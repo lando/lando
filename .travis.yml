@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "4"
+sudo: required
+services:
+  - docker
+
+before_install:
+
+  # Install some node deps
+  - npm install -g grunt-cli bower
+
+before_script:
+
+  # Nice dev helpers to verify our env
+  - ./scripts/travis-env.sh
+
+  # Sanity checks
+  - node --version
+  - npm --version
+  - grunt --version
+
+script:
+
+  # Run code and styling
+  - grunt test:code

@@ -1,0 +1,38 @@
+{
+  "name": "lando",
+  "description": "",
+  "license": "MIT",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pirog/lando"
+  },
+  "bugs": {
+    "email": "mike@thinktandem.io",
+    "url": "https://github.com/pirog/lando/issues"
+  },
+  "main": "lib/lando.js",
+  "bin": {
+    "lando": "./bin/lando.js"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "chalk": "^1.1.3",
+    "fs-extra": "^0.18.2",
+    "js-yaml": "^3.4.6",
+    "jsonfile": "^2.3.1",
+    "lodash": "^4.15.0",
+    "winston": "^2.2.0",
+    "yargs": "^4.8.1"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-jscs": "~0.8.1",
+    "jshint-stylish": "~1.0.0",
+    "matchdep": "^0.3.0"
+  }
+}
