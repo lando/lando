@@ -16,7 +16,8 @@ var jsFiles = [
   'bin/**/*.js',
   'cmds/**/*.js',
   'lib/**/*.js',
-  'tasks/**/*.js'
+  'tasks/**/*.js',
+  'tests/**/*.js'
 ];
 
 // Return our objects

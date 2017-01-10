@@ -9,16 +9,26 @@
 
 'use strict';
 
-// Define our basic CLI
-var yargs = require('yargs');
-var argv = yargs
-  .commandDir('../cmds')
-  .demand(1)
-  .help()
-  .global('verbose')
-  .count('verbose')
-  .alias('v', 'verbose')
-  .argv;
+// Grab the core API
+var lando = require('./../lib/lando.js');
 
-// Appease code styles
-argv = argv;
+// Initialization options.
+var opts = {
+  mode: 'cli'
+};
+
+/*
+ * Ensure all uncaught exceptions get handled.
+ */
+process.on('uncaughtException', lando.error.handleError);
+
+// Initialize core library.
+lando.bootstrap(opts)
+
+.catch(function(err) {
+  throw Error(err);
+})
+
+.then(function() {
+  console.log('WE BOOTSTRAPPED!');
+});
