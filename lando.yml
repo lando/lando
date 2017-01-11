@@ -1,5 +1,5 @@
 plugins:
-  - kalabox-core
+  - lando-core
   - kalabox-cmd
   - kalabox-proxy
   - kalabox-sharing

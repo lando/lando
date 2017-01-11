@@ -13,11 +13,16 @@
 var bootstrap = require('./../lib/bootstrap.js');
 var errorHandler;
 
-// Initialize
+// Initialize Lando
 bootstrap({mode: 'cli'})
 
+// Initialize CLI
+.tap(function(lando) {
+  lando = lando;
+})
+
 // Handle uncaught errors
-.then(function(lando) {
+.tap(function(lando) {
   errorHandler = lando.error.handleError;
   process.on('uncaughtException', errorHandler);
 })
