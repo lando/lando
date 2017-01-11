@@ -9,14 +9,18 @@
 
 'use strict';
 
-// Grab the core LANDO API.
-var lando = require('./../lib/lando.js');
-
-// Ensure all uncaught exceptions get handled.
-process.on('uncaughtException', lando.error.handleError);
+// Grab stuff so we can bootstrap
+var bootstrap = require('./../lib/bootstrap.js');
 
 // Initialize.
-lando.bootstrap({mode: 'cli'})
+bootstrap({mode: 'cli'})
+
+// Other stuff
+.then(function(lando) {
+  process.on('uncaughtException', lando.error.handleError);
+})
 
 // Catch.
-.catch(lando.error.handleError);
+.catch(function(err) {
+  throw new Error(err);
+});

@@ -4,4 +4,4 @@ plugins:
   - kalabox-proxy
   - kalabox-sharing
   - kalabox-ui
-logLevelConsole: verbose
+logLevelConsole: silly
