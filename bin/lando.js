@@ -9,14 +9,14 @@
 
 'use strict';
 
-// Grab the core API
+// Grab the core LANDO API.
 var lando = require('./../lib/lando.js');
 
 // Ensure all uncaught exceptions get handled.
 process.on('uncaughtException', lando.error.handleError);
 
-// Initialize core library.
+// Initialize.
 lando.bootstrap({mode: 'cli'})
 
-// Catch
+// Catch.
 .catch(lando.error.handleError);
