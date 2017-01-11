@@ -1,7 +1,4 @@
 plugins:
   - lando-core
-  - kalabox-cmd
-  - kalabox-proxy
-  - kalabox-sharing
-  - kalabox-ui
-logLevelConsole: silly
+logLevelConsole: error
+logLevel: debug

@@ -18,7 +18,7 @@ bootstrap({mode: 'cli'})
 
 // Initialize CLI
 .tap(function(lando) {
-  lando = lando;
+  return lando.tasks.cli(lando);
 })
 
 // Handle uncaught errors
