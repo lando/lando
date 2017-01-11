@@ -11,16 +11,16 @@
 
 // Grab stuff so we can bootstrap
 var bootstrap = require('./../lib/bootstrap.js');
+var errorHandler;
 
-// Initialize.
+// Initialize
 bootstrap({mode: 'cli'})
 
-// Other stuff
+// Handle uncaught errors
 .then(function(lando) {
-  process.on('uncaughtException', lando.error.handleError);
+  errorHandler = lando.error.handleError;
+  process.on('uncaughtException', errorHandler);
 })
 
-// Catch.
-.catch(function(err) {
-  throw new Error(err);
-});
+// Catch errors
+.catch(errorHandler);
