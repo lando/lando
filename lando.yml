@@ -1,7 +1,7 @@
-#globalPlugins:
-#  - kalabox-core
-#  - kalabox-cmd
-#  - kalabox-proxy
-#  - kalabox-sharing
-#  - kalabox-ui
-logLevelConsole: info
+plugins:
+  - kalabox-core
+  - kalabox-cmd
+  - kalabox-proxy
+  - kalabox-sharing
+  - kalabox-ui
+logLevelConsole: verbose

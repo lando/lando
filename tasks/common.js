@@ -16,6 +16,7 @@ var jsFiles = [
   'bin/**/*.js',
   'cmds/**/*.js',
   'lib/**/*.js',
+  'plugins/**/*.js',
   'tasks/**/*.js',
   'tests/**/*.js'
 ];

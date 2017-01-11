@@ -12,15 +12,11 @@
 // Grab the core API
 var lando = require('./../lib/lando.js');
 
-/*
- * Ensure all uncaught exceptions get handled.
- */
+// Ensure all uncaught exceptions get handled.
 process.on('uncaughtException', lando.error.handleError);
 
 // Initialize core library.
 lando.bootstrap({mode: 'cli'})
 
 // Catch
-.catch(function(err) {
-  throw Error(err);
-});
+.catch(lando.error.handleError);
