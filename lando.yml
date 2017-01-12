@@ -1,4 +1,4 @@
 plugins:
   - lando-core
-logLevelConsole: error
+logLevelConsole: warn
 logLevel: debug

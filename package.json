@@ -25,6 +25,8 @@
     "jsonfile": "^2.3.1",
     "lodash": "^4.15.0",
     "sha1": "^1.1.0",
+    "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
+    "shelljs": "^0.6.0",
     "sync-exec": "^0.6.2",
     "winston": "^2.2.0",
     "yargonaut": "^1.1.2",
