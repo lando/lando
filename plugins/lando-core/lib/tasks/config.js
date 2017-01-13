@@ -1,5 +1,7 @@
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * Command to print out the config
+ *
+ * @name config
  */
 
 'use strict';
@@ -10,7 +12,7 @@ module.exports = function(lando) {
     command: 'config',
     describe: 'Display the lando configuration',
     handler: function() {
-      console.log(JSON.stringify(lando.config, null, '  '));
+      console.log(JSON.stringify(lando.config, null, 2));
     }
   };
 

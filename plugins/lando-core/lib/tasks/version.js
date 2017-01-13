@@ -1,8 +1,10 @@
-'use strict';
-
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * Command to show the version
+ *
+ * @name version
  */
+
+'use strict';
 
 module.exports = function(lando) {
 

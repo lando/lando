@@ -1,55 +1,27 @@
-'use strict';
-
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * Command to start a lando app
+ *
+ * @name stop
  */
 
-module.exports = function(kbox) {
+'use strict';
 
-  kbox.core.events.on('post-app-load', function(app) {
+module.exports = function(lando) {
 
-    app.events.on('load-tasks', function() {
+  return {
+    command: 'start [appname]',
+    describe: 'Start app in current directory or [appname] if given',
+    handler: function(argv) {
 
-      kbox.tasks.add(function(task) {
-        task.path = [app.name, 'start'];
-        task.category = 'appAction';
-        task.options.push({
-          name: 'force',
-          alias: 'f',
-          kind: 'boolean',
-          description: 'Force start even if already running.'
-        });
-        task.description = 'Start an installed kbox application.';
-        task.func = function() {
+      return lando.app.get(argv.appname)
 
-          // Node modules
-          var format = require('util').format;
-          var log = kbox.core.log;
-
-          // Get options
-          var options = this.options || {};
-
-          // Check to see if app is already running
-          return kbox.app.isRunning(app)
-
-          // Start if not running, otherwise inform user
-          .then(function(isRunning) {
-            if (!isRunning || options.force) {
-              return kbox.app.start(app)
-              .then(function() {
-                console.log(kbox.art.appStart(app));
-              });
-            }
-            else {
-              log.warn(format('App %s already running.', app.name));
-            }
-          });
-
-        };
+      .then(function(app) {
+        if (app) {
+          return lando.app.start(app);
+        }
       });
 
-    });
-
-  });
+    }
+  };
 
 };

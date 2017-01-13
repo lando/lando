@@ -31,7 +31,8 @@
     "sync-exec": "^0.6.2",
     "winston": "^2.2.0",
     "yargonaut": "^1.1.2",
-    "yargs": "^4.8.1"
+    "yargs": "^6.6.0",
+    "yargs-parser": "^4.2.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
