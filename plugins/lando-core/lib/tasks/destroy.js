@@ -1,84 +1,27 @@
-'use strict';
-
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * Command to destroy a lando app
+ *
+ * @name destroy
  */
 
-module.exports = function(kbox) {
+'use strict';
 
-  // Npm modules
-  var inquirer = require('inquirer');
-  var chalk = require('chalk');
-  var _ = require('lodash');
+module.exports = function(lando) {
 
-  kbox.core.events.on('post-app-load', function(app) {
+  return {
+    command: 'destroy [appname]',
+    describe: 'Destroy app in current directory or [appname] if given',
+    handler: function(argv) {
 
-    app.events.on('load-tasks', function() {
+      return lando.app.get(argv.appname)
 
-      kbox.tasks.add(function(task) {
-        task.path = [app.name, 'destroy'];
-        task.category = 'appAction';
-        task.options.push({
-          name: 'yes',
-          alias: 'y',
-          kind: 'boolean',
-          description: 'Automatically answer affirmitive'
-        });
-        task.description = 'Completely destroys and removes an app.';
-        task.func = function(done) {
-
-          // Print helpful stuff to the user after their app has
-          // been destroyed
-          app.events.on('post-destroy', 9, function(/*app*/) {
-            console.log(kbox.art.postDestroy());
-          });
-
-          // Needs to prompt?
-          var confirmPrompt = !this.options.yes;
-
-          // Display ominous warning if prompted
-          if (confirmPrompt) {
-            console.log(kbox.art.destroyWarn(app));
-          }
-
-          // Set up our confirmation question if needed
-          var confirm = {
-            type: 'confirm',
-            name: 'doit',
-            message: 'So, are you still prepared to DESTROY?',
-            when: function(/*answers*/) {
-              return confirmPrompt;
-            },
-            default: function() {
-              return false;
-            }
-          };
-
-          // Destroyer of worlds
-          inquirer.prompt([confirm], function(answers) {
-
-            // Set non-interactive if needed
-            if (_.isEmpty(answers)) {
-              answers.doit = !confirmPrompt;
-            }
-
-            // Destroy if confirmed
-            if (answers.doit) {
-              kbox.app.destroy(app, done);
-            }
-            // Print and exit
-            else {
-              console.log(chalk.green('WHEW! IMMINENT DESTRUCTION AVERTED!'));
-              done();
-            }
-
-          });
-
-        };
+      .then(function(app) {
+        if (app) {
+          return lando.app.destroy(app);
+        }
       });
 
-    });
-
-  });
+    }
+  };
 
 };

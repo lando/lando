@@ -1,22 +1,27 @@
-'use strict';
-
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * Command to restop a lando app
+ *
+ * @name restop
  */
 
-module.exports = function(kbox) {
+'use strict';
 
-  kbox.core.events.on('post-app-load', function(app) {
-    app.events.on('load-tasks', function() {
-      kbox.tasks.add(function(task) {
-        task.path = [app.name, 'rebuild'];
-        task.category = 'appAction';
-        task.description = 'Rebuilds your app while maintaining your app data.';
-        task.func = function(done) {
-          kbox.app.rebuild(app, done);
-        };
+module.exports = function(lando) {
+
+  return {
+    command: 'rebuild [appname]',
+    describe: 'Rebuilds app in current directory or [appname] if given',
+    handler: function(argv) {
+
+      return lando.app.get(argv.appname)
+
+      .then(function(app) {
+        if (app) {
+          return lando.app.rebuild(app);
+        }
       });
-    });
-  });
+
+    }
+  };
 
 };

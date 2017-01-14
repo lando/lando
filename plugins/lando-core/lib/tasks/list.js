@@ -1,10 +1,12 @@
-'use strict';
-
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * Command to list all lando apps
+ *
+ * @name list
  */
 
-module.exports = function(kbox) {
+'use strict';
+
+module.exports = function(lando) {
 
   /*
    * Helper function to build some summary info for our apps
@@ -12,15 +14,12 @@ module.exports = function(kbox) {
   var appSummary = function(app) {
 
     // Chcek if our app is running
-    return kbox.app.isRunning(app)
+    return lando.app.isRunning(app)
 
     // Return a nice app summary
     .then(function(isRunning) {
       return {
         name: app.name,
-        url: app.url,
-        type: app.config.type,
-        version: app.config.version,
         location: app.root,
         running: isRunning
       };
@@ -28,19 +27,13 @@ module.exports = function(kbox) {
 
   };
 
-  // Display list of apps.
-  kbox.tasks.add(function(task) {
-    task.path = ['list'];
-    task.description = 'Display list of apps';
-    task.options.push({
-      name: 'names',
-      alias: 'n',
-      description: 'Only display app names'
-    });
-    task.func = function(done) {
+  return {
+    command: 'list',
+    describe: 'List all lando apps',
+    handler: function() {
 
       // List all the apps
-      return kbox.app.list()
+      return lando.app.list()
 
       // Map each app to a summary and print results
       .each(function(app) {
@@ -48,12 +41,9 @@ module.exports = function(kbox) {
         .then(function(summary) {
           console.log(JSON.stringify(summary, null, 2));
         });
-      })
+      });
 
-      // Nodeify the doneness
-      .nodeify(done);
-
-    };
-  });
+    }
+  };
 
 };

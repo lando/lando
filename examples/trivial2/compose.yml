@@ -1,0 +1,4 @@
+web:
+  image: httpd
+  ports:
+   - "8081:80"
