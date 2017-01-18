@@ -8,6 +8,9 @@
 
 module.exports = function(lando) {
 
+  // Modules
+  var chalk = lando.node.chalk;
+
   // The task object
   return {
     command: 'stop [appname]',
@@ -20,7 +23,10 @@ module.exports = function(lando) {
       // Restart the app
       .then(function(app) {
         if (app) {
-          return lando.app.stop(app);
+          return lando.app.stop(app)
+          .then(function() {
+            console.log(chalk.red('App stopped!'));
+          });
         }
       });
 

@@ -31,8 +31,8 @@ module.exports = function(lando) {
 
       // Stop rebuild if user decides its a nogo
       if (!options.yes) {
-        console.log(chalk.green('DESTRUCTION AVERTED!'));
-        process.exit(1);
+        console.log(chalk.yellow('DESTRUCTION AVERTED!'));
+        return;
       }
 
       // Try to get the app if we can
@@ -41,7 +41,10 @@ module.exports = function(lando) {
       // Destroy the app
       .then(function(app) {
         if (app) {
-          return lando.app.destroy(app);
+          return lando.app.destroy(app)
+          .then(function() {
+            console.log(chalk.red('App destroyed!'));
+          });
         }
       });
 

@@ -32,7 +32,7 @@ module.exports = function(lando) {
       // Stop rebuild if user decides its a nogo
       if (!options.yes) {
         console.log(chalk.yellow('Rebuild aborted'));
-        process.exit(1);
+        return;
       }
 
       // Attempt to grab the app if we can
@@ -41,7 +41,10 @@ module.exports = function(lando) {
       // Rebuild the app
       .then(function(app) {
         if (app) {
-          return lando.app.rebuild(app);
+          return lando.app.rebuild(app)
+          .then(function() {
+            console.log(chalk.green('App rebuilt!'));
+          });
         }
       });
 

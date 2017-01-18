@@ -8,6 +8,9 @@
 
 module.exports = function(lando) {
 
+  // Modules
+  var chalk = lando.node.chalk;
+
   // Task object
   return {
     command: 'restart [appname]',
@@ -20,7 +23,10 @@ module.exports = function(lando) {
       // Resttart the app
       .then(function(app) {
         if (app) {
-          return lando.app.restart(app);
+          return lando.app.restart(app)
+          .then(function() {
+            console.log(chalk.green('App restarted!'));
+          });
         }
       });
 
