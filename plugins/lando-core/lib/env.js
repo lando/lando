@@ -43,6 +43,11 @@ module.exports = function(lando) {
     // Add the global env object to all our containers
     app.events.on('app-ready', function(app) {
 
+      // Log
+      lando.log.verbose('App %s has global env.', app.name, app.env);
+      lando.log.verbose('App %s has global labels.', app.name, app.labels);
+      lando.log.verbose('App %s adds process env.', app.name, app.processEnv);
+
       // If we have some containers lets add in our global envs and labels
       if (!_.isEmpty(app.containers)) {
         _.forEach(app.containers, function(container) {

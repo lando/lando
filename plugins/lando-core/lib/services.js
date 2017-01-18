@@ -35,7 +35,9 @@ module.exports = function(lando) {
     if (!_.isEmpty(app.config.compose)) {
       _.forEach(app.config.compose, function(compose) {
         if (fs.existsSync(path.join(app.root, compose))) {
-          var containers = fs.readFileSync(path.join(app.root, compose));
+          var composeFile = path.join(app.root, compose);
+          lando.log.verbose('Adding compose file %s to app.', composeFile);
+          var containers = fs.readFileSync(composeFile);
           app.containers = _.merge(app.containers, yaml.safeLoad(containers));
         }
       });
@@ -65,8 +67,15 @@ module.exports = function(lando) {
         var data = yaml.safeDump(app.containers);
         fs.writeFileSync(file, data);
 
+        // Log
+        var services = _.keys(app.containers);
+        lando.log.verbose('Generating compose file with services.', services);
+        lando.log.verbose('Writing %j to %s', services, file);
+        lando.log.debug('Full services for %s', project, app.containers);
+
         // Add that file to our compose list
         app.compose.push(file);
+        lando.log.verbose('App %s has compose files.', project, app.compose);
 
       }
 
