@@ -12,7 +12,7 @@ module.exports = function(lando) {
   return {
     command: 'config',
     describe: 'Display the lando configuration',
-    handler: function() {
+    run: function() {
       console.log(JSON.stringify(lando.config, null, 2));
     }
   };

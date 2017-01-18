@@ -8,10 +8,12 @@
 
 module.exports = function(lando) {
 
+  // The task object
+  // @TODO: change this to grab all containers
   return {
     command: 'poweroff',
     describe: 'Spin down all lando related containers',
-    handler: function() {
+    run: function() {
       return lando.engine.down();
     }
   };

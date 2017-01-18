@@ -8,13 +8,16 @@
 
 module.exports = function(lando) {
 
+  // The task object
   return {
     command: 'stop [appname]',
     describe: 'Stops app in current directory or [appname] if given',
-    handler: function(argv) {
+    run: function(options) {
 
-      return lando.app.get(argv.appname)
+      // Try to get the app
+      return lando.app.get(options.appname)
 
+      // Restart the app
       .then(function(app) {
         if (app) {
           return lando.app.stop(app);

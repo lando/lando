@@ -30,7 +30,7 @@ module.exports = function(lando) {
   return {
     command: 'list',
     describe: 'List all lando apps',
-    handler: function() {
+    run: function() {
 
       // List all the apps
       return lando.app.list()
