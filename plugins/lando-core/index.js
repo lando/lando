@@ -8,12 +8,10 @@
 
 module.exports = function(lando) {
 
-  // Load CLI tasks for this plugin.
-  require('./lib/tasks.js')(lando);
+  // Load tasks for this plugin.
+  require('./lib/tasks')(lando);
 
-  // Load in all our commands
-  lando.events.on('post-engine-up', function() {
-    console.log('ahhh yes');
-  });
+  // Basic app services handling
+  require('./lib/services')(lando);
 
 };
