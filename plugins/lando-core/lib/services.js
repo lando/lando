@@ -1,5 +1,5 @@
 /**
- * This adds basic service parsing
+ * This adds basic app service parsing
  *
  * Specifically, it handles a "compose" option in the app config which is an
  * array of files. It is also responsible for parsing
@@ -42,12 +42,12 @@ module.exports = function(lando) {
     }
 
     // Add the app object itself into the options
-    app.events.on('app-ready', 1, function(app) {
+    app.events.on('app-ready', 9, function(app) {
       app.opts = {app: _.cloneDeep(app)};
     });
 
     // Parse whatever containers we might have into docker compose files
-    app.events.on('app-ready', 1, function(app) {
+    app.events.on('app-ready', 9, function(app) {
 
       // If we have some containers lets parse them
       if (!_.isEmpty(app.containers)) {

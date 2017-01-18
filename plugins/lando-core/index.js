@@ -14,4 +14,7 @@ module.exports = function(lando) {
   // Basic app services handling
   require('./lib/services')(lando);
 
+  // Basic environment handling
+  require('./lib/env')(lando);
+
 };
