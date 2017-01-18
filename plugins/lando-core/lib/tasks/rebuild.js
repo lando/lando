@@ -8,13 +8,37 @@
 
 module.exports = function(lando) {
 
+  // Modules
+  var chalk = lando.node.chalk;
+
+  // The task object
   return {
     command: 'rebuild [appname]',
     describe: 'Rebuilds app in current directory or [appname] if given',
-    handler: function(argv) {
+    options: {
+      yes: {
+        describe: 'Auto answer yes to prompts',
+        alias: ['y'],
+        default: false,
+        boolean: true,
+        interactive: {
+          type: 'confirm',
+          message: 'Are you sure you want to rebuild?'
+        }
+      }
+    },
+    run: function(options) {
 
-      return lando.app.get(argv.appname)
+      // Stop rebuild if user decides its a nogo
+      if (!options.yes) {
+        console.log(chalk.yellow('Rebuild aborted'));
+        process.exit(1);
+      }
 
+      // Attempt to grab the app if we can
+      return lando.app.get(options.appname)
+
+      // Rebuild the app
       .then(function(app) {
         if (app) {
           return lando.app.rebuild(app);
