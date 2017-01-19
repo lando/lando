@@ -1,10 +1,9 @@
 web:
   image: httpd
   ports:
-    - "8082:80"
+    - "80"
     - "8083:80"
 web2:
   image: nginx
   ports:
     - "8084:80"
-    - "4432:443"

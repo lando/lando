@@ -44,12 +44,12 @@ module.exports = function(lando) {
     }
 
     // Add the app object itself into the options
-    app.events.on('app-ready', 9, function(app) {
+    app.events.on('app-ready', 9, function() {
       app.opts = {app: _.cloneDeep(app)};
     });
 
     // Parse whatever containers we might have into docker compose files
-    app.events.on('app-ready', 9, function(app) {
+    app.events.on('app-ready', 9, function() {
 
       // If we have some containers lets parse them
       if (!_.isEmpty(app.containers)) {

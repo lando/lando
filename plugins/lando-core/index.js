@@ -14,6 +14,9 @@ module.exports = function(lando) {
   // App info handling and discovery
   require('./lib/info')(lando);
 
+  // Add a function to the app object so it can scan its URLs
+  require('./lib/scan')(lando);
+
   // Basic app services handling
   require('./lib/services')(lando);
 
