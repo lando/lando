@@ -14,7 +14,7 @@ module.exports = function(lando) {
   // The task object
   return {
     command: 'destroy [appname]',
-    describe: 'Destroy app in current directory or [appname] if given',
+    describe: 'Destroy app in current directory or [appname]',
     options: {
       yes: {
         describe: 'Auto answer yes to prompts',

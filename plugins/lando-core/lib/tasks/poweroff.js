@@ -1,5 +1,5 @@
 /**
- * Poweroff all kalabox containers
+ * Poweroff all lando containers
  *
  * @name poweroff
  */
@@ -25,7 +25,7 @@ module.exports = function(lando) {
       return lando.app.list()
 
       // SHUT IT ALL DOWN
-      .each(function(app) {
+      .map(function(app) {
         return lando.app.get(app.name)
         .then(function(app) {
           lando.app.stop(app);

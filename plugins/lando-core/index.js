@@ -8,13 +8,16 @@
 
 module.exports = function(lando) {
 
-  // Load tasks for this plugin.
-  require('./lib/tasks')(lando);
+  // Basic environment handling
+  require('./lib/env')(lando);
+
+  // App info handling and discovery
+  require('./lib/info')(lando);
 
   // Basic app services handling
   require('./lib/services')(lando);
 
-  // Basic environment handling
-  require('./lib/env')(lando);
+  // Load tasks for this plugin.
+  require('./lib/tasks')(lando);
 
 };

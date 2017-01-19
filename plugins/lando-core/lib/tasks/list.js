@@ -20,7 +20,7 @@ module.exports = function(lando) {
     .then(function(isRunning) {
       return {
         name: app.name,
-        location: app.root,
+        location: app.dir,
         running: isRunning
       };
     });
@@ -36,7 +36,7 @@ module.exports = function(lando) {
       return lando.app.list()
 
       // Map each app to a summary and print results
-      .each(function(app) {
+      .map(function(app) {
         return appSummary(app)
         .then(function(summary) {
           console.log(JSON.stringify(summary, null, 2));

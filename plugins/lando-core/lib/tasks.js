@@ -1,5 +1,5 @@
 /**
- * This contains all the core commands that kalabox can run on every machine
+ * This contains all the core commands that lando can run on every machine
  *
  * @name tasks
  */
@@ -12,6 +12,7 @@ module.exports = function(lando) {
   lando.events.on('post-bootstrap', 1, function(lando) {
     lando.tasks.addTask('config', require('./tasks/config')(lando));
     lando.tasks.addTask('destroy', require('./tasks/destroy')(lando));
+    lando.tasks.addTask('info', require('./tasks/info')(lando));
     lando.tasks.addTask('list', require('./tasks/list')(lando));
     lando.tasks.addTask('poweroff', require('./tasks/poweroff')(lando));
     lando.tasks.addTask('rebuild', require('./tasks/rebuild')(lando));

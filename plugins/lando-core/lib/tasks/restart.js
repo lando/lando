@@ -1,7 +1,7 @@
 /**
  * Command to restop a lando app
  *
- * @name restop
+ * @name restart
  */
 
 'use strict';
@@ -14,7 +14,7 @@ module.exports = function(lando) {
   // Task object
   return {
     command: 'restart [appname]',
-    describe: 'Restarts app in current directory or [appname] if given',
+    describe: 'Restarts app in current directory or [appname]',
     run: function(options) {
 
       // Try to get the app

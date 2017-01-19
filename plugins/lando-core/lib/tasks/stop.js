@@ -14,7 +14,7 @@ module.exports = function(lando) {
   // The task object
   return {
     command: 'stop [appname]',
-    describe: 'Stops app in current directory or [appname] if given',
+    describe: 'Stops app in current directory or [appname]',
     run: function(options) {
 
       // Try to get the app

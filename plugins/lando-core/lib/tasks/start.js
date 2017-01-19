@@ -14,7 +14,7 @@ module.exports = function(lando) {
   // Restart the app
   return {
     command: 'start [appname]',
-    describe: 'Start app in current directory or [appname] if given',
+    describe: 'Start app in current directory or [appname]',
     run: function(options) {
 
       // Try to get the app

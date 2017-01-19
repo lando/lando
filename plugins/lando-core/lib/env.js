@@ -29,13 +29,13 @@ module.exports = function(lando) {
     app.labels = {};
 
     // Add in some common process envvars we might want
-    app.processEnv.KALABOX_APP_NAME = app.name;
-    app.processEnv.KALABOX_APP_ROOT = app.root;
-    app.processEnv.KALABOX_APP_ROOT_BIND = app.rootBind;
+    app.processEnv.LANDO_APP_NAME = app.name;
+    app.processEnv.LANDO_APP_ROOT = app.root;
+    app.processEnv.LANDO_APP_ROOT_BIND = app.rootBind;
 
     // Add in some global container envvars
-    app.env.KALABOX = 'ON';
-    app.env.KALABOX_HOST_OS = lando.config.os.platform;
+    app.env.LANDO = 'ON';
+    app.env.LANDO_HOST_OS = lando.config.os.platform;
 
     // Add in some global labels
     app.labels = {'io.lando.container': 'TRUE'};
