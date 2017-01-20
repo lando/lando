@@ -25,10 +25,15 @@ module.exports = function(lando) {
    * Define the proxy service
    */
   var getProxyService = function(http, https, redis) {
+
+    // Log
+    lando.log.debug('Proxy with http %s https %s redis %s', http, https, redis);
+
+    // Return the compose object
     return {
       image: 'kalabox/proxy:stable',
       environment: {
-        'DOMAIN': lando.config.proxyDomain || 'lando.site'
+        'DOMAIN': lando.config.proxyDomain || 'kbox.site'
       },
       labels: {
         'io.lando.container': 'TRUE'
@@ -46,6 +51,11 @@ module.exports = function(lando) {
    * Return the proxy service
    */
   var getProxy = function(file) {
+
+    // Log
+    lando.log.debug('Run proxy service from %s', file);
+
+    // Return engine object
     return {
       compose: [file],
       project: 'lando',
@@ -216,7 +226,7 @@ module.exports = function(lando) {
     return Promise.retry(function() {
       var REDIS_PORT = lando.config.proxyRedisPort;
       var REDIS_IP = lando.config.engineHost;
-      lando.log.info('Connecting to redis on %s:%s', REDIS_IP, REDIS_PORT);
+      lando.log.verbose('Connecting to redis on %s:%s', REDIS_IP, REDIS_PORT);
       return redis.createClient(REDIS_PORT, REDIS_IP);
     });
   };
@@ -234,7 +244,7 @@ module.exports = function(lando) {
 
     // Run the redis query and then quit
     .then(function(redis) {
-      lando.log.verbose('Setting DNS. %s => %s', key, dest);
+      lando.log.debug('Setting DNS %s => %s', key, dest);
       return Promise.fromNode(function(cb) {
         redis.multi()
         .del(key)
@@ -284,7 +294,7 @@ module.exports = function(lando) {
           };
 
           // Log the service getting confed
-          lando.log.verbose('Configuring DNS for %s services.', service.name);
+          lando.log.verbose('Configuring DNS for %s service.', service.name);
 
           // Inspect the service to be proxies
           return lando.engine.inspect(getAppService(service.name))
@@ -356,11 +366,18 @@ module.exports = function(lando) {
           var proxyIsUp = isRunning[0];
           var appIsUp = isRunning[1];
 
+          // Log
+          lando.log.verbose('Proxy up = %s', proxyIsUp);
+          lando.log.verbose('App %s is up = %s', app.name, proxyIsUp);
+
           // Kick off another chain
           return Promise.try(function() {
 
             // If proxy is down up app is up try to start the proxy
             if (appIsUp && !proxyIsUp) {
+
+              // Log
+              lando.log.verbose('App %s is up but proxy is down', app.name);
 
               // Get our config
               var httpPort = lando.config.proxyHttpPort;
@@ -390,13 +407,20 @@ module.exports = function(lando) {
                 // Get the redis port
                 var redis = lando.config.proxyRedisPort;
 
+                // Log
+                var engineHost = lando.config.engineHost;
+                lando.log.verbose('Proxying on %s:%s', engineHost, http);
+                lando.log.verbose('Proxying on %s:%s', engineHost, https);
+                lando.log.verbose('Proxy redis on %s:%s', engineHost, redis);
+
                 // Get the proxy service
                 var proxyService = {proxy: getProxyService(http, https, redis)};
 
                 // Set the service
                 lando.utils.compose(proxyFile, proxyService);
 
-                // Start the service
+                // Start the service and dump our cache
+                cache.remove('proxyData');
                 return lando.engine.start(getProxy(proxyFile));
 
               });
@@ -440,6 +464,9 @@ module.exports = function(lando) {
                 // Get old urls
                 var old = app.info[service.name].urls || [];
                 var updated = _.map(service.routes, 'urls');
+
+                // Log
+                lando.log.debug('Adding app URLs', updated);
 
                 // Merge our list together
                 app.info[service.name].urls = _.flatten(old.concat(updated));

@@ -15,7 +15,7 @@ module.exports = function(lando) {
   lando.events.on('post-bootstrap', function(lando) {
 
     // Log
-    lando.log.verbose('Initializing proxy config.');
+    lando.log.info('Initializing proxy');
 
     // Proxy defaults
     var defaults = {
@@ -41,7 +41,7 @@ module.exports = function(lando) {
     };
 
     // Log it
-    lando.log.debug('Proxy initialized with config', proxyConf);
+    lando.log.verbose('Proxy initialized with config', proxyConf);
 
   });
 
