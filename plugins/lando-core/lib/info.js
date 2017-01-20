@@ -33,6 +33,9 @@ module.exports = function(lando) {
       // Start a URL collector
       var urls = [];
 
+      // Grab the service
+      var service = container.service;
+
       // Inspect the container
       return lando.engine.inspect(container)
 
@@ -53,6 +56,8 @@ module.exports = function(lando) {
 
             // Add URL
             _.forEach(externalPorts, function(externalPort) {
+              var url = protocol + 'localhost:' + externalPort.HostPort;
+              lando.log.debug('Adding %s to %s on %s.', url, service, app.name);
               urls.push(protocol + 'localhost:' + externalPort.HostPort);
             });
           }
@@ -63,6 +68,7 @@ module.exports = function(lando) {
 
       // Add our URLs
       .then(function() {
+        lando.log.verbose('%s service %s has urls:', app.name, service, urls);
         app.info[container.service].urls = urls;
       });
 

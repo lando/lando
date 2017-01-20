@@ -12,7 +12,6 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var chalk = lando.node.chalk;
   var os = require('os');
-  var Table = require('cli-table');
 
   // Restart the app
   return {
@@ -33,61 +32,28 @@ module.exports = function(lando) {
           // Report the app has started and some extra info
           .then(function() {
 
-            // Start our jam
-            var lines = [];
-
-            // Paint a picture
-            lines.push('');
-            lines.push(chalk.green('BOOMSHAKALAKA!!!'));
-            lines.push('');
-            lines.push('Your app has started up correctly.');
-            lines.push('Here are some vitals:');
-            lines.push('');
-
-            // Print it out
-            console.log(lines.join(os.EOL));
+            // Header it
+            console.log(lando.cli.startHeader());
 
             // Grab a new cli table
-            // @todo: dump this in CORE at some point?
-            var table = new Table({
-              chars: {
-                'top': '',
-                'top-mid': '',
-                'top-left': '',
-                'top-right': '',
-                'bottom': '',
-                'bottom-mid': '',
-                'bottom-left': '',
-                'bottom-right': '',
-                'left': '',
-                'left-mid': '',
-                'mid': '',
-                'mid-mid': '',
-                'right': '',
-                'right-mid': '',
-                'middle': ''
-              }
-            });
+            var table = new lando.cli.Table();
 
-            // Add name and lcoation
-            table.push([chalk.cyan('NAME'), app.name]);
-            table.push([chalk.cyan('LOCATION'), app.root]);
-
-            // List the containers
-            var containers = _.keys(app.containers);
-            table.push([chalk.cyan('CONTAINERS'), containers.join(', ')]);
-
-            // Add URLS
+            // Colorize URLS
             var urls = _.map(app.urls, function(url) {
               var uri = url.url;
               return (url.status) ? chalk.green(uri) : chalk.red(uri);
             });
-            table.push([chalk.cyan('URLS'), urls.join(os.EOL)]);
+
+            // Add data
+            table.add('NAME', app.name);
+            table.add('LOCATION', app.root);
+            table.add('CONTAINERS', _.keys(app.containers));
+            table.add('URLS', urls, {arrayJoiner: os.EOL});
 
             // Print the table
             console.log(table.toString());
 
-            // SPace it
+            // Space it
             console.log('');
 
           });

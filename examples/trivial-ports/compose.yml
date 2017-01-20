@@ -7,3 +7,5 @@ web2:
   image: nginx
   ports:
     - "8084:80"
+    - "443"
+    - "80"
