@@ -57,24 +57,13 @@ module.exports = function(lando) {
         // Get project name
         var project = app.project || app.name;
 
-        // Make sure we have a place to store these files
+        // Write the services
         var projectDir = path.join(lando.config.userConfRoot, 'tmp', project);
-        fs.mkdirpSync(projectDir);
-
-        // Drop our containers into a file
         var fileName = [project, _.uniqueId()].join('-');
         var file = path.join(projectDir, fileName + '.yml');
-        var data = yaml.safeDump(app.containers);
-        fs.writeFileSync(file, data);
-
-        // Log
-        var services = _.keys(app.containers);
-        lando.log.verbose('Generating compose file with services.', services);
-        lando.log.verbose('Writing %j to %s', services, file);
-        lando.log.debug('Full services for %s', project, app.containers);
 
         // Add that file to our compose list
-        app.compose.push(file);
+        app.compose.push(lando.utils.compose(file, app.containers));
         lando.log.verbose('App %s has compose files.', project, app.compose);
 
       }

@@ -32,6 +32,11 @@ module.exports = function(lando) {
         });
       })
 
+      // Emit poweroff
+      .then(function() {
+        return lando.events.emit('poweroff');
+      })
+
       // Finish up
       .then(function() {
         console.log(chalk.red('Lando containers have been spun down.'));

@@ -84,7 +84,7 @@ module.exports = function(lando) {
 
     // Add some basics to the info and emit and event so other things
     // can add info as well
-    app.events.on('app-ready', 9, function() {
+    app.events.on('app-ready', 1, function() {
 
       // Add service keys
       _.forEach(_.keys(app.containers), function(service) {
@@ -96,7 +96,7 @@ module.exports = function(lando) {
 
       // Allow other things to add info
       .then(function() {
-        return app.events.emit('app-info', app);
+        return app.events.emit('app-info');
       });
 
     });
@@ -104,7 +104,15 @@ module.exports = function(lando) {
     // The apps urls need to be refreshed on start since these can
     // change during the process eg on restart
     app.events.on('post-start', 1, function() {
-      return getUrls(app);
+
+      // Get the URLs for this app
+      return getUrls(app)
+
+      // Emit this again so our info here is the same as above
+      .then(function() {
+        return app.events.emit('app-info');
+      });
+
     });
 
   });

@@ -1,0 +1,16 @@
+name: trivial-proxy
+compose:
+  - compose.yml
+proxy:
+  web:
+    - port: 80/tcp
+      default: true
+      subdomains:
+        - site1
+        - site2
+        - site3
+        - site4
+      custom:
+        - bob.frank.kbox.com
+        - frank.bob.joe
+        - tippecanoe.tyler.too

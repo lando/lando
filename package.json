@@ -27,6 +27,7 @@
     "js-yaml": "^3.4.6",
     "lodash": "^4.15.0",
     "node-cache": "^4.1.1",
+    "redis": "https://github.com/thinktandem/node_redis/tarball/master",
     "restler": "^3.4.0",
     "sha1": "^1.1.0",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",

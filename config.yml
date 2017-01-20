@@ -1,4 +1,5 @@
 plugins:
   - lando-core
+  - lando-proxy
 logLevelConsole: warn
 logLevel: debug

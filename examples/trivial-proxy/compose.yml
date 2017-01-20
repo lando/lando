@@ -1,0 +1,11 @@
+web:
+  image: httpd
+  ports:
+    - "80"
+    - "8085:80"
+web2:
+  image: nginx
+  ports:
+    - "8086:80"
+    - "443"
+    - "80"
