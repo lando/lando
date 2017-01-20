@@ -14,6 +14,8 @@ module.exports = function(lando) {
   var fs = lando.node.fs;
   var path = require('path');
   var Promise = lando.Promise;
+  var redis = require('redis');
+  var u = require('url');
 
   // Fixed location of our proxy service compose file
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
@@ -129,7 +131,7 @@ module.exports = function(lando) {
     return _.map(hostnames, function(hostname) {
 
       // Optional port TBD
-      var port;
+      var port = '';
 
       // Determine whether we need to add a port
       if (!route.secure && ports.http !== '80') {
@@ -204,6 +206,49 @@ module.exports = function(lando) {
 
   };
 
+  /*
+   * Return the redis client
+   *
+   * This allows us to retry the connection a few times just in case redis
+   * is slow to start
+   */
+  var getRedisClient = function() {
+    return Promise.retry(function() {
+      var REDIS_PORT = lando.config.proxyRedisPort;
+      var REDIS_IP = lando.config.engineHost;
+      lando.log.info('Connecting to redis on %s:%s', REDIS_IP, REDIS_PORT);
+      return redis.createClient(REDIS_PORT, REDIS_IP);
+    });
+  };
+
+  /*
+   * Adds an entry to redis
+   *
+   * This allows us to retry the connection a few times just in case redis
+   * is slow to start
+   */
+  var addRedisEntry = function(key, dest, containerName) {
+
+    // Attempt to connect to redis
+    return getRedisClient()
+
+    // Run the redis query and then quit
+    .then(function(redis) {
+      lando.log.verbose('Setting DNS. %s => %s', key, dest);
+      return Promise.fromNode(function(cb) {
+        redis.multi()
+        .del(key)
+        .rpush(key, containerName)
+        .rpush(key, dest)
+        .exec(cb);
+      })
+      .then(function() {
+        redis.quit();
+      });
+    });
+
+  };
+
   // Turn the proxy off on powerdown if applicable
   lando.events.on('poweroff', function() {
     if (lando.config.proxy === 'ON' && fs.existsSync(proxyFile)) {
@@ -216,6 +261,60 @@ module.exports = function(lando) {
 
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
+
+      // Add entries to redis for hipache
+      app.events.on('post-start', 1, function() {
+
+        // Grab the proxy config
+        var proxyServices = app.proxy || {};
+
+        // Go through those services one by one and add dns entries
+        return Promise.map(proxyServices, function(service) {
+
+          // Return the services for this app
+          var getAppService = function(service) {
+            return {
+              compose: _.uniq(app.compose),
+              project: app.name,
+              opts: {
+                app: app,
+                services: [service]
+              }
+            };
+          };
+
+          // Log the service getting confed
+          lando.log.verbose('Configuring DNS for %s services.', service.name);
+
+          // Inspect the service to be proxies
+          return lando.engine.inspect(getAppService(service.name))
+
+          // Grab our port information from docker
+          .then(function(data) {
+
+            // Get port information from container query.
+            var ip = _.get(data, 'NetworkSettings.Networks.bridge.IPAddress');
+
+            // Loop through each proxy.
+            return Promise.map(service.routes, function(route) {
+
+              // Get port for this proxy from port information.
+              var port = route.port.split('/')[0];
+
+              // Loop through each url and add an entry to redis
+              return Promise.map(route.urls, function(url) {
+                return addRedisEntry(
+                  ['frontend', url].join(':'),
+                  u.parse(url).protocol + '//' + ip + ':' + port,
+                  _.trimStart(data.Name, '/')
+                );
+              });
+
+            });
+          });
+        });
+
+      });
 
       // Add proxy URLS to our app info
       app.events.on('app-info', function() {
