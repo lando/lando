@@ -338,11 +338,24 @@ module.exports = function(lando) {
 
             // If there is a proxy file, grab it and inspect
             if (hasProxy) {
+
+              // Try to inspect the proxy
               return lando.engine.inspect(getProxy(proxyFile))
+
+              // Determine whether it is running or not
               .then(function(data) {
+
+                // We dont have a container at all
+                if (!data) {
+                  return false;
+                }
+
+                // Othewise data and check running status
                 cache.set('proxyData', data);
                 return lando.engine.isRunning(data.Id);
+
               });
+
             }
 
             // This must be false
