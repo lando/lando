@@ -122,6 +122,12 @@ module.exports = function(lando) {
           // Add the app object
           app.info[service].share = share;
 
+          // Log
+          lando.log.verbose(
+            'Sharing from %s to %s on %s for %s',
+            share.local, share.remote, service, app.name
+          );
+
           // Ensure the local webroot exists
           fs.mkdirpSync(app.info[service].share.local);
 
@@ -146,6 +152,9 @@ module.exports = function(lando) {
           app.containers[service].volumes = _.uniq(newVols);
 
         });
+
+        // Log
+        lando.log.info('Sharing folders');
 
       });
 
