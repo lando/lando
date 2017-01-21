@@ -4,4 +4,4 @@ web:
     - "8081:80"
   environment:
     TEST: thing
-    KALABOX_DEV: $KALABOX_DEV
+    APPNAME: $LANDO_APP_NAME

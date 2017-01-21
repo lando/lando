@@ -244,7 +244,7 @@ module.exports = function(lando) {
 
     // Run the redis query and then quit
     .then(function(redis) {
-      lando.log.debug('Setting DNS %s => %s', key, dest);
+      lando.log.debug('Setting DNS %s => %s on %s', key, dest, containerName);
       return Promise.fromNode(function(cb) {
         redis.multi()
         .del(key)
@@ -313,11 +313,21 @@ module.exports = function(lando) {
 
               // Loop through each url and add an entry to redis
               return Promise.map(route.urls, function(url) {
+
+                // Build a URL formatted correctly for hipache
+                url = u.format({
+                  protocol: u.parse(url).protocol,
+                  hostname: u.parse(url).hostname,
+                  slashes: true
+                });
+
+                // Add the record
                 return addRedisEntry(
                   ['frontend', url].join(':'),
                   u.parse(url).protocol + '//' + ip + ':' + port,
                   _.trimStart(data.Name, '/')
                 );
+
               });
 
             });
