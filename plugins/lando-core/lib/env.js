@@ -50,7 +50,7 @@ module.exports = function(lando) {
 
       // If we have some containers lets add in our global envs and labels
       if (!_.isEmpty(app.containers)) {
-        _.forEach(app.containers, function(container) {
+        _.forEach(app.containers, function(container, service) {
 
           // Get existing ENV and LABELS
           var env = container.environment || {};
@@ -59,6 +59,9 @@ module.exports = function(lando) {
           // Merge in our globals underneath
           container.environment = _.merge(app.env, env);
           container.labels = _.merge(app.labels, labels);
+
+          // Reset the app conatiner
+          app.containers[service] = _.cloneDeep(container);
 
         });
 

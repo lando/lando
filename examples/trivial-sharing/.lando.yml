@@ -1,0 +1,18 @@
+name: trivial-sharing
+compose:
+  - compose.yml
+sharing:
+  web:
+    local: webroot1
+    remote: /usr/local/apache2/htdocs
+  web2:
+    local: webroot2
+    remote: /usr/share/nginx/html
+proxy:
+  web:
+    - port: 80/tcp
+      default: true
+  web2:
+    - port: 80/tcp
+      subdomains:
+        - web2

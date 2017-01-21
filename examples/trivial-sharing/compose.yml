@@ -1,0 +1,10 @@
+web:
+  image: httpd
+  ports:
+    - "80"
+web2:
+  image: nginx
+  ports:
+    - "80"
+  volumes:
+    - /var/www

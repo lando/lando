@@ -68,8 +68,10 @@ module.exports = function(lando) {
 
       // Add our URLs
       .then(function() {
-        lando.log.verbose('%s service %s has urls:', app.name, service, urls);
-        app.info[container.service].urls = urls;
+        if (!_.isEmpty(urls)) {
+          lando.log.verbose('%s service %s has urls:', app.name, service, urls);
+          app.info[container.service].urls = urls;
+        }
       });
 
     });
