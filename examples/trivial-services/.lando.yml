@@ -1,0 +1,9 @@
+name: trivial-services
+sharing:
+  appserver:
+    local: webroot2
+    remote: /usr/share/nginx/html
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true

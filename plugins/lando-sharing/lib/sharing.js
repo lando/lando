@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var fs = lando.node.fs;
+  var path = require('path');
 
   /*
    * Helper function to generate the appropriate sharing compose file on
@@ -129,7 +130,7 @@ module.exports = function(lando) {
           );
 
           // Ensure the local webroot exists
-          fs.mkdirpSync(app.info[service].share.local);
+          fs.mkdirpSync(path.join(app.root, app.info[service].share.local));
 
         });
 
