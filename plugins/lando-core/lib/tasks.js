@@ -10,16 +10,16 @@ module.exports = function(lando) {
 
   // Load in all our commands
   lando.events.on('post-bootstrap', 1, function(lando) {
-    lando.tasks.addTask('config', require('./tasks/config')(lando));
-    lando.tasks.addTask('destroy', require('./tasks/destroy')(lando));
-    lando.tasks.addTask('info', require('./tasks/info')(lando));
-    lando.tasks.addTask('list', require('./tasks/list')(lando));
-    lando.tasks.addTask('poweroff', require('./tasks/poweroff')(lando));
-    lando.tasks.addTask('rebuild', require('./tasks/rebuild')(lando));
-    lando.tasks.addTask('restart', require('./tasks/restart')(lando));
-    lando.tasks.addTask('start', require('./tasks/start')(lando));
-    lando.tasks.addTask('stop', require('./tasks/stop')(lando));
-    lando.tasks.addTask('version', require('./tasks/version')(lando));
+    lando.tasks.add('config', require('./tasks/config')(lando));
+    lando.tasks.add('destroy', require('./tasks/destroy')(lando));
+    lando.tasks.add('info', require('./tasks/info')(lando));
+    lando.tasks.add('list', require('./tasks/list')(lando));
+    lando.tasks.add('poweroff', require('./tasks/poweroff')(lando));
+    lando.tasks.add('rebuild', require('./tasks/rebuild')(lando));
+    lando.tasks.add('restart', require('./tasks/restart')(lando));
+    lando.tasks.add('start', require('./tasks/start')(lando));
+    lando.tasks.add('stop', require('./tasks/stop')(lando));
+    lando.tasks.add('version', require('./tasks/version')(lando));
   });
 
 };

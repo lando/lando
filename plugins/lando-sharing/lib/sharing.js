@@ -120,7 +120,7 @@ module.exports = function(lando) {
         // local webroot exists
         _.forEach(shares, function(share, service) {
 
-          // Add the app object
+          // ADd our share to the info
           app.info[service].share = share;
 
           // Log

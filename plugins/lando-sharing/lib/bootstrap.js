@@ -11,13 +11,13 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
 
-  // Add in some high level config for our proxy
+  // Add in some high level config for our sharing
   lando.events.on('post-bootstrap', function(lando) {
 
     // Log
     lando.log.info('Initializing sharing');
 
-    // Proxy defaults
+    // Sharing defaults
     var defaults = {
       sharing: 'ON'
     };
