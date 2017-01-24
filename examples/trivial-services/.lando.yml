@@ -7,8 +7,12 @@ proxy:
   appserver:
     - port: 80/tcp
       default: true
+    - port: 443/tcp
+      secure: true
+      default: true
 services:
   appserver:
-    type: nginx:1.8.1
+    type: nginx:1.11
     ssl: true
-
+    config:
+      server: config/server.conf

@@ -10,6 +10,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var path = require('path');
 
   /**
    * Supported versions for nginx
@@ -45,18 +46,32 @@ module.exports = function(lando) {
       image: 'nginx:' + config.version,
       ports: ['80'],
       environment: {
-        HOME: '/usr/share/nginx/html',
         TERM: 'xterm'
       },
+      command: 'nginx -g "daemon off;"',
       volumes: [
         '$LANDO_APP_ROOT_BIND:/app',
+        '$LANDO_ENGINE_HOME:/user',
       ],
       'volumes_from': ['data']
     };
 
     // Handle ssl option
     if (config.ssl) {
+
+      // Add the SSL port
       nginx.ports.push('443');
+
+      // If we don't have a custom default ssl config lets use the default one
+      var confDir = lando.config.engineConfigDir;
+      var sslFile = path.join(confDir, 'nginx', 'default-ssl.conf');
+      nginx.volumes.push([sslFile, configFiles.server].join(':'));
+
+      // Add in an add cert task
+      var scriptsDir = lando.config.engineScriptsDir;
+      var acFile = path.join(scriptsDir, 'add-cert.sh');
+      nginx.volumes.push([acFile, '/scripts/add-cert.sh'].join(':'));
+
     }
 
     // Handle custom config files
@@ -82,7 +97,8 @@ module.exports = function(lando) {
 
   return {
     builder: builder,
-    versions: versions
+    versions: versions,
+    configDir: __dirname
   };
 
 };

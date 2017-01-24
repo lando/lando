@@ -10,7 +10,69 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var fs = lando.node.fs;
   var path = require('path');
+
+  /*
+   * Helper to move conf into a mountable dir
+   */
+  var moveConfig = function(service, dir) {
+
+    // Copy opts and filter out all js files
+    // We dont want to give the false impression that you can edit the JS
+    var copyOpts = {
+      overwrite: true,
+      filter: function(file) {
+        return (path.extname(file) !== '.js');
+      }
+    };
+
+    // Ensure userconf root exists
+    var ucr = lando.config.userConfRoot;
+    var newConfDir = path.join(ucr, 'services', 'config', service);
+    fs.mkdirpSync(newConfDir);
+
+    // Copy the old root to the new root
+    // NOTE: we do not overwrite to allow user customization
+    fs.copySync(dir, newConfDir, copyOpts);
+
+    // Return the new scripts directory
+    return newConfDir;
+
+  };
+
+  /*
+   * Set the global docker entrypoint
+   */
+  var setEntrypoint = function(container) {
+
+    // Entrypoint files
+    var hostEntrypoint = '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh';
+    var contEntrypoint = '/lando-entrypoint.sh';
+
+    // Volumes
+    var volumes = container.volumes || [];
+    volumes.push([hostEntrypoint, contEntrypoint].join(':'));
+
+    // Add our things to the container
+    container.entrypoint = contEntrypoint;
+    container.volumes = volumes;
+
+    // Return the container
+    return container;
+
+  };
+
+  // Move our scripts over and set useful ENV we can use
+  var scriptsDir = path.join(__dirname, '..', 'scripts');
+  scriptsDir = moveConfig('scripts', scriptsDir);
+  lando.config.engineScriptsDir = scriptsDir;
+  lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = scriptsDir;
+
+  // Set an envvar for our config directory
+  var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
+  lando.config.engineConfigDir = confDir;
+  lando.config.env.LANDO_ENGINE_CONFIG_DIR = confDir;
 
   // Registry of services
   var registry = {};
@@ -54,8 +116,28 @@ module.exports = function(lando) {
     // Add a version from the tag if available
     config.version = type.split(':')[1] || 'latest';
 
-    // Return the built service
-    return registry[service].builder(name, config);
+    // Move our config into the userconfroot if we have some
+    // NOTE: we need to do this because on macOS and Windows not all host files
+    // are shared into the docker vm
+    if (_.has(registry[service], 'configDir')) {
+      moveConfig(service, registry[service].configDir);
+    }
+
+    // Get the containers
+    var containers = registry[service].builder(name, config);
+
+    // Add in the our global docker entrypoint
+    // NOTE: this can be overridden down the stream
+    containers[name] = setEntrypoint(containers[name]);
+
+    // Add in some helpful ENVs
+    var env = containers[name].environment || {};
+    env.LANDO_SERVICE_NAME = name;
+    env.LANDO_SERVICE_TYPE = service;
+    containers[name].environment = env;
+
+    // Return the built services
+    return containers;
 
   };
 
