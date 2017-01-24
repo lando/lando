@@ -1,6 +1,6 @@
 name: trivial-services
 sharing:
-  appserver:
+  data:
     local: .
     remote: /usr/share/nginx/html
 proxy:
@@ -10,3 +10,4 @@ proxy:
 services:
   appserver:
     type: nginx:1.8.1
+
