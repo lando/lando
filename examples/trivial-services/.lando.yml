@@ -10,4 +10,5 @@ proxy:
 services:
   appserver:
     type: nginx:1.8.1
+    ssl: true
 

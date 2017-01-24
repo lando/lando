@@ -18,14 +18,58 @@ module.exports = function(lando) {
     // them into correct containers definition
     if (!_.isEmpty(app.config.services)) {
       _.forEach(app.config.services, function(service, name) {
-        app.containers[name] = lando.services.build(service.type, service);
+
+        // Get our new containers
+        var newContainers = lando.services.build(name, service.type, service);
+
+        // Loop through and merge each one in
+        _.forEach(newContainers, function(container, key) {
+
+          // Get our old container or empty object
+          var oldContainer = app.containers[key] || {};
+
+          // Merge the new container ontop of the old
+          container = _.merge(oldContainer, container);
+
+          // Clone deeply
+          app.containers[key] = _.cloneDeep(container);
+
+        });
+
       });
     }
 
     // Add services to our app as needed
     app.events.on('app-info', function() {
 
-      //console.log(app.info);
+      //console.log(app.containers);
+
+    });
+
+    /*
+     * We don't want to uninstall our data container on a rebuild
+     * so remove the data container from here
+     *
+     * NOTE: this is a nifty implementation where we inception some events
+     * to target exactly what we want
+     */
+    app.events.on('pre-rebuild', function() {
+
+      // We want to edit our engine remove things
+      lando.events.on('pre-engine-destroy', function(data) {
+
+        // Make sure opts is set
+        data.opts = data.opts || {};
+
+        // Remove the data element
+        var withoutData = _.remove(_.keys(data.containers), function(name) {
+          return name !== 'data';
+        });
+
+        // Update data to note remove data services on rebuilds
+        data.opts.services = withoutData;
+
+      });
 
     });
 

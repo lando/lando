@@ -20,7 +20,7 @@ module.exports = function(lando) {
     app.events.on('post-start', 9, function() {
 
       // Get app URLs
-      var urls = _.flatMap(app.info, 'urls');
+      var urls = _.filter(_.flatMap(app.info, 'urls'), _.identity);
 
       // Scan the urls
       return lando.utils.scanUrls(urls, {max: 3})

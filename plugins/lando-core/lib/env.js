@@ -58,9 +58,17 @@ module.exports = function(lando) {
           var env = container.environment || {};
           var labels = container.labels || {};
 
-          // Merge in our globals underneath
-          container.environment = _.merge(app.env, env);
-          container.labels = _.merge(app.labels, labels);
+          // Add our env globals
+          _.forEach(app.env, function(value, key) {
+            env[key] = value;
+          });
+          container.environment = env;
+
+          // Add our global labels
+          _.forEach(app.labels, function(value, key) {
+            labels[key] = value;
+          });
+          container.labels = labels;
 
           // Reset the app conatiner
           app.containers[service] = _.cloneDeep(container);
