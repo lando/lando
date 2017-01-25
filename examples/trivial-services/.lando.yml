@@ -16,3 +16,7 @@ services:
     ssl: true
     config:
       server: config/server.conf
+    compose:
+      environment:
+        THING: STUFF
+      ports: ['8080:80']

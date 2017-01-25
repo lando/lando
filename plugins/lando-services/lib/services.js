@@ -176,6 +176,11 @@ module.exports = function(lando) {
     env.LANDO_SERVICE_TYPE = service;
     containers[name].environment = env;
 
+    // Process any compose overrides we might have
+    if (_.has(config, 'compose')) {
+      containers[name] = _.merge(containers[name], config.compose);
+    }
+
     // Return the built services
     return containers;
 
