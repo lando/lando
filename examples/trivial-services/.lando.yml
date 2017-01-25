@@ -1,15 +1,18 @@
 name: trivial-services
 sharing:
   data:
-    local: .
+    local: www
     remote: /usr/share/nginx/html
 proxy:
   appserver:
     - port: 80/tcp
       default: true
+    - port: 443/tcp
+      default: true
+      secure: true
 services:
   appserver:
-    type: nginx
+    type: nginx:stable
     ssl: true
     config:
       server: config/server.conf

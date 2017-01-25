@@ -150,6 +150,12 @@ module.exports = function(lando) {
     // Add a version from the tag if available
     config.version = type.split(':')[1] || 'latest';
 
+    // If this version is not supported through a warning and return
+    if (!_.includes(registry[service].versions, config.version)) {
+      lando.log.warn('%s version %s not supported.', service, config.version);
+      return {};
+    }
+
     // Move our config into the userconfroot if we have some
     // NOTE: we need to do this because on macOS and Windows not all host files
     // are shared into the docker vm

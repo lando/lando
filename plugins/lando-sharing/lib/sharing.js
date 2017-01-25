@@ -119,19 +119,21 @@ module.exports = function(lando) {
         // Add the shares directly to the app info and make sure
         // local webroot exists
         _.forEach(shares, function(share, service) {
+          if (app.info[service]) {
 
-          // ADd our share to the info
-          app.info[service].share = share;
+            // ADd our share to the info
+            app.info[service].share = share;
 
-          // Log
-          lando.log.verbose(
-            'Sharing from %s to %s on %s for %s',
-            share.local, share.remote, service, app.name
-          );
+            // Log
+            lando.log.verbose(
+              'Sharing from %s to %s on %s for %s',
+              share.local, share.remote, service, app.name
+            );
 
-          // Ensure the local webroot exists
-          fs.mkdirpSync(path.join(app.root, app.info[service].share.local));
+            // Ensure the local webroot exists
+            fs.mkdirpSync(path.join(app.root, app.info[service].share.local));
 
+          }
         });
 
         // Get the compose files we need to merge

@@ -481,19 +481,20 @@ module.exports = function(lando) {
               // Add the parsed services to the app
               app.proxy = parseServices(app, ports);
 
-              // Add URLS to the app info
+              // Add URLS to the app info if applicable
               _.forEach(app.proxy, function(service) {
+                if (app.info[service.name]) {
 
-                // Get old urls
-                var old = app.info[service.name].urls || [];
-                var updated = _.map(service.routes, 'urls');
+                  // Get old urls
+                  var old = app.info[service.name].urls || [];
+                  var updated = _.map(service.routes, 'urls');
 
-                // Log
-                lando.log.debug('Adding app URLs', updated);
+                  // Log
+                  lando.log.debug('Adding app URLs', updated);
 
-                // Merge our list together
-                app.info[service.name].urls = _.flatten(old.concat(updated));
-
+                  // Merge our list together
+                  app.info[service.name].urls = _.flatten(old.concat(updated));
+                }
               });
 
             }
