@@ -1,7 +1,7 @@
 /**
- * Lando nginx service builder
+ * Lando apache service builder
  *
- * @name nginx
+ * @name apache
  */
 
 'use strict';
@@ -15,22 +15,19 @@ module.exports = function(lando) {
   var normalizePath = lando.services.normalizePath;
 
   /**
-   * Supported versions for nginx
+   * Supported versions for apache
    */
   var versions = [
-    '1.8.1',
-    '1.10.2',
-    '1.10',
-    'stable',
-    '1.11.8',
-    '1',
-    '1.11',
-    'mainline',
+    '2',
+    '2.2.23',
+    '2.2',
+    '2.4.25',
+    '2.4',
     'latest'
   ];
 
   /**
-   * Build out nginx
+   * Build out apache
    */
   var builder = function(name, config) {
 
@@ -39,19 +36,18 @@ module.exports = function(lando) {
 
     // Define config mappings
     var configFiles = {
-      http: '/etc/nginx/nginx.conf',
-      server: '/etc/nginx/conf.d/default.conf',
-      webroot: '/usr/share/nginx/html'
+      server: '/usr/local/apache2/conf/httpd.conf',
+      webroot: '/usr/local/apache2/htdocs'
     };
 
-    // Default nginx service
-    var nginx = {
-      image: 'nginx:' + config.version,
+    // Default apache service
+    var apache = {
+      image: 'httpd:' + config.version,
       ports: ['80'],
       environment: {
         TERM: 'xterm'
       },
-      command: 'nginx -g "daemon off;"',
+      command: 'httpd-foreground',
       volumes: [
         '$LANDO_APP_ROOT_BIND:/app',
         '$LANDO_ENGINE_HOME:/user',
@@ -63,21 +59,21 @@ module.exports = function(lando) {
     if (config.ssl) {
 
       // Add the SSL port
-      nginx.ports.push('443');
+      apache.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
-      var defaultSSLConfig = ['nginx', 'default-ssl.conf'];
-      nginx.volumes.push(addConfig(defaultSSLConfig, configFiles.server));
+      var defaultSSLConfig = ['apache', 'httpd-ssl.conf'];
+      apache.volumes.push(addConfig(defaultSSLConfig, configFiles.server));
 
       // Add in an add cert task
-      nginx.volumes.push(addScript('add-cert.sh'));
+      apache.volumes.push(addScript('add-cert.sh'));
 
     }
 
     // Handle custom config files
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        nginx.volumes.push(normalizePath(config.config[type], file));
+        apache.volumes.push(normalizePath(config.config[type], file));
       }
     });
 
@@ -88,7 +84,7 @@ module.exports = function(lando) {
     };
 
     // Put it all together
-    services[name] = nginx;
+    services[name] = apache;
 
     // Return our service
     return services;

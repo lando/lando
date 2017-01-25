@@ -21,7 +21,7 @@ module.exports = function(lando) {
     // Copy opts and filter out all js files
     // We dont want to give the false impression that you can edit the JS
     var copyOpts = {
-      overwrite: false,
+      overwrite: true,
       filter: function(file) {
         return (path.extname(file) !== '.js');
       }

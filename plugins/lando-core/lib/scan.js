@@ -23,7 +23,7 @@ module.exports = function(lando) {
       var urls = _.filter(_.flatMap(app.info, 'urls'), _.identity);
 
       // Scan the urls
-      return lando.utils.scanUrls(urls, {max: 3})
+      return lando.utils.scanUrls(urls, {max: 10})
 
       // Add our URLS to the app
       .then(function(urls) {

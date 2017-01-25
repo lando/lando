@@ -1,0 +1,20 @@
+name: apache
+sharing:
+  data:
+    local: .
+    remote: /usr/local/apache2/htdocs/
+proxy:
+  html:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  html:
+    type: apache
+    ssl: true
+    compose:
+      environment:
+        STUFF: THINGS
+      ports: ['8081:80']

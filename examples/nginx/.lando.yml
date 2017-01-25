@@ -1,0 +1,22 @@
+name: nginx
+sharing:
+  data:
+    local: www
+    remote: /usr/share/nginx/html
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  appserver:
+    type: nginx:stable
+    ssl: true
+    config:
+      server: config/server.conf
+    compose:
+      environment:
+        THING: STUFF
+      ports: ['8080:80']
