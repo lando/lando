@@ -21,7 +21,7 @@ module.exports = function(lando) {
     // Copy opts and filter out all js files
     // We dont want to give the false impression that you can edit the JS
     var copyOpts = {
-      overwrite: true,
+      overwrite: false,
       filter: function(file) {
         return (path.extname(file) !== '.js');
       }
@@ -29,15 +29,18 @@ module.exports = function(lando) {
 
     // Ensure userconf root exists
     var ucr = lando.config.userConfRoot;
-    var newConfDir = path.join(ucr, 'services', 'config', service);
-    fs.mkdirpSync(newConfDir);
+    var newDir = path.join(ucr, 'services', 'config', service);
+    fs.mkdirpSync(newDir);
 
     // Copy the old root to the new root
     // NOTE: we do not overwrite to allow user customization
-    fs.copySync(dir, newConfDir, copyOpts);
+    fs.copySync(dir, newDir, copyOpts);
+
+    // Log
+    lando.log.verbose('Copying %s config from %s to %s', service, dir, newDir);
 
     // Return the new scripts directory
-    return newConfDir;
+    return newDir;
 
   };
 
@@ -150,6 +153,10 @@ module.exports = function(lando) {
     // Add a version from the tag if available
     config.version = type.split(':')[1] || 'latest';
 
+    // Log
+    lando.log.verbose('Building %s %s ad %s', service, config.version, name);
+    lando.log.debug('Building %s with config', name, config);
+
     // If this version is not supported through a warning and return
     if (!_.includes(registry[service].versions, config.version)) {
       lando.log.warn('%s version %s not supported.', service, config.version);
@@ -169,6 +176,7 @@ module.exports = function(lando) {
     // Add in the our global docker entrypoint
     // NOTE: this can be overridden down the stream
     containers[name] = setEntrypoint(containers[name]);
+    lando.log.debug('Setting default entrypoint for %s', name);
 
     // Add in some helpful ENVs
     var env = containers[name].environment || {};
@@ -178,6 +186,7 @@ module.exports = function(lando) {
 
     // Process any compose overrides we might have
     if (_.has(config, 'compose')) {
+      lando.log.debug('Overriding %s with', name, config.compose);
       containers[name] = _.merge(containers[name], config.compose);
     }
 

@@ -39,10 +39,14 @@ module.exports = function(lando) {
       });
     }
 
-    // Add services to our app as needed
+    // Add types to our app as needed
     app.events.on('app-info', function() {
 
-      //console.log(app.containers);
+      // Go through each container and get and set the type
+      _.forEach(app.info, function(container, key) {
+        var type = _.get(app, 'config.services.' + key + '.type', 'custom');
+        app.info[key].type = type;
+      });
 
     });
 
@@ -65,6 +69,9 @@ module.exports = function(lando) {
         var withoutData = _.remove(_.keys(data.containers), function(name) {
           return name !== 'data';
         });
+
+        // Log
+        lando.log.debug('Removing data container from %s rebuild', app.name);
 
         // Update data to note remove data services on rebuilds
         data.opts.services = withoutData;
