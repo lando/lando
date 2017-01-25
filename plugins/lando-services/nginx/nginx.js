@@ -10,7 +10,9 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var path = require('path');
+  var addConfig = lando.services.addConfig;
+  var addScript = lando.services.addScript;
+  var normalizePath = lando.services.normalizePath;
 
   /**
    * Supported versions for nginx
@@ -63,21 +65,18 @@ module.exports = function(lando) {
       nginx.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
-      var confDir = lando.config.engineConfigDir;
-      var sslFile = path.join(confDir, 'nginx', 'default-ssl.conf');
-      nginx.volumes.push([sslFile, configFiles.server].join(':'));
+      var defaultSSLConfig = ['nginx', 'default-ssl.conf'];
+      nginx.volumes.push(addConfig(defaultSSLConfig, configFiles.server));
 
       // Add in an add cert task
-      var scriptsDir = lando.config.engineScriptsDir;
-      var acFile = path.join(scriptsDir, 'add-cert.sh');
-      nginx.volumes.push([acFile, '/scripts/add-cert.sh'].join(':'));
+      nginx.volumes.push(addScript('add-cert.sh'));
 
     }
 
     // Handle custom config files
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        nginx.volumes.push(lando.services.setConfig(config.config[type], file));
+        nginx.volumes.push(normalizePath(config.config[type], file));
       }
     });
 

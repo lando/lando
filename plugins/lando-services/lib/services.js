@@ -92,9 +92,9 @@ module.exports = function(lando) {
   };
 
   /**
-   * Helper to ensure config files exist and are good
+   * Helper to ensure config files are expanded properly
    */
-  var setConfig = function(local, remote) {
+  var normalizePath = function(local, remote) {
 
     // Normalize the path
     var isAbs = path.isAbsolute(local);
@@ -102,6 +102,40 @@ module.exports = function(lando) {
 
     // Return volume mount
     return [local, remote].join(':');
+
+  };
+
+  /**
+   * Helper function to inject config
+   */
+  var addConfig = function(local, remote) {
+
+    // Figure out the deal with local
+    if (_.isString(local)) {
+      local = [local];
+    }
+
+    // Transform into path
+    local = local.join(path.sep);
+
+    // Construct the local path
+    var localFile = path.join(lando.config.engineConfigDir, local);
+
+    // Return the volume
+    return [localFile, remote].join(':');
+
+  };
+
+  /**
+   * Helper function to inject scripts
+   */
+  var addScript = function(script) {
+
+    // Construct the local path
+    var localFile = path.join(lando.config.engineScriptsDir, script);
+
+    // Return the volume
+    return [localFile, '/scripts/' + script].join(':');
 
   };
 
@@ -143,7 +177,9 @@ module.exports = function(lando) {
 
   return {
     add: add,
-    setConfig: setConfig,
+    addConfig: addConfig,
+    addScript: addScript,
+    normalizePath: normalizePath,
     build: build,
     get: get
   };
