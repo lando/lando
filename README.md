@@ -5,7 +5,7 @@
 Installation
 ---
 
-* `git clone git@github.com:pirog/lando.git`
+* `git clone git@github.com:kalabox/lando.git`
 * `cd lando`
 * `npm install`
 * `ln -s {/path/to/lando/}bin/lando.js /usr/local/bin`
