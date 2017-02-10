@@ -26,7 +26,8 @@ module.exports = function(lando) {
     '1',
     '1.11',
     'mainline',
-    'latest'
+    'latest',
+    'custom'
   ];
 
   /**
@@ -51,11 +52,8 @@ module.exports = function(lando) {
       environment: {
         TERM: 'xterm'
       },
+      volumes: [],
       command: 'nginx -g "daemon off;"',
-      volumes: [
-        '$LANDO_APP_ROOT_BIND:/app',
-        '$LANDO_ENGINE_HOME:/user',
-      ],
       'volumes_from': ['data']
     };
 

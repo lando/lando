@@ -25,6 +25,7 @@
     "fs-extra": "^0.18.2",
     "inquirer": "^2.0.0",
     "js-yaml": "^3.4.6",
+    "jsonfile": "^2.4.0",
     "lodash": "^4.15.0",
     "node-cache": "^4.1.1",
     "redis": "https://github.com/thinktandem/node_redis/tarball/master",

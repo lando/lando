@@ -1,0 +1,25 @@
+name: mariadb
+sharing:
+  data:
+    local: www
+    remote: /usr/share/nginx/html
+proxy:
+  html:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  html:
+    type: nginx
+    ssl: true
+  database:
+    type: mariadb
+    portforward: 3307
+    creds:
+      user: pirog
+      password: pirog
+      database: pirog
+    config:
+      confd: config

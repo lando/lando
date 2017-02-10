@@ -28,6 +28,7 @@ module.exports = function(lando) {
     // Add the services
     lando.services.add('nginx', require('./../nginx/nginx')(lando));
     lando.services.add('apache', require('./../apache/apache')(lando));
+    lando.services.add('mariadb', require('./../mariadb/mariadb')(lando));
 
   });
 

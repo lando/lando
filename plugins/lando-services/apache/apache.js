@@ -23,7 +23,8 @@ module.exports = function(lando) {
     '2.2',
     '2.4.25',
     '2.4',
-    'latest'
+    'latest',
+    'custom'
   ];
 
   /**
@@ -47,11 +48,8 @@ module.exports = function(lando) {
       environment: {
         TERM: 'xterm'
       },
+      volumes: [],
       command: 'httpd-foreground',
-      volumes: [
-        '$LANDO_APP_ROOT_BIND:/app',
-        '$LANDO_ENGINE_HOME:/user',
-      ],
       'volumes_from': ['data']
     };
 

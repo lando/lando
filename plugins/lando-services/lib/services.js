@@ -153,6 +153,12 @@ module.exports = function(lando) {
     // Add a version from the tag if available
     config.version = type.split(':')[1] || 'latest';
 
+    // Check to verify whether the service exists in the registry
+    if (!registry[service]) {
+      lando.log.warn('%s is not a supported service.', service);
+      return {};
+    }
+
     // Log
     lando.log.verbose('Building %s %s ad %s', service, config.version, name);
     lando.log.debug('Building %s with config', name, config);
@@ -183,6 +189,12 @@ module.exports = function(lando) {
     env.LANDO_SERVICE_NAME = name;
     env.LANDO_SERVICE_TYPE = service;
     containers[name].environment = env;
+
+    // Add in some helpful volumes
+    var volumes = containers[name].volumes || [];
+    volumes.push('$LANDO_APP_ROOT_BIND:/app');
+    volumes.push('$LANDO_ENGINE_HOME:/user');
+    containers[name].volumes = volumes;
 
     // Process any compose overrides we might have
     if (_.has(config, 'compose')) {
