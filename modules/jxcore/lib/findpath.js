@@ -1,4 +1,5 @@
-var fs = require('fs');
+'use strict';
+
 var path = require('path');
 var bindir = path.resolve(__dirname, '..', 'bin');
 
@@ -10,4 +11,4 @@ module.exports = function() {
     bin = path.join(bin, 'jx');
   }
   return bin;
-}
+};
