@@ -27,3 +27,7 @@ env.yml
 # gitbooks
 _books
 _book
+
+# Build dirs
+build
+dist
