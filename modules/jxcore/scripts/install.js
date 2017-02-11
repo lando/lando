@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var Download = require('download');
 var rimraf = require('rimraf');
 var semver = require('semver');
-var createBar = require('multimeter')(process);
 var path = require('path');
-var fs = require('fs');
 var merge = require('merge');
 var urlModule = require('url');
 var Decompress = require('decompress');
@@ -33,13 +33,15 @@ function logError(e) {
 }
 
 function cb(error) {
-  if( error != null ) {
-    return logError( error )
+
+  if (error !== null) {
+    return logError(error);
   }
 
   process.nextTick(function() {
     process.exit();
   });
+
 }
 
 if (v.prerelease && typeof v.prerelease[0] === 'string') {
@@ -50,7 +52,9 @@ if (v.prerelease && typeof v.prerelease[0] === 'string') {
   version += '-' + prerelease.join('-');
 }
 
-if (!getPkgType()) logError('Could not find a compatible version of nw.js to download for your platform.');
+if (!getPkgType()) {
+  logError('Could not find a compat version of nw.js to dl for your platform.');
+}
 
 var url = [
   'https://raw.githubusercontent.com/jxcore/jxcore-release/master/',
@@ -61,26 +65,21 @@ var url = [
 var dest = path.resolve(__dirname, '..', 'bin');
 rimraf.sync(dest);
 
-var bar = createBar({ before: url + ' [' });
-
-var total = 0;
-var progress = 0;
-
 var parsedUrl = urlModule.parse(url);
-var decompressOptions = { strip: 1, mode: '755' };
-if( parsedUrl.protocol == 'file:' ) {
-  if ( !fileExists(parsedUrl.path) ) {
+var decompressOptions = {strip: 1, mode: '755'};
+if (parsedUrl.protocol === 'file:') {
+  if (fileExists(parsedUrl.path)) {
     logError('Could not find ' + parsedUrl.path);
   }
   new Decompress()
-    .src( parsedUrl.path )
-    .dest( dest )
-    .use( Decompress.zip(decompressOptions) )
-    .use( Decompress.targz(decompressOptions) )
-    .run( cb );
+    .src(parsedUrl.path)
+    .dest(dest)
+    .use(Decompress.zip(decompressOptions))
+    .use(Decompress.targz(decompressOptions))
+    .run(cb);
 } else {
-  new Download(merge({ extract: true }, decompressOptions))
-    .get( url )
-    .dest( dest )
-    .run( cb );
+  new Download(merge({extract: true}, decompressOptions))
+    .get(url)
+    .dest(dest)
+    .run(cb);
 }
