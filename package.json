@@ -44,6 +44,7 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-jscs": "~0.8.1",
     "jshint-stylish": "~1.0.0",
+    "jxcore": "file:./modules/jxcore",
     "matchdep": "^0.3.0"
   }
 }
