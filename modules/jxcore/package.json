@@ -1,0 +1,20 @@
+{
+  "name": "jxcore",
+  "version": "0.3.1",
+  "subpatch": "1",
+  "description": "NPM based dependency downloader",
+  "scripts": {
+    "postinstall": "node scripts/install.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "decompress": "^2.2.1",
+    "download": "^3.3.0",
+    "file-exists": "^0.1.1",
+    "merge": "^1.2.0",
+    "multimeter": "^0.1.1",
+    "rimraf": "^2.2.8",
+    "semver": "^4.3.0",
+    "chalk": "~1.0.0"
+  }
+}
