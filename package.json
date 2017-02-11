@@ -1,15 +1,15 @@
 {
   "name": "lando",
-  "description": "",
+  "description": "The best local development solution in the galaxy.",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pirog/lando"
+    "url": "https://github.com/kalabox/lando"
   },
   "bugs": {
     "email": "mike@thinktandem.io",
-    "url": "https://github.com/pirog/lando/issues"
+    "url": "https://github.com/kalabox/lando/issues"
   },
   "main": "lib/lando.js",
   "bin": {
@@ -44,7 +44,6 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-jscs": "~0.8.1",
     "jshint-stylish": "~1.0.0",
-    "jxcore": "file:./modules/jxcore",
     "matchdep": "^0.3.0"
   }
 }
