@@ -1,7 +1,5 @@
 # lando
 
-![Lando](lando.jpg)
-
 Installation
 ---
 
