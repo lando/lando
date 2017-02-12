@@ -30,7 +30,6 @@
     "node-cache": "^4.1.1",
     "redis": "https://github.com/thinktandem/node_redis/tarball/master",
     "restler": "^3.4.0",
-    "sha1": "^1.1.0",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
     "shelljs": "^0.6.0",
     "sync-exec": "^0.6.2",
