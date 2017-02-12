@@ -13,8 +13,8 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
 
-  // Add in some high level config so our app can handle
-  lando.events.on('post-instantiate-app', 1, function(app) {
+  // Get the app object so we can do app things
+  lando.events.on('post-instantiate-app', function(app) {
 
     // Scan our URLs and add a list of them and their status to the app
     app.events.on('post-start', 9, function() {
