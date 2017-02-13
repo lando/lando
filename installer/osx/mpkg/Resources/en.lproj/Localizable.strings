@@ -1,0 +1,13 @@
+'lando_title' = 'Lando';
+
+'choiceLando_title' = 'Lando %LANDO_VERSION%';
+'choiceLando_msg' = 'Installs Lando into /usr/local/bin/';
+
+'choiceDocker_title' = 'Docker %DOCKER_VERSION%';
+'choiceDocker_msg' = 'Installs Docker into /Applications/';
+
+'UNSUPPORTED_HW_MACHINE_TLE' = "Unsupported hardware architecture detected!";
+'UNSUPPORTED_HW_MACHINE_MSG' = "The installer has detected an unsupported architecture. Lando only runs on the x64 and amd64 architectures.";
+
+'UNSUPPORTED_OS_TLE' = "Unsupported OS version detected!";
+'UNSUPPORTED_OS_MSG' = "The installer has detected an unsupported operation system. Please upgrade to Mac OS X 10.8 or later.";

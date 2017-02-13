@@ -1,0 +1,46 @@
+#!/bin/bash
+set -e -x
+
+LANDO_ROOT=/usr/share/lando
+PATH=$PATH:/usr/local/bin
+TERM=xterm
+
+# Set some permissions
+chmod 755 -R "$LANDO_ROOT"
+
+# we only need to do this if upstart isn't in charge
+if ! { [ -x /sbin/initctl ] && /sbin/initctl version 2>/dev/null | grep -q upstart; }; then
+  command -v foo >/dev/null 2>&1 && { update-rc.d lando defaults > /dev/null || true; }
+fi
+
+# We are probably on systemd?
+if [ -d /run/systemd/system ]; then
+  if ! { [ -x "$(which systemctl)" ] && "$(which systemctl)" version 2>/dev/null; }; then
+    systemctl start lando.service
+    systemctl enable lando.service
+  fi
+else
+  # Set up and run our altdaemon
+  if [ -n "$2" ]; then
+    _dh_action=restart
+  else
+    _dh_action=start
+  fi
+  service lando $_dh_action 2>/dev/null || true
+fi
+
+# Symlink the lando binary
+mkdir -p /usr/local/bin
+ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
+
+# Add an entry to the system menu
+XDG_DESKTOP_MENU="$(which xdg-desktop-menu 2> /dev/null)"
+if [ ! -x "$XDG_DESKTOP_MENU" ]; then
+  echo "WARNING: Could not find xdg-desktop-menu" >&2
+else
+  # We need this directory to exist
+  mkdir -p /usr/share/desktop-directories/
+  # Set the menu things
+  "$XDG_DESKTOP_MENU" install --novendor --mode system /usr/share/applications/lando.desktop
+  "$XDG_DESKTOP_MENU" forceupdate --mode system
+fi

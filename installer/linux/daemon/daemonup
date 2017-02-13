@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+# Up the d
+/usr/share/lando/bin/docker daemon \
+  -D \
+  --bridge=lando0 \
+  --group=$(echo $(getent group sudo || getent group wheel) | awk -F':' {' print $1 '}) \
+  --exec-root=/usr/share/lando/docker.exec \
+  --graph=/usr/share/lando/docker.graph \
+  --host=unix:///usr/share/lando/docker.socket \
+  --host=tcp://10.13.37.100:2375 \
+  --pidfile=/usr/share/lando/docker.pid
