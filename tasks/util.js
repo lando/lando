@@ -20,7 +20,7 @@ module.exports = function() {
         createTag: true,
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
-        push: false,
+        push: true,
         pushTo: 'origin',
         gitDescribeOptions: '--tags --always --abbrev=1',
         globalReplace: false,

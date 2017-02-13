@@ -73,4 +73,4 @@ deploy:
     skip_cleanup: true
     on:
       repo: kalabox/lando
-      branch: 5-installTest
+      branch: master

@@ -74,7 +74,7 @@ deploy:
     set_public: true
     artifact: weezer
     on:
-      branch: 5-installTest
+      branch: master
 notifications:
   - provider: Email
     to:
