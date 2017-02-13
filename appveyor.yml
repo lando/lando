@@ -1,0 +1,84 @@
+init:
+  - git config --global core.autocrlf true
+platform: x64
+environment:
+  nodejs_version: "6"
+
+install:
+
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version x64
+
+  # Install InnoSetup
+  - choco install -y InnoSetup
+  - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
+
+  # install relevant things
+  - npm install -g grunt-cli
+
+  # Build the things
+  # Need to do this first because it installs JX for us
+  - npm install
+
+  # Edit the package.json if this isn't an official release
+  - IF NOT DEFINED APPVEYOR_REPO_TAG_NAME (node .\scripts\dev-version.js)
+
+  # Define the travis tag as "latest-dev" if its not already defined
+  - IF NOT DEFINED APPVEYOR_REPO_TAG_NAME (SET APPVEYOR_REPO_TAG_NAME=latest-dev)
+
+  # Nice dev helpers to verify our env
+  - scripts\appveyor-env.bat
+
+  # Sanity checks
+  - node --version
+  - npm --version
+  - grunt --version
+  - node bin\lando.js version
+  # Iscc has no version option and returns exit code 1 by default
+  # This can never fail but at least we can check the output to verify
+  - iscc | echo
+
+  # Run basic tests
+  - grunt test:code
+
+build_script:
+
+  # Build dev releases
+  - grunt pkg
+  - mkdir release
+  - copy "dist\lando.exe" "release\lando-%APPVEYOR_REPO_TAG_NAME%.exe"
+
+artifacts:
+  - path: release\*.exe
+    name: release
+
+after_build:
+  - ps: Get-ChildItem .\release\*.exe | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name -DeploymentName weezer }
+deploy:
+  - provider: GitHub
+    description: v$(LANDO_VERSION)
+    artifact: weezer
+    draft: false
+    auth_token:
+      secure: h95XRXK3tAJOZphssQ9dB3rpdK0y2I8VpakCR79+YwjZQOCW4YukAdCcwtBFdEoD
+    prerelease: false
+    on:
+      appveyor_repo_tag: true
+  - provider: S3
+    access_key_id:
+      secure: t16g2geIvu5qJVSiPzqxzUnk4+p9X1psf6e8RmUJPDk=
+    secret_access_key:
+      secure: o/pYPIuDU8SPSrTB15BwzlLrDXGuhhTJUWdWMyvDLnsAwC6uJmASPEATUX9CFIEW
+    bucket: installer.lndo.io
+    region: us-west-2
+    set_public: true
+    artifact: weezer
+    on:
+      branch: master
+notifications:
+  - provider: Email
+    to:
+      - mike@thinktandem.io
+      - alec@thinktandem.io
+      - geoff@thinktandem.io
+    on_build_status_changed: true

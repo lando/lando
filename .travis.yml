@@ -1,9 +1,20 @@
 language: node_js
 node_js:
-  - "4"
-sudo: required
+  - "6"
+matrix:
+  include:
+  - os: linux
+    env: LANDO_PKG_TYPE=rpm LANDO_SUDO_PASSWORD=
+    node_js: '4.2'
+  - os: linux
+    env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
+    node_js: '4.2'
+  - os: osx
+    env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
+    node_js: '4.2'
 services:
   - docker
+sudo: required
 
 before_install:
 
@@ -12,6 +23,9 @@ before_install:
 
 before_script:
 
+  # Edit the package.json if this isn't an official release
+  - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
+
   # Nice dev helpers to verify our env
   - ./scripts/travis-env.sh
 
@@ -19,8 +33,46 @@ before_script:
   - node --version
   - npm --version
   - grunt --version
+  - node bin/lando.js version
 
 script:
 
   # Run code and styling
   - grunt test:code
+
+  # Run the build
+  - mkdir -p release
+  - grunt pkg
+
+  # Name the release depending on whether it is an official release or not
+  - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi
+  - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE; fi
+
+notifications:
+  email:
+    recipients:
+    - mike@thinktandem.io
+    - alec@thinktandem.io
+    - geoff@thinktandem.io
+    on_success: always
+deploy:
+  - provider: releases
+    api_key:
+      secure: MDL8ub5md5MQFhcZrsX15qEJ9pJPrQ2jIzFQNergsXh3D0bEO3mNbeCcN9kI2S6chUIxpxwvoJnNXsN66ZNn3NzFVyf4QKQV6thBDFgapZN5sYk2u0QD6pyc9Q7RaRwGzqLXdRFdF0KRLPx0lH9DsA0RJ1t85vuBbUK9f/0ys1w=
+    file: release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
+    skip_cleanup: true
+    on:
+      repo: kalabox/lando
+      tags: true
+  - provider: s3
+    access_key_id: AKIAJO2C7GYG5GL5G74A
+    secret_access_key:
+      secure: Sr0cMoJ6ZtRSh4H6xwu/CV1pj5xaYgtE5vup80r4fDygfi5C/mFqzCOODWN928nzZHOXWkG13myhLgTztMYDkIkN+TIVP9BmHXpIqWaZsHeytrdLUJMSNsL1Dc8Ixm4kqJBqla9mRgjZaWYceDhbHFvdUZNA7s9Mr1fUUmGyYyI=
+    bucket: installer.lndo.io
+    local-dir: release
+    acl: public_read
+    region: us-west-2
+    skip_cleanup: true
+    on:
+      repo: kalabox/lando
+      branch: master
