@@ -39,9 +39,13 @@
     "yargs-parser": "^4.2.1"
   },
   "devDependencies": {
+    "enclose": "^2.2.0",
     "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-jscs": "~0.8.1",
+    "grunt-shell": "^1.1.1",
     "jshint-stylish": "~1.0.0",
     "matchdep": "^0.3.0"
   }

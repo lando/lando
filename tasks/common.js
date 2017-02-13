@@ -51,6 +51,6 @@ module.exports = {
   },
   files: {
     js: jsFiles,
-    build: cliBuildFiles
+    build: buildFiles
   }
 };
