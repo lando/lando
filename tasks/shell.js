@@ -25,6 +25,39 @@ module.exports = function(common) {
   };
 
   /*
+   * Run a default bash/sh/cmd script
+   */
+  var scriptTask = function(cmd) {
+
+    // "Constants"
+    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
+
+    // Return our shell task
+    return {
+      options: shellOpts,
+      command: cmd
+    };
+
+  };
+
+  /*
+   * Run a ps script
+   */
+  var psTask = function(cmd) {
+
+    // "Constants"
+    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
+    var entrypoint = 'PowerShell -NoProfile -ExecutionPolicy Bypass -Command';
+
+    // Return our ps task
+    return {
+      options: shellOpts,
+      command: [entrypoint, cmd, '&& EXIT /B %errorlevel%'].join(' ')
+    };
+
+  };
+
+  /*
    * Constructs the CLI PKG task
    */
   var cliPkgTask = function() {
@@ -73,7 +106,9 @@ module.exports = function(common) {
 
   // Return our things
   return {
-    cliPkgTask: cliPkgTask
+    cliPkgTask: cliPkgTask,
+    psTask: psTask,
+    scriptTask: scriptTask
   };
 
 };
