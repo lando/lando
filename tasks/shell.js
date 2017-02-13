@@ -67,7 +67,7 @@ module.exports = function(common) {
     var encloseBin = path.join(encloseDir, 'bin', 'enclose.js');
 
     // "Constants"
-    var pkgName = 'lando-' + common.lando.pkgType;
+    var pkgName = 'lando-' + common.lando.pkgSuffix;
     var configFile = path.resolve(__dirname, '..', 'encloseConfig.js');
     var entrypoint = path.resolve(__dirname, '..', 'bin', 'lando.js');
     var shellOpts = {
@@ -79,6 +79,7 @@ module.exports = function(common) {
 
     // Enclose package command
     var encloseCmd = [
+      'node',
       encloseBin,
       '-c ' + configFile,
       '-o ' + pkgName,

@@ -69,7 +69,7 @@ deploy:
       secure: hheF7PGTvLnmq4LzzxZv6/TyzBmPHkhxOVuQFzXZrFQ=
     secret_access_key:
       secure: n2Wto8btzQ6w029bsvN5POyXfbKs5sL5G83AUjaDvmOkqsoxIL8ijh+md+CkY4BS
-    bucket: installer.lndo.io
+    bucket: installer.kalabox.io
     region: us-west-2
     set_public: true
     artifact: weezer
