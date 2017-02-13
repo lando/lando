@@ -60,21 +60,21 @@ deploy:
     artifact: weezer
     draft: false
     auth_token:
-      secure: h95XRXK3tAJOZphssQ9dB3rpdK0y2I8VpakCR79+YwjZQOCW4YukAdCcwtBFdEoD
+      secure: 59olpXsQzG1FN5/M/VZJeMNdlwSoFn4L/Lefk/t3T4j39VF7y4paGsDG6CRuwZGD
     prerelease: false
     on:
       appveyor_repo_tag: true
   - provider: S3
     access_key_id:
-      secure: t16g2geIvu5qJVSiPzqxzUnk4+p9X1psf6e8RmUJPDk=
+      secure: hheF7PGTvLnmq4LzzxZv6/TyzBmPHkhxOVuQFzXZrFQ=
     secret_access_key:
-      secure: o/pYPIuDU8SPSrTB15BwzlLrDXGuhhTJUWdWMyvDLnsAwC6uJmASPEATUX9CFIEW
+      secure: n2Wto8btzQ6w029bsvN5POyXfbKs5sL5G83AUjaDvmOkqsoxIL8ijh+md+CkY4BS
     bucket: installer.lndo.io
     region: us-west-2
     set_public: true
     artifact: weezer
     on:
-      branch: master
+      branch: 5-installTest
 notifications:
   - provider: Email
     to:

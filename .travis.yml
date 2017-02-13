@@ -1,17 +1,15 @@
 language: node_js
-node_js:
-  - "6"
 matrix:
   include:
   - os: linux
     env: LANDO_PKG_TYPE=rpm LANDO_SUDO_PASSWORD=
-    node_js: '4.2'
+    node_js: '6'
   - os: linux
     env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
-    node_js: '4.2'
+    node_js: '6'
   - os: osx
     env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
-    node_js: '4.2'
+    node_js: '6'
 services:
   - docker
 sudo: required
@@ -19,7 +17,7 @@ sudo: required
 before_install:
 
   # Install some node deps
-  - npm install -g grunt-cli bower
+  - npm install -g grunt-cli
 
 before_script:
 
@@ -51,28 +49,27 @@ script:
 notifications:
   email:
     recipients:
-    - mike@thinktandem.io
-    - alec@thinktandem.io
-    - geoff@thinktandem.io
+      - mike@thinktandem.io
+      - alec@thinktandem.io
+      - geoff@thinktandem.io
     on_success: always
 deploy:
   - provider: releases
     api_key:
-      secure: MDL8ub5md5MQFhcZrsX15qEJ9pJPrQ2jIzFQNergsXh3D0bEO3mNbeCcN9kI2S6chUIxpxwvoJnNXsN66ZNn3NzFVyf4QKQV6thBDFgapZN5sYk2u0QD6pyc9Q7RaRwGzqLXdRFdF0KRLPx0lH9DsA0RJ1t85vuBbUK9f/0ys1w=
+      secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
     file: release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
     skip_cleanup: true
     on:
       repo: kalabox/lando
       tags: true
   - provider: s3
-    access_key_id: AKIAJO2C7GYG5GL5G74A
+    access_key_id: AKIAJXCGUYNMSXQPAKYQ
     secret_access_key:
-      secure: Sr0cMoJ6ZtRSh4H6xwu/CV1pj5xaYgtE5vup80r4fDygfi5C/mFqzCOODWN928nzZHOXWkG13myhLgTztMYDkIkN+TIVP9BmHXpIqWaZsHeytrdLUJMSNsL1Dc8Ixm4kqJBqla9mRgjZaWYceDhbHFvdUZNA7s9Mr1fUUmGyYyI=
-    bucket: installer.lndo.io
+      secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=    bucket: installer.kalabox.io
     local-dir: release
     acl: public_read
     region: us-west-2
     skip_cleanup: true
     on:
       repo: kalabox/lando
-      branch: master
+      branch: 5-installTest
