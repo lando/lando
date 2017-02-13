@@ -15,14 +15,16 @@ var shell = require('shelljs');
 
 // Get the location of the files we need to edit
 var files = bump.bump.options.files;
+var describeOptions = bump.bump.options.gitDescribeOptions;
 
 // Start our sacred promise
 return new Promise(function(resolve, reject) {
-  shell.exec(['git describe'], {silent: true}, function(code, stdout, stderr) {
+  shell.exec(['git describe ' + describeOptions], {silent: true}, function(code, stdout, stderr) {
     if (code !== 0) {
       reject(new Error('code: ' + code + 'err:' + stderr));
     }
     else {
+      console.log(stdout);
       resolve(stdout);
     }
   });
