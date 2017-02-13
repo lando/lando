@@ -25,6 +25,26 @@ module.exports = function(common) {
             mode: true
           }
         }
+      },
+      installer: {
+        build: {
+          cwd: 'installer/' + common.system.platform,
+          src: ['**'],
+          dest: 'build/installer',
+          expand: true,
+          options: {
+            mode: true
+          }
+        },
+        dist: {
+          cwd: 'build/installer/dist',
+          src: ['**'],
+          dest: 'dist/',
+          expand: true,
+          options: {
+            mode: true
+          }
+        }
       }
     },
 
@@ -33,6 +53,15 @@ module.exports = function(common) {
       cli: {
         build: ['build/cli'],
         dist: ['dist/cli']
+      },
+      installer: {
+        build: ['build/installer'],
+        dist: [
+          'dist/*.exe',
+          'dist/*.dmg',
+          'dist/*.rpm',
+          'dist/*.deb'
+        ]
       }
     }
 
