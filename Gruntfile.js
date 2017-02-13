@@ -9,6 +9,8 @@ module.exports = function(grunt) {
   var common = require('./tasks/common.js');
 
   // Load in delegated responsibilities because cleanliness => godliness
+  var fs = require('./tasks/fs.js')(common);
+  var shell = require('./tasks/shell.js')(common);
   var style = require('./tasks/style.js')(common);
 
   // Our Grut config object
@@ -16,7 +18,24 @@ module.exports = function(grunt) {
 
     // Linting, standards and styles tasks
     jshint: style.jshint,
-    jscs: style.jscs
+    jscs: style.jscs,
+
+    // Copying tasks
+    copy: {
+      cliBuild: fs.copy.cli.build,
+      cliDist: fs.copy.cli.dist
+    },
+
+    // Copying tasks
+    clean: {
+      cliBuild: fs.clean.cli.build,
+      cliDist: fs.clean.cli.dist
+    },
+
+    // Shell tasks
+    shell: {
+      cliPkg: shell.cliPkgTask()
+    }
 
   };
 
@@ -27,6 +46,15 @@ module.exports = function(grunt) {
   grunt.registerTask('test:code', [
     'jshint',
     'jscs'
+  ]);
+
+  // Pkg the CLI binary
+  grunt.registerTask('pkg:cli', [
+    'clean:cliBuild',
+    'clean:cliDist',
+    'copy:cliBuild',
+    'shell:cliPkg',
+    'copy:cliDist'
   ]);
 
 };
