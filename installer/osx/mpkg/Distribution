@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<installer-gui-script minSpecVersion="1">
+    <title>lando_title</title>
+    <options customize="allow" allow-external-scripts="yes" rootVolumeOnly="true" hostArchitectures="x86_64"/>
+    <welcome file="welcome.rtfd" mime-type="text/rtfd"/>
+
+    <choices-outline>
+        <line choice="choiceDocker"/>
+        <line choice="choiceLando"/>
+    </choices-outline>
+
+    <choice id="choiceLando" title="choiceLando_title" description="choiceLando_msg" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="io.lando.pkg.lando"/>
+    </choice>
+    <pkg-ref id="io.lando.pkg.lando" auth="Root" version="%LANDO_VERSION%" installKBytes="%LANDO_INSTALL_KBYTES%">#lando.pkg</pkg-ref>
+    <pkg-ref id="io.lando.pkg.lando">
+        <bundle-version/>
+    </pkg-ref>
+
+    <choice id="choiceDocker" title="choiceDocker_title" description="choiceDocker_msg" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="io.lando.pkg.docker"/>
+    </choice>
+    <pkg-ref id="io.lando.pkg.docker" auth="Root" version="%DOCKER_VERSION%" installKBytes="%DOCKER_INSTALL_KBYTES%">#docker.pkg</pkg-ref>
+    <pkg-ref id="io.lando.pkg.docker">
+        <bundle-version/>
+    </pkg-ref>
+
+    <product id="io.lando.mpkg.lando" version="%LANDO_VERSION%"/>
+
+    <!-- Manually imported VBox Stuff -->
+    <installation-check script="checkPrerequisite()"/>
+    <script>
+    <![CDATA[
+    /* js:pkmk:start */
+    function checkPrerequisite()
+    {
+       try
+       {
+           test = system.sysctl('hw.machine');
+           system.log("Hardware architecture detected: " + test);
+           result = (test == 'i386' || test == 'x86_64');
+       } catch (e) { system.log(e); result = false; }
+
+       if (!result)
+       {
+           my.result.type = 'Fatal';
+           my.result.title = system.localizedString('UNSUPPORTED_HW_MACHINE_TLE');
+           my.result.message = system.localizedString('UNSUPPORTED_HW_MACHINE_MSG');
+           return result;
+       }
+
+       try
+       {
+           test = system.version['ProductVersion'];
+           system.log("OS version detected: " + test);
+           result = (system.compareVersions(test, '10.8') >= 0);
+       } catch (e) { system.log(e); result = false; }
+
+       if (!result)
+       {
+           my.result.type = 'Fatal';
+           my.result.title = system.localizedString('UNSUPPORTED_OS_TLE');
+           my.result.message = system.localizedString('UNSUPPORTED_OS_MSG');
+           return result;
+       }
+
+       system.log("result:" + result);
+       return result;
+     }
+
+
+     /* js:pkmk:end */
+     ]]>
+    </script>
+</installer-gui-script>

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Declare
+# declare -r lando_bundle_dir=/Applications/Lando.app/Contents/MacOS
+
+# Unset some possibly bad things
+unset DYLD_LIBRARY_PATH
+unset LD_LIBRARY_PATH
+
+# Ensure app perms
+# chmod -R 755 /Applications/Lando.app/
+
+# Symlink the lando binary
+mkdir -p /usr/local/bin
+# ln -sF ${lando_bundle_dir}/bin/lando /usr/local/bin/lando
+
+# Fin

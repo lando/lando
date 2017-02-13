@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Set up bridge network:
+if ! ip link show lando0 > /dev/null 2>&1
+then
+  brctl addbr lando0
+fi
+
+# Try a few times
+NEXT_WAIT_TIME=0
+until ifconfig lando0 | grep 10.13.37.100 >/dev/null || [ $NEXT_WAIT_TIME -eq 5 ]; do
+  ip addr add "10.13.37.100/24" dev lando0
+  ip link set dev lando0 up
+  sleep $(( NEXT_WAIT_TIME++ ))
+done
