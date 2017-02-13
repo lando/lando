@@ -12,6 +12,7 @@ module.exports = function(grunt) {
   var fs = require('./tasks/fs.js')(common);
   var shell = require('./tasks/shell.js')(common);
   var style = require('./tasks/style.js')(common);
+  var util = require('./tasks/util.js')(common);
 
   // Our Grut config object
   var config = {
@@ -42,7 +43,10 @@ module.exports = function(grunt) {
       installerPkgosx: shell.scriptTask('./scripts/build-osx.sh'),
       installerPkglinux: shell.scriptTask('./scripts/build-linux.sh'),
       installerPkgwin32: shell.psTask('./scripts/build-win32.ps1')
-    }
+    },
+
+    // Utility tasks
+    bump: util.bump
 
   };
 
@@ -77,6 +81,21 @@ module.exports = function(grunt) {
     'pkg:cli',
     'shell:installerPkg' + common.system.platform,
     'copy:installerDist'
+  ]);
+
+  // Bump our minor version
+  grunt.registerTask('bigrelease', [
+    'bump:minor'
+  ]);
+
+  // Bump our patch version
+  grunt.registerTask('release', [
+    'bump:patch'
+  ]);
+
+  // Do a prerelease version
+  grunt.registerTask('prerelease', [
+    'bump:prerelease'
   ]);
 
 };
