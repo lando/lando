@@ -24,7 +24,6 @@ return new Promise(function(resolve, reject) {
       reject(new Error('code: ' + code + 'err:' + stderr));
     }
     else {
-      console.log(stdout);
       resolve(stdout);
     }
   });
