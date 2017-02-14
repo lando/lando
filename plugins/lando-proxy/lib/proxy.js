@@ -33,7 +33,7 @@ module.exports = function(lando) {
     return {
       image: 'kalabox/proxy:stable',
       environment: {
-        'DOMAIN': lando.config.proxyDomain || 'kbox.site'
+        'DOMAIN': lando.config.proxyDomain || 'lndo.site' || '.local'
       },
       labels: {
         'io.lando.container': 'TRUE'
