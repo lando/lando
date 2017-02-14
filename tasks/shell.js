@@ -25,6 +25,27 @@ module.exports = function(common) {
   };
 
   /*
+   * Returns a BATS task
+   */
+  var batsTask = function(files) {
+
+    // "Constants"
+    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
+
+    // BATS binary
+    var bin = 'node_modules/bats/libexec/bats';
+    var opts = '${CI:+--tap}';
+    var cmd = [bin, opts, files.join(' ')];
+
+    // Return our BATS task
+    return {
+      options: shellOpts,
+      command: cmd.join(' '),
+    };
+
+  };
+
+  /*
    * Run a default bash/sh/cmd script
    */
   var scriptTask = function(cmd) {
@@ -107,6 +128,7 @@ module.exports = function(common) {
 
   // Return our things
   return {
+    batsTask: batsTask,
     cliPkgTask: cliPkgTask,
     psTask: psTask,
     scriptTask: scriptTask

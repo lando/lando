@@ -45,7 +45,9 @@ module.exports = function(grunt) {
       cliPkg: shell.cliPkgTask(),
       installerPkgosx: shell.scriptTask('./scripts/build-osx.sh'),
       installerPkglinux: shell.scriptTask('./scripts/build-linux.sh'),
-      installerPkgwin32: shell.psTask('./scripts/build-win32.ps1')
+      installerPkgwin32: shell.psTask('./scripts/build-win32.ps1'),
+      installerosxBats: shell.batsTask(common.files.installerOsxBats),
+      installerlinuxBats: shell.batsTask(common.files.installerLinuxBats)
     },
 
     // Utility tasks
@@ -67,10 +69,16 @@ module.exports = function(grunt) {
     'mochacli'
   ]);
 
+  // BATS tests
+  grunt.registerTask('test:bats', [
+    'shell:installer' + common.system.platform + 'Bats'
+  ]);
+
   // All tests
   grunt.registerTask('test', [
     'test:code',
-    'test:unit'
+    'test:unit',
+    'test:bats'
   ]);
 
   // Pkg the CLI binary
