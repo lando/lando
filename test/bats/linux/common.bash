@@ -25,7 +25,7 @@ lando-install() {
   # Loop through to install our DEPS
   for i in "${DEPS[@]}"
   do
-    echo "${LANDO_SUDO_PASSWORD}" | sudo -S $LANDO_DEP_INSTALL $i
+    echo "${LANDO_SUDO_PASSWORD}" | sudo -S $LINUX_DEP_INSTALL $i
   done
 
   # Install lando
