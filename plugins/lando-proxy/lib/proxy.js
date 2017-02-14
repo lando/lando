@@ -379,7 +379,7 @@ module.exports = function(lando) {
         // Kick off the chain by seeing if our things are up
         return Promise.all([
           proxyIsUp(),
-          lando.app.isRunning(app.name)
+          lando.app.isRunning(app)
         ])
 
         // Check to see if our proxy is running, if not, start it
