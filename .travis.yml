@@ -61,7 +61,7 @@ notifications:
       - mike@thinktandem.io
       - alec@thinktandem.io
       - geoff@thinktandem.io
-    on_success: always
+    on_failure: always
 deploy:
   - provider: releases
     api_key:
