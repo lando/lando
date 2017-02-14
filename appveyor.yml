@@ -84,4 +84,4 @@ notifications:
       - mike@thinktandem.io
       - alec@thinktandem.io
       - geoff@thinktandem.io
-    on_build_status_changed: true
+    on_build_failure: true
