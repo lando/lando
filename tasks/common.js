@@ -49,11 +49,12 @@ var testOsxBatsFiles = [
 
 // Build assets
 var buildFiles = [
-  'bin/lando.*',
+  'bin/lando.js',
   'lib/**',
   'plugins/**',
   '*.json',
-  'config.yml'
+  'config.yml',
+  'encloseConfig.js'
 ];
 
 // Return our objects
