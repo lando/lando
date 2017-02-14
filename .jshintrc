@@ -21,6 +21,8 @@
   "smarttabs": true,
   "loopfunc": true,
   "globals": {
-    "Promise": true
+    "Promise": true,
+    "describe": true,
+    "it": true
   }
 }

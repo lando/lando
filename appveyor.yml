@@ -38,8 +38,11 @@ install:
   # This can never fail but at least we can check the output to verify
   - iscc | echo
 
-  # Run basic tests
+  # Run basic code style tests
   - grunt test:code
+
+  # Run unit tests
+  - grunt test:unit
 
 build_script:
 

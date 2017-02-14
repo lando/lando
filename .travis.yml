@@ -38,6 +38,9 @@ script:
   # Run code and styling
   - grunt test:code
 
+  # Run unit tests
+  - grunt test:unit
+
   # Run the build
   - mkdir -p release
   - grunt pkg

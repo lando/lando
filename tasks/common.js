@@ -28,7 +28,12 @@ var jsFiles = [
   'modules/**/*.js',
   'plugins/**/*.js',
   'tasks/**/*.js',
-  'tests/**/*.js'
+  'test/**/*.js'
+];
+
+// All test files
+var testJsFiles = [
+  'test/**/*.js'
 ];
 
 // Build assets
@@ -51,6 +56,7 @@ module.exports = {
   },
   files: {
     js: jsFiles,
-    build: buildFiles
+    build: buildFiles,
+    jsTest: testJsFiles
   }
 };

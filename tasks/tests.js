@@ -22,6 +22,18 @@ module.exports = function(common) {
         config: '.jscsrc'
       },
       cli: common.files.js
+    },
+    unit: {
+      options: {
+        bail: true,
+        reporter: 'spec',
+        timeout: 5000,
+        recursive: true,
+        env: {
+          WINSTON_SHUTUP: true
+        }
+      },
+      unit: common.files.jsTest
     }
   };
 
