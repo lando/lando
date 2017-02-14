@@ -36,6 +36,17 @@ var testJsFiles = [
   'test/**/*.js'
 ];
 
+// Linux BATS tests
+var testLinuxBatsFiles = [
+  './test/bats/install.bats',
+  './test/bats/linux/*.bats'
+];
+
+// Osx BATS tests
+var testOsxBatsFiles = [
+  './test/bats/install.bats'
+];
+
 // Build assets
 var buildFiles = [
   'bin/lando.*',
@@ -55,8 +66,10 @@ module.exports = {
     pkgSuffix: pkgSuffix
   },
   files: {
-    js: jsFiles,
     build: buildFiles,
+    installerLinuxBats: testLinuxBatsFiles,
+    installerOsxBats: testOsxBatsFiles,
+    js: jsFiles,
     jsTest: testJsFiles
   }
 };
