@@ -89,12 +89,12 @@ module.exports = function(common) {
 
     // "Constants"
     var pkgName = 'lando-' + common.lando.pkgSuffix;
-    var configFile = path.resolve(__dirname, '..', 'encloseConfig.js');
-    var entrypoint = path.resolve(__dirname, '..', 'bin', 'lando.js');
+    var configFile = path.join('encloseConfig.js');
+    var entrypoint = path.join('bin', 'lando.js');
     var shellOpts = {
       execOptions: {
-        cwd: 'build/cli',
-        maxBuffer: 20 * 1024 * 1024
+        maxBuffer: 20 * 1024 * 1024,
+        cwd: 'build/cli'
       }
     };
 
