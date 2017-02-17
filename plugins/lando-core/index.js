@@ -11,9 +11,6 @@ module.exports = function(lando) {
   // Basic environment handling
   require('./lib/env')(lando);
 
-  // App info handling and discovery
-  require('./lib/info')(lando);
-
   // Add a function to the app object so it can scan its URLs
   require('./lib/scan')(lando);
 
@@ -22,5 +19,8 @@ module.exports = function(lando) {
 
   // Load tasks for this plugin.
   require('./lib/tasks')(lando);
+
+  // App url handling and discovery
+  require('./lib/urls')(lando);
 
 };

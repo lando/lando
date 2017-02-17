@@ -81,40 +81,25 @@ module.exports = function(lando) {
   // Add in some high level config so our app can handle
   lando.events.on('post-instantiate-app', 1, function(app) {
 
-    // Adds an object to collect helpful info about the app
-    app.info = {};
-
-    // Add some basics to the info and emit and event so other things
-    // can add info as well
-    app.events.on('app-ready', 1, function() {
+    // Add the services to the app
+    app.events.on('app-ready', function() {
 
       // Add service keys
       _.forEach(_.keys(app.containers), function(service) {
         app.info[service] = {};
       });
 
-      // Get the URLs for this app
-      return getUrls(app)
+    });
 
-      // Allow other things to add info
-      .then(function() {
-        return app.events.emit('app-info');
-      });
-
+      // Add the urls to the app
+    app.events.on('pre-info', function() {
+      return getUrls(app);
     });
 
     // The apps urls need to be refreshed on start since these can
     // change during the process eg on restart
     app.events.on('post-start', 1, function() {
-
-      // Get the URLs for this app
-      return getUrls(app)
-
-      // Emit this again so our info here is the same as above
-      .then(function() {
-        return app.events.emit('app-info');
-      });
-
+      return getUrls(app);
     });
 
   });

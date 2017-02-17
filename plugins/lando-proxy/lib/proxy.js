@@ -10,7 +10,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var cache = lando.cache;
   var fs = lando.node.fs;
   var path = require('path');
   var Promise = lando.Promise;
@@ -44,6 +43,20 @@ module.exports = function(lando) {
         [lando.config.engineHost, redis, '8160'].join(':')
       ],
       restart: 'always'
+    };
+  };
+
+  /*
+   * Return the services for this app
+   */
+  var getAppService = function(app, service) {
+    return {
+      compose: _.uniq(app.compose),
+      project: app.name,
+      opts: {
+        app: app,
+        services: [service]
+      }
     };
   };
 
@@ -95,6 +108,100 @@ module.exports = function(lando) {
     .then(function(ports) {
       var port = (_.includes(ports, preferred)) ? preferred : ports[0];
       return {protocol: protocol, port: port};
+    });
+
+  };
+
+  /*
+   * Get the best ports to use
+   */
+  var getPorts = function() {
+
+    // Get our config
+    var httpPort = lando.config.proxyHttpPort;
+    var httpFallbacks = lando.config.proxyHttpFallbacks;
+    var httpsPort = lando.config.proxyHttpsPort;
+    var httpsFallbacks = lando.config.proxyHttpsFallbacks;
+
+    // Determine the ports for our proxy
+    return Promise.all([
+      findPort(httpPort, httpFallbacks),
+      findPort(httpsPort, httpsFallbacks, true)
+    ])
+
+    // Configure the proxy and start the service
+    .then(function(data) {
+
+      // Get the http port
+      var http = _.find(data, function(datum) {
+        return datum.protocol === 'http://';
+      }).port;
+
+      // Get the https port
+      var https = _.find(data, function(datum) {
+        return datum.protocol === 'https://';
+      }).port;
+
+      // Get the redis port
+      var redis = lando.config.proxyRedisPort;
+
+      // Return our ports
+      return {
+        http: http,
+        https: https,
+        redis: redis
+      };
+
+    });
+  };
+
+  /*
+   * Create the proxy service file
+   */
+  var createProxy = function() {
+
+    // Determine the ports for our proxy
+    return getPorts()
+
+    // Configure the proxy and set the file
+    .then(function(ports) {
+
+      // Get the ports
+      var http = ports.http;
+      var https = ports.https;
+      var redis = ports.redis;
+
+      // Log
+      var engineHost = lando.config.engineHost;
+      lando.log.verbose('Proxying on %s:%s', engineHost, http);
+      lando.log.verbose('Proxying on %s:%s', engineHost, https);
+      lando.log.verbose('Proxy redis on %s:%s', engineHost, redis);
+
+      // Get the proxy service
+      var proxyService = {proxy: getProxyService(http, https, redis)};
+
+      // Set the service
+      lando.utils.compose(proxyFile, proxyService);
+
+    });
+
+  };
+
+  /*
+   * Get our proxy data
+   */
+  var startProxy = function() {
+
+    // Create the proxy first if we need to
+    return Promise.try(function() {
+      if (!fs.existsSync(proxyFile)) {
+        return createProxy();
+      }
+    })
+
+    // Try to start the proxy
+    .then(function() {
+      return lando.engine.start(getProxy(proxyFile));
     });
 
   };
@@ -217,6 +324,36 @@ module.exports = function(lando) {
   };
 
   /*
+   * Helper to get proxy data
+   */
+  var getProxyData = function(app) {
+
+    // Inspect
+    return lando.engine.inspect(getProxy(proxyFile))
+
+    // Grab the ports we are using and then parse the services if our app
+    .then(function(data) {
+
+      // Core data path
+      var pp = function(port) {
+        return 'NetworkSettings.Ports.' + port + '/tcp[0].HostPort';
+      };
+
+      // Get our ports from the daat
+      var preferredHttp = lando.config.proxyHttpPort;
+      var preferredHttps = lando.config.proxyHttpsPort;
+      var httpPort = _.get(data, pp('80'), preferredHttp);
+      var httpsPort = _.get(data, pp('443'), preferredHttps);
+      var ports = {http: httpPort, https: httpsPort};
+
+      // Add the parsed services to the app
+      return parseServices(app, ports) || {};
+
+    });
+
+  };
+
+  /*
    * Return the redis client
    *
    * This allows us to retry the connection a few times just in case redis
@@ -272,32 +409,40 @@ module.exports = function(lando) {
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
 
-      // Add entries to redis for hipache
+      // Make sure the proxy is up and ready
       app.events.on('post-start', 1, function() {
+        return startProxy();
+      });
 
-        // Grab the proxy config
-        var proxyServices = app.proxy || {};
+      // Add entries to redis for hipache
+      app.events.on('post-start', function() {
+
+        // GEt the proxy data
+        return getProxyData(app)
 
         // Go through those services one by one and add dns entries
-        return Promise.map(proxyServices, function(service) {
+        .map(function(service) {
 
-          // Return the services for this app
-          var getAppService = function(service) {
-            return {
-              compose: _.uniq(app.compose),
-              project: app.name,
-              opts: {
-                app: app,
-                services: [service]
-              }
-            };
-          };
+          // Add the urls
+          if (app.info[service.name]) {
+
+            // Get old urls
+            var old = app.info[service.name].urls || [];
+            var updated = _.map(service.routes, 'urls');
+
+            // Log
+            lando.log.debug('Adding app URLs', updated);
+
+            // Merge our list together
+            app.info[service.name].urls = _.flatten(old.concat(updated));
+
+          }
 
           // Log the service getting confed
           lando.log.verbose('Configuring DNS for %s service.', service.name);
 
           // Inspect the service to be proxies
-          return lando.engine.inspect(getAppService(service.name))
+          return lando.engine.inspect(getAppService(app, service.name))
 
           // Grab our port information from docker
           .then(function(data) {
@@ -337,169 +482,45 @@ module.exports = function(lando) {
       });
 
       // Add proxy URLS to our app info
-      app.events.on('app-info', function() {
+      app.events.on('pre-info', function() {
 
-        // Do we have a proxyfile already?
-        var hasProxy = fs.existsSync(proxyFile);
+        // Kick off the chain by seeing if our app is up
+        return lando.app.isRunning(app)
 
-        // Helper to determine whether proxy is up
-        var proxyIsUp = function() {
-          return Promise.try(function() {
-
-            // If there is a proxy file, grab it and inspect
-            if (hasProxy) {
-
-              // Try to inspect the proxy
-              return lando.engine.inspect(getProxy(proxyFile))
-
-              // Determine whether it is running or not
-              .then(function(data) {
-
-                // We dont have a container at all
-                if (!data) {
-                  return false;
-                }
-
-                // Othewise data and check running status
-                cache.set('proxyData', data);
-                return lando.engine.isRunning(data.Id);
-
-              });
-
-            }
-
-            // This must be false
-            else {
-              return false;
-            }
-
-          });
-        };
-
-        // Kick off the chain by seeing if our things are up
-        return Promise.all([
-          proxyIsUp(),
-          lando.app.isRunning(app)
-        ])
-
-        // Check to see if our proxy is running, if not, start it
+        // If app is not running then we are done
         .then(function(isRunning) {
 
-          // Return our service status
-          var proxyIsUp = isRunning[0];
-          var appIsUp = isRunning[1];
-
           // Log
-          lando.log.verbose('Proxy up = %s', proxyIsUp);
-          lando.log.verbose('App %s is up = %s', app.name, proxyIsUp);
+          lando.log.verbose('App %s is up = %s', app.name, isRunning);
 
-          // Kick off another chain
-          return Promise.try(function() {
+          // If app is running then continue
+          if (isRunning) {
 
-            // If proxy is down up app is up try to start the proxy
-            if (appIsUp && !proxyIsUp) {
+            // Start the proxy
+            return startProxy()
 
-              // Log
-              lando.log.verbose('App %s is up but proxy is down', app.name);
+            // Get thet proxy data
+            .then(function() {
+              return getProxyData(app);
+            })
 
-              // Get our config
-              var httpPort = lando.config.proxyHttpPort;
-              var httpFallbacks = lando.config.proxyHttpFallbacks;
-              var httpsPort = lando.config.proxyHttpsPort;
-              var httpsFallbacks = lando.config.proxyHttpsFallbacks;
+            // Map into info
+            .map(function(service) {
+              if (app.info[service.name]) {
 
-              // Determine the ports for our proxy
-              return Promise.all([
-                findPort(httpPort, httpFallbacks),
-                findPort(httpsPort, httpsFallbacks, true)
-              ])
-
-              // Configure the proxy and start the service
-              .then(function(data) {
-
-                // Get the http port
-                var http = _.find(data, function(datum) {
-                  return datum.protocol === 'http://';
-                }).port;
-
-                // Get the https port
-                var https = _.find(data, function(datum) {
-                  return datum.protocol === 'https://';
-                }).port;
-
-                // Get the redis port
-                var redis = lando.config.proxyRedisPort;
+                // Get old urls
+                var old = app.info[service.name].urls || [];
+                var updated = _.map(service.routes, 'urls');
 
                 // Log
-                var engineHost = lando.config.engineHost;
-                lando.log.verbose('Proxying on %s:%s', engineHost, http);
-                lando.log.verbose('Proxying on %s:%s', engineHost, https);
-                lando.log.verbose('Proxy redis on %s:%s', engineHost, redis);
+                lando.log.debug('Adding app URLs', updated);
 
-                // Get the proxy service
-                var proxyService = {proxy: getProxyService(http, https, redis)};
+                // Merge our list together
+                app.info[service.name].urls = _.flatten(old.concat(updated));
+              }
+            });
 
-                // Set the service
-                lando.utils.compose(proxyFile, proxyService);
-
-                // Start the service and dump our cache
-                cache.remove('proxyData');
-                return lando.engine.start(getProxy(proxyFile));
-
-              });
-
-            }
-
-          })
-
-          // Inspect if our app is up
-          .then(function() {
-            if (appIsUp) {
-              var data = cache.get('proxyData');
-              return (data) ? data : lando.engine.inspect(getProxy(proxyFile));
-            }
-          })
-
-          // Grab the ports we are using and then parse the services if our app
-          // is Up
-          .then(function(data) {
-
-            if (appIsUp) {
-
-              // Core data path
-              var pp = function(port) {
-                return 'NetworkSettings.Ports.' + port + '/tcp[0].HostPort';
-              };
-
-              // Get our ports from the daat
-              var preferredHttp = lando.config.proxyHttpPort;
-              var preferredHttps = lando.config.proxyHttpsPort;
-              var httpPort = _.get(data, pp('80'), preferredHttp);
-              var httpsPort = _.get(data, pp('443'), preferredHttps);
-              var ports = {http: httpPort, https: httpsPort};
-
-              // Add the parsed services to the app
-              app.proxy = parseServices(app, ports);
-
-              // Add URLS to the app info if applicable
-              _.forEach(app.proxy, function(service) {
-                if (app.info[service.name]) {
-
-                  // Get old urls
-                  var old = app.info[service.name].urls || [];
-                  var updated = _.map(service.routes, 'urls');
-
-                  // Log
-                  lando.log.debug('Adding app URLs', updated);
-
-                  // Merge our list together
-                  app.info[service.name].urls = _.flatten(old.concat(updated));
-                }
-              });
-
-            }
-
-          });
+          }
 
         });
 
