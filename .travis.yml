@@ -1,4 +1,7 @@
 language: node_js
+env:
+  global:
+    - secure: "hLLTIt72ruHo8Gq8ofwNMDQs85dPM0a1xa94JSlwjlIEmMcbWfJ7gLQfWvGQ4caUHsBR/mEwMVVfdhSHFJ4NZBrg6/svXq+iVfkeRJQAYvUgIkw12iCx4MFyTiQkX0eq23kdJQb+rKG+1Y1PUAIJ2Ew3C3PZMJttX+OV8JoHK8bTPn7jSjKIYY62zRitzaAwY7YM/Iq5WrzoN8WCxmpjdzNynrVTZor6YroP9fSpskSoBHikWGN4KYvNkwRLKsvKTzR4l3pS82xjELfqbPPaCcuHsC2zex4VJj3Brao3bQLcckufUiKZpPIqAAMVNfl7MsH5TIt4GDinYEBjpOuj10I3UqwlPtiNVnJgPlXKytLx9OMODa2CSZ1yJ4kl8l3B/qZGBBzC5Am+cHZlXBXSck1aoPr7g2S82L63dU91f7gaiE7VnDMON/xMjKNQ8LCL3QM8VWypqkOvFu/zJSX+wpWNJK9xArqeKh8xEJsPjDGu8DP7e7vZrRlGeEMLA0nattFhCAqLcAdKkR4utDUbT4L9wPmPxsku8etvPAN5NL6P2TfgrCHt4KhfCqH5A6FiMzihDU1tTnIv8b+GSgMpkwpPnD13oKb4OOPFTO91DCLl+jwwJz2k4aa4OilSpnBIehZUWVHu7u4AFm9iD4rMAojvTz6MWWfKJLiddpq11Gs="
 matrix:
   include:
   - os: linux
@@ -18,6 +21,11 @@ before_install:
 
   # Install some node deps
   - npm install -g grunt-cli
+
+install:
+
+  # Override the normal npm install with npm -E install
+  - npm -E install
 
 before_script:
 
