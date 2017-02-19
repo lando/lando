@@ -20,7 +20,7 @@ module.exports = function(lando) {
       // Resttart the app
       .then(function(app) {
         if (app) {
-          console.log(JSON.stringify(app.info, null, 2));
+          return lando.app.info(app);
         }
       });
 

@@ -40,7 +40,7 @@ module.exports = function(lando) {
     }
 
     // Add types to our app as needed
-    app.events.on('app-info', function() {
+    app.events.on('pre-info', function() {
 
       // Go through each container and get and set the type
       _.forEach(app.info, function(container, key) {
