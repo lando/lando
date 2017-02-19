@@ -494,15 +494,11 @@ module.exports = function(lando) {
           lando.log.verbose('App %s is up = %s', app.name, isRunning);
 
           // If app is running then continue
+          // NOTE: we assume if the app is running then so is the proxy
           if (isRunning) {
 
-            // Start the proxy
-            return startProxy()
-
             // Get thet proxy data
-            .then(function() {
-              return getProxyData(app);
-            })
+            return getProxyData(app)
 
             // Map into info
             .map(function(service) {
