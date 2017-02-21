@@ -4,9 +4,6 @@
 
 FROM php:5.5-apache
 
-# Set a harmless default for our extras
-ENV LANDO_EXTRAS true
-
 # Install the PHP extensions we need
 RUN apt-get update && apt-get install -y \
     bzip2 \
@@ -57,5 +54,3 @@ RUN apt-get update && apt-get install -y \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
 
-# Run any additional commands that are passed in
-RUN "$LANDO_EXTRAS"

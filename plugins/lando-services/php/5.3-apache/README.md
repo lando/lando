@@ -8,10 +8,7 @@ A decent cross purpose apache based php 5.3 appserver.
 #
 # docker build -t kalabox/php:5.3-apache .
 
-FROM eugeneware/php-5.3
-
-# Set a harmless default for our extras
-ENV LANDO_EXTRAS true
+FROM eugeneware/php-5.3:master
 
 # Copy our helpers
 COPY docker-php-ext-* /usr/local/bin/
@@ -66,7 +63,4 @@ RUN apt-get update && apt-get install -y \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
-
-# Run any additional commands that are passed in
-RUN "$LANDO_EXTRAS"
 ```
