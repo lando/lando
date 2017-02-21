@@ -1,4 +1,4 @@
-name: mariadb
+name: lamp
 sharing:
   data:
     local: www
@@ -9,7 +9,7 @@ proxy:
       default: true
 services:
   appserver:
-    type: php:7.0
+    type: php:5.5
     via: apache
   database:
     type: mariadb
