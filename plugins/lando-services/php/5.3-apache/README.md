@@ -11,7 +11,7 @@ A decent cross purpose apache based php 5.3 appserver.
 FROM eugeneware/php-5.3:master
 
 # Copy our helpers
-COPY docker-php-ext-* /usr/local/bin/
+COPY docker-php-ext-enable /usr/local/bin/
 
 # Install the PHP extensions we need
 RUN apt-get update && apt-get install -y \
