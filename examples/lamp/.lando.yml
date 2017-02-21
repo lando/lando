@@ -1,0 +1,22 @@
+name: mariadb
+sharing:
+  data:
+    local: www
+    remote: /var/www/html
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+services:
+  appserver:
+    type: php:7.0
+    via: apache
+  database:
+    type: mariadb
+    portforward: 3307
+    creds:
+      user: pirog
+      password: pirog
+      database: pirog
+    config:
+      confd: config
