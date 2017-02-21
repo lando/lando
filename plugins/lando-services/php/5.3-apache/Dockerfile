@@ -5,7 +5,7 @@
 FROM eugeneware/php-5.3:master
 
 # Copy our helpers
-COPY docker-php-ext-* /usr/local/bin/
+COPY docker-php-ext-enable /usr/local/bin/
 
 # Install the PHP extensions we need
 RUN apt-get update && apt-get install -y \
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     xfonts-base \
     xfonts-75dpi \
+  && mkdir -p /usr/local/etc/php/conf.d \
   && pecl install apc \
   && pecl install imagick-3.3.0 \
   && pecl install oauth-1.2.3 \

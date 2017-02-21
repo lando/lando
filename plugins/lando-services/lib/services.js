@@ -194,7 +194,7 @@ module.exports = function(lando) {
     var volumes = containers[name].volumes || [];
     volumes.push('$LANDO_APP_ROOT_BIND:/app');
     volumes.push('$LANDO_ENGINE_HOME:/user');
-    containers[name].volumes = volumes;
+    containers[name].volumes = _.uniq(volumes);
 
     // Process any compose overrides we might have
     if (_.has(config, 'compose')) {

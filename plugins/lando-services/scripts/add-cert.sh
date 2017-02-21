@@ -5,6 +5,12 @@ set -e
 # Make sure our cert directory exists
 mkdir -p /certs
 
+# Enable SSL if we need to
+if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
+  cp -rf /etc/apache2/mods-available/ssl* /etc/apache2/mods-enabled || true
+  cp -rf /etc/apache2/mods-available/socache_shmcb* /etc/apache2/mods-enabled || true
+fi
+
 # Set up a certs for this service
 if [ ! -f "/certs/${LANDO_SERVICE_TYPE}.pem" ]; then
 

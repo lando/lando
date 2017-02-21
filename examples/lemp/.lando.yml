@@ -1,4 +1,4 @@
-name: lamp
+name: lemp
 sharing:
   data:
     local: www
@@ -13,12 +13,8 @@ proxy:
 services:
   appserver:
     type: php:7.0
-    via: apache
+    via: nginx
     ssl: true
   database:
     type: mariadb
-    portforward: 3307
-    creds:
-      user: pirog
-      password: pirog
-      database: pirog
+    portforward: true

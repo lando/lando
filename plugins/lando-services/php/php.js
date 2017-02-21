@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Modules
   var _ = require('lodash');
   var addConfig = lando.services.addConfig;
+  var addScript = lando.services.addScript;
 
   /**
    * Supported versions for php
@@ -44,7 +45,8 @@ module.exports = function(lando) {
       apache: {
         type: type,
         command: ['apache2-foreground'],
-        image: [version, 'apache'].join('-')
+        image: [version, 'apache'].join('-'),
+        serverConf: '/etc/apache2/sites-available/000-default.conf',
       }
     };
 
@@ -62,15 +64,37 @@ module.exports = function(lando) {
    * Build php
    */
   var php = function(config) {
-    return {
+
+    // Start with the php base
+    var php = {
       image: 'kalabox/php:' + config.image,
       environment: {
         TERM: 'xterm'
       },
+      ports: ['80'],
       volumes: [],
       command: config.command.join(' '),
       'volumes_from': ['data']
     };
+
+    // If this is apache lets do some checks
+    if (config.type === 'apache' && config.ssl) {
+
+      // Add the ssl port
+      php.ports.push('443');
+
+      // If we don't have a custom default ssl config lets use the default one
+      var sslDefaultConfig = ['php', 'httpd-ssl.conf'];
+      php.volumes.push(addConfig(sslDefaultConfig, config.serverConf));
+
+      // Add in an add cert task
+      php.volumes.push(addScript('add-cert.sh'));
+
+    }
+
+    // REturn the service
+    return php;
+
   };
 
   /*
@@ -78,21 +102,36 @@ module.exports = function(lando) {
    */
   var nginx = function(config) {
 
-    // Build base service
-    var nginx = {
-      image: config.via || 'nginx',
-      links: [config.name + '-php:fpm'],
-      volumes: [],
-      'volumes_from': ['data'],
-      command: 'nginx -g "daemon off;"'
+    // Add a version to the type if applicable
+    var type = [config.type, config.via.split(':')[1]].join(':');
+
+    // Handle our nginx config
+    var serverFileMount = addConfig(['php', 'default.conf'], config.serverConf);
+    var nginxConfigDefaults = {
+      server: serverFileMount.split(':')[0]
     };
 
-    // Add relevant config files
-    var defaultConfig = ['php', 'default.conf'];
-    var serverFile = config.serverConf;
-    nginx.volumes.push(addConfig(defaultConfig, serverFile));
+    // Set the nginx config
+    config.config = _.merge(nginxConfigDefaults, config.config);
 
-    // Return the relevant service
+    // Generate a config object to build the service with
+    var nginx = lando.services.build(config.name, type, config)[config.name];
+
+    // Override the ssl conf file if needed
+    if (config.ssl) {
+      var defaultSSLConfig = ['php', 'default-ssl.conf'];
+      nginx.volumes.push(addConfig(defaultSSLConfig, config.serverConf));
+    }
+
+    // Add links array if needed
+    if (!nginx.links) {
+      nginx.links = [];
+    }
+
+    // Add backend link
+    nginx.links.push(config.name + '-php:fpm');
+
+    // Return the object
     return nginx;
 
   };
@@ -113,13 +152,11 @@ module.exports = function(lando) {
     // Build the correct "appserver"
     services[name] = (type === 'nginx') ? nginx(config) : php(config);
 
-    // Start up the normal ports
-    services[name].ports = ['80'];
-
     // Add fpm backend if we are doing nginx
     if (type === 'nginx') {
       var backend = [name, 'php'].join('-');
       services[backend] = php(config);
+      delete services[backend].ports;
     }
 
     // Return things
