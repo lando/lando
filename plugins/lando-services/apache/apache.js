@@ -12,7 +12,10 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var addConfig = lando.services.addConfig;
   var addScript = lando.services.addScript;
-  var normalizePath = lando.services.normalizePath;
+  var buildVolume = lando.services.buildVolume;
+
+  // "Constants"
+  var defaultConfDir = lando.config.engineConfigDir;
 
   /**
    * Supported versions for apache
@@ -60,18 +63,21 @@ module.exports = function(lando) {
       apache.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
-      var defaultSSLConfig = ['apache', 'httpd-ssl.conf'];
-      apache.volumes.push(addConfig(defaultSSLConfig, configFiles.server));
+      var sslConf = ['apache', 'httpd-ssl.conf'];
+      var sslVolume = buildVolume(sslConf, configFiles.server, defaultConfDir);
+      apache.volumes = addConfig(sslVolume, apache.volumes);
 
       // Add in an add cert task
-      apache.volumes.push(addScript('add-cert.sh'));
+      apache.volumes = addScript('add-cert.sh', apache.volumes);
 
     }
 
     // Handle custom config files
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        apache.volumes.push(normalizePath(config.config[type], file));
+        var local = config.config[type];
+        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        apache.volumes = addConfig(customConfig, apache.volumes);
       }
     });
 

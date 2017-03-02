@@ -20,7 +20,8 @@ module.exports = function(lando) {
       _.forEach(app.config.services, function(service, name) {
 
         // Get our new containers
-        var newContainers = lando.services.build(name, service.type, service);
+        var type = service.type;
+        var newContainers = lando.services.build(name, type, service);
 
         // Loop through and merge each one in
         _.forEach(newContainers, function(container, key) {

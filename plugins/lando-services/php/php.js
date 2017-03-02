@@ -12,6 +12,10 @@ module.exports = function(lando) {
   var _ = require('lodash');
   var addConfig = lando.services.addConfig;
   var addScript = lando.services.addScript;
+  var buildVolume = lando.services.buildVolume;
+
+  // "Constants"
+  var defaultConfDir = lando.config.engineConfigDir;
 
   /**
    * Supported versions for php
@@ -84,11 +88,12 @@ module.exports = function(lando) {
       php.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
-      var sslDefaultConfig = ['php', 'httpd-ssl.conf'];
-      php.volumes.push(addConfig(sslDefaultConfig, config.serverConf));
+      var sslConf = ['php', 'httpd-ssl.conf'];
+      var sslVolume = buildVolume(sslConf, config.serverConf, defaultConfDir);
+      php.volumes = addConfig(sslVolume, php.volumes);
 
       // Add in an add cert task
-      php.volumes.push(addScript('add-cert.sh'));
+      php.volumes = addScript('add-cert.sh');
 
     }
 
@@ -106,9 +111,11 @@ module.exports = function(lando) {
     var type = [config.type, config.via.split(':')[1]].join(':');
 
     // Handle our nginx config
-    var serverFileMount = addConfig(['php', 'default.conf'], config.serverConf);
+    var defaultConfFile = (config.ssl) ? 'default-ssl.conf' : 'default.conf';
+    var configFile = ['php', defaultConfFile];
+    var mount = buildVolume(configFile, config.serverConf, defaultConfDir);
     var nginxConfigDefaults = {
-      server: serverFileMount.split(':')[0]
+      server: mount.split(':')[0]
     };
 
     // Set the nginx config
@@ -116,12 +123,6 @@ module.exports = function(lando) {
 
     // Generate a config object to build the service with
     var nginx = lando.services.build(config.name, type, config)[config.name];
-
-    // Override the ssl conf file if needed
-    if (config.ssl) {
-      var defaultSSLConfig = ['php', 'default-ssl.conf'];
-      nginx.volumes.push(addConfig(defaultSSLConfig, config.serverConf));
-    }
 
     // Add links array if needed
     if (!nginx.links) {
@@ -179,8 +180,33 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       webroot: '/var/www/html',
-      server: config.serverConf
+      php: {
+        confd: '/usr/local/etc/php/conf.d'
+      },
+      web: {
+        server: config.serverConf
+      }
     };
+
+    // Handle custom web config files/dirs
+    _.forEach(configFiles.web, function(file, type) {
+      if (_.has(config, 'config.' + type)) {
+        var local = config.config[type];
+        var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        services[name].volumes = addConfig(customConf, services[name].volumes);
+      }
+    });
+
+    // Handle custom php config files/dirs
+    _.forEach(configFiles.php, function(file, type) {
+      if (_.has(config, 'config.' + type)) {
+        var service = (config.type === 'nginx') ? name + '-php' : name;
+        var local = config.config[type];
+        var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        var volumes = services[service].volumes;
+        services[service].volumes = addConfig(customConf, volumes);
+      }
+    });
 
     // Add the datacontainer
     services.data = {
