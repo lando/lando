@@ -1,0 +1,29 @@
+name: drupal7
+sharing:
+  data:
+    local: www
+    remote: /var/www/html
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  appserver:
+    type: php:7.0
+    via: nginx
+    ssl: true
+    config:
+      server: config/nginx/drupal.conf
+      confd: config/php
+  database:
+    type: mariadb
+    portforward: true
+    creds:
+      user: drupal
+      password: drupal
+      database: drupal
+    config:
+      confd: config/mysql

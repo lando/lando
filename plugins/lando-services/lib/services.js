@@ -95,34 +95,20 @@ module.exports = function(lando) {
   };
 
   /**
-   * Helper to ensure config files are expanded properly
-   */
-  var normalizePath = function(local, remote) {
-
-    // Normalize the path
-    var isAbs = path.isAbsolute(local);
-    local = (isAbs) ? local : path.join('$LANDO_APP_ROOT_BIND', local);
-
-    // Return volume mount
-    return [local, remote].join(':');
-
-  };
-
-  /**
    * Helper function to inject config
    */
-  var addConfig = function(local, remote) {
+  var buildVolume = function(local, remote, base) {
 
     // Figure out the deal with local
     if (_.isString(local)) {
       local = [local];
     }
 
-    // Transform into path
+    // Transform into path if needed
     local = local.join(path.sep);
 
-    // Construct the local path
-    var localFile = path.join(lando.config.engineConfigDir, local);
+    // Normalize the path with the base if it is not absolute
+    var localFile = (path.isAbsolute(local)) ? local : path.join(base, local);
 
     // Return the volume
     return [localFile, remote].join(':');
@@ -130,15 +116,42 @@ module.exports = function(lando) {
   };
 
   /**
+   * Helper function to inject config
+   */
+  var addConfig = function(mount, volumes) {
+
+    // Filter the volumes by the host mount
+    volumes = _.filter(volumes, function(volume) {
+      return volume.split(':')[1] !== mount.split(':')[1];
+    });
+
+    // Push to volumes and then return
+    volumes.push(mount);
+
+    // Return the volume
+    return volumes;
+
+  };
+
+  /**
    * Helper function to inject scripts
    */
-  var addScript = function(script) {
+  var addScript = function(script, volumes) {
 
     // Construct the local path
     var localFile = path.join(lando.config.engineScriptsDir, script);
+    var scriptFile = '/scripts/' + script;
 
-    // Return the volume
-    return [localFile, '/scripts/' + script].join(':');
+    // Filter the volumes by the host mount
+    volumes = _.filter(volumes, function(volume) {
+      return volume.split(':')[1] !== scriptFile;
+    });
+
+    // Push to volume
+    volumes.push([localFile, scriptFile].join(':'));
+
+    // Return the volumes
+    return volumes;
 
   };
 
@@ -209,9 +222,9 @@ module.exports = function(lando) {
 
   return {
     add: add,
+    buildVolume: buildVolume,
     addConfig: addConfig,
     addScript: addScript,
-    normalizePath: normalizePath,
     build: build,
     get: get
   };

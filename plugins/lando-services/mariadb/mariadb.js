@@ -10,7 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var normalizePath = lando.services.normalizePath;
+  var addConfig = lando.services.addConfig;
+  var buildVolume = lando.services.buildVolume;
 
   /**
    * Supported versions for mariadb
@@ -78,7 +79,9 @@ module.exports = function(lando) {
     // Handle custom config directory
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        mariadb.volumes.push(normalizePath(config.config[type], file));
+        var local = config.config[type];
+        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        mariadb.volumes = addConfig(customConfig, mariadb.volumes);
       }
     });
 
