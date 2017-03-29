@@ -85,7 +85,7 @@ module.exports = function(lando) {
     app.events.on('app-ready', function() {
 
       // Add service keys
-      _.forEach(_.keys(app.containers), function(service) {
+      _.forEach(_.keys(app.services), function(service) {
         app.info[service] = {};
       });
 

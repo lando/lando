@@ -42,7 +42,7 @@ module.exports = function(lando) {
     // Add in some global labels
     app.labels = {'io.lando.container': 'TRUE'};
 
-    // Add the global env object to all our containers
+    // Add the global env object to all our services
     app.events.on('app-ready', function() {
 
       // Log
@@ -50,28 +50,28 @@ module.exports = function(lando) {
       lando.log.verbose('App %s has global labels.', app.name, app.labels);
       lando.log.verbose('App %s adds process env.', app.name, app.processEnv);
 
-      // If we have some containers lets add in our global envs and labels
-      if (!_.isEmpty(app.containers)) {
-        _.forEach(app.containers, function(container, service) {
+      // If we have some services lets add in our global envs and labels
+      if (!_.isEmpty(app.services)) {
+        _.forEach(app.services, function(service, name) {
 
           // Get existing ENV and LABELS
-          var env = container.environment || {};
-          var labels = container.labels || {};
+          var env = service.environment || {};
+          var labels = service.labels || {};
 
           // Add our env globals
           _.forEach(app.env, function(value, key) {
             env[key] = value;
           });
-          container.environment = env;
+          service.environment = env;
 
           // Add our global labels
           _.forEach(app.labels, function(value, key) {
             labels[key] = value;
           });
-          container.labels = labels;
+          service.labels = labels;
 
           // Reset the app conatiner
-          app.containers[service] = _.cloneDeep(container);
+          app.services[name] = _.cloneDeep(service);
 
         });
 

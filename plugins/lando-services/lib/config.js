@@ -21,19 +21,19 @@ module.exports = function(lando) {
 
         // Get our new containers
         var type = service.type;
-        var newContainers = lando.services.build(name, type, service);
+        var newServices = lando.services.build(name, type, service);
 
         // Loop through and merge each one in
-        _.forEach(newContainers, function(container, key) {
+        _.forEach(newServices, function(service, name) {
 
           // Get our old container or empty object
-          var oldContainer = app.containers[key] || {};
+          var oldService = app.services[name] || {};
 
           // Merge the new container ontop of the old
-          container = _.merge(oldContainer, container);
+          service = _.merge(oldService, service);
 
           // Clone deeply
-          app.containers[key] = _.cloneDeep(container);
+          app.services[name] = _.cloneDeep(service);
 
         });
 

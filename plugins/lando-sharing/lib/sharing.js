@@ -125,24 +125,24 @@ module.exports = function(lando) {
         });
 
         // Take some care to merge in our shares
-        _.forEach(shareCompose, function(share, service) {
+        _.forEach(shareCompose, function(share, name) {
 
           // Add new containers
-          if (_.isEmpty(app.containers[service])) {
-            app.containers[service] = share;
+          if (_.isEmpty(app.services[name])) {
+            app.services[name] = share;
           }
 
           // Get old volumes if they exist and add them to the new
-          var oldVols = app.containers[service].volumes || [];
-          var newVols = _.flatten([oldVols, shareCompose[service].volumes]);
+          var oldVols = app.services[name].volumes || [];
+          var newVols = _.flatten([oldVols, shareCompose[name].volumes]);
 
           // Reset shareCompsoe volumes
-          app.containers[service].volumes = _.uniq(newVols);
+          app.services[name].volumes = _.uniq(newVols);
 
           // Log
           lando.log.verbose(
             'Sharing from %s to %s on %s for %s',
-            share.local, share.remote, service, app.name
+            share.local, share.remote, name, app.name
           );
 
         });
