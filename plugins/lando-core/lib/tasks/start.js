@@ -47,7 +47,7 @@ module.exports = function(lando) {
             // Add data
             table.add('NAME', app.name);
             table.add('LOCATION', app.root);
-            table.add('CONTAINERS', _.keys(app.containers));
+            table.add('SERVICES', _.keys(app.services));
             table.add('URLS', urls, {arrayJoiner: os.EOL});
 
             // Print the table
