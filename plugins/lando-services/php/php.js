@@ -181,7 +181,7 @@ module.exports = function(lando) {
     var configFiles = {
       webroot: '/var/www/html',
       php: {
-        confd: '/usr/local/etc/php/conf.d'
+        conf: '/usr/local/etc/php/php.ini'
       },
       web: {
         server: config.serverConf
