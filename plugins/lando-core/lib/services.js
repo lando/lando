@@ -67,8 +67,24 @@ module.exports = function(lando) {
     // Parse whatever services we might have into docker compose files
     app.events.on('app-ready', 9, function() {
 
-      // If we have some services lets parse them
-      if (!_.isEmpty(app.services)) {
+      // Start a compose collector
+      var compose = {};
+
+      // Check if some properties exit and then add them if they do
+      var tlos = ['services', 'volumes', 'networks'];
+
+      // Check for each and add as needed
+      _.forEach(tlos, function(option) {
+        if (!_.isEmpty(app[option])) {
+          compose[option] = app[option];
+        }
+      })
+
+      // If we have some services lets create the file
+      if (!_.isEmpty(compose)) {
+
+        // Set the compose version
+        compose.version = '3';
 
         // Get project name
         var project = app.project || app.name;
@@ -79,7 +95,7 @@ module.exports = function(lando) {
         var file = path.join(projectDir, fileName + '.yml');
 
         // Add that file to our compose list
-        app.compose.push(lando.utils.compose(file, app.services));
+        app.compose.push(lando.utils.compose(file, compose));
         lando.log.verbose('App %s has compose files.', project, app.compose);
 
       }
