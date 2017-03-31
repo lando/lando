@@ -1,0 +1,13 @@
+name: trivial-proxy2
+compose:
+  - compose.yml
+proxy:
+  web:
+    - port: 80/tcp
+      default: true
+      subdomains:
+        - site1
+        - site2
+        - site3
+        - site4
+

@@ -78,7 +78,7 @@ module.exports = function(lando) {
         if (!_.isEmpty(app[option])) {
           compose[option] = app[option];
         }
-      })
+      });
 
       // If we have some services lets create the file
       if (!_.isEmpty(compose)) {
