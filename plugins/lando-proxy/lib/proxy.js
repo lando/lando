@@ -42,7 +42,7 @@ module.exports = function(lando) {
         [lando.config.engineHost, https, '443'].join(':'),
         [lando.config.engineHost, redis, '8160'].join(':')
       ],
-      restart: 'always'
+      restart: 'on-failure'
     };
   };
 
@@ -178,7 +178,12 @@ module.exports = function(lando) {
       lando.log.verbose('Proxy redis on %s:%s', engineHost, redis);
 
       // Get the proxy service
-      var proxyService = {proxy: getProxyService(http, https, redis)};
+      var proxyService = {
+        version: '3',
+        services: {
+          proxy: getProxyService(http, https, redis)
+        }
+      };
 
       // Set the service
       lando.utils.compose(proxyFile, proxyService);
@@ -447,8 +452,16 @@ module.exports = function(lando) {
           // Grab our port information from docker
           .then(function(data) {
 
+            // Get project name
+            var labels = _.get(data, 'Config.Labels');
+            var project = labels['com.docker.compose.project'];
+            var network = [project, 'default'].join('_');
+
+            // Get network IP path
+            var ipPath = ['NetworkSettings', 'Networks', network, 'IPAddress'];
+
             // Get port information from container query.
-            var ip = _.get(data, 'NetworkSettings.Networks.bridge.IPAddress');
+            var ip = _.get(data, ipPath.join('.'));
 
             // Loop through each proxy.
             return Promise.map(service.routes, function(route) {
