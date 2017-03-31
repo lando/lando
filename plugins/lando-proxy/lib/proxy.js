@@ -15,10 +15,18 @@ module.exports = function(lando) {
   var Promise = lando.Promise;
   var redis = require('redis');
   var u = require('url');
+  var yaml = lando.node.yaml;
 
   // Fixed location of our proxy service compose file
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
   var proxyFile = path.join(proxyDir, 'proxy' + '.yml');
+
+  /*
+   * Helper to extract ports from inspect data
+   */
+  var pp = function(port) {
+    return 'NetworkSettings.Ports.' + port + '/tcp[0].HostPort';
+  };
 
   /*
    * Define the proxy service
@@ -113,9 +121,9 @@ module.exports = function(lando) {
   };
 
   /*
-   * Get the best ports to use
+   * Scan ports to find available ones for proxy
    */
-  var getPorts = function() {
+  var scanPorts = function() {
 
     // Get our config
     var httpPort = lando.config.proxyHttpPort;
@@ -129,7 +137,7 @@ module.exports = function(lando) {
       findPort(httpsPort, httpsFallbacks, true)
     ])
 
-    // Configure the proxy and start the service
+    // Discover ports and return object
     .then(function(data) {
 
       // Get the http port
@@ -153,12 +161,65 @@ module.exports = function(lando) {
       };
 
     });
+
+  };
+
+  /*
+   * Get the best ports to use
+   */
+  var getPorts = function() {
+
+    // If there is no proxy file then lets scan the ports
+    if (!fs.existsSync(proxyFile)) {
+      return scanPorts();
+    }
+
+    // If the proxy has been created already lets see if we can use that
+    else {
+
+      // Inspect current proxy to make sure we dont incorrectly rebuild
+      return lando.engine.inspect(getProxy(proxyFile))
+
+      // Look at the proxy data
+      .then(function(data) {
+
+        // If the proxy is running, lets make sure we hook up the ports that the proxy
+        // is already using. If we dont do this the proxy will always show as "changed"
+        if (_.get(data, 'State.Running', false)) {
+
+          // Extract the ports from the running proxy
+          var preferredHttp = lando.config.proxyHttpPort;
+          var preferredHttps = lando.config.proxyHttpsPort;
+          var httpPort = _.get(data, pp('80'), preferredHttp);
+          var httpsPort = _.get(data, pp('443'), preferredHttps);
+
+          // Rebuild the ports on the new proxy file with ports already in use
+          var redis = lando.config.proxyRedisPort;
+
+          // Return our ports
+          return {
+            http: httpPort,
+            https: httpsPort,
+            redis: redis
+          };
+
+        }
+
+        // If proxy is off then lets scan in case something else has taken the old ports
+        else {
+          return scanPorts();
+        }
+
+      });
+
+    }
+
   };
 
   /*
    * Create the proxy service file
    */
-  var createProxy = function() {
+  var buildProxy = function() {
 
     // Determine the ports for our proxy
     return getPorts()
@@ -177,16 +238,13 @@ module.exports = function(lando) {
       lando.log.verbose('Proxying on %s:%s', engineHost, https);
       lando.log.verbose('Proxy redis on %s:%s', engineHost, redis);
 
-      // Get the proxy service
-      var proxyService = {
+      // Get the new proxy service
+      return {
         version: '3',
         services: {
           proxy: getProxyService(http, https, redis)
         }
       };
-
-      // Set the service
-      lando.utils.compose(proxyFile, proxyService);
 
     });
 
@@ -197,11 +255,32 @@ module.exports = function(lando) {
    */
   var startProxy = function() {
 
-    // Create the proxy first if we need to
-    return Promise.try(function() {
+    // Build the proxy
+    return buildProxy()
+
+    // Set the proxy
+    .then(function(proxy) {
+
+      // If we are building the proxy for the first time
       if (!fs.existsSync(proxyFile)) {
-        return createProxy();
+        lando.log.verbose('Starting proxy for the first time');
+        lando.utils.compose(proxyFile, proxy);
       }
+
+      // We already have a proxy, lets see if its different and rebuild if needed
+      else {
+
+        // Get the current proxy
+        var proxyOld = yaml.safeLoad(fs.readFileSync(proxyFile));
+
+        // If the proxy is different, rebuild with new and stop the old
+        if (JSON.stringify(proxyOld) !== JSON.stringify(proxy)) {
+          lando.log.verbose('Proxy has changed, rebuilding');
+          lando.utils.compose(proxyFile, proxy);
+        }
+
+      }
+
     })
 
     // Try to start the proxy
@@ -339,12 +418,7 @@ module.exports = function(lando) {
     // Grab the ports we are using and then parse the services if our app
     .then(function(data) {
 
-      // Core data path
-      var pp = function(port) {
-        return 'NetworkSettings.Ports.' + port + '/tcp[0].HostPort';
-      };
-
-      // Get our ports from the daat
+      // Get our ports from the data
       var preferredHttp = lando.config.proxyHttpPort;
       var preferredHttps = lando.config.proxyHttpsPort;
       var httpPort = _.get(data, pp('80'), preferredHttp);
