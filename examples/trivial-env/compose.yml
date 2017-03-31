@@ -1,7 +1,9 @@
-web:
-  image: httpd
-  ports:
-    - "8081:80"
-  environment:
-    TEST: thing
-    APPNAME: $LANDO_APP_NAME
+version: 3
+services:
+  web:
+    image: httpd
+    ports:
+      - "8081:80"
+    environment:
+      TEST: thing
+      APPNAME: $LANDO_APP_NAME
