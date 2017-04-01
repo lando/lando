@@ -1,6 +1,6 @@
 name: apache
 sharing:
-  data:
+  html:
     local: .
     remote: /usr/local/apache2/htdocs/
 proxy:

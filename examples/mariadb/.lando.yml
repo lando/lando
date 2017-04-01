@@ -1,6 +1,6 @@
 name: mariadb
 sharing:
-  data:
+  html:
     local: www
     remote: /usr/share/nginx/html
 proxy:

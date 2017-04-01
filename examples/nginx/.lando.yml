@@ -1,6 +1,6 @@
 name: nginx
 sharing:
-  data:
+  appserver:
     local: www
     remote: /usr/share/nginx/html
 proxy:

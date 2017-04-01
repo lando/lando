@@ -29,6 +29,13 @@ module.exports = function(lando) {
     'custom'
   ];
 
+  /**
+   * Return the networks needed
+   */
+  var networks = function() {
+    return {};
+  };
+
   /*
    * Parse our config
    */
@@ -76,9 +83,8 @@ module.exports = function(lando) {
         TERM: 'xterm'
       },
       ports: ['80'],
-      volumes: [],
+      volumes: ['data:/var/www/html'],
       command: config.command.join(' '),
-      'volumes_from': ['data']
     };
 
     // If this is apache lets do some checks
@@ -93,7 +99,7 @@ module.exports = function(lando) {
       php.volumes = addConfig(sslVolume, php.volumes);
 
       // Add in an add cert task
-      php.volumes = addScript('add-cert.sh');
+      php.volumes = addScript('add-cert.sh', php.volumes);
 
     }
 
@@ -120,17 +126,13 @@ module.exports = function(lando) {
 
     // Set the nginx config
     config.config = _.merge(nginxConfigDefaults, config.config);
+    var name = config.name;
 
     // Generate a config object to build the service with
-    var nginx = lando.services.build(config.name, type, config)[config.name];
+    var nginx = lando.services.build(name, type, config).services[config.name];
 
-    // Add links array if needed
-    if (!nginx.links) {
-      nginx.links = [];
-    }
-
-    // Add backend link
-    nginx.links.push(config.name + '-php:fpm');
+    // Add the webroot
+    nginx.volumes.push('data:/var/www/html');
 
     // Return the object
     return nginx;
@@ -155,9 +157,8 @@ module.exports = function(lando) {
 
     // Add fpm backend if we are doing nginx
     if (type === 'nginx') {
-      var backend = [name, 'php'].join('-');
-      services[backend] = php(config);
-      delete services[backend].ports;
+      services.fpm = php(config);
+      delete services.fpm.ports;
     }
 
     // Return things
@@ -168,7 +169,7 @@ module.exports = function(lando) {
   /**
    * Build out php
    */
-  var builder = function(name, config) {
+  var services = function(name, config) {
 
     // Parse our config
     config.name = name;
@@ -200,7 +201,7 @@ module.exports = function(lando) {
     // Handle custom php config files/dirs
     _.forEach(configFiles.php, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        var service = (config.type === 'nginx') ? name + '-php' : name;
+        var service = (config.type === 'nginx') ? 'fpm' : name;
         var local = config.config[type];
         var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         var volumes = services[service].volumes;
@@ -208,20 +209,34 @@ module.exports = function(lando) {
       }
     });
 
-    // Add the datacontainer
-    services.data = {
-      image: 'busybox',
-      volumes: [configFiles.webroot]
-    };
-
     // Return our service
     return services;
 
   };
 
+  /**
+   * Return the volumes needed
+   */
+  var volumes = function(name) {
+
+    // Construct our volumes
+    var volumes = {
+      data: {}
+    };
+
+    // Add the appserver
+    volumes[name] = {};
+
+    // Return the volumes
+    return volumes;
+
+  };
+
   return {
-    builder: builder,
+    networks: networks,
+    services: services,
     versions: versions,
+    volumes: volumes,
     configDir: __dirname
   };
 

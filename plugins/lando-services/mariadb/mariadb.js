@@ -30,9 +30,16 @@ module.exports = function(lando) {
   ];
 
   /**
+   * Return the networks needed
+   */
+  var networks = function() {
+    return {};
+  };
+
+  /**
    * Build out mariadb
    */
-  var builder = function(name, config) {
+  var services = function(name, config) {
 
     // Start a services collector
     var services = {};
@@ -56,9 +63,8 @@ module.exports = function(lando) {
         MYSQL_DATABASE: creds.database || 'database',
         TERM: 'xterm'
       },
-      volumes: [],
-      command: 'docker-entrypoint.sh mysqld',
-      'volumes_from': ['data']
+      volumes: ['data:' + configFiles.dataDir],
+      command: 'docker-entrypoint.sh mysqld'
     };
 
     // Handle port forwarding
@@ -85,12 +91,6 @@ module.exports = function(lando) {
       }
     });
 
-    // Add the data container
-    services.data = {
-      image: 'busybox',
-      volumes: [configFiles.dataDir]
-    };
-
     // Put it all together
     services[name] = mariadb;
 
@@ -99,9 +99,18 @@ module.exports = function(lando) {
 
   };
 
+  /**
+   * Return the volumes needed
+   */
+  var volumes = function() {
+    return {data: {}};
+  };
+
   return {
-    builder: builder,
+    networks: networks,
+    services: services,
     versions: versions,
+    volumes: volumes,
     configDir: __dirname
   };
 
