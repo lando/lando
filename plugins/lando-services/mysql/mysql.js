@@ -10,7 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var normalizePath = lando.services.normalizePath;
+  var addConfig = lando.services.addConfig;
+  var buildVolume = lando.services.buildVolume;
 
   /**
    * Supported versions for mysql
@@ -25,9 +26,16 @@ module.exports = function(lando) {
   ];
 
   /**
+   * Return the networks needed
+   */
+  var networks = function() {
+    return {};
+  };
+
+  /**
    * Build out mysql
    */
-  var builder = function(name, config) {
+  var services = function(name, config) {
 
     // Start a services collector
     var services = {};
@@ -51,9 +59,8 @@ module.exports = function(lando) {
         MYSQL_DATABASE: creds.database || 'database',
         TERM: 'xterm'
       },
-      volumes: [],
+      volumes: ['data:' + configFiles.dataDir],
       command: 'docker-entrypoint.sh mysqld',
-      'volumes_from': ['data']
     };
 
     // Handle port forwarding
@@ -74,15 +81,11 @@ module.exports = function(lando) {
     // Handle custom config directory
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        mysql.volumes.push(normalizePath(config.config[type], file));
+        var local = config.config[type];
+        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        mysql.volumes = addConfig(customConfig, mysql.volumes);
       }
     });
-
-    // Add the data container
-    services.data = {
-      image: 'busybox',
-      volumes: [configFiles.dataDir]
-    };
 
     // Put it all together
     services[name] = mysql;
@@ -92,9 +95,18 @@ module.exports = function(lando) {
 
   };
 
+  /**
+   * Return the volumes needed
+   */
+  var volumes = function() {
+    return {data: {}};
+  };
+
   return {
-    builder: builder,
+    networks: networks,
+    services: services,
     versions: versions,
+    volumes: volumes,
     configDir: __dirname
   };
 
