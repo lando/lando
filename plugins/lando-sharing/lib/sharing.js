@@ -35,16 +35,16 @@ module.exports = function(lando) {
     var getUnison = function(local, remote, service) {
       return {
         image: 'kalabox/unison:2.49',
-        restart: 'always',
+        restart: 'on-failure',
         environment: {
           'UNISON_WEBROOT': remote,
           'UNISON_CODEROOT': '/kalashare/' + local,
           'UNISON_OPTIONS': getUnisonOptions()
         },
         volumes: [
-          '$LANDO_APP_ROOT_BIND:/kalashare'
-        ],
-        'volumes_from': [service]
+          '$LANDO_APP_ROOT_BIND:/kalashare',
+          [service, remote].join(':')
+        ]
       };
     };
 
@@ -61,7 +61,7 @@ module.exports = function(lando) {
       services[name] = getUnison(share.local, share.remote, service);
 
       // Add the volume to the service
-      services[service] = {volumes: [share.remote]};
+      services[service] = {volumes: [[service, share.remote].join(':')]};
 
     });
 
@@ -119,9 +119,10 @@ module.exports = function(lando) {
         // Get the compose files we need to merge
         var shareCompose = getSharingCompose(shares);
 
-        // Make sure local webroots exist
-        _.forEach(shares, function(share) {
+        // Make sure local webroots exist and our volumes TL is set
+        _.forEach(shares, function(share, name) {
           fs.mkdirpSync(path.join(app.root, share.local));
+          app.volumes[name] = {};
         });
 
         // Take some care to merge in our shares
