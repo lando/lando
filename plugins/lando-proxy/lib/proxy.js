@@ -31,7 +31,7 @@ module.exports = function(lando) {
   /*
    * Define the proxy service
    */
-  var getProxyService = function(http, https, redis) {
+  var getProxyService = function(http, https, redis, networks) {
 
     // Log
     lando.log.debug('Proxy with http %s https %s redis %s', http, https, redis);
@@ -45,6 +45,7 @@ module.exports = function(lando) {
       labels: {
         'io.lando.container': 'TRUE'
       },
+      networks: networks,
       ports: [
         [lando.config.engineHost, http, '80'].join(':'),
         [lando.config.engineHost, https, '443'].join(':'),
@@ -217,15 +218,50 @@ module.exports = function(lando) {
   };
 
   /*
+   * Get networks we need for this
+   */
+  var getNetworks = function() {
+
+    // Options to filter the networks
+    var opts = {
+      filters: {
+        driver: {bridge: true},
+        name: {_default: true}
+      }
+    };
+
+    // Get the networks
+    return lando.networks.get(opts)
+
+    // Filter out lando_default
+    .filter(function(network) {
+      return network.Name !== 'lando_default';
+    })
+
+    // Map to list of networks
+    .map(function(network) {
+      return network.Name;
+    });
+
+  };
+
+  /*
    * Create the proxy service file
    */
   var buildProxy = function() {
 
-    // Determine the ports for our proxy
-    return getPorts()
+    // Determine the ports and networks for our proxy
+    return Promise.all([
+      getPorts(),
+      getNetworks()
+    ])
 
     // Configure the proxy and set the file
-    .then(function(ports) {
+    .then(function(data) {
+
+      // Split the data
+      var ports = data[0];
+      var networks = data[1];
 
       // Get the ports
       var http = ports.http;
@@ -238,12 +274,21 @@ module.exports = function(lando) {
       lando.log.verbose('Proxying on %s:%s', engineHost, https);
       lando.log.verbose('Proxy redis on %s:%s', engineHost, redis);
 
+      // Start up a collector for our top level networks key
+      var tlNetworks = {};
+
+      // Build the TL networks key
+      _.forEach(networks, function(network) {
+        tlNetworks[network] = {external: true};
+      });
+
       // Get the new proxy service
       return {
         version: '3',
         services: {
-          proxy: getProxyService(http, https, redis)
-        }
+          proxy: getProxyService(http, https, redis, networks)
+        },
+        networks: tlNetworks
       };
 
     });
