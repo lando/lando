@@ -21,10 +21,10 @@ module.exports = function(lando) {
 
         // Get our new containers
         var type = service.type;
-        var newServices = lando.services.build(name, type, service);
+        var newCompose = lando.services.build(name, type, service);
 
-        // Loop through and merge each one in
-        _.forEach(newServices, function(service, name) {
+        // Loop through and merge each service one in
+        _.forEach(newCompose.services, function(service, name) {
 
           // Get our old container or empty object
           var oldService = app.services[name] || {};
@@ -37,6 +37,10 @@ module.exports = function(lando) {
 
         });
 
+        // Merge in the volumes and networks as well
+        app.volumes = _.merge(app.volumes, newCompose.volumes);
+        app.networks = _.merge(app.networks, newCompose.networks);
+
       });
     }
 
@@ -47,36 +51,6 @@ module.exports = function(lando) {
       _.forEach(app.info, function(container, key) {
         var type = _.get(app, 'config.services.' + key + '.type', 'custom');
         app.info[key].type = type;
-      });
-
-    });
-
-    /*
-     * We don't want to uninstall our data container on a rebuild
-     * so remove the data container from here
-     *
-     * NOTE: this is a nifty implementation where we inception some events
-     * to target exactly what we want
-     */
-    app.events.on('pre-rebuild', function() {
-
-      // We want to edit our engine remove things
-      lando.events.on('pre-engine-destroy', function(data) {
-
-        // Make sure opts is set
-        data.opts = data.opts || {};
-
-        // Remove the data element
-        var withoutData = _.remove(_.keys(data.containers), function(name) {
-          return name !== 'data';
-        });
-
-        // Log
-        lando.log.debug('Removing data container from %s rebuild', app.name);
-
-        // Update data to note remove data services on rebuilds
-        data.opts.services = withoutData;
-
       });
 
     });

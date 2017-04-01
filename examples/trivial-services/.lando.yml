@@ -1,6 +1,6 @@
 name: trivial-services
 sharing:
-  data:
+  appserver:
     local: www
     remote: /usr/share/nginx/html
 proxy:
@@ -16,7 +16,8 @@ services:
     ssl: true
     config:
       server: config/server.conf
-    compose:
-      environment:
-        THING: STUFF
-      ports: ['8080:80']
+    overrides:
+      services:
+        environment:
+          THING: STUFF
+        ports: ['8080:80']

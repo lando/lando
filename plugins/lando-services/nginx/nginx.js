@@ -34,9 +34,16 @@ module.exports = function(lando) {
   ];
 
   /**
-   * Build out nginx
+   * Return the networks needed
    */
-  var builder = function(name, config) {
+  var networks = function() {
+    return {};
+  };
+
+  /**
+   * Build out nginx services
+   */
+  var services = function(name, config) {
 
     // Start a services collector
     var services = {};
@@ -55,9 +62,8 @@ module.exports = function(lando) {
       environment: {
         TERM: 'xterm'
       },
-      volumes: [],
-      command: 'nginx -g "daemon off;"',
-      'volumes_from': ['data']
+      volumes: ['data:' + configFiles.webroot],
+      command: 'nginx -g "daemon off;"'
     };
 
     // Handle ssl option
@@ -85,12 +91,6 @@ module.exports = function(lando) {
       }
     });
 
-    // Add the data container
-    services.data = {
-      image: 'busybox',
-      volumes: [configFiles.webroot]
-    };
-
     // Put it all together
     services[name] = nginx;
 
@@ -99,9 +99,18 @@ module.exports = function(lando) {
 
   };
 
+  /**
+   * Return the volumes needed
+   */
+  var volumes = function() {
+    return {data: {}};
+  };
+
   return {
-    builder: builder,
+    networks: networks,
+    services: services,
     versions: versions,
+    volumes: volumes,
     configDir: __dirname
   };
 
