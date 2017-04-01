@@ -47,22 +47,22 @@ module.exports = function(lando) {
   /*
    * Set the global docker entrypoint
    */
-  var setEntrypoint = function(container) {
+  var setEntrypoint = function(service) {
 
     // Entrypoint files
     var hostEntrypoint = '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh';
     var contEntrypoint = '/lando-entrypoint.sh';
 
     // Volumes
-    var volumes = container.volumes || [];
+    var volumes = service.volumes || [];
     volumes.push([hostEntrypoint, contEntrypoint].join(':'));
 
     // Add our things to the container
-    container.entrypoint = contEntrypoint;
-    container.volumes = volumes;
+    service.entrypoint = contEntrypoint;
+    service.volumes = volumes;
 
-    // Return the container
-    return container;
+    // Return the service
+    return service;
 
   };
 
@@ -189,34 +189,42 @@ module.exports = function(lando) {
       moveConfig(service, registry[service].configDir);
     }
 
-    // Get the containers
-    var containers = registry[service].builder(name, config);
+    // Get the networks, services and volumes
+    var networks = registry[service].networks(name, config);
+    var services = registry[service].services(name, config);
+    var volumes = registry[service].volumes(name, config);
 
     // Add in the our global docker entrypoint
     // NOTE: this can be overridden down the stream
-    containers[name] = setEntrypoint(containers[name]);
+    services[name] = setEntrypoint(services[name]);
     lando.log.debug('Setting default entrypoint for %s', name);
 
     // Add in some helpful ENVs
-    var env = containers[name].environment || {};
+    var env = services[name].environment || {};
     env.LANDO_SERVICE_NAME = name;
     env.LANDO_SERVICE_TYPE = service;
-    containers[name].environment = env;
+    services[name].environment = env;
 
     // Add in some helpful volumes
-    var volumes = containers[name].volumes || [];
-    volumes.push('$LANDO_APP_ROOT_BIND:/app');
-    volumes.push('$LANDO_ENGINE_HOME:/user');
-    containers[name].volumes = _.uniq(volumes);
+    var vols = services[name].volumes || [];
+    vols.push('$LANDO_APP_ROOT_BIND:/app');
+    vols.push('$LANDO_ENGINE_HOME:/user');
+    services[name].volumes = _.uniq(vols);
 
     // Process any compose overrides we might have
-    if (_.has(config, 'compose')) {
-      lando.log.debug('Overriding %s with', name, config.compose);
-      containers[name] = _.merge(containers[name], config.compose);
+    if (_.has(config, 'overrides')) {
+      lando.log.debug('Overriding %s with', name, config.overrides);
+      services[name] = _.merge(services[name], config.overrides.services);
+      volumes = _.merge(volumes, config.overrides.volumes);
+      networks = _.merge(networks, config.overrides.networks);
     }
 
-    // Return the built services
-    return containers;
+    // Return the built compose file
+    return {
+      networks: networks,
+      services: services,
+      volumes: volumes
+    };
 
   };
 
