@@ -1,0 +1,16 @@
+name = Forum
+description = Provides discussion forums.
+dependencies[] = taxonomy
+dependencies[] = comment
+package = Core
+version = VERSION
+core = 7.x
+files[] = forum.test
+configure = admin/structure/forum
+stylesheets[all][] = forum.css
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

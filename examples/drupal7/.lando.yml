@@ -1,6 +1,6 @@
 name: drupal7
 sharing:
-  data:
+  appserver:
     local: www
     remote: /var/www/html
 proxy:
@@ -12,18 +12,15 @@ proxy:
       secure: true
 services:
   appserver:
-    type: php:5.6
+    type: php:7.0
     via: nginx
     ssl: true
     config:
       server: config/nginx/drupal.conf
       conf: config/php/php.ini
-    compose:
-      links:
-        - database:db
   database:
     type: mariadb
-    portforward: true
+    portforward: 3310
     creds:
       user: drupal
       password: drupal

@@ -1,0 +1,13 @@
+name = "Field API Test"
+description = "Support module for the Field API tests."
+core = 7.x
+package = Testing
+files[] = field_test.entity.inc
+version = VERSION
+hidden = TRUE
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

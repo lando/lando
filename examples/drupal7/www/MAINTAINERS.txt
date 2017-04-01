@@ -1,0 +1,307 @@
+
+Drupal core is built and maintained by the Drupal project community. Everyone is
+encouraged to submit issues and changes (patches) to improve Drupal, and to
+contribute in other ways -- see https://www.drupal.org/contribute to find out
+how.
+
+Branch maintainers
+------------------
+
+The Drupal Core branch maintainers oversee the development of Drupal as a whole.
+The branch maintainers for Drupal 7 are:
+
+- Dries Buytaert 'dries' https://www.drupal.org/u/dries
+- Angela Byron 'webchick' https://www.drupal.org/u/webchick
+- Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
+- David Rothstein 'David_Rothstein' https://www.drupal.org/u/david_rothstein
+- Stefan Ruijsenaars 'stefan.r' https://www.drupal.org/u/stefanr-0
+
+
+Component maintainers
+---------------------
+
+The Drupal Core component maintainers oversee the development of Drupal
+subsystems. See https://www.drupal.org/contribute/core-maintainers for more
+information on their responsibilities, and to find out how to become a component
+maintainer. Current component maintainers for Drupal 7:
+
+Ajax system
+- Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
+- Earl Miles 'merlinofchaos' https://www.drupal.org/u/merlinofchaos
+
+Base system
+- Damien Tournoud 'DamZ' https://www.drupal.org/u/damien-tournoud
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+
+Batch system
+- Yves Chedemois 'yched' https://www.drupal.org/u/yched
+
+Cache system
+- Damien Tournoud 'DamZ' https://www.drupal.org/u/damien-tournoud
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+
+Cron system
+- Derek Wright 'dww' https://www.drupal.org/u/dww
+
+Database system
+- Larry Garfield 'Crell' https://www.drupal.org/u/crell
+
+  - MySQL driver
+    - Larry Garfield 'Crell' https://www.drupal.org/u/crell
+    - David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+
+  - PostgreSQL driver
+    - Damien Tournoud 'DamZ' https://www.drupal.org/u/damien-tournoud
+    - Josh Waihi 'fiasco' https://www.drupal.org/u/josh-waihi
+
+  - Sqlite driver
+    - Damien Tournoud 'DamZ' https://www.drupal.org/u/damien-tournoud
+
+Database update system
+- Ashok Modi 'BTMash' https://www.drupal.org/u/btmash
+
+Entity system
+- Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Franz Heinzmann 'Frando' https://www.drupal.org/u/frando
+
+File system
+- Andrew Morton 'drewish' https://www.drupal.org/u/drewish
+- Aaron Winborn 'aaron' https://www.drupal.org/u/aaron
+
+Form system
+- Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
+- Wolfgang Ziegler 'fago' https://www.drupal.org/u/fago
+- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+- Franz Heinzmann 'Frando' https://www.drupal.org/u/frando
+
+Image system
+- Andrew Morton 'drewish' https://www.drupal.org/u/drewish
+- Nathan Haug 'quicksketch' https://www.drupal.org/u/quicksketch
+
+Install system
+- David Rothstein 'David_Rothstein' https://www.drupal.org/u/david_rothstein
+
+JavaScript
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+- Steve De Jonghe 'seutje' https://www.drupal.org/u/seutje
+
+Language system
+- Francesco Placella 'plach' https://www.drupal.org/u/plach
+- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+
+Lock system
+- Damien Tournoud 'DamZ' https://www.drupal.org/u/damien-tournoud
+
+Mail system
+- ?
+
+Markup
+- Jacine Luisi 'Jacine' https://www.drupal.org/u/jacine
+- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+
+Menu system
+- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
+
+Path system
+- Dave Reid 'davereid' https://www.drupal.org/u/dave-reid
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+
+Render system
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
+- Franz Heinzmann 'Frando' https://www.drupal.org/u/frando
+
+Theme system
+- Earl Miles 'merlinofchaos' https://www.drupal.org/u/merlinofchaos
+- Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
+- Joon Park 'dvessel' https://www.drupal.org/u/dvessel
+- John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
+
+Token system
+- Dave Reid 'davereid' https://www.drupal.org/u/dave-reid
+
+XML-RPC system
+- Frederic G. Marand 'fgm' https://www.drupal.org/u/fgm
+
+
+Topic coordinators
+------------------
+
+Accessibility
+- Everett Zufelt 'Everett Zufelt' https://www.drupal.org/u/everett-zufelt
+- Brandon Bowersox-Johnson 'bowersox' https://www.drupal.org/u/bowersox
+
+Documentation
+- Jennifer Hodgdon 'jhodgdon' https://www.drupal.org/u/jhodgdon
+
+Translations
+- Gerhard Killesreiter 'killes' https://www.drupal.org/u/gerhard-killesreiter
+
+User experience and usability
+- Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
+- Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
+
+Node Access
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- Ken Rickard 'agentrickard' https://www.drupal.org/u/agentrickard
+
+
+Security team
+-----------------
+
+To report a security issue, see: https://www.drupal.org/security-team/report-issue
+
+The Drupal security team provides Security Advisories for vulnerabilities,
+assists developers in resolving security issues, and provides security
+documentation. See https://www.drupal.org/security-team for more information.
+The security team lead is:
+
+- Michael Hess 'mlhess' https://www.drupal.org/u/mlhess
+
+
+Module maintainers
+------------------
+
+Aggregator module
+- ?
+
+Block module
+- John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
+
+Blog module
+- ?
+
+Book module
+- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
+
+Color module
+- ?
+
+Comment module
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+
+Contact module
+- Dave Reid 'davereid' https://www.drupal.org/u/dave-reid
+
+Contextual module
+- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+
+Dashboard module
+- ?
+
+Database logging module
+- Khalid Baheyeldin 'kbahey' https://www.drupal.org/u/kbahey
+
+Field module
+- Yves Chedemois 'yched' https://www.drupal.org/u/yched
+- Barry Jaspan 'bjaspan' https://www.drupal.org/u/bjaspan
+
+Field UI module
+- Yves Chedemois 'yched' https://www.drupal.org/u/yched
+
+File module
+- Aaron Winborn 'aaron' https://www.drupal.org/u/aaron
+
+Filter module
+- Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
+
+Forum module
+- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
+
+Help module
+- ?
+
+Image module
+- Nathan Haug 'quicksketch' https://www.drupal.org/u/quicksketch
+
+Locale module
+- Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
+
+Menu module
+- ?
+
+Node module
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+
+OpenID module
+- Vojtech Kusy 'wojtha' https://www.drupal.org/u/wojtha
+- Christian Schmidt 'c960657' https://www.drupal.org/u/c960657
+- Damien Tournoud 'DamZ' https://www.drupal.org/u/damien-tournoud
+
+Overlay module
+- Katherine Senzee 'ksenzee' https://www.drupal.org/u/ksenzee
+
+Path module
+- Dave Reid 'davereid' https://www.drupal.org/u/dave-reid
+
+PHP module
+- ?
+
+Poll module
+- Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
+
+Profile module
+- ?
+
+RDF module
+- Stéphane Corlosquet 'scor' https://www.drupal.org/u/scor
+
+Search module
+- Doug Green 'douggreen' https://www.drupal.org/u/douggreen
+
+Shortcut module
+- David Rothstein 'David_Rothstein' https://www.drupal.org/u/david_rothstein
+
+Simpletest module
+- Jimmy Berry 'boombatower' https://www.drupal.org/u/boombatower
+
+Statistics module
+- Tim Millwood 'timmillwood' https://www.drupal.org/u/timmillwood
+
+Syslog module
+- Khalid Baheyeldin 'kbahey' https://www.drupal.org/u/kbahey
+
+System module
+- ?
+
+Taxonomy module
+- Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Benjamin Doherty 'bangpound' https://www.drupal.org/u/bangpound
+
+Toolbar module
+- ?
+
+Tracker module
+- David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+
+Translation module
+- Francesco Placella 'plach' https://www.drupal.org/u/plach
+
+Trigger module
+- ?
+
+Update module
+- Derek Wright 'dww' https://www.drupal.org/u/dww
+
+User module
+- Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
+- David Strauss 'David Strauss' https://www.drupal.org/u/david-strauss
+
+
+Theme maintainers
+-----------------
+
+Bartik theme
+- Jen Simmons 'jensimmons' https://www.drupal.org/u/jensimmons
+- Jeff Burns 'Jeff Burnz' https://www.drupal.org/u/jeff-burnz
+
+Garland theme
+- John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
+
+Seven theme
+- Jeff Burns 'Jeff Burnz' https://www.drupal.org/u/jeff-burnz
+
+Stark theme
+- John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin

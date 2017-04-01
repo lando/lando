@@ -1,0 +1,13 @@
+name = Image test
+description = Provides hook implementations for testing Image module functionality.
+package = Core
+version = VERSION
+core = 7.x
+files[] = image_module_test.module
+hidden = TRUE
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

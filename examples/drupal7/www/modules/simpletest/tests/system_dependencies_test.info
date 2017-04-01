@@ -1,0 +1,13 @@
+name = "System dependency test"
+description = "Support module for testing system dependencies."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
+dependencies[] = _missing_dependency
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

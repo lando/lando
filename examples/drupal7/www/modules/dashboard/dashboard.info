@@ -1,0 +1,14 @@
+name = Dashboard
+description = Provides a dashboard page in the administrative interface for organizing administrative tasks and tracking information within your site.
+core = 7.x
+package = Core
+version = VERSION
+files[] = dashboard.test
+dependencies[] = block
+configure = admin/dashboard/customize
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

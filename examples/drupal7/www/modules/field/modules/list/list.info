@@ -1,0 +1,14 @@
+name = List
+description = Defines list field types. Use with Options to create selection lists.
+package = Core
+version = VERSION
+core = 7.x
+dependencies[] = field
+dependencies[] = options
+files[] = tests/list.test
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

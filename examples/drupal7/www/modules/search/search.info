@@ -1,0 +1,15 @@
+name = Search
+description = Enables site-wide keyword searching.
+package = Core
+version = VERSION
+core = 7.x
+files[] = search.extender.inc
+files[] = search.test
+configure = admin/config/search/settings
+stylesheets[all][] = search.css
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

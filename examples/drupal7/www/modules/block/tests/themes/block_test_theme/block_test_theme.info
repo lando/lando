@@ -1,0 +1,20 @@
+name = Block test theme
+description = Theme for testing the block system
+core = 7.x
+hidden = TRUE
+
+regions[sidebar_first] = Left sidebar
+regions_hidden[]  = sidebar_first
+regions[sidebar_second] = Right sidebar
+regions_hidden[]  = sidebar_second
+regions[content] = Content
+regions[header] = Header
+regions[footer] = Footer
+regions[highlighted] = Highlighted
+regions[help] = Help
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

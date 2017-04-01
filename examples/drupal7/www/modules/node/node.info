@@ -1,0 +1,16 @@
+name = Node
+description = Allows content to be submitted to the site and displayed on pages.
+package = Core
+version = VERSION
+core = 7.x
+files[] = node.module
+files[] = node.test
+required = TRUE
+configure = admin/structure/types
+stylesheets[all][] = node.css
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+
