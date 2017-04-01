@@ -1,6 +1,6 @@
 name: lemp
 sharing:
-  data:
+  appserver:
     local: www
     remote: /var/www/html
 proxy:

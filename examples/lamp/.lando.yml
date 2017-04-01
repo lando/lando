@@ -1,6 +1,6 @@
 name: lamp
 sharing:
-  data:
+  appserver:
     local: www
     remote: /var/www/html
 proxy:
@@ -17,7 +17,7 @@ services:
     ssl: true
   database:
     type: mariadb
-    portforward: 3307
+    portforward: 3308
     creds:
       user: pirog
       password: pirog
