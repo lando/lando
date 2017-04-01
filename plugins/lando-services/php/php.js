@@ -83,7 +83,7 @@ module.exports = function(lando) {
         TERM: 'xterm'
       },
       ports: ['80'],
-      volumes: ['data:/var/www/html'],
+      volumes: [],
       command: config.command.join(' '),
     };
 
@@ -159,6 +159,14 @@ module.exports = function(lando) {
     if (type === 'nginx') {
       services.fpm = php(config);
       delete services.fpm.ports;
+    }
+
+    // Add correct volumes based on webserver choice
+    if (type === 'nginx') {
+      services.fpm.volumes.push(name + ':/var/www/html');
+    }
+    else {
+      services[name].volumes.push('data:/var/www/html');
     }
 
     // Return things
