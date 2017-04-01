@@ -1,0 +1,13 @@
+name = Trigger
+description = Enables actions to be fired on certain system events, such as when new content is created.
+package = Core
+version = VERSION
+core = 7.x
+files[] = trigger.test
+configure = admin/structure/trigger
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

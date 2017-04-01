@@ -1,0 +1,11 @@
+name = Update test subtheme
+description = Test theme which uses update_test_basetheme as the base theme.
+core = 7.x
+base theme = update_test_basetheme
+hidden = TRUE
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

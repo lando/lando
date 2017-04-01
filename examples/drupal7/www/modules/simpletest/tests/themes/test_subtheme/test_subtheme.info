@@ -1,0 +1,13 @@
+name = Theme test subtheme
+description = Test theme which uses test_basetheme as the base theme.
+core = 7.x
+base theme = test_basetheme
+hidden = TRUE
+
+settings[subtheme_override] = subtheme value
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+

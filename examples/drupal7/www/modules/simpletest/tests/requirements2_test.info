@@ -1,0 +1,14 @@
+name = Requirements 2 Test
+description = "Tests that a module is not installed when the one it depends on fails hook_requirements('install)."
+dependencies[] = requirements1_test
+dependencies[] = comment
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
+
+; Information added by Drupal.org packaging script on 2017-02-01
+version = "7.54"
+project = "drupal"
+datestamp = "1485986921"
+
