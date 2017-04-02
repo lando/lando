@@ -17,6 +17,7 @@ module.exports = function(lando) {
    * Supported versions for mysql
    */
   var versions = [
+    '8',
     '5.5.53',
     '5.6',
     '5.7',

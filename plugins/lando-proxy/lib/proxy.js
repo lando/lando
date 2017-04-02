@@ -533,6 +533,18 @@ module.exports = function(lando) {
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
 
+      // Make sure the proxy is down before we destroy
+      app.events.on('pre-destroy', function() {
+        if (fs.existsSync(proxyFile)) {
+          return lando.engine.stop(getProxy(proxyFile));
+        }
+      });
+
+      // Make sure the proxy is up brought back up after we destroy
+      app.events.on('post-destroy', function() {
+        return startProxy();
+      });
+
       // Make sure the proxy is up and ready
       app.events.on('post-start', 1, function() {
         return startProxy();
