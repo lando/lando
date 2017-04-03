@@ -156,6 +156,39 @@ module.exports = function(lando) {
   };
 
   /**
+   * Delegator to gather info about a service for display to the user
+   */
+  var info = function(name, type, config) {
+
+    // Parse the type and version
+    var service = type.split(':')[0];
+    var version = type.split(':')[1] || 'latest';
+
+    // Check to verify whether the service exists in the registry
+    if (!registry[service]) {
+      lando.log.warn('%s is not a supported service.', service);
+      return {};
+    }
+
+    // Start an info collector
+    var info = {};
+
+    // Add basic info about our service
+    info.type = service;
+    info.version = version;
+
+    // Get additional information
+    info = _.merge(info, registry[service].info(name, config));
+
+    // Log
+    lando.log.verbose('Info get for %s:%s named %s', service, version, name);
+
+    // Return info
+    return info;
+
+  };
+
+  /**
    * The core service builder
    */
   var build = function(name, type, config) {
@@ -234,7 +267,8 @@ module.exports = function(lando) {
     addConfig: addConfig,
     addScript: addScript,
     build: build,
-    get: get
+    get: get,
+    info: info
   };
 
 };

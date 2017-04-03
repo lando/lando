@@ -20,8 +20,7 @@ module.exports = function(lando) {
       _.forEach(app.config.services, function(service, name) {
 
         // Get our new containers
-        var type = service.type;
-        var newCompose = lando.services.build(name, type, service);
+        var newCompose = lando.services.build(name, service.type, service);
 
         // Loop through and merge each service one in
         _.forEach(newCompose.services, function(service, name) {
@@ -44,15 +43,11 @@ module.exports = function(lando) {
       });
     }
 
-    // Add types to our app as needed
-    app.events.on('pre-info', function() {
-
-      // Go through each container and get and set the type
-      _.forEach(app.info, function(container, key) {
-        var type = _.get(app, 'config.services.' + key + '.type', 'custom');
-        app.info[key].type = type;
+    // Go through each config service and add additional info as needed
+    app.events.on('pre-info', 1, function() {
+      _.forEach(app.config.services, function(service, name) {
+        app.info[name] = lando.services.info(name, service.type, service);
       });
-
     });
 
   });
