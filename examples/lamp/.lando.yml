@@ -16,7 +16,7 @@ services:
     via: apache
     ssl: true
   database:
-    type: mariadb
+    type: mysql
     portforward: 3308
     creds:
       user: pirog

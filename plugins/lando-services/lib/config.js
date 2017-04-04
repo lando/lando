@@ -46,7 +46,13 @@ module.exports = function(lando) {
     // Go through each config service and add additional info as needed
     app.events.on('pre-info', 1, function() {
       _.forEach(app.config.services, function(service, name) {
-        app.info[name] = lando.services.info(name, service.type, service);
+
+        // Merge in any computed service info with starting conf
+        var config = _.merge(app.services[name], service);
+
+        // Merge create the info for the service
+        app.info[name] = lando.services.info(name, service.type, config);
+
       });
     });
 

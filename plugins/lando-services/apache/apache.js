@@ -96,6 +96,19 @@ module.exports = function(lando) {
   };
 
   /**
+   * Metadata about our service
+   */
+  var info = function() {
+
+    // Start up an info collector
+    var info = {};
+
+    // Return the collected info
+    return info;
+
+  };
+
+  /**
    * Return the volumes needed
    */
   var volumes = function() {
@@ -103,6 +116,7 @@ module.exports = function(lando) {
   };
 
   return {
+    info: info,
     networks: networks,
     services: services,
     versions: versions,
