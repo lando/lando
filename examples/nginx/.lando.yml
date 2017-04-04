@@ -12,7 +12,7 @@ proxy:
       secure: true
 services:
   appserver:
-    type: nginx:stable
+    type: nginx:1.8.1
     ssl: true
     config:
       server: config/server.conf

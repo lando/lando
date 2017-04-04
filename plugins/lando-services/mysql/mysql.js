@@ -103,7 +103,35 @@ module.exports = function(lando) {
     return {data: {}};
   };
 
+  /**
+   * Metadata about our service
+   */
+  var info = function(name, config) {
+
+    // Add in generic info
+    var info = {
+      creds: {
+        user: config.environment.MYSQL_USER,
+        password: config.environment.MYSQL_PASSWORD,
+        database: config.environment.MYSQL_DATABASE
+      },
+      'internal_connection': {
+        host: name,
+        port: 3306
+      },
+      'external_connection': {
+        host: 'localhost',
+        port: config.portforward
+      }
+    };
+
+    // Return the collected info
+    return info;
+
+  };
+
   return {
+    info: info,
     networks: networks,
     services: services,
     versions: versions,

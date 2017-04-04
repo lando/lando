@@ -43,18 +43,16 @@ module.exports = function(lando) {
 
     // Get the version and type
     var version = config.version || '7.0';
-    var type = config.via.split(':')[0] || 'nginx';
+    var via = config.via.split(':')[0] || 'nginx';
 
     // Define type specific config things
     var typeConfig = {
       nginx: {
-        type: type,
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.conf'
       },
       apache: {
-        type: type,
         command: ['apache2-foreground'],
         image: [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-available/000-default.conf',
@@ -63,11 +61,11 @@ module.exports = function(lando) {
 
     // Add the docker php entrypoint if we are on a supported php version
     if (version.split('.').join('') > 55) {
-      typeConfig[type].command.unshift('docker-php-entrypoint');
+      typeConfig[via].command.unshift('docker-php-entrypoint');
     }
 
     // Return type specific config
-    return _.merge(config, typeConfig[type]);
+    return _.merge(config, typeConfig[via]);
 
   };
 
@@ -88,7 +86,7 @@ module.exports = function(lando) {
     };
 
     // If this is apache lets do some checks
-    if (config.type === 'apache' && config.ssl) {
+    if (config.via === 'apache' && config.ssl) {
 
       // Add the ssl port
       php.ports.push('443');
@@ -114,7 +112,7 @@ module.exports = function(lando) {
   var nginx = function(config) {
 
     // Add a version to the type if applicable
-    var type = [config.type, config.via.split(':')[1]].join(':');
+    var type = ['nginx', config.via.split(':')[1]].join(':');
 
     // Handle our nginx config
     var defaultConfFile = (config.ssl) ? 'default-ssl.conf' : 'default.conf';
@@ -147,22 +145,22 @@ module.exports = function(lando) {
 
     // Get name and type
     var name = config.name;
-    var type = config.type;
+    var via = config.via;
 
     // Start a services collector
     var services = {};
 
     // Build the correct "appserver"
-    services[name] = (type === 'nginx') ? nginx(config) : php(config);
+    services[name] = (via === 'nginx') ? nginx(config) : php(config);
 
     // Add fpm backend if we are doing nginx
-    if (type === 'nginx') {
+    if (via === 'nginx') {
       services.fpm = php(config);
       delete services.fpm.ports;
     }
 
     // Add correct volumes based on webserver choice
-    if (type === 'nginx') {
+    if (via === 'nginx') {
       services.fpm.volumes.push(name + ':/var/www/html');
     }
     else {
@@ -209,7 +207,7 @@ module.exports = function(lando) {
     // Handle custom php config files/dirs
     _.forEach(configFiles.php, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        var service = (config.type === 'nginx') ? 'fpm' : name;
+        var service = (config.via === 'nginx') ? 'fpm' : name;
         var local = config.config[type];
         var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         var volumes = services[service].volumes;
@@ -219,6 +217,27 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
+
+  };
+
+  /**
+   * Metadata about our service
+   */
+  var info = function(name, config) {
+
+    // Start up an info collector
+    var info = {};
+
+    // Add in appserver basics
+    info.via = config.via;
+
+    // Add in FPM if needed
+    if (config.via === 'nginx') {
+      info.fpm = true;
+    }
+
+    // Return the collected info
+    return info;
 
   };
 
@@ -241,6 +260,7 @@ module.exports = function(lando) {
   };
 
   return {
+    info: info,
     networks: networks,
     services: services,
     versions: versions,
