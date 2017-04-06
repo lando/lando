@@ -1,0 +1,194 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the search module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function search_schema() {
+  $schema['search_dataset'] = array(
+    'description' => 'Stores items that will be searched.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Search item ID, e.g. node ID for nodes.',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'description' => 'Type of item, e.g. node.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'List of space-separated words from the item.',
+      ),
+      'reindex' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Set to force node reindexing.',
+      ),
+    ),
+    'primary key' => array('sid', 'type'),
+  );
+
+  $schema['search_index'] = array(
+    'description' => 'Stores the search index, associating words, items and scores.',
+    'fields' => array(
+      'word' => array(
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The {search_total}.word that is associated with the search item.',
+      ),
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {search_dataset}.sid of the searchable item to which the word belongs.',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',
+      ),
+      'score' => array(
+        'type' => 'float',
+        'not null' => FALSE,
+        'description' => 'The numeric score of the word, higher being more important.',
+      ),
+    ),
+    'indexes' => array(
+      'sid_type' => array('sid', 'type'),
+    ),
+    'foreign keys' => array(
+      'search_dataset' => array(
+        'table' => 'search_dataset',
+        'columns' => array(
+          'sid' => 'sid',
+          'type' => 'type',
+        ),
+      ),
+    ),
+    'primary key' => array('word', 'sid', 'type'),
+  );
+
+  $schema['search_total'] = array(
+    'description' => 'Stores search totals for words.',
+    'fields' => array(
+      'word' => array(
+        'description' => 'Primary Key: Unique word in the search index.',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'count' => array(
+        'description' => "The count of the word in the index using Zipf's law to equalize the probability distribution.",
+        'type' => 'float',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('word'),
+  );
+
+  $schema['search_node_links'] = array(
+    'description' => 'Stores items (like nodes) that link to other nodes, used to improve search scores for nodes that are frequently linked to.',
+    'fields' => array(
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {search_dataset}.sid of the searchable item containing the link to the node.',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The {search_dataset}.type of the searchable item containing the link to the node.',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid that this item links to.',
+      ),
+      'caption' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => 'The text used to link to the {node}.nid.',
+      ),
+    ),
+    'primary key' => array('sid', 'type', 'nid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */ 
+
+/**
+ * Update search module to use the configuration system.
+ */
+function search_update_1000() {
+  // Migrate variables to config.
+  $config = config('search.settings');
+  $config->set('search_minimum_word_size', update_variable_get('minimum_word_size', 3));
+  $config->set('search_overlap_cjk', update_variable_get('overlap_cjk', 1));
+  $config->set('search_cron_limit', update_variable_get('search_cron_limit', 100));
+  $config->set('search_tag_weights', update_variable_get('search_tag_weights', array(
+    'h1' => 25,
+    'h2' => 18,
+    'h3' => 15,
+    'h4' => 12,
+    'h5' => 9,
+    'h6' => 6,
+    'u' => 3,
+    'b' => 3,
+    'i' => 3,
+    'strong' => 3,
+    'em' => 3,
+    'a' => 10
+  )));
+  $config->set('search_active_modules', update_variable_get('search_active_modules', array('node', 'user')));
+  $config->set('search_and_or_limit', update_variable_get('search_and_or_limit', 7));
+  $config->set('search_default_module', update_variable_get('search_default_module', 'node'));
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('minimum_word_size');
+  update_variable_del('overlap_cjk');
+  update_variable_del('search_cron_limit');
+  update_variable_del('search_tag_weights');
+  update_variable_del('search_active_modules');
+  update_variable_del('search_and_or_limit');
+  update_variable_del('search_default_module');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

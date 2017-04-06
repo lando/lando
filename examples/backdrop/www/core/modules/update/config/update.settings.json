@@ -1,0 +1,18 @@
+{
+    "_config_name": "update.settings",
+    "_config_static": true,
+    "update_cron": 1,
+    "update_disabled_extensions": 0,
+    "update_interval_days": 1,
+    "update_url": "",
+    "update_not_implemented_url": "https://github.com/backdrop-ops/backdropcms.org/issues/22",
+    "update_max_attempts": 2,
+    "update_timeout": 30,
+    "update_emails": [],
+    "update_threshold": 0,
+    "update_requirement_type": 0,
+    "update_system_info": [],
+    "update_status": [],
+    "update_xml_map": 0,
+    "update_projects": []
+}

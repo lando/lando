@@ -1,0 +1,403 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the standard installation profile.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function standard_install() {
+  // Add text formats.
+  $filtered_html_format = array(
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'weight' => 0,
+    'editor' => 'ckeditor',
+    'editor_settings' => array(
+      'image_upload' => array(
+        'status' => 1,
+        'dimensions' => array('max_width' => '', 'max_height' => ''),
+        'max_size' => NULL,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+      ),
+    ),
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // HTML filter.
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+      // Image captions.
+      'filter_image_caption' => array(
+        'weight' => 4,
+        'status' => 1,
+      ),
+      // Image alignment.
+      'filter_image_align' => array(
+        'weight' => 4,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $filtered_html_format = (object) $filtered_html_format;
+  filter_format_save($filtered_html_format);
+
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'editor' => NULL,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Image captions.
+      'filter_image_caption' => array(
+        'weight' => 4,
+        'status' => 1,
+      ),
+      // Image alignment.
+      'filter_image_align' => array(
+        'weight' => 4,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+
+  // Enable Basis theme and set it as default theme instead of Stark.
+  // @see system_install()
+  $default_theme = 'basis';
+  config_set('system.core', 'theme_default', $default_theme);
+  theme_enable(array($default_theme));
+  theme_disable(array('stark'));
+
+  // Set front page to "home".
+  config_set('system.core', 'site_frontpage', 'home');
+  backdrop_flush_all_caches();
+
+  // Create default pre-defined node types. For a complete list of available
+  // node type attributes please refer to the node type API documentation at:
+  // https://api.backdropcms.org/api/backdrop/core!modules!node!node.module/function/node_type_save
+  $types = array(
+    array(
+      'type' => 'page',
+      'name' => st('Page'),
+      'description' => st("Add a page with static content, like the 'About' page."),
+      'settings' => array(
+        'status_default' => TRUE,
+        'promote_enabled' => FALSE,
+        'promote_default' => FALSE,
+        'sticky_enabled' => FALSE,
+        'sticky_default' => FALSE,
+        'revision_enabled' => TRUE,
+        'revision_default' => FALSE,
+        'node_submitted' => FALSE,
+        'node_user_picture' => FALSE,
+        'comment_default' => COMMENT_NODE_CLOSED,
+        'menu_options' => array('main-menu'),
+      ),
+      'is_new' => TRUE,
+    ),
+    array(
+      'type' => 'post',
+      'name' => st('Post'),
+      'description' => st('Add a blog post, news article, or press release.'),
+      'settings' => array(
+        'status_default' => TRUE,
+        'promote_enabled' => TRUE,
+        'promote_default' => TRUE,
+        'sticky_enabled' => TRUE,
+        'sticky_default' => FALSE,
+        'revision_enabled' => TRUE,
+        'revision_default' => FALSE,
+        'show_submitted_info' => TRUE,
+        'comment_default' => COMMENT_NODE_OPEN,
+        'node_submitted' => TRUE,
+        'node_user_picture' => TRUE,
+      ),
+      'is_new' => TRUE,
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    node_add_body_field($type);
+  }
+
+  // Add default alias for page content types.
+  config('path.settings')
+    ->set('node_page_pattern', '[node:title]')
+    ->set('node_post_pattern', 'posts/[node:title]')
+    ->save();
+
+  // Enable user picture support and set the default to a square thumbnail option.
+  config('system.core')
+    ->set('user_pictures', '1')
+    ->set('user_picture_dimensions', '1024x1024')
+    ->set('user_picture_file_size', '800')
+    ->set('user_picture_style', 'thumbnail')
+    ->save();
+
+  // Create an initial post to welcome users on install.
+  $post = new Node(
+    array(
+      'title' => st('Your first post!'),
+      'body' => array(
+        LANGUAGE_NONE => array(
+          array(
+            'value' => st('This is your first post! You may edit or delete it.'),
+          ),
+        ),
+      ),
+      'uid' => 1,
+      'status' => 1,
+      'promote' => 1,
+      'type' => 'post',
+    )
+  );
+  $post->save();
+
+  // Create an "About" page node.
+  $page = new Node(
+    array(
+      'title' => st('About'),
+      'body' => array(
+        LANGUAGE_NONE => array(
+          array(
+            'value' => st('This is a page with static content. You may edit or delete it.'),
+          ),
+        ),
+      ),
+      'uid' => 1,
+      'status' => 1,
+      'promote' => 0,
+      'type' => 'page',
+    )
+  );
+  $page->save();
+
+  // Create an "About" link in the main menu.
+  $item = array(
+    'link_path' => 'node/' . $page->nid,
+    'link_title' => 'About',
+    'weight' => 1,
+  );
+  menu_link_save($item);
+
+
+  // Allow visitor account creation with administrative approval.
+  config_set('system.core', 'user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
+
+  // Create a default vocabulary named "Tags", enabled for the 'post' content type.
+  $description = st('Use tags to group posts on similar topics into categories.');
+  $vocabulary = new TaxonomyVocabulary(array(
+    'name' => st('Tags'),
+    'description' => $description,
+    'machine_name' => 'tags',
+  ));
+  taxonomy_vocabulary_save($vocabulary);
+
+  $field = array(
+    'field_name' => 'field_' . $vocabulary->machine_name,
+    'type' => 'taxonomy_term_reference',
+    // Set cardinality to unlimited for tagging.
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'settings' => array(
+      'allowed_values' => array(
+        array(
+          'vocabulary' => $vocabulary->machine_name,
+          'parent' => 0,
+        ),
+      ),
+    ),
+  );
+  field_create_field($field);
+
+  $help = st('Enter a comma-separated list of words to describe your content.');
+  $instance = array(
+    'field_name' => 'field_' . $vocabulary->machine_name,
+    'entity_type' => 'node',
+    'label' => 'Tags',
+    'bundle' => 'post',
+    'description' => $help,
+    'widget' => array(
+      'type' => 'taxonomy_autocomplete',
+      'weight' => -4,
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+
+
+  // Create an image field named "Image", enabled for the 'post' content type.
+  // Many of the following values will be defaulted, they're included here as an illustrative examples.
+  // See https://api.backdropcms.org/api/function/field_create_field/1
+
+  $field = array(
+    'field_name' => 'field_image',
+    'type' => 'image',
+    'cardinality' => 1,
+    'locked' => FALSE,
+    'indexes' => array('fid' => array('fid')),
+    'settings' => array(
+      'uri_scheme' => 'public',
+      'default_image' => FALSE,
+    ),
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+    ),
+  );
+  field_create_field($field);
+
+
+  // Many of the following values will be defaulted, they're included here as an illustrative examples.
+  // See https://api.backdropcms.org/api/function/field_create_instance/1
+  $instance = array(
+    'field_name' => 'field_image',
+    'entity_type' => 'node',
+    'label' => 'Image',
+    'bundle' => 'post',
+    'description' => st('Upload an image to go with this post.'),
+    'required' => FALSE,
+
+    'settings' => array(
+      'file_directory' => 'field/image',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'alt_field' => TRUE,
+      'title_field' => '',
+    ),
+
+    'widget' => array(
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array('image_style' => 'large', 'image_link' => ''),
+        'weight' => -1,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array(
+          'image_style' => 'medium',
+          'image_link' => 'content',
+          'image_float' => 'right',
+        ),
+        'weight' => -1,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+
+  // Enable default permissions for system roles.
+  $filtered_html_permission = filter_permission_name($filtered_html_format);
+  user_role_grant_permissions(BACKDROP_ANONYMOUS_ROLE, array('access content', 'access comments', $filtered_html_permission));
+  user_role_grant_permissions(BACKDROP_AUTHENTICATED_ROLE, array('access content', 'access comments', 'post comments', 'skip comment approval', 'upload editor images', $filtered_html_permission));
+
+  // Create a default role for site administrators, with all available permissions assigned.
+  $admin_role = new stdClass();
+  $admin_role->name = 'administrator';
+  $admin_role->label = st('Administrator');
+  $admin_role->weight = 2;
+  $admin_role->permissions = array_keys(module_invoke_all('permission'));
+  user_role_save($admin_role);
+  // Set this as the administrator role.
+  config_set('system.core', 'user_admin_role', $admin_role->name);
+
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+    ->fields(array('uid' => 1, 'role' => $admin_role->name))
+    ->execute();
+
+  // Create a Home link in the main menu.
+  $item = array(
+    'link_title' => st('Home'),
+    'link_path' => '<front>',
+    'menu_name' => 'main-menu',
+    'weight' => -1,
+  );
+  menu_link_save($item);
+
+  // Create a login link in the account menu.
+  $item = array(
+    'link_title' => st('Login'),
+    'link_path' => 'user/login',
+    'menu_name' => 'user-menu',
+    'weight' => -1,
+  );
+  menu_link_save($item);
+
+  // Update the menu router information.
+  menu_rebuild();
+
+  // Enable the admin theme.
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('type', 'theme')
+    ->condition('name', 'seven')
+    ->execute();
+  config_set('system.core', 'admin_theme', 'seven');
+  config_set('system.core', 'node_admin_theme', '1');
+
+  // Enable the page cache and aggregation.
+  config_set('system.core', 'preprocess_css', '1');
+  config_set('system.core', 'preprocess_js', '1');
+  config_set('system.core', 'cache', '1');
+}

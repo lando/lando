@@ -1,0 +1,5 @@
+{
+    "_config_name": "book.settings",
+    "book_allowed_types": ["book"],
+    "book_child_type": "book"
+}

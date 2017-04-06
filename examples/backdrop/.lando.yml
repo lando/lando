@@ -1,0 +1,29 @@
+name: backdrop
+sharing:
+  appserver:
+    local: www
+    remote: /var/www/html
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  appserver:
+    type: php:7.0
+    via: nginx
+    ssl: true
+    config:
+      server: config/nginx/backdrop.conf
+      conf: config/php/php.ini
+  database:
+    type: mysql:5.5.53
+    portforward: 3399
+    creds:
+      user: backdrop
+      password: backdrop
+      database: backdrop
+    config:
+      confd: config/mysql

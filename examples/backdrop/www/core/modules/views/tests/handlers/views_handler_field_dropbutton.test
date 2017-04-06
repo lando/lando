@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Tests dropbutton functionality of Views.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/views_query.test';
+
+/**
+ * Tests dropbutton functionality of views.
+ */
+class ViewsHandlerFieldDropbuttonTest extends ViewsSqlTest {
+  /**
+   * Tests dropbutton display.
+   */
+  public function testDropbutton() {
+    // Create a node to test the listing.
+    $node = $this->backdropCreateNode();
+    $this->backdropGet('views_test/dropbutton');
+    $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => url('node/' . $node->nid), ':title' => 'view'));
+    $this->assertEqual(count($result), 1, 'Node node view link found in dropbutton.');
+    $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[contains(@href, :path) and text()=:title]', array(':path' => url('node/' . $node->nid), ':title' => 'custom'));
+    $this->assertEqual(count($result), 1, 'Custom link to node found in dropbutton.');
+  }
+}

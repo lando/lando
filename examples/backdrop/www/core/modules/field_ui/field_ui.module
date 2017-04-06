@@ -1,0 +1,413 @@
+<?php
+/**
+ * @file
+ * Allows administrators to attach custom fields to fieldable types.
+ */
+
+/**
+ * Implements hook_field_attach_rename_bundle().
+ */
+function field_ui_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new) {
+  // The Field UI relies on entity_get_info() to build menu items for entity
+  // field administration pages. Ensure that the menu is rebuilt.
+  menu_rebuild();
+}
+
+/**
+ * Implements hook_permission().
+ */
+function field_ui_permission() {
+  return array(
+    'administer view modes' => array(
+      'title' => t('Add, edit, and delete custom view modes.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function field_ui_menu() {
+  $items['admin/reports/fields'] = array(
+    'title' => 'Fields',
+    'description' => 'Overview of fields on all entity types.',
+    'page callback' => 'field_ui_fields_list',
+    'access arguments' => array('administer content types'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'field_ui.admin.inc',
+  );
+
+  // Create tabs for all possible bundles.
+  foreach (entity_get_info() as $entity_type => $entity_info) {
+    if ($entity_info['fieldable']) {
+      foreach ($entity_info['bundles'] as $bundle_name => $bundle_info) {
+        if (isset($bundle_info['admin'])) {
+          // Extract path information from the bundle.
+          $path = $bundle_info['admin']['path'];
+          // Different bundles can appear on the same path (e.g. %node_type and
+          // %comment_menu_node_type). To allow field_ui_menu_load() to extract the
+          // actual bundle object from the translated menu router path
+          // arguments, we need to identify the argument position of the bundle
+          // name string ('bundle argument') and pass that position to the menu
+          // loader. The position needs to be casted into a string; otherwise it
+          // would be replaced with the bundle name string.
+          if (isset($bundle_info['admin']['bundle argument'])) {
+            $bundle_arg = $bundle_info['admin']['bundle argument'];
+            $bundle_position = (string) $bundle_arg;
+          }
+          else {
+            $bundle_arg = $bundle_name;
+            $bundle_position = '0';
+          }
+          // This is the position of the %field_ui_menu placeholder in the
+          // items below.
+          $field_position = count(explode('/', $path)) + 1;
+          $view_mode_position = count(explode('/', $path)) + 1;
+
+          // Extract access information, providing defaults.
+          $access = array_intersect_key($bundle_info['admin'], backdrop_map_assoc(array('access callback', 'access arguments')));
+          $access += array(
+            'access callback' => 'user_access',
+            'access arguments' => array('administer fields'),
+          );
+
+          // Add the "administer fields" permission on top of the access
+          // restriction because the field UI should only be accessible to
+          // trusted users.
+          if ($access['access callback'] != 'user_access' || $access['access arguments'] != array('administer fields')) {
+            $access = array(
+              'access callback' => 'field_ui_admin_access',
+              'access arguments' => array($access['access callback'], $access['access arguments']),
+            );
+          }
+
+          $items["$path/fields"] = array(
+            'title' => 'Manage fields',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_field_overview_form', $entity_type, $bundle_arg),
+            'type' => MENU_LOCAL_TASK,
+            'weight' => 1,
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+          $items["$path/fields/%field_ui_menu"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_position, '%map'),
+            'title callback' => 'field_ui_menu_title',
+            'title arguments' => array($field_position),
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_field_edit_form', $field_position),
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+          $items["$path/fields/%field_ui_menu/edit"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_position, '%map'),
+            'title' => 'Edit',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_field_edit_form', $field_position),
+            'type' => MENU_DEFAULT_LOCAL_TASK,
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+          $items["$path/fields/%field_ui_menu/field-settings"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_position, '%map'),
+            'title' => 'Field settings',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_field_settings_form', $field_position),
+            'type' => MENU_LOCAL_TASK,
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+          $items["$path/fields/%field_ui_menu/widget-type"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_position, '%map'),
+            'title' => 'Widget type',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_widget_type_form', $field_position),
+            'type' => MENU_LOCAL_TASK,
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+          $items["$path/fields/%field_ui_menu/delete"] = array(
+            'load arguments' => array($entity_type, $bundle_arg, $bundle_position, '%map'),
+            'title' => 'Delete',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_field_delete_form', $field_position),
+            'type' => MENU_VISIBLE_IN_BREADCRUMB,
+            'weight' => 10,
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+
+          // 'Manage displays' overview.
+          $items["$path/display"] = array(
+            'title' => 'Manage displays',
+            'page callback' => 'field_ui_display_overview',
+            'page arguments' => array($entity_type, $bundle_arg),
+            'type' => MENU_LOCAL_TASK,
+            'weight' => 2,
+            'file' => 'field_ui.admin.inc',
+          ) + $access;
+
+          // View modes displays.
+          // The same base $path for the menu item (with a placeholder) can be
+          // used for all bundles of a given entity type; but depending on
+          // administrator settings, each bundle has a different set of view
+          // modes available for customization. So we define menu items for all
+          // view modes, and use an access callback to determine which ones are
+          // actually visible for a given bundle.
+          $weight = 0;
+
+          $items["$path/display/%"] = array(
+            'title callback' => 'field_ui_manage_display_title',
+            'title arguments' => array($entity_type, $view_mode_position),
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_display_form', $entity_type, $bundle_arg, $view_mode_position),
+            // The access callback needs to check both the current 'custom
+            // display' setting for the view mode, and the overall access
+            // rules for the bundle admin pages.
+            'access callback' => '_field_ui_view_mode_menu_access',
+            'access arguments' => array_merge(array($entity_type, $bundle_arg, $view_mode_position, $access['access callback']), $access['access arguments']),
+            'file' => 'field_ui.admin.inc',
+          );
+
+          // View mode administration.
+          $items["$path/display/add"] = array(
+            'title' => 'Add view mode',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_view_mode_form', $entity_type, $bundle_arg),
+            'access arguments' => array('administer view modes'),
+            'file' => 'field_ui.admin.inc',
+            'type' => MENU_LOCAL_ACTION,
+          );
+          $items["$path/display/%/configure"] = array(
+            'title' => 'Configure view mode',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_view_mode_form', $entity_type, $bundle_arg, $view_mode_position),
+            'access arguments' => array('administer view modes'),
+            'file' => 'field_ui.admin.inc',
+          );
+          $items["$path/display/%/delete"] = array(
+            'title' => 'Delete view mode',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_view_mode_delete_form', $entity_type, $bundle_arg, $view_mode_position),
+            'access arguments' => array('administer view modes'),
+            'file' => 'field_ui.admin.inc',
+          );
+          $items["$path/display/%/enable"] = array(
+            'title' => 'Enable view mode',
+            'page callback' => 'field_ui_view_mode_enable',
+            'page arguments' => array($entity_type, $bundle_arg, $view_mode_position),
+            'access callback' => 'field_ui_view_mode_enable_access',
+            'file' => 'field_ui.admin.inc',
+          );
+          $items["$path/display/%/reset"] = array(
+            'title' => 'Reset to default',
+            'page callback' => 'backdrop_get_form',
+            'page arguments' => array('field_ui_view_mode_reset_form', $entity_type, $bundle_arg, $view_mode_position),
+            'access arguments' => array('administer view modes'),
+            'file' => 'field_ui.admin.inc',
+          );
+        }
+      }
+    }
+  }
+  return $items;
+}
+
+/**
+ * Menu loader callback: Loads a field instance based on field and bundle name.
+ *
+ * @param $field_name
+ *   The name of the field, as contained in the path.
+ * @param $entity_type
+ *   The name of the entity.
+ * @param $bundle_name
+ *   The name of the bundle, as contained in the path.
+ * @param $bundle_position
+ *   The position of $bundle_name in $map.
+ * @param $map
+ *   The translated menu router path argument map.
+ *
+ * @return
+ *   The field instance array.
+ *
+ * @ingroup field
+ */
+function field_ui_menu_load($field_name, $entity_type, $bundle_name, $bundle_position, $map) {
+  // Extract the actual bundle name from the translated argument map.
+  // The menu router path to manage fields of an entity can be shared among
+  // multiple bundles. For example:
+  // - admin/structure/types/manage/%node_type/fields/%field_ui_menu
+  // - admin/structure/types/manage/%comment_menu_node_type/fields/%field_ui_menu
+  // The menu system will automatically load the correct bundle depending on the
+  // actual path arguments, but this menu loader function only receives the node
+  // type string as $bundle_name, which is not the bundle name for comments.
+  // We therefore leverage the dynamically translated $map provided by the menu
+  // system to retrieve the actual bundle and bundle name for the current path.
+  if ($bundle_position > 0) {
+    $bundle = $map[$bundle_position];
+    $bundle_name = field_extract_bundle($entity_type, $bundle);
+  }
+  // Check whether the field exists at all.
+  if ($field = field_info_field($field_name)) {
+    // Only return the field if a field instance exists for the given entity
+    // type and bundle.
+    if ($instance = field_info_instance($entity_type, $field_name, $bundle_name)) {
+      return $instance;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Title callback: Returns the name of a given instance.
+ *
+ * @see field_ui_menu()
+ */
+function field_ui_menu_title($instance) {
+  return $instance['label'];
+}
+
+/**
+ * Access callback: Checks access for the 'view mode display settings' pages.
+ *
+ * @see field_ui_menu()
+ */
+function _field_ui_view_mode_menu_access($entity_type, $bundle, $view_mode, $access_callback) {
+  // First, determine visibility according to the 'use custom display'
+  // setting for the view mode.
+  $bundle = field_extract_bundle($entity_type, $bundle);
+  $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+  $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['custom_settings']);
+
+  // Then, determine access according to the $access parameter. This duplicates
+  // part of _menu_check_access().
+  if ($visibility) {
+    // Grab the variable 'access arguments' part.
+    $args = array_slice(func_get_args(), 4);
+    $callback = empty($access_callback) ? 0 : trim($access_callback);
+    if (is_numeric($callback)) {
+      return (bool) $callback;
+    }
+    else {
+      // As call_user_func_array() is quite slow and user_access is a very
+      // common callback, it is worth making a special case for it.
+      if ($access_callback == 'user_access') {
+        return (count($args) == 1) ? user_access($args[0]) : user_access($args[0], $args[1]);
+      }
+      else {
+        return call_user_func_array($access_callback, $args);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function field_ui_theme() {
+  return array(
+    'field_ui_table' => array(
+      'render element' => 'elements',
+      'file' => 'field_ui.theme.inc',
+    ),
+    'field_ui_view_modes' => array(
+      'render element' => 'element',
+      'file' => 'field_ui.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_element_info().
+ */
+function field_ui_element_info() {
+  return array(
+    'field_ui_table' => array(
+      '#theme' => 'field_ui_table',
+      '#pre_render' => array('field_ui_table_pre_render'),
+      '#regions' => array('' => array()),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_attach_create_bundle().
+ */
+function field_ui_field_attach_create_bundle($entity_type, $bundle) {
+  // When a new bundle is created, the menu needs to be rebuilt to add our
+  // menu item tabs.
+  state_set('menu_rebuild_needed', TRUE);
+}
+
+/**
+ * Determines the administration path for a bundle.
+ */
+function _field_ui_bundle_admin_path($entity_type, $bundle_name) {
+  $bundles = field_info_bundles($entity_type);
+  $bundle_info = $bundles[$bundle_name];
+  if (isset($bundle_info['admin'])) {
+    return isset($bundle_info['admin']['real path']) ? $bundle_info['admin']['real path'] : $bundle_info['admin']['path'];
+  }
+}
+
+/**
+ * Identifies inactive fields within a bundle.
+ */
+function field_ui_inactive_instances($entity_type, $bundle_name = NULL) {
+  if (!empty($bundle_name)) {
+    $inactive = array($bundle_name => array());
+    $params = array('bundle' => $bundle_name);
+  }
+  else {
+    $inactive = array();
+    $params = array();
+  }
+  $params['entity_type'] = $entity_type;
+
+  $active_instances = field_info_instances($entity_type);
+  $all_instances = field_read_instances($params, array('include_inactive' => TRUE));
+  foreach ($all_instances as $instance) {
+    if (!isset($active_instances[$instance['bundle']][$instance['field_name']])) {
+      $inactive[$instance['bundle']][$instance['field_name']] = $instance;
+    }
+  }
+  if (!empty($bundle_name)) {
+    return $inactive[$bundle_name];
+  }
+  return $inactive;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds a button 'Save and add fields' to the 'Add content type' form.
+ *
+ * @see node_type_form()
+ * @see field_ui_form_node_type_form_submit()
+ */
+function field_ui_form_node_type_form_alter(&$form, $form_state) {
+  // Display the button only on the 'Add content type' page.
+  if (empty($form['#node_type']->type)) {
+    $form['actions']['save_continue'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save and add fields'),
+      '#weight' => 35,
+    );
+    $form['#submit'][] = 'field_ui_form_node_type_form_submit';
+  }
+}
+
+/**
+ * Form submission handler for the 'Save and add fields' button.
+ *
+ * @see field_ui_form_node_type_form_alter()
+ */
+function field_ui_form_node_type_form_submit($form, &$form_state) {
+  if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
+    $form_state['redirect'] = _field_ui_bundle_admin_path('node', $form_state['values']['type']) .'/fields';
+  }
+}
+
+/**
+ * Access callback to determine if a user is allowed to use the field UI.
+ *
+ * Only grant access if the user has both the "administer fields" permission and
+ * is granted access by the entity specific restrictions.
+ */
+function field_ui_admin_access($access_callback, $access_arguments) {
+  return user_access('administer fields') && call_user_func_array($access_callback, $access_arguments);
+}

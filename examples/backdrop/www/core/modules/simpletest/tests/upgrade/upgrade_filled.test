@@ -1,0 +1,25 @@
+<?php
+
+require_once BACKDROP_ROOT . '/core/modules/simpletest/tests/upgrade/upgrade.test';
+
+/**
+ * Upgrade test for the filled database..
+ *
+ * Load a filled installation of Drupal 7 and run the upgrade process on it.
+ */
+class FilledUpgradePathTestCase extends UpgradePathTestCase {
+  public function setUp() {
+    // Path to the database dump.
+    $this->databaseDumpFiles = array(
+      backdrop_get_path('module', 'simpletest') . '/tests/upgrade/drupal-7.filled.database.php.gz',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testFilledUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+  }
+}

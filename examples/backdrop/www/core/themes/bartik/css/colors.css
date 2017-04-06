@@ -1,0 +1,77 @@
+
+/* ---------- Color Module Styles ----------- */
+
+body {
+  color: #3b3b3b;
+}
+.layout,
+.l-container {
+  background: #ffffff;
+}
+.l-header {
+  color: #fffeff;
+  background-color: #000000;
+  background-image: -moz-linear-gradient(top, #000000 0%, #000001 100%);
+  background-image: -ms-linear-gradient(top, #000000 0%, #000001 100%);
+  background-image: -o-linear-gradient(top, #000000 0%, #000001 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #000000), color-stop(1, #000001));
+  background-image: -webkit-linear-gradient(top, #000000 0%, #000001 100%);
+  background-image: linear-gradient(top, #000000 0%, #000001 100%);
+}
+.l-header ul.menu > li > a {
+  color: #e3e3e3;
+}
+.l-header ul.menu-dropdown a {
+  color: #3b3b3b;
+}
+
+/* Style the colors of the dropdown to match the header if no-tabs. */
+.l-header .no-tabs ul.menu a {
+  color: #e3e3e3;
+}
+.l-header .no-tabs .menu-dropdown a span.sub-arrow {
+  border-color: #e3e3e3 transparent transparent transparent;
+}
+.l-header .no-tabs .menu-dropdown ul a span.sub-arrow {
+  border-color: transparent transparent transparent #e3e3e3; /* RTL */
+}
+[dir="rtl"] .l-header  .no-tabs .menu-dropdown ul a span.sub-arrow {
+  border-color: transparent #e3e3e3 transparent transparent;
+}
+.l-header .no-tabs ul.menu-dropdown ul {
+  background-color: #000001;
+}
+
+input {
+  color: #3b3b3b;
+}
+.tabs ul.primary > li > a.active {
+  background-color: #ffffff;
+}
+.tabs ul.primary > li.active > a {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+.comment .comment-arrow {
+  border-color: #ffffff;
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+  color: #27ace2;
+}
+
+.l-sidebar .block {
+  background-color: #e8e6e5;
+  border-color: #fffffe;
+}
+
+.l-footer-wrapper,
+.l-footer {
+  background: #000002;
+}
+.l-header a {
+  color: #fffeff;
+}

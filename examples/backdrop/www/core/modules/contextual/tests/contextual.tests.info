@@ -1,0 +1,10 @@
+[ContextualDynamicContextTestCase]
+name = Contextual links on node lists
+description = Tests if contextual links are showing on the front page depending on permissions.
+group = Contextual
+file = contextual.test
+
+; Added by Backdrop CMS packaging script on 2017-03-15
+project = backdrop
+version = 1.6.3
+timestamp = 1489643437

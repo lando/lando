@@ -1,0 +1,164 @@
+{
+    "_config_name": "layout.layout.home",
+    "path": "home",
+    "name": "home",
+    "title": "Home page",
+    "description": null,
+    "module": "standard",
+    "weight": 0,
+    "storage": 4,
+    "layout_template": "boxton",
+    "disabled": false,
+    "settings": {
+        "title": "Welcome to Backdrop",
+        "title_display": "none",
+        "title_block": "094cbc03-d088-4b3c-8361-977733540ae8"
+    },
+    "positions": {
+        "header": [
+            "9bd5a524-3670-4922-8b12-18b00a2858b9",
+            "9aece1df-ac4f-44a6-8b0c-12a7f6a1fb21"
+        ],
+        "top": [
+            "094cbc03-d088-4b3c-8361-977733540ae8"
+        ],
+        "content": [
+            "578243cf-a4c8-46ad-9504-04aaf4ec9ccc"
+        ],
+        "bottom": [],
+        "footer": [
+            "d6903155-4ad7-46d3-9300-e628fd337f06"
+        ],
+        "title": []
+    },
+    "content": {
+        "9bd5a524-3670-4922-8b12-18b00a2858b9": {
+            "plugin": "system:header",
+            "data": {
+                "module": "system",
+                "delta": "header",
+                "settings": {
+                    "title_display": "default",
+                    "title": "",
+                    "style": "default",
+                    "block_settings": {
+                        "menu": "user-menu",
+                        "logo": 1,
+                        "site_name": 1,
+                        "site_slogan": 1
+                    },
+                    "contexts": []
+                },
+                "uuid": "9bd5a524-3670-4922-8b12-18b00a2858b9",
+                "style": {
+                    "plugin": "default",
+                    "data": {
+                        "settings": {
+                            "classes": ""
+                        }
+                    }
+                }
+            }
+        },
+        "9aece1df-ac4f-44a6-8b0c-12a7f6a1fb21": {
+            "plugin": "system:main-menu",
+            "data": {
+                "module": "system",
+                "delta": "main-menu",
+                "settings": {
+                    "title_display": "none",
+                    "title": "",
+                    "style": "default",
+                    "block_settings": {
+                        "style": "dropdown",
+                        "level": 1,
+                        "depth": 0
+                    },
+                    "contexts": []
+                },
+                "uuid": "9aece1df-ac4f-44a6-8b0c-12a7f6a1fb21",
+                "style": {
+                    "plugin": "default",
+                    "data": {
+                        "settings": {
+                            "classes": ""
+                        }
+                    }
+                }
+            }
+        },
+        "094cbc03-d088-4b3c-8361-977733540ae8": {
+            "plugin": "layout:hero",
+            "data": {
+                "module": "layout",
+                "delta": "hero",
+                "settings": {
+                    "title_display": "default",
+                    "title": "Welcome to Backdrop CMS",
+                    "style": "default",
+                    "block_settings": [],
+                    "contexts": [],
+                    "content": "",
+                    "format": "filtered_html",
+                    "image": null,
+                    "image_path": null
+                },
+                "uuid": "094cbc03-d088-4b3c-8361-977733540ae8",
+                "style": {
+                    "plugin": "default",
+                    "data": {
+                        "settings": {
+                            "classes": ""
+                        }
+                    }
+                }
+            }
+        },
+        "578243cf-a4c8-46ad-9504-04aaf4ec9ccc": {
+            "plugin": "views:promoted-block",
+            "data": {
+                "module": "views",
+                "delta": "promoted-block",
+                "settings": {
+                    "title_display": "default",
+                    "title": "",
+                    "style": "default",
+                    "block_settings": [],
+                    "contexts": []
+                },
+                "uuid": "578243cf-a4c8-46ad-9504-04aaf4ec9ccc",
+                "style": {
+                    "plugin": "default",
+                    "data": {
+                        "settings": {
+                            "classes": ""
+                        }
+                    }
+                }
+            }
+        },
+        "d6903155-4ad7-46d3-9300-e628fd337f06": {
+            "plugin": "system:powered-by",
+            "data": {
+                "module": "system",
+                "delta": "powered-by",
+                "settings": {
+                    "title_display": "default",
+                    "title": "",
+                    "style": "default",
+                    "block_settings": [],
+                    "contexts": []
+                },
+                "uuid": "d6903155-4ad7-46d3-9300-e628fd337f06",
+                "style": {
+                    "plugin": "default",
+                    "data": {
+                        "settings": {
+                            "classes": ""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

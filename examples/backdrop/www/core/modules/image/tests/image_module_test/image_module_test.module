@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Provides Image module hook implementations for testing purposes.
+ */
+
+function image_module_test_file_download($uri) {
+  if (state_get('image_module_test_file_download', FALSE) == $uri) {
+    return array('X-Image-Owned-By' => 'image_module_test');
+  }
+  if (state_get('image_module_test_invalid_headers', FALSE) == $uri) {
+    return array('Content-Type' => 'image/png');
+  }
+}
+
+/**
+ * Implements hook_image_effect_info().
+ */
+function image_module_test_image_effect_info() {
+  $effects = array(
+    'image_module_test_null' => array(
+      'effect callback' => 'image_module_test_null_effect',
+    ),
+    'image_module_test_wait' => array(
+      'label' => t('Wait 2 seconds'),
+      'help' => t('Performs a NULL operation that takes 5 seconds.'),
+      'effect callback' => 'image_module_test_wait_effect',
+      'dimensions passthrough' => TRUE,
+    )
+  );
+
+  return $effects;
+}
+
+/**
+ * Image effect callback; Null.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $data
+ *   An array with no attributes.
+ *
+ * @return TRUE
+ */
+function image_module_test_null_effect(array &$image, array $data) {
+  return TRUE;
+}
+
+/**
+ * Image effect callback; Waits 2 seconds and performs no action.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $data
+ *   An array with no attributes.
+ *
+ * @return TRUE
+ */
+function image_module_test_wait_effect() {
+  sleep(5);
+  return TRUE;
+}
+
+/**
+ * Implements hook_image_effect_info_alter().
+ *
+ * Used to keep a count of cache misses in image_effect_definitions().
+ */
+function image_module_test_image_effect_info_alter(&$effects) {
+  $image_effects_definition_called = &backdrop_static(__FUNCTION__, 0);
+  $image_effects_definition_called++;
+}

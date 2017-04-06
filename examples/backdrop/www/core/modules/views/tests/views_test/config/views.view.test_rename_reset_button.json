@@ -1,0 +1,71 @@
+{
+    "_config_name": "views.view.test_rename_reset_button",
+    "name": "test_rename_reset_button",
+    "module": "views_test",
+    "description": "",
+    "tag": "",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "",
+    "core": 0,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic",
+                    "options": {
+                        "reset_button": true
+                    }
+                },
+                "pager": {
+                    "type": "full"
+                },
+                "style_plugin": "default",
+                "row_plugin": "node",
+                "row_options": {
+                    "links": 1,
+                    "comments": 0
+                },
+                "filters": {
+                    "type": {
+                        "id": "type",
+                        "table": "node",
+                        "field": "type",
+                        "exposed": true,
+                        "expose": {
+                            "operator_id": "type_op",
+                            "label": "Content: Type",
+                            "identifier": "type",
+                            "reduce": 0
+                        }
+                    }
+                }
+            }
+        },
+        "page_1": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "test_rename_reset_button"
+            }
+        }
+    }
+}

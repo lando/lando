@@ -1,0 +1,197 @@
+<?php
+/**
+ * @file
+ * Timezone tests.
+ */
+ 
+require_once BACKDROP_ROOT . '/core/modules/date/tests/date_field.test';
+
+class DateTimezoneTestCase extends DateFieldBasic {
+
+  /**
+   * Creates one of each type of date field and check timezone handling in each.
+   */
+  public function testTimezone() {
+    // Create date fields with combinations of various timezone handling and
+    // granularity.
+    foreach (array('date', 'datestamp', 'datetime') as $field_type) {
+      foreach (array('site', 'none', 'date', 'user', 'utc') as $tz_handling) {
+        foreach (array('year', 'month', 'day', 'hour', 'minute', 'second') as $max_granularity) {
+          // Skip invalid combinations.
+          if (in_array($max_granularity, array('year', 'month', 'day')) && $tz_handling != 'none') {
+            continue;
+          }
+          $field_name = "field_test";
+          $label = 'Test';
+          $granularity = date_granularity_array_from_precision($max_granularity);
+          $options = array(
+            'label' => $label,
+            'widget_type' => 'date_text',
+            'field_name' => $field_name,
+            'field_type' => $field_type,
+            'input_format' => 'custom',
+            'input_format_custom' => 'm/d/Y - H:i:s',
+            'tz_handling' => $tz_handling,
+            'granularity' => $granularity,
+          );
+          $this->createDateField($options);
+          $this->dateForm($field_name, $field_type, $max_granularity, $tz_handling);
+          $this->deleteDateField($label);
+        }
+      }
+    }
+  }
+
+  /**
+   * Validates timezone handling with a multi-value date field.
+   */
+  public function testMultiUserTimezone() {
+    // Create date fields with combinations of various types and granularity
+    // using the "Date's Timezone" strategy.
+    $field_type = 'datetime';
+    $tz_handling = 'date';
+    $max_granularity = 'minute';
+
+    // Create date field
+    $field_name = "field_test";
+    $label = 'Test';
+    $options = array(
+      'label' => $label,
+      'widget_type' => 'date_text',
+      'field_name' => $field_name,
+      'field_type' => $field_type,
+      'input_format' => 'custom',
+      'input_format_custom' => 'm/d/Y - H:i:s T',
+      'cardinality' => 3,
+      'tz_handling' => $tz_handling,
+    );
+    $this->createMultiDateField($options);
+
+    // Submit a date field form with multiple values
+    $this->dateMultiValueForm($field_name, $field_type, $max_granularity, $tz_handling);
+
+
+    $this->deleteDateField($label);
+  }
+
+  /**
+   * Tests the submission of a date field's widget form when using unlimited
+   * cardinality
+   */
+  public function dateMultiValueForm($field_name, $field_type, $max_granularity, $tz_handling) {
+    $format = system_date_format_load('long');
+    $format['pattern'] = 'D, m/d/Y - H:i:s T';
+    system_date_format_save($format);
+    $edit = array();
+    $should_be = array();
+    $edit['title'] = $this->randomName(8);
+    $timezones = array('America/Chicago', 'America/Los_Angeles', 'America/New_York');
+
+    switch ($max_granularity) {
+      case 'hour':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][0][timezone][timezone]'] = 'America/Chicago';
+        $should_be[0] = 'Thu, 10/07/2010 - 10 CDT';
+
+        $edit[$field_name . '[und][1][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][1][timezone][timezone]'] = 'America/Los_Angeles';
+        $should_be[1] = 'Thu, 10/07/2010 - 10 PDT';
+
+        $edit[$field_name . '[und][2][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][2][timezone][timezone]'] = 'America/New_York';
+        $should_be[2] = 'Thu, 10/07/2010 - 10 EDT';
+
+        break;
+      case 'minute':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][0][timezone][timezone]'] = 'America/Chicago';
+        $should_be[0] = 'Thu, 10/07/2010 - 10:30 CDT';
+
+        $edit[$field_name . '[und][1][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][1][timezone][timezone]'] = 'America/Los_Angeles';
+        $should_be[1] = 'Thu, 10/07/2010 - 10:30 PDT';
+
+        $edit[$field_name . '[und][2][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][2][timezone][timezone]'] = 'America/New_York';
+        $should_be[2] = 'Thu, 10/07/2010 - 10:30 EDT';
+
+        break;
+      case 'second':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][0][timezone][timezone]'] = 'America/Chicago';
+        $should_be[0] = 'Thu, 10/07/2010 - 10:30:30 CDT';
+
+        $edit[$field_name . '[und][1][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][1][timezone][timezone]'] = 'America/Los_Angeles';
+        $should_be[1] = 'Thu, 10/07/2010 - 10:30:30 PDT';
+
+        $edit[$field_name . '[und][2][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][2][timezone][timezone]'] = 'America/New_York';
+        $should_be[2] = 'Thu, 10/07/2010 - 10:30:30 EDT';
+        break;
+    }
+
+    $this->backdropPost('node/add/story', $edit, t('Save'));
+    $this->assertText($edit['title'], "Node has been created");
+
+    foreach ($should_be as $assertion) {
+      $this->assertText($assertion, "Found the correct date for a $field_type field using $max_granularity granularity with $tz_handling timezone handling.");
+    }
+
+    // Goto the edit page and save the node again.
+    $node = $this->backdropGetNodeByTitle($edit['title']);
+    $this->backdropGet('node/' . $node->nid . '/edit');
+
+    // Re-assert the proper date timezones.
+    foreach ($timezones as $key => $timezone) {
+      $this->assertOptionSelected('edit-field-test-und-' . $key . '-timezone-timezone', $timezone, "Found the correct timezone $timezone for a $field_type field using $max_granularity granularity with $tz_handling timezone handling.");
+    }
+  }
+
+  /**
+   * Utility function to validate the node form displays date fields correctly.
+   */
+  public function dateForm($field_name, $field_type, $max_granularity, $tz_handling) {
+    $format = system_date_format_load('long');
+    $format['pattern'] = 'D, m/d/Y - H:i:s';
+    system_date_format_save($format);
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit[$field_name . '[und][0][show_todate]'] = '1';
+    switch ($max_granularity) {
+      case 'year':
+        $edit[$field_name . '[und][0][value][date]'] = '2010';
+        $edit[$field_name . '[und][0][value2][date]'] = '2011';
+        $should_be = '2010 to 2011';
+        break;
+      case 'month':
+        $edit[$field_name . '[und][0][value][date]'] = '07/2010';
+        $edit[$field_name . '[und][0][value2][date]'] = '08/2010';
+        $should_be = '07/2010 to 08/2010';
+        break;
+      case 'day':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010';
+        $edit[$field_name . '[und][0][value2][date]'] = '10/08/2010';
+        $should_be = 'Thu, 10/07/2010 to Fri, 10/08/2010';
+        break;
+      case 'hour':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10';
+        $edit[$field_name . '[und][0][value2][date]'] = '10/07/2010 - 11';
+        $should_be = 'Thu, 10/07/2010 - 10 to Thu, 10/07/2010 - 11';
+        break;
+      case 'minute':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10:30';
+        $edit[$field_name . '[und][0][value2][date]'] = '10/07/2010 - 11:30';
+        $should_be = 'Thu, 10/07/2010 - 10:30 to 11:30';
+        break;
+      case 'second':
+        $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10:30:30';
+        $edit[$field_name . '[und][0][value2][date]'] = '10/07/2010 - 11:30:30';
+        $should_be = 'Thu, 10/07/2010 - 10:30:30 to 11:30:30';
+        break;
+    }
+    $this->backdropPost('node/add/story', $edit, t('Save'));
+    $this->assertText($edit['title'], "Node has been created");
+    $this->assertText($should_be, "Found the correct date for a $field_type field using $max_granularity granularity with $tz_handling timezone handling.");
+  }
+}

@@ -1,0 +1,68 @@
+<?php
+/**
+ * @file
+ * Link base test file - contains common functions for testing links.
+ */
+
+class LinkBaseTestClass extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  /**
+   * @var User
+   * Stores the logged-in user.
+   */
+  protected $web_user;
+
+  /**
+   * @var array
+   * The list of permissions assigned to the created web user.
+   */
+  protected $permissions = array(
+    'access content',
+    'administer content types',
+    'administer fields',
+    'administer nodes',
+    'administer filters',
+    'access administration pages',
+    'create page content',
+  );
+
+  function setUp() {
+    $modules = func_get_args();
+    $modules[] = 'node';
+    $modules[] = 'field_ui';
+    $modules[] = 'link';
+    parent::setUp($modules);
+
+    // Create a page content type with no fields.
+    $this->backdropCreateContentType(array(
+      'type' => 'page',
+      'name' => 'Basic page',
+    ));
+
+    $this->web_user = $this->backdropCreateUser($this->permissions);
+    $this->backdropLogin($this->web_user);
+  }
+
+  protected function createLinkField($node_type = 'page', $settings = array()) {
+    $name = strtolower($this->randomName());
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $field_name = 'field_' . $name;
+    $this->backdropPost('admin/structure/types/manage/' . $node_type . '/fields', $edit, t('Save'));
+
+    // Lind does not have any field settings, so these are skipped.
+    // $this->backdropPost(NULL, array(), t('Save field settings'));
+
+    $this->backdropPost(NULL, $settings, t('Save settings'));
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    return $field_name;
+  }
+}

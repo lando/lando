@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Tests for syslog.module.
+ */
+
+class SyslogTestCase extends BackdropWebTestCase {
+  function setUp() {
+    parent::setUp('syslog');
+  }
+
+  /**
+   * Test the syslog settings page.
+   */
+  function testSettings() {
+    $admin_user = $this->backdropCreateUser(array('administer site configuration'));
+    $this->backdropLogin($admin_user);
+
+    $edit = array();
+    // If we're on Windows, there is no configuration form.
+    if (defined('LOG_LOCAL6')) {
+      $this->backdropPost('admin/config/development/logging', array('syslog_facility' => LOG_LOCAL6), t('Save configuration'));
+      $this->assertText(t('The configuration options have been saved.'));
+
+      $this->backdropGet('admin/config/development/logging');
+      if ($this->parse()) {
+        $field = $this->xpath('//option[@value=:value]', array(':value' => LOG_LOCAL6)); // Should be one field.
+        $this->assertTrue($field[0]['selected'] == 'selected', 'Facility value saved.');
+      }
+    }
+  }
+}

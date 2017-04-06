@@ -1,0 +1,16 @@
+{
+  "_config_name": "locale.settings",
+  "cache_length": 75,
+  "field_language_fallback": true,
+  "language_negotiation_session_parameter": "language",
+  "language_negotiation_url_part": "path_prefix",
+  "language_negotiation_url_prefixes": {
+    "en": ""
+  },
+  "language_negotiation_url_type": "language",
+  "language_negotiation_url_domains": {
+    "en": ""
+  },
+  "language_providers_weight_language": [],
+  "translate_english": false
+}

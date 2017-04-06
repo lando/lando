@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * @file
+ * System monitoring and logging for administrators.
+ *
+ * The Database Logging module monitors your site and keeps a list of recorded
+ * events containing usage and performance data, errors, warnings, and similar
+ * operational information.
+ *
+ * @see watchdog()
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function dblog_menu() {
+  $items['admin/reports/dblog'] = array(
+    'title' => 'Recent log messages',
+    'description' => 'View events that have recently been logged.',
+    'page callback' => 'dblog_overview',
+    'access arguments' => array('access site reports'),
+    'weight' => -1,
+    'file' => 'dblog.admin.inc',
+  );
+  $items['admin/reports/page-not-found'] = array(
+    'title' => "Top 'page not found' errors",
+    'description' => "View 'page not found' errors (404s).",
+    'page callback' => 'dblog_top',
+    'page arguments' => array('page not found'),
+    'access arguments' => array('access site reports'),
+    'file' => 'dblog.admin.inc',
+  );
+  $items['admin/reports/access-denied'] = array(
+    'title' => "Top 'access denied' errors",
+    'description' => "View 'access denied' errors (403s).",
+    'page callback' => 'dblog_top',
+    'page arguments' => array('access denied'),
+    'access arguments' => array('access site reports'),
+    'file' => 'dblog.admin.inc',
+  );
+  $items['admin/reports/event/%'] = array(
+    'title' => 'Details',
+    'page callback' => 'dblog_event',
+    'page arguments' => array(3),
+    'access arguments' => array('access site reports'),
+    'file' => 'dblog.admin.inc',
+  );
+
+  if (module_exists('search')) {
+    $items['admin/reports/search'] = array(
+      'title' => 'Top search phrases',
+      'description' => 'View most popular search phrases.',
+      'page callback' => 'dblog_top',
+      'page arguments' => array('search'),
+      'access arguments' => array('access site reports'),
+      'file' => 'dblog.admin.inc',
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_init().
+ */
+function dblog_init() {
+  if (arg(0) == 'admin' && arg(1) == 'reports') {
+    // Add the CSS for this module
+    backdrop_add_css(backdrop_get_path('module', 'dblog') . '/css/dblog.css');
+  }
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Controls the size of the log table, paring it to 'dblog_row_limit' messages.
+ */
+function dblog_cron() {
+  // Cleanup the watchdog table.
+  $row_limit = config_get('system.core', 'log_row_limit');
+
+  // For row limit n, get the wid of the nth row in descending wid order.
+  // Counting the most recent n rows avoids issues with wid number sequences,
+  // e.g. auto_increment value > 1 or rows deleted directly from the table.
+  if ($row_limit > 0) {
+    $min_row = db_select('watchdog', 'w')
+      ->fields('w', array('wid'))
+      ->orderBy('wid', 'DESC')
+      ->range($row_limit - 1, 1)
+      ->execute()->fetchField();
+
+    // Delete all table entries older than the nth row, if nth row was found.
+    if ($min_row) {
+      db_delete('watchdog')
+        ->condition('wid', $min_row, '<')
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Gathers a list of uniquely defined database log message types.
+ *
+ * @return array
+ *   List of uniquely defined database log message types.
+ */
+function _dblog_get_message_types() {
+  $types = array();
+
+  $result = db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type');
+  foreach ($result as $object) {
+    $types[] = $object->type;
+  }
+
+  return $types;
+}
+
+/**
+ * Implements hook_watchdog().
+ *
+ * Note: Some values may be truncated to meet database column size restrictions.
+ */
+function dblog_watchdog(array $log_entry) {
+  if (!function_exists('backdrop_substr')) {
+    require_once BACKDROP_ROOT . '/core/includes/unicode.inc';
+  }
+  Database::getConnection('default', 'default')->insert('watchdog')
+    ->fields(array(
+      'uid' => $log_entry['uid'],
+      'type' => backdrop_substr($log_entry['type'], 0, 64),
+      'message' => $log_entry['message'],
+      'variables' => serialize($log_entry['variables']),
+      'severity' => $log_entry['severity'],
+      'link' => backdrop_substr($log_entry['link'], 0, 255),
+      'location' => $log_entry['request_uri'],
+      'referer' => $log_entry['referer'],
+      'hostname' => backdrop_substr($log_entry['ip'], 0, 128),
+      'timestamp' => $log_entry['timestamp'],
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for system_logging_settings().
+ */
+function dblog_form_system_logging_settings_alter(&$form, $form_state) {
+  $form['dblog_row_limit'] = array(
+    '#type' => 'select',
+    '#title' => t('Database log messages to keep'),
+    '#default_value' => config_get('system.core', 'log_row_limit'),
+    '#options' => array(0 => t('All')) + backdrop_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
+    '#description' => t('The maximum number of messages to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
+  );
+  $form['#submit'][] = 'dblog_logging_settings_submit';
+}
+
+/**
+ * Form submission handler for system_logging_settings().
+ *
+ * @see dblog_form_system_logging_settings_alter()
+ */
+function dblog_logging_settings_submit($form, &$form_state) {
+  config_set('system.core', 'log_row_limit', $form_state['values']['dblog_row_limit']);
+}

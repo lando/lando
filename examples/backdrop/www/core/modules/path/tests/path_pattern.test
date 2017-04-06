@@ -1,0 +1,1055 @@
+<?php
+/**
+ * @file
+ * Functionality tests for automatic path generation.
+ */
+
+/**
+ * Helper test class with some added functions for testing.
+ */
+class PathPatternTestHelper extends BackdropWebTestCase {
+  function setUp(array $modules = array()) {
+    $modules[] = 'path';
+    $modules[] = 'taxonomy';
+    parent::setUp($modules);
+  }
+
+  function assertToken($type, $object, $token, $expected) {
+    $tokens = token_generate($type, array($token => $token), array($type => $object));
+    $tokens += array($token => '');
+    $this->assertIdentical($tokens[$token], $expected, format_string("Token value for [@type:@token] was '@actual', expected value '@expected'.", array('@type' => $type, '@token' => $token, '@actual' => $tokens[$token], '@expected' => $expected)));
+  }
+
+  function saveAlias($source, $alias, $langcode = LANGUAGE_NONE) {
+    $alias = array(
+      'source' => $source,
+      'alias' => $alias,
+      'langcode' => $langcode,
+    );
+    path_save($alias);
+    return $alias;
+  }
+
+  function saveEntityAlias($entity_type, $entity, $alias, $language = LANGUAGE_NONE) {
+    $uri = entity_uri($entity_type, $entity);
+    return $this->saveAlias($uri['path'], $alias, $language);
+  }
+
+  function assertEntityAlias($entity_type, $entity, $expected_alias, $language = LANGUAGE_NONE) {
+    $uri = entity_uri($entity_type, $entity);
+    $this->assertAlias($uri['path'], $expected_alias, $language);
+  }
+
+  function assertEntityAliasExists($entity_type, $entity) {
+    $uri = entity_uri($entity_type, $entity);
+    return $this->assertAliasExists(array('source' => $uri['path']));
+  }
+
+  function assertNoEntityAlias($entity_type, $entity, $language = LANGUAGE_NONE) {
+    $uri = entity_uri($entity_type, $entity);
+    $this->assertEntityAlias($entity_type, $entity, $uri['path'], $language);
+  }
+
+  function assertNoEntityAliasExists($entity_type, $entity) {
+    $uri = entity_uri($entity_type, $entity);
+    $this->assertNoAliasExists(array('source' => $uri['path']));
+  }
+
+  function assertAlias($source, $expected_alias, $langcode = LANGUAGE_NONE) {
+    backdrop_clear_path_cache($source);
+    $alias = backdrop_get_path_alias($source, $langcode);
+    $this->assertIdentical($alias, $expected_alias, format_string("Alias for %source with language '@language' was %actual, expected %expected.", array('%source' => $source, '%actual' => $alias, '%expected' => $expected_alias, '@language' => $langcode)));
+  }
+
+  function assertAliasExists($conditions) {
+    $path = path_load($conditions);
+    $this->assertTrue($path, format_string('Alias with conditions @conditions found.', array('@conditions' => var_export($conditions, TRUE))));
+    return $path;
+  }
+
+  function assertNoAliasExists($conditions) {
+    $alias = path_load($conditions);
+    $this->assertFalse($alias, format_string('Alias with conditions @conditions not found.', array('@conditions' => var_export($conditions, TRUE))));
+  }
+
+  function deleteAllAliases() {
+    db_delete('url_alias')->execute();
+    backdrop_clear_path_cache();
+  }
+
+  function addVocabulary(array $vocabulary = array()) {
+    $name = backdrop_strtolower($this->randomName(5));
+    $vocabulary += array(
+      'name' => $name,
+      'machine_name' => $name,
+      'nodes' => array('post' => 'post'),
+    );
+    $vocabulary = new TaxonomyVocabulary($vocabulary);
+    taxonomy_vocabulary_save($vocabulary);
+    return $vocabulary;
+  }
+
+  function addTerm(TaxonomyVocabulary $vocabulary, array $term = array()) {
+    $term += array(
+      'name' => backdrop_strtolower($this->randomName(5)),
+      'vocabulary' => $vocabulary->machine_name,
+      'parent' => array(0),
+    );
+    $term = new TaxonomyTerm($term);
+    taxonomy_term_save($term);
+    return $term;
+  }
+
+  function assertEntityPattern($entity_type, $bundle, $language = LANGUAGE_NONE, $expected) {
+    backdrop_static_reset('path_get_pattern_by_entity_type');
+    $this->refreshVariables();
+    $pattern = path_get_pattern_by_entity_type($entity_type, $bundle, $language);
+    $this->assertIdentical($expected, $pattern);
+  }
+
+  function backdropGetTermByName($name, $reset = FALSE) {
+    $terms = entity_load('taxonomy_term', array(), array('name' => $name), $reset);
+    return !empty($terms) ? reset($terms) : FALSE;
+  }
+}
+
+/**
+ * Unit tests for Path pattern functions.
+ */
+class PathPatternUnitTestCase extends PathPatternTestHelper {
+  function setUp(array $modules = array()) {
+    parent::setUp($modules);
+    module_load_include('inc', 'path');
+  }
+
+  /**
+   * Test _path_get_schema_alias_maxlength().
+   */
+  function testGetSchemaAliasMaxLength() {
+    $this->assertIdentical(_path_get_schema_alias_maxlength(), 255);
+  }
+
+  /**
+   * Test path_get_pattern_by_entity_type().
+   */
+  function testPatternLoadByEntity() {
+    $config = config('path.settings');
+    $config->set('node_story_en_pattern', 'story/en/[node:title] ');
+    $config->set('node_story_pattern', 'story/[node:title]');
+    $config->set('node_pattern', 'content/[node:title]');
+    $config->set('user_pattern', 'users/[user:name]');
+    $config->save();
+
+    $tests = array(
+      array('entity' => 'node', 'bundle' => 'story', 'langcode' => 'fr', 'expected' => 'story/[node:title]'),
+      array('entity' => 'node', 'bundle' => 'story', 'langcode' => 'en', 'expected' => 'story/en/[node:title]'),
+      array('entity' => 'node', 'bundle' => 'story', 'langcode' => LANGUAGE_NONE, 'expected' => 'story/[node:title]'),
+      array('entity' => 'node', 'bundle' => 'page', 'langcode' => 'en', 'expected' => '[node:title]'),
+      array('entity' => 'user', 'bundle' => 'user', 'langcode' => LANGUAGE_NONE, 'expected' => 'users/[user:name]'),
+      array('entity' => 'invalid-entity', 'bundle' => '', 'langcode' => LANGUAGE_NONE, 'expected' => ''),
+    );
+    foreach ($tests as $test) {
+      $actual = path_get_pattern_by_entity_type($test['entity'], $test['bundle'], $test['langcode']);
+      $this->assertIdentical($actual, $test['expected'], format_string("path_get_pattern_by_entity_type('@entity', '@bundle', '@language') returned '@actual', expected '@expected'", array('@entity' => $test['entity'], '@bundle' => $test['bundle'], '@language' => $test['langcode'], '@actual' => $actual, '@expected' => $test['expected'])));
+    }
+  }
+
+  /**
+   * Test path_clean_string().
+   */
+  function testCleanString() {
+    $config = config('path.settings');
+    $tests = array();
+    $config->set('ignore_words', ', a, in, is,that, the  , this, with, ');
+    $config->set('max_component_length', 35);
+    $config->save();
+
+    // Test the 'ignored words' removal.
+    $tests['this'] = 'this';
+    $tests['this with that'] = 'this-with-that';
+    $tests['this thing with that thing'] = 'thing-thing';
+
+    // Test length truncation and duplicate separator removal.
+    $tests[' - Dave - Greg - Freso - Mike'] = 'dave-greg-freso-mike';
+
+    // Test that HTML tags are removed.
+    $tests['This <span class="text">text</span> has <br /><a href="http://example.com"><strong>HTML tags</strong></a>.'] = 'text-has-html-tags';
+    $tests[check_plain('This <span class="text">text</span> has <br /><a href="http://example.com"><strong>HTML tags</strong></a>.')] = 'text-has-html-tags';
+
+    foreach ($tests as $input => $expected) {
+      $output = path_clean_string($input);
+      $this->assertEqual($output, $expected, format_string("path_clean_string('@input') expected '@expected', actual '@output'", array('@input' => $input, '@expected' => $expected, '@output' => $output)));
+    }
+
+    // Test transliteration replacements.
+    $config->set('transliterate', 1);
+    $config->save();
+    backdrop_static_reset('path_clean_string');
+
+    $input = 'ädd ä accènts thè';
+    $expected = 'add-accents'; // "a" and "the" is stripped out.
+    $output = path_clean_string($input);
+    $this->assertEqual($output, $expected, format_string("path_clean_string('@input') expected '@expected', actual '@output'", array('@input' => $input, '@expected' => $expected, '@output' => $output)));
+  }
+
+  /**
+   * Test path_clean_alias().
+   */
+  function testCleanAlias() {
+    $tests = array();
+    $tests['one/two/three'] = 'one/two/three';
+    $tests['/one/two/three/'] = 'one/two/three';
+    $tests['one//two///three'] = 'one/two/three';
+    $tests['one/two--three/-/--/-/--/four---five'] = 'one/two-three/four-five';
+    $tests['one/-//three--/four'] = 'one/three/four';
+    foreach ($tests as $input => $expected) {
+      $output = path_clean_alias($input);
+      $this->assertEqual($output, $expected, format_string("path_clean_alias('@input') expected '@expected', actual '@output'", array('@input' => $input, '@expected' => $expected, '@output' => $output)));
+    }
+
+  }
+
+  /**
+   * Test path_delete_multiple().
+   */
+  function testPathDeleteMultiple() {
+    $this->saveAlias('node/1', 'node-1-alias');
+    $this->saveAlias('node/1/view', 'node-1-alias/view');
+    $this->saveAlias('node/1', 'node-1-alias-en', 'en');
+    $this->saveAlias('node/1', 'node-1-alias-fr', 'fr');
+    $this->saveAlias('node/2', 'node-2-alias');
+
+    path_delete_all_by_source('node/1');
+    $this->assertNoAliasExists(array('source' => "node/1"));
+    $this->assertNoAliasExists(array('source' => "node/1/view"));
+    $this->assertAliasExists(array('source' => "node/2"));
+  }
+
+  /**
+   * Test the different update actions in path_save_automatic_alias().
+   */
+  function testUpdateActions() {
+    $config = config('path.settings');
+    // Test PATH_UPDATE_ACTION_NO_NEW with a new inserted, unaliased node.
+    $config->set('update_action', PATH_UPDATE_ACTION_NO_NEW);
+    $config->set('node_page_pattern', 'content/[node:title]');
+    $config->save();
+    $node = $this->backdropCreateNode(array('title' => 'First title'));
+    $this->assertEntityAlias('node', $node, 'content/first-title');
+
+    // Default action is PATH_UPDATE_ACTION_DELETE.
+    $config->set('update_action', PATH_UPDATE_ACTION_DELETE);
+    $config->save();
+
+    // After each change to the node, load it again to get the latest path
+    // information.
+    $node->title = 'Second title';
+    $node->save();
+
+    $this->assertEntityAlias('node', $node, 'content/second-title');
+    $this->assertNoAliasExists(array('alias' => 'content/first-title'));
+
+    // Test PATH_UPDATE_ACTION_LEAVE
+    $config->set('update_action', PATH_UPDATE_ACTION_LEAVE);
+    $config->save();
+
+    $node->title = 'Third title';
+    $node->save();
+    $this->assertEntityAlias('node', $node, 'content/third-title');
+    $this->assertAliasExists(array('source' => "node/{$node->nid}", 'alias' => 'content/second-title'));
+
+    $config->set('update_action', PATH_UPDATE_ACTION_DELETE);
+    $config->save();
+    $node->title = 'Fourth title';
+    $node->save();
+    $this->assertEntityAlias('node', $node, 'content/fourth-title');
+    $this->assertNoAliasExists(array('alias' => 'content/third-title'));
+    // The older second URL alias is not deleted yet.
+    $older_path = $this->assertAliasExists(array('source' => "node/{$node->nid}", 'alias' => 'content/second-title'));
+    path_delete($older_path);
+
+    $config->set('update_action', PATH_UPDATE_ACTION_NO_NEW);
+    $config->save();
+    $node->title = 'Fifth title';
+    $node->save();
+    $this->assertEntityAlias('node', $node, 'content/fourth-title');
+    $this->assertNoAliasExists(array('alias' => 'content/fifth-title'));
+
+    // Test PATH_UPDATE_ACTION_NO_NEW with unaliased node and node update.
+    $this->deleteAllAliases();
+    $node->save();
+    $this->assertEntityAlias('node', $node, 'content/fifth-title');
+
+    // Test PATH_UPDATE_ACTION_NO_NEW with unaliased node and directly update.
+    $this->deleteAllAliases();
+    $node->title = 'Sixth title';
+    path_save_automatic_entity_alias($node);
+    $this->assertEntityAlias('node', $node, 'content/sixth-title');
+  }
+
+  /**
+   * Test that path_save_automatic_alias() will not create a URL alias for a
+   * pattern that does not get any tokens replaced.
+   */
+  function testNoTokensNoAlias() {
+    $node = $this->backdropCreateNode(array('title' => ''));
+    $this->assertNoEntityAliasExists('node', $node);
+
+    // On subsequent saves, the $node->path property is now populated indicating
+    // this node does not have an automatic alias, so re-saving the node should
+    // not give it one.
+    $node->title = 'hello';
+    $node->save();
+    $this->assertNoEntityAliasExists('node', $node);
+
+    // Manually setting the auto flag and saving should create an alias.
+    $node->path['auto'] = TRUE;
+    $node->save();
+    $this->assertEntityAlias('node', $node, 'hello');
+  }
+
+  /**
+   * Test the handling of path vs non-path tokens in path_clean_token_values().
+   */
+  function testPathTokens() {
+    $config = config('path.settings');
+    $config->set('taxonomy_term_pattern', '[term:parent:url:path]/[term:name]');
+    $config->save();
+    $vocab = $this->addVocabulary();
+
+    $term1 = $this->addTerm($vocab, array('name' => 'Parent term'));
+    $this->assertEntityAlias('taxonomy_term', $term1, 'parent-term');
+
+    $term2 = $this->addTerm($vocab, array('name' => 'Child term', 'parent' => array($term1->tid)));
+    $this->assertEntityAlias('taxonomy_term', $term2, 'parent-term/child-term');
+
+    $this->saveEntityAlias('taxonomy_term', $term1, 'My Crazy/Alias/');
+    $term2->save();
+    $this->assertEntityAlias('taxonomy_term', $term2, 'My Crazy/Alias/child-term');
+  }
+
+  function testEntityBundleRenamingDeleting() {
+    $config = config('path.settings');
+    // Create a vocabulary and test that it's pattern variable works.
+    $vocab = $this->addVocabulary(array('machine_name' => 'old_name'));
+    $config->set('taxonomy_term_pattern', 'base');
+    $config->set('taxonomy_term_old_name_pattern', 'bundle');
+    $config->save();
+    $this->assertEntityPattern('taxonomy_term', 'old_name', LANGUAGE_NONE, 'bundle');
+
+    // Rename the vocabulary's machine name, which should cause its pattern
+    // variable to also be renamed.
+    // @todo: Renaming vocabularies in Backdrop is not supported. Remove?
+    //$vocab->machine_name = 'new_name';
+    //taxonomy_vocabulary_save($vocab);
+    //$this->assertEntityPattern('taxonomy_term', 'new_name', LANGUAGE_NONE, 'bundle');
+    //$this->assertEntityPattern('taxonomy_term', 'old_name', LANGUAGE_NONE, 'base');
+
+    // Delete the vocabulary, which should cause its pattern variable to also
+    // be deleted.
+    taxonomy_vocabulary_delete($vocab->machine_name);
+    $this->assertEntityPattern('taxonomy_term', 'new_name', LANGUAGE_NONE, 'base');
+  }
+
+  function testNoExistingPathAliases() {
+    $config = config('path.settings');
+    $config->set('node_page_pattern', '[node:title]');
+    $config->set('punctuation_period', PATH_PUNCTUATION_DO_NOTHING);
+    $config->save();
+
+    // Check that Path does not create a URL alias of '/admin'.
+    $node = $this->backdropCreateNode(array('title' => 'Admin', 'type' => 'page'));
+    $this->assertEntityAlias('node', $node, 'admin-1');
+
+    // Check that Path does not create a URL alias of '/modules'.
+    $node->title = 'Modules';
+    node_save($node);
+    $this->assertEntityAlias('node', $node, 'modules-1');
+
+    // Check that Path does not create a URL alias of '/index.php'.
+    $node->title = 'index.php';
+    node_save($node);
+    $this->assertEntityAlias('node', $node, 'index.php-1');
+
+    // Check that a safe value gets an automatic alias. This is also a control
+    // to ensure the above tests work properly.
+    $node->title = 'Safe value';
+    node_save($node);
+    $this->assertEntityAlias('node', $node, 'safe-value');
+  }
+}
+
+/**
+ * Helper test class with some added functions for testing.
+ */
+class PathPatternFunctionalTestHelper extends PathPatternTestHelper {
+  protected $admin_user;
+  protected $config;
+
+  function setUp(array $modules = array()) {
+    parent::setUp($modules);
+    $config = config('path.settings');
+
+    // Set Path settings we assume to be as-is in this test.
+    $config->set('node_page_pattern', 'content/[node:title]');
+    $config->save();
+
+    // Redirect module is not tested with aliases in these tests. Redirect does
+    // its own testing in RedirectFunctionalTest.
+    module_disable(array('redirect'));
+    menu_rebuild();
+
+    // Allow other modules to add additional permissions for the admin user.
+    $permissions = array(
+      'administer path patterns',
+      'administer url aliases',
+      'create url aliases',
+      'administer nodes',
+      'administer content types',
+      'bypass node access',
+      'access content overview',
+      'administer taxonomy',
+      'administer users',
+    );
+    $args = func_get_args();
+    if (isset($args[1]) && is_array($args[1])) {
+      $permissions = array_merge($permissions, $args[1]);
+    }
+    $this->admin_user = $this->backdropCreateUser($permissions);
+
+    $this->backdropLogin($this->admin_user);
+  }
+}
+
+/**
+ * Test basic Path automatic URL alias functionality.
+ */
+class PathPatternFunctionalTestCase extends PathPatternFunctionalTestHelper {
+  /**
+   * Create a new content type with new path pattern.
+   */
+  function testNodeTypeCreate() {
+    // Create a user with more permissions.
+    $permissions = array(
+      'administer path patterns',
+      'administer content types',
+      'administer taxonomy',
+      'administer account settings',
+    );
+    $this->admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->admin_user);
+
+    // Set the path pattern when creating a new content type.
+    $this->backdropGet('admin/structure/types/add');
+    $edit = array(
+      'name' => 'foo',
+      'type' => 'foo',
+      'path_pattern' => 'foo/[node:title]',
+    );
+    $this->backdropPost(NULL, $edit, t('Save content type'));
+
+    // Create a test node that should have pattern "foo/node1".
+    backdrop_static_reset();
+    $node1 = $this->backdropCreateNode(array('type' => 'foo', 'title' => 'node1'));
+    $this->assertEntityAlias('node', $node1, 'foo/node1');
+
+    // Change the path pattern on the content type.
+    $this->backdropGet('admin/structure/types/manage/foo/configure');
+    $edit = array(
+      'path_pattern' => 'bar/[node:title]',
+    );
+    $this->backdropPost(NULL, $edit, t('Save content type'));
+
+    // Create a test node that should have updated pattern "bar/node2".
+    backdrop_static_reset();
+    $node2 = $this->backdropCreateNode(array('type' => 'foo', 'title' => 'node2'));
+    $this->assertEntityAlias('node', $node2, 'bar/node2');
+  }
+
+  /**
+   * Basic functional testing of node Path patterns.
+   */
+  function testNodeEditing() {
+    $config = config('path.settings');
+    // Delete the default node pattern. Only the page content type will have a pattern.
+    $config->set('node_pattern', '');
+    $config->save();
+
+    // Ensure the Path auto checkbox is checked by default on the node add form.
+    $this->backdropGet('node/add/page');
+    $this->assertFieldChecked('edit-path-auto');
+
+    // Create node for testing by saving the node form.
+    $title = ' Testing: node title [';
+    $automatic_alias = 'content/testing-node-title';
+    $this->backdropPost(NULL, array('title' => $title), 'Save');
+    $node = $this->backdropGetNodeByTitle($title);
+
+    // Look for URL alias generated in the form.
+    $this->backdropGet("node/{$node->nid}/edit");
+    $this->assertFieldChecked('edit-path-auto');
+    $this->assertFieldByName('path[alias]', $automatic_alias, 'Generated URL alias visible in the path URL alias field.');
+
+    // Check whether the URL alias actually works.
+    $this->backdropGet($automatic_alias);
+    $this->assertText($title, 'Node accessible through automatic alias.');
+
+    // Disable the update action. The checkbox should not be visible.
+    $config->set('update_action', PATH_UPDATE_ACTION_NO_NEW);
+    $config->save();
+    $this->backdropGet("node/{$node->nid}/edit");
+    $this->assertNoFieldById('edit-path-auto');
+
+    // Reset the update action back to default. The checkbox should be visible.
+    $config->set('update_action', PATH_UPDATE_ACTION_LEAVE);
+    $config->save();
+    $this->backdropGet("node/{$node->nid}/edit");
+    $this->assertFieldChecked('edit-path-auto');
+
+    // Manually set the node's alias.
+    $manual_alias = 'content/' . $node->nid;
+    $edit = array(
+      'path[auto]' => FALSE,
+      'path[alias]' => $manual_alias,
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+    $this->assertText("Page $title has been updated.");
+
+    // Check that the automatic URL alias checkbox is now unchecked by default.
+    $this->backdropGet("node/{$node->nid}/edit");
+    $this->assertNoFieldChecked('edit-path-auto');
+    $this->assertFieldByName('path[alias]', $manual_alias);
+
+    // Submit the node form with the default values.
+    $this->backdropPost(NULL, array(), t('Save'));
+    $this->assertText("Page $title has been updated.");
+
+    // Test that the old (automatic) URL alias has been deleted and only accessible
+    // through the new (manual) alias.
+    $this->backdropGet($automatic_alias);
+    $this->assertResponse(404, 'Node not accessible through automatic alias.');
+    $this->backdropGet($manual_alias);
+    $this->assertText($title, 'Node accessible through manual alias.');
+
+    // Now attempt to create a node that has no pattern (post content type).
+    // The automatic URL alias checkbox should not exist.
+    $this->backdropGet('node/add/post');
+    $this->assertNoFieldById('edit-path-auto');
+    $this->assertFieldByName('path[alias]', '');
+
+    $edit = array();
+    $edit['title'] = 'My test post';
+    $this->backdropPost(NULL, $edit, t('Save'));
+    $node = $this->backdropGetNodeByTitle($edit['title']);
+
+    // Automatic URL alias checkbox should still not exist.
+    $this->backdropGet('node/' . $node->nid . '/edit');
+    $this->assertNoFieldById('edit-path-auto');
+    $this->assertFieldByName('path[alias]', '');
+
+    // Set the page pattern to use only tokens so we can test the checkbox
+    // behavior if none of the tokens have a value currently.
+    $config->set('node_page_pattern', '[node:title]');
+    $config->save();
+
+    // Create a node with an empty title. The auto checkbox should still be
+    // visible but unchecked.
+    $node = $this->backdropCreateNode(array('type' => 'page', 'title' => ''));
+    $this->backdropGet('node/' . $node->nid . '/edit');
+    $this->assertNoFieldChecked('edit-path-auto');
+    $this->assertFieldByName('path[alias]', '');
+    $this->assertNoEntityAlias('node', $node);
+
+    $edit = array();
+    $edit['title'] = 'Valid title';
+    $edit['path[auto]'] = TRUE;
+    $this->backdropPost(NULL, $edit, t('Save'));
+    $this->backdropGet('node/' . $node->nid . '/edit');
+    $this->assertFieldChecked('edit-path-auto');
+    $this->assertFieldByName('path[alias]', 'valid-title');
+  }
+
+  /**
+   * Test node operations.
+   */
+  function testNodeOperations() {
+    $node1 = $this->backdropCreateNode(array('title' => 'node1'));
+    $node2 = $this->backdropCreateNode(array('title' => 'node2'));
+
+    // Delete all current URL aliases.
+    $this->deleteAllAliases();
+
+    $edit = array(
+      'action' => 'path_node_update_action',
+      "bulk_form[0]" => TRUE,
+    );
+    $this->backdropPost('admin/content', $edit, t('Execute'));
+    $this->assertRaw(format_string('%action was applied to 1 item', array('%action' => 'Update content URL alias')));
+
+    $this->assertEntityAlias('node', $node1, 'content/' . $node1->title);
+    $this->assertEntityAlias('node', $node2, 'node/' . $node2->nid);
+  }
+
+  /**
+   * Basic functional testing of Path automatic aliases with taxonomy terms.
+   */
+  function testTermEditing() {
+    $this->backdropGet('admin/structure');
+    $this->backdropGet('admin/structure/taxonomy');
+
+    // Create term for testing.
+    $name = ' Testing: term name [ ';
+    $automatic_alias = 'tags/testing-term-name';
+    $this->backdropPost('admin/structure/taxonomy/tags/add', array('name' => $name), 'Save');
+    $name = trim($name);
+    $this->assertText("Created new term $name.");
+    $term = $this->backdropGetTermByName($name);
+
+    // Look for URL alias generated in the form.
+    $this->backdropGet("taxonomy/term/{$term->tid}/edit");
+    $this->assertFieldChecked('edit-path-auto');
+    $this->assertFieldByName('path[alias]', $automatic_alias, 'Generated URL alias visible in the path URL alias field.');
+
+    // Check whether the URL alias actually works.
+    $this->backdropGet($automatic_alias);
+    $this->assertText($name, 'Term accessible through automatic alias.');
+
+    // Manually set the term's alias.
+    $manual_alias = 'tags/' . $term->tid;
+    $edit = array(
+      'path[auto]' => FALSE,
+      'path[alias]' => $manual_alias,
+    );
+    $this->backdropPost("taxonomy/term/{$term->tid}/edit", $edit, t('Save'));
+    $this->assertText("Updated term $name.");
+
+    // Check that the automatic URL alias checkbox is now unchecked by default.
+    $this->backdropGet("taxonomy/term/{$term->tid}/edit");
+    $this->assertNoFieldChecked('edit-path-auto');
+    $this->assertFieldByName('path[alias]', $manual_alias);
+
+    // Submit the term form with the default values.
+    $this->backdropPost(NULL, array(), t('Save'));
+    $this->assertText("Updated term $name.");
+
+    // Test that the old (automatic) URL alias has been deleted and only accessible
+    // through the new (manual) alias.
+    $this->backdropGet($automatic_alias);
+    $this->assertResponse(404, 'Term not accessible through automatic alias.');
+    $this->backdropGet($manual_alias);
+    $this->assertText($name, 'Term accessible through manual URL alias.');
+  }
+
+  /**
+   * Basic functional testing of Path automatic aliases with users.
+   */
+  function testUserEditing() {
+    // There should be no auto checkbox on user forms.
+    $this->backdropGet('user/' . $this->admin_user->uid . '/edit');
+    $this->assertNoFieldById('edit-path-auto');
+  }
+
+  /**
+   * Test user operations.
+   */
+  function testUserOperations() {
+    $account = $this->backdropCreateUser();
+
+    // Delete all current URL aliases.
+    $this->deleteAllAliases();
+
+    // Find the last row in the users table to apply the URL alias to the new user.
+    $this->backdropGet('admin/people', array('query' => array('order' => 'created', 'sort' => 'asc')));
+    $checkbox = $this->xpath('//form[@id="views-form-user-admin-page"]//tr[last()]//input[@type="checkbox"]');
+    $checkbox_name = (string) $checkbox[0]['name'];
+
+    $edit = array(
+      'action' => 'path_user_update_action',
+      $checkbox_name => TRUE,
+    );
+    $this->backdropPost('admin/people', $edit, t('Execute'), array('query' => array('order' => 'created', 'sort' => 'asc')));
+    $this->assertRaw(format_string('%action was applied to 1 item.', array('%action' => 'Update user URL alias')));
+
+    $this->assertEntityAlias('user', $account, 'accounts/' . backdrop_strtolower($account->name));
+    $this->assertEntityAlias('user', $this->admin_user, 'user/' . $this->admin_user->uid);
+  }
+
+  function testConfigurationUserInterfaces() {
+    // Test validation.
+    $edit = array();
+    $edit['max_length'] = 'abc';
+    $edit['max_component_length'] = 'abc';
+    $this->backdropPost('admin/config/urls/path/patterns/settings', $edit, 'Save configuration');
+    $this->assertText('Maximum URL alias length must be a number.');
+    $this->assertText('Maximum component length must be a number.');
+    $this->assertNoText('The configuration options have been saved.');
+
+    $edit['max_length'] = '0';
+    $edit['max_component_length'] = '0';
+    $this->backdropPost('admin/config/urls/path/patterns/settings', $edit, 'Save configuration');
+    $this->assertText('Maximum URL alias length must be higher or equal to 1.');
+    $this->assertText('Maximum component length must be higher or equal to 1.');
+    $this->assertNoText('The configuration options have been saved.');
+
+    $edit['max_length'] = '999';
+    $edit['max_component_length'] = '999';
+    $this->backdropPost('admin/config/urls/path/patterns/settings', $edit, 'Save configuration');
+    $this->assertText('Maximum URL alias length must be below or equal to 255.');
+    $this->assertText('Maximum component length must be below or equal to 255.');
+    $this->assertNoText('The configuration options have been saved.');
+
+    $edit['max_length'] = '50';
+    $edit['max_component_length'] = '50';
+    $this->backdropPost('admin/config/urls/path/patterns/settings', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
+
+    // To test alternate interfaces, we need more permissions.
+    $permissions = array(
+      'administer path patterns',
+      'administer content types',
+      'administer taxonomy',
+      'administer account settings',
+    );
+    $this->admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->admin_user);
+
+    // Test alternate interfaces - node type configuration.
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+    $edit = array('path_pattern' => 'post/[node:title]/foo');
+    $this->backdropPost('admin/structure/types/manage/post', $edit, 'Save content type');
+    // Check that the page URL alias pattern is on the pathauto form.
+    $this->backdropGet('admin/config/search/path/patterns');
+    $this->assertFieldByName('node_post_pattern', 'post/[node:title]/foo', 'URL alias pattern set with node type settings appears on path config page.');
+
+    // Test alternate interfaces - vocab configuration.
+    $vocabulary = $this->addVocabulary();
+    $pattern = $vocabulary->machine_name . '/[term:name]/foo';
+    $edit = array('path_pattern' =>  $pattern);
+    $this->backdropPost('admin/structure/taxonomy/' . $vocabulary->machine_name . '/configure', $edit, 'Save');
+    // Check that the page URL alias pattern is on the pathauto form.
+    $this->backdropGet('admin/config/search/path/patterns');
+    $this->assertFieldByName('taxonomy_term_' . $vocabulary->machine_name . '_pattern', $pattern, 'URL alias pattern set with vocabulary settings appears on path config page.');
+
+    // Test alternate interfaces - user configuration.
+    $edit = array('path_pattern' => 'accounts/[user:name]/foo');
+    $this->backdropPost('admin/config/people/settings', $edit, 'Save configuration');
+    // Check that the page URL alias pattern is on the pathauto form.
+    $this->backdropGet('admin/config/search/path/patterns');
+    $this->assertFieldByName('user_pattern', 'accounts/[user:name]/foo', 'URL alias pattern set with user account settings appears on path config page.');
+  }
+
+  function testPatternsValidation() {
+    $edit = array();
+    $edit['node_pattern'] = '[node:title]/[user:name]/[term:name]';
+    $edit['node_page_pattern'] = 'page';
+    $this->backdropPost('admin/config/urls/path/patterns', $edit, 'Save configuration');
+    $this->assertText('The Default URL alias pattern (applies to all content types with blank URL alias patterns below) is using the following invalid tokens: [user:name], [term:name].');
+    $this->assertText('The URL alias pattern for all Page URLs cannot contain fewer than one token.');
+    $this->assertNoText('The configuration options have been saved.');
+
+    $edit['node_pattern'] = '[node:title]';
+    $edit['node_page_pattern'] = 'page/[node:title]';
+    $edit['node_post_pattern'] = '';
+    $this->backdropPost('admin/config/urls/path/patterns', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
+  }
+
+  /**
+   * Test programmatic entity creation for aliases.
+   */
+  function testProgrammaticEntityCreation() {
+    $node = $this->backdropCreateNode(array('title' => 'Test node', 'path' => array('auto' => TRUE)));
+    $this->assertEntityAlias('node', $node, 'content/test-node');
+
+    $vocabulary = $this->addVocabulary(array('name' => 'Tags'));
+    $term = $this->addTerm($vocabulary, array('name' => 'Test term', 'path' => array('auto' => TRUE)));
+    $this->assertEntityAlias('taxonomy_term', $term, 'tags/test-term');
+
+    $edit['name'] = 'Test user';
+    $edit['mail'] = 'test-user@example.com';
+    $edit['pass']   = user_password();
+    $edit['path'] = array('auto' => TRUE);
+    $edit['status'] = 1;
+    $account = new User($edit);
+    $account->save();
+    $this->assertEntityAlias('user', $account, 'accounts/test-user');
+  }
+}
+
+class PathPatternLocaleTestCase extends PathPatternFunctionalTestHelper {
+
+  function setUp(array $modules = array()) {
+    $modules[] = 'language';
+    $modules[] = 'locale';
+    $modules[] = 'translation';
+    parent::setUp($modules, array('administer languages'));
+
+    // Add predefined French language and reset the locale cache.
+    $language = (object) array(
+      'langcode' => 'fr',
+      'name' => 'French',
+      'direction' => LANGUAGE_LTR,
+    );
+    language_save($language);
+    backdrop_language_initialize();
+  }
+
+  /**
+   * Test that when an English node is updated, its old English URL alias is
+   * updated and its newer French URL alias is left intact.
+   */
+  function testLanguageAliases() {
+    $node = array(
+      'title' => 'English node',
+      'langcode' => 'en',
+      'body' => array('en' => array(array())),
+      'path' => array(
+        'alias' => 'english-node',
+        'auto' => FALSE,
+      ),
+    );
+    $node = $this->backdropCreateNode($node);
+    $english_alias = path_load(array('alias' => 'english-node', 'langcode' => 'en'));
+    $this->assertTrue($english_alias, 'Alias created with proper language.');
+
+    // Also save a French URL alias that should not be left alone, even though
+    // it is the newer alias.
+    $this->saveEntityAlias('node', $node, 'french-node', 'fr');
+
+    // Add a URL alias with the soon-to-be generated alias, causing the upcoming
+    // URL alias update to generate a unique URL alias with the '-0' suffix.
+    $this->saveAlias('node/invalid', 'content/english-node', LANGUAGE_NONE);
+
+    // Update the node, triggering a change in the English alias.
+    $node->path['auto'] = TRUE;
+    $node->save();
+
+    // Check that the new English URL alias replaced the old one.
+    $this->assertEntityAlias('node', $node, 'content/english-node-1', 'en');
+    $this->assertEntityAlias('node', $node, 'french-node', 'fr');
+    $this->assertAliasExists(array('pid' => $english_alias['pid'], 'alias' => 'content/english-node-1'));
+  }
+}
+
+/**
+ * Bulk update functionality tests.
+ */
+class PathPatternBulkUpdateTestCase extends PathPatternFunctionalTestHelper {
+  private $nodes;
+
+  function testBulkUpdate() {
+    $this->nodes = array();
+    // Add a path pattern on the post content type.
+    $edit = array(
+      'path_pattern' => 'post/[node:title]',
+    );
+    $this->backdropPost('admin/structure/types/manage/post/configure', $edit, t('Save content type'));
+
+    // Create five page nodes.
+    for ($i = 1; $i <= 5; $i++) {
+      $node = $this->backdropCreateNode(array('type' => 'page'));
+      $this->nodes[$node->nid] = $node;
+    }
+    // Create five post nodes.
+    for ($i = 1; $i <= 5; $i++) {
+      $node = $this->backdropCreateNode(array('type' => 'post'));
+      $this->nodes[$node->nid] = $node;
+    }
+    // Create a vocabulary named "Bulk test".
+    $vocabulary = new TaxonomyVocabulary(array(
+      'name' => 'Bulk test',
+      'machine_name' => 'bulk_test',
+    ));
+    taxonomy_vocabulary_save($vocabulary);
+    // Create three tags terms.
+    $this->terms = array();
+    for ($i = 1; $i <= 3; $i++) {
+      $term = entity_create('taxonomy_term', array(
+        'name' => $this->randomName(),
+        'vocabulary' => 'tags',
+        'langcode' => LANGUAGE_NONE,
+      ));
+      taxonomy_term_save($term);
+      $this->terms[$term->tid] = $term;
+      // Test that terms have proper aliases.
+      $this->assertEntityAlias('term', $term, 'tags/' . strtolower($term->name));
+    }
+    // Create three bulk_test terms.
+    $this->terms = array();
+    for ($i = 1; $i <= 3; $i++) {
+      $term = entity_create('taxonomy_term', array(
+        'name' => $this->randomName(),
+        'vocabulary' => 'bulk_test',
+        'langcode' => LANGUAGE_NONE,
+      ));
+      taxonomy_term_save($term);
+      $this->terms[$term->tid] = $term;
+      // Test that terms have proper aliases.
+      $this->assertEntityAlias('term', $term, 'bulk-test/' . strtolower($term->name));
+    }
+
+    // Clear out all aliases.
+    $this->deleteAllAliases();
+    // Test that aliases were deleted.
+    foreach ($this->nodes as $node) {
+      $this->assertNoEntityAliasExists('node', $node);
+    }
+    foreach ($this->terms as $term) {
+      $this->assertNoEntityAliasExists('term', $term);
+    }
+
+    // Bulk create aliases.
+    $edit = array(
+      'update[node][base]' => TRUE,
+      'update[taxonomy_term][base]' => TRUE,
+      'update[user][base]' => TRUE,
+      'operations[operation]' => 'generate',
+    );
+    $this->backdropPost('admin/config/urls/path/bulk-update', $edit, t('Execute'));
+    $this->assertText('Generated 20 URL aliases.'); // 12 nodes + 6 terms + 2 users
+
+    // Check that aliases have actually been created.
+    foreach ($this->nodes as $node) {
+      $this->assertEntityAliasExists('node', $node);
+    }
+    $this->assertEntityAliasExists('user', $this->admin_user);
+
+    // Add a new node.
+    $new_node = $this->backdropCreateNode(array('path' => array('alias' => '', 'auto' => FALSE)));
+    $this->nodes[$new_node->nid] = $new_node;
+
+    // Run the update again which should only run against the new node.
+    $this->backdropPost('admin/config/urls/path/bulk-update', $edit, t('Execute'));
+    $this->assertText('Generated 1 URL alias.'); // 1 node + 0 users
+
+    $this->assertEntityAliasExists('node', $new_node);
+
+    // Test deletion of aliases by deleting all node aliases.
+    $edit = array(
+      'update[node][base]' => TRUE,
+      'operations[operation]' => 'delete',
+    );
+    $this->backdropPost('admin/config/search/path/bulk-update', $edit, t('Execute'));
+    $this->backdropPost(NULL, array(), t('Delete URL aliases'));
+    // Check that aliases have actually been deleted.
+    foreach ($this->nodes as $node) {
+      $this->assertNoEntityAliasExists('node', $node);
+    }
+
+    // Test generation of node types by creating only post aliases.
+    $edit = array(
+      'update[node][post]' => TRUE,
+      'operations[operation]' => 'generate',
+    );
+    $this->backdropPost('admin/config/search/path/bulk-update', $edit, t('Execute'));
+    // Check that aliases only now exists for post types.
+    foreach ($this->nodes as $node) {
+      if ($node->type == 'page') {
+        $this->assertNoEntityAliasExists('node', $node);
+      }
+      if ($node->type == 'post') {
+        $this->assertEntityAliasExists('node', $node);
+      }
+    }
+
+    // Test resetting aliases. Change the path pattern on the post content type.
+    $edit = array(
+      'path_pattern' => 'changed-post/[node:title]',
+    );
+    $this->backdropPost('admin/structure/types/manage/post/configure', $edit, t('Save content type'));
+    $edit = array(
+      'update[node][page]' => TRUE,
+      'update[node][post]' => TRUE,
+      'operations[operation]' => 'update',
+    );
+    $this->backdropPost('admin/config/search/path/bulk-update', $edit, t('Execute'));
+    foreach ($this->nodes as $node) {
+      if ($node->type == 'page') {
+        $this->assertNoEntityAliasExists('node', $node);
+      }
+      if ($node->type == 'post') {
+        $this->assertEntityAlias('node', $node, 'changed-post/' . strtolower($node->title));
+      }
+    }
+
+    // Test deletion of individual types by deleting only post and tags aliases.
+    $edit = array(
+      'update[node][post]' => TRUE,
+      'update[taxonomy_term][tags]' => TRUE,
+      'operations[operation]' => 'delete',
+    );
+    $this->backdropPost('admin/config/search/path/bulk-update', $edit, t('Execute'));
+    $this->backdropPost(NULL, array(), t('Delete URL aliases'));
+    // Check that all node aliases are again deleted.
+    foreach ($this->nodes as $node) {
+      $this->assertNoEntityAliasExists('node', $node);
+    }
+    // Check only tags aliases were deleted.
+    foreach ($this->terms as $term) {
+      if ($term->vocabulary == 'tags') {
+        $this->assertNoEntityAliasExists('taxonomy_term', $term);
+      }
+      if ($term->vocabulary == 'bulk_test') {
+        $this->assertEntityAliasExists('taxonomy_term', $term);
+      }
+    }
+  }
+}
+
+/**
+ * Token functionality tests.
+ */
+class PathPatternTokenTestCase extends PathPatternFunctionalTestHelper {
+
+  function testPathPatternTokens() {
+    $array = array(
+      'test first arg',
+      'The Array / value',
+    );
+
+    $tokens = array(
+      'join-path' => 'test-first-arg/array-value',
+    );
+    $data['array'] = $array;
+    $replacements = $this->assertTokens('array', $data, $tokens);
+
+    // Ensure that the path_clean_token_values() function does not alter
+    // this token value.
+    module_load_include('inc', 'path');
+    path_clean_token_values($replacements, $data, array());
+    $this->assertEqual($replacements['[array:join-path]'], 'test-first-arg/array-value');
+  }
+
+  /**
+   * Function copied from TokenTestHelper::assertTokens().
+   */
+  function assertTokens($type, array $data, array $tokens, array $options = array()) {
+    $input = $this->mapTokenNames($type, array_keys($tokens));
+    $replacements = token_generate($type, $input, $data, $options);
+    foreach ($tokens as $name => $expected) {
+      $token = $input[$name];
+      if (!isset($expected)) {
+        $this->assertTrue(!isset($values[$token]), format_string("Token value for @token was not generated.", array('@type' => $type, '@token' => $token)));
+      }
+      elseif (!isset($replacements[$token])) {
+        $this->fail(t("Token value for @token was not generated.", array('@type' => $type, '@token' => $token)));
+      }
+      elseif (!empty($options['regex'])) {
+        $this->assertTrue(preg_match('/^' . $expected . '$/', $replacements[$token]), format_string("Token value for @token was '@actual', matching regular expression pattern '@expected'.", array('@type' => $type, '@token' => $token, '@actual' => $replacements[$token], '@expected' => $expected)));
+      }
+      else {
+        $this->assertIdentical($replacements[$token], $expected, format_string("Token value for @token was '@actual', expected value '@expected'.", array('@type' => $type, '@token' => $token, '@actual' => $replacements[$token], '@expected' => $expected)));
+      }
+    }
+
+    return $replacements;
+  }
+
+  function mapTokenNames($type, array $tokens = array()) {
+    $return = array();
+    foreach ($tokens as $token) {
+      $return[$token] = "[$type:$token]";
+    }
+    return $return;
+  }
+}

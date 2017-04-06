@@ -1,0 +1,197 @@
+/**
+ * @file
+ * Small text components styling.
+ */
+
+/**
+ * Marker
+ */
+.marker {
+  font-size: 0.875em;
+  display: inline-block;
+  margin: 0 0.4em;
+  padding: 0.3em 0.6em;
+  text-transform: uppercase;
+  line-height: 1;
+  font-style: italic;
+}
+
+/**
+ * More help link
+ */
+.more-help-link {
+  text-align: right;
+}
+
+.more-help-link a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.more-help-link a:before {
+  content: '?';
+  display: inline-block;
+  width: 1.3em;
+  height: 1.3em;
+  margin: 0 0.4em 0 0;
+  border-radius: 50%;
+  font-weight: 600;
+  text-align: center;
+}
+
+/**
+ * Icon - External Link
+ * Add following markup:
+ * <span class="icon-external-link"><span class="icon-external-link-arrow"></span></span>
+ */
+.icon-external-link {
+  position: relative;
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  border: 0.0625em solid #0074bd;
+  border-radius: 0.125em;
+  margin: 0 0 0 0.4em;
+}
+
+.icon-external-link-arrow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  -webkit-transform:
+    translate(0.4375em, -0.3125em)
+    rotate(45deg);
+  transform:
+    translate(0.4375em, -0.3125em)
+    rotate(45deg);
+  -webkit-transform-origin: top center;
+  transform-origin: top left;
+  box-sizing: content-box;
+  width: 0.2em;
+  height: 0.6em;
+  border: 0.125em solid #fff;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.icon-external-link-arrow:before,
+.icon-external-link-arrow:after {
+  content: '';
+  position: absolute;
+}
+
+.icon-external-link-arrow:before {
+  top: 0;
+  right: 0;
+  display: block;
+  width: 0.4em;
+  height: 0.4em;
+  z-index: 100;
+  -webkit-transform:
+    rotate(45deg)
+    translate(0.28125em, -0.01367em);
+  transform:
+    rotate(45deg)
+    translate(0.28125em, -0.01367em);
+  -webkit-transform-origin: top right;
+  transform-origin: top right;
+  border: 0.0625em solid #0074bd;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.icon-external-link-arrow:after {
+  border: 0.1875em solid transparent;
+  border-top: 0;
+  -webkit-transform: translate(-0.12em, -0.12em);
+  transform: translate(-0.12em, -0.12em);
+}
+
+/**
+ * List Components
+ */
+.item-list h3 + ol,
+.item-list h3 + ul {
+  margin-top: 0;
+}
+
+.item-list ol,
+.item-list ul,
+ul.links,
+.links ul {
+  padding: 0 0 0 1.3em;
+}
+
+.links li {
+  position: relative;
+  list-style: none;
+}
+
+.links a {
+  text-decoration: none;
+}
+
+.links li:before,
+.links li:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0.4375em;
+  height: 0.4375em;
+  border: 0.0625rem solid #0074bd;
+  border-width: 0.0625rem 0.0625rem 0 0;
+  -webkit-transform:
+    translate(-1.25em, -50%)
+    rotate(45deg);
+  transform:
+    translate(-1.25em, -50%)
+    rotate(45deg);
+}
+
+.links li:after {
+  -webkit-transform:
+    translate(-1em, -50%)
+    rotate(45deg);
+  transform:
+    translate(-1em, -50%)
+    rotate(45deg);
+}
+
+.links.inline li:before {
+  display: none;
+}
+
+.links.inline {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+.links.inline li {
+  display: inline-block;
+  padding: 0 0.6em 0 0;
+}
+
+.links.inline li:after {
+  content: ',';
+  position: static;
+  display: inline;
+  -webkit-transform: none;
+  transform: none;
+  border: 0;
+}
+
+.links.inline li:last-child:after {
+  content: '';
+}
+
+.links.inline .node-readmore {
+  display: block;
+}
+
+.links.inline .node-readmore:after {
+  content: '';
+}

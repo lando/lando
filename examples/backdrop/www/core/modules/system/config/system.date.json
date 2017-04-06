@@ -1,0 +1,68 @@
+{
+    "_config_name": "system.date",
+    "first_day": 0,
+    "default_country": "",
+    "default_timezone": "UTC",
+    "user_configurable_timezones": 1,
+    "user_default_timezone": 0,
+    "user_empty_timezone_message": 0,
+    "formats": {
+        "long": {
+            "label": "Long Date",
+            "pattern": "l, F j, Y - g:ia",
+            "module": "system"
+        },
+        "medium": {
+            "label": "Medium Date",
+            "pattern": "D, m/d/Y - g:ia",
+            "module": "system"
+        },
+        "short":{
+            "label": "Short Date",
+            "pattern": "m/d/Y - g:ia",
+            "module": "system"
+        },
+        "html_datetime": {
+            "label": "HTML Datetime",
+            "pattern": "Y-m-d\\TH:i:sO",
+            "module": "system",
+            "hidden": 1
+        },
+        "html_date": {
+            "label": "HTML Date",
+            "pattern": "Y-m-d",
+            "module": "system",
+            "hidden": 1
+        },
+        "html_time": {
+            "label": "HTML Time",
+            "pattern": "H:i:s",
+            "module": "system",
+            "hidden": 1
+        },
+        "html_yearless_date": {
+            "label": "HTML Yearless date",
+            "pattern": "m-d",
+            "module": "system",
+            "hidden": 1
+        },
+        "html_week": {
+            "label": "HTML Week",
+            "pattern": "Y-\\WW",
+            "module": "system",
+            "hidden": 1
+        },
+        "html_month": {
+            "label": "HTML Month",
+            "pattern": "Y-m",
+            "module": "system",
+            "hidden": 1
+        },
+        "html_year": {
+            "label": "HTML Year",
+            "pattern": "Y",
+            "module": "system",
+            "hidden": 1
+        }
+    }
+}

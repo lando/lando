@@ -1,0 +1,44 @@
+<?php
+
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Update Views UI variables to use configuration files.
+ */
+function views_ui_update_1000() {
+  $update_variables = array(
+    'views_ui_show_master_display' => FALSE,
+    'views_ui_show_sql_query' => FALSE,
+    'views_ui_show_preview_information' => FALSE,
+    'views_ui_show_sql_query_where' => 'above',
+    'views_ui_show_performance_statistics' => FALSE,
+    'views_ui_always_live_preview' => TRUE,
+    'views_ui_display_embed' => FALSE,
+    'views_ui_custom_theme' => '_default',
+  );
+
+  // Update the UI variables.
+  $config = config('views_ui.settings');
+  foreach ($update_variables as $name => $default) {
+    $value = update_variable_get($name, $default);
+    $name = str_replace('views_ui_', '', $name);
+    $config->set($name, $value);
+  }
+  $config->save();
+
+  // Delete the updated and unneeded variables.
+  $delete_variables = array_keys($update_variables);
+  $delete_variables[] = 'views_ui_show_listing_filters';
+  db_delete('variable')
+    ->condition('name', $delete_variables, 'IN')
+    ->execute();
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

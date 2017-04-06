@@ -1,0 +1,84 @@
+/**
+ * @file
+ * Site Footer styles.
+ */
+.l-footer {
+  margin: 1.5rem 0 0;
+}
+
+.l-footer a {
+  text-decoration: none;
+}
+
+.l-footer a:hover,
+.l-footer a:focus {
+  text-decoration: underline;
+}
+
+/**
+ * Footer menu styles
+ */
+.l-footer .menu,
+.l-footer .menu li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.l-footer .menu:after {
+  /* Clearfix menus */
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.l-footer .menu > li {
+  float: left;
+}
+
+[dir="rtl"] .l-footer .menu > li {
+  float: right;
+}
+
+.l-footer .menu a {
+  display: block;
+  padding: 0 1rem;
+}
+
+/**
+ * Powered by Backdrop Block
+ */
+.l-footer .block-system-powered-by a {
+  text-decoration: none;
+}
+
+.l-footer .block-system-powered-by a:hover {
+  text-decoration: underline;
+}
+
+.drop-lounging {
+  position: relative;
+  width: 7em;
+}
+
+.drop-lounging:before {
+  content: '';
+  position: absolute;
+  top: -0.75em;
+  left: 50%;
+  left: calc(50% + 1.25em);
+  display: none; /* Default hidden unless certain criteria are met */
+  box-sizing: content-box;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0 0 52%;
+  -webkit-transform: translate(-50%, -82%);
+  transform: translate(-50%, -82%);
+  background: url("../images/drop-lounging.png") no-repeat;
+  background-size: 100% auto;
+}
+
+.l-footer .block:first-child .drop-lounging:before {
+  display: block;
+}

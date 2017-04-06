@@ -1,0 +1,132 @@
+<?php
+
+/**
+ * @file
+ * Helper module for Views tests.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function views_test_permission() {
+  return array(
+    'views_test test permission' => array(
+      'title' => t('Test permission'),
+      'description' => t('views_test test permission'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function views_test_views_api() {
+  return array(
+    'api' => 3.0,
+    'template path' => backdrop_get_path('module', 'views_test') . '/templates',
+  );
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function views_test_autoload_info() {
+  return array(
+    'views_test_plugin_access_test_dynamic' => 'test_plugins/views_test_plugin_access_test_dynamic.inc',
+    'views_test_plugin_access_test_static' => 'test_plugins/views_test_plugin_access_test_static.inc',
+    'views_test_plugin_style_test_mapping' => 'test_plugins/views_test_plugin_style_test_mapping.inc',
+  );
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function views_test_views_data() {
+  // Count how often this hook is called.
+  $count = state_get('views_test_views_data_count', 0);
+  $count++;
+  state_set('views_test_views_data_count', $count);
+  return  state_get('views_test_views_data', array());
+}
+
+/**
+ * Implements hook_views_plugins().
+ */
+function views_test_views_plugins() {
+  return state_get('views_test_views_plugins', array());
+}
+
+function views_test_test_static_access_callback($access) {
+  return $access;
+}
+
+function views_test_test_dynamic_access_callback($access, $argument1, $argument2) {
+  return $access && $argument1 == state_get('test_dynamic_access_argument1', NULL) && $argument2 == state_get('test_dynamic_access_argument2', NULL);
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function views_test_views_pre_render(&$view) {
+  if ($view->name == 'test_cache_header_storage') {
+    backdrop_add_js(backdrop_get_path('module', 'views_test') . '/views_cache.test.js');
+    backdrop_add_css(backdrop_get_path('module', 'views_test') . '/views_cache.test.css');
+    $view->pre_render_called = TRUE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for theme_views_view_mapping_test().
+ */
+function template_preprocess_views_view_mapping_test(&$variables) {
+  $variables['element'] = array();
+
+  foreach ($variables['rows'] as $delta => $row) {
+    $fields = array();
+    foreach ($variables['options']['mapping'] as $type => $field_names) {
+      if (!is_array($field_names)) {
+        $field_names = array($field_names);
+      }
+      foreach ($field_names as $field_name) {
+        if ($value = $variables['view']->style_plugin->get_field($delta, $field_name)) {
+          $fields[$type . '-' . $field_name] = $type . ':' . $value;
+        }
+      }
+    }
+
+    // If there are no fields in this row, skip to the next one.
+    if (empty($fields)) {
+      continue;
+    }
+
+    // Build a container for the row.
+    $variables['element'][$delta] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'views-row-mapping-test',
+        ),
+      ),
+    );
+
+    // Add each field to the row.
+    foreach ($fields as $key => $render) {
+      $variables['element'][$delta][$key] = array(
+        '#children' => $render,
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => array(
+            $key,
+          ),
+        ),
+      );
+    }
+  }
+}
+
+/**
+ * Returns HTML for the Mapping Test style.
+ */
+function theme_views_view_mapping_test($variables) {
+  return backdrop_render($variables['element']);
+}

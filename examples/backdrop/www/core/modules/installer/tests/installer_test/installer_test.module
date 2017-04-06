@@ -1,0 +1,242 @@
+<?php
+
+
+/**
+ * Implements hook_archiver_info().
+ */
+function installer_test_archiver_info() {
+  return array(
+    'installer_test_archiver' => array(
+      // This is bogus, we only care about the extensions for now.
+      'class' => 'ArchiverInstallerTest',
+      'extensions' => array('installer-test-extension'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function installer_test_menu() {
+  $items['core/modules/installer/tests/installer_test_xml/%/%'] = array(
+    'title' => 'XML feed page',
+    'description' => "Deliver release info as an XML file.",
+    'page callback' => 'installer_test_xml',
+    'page arguments' => array(5, 6),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['installer_test/query/%/%'] = array(
+    'title' => 'Test Query page',
+    'description' => "Tests the ability to fetch and display projects, and filter them appropriately.",
+    'page callback' => 'installer_test_query',
+    'page arguments' => array(1, 2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Page callback. Outputs release information for test projects as XML data.
+ */
+function installer_test_xml($project = NULL, $version = '1.x') {
+  $path = backdrop_get_path('module', 'installer'); 
+  readfile("$path/tests/installer_test_xml/$project.xml");
+  backdrop_exit();
+}
+
+/**
+ * Page callback. Generates json based on the input filters.
+ */
+function installer_test_query($query, $type, $version = 1) {
+  switch ($query) {
+    case 'query':
+      // Check that we have valid data
+      if (!isset($version)) {
+        print backdrop_json_encode(t('You must specify a backdrop version.'));
+        exit();
+      }
+      if (!isset($type)) {
+        print backdrop_json_encode(t('You must specify a project type.'));
+        exit();
+      }
+      
+      // Get the filters
+      $filters = array(
+        'version' => $version,
+        'type' => $type,
+        'text' => (isset($_GET['text']) && $_GET['text']) ? $_GET['text'] : '',
+        'order_by' => isset($_GET['order_by']) ? $_GET['order_by'] : 'usage',
+        'sort' => isset($_GET['sort']) ? $_GET['sort'] : 'desc',
+        'items_per_page' => isset($_GET['items_per_page']) ? (int) $_GET['items_per_page'] : 12,
+        'page' => isset($_GET['page']) ? (int) $_GET['page'] : 0,
+      );
+      
+      // Pass them off to the installer_server_get_results() function
+      $results = installer_test_get_results($filters);
+      
+      print backdrop_json_encode($results);
+      
+      exit();
+  }
+}
+
+/**
+ * Returns projects based on the filters.
+ */
+function installer_test_get_results($filters) {
+  $projects = installer_test_projects();
+  
+  $results = array(
+    'total' => count($projects),
+    'projects' => array(),
+  );
+  
+  // Filter out projects based on type
+  if (isset($filters['type']) && $type = $filters['type']) {
+    foreach ($projects as $name => $project) {
+      if ($type != $project['type']) {
+        unset($projects[$name]);
+      }
+    }
+  }
+  
+  // Filter out projects based on backdrop version number
+  if (isset($filters['version']) && $version = $filters['version']) {
+    foreach ($projects as $name => $project) {
+      if ($version != $project['version']) {
+        unset($projects[$name]);
+      }
+    }
+  }
+
+  // Filter out projects based on the text query
+  if (isset($filters['text']) && $text = $filters['text']) {
+    foreach ($projects as $name => $project) {
+      if (!stristr($project['title'], $text) && !stristr($project['description'], $text)) {
+        unset($projects[$name]);
+      }
+    }
+  }
+  
+  $results['total'] = count($projects);
+  
+  // Only send back the requested amount
+  $start = $filters['page'] * $filters['items_per_page'];
+  $end = $start + $filters['items_per_page'];
+  
+  $results['projects'] = $projects;
+  
+  return $results;
+}
+
+/**
+ * Returns some static projects.
+ */
+function installer_test_projects() {
+  $projects = array();
+  
+  $projects['aaa_installer_test'] = array(
+    'type' => 'module',
+    'title' => 'AAA Installer test',
+    'name' => 'aaa_installer_test',
+    'version' => 1,
+    'author' => 'docwilmot',
+    'description' => "Support module for installer module testing",
+    'versions' => array(1),
+    'image' => '',
+    'usage' => '542312',
+    'project url' => '',
+    'project status url' => url(backdrop_get_path('module', 'installer') . '/tests/installer_test_xml/aaa_installer_test.xml', array('absolute' => TRUE)),
+    'last updated' => '12342521',
+    'maintenance status' => 'Actively maintained',
+    'development status' => 'Under active development',
+    'rating' => '9.6',
+    'includes' => array(),
+    'dependencies' => array(),
+  );
+  
+  $projects['ddd_installer_test'] = array(
+    'type' => 'module',
+    'title' => 'DDD Installer test',
+    'name' => 'ddd_installer_test',
+    'version' => 1,
+    'author' => 'docwilmot',
+    'description' => "Support module for installer module testing",
+    'versions' => array(1),
+    'image' => '',
+    'usage' => '542312',
+    'project url' => '',
+    'project status url' => url(backdrop_get_path('module', 'installer') . '/tests/installer_test_xml/ddd_installer_test.xml', array('absolute' => TRUE)),
+    'last updated' => '12342522',
+    'maintenance status' => 'Actively maintained',
+    'development status' => 'Under active development',
+    'rating' => '9.6',
+    'includes' => array(),
+    'dependencies' => array(
+      'eee_installer_test',
+    ),
+  );
+  
+  $projects['eee_installer_test'] = array(
+    'type' => 'module',
+    'title' => 'EEE Installer test',
+    'name' => 'eee_installer_test',
+    'version' => 1,
+    'author' => 'docwilmot',
+    'description' => "Support module for installer module testing",
+    'versions' => array(1),
+    'image' => '',
+    'usage' => '542312',
+    'project url' => '',
+    'project status url' => url(backdrop_get_path('module', 'installer') . '/tests/installer_test_xml/eee_installer_test.xml', array('absolute' => TRUE)),
+    'last updated' => '12342523',
+    'maintenance status' => 'Actively maintained',
+    'development status' => 'Under active development',
+    'rating' => '9.6',
+    'includes' => array(),
+    'dependencies' => array(),
+  );
+  
+  $projects['ttt_installer_test'] = array(
+    'type' => 'theme',
+    'title' => 'TTT Installer test',
+    'name' => 'ttt_installer_test',
+    'version' => 1,
+    'author' => 'docwilmot',
+    'description' => "Support theme for installer module testing",
+    'versions' => array(1),
+    'image' => '',
+    'usage' => '542312',
+    'project url' => '',
+    'project status url' => url(backdrop_get_path('module', 'installer') . '/tests/installer_test_xml/ttt_installer_test.xml', array('absolute' => TRUE)),
+    'last updated' => '12342511',
+    'maintenance status' => 'Actively maintained',
+    'development status' => 'Under active development',
+    'rating' => '9.6',
+    'includes' => array(),
+    'dependencies' => array(),
+  );
+  $projects['lll_installer_test'] = array(
+    'type' => 'layout',
+    'title' => 'LLL Installer test',
+    'name' => 'lll_installer_test',
+    'version' => 1,
+    'author' => 'docwilmot',
+    'description' => "Support layout for installer module testing",
+    'versions' => array(1),
+    'image' => '',
+    'usage' => '542312',
+    'project url' => '',
+    'project status url' => url(backdrop_get_path('module', 'installer') . '/tests/installer_test_xml/lll_installer_test.xml', array('absolute' => TRUE)),
+    'last updated' => '12342531',
+    'maintenance status' => 'Actively maintained',
+    'development status' => 'Under active development',
+    'rating' => '9.6',
+    'includes' => array(),
+    'dependencies' => array(),
+  );
+  
+  return $projects;
+}

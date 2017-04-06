@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * @file
+ * Tests for color module.
+ */
+
+/**
+ * Tests the Color module functionality.
+ */
+class ColorTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+  protected $big_user;
+  protected $themes;
+  protected $colorTests;
+
+  function setUp() {
+    parent::setUp('color');
+
+    // Create users.
+    $this->big_user = $this->backdropCreateUser(array('administer themes'));
+
+    // This tests the color module in Bartik.
+    $this->themes = array(
+      'bartik' => array(
+        'palette_input' => 'palette[bg]',
+        'scheme' => 'goldfish',
+        'scheme_color' => '#3b3b3b',
+      ),
+    );
+    theme_enable(array_keys($this->themes));
+
+    // Array filled with valid and not valid color values
+    $this->colorTests = array(
+      '#000' => TRUE,
+      '#123456' => TRUE,
+      '#abcdef' => TRUE,
+      '#0' => FALSE,
+      '#00' => FALSE,
+      '#0000' => FALSE,
+      '#00000' => FALSE,
+      '123456' => FALSE,
+      '#00000g' => FALSE,
+    );
+  }
+
+  /**
+   * Tests the Color module functionality.
+   */
+  function testColor() {
+    foreach ($this->themes as $theme => $test_values) {
+      $this->_testColor($theme, $test_values);
+    }
+  }
+
+  /**
+   * Tests the Color module functionality using the given theme.
+   */
+  function _testColor($theme, $test_values) {
+    config_set('system.core', 'theme_default', $theme);
+    $settings_path = 'admin/appearance/settings/' . $theme;
+
+    $this->backdropLogin($this->big_user);
+    $this->backdropGet($settings_path);
+    $this->assertResponse(200);
+    $edit['scheme'] = '';
+    $edit[$test_values['palette_input']] = '#123456';
+    $this->backdropPost($settings_path, $edit, t('Save theme settings'));
+
+    $this->backdropGet('<front>');
+    $stylesheets = theme_get_setting('color.stylesheets', $theme);
+    $this->assertPattern('|' . file_create_url($stylesheets[0]) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
+
+    $stylesheet_content = join("\n", file($stylesheets[0]));
+    $this->assertTrue(strpos($stylesheet_content, 'color: #123456') !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+
+    $this->backdropGet($settings_path);
+    $this->assertResponse(200);
+    $edit['scheme'] = $test_values['scheme'];
+    $this->backdropPost($settings_path, $edit, t('Save theme settings'));
+
+    $this->backdropGet('<front>');
+    backdrop_static_reset();
+    $stylesheets = theme_get_setting('color.stylesheets', $theme);
+    $stylesheet_content = join("\n", file($stylesheets[0]));
+    $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+
+    // Test with aggregated CSS turned on.
+    config_set('system.core', 'preprocess_css', 1);
+    $this->backdropGet('<front>');
+    $stylesheets = state_get('css_cache_files', array());
+    $stylesheet_content = '';
+    foreach ($stylesheets as $key => $uri) {
+      $stylesheet_content .= join("\n", file(backdrop_realpath($uri)));
+    }
+    $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');
+    config_set('system.core', 'preprocess_css', 0);
+  }
+
+  /**
+   * Tests whether the provided color is valid.
+   */
+  function testValidColor() {
+    config_set('system.core', 'theme_default', 'bartik');
+    $settings_path = 'admin/appearance/settings/bartik';
+
+    $this->backdropLogin($this->big_user);
+    $edit['scheme'] = '';
+
+    foreach ($this->colorTests as $color => $is_valid) {
+      $edit['palette[bg]'] = $color;
+      $this->backdropPost($settings_path, $edit, t('Save theme settings'));
+
+      if ($is_valid) {
+        $this->assertText('The configuration options have been saved.');
+      }
+      else {
+        $this->assertText('You must enter a valid hexadecimal color value for Main background.');
+      }
+    }
+  }
+
+  /**
+   * Test the Bartik legacy color mode.
+   */
+  function testBartikLegacy() {
+    config_set('system.core', 'theme_default', 'bartik');
+    $settings_path = 'admin/appearance/settings/bartik';
+
+    $info = array();
+    include BACKDROP_ROOT . '/' . backdrop_get_path('theme', 'bartik') . '/color/color.inc';
+
+    $default_palette = $info['schemes']['default']['colors'];
+    $blue_lagoon_palette = $info['schemes']['blue_lagoon']['colors'];
+
+    // Set the colors to the Blue Lagoon palette.
+    $edit = array();
+    foreach ($blue_lagoon_palette as $key => $color) {
+      $edit["palette[$key]"] = $color;
+    }
+    $this->backdropLogin($this->big_user);
+    $this->backdropPost($settings_path, $edit, t('Save theme settings'));
+
+    // No color settings should be saved other than the legacy option.
+    $this->assertTrue(config_get('bartik.settings', 'color_legacy'), 'Legacy color flag set in Bartik configuration.');
+    $this->assertNull(config_get('bartik.settings', 'color'), 'No other color settings saved.');
+    $this->backdropGet('');
+    $this->assertRaw('bartik/css/colors-legacy.css', 'Legacy color CSS found on the homepage.');
+    $this->assertNoRaw('bartik/css/legacy.css', 'Default color CSS correctly not used on the homepage.');
+
+    // Modify the palette to trigger a custom palette.
+    $edit['palette[top]'] = '#292929';
+    $this->backdropPost($settings_path, $edit, t('Save theme settings'));
+
+    // Now neither the original nor legacy CSS file should be used.
+    $this->assertFalse(config_get('bartik.settings', 'color_legacy'), 'Legacy color flag set to FALSE in Bartik configuration.');
+    $this->backdropGet('');
+    $this->assertNoRaw('bartik/css/colors-legacy.css', 'Legacy color CSS correctly not found found on the homepage.');
+    $this->assertNoRaw('bartik/css/colors.css', 'Default color CSS correctly not used on the homepage.');
+
+    // Set back to the default palette.
+    $edit = array(
+      'scheme' => 'default'
+    );
+    foreach ($default_palette as $key => $color) {
+      $edit["palette[$key]"] = $color;
+    }
+    $this->backdropPost($settings_path, $edit, t('Save theme settings'));
+    $this->assertFalse(config_get('bartik.settings', 'color_legacy'), 'Legacy color flag set to FALSE in Bartik configuration.');
+    $this->assertNull(config_get('bartik.settings', 'color'), 'Color settings emptied out.');
+    $this->assertNoRaw('bartik/css/colors-legacy.css', 'Legacy color CSS correctly not found found on the homepage.');
+    $this->assertRaw('bartik/css/colors.css', 'Default color CSS found on the homepage.');
+  }
+}

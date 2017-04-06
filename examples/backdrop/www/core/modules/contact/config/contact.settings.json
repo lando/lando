@@ -1,0 +1,6 @@
+{
+    "_config_name": "contact.settings",
+    "contact_default_status": 1,
+    "contact_threshold_limit": 5,
+    "contact_threshold_window": 3600
+}

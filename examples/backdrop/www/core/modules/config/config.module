@@ -1,0 +1,223 @@
+<?php
+/**
+ * @file
+ * Allows site administrators to modify configuration.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function config_menu() {
+  $items['admin/config/development/configuration'] = array(
+    'title' => 'Configuration management',
+    'description' => 'Import, export, and synchronize your configuration changes between different installations of your site, such as in development, staging, and production environments.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('config_sync_form'),
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+  );
+  $items['admin/config/development/configuration/sync'] = array(
+    'title' => 'Synchronize',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  );
+  $items['admin/config/development/configuration/sync/diff'] = array(
+    'title' => 'Configuration diff',
+    'page callback' => 'config_diff_page',
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/development/configuration/single'] = array(
+    'title' => 'Single Import/Export',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('config_import_single_form'),
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/config/development/configuration/single/import'] = array(
+    'title' => 'Import',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/development/configuration/single/export'] = array(
+    'title' => 'Export',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('config_export_single_form'),
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/config/development/configuration/full'] = array(
+    'title' => 'Full Import/Export',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('config_import_full_form'),
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+  $items['admin/config/development/configuration/full/import'] = array(
+    'title' => 'Import',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/development/configuration/full/export'] = array(
+    'title' => 'Export',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('config_export_full_form'),
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/config/development/configuration/full/export-download'] = array(
+    'page callback' => 'config_download_full_export',
+    'access arguments' => array('synchronize configuration'),
+    'file' => 'config.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function config_permission() {
+  $permissions['synchronize configuration'] = array(
+    'title' => t('Synchronize, import, and export configuration'),
+    'restrict access' => TRUE,
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function config_file_download($uri) {
+  $scheme = file_uri_scheme($uri);
+  $target = file_uri_target($uri);
+  if ($scheme == 'temporary' && $target == 'config.tar.gz') {
+    return array(
+      'Content-disposition' => 'attachment; filename="config.tar.gz"',
+    );
+  }
+}
+
+/**
+ * Retrieves configuration information provided by modules.
+ *
+ * @param string $config_name
+ *   (optional) The name of the config file whose information should be
+ *   retrieved. If not specified, information for all configuration prefixes is
+ *   returned.
+ * @return array
+ *   An array of all configuration information, either for the single
+ *   configuration file based on its prefix, or configuration information for
+ *   all installed modules if no $config_name is specified.
+ *
+ * @see hook_config_info()
+ * @see hook_config_info_alter()
+ */
+function config_get_info($config_name = NULL) {
+  $config_info = &backdrop_static(__FUNCTION__, array());
+  if (empty($config_info)) {
+    $config_info = module_invoke_all('config_info');
+    backdrop_alter('config_info', $config_info);
+  }
+
+  if ($config_name) {
+    $return_config_info = FALSE;
+    foreach ($config_info as $prefix => $this_config_info) {
+      if ($config_name === $prefix || strpos($config_name, $prefix . '.') === 0) {
+        $return_config_info = $this_config_info;
+        break;
+      }
+    }
+    return $return_config_info;
+  }
+  else {
+    return $config_info;
+  }
+}
+
+/**
+ * Get a list of all configuration prefixes and groups.
+ *
+ * This list provided by hook_config_info().
+ */
+function config_get_prefix_groups($type = 'active') {
+  $config_info_all = config_get_info();
+  $groups = array();
+  $ungrouped = t('Ungrouped');
+
+  $config_storage = config_get_config_storage($type);
+  foreach ($config_info_all as $prefix => $config_info) {
+    $group = isset($config_info['group']) ? $config_info['group'] : $ungrouped;
+    if (isset($config_info['label_callback']) || isset($config_info['label_key'])) {
+      $config_list = $config_storage->listAll($prefix);
+      foreach ($config_list as $config_name) {
+        $config = $config_storage->read($config_name);
+        if (isset($config_info['label_callback'])) {
+          $label = $config_info['label_callback']($config, $config_name);
+        }
+        elseif (isset($config_info['label_key']) && isset($config[$config_info['label_key']])) {
+          $label = $config[$config_info['label_key']];
+        }
+        else {
+          $label = $config_name;
+        }
+        $groups[$group][$config_name] = $label;
+      }
+    }
+    elseif (isset($config_info['label'])) {
+      $groups[$group][$prefix] = $config_info['label'];
+    }
+  }
+  return $groups;
+}
+
+/**
+ * Implements hook_config_data_validate().
+ */
+function config_config_data_validate(Config $config, $config_info) {
+  // This validation only applies to configs that have module-provided info.
+  if (empty($config_info)) {
+    return;
+  }
+
+  // First check that the provided name matches the filename.
+  $config_name = $config->getName();
+  $data = $config->get();
+  if (isset($config_info['name_key'])) {
+    // Keys may be an array or string. Ensure each key exists.
+    $keys = (array) $config_info['name_key'];
+    $config_string = '';
+    foreach ($keys as $name_key) {
+      if (empty($data[$name_key])) {
+        throw new ConfigValidateException(t('The configuration "@file" must have the "@key" attribute specified.', array('@file' => $config_name, '@key' => $name_key)));
+      }
+      $config_string .= '.' . $data[$name_key];
+    }
+
+    // Then check the file name matches the key or list of keys.
+    if (strpos($config_name, $config_string) === FALSE) {
+      if (count($keys) === 1) {
+        $message = t('The "@name_key" attribute has the value "@value", which does not match the file name "@file".', array('@file' => $config_name, '@name_key' => $name_key, '@value' => $data[$name_key]));
+      }
+      else {
+        $message = t('The attributes for @list do not match the file name "@file".', array('@file' => $config_name, '@list' => implode(', ', $keys)));
+      }
+      throw new ConfigValidateException($message);
+    }
+  }
+
+  // Check that a label key is provided (if applicable).
+  if (isset($config_info['label_key'])) {
+    $label_key = $config_info['label_key'];
+    if (empty($data[$label_key])) {
+      throw new ConfigValidateException(t('The configuration "@file" must have a "@key" attribute specified.', array('@file' => $config_name, '@key' => $label_key)));
+    }
+  }
+}

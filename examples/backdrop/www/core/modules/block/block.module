@@ -1,0 +1,298 @@
+<?php
+/**
+ * @file
+ * Provides the ability to create reusable custom blocks.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function block_permission() {
+  return array(
+    'administer blocks' => array(
+      'title' => t('Administer custom blocks'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function block_menu() {
+  $items['admin/structure/block'] = array(
+    'title' => 'Custom blocks',
+    'description' => 'Create reusable blocks that can be placed in layouts.',
+    'page callback' => 'block_admin_list',
+    'access arguments' => array('administer blocks'),
+    'file' => 'block.admin.inc',
+  );
+  $items['admin/structure/block/list'] = array(
+    'title' => 'List custom blocks',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/structure/block/manage/%block_custom_block'] = array(
+    'title' => 'Configure block',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('block_admin_configure', 4),
+    'access arguments' => array('administer blocks'),
+    'file' => 'block.admin.inc',
+  );
+  $items['admin/structure/block/manage/%/configure'] = array(
+    'title' => 'Configure block',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
+  );
+  $items['admin/structure/block/manage/%/delete'] = array(
+    'title' => 'Delete block',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('block_custom_block_delete', 4),
+    'access arguments' => array('administer blocks'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_NONE,
+    'file' => 'block.admin.inc',
+  );
+  $items['admin/structure/block/add'] = array(
+    'title' => 'Add custom block',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('block_add_block_form'),
+    'access arguments' => array('administer blocks'),
+    'type' => MENU_LOCAL_ACTION,
+    'file' => 'block.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function block_config_info() {
+  $prefixes['block.custom'] = array(
+    'name_key' => 'delta',
+    'label_key' => 'info',
+    'group' => t('Custom Blocks'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function block_block_info() {
+  // Statically cache to prevent multiple database lookups.
+  $blocks = &backdrop_static(__FUNCTION__);
+  if (isset($blocks)) {
+    return $blocks;
+  }
+
+  $blocks = array();
+  $config_names = config_get_names_with_prefix('block.custom.');
+  foreach ($config_names as $config_name) {
+    $block = config_get($config_name);
+    $blocks[$block['delta']] = $block;
+    $blocks[$block['delta']]['description'] = t('A reusable custom block.');
+  }
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function block_block_configure($delta) {
+  if ($delta) {
+    $custom_block = block_custom_block_load($delta);
+    $custom_block['delta'] = $delta;
+  }
+  else {
+    $custom_block = array();
+  }
+  return block_custom_block_form($custom_block, FALSE);
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function block_block_save($delta, &$edit = array()) {
+  block_custom_block_save($edit, $delta);
+
+  // Remove values from edit to prevent them from being saved in layout config.
+  unset($edit['info']);
+  unset($edit['title']);
+  unset($edit['body']);
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * Generates the administrator-defined blocks for display.
+ */
+function block_block_view($delta = '') {
+  $block = block_custom_block_load($delta);
+  if (!$block) {
+    return array();
+  }
+  $data['subject'] = strlen($block['title']) ? check_plain($block['title']) : NULL;
+  $data['content'] = check_markup($block['body']['value'], $block['body']['format'], '', TRUE);
+  return $data;
+}
+
+/**
+ * Returns information from configuration about a user-created (custom) block.
+ *
+ * @param $delta
+ *   ID of the block to get information for.
+ *
+ * @return array
+ *   Associative array of information stored in configuration for this block, or FALSE if it doesn't exist
+ *   Array keys:
+ *   - delta: Block ID.
+ *   - info: Block description.
+ *   - body: Block contents.
+ *   - format: Filter ID of the filter format for the body.
+ */
+function block_custom_block_load($delta) {
+  $blocks = block_block_info();
+  if (isset($blocks[$delta])) {
+    return $blocks[$delta];
+  }
+  return FALSE;
+}
+
+/**
+ * Form constructor for the custom block form.
+ *
+ * @param $edit
+ *   (optional) An associative array of information retrieved by
+ *   block_custom_get_block() if an existing block is being edited, or an empty
+ *   array otherwise. Defaults to array().
+ * @param $stand_alone
+ *   (optional) Set to FALSE if this form is used when displaying as part of a
+ *   form within the Layout UI. The default value of TRUE should be used if this
+ *   is a stand-alone form, such as when editing a block at it's own URL.
+ *
+ * @ingroup forms
+ */
+function block_custom_block_form($edit = array(), $stand_alone = TRUE) {
+  $edit += array(
+    'info' => '',
+    'title' => '',
+    'body' => array('value' => '', 'format' => NULL),
+    'delta' => NULL,
+  );
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Display title'),
+    '#default_value' => $edit['title'],
+    '#maxlength' => 255,
+    '#description' => t('The title of the block as shown to the user. This will affect all places where this block is used.'),
+    '#weight' => -18,
+  );
+  $form['info'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Admin label'),
+    '#default_value' => $edit['info'],
+    '#maxlength' => 64,
+    '#description' => t('Used in administrative interfaces and not shown to end-users.'),
+    '#required' => TRUE,
+    '#weight' => -20,
+    '#id' => 'block-info',
+  );
+  $form['delta'] = array(
+    '#type' => 'machine_name',
+    '#default_value' => $edit['delta'],
+    '#maxlength' => 128,
+    '#machine_name' => array(
+      'exists' => 'block_custom_block_load',
+      'source' => array('info'),
+    ),
+    '#description' => t('A unique machine-readable name for this Block. It must only contain lowercase letters, numbers, and underscores.'),
+    '#weight' => -19,
+    '#disabled' => isset($edit['delta']),
+  );
+  $form['body'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Block content'),
+    '#default_value' => $edit['body']['value'],
+    '#format' => $edit['body']['format'],
+    '#editor_uploads' => TRUE,
+    '#rows' => 8,
+    '#required' => TRUE,
+    '#weight' => -17,
+  );
+
+  // When displaying as part of the Layout UI.
+  if (!$stand_alone) {
+    $form['title']['#states'] = array(
+      'visible' => array(
+        '[name=title_display]' => array('value' => LAYOUT_TITLE_DEFAULT),
+      ),
+    );
+    $form['info']['#weight'] = 5;
+    $form['delta']['#weight'] = 6;
+    $form['delta']['#machine_name']['source'] = array('block_settings', 'info');
+    $form['reusable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Make this block reusable'),
+      '#description' => t('This option may not be unchecked once enabled. You may configure or delete this reusable block from the !block_link page.', array('!block_link' => l(t('Custom blocks'), 'admin/structure/block'))),
+      '#weight' => 4,
+      '#default_value' => TRUE,
+      '#disabled' => TRUE,
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Saves a user-created block in a config file.
+ *
+ * @param array $edit
+ *   Associative array of fields to save. Array keys:
+ *   - delta: The machine name for the block
+ *   - info: Block description.
+ *   - title: The block title (optional, since layouts have their own title field)
+ *   - body: Associative array of body value and format. Array keys:
+ *     - value: Block contents.
+ *     - format: Filter ID of the filter format for the body.
+ * @param string|NULL $delta
+ *   Machine name of the block to save, comprised of lower-case letters,
+ *   numbers, and underscores. Note: NULL values are still accepted when
+ *   creating new nodes to maintain API contiguity.
+ */
+function block_custom_block_save(array $edit, $delta = NULL) {
+  $delta = $delta ? $delta : preg_replace('/[^a-z0-9_]+/', '_', strtolower($edit['info']));
+  $block = block_custom_block_load($delta);
+  if (!$block) {
+    $block = array(
+      'delta' => $delta,
+      'info' => '',
+      'title' => '',
+      'body' => array('value' => '', 'format' => ''),
+    );
+  }
+  foreach ($block as $key => $value) {
+    if (isset($edit[$key])) {
+      $block[$key] = $edit[$key];
+    }
+  }
+  $config = config('block.custom.' . $delta);
+  $config->setData($block);
+  $config->save();
+
+  // Save each file as permanent, preventing it from being deleted. The same
+  // process is used in Layout::save(), but that only applies to non-reusable
+  // blocks (BlockText objects). If a block has been marked reusable, the files
+  // are immediately marked as permanent.
+  // File usages are not currently removed for custom blocks.
+  // See https://github.com/backdrop/backdrop-issues/issues/2137.
+  $fids = filter_parse_file_fids($block['body']['value']);
+  $files = file_load_multiple($fids);
+  foreach ($files as $fid => $file) {
+    if ($file && $file->status !== FILE_STATUS_PERMANENT) {
+      // This makes the file "self-referencing", so it will never be deleted.
+      file_usage_add($file, 'file', 'file', $file->fid);
+    }
+  }
+
+  // Reset the static cache on the block list so this block is picked up.
+  backdrop_static_reset('block_block_info');
+}

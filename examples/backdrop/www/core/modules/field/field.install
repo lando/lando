@@ -1,0 +1,119 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the field module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function field_schema() {
+  $schema['cache_field'] = backdrop_get_schema_unprocessed('system', 'cache');
+  $schema['cache_field']['description'] = 'Cache table for the Field module to store already built field information.';
+
+  return $schema;
+}
+
+/**
+ * Convert fields to configuration files.
+ */
+function field_update_1000() {
+  if (db_table_exists('field_config')) {
+    // Only upgrade active fields. As we no longer support multiple fields with
+    // the same name, this prevents upgrading deleted fields that would conflict
+    // with active fields with the same name.
+    $result = db_query('SELECT * FROM {field_config} WHERE deleted = 0 AND active = 1');
+    foreach ($result as $row) {
+      $field = (array) $row;
+      $field += unserialize($field['data']);
+      $field['storage'] = array(
+        'type' => $field['storage_type'],
+        'module' => $field['storage_module'],
+        'active' => $field['storage_active'],
+        'settings' => array(),
+      );
+      unset($field['id']);
+      unset($field['data']);
+      unset($field['storage_type']);
+      unset($field['storage_module']);
+      unset($field['storage_active']);
+      $config = config('field.field.' . $field['field_name']);
+      $config->setData($field);
+      $config->save();
+    }
+    db_drop_table('field_config');
+  }
+
+  if (db_table_exists('field_config_instance')) {
+    $result = db_query('SELECT * FROM {field_config_instance} WHERE deleted = 0');
+    foreach ($result as $row) {
+      $instance = (array) $row;
+      $instance += unserialize($instance['data']);
+      unset($instance['id']);
+      unset($instance['field_id']);
+      unset($instance['data']);
+      $config = config('field.instance.' . $instance['entity_type'] . '.' . $instance['bundle'] . '.' . $instance['field_name']);
+      $config->setData($instance);
+      $config->save();
+    }
+  }
+
+  // Upgrade display mode settings.
+  $result = db_query("SELECT * FROM {variable} WHERE name LIKE 'field_bundle_settings_%'");
+  foreach ($result as $row) {
+    $variable_name = $row->name;
+    $data = unserialize($row->value);
+    $name = str_replace('field_bundle_settings_', '', $variable_name);
+    $entity_type = substr($name, 0, strpos($name, '__'));
+    $bundle = substr($name, strpos($name, '__') + 2);
+    $config = config('field.bundle.' . $entity_type . '.' . $bundle);
+    $config->setData($data);
+    $config->save();
+  }
+  db_query("DELETE FROM {variable} WHERE name LIKE 'field_bundle_settings_%'");
+
+  // Update purge size variable to config.
+  config_set('system.core', 'field_purge_batch_size', update_variable_get('field_purge_batch_size', 200));
+}
+
+/**
+ * Add missing entity type and bundle information to Field config files.
+ */
+function field_update_1001() {
+  $names = config_get_names_with_prefix('field.bundle.');
+  foreach ($names as $name) {
+    $config = config($name);
+    list(, , $entity_type, $bundle) = explode('.', $name);
+    $settings = $config->get();
+    $data = array(
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+    ) + $settings;
+    $config->setData($data);
+    $config->save();
+  }
+}
+
+/**
+ * Grant the new "administer fields" permission to trusted users.
+ */
+function field_update_1002() {
+  // Assign the permission to anyone that already has a trusted core permission
+  // that would have previously let them administer fields on an entity type.
+  $role_names = array();
+  $permissions = array(
+    'administer site configuration',
+    'administer content types',
+    'administer users',
+  );
+  foreach ($permissions as $permission) {
+    $role_names = array_merge($role_names, array_keys(user_roles(FALSE, $permission)));
+  }
+  $role_names = array_unique($role_names);
+  foreach ($role_names as $role_name) {
+    $role_config = config('user.role.' . $role_name);
+    $permissions = array_unique(array_merge($role_config->get('permissions'), array('administer fields')));
+    $role_config->set('permissions', $permissions);
+    $role_config->save();
+  }
+}

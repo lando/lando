@@ -1,0 +1,212 @@
+.menu-dropdown {
+  position: relative;
+}
+
+/* Undo system.theme.css menu styles for dropdowns. */
+.menu-dropdown li,
+.menu-dropdown li.expanded,
+.menu-dropdown li.collapsed,
+.menu-dropdown li.leaf {
+  margin: 0;
+  padding: 0;
+}
+.js .menu-dropdown a,
+.js .menu-dropdown a:hover,
+.js .menu-dropdown a:focus,
+.js .menu-dropdown a:active {
+  /* make room for the toggle button (sub indicator) */
+  padding-right: 58px;
+  font-weight: normal;
+  line-height: 17px;
+  text-decoration: none;
+}
+.menu-dropdown a.current {
+  color: #d23600;
+}
+.menu-dropdown a.disabled {
+  color: #bbbbbb;
+}
+.menu-dropdown a span.sub-arrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  left: auto;
+  right: 4px;
+  width: 34px;
+  height: 34px;
+  overflow: hidden;
+  font: bold 16px/34px monospace !important;
+  text-align: center;
+  text-shadow: none;
+}
+.menu-dropdown span.sub-arrow:before {
+  display: block;
+  content: '+';
+}
+.menu-dropdown a.highlighted span.sub-arrow:before {
+  display: block;
+  content: '-';
+}
+
+@media (min-width: 48em) {
+  /* Switch to desktop layout
+  -----------------------------------------------
+     These transform the menu tree from
+     collapsible to desktop (navbar + dropdowns)
+  -----------------------------------------------*/
+  /* start... (it's not recommended editing these rules) */
+  .js .menu-dropdown ul {
+    position: absolute;
+    width: 12em;
+    top: 1em;
+  }
+
+  .menu-dropdown li {
+    float: left;
+  }
+
+  [dir="rtl"] .menu-dropdown li {
+    float: right;
+  }
+
+  .menu-dropdown ul li,
+  [dir="rtl"] .menu-dropdown ul li {
+    float: none;
+  }
+
+  .menu-dropdown a {
+    white-space: nowrap;
+  }
+
+  .menu-dropdown ul a {
+    white-space: normal;
+  }
+
+  /* ...end */
+  .menu-dropdown a,
+  .menu-dropdown a:hover,
+  .menu-dropdown a:focus,
+  .menu-dropdown a:active,
+  .menu-dropdown a.highlighted {
+    color: #555555;
+  }
+  .menu-dropdown a.disabled {
+    color: #bbbbbb;
+  }
+  .menu-dropdown li.has-children > a {
+    padding-right: 24px;
+  }
+  .menu-dropdown a span.sub-arrow {
+    top: 50%;
+    margin-top: -2px;
+    right: 12px;
+    width: 0;
+    height: 0;
+    border-width: 4px;
+    border-style: solid dashed dashed dashed;
+    border-color: #555555 transparent transparent transparent;
+    background: transparent;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+  }
+  .menu-dropdown a.highlighted span.sub-arrow:before {
+    display: none;
+  }
+  .menu-dropdown li {
+    border-top: 0;
+  }
+  .menu-dropdown ul {
+    border: 1px solid #bbbbbb;
+    padding: 5px 0;
+    background: #ccc;
+  }
+  .menu-dropdown ul a,
+  .menu-dropdown ul a:hover,
+  .menu-dropdown ul a:focus,
+  .menu-dropdown ul a:active,
+  .menu-dropdown ul a.highlighted {
+    border: 0 !important;
+    padding: 10px 20px;
+    color: #555555;
+  }
+  .menu-dropdown ul a:hover,
+  .menu-dropdown ul a:focus,
+  .menu-dropdown ul a:active,
+  .menu-dropdown ul a.highlighted {
+    background: #eeeeee;
+  }
+  .menu-dropdown ul a.disabled {
+    background: white;
+    color: #cccccc;
+  }
+  .menu-dropdown ul .has-children > a {
+    padding-right: 20px;
+  }
+  .menu-dropdown ul a span.sub-arrow {
+    right: 8px;
+    top: 50%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: dashed dashed dashed solid;
+    border-color: transparent transparent transparent #555555;
+  }
+  .menu-dropdown span.scroll-up,
+  .menu-dropdown span.scroll-down {
+    position: absolute;
+    display: none;
+    visibility: hidden;
+    overflow: hidden;
+    background: white;
+    height: 20px;
+  }
+  .menu-dropdown span.scroll-up:hover,
+  .menu-dropdown span.scroll-down:hover {
+    background: #eeeeee;
+  }
+  .menu-dropdown span.scroll-up-arrow,
+  .menu-dropdown span.scroll-down-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -6px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border-width: 6px;
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent #555555 transparent;
+  }
+  .menu-dropdown span.scroll-down-arrow {
+    top: 8px;
+    border-style: solid dashed dashed dashed;
+    border-color: #555555 transparent transparent transparent;
+  }
+  [dir="rtl"] .menu-dropdown li.has-children > a {
+    padding-right: 12px;
+    padding-left: 24px;
+  }
+  [dir="rtl"] .menu-dropdown span.sub-arrow {
+    right: auto;
+    left: 12px;
+  }
+  [dir="rtl"] .menu-dropdown > li > ul:before {
+    left: auto;
+    right: 30px;
+  }
+  [dir="rtl"] .menu-dropdown > li > ul:after {
+    left: auto;
+    right: 31px;
+  }
+  [dir="rtl"] .menu-dropdown li.has-children > a {
+    padding: 10px 20px !important;
+  }
+  [dir="rtl"] .menu-dropdown span.sub-arrow {
+    right: auto;
+    left: 8px;
+    border-style: dashed solid dashed dashed;
+    border-color: transparent #555555 transparent transparent;
+  }
+}

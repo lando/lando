@@ -1,0 +1,494 @@
+<?php
+
+/**
+ * @file
+ * Tests for the Administration bar module.
+ */
+
+/**
+ * Base class for all administration bar web test cases.
+ */
+class AdminBarWebTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  protected $basePermissions = array(
+    'system' => 'access administration pages',
+    'config' => 'administer site configuration',
+    'admin_bar' => 'access administration bar',
+    'node' => 'access content',
+  );
+
+  function setUp() {
+    // Enable admin bar module and any other modules.
+    $modules = func_get_args();
+    $modules = isset($modules[0]) ? $modules[0] : $modules;
+    $modules[] = 'admin_bar';
+    $modules[] = 'node';
+    parent::setUp($modules);
+  }
+
+  /**
+   * Check that an element exists in HTML markup.
+   *
+   * @param $xpath
+   *   An XPath expression.
+   * @param array $arguments
+   *   (optional) An associative array of XPath replacement tokens to pass to
+   *   BackdropWebTestCase::buildXPathQuery().
+   * @param $message
+   *   The message to display along with the assertion.
+   * @param $group
+   *   The type of assertion - examples are "Browser", "PHP".
+   *
+   * @return
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertElementByXPath($xpath, array $arguments = array(), $message, $group = 'Other') {
+    $elements = $this->xpath($xpath, $arguments);
+    return $this->assertTrue(!empty($elements[0]), $message, $group);
+  }
+
+  /**
+   * Check that an element does not exist in HTML markup.
+   *
+   * @param $xpath
+   *   An XPath expression.
+   * @param array $arguments
+   *   (optional) An associative array of XPath replacement tokens to pass to
+   *   BackdropWebTestCase::buildXPathQuery().
+   * @param $message
+   *   The message to display along with the assertion.
+   * @param $group
+   *   The type of assertion - examples are "Browser", "PHP".
+   *
+   * @return
+   *   TRUE if the assertion succeeded, FALSE otherwise.
+   */
+  protected function assertNoElementByXPath($xpath, array $arguments = array(), $message, $group = 'Other') {
+    $elements = $this->xpath($xpath, $arguments);
+    return $this->assertTrue(empty($elements), $message, $group);
+  }
+
+  /**
+   * Asserts that links appear in the menu in a specified trail.
+   *
+   * @param array $trail
+   *   A list of menu link titles to assert in the menu.
+   */
+  protected function assertLinkTrailByTitle(array $trail) {
+    $xpath = array();
+    $args = array();
+    $message = '';
+    foreach ($trail as $i => $title) {
+      $xpath[] = '/li/a[text()=:title' . $i . ']';
+      $args[':title' . $i] = $title;
+      $message .= ($i ? ' » ' : '') . check_plain($title);
+    }
+    $xpath = '//div[@id="admin-bar"]/div/ul/li/ul' . implode('/parent::li/ul', $xpath);
+    $this->assertElementByXPath($xpath, $args, $message . ' link found.');
+  }
+
+  /**
+   * Asserts that no link appears in the menu for a specified trail.
+   *
+   * @param array $trail
+   *   A list of menu link titles to assert in the menu.
+   */
+  protected function assertNoLinkTrailByTitle(array $trail) {
+    $xpath = array();
+    $args = array();
+    $message = '';
+    foreach ($trail as $i => $title) {
+      $xpath[] = '/li/a[text()=:title' . $i . ']';
+      $args[':title' . $i] = $title;
+      $message .= ($i ? ' » ' : '') . check_plain($title);
+    }
+    $xpath = '//div[@id="admin-bar"]/div/ul' . implode('/parent::li/ul', $xpath);
+    $this->assertNoElementByXPath($xpath, $args, $message . ' link not found.');
+  }
+}
+
+/**
+ * Tests menu links depending on user permissions.
+ */
+class AdminBarPermissionsTestCase extends AdminBarWebTestCase {
+  function setUp() {
+    parent::setUp(array('node'));
+  }
+
+  /**
+   * Test that the links are added to the page (no JS testing).
+   */
+  function testPermissions() {
+    module_enable(array('contact'));
+    $this->resetAll();
+
+    // Anonymous users should not see the menu.
+    $this->backdropGet('');
+    $this->assertNoElementByXPath('//div[@id="admin-bar"]', array(), t('Administration bar not found.'));
+
+    // Create a user who
+    // - can access content overview
+    // - cannot administer Contact module
+    $permissions = $this->basePermissions + array(
+      'access content overview',
+    );
+    $admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($admin_user);
+
+    // Check that the user can see the admin links, but not the Backdrop links.
+    $this->assertElementByXPath('//div[@id="admin-bar"]', array(), 'Administration bar found.');
+    $this->assertElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path)]', array(':path' => 'admin/content'), 'Content link found.');
+    $this->assertNoElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path)]', array(':path' => 'admin/structure/contact'), 'Structure » Contact link not found.');
+
+    // Create a user "reversed" to the above; i.e., who
+    // - cannot access content overview
+    // - can administer Contact module
+    $permissions = $this->basePermissions + array(
+      'administer contact forms',
+    );
+    $admin_user2 = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($admin_user2);
+    $this->assertElementByXPath('//div[@id="admin-bar"]', array(), 'Administration bar found.');
+    $this->assertNoElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path)]', array(':path' => 'admin/content'), 'Content link not found.');
+    $this->assertElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path)]', array(':path' => 'admin/structure/contact'), 'Structure » Contact link found.');
+  }
+
+  /**
+   * Tests handling of links pointing to category/overview pages.
+   */
+  function testCategories() {
+    // Create a user with minimum permissions.
+    $admin_user = $this->backdropCreateUser($this->basePermissions);
+    $this->backdropLogin($admin_user);
+
+    // Verify that no category links appear.
+    $this->assertNoLinkTrailByTitle(array(t('Structure')));
+    $this->assertNoLinkTrailByTitle(array(t('Configuration')));
+
+    // Create a user with access to one configuration category.
+    $permissions = $this->basePermissions + array(
+      'administer users',
+      'administer account settings',
+    );
+    $admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($admin_user);
+
+    // Verify that only expected category links appear.
+    $this->assertNoLinkTrailByTitle(array(t('Structure')));
+    $this->assertLinkTrailByTitle(array(t('User accounts')));
+    $this->assertLinkTrailByTitle(array(t('Configuration')));
+    $this->assertLinkTrailByTitle(array(t('Configuration'), t('User accounts')));
+    // Random picks are sufficient.
+    $this->assertNoLinkTrailByTitle(array(t('Configuration'), t('Media')));
+    $this->assertNoLinkTrailByTitle(array(t('Configuration'), t('System')));
+  }
+
+  /**
+   * Tests that user role and permission changes are properly taken up.
+   */
+  function testPermissionChanges() {
+    // Create a user who is able to change permissions.
+    $permissions = $this->basePermissions + array(
+      'administer permissions',
+      'assign roles',
+    );
+    $admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($admin_user);
+
+    // Extract the user role name that was created for above permissions.
+    $roles = array_diff($admin_user->roles, array(BACKDROP_AUTHENTICATED_ROLE));
+    $role_name = reset($roles);
+
+    // Verify that Configuration does not appear.
+    $this->assertNoLinkTrailByTitle(array(t('Configuration')));
+    // Grant the 'administer site configuration' permission to ourselves.
+    $edit = array(
+      $role_name . '[administer site configuration]' => TRUE,
+    );
+    $this->backdropPost('admin/config/people/permissions', $edit, t('Save permissions'));
+    // Verify that Configuration appears.
+    $this->assertLinkTrailByTitle(array(t('Configuration')));
+
+    // Verify that Structure » Content types does not appear.
+    $this->assertNoLinkTrailByTitle(array(t('Structure'), t('Content types')));
+    // Create a new role.
+    $edit = array(
+      'name' => 'test',
+      'label' => 'Test',
+    );
+    $this->backdropPost('admin/config/people/roles', $edit, t('Add role'));
+
+    // Grant the 'administer content types' permission for the role.
+    $edit = array(
+      'test[administer content types]' => TRUE,
+    );
+    $this->backdropPost('admin/config/people/permissions/test', $edit, t('Save permissions'));
+    // Verify that Structure » Content types does not appear.
+    $this->assertNoLinkTrailByTitle(array(t('Structure'), t('Content types')));
+
+    // Assign the role to ourselves.
+    $edit = array(
+      'roles[test]' => TRUE,
+    );
+    $this->backdropPost('user/' . $admin_user->uid . '/edit', $edit, t('Save'));
+    // Verify that Structure » Content types appears.
+    $this->assertLinkTrailByTitle(array(t('Structure'), t('Content types')));
+
+    // Delete the role.
+    $this->backdropPost('admin/config/people/roles/delete/test', array(), t('Delete'));
+    // Verify that Structure » Content types does not appear.
+    $this->assertNoLinkTrailByTitle(array(t('Structure'), t('Content types')));
+  }
+}
+
+/**
+ * Tests appearance, localization, and escaping of dynamic links.
+ */
+class AdminBarDynamicLinksTestCase extends AdminBarWebTestCase {
+  function setUp() {
+    parent::setUp(array('node'));
+  }
+
+  /**
+   * Tests node type links.
+   */
+  function testNode() {
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+    // Create a content-type with special characters.
+    $this->backdropCreateContentType(array('type' => 'special', 'name' => 'Cool & Special'));
+
+    $permissions = $this->basePermissions + array(
+      'administer content types',
+      'create post content',
+      'create special content',
+    );
+    $this->admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->admin_user);
+
+    // Verify that dynamic links are displayed.
+    $cid = 'admin_bar:' . $this->admin_user->uid . ':' . session_id() . ':en';
+    $hash = admin_bar_cache_get($cid);
+    $this->backdropGet('js/admin_bar/cache/' . $hash);
+    $this->assertElementByXPath('//div[@id="admin-bar"]', array(), t('Administration bar found.'));
+    $this->assertElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path)]', array(':path' => 'admin/structure/types'), "Structure » Content types link found.");
+
+    // Verify link title output escaping.
+    $this->assertNoRaw('Cool & Special');
+    $this->assertRaw(check_plain('Cool & Special'));
+
+    // Verify Manage content type links.
+    $links = array(
+      'admin/structure/types/manage/post' => 'Post',
+      'admin/structure/types/manage/special' => 'Cool & Special',
+    );
+    foreach ($links as $path => $title) {
+      $this->assertElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path) and text()=:title]', array(
+        ':path' => $path,
+        ':title' => $title,
+      ), "Structure » Content types » $title link found.");
+    }
+
+    // Verify Add content links.
+    $links = array(
+      'node/add/post' => 'Post',
+      'node/add/special' => 'Cool & Special',
+    );
+    foreach ($links as $path => $title) {
+      $this->assertElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path) and text()=:title]', array(
+        ':path' => $path,
+        ':title' => $title,
+      ), "Add content » $title link found.");
+    }
+
+    // Remove the node/add items from the management menu and check that the add
+    // links are still added to the menu.
+    module_load_include('inc', 'admin_bar');
+    $link = db_query("SELECT * FROM {menu_links} WHERE router_path LIKE 'node/add%' AND module = 'system'")->fetchAssoc();
+    $link = menu_link_load($link['mlid']);
+    $link['menu_name'] = 'main-menu';
+    menu_link_save($link);
+
+    // Delete the special type and check that the link disappears.
+    $this->backdropPost('admin/structure/types/manage/special/delete', array(), t('Delete'));
+    $this->backdropGet('js/admin_bar/cache/' . $hash);
+
+    $this->assertElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path) and text()=:title]', array(
+      ':path' => 'node/add/post',
+      ':title' => 'Post',
+    ), "Add content » Post link found after moving Add Content into a different menu.");
+    $this->assertNoElementByXPath('//div[@id="admin-bar"]//a[contains(@href, :path) and text()=:title]', array(
+      ':path' => 'node/add/special',
+      ':title' => 'Cool & Special',
+    ), "Add content » Cool & Special link no longer present after deleting the content type.");
+  }
+
+  /**
+   * Tests Add content links.
+   */
+  function testNodeAdd() {
+    $type = $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+
+    // Verify that "Add content" does not appear for unprivileged users.
+    $permissions = $this->basePermissions + array();
+    $this->web_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->web_user);
+    $this->assertNoText(t('Add content'));
+
+    // Verify "Add content" appears below "Content" for administrative users.
+    $permissions = $this->basePermissions + array(
+      'access content overview',
+      'create post content',
+    );
+    $this->admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->admin_user);
+    $this->assertLinkTrailByTitle(array(
+      t('Content'),
+      t('Add content'),
+    ));
+
+    // Verify "Add content" appears on the top-level for regular users.
+    $permissions = $this->basePermissions + array(
+      'create post content',
+    );
+    $this->web_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->web_user);
+    $this->assertLinkTrailByTitle(array(
+      t('Add content'),
+    ));
+  }
+}
+
+/**
+ * Tests appearance of different types of links.
+ */
+class AdminBarLinkTypesTestCase extends AdminBarWebTestCase {
+  function setUp() {
+    parent::setUp();
+
+    $permissions = module_invoke_all('permission');
+    $permissions = array_keys($permissions);
+    $this->admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->admin_user);
+  }
+
+  /**
+   * Tests appearance of different router item link types.
+   */
+  function testLinkTypes() {
+    // Verify that MENU_NORMAL_ITEMs appear.
+    $this->assertLinkTrailByTitle(array(
+      t('Configuration'),
+      t('System'),
+      t('Site information'),
+    ));
+
+    // Verify that MENU_LOCAL_TASKs appear.
+    $this->assertLinkTrailByTitle(array(t('Functionality'), t('Uninstall modules')));
+
+    // Verify that MENU_LOCAL_ACTIONs appear.
+    $this->assertLinkTrailByTitle(array(
+      t('User accounts'),
+      t('Add user account'),
+    ));
+
+    // Verify that MENU_DEFAULT_LOCAL_TASKs do NOT appear.
+    $this->assertNoLinkTrailByTitle(array(t('Appearance'), t('List')));
+    $this->assertNoLinkTrailByTitle(array(t('Modules'), t('List')));
+
+    // Verify that MENU_VISIBLE_IN_BREADCRUMB items (exact type) do NOT appear.
+    $this->assertNoLinkTrailByTitle(array(t('Modules'), t('Uninstall'), t('Uninstall')));
+  }
+}
+
+/**
+ * Tests customized menu links.
+ */
+class AdminBarCustomizedTestCase extends AdminBarWebTestCase {
+  function setUp() {
+    parent::setUp(array('menu'));
+
+    $this->admin_user = $this->backdropCreateUser($this->basePermissions + array(
+      'administer menu',
+    ));
+    $this->backdropLogin($this->admin_user);
+  }
+
+  /**
+   * Test disabled custom links.
+   */
+  function testCustomDisabled() {
+    $type = $this->backdropCreateContentType();
+    $node = $this->backdropCreateNode(array('type' => $type->type));
+    $text = $this->randomName();
+    $xpath = $this->buildXPathQuery('//div[@id=:id]//a[contains(text(), :text)]', array(
+      ':id' => 'admin-bar',
+      ':text' => $text,
+    ));
+
+    // Verify that the link does not appear in the menu.
+    $this->backdropGet('admin/config/administration/admin_bar');
+    $elements = $this->xpath($xpath);
+    $this->assertFalse($elements, 'Custom link not found.');
+
+    // Add a custom link to the node to the menu.
+    $edit = array(
+      'link_path' => 'node/' . $node->nid,
+      'link_title' => $text,
+      'parent' => 'management:' . $this->queryMlidByPath('admin'),
+    );
+    $this->backdropPost('admin/structure/menu/manage/management/add', $edit, t('Save'));
+
+    // Verify that the link appears in the menu.
+    $cid = 'admin_bar:' . $this->admin_user->uid . ':' . session_id() . ':en';
+    $hash = admin_bar_cache_get($cid);
+    $this->backdropGet('js/admin_bar/cache/' . $hash);
+    $elements = $this->xpath($xpath);
+    $this->assertTrue($elements, 'Custom link found.');
+
+    // Disable the link.
+    $edit = array(
+      'enabled' => FALSE,
+    );
+    $this->backdropPost('admin/structure/menu/item/' . $this->queryMlidByPath('node/' . $node->nid) . '/edit', $edit, t('Save'));
+
+    // Verify that the disabled link does not appear in the menu.
+    $this->backdropGet('admin/config/administration/admin_bar');
+    $elements = $this->xpath($xpath);
+    $this->assertFalse($elements, 'Disabled custom link not found.');
+  }
+
+  /**
+   * Tests external links.
+   */
+  function testCustomExternal() {
+    // Add a custom link to the node to the menu.
+    $edit = array(
+      'link_path' => 'http://example.com',
+      'link_title' => 'Example',
+      'parent' => 'management:' . $this->queryMlidByPath('admin'),
+    );
+    $this->backdropPost('admin/structure/menu/manage/management/add', $edit, t('Save'));
+
+    // Verify that the link appears in the menu.
+    $cid = 'admin_bar:' . $this->admin_user->uid . ':' . session_id() . ':en';
+    $hash = admin_bar_cache_get($cid);
+    $this->backdropGet('js/admin_bar/cache/' . $hash);
+    $elements = $this->xpath('//div[@id=:id]//a[@href=:href and contains(text(), :text)]', array(
+      ':id' => 'admin-bar',
+      ':href' => $edit['link_path'],
+      ':text' => $edit['link_title'],
+    ));
+    $this->assertTrue($elements, 'External link found.');
+  }
+
+  /**
+   * Returns the menu link ID for a given link path in the management menu.
+   */
+  protected function queryMlidByPath($path) {
+    return db_query('SELECT mlid FROM {menu_links} WHERE menu_name = :menu AND link_path = :path', array(
+      ':menu' => 'management',
+      ':path' => $path,
+    ))->fetchField();
+  }
+}

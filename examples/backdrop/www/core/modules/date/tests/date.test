@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Test date UI.
+ */
+ 
+require_once BACKDROP_ROOT . '/core/modules/date/tests/date_field.test';
+
+class DateUITestCase extends DateFieldBasic {
+
+   public function setUp() {
+    parent::setUp();
+
+    $format = system_date_format_load('long');
+    $format['pattern'] = 'D, m/d/Y - H:i';
+    system_date_format_save($format);
+  }
+
+  public function testFieldUI() {
+    $label = 'Test';
+    $current_year = date('Y');
+
+    $field_types = array('date', 'datestamp', 'datetime');
+    $widget_types = array('date_select', 'date_text', 'date_popup');
+
+    // Test widgets with default settings using every widget and field type.
+    foreach ($field_types as $field_type) {
+      foreach ($widget_types as $widget_type) {
+        $this->createDateField(
+            array(
+              'label' => $label,
+              'field_type' => $field_type,
+              'widget_type' => $widget_type,
+            )
+        );
+        $this->dateForm($widget_type);
+        $this->assertText(format_string('10/07/!year - 10:30', array('!year' => $current_year)), 'Found the correct date for a date field using the ' . $widget_type . ' widget.');
+        $this->deleteDateField($label);
+      }
+    }
+
+    // Test timezone handling validation on the field settings form.
+    $this->createDateField(array('label' => $label, 'field_type' => 'date', 'widget_type' => 'date_select', 'granularity' => array('year', 'month', 'day')));
+    $edit = array('field[settings][granularity][hour]' => FALSE);
+    $this->backdropPost('admin/structure/types/manage/story/fields/field_' . strtolower($label), $edit, t('Save settings'));
+    $this->assertText("Dates without hours granularity must not use any timezone handling.", "Dates without hours granularity required to use timezone handling of 'none.'");
+    $this->deleteDateField($label);
+  }
+
+  function dateForm($options) {
+    // Tests that date field functions properly.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body[und][0][value]'] = $this->randomName(16);
+    $current_year = date('Y');
+
+    if ($options == 'date_select') {
+      $edit['field_test[und][0][value][year]'] = $current_year;
+      $edit['field_test[und][0][value][month]'] = '10';
+      $edit['field_test[und][0][value][day]'] = '7';
+      $edit['field_test[und][0][value][hour]'] = '10';
+      $edit['field_test[und][0][value][minute]'] = '30';
+      $edit['field_test[und][0][value][ampm]'] = 'am';
+    }
+    elseif ($options == 'date_text') {
+      $edit['field_test[und][0][value][date]'] = format_string('10/07/!year - 10:30', array('!year' => $current_year));
+    }
+    elseif ($options == 'date_popup') {
+      $edit['field_test[und][0][value][date]'] = format_string('10/07/!year', array('!year' => $current_year));
+      $edit['field_test[und][0][value][time]'] = '10:30';
+    }
+    $this->backdropPost('node/add/story', $edit, t('Save'));
+    $this->assertText($edit['body[und][0][value]'], 'Test node has been created');
+  }
+}
