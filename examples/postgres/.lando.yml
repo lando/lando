@@ -1,0 +1,23 @@
+name: postgres
+sharing:
+  html:
+    local: www
+    remote: /usr/share/nginx/html
+proxy:
+  html:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  html:
+    type: nginx
+    ssl: true
+  database:
+    type: postgres
+    portforward: 5444
+    creds:
+      user: postgres
+      password: postgres
+      database: postgres

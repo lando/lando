@@ -30,6 +30,7 @@ module.exports = function(lando) {
     lando.services.add('nginx', require('./../nginx/nginx')(lando));
     lando.services.add('mariadb', require('./../mariadb/mariadb')(lando));
     lando.services.add('mysql', require('./../mysql/mysql')(lando));
+    lando.services.add('postgres', require('./../postgres/postgres')(lando));
     lando.services.add('php', require('./../php/php')(lando));
 
   });
