@@ -63,7 +63,9 @@ module.exports = function(lando) {
         POSTGRES_DB: creds.database || 'database',
         TERM: 'xterm'
       },
-      volumes: ['data:' + configFiles.dataDir],
+      // @todo: Persistance of postgres data volume is an issue
+      // see: https://github.com/docker-library/postgres/issues/213
+      //volumes: ['data:' + configFiles.dataDir],
       command: 'docker-entrypoint.sh postgres',
     };
 
