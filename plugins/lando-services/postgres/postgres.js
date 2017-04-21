@@ -1,28 +1,27 @@
 /**
- * Lando mysql service builder
+ * Lando postgres service builder
  *
- * @name mysql
+ * @name postgres
  */
 
 'use strict';
 
-module.exports = function(lando) {
+module.exports = function(/*lando*/) {
 
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.services.addConfig;
-  var buildVolume = lando.services.buildVolume;
+  //var _ = lando.node._;
+  //var addConfig = lando.services.addConfig;
+  //var buildVolume = lando.services.buildVolume;
 
   /**
    * Supported versions for mysql
    */
   var versions = [
-    '8',
-    '5.5.53',
-    '5.5',
-    '5.6',
-    '5.7',
-    '5',
+    '9.2',
+    '9.3',
+    '9.4',
+    '9.5',
+    '9.6',
     'latest',
     'custom'
   ];
@@ -44,25 +43,24 @@ module.exports = function(lando) {
 
     // Define config mappings
     var configFiles = {
-      confd: '/etc/mysql/conf.d',
-      dataDir: '/var/lib/mysql'
+      //confd: '/etc/mysql/conf.d',
+      dataDir: '/var/lib/postgresql/data'
     };
 
     // GEt creds
     var creds = config.creds || {};
 
-    // Default mysql service
-    var mysql = {
-      image: 'mysql:' + config.version,
+    // Default postgres service
+    var postgres = {
+      image: 'postgres:' + config.version,
       environment: {
-        MYSQL_USER: creds.user || 'mysql',
-        MYSQL_PASSWORD: creds.password || 'password',
-        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes',
-        MYSQL_DATABASE: creds.database || 'database',
+        POSTGRES_USER: creds.user || 'postgres',
+        POSTGRES_PASSWORD: creds.password || 'password',
+        POSTGRES_DB: creds.database || 'database',
         TERM: 'xterm'
       },
       volumes: ['data:' + configFiles.dataDir],
-      command: 'docker-entrypoint.sh mysqld',
+      command: 'docker-entrypoint.sh postgres',
     };
 
     // Handle port forwarding
@@ -70,17 +68,18 @@ module.exports = function(lando) {
 
       // If true assign a port automatically
       if (config.portforward === true) {
-        mysql.ports = ['3306'];
+        postgres.ports = ['5432'];
       }
 
       // Else use the specified port
       else {
-        mysql.ports = [config.portforward + ':3306'];
+        postgres.ports = [config.portforward + ':5432'];
       }
 
     }
 
     // Handle custom config directory
+    /*
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
         var local = config.config[type];
@@ -88,9 +87,10 @@ module.exports = function(lando) {
         mysql.volumes = addConfig(customConfig, mysql.volumes);
       }
     });
+    */
 
     // Put it all together
-    services[name] = mysql;
+    services[name] = postgres;
 
     // Return our service
     return services;
@@ -112,13 +112,13 @@ module.exports = function(lando) {
     // Add in generic info
     var info = {
       creds: {
-        user: config.environment.MYSQL_USER,
-        password: config.environment.MYSQL_PASSWORD,
-        database: config.environment.MYSQL_DATABASE
+        user: config.environment.POSTGRES_USER,
+        password: config.environment.POSTGRES_PASSWORD,
+        database: config.environment.POSTGRES_DB
       },
       'internal_connection': {
         host: name,
-        port: 3306
+        port: 5432
       },
       'external_connection': {
         host: 'localhost',
