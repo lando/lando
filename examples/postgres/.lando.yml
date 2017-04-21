@@ -15,6 +15,8 @@ services:
     type: nginx
     ssl: true
   database:
+    config:
+      postgres: config/postgresql.conf
     type: postgres
     portforward: 5444
     creds:
