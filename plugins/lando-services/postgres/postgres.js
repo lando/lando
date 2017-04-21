@@ -6,12 +6,12 @@
 
 'use strict';
 
-module.exports = function(/*lando*/) {
+module.exports = function(lando) {
 
   // Modules
-  //var _ = lando.node._;
-  //var addConfig = lando.services.addConfig;
-  //var buildVolume = lando.services.buildVolume;
+  var _ = lando.node._;
+  var addConfig = lando.services.addConfig;
+  var buildVolume = lando.services.buildVolume;
 
   /**
    * Supported versions for mysql
@@ -41,10 +41,14 @@ module.exports = function(/*lando*/) {
     // Start a services collector
     var services = {};
 
+    // Get data dir
+    var ddd = '/var/lib/postgresql/data';
+    var dataDir = _.get(config, 'overrides.services.environment.PGDATA', ddd);
+
     // Define config mappings
     var configFiles = {
-      //confd: '/etc/mysql/conf.d',
-      dataDir: '/var/lib/postgresql/data'
+      postgres: dataDir + '/postgresql.conf',
+      dataDir: dataDir
     };
 
     // GEt creds
@@ -79,15 +83,13 @@ module.exports = function(/*lando*/) {
     }
 
     // Handle custom config directory
-    /*
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
         var local = config.config[type];
         var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-        mysql.volumes = addConfig(customConfig, mysql.volumes);
+        postgres.volumes = addConfig(customConfig, postgres.volumes);
       }
     });
-    */
 
     // Put it all together
     services[name] = postgres;
