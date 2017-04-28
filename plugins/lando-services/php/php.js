@@ -48,11 +48,13 @@ module.exports = function(lando) {
     // Define type specific config things
     var typeConfig = {
       nginx: {
+        web: 'nginx',
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.conf'
       },
       apache: {
+        web: 'apache',
         command: ['apache2-foreground'],
         image: [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-available/000-default.conf',
@@ -86,7 +88,7 @@ module.exports = function(lando) {
     };
 
     // If this is apache lets do some checks
-    if (config.via === 'apache' && config.ssl) {
+    if (config.web === 'apache' && config.ssl) {
 
       // Add the ssl port
       php.ports.push('443');
@@ -98,6 +100,17 @@ module.exports = function(lando) {
 
       // Add in an add cert task
       php.volumes = addScript('add-cert.sh', php.volumes);
+
+    }
+
+    // If this being delivered via nginx we need to modify some things
+    if (config.web === 'nginx') {
+
+      // Make sure network alias exists
+      php.networks = {default: {aliases: ['fpm']}};
+
+      // Set ports to empty
+      php.ports = [];
 
     }
 
@@ -124,13 +137,13 @@ module.exports = function(lando) {
 
     // Set the nginx config
     config.config = _.merge(nginxConfigDefaults, config.config);
-    var name = config.name;
 
     // Generate a config object to build the service with
-    var nginx = lando.services.build(name, type, config).services[config.name];
+    var name = config.name;
+    var nginx = lando.services.build(name, type, config).services[name];
 
     // Add the webroot
-    nginx.volumes.push('data:/var/www/html');
+    nginx.volumes.push('appserver:/var/www/html');
 
     // Return the object
     return nginx;
@@ -143,28 +156,15 @@ module.exports = function(lando) {
    */
   var buildAppserver = function(config) {
 
-    // Get name and type
-    var name = config.name;
-    var via = config.via;
-
     // Start a services collector
     var services = {};
 
     // Build the correct "appserver"
-    services[name] = (via === 'nginx') ? nginx(config) : php(config);
+    services[config.name] = php(config);
 
-    // Add fpm backend if we are doing nginx
-    if (via === 'nginx') {
-      services.fpm = php(config);
-      delete services.fpm.ports;
-    }
-
-    // Add correct volumes based on webserver choice
-    if (via === 'nginx') {
-      services.fpm.volumes.push(name + ':/var/www/html');
-    }
-    else {
-      services[name].volumes.push('data:/var/www/html');
+    // Add nginx delivery if we are doing nginx
+    if (config.web === 'nginx') {
+      services.nginx = nginx(config);
     }
 
     // Return things
@@ -196,22 +196,22 @@ module.exports = function(lando) {
     };
 
     // Handle custom web config files/dirs
+    var web = (config.web === 'nginx') ? 'nginx' : name;
     _.forEach(configFiles.web, function(file, type) {
       if (_.has(config, 'config.' + type)) {
         var local = config.config[type];
         var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-        services[name].volumes = addConfig(customConf, services[name].volumes);
+        services[web].volumes = addConfig(customConf, services[web].volumes);
       }
     });
 
     // Handle custom php config files/dirs
     _.forEach(configFiles.php, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        var service = (config.via === 'nginx') ? 'fpm' : name;
         var local = config.config[type];
         var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-        var volumes = services[service].volumes;
-        services[service].volumes = addConfig(customConf, volumes);
+        var volumes = services[name].volumes;
+        services[name].volumes = addConfig(customConf, volumes);
       }
     });
 
@@ -230,11 +230,6 @@ module.exports = function(lando) {
 
     // Add in appserver basics
     info.via = config.via;
-
-    // Add in FPM if needed
-    if (config.via === 'nginx') {
-      info.fpm = true;
-    }
 
     // Return the collected info
     return info;

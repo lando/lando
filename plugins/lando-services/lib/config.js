@@ -19,6 +19,9 @@ module.exports = function(lando) {
     if (!_.isEmpty(app.config.services)) {
       _.forEach(app.config.services, function(service, name) {
 
+        // Add the appname to the service info
+        service.app = app.config.name;
+
         // Get our new containers
         var newCompose = lando.services.build(name, service.type, service);
 
@@ -28,7 +31,7 @@ module.exports = function(lando) {
           // Get our old container or empty object
           var oldService = app.services[name] || {};
 
-          // Merge the new container ontop of the old
+          // Merge the new container on top of the old
           service = _.merge(oldService, service);
 
           // Clone deeply
