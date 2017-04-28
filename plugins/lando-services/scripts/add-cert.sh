@@ -12,7 +12,7 @@ if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
 fi
 
 # Set up a certs for this service
-if [ ! -f "/certs/${LANDO_SERVICE_TYPE}.pem" ]; then
+if [ ! -f "/certs/cert.pem" ]; then
 
   # Check if openssl is installed, it not install it
   if ! [ -x "$(command -v openssl)" ]; then
@@ -20,8 +20,8 @@ if [ ! -f "/certs/${LANDO_SERVICE_TYPE}.pem" ]; then
   fi
 
   # Generate the cert
-  openssl genrsa -out /certs/${LANDO_SERVICE_TYPE}.key 2048 && \
-  openssl req -new -x509 -key /certs/${LANDO_SERVICE_TYPE}.key -out /certs/${LANDO_SERVICE_TYPE}.crt -days 365 -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=KB/CN=${LANDO_SERVICE_TYPE}" && \
-  cat /certs/${LANDO_SERVICE_TYPE}.crt /certs/${LANDO_SERVICE_TYPE}.key > /certs/${LANDO_SERVICE_TYPE}.pem
+  openssl genrsa -out /certs/cert.key 2048 && \
+  openssl req -new -x509 -key /certs/cert.key -out /certs/cert.crt -days 365 -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=KB/CN=${LANDO_SERVICE_TYPE}" && \
+  cat /certs/cert.crt /certs/cert.key > /certs/cert.pem
 
 fi

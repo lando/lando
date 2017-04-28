@@ -4,7 +4,7 @@ sharing:
     local: www
     remote: /var/www/html
 proxy:
-  appserver:
+  nginx:
     - port: 80/tcp
       default: true
     - port: 443/tcp
