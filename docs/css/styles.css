@@ -1,0 +1,111 @@
+body {
+  padding-top: 78px;
+}
+
+.markdown-section a {
+  color: #0dbc96;
+}
+
+.book-summary ul.summary li.active>a {
+  color: #0ca785;
+}
+
+.lando-header {
+  padding: 20px 40px;
+  box-sizing:border-box;
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);
+  height: 80px;
+  background-color: #0dbc96;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  min-height: 80px;
+}
+
+.lando-header .lando-header-limiter {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.lando-header .lando-header-limiter .fa {
+  color: #fff;
+  font-size: 32px;
+}
+
+/* Logo */
+
+.lando-header .lando-header-limiter h1 {
+  float: left;
+  font: normal 32px Cookie, Arial, Helvetica, sans-serif;
+  line-height: 40px;
+  margin: 0;
+}
+
+.lando-header .lando-header-limiter h1 span {
+  color: #88f7df;
+}
+
+/* The header links */
+
+.lando-header .lando-header-limiter a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.lando-header .lando-header-limiter nav {
+  font:15px Arial, Helvetica, sans-serif;
+  line-height: 40px;
+  float: right;
+}
+
+.lando-header .lando-header-limiter nav a {
+  display: inline-block;
+  padding: 0 5px;
+  opacity: 0.9;
+  text-decoration:none;
+  color: #ffffff;
+  font-size: 24px;
+  text-transform: uppercase;
+  line-height:1;
+}
+
+.lando-header .lando-header-limiter nav a:hover {
+  text-decoration:underline;
+}
+
+.lando-header .lando-header-limiter nav a.selected {
+  background-color: #88f7df;
+  color: #ffffff;
+  border-radius: 3px;
+  padding:6px 10px;
+}
+
+/* Making the header responsive. */
+
+@media all and (max-width: 600px) {
+
+  .lando-header {
+    padding: 20px 0;
+    height: 85px;
+  }
+
+  .lando-header .lando-header-limiter h1 {
+    float: none;
+    margin: -8px 0 10px;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .lando-header .lando-header-limiter nav {
+    line-height: 1;
+    float:none;
+  }
+
+  .lando-header .lando-header-limiter nav a {
+    font-size: 13px;
+  }
+
+}

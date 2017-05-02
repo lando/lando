@@ -1,0 +1,20 @@
+{% extends template.self %}
+
+{% block body %}
+
+<header class="lando-header">
+  <div class="lando-header-limiter">
+    <div class="logo">
+      <h1><a href="#">lando</a><span>cumentation</span></h1>
+    </div>
+    <nav>
+      <a href="/">Docs</a>
+      <a href="https://github.com/kalabox/lando/releases">Downloads</a>
+      <a href="https://github.com/kalabox/lando"><i class="fa fa-github" aria-hidden="true"></i></a>
+    </nav>
+  </div>
+</header>
+
+{{ super() }}
+
+{% endblock %}
