@@ -19,6 +19,6 @@ services:
     type: mysql
     portforward: 3308
     creds:
-      user: pirog
-      password: pirog
-      database: pirog
+      user: lamp
+      password: lamp
+      database: lamp

@@ -5,6 +5,10 @@ sharing:
   web:
     local: webroot1
     remote: /usr/local/apache2/htdocs
+    uid: 33
+    user: www-data
+    gid: 33
+    group: www-data
   web2:
     local: webroot2
     remote: /usr/share/nginx/html

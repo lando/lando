@@ -1,9 +1,17 @@
 FROM debian:jessie
 
-ENV UNISON_VERSION=2.49.543
-ENV UNISON_CODEROOT=/code
-ENV UNISON_WEBROOT=/var/www
+ENV UNISON_VERSION="2.49.543"
+
+ENV UNISON_CODEROOT="/code"
+ENV UNISON_WEBROOT="/var/www/html"
+ENV UNISON_DIR="/unison"
+
 ENV UNISON_OPTIONS=
+
+ENV UNISON_GROUP="www-data"
+ENV UNISON_GID="33"
+ENV UNISON_USER="www-data"
+ENV UNISON_UID="33"
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -29,5 +37,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY sync.profile /root/.unison/default.prf
 COPY run.sh /run.sh
+
+VOLUME /unison
 
 CMD ["/run.sh"]

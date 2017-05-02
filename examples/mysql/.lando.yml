@@ -18,6 +18,6 @@ services:
     type: mysql
     portforward: 3311
     creds:
-      user: pirog
-      password: pirog
-      database: pirog
+      user: mysql
+      password: mysql
+      database: mysql
