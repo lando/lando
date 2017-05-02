@@ -32,18 +32,22 @@ module.exports = function(lando) {
     /*
      * Return a unison contaniner with our sharing opts
      */
-    var getUnison = function(local, remote, service) {
+    var getUnison = function(share, service) {
       return {
-        image: 'kalabox/unison:2.49',
+        image: 'kalabox/sync:2.49',
         restart: 'on-failure',
         environment: {
-          'UNISON_WEBROOT': remote,
-          'UNISON_CODEROOT': '/kalashare/' + local,
-          'UNISON_OPTIONS': getUnisonOptions()
+          'UNISON_WEBROOT': share.remote,
+          'UNISON_CODEROOT': '/kalashare/' + share.local,
+          'UNISON_OPTIONS': getUnisonOptions(),
+          'UNISON_UID': share.uid || 33,
+          'UNISON_USER': share.user || 'www-data',
+          'UNISON_GID': share.gid || 33,
+          'UNISON_GROUP': share.group || 'www-data'
         },
         volumes: [
           '$LANDO_APP_ROOT_BIND:/kalashare',
-          [service, remote].join(':')
+          [service, share.remote].join(':')
         ]
       };
     };
@@ -58,7 +62,7 @@ module.exports = function(lando) {
       var name = 'unison' + service;
 
       // Get the unison piece
-      services[name] = getUnison(share.local, share.remote, service);
+      services[name] = getUnison(share, service);
 
       // Add the volume to the service
       services[service] = {volumes: [[service, share.remote].join(':')]};

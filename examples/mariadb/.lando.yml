@@ -18,8 +18,8 @@ services:
     type: mariadb
     portforward: 3307
     creds:
-      user: pirog
-      password: pirog
-      database: pirog
+      user: mariadb
+      password: mariadb
+      database: mariadb
     config:
       confd: config
