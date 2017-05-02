@@ -4,12 +4,21 @@
   "gitbook": ">=3.2",
   "language": "en",
   "plugins": [
-    "edit-link"
+    "anchors",
+    "codesnippet",
+    "edit-link",
+    "gtm",
+    "toc",
+    "-sharing"
   ],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/kalabox/lando/edit/master/docs",
       "label": "Edit Page"
+    },
+    "gtm": {
+      "token": "GTM-TKLWK67",
+      "virtualPageViews": true
     }
   }
 }

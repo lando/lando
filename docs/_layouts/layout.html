@@ -1,0 +1,24 @@
+{% extends template.self %}
+
+
+{% block body %}
+
+{{ super() }}
+
+{# This block doesn't work for some reason. #}
+
+{% endblock %}
+
+{% block style %}
+{{ super() }}
+
+<link rel="stylesheet" href="/css/styles.css">
+
+{% endblock %}
+
+{% block javascript %}
+{{ super() }}
+
+{# This block doesn't work for some reason. #}
+
+{% endblock %}
