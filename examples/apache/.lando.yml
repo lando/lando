@@ -14,7 +14,8 @@ services:
   html:
     type: apache
     ssl: true
-    compose:
-      environment:
-        STUFF: THINGS
-      ports: ['8081:80']
+    overrides:
+      services:
+        environment:
+          STUFF: THINGS
+        ports: ['8081:80']

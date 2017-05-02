@@ -44,6 +44,9 @@ install:
   # Run unit tests
   - grunt test:unit
 
+  # Make sure we can build the docs
+  - grunt docs
+
 build_script:
 
   # Build dev releases

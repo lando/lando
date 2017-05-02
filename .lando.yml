@@ -1,7 +1,7 @@
-name: nginx
+name: docs
 sharing:
   appserver:
-    local: www
+    local: _book
     remote: /usr/share/nginx/html
 proxy:
   appserver:
@@ -12,12 +12,5 @@ proxy:
       secure: true
 services:
   appserver:
-    type: nginx:1.8.1
+    type: nginx
     ssl: true
-    config:
-      server: config/server.conf
-    overrides:
-      services:
-        environment:
-          THING: STUFF
-        ports: ['8080:80']

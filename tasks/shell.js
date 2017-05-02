@@ -126,10 +126,28 @@ module.exports = function(common) {
 
   };
 
+  /*
+   * Constructs the gitbook task
+   */
+  var gitBookTask = function() {
+
+    // Start a command collector
+    var cmd = [];
+
+    // Cobble it together
+    cmd.push('./node_modules/.bin/gitbook install');
+    cmd.push('./node_modules/.bin/gitbook build');
+
+    // Return the gitbook task
+    return scriptTask(cmd.join(' && '));
+
+  };
+
   // Return our things
   return {
     batsTask: batsTask,
     cliPkgTask: cliPkgTask,
+    gitBookTask: gitBookTask,
     psTask: psTask,
     scriptTask: scriptTask
   };

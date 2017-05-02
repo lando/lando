@@ -1,0 +1,43 @@
+# This file describes an application. You can have multiple applications
+# in the same project.
+
+# The name of this app. Must be unique within a project.
+name: app
+
+# The toolstack used to build the application.
+type: php:7.0
+build:
+  flavor: none
+
+# The configuration of app when it is exposed to the web.
+web:
+  locations:
+    "/":
+      root: "_book"
+      index:
+        - "index.html"
+      expires: 300s
+      scripts: true
+      allow: false
+      rules:
+        \.(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
+          allow: true
+        ^/robots\.txt$:
+          allow: true
+        search_index\.json$:
+          allow: true
+
+# The size of the persistent disk of the application (in MB).
+disk: 2048
+
+# Build time dependencies.
+dependencies:
+  nodejs:
+    grunt-cli: "*"
+
+# The hooks that will be performed when the package is deployed.
+hooks:
+  build: |
+    npm install
+    grunt docs
+    cp docs/images/favicon.ico _book/gitbook/images/favicon.ico

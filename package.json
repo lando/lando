@@ -44,6 +44,7 @@
     "bats": "git+https://github.com/sstephenson/bats.git#master",
     "chai": "^3.5.0",
     "enclose": "^2.2.0",
+    "gitbook-cli": "^2.3.0",
     "grunt": "^0.4.5",
     "grunt-bump": "0.7.0",
     "grunt-contrib-clean": "^1.0.0",

@@ -49,6 +49,9 @@ script:
   # Run unit tests
   - grunt test:unit
 
+  # Make sure we can build the docs
+  - grunt docs
+
   # Run the build
   - mkdir -p release
   - grunt pkg

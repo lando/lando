@@ -43,6 +43,8 @@ module.exports = function(grunt) {
     // Shell tasks
     shell: {
       cliPkg: shell.cliPkgTask(),
+      gitBookBuild: shell.gitBookTask(),
+      gitBookServe: shell.scriptTask('./node_modules/.bin/gitbook serve'),
       installerPkgosx: shell.scriptTask('./scripts/build-osx.sh'),
       installerPkglinux: shell.scriptTask('./scripts/build-linux.sh'),
       installerPkgwin32: shell.psTask('./scripts/build-win32.ps1'),
@@ -57,6 +59,17 @@ module.exports = function(grunt) {
 
   // Load in all our task config
   grunt.initConfig(config);
+
+  // Install and build our docs
+  grunt.registerTask('docs', [
+    'shell:gitBookBuild'
+  ]);
+
+  // Serve our docs
+  // NOTE: use this if you don't want to dogfood lando
+  grunt.registerTask('serve', [
+    'shell:gitBookServe'
+  ]);
 
   // Check Linting, standards and styles
   grunt.registerTask('test:code', [

@@ -1,0 +1,15 @@
+{
+  "title": "Lando Documentation",
+  "root": "docs",
+  "gitbook": ">=3.2",
+  "language": "en",
+  "plugins": [
+    "edit-link"
+  ],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/kalabox/lando/edit/master/docs",
+      "label": "Edit Page"
+    }
+  }
+}

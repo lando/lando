@@ -22,11 +22,21 @@ module.exports = function(lando) {
     /*
      * Get a list of unison options based on the platform
      */
-    var getUnisonOptions = function() {
+    var getUnisonOptions = function(local) {
+
       // Start with our basic options
-      var opts = ['-repeat', 'watch', '-retry', '5'];
+      var opts = [
+        '-repeat',
+        'watch',
+        '-retry',
+        '5',
+        '-prefer',
+        '/kalashare/' + local
+      ];
+
       // Return our list
       return opts.join(' ');
+
     };
 
     /*
@@ -39,7 +49,7 @@ module.exports = function(lando) {
         environment: {
           'UNISON_WEBROOT': share.remote,
           'UNISON_CODEROOT': '/kalashare/' + share.local,
-          'UNISON_OPTIONS': getUnisonOptions(),
+          'UNISON_OPTIONS': getUnisonOptions(share.local),
           'UNISON_UID': share.uid || 33,
           'UNISON_USER': share.user || 'www-data',
           'UNISON_GID': share.gid || 33,
