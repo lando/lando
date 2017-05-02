@@ -7,3 +7,4 @@ v3.0.0-alpha.1
 * Added testing framework and tasks. [#5](https://github.com/kalabox/lando/issues/5)
 * Switched to `lndo.site` and `lndo.host` proxy domains. [#22](https://github.com/kalabox/lando/issues/22)
 * Added reporting framework. [#26](https://github.com/kalabox/lando/issues/26)
+* Initial release of Lando core framework.

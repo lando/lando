@@ -1,11 +1,11 @@
-Kalabox Proxy
-===================
+Lando Proxy
+===========
 
-A proxy server based on hipache
+A proxy server based on a hipache fork
 
 ```
 
-# Reverse proxy container for Kalabox
+# Reverse proxy container for Lando
 # docker build -t kalabox/proxy .
 # docker run -d kalabox/proxy
 
