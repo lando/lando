@@ -45,7 +45,7 @@ module.exports = function(grunt) {
       cliPkg: shell.cliPkgTask(),
       gitBookBuild: shell.gitBookTask('build'),
       gitBookInstall: shell.gitBookTask('install'),
-      gitBookServe: shell.scriptTask('serve'),
+      gitBookServe: shell.gitBookTask('serve'),
       installerPkgosx: shell.scriptTask('./scripts/build-osx.sh'),
       installerPkglinux: shell.scriptTask('./scripts/build-linux.sh'),
       installerPkgwin32: shell.psTask('./scripts/build-win32.ps1'),

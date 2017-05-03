@@ -2,6 +2,53 @@ body {
   padding-top: 78px;
 }
 
+.panel {
+  border: 0px;
+  border-radius: 0px;
+}
+
+.panel-info > .panel-heading {
+  background-color: #0d8fba;
+}
+
+.panel-primary > .panel-heading {
+  background-color: #0d63ba;
+  border-color: #0d63ba;
+}
+
+.panel-success > .panel-heading {
+  background-color: #72F0A1;
+}
+
+.panel-success {
+  background-color: #e8fdef;
+}
+
+.panel-warning > .panel-heading {
+  background-color: #FFCC4F;
+}
+
+.panel-warning {
+  background-color: #fff1cc;
+}
+
+.panel-danger > .panel-heading {
+  background-color: #FF8E79;
+}
+
+.panel-quote {
+  border-left: 5px solid #FFCC4F;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 30px;
+  color: #777;
+}
+
+.panel-quote .panel-title {
+  font-size: 100px;
+  color: #4BB5DD;
+}
+
 .markdown-section a {
   color: #0dbc96;
 }

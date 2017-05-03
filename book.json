@@ -5,6 +5,7 @@
   "language": "en",
   "plugins": [
     "anchors",
+    "callouts",
     "codesnippet",
     "edit-link",
     "gtm",
@@ -12,6 +13,9 @@
     "-sharing"
   ],
   "pluginsConfig": {
+    "callouts": {
+      "showTypeInHeader": false
+    },
     "edit-link": {
       "base": "https://github.com/kalabox/lando/edit/master/docs",
       "label": "Edit Page"
