@@ -1,4 +1,4 @@
-name: docs
+name: docs.lando
 sharing:
   appserver:
     local: _book
