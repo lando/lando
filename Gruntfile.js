@@ -43,8 +43,9 @@ module.exports = function(grunt) {
     // Shell tasks
     shell: {
       cliPkg: shell.cliPkgTask(),
-      gitBookBuild: shell.gitBookTask(),
-      gitBookServe: shell.scriptTask('./node_modules/.bin/gitbook serve'),
+      gitBookBuild: shell.gitBookTask('build'),
+      gitBookInstall: shell.gitBookTask('install'),
+      gitBookServe: shell.scriptTask('serve'),
       installerPkgosx: shell.scriptTask('./scripts/build-osx.sh'),
       installerPkglinux: shell.scriptTask('./scripts/build-linux.sh'),
       installerPkgwin32: shell.psTask('./scripts/build-win32.ps1'),
@@ -62,6 +63,7 @@ module.exports = function(grunt) {
 
   // Install and build our docs
   grunt.registerTask('docs', [
+    'shell:gitBookInstall',
     'shell:gitBookBuild'
   ]);
 
