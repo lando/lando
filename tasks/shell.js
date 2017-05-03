@@ -129,17 +129,14 @@ module.exports = function(common) {
   /*
    * Constructs the gitbook task
    */
-  var gitBookTask = function() {
+  var gitBookTask = function(cmd) {
 
-    // Start a command collector
-    var cmd = [];
-
-    // Cobble it together
-    cmd.push('./node_modules/.bin/gitbook install');
-    cmd.push('./node_modules/.bin/gitbook build');
+    // Get the gitbook binary
+    var binDir = path.resolve(__dirname, '..', 'node_modules', '.bin');
+    var gitBookBin = path.join(binDir, 'gitbook');
 
     // Return the gitbook task
-    return scriptTask(cmd.join(' && '));
+    return scriptTask([gitBookBin, cmd].join(' '));
 
   };
 
