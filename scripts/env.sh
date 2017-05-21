@@ -21,7 +21,7 @@ PKG_SCRIPTS="\
 --before-remove $PKG_SCRIPTS_DIR/$PKG_TYPE/prerm"
 
 # Set our dependencies
-DEPS=( bridge-utils iptables )
+DEPS=( iptables git-core procps docker-ce )
 
 # Add OS specific deps
 if [ "$1" == "rpm" ]; then

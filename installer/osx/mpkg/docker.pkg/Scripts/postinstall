@@ -13,7 +13,6 @@ TERM=xterm
 declare -r console_user=$(stat -f '%Su' /dev/console)
 
 # Set some docker things
-# @todo: get IP to be 10.13.37.100 at some point
 declare -r docker_engine_ip=127.0.0.1
 declare -r docker_bundle_dir=/Applications/Docker.app/Contents
 declare -r docker=${docker_bundle_dir}/Resources/bin/docker

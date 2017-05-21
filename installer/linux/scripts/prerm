@@ -1,20 +1,5 @@
 #!/bin/bash
 
-set -e
-set -u
+# Scripts to run before we remove Lando
 
-# We are probably on systemd?
-if [ -d /run/systemd/system ]; then
-  if ! { [ -x "$(which systemctl)" ] && "$(which systemctl)" version 2>/dev/null; }; then
-    systemctl stop lando.service 2>/dev/null || true
-    systemctl disable lando.service 2>/dev/null || true
-  fi
-else
-  service lando stop 2>/dev/null || true
-fi
-
-# Wait until the process is killed
-while [ -f /usr/share/lando/docker.pid ]; do
-  echo "Waiting for process to end..."
-  sleep 1
-done
+set -e -u

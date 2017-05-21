@@ -1,16 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-set -e
-set -u
+# Scripts to run after we remove Lando
 
-# Remove the service if it hasn't been already
-update-rc.d lando remove > /dev/null || true
-
-# In case this system is running systemd, we make systemd reload the unit files
-# to pick up changes.
-if [ -d /run/systemd/system ] ; then
-  systemctl --system daemon-reload > /dev/null || true
-fi
+set -e -u
 
 # Totally wipe out /usr/share/lando on a purge
 if [ "$1" = "purge" ] ; then

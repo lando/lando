@@ -47,9 +47,7 @@ case $FLAVOR in
   debian)
     apt-get update && apt-get -y --force-yes install \
       curl file \
-      build-essential \
-      fakeroot \
-      alien
+      build-essential
     ;;
   fedora)
     echo "Not implemented yet!"
