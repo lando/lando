@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# Scripts to run before we remove Lando
-
-set -e -u
