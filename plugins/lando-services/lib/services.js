@@ -272,12 +272,13 @@ module.exports = function(lando) {
 
   return {
     add: add,
-    buildVolume: buildVolume,
     addConfig: addConfig,
     addScript: addScript,
     build: build,
+    buildVolume: buildVolume,
     get: get,
-    info: info
+    info: info,
+    moveConfig: moveConfig
   };
 
 };
