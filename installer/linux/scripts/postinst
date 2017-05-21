@@ -19,7 +19,6 @@ ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
 for u in $(awk -F':' '/sudo/{print $4}' /etc/group)
 do
   usermod -a -G docker $u
-  su - $u && exit
 done
 
 # @TODO: Wait for GUI
