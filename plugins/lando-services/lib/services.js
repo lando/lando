@@ -49,16 +49,22 @@ module.exports = function(lando) {
    */
   var setEntrypoint = function(service) {
 
+    // Define the entrypoint
+    var entrypoint = 'lando-entrypoint.sh';
+
+    // Make sure the entrypoint is executable
+    fs.chmodSync(path.join(lando.config.engineScriptsDir, entrypoint), '755');
+
     // Entrypoint files
-    var hostEntrypoint = '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh';
-    var contEntrypoint = '/lando-entrypoint.sh';
+    var host = path.join('$LANDO_ENGINE_SCRIPTS_DIR', entrypoint);
+    var container = '/lando-entrypoint.sh';
 
     // Volumes
     var volumes = service.volumes || [];
-    volumes.push([hostEntrypoint, contEntrypoint].join(':'));
+    volumes.push([host, container].join(':'));
 
     // Add our things to the container
-    service.entrypoint = contEntrypoint;
+    service.entrypoint = container;
     service.volumes = volumes;
 
     // Return the service
@@ -146,6 +152,9 @@ module.exports = function(lando) {
     volumes = _.filter(volumes, function(volume) {
       return volume.split(':')[1] !== scriptFile;
     });
+
+    // Make sure the script is executable
+    fs.chmodSync(localFile, '755');
 
     // Push to volume
     volumes.push([localFile, scriptFile].join(':'));
