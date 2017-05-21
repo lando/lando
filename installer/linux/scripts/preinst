@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Scripts to run before we install Lando
-
-set -e -u
-
-usermod -aG docker "$USER"

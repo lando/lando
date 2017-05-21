@@ -15,6 +15,13 @@ chmod 755 -R "$LANDO_ROOT"
 mkdir -p /usr/local/bin
 ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
 
+# Add all our sudo users to docker group
+for u in $(awk -F':' '/sudo/{print $4}' /etc/group)
+do
+  usermod -a -G docker $u
+  su - $u && exit
+done
+
 # @TODO: Wait for GUI
 # Add an entry to the system menu
 # XDG_DESKTOP_MENU="$(which xdg-desktop-menu 2> /dev/null)"
