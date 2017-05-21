@@ -54,7 +54,7 @@ case $FLAVOR in
 
     # Unix type
     : ${UNIX_TYPE:=linux}
-    : ${LANDO_IP:=10.13.37.100}
+    : ${LANDO_IP:=127.0.0.1}
 
     # Dep handling
     : ${LINUX_DEP_INSTALL:=apt-get -y --force-yes install}
@@ -69,7 +69,7 @@ case $FLAVOR in
 
     # Docker bin
     : ${DOCKER:="/usr/share/lando/bin/docker"}
-    export DOCKER_HOST=tcp://10.13.37.100:2375
+    export DOCKER_HOST=unix:///var/run/docker.sock
 
     ;;
   fedora)
@@ -79,7 +79,7 @@ case $FLAVOR in
 
     # Unix type
     : ${UNIX_TYPE:=linux}
-    : ${LANDO_IP:=10.13.37.100}
+    : ${LANDO_IP:=127.0.0.1}
 
     # Dep handling
     : ${LINUX_DEP_INSTALL:=dnf -y install}
@@ -94,7 +94,7 @@ case $FLAVOR in
 
     # Docker bin
     : ${DOCKER:="/usr/share/lando/bin/docker"}
-    export DOCKER_HOST=tcp://10.13.37.100:2375
+    export DOCKER_HOST=unix:///var/run/docker.sock
 
     ;;
   darwin)
