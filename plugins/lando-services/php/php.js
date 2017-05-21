@@ -142,8 +142,16 @@ module.exports = function(lando) {
     var name = config.name;
     var nginx = lando.services.build(name, type, config).services[name];
 
-    // Add the webroot
-    nginx.volumes.push('appserver:/var/www/html');
+    // On darwin or if sharing is off we can just share the volume since we do
+    // not have potential volume transitivity via sharing
+    if (process.platform === 'darwin' || lando.config.sharing !== 'ON') {
+      nginx.volumes.push([name, '/var/www/html'].join(':'));
+    }
+
+    // on Linux and Windoze we need to make sure we also add sharing to nginx if applicable
+    else if (!_.isEmpty(config.sharing[name])) {
+      config.sharing.nginx = config.sharing[name];
+    }
 
     // Return the object
     return nginx;
