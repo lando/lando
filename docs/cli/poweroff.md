@@ -1,61 +1,16 @@
-Some nice styled callouts
-=========================
+poweroff
+========
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+Shuts down all running Lando containers. This is useful if you want to deactive all the containers needed to run Lando. If you have another service that requires usual system resources like ports `80` and `443` this command will free them up.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+lando poweroff
+```
 
--
+### Options
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+```

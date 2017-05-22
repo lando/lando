@@ -1,61 +1,24 @@
-Some nice styled callouts
-=========================
+start
+=====
 
-> #### Info::Todo
+Starts an app. This will build all relevant containers needed to run the app.
+
+> #### Hint::Containers are cached!
 >
-> STUFF GOES HERE!
+> If you start an app with a new service or container it will need to pull that container image down. This can take a moment depending on your internet connection. Subsequent pulls to that container or service are cached so they should be much faster.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+# From an app directory or its subdirectories
+lando start
 
--
+# From outside of an app directory
+lando start myapp
+```
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+### Options
 
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+```

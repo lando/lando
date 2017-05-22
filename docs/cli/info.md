@@ -1,61 +1,20 @@
-Some nice styled callouts
-=========================
+info
+====
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+Displays relevant information for an app. Using this command you can see useful information such as which container volumes are being shared, which database ports are exposed (both internally and externally), and which URLs you can use to access an app.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+# From an app directory or its subdirectories
+lando info
 
--
+# From outside of an app directory
+lando info myapp
+```
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+### Options
 
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+```

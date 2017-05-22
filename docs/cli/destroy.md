@@ -1,61 +1,31 @@
-Some nice styled callouts
-=========================
+destroy
+=======
 
-> #### Info::Todo
+Destroys the infrastructure needed to run an app. After you run this command you will not be able to access the app or use Lando tooling for development. The files (eg the git repo) for the app will not be removed
+
+> #### Info::Only destroys an app, not Lando itself!
 >
-> STUFF GOES HERE!
+> This command should not be confused with uninstalling Lando. It **will only** destroy the app that you use it on.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+# From an app directory or its subdirectories
+lando destroy
 
--
+# From outside of an app directory
+lando destroy myapp
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+# Non-interactive destruction from app directory
+lando destroy -y
 
--
+# Destruction from anywhere in debug mode
+lando destroy appname -- -vvv
+```
 
-> #### Comment::Todo
->
-> STUFF GOES HERE!
+### Options
 
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+  --yes, -y   Auto answer yes to prompts              [boolean] [default: false]
+```
