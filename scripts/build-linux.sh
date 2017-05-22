@@ -5,7 +5,7 @@ set -x
 set -e
 
 # Check to see that we have the correct dependencies
-if [ ! $(type -p fpm) ] || [ ! $(type -p alien) ]; then
+if [ ! $(type -p fpm) ]; then
   echo "You do not have the correct dependencies installed to build Lando. Trying to install them..."
   sudo ./scripts/install-deps.sh
   gem install --verbose fpm || sudo gem install --verbose fpm
