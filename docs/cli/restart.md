@@ -1,61 +1,24 @@
-Some nice styled callouts
-=========================
+restart
+=======
 
-> #### Info::Todo
+[Stops](./stop.md) and then [starts](./start.md) an app.
+
+> #### Hint::Good to resolve random issues
 >
-> STUFF GOES HERE!
+> Sometimes if your Lando app is giving you a tough go, doing a simple restart can help flush out the issue.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+# From an app directory or its subdirectories
+lando restart
 
--
+# From outside of an app directory
+lando restart myapp
+```
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+### Options
 
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+```

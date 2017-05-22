@@ -22,6 +22,7 @@
 
 ## Command Line
 
+* [usage](cli/usage.md)
 * [config](cli/config.md)
 * [destroy](cli/destroy.md)
 * [info](cli/info.md)

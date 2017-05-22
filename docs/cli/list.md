@@ -1,61 +1,16 @@
-Some nice styled callouts
-=========================
+list
+====
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+Prints out a list of installed Lando apps with some basic information about each.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+lando list
+```
 
--
+### Options
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+```

@@ -1,61 +1,20 @@
-Some nice styled callouts
-=========================
+stop
+====
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+Stops an app. This will spin down all containers and services associated with this app.
 
--
+### Usage
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+```bash
+# From an app directory or its subdirectories
+lando stop
 
--
+# From outside of an app directory
+lando stop myapp
+```
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+### Options
 
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```bash
+  --help, -h  Show help                                                [boolean]
+```
