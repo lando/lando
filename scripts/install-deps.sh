@@ -49,7 +49,7 @@ case $FLAVOR in
       build-essential \
       curl \
       file \
-      rpmbuild
+      rpm
     ;;
   fedora)
     echo "Not implemented yet!"
