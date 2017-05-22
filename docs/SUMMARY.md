@@ -3,6 +3,7 @@
 * [Big Picture](README.md)
 * [Quick Start](quickstart.md)
 * [Roadmap](roadmap.md)
+* [Troubleshooting](trouble.md)
 
 ## Installation
 
@@ -43,6 +44,7 @@
 
 ## Development
 
+* [Contrib](dev/dev.md)
 * [Documentation](dev/docs.md)
 
 ## Changelog

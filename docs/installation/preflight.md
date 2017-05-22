@@ -1,61 +1,6 @@
-Some nice styled callouts
-=========================
+Preflight Checks
+================
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Note::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Tag::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+1. Verify that your system meets the [minimum system and hardware requirements](system-requirements.md) to run Lando.
+2. Verify that you are connected to the internet.
+3. Verify that you have administrative access to your machine.
