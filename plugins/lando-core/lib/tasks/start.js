@@ -11,7 +11,6 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var chalk = lando.node.chalk;
-  var os = require('os');
 
   // Restart the app
   return {
@@ -48,7 +47,7 @@ module.exports = function(lando) {
             table.add('NAME', app.name);
             table.add('LOCATION', app.root);
             table.add('SERVICES', _.keys(app.services));
-            table.add('URLS', urls, {arrayJoiner: os.EOL});
+            table.add('URLS', urls, {arrayJoiner: '\n'});
 
             // Print the table
             console.log(table.toString());

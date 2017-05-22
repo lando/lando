@@ -14,6 +14,18 @@ module.exports = function(lando) {
   var path = require('path');
 
   /*
+   * Share defaults
+   */
+  var shareDefaults = function() {
+    return {
+      uid: 33,
+      user: 'www-data',
+      gid: 33,
+      group: 'www-data'
+    };
+  };
+
+  /*
    * Helper function to generate the appropriate sharing compose file on
    * macOS
    */
@@ -50,10 +62,10 @@ module.exports = function(lando) {
           'UNISON_WEBROOT': share.remote,
           'UNISON_CODEROOT': '/kalashare/' + share.local,
           'UNISON_OPTIONS': getUnisonOptions(share.local),
-          'UNISON_UID': share.uid || 33,
-          'UNISON_USER': share.user || 'www-data',
-          'UNISON_GID': share.gid || 33,
-          'UNISON_GROUP': share.group || 'www-data'
+          'UNISON_UID': share.uid,
+          'UNISON_USER': share.user,
+          'UNISON_GID': share.gid,
+          'UNISON_GROUP': share.group
         },
         volumes: [
           '$LANDO_APP_ROOT_BIND:/kalashare',
@@ -70,6 +82,9 @@ module.exports = function(lando) {
 
       // Give this a contianer name
       var name = 'unison' + service;
+
+      // Merge in our defaults
+      share = _.merge(shareDefaults(), share);
 
       // Get the unison piece
       services[name] = getUnison(share, service);
@@ -90,16 +105,39 @@ module.exports = function(lando) {
    */
   var getSharingComposeGeneric = function(shares) {
 
+    // Move our scripts over
+    var scriptsDir = path.join(__dirname, '..', 'scripts');
+    scriptsDir = lando.services.moveConfig('scripts', scriptsDir);
+
     // Start the services collector
     var services = {};
 
     // Go through our conf and add the services
     _.forEach(shares, function(share, service) {
+
+      // Add the volume directly
       services[service] = {
         volumes: [
           '$LANDO_APP_ROOT_BIND/' + share.local + ':' + share.remote
         ]
       };
+
+      // Merge in our defaults
+      share = _.merge(shareDefaults(), share);
+
+      // Add envars to help with usermapping
+      services[service].environment = {
+        'SHARING_UID': share.uid,
+        'SHARING_USER': share.user,
+        'SHARING_GID': share.gid,
+        'SHARING_GROUP': share.group
+      };
+
+      // Add the usermap script
+      var volumes = services[service].volumes;
+      var addScript = lando.services.addScript;
+      services[service].volumes = addScript('sharing-usermap.sh', volumes);
+
     });
 
     // Return our services
@@ -153,6 +191,11 @@ module.exports = function(lando) {
 
           // Reset shareCompsoe volumes
           app.services[name].volumes = _.uniq(newVols);
+
+          // Merge in any added envars
+          var oldEnv = app.services[name].environment;
+          var newEnv = shareCompose[name].environment;
+          app.services[name].environment = _.merge(oldEnv, newEnv);
 
           // Log
           lando.log.verbose(

@@ -3,7 +3,8 @@ init:
 platform: x64
 environment:
   nodejs_version: "6"
-
+  ENCLOSEJS_KEY:
+    secure: DWVA8jhjxcfGRxz6zf/eKiWOQaEupaDvTIHj0Gb/7hFvDgGqP/JM+z0iW7Ux1SSV7UiqlywYOcU6KH3lhbpqBAyILSnSHY8i/9CuEyOCWNHr6Y/TX9dQ7D8UHe3S9AkSgE+TXA01g79M34Umw4xYDd6kmC4G5j53ZubQHG+hMUM6OWj5A4M6vQDL5iLmoGR5
 install:
 
   # Get the latest stable version of Node.js or io.js
@@ -17,8 +18,7 @@ install:
   - npm install -g grunt-cli
 
   # Build the things
-  # Need to do this first because it installs JX for us
-  - npm install
+  - npm -E install
 
   # Edit the package.json if this isn't an official release
   - IF NOT DEFINED APPVEYOR_REPO_TAG_NAME (node .\scripts\dev-version.js)

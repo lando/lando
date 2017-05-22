@@ -46,10 +46,10 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 case $FLAVOR in
   debian)
     apt-get update && apt-get -y --force-yes install \
-      curl file \
       build-essential \
-      fakeroot \
-      alien
+      curl \
+      file \
+      rpm
     ;;
   fedora)
     echo "Not implemented yet!"

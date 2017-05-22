@@ -22,6 +22,12 @@ module.exports = function(lando) {
         // Add the appname to the service info
         service.app = app.config.name;
 
+        // If we have sharing config let's also add that
+        // @todo: this is weird since it crosses the plugin barrier
+        if (lando.config.sharing === 'ON' && !_.isEmpty(app.config.sharing)) {
+          service.sharing = app.config.sharing;
+        }
+
         // Get our new containers
         var newCompose = lando.services.build(name, service.type, service);
 

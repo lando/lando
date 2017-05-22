@@ -28,9 +28,4 @@ fpm -s dir -t $PKG_TYPE \
   -C build/installer \
   lando=/usr/share \
   desktop/lando.desktop=/usr/share/applications/lando.desktop \
-  desktop/lando.png=/usr/share/lando/lando.png \
-  network/bridgeup=/usr/share/lando/scripts/bridgeup \
-  daemon/daemonup=/usr/share/lando/scripts/daemonup \
-  init/upstart/lando.conf=/etc/init/lando.conf \
-  init/sysv/lando=/etc/init.d/lando \
-  init/systemd/lando.service=/lib/systemd/system/lando.service
+  desktop/lando.png=/usr/share/lando/lando.png

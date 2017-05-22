@@ -20,7 +20,7 @@ module.exports = function(lando) {
     // Proxy defaults
     var defaults = {
       proxy: 'ON',
-      proxyDomain: (process.platform === 'linux') ? 'lndo.host' : 'lndo.site',
+      proxyDomain: 'lndo.site',
       proxyHttpPort: '80',
       proxyHttpsPort: '443',
       proxyRedisPort: '8161',
