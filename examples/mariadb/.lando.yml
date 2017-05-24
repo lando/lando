@@ -1,8 +1,13 @@
+# The name of the app
 name: mariadb
+
+# Share the www directory in my app into the webroot of the html container
 sharing:
   html:
     local: www
     remote: /usr/share/nginx/html
+
+# Give me http://mariadb.lndo.site and https://mariadb.lndo.site
 proxy:
   html:
     - port: 80/tcp
@@ -10,16 +15,37 @@ proxy:
     - port: 443/tcp
       default: true
       secure: true
+
+# Set up my services
 services:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
   html:
     type: nginx
     ssl: true
+
+  # Spin up a mariadb container called "database"
+  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
   database:
-    type: mariadb
+
+    # Use mariadb version 10.1
+    type: mariadb:10.1
+
+    # Optionally allow access to the database at localhost:3307
+    # You will need to make sure port 3307 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
     portforward: 3307
+
+    # Optionally set the default db credentials
     creds:
       user: mariadb
       password: mariadb
       database: mariadb
+
+    # Optionally load in all the mariadb config files in the config directory
+    # This is relative to the app root
     config:
       confd: config

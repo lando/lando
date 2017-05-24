@@ -1,23 +1,50 @@
+# The name of the app
 name: mysql
+
+# Share the www directory in my app into the webroot of the appserver container
 sharing:
-  html:
+  appserver:
     local: www
     remote: /usr/share/nginx/html
+
+# Give me http://mysql.lndo.site and https://mysql.lndo.site
 proxy:
-  html:
+  appserver:
     - port: 80/tcp
       default: true
     - port: 443/tcp
       default: true
       secure: true
+
+# Set up my services
 services:
-  html:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
+  appserver:
     type: nginx
     ssl: true
-  database:
+
+  # Spin up a mariadb container called "database"
+  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
+  db:
+
+    # Use the latest version of mysql
     type: mysql
-    portforward: 3311
-    creds:
-      user: mysql
-      password: mysql
-      database: mysql
+
+    # Optionally forward out our port so we can access it at `localhost:someport`.
+    # This port will change every time you restart this app
+    #
+    # You can also set this to a static port you want to use `portforward:3311`.
+    # You will need to make sure the port is open and avialable
+    portforward: true
+
+    # Optionally change the default db credentials
+    # creds:
+      # user: mysql
+      # password: mysql
+      # database: mysql
+
+    # Optionally load in all the mysql config files in the config directory
+    # This is relative to the app root
+    # config:
+    #  confd: config

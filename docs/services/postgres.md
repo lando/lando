@@ -1,61 +1,66 @@
-Some nice styled callouts
-=========================
+PostgreSQL
+==========
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+[Postgres](https://www.postgresql.org/) is an advanced open source database server. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
--
+### Supported versions
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+  * 9.6
+  * 9.5
+  * 9.4
+  * 9.3
+  * 9.2
+  * latest
+  * custom
 
--
+### Example
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+{% codesnippet "./../examples/postgres/.lando.yml" %}{% endcodesnippet %}
 
--
+You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/postgres)
 
-> #### Comment::Todo
->
-> STUFF GOES HERE!
+### Getting information
 
--
+You can get connection and credential information about your database by running `lando info` from inside your app.
 
-> #### Hint::Todo
->
-> STUFF GOES HERE!
+```bash
+# Navigate to the app
+cd /path/to/app
 
--
+# Get info (app needs to be running to get this)
+lando info
 
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+{
+  "html": {
+    "type": "nginx",
+    "version": "latest",
+    "urls": [
+      "https://localhost:32811",
+      "http://localhost:32812",
+      "http://postgres.lndo.site",
+      "https://postgres.lndo.site"
+    ],
+    "share": {
+      "local": "www",
+      "remote": "/usr/share/nginx/html"
+    }
+  },
+  "tswift": {
+    "type": "postgres",
+    "version": "latest",
+    "creds": {
+      "user": "trouble",
+      "password": "trouble",
+      "database": "trouble"
+    },
+    "internal_connection": {
+      "host": "tswift",
+      "port": 5432
+    },
+    "external_connection": {
+      "host": "localhost",
+      "port": 5444
+    }
+  }
+}
+```

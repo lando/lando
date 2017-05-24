@@ -1,8 +1,13 @@
+# The name of my app
 name: nginx
+
+# Share the www directory of my app into nginx's webroot
 sharing:
   appserver:
     local: www
     remote: /usr/share/nginx/html
+
+# Give me http://nginx.lndo.site and https://nginx.lndo.site
 proxy:
   appserver:
     - port: 80/tcp
@@ -10,14 +15,34 @@ proxy:
     - port: 443/tcp
       default: true
       secure: true
+
+# Configure my services
 services:
+
+  # Create an nginx service called "appserver"
   appserver:
-    type: nginx:1.8.1
+
+    # Use nginx version 1.8
+    type: nginx:1.8
+
+    # Optionally configure nginx to be able to also serve over https
     ssl: true
+
+    # Optionally use our own config files
     config:
+
+      # Use custom nginx server config located in config/server.conf relative
+      # to our app root
       server: config/server.conf
+
+      # Use custom nginx http config located in config/http.conf relative
+      # to our app root
+      # http: config/http.conf
+
+    # Pass in some docker compose overrides so we can map ports and get
+    # more envvars
     overrides:
       services:
         environment:
           THING: STUFF
-        ports: ['8080:80']
+        ports: ['8888:80']

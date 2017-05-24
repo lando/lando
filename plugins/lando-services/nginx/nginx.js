@@ -21,14 +21,14 @@ module.exports = function(lando) {
    * Supported versions for nginx
    */
   var versions = [
-    '1.8.1',
-    '1.10.2',
-    '1.10',
-    'stable',
-    '1.11.8',
-    '1',
+    '1.13',
+    '1.12',
     '1.11',
+    '1.10',
+    '1.9',
+    '1.8',
     'mainline',
+    'stable',
     'latest',
     'custom'
   ];

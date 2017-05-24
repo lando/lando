@@ -1,8 +1,13 @@
+# The name of the app
 name: postgres
+
+# Share the www directory in my app into the webroot of the html container
 sharing:
   html:
     local: www
     remote: /usr/share/nginx/html
+
+# Give me http://postgres.lndo.site and https://postgres.lndo.site
 proxy:
   html:
     - port: 80/tcp
@@ -10,16 +15,35 @@ proxy:
     - port: 443/tcp
       default: true
       secure: true
+
+# Service configuration
 services:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
   html:
     type: nginx
     ssl: true
-  database:
+
+  # Spin up a postgres container called "tswift"
+  tswift:
+
+    # Use the latest version of postgres
+    type: postgres
+
+    # Optionally allow access to the database at localhost:3307
+    # You will need to make sure port 3307 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 5444
+
+    # Optionally set the default db credentials
+    creds:
+      user: trouble
+      password: trouble
+      database: trouble
+
+    # Optionally specify a postgres config file relative to the app root directory
     config:
       postgres: config/postgresql.conf
-    type: postgres
-    portforward: 5444
-    creds:
-      user: postgres
-      password: postgres
-      database: postgres

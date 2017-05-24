@@ -1,7 +1,6 @@
 ## Overview
 
 * [Big Picture](README.md)
-* [Quick Start](quickstart.md)
 * [Roadmap](roadmap.md)
 * [Troubleshooting](trouble.md)
 
@@ -9,20 +8,36 @@
 
 * [System Requirements](installation/system-requirements.md)
 * [Preflight Checks](installation/preflight.md)
-* [Installing](installation/installing.md)
-* [Uninstalling](installation/uninstalling.md)
+* [macOS](installation/macos.md)
+* [Windows](installation/windows.md)
+* [Linux](installation/linux.md)
+* [From Source](installation/source.md)
+
+## Getting Started
+
+* [Running my first Lando app](tutorial/first-app.md)
+* [Running a LAMP stack with Lando](tutorial/lamp.md)
 
 ## Configuration
 
-* [config.yml](config/config.md)
 * [.lando.yml](config/lando.md)
-* [Proxy](config/proxy.md)
-* [Services](config/services.md)
-* [Sharing](config/sharing.md)
+  * [Proxy](config/proxy.md)
+  * [Services](config/services.md)
+  * [Sharing](config/sharing.md)
+* [config.yml](config/config.md)
+
+## Services
+
+* [apache](services/apache.md)
+* [mariadb](services/mariadb.md)
+* [mysql](services/mysql.md)
+* [nginx](services/nginx.md)
+* [php](services/php.md)
+* [postgres](services/postgres.md)
 
 ## Command Line
 
-* [usage](cli/usage.md)
+* [Usage](cli/usage.md)
 * [config](cli/config.md)
 * [destroy](cli/destroy.md)
 * [info](cli/info.md)
@@ -33,15 +48,6 @@
 * [start](cli/start.md)
 * [stop](cli/stop.md)
 * [version](cli/version.md)
-
-## Services
-
-* [apache](services/apache.md)
-* [mariadb](services/mariadb.md)
-* [mysql](services/mysql.md)
-* [nginx](services/nginx.md)
-* [php](services/php.md)
-* [postgres](services/postgres.md)
 
 ## Development
 
@@ -54,4 +60,6 @@
 
 ## Known Issues
 
-* [Issue 1](issues/issue1.md)
+* [DNS Rebinding Protection](issues/dns-rebind.md)
+* [File Syncing Stalled](issues/file-sync.md)
+
