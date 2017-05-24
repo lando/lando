@@ -1,61 +1,15 @@
-Some nice styled callouts
-=========================
+Documentation
+=============
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+You can contribute to docs by clicking on the *Edit Page* link on each page of this documentation. If you want to build and preview documentation locally you can use our helpful grunt commands.
 
--
+```bash
+# Build the documentation
+grunt docs
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+# Serve the documentation with gitbooks
+grunt serve
 
--
-
-> #### Tag::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+# Use Lando to serve the documentation
+grunt docs && lando start
+```

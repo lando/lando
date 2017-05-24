@@ -16,6 +16,9 @@ done
 #
 uninstall-lando() {
 
+  echo "Making sure Lando is powered down"
+  lando poweroff
+
   echo "Removing Application..."
   sudo rm -rf /usr/local/bin/lando
 

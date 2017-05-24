@@ -1,5 +1,12 @@
-Contributing to Lando
-=====================
+Contributing
+============
+
+Here are some guidelines for contributing to the Lando project.
+
+Working with Code
+-----------------
+
+To work directly on Lando code you will want to [install from source](./../installation/installing.html#from-source).
 
 Creating Issues
 ---------------
@@ -31,11 +38,6 @@ critera
 
 1. A feature which is best expressed as more than one issue.
 2. Each sub-issue is shippable by itself.
-
-Contributing
-------------
-
-See: http://docs.lndo.io/developers/contrib/
 
 Submitting Fixes
 ----------------
