@@ -29,11 +29,11 @@ If you do not have the GUI-based Software Center you can also uninstall Lando on
 
 ```bash
 # With apt
-sudo apt-get remove kalabox
+sudo apt-get remove lando
 
 # With dpkg
-sudo dpkg -P kalabox
+sudo dpkg -P lando
 
 # With dnf
-sudo dnf remove kalabox
+sudo dnf remove lando
 ```

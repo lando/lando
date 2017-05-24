@@ -13,8 +13,9 @@
 
 ## Getting Started
 
-* [Running my first Lando app](tutorial/first-app.md)
-* [Running a LAMP stack with Lando](tutorial/lamp.md)
+* [Running my first app](tutorials/first-app.md)
+* [Running a LEMP app](tutorials/lemp-app.md)
+* [Running a Drupal 7 app](tutorials/drupal7-app.md)
 
 ----
 
@@ -61,6 +62,7 @@
 * [Building](dev/building.md)
 * [Shipping](dev/shipping.md)
 * [Documentation](dev/docs.md)
+
 ----
 
 ## Known Issues
