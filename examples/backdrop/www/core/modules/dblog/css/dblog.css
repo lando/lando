@@ -1,0 +1,85 @@
+/**
+ * @file
+ * Admin styles for the Database Logging module.
+ */
+.dblog-filter-form .form-item-type,
+.dblog-filter-form .form-item-severity {
+  float: left; /* LTR */
+  margin: .1em .9em .1em .1em; /* LTR */
+  padding-right: .8em; /* LTR */
+  margin: 0.1em;
+  /**
+   * In Opera 9, DOM elements with the property of "overflow: auto"
+   * will partially hide its contents with unnecessary scrollbars when
+   * its immediate child is floated without an explicit width set.
+   */
+  width: 15em;
+}
+[dir="rtl"] .dblog-filter-form .form-item-type,
+[dir="rtl"] .dblog-filter-form .form-item-severity {
+  float: right;
+  margin: .1em .1em .1em .9em;
+  padding-left: .8em;
+  padding-right: 0;
+}
+.dblog-filter-form .form-type-select select {
+  width: 100%;
+}
+.dblog-filter-form .form-actions {
+  float: left; /* LTR */
+  padding: 3ex 0 0 1em; /* LTR */
+}
+[dir="rtl"] .dblog-filter-form .form-actions {
+  float: right;
+  padding: 3ex 1em 0 0;
+}
+.dblog-user {
+  background: #ffd;
+}
+.dblog-user .active {
+  background: #eed;
+}
+.dblog-content {
+  background: #ddf;
+}
+.dblog-content .active {
+  background: #cce;
+}
+.dblog-page-not-found,
+.dblog-access-denied {
+  background: #dfd;
+}
+.dblog-page-not-found .active,
+.dblog-access-denied .active {
+  background: #cec;
+}
+.dblog-error {
+  background: #ffc9c9;
+}
+.dblog-error .active {
+  background: #eeb9b9;
+}
+.admin-dblog .icon {
+  width: 30px;
+}
+.admin-dblog .icon:before {
+  content: "";
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+}
+.admin-dblog .dblog-warning .icon:before {
+  background: #FCE400 url(../../../misc/message-16-warning.png) no-repeat center center;
+}
+.admin-dblog .dblog-error .icon:before,
+.admin-dblog .dblog-critical .icon:before,
+.admin-dblog .dblog-alert .icon:before,
+.admin-dblog .dblog-emergency .icon:before {
+  background: #EE3D23 url(../../../misc/message-16-error.png) no-repeat center center;
+}
+.admin-dblog .dblog-debug .icon:before,
+.admin-dblog .dblog-info .icon:before,
+.admin-dblog .dblog-notice .icon:before {
+  background: #ccc url(../../../misc/message-16-info.png) no-repeat center center;
+}

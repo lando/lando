@@ -1,0 +1,101 @@
+{
+    "_config_name": "views.view.test_exposed_remember",
+    "name": "test_exposed_remember",
+    "module": "views_test",
+    "description": "",
+    "tag": "",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": null,
+    "core": null,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic",
+                    "options": {
+                        "reset_button": true
+                    }
+                },
+                "pager": {
+                    "type": "full"
+                },
+                "style_plugin": "default",
+                "row_plugin": "node",
+                "row_options": {
+                    "links": 1,
+                    "comments": 0
+                },
+                "filters": {
+                    "type": {
+                        "id": "type",
+                        "table": "node",
+                        "field": "type",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "operator": "in",
+                        "value": [],
+                        "group": "1",
+                        "exposed": true,
+                        "expose": {
+                            "operator_id": "type_op",
+                            "label": "Content: Type",
+                            "description": "",
+                            "use_operator": 0,
+                            "operator": "",
+                            "identifier": "type",
+                            "required": 0,
+                            "remember": 1,
+                            "multiple": 0,
+                            "remember_roles": {
+                                "authenticated": "authenticated",
+                                "anonymous": 0,
+                                "administrator": 0
+                            },
+                            "reduce": 0
+                        },
+                        "is_grouped": false,
+                        "group_info": {
+                            "label": "",
+                            "description": "",
+                            "identifier": "",
+                            "optional": true,
+                            "widget": "select",
+                            "multiple": false,
+                            "remember": 0,
+                            "default_group": "All",
+                            "default_group_multiple": [],
+                            "group_items": []
+                        }
+                    }
+                }
+            }
+        },
+        "page_1": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "test_exposed_remember"
+            }
+        }
+    }
+}

@@ -1,0 +1,108 @@
+/*
+ * @file
+ * CSS for the responsive menu toggle checkbox / button.
+ */
+
+ /**
+  * Menu toggle button
+  */
+.menu-toggle-button {
+  position: relative;
+  display: inline-block;
+  text-indent: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+@media (min-width: 25em) { /* 400px @ 16px font size */
+  .menu-toggle-button {
+    width: auto;
+  }
+}
+
+@media (min-width: 48em) {  /* 768px @ 16px font size */
+  /* hide the button in desktop view */
+  .menu-toggle-button {
+    position: absolute;
+    top: -99999px;
+  }
+}
+.menu-toggle-button-text {
+  vertical-align: middle;
+  padding: 0 .5em;
+}
+
+/**
+ * Hamburger icon.
+ */
+.menu-toggle-button-icon,
+.menu-toggle-button-icon:before,
+.menu-toggle-button-icon:after {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  height: 2px;
+  width: 24px;
+  background: #bbb;
+  -webkit-transition: all 0.25s;
+  transition: all 0.25s;
+}
+.menu-toggle-button-icon:before {
+  content: '';
+  top: -7px;
+  left: 0;
+}
+.menu-toggle-button-icon:after {
+  content: '';
+  top: 7px;
+  left: 0
+}
+
+/**
+ * Close icon.
+ */
+.menu-toggle-state:checked ~ .menu-toggle-button .menu-toggle-button-icon {
+  height: 0;
+  background: transparent;
+}
+.menu-toggle-state:checked ~ .menu-toggle-button .menu-toggle-button-icon:before {
+  top: 0;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.menu-toggle-state:checked ~ .menu-toggle-button .menu-toggle-button-icon:after {
+  top: 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/**
+ * Menu state checkbox.
+ */
+.menu-toggle-state {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(1px,1px,1px,1px);
+}
+.menu-toggle-state ~ .menu {
+  display: none;
+}
+/* Hide the menu in mobile view. */
+.menu-toggle-state:not(:checked) ~ .menu {
+  display: none;
+}
+.menu-toggle-state:checked ~ .menu {
+  display: block;
+}
+@media (min-width: 48em) {  /* 768px @ 16px font size. */
+  /* Always show the menu in desktop view. */
+  .menu-toggle-state:not(:checked) ~ .menu {
+    display: block;
+  }
+}

@@ -1,0 +1,365 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the taxonomy module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function taxonomy_uninstall() {
+  // Remove taxonomy_term bundles.
+  $configs = config_get_names_with_prefix('taxonomy.vocabulary.');
+  foreach ($configs as $config_name) {
+    $vocabulary_name = str_replace('taxonomy.vocabulary.', '', $config_name);
+    field_attach_delete_bundle('taxonomy_term', $vocabulary_name);
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function taxonomy_schema() {
+  $schema['taxonomy_term_data'] = array(
+    'description' => 'Stores term information.',
+    'fields' => array(
+      'tid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique term ID.',
+      ),
+      'vocabulary' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The vocabulary machine name to which this term is assigned.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The term name.',
+        'translatable' => TRUE,
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'A description of the term.',
+        'translatable' => TRUE,
+      ),
+      'format' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The {filter_format}.format of the description.',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this term in relation to other terms.',
+      ),
+    ),
+    'primary key' => array('tid'),
+    'indexes' => array(
+      'taxonomy_tree' => array('vocabulary', 'weight', 'name'),
+      'vocabulary_name' => array('vocabulary', 'name'),
+      'name' => array('name'),
+    ),
+  );
+
+  $schema['taxonomy_term_hierarchy'] = array(
+    'description' => 'Stores the hierarchical relationship between terms.',
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: The {taxonomy_term_data}.tid of the term.',
+      ),
+      'parent' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Primary Key: The {taxonomy_term_data}.tid of the term's parent. 0 indicates no parent.",
+      ),
+    ),
+    'indexes' => array(
+      'parent' => array('parent'),
+    ),
+    'foreign keys' => array(
+      'taxonomy_term_data' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
+    'primary key' => array('tid', 'parent'),
+  );
+
+  $schema['taxonomy_vocabulary'] = array(
+    'description' => 'Stores vocabulary information.',
+    'fields' => array(
+      'vid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique vocabulary ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the vocabulary.',
+        'translatable' => TRUE,
+      ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The vocabulary machine name.',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Description of the vocabulary.',
+        'translatable' => TRUE,
+      ),
+      'hierarchy' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The weight of this vocabulary in relation to other vocabularies.',
+      ),
+    ),
+    'primary key' => array('vid'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+    'unique keys' => array(
+      'machine_name' => array('machine_name'),
+    ),
+  );
+
+  $schema['taxonomy_index'] = array(
+    'description' => 'Maintains denormalized information about node/term relationships.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid this record tracks.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'tid' => array(
+         'description' => 'The term ID.',
+         'type' => 'int',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node is sticky.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+        'size' => 'tiny',
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the node was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default'=> 0,
+      ),
+    ),
+    'indexes' => array(
+      'term_node' => array('tid', 'sticky', 'created'),
+      'nid' => array('nid'),
+    ),
+    'foreign keys' => array(
+      'tracked_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'term' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function taxonomy_field_schema($field) {
+  return array(
+    'columns' => array(
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array('tid'),
+    ),
+    'foreign keys' => array(
+      'tid' => array(
+        'table' => 'taxonomy_term_data',
+        'columns' => array('tid' => 'tid'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function taxonomy_update_dependencies() {
+  // Do not allow user module to convert user roles to configuration until after
+  // we have renamed our permissions in taxonomy_update_1001().
+  $dependencies['user'][1007] = array(
+    'taxonomy' => 1001,
+  );
+
+  return $dependencies;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Remove the {taxonomy_vocabulary}.module field.
+ */
+function taxonomy_update_1000() {
+  // Update removed. Previously dropped the {taxonomy_vocabulary}.module field,
+  // but taxonomy_update_1002() drops the entire table.
+}
+
+/**
+ * Convert taxonomy vocabularies to configuration.
+ */
+function taxonomy_update_1001() {
+  // Create the new machine name column in the term data table.
+  if (!db_field_exists('taxonomy_term_data', 'vocabulary')) {
+    db_add_field('taxonomy_term_data', 'vocabulary', array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => 'The vocabulary machine name to which this term is assigned.',
+    ));
+  }
+
+  // Convert the vocabularies.
+  if (db_table_exists('taxonomy_vocabulary')) {
+    $result = db_query("SELECT * FROM {taxonomy_vocabulary}");
+    foreach ($result as $row) {
+      $vocabulary_data = (array) $row;
+      $vid = $vocabulary_data['vid'];
+      $machine_name = $vocabulary_data['machine_name'];
+      unset($vocabulary_data['vid']);
+
+      // Save the vocabulary as config.
+      $config = config('taxonomy.vocabulary.'. $machine_name);
+      $config->setData($vocabulary_data);
+      $config->save();
+
+      // Update the term data table.
+      db_update('taxonomy_term_data')
+        ->fields(array(
+          'vocabulary' => $machine_name
+        ))
+        ->condition('vid' , $vid)
+        ->execute();
+
+      // Update permission names to use machine name.
+      db_update('role_permission')
+        ->fields(array(
+          'permission' => 'edit terms in ' . $machine_name
+        ))
+        ->condition('permission', 'edit terms in ' . $vid)
+        ->execute();
+      db_update('role_permission')
+        ->fields(array(
+          'permission' => 'delete terms in ' . $machine_name
+        ))
+        ->condition('permission', 'delete terms in ' . $vid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Drop the old taxonomy vocabulary table.
+ */
+function taxonomy_update_1002() {
+  if (db_table_exists('taxonomy_vocabulary')) {
+    db_drop_table('taxonomy_vocabulary');
+  }
+  if (db_table_exists('taxonomy_term_data')) {
+    db_query("ALTER TABLE {taxonomy_term_data} ENGINE = InnoDB");
+  }
+  if (db_field_exists('taxonomy_term_data', 'vid')) {
+    db_drop_field('taxonomy_term_data', 'vid');
+  }
+
+  // Drop the old indexes and create new ones.
+  if (db_index_exists('taxonomy_term_data', 'taxonomy_tree')) {
+    db_drop_index('taxonomy_term_data', 'taxonomy_tree');
+    db_add_index('taxonomy_term_data', 'taxonomy_tree', array('vocabulary', 'weight', 'name'));
+  }
+  if (db_index_exists('taxonomy_term_data', 'vid_name')) {
+    db_drop_index('taxonomy_term_data', 'vid_name');
+  }
+  if (!db_index_exists('taxonomy_term_data', 'vocabulary_name')) {
+    db_add_index('taxonomy_term_data', 'vocabulary_name', array('vocabulary', 'name'));
+  }
+}
+
+/**
+ * Create the taxonomy.settings config file.
+ */
+function taxonomy_update_1003() {
+  $config = config('taxonomy.settings');
+  $config->set('maintain_index_table', TRUE);
+  $config->save();
+}
+
+/**
+ * Convert taxonomy terms per page to config.
+ */
+function taxonomy_update_1004() {
+  $config = config('taxonomy.settings');
+  $config->set('terms_per_page_admin', update_variable_get('taxonomy_terms_per_page_admin', 100));
+  $config->save();
+
+  update_variable_del('taxonomy_terms_per_page_admin');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

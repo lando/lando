@@ -1,0 +1,18 @@
+<?php
+/**
+ * @file
+ * Helper module for token tests.
+ */
+
+/**
+ * Implements hook_exit().
+ */
+function token_test_exit() {
+  if ($debug = state_get('page_tokens', array())) {
+    $debug += array('tokens' => array(), 'data' => array(), 'options' => array());
+    foreach (array_keys($debug['tokens']) as $token) {
+      $debug['values'][$token] = token_replace($token, $debug['data'], $debug['options']);
+    }
+    state_set('page_tokens', $debug);
+  }
+}

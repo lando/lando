@@ -1,0 +1,8 @@
+{
+    "_config_name": "node.type.test",
+    "name": "Test type",
+    "type": "test",
+    "module": "node_test",
+    "description": "A <em>test page</em> is here for testing purposes.",
+    "title_label": "Test name"
+}

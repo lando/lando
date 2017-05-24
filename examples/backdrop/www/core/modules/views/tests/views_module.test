@@ -1,0 +1,209 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsModuleTest.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/views_query.test';
+
+/**
+ * Tests basic functions from the Views module.
+ */
+class ViewsModuleTest extends ViewsSqlTest {
+  public function setUp() {
+    parent::setUp();
+    backdrop_theme_rebuild();
+  }
+
+  public function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test_previous'] = array();
+    $data['views_test_previous']['id']['field']['moved to'] = array('views_test', 'id');
+    $data['views_test_previous']['id']['filter']['moved to'] = array('views_test', 'id');
+    $data['views_test']['age_previous']['field']['moved to'] = array('views_test', 'age');
+    $data['views_test']['age_previous']['sort']['moved to'] = array('views_test', 'age');
+    $data['views_test_previous']['name_previous']['field']['moved to'] = array('views_test', 'name');
+    $data['views_test_previous']['name_previous']['argument']['moved to'] = array('views_test', 'name');
+
+    return $data;
+  }
+
+  public function test_views_trim_text() {
+    views_include('utility');
+
+    // Test unicode, @see http://drupal.org/node/513396#comment-2839416
+    $text = array(
+      'Tuy nhiên, những hi vọng',
+      'Giả sử chúng tôi có 3 Apple',
+      'siêu nhỏ này là bộ xử lý',
+      'Di động của nhà sản xuất Phần Lan',
+      'khoảng cách từ đại lí đến',
+      'của hãng bao gồm ba dòng',
+      'сд асд асд ас',
+      'асд асд асд ас'
+    );
+    // Just test maxlength without word boundry.
+    $alter = array(
+      'max_length' => 10,
+    );
+    $expect = array(
+      'Tuy nhiên,',
+      'Giả sử chú',
+      'siêu nhỏ n',
+      'Di động củ',
+      'khoảng các',
+      'của hãng b',
+      'сд асд асд',
+      'асд асд ас',
+    );
+
+    foreach ($text as $key => $line) {
+      $result_text = views_trim_text($alter, $line);
+      $this->assertEqual($result_text, $expect[$key]);
+    }
+
+    // Test also word_boundary
+    $alter['word_boundary'] = TRUE;
+    $expect = array(
+      'Tuy nhiên',
+      'Giả sử',
+      'siêu nhỏ',
+      'Di động',
+      'khoảng',
+      'của hãng',
+      'сд асд',
+      'асд асд',
+    );
+
+    foreach ($text as $key => $line) {
+      $result_text = views_trim_text($alter, $line);
+      $this->assertEqual($result_text, $expect[$key]);
+    }
+  }
+
+  /**
+   * Tests the dynamic includes of templates via module feature.
+   */
+  function testModuleTemplates() {
+    $existing = array();
+    $type = array();
+    $theme = array();
+    $path = array();
+    $registry = views_theme($existing, $type, $theme, $path);
+    $this->assertTrue(isset($registry['views_view__promoted']));
+  }
+
+  /**
+   * Tests the views_get_handler method.
+   */
+  function testviews_get_handler() {
+    $types = array('field', 'area', 'filter');
+    foreach ($types as $type) {
+      $handler = views_get_handler($this->randomName(), $this->randomName(), $type);
+      $this->assertEqual('views_handler_' . $type . '_broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
+    }
+
+    $views_data = $this->viewsData();
+    $test_tables = array('views_test' => array('id', 'name'));
+    foreach ($test_tables as $table => $fields) {
+      foreach ($fields as $field) {
+        $data = $views_data[$table][$field];
+        foreach ($data as $id => $field_data) {
+          if (!in_array($id, array('title', 'help'))) {
+            $handler = views_get_handler($table, $field, $id);
+            $this->assertInstanceHandler($handler, $table, $field, $id);
+          }
+        }
+      }
+    }
+
+    // Test the automatic conversion feature.
+
+    // Test the automatic table renaming.
+    $handler = views_get_handler('views_test_previous', 'id', 'field');
+    $this->assertInstanceHandler($handler, 'views_test', 'id', 'field');
+    $handler = views_get_handler('views_test_previous', 'id', 'filter');
+    $this->assertInstanceHandler($handler, 'views_test', 'id', 'filter');
+
+    // Test the automatic field renaming.
+    $handler = views_get_handler('views_test', 'age_previous', 'field');
+    $this->assertInstanceHandler($handler, 'views_test', 'age', 'field');
+    $handler = views_get_handler('views_test', 'age_previous', 'sort');
+    $this->assertInstanceHandler($handler, 'views_test', 'age', 'sort');
+
+    // Test the automatic table and field renaming.
+    $handler = views_get_handler('views_test_previous', 'name_previous', 'field');
+    $this->assertInstanceHandler($handler, 'views_test', 'name', 'field');
+    $handler = views_get_handler('views_test_previous', 'name_previous', 'argument');
+    $this->assertInstanceHandler($handler, 'views_test', 'name', 'argument');
+
+    // Test the override handler feature.
+    $handler = views_get_handler('views_test', 'job', 'filter', 'views_handler_filter');
+    $this->assertEqual('views_handler_filter', get_class($handler));
+  }
+
+  /**
+   * Tests views_fetch_data().
+   */
+  function testFetchData() {
+
+    // Make sure we start with a empty cache.
+    $this->resetStaticViewsDataCache();
+    cache('views')->flush();
+    state_set('views_test_views_data_count', 0);
+
+    // Request info about an existing table.
+    $this->assertTrue(views_fetch_data('views_test'), 'Data about existing table returned');
+    // This should have triggered a views data rebuild, and written a cache
+    // entry for all tables and the requested table but no other tables.
+    $this->assertEqual(state_get('views_test_views_data_count', 0), 1, 'Views data rebuilt once');
+    $this->assertTrue(cache('views')->get('views_data:en'), 'Cache for all tables written.');
+    $this->assertTrue(cache('views')->get('views_data:views_test:en'), 'Cache for requested table written.');
+    $this->assertFalse(cache('views')->get('views_data:views_test_previous:en'), 'No Cache written for not requested table.');
+    $this->assertTrue(backdrop_static('_views_fetch_data_fully_loaded'), 'Views data is fully loaded');
+
+    $this->resetStaticViewsDataCache();
+
+    // Request the same table again.
+    $this->assertTrue(views_fetch_data('views_test'), 'Data about existing table returned');
+    $this->assertEqual(state_get('views_test_views_data_count', 0), 1, 'Views data rebuilt once');
+    $this->assertFalse(backdrop_static('_views_fetch_data_fully_loaded'), 'Views data is not fully loaded');
+
+    $this->resetStaticViewsDataCache();
+
+    // Request a missing table, this should load the full cache from cache but
+    // not rebuilt.
+    $this->assertFalse(views_fetch_data('views_test_missing'), 'No data about missing table returned');
+    $this->assertEqual(state_get('views_test_views_data_count', 0), 1, 'Views data rebuilt once');
+    $this->assertTrue(backdrop_static('_views_fetch_data_fully_loaded'), 'Views data is fully loaded');
+
+    $this->resetStaticViewsDataCache();
+
+    // Request the same empty table again, this should load only that (empty)
+    // cache for that table.
+    $this->assertFalse(views_fetch_data('views_test_missing'), 'No data about missing table returned');
+    $this->assertEqual(state_get('views_test_views_data_count', 0), 1, 'Views data rebuilt once');
+    $this->assertFalse(backdrop_static('_views_fetch_data_fully_loaded'), 'Views data is not fully loaded');
+
+  }
+
+  /**
+   * Ensure that a certain handler is a instance of a certain table/field.
+   */
+  function assertInstanceHandler($handler, $table, $field, $id) {
+    $table_data = views_fetch_data($table);
+    $field_data = $table_data[$field][$id];
+
+    $this->assertEqual($field_data['handler'], get_class($handler));
+  }
+
+  /**
+   * Resets the views data cache.
+   */
+  protected function resetStaticViewsDataCache() {
+    backdrop_static_reset('_views_fetch_data_cache');
+    backdrop_static_reset('_views_fetch_data_recursion_protected');
+    backdrop_static_reset('_views_fetch_data_fully_loaded');
+  }
+}

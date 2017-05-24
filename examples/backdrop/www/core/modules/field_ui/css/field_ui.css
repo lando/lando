@@ -1,0 +1,89 @@
+/**
+ * @file
+ * Stylesheet for the Field UI module.
+ */
+
+/* 'Manage fields' and 'Manage display' overviews */
+.field-ui-overview tr.add-new .label-input {
+  float: left; /* LTR */
+}
+[dir="rtl"] .field-ui-overview tr.add-new .label-input {
+  float: right;
+}
+.field-ui-overview tr.add-new .tabledrag-changed {
+  display: none;
+}
+.field-ui-overview tr.add-new .description {
+  margin-bottom: 0;
+  max-width: 250px;
+}
+.field-ui-overview tr.add-new .form-type-machine-name .description {
+  white-space: normal;
+}
+.field-ui-overview tr.add-new .add-new-placeholder {
+  font-weight: bold;
+  padding-bottom: .5em;
+}
+.field-ui-overview tr.region-title td {
+  font-weight: bold;
+}
+.field-ui-overview tr.region-message td {
+  font-style: italic;
+}
+.field-ui-overview tr.region-populated {
+  display: none;
+}
+.field-ui-overview tr.region-add-new-title {
+  display: none;
+}
+.field-ui-overview tr.add-new td {
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+/* 'Manage display' overview */
+.field-ui-overview .field-formatter-summary-cell {
+  line-height: 1em;
+}
+.field-ui-overview .field-formatter-summary {
+  float: left;
+  font-size: 0.9em;
+}
+.field-ui-overview td.field-formatter-summary-cell span.warning {
+  display: block;
+  float: left;
+  margin-right: .5em;
+}
+.field-ui-overview .field-formatter-settings-edit-wrapper {
+  float: right;
+}
+.field-ui-overview .field-formatter-settings-edit {
+  float: right;
+}
+.field-ui-overview tr.field-formatter-settings-editing td {
+  vertical-align: top;
+}
+.field-ui-overview tr.field-formatter-settings-editing .field-formatter-type {
+  display: none;
+}
+.field-ui-overview .field-formatter-settings-edit-form .formatter-name{
+  font-weight: bold;
+}
+
+/* 'View modes' overview */
+.field-ui-view-modes tr.header td {
+  background-color: #e9e8e8;
+  font-weight: bold;
+}
+.field-ui-view-modes tr.uses-default td {
+  color: #999;
+}
+.field-ui-view-modes tr.default-view-mode td {
+  font-weight: bold;
+}
+.field-ui-view-modes tr.default-view-mode td div.description {
+  font-weight: normal;
+}
+.field-ui-view-modes th.operations {
+  text-align: center;
+}

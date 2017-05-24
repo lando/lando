@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Tests for contextual.module.
+ */
+
+/**
+ * Tests accessible links after inaccessible links on dynamic context.
+ */
+class ContextualDynamicContextTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  function setUp() {
+    parent::setUp(array('contextual', 'node'));
+    $this->backdropCreateContentType(array('type' => 'page', 'name' => 'Page'));
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+    $web_user = $this->backdropCreateUser(array('access content', 'access contextual links', 'edit any post content'));
+    $this->backdropLogin($web_user);
+  }
+
+  /**
+   * Tests contextual links on node lists with different permissions.
+   */
+  function testNodeLinks() {
+    // Create three nodes in the following order:
+    // - An post, which should be user-editable.
+    // - A page, which should not be user-editable.
+    // - A second post, which should also be user-editable.
+    $node1 = $this->backdropCreateNode(array('type' => 'post', 'promote' => 1));
+    $node2 = $this->backdropCreateNode(array('type' => 'page', 'promote' => 1));
+    $node3 = $this->backdropCreateNode(array('type' => 'post', 'promote' => 1));
+
+    // Now, on the front page, all post nodes should have contextual edit
+    // links. The page node in between should not.
+    $this->backdropGet('node');
+    $this->assertRaw('node/' . $node1->nid . '/edit', 'Edit link for oldest post node showing.');
+    $this->assertNoRaw('node/' . $node2->nid . '/edit', 'No edit link for page nodes.');
+    $this->assertRaw('node/' . $node3->nid . '/edit', 'Edit link for most recent post node showing.');
+  }
+}

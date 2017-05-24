@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * @file
+ * Tests for block.module.
+ */
+
+class BlockTestCase extends BackdropWebTestCase {
+  protected $admin_user;
+
+  function setUp() {
+    parent::setUp('block_test');
+
+    // Create and log in an administrative user having access to the Full HTML
+    // text format.
+    $full_html_format = filter_format_load('full_html');
+    $this->admin_user = $this->backdropCreateUser(array(
+      'administer blocks',
+      filter_permission_name($full_html_format),
+      'access administration pages',
+      'administer layouts',
+    ));
+    $this->backdropLogin($this->admin_user);
+  }
+
+  /**
+   * Test creating custom block, editing, and then deleting it.
+   */
+  function testCustomBlock() {
+    // Confirm that the add block link appears on block overview pages.
+    $this->backdropGet('admin/structure/block');
+    $this->assertRaw(l('Add custom block', 'admin/structure/block/add'), 'Add block link is present on block overview page for default theme.');
+
+    // Save a file to test file usage saving.
+    $files = $this->backdropGetTestFiles('image');
+    $file_info = (array) array_pop($files);
+    $file_info['status'] = 0;
+    $file = new File($file_info);
+    $file->save();
+    $file_info['attributes']['data-file-id'] = $file->fid;
+    $image_string = theme('image', $file_info);
+
+    // Load the form and check that file uploads are enabled on the body field.
+    $this->backdropGet('admin/structure/block/add');
+    $element = $this->xpath('//textarea[@name="body[value]"][@data-editor-uploads="true"]');
+    $this->assertEqual(count($element), 1, 'Editor upload attribute found on the body field for a custom block.');
+
+    // Add a new custom block by filling out the input form on the admin/structure/block/add page.
+    $custom_block = array();
+    $custom_block['info'] = $this->randomName(8);
+    $custom_block['delta'] = strtolower($this->randomName(8));
+    $custom_block['title'] = $this->randomName(8);
+    $custom_block['body[value]'] = $this->randomName(32) . $image_string;
+    $this->backdropPost(NULL, $custom_block, 'Save block');
+
+    // Confirm that the custom block has been created, and then find its config file
+    $this->assertText(t('The block has been created.'), 'Custom block successfully created.');
+
+    // Check to see if the custom block was created by checking that it has a configuration file.
+    $custom_block = config_get('block.custom.'.$custom_block['delta']);
+    $this->assertNotNull($custom_block['delta'], 'Custom block found in configuration.');
+
+    // Check that block_block_view() returns the correct title and content.
+    $data = block_block_view($custom_block['delta']);
+    $this->assertEqual($data['subject'], $custom_block['title'], 'block_block_view() provides the correct block title.');
+    $this->assertEqual(check_markup($custom_block['body']['value'], $custom_block['body']['format']), $data['content'], 'block_block_view() provides correct block content.');
+
+    // Check that a file usage was recorded for the file within the block.
+    $file = file_load($file->fid);
+    $references = file_usage_list($file);
+    $this->assertEqual($references['file']['file'][$file->fid], 1, 'File usage recorded for the file within the block.');
+    $this->assertEqual($file->status, 1, 'File has been marked permanent by its file usage.');
+
+    // Check whether the block can be moved to all available regions.
+    $layout = layout_load('default');
+    $layout->addBlock('block', $custom_block['delta'], 'sidebar');
+    $layout->save();
+    $this->backdropGet('user');
+    $this->assertText($data['subject'], 'Newly added block found.');
+
+    // Verify presence of configure and delete links for custom block.
+    $this->backdropGet('admin/structure/block');
+    $this->assertLinkByHref('admin/structure/block/manage/' . $custom_block['delta'] . '/configure', 0, 'Custom block configure link found.');
+    $this->assertLinkByHref('admin/structure/block/manage/' . $custom_block['delta'] . '/delete', 0, 'Custom block delete link found.');
+
+    // Delete the created custom block & verify that it's been deleted and no longer appearing on the page.
+    $this->clickLink(t('Delete'));
+    $this->backdropPost('admin/structure/block/manage/' . $custom_block['delta'] . '/delete', array(), 'Delete');
+    $this->assertRaw(t('The block %title has been removed.', array('%title' => $custom_block['info'])), 'Custom block successfully deleted.');
+    $this->assertNoText(t($custom_block['title']), 'Custom block no longer appears on page.');
+
+    // Note that file usages are NOT removed after a block has been deleted.
+    // See https://github.com/backdrop/backdrop-issues/issues/2137.
+  }
+
+  /**
+   * Test creating custom block using Full HTML.
+   */
+  function testCustomBlockFormat() {
+    // Add a new custom block by filling out the input form on the admin/structure/block/add page.
+    $custom_block = array();
+    $custom_block['info'] = $this->randomName(8);
+    $custom_block['delta'] = strtolower($this->randomName(8));
+    $custom_block['title'] = $this->randomName(8);
+    $custom_block['body[value]'] = '<h1>Full HTML</h1>';
+    $full_html_format = filter_format_load('full_html');
+    $custom_block['body[format]'] = $full_html_format->format;
+    $this->backdropPost('admin/structure/block/add', $custom_block, 'Save block');
+
+    // Set the created custom block to a specific region.
+    $layout = layout_load('default');
+    $layout->addBlock('block', $custom_block['delta'], 'content');
+    $layout->save();
+
+    // Confirm that the custom block is being displayed using configured text format.
+    $this->backdropGet('user');
+    $this->assertRaw('<h1>Full HTML</h1>', 'Custom block successfully being displayed using Full HTML.');
+
+    // Confirm that a user without access to Full HTML can not see the body field,
+    // but can still submit the form without errors.
+    $block_admin = $this->backdropCreateUser(array('administer blocks'));
+    $this->backdropLogin($block_admin);
+    $this->backdropGet('admin/structure/block/manage/' . $custom_block['delta'] . '/configure');
+    $this->assertFieldByXPath("//textarea[@name='body[value]' and @disabled='disabled']", 'This field has been disabled because you do not have sufficient permissions to edit it.', 'Body field contains denied message');
+    $this->backdropPost('admin/structure/block/manage/' . $custom_block['delta'] . '/configure', array(), 'Save block');
+    $this->assertNoText(t('Ensure that each block description is unique.'));
+
+    // Confirm that the custom block is still being displayed using configured text format.
+    $this->backdropGet('user');
+    $this->assertRaw('<h1>Full HTML</h1>', 'Custom block successfully being displayed using Full HTML.');
+  }
+
+  /**
+   * Tests the various block hooks get called when needed.
+   */
+  function testBlockHooks() {
+    // Test hook_block_info_alter().
+    $this->backdropGet('admin/structure/layouts/manage/default/add-block/editor/content');
+    $this->assertText(t('Original description.'), 'Original description found with no alterations.');
+    state_set('block_test_info_alter', TRUE);
+    $this->backdropGet('admin/structure/layouts/manage/default/add-block/editor/content');
+    $this->assertText(t('Altered description.'), 'Altered description found as modified by hook_block_info_alter().');
+
+    // Add blocks for checking hook_block_view_MODULE_DELTA_alter().
+    $this->clickLink(t('Test underscore'));
+    $this->backdropPost(NULL, array(), t('Add block'));
+    $this->backdropGet('admin/structure/layouts/manage/default/add-block/editor/content');
+    $this->clickLink(t('Test hyphen'));
+    $this->backdropPost(NULL, array(), t('Add block'));
+    $this->backdropPost(NULL, array(), t('Save layout'));
+    $this->backdropGet('admin/structure/layouts/manage/default');
+
+    // Visit the user page to see that the new blocks are in place and altered.
+    $this->backdropGet('user');
+    $this->assertText('underscore: hook_block_view_MODULE_DELTA_alter', 'hook_block_view_MODULE_DELTA_alter called for a block based on its delta.');
+    $this->assertText('hyphen: hook_block_view_MODULE_DELTA_alter', 'hook_block_view_MODULE_DELTA_alter called for a block with a delta that contains a hyphen.');
+  }
+}

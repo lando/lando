@@ -1,0 +1,181 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the language module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function language_install() {
+  // Add the default language to the database too.
+  language_save(language_default());
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function language_uninstall() {
+  // Restore core language variables to defaults.
+  $config = config('system.core');
+  $config->set('language_default', 'en');
+  $config->set('language_count', 1);
+  $config->save();
+
+  // Re-initialize the language system so successive calls to t() and other
+  // functions will not expect languages to be present.
+  backdrop_static_reset('language_default');
+  backdrop_language_initialize();
+}
+
+/**
+ * Implements hook_schema().
+ */
+function language_schema() {
+  $schema['language'] = array(
+    'description' => 'List of all available languages in the system.',
+    'fields' => array(
+      'langcode' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "Language code, e.g. 'de' or 'en-US'.",
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language name.',
+      ),
+      'direction' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Direction of language (Left-to-Right = 0, Right-to-Left = 1).',
+      ),
+      'enabled' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Enabled flag (1 = Enabled, 0 = Disabled).',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Weight, used in lists of languages.',
+      ),
+    ),
+    'primary key' => array('langcode'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Rename {language}.language to {language}.langcode.
+ *
+ * @see update_prepare_language()
+ */
+function language_update_1000() {
+  // Rename language column to langcode and set it again as the primary key.
+  if (db_field_exists('language', 'language')) {
+    db_drop_primary_key('language');
+    $langcode_spec = array(
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => "Language code, e.g. 'de' or 'en-US'.",
+    );
+    db_change_field('language', 'language', 'langcode', $langcode_spec, array('primary key' => array('langcode')));
+  }
+
+  // Update the 'language_default' system variable, if configured.
+  $language_default = update_variable_get('language_default');
+  if (!empty($language_default) && isset($language_default->language)) {
+    $language_default->langcode = $language_default->language;
+    unset($language_default->language);
+    update_variable_set('language_default', $language_default);
+  }
+}
+
+/**
+ * Convert language settings to config.
+ */
+function language_update_1001() {
+  // Save the always-required settings in system.core config.
+  $default_language = update_variable_get('language_default', (object) array(
+    'langcode' => 'en',
+    'name' => 'English',
+    'direction' => 0,
+    'enabled' => TRUE,
+    'weight' => 0,
+  ));
+  $core_config = config('system.core');
+
+  // The default language setting used to be an object, now it's just langcode.
+  $core_config->set('language_default', $default_language->langcode);
+  $core_config->set('language_count', update_variable_get('language_count'));
+  $core_config->save();
+
+  // Save settings required for language.module into its own file.
+  $language_config = config('language.settings');
+  $language_config->set('_config_static', TRUE);
+
+  // Negotiation options previously contained information from
+  // hook_language_negotiation_info() as a cache, now we just store the order.
+  $negotiation = array(
+    'language_content' => array(),
+    'language' => array(),
+    'language_url' => array(),
+  );
+  foreach ($negotiation as $language_type => $negotiation_data) {
+    $negotiation_data = update_variable_get('language_negotiation_' . $language_type, array());
+    $negotiation[$language_type] = array_keys($negotiation_data);
+  }
+  array_filter($negotiation);
+  $language_config->set('language_negotiation', $negotiation);
+
+  $language_config->save();
+
+  // Delete the old variables.
+  update_variable_del('language_default');
+  update_variable_del('language_count');
+  update_variable_del('language_negotiation_language_content');
+  update_variable_del('language_negotiation_language');
+  update_variable_del('language_negotiation_language_url');
+
+  // The language_types variable is no longer used in Backdrop.
+  update_variable_del('language_types');
+}
+
+/**
+ * Convert the language database table to config.
+ */
+function language_update_1002() {
+  if (db_table_exists('language')) {
+    $languages = db_query("SELECT * FROM {language}")->fetchAllAssoc('langcode');
+    $config = config('language.settings');
+    $config->set('_config_static', TRUE);
+    $config->set('languages', $languages);
+    $config->save();
+
+    db_drop_table('language');
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

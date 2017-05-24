@@ -1,0 +1,18 @@
+{
+    "_config_name": "image.style.medium.json",
+    "overridden": false,
+    "module": "image",
+    "label": "Medium (300x250)",
+    "name": "medium",
+    "effects": [
+        {
+            "name": "image_scale",
+            "data": {
+                "width": "300",
+                "height": "250",
+                "upscale": 1
+            },
+            "weight": 1
+        }
+    ]
+}

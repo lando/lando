@@ -1,0 +1,351 @@
+<?php
+
+/**
+ * @file
+ * Basic functions for Date tests.
+ */
+abstract class DateFieldBasic extends BackdropWebTestCase {
+  protected $privileged_user;
+  protected $profile = 'testing';
+
+  protected function setUp($modules = array()) {
+    parent::setUp(array_merge($modules, array('field', 'field_ui', 'date')));
+
+    // Create and log in our privileged user.
+    $this->privileged_user = $this->backdropCreateUser(
+      array('access content', 'administer content types', 'administer fields', 'administer nodes', 'bypass node access')
+    );
+    $this->backdropLogin($this->privileged_user);
+
+    module_load_include('inc', 'node', 'content_types');
+    module_load_include('inc', 'node', 'node.pages');
+    module_load_include('inc', 'field', 'field.crud');
+    module_load_include('inc', 'date', 'date_admin');
+
+    $edit = array();
+    $edit['name'] = 'Story';
+    $edit['type'] = 'story';
+    $this->backdropPost('admin/structure/types/add', $edit, t('Save content type'));
+    $this->assertText('The content type Story has been added.', 'Content type added.');
+  }
+
+  /**
+   * Creates a date field from an array of settings values.
+   *
+   * All values have defaults, only need to specify values that need to be
+   * different.
+   */
+  protected function createDateField($values = array()) {
+    extract($values);
+
+    $field_name = !empty($field_name) ? $field_name : 'field_test';
+    $entity_type = !empty($entity_type) ? $entity_type : 'node';
+    $bundle = !empty($bundle) ? $bundle : 'story';
+    $label = !empty($label) ? $label : 'Test';
+    $field_type = !empty($field_type) ? $field_type : 'datetime';
+    $repeat = !empty($repeat) ? $repeat : 0;
+    $todate = !empty($todate) ? $todate : 'optional';
+    $widget_type = !empty($widget_type) ? $widget_type : 'date_select';
+    $tz_handling = !empty($tz_handling) ? $tz_handling : 'site';
+    $granularity = !empty($granularity) ? $granularity : array('year', 'month', 'day', 'hour', 'minute');
+    $year_range = !empty($year_range) ? $year_range : '2010:+1';
+    $input_format = !empty($input_format) ? $input_format : date_default_format($widget_type);
+    $input_format_custom = !empty($input_format_custom) ? $input_format_custom : '';
+    $text_parts = !empty($text_parts) ? $text_parts : array();
+    $increment = !empty($increment) ? $increment : 15;
+    $default_value = !empty($default_value) ? $default_value : 'now';
+    $default_value2 = !empty($default_value2) ? $default_value2 : 'blank';
+    $default_format = !empty($default_format) ? $default_format : 'long';
+    $cache_enabled = !empty($cache_enabled);
+    $cache_count = !empty($cache_count) ? $cache_count : 4;
+
+    $field = array(
+      'field_name' => $field_name,
+      'type' => $field_type,
+      'cardinality' => !empty($repeat) ? FIELD_CARDINALITY_UNLIMITED : 1,
+      'settings' => array(
+        'granularity' => $granularity,
+        'tz_handling' => $tz_handling,
+        'timezone_db' => date_get_timezone_db($tz_handling),
+        'repeat' => $repeat,
+        'todate' => $todate,
+        'cache_enabled' => $cache_enabled,
+        'cache_count' => $cache_count,
+      ),
+    );
+    $instance = array(
+      'entity_type' => $entity_type,
+      'field_name' => $field_name,
+      'label' => $label,
+      'bundle' => $bundle,
+      // Move the date right below the title.
+      'weight' => -5,
+      'widget' => array(
+        'type' => $widget_type,
+        // Increment for minutes and seconds, can be 1, 5, 10, 15, or 30.
+        'settings' => array(
+          'increment' => $increment,
+          // The number of years to go back and forward in drop-down year
+          // selectors.
+          'year_range' => $year_range,
+          'input_format' => $input_format,
+          'input_format_custom' => $input_format_custom,
+          'text_parts' => $text_parts,
+          'label_position' => 'above',
+          'repeat_collapsed' => 0,
+        ),
+        'weight' => -5,
+      ),
+      'settings' => array(
+        'default_value' => $default_value,
+        'default_value2' => $default_value2,
+      ),
+    );
+
+    $instance['display'] = array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'date_default',
+        'settings' => array(
+          'format_type' => $default_format,
+          'show_repeat_rule' => 'show',
+          'multiple_number' => '',
+          'multiple_from' => '',
+          'multiple_to' => '',
+          'fromto' => 'both',
+        ),
+        'module' => 'date',
+        'weight' => 0 ,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'date_default',
+        'weight' => 0,
+        'settings' => array(
+          'format_type' => $default_format,
+          'show_repeat_rule' => 'show',
+          'multiple_number' => '',
+          'multiple_from' => '',
+          'multiple_to' => '',
+          'fromto' => 'both',
+        ),
+        'module' => 'date',
+      ),
+    );
+
+    field_create_field($field);
+    field_create_instance($instance);
+  }
+
+  /**
+   * Creates a date field from an array of settings values.
+   *
+   * All values have defaults, only need to specify values that need to be
+   * different.
+   */
+  protected function createMultiDateField($values = array()) {
+    extract($values);
+
+    $field_name = !empty($field_name) ? $field_name : 'field_test';
+    $entity_type = !empty($entity_type) ? $entity_type : 'node';
+    $bundle = !empty($bundle) ? $bundle : 'story';
+    $label = !empty($label) ? $label : 'Test';
+    $field_type = !empty($field_type) ? $field_type : 'datetime';
+    $repeat = !empty($repeat) ? $repeat : 0;
+    $todate = !empty($todate) ? $todate : 'optional';
+    $widget_type = !empty($widget_type) ? $widget_type : 'date_select';
+    $this->verbose(!empty($tz_handling));
+    $tz_handling = !empty($tz_handling) ? $tz_handling : 'site';
+    $granularity = !empty($granularity) ? $granularity : array('year', 'month', 'day', 'hour', 'minute');
+    $year_range = !empty($year_range) ? $year_range : '2010:+1';
+    $input_format = !empty($input_format) ? $input_format : date_default_format($widget_type);
+    $input_format_custom = !empty($input_format_custom) ? $input_format_custom : '';
+    $text_parts = !empty($text_parts) ? $text_parts : array();
+    $increment = !empty($increment) ? $increment : 15;
+    $default_value = !empty($default_value) ? $default_value : 'now';
+    $default_value2 = !empty($default_value2) ? $default_value2 : 'blank';
+    $default_format = !empty($default_format) ? $default_format : 'long';
+    $cache_enabled = !empty($cache_enabled);
+    $cache_count = !empty($cache_count) ? $cache_count : 4;
+    $cardinality = !empty($cardinality) ? $cardinality : 1;
+
+    $field = array(
+      'field_name' => $field_name,
+      'type' => $field_type,
+      'cardinality' => $cardinality,
+      'settings' => array(
+        'granularity' => $granularity,
+        'tz_handling' => $tz_handling,
+        'timezone_db' => date_get_timezone_db($tz_handling),
+        'repeat' => $repeat,
+        'todate' => $todate,
+        'cache_enabled' => $cache_enabled,
+        'cache_count' => $cache_count,
+      ),
+    );
+    $instance = array(
+      'entity_type' => $entity_type,
+      'field_name' => $field_name,
+      'label' => $label,
+      'bundle' => $bundle,
+      // Move the date right below the title.
+      'weight' => -5,
+      'widget' => array(
+        'type' => $widget_type,
+        // Increment for minutes and seconds, can be 1, 5, 10, 15, or 30.
+        'settings' => array(
+          'increment' => $increment,
+          // The number of years to go back and forward in drop-down year
+          // selectors.
+          'year_range' => $year_range,
+          'input_format' => $input_format,
+          'input_format_custom' => $input_format_custom,
+          'text_parts' => $text_parts,
+          'label_position' => 'above',
+          'repeat_collapsed' => 0,
+        ),
+        'weight' => -5,
+      ),
+      'settings' => array(
+        'default_value' => $default_value,
+        'default_value2' => $default_value2,
+      ),
+    );
+
+    $instance['display'] = array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'date_default',
+        'settings' => array(
+          'format_type' => $default_format,
+          'show_repeat_rule' => 'show',
+          'multiple_number' => '',
+          'multiple_from' => '',
+          'multiple_to' => '',
+          'fromto' => 'both',
+        ),
+        'module' => 'date',
+        'weight' => 0 ,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'date_default',
+        'weight' => 0,
+        'settings' => array(
+          'format_type' => $default_format,
+          'show_repeat_rule' => 'show',
+          'multiple_number' => '',
+          'multiple_from' => '',
+          'multiple_to' => '',
+          'fromto' => 'both',
+        ),
+        'module' => 'date',
+      ),
+    );
+
+    field_create_field($field);
+    field_create_instance($instance);
+  }
+
+  /**
+   * Remove a Date field though the UI.
+   */
+  protected function deleteDateField($label, $field_name = 'field_test', $bundle = 'story', $bundle_name = 'Story') {
+    $this->backdropGet("admin/structure/types/manage/$bundle/fields/$field_name/delete");
+    $this->backdropPost(NULL, NULL, t('Delete'));
+    $this->assertText("The field $label has been deleted from the $bundle_name content type.", 'Removed date field.');
+  }
+
+}
+
+class DateFieldTestCase extends DateFieldBasic {
+
+  /**
+   * @todo.
+   */
+  public function testField() {
+    // Create a date fields with simple values.
+    foreach (array('date', 'datestamp', 'datetime') as $field_type) {
+      foreach (array('date_select', 'date_popup', 'date_text') as $widget_type) {
+        $field_name = "field_test_$widget_type";
+        $label = 'Test';
+        $options = array(
+          'label' => $label,
+          'widget_type' => $widget_type,
+          'field_name' => $field_name,
+          'field_type' => $field_type,
+          'input_format' => 'm/d/Y - g:ia',
+        );
+        $this->createDateField($options);
+        $this->dateForm($field_name, $field_type, $widget_type);
+        $this->deleteDateField($label, $field_name);
+      }
+    }
+  }
+
+  /**
+   * Tests that date field functions properly on the node form.
+   */
+  public function dateForm($field_name, $field_type, $widget_type, $todate = TRUE) {
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    if ($widget_type == 'date_select') {
+      $edit[$field_name . '[und][0][value][year]'] = '2010';
+      $edit[$field_name . '[und][0][value][month]'] = '10';
+      $edit[$field_name . '[und][0][value][day]'] = '7';
+      $edit[$field_name . '[und][0][value][hour]'] = '10';
+      $edit[$field_name . '[und][0][value][minute]'] = '30';
+      $edit[$field_name . '[und][0][value][ampm]'] = 'am';
+      if ($todate) {
+        $edit[$field_name . '[und][0][show_todate]'] = '1';
+        $edit[$field_name . '[und][0][value2][year]'] = '2010';
+        $edit[$field_name . '[und][0][value2][month]'] = '10';
+        $edit[$field_name . '[und][0][value2][day]'] = '7';
+        $edit[$field_name . '[und][0][value2][hour]'] = '11';
+        $edit[$field_name . '[und][0][value2][minute]'] = '30';
+        $edit[$field_name . '[und][0][value2][ampm]'] = 'am';
+      }
+    }
+    elseif ($widget_type == 'date_text') {
+      $edit[$field_name . '[und][0][value][date]'] = '10/07/2010 - 10:30am';
+      if ($todate) {
+        $edit[$field_name . '[und][0][show_todate]'] = '1';
+        $edit[$field_name . '[und][0][value2][date]'] = '10/07/2010 - 11:30am';
+      }
+    }
+    elseif ($widget_type == 'date_popup') {
+      $edit[$field_name . '[und][0][value][date]'] = '10/07/2010';
+      $edit[$field_name . '[und][0][value][time]'] = '10:30am';
+      if ($todate) {
+        $edit[$field_name . '[und][0][show_todate]'] = '1';
+        $edit[$field_name . '[und][0][value2][date]'] = '10/07/2010';
+        $edit[$field_name . '[und][0][value2][time]'] = '11:30am';
+      }
+    }
+    // Test that the date is displayed correctly using both the 'short' and
+    // 'long' date types.
+    //
+    // For the short type, save an explicit format and assert that is the one
+    // which is displayed.
+    $format = system_date_format_load('short');
+    $format['pattern'] = 'l, m/d/Y - H:i:s';
+    system_date_format_save($format);
+    $instance = field_info_instance('node', $field_name, 'story');
+    $instance['display']['default']['settings']['format_type'] = 'short';
+    field_update_instance($instance);
+    $this->backdropPost('node/add/story', $edit, t('Save'));
+    $this->assertText($edit['title'], "Node has been created");
+    $should_be = $todate ? 'Thursday, 10/07/2010 - 10:30 to 11:30' : 'Thursday, 10/07/2010 - 10:30';
+    $this->assertText($should_be, "Found the correct date for a $field_type field using the $widget_type widget displayed using the short date format.");
+    // For the long format, do not save anything, and assert that the displayed
+    // date uses the expected default value of this format provided by Backdrop
+    // core ('l, F j, Y - H:i').
+    $instance = field_info_instance('node', $field_name, 'story');
+    $instance['display']['default']['settings']['format_type'] = 'long';
+    field_update_instance($instance);
+    $this->backdropPost('node/add/story', $edit, t('Save'));
+    $this->assertText($edit['title'], "Node has been created");
+    $should_be = $todate ? 'Thursday, October 7, 2010 - 10:30am to 11:30am' : 'Thursday, October 7, 2010 - 10:30am';
+    $this->assertText($should_be, "Found the correct date for a $field_type field using the $widget_type widget displayed using the long date format.");
+  }
+}

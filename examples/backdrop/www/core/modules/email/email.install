@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Defines schema for email fields
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function email_field_schema($field) {
+  return array(
+    'columns' => array(
+      'email' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Remove the old email module configuration file.
+ */
+function email_update_1000() {
+  config('email.settings')->delete();
+}

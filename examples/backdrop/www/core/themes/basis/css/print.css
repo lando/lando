@@ -1,0 +1,36 @@
+html.admin-bar body {
+  padding-top: 0;
+}
+
+.tabs {
+  display: none;
+}
+
+.l-header,
+.breadcrumb,
+.pager-first,
+.pager-previous,
+.pager-ellipsis,
+.pager-next,
+.pager-last,
+.pager-item {
+  background: transparent;
+}
+
+.l-header a,
+.l-header-inner,
+.breadcrumb,
+.breadcrumb li a,
+.pager-item a,
+.pager-first,
+.pager-previous a,
+.pager-ellipsis,
+.pager-next a,
+.pager-last a,
+.pager-item {
+  color: #000;
+}
+
+.breadcrumb li:after {
+  border-color: #000;
+}

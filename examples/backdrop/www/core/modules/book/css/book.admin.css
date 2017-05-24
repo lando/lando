@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Admin styles for book module.
+ */
+
+/**
+ * Book outline on book edit form.
+ */
+.js .book-outline-form .form-submit {
+  display: none;
+}

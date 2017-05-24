@@ -1,0 +1,72 @@
+/**
+ * @file
+ * Progress Bar
+ *
+ * See system module
+ */
+.progress {
+  font-weight: bold;
+}
+
+.progress .bar {
+  margin: 0 0.2em .5em 0;
+  border: 2px solid #e5e5e6;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress .filled {
+  position: relative;
+  overflow: hidden;
+  -webkit-transition: width .4s;
+  transition: width .4s;
+  will-change: width;
+}
+
+/* Progress Bar Animation */
+.progress .filled:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0.75em;
+  height: 100%;
+  -webkit-transform: skewX(-20deg);
+  transform: skewX(-20deg);
+  border-left: 2em solid #3c4350;
+  border-right: 0.75em solid #3c4350;
+  -webkit-animation: progressGradient 3s infinite;
+  animation: progressGradient 1.5s infinite;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-transition: width .4s;
+  transition: width .4s;
+  will-change: left;
+}
+
+@-webkit-keyframes progressGradient {
+  0% {
+    left: -15%;
+    border-left-width: 2em;
+    border-left-width: 0.75em;
+  }
+  100% {
+    left: 100%;
+    border-left-width: 1.75em;
+    border-left-width: 0.5em;
+  }
+}
+@keyframes progressGradient {
+  0% {
+    left: -15%;
+    border-left-width: 2em;
+    border-right-width: 0.75em;
+  }
+  100% {
+    left: 100%;
+    border-left-width: 1.75em;
+    border-right-width: 0.5em;
+  }
+}
+

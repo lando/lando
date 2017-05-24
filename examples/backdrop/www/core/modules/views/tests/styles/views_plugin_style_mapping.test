@@ -1,0 +1,137 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsPluginStyleMappingTest.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/styles/views_plugin_style_base.test';
+
+/**
+ * Tests the default/mapping row style.
+ */
+class ViewsPluginStyleMappingTest extends ViewsPluginStyleTestBase {
+  public function setUp() {
+    parent::setUp();
+
+    // Reset the plugin data.
+    views_fetch_plugin_data(NULL, NULL, TRUE);
+  }
+
+  protected function viewsPlugins() {
+    return array(
+      'style' =>  array(
+        'test_mapping' => array(
+          'title' => t('Field mapping'),
+          'help' => t('Maps specific fields to specific purposes.'),
+          'handler' => 'views_test_plugin_style_test_mapping',
+          'path' => backdrop_get_path('module', 'views_test') . '/test_plugins',
+          'theme' => 'views_view_mapping_test',
+          'theme path' => backdrop_get_path('module', 'views_test'),
+          'theme file' => 'views_test.module',
+          'uses row plugin' => FALSE,
+          'uses fields' => TRUE,
+          'uses options' => TRUE,
+          'uses grouping' => FALSE,
+          'type' => 'normal',
+        ),
+      ),
+    );
+  }
+
+  /**
+   * Overrides ViewsTestCase::getBasicView().
+   */
+  protected function getBasicView() {
+    $view = parent::getBasicView();
+    $view->display['default']->handler->override_option('style_plugin', 'test_mapping');
+    $view->display['default']->handler->override_option('style_options', array(
+      'mapping' => array(
+        'name_field' => 'name',
+        'numeric_field' => array(
+          'age',
+        ),
+        'title_field' => 'name',
+        'toggle_numeric_field' => TRUE,
+        'toggle_title_field' => TRUE,
+      ),
+    ));
+    $view->display['default']->handler->override_option('fields', array(
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+      ),
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+      ),
+      'job' => array(
+        'id' => 'job',
+        'table' => 'views_test',
+        'field' => 'job',
+        'relationship' => 'none',
+      ),
+    ));
+    return $view;
+  }
+
+  /**
+   * Verifies that the fields were mapped correctly.
+   */
+  public function testMappedOutput() {
+    $view = $this->getBasicView();
+    $output = $this->mappedOutputHelper($view);
+    $this->assertTrue(strpos($output, 'job') === FALSE, 'The job field is added to the view but not in the mapping.');
+
+    $view = $this->getBasicView();
+    $view->display['default']->display_options['style_options']['mapping']['name_field'] = 'job';
+    $output = $this->mappedOutputHelper($view);
+    $this->assertTrue(strpos($output, 'job') !== FALSE, 'The job field is added to the view and is in the mapping.');
+  }
+
+  /**
+   * Tests the mapping of fields.
+   *
+   * @param view $view
+   *   The view to test.
+   *
+   * @return string
+   *   The view rendered as HTML.
+   */
+  protected function mappedOutputHelper($view) {
+    $rendered_output = $view->preview();
+    $this->storeViewPreview($rendered_output);
+    $rows = $this->elements->body->div->div->div;
+    $data_set = $this->dataSet();
+
+    $count = 0;
+    foreach ($rows as $row) {
+      $attributes = $row->attributes();
+      $class = (string) $attributes['class'][0];
+      $this->assertTrue(strpos($class, 'views-row-mapping-test') !== FALSE, 'Make sure that each row has the correct CSS class.');
+
+      foreach ($row->div as $field) {
+        // Split up the field-level class, the first part is the mapping name
+        // and the second is the field ID.
+        $field_attributes = $field->attributes();
+        $name = strtok((string) $field_attributes['class'][0], '-');
+        $field_id = strtok('-');
+
+        // The expected result is the mapping name and the field value,
+        // separated by ':'.
+        $expected_result = $name . ':' . $data_set[$count][$field_id];
+        $actual_result = (string) $field;
+        $this->assertIdentical($expected_result, $actual_result, format_string('The fields were mapped successfully: %name => %field_id', array('%name' => $name, '%field_id' => $field_id)));
+      }
+
+      $count++;
+    }
+
+    return $rendered_output;
+  }
+
+}

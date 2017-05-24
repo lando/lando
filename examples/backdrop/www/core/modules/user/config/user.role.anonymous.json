@@ -1,0 +1,7 @@
+{
+    "_config_name": "user.role.anonymous",
+    "name": "anonymous",
+    "label": "Anonymous",
+    "weight": "0",
+    "permissions": []
+}

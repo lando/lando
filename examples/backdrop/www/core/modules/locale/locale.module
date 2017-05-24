@@ -1,0 +1,1042 @@
+<?php
+
+/**
+ * @file
+ *   Add language handling functionality and enables the translation of the
+ *   user interface to languages other than English.
+ *
+ *   When enabled, multiple languages can be set up. The site interface
+ *   can be displayed in different languages, as well as nodes can have languages
+ *   assigned. The setup of languages and translations is completely web based.
+ *   Gettext portable object files are supported.
+ */
+
+// ---------------------------------------------------------------------------------
+// Hook implementations
+
+/**
+ * Implements hook_menu().
+ */
+function locale_menu() {
+  // Language negotiation.
+  $items['admin/config/regional/language/detection'] = array(
+    'title' => 'Detection and selection',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('language_negotiation_configure_form'),
+    'access arguments' => array('administer languages'),
+    'weight' => 10,
+    'file' => 'locale.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/regional/language/detection/url'] = array(
+    'title' => 'URL language detection configuration',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('language_negotiation_configure_url_form'),
+    'access arguments' => array('administer languages'),
+    'file' => 'locale.admin.inc',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+  );
+  $items['admin/config/regional/language/detection/session'] = array(
+    'title' => 'Session language detection configuration',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('language_negotiation_configure_session_form'),
+    'access arguments' => array('administer languages'),
+    'file' => 'locale.admin.inc',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+  );
+
+  // Translation functionality.
+  $items['admin/config/regional/translate'] = array(
+    'title' => 'User interface translation',
+    'description' => 'Translate the built-in user interface.',
+    'page callback' => 'locale_translate_seek_screen',
+    'access arguments' => array('translate interface'),
+    'file' => 'locale.pages.inc',
+    'weight' => -5,
+  );
+  $items['admin/config/regional/translate/translate'] = array(
+    'title' => 'Translate',
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/regional/translate/import'] = array(
+    'title' => 'Import',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('locale_translate_import_form'),
+    'access arguments' => array('translate interface'),
+    'weight' => 20,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'locale.bulk.inc',
+  );
+  $items['admin/config/regional/translate/export'] = array(
+    'title' => 'Export',
+    'page callback' => 'locale_translate_export_screen',  // possibly multiple forms concatenated
+    'access arguments' => array('translate interface'),
+    'weight' => 30,
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'locale.bulk.inc',
+  );
+  $items['admin/config/regional/translate/edit/%'] = array(
+    'title' => 'Edit string',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('locale_translate_edit_form', 5),
+    'access arguments' => array('translate interface'),
+    'file' => 'locale.pages.inc',
+  );
+  $items['admin/config/regional/translate/delete/%'] = array(
+    'title' => 'Delete string',
+    'page callback' => 'locale_translate_delete_page',
+    'page arguments' => array(5),
+    'access arguments' => array('translate interface'),
+    'file' => 'locale.pages.inc',
+  );
+
+  // Localize date formats.
+  $items['admin/config/regional/date-time/formats/%system_date_format/localize'] = array(
+    'title' => 'Localize',
+    'description' => 'Configure date formats for each locale',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('locale_date_format_form', 5),
+    'access arguments' => array('administer site configuration'),
+    'load arguments' => array(FALSE),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -8,
+    'file' => 'locale.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function locale_permission() {
+  return array(
+    'translate interface' => array(
+      'title' => t('Translate interface texts'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function locale_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => backdrop_get_path('module', 'locale') . '/views',
+  );
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function locale_autoload_info() {
+  return array(
+    'views_handler_field_node_language' => 'views/views_handler_field_node_language.inc',
+    'views_handler_filter_node_language' => 'views/views_handler_filter_node_language.inc',
+    'views_handler_argument_locale_group' => 'views/views_handler_argument_locale_group.inc',
+    'views_handler_argument_locale_language' => 'views/views_handler_argument_locale_language.inc',
+    'views_handler_field_locale_group' => 'views/views_handler_field_locale_group.inc',
+    'views_handler_field_locale_language' => 'views/views_handler_field_locale_language.inc',
+    'views_handler_field_locale_link_edit' => 'views/views_handler_field_locale_link_edit.inc',
+    'views_handler_filter_locale_group' => 'views/views_handler_filter_locale_group.inc',
+    'views_handler_filter_locale_language' => 'views/views_handler_filter_locale_language.inc',
+    'views_handler_filter_locale_version' => 'views/views_handler_filter_locale_version.inc',
+  );
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function locale_config_info() {
+  $prefixes['locale.settings'] = array(
+    'label' => t('Locale settings'),
+    'group' => t('Configuration'),
+  );
+
+  return $prefixes;
+}
+
+/**
+ * Form builder callback to display language selection widget.
+ *
+ * @ingroup forms
+ * @see locale_form_alter()
+ */
+function locale_language_selector_form($user) {
+  global $language;
+  // Get list of enabled languages only.
+  $languages = language_list(TRUE);
+
+  // If the user is being created, we set the user language to the page language.
+  $user_preferred_language = $user->uid ? user_preferred_language($user) : $language;
+
+  $names = array();
+  foreach ($languages as $langcode => $item) {
+    $names[$langcode] = $item->name;
+  }
+  // Get language negotiation settings.
+  $mode = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_DEFAULT;
+  $form['locale'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Language settings'),
+    '#weight' => 1,
+  );
+  $form['locale']['language'] = array(
+    '#type' => (count($names) <= 5 ? 'radios' : 'select'),
+    '#title' => t('Language'),
+    '#default_value' => $user_preferred_language->langcode,
+    '#options' => $names,
+    '#description' => $mode ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Adds language fields to user forms.
+ */
+function locale_form_alter(&$form, &$form_state, $form_id) {
+  // Only alter user forms if there is more than one language.
+  if (language_multilingual()) {
+    // Display language selector when either creating a user on the admin
+    // interface or editing a user account.
+    if ($form_id == 'user_register_form' || $form_id == 'user_profile_form') {
+      $selector = locale_language_selector_form($form['#user']);
+      if ($form_id == 'user_register_form') {
+        $selector['locale']['#access'] = user_access('administer users');
+      }
+      $form += $selector;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function locale_form_node_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'locale_field_node_form_submit';
+}
+
+/**
+ * Form submit handler for node_form().
+ *
+ * Checks if Locale is registered as a translation handler and handle possible
+ * node language changes.
+ *
+ * This submit handler needs to run before entity_form_submit_build_entity()
+ * is invoked by node_form_submit_build_node(), because it alters the values of
+ * attached fields. Therefore, it cannot be a hook_node_submit() implementation.
+ */
+function locale_field_node_form_submit($form, &$form_state) {
+  if (field_has_translation_handler('node', 'locale')) {
+    $bundle = $form_state['values']['type'];
+    $node_language = $form_state['values']['langcode'];
+
+    foreach (field_info_instances('node', $bundle) as $instance) {
+      $field_name = $instance['field_name'];
+      $field = field_info_field($field_name);
+      $previous_langcode = $form[$field_name]['#language'];
+
+      // Handle a possible language change: new language values are inserted,
+      // previous ones are deleted.
+      if ($field['translatable'] && $previous_langcode != $node_language) {
+        $form_state['values'][$field_name][$node_language] = $form_state['values'][$field_name][$previous_langcode];
+        $form_state['values'][$field_name][$previous_langcode] = array();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function locale_theme() {
+  $base = array(
+    'file' => 'locale.theme.inc',
+  );
+
+  return array(
+    'language_negotiation_configure_form' => array(
+      'render element' => 'form',
+    ) + $base,
+    'locale_date_format_form' => array(
+      'render element' => 'form',
+    ) + $base,
+  );
+}
+
+/**
+ * Implements hook_field_language_alter().
+ */
+function locale_field_language_alter(&$display_language, $context) {
+  // Do not apply core language fallback rules if they are disabled or if Locale
+  // is not registered as a translation handler.
+  if (config_get('locale.settings', 'field_language_fallback') && field_has_translation_handler($context['entity_type'], 'locale')) {
+    locale_field_language_fallback($display_language, $context['entity'], $context['language']);
+  }
+}
+
+/**
+ * Applies language fallback rules to the fields attached to the given entity.
+ *
+ * Core language fallback rules simply check if fields have a field translation
+ * for the requested language code. If so the requested language is returned,
+ * otherwise all the fallback candidates are inspected to see if there is a
+ * field translation available in another language.
+ * By default this is called by locale_field_language_alter(), but this
+ * behavior can be disabled by setting the 'locale_field_language_fallback'
+ * variable to FALSE.
+ *
+ * @param $display_language
+ *   A reference to an array of language codes keyed by field name.
+ * @param $entity
+ *   The entity to be displayed.
+ * @param $langcode
+ *   The language code $entity has to be displayed in.
+ */
+function locale_field_language_fallback(&$display_language, $entity, $langcode) {
+  // Lazily init fallback candidates to avoid unnecessary calls.
+  $fallback_candidates = NULL;
+  $field_languages = array();
+
+  foreach ($display_language as $field_name => $field_language) {
+    // If the requested language is defined for the current field use it,
+    // otherwise search for a fallback value among the fallback candidates.
+    if (isset($entity->{$field_name}[$langcode])) {
+      $display_language[$field_name] = $langcode;
+    }
+    elseif (!empty($entity->{$field_name})) {
+      if (!isset($fallback_candidates)) {
+        require_once BACKDROP_ROOT . '/core/includes/language.inc';
+        $fallback_candidates = language_fallback_get_candidates();
+      }
+      foreach ($fallback_candidates as $fallback_language) {
+        if (isset($entity->{$field_name}[$fallback_language])) {
+          $display_language[$field_name] = $fallback_language;
+          break;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function locale_entity_info_alter(&$entity_info) {
+  $entity_info['node']['translation']['locale'] = TRUE;
+}
+
+/**
+ * Implements hook_language_types_info().
+ *
+ * Defines the three core language types:
+ * - Interface language is the only configurable language type in core. It is
+ *   used by t() as the default language if none is specified.
+ * - Content language is by default non-configurable and inherits the interface
+ *   language negotiated value. It is used by the Field API to determine the
+ *   display language for fields if no explicit value is specified.
+ * - URL language is by default non-configurable and is determined through the
+ *   URL language provider or the URL fallback provider if no language can be
+ *   detected. It is used by l() as the default language if none is specified.
+ */
+function locale_language_types_info() {
+  require_once BACKDROP_ROOT . '/core/includes/locale.inc';
+  return array(
+    LANGUAGE_TYPE_INTERFACE => array(
+      'name' => t('User interface text'),
+      'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
+    ),
+    LANGUAGE_TYPE_CONTENT => array(
+      'name' => t('Content'),
+      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
+      'fixed' => array(LANGUAGE_NEGOTIATION_INTERFACE),
+    ),
+    LANGUAGE_TYPE_URL => array(
+      'fixed' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_URL_FALLBACK),
+    ),
+  );
+}
+
+/**
+ * Implements hook_language_negotiation_info().
+ */
+function locale_language_negotiation_info() {
+  require_once BACKDROP_ROOT . '/core/includes/locale.inc';
+  $file = '/core/includes/locale.inc';
+  $providers = array();
+
+  $providers[LANGUAGE_NEGOTIATION_URL] = array(
+    'types' => array(LANGUAGE_TYPE_CONTENT, LANGUAGE_TYPE_INTERFACE, LANGUAGE_TYPE_URL),
+    'callbacks' => array(
+      'language' => 'locale_language_from_url',
+      'switcher' => 'locale_language_switcher_url',
+      'url_rewrite' => 'locale_language_url_rewrite_url',
+    ),
+    'file' => $file,
+    'weight' => -8,
+    'name' => t('URL'),
+    'description' => t('Determine the language from the URL (Path prefix or domain).'),
+    'config' => 'admin/config/regional/language/detection/url',
+  );
+
+  $providers[LANGUAGE_NEGOTIATION_SESSION] = array(
+    'callbacks' => array(
+      'language' => 'locale_language_from_session',
+      'switcher' => 'locale_language_switcher_session',
+      'url_rewrite' => 'locale_language_url_rewrite_session',
+    ),
+    'file' => $file,
+    'weight' => -6,
+    'name' => t('Session'),
+    'description' => t('Determine the language from a request/session parameter.'),
+    'config' => 'admin/config/regional/language/detection/session',
+  );
+
+  $providers[LANGUAGE_NEGOTIATION_USER] = array(
+    'callbacks' => array('language' => 'locale_language_from_user'),
+    'file' => $file,
+    'weight' => -4,
+    'name' => t('User'),
+    'description' => t("Follow the user's language preference."),
+  );
+
+  $providers[LANGUAGE_NEGOTIATION_BROWSER] = array(
+    'callbacks' => array('language' => 'locale_language_from_browser'),
+    'file' => $file,
+    'weight' => -2,
+    'cache' => 0,
+    'name' => t('Browser'),
+    'description' => t("Determine the language from the browser's language settings."),
+  );
+
+  $providers[LANGUAGE_NEGOTIATION_INTERFACE] = array(
+    'types' => array(LANGUAGE_TYPE_CONTENT),
+    'callbacks' => array('language' => 'locale_language_from_interface'),
+    'file' => $file,
+    'weight' => 8,
+    'name' => t('Interface'),
+    'description' => t('Use the detected interface language.'),
+  );
+
+  $providers[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
+    'types' => array(LANGUAGE_TYPE_URL),
+    'callbacks' => array('language' => 'locale_language_url_fallback'),
+    'file' => $file,
+    'weight' => 8,
+    'name' => t('URL fallback'),
+    'description' => t('Use an already detected language for URLs if none is found.'),
+  );
+
+  return $providers;
+}
+
+/**
+ * Implements hook_language_insert().
+ */
+function locale_language_insert($language) {
+  include_once BACKDROP_ROOT . '/core/includes/locale.inc';
+
+  // Add new language to the list of language prefixes.
+  $prefixes = locale_language_negotiation_url_prefixes();
+  $prefixes[$language->langcode] = (empty($language->default) ? $language->langcode : '');
+  locale_language_negotiation_url_prefixes_save($prefixes);
+
+  // Add language to the list of language domains.
+  $domains = locale_language_negotiation_url_domains();
+  $domains[$language->langcode] = '';
+  locale_language_negotiation_url_domains_save($domains);
+
+  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // Changing the language settings impacts the interface.
+  cache('page')->flush();
+  // Force JavaScript translation file re-creation for the new language.
+  _locale_invalidate_js($language->langcode);
+}
+
+/**
+ * Implements hook_language_update().
+ */
+function locale_language_update($language) {
+  include_once BACKDROP_ROOT . '/core/includes/locale.inc';
+
+  // If the language is the default, then ensure that no other languages have
+  // blank prefix codes.
+  if (!empty($language->default)) {
+    $prefixes = locale_language_negotiation_url_prefixes();
+    foreach ($prefixes as $langcode => $prefix) {
+      if ($prefix == '' && $langcode != $language->langcode) {
+        $prefixes[$langcode] = $langcode;
+      }
+    }
+    locale_language_negotiation_url_prefixes_save($prefixes);
+  }
+
+  // @todo move these two cache clears out. See http://drupal.org/node/1293252
+  // Changing the language settings impacts the interface.
+  cache('page')->flush();
+  // Force JavaScript translation file re-creation for the modified language.
+  _locale_invalidate_js($language->langcode);
+}
+
+/**
+ * Implements hook_language_delete().
+ */
+function locale_language_delete($language) {
+  include_once BACKDROP_ROOT . '/core/includes/locale.inc';
+
+  // Remove language from language prefix list.
+  $prefixes = locale_language_negotiation_url_prefixes();
+  unset($prefixes[$language->langcode]);
+  locale_language_negotiation_url_prefixes_save($prefixes);
+
+  // Remove language from language domain list.
+  $domains = locale_language_negotiation_url_domains();
+  unset($domains[$language->langcode]);
+  locale_language_negotiation_url_domains_save($domains);
+
+  // Remove translations.
+  db_delete('locales_target')
+    ->condition('language', $language->langcode)
+    ->execute();
+
+  _locale_invalidate_js($language->langcode);
+
+  // Changing the language settings impacts the interface:
+  cache('page')->flush();
+
+  // Clearing all locale cache from database
+  cache()->delete('locale:' . $language->langcode);
+}
+
+
+// ---------------------------------------------------------------------------------
+// Locale core functionality
+
+/**
+ * Provides interface translation services.
+ *
+ * This function is called from t() to translate a string if needed.
+ *
+ * @param $string
+ *   A string to look up translation for. If omitted, all the
+ *   cached strings will be returned in all languages already
+ *   used on the page.
+ * @param $context
+ *   The context of this string.
+ * @param $langcode
+ *   Language code to use for the lookup.
+ */
+function locale($string = NULL, $context = NULL, $langcode = NULL) {
+  global $language;
+
+  // Use the advanced backdrop_static() pattern, since this is called very often.
+  static $backdrop_static_fast;
+  if (!isset($backdrop_static_fast)) {
+    $backdrop_static_fast['locale'] = &backdrop_static(__FUNCTION__);
+  }
+  $locale_t = &$backdrop_static_fast['locale'];
+
+
+  if (!isset($string)) {
+    // Return all cached strings if no string was specified
+    return $locale_t;
+  }
+
+  $langcode = isset($langcode) ? $langcode : $language->langcode;
+
+  // Store database cached translations in a static variable. Only build the
+  // cache after $language has been set to avoid an unnecessary cache
+  // rebuild.
+  if (!isset($locale_t[$langcode]) && isset($language)) {
+    $locale_t[$langcode] = array();
+    // Disabling the usage of string caching allows a module to watch for
+    // the exact list of strings used on a page. From a performance
+    // perspective that is a really bad idea, so we have no user
+    // interface for this. Be careful when turning this option off!
+    if (settings_get('locale_cache_strings', 1) == 1) {
+      if ($cache = cache()->get('locale:' . $langcode)) {
+        $locale_t[$langcode] = $cache->data;
+      }
+      elseif (lock_acquire('locale_cache_' . $langcode)) {
+        // Refresh database stored cache of translations for given language.
+        // We only store short strings used in current version, to improve
+        // performance and consume less memory.
+        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.version = :version AND LENGTH(s.source) < :length", array(':language' => $langcode, ':version' => BACKDROP_VERSION, ':length' => config_get('locale.settings', 'cache_length')));
+        foreach ($result as $data) {
+          $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
+        }
+        cache()->set('locale:' . $langcode, $locale_t[$langcode]);
+        lock_release('locale_cache_' . $langcode);
+      }
+    }
+  }
+
+  // If we have the translation cached, skip checking the database
+  if (!isset($locale_t[$langcode][$context][$string])) {
+    // We do not have this translation cached, so get it from the DB.
+    try {
+      $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context", array(
+        ':language' => $langcode,
+        ':source' => $string,
+        ':context' => (string) $context,
+      ))->fetchObject();
+    }
+    // In the event the table does not exist (such as when uninstalling the
+    // module), just return the untranslated string.
+    catch (PDOException $e) {
+      return $string;
+    }
+
+    if ($translation) {
+      // We have the source string at least.
+      // Cache translation string or TRUE if no translation exists.
+      $locale_t[$langcode][$context][$string] = (empty($translation->translation) ? TRUE : $translation->translation);
+
+      if ($translation->version != BACKDROP_VERSION) {
+        // This is the first use of this string under current Backdrop version. Save version
+        // and clear cache, to include the string into caching next time. Saved version is
+        // also a string-history information for later pruning of the tables.
+        db_update('locales_source')
+          ->fields(array('version' => BACKDROP_VERSION))
+          ->condition('lid', $translation->lid)
+          ->execute();
+        cache()->deletePrefix('locale:');
+      }
+    }
+    else {
+      // We don't have the source string, cache this as untranslated.
+      db_merge('locales_source')
+        ->insertFields(array(
+          'location' => request_uri(),
+          'version' => BACKDROP_VERSION,
+        ))
+        ->key(array(
+          'source' => $string,
+          'context' => (string) $context,
+        ))
+        ->execute();
+      $locale_t[$langcode][$context][$string] = TRUE;
+      // Clear locale cache so this string can be added in a later request.
+      cache()->deletePrefix('locale:');
+    }
+  }
+
+  return ($locale_t[$langcode][$context][$string] === TRUE ? $string : $locale_t[$langcode][$context][$string]);
+}
+
+/**
+ * Reset static variables used by locale().
+ */
+function locale_reset() {
+  backdrop_static_reset('t');
+  backdrop_static_reset('locale');
+}
+
+/**
+ * Returns plural form index for a specific number.
+ *
+ * The index is computed from the formula of this language.
+ *
+ * @param $count
+ *   Number to return plural for.
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
+ * @return
+ *   The numeric index of the plural variant to use for this $langcode and
+ *   $count combination or -1 if the language was not found or does not have a
+ *   plural formula.
+ */
+function locale_get_plural($count, $langcode = NULL) {
+  global $language;
+
+  // Used to locally cache the plural formulas for all languages.
+  $plural_formulas = &backdrop_static(__FUNCTION__, array());
+  // Used to store precomputed plural indexes corresponding to numbers
+  // individually for each language.
+  $plural_indexes = &backdrop_static(__FUNCTION__ . ':plurals', array());
+
+  $langcode = $langcode ? $langcode : $language->langcode;
+
+  if (!isset($plural_indexes[$langcode][$count])) {
+    // Retrieve and statically cache the plural formulas for all languages.
+    if (empty($plural_formulas)) {
+      $plural_formulas = state_get('locale_translation_plurals', array());
+    }
+    // If there is a plural formula for the language, evaluate it for the given
+    // $count and statically cache the result for the combination of language
+    // and count, since the result will always be identical.
+    if (!empty($plural_formulas[$langcode])) {
+      // $n is used inside the expression in the eval().
+      $n = $count;
+      $plural_indexes[$langcode][$count] = @eval('return intval(' . $plural_formulas[$langcode]['formula'] . ');');
+    }
+    // In case there is no plural formula for English (no imported translation
+    // for English), use a default formula.
+    elseif ($langcode == 'en') {
+      $plural_indexes[$langcode][$count] = (int) ($count != 1);
+    }
+    // Otherwise, return -1 (unknown).
+    else {
+      $plural_indexes[$langcode][$count] = -1;
+    }
+  }
+  return $plural_indexes[$langcode][$count];
+}
+
+
+/**
+ * Implements hook_modules_installed().
+ */
+function locale_modules_installed($modules) {
+  locale_system_update($modules);
+}
+
+/**
+ * Implements hook_themes_enabled().
+ *
+ * @todo This is technically wrong. We must not import upon enabling, but upon
+ *   initial installation. The theme system is missing an installation hook.
+ */
+function locale_themes_enabled($themes) {
+  locale_system_update($themes);
+}
+
+/**
+ * Imports translations when new modules or themes are installed.
+ *
+ * This function will either import translation for the component change
+ * right away, or start a batch if more files need to be imported.
+ *
+ * @param $components
+ *   An array of component (theme and/or module) names to import
+ *   translations for.
+ *
+ * @todo
+ *   This currently imports all .po files available, independent of
+ *   $components. Once we integrated with update status for project
+ *   identification, we should revisit and only import files for the
+ *   identified projects for the components.
+ */
+function locale_system_update($components) {
+  include_once backdrop_get_path('module', 'locale') . '/locale.bulk.inc';
+  if ($batch = locale_translate_batch_import_files(NULL, TRUE)) {
+    batch_set($batch);
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * This function checks all JavaScript files currently added via backdrop_add_js()
+ * and invokes parsing if they have not yet been parsed for Backdrop.t()
+ * and Backdrop.formatPlural() calls. Also refreshes the JavaScript translation
+ * file if necessary, and adds it to the page.
+ */
+function locale_js_alter(&$javascript) {
+  global $language;
+
+  $dir = 'public://' . settings_get('locale_js_directory', 'languages');
+  $parsed = state_get('locale_javascript_parsed', array());
+  $files = $new_files = FALSE;
+
+  // Require because locale_js_alter() could be called without locale_init().
+  require_once BACKDROP_ROOT . '/core/includes/locale.inc';
+
+  foreach ($javascript as $item) {
+    if ($item['type'] == 'file') {
+      $files = TRUE;
+      $filepath = $item['data'];
+      if (!in_array($filepath, $parsed)) {
+        // Don't parse our own translations files.
+        if (substr($filepath, 0, strlen($dir)) != $dir) {
+          _locale_parse_js_file($filepath);
+          $parsed[] = $filepath;
+          $new_files = TRUE;
+        }
+      }
+    }
+  }
+
+  // If there are any new source files we parsed, invalidate existing
+  // JavaScript translation files for all languages, adding the refresh
+  // flags into the existing array.
+  if ($new_files) {
+    $parsed += _locale_invalidate_js();
+  }
+
+  // If necessary, rebuild the translation file for the current language.
+  if (!empty($parsed['refresh:' . $language->langcode])) {
+    // Don't clear the refresh flag on failure, so that another try will
+    // be performed later.
+    if (_locale_rebuild_js()) {
+      unset($parsed['refresh:' . $language->langcode]);
+    }
+    // Store any changes after refresh was attempted.
+    state_set('locale_javascript_parsed', $parsed);
+  }
+  // If no refresh was attempted, but we have new source files, we need
+  // to store them too. This occurs if current page is in English.
+  elseif ($new_files) {
+    state_set('locale_javascript_parsed', $parsed);
+  }
+
+  // Add the translation JavaScript file to the page.
+  $locale_javascripts = state_get('locale_translation_javascript', array());
+  if ($files && !empty($locale_javascripts[$language->langcode])) {
+    // Add the translation JavaScript file to the page.
+    $file = $dir . '/' . $language->langcode . '_' . $locale_javascripts[$language->langcode] . '.js';
+    $javascript[$file] = backdrop_js_defaults($file);
+  }
+}
+
+ /**
+ * Implement hook_library_info_alter().
+ *
+ * Provides the language support for the jQuery UI Date Picker.
+ */
+function locale_library_info_alter(&$libraries, $module) {
+  if ($module == 'system' && isset($libraries['ui.datepicker'])) {
+    global $language;
+    // locale.datepicker.js should be added in the JS_LIBRARY group, so that
+    // this attach behavior will execute early. JS_LIBRARY is the default for
+    // hook_library_info_alter(), thus does not have to be specified explicitly.
+    $datepicker = backdrop_get_path('module', 'locale') . '/js/locale.datepicker.js';
+    $libraries['ui.datepicker']['js'][$datepicker] = array();
+    $libraries['ui.datepicker']['js'][] = array(
+      'data' => array(
+        'jquery' => array(
+          'ui' => array(
+            'datepicker' => array(
+              'isRTL' => $language->direction == LANGUAGE_RTL,
+              'firstDay' => config_get('system.date', 'first_day'),
+            ),
+          ),
+        ),
+      ),
+      'type' => 'setting',
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------------
+// Language switcher block
+
+/**
+ * Implements hook_block_info().
+ */
+function locale_block_info() {
+  include_once BACKDROP_ROOT . '/core/includes/language.inc';
+  $block = array();
+  $info = language_types_info();
+  foreach (language_types_get_configurable() as $type) {
+    $block[$type] = array(
+      'info' => t('Language switcher (@type)', array('@type' => $info[$type]['name'])),
+      'description' => t('Switches the site language for the @type portions of the page.', array('@type' => $info[$type]['name'])),
+    );
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * Displays a language switcher. Only show if we have at least two languages.
+ */
+function locale_block_view($type) {
+  if (language_multilingual()) {
+    $path = backdrop_is_front_page() ? '<front>' : $_GET['q'];
+    $links = language_negotiation_get_switch_links($type, $path);
+
+    if (isset($links->links)) {
+      backdrop_add_css(backdrop_get_path('module', 'locale') . '/css/locale.css');
+      $class = "language-switcher-{$links->provider}";
+      $variables = array('links' => $links->links, 'attributes' => array('class' => array($class)));
+      $block['content'] = theme('links__locale_block', $variables);
+      $block['subject'] = t('Languages');
+      return $block;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function locale_preprocess_block(&$variables) {
+  if ($variables['block']->module == 'locale') {
+    $variables['attributes']['role'] = 'navigation';
+  }
+}
+
+/**
+ * Implements hook_url_outbound_alter().
+ *
+ * Rewrite outbound URLs with language based prefixes.
+ */
+function locale_url_outbound_alter(&$path, &$options, $original_path) {
+  // Only modify internal URLs.
+  if (!$options['external'] && language_multilingual()) {
+    static $backdrop_static_fast;
+    if (!isset($backdrop_static_fast)) {
+      $backdrop_static_fast['callbacks'] = &backdrop_static(__FUNCTION__);
+    }
+    $callbacks = &$backdrop_static_fast['callbacks'];
+
+    if (!isset($callbacks)) {
+      $callbacks = array();
+      include_once BACKDROP_ROOT . '/core/includes/language.inc';
+
+      $negotiation_info = language_negotiation_info();
+      foreach (language_types_get_configurable() as $type) {
+        // Get URL rewriter callbacks only from enabled language providers.
+        $negotiation_providers = language_negotiation_order($type);
+        foreach ($negotiation_providers as $id) {
+          $provider = $negotiation_info[$id];
+          if (isset($provider['callbacks']['url_rewrite'])) {
+            if (isset($provider['file'])) {
+              require_once BACKDROP_ROOT . '/' . $provider['file'];
+            }
+            // Avoid duplicate callback entries.
+            $callbacks[$provider['callbacks']['url_rewrite']] = TRUE;
+          }
+        }
+      }
+
+      $callbacks = array_keys($callbacks);
+    }
+
+    foreach ($callbacks as $callback) {
+      $callback($path, $options);
+    }
+
+    // No language dependent path allowed in this mode.
+    if (empty($callbacks)) {
+      unset($options['language']);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_admin_overview_form().
+ */
+function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
+  $languages = $form['languages']['#languages'];
+
+  $total_strings = db_query("SELECT COUNT(*) FROM {locales_source}")->fetchField();
+  $stats = array_fill_keys(array_keys($languages), array());
+
+  // If we have source strings, count translations and calculate progress.
+  if (!empty($total_strings)) {
+    $translations = db_query("SELECT COUNT(*) AS translated, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY language");
+    foreach ($translations as $data) {
+      $stats[$data->language]['translated'] = $data->translated;
+      if ($data->translated > 0) {
+        $stats[$data->language]['ratio'] = round($data->translated / $total_strings * 100, 2);
+      }
+    }
+  }
+
+  array_splice($form['languages']['#header'], -1, 0, t('Interface translation'));
+
+  foreach ($languages as $langcode => $language) {
+    $stats[$langcode] += array(
+      'translated' => 0,
+      'ratio' => 0,
+    );
+    if ($langcode != 'en' || locale_translate_english()) {
+      $form['languages'][$langcode]['locale_statistics'] = array(
+        '#type' => 'link',
+        '#title' => t('@translated/@total (@ratio%)', array(
+          '@translated' => $stats[$langcode]['translated'],
+          '@total' => $total_strings,
+          '@ratio' => $stats[$langcode]['ratio'],
+        )),
+        '#href' => 'admin/config/regional/translate/translate',
+      );
+    }
+    else {
+      $form['languages'][$langcode]['locale_statistics'] = array(
+        '#markup' => t('not applicable'),
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_admin_add_form(().
+ */
+function locale_form_language_admin_add_form_alter(&$form, &$form_state) {
+  $form['predefined_submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
+  $form['custom_language']['submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
+}
+
+/**
+ * Set a batch for newly added language.
+ */
+function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
+  if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
+    $langcode = $form_state['values']['langcode'];
+  }
+  else {
+    $langcode = $form_state['values']['predefined_langcode'];
+  }
+
+  include_once backdrop_get_path('module', 'locale') . '/locale.bulk.inc';
+  locale_translate_add_language_set_batch($langcode);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for language_admin_edit_form().
+ */
+function locale_form_language_admin_edit_form_alter(&$form, &$form_state) {
+  if ($form['langcode']['#type'] == 'value' && $form['langcode']['#value'] == 'en') {
+    $form['locale_translate_english'] = array(
+      '#title' => t('Enable interface translation to English'),
+      '#type' => 'checkbox',
+      '#default_value' => locale_translate_english(),
+    );
+    $form['#submit'][] = 'locale_form_language_admin_edit_form_alter_submit';
+  }
+}
+
+/**
+ * Submission handler to record our custom setting.
+ */
+function locale_form_language_admin_edit_form_alter_submit($form, $form_state) {
+  config_set('locale.settings', 'translate_english', $form_state['values']['locale_translate_english']);
+}
+
+/**
+ * Utility function to tell if locale translates to English.
+ */
+function locale_translate_english() {
+  return config_get('locale.settings', 'translate_english');
+}
+
+/**
+ * Implements MODULE_preprocess_HOOK().
+ */
+function locale_preprocess_node(&$variables) {
+  if ($variables['langcode'] != LANGUAGE_NONE) {
+    global $language;
+
+    $node_language = language_load($variables['langcode']);
+    if ($node_language->langcode != $language->langcode) {
+      // If the node language was different from the page language, we should
+      // add markup to identify the language. Otherwise the page language is
+      // inherited.
+      $variables['attributes']['lang'] = $variables['langcode'];
+      if ($node_language->direction != $language->direction) {
+        // If text direction is different form the page's text direction, add
+        // direction information as well.
+        $dir = array('ltr', 'rtl');
+        $variables['attributes']['dir'] = $dir[$node_language->direction];
+      }
+    }
+  }
+}

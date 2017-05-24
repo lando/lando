@@ -1,0 +1,25 @@
+{
+    "_config_name": "views.settings",
+    "no_javascript": false,
+    "exposed_filter_any_label": false,
+    "show_additional_queries": false,
+    "sql_signature": false,
+    "devel_output": false,
+    "devel_region": "footer",
+    "display_extenders": [],
+    "field_rewrite_elements": {
+        "": "- Use default -",
+        "0": "- None -",
+        "div": "DIV",
+        "span": "SPAN",
+        "h1": "H1",
+        "h2": "H2",
+        "h3": "H3",
+        "h4": "H4",
+        "h5": "H5",
+        "h6": "H6",
+        "p": "P",
+        "strong": "STRONG",
+        "em": "EM"
+    }
+}

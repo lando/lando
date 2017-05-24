@@ -1,0 +1,93 @@
+<?php
+/**
+ * Tests the transliteration class.
+ */
+class TransliterationTest extends BackdropUnitTestCase {
+  /**
+   * Tests transliteration API.
+   */
+  public function testTransliteration() {
+    $random = $this->randomName(10);
+    // Make some strings with two, three, and four-byte characters for testing.
+    // Note that the 3-byte character is overridden by the 'kg' language.
+    $two_byte = 'Ä Ö Ü Å Ø äöüåøhello';
+    // This is a Cyrrillic character that looks something like a u. See
+    // http://www.unicode.org/charts/PDF/U0400.pdf
+    $three_byte = html_entity_decode('&#x446;', ENT_NOQUOTES, 'UTF-8');
+    // This is a Canadian Aboriginal character like a triangle. See
+    // http://www.unicode.org/charts/PDF/U1400.pdf
+    $four_byte = html_entity_decode('&#x1411;', ENT_NOQUOTES, 'UTF-8');
+    // A character that doesn't have a replacement value.
+    $unknown_character = html_entity_decode('&#xfff1;', ENT_NOQUOTES, 'UTF-8');
+
+    $cases = array(
+      // Each test case is (language code, input, output).
+      // Test ASCII in English.
+      array('en', $random, $random),
+
+      // Test ASCII in some other language with no overrides.
+      array('fr', $random, $random),
+      // Test 3 and 4-byte characters in a language without overrides.
+      // Note: if the data tables change, these will need to change too! They
+      // are set up to test that data table loading works, so values come
+      // directly from the data files.
+      array('fr', $three_byte, 'c'),
+      array('fr', $four_byte, 'wii'),
+      // Test a language with no overrides.
+      array('en', $two_byte, 'A O U A O aouaohello'),
+      // Test language overrides provided by core.
+      array('de', $two_byte, 'Ae Oe Ue A O aeoeueaohello'),
+      array('de', $random, $random),
+      array('da', $two_byte, 'A O U Aa Oe aouaaoehello'),
+      array('da', $random, $random),
+      array('kg', $three_byte, 'ts'),
+
+      // Unknown characters.
+      array('en', 'foo' . $unknown_character . 'foo', 'foo?foo'),
+      array('en', 'foo' . $unknown_character . $unknown_character . $unknown_character . 'foo', 'foo???foo'),
+
+      // Chinese characters.
+      array('en', '一個簡單的句子', 'yigejiandandejuzi'),
+
+      // Bulgarian characters.
+      array('bg', 'първа статия', 'pyrva statija'),
+    );
+
+    include_once BACKDROP_ROOT . '/core/includes/transliteration.inc';
+    foreach ($cases as $case) {
+      list($langcode, $before, $after) = $case;
+      $actual = transliteration_get($before, '?', $langcode);
+      $this->assertEqual($after, $actual, format_string('@before is correctly transliterated to @after (actual: @actual) in @langcode langcode.', array('@before' => $before, '@after' => $after, '@actual' => $actual, '@langcode' => $langcode)));
+    }
+  }
+
+  /**
+   * Tests machine name transliteration provided by System module.
+   */
+  public function testMachineNameTransliteration() {
+    $unknown_character = html_entity_decode('&#xfff1;', ENT_NOQUOTES, 'UTF-8');
+    $string = "  ä $unknown_character test $unknown_character$unknown_character string - gap -_ ";
+    $cases = array(
+      // Keys are langcode, replace, maxlength, replace_pattern, input, output.
+      array('en', '_', NULL, NULL, $string, 'a_test_string_gap'),
+      array('de', '_', NULL, NULL, $string, 'ae_test_string_gap'),
+      array('en', '_', NULL, '[^a-zA-Z0-9_-]+', $string, 'a_test_string_-_gap_-'),
+      array('en', '',  NULL, NULL, $string, 'ateststringgap'),
+      array('en', '',  10,   NULL, $string, 'ateststrin'),
+    );
+    include_once BACKDROP_ROOT . '/core/modules/system/system.admin.inc';
+    foreach ($cases as $case) {
+      list($langcode, $replace, $maxlength, $replace_pattern, $before, $after) = $case;
+      $options = array(
+        'langcode' => $langcode,
+        'replace' => $replace,
+        'maxlength' => $maxlength,
+        'replace_pattern' => $replace_pattern,
+      );
+      // Remove NULL options.
+      $options = array_filter($options, function($variable) { return !is_null($variable); });
+      $actual = system_transliterate_machine_name($before, $options);
+      $this->assertEqual($after, $actual, format_string('@before is correctly transliterated to @after (actual: @actual) in @langcode langcode with options @options.', array('@before' => $before, '@after' => $after, '@actual' => $actual, '@langcode' => $langcode, '@options' => print_r($options, 1))));
+    }
+  }
+}

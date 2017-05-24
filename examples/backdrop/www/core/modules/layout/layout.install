@@ -1,0 +1,40 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Layout module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function layout_schema() {
+  $schema['cache_layout_path'] = backdrop_get_schema_unprocessed('system', 'cache');
+  $schema['cache_layout_path']['description'] = 'Cache table to store which layouts are active at a given path.';
+
+  return $schema;
+}
+
+/**
+ * Implements hook_enable().
+ */
+function layout_enable() {
+  config_set('system.core', 'menu_route_handler', 'layout_route_handler');
+}
+
+/**
+ * Implements hook_disable().
+ */
+function layout_disable() {
+  config_set('system.core', 'menu_route_handler', NULL);
+}
+
+/**
+ * Implements hook_install().
+ */
+function layout_install() {
+  db_query("UPDATE {system} SET weight = 60 WHERE name = 'layout' AND type = 'module'");
+}
+
+// IMPORTANT NOTE: hook_update_X() functions added to this file will not be
+// called when upgrading from Drupal 7 to Backdrop. As such, most updates
+// dealing with layouts should be added to system.install instead.

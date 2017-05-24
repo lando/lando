@@ -1,0 +1,15 @@
+<?php
+/**
+ * This module is config_obj_test because there is already a config_test module
+ * in the config module.
+ */
+/**
+ * Implements hook_config_info().
+ */
+function config_obj_test_config_info() {
+  $prefixes['config_obj_test.settings'] = array(
+    'label' => t('Test settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
