@@ -1,8 +1,13 @@
+# LAMP stack example
 name: lamp
+
+# Share my app's www directory into apache's webroot
 sharing:
   appserver:
     local: www
     remote: /var/www/html
+
+# Give me http://lamp.lndo.site and https://lamp.lndo.site
 proxy:
   appserver:
     - port: 80/tcp
@@ -10,11 +15,33 @@ proxy:
     - port: 443/tcp
       default: true
       secure: true
+
+# Spin up services to run a basic LAMP stack
 services:
+
+  # Create a php 5.6 instance served by the latest apache with https turned on
   appserver:
+
+    # PHP version 5.6
     type: php:5.6
+
+    # Serve php by either apache or nginx. You can put in any `service:version`
+    # string that is supported by Lando's nginx and apache services.
     via: apache
+
+    # Optionally serve php over https
     ssl: true
+
+    # Optionally customize the configuration for php and its underlying webserver
+    # These paths are both relative to the app root directory
+    # config:
+      # Use a custom apache config file
+      # server: config/apache/lamp.conf
+
+      # Use a custom php.ini
+      # conf: config/php/php.ini
+
+  # My database service
   database:
     type: mysql
     portforward: 3308

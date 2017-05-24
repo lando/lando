@@ -17,14 +17,11 @@ module.exports = function(lando) {
    * Supported versions for mariadb
    */
   var versions = [
-    '10',
+    '10.3',
+    '10.2',
     '10.1',
-    '10.1.21',
-    '10.0.29',
     '10.0',
-    '5.5.54',
     '5.5',
-    '5',
     'latest',
     'custom'
   ];

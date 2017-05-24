@@ -57,7 +57,7 @@ script:
   - grunt pkg
 
   # Run a few tests on the installer
-  - if [ $LANDO_PKG_TYPE == "deb" ]; then grunt test:bats; fi
+  # - if [ $LANDO_PKG_TYPE == "deb" ]; then grunt test:bats; fi
   # @TODO: Looks like installing Docker.app is still a problem which prevents us
   # from testing
   # - if [ $LANDO_PKG_TYPE == "dmg" ]; then grunt test:bats; fi

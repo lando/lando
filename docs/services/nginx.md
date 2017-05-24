@@ -1,61 +1,23 @@
-Some nice styled callouts
-=========================
+nginx
+=====
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+[nginx](https://www.nginx.com/resources/wiki/) is a very common webserver and reverse proxy which you can easily add to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
--
+### Supported versions
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+  * 1.13
+  * 1.12
+  * 1.11
+  * 1.10
+  * 1.9
+  * 1.8
+  * mainline
+  * stable
+  * latest
+  * custom
 
--
+### Example
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+{% codesnippet "./../examples/nginx/.lando.yml" %}{% endcodesnippet %}
 
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/nginx)

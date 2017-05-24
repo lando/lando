@@ -1,61 +1,63 @@
-Some nice styled callouts
-=========================
+Services
+========
 
-> #### Info::Todo
+Lando provides a way to easily specify the services and tooling your app needs via `.lando.yml`. You can use services to replace the loading of Docker compose files, although you can use both.
+
+> #### Info::Docker compose files are loaded first
 >
-> STUFF GOES HERE!
+> If you want to load Docker compose files **and** use services you should note that compose files are loaded first. This means that depending on how you name things your services could override things set in your compose files.
 
--
+Supported Services
+------------------
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+The following services are currently supported. Please check out each one to learn how to use them.
 
--
+  * ####[apache](./../services/apache.md)
+  * ####[mariadb](./../services/mariadb.md)
+  * ####[mysql](./../services/mysql.md)
+  * ####[nginx](./../services/nginx.md)
+  * ####[php](./../services/php.md)
+  * ####[postgres](./../services/postgres.md)
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+Environment
+-----------
 
--
+While you can add additional environmental variables on a per service basis (see [Advanced Service Configuration](#advanced-service-configuration) below) Lando will inject some common and helpful environmental variables into each service.
 
-> #### Comment::Todo
->
-> STUFF GOES HERE!
+```bash
+LANDO=ON
+LANDO_SERVICE_TYPE=nginx
+LANDO_HOST_UID=501
+LANDO_HOST_GID=20
+LANDO_SERVICE_NAME=appserver
+LANDO_HOST_OS=darwin
+```
 
--
+Shared Files
+------------
 
-> #### Hint::Todo
->
-> STUFF GOES HERE!
+While you can also share in additional files and directories via our [sharing plugin](./sharing.md) or with docker volumes (see [Advanced Service Configuration](#advanced-service-configuration) below) we share a few useful host directories into each service.
 
--
+| Host Location | Container Location |
+| -- | -- | -- |
+| `/path/to/my/app` | `/app` |
+| `$HOME` | `/user` |
 
-> #### Success::Todo
->
-> STUFF GOES HERE!
+Advanced Service Configuration
+------------------------------
 
--
+Our services layer is an abstraction on top of the [Docker compose v3 file format](https://docs.docker.com/compose/compose-file/). Specifically, Lando will translate the configuration you specify for each service into relevant docker compose files and execute them at runtime. This gives you a lot of power to hypertune your services at the docker compose level. You can pass docker compose config into each service using the `overrides` key.
 
-> #### Warning::Todo
->
-> STUFF GOES HERE!
+Here is an example of an overriden apache service that uses a custom image and injects some additional envvars.
 
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
-
+```yml
+services:
+  html:
+    type: apache:custom
+    overrides:
+      services:
+        environment:
+          STUFF: THINGS
+          THINGS: GUYS
+        image: pirog/myapache:2
+```

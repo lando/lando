@@ -21,11 +21,8 @@ module.exports = function(lando) {
    * Supported versions for apache
    */
   var versions = [
-    '2',
-    '2.2.23',
-    '2.2',
-    '2.4.25',
     '2.4',
+    '2.2',
     'latest',
     'custom'
   ];

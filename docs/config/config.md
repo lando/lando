@@ -1,80 +1,35 @@
-Config System
+Global Config
 =============
 
-The Kalabox config system is highly flexible and allows you to configure a few things, such as...
+You can also configure how Lando itself works with a `config.yml`. This config system is highly flexible and allows you to configure a few things, such as...
 
-  * The default domain suffix.
-  * The plugins it should load.
-  * The plugin that contains the engine implementation.
+  * Plugins it should load
+  * The verbosity of its logs and console output
+  * The location of its config directories
+  * The config of its loaded plugins
 
-kalabox.yaml
--------------
+> #### Info::Discover other configs
+>
+> Check out [`lando config`](../cli/config.md) for a full list of config options.
 
-This file specifies the core configuration options for Kalabox. If you wanted to fork Kalabox and use your own config or plugins this is the file you would want to change. Kalabox will scan a few different directories for the presence of a `kalabox.yml` file. If it finds one it will override the default config. Here is the order the overrides take place.
+config.yml
+----------
 
-  1. The default `kalabox.yml`. If you've installed Kalabox from source this will be in the source root.
-  2. The `kalabox.yml` inside of the `sysConfRoot`. For example `/usr/share/kalabox` on Linux.
-  3. The `kalabox.yml` inside of the `userConfRoot`. For examples `~/.kalabox/` on macOS.
+This file specifies the core configuration options for Lando. If you wanted to fork Lando and use your own plugins or alter plugin config like proxy ports this is the file you would want to change. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one it will override the default config. Here is the order the overrides take place.
 
-!!! attention "Where are `sysConfRoot` and `userConfRoot`?"
-    Run `kbox config` to find the location of these directories as they can be different.
+  1. The default `config.yml`. If you've installed Lando from source this will be in the source root.
+  2. The `config.yml` inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.
+  3. The `config.yml` inside of the `userConfRoot`. For examples `~/.lando/` on macOS.
 
-Here is the default `kalabox.yml` file as of `v0.13.x`.
+> #### Hint::Where are `sysConfRoot` and `userConfRoot`?
+>
+> Run `lando config` to find the location of these directories as they can be different.
 
-```yaml
-#
-# Domain
-#
-# You can change the domain suffix used by default. The support level of
-# this setting is currently unknown.
-#
-domain: kbox.site
+Examples
+--------
 
-#
-# Global plugins
-#
-# These are plugins that Kalabox should load by default.
-#   Inside of Kalabox source/binary
-#
-globalPlugins:
-  - kalabox-core
-  - kalabox-cmd
-  - kalabox-services-kalabox
-  - kalabox-sharing
-  - kalabox-ui
+### Turning the proxy off
 
-#
-# Console log level
-#
-# Determines the verbosity with which messages are printed to the screen
-#
-#   Options: [debug|info|none]
-#
-logLevelConsole: none
-
-#
-# Log level
-#
-# Determines the verbosity with which messages are added to the log
-#
-#   Options: [debug|info|none]
-#
-# logLevel: debug
-
-#
-# Engine
-#
-# The engine is a special kind of plugin that implements the Kalabox container
-# interface.
-#
-#   Options: [plugin-name]
-#
-# You generally are not going to want to change this unless you've got a
-# good replacement
-#
-engine: kalabox-engine-docker
-
+```bash
+echo "proxy: 'OFF'" > ~/.lando/config.yml
 ```
-
-!!! tip "What things can I override?"
-    Anything that shows up in `kbox config` is overrideable. That said, take caution, as some settings should not be altered.

@@ -1,8 +1,13 @@
+# Name of my app
 name: apache
+
+# Share the root directory of my app into apache's webroot
 sharing:
   html:
     local: .
     remote: /usr/local/apache2/htdocs/
+
+# Give me http://apache.lndo.site and https://apache.lndo.site
 proxy:
   html:
     - port: 80/tcp
@@ -10,12 +15,32 @@ proxy:
     - port: 443/tcp
       default: true
       secure: true
+
+# Build me an apache worthy of the internet
 services:
+
+  # You can name this key anything you want.
   html:
-    type: apache
+
+    # Use the latest version of apache.
+    type: apache:latest
+
+    # Set this to true if you want to configure apache to also run over https
     ssl: true
+
+    # Optionally use a custom apache conf file
+    # This should live in your app root and is relative to it
+    config:
+      server: config/httpd.conf
+
+    # These are v3 docker compose file overrides. They allow you to provide very
+    # precise fine tuning to your app
+    # See: https://docs.docker.com/compose/compose-file/
     overrides:
       services:
         environment:
           STUFF: THINGS
         ports: ['8081:80']
+        # Uncomment below to use a custom image or Dockerfile build location
+        # image: pirog/myapache:2
+        # build: .

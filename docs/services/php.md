@@ -1,61 +1,20 @@
-Some nice styled callouts
-=========================
+php
+===
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+[php](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md) You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
--
+### Supported versions
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+  * 7.0
+  * 5.6
+  * 5.5
+  * 5.3
+  * latest
+  * custom
 
--
+### Example
 
-> #### Tag::Todo
->
-> STUFF GOES HERE!
+{% codesnippet "./../examples/lamp/.lando.yml" %}{% endcodesnippet %}
 
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
+You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lamp)
 
