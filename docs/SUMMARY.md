@@ -2,21 +2,21 @@
 
 * [Big Picture](README.md)
 * [Roadmap](roadmap.md)
-* [Troubleshooting](trouble.md)
 
 ## Installation
 
 * [System Requirements](installation/system-requirements.md)
 * [Preflight Checks](installation/preflight.md)
-* [macOS](installation/macos.md)
-* [Windows](installation/windows.md)
-* [Linux](installation/linux.md)
-* [From Source](installation/source.md)
+* [Installing](installation/installing.md)
+* [Updating](installation/updating.md)
+* [Uninstalling](installation/uninstalling.md)
 
 ## Getting Started
 
 * [Running my first Lando app](tutorial/first-app.md)
 * [Running a LAMP stack with Lando](tutorial/lamp.md)
+
+----
 
 ## Configuration
 
@@ -49,17 +49,33 @@
 * [stop](cli/stop.md)
 * [version](cli/version.md)
 
+----
+
 ## Development
 
-* [Contrib](dev/dev.md)
+* [Contributing](dev/contributing.md)
+* [Repo Structure](dev/structure.md)
+* [Plugins](dev/plugins.md)
+* [Lando object](dev/lando.md)
+* [Testing](dev/testing.md)
+* [Building](dev/building.md)
+* [Shipping](dev/shipping.md)
 * [Documentation](dev/docs.md)
-
-## Changelog
-
-* [2017](changelog/2017.md)
+----
 
 ## Known Issues
 
 * [DNS Rebinding Protection](issues/dns-rebind.md)
 * [File Syncing Stalled](issues/file-sync.md)
+* [Running VB and HyperV](issues/win-also-vb.md)
+* [Running behind a firewall](issues/firewall.md)
 
+## Troubleshooting and Support
+
+* [Accessing Logs](troubleshooting/logs.md)
+* [Reporting Issues](https://github.com/kalabox/lando/issues)
+* [Slack Channel](https://slackpass.io/kalabox)
+
+## Changelog
+
+* [2017](changelog/2017.md)

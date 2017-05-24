@@ -1,7 +1,17 @@
-#### DNS Rebinding Protection
+File syncing issues
+-------------------
 
-Some Routers and Firewalls may prevent Kalabox from properly routing `yoursite.kbox.site` to your local environment through [DNS Rebinding](https://en.wikipedia.org/wiki/DNS_rebinding) protection. DD-WRT router firmware enables this protection by default.
+There are generally a few causes of slow or stalled file sharing. Here are some workaround and checks you can do in each circumstances.
 
-If your site preview fails automatically, and you are unable to look up the url (`nslookup <sitename>.kbox.site)`), DNS rebinding protection may be the cause. If you can't or don't want to remove this protection, you can use the steps in [Working Offline](#working-offline) to bypass.
+### 1. Is my sync complete?
 
-docker logs unison
+If you've just synced a large amount of files, as can be the case after a `npm install` you can check on the status of your sync by invoking docker directly.
+
+```bash
+# For an app named "myapp" with sharing enabled on a service called "web"
+docker logs myapp_unisonweb_1
+```
+
+### 2. Has my sync stalled or failed?
+
+There are two common reasons for a failed sync: the sharing container or docker filesharing daemon have crashed. You can resolve the former with a `lando restart` on your app. You can resolve the latter by restarting the docker daemon itself.

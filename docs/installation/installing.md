@@ -1,63 +1,82 @@
-Installation
-============
+Installing
+==========
 
 macOS
 -----
 
-### Installation Steps
-
-1. Download the `.dmg` package from [kalabox.io/download](http://kalabox.io/download)
+1. Download the latest `.dmg` package from [GitHub](https://github.com/kalabox/lando/releases)
 2. Mount the DMG by double-clicking it
-3. Double-click on the `KalaboxInstaller.pkg`
+3. Double-click on the `LandoInstaller.pkg`
 4. Go through the setup workflow
 5. Enter your username and password when prompted
-6. Launch the Kalabox CLI or GUI and start deving all the devs
+6. [Spin up your first Lando app](./../tutorials/first-app.md)
 
 Windows
 -------
 
-### Installation Steps
-
-1. Download the Windows `.exe` package from [kalabox.io/download](http://kalabox.io/download)
-2. Double-click on `kalabox.exe`
+1. Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
+2. Double-click on `lando.exe`
 3. Go through the setup workflow
 4. Approve various UAC prompts during install
-5. After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#/shared-drives)
-6. Launch the Kalabox CLI or GUI and start deving all the devs
+5. After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#shared-drives)
+6. [Spin up your first Lando app](./../tutorials/first-app.md)
 
-!!! warning "YOU MUST SET UP SHARED DRIVES AND HAVE HYPER-V ENABLED"
-    After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#/shared-drives) and if you have further problems, check to see if [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install).
+> #### Warning::YOU MUST SET UP SHARED DRIVES AND HAVE HYPER-V ENABLED
+>
+> After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#/shared-drives) and if you have further problems, check to see if [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install).
 
-Debian/Ubuntu
+Linux
+-----
+
+1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version.
+2. Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/kalabox/lando/releases)
+3. Double-click on the package to launch Software Center
+4. Click the "Install" button and enter your password when prompted
+5. [Spin up your first Lando app](./../tutorials/first-app.md)
+
+> #### Note::Install from source for other Linux distros
+>
+> If your Linux distro does not support our `.deb` or `.rpm` package you can [install from source](#from-source)
+
+
+Bleeding Edge
 -------------
 
-### Installation
+If you want to roll like a ninja you can install from our development builds or run directly from source. Developments builds are rolled against the latest commit.
 
-1. Download the `.deb` package from [kalabox.io/download](http://kalabox.io/download)
-2. Double-click on the `.deb` package to launch Software Center
-3. Click the "Install" button and enter your password when prompted
+### Development Builds
 
-If you do not have the GUI-based Software Center you can install the `.deb` pkg on the command line.
+We produce development releases for every commit merged into our `master` branch. **These releases are not officially supported** but we have made them available to intrepid users who want to try the bleeding edge or are interested in trying out a recent bug fix before
+an official release is rolled.
+
+  * **Windows** - [http://installer.kalabox.io/lando-latest-dev.exe](http://installer.kalabox.io/lando-latest-dev.exe)
+  * **Debian** - [http://installer.kalabox.io/lando-latest-dev.deb](http://installer.kalabox.io/lando-latest-dev.deb)
+  * **Fedora** - [http://installer.kalabox.io/lando-latest-dev.rpm](http://installer.kalabox.io/lando-latest-dev.rpm)
+  * **macOS** - [http://installer.kalabox.io/lando-latest-dev.dmg](http://installer.kalabox.io/lando-latest-dev.dmg)
+
+**NOTE:** Releases can take some time to build after we merge in commits. For that reason you might want to check the time of the last commit and if it is within a few hours you might want to hold off a bit before trying the new latest release.
+
+You can also easily verify that the release you downloaded matches the latest commit. All development releases look something like `v3.0.0-alpha.1-4-g63b0db0`. This means 4 commits after the `v3.0.0-alpha.1` tag and with commit hash `g63b0db0`. You should make sure this commit hash matches or comes before the latest commit.
+
+### From Source
+
+To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults.
+
+On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`.
+
+Then do the following
 
 ```bash
-sudo apt-get update -y
-sudo apt-get install bridge-utils iptables cgroup-bin
-sudo dpkg -i kalabox.deb
-```
+# Clone the Lando source
+git clone https://github.com/kalabox/lando.git
 
-Fedora/RedHat
--------------
+# Install its dependencies
+cd lando && npm install
 
-### Installation
+# Optionally set up a symlink
+sudo mkdir -p /usr/local/bin
+sudo ln -s /absolute/path/to/above/repo/bin/lando.js /usr/local/bin/lando.dev
 
-1. Download the `.rpm` package from [kalabox.io/download](http://kalabox.io/download)
-2. Double-click on the `.rpm` package to launch Software Center
-3. Click the "Install" button and enter your password when prompted
-
-If you do not have the GUI-based Software Center you can install the `.rpm` pkg on the command line.
-
-```bash
-sudo dnf update -y
-sudo dnf install bridge-utils iptables cgroup-bin
-sudo rpm -i kalabox.deb
+# Run lando
+lando.dev
 ```
