@@ -1,61 +1,23 @@
-Some nice styled callouts
-=========================
+Roadmap
+=======
 
-> #### Info::Todo
->
-> STUFF GOES HERE!
+Lando is seeking to eventually merge into and then replace the [Kalabox](http://kalabox.io) project. This means that eventually Lando will have all the great features you've come to love in the Kalabox project. That said the primary high level goals for this transition are to
 
--
+  * Provide a more reliable and robust underlying product
+  * Replace [MAMP](http://mamp.info) and other local dev stacks
+  * Reduce the complexity of building out complicated apps a la [Panthoen](http://pantheon.io)
+  * Implement a simple per-app configuration file that can be stored in version control
+  * Provide mechanisms for packaging in development tools and build steps along with services
 
-> #### Note::Todo
->
-> STUFF GOES HERE!
+There are various features that need to be implemented to achieve the above.
 
--
-
-> #### Tag::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Comment::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Hint::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Success::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Warning::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Caution::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Danger::Todo
->
-> STUFF GOES HERE!
-
--
-
-> #### Quote::Todo
->
-> STUFF GOES HERE!
+  1. ~~Transition the core framework~~
+  2. ~~Provide a services layer on top of docker compose~~
+  3. Provide a build and tooling layer
+  4. Provide additional core services and tools
+  5. Provide a type layer on top of services
+  6. Provide handling of upstream git remotes
+  7. Provide a push/pull layer on top of the tooling layer
+  8. Replicate Pantheon integration
+  9. Build GUI
 
