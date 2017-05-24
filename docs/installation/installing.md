@@ -34,9 +34,9 @@ Linux
 4. Click the "Install" button and enter your password when prompted
 5. [Spin up your first Lando app](./../tutorials/first-app.md)
 
-> #### Note::Install from source for other Linux distros
+> #### Hint::Install from source for other Linux distros
 >
-> If your Linux distro does not support our `.deb` or `.rpm` package you can [install from source](#from-source)
+> If your Linux distro does not support our `.deb` or `.rpm` packages you can [install from source](#from-source)
 
 
 Bleeding Edge
