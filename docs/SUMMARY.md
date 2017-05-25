@@ -66,7 +66,7 @@
 * [Contributing](dev/contributing.md)
 * [Repo Structure](dev/structure.md)
 * [Plugins](dev/plugins.md)
-* [Lando object](dev/lando.md)
+* [Lando object](dev/api.md)
 * [Testing](dev/testing.md)
 * [Building](dev/building.md)
 * [Shipping](dev/shipping.md)
