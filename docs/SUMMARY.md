@@ -17,7 +17,18 @@
 * [Running a LEMP app](tutorials/lemp-app.md)
 * [Running a Drupal 7 app](tutorials/drupal7-app.md)
 
-----
+## Known Issues
+
+* [DNS Rebinding Protection](issues/dns-rebind.md)
+* [File Syncing Stalled](issues/file-sync.md)
+* [Running VB and HyperV](issues/win-also-vb.md)
+* [Running behind a firewall](issues/firewall.md)
+
+## Troubleshooting and Support
+
+* [Accessing Logs](troubleshooting/logs.md)
+* [Reporting Issues](https://github.com/kalabox/lando/issues)
+* [Slack Channel](https://slackpass.io/kalabox)
 
 ## Configuration
 
@@ -50,8 +61,6 @@
 * [stop](cli/stop.md)
 * [version](cli/version.md)
 
-----
-
 ## Development
 
 * [Contributing](dev/contributing.md)
@@ -62,21 +71,6 @@
 * [Building](dev/building.md)
 * [Shipping](dev/shipping.md)
 * [Documentation](dev/docs.md)
-
-----
-
-## Known Issues
-
-* [DNS Rebinding Protection](issues/dns-rebind.md)
-* [File Syncing Stalled](issues/file-sync.md)
-* [Running VB and HyperV](issues/win-also-vb.md)
-* [Running behind a firewall](issues/firewall.md)
-
-## Troubleshooting and Support
-
-* [Accessing Logs](troubleshooting/logs.md)
-* [Reporting Issues](https://github.com/kalabox/lando/issues)
-* [Slack Channel](https://slackpass.io/kalabox)
 
 ## Changelog
 
