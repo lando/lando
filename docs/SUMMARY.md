@@ -34,8 +34,8 @@
 
 * [.lando.yml](config/lando.md)
   * [Proxy](config/proxy.md)
-  * [Services](config/services.md)
   * [Sharing](config/sharing.md)
+  * [Services](config/services.md)
 * [config.yml](config/config.md)
 
 ## Services
@@ -66,7 +66,8 @@
 * [Contributing](dev/contributing.md)
 * [Repo Structure](dev/structure.md)
 * [Plugins](dev/plugins.md)
-* [Lando object](dev/api.md)
+* [API](dev/lando.md)
+  * [App](dev/api/app.md)
 * [Testing](dev/testing.md)
 * [Building](dev/building.md)
 * [Shipping](dev/shipping.md)

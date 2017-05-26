@@ -11,24 +11,12 @@ module.exports = function() {
    */
   return {
     jsdoc2md: {
-      oneOutputFile: {
-        src: 'lib/*.js',
-        dest: 'docs/dev/api.md'
-      }/*,
       separateOutputFilePerInput: {
         files: [
-          {src: 'lib/engine.js', dest: 'api/engine.md'},
-          {src: 'lib/app.js', dest: 'api/app.md'}
+          {src: 'lib/lando.js', dest: 'docs/dev/api/lando.md'},
+          {src: 'lib/app.js', dest: 'docs/dev/api/app.md'}
         ]
-      },
-      withOptions: {
-        options: {
-          'no-gfm': true
-        },
-        src: 'src/wardrobe.js',
-        dest: 'api/with-index.md'
       }
-      */
     }
   };
 
