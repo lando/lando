@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Code required only when comparing available updates to existing data.

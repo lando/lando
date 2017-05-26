@@ -151,7 +151,7 @@ class UrlAlterFunctionalTest extends BackdropWebTestCase {
 
     // Test that alias source paths are normalized in the interface.
     $edit = array('source' => "user/$name/edit", 'alias' => 'alias/test2');
-    $this->backdropPost('admin/config/search/path/add', $edit, 'Save URL alias');
+    $this->backdropPost('admin/config/urls/path/add', $edit, 'Save URL alias');
     $this->assertText(t('The alias has been saved.'));
 
     // Test that a path always uses its alias.

@@ -133,6 +133,12 @@ function filter_menu() {
     'access arguments' => array(4),
     'file' => 'filter.admin.inc',
   );
+  $items['filter-link/autocomplete'] = array(
+    'page callback' => '_filter_link_autocomplete',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'filter.pages.inc',
+  );
   return $items;
 }
 
@@ -1612,32 +1618,34 @@ function filter_entity_update(EntityInterface $entity) {
   // deletion of previous file usages are necessary.
   $entity_info = entity_get_info($entity->entityType());
   $vid_key = isset($entity_info['entity keys']['revision']) ? $entity_info['entity keys']['revision'] : NULL;
-  if (!empty($entity->original) && $vid_key && $entity->$vid_key != $entity->original->$vid_key) {
-    $referenced_files_by_field = _filter_get_file_ids_by_field($entity);
-    foreach ($referenced_files_by_field as $field => $fids) {
-      _filter_record_file_usage($fids, $entity);
-    }
-  }
-
-  // On modified revisions, detect which file references have been added (and
-  // record their usage) and which ones have been removed (delete their usage).
-  // File references that existed both in the previous version of the revision
-  // and in the new one don't need their usage to be updated.
-  else {
-    $original_fids_by_field = _filter_get_file_ids_by_field($entity->original);
-    $fids_by_field = _filter_get_file_ids_by_field($entity);
-
-    // Detect file usages that should be incremented.
-    foreach ($fids_by_field as $field => $fids) {
-      $added_files = array_diff($fids_by_field[$field], $original_fids_by_field[$field]);
-      _filter_record_file_usage($added_files, $entity);
+  if (!empty($entity->original)) {
+    if ($vid_key && $entity->$vid_key != $entity->original->$vid_key) {
+      $referenced_files_by_field = _filter_get_file_ids_by_field($entity);
+      foreach ($referenced_files_by_field as $field => $fids) {
+        _filter_record_file_usage($fids, $entity);
+      }
     }
 
-    // Detect file usages that should be decremented.
-    foreach ($original_fids_by_field as $field => $fids) {
-      $removed_files = array_diff($original_fids_by_field[$field], $fids_by_field[$field]);
-      _filter_delete_file_usage($removed_files, $entity, 1);
-    }
+    // On modified revisions, detect which file references have been added (and
+    // record their usage) and which ones have been removed (delete their usage).
+    // File references that existed both in the previous version of the revision
+    // and in the new one don't need their usage to be updated.
+    else {
+      $original_fids_by_field = _filter_get_file_ids_by_field($entity->original);
+      $fids_by_field = _filter_get_file_ids_by_field($entity);
+
+      // Detect file usages that should be incremented.
+      foreach ($fids_by_field as $field => $fids) {
+        $added_files = array_diff($fids_by_field[$field], $original_fids_by_field[$field]);
+        _filter_record_file_usage($added_files, $entity);
+      }
+
+      // Detect file usages that should be decremented.
+      foreach ($original_fids_by_field as $field => $fids) {
+        $removed_files = array_diff($original_fids_by_field[$field], $fids_by_field[$field]);
+        _filter_delete_file_usage($removed_files, $entity, 1);
+      }
+    }  
   }
 }
 
@@ -2432,17 +2440,19 @@ function _filter_image_caption($text) {
     // bubble up the value of the class attribute of the captioned element,
     // this allows it to collaborate with e.g. the filter_align filter.
     $attributes = array();
+    $tag = $node->tagName;
     $classes = $node->getAttribute('class');
+    $node = ($node->parentNode->tagName === 'a') ? $node->parentNode : $node;
+    $node->removeAttribute('class');
     if ($classes) {
       $attributes['class'] = explode(' ', $classes);
     }
     $attributes['class'][] = 'caption';
     $attributes['class'][] = 'caption-' . $node->tagName;
-    $node->removeAttribute('class');
 
     $theme_parameters = array(
       'item' => $node->ownerDocument->saveHTML($node),
-      'tag' => $node->tagName,
+      'tag' => $tag,
       'caption' => $caption,
       'attributes' => $attributes,
     );
@@ -2467,7 +2477,7 @@ function _filter_image_caption($text) {
     // one, importing also the child nodes of the updated node.
     $updated_node = $dom->importNode($updated_node, TRUE);
 
-    // Finally, replace the original image node with the new image node.
+    // Finally, replace the original node with the new node.
     $node->parentNode->replaceChild($updated_node, $node);
   }
 

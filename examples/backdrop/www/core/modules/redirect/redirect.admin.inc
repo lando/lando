@@ -776,9 +776,8 @@ function redirect_404_list($form = NULL) {
 function redirect_list_404_filter_form($form, &$form_state, $filter_value = '') {
   $form['#attributes'] = array('class' => array('search-form'));
   $form['help'] = array(
-    '#markup' => '<p>' .
-      t('This page lists all paths that have resulted in 404 errors and do not yet have any redirects assigned to them.') .
-    '</p>'
+    '#type' => 'help',
+    '#markup' => t('This page lists all paths that have resulted in 404 errors and do not yet have any redirects assigned to them.'),
   );
   $form['basic'] = array(
     '#type' => 'fieldset',

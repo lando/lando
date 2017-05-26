@@ -29,6 +29,7 @@ class LayoutStyleDynamic extends LayoutStyle {
         'div' => 'DIV',
         'aside' => 'ASIDE',
         'section' => 'SECTION',
+        'nav' => 'NAV',
         'p' => 'P',
         '' => t('No wrapper'),
       );

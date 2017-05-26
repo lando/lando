@@ -53,3 +53,12 @@ img.align-right {
   margin-left: 2em;
   margin-bottom: 1em;
 }
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.cke_upload_uploading img {
+  opacity: 0.3;
+}

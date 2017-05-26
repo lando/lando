@@ -38,7 +38,7 @@ function taxonomy_term_page(TaxonomyTerm $term) {
   $canonical_secure = config_get('system.core', 'canonical_secure') == 1 ? TRUE : FALSE;
   $uri_options = array('absolute' => TRUE, 'https' => $canonical_secure);
   backdrop_add_html_head_link(array('rel' => 'canonical', 'href' => url($uri['path'], array_merge($uri['options'], $uri_options))), TRUE);
-  
+
   // Normally we would call taxonomy_term_show() here, but for backwards
   // compatibility in Drupal 7 we do not want to do that (it produces different
   // data structures and HTML markup than what Drupal 7 released with). Calling
@@ -65,6 +65,9 @@ function taxonomy_term_page(TaxonomyTerm $term) {
       '#suffix' => '</p>',
     );
   }
+
+  backdrop_alter('taxonomy_term_page', $build);
+
   return $build;
 }
 

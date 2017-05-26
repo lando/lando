@@ -106,6 +106,15 @@ class Block extends LayoutHandler {
   }
 
   /**
+   * Do any processing prior to getTitle() and getContent() being called.
+   *
+   * The contexts will have been set on the object at this point, just prior to
+   * the block being rendered. This method is useful to save duplicate
+   * processing if both getTitle() and getContent() need to use the same data.
+   */
+  function prepare() {}
+
+  /**
    * Return the title of a block as configured in the layout.
    *
    * @return mixed

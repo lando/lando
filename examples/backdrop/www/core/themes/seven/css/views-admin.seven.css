@@ -75,6 +75,9 @@ fieldset.fieldset-no-legend {
   padding: 5px;
 }
 #views-ui-preview-form .form-submit {
+  /* Make sure button doesn't hang over help text */
+  font-size: 0.875em;
+  padding: 0 18px;
   line-height: 36px;
 }
 
@@ -104,7 +107,6 @@ fieldset.fieldset-no-legend {
 
 /* @group Lists */
 
-.views-admin ul.secondary,
 .views-admin .item-list ul {
   margin: 0;
   padding: 0;
@@ -112,18 +114,6 @@ fieldset.fieldset-no-legend {
 
 .views-admin ul.secondary {
   clear: none;
-}
-
-.views-displays ul.secondary li a,
-.views-displays ul.secondary li.active a,
-.views-displays ul.secondary li.active a.active {
-  padding: 2px 7px 3px;
-  border-radius: 7px;
-}
-
-.views-displays ul.secondary li.active a,
-.views-displays ul.secondary li.active a.active {
-  border: 1px solid transparent;
 }
 
 .views-admin .links li {
@@ -137,10 +127,6 @@ fieldset.fieldset-no-legend {
 .page-admin-structure-views #content ul.action-links {
   padding-left: 0;
   padding-right: 0;
-}
-
-.views-display-top ul.secondary {
-  background-color: transparent;
 }
 
 /* @end */
@@ -160,50 +146,73 @@ table th {
   color: #008BCB;
 }
 
+#edit-display-settings-top {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0;
+  border-radius: 4px 4px 0 0;
+}
+
 /* @end */
 
 /* @group Attachment details tabs
  *
  * The tabs that switch between sections
  */
-
-.views-admin .icon.add {
-  background-position: center 5px;
+.views-display-top {
+  margin: 0 0 0 -6px; /* LTR */
 }
-
+[dir="rtl"] .views-display-top {
+  margin: 0 -6px 0 0;
+}
+.views-display-top ul.secondary {
+  background-color: transparent;
+}
 .views-displays .secondary a {
-  background-color: #f1f1f1;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
-  border-radius: 7px;
+  transition: none;
+  border: 2px solid #fff;
+  border-radius: 5px; /* Additional radius needed to include border width. */
+}
+.views-displays .secondary li.add a {
+  background-color: #fff;
   color: #008BCB;
 }
-
+.views-displays .secondary li.add a:hover {
+  background-color: #f7f7f7;
+  color: #008BCB;
+}
 .views-displays .secondary a:hover > .icon.add {
-  background-position: center -25px;
+  background-position: center 3px;
 }
 
+.views-displays .secondary .action-list {
+  top: 30px;
+  box-shadow: 0 5px 5px -5px hsla(0, 0%, 0%, 0.3);
+}
+.views-displays .secondary .action-list li {
+  background-color: #fff;
+}
+.views-displays .secondary .action-list li:hover {
+  background-color: #f7f7f7;
+}
 .views-displays .secondary .open > a {
-  -moz-border-radius: 7px 7px 0 0;
-  -webkit-border-radius: 7px 7px 0 0;
-  border-radius: 7px 7px 0 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
-
 .views-displays .secondary .open > a:hover {
   background-color: #f1f1f1;
   color: #008BCB;
 }
 
 .views-displays .secondary .action-list  li:first-child {
-  -moz-border-radius: 0 7px 0 0;
-  -webkit-border-radius: 0 7px 0 0;
-  border-radius: 0 7px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+  -webkit-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
 }
 
 .views-displays .secondary .action-list  li:last-child {
-  -moz-border-radius: 0 0 7px 7px;
-  -webkit-border-radius: 0 0 7px 7px;
-  border-radius: 0 0 7px 7px;
+  -moz-border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 0 0 3px 3px;
+  border-radius: 0 0 3px 3px;
 }
 
 .views-displays .secondary .action-list input.form-submit {
@@ -223,6 +232,10 @@ table th {
 .views-ui-display-tab-bucket h3 {
   font-size: 14px;
   text-transform: uppercase;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: .5em;
 }
 
 .views-ui-display-tab-bucket .links {
@@ -323,9 +336,9 @@ table th {
 
 .filterable-option .form-item.form-type-checkbox {
   /* This selector is aggressive because Seven's reset for .form-items is aggressive. */
-  padding-bottom: 4px;
-  padding-left: 4px;
-  padding-top: 4px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-top: 8px;
 }
 
 /* @end */

@@ -10,10 +10,11 @@
  */
 /* Suggestion list */
 #autocomplete {
-  border: 1px solid;
+  background: #eee;
+  border: 1px solid #ddd;
   overflow: hidden;
-  position: absolute;
-  z-index: 100;
+  position: fixed;
+  z-index: 9997;
 }
 #autocomplete ul {
   list-style: none;
@@ -22,7 +23,6 @@
   padding: 0;
 }
 #autocomplete li {
-  background: #fff;
   color: #000;
   cursor: default;
   white-space: pre;

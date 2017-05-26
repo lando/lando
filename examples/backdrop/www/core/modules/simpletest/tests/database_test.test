@@ -2996,7 +2996,7 @@ class DatabaseTemporaryQueryTestCase extends BackdropWebTestCase {
       SELECT name FROM {test}
     ";
     $table_name_test = db_query_temporary($sql, array());
-    $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'Leading white space and comments do not interfere with temporary table creation.');    
+    $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'Leading white space and comments do not interfere with temporary table creation.');
   }
 }
 
@@ -3871,7 +3871,7 @@ class ConnectionUnitTest extends BackdropUnitTestCase {
     // @todo Make this test driver-agnostic, or find a proper way to skip it.
     // @see http://drupal.org/node/1273478
     $connection_info = Database::getConnectionInfo('default');
-    $this->skipTest = (bool) $connection_info['default']['driver'] != 'mysql';
+    $this->skipTest = ($connection_info['default']['driver'] != 'mysql');
     if ($this->skipTest) {
       // Insert an assertion to prevent Simpletest from interpreting the test
       // as failure.

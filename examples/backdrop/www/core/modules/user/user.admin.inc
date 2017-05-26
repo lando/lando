@@ -627,7 +627,8 @@ function user_settings_email($form, &$form_state) {
   );
 
   $form['help'] = array(
-    '#markup' => '<p>' . t('Use this form to customize the emails sent by your website. Each template may use tokens to populate special values such as a user account name or the password reset link.') . '</p>',
+    '#type' => 'help',
+    '#markup' => t('Use this form to customize the emails sent by your website. Each template may use tokens to populate special values such as a user account name or the password reset link.'),
   );
 
   // Add a link to browse available tokens.

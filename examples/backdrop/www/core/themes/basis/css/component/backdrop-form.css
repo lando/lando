@@ -241,6 +241,23 @@ textarea.form-textarea:focus {
   outline: 0;
 }
 
+#autocomplete {
+  border: 0.125rem solid #d0d0d0;
+  border-top: 0;
+  box-sizing: content-box;
+}
+#autocomplete ul {
+  margin: 0;
+}
+#autocomplete li {
+  padding: 0.2em 0.625em;
+  margin: 0;
+}
+#autocomplete li.selected {
+  background: #008be2;
+  color: #fff;
+}
+
 ul.action-links {
   margin: 1em 0;
   padding: 0 1.25em 0; /* LTR */

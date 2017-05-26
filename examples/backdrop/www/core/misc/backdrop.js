@@ -600,15 +600,16 @@ Backdrop.featureDetect.flexbox = function() {
  * @endcode
  */
 Backdrop.optimizedResize = (function() {
-  // Set defaults
-  var callbacks = [],
-    running = false;
+  // Set defaults.
+  var callbacks = {};
+  var running = false;
+  var counter = 0;
 
-  // Fired on resize event
+  // Fired on resize event.
   function resize() {
     if (!running) {
       running = true;
-      // Provide setTimeout fallback to old browsers
+      // Provide setTimeout fallback to old browsers.
       if (window.requestAnimationFrame) {
         window.requestAnimationFrame(runCallbacks);
       } else {
@@ -617,28 +618,43 @@ Backdrop.optimizedResize = (function() {
     }
   }
 
-  // Run the actual callbacks
+  // Run the actual callbacks.
   function runCallbacks() {
-    callbacks.forEach(function(callback) {
-      callback();
-    });
+    for (var callbackName in callbacks) {
+      if (callbacks.hasOwnProperty(callbackName)) {
+        callbacks[callbackName]();
+      }
+    }
     running = false;
   }
 
-  // Adds callback to loop
-  function addCallback(callback) {
+  // Adds callback to loop.
+  function addCallback(callback, callbackName) {
+    // Populate a unique callback name if one is not provided.
+    callbackName = callbackName || ('callback-' + (counter++));
     if (callback) {
-      callbacks.push(callback);
+      callbacks[callbackName] = callback;
+    }
+  }
+
+  // Removes a callback from the list of resize handlers.
+  function removeCallback(callbackName) {
+    if (callbacks[callbackName]) {
+      delete callbacks[callbackName];
     }
   }
 
   return {
-    // Public method to add additional callback
-    add: function(callback) {
+    // Public methods to add/remove callbacks.
+    add: function(callback, callbackName) {
       if (!callbacks.length) {
         window.addEventListener('resize', resize);
+        window.addEventListener('scroll', resize);
       }
-      addCallback(callback);
+      addCallback(callback, callbackName);
+    },
+    remove: function(callbackName) {
+      removeCallback(callbackName);
     }
   }
 }());

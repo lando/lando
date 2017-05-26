@@ -220,6 +220,12 @@ description = Tests the basic display plugin.
 group = Views Plugins
 file = plugins/views_plugin_display.test
 
+[ViewsPluginDisplayBlockTestCase]
+name = Block display tests
+description = Tests overriding options for block displays.
+group = Views Plugins
+file = plugins/views_plugin_display_block.test
+
 [ViewsPluginStyleJumpMenuTest]
 name = Jump menu
 description = Test jump menu style functionality.
@@ -304,7 +310,7 @@ description = Tests some  functionality of the view class.
 group = Views
 file = views_view.test
 
-; Added by Backdrop CMS packaging script on 2017-03-15
+; Added by Backdrop CMS packaging script on 2017-05-15
 project = backdrop
-version = 1.6.3
-timestamp = 1489643437
+version = 1.7.0
+timestamp = 1494891373

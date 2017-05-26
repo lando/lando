@@ -204,6 +204,11 @@ function theme_layout_region_inner($variables) {
  */
 function layout_preprocess_layout(&$variables) {
   $settings = $variables['layout']->settings;
+
+  // Check if any Title Component blocks have been placed. These will override
+  // the variables here.
+  $block_exists = _layout_page_component_blocks_exist($variables);
+
   $variables += array(
     'action_links' => NULL,
     'tabs' => NULL,
@@ -212,13 +217,9 @@ function layout_preprocess_layout(&$variables) {
   );
 
   if (!$variables['admin']) {
-    if (!isset($variables['title'])) {
+    if (!isset($variables['title']) && !$block_exists['title']) {
       if ($settings['title_display'] === LAYOUT_TITLE_NONE) {
         $variables['title'] = NULL;
-      }
-      elseif ($settings['title_display'] === LAYOUT_TITLE_CUSTOM || ($settings['title_display'] === LAYOUT_TITLE_BLOCK && !empty($settings['title']))) {
-        $variables['title'] = check_plain(t($settings['title']));
-        backdrop_set_title(t($settings['title']));
       }
       else {
         $variables['title'] = backdrop_get_title();
@@ -227,7 +228,7 @@ function layout_preprocess_layout(&$variables) {
 
     // Generate messages last in order to capture as many as possible for the
     // current page.
-    if (!isset($variables['messages'])) {
+    if (!isset($variables['messages']) && !$block_exists['messages']) {
       $variables['messages'] = theme('status_messages');
     }
   }
@@ -236,9 +237,32 @@ function layout_preprocess_layout(&$variables) {
   }
 
   if (!$variables['admin']) {
-    $variables['action_links'] = menu_local_actions();
-    $variables['tabs'] =  menu_local_tabs();
+    if (!$block_exists['action_links']) {
+      $variables['action_links'] = menu_local_actions();
+    }
+    if (!$block_exists['tabs']) {
+      $variables['tabs'] =  menu_local_tabs();
+    }
   }
+}
+
+/**
+ * Utility function to return if a title component block is in a layout.
+ */
+function _layout_page_component_blocks_exist($variables) {
+  $active_component_blocks = array();
+  foreach ($variables['layout']->content as $block) {
+    if ($block->delta == 'page_components') {
+      $active_component_blocks[] = $block->childDelta;
+    }
+  }
+
+  $block_exists['title'] = (in_array('title_combo', $active_component_blocks) || in_array('title', $active_component_blocks));
+  $block_exists['messages'] = (in_array('title_combo', $active_component_blocks) || in_array('messages', $active_component_blocks));
+  $block_exists['tabs'] = (in_array('title_combo', $active_component_blocks) || in_array('tabs', $active_component_blocks));
+  $block_exists['action_links'] = (in_array('title_combo', $active_component_blocks) || in_array('action_links', $active_component_blocks));
+
+  return $block_exists;
 }
 
 /**

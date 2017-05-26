@@ -104,6 +104,7 @@ function views_theme($existing, $type, $theme, $path) {
   $hooks['views_view_field'] = $base + array(
     'pattern' => 'views_view_field__',
     'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
+    'file' => 'views.theme.inc',
   );
   $hooks['views_view_grouping'] = $base + array(
     'pattern' => 'views_view_grouping__',
@@ -214,7 +215,7 @@ function _views_find_module_templates($cache, $path) {
       $templates[$hook] = array(
         'template' => $template,
         'path' => dirname($file->filename),
-        'includes' => isset($cache[$hook]['includes']) ? $cache[$hook]['includes'] : NULL,
+        'includes' => !empty($cache[$hook]['includes']) ? $cache[$hook]['includes'] : array(),
       );
     }
     // Ensure that the pattern is maintained from base themes to its sub-themes.
@@ -244,7 +245,7 @@ function _views_find_module_templates($cache, $path) {
             'variables' => isset($info['variables']) ? $info['variables'] : NULL,
             'render element' => isset($info['render element']) ? $info['render element'] : NULL,
             'base hook' => $hook,
-            'includes' => isset($info['includes']) ? $info['includes'] : NULL,
+            'includes' => !empty($info['includes']) ? $info['includes'] : array(),
           );
         }
       }
@@ -616,83 +617,6 @@ function views_block_info() {
   views_cache_set('views_block_items', $items, TRUE);
 
   return $items;
-}
-
-/**
- * Implement hook_block_view().
- */
-function views_block_view($delta) {
-  // This indicates it's a special one.
-  if (substr($delta, 0, 1) == '-') {
-    list($nothing, $type, $name, $display_id) = explode('-', $delta);
-    // Put the - back on.
-    $type = '-' . $type;
-    if ($view = views_get_view($name)) {
-      if ($view->access($display_id)) {
-        $view->set_display($display_id);
-        if (isset($view->display_handler)) {
-          $output = $view->display_handler->view_special_blocks($type);
-          // Before returning the block output, convert it to a renderable
-          // array with contextual links.
-          views_add_block_contextual_links($output, $view, $display_id, 'special_block_' . $type);
-          $view->destroy();
-          return $output;
-        }
-      }
-      $view->destroy();
-    }
-  }
-
-  // If the delta doesn't contain valid data return nothing.
-  $explode = explode('-', $delta);
-  if (count($explode) != 2) {
-    return;
-  }
-  list($name, $display_id) = $explode;
-  // Load the view
-  if ($view = views_get_view($name)) {
-    if ($view->access($display_id)) {
-      $output = $view->execute_display($display_id);
-      // Before returning the block output, convert it to a renderable array
-      // with contextual links.
-      views_add_block_contextual_links($output, $view, $display_id);
-      $view->destroy();
-      return $output;
-    }
-    $view->destroy();
-  }
-}
-
-/**
- * Converts Views block content to a renderable array with contextual links.
- *
- * @param $block
- *   An array representing the block, with the same structure as the return
- *   value of hook_block_view(). This will be modified so as to force
- *   $block['content'] to be a renderable array, containing the optional
- *   '#contextual_links' property (if there are any contextual links associated
- *   with the block).
- * @param $view
- *   The view that was used to generate the block content.
- * @param $display_id
- *   The ID of the display within the view that was used to generate the block
- *   content.
- * @param $block_type
- *   The type of the block. If it's block it's a regular views display,
- *   but 'special_block_-exp' exist as well.
- */
-function views_add_block_contextual_links(&$block, $view, $display_id, $block_type = 'block') {
-  // Do not add contextual links to an empty block.
-  if (!empty($block['content'])) {
-    // Contextual links only work on blocks whose content is a renderable
-    // array, so if the block contains a string of already-rendered markup,
-    // convert it to an array.
-    if (is_string($block['content'])) {
-      $block['content'] = array('#markup' => $block['content']);
-    }
-    // Add the contextual links.
-    views_add_contextual_links($block['content'], $block_type, $view, $display_id);
-  }
 }
 
 /**
@@ -1497,13 +1421,13 @@ function views_get_view($name, $reset = FALSE) {
       $cache[$name] = FALSE;
     }
   }
-  else {
-    if ($cache[$name]) {
-      $cache[$name] = $cache[$name]->clone_view();
-    }
+
+  $return = FALSE;
+  if ($cache[$name]) {
+    $return = $cache[$name]->clone_view();
   }
 
-  return $cache[$name];
+  return $return;
 }
 
 /**
@@ -2259,6 +2183,9 @@ function views_autoload_info() {
     'views_plugin_style_summary_jump_menu' => 'plugins/views_plugin_style_summary_jump_menu.inc',
     'views_plugin_style_summary_unformatted' => 'plugins/views_plugin_style_summary_unformatted.inc',
     'views_plugin_style_table' => 'plugins/views_plugin_style_table.inc',
+    // Blocks.
+    'ViewsBlock' => 'includes/views.block.inc',
+    'ViewsSpecialBlock' => 'includes/views.special_block.inc',
     // Tests. These are used as base classes so frequently its easiest to
     // include them in the registry rather than include them manually.
     'ViewsTestCase' => 'tests/views_query.inc',

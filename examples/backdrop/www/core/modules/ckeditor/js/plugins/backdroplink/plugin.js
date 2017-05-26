@@ -7,6 +7,58 @@
 
 "use strict";
 
+function parseAttributes(editor, element) {
+  var parsedAttributes = {};
+
+  var domElement = element.$;
+  var attribute;
+  var attributeName;
+  for (var attrIndex = 0; attrIndex < domElement.attributes.length; attrIndex++) {
+    attribute = domElement.attributes.item(attrIndex);
+    attributeName = attribute.nodeName.toLowerCase();
+    // Ignore data-cke-* attributes; they're CKEditor internals.
+    if (attributeName.indexOf('data-cke-') === 0) {
+      continue;
+    }
+    // Store the value for this attribute, unless there's a data-cke-saved-
+    // alternative for it, which will contain the quirk-free, original value.
+    parsedAttributes[attributeName] = element.data('cke-saved-' + attributeName) || attribute.nodeValue;
+  }
+
+  // Remove any cke_* classes.
+  if (parsedAttributes.class) {
+    parsedAttributes.class = CKEDITOR.tools.trim(parsedAttributes.class.replace(/cke_\S+/, ''));
+  }
+
+  return parsedAttributes;
+}
+
+function getAttributes(editor, data) {
+  var set = {};
+  for (var attributeName in data) {
+    if (data.hasOwnProperty(attributeName)) {
+      set[attributeName] = data[attributeName];
+    }
+  }
+
+  // CKEditor tracks the *actual* saved href in a data-cke-saved-* attribute
+  // to work around browser quirks. We need to update it.
+  set['data-cke-saved-href'] = set.href;
+
+  // Remove all attributes which are not currently set.
+  var removed = {};
+  for (var s in set) {
+    if (set.hasOwnProperty(s)) {
+      delete removed[s];
+    }
+  }
+
+  return {
+    set: set,
+    removed: CKEDITOR.tools.objectKeys(removed)
+  };
+}
+
 CKEDITOR.plugins.add('backdroplink', {
   init: function (editor) {
     // Add the commands for link and unlink.
@@ -16,35 +68,37 @@ CKEDITOR.plugins.add('backdroplink', {
       modes: {wysiwyg: 1},
       canUndo: true,
       exec: function (editor) {
+        var backdropImageUtils = CKEDITOR.plugins.backdropimage;
+        var focusedImageWidget = backdropImageUtils && backdropImageUtils.getFocusedWidget(editor);
         var linkElement = getSelectedLink(editor);
-        var linkDOMElement = null;
 
         // Set existing values based on selected element.
         var existingValues = {};
         if (linkElement && linkElement.$) {
-          linkDOMElement = linkElement.$;
-
-          // Populate an array with the link's current attributes.
-          var attribute = null;
-          var attributeName;
-          for (var attrIndex = 0; attrIndex < linkDOMElement.attributes.length; attrIndex++) {
-            attribute = linkDOMElement.attributes.item(attrIndex);
-            attributeName = attribute.nodeName.toLowerCase();
-            // Don't consider data-cke-saved- attributes; they're just there to
-            // work around browser quirks.
-            if (attributeName.substring(0, 15) === 'data-cke-saved-') {
-              continue;
-            }
-            // Store the value for this attribute, unless there's a
-            // data-cke-saved- alternative for it, which will contain the quirk-
-            // free, original value.
-            existingValues[attributeName] = linkElement.data('cke-saved-' + attributeName) || attribute.nodeValue;
-          }
+          existingValues = parseAttributes(editor, linkElement);
+        }
+        // Or, if an image widget is focused, we're editing a link wrapping
+        // an image widget.
+        else if (focusedImageWidget && focusedImageWidget.data.link) {
+          existingValues = CKEDITOR.tools.clone(focusedImageWidget.data.link);
         }
 
         // Prepare a save callback to be used upon saving the dialog.
         var saveCallback = function (returnValues) {
           editor.fire('saveSnapshot');
+
+          // Ignore a disabled target attribute.
+          if (returnValues.attributes.target === 0) {
+            delete returnValues.attributes.target;
+          }
+
+          // If an image widget is focused, we're not editing an independent
+          // link, but we're wrapping an image widget in a link.
+          if (focusedImageWidget) {
+            focusedImageWidget.setData('link', CKEDITOR.tools.extend(returnValues.attributes, focusedImageWidget.data.link));
+            editor.fire('saveSnapshot');
+            return;
+          }
 
           // Create a new link element if needed.
           if (!linkElement && returnValues.attributes.href) {
@@ -59,11 +113,6 @@ CKEDITOR.plugins.add('backdroplink', {
               range.selectNodeContents(text);
             }
 
-            // Ignore a disabled target attribute.
-            if (returnValues.attributes.target === 0) {
-              delete returnValues.attributes.target;
-            }
-
             // Create the new link by applying a style to the new text.
             var style = new CKEDITOR.style({element: 'a', attributes: returnValues.attributes});
             style.type = CKEDITOR.STYLE_INLINE;
@@ -72,6 +121,12 @@ CKEDITOR.plugins.add('backdroplink', {
 
             // Set the link so individual properties may be set below.
             linkElement = getSelectedLink(editor);
+
+            // Move the selection to after the link so the user may continue
+            // typing outside of the link element itself.
+            range.setStartAfter(linkElement);
+            range.setEndAfter(linkElement);
+            range.select();
           }
           // Update the link properties.
           else if (linkElement) {
@@ -222,5 +277,13 @@ function getSelectedLink(editor) {
   }
   return null;
 }
+
+// Expose an API for other plugins to interact with backdroplink widgets.
+// (Compatible with the official CKEditor link plugin's API:
+// http://dev.ckeditor.com/ticket/13885.)
+CKEDITOR.plugins.backdroplink = {
+  parseLinkAttributes: parseAttributes,
+  getLinkAttributes: getAttributes
+};
 
 })(jQuery, Backdrop, CKEDITOR);

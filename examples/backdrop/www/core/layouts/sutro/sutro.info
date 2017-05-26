@@ -13,7 +13,7 @@ regions[bottom]     = Bottom
 regions[footer]     = Footer
 
 ; The default region automatically receives the "Main Content" block if needed.
-default region = half1
+default region = content
 
 ; Include a file for special preprocessing of this layout's variables.
 ; file = sutro.php
@@ -27,7 +27,7 @@ preview = sutro.png
 ; Include the Bootstrap4 Grid System
 libraries[] = bootstrap4-gs
 
-; Added by Backdrop CMS packaging script on 2017-03-15
+; Added by Backdrop CMS packaging script on 2017-05-15
 project = backdrop
-version = 1.6.3
-timestamp = 1489643437
+version = 1.7.0
+timestamp = 1494891373

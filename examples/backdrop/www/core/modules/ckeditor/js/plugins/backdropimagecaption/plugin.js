@@ -91,7 +91,13 @@ CKEDITOR.plugins.add('backdropimagecaption', {
           element.removeClass(classes[i]);
         }
 
-        return img;
+        // If img is wrapped with a link, we want to return that link.
+        if (img.parent.name === 'a') {
+          return img.parent;
+        }
+        else {
+          return img;
+        }
       };
 
       // We want to upcast <img> elements to a DOM structure required by the
@@ -116,6 +122,10 @@ CKEDITOR.plugins.add('backdropimagecaption', {
         }
 
         var attrs = element.attributes;
+        if (element.parent.name === 'a') {
+          element = element.parent;
+        }
+
         var retElement = element;
         var caption;
 

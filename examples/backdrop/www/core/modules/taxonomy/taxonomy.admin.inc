@@ -670,6 +670,9 @@ function taxonomy_form_term($form, &$form_state, TaxonomyTerm $term = NULL, Taxo
     '#maxlength' => 255,
     '#required' => TRUE,
     '#weight' => -5,
+    '#attributes' => array(
+      'autofocus' => TRUE,
+    ),
   );
   $form['description'] = array(
     '#type' => 'text_format',

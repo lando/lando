@@ -1,0 +1,161 @@
+{
+    "_config_name": "views.view.test_block",
+    "name": "test_block",
+    "description": "",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "test_block",
+    "core": null,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "access": {
+                    "type": "perm",
+                    "perm": "access content"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "some",
+                    "options": {
+                        "items_per_page": "10"
+                    }
+                },
+                "style_plugin": "default",
+                "row_plugin": "fields",
+                "fields": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "label": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "link_to_node": 1
+                    },
+                    "nid": {
+                        "id": "nid",
+                        "table": "node",
+                        "field": "nid",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Nid",
+                        "exclude": 0
+                    }
+                },
+                "filters": {
+                    "status": {
+                        "value": 1,
+                        "table": "node",
+                        "field": "status",
+                        "id": "status",
+                        "exposed": true,
+                        "expose": {
+                            "operator_id": "",
+                            "label": "Published",
+                            "description": "",
+                            "use_operator": false,
+                            "operator": "status_op",
+                            "identifier": "status",
+                            "required": 1,
+                            "remember": 0,
+                            "multiple": false
+                        },
+                        "group": 1
+                    }
+                },
+                "sorts": {
+                    "nid": {
+                        "id": "nid",
+                        "table": "node",
+                        "field": "nid",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "order": "ASC"
+                    }
+                },
+                "title": "Block Test Page",
+                "arguments": {
+                    "nid": {
+                        "id": "nid",
+                        "table": "node",
+                        "field": "nid",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "default_action": "ignore",
+                        "exception": {
+                            "value": "all",
+                            "title_enable": 0,
+                            "title": "All"
+                        },
+                        "title_enable": 0,
+                        "title": "",
+                        "breadcrumb_enable": 0,
+                        "breadcrumb": "",
+                        "default_argument_type": "fixed",
+                        "default_argument_options": {
+                            "argument": ""
+                        },
+                        "default_argument_skip_url": 0,
+                        "specify_validation": 0,
+                        "validate": {
+                            "type": "none",
+                            "fail": "not found"
+                        },
+                        "validate_options": [],
+                        "break_phrase": 0,
+                        "not": 0
+                    }
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "block-test"
+            }
+        },
+        "block": {
+            "display_title": "Block",
+            "display_plugin": "block",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "title": "Test Block",
+                "defaults": {
+                    "title": false,
+                    "pager": false,
+                    "pager_options": false
+                },
+                "pager": {
+                    "type": "some",
+                    "options": {
+                        "items_per_page": "5"
+                    }
+                },
+                "pager_options": null
+            }
+        }
+    }
+}

@@ -873,9 +873,8 @@ function field_ui_display_overview($entity_type, $bundle) {
     ),
   );
   $build['help'] = array(
-    '#type' => 'markup',
-    '#markup' => '<p>' . t('<strong>View modes</strong> are variations of how an item can be displayed. Each @label view mode can be configured differently. For example: individual fields can be displayed using a different format, or hidden entirely.', array('@label' => $bundle_label)) . '</p>',
-
+    '#type' => 'help',
+    '#markup' => t('<strong>View modes</strong> are variations of how an item can be displayed. Each @label view mode can be configured differently. For example: individual fields can be displayed using a different format, or hidden entirely.', array('@label' => $bundle_label)),
   );
   $build['view_modes'] = array(
     '#theme' => 'field_ui_view_modes',

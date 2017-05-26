@@ -7,6 +7,24 @@
 define('CKEDITOR_VERSION', '4.5.9');
 
 /**
+ * Implements hook_menu().
+ */
+function ckeditor_menu() {
+  $items['ckeditor/upload/image/%filter_format'] = array(
+    'title' => 'Upload image',
+    'page callback' => 'ckeditor_image_upload',
+    'page arguments' => array(3),
+    'access callback' => 'filter_dialog_access',
+    'access arguments' => array(3, 'image'),
+    'theme callback' => 'ajax_base_page_theme',
+    'delivery callback' => 'backdrop_json_deliver',
+    'type' => MENU_CALLBACK,
+    'file' => 'ckeditor.pages.inc',
+  );
+  return $items;
+}
+
+/**
  * Implements hook_editor_info().
  */
 function ckeditor_editor_info() {
@@ -315,7 +333,7 @@ function ckeditor_ckeditor_plugins() {
         'image' => $image_prefix . '/link.png',
       ),
       'BackdropUnlink' => array(
-        'label' => t('Link'),
+        'label' => t('Unlink'),
         'required_html' => array(array(
           'tags' => array('a'),
           'attributes' => array('href'),
@@ -522,6 +540,7 @@ function ckeditor_get_settings($format, $existing_settings) {
   if (isset($external_plugins['backdropimage'])) {
     $image_token = filter_editor_dialog_token($format, 'image');
     $settings['backdrop']['imageDialogUrl'] = url('editor/dialog/image/'. $format->format, array('query' => array('token' => $image_token, 'calling_path' => $_GET['q'])));
+    $settings['imageUploadUrl'] = url('ckeditor/upload/image/'. $format->format, array('query' => array('token' => $image_token, 'calling_path' => $_GET['q'])));
   }
   if (isset($external_plugins['backdropimagecaption'])) {
     $settings['backdrop']['captionFilterEnabled'] = !empty($format->filters['filter_image_caption']->status);

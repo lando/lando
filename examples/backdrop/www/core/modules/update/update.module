@@ -182,7 +182,6 @@ function update_manager_access() {
 function update_theme($existing, $type, $theme, $path) {
   $base = array(
     'file' => 'update.theme.inc',
-    'path' => $path . '/theme',
   );
 
   return array(
@@ -493,7 +492,7 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
         $text = t('There is a security update available for your version of Backdrop. To ensure the security of your server, you should update immediately!', array(), array('langcode' => $langcode));
       }
       else {
-        $text = t('There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!', array(), array('langcode' => $langcode));
+        $text = t('There are security updates available for one or more of your modules, themes, or layouts. To ensure the security of your server, you should update immediately!', array(), array('langcode' => $langcode));
       }
       break;
 

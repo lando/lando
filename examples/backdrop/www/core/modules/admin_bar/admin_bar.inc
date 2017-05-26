@@ -739,7 +739,16 @@ function admin_bar_theme_settings() {
     '#value' => t('Save configuration'),
   );
 
+  $form['#submit'] = array('admin_bar_theme_settings_submit');
   return system_settings_form($form);
+}
+
+/**
+ * Submit handler for admin_bar_theme_settings().
+ */
+function admin_bar_theme_settings_submit($form, &$form_state) {
+  // Save the list of components as a simple array, rather than key/value pair.
+  $form_state['values']['components'] = array_keys(array_filter($form_state['values']['components']));
 }
 
 /**

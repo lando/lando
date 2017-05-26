@@ -323,10 +323,10 @@ function _installer_browser_batch_install_release($release_name, $project, &$con
     watchdog('installer', 'There was an error while installing %project.
       !message',
       array('%project' => $project['title'], '!message' => $result['message']), WATCHDOG_ERROR);
-    $context['results']['failures'][] = t('Error installing %project. Errors have been logged.',
-      array('%project' => $project['title']));
-    $context['message'] = t('Error installing %project. !message',
+    $context['results']['failures'][] = t('Error installing %project. !message',
       array('%project' => $project['title'], '!message' => $result['message']));
+    $context['message'] = t('Error installing %project. Errors have been logged.',
+      array('%project' => $project['title']));
   }
 }
 
@@ -350,6 +350,9 @@ function _installer_browser_batch_install_releases_finished($success, $results, 
     if (!empty($results)) {
       if (!empty($results['failures'])) {
         backdrop_set_message(format_plural(count($results['failures']), 'Failed to install one project.', 'Failed to install @count projects.'), 'error');
+        foreach($results['failures'] as $message){
+          backdrop_set_message($message, 'error');
+        }
       }
     }
   }
@@ -394,7 +397,7 @@ function installer_browser_get_destination_after_install() {
   $theme = in_array('theme', $types);
   $module = in_array('module', $types);
 
-  $layout_message = t('One or more layouts were installed. You may enable layouts on the !link page.', array('!link' => l(t('Layout'), 'admin/structure/layouts')));
+  $layout_message = t('Installation finished successfully. All newly-added layout templates have been enabled and are available for use in your layouts. You can manage layout templates on the layouts !link page.', array('!link' => l(t('Settings'), 'admin/structure/layouts/settings')));
 
   if ($layout) {
     // Installed a layout and other project(s), continue the wizard. There's no

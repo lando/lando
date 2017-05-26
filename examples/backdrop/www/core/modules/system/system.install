@@ -45,14 +45,22 @@ function system_requirements($phase) {
   $requirements['webserver'] = array(
     'title' => $t('Web server'),
     'value' => $software,
+    'severity' => REQUIREMENT_INFO,
   );
 
   // Test PHP version and show link to phpinfo() if it's available
   $phpversion = phpversion();
   if (function_exists('phpinfo')) {
+    if ($phase == 'runtime') {
+      $php_value = $t('Version: !version (<a href="!infourl">PHP information</a>)', array('!version' => $phpversion, '!infourl' => url('admin/reports/status/php')));
+    }
+    else {
+      $php_value = $t('Version: !version', array('!version' => $phpversion));
+    }
     $requirements['php'] = array(
       'title' => $t('PHP'),
-      'value' => ($phase == 'runtime') ? $phpversion .' ('. l($t('more information'), 'admin/reports/status/php') .')' : $phpversion,
+      'value' =>  $php_value,
+      'severity' => REQUIREMENT_INFO,
     );
   }
   else {
@@ -128,7 +136,8 @@ function system_requirements($phase) {
     $requirements['php_extensions']['description'] = $description;
   }
   else {
-    $requirements['php_extensions']['value'] = $t('Enabled');
+    $description = $t('Enabled: !extensions', array('!extensions' => implode(', ', $required_extensions)));
+    $requirements['php_extensions']['value'] = $description;
   }
 
   if ($phase == 'install' || $phase == 'update') {
@@ -167,13 +176,11 @@ function system_requirements($phase) {
     $class = 'DatabaseTasks_' . Database::getConnection()->driver();
     /* @var DatabaseTasks $tasks */
     $tasks = new $class();
+    $dbinfo = $t('!system version !version', array('!system' => $tasks->name(), '!version' => Database::getConnection()->version()));
     $requirements['database_system'] = array(
-      'title' => $t('Database system'),
-      'value' => $tasks->name(),
-    );
-    $requirements['database_system_version'] = array(
-      'title' => $t('Database system version'),
-      'value' => Database::getConnection()->version(),
+      'title' => $t('MySQL Database'),
+      'severity' => REQUIREMENT_INFO,
+      'value' => $dbinfo,
     );
   }
 
@@ -190,12 +197,7 @@ function system_requirements($phase) {
     $requirements['jquery'] = array(
       'title' => $t('jQuery'),
       'severity' => REQUIREMENT_OK,
-      'value' => $jquery['version'],
-    );
-    $requirements['jquery_ui'] = array(
-      'title' => $t('jQuery UI'),
-      'severity' => REQUIREMENT_OK,
-      'value' => $jquery_ui['version'],
+      'value' => $t('jQuery version !jqv / jQuery UI version !jquiv', array('!jqv' => $jquery['version'], '!jquiv' => $jquery_ui['version'])),
     );
   }
 
@@ -290,20 +292,22 @@ function system_requirements($phase) {
     }
 
     // Set summary and description based on values determined above.
-    $summary = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
+    $summary = $t('Last run !time ago (<a href="@url">Run cron manually</a>)', array(
+      '!time' => format_interval(REQUEST_TIME - $cron_last),
+      '@url' => url('admin/reports/status/run-cron')
+    ));
     $description = '';
     if ($severity != REQUIREMENT_OK) {
       $description = $t('Cron has not run recently.') . ' ' . $help;
     }
 
-    $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => state_get('cron_key'))))));
+    $description .= $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/core/cron.php', array('external' => TRUE, 'query' => array('cron_key' => state_get('cron_key'))))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
-      'description' => $description
+      'description' => $description,
     );
   }
 
@@ -315,7 +319,7 @@ function system_requirements($phase) {
     $directories[] = file_directory_temp();
   }
   else {
-    $directories[] = 'files';
+    $directories[] = conf_path() . '/files';
   }
 
   $requirements['file system'] = array(
@@ -386,7 +390,7 @@ function system_requirements($phase) {
         $latest_schema = end($updates);
         if ($current_schema < $latest_schema) {
           $requirements['update']['severity'] = REQUIREMENT_ERROR;
-          $requirements['update']['value'] = $t('Out of date');
+          $requirements['update']['value'] = $t('Out of date') . ' (' . l(t('Run database updates'), base_path() . 'core/update.php'). ')';
           $requirements['update']['description'] = $t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'core/update.php'));
           break;
         }
@@ -477,7 +481,7 @@ function system_requirements($phase) {
         'value' => $t('Enabled'),
       );
     }
-    $requirements['update status']['title'] = $t('Update notifications');
+    $requirements['update status']['title'] = $t('Backdrop CMS update notifications');
   }
 
   if ($phase == 'runtime') {
@@ -564,17 +568,17 @@ function system_requirements($phase) {
   if ($phase == 'runtime') {
     // Inform user about status of display error messages.
     $error_level = config_get('system.core', 'error_level');
-    $description_start = $t('Backdrop CMS provides the ability to display error messages, which can be useful while a site is in development.');
-    $logging_url = base_path() . 'admin/config/development/logging';
+    $description = $t('Backdrop CMS provides the ability to display error messages, which can be useful while a site is in development.');
+    $logging_url = url('admin/config/development/logging');
     if ($error_level != ERROR_REPORTING_HIDE) {
-      $value =  $t('Enabled');
-      $severity =  REQUIREMENT_WARNING;
-      $description = $description_start . ' ' . $t('Do not forget to <a href="@error_level">disable the display of errors</a> when you have finished testing and this site goes live.', array('@error_level' => $logging_url));
+      $value = $t('Enabled');
+      $severity = REQUIREMENT_WARNING;
+      $description .= ' ' . $t('Do not forget to <a href="@url">disable the display of errors</a> when you have finished testing and this site goes live.', array('@url' => $logging_url));
     }
     else {
-      $value =  $t('Disabled');
-      $severity =  REQUIREMENT_OK;
-      $description = $description_start . ' ' . $t('If your site is in development, you might want to <a href="@error_level">enable the display of errors</a>.', array('@error_level' => $logging_url));
+      $value = $t('Disabled');
+      $severity = REQUIREMENT_OK;
+      $description .= ' ' . $t('If your site is in development, you might want to <a href="@url">enable the display of errors</a>.', array('@url' => $logging_url));
     }
 
     $requirements['error_level'] = array(
@@ -622,7 +626,7 @@ function _system_check_db_utf8mb4_requirements($phase) {
 
   $connection = Database::getConnection();
   $t = get_t();
-  $requirements['title'] = $t('Database system 4-byte UTF-8 support');
+  $requirements['title'] = $t('MySQL Database 4-byte UTF-8 support');
 
   $utf8mb4_active = $connection->utf8mb4IsActive();
   $utf8mb4_supported = $connection->utf8mb4IsSupported();
@@ -682,6 +686,9 @@ function system_install() {
   $versions = backdrop_get_schema_versions('system');
   $version = $versions ? max($versions) : SCHEMA_INSTALLED;
   backdrop_set_installed_schema_version('system', $version);
+
+  // Set the public files path to the directory with the settings.php file.
+  config_set('system.core', 'file_public_path', str_replace('./', '', conf_path() . '/files'));
 
   // Clear out module list and hook implementation statics before calling
   // system_rebuild_theme_data().
@@ -822,129 +829,6 @@ function system_schema() {
   $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
   $schema['cache_token'] = $schema['cache'];
   $schema['cache_token']['description'] = 'Cache table for token information.';
-
-  $schema['file_managed'] = array(
-    'description' => 'Stores information for uploaded files.',
-    'fields' => array(
-      'fid' => array(
-        'description' => 'File ID.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'description' => 'The {users}.uid of the user who is associated with the file.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'filename' => array(
-        'description' => 'Name of the file with no path components. This may differ from the basename of the URI if the file is renamed to avoid overwriting an existing file.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'uri' => array(
-        'description' => 'The URI to access the file (either local or remote).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'filemime' => array(
-        'description' => "The file's MIME type.",
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'filesize' => array(
-        'description' => 'The size of the file in bytes.',
-        'type' => 'int',
-        'size' => 'big',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'status' => array(
-        'description' => 'A field indicating the status of the file. Two status are defined in core: temporary (0) and permanent (1). Temporary files older than BACKDROP_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
-      'timestamp' => array(
-        'description' => 'UNIX timestamp for when the file was added.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'uid' => array('uid'),
-      'status' => array('status'),
-      'timestamp' => array('timestamp'),
-    ),
-    'unique keys' => array(
-      'uri' => array('uri'),
-    ),
-    'primary key' => array('fid'),
-    'foreign keys' => array(
-      'file_owner' => array(
-        'table' => 'users',
-        'columns' => array('uid' => 'uid'),
-      ),
-    ),
-  );
-
-  $schema['file_usage'] = array(
-    'description' => 'Track where a file is used.',
-    'fields' => array(
-      'fid' => array(
-        'description' => 'File ID.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'module' => array(
-        'description' => 'The name of the module that is using the file.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'type' => array(
-        'description' => 'The name of the object type in which the file is used.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'id' => array(
-        'description' => 'The primary key of the object using the file.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'count' => array(
-        'description' => 'The number of times this file is used by this object.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('fid', 'type', 'id', 'module'),
-    'indexes' => array(
-      'type_id' => array('type', 'id'),
-      'fid_count' => array('fid', 'count'),
-      'fid_module' => array('fid', 'module'),
-    ),
-  );
 
   $schema['flood'] = array(
     'description' => 'Flood controls the threshold of events, such as the number of contact attempts.',

@@ -95,6 +95,10 @@ function system_theme() {
     'admin_block_content' => array(
       'variables' => array('content' => NULL),
     ) + $base,
+    'page_components' => array(
+      'variables' => array('settings' => NULL, 'child_delta' => NULL),
+      'template' => 'templates/page-components',
+    ),
     'system_admin_index' => array(
       'variables' => array('menu_items' => NULL),
     ) + $base,
@@ -206,24 +210,6 @@ function system_hook_info() {
   );
 
   return $hooks;
-}
-
-/**
- * Implements hook_entity_info().
- */
-function system_entity_info() {
-  return array(
-    'file' => array(
-      'label' => t('File'),
-      'base table' => 'file_managed',
-      'controller class' => 'FileStorageController',
-      'entity class' => 'File',
-      'entity keys' => array(
-        'id' => 'fid',
-      ),
-      'static cache' => FALSE,
-    ),
-  );
 }
 
 /**
@@ -483,6 +469,11 @@ function system_element_info() {
   $types['markup'] = array(
     '#markup' => '',
     '#pre_render' => array('backdrop_pre_render_markup'),
+  );
+  $types['help'] = array(
+    '#markup' => '',
+    '#pre_render' => array('backdrop_pre_render_markup'),
+    '#theme' => 'help',
   );
   $types['link'] = array(
     '#pre_render' => array('backdrop_pre_render_link', 'backdrop_pre_render_markup'),
@@ -1285,8 +1276,8 @@ function system_library_info() {
   // jQuery Form Plugin.
   $libraries['jquery.form'] = array(
     'title' => 'jQuery Form Plugin',
-    'website' => 'http://malsup.com/jquery/form/',
-    'version' => '3.50.0',
+    'website' => 'https://github.com/jquery-form/form',
+    'version' => '4.2.1',
     'js' => array(
       'core/misc/jquery.form.js' => array(),
     ),
@@ -2373,6 +2364,12 @@ function system_block_info() {
     'info' => t('Powered by Backdrop'),
     'description' => t('Displays a link to <a href="https://backdropcms.org">the Backdrop CMS website</a>.'),
     'weight' => '10',
+  );
+  $blocks['page_components'] = array(
+    'info' => t('Page components'),
+    'description' => t('Displays the page title, local task tabs, local actions links, and messages.'),
+    'class' => 'PageComponents',
+    'render last' => TRUE,
   );
   // System-defined menu blocks. Load customizations from Menu module.
   $all_menus = function_exists('menu_get_menus') ? menu_get_menus() : array();
@@ -3831,10 +3828,8 @@ function system_autoload_info() {
     'ThemeUpdater' => 'system.updater.inc',
     'LayoutUpdater' => 'system.updater.inc',
 
-    // @todo: Move file entities to File module.
-    // https://github.com/backdrop/backdrop-issues/issues/213
-    'File' => 'file.entity.inc',
-    'FileStorageController' => 'file.entity.inc',
+    // Blocks.
+    'PageComponents' => 'block.page_components.inc',
 
     // Views handlers.
     'views_handler_filter_system_type' => 'views/views_handler_filter_system_type.inc',

@@ -1059,7 +1059,7 @@ function layout_title_settings_form($form, &$form_state, Layout $layout) {
   $block_options = array();
   foreach ($layout->content as $uuid => $block) {
     $title = $all_blocks[$block->module][$block->delta]['info'];
-    if (!empty($title) && $title !== 'Custom block') {
+    if (!empty($title) && $title !== 'Custom block' && !is_a($block, 'PageComponents')) {
       $block_options[$uuid] = $title;
     }
   }
@@ -1466,6 +1466,12 @@ function layout_block_configure_ajax_update($form, $form_state) {
     $commands[] = ajax_command_replace('#layout-editor-block-' . $block->uuid, $renderer->renderBlock($block));
   }
 
+  // Remove the page title pseudo region if we're adding a Title block or a
+  // Combo block.
+  if ($block->module == 'system' && $block->delta == 'page_components' && ($block->childDelta == 'title' || $block->childDelta =='title_combo')) {
+    $commands[] = ajax_command_replace('#layout-editor-title', '<div id="layout-title-region-empty"></div>');
+  }
+
   // Update the messages area.
   if ($message = layout_locked_message($layout, 'layout')) {
     backdrop_set_message($message, 'warning');
@@ -1487,11 +1493,28 @@ function layout_block_remove_page(Layout $layout, Block $block, $renderer_name) 
     return MENU_ACCESS_DENIED;
   }
 
+  $commands = array();
   $layout->removeBlock($block->uuid);
   layout_set_layout_tempstore($layout);
 
   if (backdrop_is_ajax()) {
     $commands[] = ajax_command_remove('#layout-editor-block-' . $block->uuid);
+    // If neither a Title block nor a Combo block remains in the layout, add
+    // the page title pseudo-region.
+    if ($block->module == 'system' && $block->delta == 'page_components' && ($block->childDelta == 'title' || $block->childDelta =='title_combo')) {
+      $render_title_region = TRUE;
+      $all_layout_blocks = $layout->content;
+      foreach ($all_layout_blocks as $existing_block) {
+        if ($existing_block->module == 'system' && $existing_block->delta == 'page_components' && ($existing_block->childDelta == 'title' || $existing_block->childDelta =='title_combo') && ($existing_block->uuid != $block->uuid)) {
+          $render_title_region = FALSE;
+          break;
+        }
+      }
+      if ($render_title_region) {
+        $renderer = layout_create_renderer($renderer_name, $layout);
+        $commands[] = ajax_command_replace('#layout-title-region-empty', $renderer->renderTitleRegion('title'));
+      }
+    }
     return array(
       '#type' => 'ajax',
       '#commands' => $commands,
@@ -1579,7 +1602,8 @@ function layout_condition_add_form($form, &$form_state, Layout $layout = NULL, B
     $handler = isset($layout->conditions[$condition_id]) ? $layout->conditions[$condition_id] : NULL;
   }
   $form['help'] = array(
-    '#markup' => '<p>' . $help . '</p>',
+    '#type' => 'help',
+    '#markup' => $help,
   );
   $all_access_info = _layout_get_all_info('layout_access');
   backdrop_sort($all_access_info, array('title'));
@@ -1898,7 +1922,8 @@ function layout_reorder_form($form, &$form_state) {
   }
 
   $form['help'] = array(
-    '#markup' => '<p class="help">' . t('Layouts at the same path are selected based on the first layout that matches its conditions. Reorder the layouts on this page to affect the layout that will be used first.') . '</p>',
+    '#type' => 'help',
+    '#markup' => t('Layouts at the same path are selected based on the first layout that matches its conditions. Reorder the layouts on this page to affect the layout that will be used first.'),
   );
 
   $form['layouts'] = array(

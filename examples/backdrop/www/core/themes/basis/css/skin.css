@@ -149,14 +149,17 @@ fieldset .fieldset-legend {
   background: #20252e;
 }
 
+.l-header-inner {
+  color: #fff;
+  padding: 0;
+}
+
 @media (min-width: 34em) {
   .l-header-inner {
     min-height: 6.125rem;
+    padding-right: .9375rem;
+    padding-left: .9375rem;
   }
-}
-
-.l-header-inner {
-  color: #fff;
 }
 
 .l-header a {
@@ -318,7 +321,7 @@ fieldset .fieldset-legend {
 }
 
 .js .menu-dropdown > li {
-  border-bottom-color: #114a75;
+  border-bottom-color: #777;
 }
 
 .menu-dropdown a.disabled {
@@ -344,7 +347,7 @@ fieldset .fieldset-legend {
   }
 
   .menu-dropdown a span.sub-arrow {
-    border-color-top: #fff;
+    border-top-color: #fff;
   }
 
   .menu-dropdown ul {
@@ -372,7 +375,7 @@ fieldset .fieldset-legend {
   }
 
   .menu-dropdown ul a span.sub-arrow {
-    border-color-left: #fff;
+    border-left-color: #fff;
   }
 
   .menu-dropdown span.scroll-up,
@@ -387,15 +390,15 @@ fieldset .fieldset-legend {
 
   .menu-dropdown span.scroll-up-arrow,
   .menu-dropdown span.scroll-down-arrow {
-    border-color-bottom: #fff;
+    border-bottom-color: #fff;
   }
 
   .menu-dropdown span.scroll-down-arrow {
-    border-color-top: #fff;
+    border-top-color: #fff;
   }
 
   [dir="rtl"] .menu-dropdown span.sub-arrow {
-    border-color-right: #fff;
+    border-right-color: #fff;
   }
 }
 
@@ -627,6 +630,7 @@ button.button-primary,
 .ui-widget-header .ui-state-default {
   color: white;
   background: #0074bd;
+  border: none;
 }
 
 input.button-primary:hover,

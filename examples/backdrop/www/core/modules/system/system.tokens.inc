@@ -16,7 +16,7 @@ function system_token_info() {
     'name' => t('Current page'),
     'description' => t('Tokens related to the current page request.'),
   );
-  $type['current-date'] = array(
+  $types['current-date'] = array(
     'name' => t('Current date'),
     'description' => t('Tokens related to the current date and time.'),
     'type' => 'date',

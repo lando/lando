@@ -7549,7 +7549,7 @@ function backdrop_common_theme() {
       'variables' => array('breadcrumb' => NULL),
     ),
     'help' => array(
-      'variables' => array(),
+      'variables' => array('markup' => NULL),
     ),
     'table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),

@@ -178,7 +178,7 @@ class view {
   /**
    * Stores all display handlers of this view.
    *
-   * @var array[views_display]
+   * @var views_display[]
    */
   var $display;
 

@@ -141,7 +141,8 @@ function update_script_selection_form($form, &$form_state) {
   }
   else {
     $form['help'] = array(
-      '#markup' => '<p>Updates have been found that need to be applied. You may review the updates below before executing them.</p>',
+      '#type' => 'help',
+      '#markup' => 'Updates have been found that need to be applied. You may review the updates below before executing them.',
       '#weight' => -5,
     );
     if ($incompatible_count) {

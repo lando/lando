@@ -147,14 +147,25 @@
 
 /* @group Attachment details new section button */
 
-.views-displays .secondary {
-  text-align: left; /* LTR */
-  float: left; /* LTR */
-}
-
-[dir="rtl"] .views-displays .secondary {
-  text-align: right;
-  float: right;
+@media (min-width: 768px) {
+  .views-display-top .secondary {
+    margin-right: 23em; /* LTR */
+    text-align: left; /* LTR */
+    float: left; /* LTR */
+    clear: none;
+  }
+  [dir="rtl"] .views-display-top .secondary {
+    margin-right: 0;
+    margin-left: 23em;
+    text-align: right;
+    float: right;
+  }
+  .views-display-top .dropbutton-wrapper {
+    float: right;
+  }
+  [dir="rtl"] .views-display-top .dropbutton-wrapper {
+    float: left;
+  }
 }
 
 .views-display-top .secondary .action-list li {
@@ -174,7 +185,7 @@
   left: 0; /* LTR */
   margin: 0;
   position: absolute;
-  top: 23px;
+  top: 25px;
   z-index: 50;
 }
 [dir="rtl"] .views-displays .secondary .action-list {
@@ -184,6 +195,29 @@
 
 .views-displays .secondary .action-list  li {
   display: block;
+}
+
+/* @end */
+
+
+/* @group Display top area */
+
+#edit-display-settings-top .dropbutton-wrapper {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  float: right; /* LTR */
+}
+[dir="rtl"] #edit-display-settings-top .dropbutton-wrapper {
+  float: left;
+}
+#edit-display-settings-top .views-ui-display-tab-setting {
+  position: relative;
+  float: left; /* LTR */
+}
+[dir="rtl"] #edit-display-settings-top .views-ui-display-tab-setting {
+  float: right;
 }
 
 /* @end */
@@ -223,29 +257,24 @@
 
 /* @group Attachment configuration columns */
 @media (min-width: 768px) {
+  #edit-display-settings-details {
+    padding: 0.5em;
+  }
+
+  #edit-display-settings-top,
+  .views-display-columns {
+    /* Prevent extra spacing on outer edges from child padding */
+    margin: 0 -0.5em;
+  }
+
   .views-display-columns > * {
+    box-sizing: border-box;
     float: left; /* LTR */
-    margin-left: 1%; /* LTR */
-    padding-left: 1%; /* LTR */
-    width: 32%;
+    width: 33.333%;
+    padding: 0 0.5em;
   }
   [dir="rtl"] .views-display-columns > * {
     float: right;
-    margin-left: 0;
-    margin-right: 1%;
-    padding-left: 0;
-    padding-right: 1%;
-  }
-
-  .views-display-columns > *:first-child {
-    margin-left: 0; /* LTR */
-    padding-left: 0; /* LTR */
-  }
-  [dir="rtl"] .views-display-columns > *:first-child {
-    margin-left: inherit;
-    margin-right: 0;
-    padding-left: inherit;
-    padding-right: 0;
   }
 }
 

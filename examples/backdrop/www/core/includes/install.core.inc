@@ -248,6 +248,7 @@ function install_begin_request(&$install_state) {
   include_once BACKDROP_ROOT . '/core/includes/module.inc';
   include_once BACKDROP_ROOT . '/core/includes/session.inc';
   require_once BACKDROP_ROOT . '/core/includes/theme.inc';
+  require_once BACKDROP_ROOT . '/core/includes/tablesort.inc';
 
   require_once BACKDROP_ROOT . '/core/includes/ajax.inc';
   $module_list['system']['filename'] = 'core/modules/system/system.module';
@@ -1298,7 +1299,7 @@ function install_find_translations() {
  * @see file_scan_directory()
  */
 function install_find_translation_files($langcode = NULL) {
-  $directory = settings_get('locale_translate_file_directory', 'files/translations');
+  $directory = settings_get('locale_translate_file_directory', conf_path() . '/files/translations');
   // @todo: Remove the "drupal" check in 2.x (assuming we have a localization
   //   server by then).
   $files = file_scan_directory($directory, '!(install|drupal-\d+\.\d+)\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
@@ -1343,7 +1344,7 @@ function install_select_language(&$install_state) {
     // is doing.
     if (count($files) == 1) {
       if ($install_state['interactive']) {
-        $directory = settings_get('locale_translate_file_directory', 'files/translations');
+        $directory = settings_get('locale_translate_file_directory', conf_path() . '/files/translations');
 
         backdrop_set_title(st('Choose language'));
         if (!empty($install_state['parameters']['translate'])) {
@@ -1437,7 +1438,8 @@ function install_select_language_form($form, &$form_state, $files) {
 
   if (count($files) == 1) {
     $form['help'] = array(
-      '#markup' => '<p><a href="' . check_url(backdrop_current_script_url(array('translate' => 'true'))) . '">' . st('Learn how to install Backdrop in other languages') . '</a></p>',
+      '#type' => 'help',
+      '#markup' => '<a href="' . check_url(backdrop_current_script_url(array('translate' => 'true'))) . '">' . st('Learn how to install Backdrop in other languages') . '</a>',
     );
   }
   $form['actions'] = array('#type' => 'actions');
@@ -1463,7 +1465,20 @@ function install_already_done_error() {
   global $base_url;
 
   backdrop_set_title(st('Backdrop already installed'));
-  return st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
+
+  $items = array();
+  $items[] = st('To start over, you must empty your existing database.');
+
+  $settings_php = st('To install to a different database, edit the <em>settings.php</em> file located in the root folder of this site.');
+  if (conf_path() !== '.') {
+    $settings_php = st('To install to a different database, edit the <em>settings.php</em> file corresponding to this site within the <em>sites</em> directory.');
+  }
+  $items[] = $settings_php;
+
+  $items[] = st('To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.', array('@base-url' => $base_url));
+  $items[] = st('View your <a href="@base-url">existing site</a>.', array('@base-url' => $base_url));
+
+  return theme('item_list', array('items' => $items));
 }
 
 /**
@@ -1740,6 +1755,12 @@ function install_check_requirements($install_state) {
         // If it does, make sure it is writable.
         $writable = backdrop_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
         $exists = TRUE;
+      }
+      elseif ($settings_file !== './settings.php') {
+        if (copy('./settings.php', $settings_file) === TRUE) {
+          $exists = TRUE;
+          $writable = backdrop_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
+        }
       }
     }
 

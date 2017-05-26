@@ -1106,7 +1106,7 @@ function views_ui_edit_form($form, &$form_state, $view, $display_id = NULL) {
   );
 
   $form['displays'] = array(
-    '#prefix' => '<h1 class="unit-title clearfix">' . t('Displays') . '</h1>' . "\n" . '<div class="views-displays">',
+    '#prefix' => '<h1 class="unit-title">' . t('Displays') . '</h1>' . "\n" . '<div class="views-displays">',
     '#suffix' => '</div>',
   );
 
@@ -3986,6 +3986,7 @@ function views_ui_config_item_form($form, &$form_state) {
 
       if (!empty($handler->definition['help'])) {
         $form['options']['form_description'] = array(
+          '#type' => 'help',
           '#markup' => $handler->definition['help'],
           '#theme_wrappers' => array('container'),
           '#attributes' => array('class' => array('form-item description')),

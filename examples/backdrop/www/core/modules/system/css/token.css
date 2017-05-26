@@ -31,6 +31,10 @@
   padding-left: 20px;
   padding-right: 20px;
 }
+.token-tree .branch.collapsed .token-name,
+.token-tree .branch.expanded .token-name {
+  cursor: pointer;
+}
 .token-tree .token-name {
   width: 30%;
   white-space: nowrap;

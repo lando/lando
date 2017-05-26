@@ -26,6 +26,9 @@ function file_action_info() {
  */
 function file_autoload_info() {
   return array(
+    'File' => 'file.entity.inc',
+    'FileStorageController' => 'file.entity.inc',
+
     // Views handlers.
     'views_handler_argument_file_fid' => 'views/views_handler_argument_file_fid.inc',
     'views_handler_field_file' => 'views/views_handler_field_file.inc',
@@ -97,6 +100,24 @@ function file_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function file_entity_info() {
+  return array(
+    'file' => array(
+      'label' => t('File'),
+      'base table' => 'file_managed',
+      'controller class' => 'FileStorageController',
+      'entity class' => 'File',
+      'entity keys' => array(
+        'id' => 'fid',
+      ),
+      'static cache' => FALSE,
+    ),
+  );
 }
 
 /**

@@ -284,7 +284,7 @@ Backdrop.behaviors.viewsUiRenderAddViewButton = {
 
 Backdrop.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
   $trigger.parent().toggleClass('open');
-  $trigger.next().slideToggle('fast');
+  $trigger.next().toggle();
 };
 
 Backdrop.behaviors.viewsUiSearchOptions = {

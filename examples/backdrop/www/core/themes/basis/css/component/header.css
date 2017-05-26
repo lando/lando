@@ -148,7 +148,11 @@
   padding: 1rem 1.25rem;
 }
 .l-header .menu-toggle-button {
+  margin-left: .9375rem;
   padding: .5rem 0;
+}
+.l-header .menu-toggle-button-text {
+  color: #bbb;
 }
 
 @media (min-width: 34em) {

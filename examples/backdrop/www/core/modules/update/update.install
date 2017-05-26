@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Install, update, and uninstall functions for the Update Manager module.
@@ -110,7 +109,7 @@ function _update_requirement_check($project, $type) {
     $requirement['title'] = t('Backdrop CMS update status');
   }
   else {
-    $requirement['title'] = t('Module, theme and layout update status');
+    $requirement['title'] = t('Module, theme, and layout updates');
   }
   $status = $project['status'];
   if ($status != UPDATE_CURRENT) {
@@ -149,10 +148,21 @@ function _update_requirement_check($project, $type) {
       $requirement_label = t('Up to date');
   }
   if (isset($requirement_label)) {
-    if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
-      $requirement_label .= ' ' . t('(version @version available)', array('@version' => $project['recommended']));
+    if ($status != UPDATE_CURRENT) {
+      if ($type == 'core' && isset($project['recommended'])) {
+        $version_available = t('version @version available', array('@version' => $project['recommended']));
+      }
+      else {
+        $version_available = t('Updates available');
+      }
+      if (update_manager_access()) {
+        $requirement_label .= ' (' . l($version_available, 'admin/modules/update') . ')';
+      }
+      else {
+        $requirement_label .= ' (' . l($version_available, 'admin/reports/updates') . ')';
+      }
     }
-    $requirement['value'] = l($requirement_label, update_manager_access() ? 'admin/reports/updates/update' : 'admin/reports/updates');
+    $requirement['value'] = $requirement_label;
   }
   return $requirement;
 }

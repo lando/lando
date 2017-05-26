@@ -186,7 +186,7 @@ Backdrop.jsAC.prototype.hidePopup = function (keycode) {
  */
 Backdrop.jsAC.prototype.populatePopup = function () {
   var $input = $(this.input);
-  var position = $input.position();
+
   // Show popup.
   if (this.popup) {
     $(this.popup).remove();
@@ -194,17 +194,38 @@ Backdrop.jsAC.prototype.populatePopup = function () {
   this.selected = false;
   this.popup = $('<div id="autocomplete"></div>')[0];
   this.popup.owner = this;
-  $(this.popup).css({
-    top: parseInt(position.top + this.input.offsetHeight, 10) + 'px',
-    left: parseInt(position.left, 10) + 'px',
-    width: $input.innerWidth() + 'px',
-    display: 'none'
-  });
-  $input.before(this.popup);
+
+  // Add the popup to the page and position.
+  $("body").prepend(this.popup);
+  var autocompletInstance = this;
+  positionPopup();
+  Backdrop.optimizedResize.add(positionPopup, 'autocompletePopup');
 
   // Do search.
   this.db.owner = this;
   this.db.search(this.input.value);
+
+  function positionPopup() {
+    // If the popup has been removed, remove this resize handler.
+    if (!autocompletInstance.popup) {
+      Backdrop.optimizedResize.remove('autocompletePopup');
+      return;
+    }
+
+    var offset = $input.offset();
+    var paddingLeft = parseInt($input.css('padding-left').replace('px', ''), 10);
+    var paddingRight = parseInt($input.css('padding-right').replace('px', ''), 10);
+    var paddingWidth = paddingLeft + paddingRight;
+
+    // Because we use "fixed" position, the final location is the offset from
+    // the document and the height of the element, minus scroll bar position.
+    $(autocompletInstance.popup).css({
+      top: ($input.outerHeight() + offset.top - $(document).scrollTop()) + 'px',
+      left: (offset.left - $(document).scrollLeft()) + 'px',
+      width: ($input.width() + paddingWidth) + 'px',
+      position: 'fixed'
+    });
+  }
 };
 
 /**

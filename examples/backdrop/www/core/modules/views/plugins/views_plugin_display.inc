@@ -710,7 +710,7 @@ class views_plugin_display extends views_plugin {
   function uses_link_display() { return !$this->has_path(); }
 
   /**
-   * Check to see if the display can put the exposed formin a block.
+   * Check to see if the display can put the exposed form in a block.
    *
    * By default, displays that do not have a path cannot disconnect
    * the exposed form and put it in a block, because the form has no
@@ -1077,13 +1077,20 @@ class views_plugin_display extends views_plugin {
         'title' => t('Format'),
         'column' => 'first',
       ),
+      'fields' => array(
+        'title' => t('Fields'),
+        'column' => 'first',
+      ),
       'filters' => array(
         'title' => t('Filters'),
         'column' => 'first',
       ),
-      'fields' => array(
-        'title' => t('Fields'),
-        'column' => 'first',
+      'access' => array(
+        'title' => t('Access'),
+        'column' => 'second',
+        'build' => array(
+          '#weight' => -5,
+        ),
       ),
       'pager' => array(
         'title' => t('Pager'),
@@ -1094,13 +1101,6 @@ class views_plugin_display extends views_plugin {
         'column' => 'third',
         'build' => array(
           '#weight' => 1,
-        ),
-      ),
-      'access' => array(
-        'title' => '',
-        'column' => 'second',
-        'build' => array(
-          '#weight' => -5,
         ),
       ),
       'other' => array(
@@ -1329,7 +1329,7 @@ class views_plugin_display extends views_plugin {
     if ($this->uses_exposed_form_in_block()) {
       $options['exposed_block'] = array(
         'category' => 'exposed',
-        'title' => t('Exposed form in block'),
+        'title' => t('Create exposed form block'),
         'value' => $this->get_option('exposed_block') ? t('Yes') : t('No'),
         'desc' => t('Allow the exposed form to appear in a block instead of the view.'),
       );
@@ -2758,11 +2758,13 @@ class views_plugin_display extends views_plugin {
 
     if ($this->uses_exposed_form_in_block()) {
       $delta = '-exp-' . $this->view->name . '-' . $this->display->id;
-      $desc = t('Exposed form: @view-@display_id', array('@view' => $this->view->name, '@display_id' => $this->display->id));
+      $title = t('Exposed form: @view (@display_id)', array('@view' => $this->view->get_human_name(), '@display_id' => $this->display->id));
 
       $blocks[$delta] = array(
-        'info' => $desc,
+        'info' => $title,
+        'description' => t('Provides filters that a user may change to adjust the results of a view.'),
         'cache' => BACKDROP_NO_CACHE,
+        'class' => 'ViewsSpecialBlock',
       );
     }
 

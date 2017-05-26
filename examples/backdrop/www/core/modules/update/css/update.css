@@ -2,75 +2,64 @@
  * @file
  * Styles used by the Update Manager module.
  */
+.checked .button {
+  margin: 1em;
+  vertical-align: middle;
+}
+
+table.update {
+  width: 100%;
+  margin-top: .5em;
+}
+.update tr {
+  position: relative;
+}
 
 .update .project {
   font-weight: bold;
   font-size: 110%;
-  padding-left: .25em; /* LTR */
-  height: 22px;
 }
-[dir="rtl"] .update .project {
-  padding-left: 0;
-  padding-right: .25em;
+@media all and (min-width: 550px) {
+  .update .project {
+    float: left; /* LTR */
+  }
+  [dir="rtl"] .update .project {
+    float: right;
+  }
+  .update .version-status {
+    float: right; /* LTR */
+  }
+  [dir="rtl"] .update .version-status {
+    float: left;
+  }
+  .update .versions {
+    clear: both;
+  }
 }
 
-.update .version-status {
-  float: right; /* LTR */
-  padding-right: 10px; /* LTR */
-  font-size: 110%;
-  height: 20px;
-}
-[dir="rtl"] .update .version-status {
-  float: left;
-  padding-left: 10px;
-  padding-right: 0;
-}
-
-.update .version-status .icon {
-  padding-left: .5em; /* LTR */
-}
-[dir="rtl"] .update .version-status .icon {
-  padding-left: 0;
-  padding-right: .5em;
+@media all and (min-width: 550px) {
+  .update .version-status {
+    text-align: right;
+    font-size: 110%;
+    position: static;
+    float: right; /* LTR */
+    padding-left: 10px;
+  }
+  [dir="rtl"] .update .version-status {
+    float: left;
+    padding-left: 0;
+    padding-right: 10px;
+  }
 }
 
 .update .version-date {
   white-space: nowrap;
+  display: none;
 }
-
-.update .info {
-  margin: 0;
-  padding: 1em 1em .25em 1em;
-}
-
-.update tr.even,
-.update tr.odd {
-  border: none;
-}
-
-.update tr td {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-}
-
-.update tr.error {
-  background: #fcc;
-}
-
-.update tr.error .version-recommended {
-  background: #fdd;
-}
-
-.update tr.status {
-  background: #dfd;
-}
-
-.update tr.warning {
-  background: #ffd;
-}
-
-.update tr.warning .version-recommended {
-  background: #ffe;
+@media all and (min-width: 550px) {
+  .update .version-date {
+    display: inline-block;
+  }
 }
 
 .current-version,
@@ -78,70 +67,52 @@
   direction: ltr; /* Note: version numbers should always be LTR. */
 }
 
-.update tr.unknown {
-  background: #ddd;
+.update .version {
+  padding-top: 5px;
 }
-
-table.update,
-.update table.version {
-  width: 100%;
-  margin-top: .5em;
-  border: none;
-}
-
-.update table.version tbody {
-  border: none;
-}
-
-.update table.version tr,
-.update table.version td {
-  line-height: .9em;
+.update .version div {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border: none;
-  background: none;
+}
+@media all and (min-width: 550px) {
+  .update .version-info {
+    width: 66%;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .update .version-links {
+    width: 33%;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .update .version-details {
+    display: inline-block;
+  }
 }
 
-.update table.version .version-title {
-  padding-left: 1em; /* LTR */
-  width: 14em;
-}
-[dir="rtl"] .update table.version .version-title {
-  padding-left: 0;
-  padding-right: 1em;
-}
-
-.update table.version .version-details {
-  padding-right: .5em; /* LTR */
-}
-[dir="rtl"] .update table.version .version-details {
-  padding-left: .5em;
-  padding-right: 0;
-  direction: ltr;
-}
-
-.update table.version .version-links ul {
+.update .version-links ul {
+  font-size: .9em;
   list-style-type: none;
-  text-align: right; /* LTR */
-  padding-right: 1em; /* LTR */
+  padding: 0;
+  margin: 5px 0 0 0;
 }
-[dir="rtl"] .update table.version .version-links {
-  text-align: left;
-  padding-left: 1em;
-  padding-right: 0;
+@media all and (min-width: 550px) {
+  .update .version-links ul {
+    text-align: right; /* LTR */
+  }
+  [dir="rtl"] .update .version-links {
+    text-align: left;
+  }
 }
 
-.update table.version-security .version-title {
-  color: #970f00;
-}
-
-.update table.version-recommended-strong .version-title {
+.update .security-error,
+.update .version-recommended-strong .version-title {
   font-weight: bold;
 }
 
-.update .security-error {
-  font-weight: bold;
-  color: #970f00;
+.update .version-security .version-title {
+  color: #EC351C;
 }
 
 .update .check-manually {
@@ -152,12 +123,15 @@ table.update,
   padding-right: 1em;
 }
 
+.update .info {
+  display: none;
+}
+@media all and (min-width: 768px) {
+  .update .info {
+    display: block;
+  }
+}
 
 .update-major-version-warning {
   color: #ff0000;
-}
-
-table tbody tr.update-security,
-table tbody tr.update-unsupported {
-  background: #fcc;
 }

@@ -9,7 +9,8 @@ Backdrop.behaviors.tokenTree = {
   attach: function (context, settings) {
     $(context).find('table.token-tree').once('token-tree', function () {
       $(this).treetable({
-        'expandable': true
+        'expandable': true,
+        'clickableNodeNames': true
       });
     });
   }

@@ -120,7 +120,7 @@ function layout_test_path() {
 /**
  * Implements hook_layout_presave().
  */
-function layout_test_layout_presave($layout_name, $layout) {
+function layout_test_layout_presave($layout) {
   $return = state_get('layout_test');
   $return[] = (__FUNCTION__ . ' called');
   state_set('layout_test', $return);

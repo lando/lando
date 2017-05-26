@@ -91,21 +91,12 @@ function path_menu() {
     'file' => 'path.admin.inc',
   );
   $items['admin/config/urls/path/bulk-update'] = array(
-    'title' => 'Generate URL aliases',
+    'title' => 'URL aliases bulk actions',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('path_bulk_update_form'),
     'access arguments' => array('administer url aliases'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
-    'file' => 'path.admin.inc',
-  );
-  $items['admin/config/urls/path/bulk-delete'] = array(
-    'title' => 'Delete URL aliases',
-    'page callback' => 'backdrop_get_form',
-    'page arguments' => array('path_patterns_settings_form'),
-    'access arguments' => array('administer path patterns'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
     'file' => 'path.admin.inc',
   );
 
@@ -246,7 +237,7 @@ function path_action_info() {
 function path_form_node_form_alter(&$form, $form_state) {
   $node = $form['#node'];
   $form['path'] = path_form_element($node);
-  $form['path']['alias']['#description'] = t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter "about" for the about page.');
+  $form['path']['alias']['#description'] = t('The alternative URL for this content. Use a relative path without a trailing slash. For example, enter <code>about</code> for the about page.');
 }
 
 /**
@@ -264,7 +255,7 @@ function path_form_node_type_form_alter(&$form, $form_state) {
 
   $settings = array(
     'default' => $url_pattern,
-    'description' => t('New pages will have URLs that match a pattern based on wildcards called <em>tokens</em>. For example the URL "blog/my-first-post" could be created using the pattern "blog/[node:title]" if the title of the blog post was "My first post".'),
+    'description' => t('New pages will have URLs that match a pattern based on wildcards called <em>tokens</em>. For example the URL <code>blog/my-first-post</code> could be created using the pattern <code>blog/[node:title]</code> if the title of the blog post was "My first post".'),
     'token_types' => array('node'),
   );
   $form += path_pattern_settings_form($settings);
@@ -289,7 +280,7 @@ function path_node_type_form_submit($form, &$form_state) {
       // the specific pattern.
       $config->clear($pattern_type);
       if (empty($pattern) && !empty($generic_pattern)) {
-        backdrop_set_message(t('The <em>Default URL alias pattern</em> field was left empty, so the generic pattern of "@pattern" will still be used. This can be changed on the !url_alias_patterns page.', array('@pattern' => $generic_pattern, '!url_alias_patterns' => l('URL alias patterns', 'admin/config/search/path/patterns'))));
+        backdrop_set_message(t('The <em>Default URL alias pattern</em> field was left empty, so the generic pattern of <code>@pattern</code> will still be used. This can be changed on the <a href="!url">URL alias patterns</a> page.', array('@pattern' => $generic_pattern, '!url' => url('admin/config/urls/path/patterns'))));
       }
     }
     $config->save();
@@ -323,7 +314,7 @@ function path_form_taxonomy_form_vocabulary_alter(&$form, $form_state) {
 
   $settings = array(
     'default' => $url_pattern,
-    'description' => t('New pages will have URLs that match a pattern based on wildcards called <em>tokens</em>. For example the URL "tags/environment" could be created using the pattern "[term:vocabulary]/[term:name]" if the vocabulary is named "Tags" and the term is named "Environment".'),
+    'description' => t('New pages will have URLs that match a pattern based on wildcards called <em>tokens</em>. For example the URL <code>tags/environment</code> could be created using the pattern <code>[term:vocabulary]/[term:name]</code> if the vocabulary is named "Tags" and the term is named "Environment".'),
     'token_types' => array('vocabulary', 'term'),
   );
   $form += path_pattern_settings_form($settings);
@@ -349,7 +340,7 @@ function path_taxonomy_form_vocabulary_submit($form, &$form_state) {
       // the specific pattern.
       $config->clear($pattern_type);
       if (empty($pattern)) {
-        backdrop_set_message(t('The <em>Default URL alias pattern</em> field was left empty, so the generic pattern of "@pattern" will still be used. This can be changed on the !url_alias_patterns page.', array('@pattern' => $generic_pattern, '!url_alias_patterns' => l('URL alias patterns', 'admin/config/search/path/patterns'))));
+        backdrop_set_message(t('The <em>Default URL alias pattern</em> field was left empty, so the generic pattern of <code>@pattern</code> will still be used. This can be changed on the <a href="!url">URL alias patterns</a> page.', array('@pattern' => $generic_pattern, '!url' => url('admin/config/urls/path/patterns'))));
       }
     }
     $config->save();
@@ -362,7 +353,7 @@ function path_taxonomy_form_vocabulary_submit($form, &$form_state) {
 function path_form_user_admin_settings_alter(&$form, $form_state) {
   $settings = array(
     'default' => config_get('path.settings', 'user_pattern'),
-    'description' => t('New pages will have URLs that match a pattern based on wildcards called <em>tokens</em>. For example the URL "members/jane-doe" could be created using the pattern "members/[user:name]" if the user name is "Jane Doe".'),
+    'description' => t('New pages will have URLs that match a pattern based on wildcards called <em>tokens</em>. For example the URL <code>members/jane-doe</code> could be created using the pattern <code>members/[user:name]</code> if the user name is "Jane Doe".'),
     'token_types' => array('user'),
   );
   $form += path_pattern_settings_form($settings);
@@ -509,9 +500,8 @@ function path_entity_update(Entity $entity) {
       module_load_include('inc', 'path');
       $path = path_save_automatic_entity_alias($entity);
 
-      // Ideally this would be in hook_taxonomy_term_update() instead, but
-      // as hook_entity_update() fires second, we have to include it directly
-      // here.
+      // Ideally this would be in hook_taxonomy_term_update() instead, but as
+      // hook_entity_update() fires second, we have to include it directly here.
       if ($entity->entityType() === 'taxonomy_term') {
         // Generate new aliases for all children as well.
         foreach (taxonomy_get_tree($entity->vocabulary, $entity->tid, NULL, TRUE) as $subterm) {

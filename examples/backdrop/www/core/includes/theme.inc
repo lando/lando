@@ -1994,7 +1994,7 @@ function theme_breadcrumb($variables) {
  *     - "data": The localized title of the table column.
  *     - "field": The database field represented in the table column (required
  *       if user is to be able to sort on this column).
- *     - "sort": A default sort order for this column ("asc" or "desc"). 
+ *     - "sort": A default sort order for this column ("asc" or "desc").
  *     - "class": An array of values for the 'class' attribute. In particular,
  *       the least important columns that can be hidden on narrow and medium
  *       width screens should have a 'priority-low' class, referenced with the
@@ -2364,6 +2364,17 @@ function theme_item_list($variables) {
   }
 
   return $output;
+}
+
+/**
+ * Returns HTML for a help element.
+ */
+function theme_help($variables) {
+  // Wrap in a paragraph tag if one is not present.
+  if (strpos($variables['markup'], '<p') === FALSE) {
+    $variables['markup'] = '<p>' . $variables['markup'] . '</p>';
+  }
+  return '<div class="help">' . $variables['markup'] . '</div>';
 }
 
 /**
@@ -2795,7 +2806,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['front_page']        = url();
   $variables['breadcrumb']        = '';
   $variables['feed_icons']        = '';
-  $variables['help']              = '';
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['main_menu']         = array();
   $variables['secondary_menu']    = array();
