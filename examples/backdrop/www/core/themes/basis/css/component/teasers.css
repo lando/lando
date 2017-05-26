@@ -1,0 +1,38 @@
+/**
+ * @file
+ * Teasers styling.
+ */
+.view-mode-teaser {
+  margin: 2rem 0 0;
+  padding: 0 0 2em;
+}
+
+.view-mode-teaser + .view-mode-teaser,
+.view-promoted .views-row {
+  border-top: 0.25rem solid #c6cad2;
+}
+
+.view-promoted .views-row:first-child {
+  border-top: 0;
+}
+
+.view-mode-teaser h1,
+.view-mode-teaser h2,
+.view-mode-teaser h3,
+.view-mode-teaser h4,
+.view-mode-teaser h5,
+.view-mode-teaser h6 {
+  margin: 0 0 0.5rem;
+}
+
+.view-mode-teaser .align-right {
+  margin: 0 0 1.5rem 1.5rem;
+}
+
+.view-mode-teaser p {
+  margin: 0 0 0.5rem;
+}
+
+.view-mode-teaser .content {
+  margin: 0 0 1.5rem;
+}

@@ -1,0 +1,992 @@
+<?php
+/**
+ * @file
+ * Test integration for the token module.
+ */
+
+/**
+ * Test token replacement in strings.
+ */
+class TokenReplaceTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  /**
+   * Creates a user and a node, then tests the tokens generated from them.
+   */
+  function testTokenReplacement() {
+    // Create the initial objects.
+    $account = $this->backdropCreateUser();
+    $node = $this->backdropCreateNode(array('uid' => $account->uid));
+    $node->title = '<blink>Blinking Text</blink>';
+    global $user, $language;
+
+    $source  = '[node:title]';         // Title of the node we passed in
+    $source .= '[node:author:name]';   // Node author's name
+    $source .= '[node:created:since]'; // Time since the node was created
+    $source .= '[current-user:name]';  // Current user's name
+    $source .= '[date:short]';         // Short date format of REQUEST_TIME
+    $source .= '[user:name]';          // No user passed in, should be untouched
+    $source .= '[bogus:token]';        // Non-existent token
+
+    $target  = check_plain($node->title);
+    $target .= check_plain($account->name);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language->langcode);
+    $target .= check_plain($user->name);
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language->langcode);
+
+    // Test that the clear parameter cleans out non-existent tokens.
+    $result = @token_replace($source, array('node' => $node), array('language' => $language, 'clear' => TRUE));
+    $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
+
+    // Test without using the clear parameter (non-existent token untouched).
+    $target .= '[user:name]';
+    $target .= '[bogus:token]';
+    $result = @token_replace($source, array('node' => $node), array('language' => $language));
+    $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
+
+    // Check that the results of token_generate are sanitized properly. This does NOT
+    // test the cleanliness of every token -- just that the $sanitize flag is being
+    // passed properly through the call stack and being handled correctly by a 'known'
+    // token, [node:title].
+    $raw_tokens = array('title' => '[node:title]');
+    $generated = token_generate('node', $raw_tokens, array('node' => $node));
+    $this->assertEqual($generated['[node:title]'], check_plain($node->title), 'Token sanitized.');
+
+    $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
+    $this->assertEqual($generated['[node:title]'], $node->title, 'Unsanitized token generated properly.');
+
+    // Test token replacement when the string contains no tokens.
+    $this->assertEqual(token_replace('No tokens here.'), 'No tokens here.');
+  }
+
+  /**
+   * Test whether token-replacement works in various contexts.
+   */
+  function testSystemTokenRecognition() {
+    global $language;
+
+    // Generate prefixes and suffixes for the token context.
+    $tests = array(
+      array('prefix' => 'this is the ', 'suffix' => ' site'),
+      array('prefix' => 'this is the', 'suffix' => 'site'),
+      array('prefix' => '[', 'suffix' => ']'),
+      array('prefix' => '', 'suffix' => ']]]'),
+      array('prefix' => '[[[', 'suffix' => ''),
+      array('prefix' => ':[:', 'suffix' => '--]'),
+      array('prefix' => '-[-', 'suffix' => ':]:'),
+      array('prefix' => '[:', 'suffix' => ']'),
+      array('prefix' => '[site:', 'suffix' => ':name]'),
+      array('prefix' => '[site:', 'suffix' => ']'),
+    );
+
+    // Check if the token is recognized in each of the contexts.
+    foreach ($tests as $test) {
+      $input = $test['prefix'] . '[site:name]' . $test['suffix'];
+      $expected = $test['prefix'] . 'Backdrop CMS' . $test['suffix'];
+      $output = token_replace($input, array(), array('language' => $language));
+      $this->assertTrue($output == $expected, format_string('Token recognized in string %string', array('%string' => $input)));
+    }
+  }
+
+  /**
+   * Tests the generation of all system site information tokens.
+   */
+  function testSystemSiteTokenReplacement() {
+    global $language;
+    $url_options = array(
+      'absolute' => TRUE,
+      'language' => $language,
+    );
+
+    // Set a few site variables.
+    config('system.core')
+      ->set('site_name', '<strong>Backdrop<strong>')
+      ->set('site_slogan', '<blink>Slogan</blink>')
+      ->save();
+
+    // Generate and test sanitized tokens.
+    $tests = array();
+    $tests['[site:name]'] = check_plain(config_get('system.core', 'site_name'));
+    $tests['[site:slogan]'] = check_plain(config_get('system.core', 'site_slogan'));
+    $tests['[site:mail]'] = 'simpletest@example.com';
+    $tests['[site:url]'] = url('<front>', $url_options);
+    $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
+    $tests['[site:url:brief]'] = $tests['[site:url-brief]'];
+    $tests['[site:login-url]'] = url('user', $url_options);
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array(), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Sanitized system site information token %token replaced.', array('%token' => $input)));
+    }
+
+    // Generate and test unsanitized tokens.
+    $tests['[site:name]'] = config_get('system.core', 'site_name');
+    $tests['[site:slogan]'] = config_get('system.core', 'site_slogan');
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array(), array('language' => $language, 'sanitize' => FALSE));
+      $this->assertEqual($output, $expected, format_string('Unsanitized system site information token %token replaced.', array('%token' => $input)));
+    }
+  }
+
+  /**
+   * Tests the generation of all system date tokens.
+   */
+  function testSystemDateTokenReplacement() {
+    global $language;
+
+    // Set time to one hour before request.
+    $date = REQUEST_TIME - 3600;
+
+    // Generate and test tokens.
+    $tests = array();
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language->langcode);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language->langcode);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language->langcode);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language->langcode);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language->langcode);
+    $tests['[date:raw]'] = filter_xss($date);
+
+    // Test to make sure that we generated something for each token.
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('date' => $date), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Date token %token replaced.', array('%token' => $input)));
+    }
+  }
+}
+
+/**
+ * Test token replacement in strings.
+ */
+class TokenScanTest extends BackdropUnitTestCase {
+  /**
+   * Scans dummy text, then tests the output.
+   */
+  function testTokenScan() {
+    // Define text with valid and not valid, fake and existing token-like
+    // strings.
+    $text = 'First a [valid:simple], but dummy token, and a dummy [valid:token with: spaces].';
+    $text .= 'Then a [not valid:token].';
+    $text .= 'Last an existing token: [node:author:name].';
+    $token_wannabes = token_scan($text);
+
+    $this->assertTrue(isset($token_wannabes['valid']['simple']), 'A simple valid token has been matched.');
+    $this->assertTrue(isset($token_wannabes['valid']['token with: spaces']), 'A valid token with space characters in the token name has been matched.');
+    $this->assertFalse(isset($token_wannabes['not valid']), 'An invalid token with spaces in the token type has not been matched.');
+    $this->assertTrue(isset($token_wannabes['node']), 'An existing valid token has been matched.');
+  }
+}
+
+/**
+ * Helper test class with some added functions for testing.
+ */
+class TokenTestHelper extends BackdropWebTestCase {
+  protected $profile = 'testing';
+  protected $config;
+
+  public function setUp($modules = array()) {
+    $modules[] = 'path';
+    $modules[] = 'token_test';
+    parent::setUp($modules);
+
+    config_set('system.core', 'clean_url', 1);
+  }
+
+  function assertToken($type, array $data, $token, $expected, array $options = array()) {
+    return $this->assertTokens($type, $data, array($token => $expected), $options);
+  }
+
+  function assertTokens($type, array $data, array $tokens, array $options = array()) {
+    $input = $this->mapTokenNames($type, array_keys($tokens));
+    $replacements = token_generate($type, $input, $data, $options);
+    foreach ($tokens as $name => $expected) {
+      $token = $input[$name];
+      if (!isset($expected)) {
+        $this->assertTrue(!isset($values[$token]), t("Token value for @token was not generated.", array('@type' => $type, '@token' => $token)));
+      }
+      elseif (!isset($replacements[$token])) {
+        $this->fail(t("Token value for @token was not generated.", array('@type' => $type, '@token' => $token)));
+      }
+      elseif (!empty($options['regex'])) {
+        $this->assertTrue(preg_match('/^' . $expected . '$/', $replacements[$token]), t("Token value for @token was '@actual', matching regular expression pattern '@expected'.", array('@type' => $type, '@token' => $token, '@actual' => $replacements[$token], '@expected' => $expected)));
+      }
+      else {
+        $this->assertIdentical($replacements[$token], $expected, t("Token value for @token was '@actual', expected value '@expected'.", array('@type' => $type, '@token' => $token, '@actual' => $replacements[$token], '@expected' => $expected)));
+      }
+    }
+
+    return $replacements;
+  }
+
+  function mapTokenNames($type, array $tokens = array()) {
+    $return = array();
+    foreach ($tokens as $token) {
+      $return[$token] = "[$type:$token]";
+    }
+    return $return;
+  }
+
+  function assertNoTokens($type, array $data, array $tokens, array $options = array()) {
+    $input = $this->mapTokenNames($type, $tokens);
+    $replacements = token_generate($type, $input, $data, $options);
+    foreach ($tokens as $name) {
+      $token = $input[$name];
+      $this->assertTrue(!isset($replacements[$token]), t("Token value for @token was not generated.", array('@type' => $type, '@token' => $token)));
+    }
+  }
+
+  function saveAlias($source, $alias, $language = LANGUAGE_NONE) {
+    $alias = array(
+      'source' => $source,
+      'alias' => $alias,
+      'language' => $language,
+    );
+    path_save($alias);
+    return $alias;
+  }
+
+  function saveEntityAlias($entity_type, $entity, $alias, $language = LANGUAGE_NONE) {
+    $uri = entity_uri($entity_type, $entity);
+    return $this->saveAlias($uri['path'], $alias, $language);
+  }
+
+  /**
+   * Make a page request and test for token generation.
+   */
+  function assertPageTokens($url, array $tokens, array $data = array(), array $options = array()) {
+    if (empty($tokens)) {
+      return TRUE;
+    }
+
+    $token_page_tokens = array(
+      'tokens' => $tokens,
+      'data' => $data,
+      'options' => $options,
+    );
+
+    state_set('page_tokens', $token_page_tokens);
+
+    $options += array('url_options' => array());
+    $this->backdropGet($url, $options['url_options']);
+    $result = state_get('page_tokens', array());
+
+    if (!isset($result['values']) || !is_array($result['values'])) {
+      return $this->fail('Failed to generate tokens.');
+    }
+
+    foreach ($tokens as $token => $expected) {
+      if (!isset($expected)) {
+        $this->assertTrue(!isset($result['values'][$token]) || $result['values'][$token] === $token, t("Token value for @token was not generated.", array('@token' => $token)));
+      }
+      elseif (!isset($result['values'][$token])) {
+        $this->fail(t('Failed to generate token @token.', array('@token' => $token)));
+      }
+      else {
+        $this->assertIdentical($result['values'][$token], (string) $expected, t("Token value for @token was '@actual', expected value '@expected'.", array('@token' => $token, '@actual' => $result['values'][$token], '@expected' => $expected)));
+      }
+    }
+  }
+}
+
+class TokenUnitTestCase extends TokenTestHelper {
+  /**
+   * Test token_get_invalid_tokens() and token_get_invalid_tokens_by_context().
+   */
+  public function testGetInvalidTokens() {
+    $tests = array();
+    $tests[] = array(
+      'valid tokens' => array(
+        '[node:title]',
+        '[node:created:short]',
+        '[node:created:custom:invalid]',
+        '[node:created:custom:mm-YYYY]',
+        '[site:name]',
+        '[site:slogan]',
+        '[date:short]',
+        '[current-user:uid]',
+        '[current-user:ip-address]',
+        // Deprecated tokens:
+        '[node:type]',
+        '[node:type-name]',
+      ),
+      'invalid tokens' => array(
+        '[node:title:invalid]',
+        '[node:created:invalid]',
+        '[node:created:short:invalid]',
+        '[invalid:title]',
+        '[site:invalid]',
+        '[user:ip-address]',
+        '[user:uid]',
+        '[comment:cid]',
+        '[date:short]',
+      ),
+      'types' => array('node'),
+    );
+    $tests[] = array(
+      'valid tokens' => array(
+        '[node:title]',
+        '[node:created:short]',
+        '[node:created:custom:invalid]',
+        '[node:created:custom:mm-YYYY]',
+        '[site:name]',
+        '[site:slogan]',
+        '[user:uid]',
+        '[user:ip-address]',
+        '[date:short]',
+        '[current-user:uid]',
+        // Deprecated tokens:
+        '[node:type]',
+        '[node:type-name]',
+      ),
+      'invalid tokens' => array(
+        '[node:title:invalid]',
+        '[node:created:invalid]',
+        '[node:created:short:invalid]',
+        '[invalid:title]',
+        '[site:invalid]',
+        '[comment:cid]',
+      ),
+      'types' => array('all'),
+    );
+
+    foreach ($tests as $test) {
+      $tokens = array_merge($test['valid tokens'], $test['invalid tokens']);
+      shuffle($tokens);
+
+      require_once BACKDROP_ROOT . '/core/includes/token.inc';
+      $invalid_tokens = token_get_invalid_tokens_by_context(implode(' ', $tokens), $test['types']);
+
+      sort($invalid_tokens);
+      sort($test['invalid tokens']);
+      $this->assertEqual($invalid_tokens, $test['invalid tokens'], 'Invalid tokens detected properly: ' . implode(', ', $invalid_tokens));
+    }
+  }
+}
+
+class TokenURLTestCase extends TokenTestHelper {
+
+  public function setUp($modules = array()) {
+    parent::setUp($modules);
+    $this->saveAlias('node/1', 'first-node');
+  }
+
+  function testURLTokens() {
+    $tokens = array(
+      'absolute' => 'http://example.com/first-node',
+      'relative' => base_path() . 'first-node',
+      'path' => 'first-node',
+      'brief' => 'example.com/first-node',
+      'args:value:0' => 'first-node',
+      'args:value:1' => NULL,
+      'args:value:N' => NULL,
+      'unaliased' => 'http://example.com/node/1',
+      'unaliased:relative' => base_path() . 'node/1',
+      'unaliased:path' => 'node/1',
+      'unaliased:brief' => 'example.com/node/1',
+      'unaliased:args:value:0' => 'node',
+      'unaliased:args:value:1' => '1',
+      'unaliased:args:value:2' => NULL,
+      // Deprecated tokens.
+      'alias' => 'first-node',
+    );
+    $this->assertTokens('url', array('path' => 'node/1', 'options' => array('base_url' => 'http://example.com')), $tokens);
+  }
+}
+
+class TokenCommentTestCase extends TokenTestHelper {
+
+  public function setUp($modules = array()) {
+    $modules[] = 'comment';
+    parent::setUp($modules);
+  }
+
+  function testCommentTokens() {
+    $node = $this->backdropCreateNode(array('comment' => COMMENT_NODE_OPEN));
+
+    $parent_comment = new Comment();
+    $parent_comment->nid = $node->nid;
+    $parent_comment->pid = 0;
+    $parent_comment->cid = NULL;
+    $parent_comment->uid = 0;
+    $parent_comment->name = 'anonymous user';
+    $parent_comment->mail = 'anonymous@example.com';
+    $parent_comment->subject = $this->randomName();
+    $parent_comment->timestamp = mt_rand($node->created, REQUEST_TIME);
+    $parent_comment->language = LANGUAGE_NONE;
+    $parent_comment->body[LANGUAGE_NONE][0] = $this->randomName();
+    comment_save($parent_comment);
+
+    $tokens = array(
+      'url' => url('comment/' . $parent_comment->cid, array('fragment' => 'comment-' . $parent_comment->cid, 'absolute' => TRUE)),
+      'url:absolute' => url('comment/' . $parent_comment->cid, array('fragment' => 'comment-' . $parent_comment->cid, 'absolute' => TRUE)),
+      'url:relative' => url('comment/' . $parent_comment->cid, array('fragment' => 'comment-' . $parent_comment->cid, 'absolute' => FALSE)),
+      'url:path' => 'comment/' . $parent_comment->cid,
+      'parent:url:absolute' => NULL,
+    );
+    $this->assertTokens('comment', array('comment' => $parent_comment), $tokens);
+
+    $comment = new Comment();
+    $comment->nid = $node->nid;
+    $comment->pid = $parent_comment->cid;
+    $comment->cid = NULL;
+    $comment->uid = 1;
+    $comment->subject = $this->randomName();
+    $comment->timestamp = mt_rand($parent_comment->created, REQUEST_TIME);
+    $comment->language = LANGUAGE_NONE;
+    $comment->body[LANGUAGE_NONE][0] = $this->randomName();
+    comment_save($comment);
+
+    $tokens = array(
+      'url' => url('comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid, 'absolute' => TRUE)),
+      'url:absolute' => url('comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid, 'absolute' => TRUE)),
+      'url:relative' => url('comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid, 'absolute' => FALSE)),
+      'url:path' => 'comment/' . $comment->cid,
+      'parent:url:absolute' => url('comment/' . $parent_comment->cid, array('fragment' => 'comment-' . $parent_comment->cid, 'absolute' => TRUE)),
+    );
+    $this->assertTokens('comment', array('comment' => $comment), $tokens);
+  }
+}
+
+class TokenNodeTestCase extends TokenTestHelper {
+  protected $profile = 'standard';
+
+  function testNodeTokens() {
+    $admin_user = $this->backdropCreateUser(array('create post content', 'create url aliases'));
+    $this->backdropLogin($admin_user);
+
+    $files = $this->backdropGetTestFiles('image');
+    $file = new File((array) $files[0]);
+    $file->uid = $admin_user->uid;
+    $file->save();
+    $node_title = $this->randomName();
+    $node_edit = array(
+      'title' => $node_title,
+      'path[auto]' => FALSE,
+      'path[alias]' => 'content/source-node',
+      'field_tags[und]' => 'foo, bar',
+      'field_image[und][0][fid]' => $file->fid,
+    );
+    $this->backdropPost('node/add/post', $node_edit, t('Save'));
+    $source_node = $this->backdropGetNodeByTitle($node_title);
+
+    $tokens = array(
+      'source' => NULL,
+      'source:nid' => NULL,
+      'log' => $source_node->log,
+      'url:path' => 'content/source-node',
+      'url:absolute' => url("node/{$source_node->nid}", array('absolute' => TRUE)),
+      'url:relative' => url("node/{$source_node->nid}", array('absolute' => FALSE)),
+      'url:unaliased:path' => "node/{$source_node->nid}",
+      'content-type' => 'Post',
+      'content-type:name' => 'Post',
+      'content-type:machine-name' => 'post',
+      'content-type:description' => "Add a blog post, news article, or press release.",
+      'content-type:node-count' => 2,
+      'content-type:edit-url' => url('admin/structure/types/manage/post', array('absolute' => TRUE)),
+      'field_image' => file_create_url($file->uri),
+      'field_tags' => 'foo, bar',
+      // Deprecated tokens.
+      //'tnid' => 0,
+      'type' => 'post',
+      'type-name' => 'Post',
+      'url:alias' => 'content/source-node',
+    );
+    $this->assertTokens('node', array('node' => $source_node), $tokens);
+
+    $translated_node = $this->backdropCreateNode(array(
+      'tnid' => $source_node->nid,
+      'type' => 'post',
+    ));
+    $tokens = array(
+      'source' => $source_node->title,
+      'source:nid' => $source_node->nid,
+      'log' => '',
+      'url:path' => $translated_node->path['alias'],
+      'url:absolute' => url("node/{$translated_node->nid}", array('absolute' => TRUE)),
+      'url:relative' => url("node/{$translated_node->nid}", array('absolute' => FALSE)),
+      'url:unaliased:path' => "node/{$translated_node->nid}",
+      'content-type' => 'Post',
+      'content-type:name' => 'Post',
+      'content-type:machine-name' => 'post',
+      'content-type:description' => "Add a blog post, news article, or press release.",
+      'content-type:node-count' => 3,
+      'content-type:edit-url' => url('admin/structure/types/manage/post', array('absolute' => TRUE)),
+      // Deprecated tokens.
+      'type' => 'post',
+      'type-name' => 'Post',
+      'tnid' => $source_node->nid,
+      'url:alias' => $translated_node->path['alias'],
+    );
+    $this->assertTokens('node', array('node' => $translated_node), $tokens);
+  }
+}
+
+class TokenMenuTestCase extends TokenTestHelper {
+
+  public function setUp($modules = array()) {
+    $modules[] = 'menu';
+    parent::setUp($modules);
+  }
+
+  function testMenuTokens() {
+    // Add a root link.
+    $root_link = array(
+      'link_path' => 'root',
+      'link_title' => 'Root link',
+      'menu_name' => 'main-menu',
+    );
+    menu_link_save($root_link);
+
+    // Add another link with the root link as the parent
+    $child_link = array(
+      'link_path' => 'root/parent',
+      'link_title' => 'Parent link',
+      'menu_name' => 'main-menu',
+      'plid' => $root_link['mlid'],
+    );
+    menu_link_save($child_link);
+
+    // Test menu link tokens.
+    $tokens = array(
+      'mlid' => $child_link['mlid'],
+      'title' => 'Parent link',
+      'menu' => 'Primary navigation',
+      'menu:name' => 'Primary navigation',
+      'menu:machine-name' => 'main-menu',
+      'menu:description' => 'The <em>Primary navigation</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.',
+      'menu:menu-link-count' => 2,
+      'menu:edit-url' => url("admin/structure/menu/manage/main-menu", array('absolute' => TRUE)),
+      'url' => url('root/parent', array('absolute' => TRUE)),
+      'url:absolute' => url('root/parent', array('absolute' => TRUE)),
+      'url:relative' => url('root/parent', array('absolute' => FALSE)),
+      'url:path' => 'root/parent',
+      'url:alias' => 'root/parent',
+      'edit-url' => url("admin/structure/menu/item/{$child_link['mlid']}/edit", array('absolute' => TRUE)),
+      'parent' => 'Root link',
+      'parent:mlid' => $root_link['mlid'],
+      'parent:title' => 'Root link',
+      'parent:menu' => 'Primary navigation',
+      'parent:parent' => NULL,
+      'parents' => 'Root link',
+      'parents:count' => 1,
+      'parents:keys' => $root_link['mlid'],
+      'root' => 'Root link',
+      'root:mlid' => $root_link['mlid'],
+      'root:parent' => NULL,
+      'root:root' => NULL,
+    );
+    $this->assertTokens('menu-link', array('menu-link' => $child_link), $tokens);
+
+    // Add a node menu link
+    $node_link = array(
+      'enabled' => TRUE,
+      'link_title' => 'Node link',
+      'plid' => $child_link['mlid'],
+      'customized' => 0,
+      'description' => '',
+    );
+    $node = $this->backdropCreateNode(array('menu' => $node_link));
+
+    // Test [node:menu] tokens.
+    $tokens = array(
+      'menu-link' => 'Node link',
+      'menu-link:mlid' => $node->menu['mlid'],
+      'menu-link:title' => 'Node link',
+      'menu-link:menu' => 'Primary navigation',
+      'menu-link:url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'menu-link:url:path' => $node->path['alias'],
+      'menu-link:edit-url' => url("admin/structure/menu/item/{$node->menu['mlid']}/edit", array('absolute' => TRUE)),
+      'menu-link:parent' => 'Parent link',
+      'menu-link:parent:mlid' => $node->menu['plid'],
+      'menu-link:parent:mlid' => $child_link['mlid'],
+      'menu-link:parents' => 'Root link, Parent link',
+      'menu-link:parents:count' => 2,
+      'menu-link:parents:keys' => $root_link['mlid'] . ', ' . $child_link['mlid'],
+      'menu-link:root' => 'Root link',
+      'menu-link:root:mlid' => $root_link['mlid'],
+    );
+    $this->assertTokens('node', array('node' => $node), $tokens);
+
+    // Reload the node which will not have $node->menu defined and re-test.
+    $loaded_node = node_load($node->nid);
+    $this->assertTokens('node', array('node' => $loaded_node), $tokens);
+
+    // Regression test for http://drupal.org/node/1317926 to ensure the
+    // original node object is not changed when calling menu_node_prepare().
+    $this->assertTrue(!isset($loaded_node->menu), t('The $node->menu property was not modified during token replacement.'), 'Regression');
+  }
+}
+
+class TokenTaxonomyTestCase extends TokenTestHelper {
+  protected $profile = 'standard';
+  protected $vocab;
+
+  public function setUp($modules = array()) {
+    $modules[] = 'taxonomy';
+    parent::setUp($modules);
+
+    // Create the default tags vocabulary.
+    $vocabulary = new TaxonomyVocabulary(array(
+      'name' => 'Tags',
+      'machine_name' => 'tags',
+    ));
+    taxonomy_vocabulary_save($vocabulary);
+    $this->vocab = $vocabulary;
+  }
+
+  /**
+   * Test the additional taxonomy term tokens.
+   */
+  function testTaxonomyTokens() {
+    $root_term = $this->addTerm($this->vocab, array('name' => 'Root term', 'path' => array('alias' => 'root-term', 'auto' => FALSE)));
+    $tokens = array(
+      'url' => url("taxonomy/term/{$root_term->tid}", array('absolute' => TRUE)),
+      'url:absolute' => url("taxonomy/term/{$root_term->tid}", array('absolute' => TRUE)),
+      'url:relative' => url("taxonomy/term/{$root_term->tid}", array('absolute' => FALSE)),
+      'url:path' => 'root-term',
+      'url:unaliased:path' => "taxonomy/term/{$root_term->tid}",
+      'edit-url' => url("taxonomy/term/{$root_term->tid}/edit", array('absolute' => TRUE)),
+      'parents' => NULL,
+      'parents:count' => NULL,
+      'parents:keys' => NULL,
+      'root' => NULL,
+      // Deprecated tokens
+      'url:alias' => 'root-term',
+    );
+    $this->assertTokens('term', array('term' => $root_term), $tokens);
+
+    $parent_term = $this->addTerm($this->vocab, array('name' => 'Parent term', 'parent' => array($root_term->tid), 'path' => array('auto' => FALSE)));
+    $tokens = array(
+      'url' => url("taxonomy/term/{$parent_term->tid}", array('absolute' => TRUE)),
+      'url:absolute' => url("taxonomy/term/{$parent_term->tid}", array('absolute' => TRUE)),
+      'url:relative' => url("taxonomy/term/{$parent_term->tid}", array('absolute' => FALSE)),
+      'url:path' => "taxonomy/term/{$parent_term->tid}",
+      'url:unaliased:path' => "taxonomy/term/{$parent_term->tid}",
+      'edit-url' => url("taxonomy/term/{$parent_term->tid}/edit", array('absolute' => TRUE)),
+      'parents' => 'Root term',
+      'parents:count' => 1,
+      'parents:keys' => $root_term->tid,
+      'root' => check_plain($root_term->name),
+      'root:tid' => $root_term->tid,
+      // Deprecated tokens
+      'url:alias' => "taxonomy/term/{$parent_term->tid}",
+    );
+    $this->assertTokens('term', array('term' => $parent_term), $tokens);
+
+    $term = $this->addTerm($this->vocab, array('name' => 'Test term', 'parent' => array($parent_term->tid)));
+    $tokens = array(
+      'parents' => 'Root term, Parent term',
+      'parents:count' => 2,
+      'parents:keys' => implode(', ', array($root_term->tid, $parent_term->tid)),
+    );
+    $this->assertTokens('term', array('term' => $term), $tokens);
+  }
+
+  /**
+   * Test the additional vocabulary tokens.
+   */
+  function testVocabularyTokens() {
+    $vocabulary = $this->vocab;
+    $tokens = array(
+      'machine-name' => 'tags',
+      'edit-url' => url("admin/structure/taxonomy/{$vocabulary->machine_name}/edit", array('absolute' => TRUE)),
+    );
+    $this->assertTokens('vocabulary', array('vocabulary' => $vocabulary), $tokens);
+  }
+
+  function addVocabulary(array $vocabulary = array()) {
+    $vocabulary += array(
+      'name' => backdrop_strtolower($this->randomName(5)),
+      'nodes' => array('post' => 'post'),
+    );
+    $vocabulary = new TaxonomyVocabulary($vocabulary);
+    taxonomy_vocabulary_save($vocabulary);
+    return $vocabulary;
+  }
+
+  function addTerm(TaxonomyVocabulary $vocabulary, array $term = array()) {
+    $term += array(
+      'name' => backdrop_strtolower($this->randomName(5)),
+      'vocabulary' => $vocabulary->machine_name,
+      'parent' => array(0),
+    );
+    $term = new TaxonomyTerm($term);
+    taxonomy_term_save($term);
+    return $term;
+  }
+}
+
+class TokenUserTestCase extends TokenTestHelper {
+  protected $account = NULL;
+  protected $config;
+
+
+  public function setUp($modules = array()) {
+    parent::setUp($modules);
+    // Enable user pictures.
+    config_set('system.core', 'user_pictures', 1);
+    config_set('system.core', 'user_picture_file_size', '');
+
+    // Set up the pictures directory.
+    $picture_path = file_default_scheme() . '://' . config_get('system.core', 'user_picture_path');
+    if (!file_prepare_directory($picture_path, FILE_CREATE_DIRECTORY)) {
+      $this->fail('Could not create directory ' . $picture_path . '.');
+    }
+
+    $this->account = $this->backdropCreateUser(array('administer users', 'administer account settings'));
+    $this->backdropLogin($this->account);
+  }
+
+  function testUserTokens() {
+    // Add a user picture to the account.
+    $image = current($this->backdropGetTestFiles('image'));
+    $edit = array('files[picture_upload]' => backdrop_realpath($image->uri));
+    $this->backdropPost('user/' . $this->account->uid . '/edit', $edit, t('Save'));
+
+    // Load actual user data from database.
+    $this->account = user_load($this->account->uid, TRUE);
+    $this->assertTrue(!empty($this->account->picture->fid), 'User picture uploaded.');
+
+    $user_tokens = array(
+      'picture' => theme('user_picture', array('account' => $this->account)),
+      'picture:fid' => $this->account->picture->fid,
+      'picture:size-raw' => 125,
+      'ip-address' => NULL,
+      'roles' => implode(', ', array_intersect_key(user_roles(), backdrop_map_assoc($this->account->roles))),
+      'roles:keys' => implode(', ', $this->account->roles),
+    );
+    $this->assertTokens('user', array('user' => $this->account), $user_tokens);
+
+    $edit = array('user_pictures' => FALSE);
+    $this->backdropPost('admin/config/people/settings', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
+
+    // Remove the simpletest-created user role.
+    user_role_delete(end($this->account->roles));
+    $this->account = user_load($this->account->uid, TRUE);
+
+    $user_tokens = array(
+      'picture' => NULL,
+      'picture:fid' => NULL,
+      'ip-address' => NULL,
+      'roles' => 'Authenticated',
+      'roles:keys' => BACKDROP_AUTHENTICATED_ROLE,
+    );
+    $this->assertTokens('user', array('user' => $this->account), $user_tokens);
+
+    // The ip address token should work for the current user token type.
+    $tokens = array(
+      'ip-address' => ip_address(),
+    );
+    $this->assertTokens('current-user', array(), $tokens);
+
+    $anonymous = backdrop_anonymous_user();
+    $tokens = array(
+      'roles' => 'Anonymous',
+      'roles:keys' => BACKDROP_ANONYMOUS_ROLE,
+    );
+    $this->assertTokens('user', array('user' => $anonymous), $tokens);
+  }
+}
+
+class TokenEntityTestCase extends TokenTestHelper {
+
+  public function setUp($modules = array()) {
+    $modules[] = 'taxonomy';
+    parent::setUp($modules);
+
+    // Create the default tags vocabulary.
+    $vocabulary = new TaxonomyVocabulary(array(
+      'name' => 'Tags',
+      'machine_name' => 'tags',
+    ));
+    taxonomy_vocabulary_save($vocabulary);
+    $this->vocab = $vocabulary;
+  }
+
+  function addTerm(TaxonomyVocabulary $vocabulary, array $term = array()) {
+    $term += array(
+      'name' => backdrop_strtolower($this->randomName(5)),
+      'vocabulary' => $vocabulary->machine_name,
+      'parents' => array(0),
+    );
+    $term = new TaxonomyTerm($term);
+    $term->save();
+    return $term;
+  }
+
+  /**
+   * Test the [entity:original:*] tokens.
+   */
+  function testEntityOriginal() {
+    $node = $this->backdropCreateNode(array('title' => 'Original title'));
+
+    $tokens = array(
+      'nid' => $node->nid,
+      'title' => 'Original title',
+      'original' => NULL,
+      'original:nid' => NULL,
+    );
+    $this->assertTokens('node', array('node' => $node), $tokens);
+
+    // Emulate the original entity property that would be available from
+    // node_save() and change the title for the node.
+    $node->original = entity_load_unchanged('node', $node->nid);
+    $node->title = 'New title';
+
+    $tokens = array(
+      'nid' => $node->nid,
+      'title' => 'New title',
+      'original' => 'Original title',
+      'original:nid' => $node->nid,
+    );
+    $this->assertTokens('node', array('node' => $node), $tokens);
+  }
+}
+
+/**
+ * Test the current page tokens.
+ */
+class TokenCurrentPageTestCase extends TokenTestHelper {
+  protected $profile = 'standard';
+  protected $config;
+
+  function testCurrentPageTokens() {
+    $tokens = array(
+      '[current-page:title]' => t('Home', array('@site-name' => config_get('system.core', 'site_name'))),
+      '[current-page:url]' => url('home', array('absolute' => TRUE)),
+      '[current-page:url:absolute]' => url('home', array('absolute' => TRUE)),
+      '[current-page:url:relative]' => url('home', array('absolute' => FALSE)),
+      '[current-page:url:path]' => 'home',
+      '[current-page:url:args:value:0]' => 'home',
+      '[current-page:url:args:value:1]' => NULL,
+      '[current-page:url:unaliased]' => url('home', array('absolute' => TRUE, 'alias' => TRUE)),
+      '[current-page:page-number]' => 1,
+      '[current-page:query:foo]' => NULL,
+      '[current-page:query:bar]' => NULL,
+      '[current-page:query:q]' => 'home',
+      // Deprecated tokens
+      '[current-page:arg:0]' => 'home',
+      '[current-page:arg:1]' => NULL,
+    );
+    $this->assertPageTokens('', $tokens);
+
+    $node = $this->backdropCreateNode(array(
+      'title' => 'Node title',
+      'path' => array(
+        'auto' => FALSE,
+        'alias' => 'node-alias',
+      ),
+    ));
+    $tokens = array(
+      '[current-page:title]' => 'Node title',
+      '[current-page:url]' => url("node/{$node->nid}", array('absolute' => TRUE)),
+      '[current-page:url:absolute]' => url("node/{$node->nid}", array('absolute' => TRUE)),
+      '[current-page:url:relative]' => url("node/{$node->nid}", array('absolute' => FALSE)),
+      '[current-page:url:alias]' => 'node-alias',
+      '[current-page:url:args:value:0]' => 'node-alias',
+      '[current-page:url:args:value:1]' => NULL,
+      '[current-page:url:unaliased]' => url("node/{$node->nid}", array('absolute' => TRUE, 'alias' => TRUE)),
+      '[current-page:url:unaliased:args:value:0]' => 'node',
+      '[current-page:url:unaliased:args:value:1]' => $node->nid,
+      '[current-page:url:unaliased:args:value:2]' => NULL,
+      '[current-page:page-number]' => 1,
+      '[current-page:query:foo]' => 'bar',
+      '[current-page:query:bar]' => NULL,
+      '[current-page:query:q]' => 'node/3',
+      // Deprecated tokens
+      '[current-page:arg:0]' => 'node',
+      '[current-page:arg:1]' => 3,
+      '[current-page:arg:2]' => NULL,
+    );
+    $this->assertPageTokens("node/{$node->nid}", $tokens, array(), array('url_options' => array('query' => array('foo' => 'bar'))));
+  }
+}
+
+class TokenArrayTestCase extends TokenTestHelper {
+
+  function testArrayTokens() {
+    // Test a simple array.
+    $array = array(0 => 'a', 1 => 'b', 2 => 'c', 4 => 'd');
+    $tokens = array(
+      'first' => 'a',
+      'last' => 'd',
+      'value:0' => 'a',
+      'value:2' => 'c',
+      'count' => 4,
+      'keys' => '0, 1, 2, 4',
+      'keys:value:3' => '4',
+      'keys:join' => '0124',
+      'reversed' => 'd, c, b, a',
+      'reversed:keys' => '4, 2, 1, 0',
+      'join:/' => 'a/b/c/d',
+      'join' => 'abcd',
+      'join:, ' => 'a, b, c, d',
+      'join: ' => 'a b c d',
+    );
+    $this->assertTokens('array', array('array' => $array), $tokens);
+
+    // Test a render array.
+    // 2 => c, 0 => a, 4 => d, 1 => b
+    $array = array(
+      '#property' => 'value',
+      0 => array('#markup' => 'a', '#weight' => -0.001),
+      1 => array('#markup' => 'b', '#weight' => 0.01),
+      2 => array('#markup' => 'c', '#weight' => -10),
+      4 => array('#markup' => 'd', '#weight' => 0),
+    );
+    $tokens = array(
+      'first' => 'c',
+      'last' => 'b',
+      'value:0' => 'a',
+      'value:2' => 'c',
+      'count' => 4,
+      'keys' => '2, 0, 4, 1',
+      'keys:value:3' => '1',
+      'keys:join' => '2041',
+      'reversed' => 'b, d, a, c',
+      'reversed:keys' => '1, 4, 0, 2',
+      'join:/' => 'c/a/d/b',
+      'join' => 'cadb',
+      'join:, ' => 'c, a, d, b',
+      'join: ' => 'c a d b',
+    );
+    $this->assertTokens('array', array('array' => $array), $tokens, array('array sort' => TRUE));
+  }
+}
+
+class TokenFileTestCase extends TokenTestHelper {
+
+  function testFileTokens() {
+    // Create a test file object.
+    $file = new File();
+    $file->fid = 1;
+    $file->filename = 'test.png';
+    $file->filesize = 100;
+    $file->uri = 'public://images/test.png';
+    $file->filemime = 'image/png';
+
+    $tokens = array(
+      'basename' => 'test.png',
+      'extension' => 'png',
+      'size-raw' => 100,
+    );
+    $this->assertTokens('file', array('file' => $file), $tokens);
+
+    // Test a file with no extension and a fake name.
+    $file->filename = 'Test PNG image';
+    $file->uri = 'public://images/test';
+
+    $tokens = array(
+      'basename' => 'test',
+      'extension' => '',
+      'size-raw' => 100,
+    );
+    $this->assertTokens('file', array('file' => $file), $tokens);
+  }
+}

@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the update_d7_test_2 module.
+ */
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function update_d7_test_2_update_last_removed() {
+  return 7002;
+}
+
+/**
+ * Dummy update_d7_test_2 update 1000.
+ */
+function update_d7_test_2_update_1000() {
+}
+
+/**
+ * Dummy update_d7_test_2 update 1001.
+ */
+function update_d7_test_2_update_1001() {
+}
+
+/**
+ * Dummy update_d7_test_2 update 1002.
+ */
+function update_d7_test_2_update_1002() {
+}

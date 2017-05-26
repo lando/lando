@@ -1,0 +1,28 @@
+<?php
+
+require_once BACKDROP_ROOT . '/core/modules/simpletest/tests/upgrade/upgrade.test';
+
+/**
+ * Upgrade test for the bare database..
+ *
+ * Load an empty installation of Drupal 7 and run the upgrade process on it.
+ */
+class BareUpgradePathTestCase extends UpgradePathTestCase {
+  public function setUp() {
+    // Path to the database dump.
+    $this->databaseDumpFiles = array(
+      backdrop_get_path('module', 'simpletest') . '/tests/upgrade/drupal-7.bare.database.php.gz',
+    );
+    parent::setUp();
+  }
+
+  /**
+   * Test a successful upgrade.
+   */
+  public function testBareUpgrade() {
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+
+    // Ensure that the new Entity module is enabled after upgrade.
+    $this->assertTrue(module_exists('entity'), 'Entity module enabled after upgrade.');
+  }
+}

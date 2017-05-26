@@ -1,0 +1,58 @@
+.views-exposed-form .views-exposed-widget,
+.views-bulk-form .form-item,
+.views-bulk-form .form-actions {
+  display: inline-block;
+  padding: .5em 1em 0 0; /* LTR */
+}
+[dir="rtl"] .views-exposed-form .views-exposed-widget,
+[dir="rtl"] .views-bulk-form .form-item,
+[dir="rtl"] .views-bulk-form .form-actions {
+  padding: .5em 0 0 1em;
+}
+
+.views-exposed-form .form-item,
+.views-exposed-form .form-submit {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.views-exposed-form label {
+  font-weight: bold;
+}
+
+.views-exposed-widgets {
+  margin-bottom: .5em;
+}
+
+.views-bulk-form .form-item,
+.views-bulk-form .form-actions,
+.views-bulk-form .form-submit {
+  display: inline-block;
+  vertical-align: bottom;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.views-bulk-form {
+  margin-bottom: 1em;
+}
+
+/* table style column align */
+.views-align-left {
+  text-align: left;
+}
+.views-align-right {
+  text-align: right;
+}
+.views-align-center {
+  text-align: center;
+}
+
+/* Remove the border on tbody that system puts in */
+.views-view-grid tbody {
+  border-top: none;
+}
+
+.view .progress-disabled {
+  float: none;
+}

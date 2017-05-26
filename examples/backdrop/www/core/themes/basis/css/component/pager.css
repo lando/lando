@@ -1,0 +1,146 @@
+/**
+ * @file
+ * Pager styling.
+ */
+ul.pager {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  list-style: none;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 1em 0 2em;
+  padding: 0;
+  clear: both;
+}
+
+.no-flexbox .pager-first,
+.no-flexbox .pager-previous,
+.no-flexbox .pager-ellipsis,
+.no-flexbox .pager-current,
+.no-flexbox .pager-next,
+.no-flexbox .pager-last,
+.no-flexbox .pager-item {
+  float: left;
+}
+
+.pager-item,
+.pager-ellipsis {
+  display: none;
+}
+
+@media (min-width: 34em) {
+  .pager-item,
+  .pager-ellipsis {
+    display: block;
+  }
+}
+
+.pager-first,
+.pager-previous,
+.pager-ellipsis,
+.pager-current,
+.pager-next,
+.pager-last,
+.pager-item {
+  padding: 0.6em 1em;
+  margin: 0;
+}
+
+.pager-ellipsis {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.pager-first a,
+.pager-previous a,
+.pager-next a,
+.pager-last a {
+  position: relative;
+  display: block;
+  text-indent: -9999em;
+  overflow: hidden;
+  width: 2.5em;
+}
+
+.pager-first a:before,
+.pager-first a:after,
+.pager-previous a:before,
+.pager-next a:before,
+.pager-last a:before,
+.pager-last a:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 0.5em;
+  height: 0.5em;
+  border: 0.125rem solid #fff;
+  -webkit-transform: translate(-50%, -50%) rotate(45deg);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.pager-first a:before,
+.pager-first a:after,
+.pager-previous a:before {
+  border-top-width: 0;
+  border-right-width: 0;
+}
+
+.pager-last a:before,
+.pager-last a:after,
+.pager-next a:before {
+  border-bottom-width: 0;
+  border-left-width: 0;
+}
+
+.pager-first a:before,
+.pager-last a:before {
+  margin-left: -0.1875rem;
+}
+
+.pager-last a:after,
+.pager-first a:after {
+  margin-left: 0.1875rem;
+}
+
+@media (min-width: 48em) {
+  .pager-first a,
+  .pager-previous a,
+  .pager-next a,
+  .pager-last a {
+    text-indent: 0;
+    overflow: visible;
+    width: auto;
+  }
+
+  .pager-first a:before,
+  .pager-first a:after,
+  .pager-previous a:before,
+  .pager-next a:before,
+  .pager-last a:before,
+  .pager-last a:after {
+    display: none;
+  }
+}
+
+.pager-first a,
+.pager-previous a,
+.pager-next a,
+.pager-last a,
+.pager-item a {
+  margin: -0.6em -1em;
+  padding: 0.6em 1em;
+  text-decoration: none;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+  will-change: background-color;
+  white-space: nowrap;
+}

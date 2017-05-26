@@ -1,0 +1,155 @@
+<?php
+/**
+ * @file
+ * Contains install and update functions for Views.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function views_install() {
+  db_query("UPDATE {system} SET weight = 10 WHERE name = 'views'");
+}
+
+/**
+ * Implements hook_schema().
+ */
+function views_schema() {
+  $schema['cache_views'] = backdrop_get_schema_unprocessed('system', 'cache');
+  $schema['cache_views']['description'] = 'Cache table for Views to store loaded view configurations.';
+
+  $schema['cache_views_data'] = backdrop_get_schema_unprocessed('system', 'cache');
+  $schema['cache_views_data']['description'] = 'Cache table for views to store pre-rendered queries, results, and display output.';
+  $schema['cache_views_data']['fields']['serialized']['default'] = 1;
+
+  return $schema;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Convert default views to configuration files.
+ */
+function views_update_1000() {
+  // This update removed. Updates for default views are in individual modules.
+}
+
+/**
+ * Convert available database views to configuration files.
+ */
+function views_update_1001() {
+  if (db_table_exists('views_view')) {
+    $views = db_query("SELECT * FROM {views_view}");
+    foreach ($views as $view) {
+      $view = (array) $view;
+      $view['display'] = array();
+      if (empty($view['human_name'])) {
+        $view['human_name'] = $view['name'];
+      }
+      $displays = db_query("SELECT * FROM {views_display} WHERE vid = :vid ORDER BY position ASC", array(':vid' => $view['vid']));
+      foreach ($displays as $display) {
+        $display = (array) $display;
+        $display['display_options'] = unserialize($display['display_options']);
+        $id = $display['id'];
+        unset($display['id']);
+        unset($display['vid']);
+        unset($display['position']);
+        $view['display'][$id] = $display;
+      }
+      unset($view['vid']);
+      $config = config('views.view.' . $view['name']);
+      $config->setData($view);
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Drop Views tables that were converted to configuration files.
+ *
+ * This update is separate from views_update_1001 so that other modules may read
+ * the views_view and views_display tables before they are dropped using
+ * hook_update_dependencies() to come between these two updates.
+ */
+function views_update_1002() {
+  if (db_table_exists('views_view')) {
+    db_drop_table('views_view');
+    db_drop_table('views_display');
+  }
+}
+
+/**
+ * Update Views variables to use configuration files.
+ */
+function views_update_1003() {
+  $update_variables = array(
+    'views_no_javascript' => FALSE,
+    'views_exposed_filter_any_label' => 'new_any',
+    'views_show_additional_queries' => FALSE,
+    'views_sql_signature' => FALSE,
+    'views_devel_output' => FALSE,
+    'views_devel_region' => 'footer',
+    'views_display_extenders' => array(),
+    'views_field_rewrite_elements' => array(
+      '' => t('- Use default -'),
+      '0' => t('- None -'),
+      'div' => 'DIV',
+      'span' => 'SPAN',
+      'h1' => 'H1',
+      'h2' => 'H2',
+      'h3' => 'H3',
+      'h4' => 'H4',
+      'h5' => 'H5',
+      'h6' => 'H6',
+      'p' => 'P',
+      'strong' => 'STRONG',
+      'em' => 'EM',
+    ),
+  );
+
+  // Update the main views module variables.
+  $config = config('views.settings');
+  foreach ($update_variables as $name => $default) {
+    $value = update_variable_get($name, $default);
+    $name = str_replace('views_', '', $name);
+    $config->set($name, $value);
+  }
+  $config->save();
+
+  // Delete the updated and unneeded variables.
+  $delete_variables = array_keys($update_variables);
+  $delete_variables[] = 'views_skip_cache';
+  db_delete('variable')
+    ->condition('name', $delete_variables, 'IN')
+    ->execute();
+}
+
+/**
+ * Replace the frontpage view with promoted.
+ */
+function views_update_1004() {
+  // If the old frontpage view is still disabled, delete it.
+  if (config_get('views.view.frontpage', 'disabled') === TRUE) {
+    $config_frontpage = config('views.view.frontpage');
+    $config_frontpage->delete();
+  }
+  // See if there is already a promoted view on this site.
+  $config_promoted = config('views.view.promoted');
+  if ($config_promoted->isNew()) {
+    // If not, create the new promoted view and mark it disabled.
+    $path = backdrop_get_path('module', 'views') . '/config/';
+    $contents = file_get_contents($path . 'views.view.promoted.json');
+    $data = json_decode($contents, true);
+    $config_promoted->setData($data);
+    $config_promoted->set('disabled', TRUE);
+    $config_promoted->save();
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

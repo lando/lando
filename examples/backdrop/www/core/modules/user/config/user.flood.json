@@ -1,0 +1,8 @@
+{
+    "_config_name": "user.flood",
+    "flood_uid_only": "false",
+    "flood_ip_limit": 50,
+    "flood_ip_window": 3600,
+    "flood_user_limit": 5,
+    "flood_user_window": 21600
+}

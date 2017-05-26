@@ -1,0 +1,339 @@
+
+/**
+ * @file
+ * Styles for administration pages.
+ */
+
+/**
+ * Administration blocks.
+ */
+div.admin-panel {
+  margin: 0;
+  padding: 5px 5px 15px 5px;
+}
+div.admin-panel .description {
+  margin: 0 0 3px;
+  padding: 2px 0 3px 0;
+}
+div.admin-panel .body {
+  padding: 0 4px 2px 8px; /* LTR */
+}
+[dir="rtl"] div.admin-panel .body {
+  padding: 0 8px 2px 4px;
+}
+div.admin {
+  padding-top: 15px;
+}
+div.admin .left {
+  float: left; /* LTR */
+  width: 47%;
+  margin-left: 1em; /* LTR */
+}
+[dir="rtl"] div.admin .left {
+  float: right;
+  margin-left: 0;
+  margin-right: 1em;
+}
+div.admin .right {
+  float: right; /* LTR */
+  width: 47%;
+  margin-right: 1em; /* LTR */
+}
+[dir="rtl"] div.admin .right {
+  float: left;
+  margin-left: 1em;
+  margin-right: 0;
+}
+div.admin .expert-link {
+  text-align: right; /* LTR */
+  margin-right: 1em; /* LTR */
+  padding-right: 4px; /* LTR */
+}
+[dir="rtl"] div.admin .expert-link {
+  text-align: left;
+  margin-right: 0;
+  margin-left: 1em;
+  padding-right: 0;
+  padding-left: 4px;
+}
+
+/**
+ * Quick inline admin links.
+ */
+small .admin-link:before {
+  content: '[';
+}
+small .admin-link:after {
+  content: ']';
+}
+
+/**
+ * Modules page.
+ */
+#system-modules div.incompatible {
+  font-weight: bold;
+}
+#system-modules td.checkbox {
+  width: 20px;
+}
+#system-modules td.module {
+  width: 110px;
+}
+@media screen and (min-width: 800px) {
+  #system-modules td.module {
+    width: 180px;
+  }
+}
+#system-modules td.version {
+  width: 70px;
+}
+#system-modules td.operations {
+  width: 105px;
+}
+div.admin-requirements,
+div.admin-required {
+  font-size: 0.9em;
+  color: #444;
+}
+span.admin-disabled {
+  color: #800;
+}
+span.admin-enabled {
+  color: #080;
+}
+span.admin-missing {
+  color: #f00;
+}
+
+/**
+ * Status report.
+ */
+table.system-status-report td {
+  padding: 6px;
+  vertical-align: middle;
+}
+table.system-status-report tr.merge-up td {
+  padding: 0 6px 8px 40px; /* LTR */
+}
+[dir="rtl"] table.system-status-report tr.merge-up td {
+  padding: 0 40px 8px 6px;
+}
+table.system-status-report td.status-icon {
+  width: 16px;
+  padding-right: 0; /* LTR */
+}
+[dir="rtl"] table.system-status-report td.status-icon {
+  padding-left: 0;
+  padding-right: 6px;
+}
+table.system-status-report td.status-icon div {
+  background-repeat: no-repeat;
+  width: 28px;
+  height: 28px;
+}
+table.system-status-report td.status-icon div:before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 15px;
+}
+table.system-status-report tr.error td.status-icon div:before {
+  background: #EE3D23 url(../../../misc/message-16-error.png) no-repeat center center;
+}
+table.system-status-report tr.warning td.status-icon div:before {
+  background: #FCE400 url(../../../misc/message-16-warning.png) no-repeat center center;
+}
+tr.merge-down,
+tr.merge-down td {
+  border-bottom-width: 0 !important;
+}
+tr.merge-up,
+tr.merge-up td {
+  border-top-width: 0 !important;
+}
+
+/**
+ * Theme settings.
+ */
+.theme-settings-left {
+  float: left;
+  width: 49%;
+}
+.theme-settings-right {
+  float: right;
+  width: 49%;
+}
+.theme-settings-bottom {
+  clear: both;
+}
+
+/**
+ * Appearance page.
+ */
+table.screenshot {
+  margin-right: 1em; /* LTR */
+}
+[dir="rtl"] table.screenshot {
+  margin-left: 1em;
+  margin-right: 0;
+}
+.theme-info h2 {
+  margin-bottom: 0;
+}
+.theme-info p {
+  margin-top: 0;
+}
+.system-themes-list {
+  margin-bottom: 20px;
+}
+.system-themes-list-disabled {
+  border-top: 1px solid #cdcdcd;
+  padding-top: 20px;
+}
+.system-themes-list h2 {
+  margin: 0;
+}
+.theme-selector {
+  padding-top: 20px;
+}
+.theme-selector .screenshot,
+.theme-selector .no-screenshot {
+  border: 1px solid #e0e0d8;
+  padding: 2px;
+  vertical-align: bottom;
+  width: 294px;
+  height: auto;
+  line-height: 219px;
+  text-align: center;
+}
+.theme-default .screenshot {
+  border: 1px solid #aaa;
+}
+.system-themes-list-enabled .theme-selector .screenshot,
+.system-themes-list-enabled .theme-selector .no-screenshot {
+  float: left; /* LTR */
+  margin: 0 20px 0 0; /* LTR */
+}
+[dir="rtl"] .system-themes-list-enabled .theme-selector .screenshot,
+[dir="rtl"] .system-themes-list-enabled .theme-selector .no-screenshot {
+  float: right;
+  margin: 0 0 0 20px;
+}
+.system-themes-list-disabled .theme-selector .screenshot,
+.system-themes-list-disabled .theme-selector .no-screenshot {
+  width: 194px;
+  height: 144px;
+  line-height: 144px;
+}
+[dir="rtl"] .system-themes-list-enabled .theme-selector .screenshot,
+[dir="rtl"] .system-themes-list-enabled .theme-selector .no-screenshot {
+  float: right;
+  margin: 0 0 0 20px;
+}
+.theme-selector h3 {
+  font-weight: normal;
+}
+.theme-default h3 {
+  font-weight: bold;
+}
+.system-themes-list-enabled .theme-selector h3 {
+  margin-top: 0;
+}
+.system-themes-list-disabled .theme-selector {
+  width: 300px;
+  float: left; /* LTR */
+  padding: 20px 20px 20px 0; /* LTR */
+}
+[dir="rtl"] .system-themes-list-disabled .theme-selector {
+  float: right;
+  padding: 20px 0 20px 20px;
+}
+.system-themes-list-enabled .theme-info {
+  max-width: 940px;
+}
+.system-themes-list-disabled .theme-info {
+  min-height: 170px;
+}
+.theme-selector .incompatible {
+  margin-top: 10px;
+  font-weight: bold;
+}
+.theme-selector .operations {
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+.theme-selector .operations li {
+  float: left; /* LTR */
+  margin: 0;
+  padding: 0 0.7em;
+  list-style-type: none;
+  border-right: 1px solid #cdcdcd;  /* LTR */
+}
+[dir="rtl"] .theme-selector .operations li {
+  border-right: none;
+  border-left: 1px solid #cdcdcd;
+  float: right;
+}
+.theme-selector .operations li.last {
+  padding: 0 0 0 0.7em; /* LTR */
+  border-right: none; /* LTR */
+}
+[dir="rtl"] .theme-selector .operations li.last {
+  border-left: none;
+  padding: 0 0.7em 0 0;
+}
+.theme-selector .operations li.first {
+  padding: 0 0.7em 0 0; /* LTR */
+}
+[dir="rtl"] .theme-selector .operations li.first {
+  padding: 0 0 0 0.7em;
+}
+#system-themes-admin-form {
+  clear: left;
+}
+
+/**
+ * Exposed filters.
+ */
+.exposed-filters .filters {
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
+}
+[dir="rtl"] .exposed-filters .filters {
+  float: right;
+  margin-left: 1em;
+  margin-right: 0;
+}
+.exposed-filters .form-item {
+  margin: 0 0 0.1em 0;
+  padding: 0;
+}
+.exposed-filters .form-item label {
+  float: left; /* LTR */
+  font-weight: normal;
+  width: 10em;
+}
+[dir="rtl"] .exposed-filters .form-item label {
+  float: right;
+}
+.exposed-filters .form-select {
+  width: 14em;
+}
+/* Current filters */
+.exposed-filters .current-filters {
+  margin-bottom: 1em;
+}
+.exposed-filters .current-filters .placeholder {
+  font-style: normal;
+  font-weight: bold;
+}
+.exposed-filters .additional-filters {
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
+}
+[dir="rtl"] .exposed-filters .additional-filters {
+  float: right;
+  margin-left: 1em;
+  margin-right: 0;
+}

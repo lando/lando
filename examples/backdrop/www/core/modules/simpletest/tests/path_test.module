@@ -1,0 +1,42 @@
+<?php
+/**
+ * @file
+ * Helper module for the path tests.
+ */
+
+/**
+ * Resets the path test results.
+ */
+function path_test_reset() {
+  state_set('path_test_results', array());
+}
+
+/**
+ * Implements hook_path_delete().
+ */
+function path_test_path_delete($path) {
+  backdrop_set_message('path_test_path_delete(): ' . $path['alias'] . ' => ' . $path['source']);
+}
+
+/**
+ * Implements hook_path_insert().
+ */
+function path_test_path_insert($path) {
+  backdrop_set_message('path_test_path_insert(): ' . $path['alias'] . ' => ' . $path['source']);
+
+  // Save the path to a variable so the test routine can use the path ID.
+  // See PathHooksTestCase::testPathHooks().
+  state_set('path_test_inserted_path', $path);
+}
+
+/**
+ * Implements hook_path_update().
+ */
+function path_test_path_update($path) {
+  backdrop_set_message('path_test_path_update(): ' . $path['alias'] . ' => ' . $path['source']);
+
+  // @see PathSaveTest::testBackdropSaveOriginalPath().
+  $results = state_get('path_test_results', array());
+  $results['hook_path_update'] = $path;
+  state_set('path_test_results', $results);
+}

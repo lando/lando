@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsHandlerFileExtensionTest.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/views_query.test';
+
+/**
+ * Tests the views_handler_field_file_extension handler.
+ */
+class ViewsHandlerFileExtensionTest extends ViewsSqlTest {
+  function dataSet() {
+    $data = parent::dataSet();
+    $data[0]['name'] = 'file.png';
+    $data[1]['name'] = 'file.tar';
+    $data[2]['name'] = 'file.tar.gz';
+    $data[3]['name'] = 'file';
+
+    return $data;
+  }
+
+  function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test']['name']['field']['handler'] = 'views_handler_field_file_extension';
+    $data['views_test']['name']['real field'] = 'name';
+
+    return $data;
+  }
+
+  /**
+   * Tests the 'extension_detect_tar' handler option.
+   */
+  public function testFileExtensionTarOption() {
+    $view = $this->getBasicView();
+
+    $view->display['default']->handler->override_option('fields', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+      ),
+    ));
+
+    $this->executeView($view);
+
+    // Test without the tar option.
+    $this->assertEqual($view->field['name']->advanced_render($view->result[0]), 'png');
+    $this->assertEqual($view->field['name']->advanced_render($view->result[1]), 'tar');
+    $this->assertEqual($view->field['name']->advanced_render($view->result[2]), 'gz');
+    $this->assertEqual($view->field['name']->advanced_render($view->result[3]), '');
+    // Test with the tar option.
+    $view->field['name']->options['extension_detect_tar'] = TRUE;
+    $this->assertEqual($view->field['name']->advanced_render($view->result[0]), 'png');
+    $this->assertEqual($view->field['name']->advanced_render($view->result[1]), 'tar');
+    $this->assertEqual($view->field['name']->advanced_render($view->result[2]), 'tar.gz');
+    $this->assertEqual($view->field['name']->advanced_render($view->result[3]), '');
+  }
+}

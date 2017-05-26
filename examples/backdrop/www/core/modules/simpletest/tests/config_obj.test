@@ -1,0 +1,64 @@
+<?php
+/**
+ * Perform unit tests on the Config objects.
+ */
+class ConfigObjectTestCase extends BackdropWebTestCase {
+
+  function setUp() {
+    parent::setUp(array('config_obj_test'));
+  }
+
+  public function testConfigObject() {
+    $config = config('config_obj_test.settings');
+
+    // Test getting a config object
+    $this->assertTrue(is_object($config) && is_a($config, 'Config'), 'config() returned a Config object.');
+    $this->assertFalse($config->isNew(), 'Config object is loaded from storage.');
+
+    // Test reading values from the config object
+    $this->assertTrue($config->get('my_integer') === 99, 'Read integer default value from Config.');
+    $this->assertTrue($config->get('my_string') === 'foo', 'Read string default value from Config.');
+    $array_value = $config->get('my_array');
+    $this->assertTrue(is_array($array_value) && count($array_value) == 4, 'Read integer default value from Config.');
+
+    // Test set/get
+    $config->set('my_integer', -1);
+    $this->assertTrue($config->get('my_integer') === -1, 'Set and read back to same config object');
+    $random_string = $this->randomString();
+    $config->set('my_new_string', $random_string);
+    $this->assertTrue($config->get('my_new_string') === $random_string, 'Add a new setting to an existing object');
+
+    // Test load/save
+    $config_copy = config('config_obj_test.settings');
+    $config->save();
+    $this->assertTrue($config_copy->get('my_integer') == 99, 'Second copy does not have new value.');
+    $config_copy->load();
+    $this->assertTrue($config_copy->get('my_integer') == -1, 'Reloaded second copy does have new value.');
+    $this->assertTrue($config_copy->get('my_new_string') === $random_string, 'Reloaded second copy has new setting.');
+    unset($config_copy);
+
+    // Test bulk set
+    $new_values = array(
+      'my_integer' => 50,
+      'my_string' => $this->randomString(),
+      'my_array' => array('apple', 'banana', 'orange'),
+      'my_new_string' => $this->randomString(),
+      'another_new_string' => $this->randomString(),
+    );
+    $config->setData($new_values);
+    foreach($new_values as $key => $value) {
+      $this->assertTrue($config->get($key) == $value, "Bulk set for $key.");
+    }
+
+    // Test clearing data from a config object
+    $config->clear('my_integer');
+    $this->assertTrue($config->get('my_integer') == NULL, 'Clear value from config object.');
+
+    // remove from disk
+    $config->delete();
+    $config_copy = config('config_obj_test.settings');
+    $this->assertTrue($config->get('my_string') === NULL, 'Deleted config object has no data.');
+    $this->assertTrue($config_copy->get('my_string') === NULL, 'Reloading deleted config object clears data.');
+    $this->assertTrue($config_copy->get('my_new_string') === NULL, 'Reverted copy is missing previously added values.');
+  }
+}

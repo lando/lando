@@ -1,0 +1,297 @@
+<?php
+
+/**
+ * @file
+ * Enables the use of personal and site-wide contact forms.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function contact_permission() {
+  return array(
+    'administer contact forms' => array(
+      'title' => t('Administer contact forms and contact form settings'),
+    ),
+    'access site-wide contact form' => array(
+      'title' => t('Use the site-wide contact form'),
+    ),
+    'access user contact forms' => array(
+      'title' => t("Use users' personal contact forms"),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function contact_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => backdrop_get_path('module', 'contact') . '/views',
+  );
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function contact_config_info() {
+  $prefixes['contact.settings'] = array(
+    'label' => t('Contact settings'),
+    'group' => t('Contact'),
+  );
+  $prefixes['contact.categories'] = array(
+    'label' => t('Contact categories'),
+    'group' => t('Contact'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function contact_menu() {
+  $items['admin/structure/contact'] = array(
+    'title' => 'Contact form',
+    'description' => 'Create a system contact form and set up categories for the form to use.',
+    'page callback' => 'contact_category_list',
+    'access arguments' => array('administer contact forms'),
+    'file' => 'contact.admin.inc',
+  );
+  $items['admin/structure/contact/add'] = array(
+    'title' => 'Add category',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('contact_category_edit_form'),
+    'access arguments' => array('administer contact forms'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 1,
+    'file' => 'contact.admin.inc',
+  );
+  $items['admin/structure/contact/configure/%contact'] = array(
+    'title' => 'Configure contact category',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('contact_category_edit_form', 4),
+    'access arguments' => array('administer contact forms'),
+    'file' => 'contact.admin.inc',
+  );
+  $items['admin/structure/contact/delete/%contact'] = array(
+    'title' => 'Delete contact',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('contact_category_delete_form', 4),
+    'access arguments' => array('administer contact forms'),
+    'file' => 'contact.admin.inc',
+  );
+  $items['contact'] = array(
+    'title' => 'Contact',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('contact_site_form'),
+    'access arguments' => array('access site-wide contact form'),
+    'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'contact.pages.inc',
+  );
+  $items['user/%user/contact'] = array(
+    'title' => 'Contact',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('contact_personal_form', 1),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => '_contact_personal_tab_access',
+    'access arguments' => array(1),
+    'weight' => 2,
+    'file' => 'contact.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Access callback: Checks access for a user's personal contact form.
+ *
+ * @param User $account
+ *   The user object of the user whose contact form is being requested.
+ *
+ * @see contact_menu()
+ */
+function _contact_personal_tab_access($account) {
+  global $user;
+
+  // Anonymous users cannot have contact forms.
+  if (!$account->uid) {
+    return FALSE;
+  }
+
+  // User administrators should always have access to personal contact forms.
+  if (user_access('administer users')) {
+    return TRUE;
+  }
+
+  // Users may not contact themselves.
+  if ($user->uid == $account->uid) {
+    return FALSE;
+  }
+
+  // If the requested user has disabled their contact form, or this preference
+  // has not yet been saved, do not allow users to contact them.
+  if (empty($account->data['contact'])) {
+    return FALSE;
+  }
+
+  // If requested user has been blocked, do not allow users to contact them.
+  if (empty($account->status)) {
+    return FALSE;
+  }
+
+  return user_access('access user contact forms');
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function contact_autoload_info() {
+  return array(
+    'views_handler_field_contact_link' => 'views/views_handler_field_contact_link.inc',
+  );
+}
+
+/**
+ * Loads a contact category.
+ *
+ * @param int $cid
+ *   The contact category id.
+ *
+ * @return array
+ *   An array with the contact category's data.
+ */
+function contact_load($cid) {
+  $cat_data = contact_config_data();
+  $categories = $cat_data['categories'];
+
+  if ($categories) {
+    foreach ($categories as $key => $cat) {
+      if ($cid == $cat['cid']) {
+        $contact = $categories[$key];
+        return $contact;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Loads an array of all contact categories.
+ *
+ * @return array
+ *   An array of contact categoryies data.
+ */
+function contact_config_data() {
+  $config_data = array();
+
+  $config = config('contact.categories');
+  $config_data['contact_default_category'] = $config->get('contact_default_category');
+
+  $categories = $config->get('categories');
+
+  // Sort the categories by weight then category.
+  if ($categories) {
+    backdrop_sort($categories, array('weight' => SORT_NUMERIC, 'category' => SORT_STRING));
+  }
+  $config_data['categories'] = $categories;
+
+  return $config_data;
+}
+
+/**
+ * Implements hook_mail().
+ */
+function contact_mail($key, &$message, $params) {
+  $language = $message['language'];
+  $variables = array(
+    '!site-name' => config_get('system.core', 'site_name'),
+    '!subject' => $params['subject'],
+    '!category' => isset($params['category']['category']) ? $params['category']['category'] : '',
+    '!form-url' => url($_GET['q'], array('absolute' => TRUE, 'language' => $language)),
+    '!sender-name' => user_format_name($params['sender']),
+    '!sender-url' => $params['sender']->uid ? url('user/' . $params['sender']->uid, array('absolute' => TRUE, 'language' => $language)) : $params['sender']->mail,
+  );
+
+  switch ($key) {
+    case 'page_mail':
+    case 'page_copy':
+      $message['subject'] .= t('[!category] !subject', $variables, array('langcode' => $language->langcode));
+      $message['body'][] = t("!sender-name (!sender-url) sent a message using the contact form at !form-url.", $variables, array('langcode' => $language->langcode));
+      $message['body'][] = $params['message'];
+      break;
+
+    case 'page_autoreply':
+      $message['subject'] .= t('[!category] !subject', $variables, array('langcode' => $language->langcode));
+      $message['body'][] = $params['category']['reply'];
+      break;
+
+    case 'user_mail':
+    case 'user_copy':
+      $variables += array(
+        '!recipient-name' => user_format_name($params['recipient']),
+        '!recipient-edit-url' => url('user/' . $params['recipient']->uid . '/edit', array('absolute' => TRUE, 'language' => $language)),
+      );
+      $message['subject'] .= t('[!site-name] !subject', $variables, array('langcode' => $language->langcode));
+      $message['body'][] = t('Hello !recipient-name,', $variables, array('langcode' => $language->langcode));
+      $message['body'][] = t("!sender-name (!sender-url) has sent you a message via your contact form (!form-url) at !site-name.", $variables, array('langcode' => $language->langcode));
+      $message['body'][] = t("If you don't want to receive such e-mails, you can change your settings at !recipient-edit-url.", $variables, array('langcode' => $language->langcode));
+      $message['body'][] = t('Message:', array(), array('langcode' => $language->langcode));
+      $message['body'][] = $params['message'];
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add the enable personal contact form to an individual user's account page.
+ *
+ * @see user_profile_form()
+ */
+function contact_form_user_profile_form_alter(&$form, &$form_state) {
+  $form['contact'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Contact settings'),
+    '#weight' => 5,
+    '#collapsible' => TRUE,
+  );
+  $account = $form['#user'];
+  $form['contact']['contact'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Personal contact form'),
+    '#default_value' => !empty($account->data['contact']) ? $account->data['contact'] : FALSE,
+    '#description' => t('Allow other users to contact you via a <a href="@url">personal contact form</a> which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.', array('@url' => url("user/$account->uid/contact"))),
+  );
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+function contact_user_presave($account) {
+  $config = config('contact.settings');
+  $account->data['contact'] = isset($account->contact) ? $account->contact : $config->get('contact_default_status');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add the default personal contact setting on the user settings page.
+ *
+ * @see user_admin_settings()
+ */
+function contact_form_user_admin_settings_alter(&$form, &$form_state) {
+  $config = config('contact.settings');
+
+  $form['contact'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Contact settings'),
+    '#weight' => 0,
+    '#config' => 'contact.settings',
+  );
+  $form['contact']['contact_default_status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable the personal contact form by default for new users.'),
+    '#description' => t('Changing this setting will not affect existing users.'),
+    '#default_value' => $config->get('contact_default_status'),
+  );
+}

@@ -1,0 +1,347 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the locale module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Enable URL language negotiation by default in order to have a basic working
+ * system on multilingual sites without needing any preliminary configuration.
+ */
+function locale_install() {
+  require_once BACKDROP_ROOT . '/core/includes/language.inc';
+
+  // Enable URL language detection for each configurable language type.
+  $language_config = config('language.settings');
+  foreach (language_types_get_configurable() as $type) {
+    $negotiation = $language_config->get("language_negotiation.$type");
+    if (empty($negotiation)) {
+      $negotiation = array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_DEFAULT);
+    }
+    else {
+      array_unshift($negotiation, LANGUAGE_NEGOTIATION_URL);
+    }
+    $language_config->set("language_negotiation.$type", $negotiation);
+  }
+  $language_config->save();
+}
+
+/**
+ * Fill in the path prefixes and domains when enabled.
+ *
+ * Language module might change the list of languages, so we need to sync our
+ * configuration for domains and paths with the current language list. This
+ * should run every time the module is enabled.
+ */
+function locale_enable() {
+  require_once BACKDROP_ROOT . '/core/includes/locale.inc';
+
+  $languages = language_list();
+  $prefixes_old = locale_language_negotiation_url_prefixes();
+  $domains_old = locale_language_negotiation_url_domains();
+
+  $prefixes = array();
+  $domains = array();
+  foreach ($languages as $langcode => $language) {
+    // Keep the old prefix or fill in based on whether the language is default.
+    $prefixes[$langcode] = empty($prefixes_old[$langcode]) ? (empty($language->default) ? $langcode : '') : $prefixes_old[$langcode];
+    // Keep the old domain or fill in empty value.
+    $domains[$langcode] = empty($domains_old[$langcode]) ? '' : $domains_old[$langcode];
+  }
+
+  locale_language_negotiation_url_prefixes_save($prefixes);
+  locale_language_negotiation_url_domains_save($domains);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function locale_uninstall() {
+  // Delete all JavaScript translation files.
+  $locale_js_directory = 'public://' . settings_get('locale_js_directory', 'languages');
+
+  if (is_dir($locale_js_directory)) {
+    $locale_javascripts = state_get('locale_translation_javascript', array());
+    foreach ($locale_javascripts as $langcode => $file_suffix) {
+      if (!empty($file_suffix)) {
+        file_unmanaged_delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
+      }
+    }
+    // Delete the JavaScript translations directory if empty.
+    if (!file_scan_directory($locale_js_directory, '/.*/')) {
+      backdrop_rmdir($locale_js_directory);
+    }
+  }
+
+  // Clear state values.
+  state_del('locale_javascript_parsed');
+  state_del('locale_translation_javascript');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function locale_schema() {
+  $schema['locales_source'] = array(
+    'description' => 'List of English source strings.',
+    'fields' => array(
+      'lid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this string.',
+      ),
+      'location' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Backdrop path in case of online discovered translations or file path in case of imported strings.',
+      ),
+      'source' => array(
+        'type' => 'blob',
+        'not null' => TRUE,
+        'description' => 'The original string in English.',
+      ),
+      'context' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The context this string applies to.',
+      ),
+      'version' => array(
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'none',
+        'description' => 'Version of Backdrop, where the string was last used (for locales optimization).',
+      ),
+    ),
+    'primary key' => array('lid'),
+    'indexes' => array(
+      'source_context' => array(array('source', 30), 'context'),
+    ),
+  );
+
+  $schema['locales_target'] = array(
+    'description' => 'Stores translated versions of strings.',
+    'fields' => array(
+      'lid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Source string ID. References {locales_source}.lid.',
+      ),
+      'translation' => array(
+        'type' => 'blob',
+        'not null' => TRUE,
+        'description' => 'Translation string value in this language.',
+      ),
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Language code from the language.settings config file',
+      ),
+      'plid' => array(
+        'type' => 'int',
+        'not null' => TRUE, // This should be NULL for no referenced string, not zero.
+        'default' => 0,
+        'description' => 'Parent lid (lid of the previous string in the plural chain) in case of plural strings. References {locales_source}.lid.',
+      ),
+      'plural' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Plural index number in case of plural strings.',
+      ),
+    ),
+    'primary key' => array('language', 'lid', 'plural'),
+    'foreign keys' => array(
+      'locales_source' => array(
+        'table' => 'locales_source',
+        'columns' => array('lid' => 'lid'),
+      ),
+    ),
+    'indexes' => array(
+      'lid'      => array('lid'),
+      'plid'     => array('plid'),
+      'plural'   => array('plural'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function locale_update_dependencies() {
+  // Make sure Locale module updates block tables before System module port the
+  // blocks to layouts.
+  $dependencies['system'][1025] = array(
+    'locale' => 1001,
+  );
+  // Locale update 1003 uses variables modified by language update 1001. Make
+  // sure that Locale runs first as is the expected order.
+  $dependencies['language'][1001] = array(
+    'locale' => 1003,
+  );
+  return $dependencies;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Drop textgroup support.
+ *
+ * Update assumes i18n migrated this data before the update happened. Core
+ * never used textgroups for anything, so it is not our job to find place
+ * for the data elsewhere.
+ */
+function locale_update_1000() {
+  $subquery = db_select('locales_source', 'ls')
+    ->fields('ls', array('lid'))
+    ->condition('ls.textgroup', 'default', '<>');
+  db_delete('locales_target')
+    ->condition('lid', $subquery, 'IN')
+    ->execute();
+  db_delete('locales_source')
+    ->condition('textgroup', 'default', '<>')
+    ->execute();
+  db_drop_field('locales_source', 'textgroup');
+}
+
+/**
+ * Language type 'language' renamed to 'language_interface'.
+ */
+function locale_update_1001() {
+  // Update removed. See https://github.com/backdrop/backdrop-issues/issues/445.
+}
+
+/**
+ * Removes duplicates in {locales_source}.
+ *
+ * Aggressively removes duplicates that has not already been removed by
+ * locale_update_7004() in Drupal 7.x.
+ */
+function locale_update_1002() {
+  // Look up all duplicates.
+  $results = db_query("SELECT source, context FROM {locales_source} GROUP BY source, context HAVING COUNT(*) > 1");
+
+  // For each set of duplicates, select one row that should survive, preferably
+  // one that has been translated, and delete the rest.
+  foreach ($results as $row) {
+    $lid = db_query("SELECT s.lid FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = :source AND s.context = :context ORDER BY translation IS NULL", array(
+      ':source' => $row->source,
+      ':context' => $row->context,
+      ))->fetchField();
+    db_delete('locales_source')
+      ->condition('source', $row->source)
+      ->condition('context', $row->context)
+      ->condition('lid', $lid, '<>')
+      ->execute();
+  }
+
+  // Finally remove any rows from {locales_target} that refer to non-existing
+  // lids.
+  $subquery = db_select('locales_source', 't')->fields('t', array('lid'));
+  db_delete('locales_target')->condition('lid', $subquery, 'NOT IN')->execute();
+}
+
+/**
+ * Move language negotiation settings from variables to config.
+ */
+function locale_update_1003() {
+  // Set up new config file for language negotiation.
+  $config = config('locale.settings');
+  $config->set('_config_static', true);
+
+  $config->set('language_negotiation_session_parameter', update_variable_get('locale_language_negotiation_session_param', 'language'));
+  $config->set('language_negotiation_url_part', update_variable_get('locale_language_negotiation_url_part', 'path_prefix'));
+
+  // Ensure defaults are set for all enabled languages.
+  $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode');
+  $prefixes_old = update_variable_get('locale_language_negotiation_url_prefixes', array('en' => ''));
+  $domains_old = update_variable_get('locale_language_negotiation_url_domains', array('en' => ''));
+  $default_language = update_variable_get('language_default', (object) array(
+    'langcode' => 'en',
+    'name' => 'English',
+    'direction' => 0,
+    'enabled' => TRUE,
+    'weight' => 0,
+  ));
+  $prefixes = array();
+  $domains = array();
+
+  foreach ($languages as $langcode => $language) {
+    // Keep the old prefix or fill in based on whether the language is default.
+    $prefixes[$langcode] = empty($prefixes_old[$langcode]) ? ($default_language->langcode == $langcode ? '' : $langcode) : $prefixes_old[$langcode];
+    // Keep the old domain or fill in empty value.
+    $domains[$langcode] = empty($domains_old[$langcode]) ? '' : $domains_old[$langcode];
+  }
+  $config->set('language_negotiation_url_prefixes', $prefixes);
+  $config->set('language_negotiation_url_domains', $domains);
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('locale_language_negotiation_session_param');
+  update_variable_del('locale_language_negotiation_url_part');
+  update_variable_del('locale_language_negotiation_url_prefixes');
+  update_variable_del('locale_language_negotiation_url_domains');
+}
+
+/**
+ * Update locale settings to config.
+ */
+function locale_update_1004() {
+  $config = config('locale.settings');
+
+  // Previously we had stored these settings in language.negotiation config, so
+  // move them if they exist.
+  $old_config = config('language.negotiation');
+  if (!$old_config->isNew()) {
+    $config->set('language_negotiation_session_parameter', $old_config->get('session_parameter'));
+    $config->set('language_negotiation_url_part', $old_config->get('url_part'));
+    $config->set('language_negotiation_url_prefixes', $old_config->get('url_prefixes'));
+    $config->set('language_negotiation_url_domains', $old_config->get('url_domains'));
+    $old_config->delete();
+  }
+
+  $config->set('language_negotiation_url_type', update_variable_get('locale_language_negotiation_url_type', 'language'));
+  $config->set('language_providers_weight_language', update_variable_get('locale_language_providers_weight_language'));
+  $config->set('cache_length', update_variable_get('locale_cache_length', 75));
+  $config->set('field_language_fallback', update_variable_get('locale_field_language_fallback', TRUE));
+  $config->set('translate_english', update_variable_get('locale_translate_english', FALSE));
+
+  $config->save();
+
+  state_set('locale_translation_plurals', update_variable_get('locale_translation_plurals', array()));
+
+  // Moved to config:
+  update_variable_del('locale_language_negotiation_url_type');
+  update_variable_del('locale_language_providers_weight_language');
+  update_variable_del('locale_cache_length');
+  update_variable_del('locale_field_language_fallback');
+  update_variable_del('locale_translate_english');
+
+  // Moved to $settings:
+  update_variable_del('locale_translate_file_directory');
+  update_variable_del('locale_js_directory');
+  update_variable_del('locale_cache_strings');
+
+  // Moved to state:
+  update_variable_del('locale_translation_plurals');
+  update_variable_del('locale_translation_javascript');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

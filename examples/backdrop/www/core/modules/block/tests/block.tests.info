@@ -1,0 +1,10 @@
+[BlockTestCase]
+name = Block functionality
+description = Add, edit and delete custom block. Configure and move a module-defined block.
+group = Block
+file = block.test
+
+; Added by Backdrop CMS packaging script on 2017-03-15
+project = backdrop
+version = 1.6.3
+timestamp = 1489643437

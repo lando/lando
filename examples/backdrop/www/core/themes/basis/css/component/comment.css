@@ -1,0 +1,165 @@
+.comment {
+  position: relative;
+  display: block;
+  padding: 0;
+  margin: 0 0 1.5em;
+}
+
+.comments .indented {
+  position: relative;
+  padding-left: 1.25em;
+  margin-top: -1.5em;
+}
+
+.comments .indented:before,
+.comments .indented:after {
+  content: '';
+  position: absolute;
+  display: block;
+  border: 0.125em solid transparent;
+}
+
+.comments .indented:before {
+  top: -1em;
+  left: 0;
+  width: 0.5em;
+  height: 1.5em;
+  border-left-color: #dee2ea;
+  border-bottom-color: #dee2ea;
+}
+
+.comments .indented:after {
+  content: '';
+  position: absolute;
+  top: 0.6875em;
+  left: 0.4375em;
+  width: 0.25em;
+  height: 0.25em;
+  border-top-color: #dee2ea;
+  border-right-color: #dee2ea;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  transform-origin: right top;
+}
+
+[dir="rtl"] .comment {
+  padding: 0;
+}
+
+.comment-header {
+  position: relative;
+}
+
+.comment-header:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 1.625em;
+  width: 0.875em;
+  height: 0.875em;
+  display: block;
+  border: 0.125em solid transparent;
+  border-bottom-color: #dee2ea;
+  border-left-color: #dee2ea;
+  -webkit-transform: rotate(-45deg) translate(0, -0.75em);
+  transform: rotate(-45deg) translate(0, -0.75em);
+  background: #fff;
+  pointer-events: none;
+  z-index: 0;
+}
+
+[dir="rtl"] .comment:before {
+  right: 1.625em;
+  left: auto;
+}
+
+.comment .attribution {
+  position: relative;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 0 0.5em;
+}
+
+[dir="rtl"] .comment .attribution {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.comment .attribution img {
+  display: block;
+}
+
+.comment .user-picture {
+  width: 3.25em;
+  padding: 0 0.75em 0 0;
+}
+
+.commenter-name {
+  margin: 0;
+}
+
+.commenter-name a {
+  text-decoration: none;
+}
+
+.commenter-name a:hover {
+  text-decoration: underline;
+}
+
+.comment .comment-text {
+  border: 0.125em solid #dee2ea;
+}
+
+.comment-title {
+  padding: 1em 1.25em 0.25em;
+}
+
+.comment-title h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.125em;
+}
+
+.comment-time {
+  padding: 0;
+  font-size: 0.875em;
+}
+
+.comment .content {
+  padding: 0 1.375em;
+}
+
+.comment-footer {
+  float: right;
+  margin: 0 -0.125em 0 0;
+  padding: 0.5em 0.5em;
+  background: #dee2ea;
+}
+
+.comment-footer .links.inline li {
+  margin: 0;
+  padding: 0 0.5em; /* Ensure spacing on login links */
+}
+
+.comment-footer .links.inline li:after {
+  display: none;
+}
+
+.comment-footer .links.inline a{
+  display: inline-block;
+  margin: 0 -0.5em; /* Prevent spacing on log in message */
+  padding: 0 0.5em;
+}
+
+[dir="rtl"] .comment-footer {
+  float: left;
+}

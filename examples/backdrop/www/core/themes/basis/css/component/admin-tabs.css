@@ -1,0 +1,415 @@
+/**
+ * @file
+ * Drupal Admin Tabs styles.
+ */
+
+/**
+ * Primary admin tabs
+ */
+nav.tabs {
+  position: relative;
+  padding: 0.75em 0.5em 0;
+}
+
+nav.tabs:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 3.1875em;
+  transform: translate(-50%, 0);
+}
+
+.tabs:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+ul.primary {
+  position: relative;
+  clear: both;
+  box-sizing: border-box;
+  border: none;
+  width: 100%;
+  float: left; /* LTR */
+  margin: 0 0 1em;
+  padding: 0 0 0 0.5em;
+  font-size: 0.9375em;
+  text-transform: uppercase;
+}
+
+[dir="rtl"] ul.primary {
+  float: right;
+}
+
+ul.primary li {
+  position: relative;
+  z-index: 1;
+  float: left; /* LTR */
+  margin: 0;
+  list-style: none;
+}
+
+[dir="rtl"] ul.primary li {
+  float: right;
+}
+
+ul.primary li a,
+ul.primary li a:visited,
+ul.primary li a:hover,
+ul.primary li.active a,
+.expand-dropdown-tabs-control,
+.responsive-tabs-mobile .expand-dropdown-tabs-control:before,
+.responsive-tabs-mobile .expand-dropdown-tabs-label {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  border: 0;
+  border-right: 0.125rem solid #586172; /* LTR */
+  overflow: visible;
+  line-height: 1;
+  font-weight: normal;
+  transition:
+    background-color 0.5s ease 0s,
+    color 0.5s ease 0s;
+  will-change: background-color, color;
+}
+
+[dir="rtl"] ul.primary li a,
+[dir="rtl"] ul.primary li a.active,
+[dir="rtl"] ul.primary li a:active,
+[dir="rtl"] ul.primary li a:visited,
+[dir="rtl"] ul.primary li a:hover,
+[dir="rtl"] ul.primary li.active a,
+[dir="rtl"] .expand-dropdown-tabs-control,
+[dir="rtl"] .responsive-tabs-mobile .expand-dropdown-tabs-control:before,
+[dir="rtl"] .responsive-tabs-mobile .expand-dropdown-tabs-label {
+  border-right: 0;
+  border-left-width: 0.125rem;
+  border-left-style: solid;
+}
+
+ul.primary li:first-child a {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+}
+
+.expand-dropdown-tabs-control,
+ul.primary li:last-child a {
+  -webkit-border-radius: 0 4px 0 0;
+  -moz-border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0;
+  border-right: 0;
+}
+
+[dir="rtl"] ul.primary li:first-child a {
+  -webkit-border-radius: 0 4px 0 0;
+  -moz-border-radius: 0 4px 0 0;
+  border-radius: 0 4px 0 0;
+}
+
+[dir="rtl"] .expand-dropdown-tabs-control,
+[dir="rtl"] ul.primary li:last-child a {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+  border-right: 0;
+}
+
+@media (max-width: 34em) {
+  ul.primary li {
+    float: none;
+    margin-bottom: 2px;
+  }
+  .js ul.primary li {
+    float: left;
+  }
+}
+
+/**
+ * Secondary admin tabs
+ */
+ul.secondary {
+  padding: 16px 23px 6px;
+  margin: 0 -20px 0;
+  line-height: 1.385;
+  overflow: hidden;
+  clear: both;
+  border: 0;
+}
+
+ul.secondary li {
+  display: inline-block;
+  margin: 0 5px 10px;
+}
+
+ul.secondary li a {
+  display: block;
+  border: 2px solid #e3e2e2;
+  text-decoration: none;
+  transition:
+    background-color 0.6s ease,
+    color 0.6s ease;
+}
+
+ul.secondary li a,
+ul.secondary li a:hover,
+ul.secondary li.active a,
+ul.secondary li.active a.active {
+  padding: .36em 1em;
+  -webkit-border-radius: 1.45em;
+  -moz-border-radius: 1.45em;
+  border-radius: 1.45em;
+}
+
+/**
+ * Responsive tabs
+ */
+.responsive-tabs-processed ul.primary {
+  height: 2.75em;
+  overflow: hidden;
+}
+
+.responsive-tabs-processed ul.primary li {
+  margin-bottom: 0;
+}
+
+.responsive-tabs-processed .duplicated-tab,
+.responsive-tabs-mobile ul.primary {
+  /* Hidden elements, hiding from sighted users only */
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.expand-dropdown-tabs.responsive-tabs-mobile ul.primary {
+  /* Reverse hidden elements styles */
+  visibility: visible;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+}
+
+.expand-dropdown-tabs .responsive-tabs-dropdown li {
+  width: 100%;
+  margin: 0;
+}
+
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li a,
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li a:hover {
+  border: 0;
+  border-top: 2px solid #fff;
+  position: relative;
+}
+
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li:first-child a:before {
+  margin-top: -2px;
+  height: calc(100% + 2px);
+}
+
+.responsive-tabs-before.expand-dropdown-tabs ul.responsive-tabs-dropdown li a {
+  padding-right: 72px;
+}
+
+.responsive-tabs-after.expand-dropdown-tabs ul.responsive-tabs-dropdown li a {
+  padding-left: 72px;
+}
+
+.expand-dropdown-tabs .responsive-tabs-dropdown a:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 100%;
+}
+
+.responsive-tabs-after.expand-dropdown-tabs .responsive-tabs-dropdown a:before {
+  right: auto;
+  left: 0;
+  width: 48px;
+}
+
+.expand-dropdown-tabs {
+  position: relative;
+}
+
+ul.primary.responsive-tabs-dropdown {
+  display: none;
+  height: auto;
+  padding: 0;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}
+
+.expand-dropdown-tabs .primary.responsive-tabs-dropdown {
+  display: block;
+  position: absolute;
+}
+
+ul.primary.responsive-tabs-dropdown li:first-child a,
+ul.primary.responsive-tabs-dropdown li:last-child a {
+  border-radius: 0;
+}
+
+.expand-dropdown-tabs .primary.responsive-tabs-dropdown:after {
+  content: '';
+  display: table;
+}
+
+.expand-dropdown-tabs-control {
+  position: absolute;
+  top: 0.8em;
+  left: 0;
+  box-sizing: border-box;
+  width: 50px;
+  height: auto;
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 0.9375em;
+  text-align: center;
+  visibility: visible;
+  clip: auto;
+  cursor: pointer;
+}
+
+.expand-dropdown-tabs-control:before {
+  content: '...';
+  font-weight: bold;
+}
+
+.responsive-tabs-after .expand-dropdown-tabs-control {
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+  border-left: 2px solid #bcc2cc;
+}
+
+.desktop-primary-tabs .expand-dropdown-tabs-control {
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.expand-dropdown-tabs-label {
+  display: none;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.expand-dropdown-tabs-label .responsive-tabs-link-text-wrapper {
+  display: block;
+  width: calc(100% - 3em + 10px);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-label {
+  display: block;
+  text-align: left;
+}
+
+.responsive-tabs-mobile.expand-dropdown-tabs .expand-dropdown-tabs-label,
+.responsive-tabs-mobile.expand-dropdown-tabs:hover .expand-dropdown-tabs-label {
+  background: #fff;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  border-radius: 4px 4px 0 0;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control.js-active {
+  overflow: visible;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3em;
+  height: 100%;
+  box-sizing: border-box;
+  border-left: 2px solid transparent;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control:after {
+  content: '';
+  position: absolute;
+  top: .85em;
+  right: 1.3em;
+  width: 0;
+  height: 0;
+  border: 0.4em solid transparent;
+  border-left: 0;
+}
+
+.expand-dropdown-tabs .expand-dropdown-tabs-control:after {
+  top: 1.08em;
+  right: 1em;
+  border: 0.4em solid transparent;
+  border-bottom: 0;
+}
+
+.responsive-tabs-mobile ul.primary,
+.responsive-tabs-mobile.expand-dropdown-tabs ul.primary {
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  top: 2.6em;
+}
+
+.responsive-tabs-mobile ul.primary,
+.expand-dropdown-tabs.responsive-tabs-mobile ul.primary {
+  overflow: hidden;
+  -webkit-border-radius: 0 0 4px 4px;
+  border-radius: 4px;
+}
+
+.responsive-tabs-mobile ul.primary li {
+  position: relative;
+  float: none;
+  border-right: 0;
+  border-bottom: 2px solid #fff;
+}
+
+.responsive-tabs-mobile ul.primary a:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 3em;
+  height: 100%;
+}
+
+.responsive-tabs-mobile ul.primary li:last-child {
+  border-bottom: 0;
+}
+
+.responsive-tabs-mobile ul.primary li a {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}

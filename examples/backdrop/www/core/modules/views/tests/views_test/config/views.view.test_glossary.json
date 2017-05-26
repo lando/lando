@@ -1,0 +1,184 @@
+{
+    "_config_name": "views.view.test_glossary",
+    "name": "test_glossary",
+    "module": "views_test",
+    "description": "A list of all content, by letter.",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "Glossary",
+    "core": 0,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "use_ajax": true,
+                "use_more_always": false,
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "full",
+                    "options": {
+                        "items_per_page": 36
+                    }
+                },
+                "style_plugin": "table",
+                "style_options": {
+                    "columns": {
+                        "title": "title",
+                        "name": "name",
+                        "changed": "changed"
+                    },
+                    "default": "title",
+                    "info": {
+                        "title": {
+                            "sortable": 1,
+                            "separator": ""
+                        },
+                        "name": {
+                            "sortable": 1,
+                            "separator": ""
+                        },
+                        "changed": {
+                            "sortable": 1,
+                            "separator": ""
+                        }
+                    }
+                },
+                "fields": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title"
+                    },
+                    "name": {
+                        "id": "name",
+                        "table": "users",
+                        "field": "name",
+                        "label": "Author",
+                        "relationship": "uid"
+                    },
+                    "changed": {
+                        "id": "changed",
+                        "table": "node",
+                        "field": "changed",
+                        "label": "Last update",
+                        "date_format": "large"
+                    }
+                },
+                "arguments": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "default_action": "default",
+                        "exception": {
+                            "title_enable": true
+                        },
+                        "default_argument_type": "fixed",
+                        "default_argument_options": {
+                            "argument": "a"
+                        },
+                        "summary": {
+                            "format": "default_summary"
+                        },
+                        "specify_validation": true,
+                        "glossary": true,
+                        "limit": "1",
+                        "case": "upper",
+                        "path_case": "lower"
+                    }
+                },
+                "relationships": {
+                    "uid": {
+                        "id": "uid",
+                        "table": "node",
+                        "field": "uid"
+                    }
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "glossary",
+                "menu": {
+                    "type": "normal",
+                    "title": "Glossary",
+                    "weight": "0"
+                }
+            }
+        },
+        "attachment": {
+            "display_title": "Attachment",
+            "display_plugin": "attachment",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": "0"
+                    }
+                },
+                "defaults": {
+                    "arguments": false
+                },
+                "arguments": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "default_action": "summary",
+                        "exception": {
+                            "title_enable": true
+                        },
+                        "default_argument_type": "fixed",
+                        "default_argument_options": {
+                            "argument": "a"
+                        },
+                        "summary": {
+                            "format": "unformatted_summary"
+                        },
+                        "summary_options": {
+                            "items_per_page": "25",
+                            "inline": true,
+                            "separator": " | "
+                        },
+                        "specify_validation": true,
+                        "glossary": true,
+                        "limit": "1",
+                        "case": "upper",
+                        "path_case": "lower"
+                    }
+                },
+                "displays": {
+                    "default": "default",
+                    "page": "page"
+                },
+                "inherit_arguments": false
+            }
+        }
+    }
+}

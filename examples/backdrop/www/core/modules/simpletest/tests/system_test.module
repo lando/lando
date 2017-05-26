@@ -1,0 +1,519 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function system_test_menu() {
+  $items['system-test/hello-world'] = array(
+    'title' => 'Hello world!',
+    'page callback' => 'system_test_hello_world',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/sleep/%'] = array(
+    'page callback' => 'system_test_sleep',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/sleep/shutdown/%'] = array(
+    'page callback' => 'system_test_sleep',
+    'page arguments' => array(3, TRUE),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/auth'] = array(
+    'page callback' => 'system_test_basic_auth_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/authorize-init/%'] = array(
+    'page callback' => 'system_test_authorize_init_page',
+    'page arguments' => array(2),
+    'access arguments' => array('administer software updates'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect/%'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'system_test_redirect',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/multiple-redirects/%'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'system_test_multiple_redirects',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/set-header'] = array(
+    'page callback' => 'system_test_set_header',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect-noscheme'] = array(
+    'page callback' => 'system_test_redirect_noscheme',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect-noparse'] = array(
+    'page callback' => 'system_test_redirect_noparse',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect-invalid-scheme'] = array(
+    'page callback' => 'system_test_redirect_invalid_scheme',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/variable-get'] = array(
+    'title' => 'Variable Get',
+    'page callback' => 'variable_get',
+    'page arguments' => array('simpletest_bootstrap_variable_test', NULL),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/lock-acquire'] = array(
+    'title' => 'Lock acquire',
+    'page callback' => 'system_test_lock_acquire',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/lock-exit'] = array(
+    'title' => 'Lock acquire then exit',
+    'page callback' => 'system_test_lock_exit',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/backdrop-set-message'] = array(
+    'title' => 'Set messages with backdrop_set_message()',
+    'page callback' => 'system_test_backdrop_set_message',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+   );
+
+  $items['system-test/main-content-fallback'] = array(
+    'title' => 'Test main content fallback',
+    'page callback' => 'system_test_main_content_fallback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/shutdown-functions'] = array(
+    'title' => 'Test shutdown functions',
+    'page callback' => 'system_test_page_shutdown_functions',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/get-destination'] = array(
+    'title' => 'Test $_GET[\'destination\']',
+    'page callback' => 'system_test_get_destination',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/request-destination'] = array(
+    'title' => 'Test $_REQUEST[\'destination\']',
+    'page callback' => 'system_test_request_destination',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/access'] = array(
+    'title' => 'Access granted',
+    'page callback' => 'system_test_hello_world',
+    'access callback' => 'system_test_access_callback',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Menu callback; Basic page with no dynamic content.
+ *
+ * @return string
+ *   Hello world!
+ */
+function system_test_hello_world() {
+  return 'Hello world!';
+}
+
+/**
+ * Menu callback; Delay the return of a response, simulating a heavy page.
+ *
+ * @param $seconds
+ *   The number of seconds to wait before returning the response.
+ * @param bool $sleep_at_shutdown
+ *   Instead of waiting immediately, return a response and wait at shutdown.
+ *
+ * @return string
+ *   A message indicating the amount of time slept.
+ */
+function system_test_sleep($seconds, $sleep_at_shutdown = FALSE) {
+  $output = '<div id="start">' . microtime(TRUE) . '</div>';
+
+  if ($sleep_at_shutdown) {
+    register_shutdown_function('system_test_sleep', $seconds);
+    $output .= format_string('@time seconds will be slept at shutdown.', array('@time' => $seconds)) . ' ';
+  }
+  else {
+    sleep($seconds);
+    $output .= format_string('Slept for @time seconds.', array('@time' => $seconds)) . ' ';
+  }
+
+  $output .= '<div id="end">' . microtime(TRUE) . '</div>';
+  return $output;
+}
+
+/**
+ * Check HTTP headers for authentication.
+ *
+ * @return string
+ *   The username and password passed in through web authentication.
+ */
+function system_test_basic_auth_page() {
+  // The Authorization HTTP header is forwarded via Backdrop's .htaccess file even
+  // for PHP CGI SAPIs.
+  if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    $authorization_header = $_SERVER['HTTP_AUTHORIZATION'];
+  }
+  // If using CGI on Apache with mod_rewrite, the forwarded HTTP header appears
+  // in the redirected HTTP headers. See
+  // https://github.com/symfony/symfony/blob/master/src/Symfony/Component/HttpFoundation/ServerBag.php#L61
+  elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+    $authorization_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+  }
+  // Resemble PHP_AUTH_USER and PHP_AUTH_PW for a Basic authentication from
+  // the HTTP_AUTHORIZATION header. See
+  // http://www.php.net/manual/features.http-auth.php
+  list($user, $pw) = explode(':', base64_decode(substr($authorization_header, 6)));
+  $output = format_string('Username is @username.', array('@username' => $_SERVER['PHP_AUTH_USER']));
+  $output .= format_string('Password is @password.', array('@password' => $_SERVER['PHP_AUTH_PW']));
+  return $output;
+}
+
+function system_test_redirect($code) {
+  $code = (int) $code;
+  if ($code != 200) {
+    // Header names are case-insensitive.
+    header("locaTION: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
+    exit;
+  }
+  return '';
+}
+
+/**
+ * Menu callback; sends a redirect header to itself until $count argument is 0.
+ *
+ * Emulates the variable number of redirects (given by initial $count argument)
+ * to the final destination URL by continuous sending of 301 HTTP redirect
+ * headers to itself together with decrementing the $count parameter until the
+ * $count parameter reaches 0. After that it returns an empty string to render
+ * the final destination page.
+ *
+ * @param $count
+ *   The count of redirects left until the final destination page.
+ *
+ * @returns
+ *   The location redirect if the $count > 0, otherwise an empty string.
+ */
+function system_test_multiple_redirects($count) {
+  $count = (int) $count;
+  if ($count > 0) {
+    header("location: " . url('system-test/multiple-redirects/' . --$count, array('absolute' => TRUE)), TRUE, 301);
+    exit;
+  }
+  return '';
+}
+
+function system_test_set_header() {
+  backdrop_add_http_header($_GET['name'], $_GET['value']);
+  return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
+}
+
+function system_test_redirect_noscheme() {
+  header("Location: localhost/path", TRUE, 301);
+  exit;
+}
+
+function system_test_redirect_noparse() {
+  header("Location: http:///path", TRUE, 301);
+  exit;
+}
+
+function system_test_redirect_invalid_scheme() {
+  header("Location: ftp://localhost/path", TRUE, 301);
+  exit;
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function system_test_modules_installed($modules) {
+  if (state_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      backdrop_set_message(t('hook_modules_installed fired for @module', array('@module' => $module)));
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_enabled().
+ */
+function system_test_modules_enabled($modules) {
+  if (state_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      backdrop_set_message(t('hook_modules_enabled fired for @module', array('@module' => $module)));
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function system_test_modules_disabled($modules) {
+  if (state_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      backdrop_set_message(t('hook_modules_disabled fired for @module', array('@module' => $module)));
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function system_test_modules_uninstalled($modules) {
+  if (state_get('test_verbose_module_hooks')) {
+    foreach ($modules as $module) {
+      backdrop_set_message(t('hook_modules_uninstalled fired for @module', array('@module' => $module)));
+    }
+  }
+}
+
+/**
+ * Implements hook_boot().
+ */
+function system_test_boot() {
+  watchdog('system_test', 'hook_boot');
+}
+
+/**
+ * Implements hook_init().
+ */
+function system_test_init() {
+  // Used by FrontPageTestCase to get the results of backdrop_is_front_page().
+  if (config_get('system.core', 'front_page_output') && backdrop_is_front_page()) {
+    backdrop_set_message(t('On front page.'));
+  }
+}
+
+/**
+ * Implements hook_exit().
+ */
+function system_test_exit() {
+  watchdog('system_test', 'hook_exit');
+}
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function system_test_system_info_alter(&$info, $file, $type) {
+  // We need a static otherwise the last test will fail to alter common_test.
+  static $test;
+  if (($dependencies = state_get('system_test_dependencies', array())) || $test) {
+    if ($file->name == 'module_test') {
+      $info['hidden'] = FALSE;
+      $info['dependencies'][] = array_shift($dependencies);
+      state_set('system_test_dependencies', $dependencies);
+      $test = TRUE;
+    }
+    if ($file->name == 'common_test') {
+      $info['hidden'] = FALSE;
+      $info['version'] = '1.x-2.4-beta3';
+    }
+  }
+
+  if ($file->name == 'system_project_namespace_test') {
+    $info['hidden'] = FALSE;
+  }
+  // Make the system_dependencies_test visible by default.
+  if ($file->name == 'system_dependencies_test') {
+    $info['hidden'] = FALSE;
+  }
+  if (in_array($file->name, array(
+    'system_incompatible_module_version_dependencies_test',
+    'system_incompatible_core_version_dependencies_test',
+    'system_incompatible_module_version_test',
+    'system_incompatible_core_version_test',
+  ))) {
+    $info['hidden'] = FALSE;
+  }
+  if ($file->name == 'requirements1_test' || $file->name == 'requirements2_test') {
+    $info['hidden'] = FALSE;
+  }
+}
+
+/**
+ * Try to acquire a named lock and report the outcome.
+ */
+function system_test_lock_acquire() {
+  if (lock_acquire('system_test_lock_acquire')) {
+    lock_release('system_test_lock_acquire');
+    return 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
+  }
+  else {
+    return 'FALSE: Lock not acquired in system_test_lock_acquire()';
+  }
+}
+
+/**
+ * Try to acquire a specific lock, and then exit.
+ */
+function system_test_lock_exit() {
+  if (lock_acquire('system_test_lock_exit', 900)) {
+    echo 'TRUE: Lock successfully acquired in system_test_lock_exit()';
+    // The shut-down function should release the lock.
+    exit();
+  }
+  else {
+    return 'FALSE: Lock not acquired in system_test_lock_exit()';
+  }
+}
+
+/**
+ * Menu callback to test main content fallback().
+ */
+function system_test_main_content_fallback() {
+  return t('Content to test main content fallback');
+}
+
+/**
+ * A simple page callback which adds a register shutdown function.
+ */
+function system_test_page_shutdown_functions($arg1, $arg2) {
+  backdrop_register_shutdown_function('_system_test_first_shutdown_function', $arg1, $arg2);
+}
+
+/**
+ * Dummy shutdown function which registers another shutdown function.
+ */
+function _system_test_first_shutdown_function($arg1, $arg2) {
+  // The page has already been printed, so we are unable to affect its output.
+  // Print something (which won't show up).
+  $output = format_string('First shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2));
+  print $output;
+  watchdog('shutdown', $output);
+  backdrop_register_shutdown_function('_system_test_second_shutdown_function', $arg1, $arg2);
+}
+
+/**
+ * Dummy shutdown function.
+ */
+function _system_test_second_shutdown_function($arg1, $arg2) {
+  // The page has already been printed, so we are unable to affect its output.
+  // Print something (which won't show up).
+  $output = format_string('Second shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2));
+  print $output;
+  watchdog('shutdown', $output);
+
+  // Throw an exception with an HTML tag. Since this is called in a shutdown
+  // function, it will not bubble up to the default exception handler but will
+  // be caught in _backdrop_shutdown_function() and be displayed through
+  // _backdrop_render_exception_safe().
+  throw new Exception('Backdrop is <blink>awesome</blink>.');
+}
+
+/**
+ * Implements hook_filetransfer_info().
+ */
+function system_test_filetransfer_info() {
+  return array(
+    'system_test' => array(
+      'title' => t('System Test FileTransfer'),
+      'file' => 'system_test.module',  // Should be a .inc, but for test, ok.
+      'class' => 'SystemTestFileTransfer',
+      'weight' => -10,
+    ),
+  );
+}
+
+/**
+ * Mock FileTransfer object to test the settings form functionality.
+ */
+class SystemTestFileTransfer {
+  public static function factory() {
+    return new SystemTestFileTransfer;
+  }
+
+  public function getSettingsForm() {
+    $form = array();
+    $form['system_test_username'] = array(
+      '#type' => 'textfield',
+      '#title' => t('System Test Username'),
+    );
+    return $form;
+  }
+}
+
+/**
+ * Page callback to initialize authorize.php during testing.
+ *
+ * @see system_authorized_init().
+ */
+function system_test_authorize_init_page($page_title) {
+  $authorize_url = $GLOBALS['base_url'] . '/core/authorize.php';
+  system_authorized_init('system_test_authorize_run', backdrop_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
+  backdrop_goto($authorize_url);
+}
+
+/**
+ * Sets two messages and removes the first one before the messages are displayed.
+ */
+function system_test_backdrop_set_message() {
+  // Set two messages.
+  backdrop_set_message('First message (removed).');
+  backdrop_set_message('Second message (not removed).');
+
+  // Remove the first.
+  unset($_SESSION['messages']['status'][0]);
+
+  return '';
+}
+
+/**
+ * Page callback to print out $_GET['destination'] for testing.
+ */
+function system_test_get_destination() {
+  if (isset($_GET['destination'])) {
+    print $_GET['destination'];
+  }
+  // No need to render the whole page, we are just interested in this bit of
+  // information.
+  exit;
+}
+
+/**
+ * Page callback to print out $_REQUEST['destination'] for testing.
+ */
+function system_test_request_destination() {
+  if (isset($_REQUEST['destination'])) {
+    print $_REQUEST['destination'];
+  }
+  // No need to render the whole page, we are just interested in this bit of
+  // information.
+  exit;
+}
+
+/**
+ * Access callback used to simply check access based on a variable.
+ */
+function system_test_access_callback() {
+  return state_get('system_test_access', TRUE);
+}

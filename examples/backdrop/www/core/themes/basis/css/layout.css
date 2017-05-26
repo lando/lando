@@ -1,0 +1,40 @@
+/**
+ * @file
+ * Component Layout CSS and some Page layout overrides
+ */
+
+.l-header {
+  position: relative;
+  margin: 0 0 2rem;
+}
+
+.layout .l-messages {
+  margin: 0 0 2rem;
+}
+
+/* Push the footer down to the bottom of the page. */
+.layout {
+  box-sizing: border-box;
+  height: 100vh;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.admin-bar body .layout {
+  padding-top: 33px;
+  margin-top: -33px;
+}
+.l-wrapper {
+  -webkit-flex: 1 0 auto;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+.l-header,
+.l-footer {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}

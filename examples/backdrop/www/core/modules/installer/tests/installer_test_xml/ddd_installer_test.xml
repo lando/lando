@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>DDD Installer test</title>
+<short_name>ddd_installer_test</short_name>
+<dc:creator>root</dc:creator>
+<type>project_module</type>
+<api_version>1.x</api_version>
+<recommended_major>1</recommended_major>
+<supported_majors>1</supported_majors>
+<default_major>1</default_major>
+<project_status>published</project_status>
+<link>https://backdropcms.org/project/ddd_installer_test</link>
+<releases>
+<release>
+  <name>ddd_installer_test 1.x-1.0.1</name>
+  <version>1.0.1</version>
+  <version_major>1</version_major>
+  <version_minor>0</version_minor>
+  <version_patch>1</version_patch>
+  <status>published</status>
+  <release_link>https://github.com/backdrop-contrib/ddd_installer_test/releases/tag/1.x-1.0.1</release_link>
+  <download_link>core/modules/installer/tests/ddd_installer_test.zip</download_link>
+  <date>1440215584</date>
+  <filesize>48285</filesize>
+  <security_update>false</security_update>
+</release>
+</releases>
+</project>

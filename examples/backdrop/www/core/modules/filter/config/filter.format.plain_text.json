@@ -1,0 +1,20 @@
+{
+    "_config_name": "filter.format.plain_text",
+    "format": "plain_text",
+    "name": "Plain text",
+    "weight": 10,
+    "filters": {
+        "filter_html_escape": {
+            "weight": 0,
+            "status": 1
+        },
+        "filter_url": {
+            "weight": 1,
+            "status": 1
+        },
+        "filter_autop": {
+            "weight": 2,
+            "status": 1
+        }
+    }
+}

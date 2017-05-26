@@ -1,0 +1,553 @@
+<?php
+/**
+ * @file
+ * Provides testing functionality.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function simpletest_menu() {
+  $items['admin/config/development/testing'] = array(
+    'title' => 'Testing',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('simpletest_test_form'),
+    'description' => 'Run tests against Backdrop core and your modules. These tests help assure that your site code is working as designed.',
+    'access arguments' => array('administer unit tests'),
+    'file' => 'simpletest.pages.inc',
+    'weight' => -5,
+  );
+  $items['admin/config/development/testing/list'] = array(
+    'title' => 'List tests',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/development/testing/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('simpletest_settings_form'),
+    'access arguments' => array('administer unit tests'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'simpletest.pages.inc',
+  );
+  $items['admin/config/development/testing/results/%'] = array(
+    'title' => 'Test result',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('simpletest_result_form', 5),
+    'description' => 'View result of tests.',
+    'access arguments' => array('administer unit tests'),
+    'file' => 'simpletest.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function simpletest_permission() {
+  return array(
+    'administer unit tests' => array(
+      'title' => t('Administer tests'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function simpletest_theme() {
+  $base = array(
+    'file' => 'simpletest.theme.inc',
+  );
+
+  return array(
+    'simpletest_test_table' => array(
+      'render element' => 'table',
+    ) + $base,
+    'simpletest_result_summary' => array(
+      'render element' => 'form',
+    ) + $base,
+  );
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function simpletest_config_info() {
+  $prefixes['simpletest.settings'] = array(
+    'label' => t('Testing settings'),
+    'group' => t('Configuration'),
+  );
+  $prefixes['simpletest.testconfig'] = array(
+    'label' => t('Configuration file for testing purposes'),
+    'group' => t('Test Data'),
+  );
+  $prefixes['simpletest.secondconfig'] = array(
+    'label' => t('Second configuration file for testing purposes'),
+    'group' => t('Test Data'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function simpletest_autoload_info() {
+  return array(
+    'BackdropTestCase' => 'backdrop_web_test_case.php',
+    'BackdropUnitTestCase' => 'backdrop_web_test_case.php',
+    'BackdropWebTestCase' => 'backdrop_web_test_case.php',
+  );
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function simpletest_js_alter(&$javascript) {
+  // Since SimpleTest is a special use case for the table select, stick the
+  // SimpleTest JavaScript above the table select.
+  $simpletest = backdrop_get_path('module', 'simpletest') . '/js/simpletest.js';
+  if (array_key_exists($simpletest, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
+    $javascript[$simpletest]['weight'] = $javascript['core/misc/tableselect.js']['weight'] - 1;
+  }
+}
+
+function _simpletest_format_summary_line($summary) {
+  $args = array(
+    '@pass' => format_plural(isset($summary['#pass']) ? $summary['#pass'] : 0, '1 pass', '@count passes'),
+    '@fail' => format_plural(isset($summary['#fail']) ? $summary['#fail'] : 0, '1 fail', '@count fails'),
+    '@exception' => format_plural(isset($summary['#exception']) ? $summary['#exception'] : 0, '1 exception', '@count exceptions'),
+  );
+  if (!$summary['#debug']) {
+    return t('@pass, @fail, and @exception', $args);
+  }
+  $args['@debug'] = format_plural(isset($summary['#debug']) ? $summary['#debug'] : 0, '1 debug message', '@count debug messages');
+  return t('@pass, @fail, @exception, and @debug', $args);
+}
+
+/**
+ * Actually runs tests.
+ *
+ * @param $test_list
+ *   List of tests to run.
+ * @param $reporter
+ *   Which reporter to use. Allowed values are: text, xml, html and backdrop,
+ *   backdrop being the default.
+ */
+function simpletest_run_tests($test_list, $reporter = 'backdrop') {
+  $test_id = db_query("SELECT MAX(test_id) FROM {simpletest_prefix}")->fetchField() + 1;
+
+  // Clear out the previous verbose files.
+  file_unmanaged_delete_recursive('public://simpletest/verbose');
+
+  // Get the info for the first test being run.
+  $first_test = array_shift($test_list);
+  $test_info = simpletest_test_get_by_class($first_test);
+  include_once BACKDROP_ROOT . '/' .  $test_info['file path'] . '/' . $test_info['file'];
+  $first_instance = new $first_test();
+  array_unshift($test_list, $first_test);
+  $info = simpletest_test_get_by_class(get_class($first_instance));
+
+  $batch = array(
+    'title' => t('Running tests'),
+    'operations' => array(
+      array('_simpletest_batch_operation', array($test_list, $test_id)),
+    ),
+    'finished' => '_simpletest_batch_finished',
+    'progress_message' => '',
+    'css' => array(backdrop_get_path('module', 'simpletest') . '/css/simpletest.css'),
+    'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
+  );
+  batch_set($batch);
+
+  module_invoke_all('test_group_started');
+
+  return $test_id;
+}
+
+/**
+ * Batch operation callback.
+ */
+function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
+  // Get working values.
+  if (!isset($context['sandbox']['max'])) {
+    // First iteration: initialize working values.
+    $test_list = $test_list_init;
+    $context['sandbox']['max'] = count($test_list);
+    $test_results = array('#pass' => 0, '#fail' => 0, '#exception' => 0, '#debug' => 0);
+  }
+  else {
+    // Nth iteration: get the current values where we last stored them.
+    $test_list = $context['sandbox']['tests'];
+    $test_results = $context['sandbox']['test_results'];
+  }
+  $max = $context['sandbox']['max'];
+
+  // Perform the next test.
+  $test_class = array_shift($test_list);
+  $test_info = simpletest_test_get_by_class($test_class);
+  include_once BACKDROP_ROOT . '/' . $test_info['file path'] . '/' . $test_info['file'];
+  $test = new $test_class($test_id);
+  $test->run();
+  $size = count($test_list);
+  $info = simpletest_test_get_by_class(get_class($test));
+
+  module_invoke_all('test_finished', $test->results);
+
+  // Gather results and compose the report.
+  $test_results[$test_class] = $test->results;
+  foreach ($test_results[$test_class] as $key => $value) {
+    $test_results[$key] += $value;
+  }
+  $test_results[$test_class]['#name'] = $info['name'];
+  $items = array();
+  foreach (element_children($test_results) as $class) {
+    array_unshift($items, '<div class="simpletest-' . ($test_results[$class]['#fail'] + $test_results[$class]['#exception'] ? 'fail' : 'pass') . '">' . t('@name: @summary', array('@name' => $test_results[$class]['#name'], '@summary' => _simpletest_format_summary_line($test_results[$class]))) . '</div>');
+  }
+  $context['message'] = t('Processed test @num of @max - %test.', array('%test' => $info['name'], '@num' => $max - $size, '@max' => $max));
+  $context['message'] .= '<div class="simpletest-' . ($test_results['#fail'] + $test_results['#exception'] ? 'fail' : 'pass') . '">Overall results: ' . _simpletest_format_summary_line($test_results) . '</div>';
+  $context['message'] .= theme('item_list', array('items' => $items));
+
+  // Save working values for the next iteration.
+  $context['sandbox']['tests'] = $test_list;
+  $context['sandbox']['test_results'] = $test_results;
+  // The test_id is the only thing we need to save for the report page.
+  $context['results']['test_id'] = $test_id;
+
+  // Multistep processing: report progress.
+  $context['finished'] = 1 - $size / $max;
+}
+
+function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
+  if ($success) {
+    backdrop_set_message(t('The test run finished in @elapsed.', array('@elapsed' => $elapsed)));
+  }
+  else {
+    // If any uncompleted operations are left, we can use the next item to pull
+    // the test_id and report any errors from the test log.
+    if (!empty($operations)) {
+      // Use the test_id passed as a parameter to _simpletest_batch_operation().
+      $next_operation = reset($operations);
+      $test_id = $next_operation[1][1];
+
+      // Retrieve the last database prefix used for testing and the last test
+      // class that was run from. Use the information to read the lgo file
+      // in case any fatal errors caused the test to crash.
+      list($last_prefix, $last_test_class) = simpletest_last_test_get($test_id);
+      simpletest_log_read($test_id, $last_prefix, $last_test_class);
+    }
+
+    backdrop_set_message(t('The test run did not successfully finish.'), 'error');
+    backdrop_set_message(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'), 'warning');
+  }
+  module_invoke_all('test_group_finished');
+}
+
+/**
+ * Get information about the last test that ran given a test ID.
+ *
+ * @param $test_id
+ *   The test ID to get the last test from.
+ * @return
+ *   Array containing the last database prefix used and the last test class
+ *   that ran.
+ */
+function simpletest_last_test_get($test_id) {
+  $last_prefix = db_query_range('SELECT prefix FROM {simpletest_prefix} WHERE test_id = :test_id', 0, 1, array(':test_id' => $test_id))->fetchField();
+  $last_test_class = db_query_range('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, array(':test_id' => $test_id))->fetchField();
+  return array($last_prefix, $last_test_class);
+}
+
+/**
+ * Read the error log and report any errors as assertion failures.
+ *
+ * The errors in the log should only be fatal errors since any other errors
+ * will have been recorded by the error handler.
+ *
+ * @param $test_id
+ *   The test ID to which the log relates.
+ * @param $prefix
+ *   The database prefix to which the log relates.
+ * @param $test_class
+ *   The test class to which the log relates.
+ * @param $during_test
+ *   Indicates that the current file directory path is a temporary file
+ *   file directory used during testing.
+ * @return
+ *   Found any entries in log.
+ */
+function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALSE) {
+  $log = 'public://' . ($during_test ? '' : '/simpletest/' . substr($prefix, 10)) . '/error.log';
+  $found = FALSE;
+  if (file_exists($log)) {
+    foreach (file($log) as $line) {
+      if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
+        // Parse PHP fatal errors for example: PHP Fatal error: Call to
+        // undefined function break_me() in /path/to/file.php on line 17
+        $caller = array(
+          'line' => $match[4],
+          'file' => $match[3],
+        );
+        BackdropTestCase::insertAssert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
+      }
+      else {
+        // Unknown format, place the entire message in the log.
+        BackdropTestCase::insertAssert($test_id, $test_class, FALSE, $line, 'Fatal error');
+      }
+      $found = TRUE;
+    }
+  }
+  return $found;
+}
+
+/**
+ * Get a list of all of the tests provided by the system.
+ *
+ * The list of test classes is loaded from the registry where it looks for
+ * files ending in ".test". Once loaded the test list is cached and stored in
+ * a static variable. In order to list tests provided by disabled modules
+ * hook_registry_files_alter() is used to forcefully add them to the registry.
+ *
+ * @return
+ *   An array of tests keyed with the groups specified by each owning module's
+ *   .tests.info file and then keyed by the test class. An example of the array
+ *   structure is provided below.
+ *
+ *   @code
+ *     $groups['Block'] => array(
+ *       'BlockTestCase' => array(
+ *         'name' => 'Block functionality',
+ *         'description' => 'Add, edit and delete custom block...',
+ *         'group' => 'Block',
+ *         'file' => block.test,
+ *         'file path' => 'core/modules/block',
+ *       ),
+ *     );
+ *   @endcode
+ * @see simpletest_registry_files_alter()
+ */
+function simpletest_test_get_all() {
+  $groups = &backdrop_static(__FUNCTION__);
+
+  if (!$groups) {
+    // Load test information from cache if available, otherwise retrieve the
+    // information from each module's *.tests.info file.
+    if ($cache = cache()->get('simpletest')) {
+      $groups = $cache->data;
+    }
+    else {
+      $files = backdrop_system_listing('/^' . BACKDROP_PHP_FUNCTION_PATTERN . '\.tests\.info$/', 'modules', 'name', 0);
+      $groups = array();
+      foreach ($files as $file) {
+        $classes = backdrop_parse_info_file($file->uri, TRUE);
+        foreach ($classes as $class => $info) {
+          $info['file path'] = dirname($file->uri);
+          // If this test class requires a non-existing module, skip it.
+          if (!empty($info['dependencies'])) {
+            foreach ($info['dependencies'] as $module) {
+              if (!backdrop_get_filename('module', $module)) {
+                continue 2;
+              }
+            }
+          }
+
+          $groups[$info['group']][$class] = $info;
+        }
+      }
+
+      // Sort the groups and tests within the groups by name.
+      uksort($groups, 'strnatcasecmp');
+      foreach ($groups as &$tests) {
+        uksort($tests, 'strnatcasecmp');
+      }
+
+      // Allow modules extending core tests to disable originals.
+      backdrop_alter('simpletest', $groups);
+      cache()->set('simpletest', $groups);
+    }
+  }
+  return $groups;
+}
+
+/**
+ * Get information about a test by its class name.
+ */
+function simpletest_test_get_by_class($class) {
+  $groups = simpletest_test_get_all();
+  foreach ($groups as $classes) {
+    if (array_key_exists($class, $classes)) {
+      return $classes[$class];
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_registry_files_alter().
+ *
+ * Add the test files for disabled modules so that we get a list containing
+ * all the avialable tests.
+ */
+function simpletest_registry_files_alter(&$files, $modules) {
+  foreach ($modules as $module) {
+    // Only add test files for disabled modules, as enabled modules should
+    // already include any test files they provide.
+    if (!$module->status) {
+      $dir = $module->dir;
+      if (!empty($module->info['files'])) {
+        foreach ($module->info['files'] as $file) {
+          if (substr($file, -5) == '.test') {
+            $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Generate test file.
+ */
+function simpletest_generate_file($filename, $width, $lines, $type = 'binary-text') {
+  $text = '';
+  for ($i = 0; $i < $lines; $i++) {
+    // Generate $width - 1 characters to leave space for the "\n" character.
+    for ($j = 0; $j < $width - 1; $j++) {
+      switch ($type) {
+        case 'text':
+          $text .= chr(rand(32, 126));
+          break;
+        case 'binary':
+          $text .= chr(rand(0, 31));
+          break;
+        case 'binary-text':
+        default:
+          $text .= rand(0, 1);
+          break;
+      }
+    }
+    $text .= "\n";
+  }
+
+  // Create filename.
+  file_put_contents('public://' . $filename . '.txt', $text);
+  return $filename;
+}
+
+/**
+ * Remove all temporary database tables and directories.
+ */
+function simpletest_clean_environment() {
+  simpletest_clean_database();
+  simpletest_clean_temporary_directories();
+  if (config_get('simpletest.settings', 'simpletest_clear_results')) {
+    $count = simpletest_clean_results_table();
+    backdrop_set_message(format_plural($count, 'Removed 1 test result.', 'Removed @count test results.'));
+  }
+  else {
+    backdrop_set_message(t('Clear results is disabled and the test results table will not be cleared.'), 'warning');
+  }
+
+  // Detect test classes that have been added, renamed or deleted.
+  cache()->delete('simpletest');
+}
+
+/**
+ * Removed prefixed tables from the database that are left over from crashed tests.
+ */
+function simpletest_clean_database() {
+  $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
+  $schema = backdrop_get_schema_unprocessed('simpletest');
+  $count = 0;
+  foreach (array_diff_key($tables, $schema) as $table) {
+    // Strip the prefix and skip tables without digits following "simpletest",
+    // e.g. {simpletest_prefix}.
+    if (preg_match('/simpletest\d+.*/', $table, $matches)) {
+      db_drop_table($matches[0]);
+      $count++;
+    }
+  }
+
+  if ($count > 0) {
+    backdrop_set_message(format_plural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
+  }
+  else {
+    backdrop_set_message(t('No leftover tables to remove.'));
+  }
+}
+
+/**
+ * Find all leftover temporary directories and remove them.
+ */
+function simpletest_clean_temporary_directories() {
+  $count = 0;
+  if (is_dir('public://simpletest')) {
+    $files = scandir('public://simpletest');
+    foreach ($files as $file) {
+      $path = 'public://simpletest/' . $file;
+      if (is_dir($path) && is_numeric($file)) {
+        file_unmanaged_delete_recursive($path);
+        $count++;
+      }
+    }
+  }
+
+  // Delete the verbose output directory if present.
+  $verbose_directory = 'public://simpletest/verbose';
+  if (is_dir($verbose_directory)) {
+    file_unmanaged_delete_recursive($verbose_directory);
+  }
+
+  if ($count > 0) {
+    backdrop_set_message(format_plural($count, 'Removed 1 temporary directory.', 'Removed @count temporary directories.'));
+  }
+  else {
+    backdrop_set_message(t('No temporary directories to remove.'));
+  }
+}
+
+/**
+ * Clear the test result tables.
+ *
+ * @param $test_id
+ *   Test ID to remove results for, or NULL to remove all results.
+ * @return
+ *   The number of results removed.
+ */
+function simpletest_clean_results_table($test_id = NULL) {
+  if (config_get('simpletest.settings', 'simpletest_clear_results')) {
+    if ($test_id) {
+      $count = db_query('SELECT COUNT(test_id) FROM {simpletest_prefix} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
+
+      db_delete('simpletest')
+        ->condition('test_id', $test_id)
+        ->execute();
+      db_delete('simpletest_prefix')
+        ->condition('test_id', $test_id)
+        ->execute();
+    }
+    else {
+      $count = db_query('SELECT COUNT(test_id) FROM {simpletest_prefix}')->fetchField();
+
+      // Clear test results.
+      db_delete('simpletest')->execute();
+      db_delete('simpletest_prefix')->execute();
+    }
+
+    return $count;
+  }
+  return 0;
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Aborts sending of messages with ID 'simpletest_cancel_test'.
+ *
+ * @see MailTestCase::testCancelMessage()
+ */
+function simpletest_mail_alter(&$message) {
+  if ($message['id'] == 'simpletest_cancel_test') {
+    $message['send'] = FALSE;
+  }
+}

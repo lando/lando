@@ -1,0 +1,33 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for CKEditor module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function ckeditor_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  // Check if CKEditor is not enabled on any formats.
+  if ($phase == 'runtime') {
+    $ckeditor_found = FALSE;
+    $formats = filter_formats();
+    foreach ($formats as $format) {
+      if (isset($format->editor) && $format->editor === 'ckeditor') {
+        $ckeditor_found = TRUE;
+      }
+    }
+    if (!$ckeditor_found) {
+      $requirements['ckeditor_not_enabled'] = array(
+        'title' => $t('CKEditor'),
+        'value' => $t('CKEditor is installed but not enabled on any formats. Visit the <a href="!url">text editors and formats configuration</a> to enable CKEditor on one or more formats.', array('!url' => url('admin/config/content/formats'))),
+        'severity' => REQUIREMENT_WARNING
+      );
+    }
+  }
+
+  return $requirements;
+}

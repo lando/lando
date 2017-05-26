@@ -1,0 +1,581 @@
+<?php
+/**
+ * @file
+ * Render an administrative bar as a dropdown menu at the top of the window.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function admin_bar_menu() {
+  // AJAX callback.
+  $items['js/admin_bar/cache'] = array(
+    'page callback' => 'admin_bar_js_cache',
+    'delivery callback' => 'admin_bar_deliver',
+    'access arguments' => array('access administration bar'),
+    'type' => MENU_CALLBACK,
+  );
+  // Module settings.
+  $items['admin/config/administration/admin-bar'] = array(
+    'title' => 'Administration bar',
+    'description' => 'Adjust administration bar settings.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('admin_bar_theme_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'admin_bar.inc',
+  );
+  // Menu link callbacks.
+  $items['admin_bar/flush-cache'] = array(
+    'page callback' => 'admin_bar_flush_cache',
+    'access arguments' => array('flush caches'),
+    'type' => MENU_CALLBACK,
+    'file' => 'admin_bar.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function admin_bar_permission() {
+  return array(
+    'access administration bar' => array(
+      'title' => t('Access administration bar'),
+      'description' => t('Display the administration bar at the top of each page.'),
+    ),
+    'flush caches' => array(
+      'title' => t('Flush caches'),
+      'description' => t('Access links to flush caches in the administration bar.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function admin_bar_theme() {
+  $base = array(
+    'file' => 'admin_bar.theme.inc',
+  );
+
+  return array(
+    'admin_bar_links' => array(
+      'render element' => 'elements',
+    ) + $base,
+    'admin_bar_icon' => array(
+      'variables' => array('src' => NULL, 'alt' => NULL),
+    ) + $base,
+  );
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function admin_bar_config_info() {
+  $prefixes['admin_bar.settings'] = array(
+    'label' => t('Admin bar settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function admin_bar_menu_alter(&$items) {
+  // Flush client-side caches whenever the menu is rebuilt.
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_menu_link_insert().
+ */
+function admin_bar_menu_link_insert($link) {
+  // Flush all of our caches to pick up the link.
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_menu_link_update().
+ */
+function admin_bar_menu_link_update($link) {
+  // Flush all of our caches to pick up the link.
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_menu_link_delete().
+ */
+function admin_bar_menu_link_delete($link) {
+  // Flush all of our caches to pick up the link.
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_language_update().
+ */
+function admin_bar_language_update() {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_language_delete().
+ */
+function admin_bar_language_delete() {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_field_create_instance().
+ */
+function admin_bar_field_create_instance($instance) {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_field_update_instance().
+ */
+function admin_bar_field_update_instance($instance, $prior_instance) {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_field_delete_instance().
+ */
+function admin_bar_field_delete_instance($instance) {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_insert().
+ */
+function admin_bar_taxonomy_vocabulary_insert(TaxonomyVocabulary $vocabulary) {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_update().
+ */
+function admin_bar_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_delete().
+ */
+function admin_bar_taxonomy_vocabulary_delete(TaxonomyVocabulary $vocabulary) {
+  cache('admin_bar')->flush();
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function admin_bar_preprocess_page(&$variables) {
+  if (!user_access('access administration bar') || admin_bar_suppress(FALSE)) {
+    return;
+  }
+
+  // Performance: Skip this entirely for AJAX requests.
+  if (!backdrop_is_html()) {
+    return;
+  }
+
+  // For the status report page, generate the admin bar from scratch to refresh
+  // the site status indicator.
+  if (strpos($_GET['q'], 'admin/reports/status') === 0) {
+    cache('admin_bar')->flush();
+  }
+
+  global $user, $language;
+  $path = backdrop_get_path('module', 'admin_bar');
+
+  $options = array('every_page' => TRUE);
+
+  backdrop_add_css($path . '/css/admin_bar.css', $options);
+  backdrop_add_js($path . '/js/admin_bar.js', $options);
+
+  // Add current path to support menu item highlighting.
+  $args = explode('/', $_GET['q']);
+  if ($args[0] == 'admin' && !empty($args[1])) {
+    $settings['activeTrail'] = url($args[0] . '/' . $args[1]);
+  }
+  elseif (backdrop_is_front_page()) {
+    $settings['activeTrail'] = url('<front>');
+  }
+
+  // Destination query strings are applied via JS.
+  $settings['destination'] = backdrop_http_build_query(backdrop_get_destination());
+
+  // Determine whether we need to show all components and disable all caches.
+  $complete = FALSE;
+
+  // If we have a cached menu for the current user, only output the hash for the
+  // client-side HTTP cache callback URL.
+  $cid = 'admin_bar:' . $user->uid . ':' . session_id() . ':' . $language->langcode;
+  if (!$complete && ($hash = admin_bar_cache_get($cid))) {
+    $settings['hash'] = $hash;
+
+    // The base path to use for cache requests depends on whether clean URLs
+    // are enabled, whether Backdrop runs in a sub-directory, and on the locale
+    // system configuration. url() already provides us the proper path and also
+    // invokes potentially existing custom_url_rewrite() functions, which may
+    // add further required components to the URL to provide context. Due to
+    // those components, and since url('') returns only base_path() when clean
+    // URLs are disabled, we need to use a replacement token as path.  Yuck.
+    $settings['basePath'] = url('admin_bar');
+  }
+  // Otherwise, add the full menu to the page.
+  else {
+    module_load_include('inc', 'admin_bar');
+    $variables['page_bottom'] .= admin_bar_output($complete);
+  }
+
+  $replacements = module_invoke_all('admin_bar_replacements', $complete);
+  if (!empty($replacements)) {
+    $settings['replacements'] = $replacements;
+  }
+
+  $config = config('admin_bar.settings');
+  if ($setting = $config->get('margin_top')) {
+    $settings['margin_top'] = $setting;
+  }
+  if ($setting = $config->get('position_fixed')) {
+    $settings['position_fixed'] = $setting;
+  }
+
+  backdrop_add_js(array('admin_bar' => $settings), 'setting');
+}
+
+/**
+ * Suppress display of administration bar.
+ *
+ * This function should be called from within another module's page callback
+ * (preferably using module_invoke()) when the menu should not be displayed.
+ * This is useful for modules that implement popup pages or other special
+ * pages where the menu would be distracting or break the layout.
+ *
+ * @param $set
+ *   Defaults to TRUE. If called before hook_footer(), the menu will not be
+ *   displayed. If FALSE is passed, the suppression state is returned.
+ */
+function admin_bar_suppress($set = TRUE) {
+  static $suppress = FALSE;
+  // backdrop_add_js() must only be invoked once.
+  if (!empty($set) && $suppress === FALSE) {
+    $suppress = TRUE;
+    backdrop_add_js(array('admin_bar' => array('suppress' => 1)), 'setting');
+  }
+  return $suppress;
+}
+
+/**
+ * Implements hook_js().
+ */
+function admin_bar_js() {
+  return array(
+    'cache' => array(
+      'callback' => 'admin_bar_js_cache',
+      'includes' => array('common', 'theme', 'unicode'),
+      'dependencies' => array('filter', 'user'),
+    ),
+  );
+}
+
+/**
+ * Retrieve a client-side cache hash from cache.
+ *
+ * The hash cache is consulted more than once per request; we therefore cache
+ * the results statically to avoid multiple database requests.
+ *
+ * This should only be used for client-side cache hashes. Use cache_menu for
+ * administration bar content.
+ *
+ * @param $cid
+ *   The cache ID of the data to retrieve.
+ */
+function admin_bar_cache_get($cid) {
+  $cache = &backdrop_static(__FUNCTION__, array());
+
+  if (!array_key_exists($cid, $cache)) {
+    $cache[$cid] = cache('admin_bar')->get($cid);
+    if ($cache[$cid] && isset($cache[$cid]->data)) {
+      $cache[$cid] = $cache[$cid]->data;
+    }
+  }
+
+  return $cache[$cid];
+}
+
+/**
+ * Store a client-side cache hash in persistent cache.
+ *
+ * This should only be used for client-side cache hashes. Use cache_menu for
+ * administration bar content.
+ *
+ * @param $cid
+ *   The cache ID of the data to retrieve.
+ */
+function admin_bar_cache_set($cid, $data) {
+  cache('admin_bar')->set($cid, $data);
+}
+
+/**
+ * Menu callback; Output administration bar for HTTP caching via AJAX request.
+ *
+ * @see admin_bar_deliver()
+ */
+function admin_bar_js_cache() {
+  global $conf;
+
+  // Enforce page caching.
+  $conf['cache'] = 1;
+  backdrop_page_is_cacheable(TRUE);
+
+  // If we have a cache, serve it.
+  // @see _backdrop_bootstrap_page_cache()
+  $cache = backdrop_page_get_cache();
+  if (is_object($cache)) {
+    backdrop_add_http_header('X-Backdrop-Cache', 'HIT');
+    backdrop_serve_page_from_cache($cache);
+    exit;
+  }
+
+  // Otherwise, create a new page response (that will be cached).
+  backdrop_add_http_header('X-Backdrop-Cache', 'MISS');
+
+  // The Expires HTTP header is the heart of the client-side HTTP caching. The
+  // additional server-side page cache only takes effect when the client
+  // accesses the callback URL again (e.g., after clearing the browser cache or
+  // when force-reloading a Backdrop page).
+  $max_age = 3600 * 24 * 365;
+  backdrop_add_http_header('Expires', gmdate(DATE_RFC1123, REQUEST_TIME + $max_age));
+  backdrop_add_http_header('Cache-Control', 'private, max-age=' . $max_age);
+
+  // Retrieve and return the rendered menu.
+  module_load_include('inc', 'admin_bar');
+  return admin_bar_output();
+}
+
+/**
+ * Delivery callback for client-side HTTP caching.
+ *
+ * @see admin_bar_js_cache()
+ */
+function admin_bar_deliver($page_callback_result) {
+  backdrop_add_http_header('Content-Type', 'text/html; charset=utf-8');
+
+  // Send appropriate language header for browsers.
+  global $language;
+  backdrop_add_http_header('Content-Language', $language->langcode);
+
+  // The page callback is always admin_bar_js_cache(), which always returns a
+  // string, and is only accessed when the user actually has access to it.
+  // Therefore, we do not care for the other possible page callback results.
+  print $page_callback_result;
+
+  // Perform end-of-request tasks. The page cache is created here.
+  backdrop_page_footer();
+}
+
+/**
+ * Implements hook_admin_bar_replacements().
+ */
+function admin_bar_admin_bar_replacements($complete) {
+  $items = array();
+  // If the complete menu is output, then it is uncached and will contain the
+  // current counts already.
+  if (!$complete) {
+    // Check whether the users count component is enabled.
+    $components = config_get('admin_bar.settings', 'components');
+    if (in_array('admin_bar.users', $components) && ($user_count = admin_bar_get_user_count())) {
+      // Replace the counters in the cached menu output with current counts.
+      $items['.admin-bar-users a'] = $user_count;
+    }
+  }
+  return $items;
+}
+
+/**
+ * Return count of online authenticated users.
+ *
+ * @see user_block(), user.module
+ */
+function admin_bar_get_user_count() {
+  $interval   = REQUEST_TIME - 900;
+  $count_auth = admin_bar_session_count($interval, FALSE);
+
+  return $count_auth;
+}
+
+/**
+ * Counts how many users are active on the site.
+ *
+ * Counts how many users have sessions which have been active since the
+ * specified time. Can count either anonymous sessions or authenticated
+ * sessions.
+ *
+ * @param $timestamp
+ *   A Unix timestamp. Users who have been active since this time will be
+ *   counted. The default is 0, which counts all existing sessions.
+ * @param $anonymous
+ *   TRUE counts only anonymous users. FALSE counts only authenticated users.
+ *
+ * @return
+ *   The number of users with sessions.
+ *
+ * @todo There are mostly no anonymous sessions anymore. Split this into a
+ *   separate module providing proper user statistics.
+ */
+function admin_bar_session_count($timestamp = 0, $anonymous = TRUE) {
+  $query = db_select('sessions');
+  $query->addExpression('COUNT(sid)', 'count');
+  $query->condition('timestamp', $timestamp, '>=');
+  $query->condition('uid', 0, $anonymous ? '=' : '>');
+  return $query->execute()->fetchField();
+}
+
+/**
+ * Implements hook_admin_bar_output_build().
+ */
+function admin_bar_admin_bar_output_build(&$content) {
+  if (!isset($content['menu']['menu'])) {
+    return;
+  }
+
+  // Unassign weights for categories below Configuration.
+  // An alphabetical order is more natural for a dropdown menu.
+  if (isset($content['menu']['menu']['admin/config'])) {
+    foreach (element_children($content['menu']['menu']['admin/config']) as $key) {
+      $content['menu']['menu']['admin/config'][$key]['#weight_original'] = $content['menu']['menu']['admin/config'][$key]['#weight'];
+      unset($content['menu']['menu']['admin/config'][$key]['#weight']);
+    }
+  }
+
+  // Move node/add under the "Content" item if it already exists in the menu.
+  if (isset($content['menu']['menu']['node/add']) && isset($content['menu']['menu']['admin/content'])) {
+    $content['menu']['menu']['admin/content']['node/add'] = $content['menu']['menu']['node/add'];
+    unset($content['menu']['menu']['node/add']);
+  }
+  // Retrieve and insert node/add if it does not yet exist in the menu.
+  else {
+    $link = db_query("SELECT * FROM {menu_links} WHERE router_path = 'node/add' AND module = 'system'")->fetchAssoc();
+    $conditions = array();
+    for ($i = 1; $i < MENU_MAX_DEPTH; $i++) {
+      if (!empty($link["p$i"])) {
+        $conditions["p$i"] = $link["p$i"];
+      }
+    }
+    $tree = menu_build_tree($link['menu_name'], array(
+      'conditions' => $conditions,
+      'min_depth' => $link['depth'],
+    ));
+    $links = admin_bar_links_menu($tree);
+    if (!empty($links)) {
+      $key = key($links);
+      $links[$key]['#weight'] = -100;
+
+      // If the user has access to the top-level "Content" category, insert the
+      // "Add content" link tree there.
+      if (isset($content['menu']['menu']['admin/content'])) {
+        $content['menu']['menu']['admin/content'] += $links;
+      }
+      // Otherwise make insert "Add content" as top-level category.
+      else {
+        $content['menu']['menu'] += $links;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_admin_bar_output_alter().
+ */
+function admin_bar_admin_bar_output_alter(&$content) {
+  if (isset($content['menu']['menu'])) {
+    foreach ($content['menu']['menu'] as $key => $link) {
+      // Move local tasks on 'admin' into icon menu.
+      if ($key == 'admin/tasks' || $key == 'admin/index') {
+        unset($content['menu']['menu'][$key]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_translated_menu_link_alter().
+ *
+ * Here is where we make changes to links that need dynamic information such
+ * as the current page path or the number of users.
+ */
+function admin_bar_translated_menu_link_alter(&$item, $map) {
+  if ($item['menu_name'] != 'admin_bar') {
+    return;
+  }
+
+  // Prepare links that would not be displayed normally.
+  if (!$item['access']) {
+    $item['access'] = TRUE;
+    // Prepare for http://drupal.org/node/266596
+    if (!isset($item['localized_options'])) {
+      _menu_item_localize($item, $map, TRUE);
+    }
+  }
+
+  // Don't waste cycles altering items that are not visible
+  if (!$item['access']) {
+    return;
+  }
+}
+
+/**
+ * Implements hook_flush_caches().
+ *
+ * Flushes client-side caches.
+ */
+function admin_bar_flush_caches() {
+  // Flush client-side cache hashes.
+  backdrop_static_reset('admin_bar_cache_get');
+
+  // Flush cached output of admin_bar.
+  return array('cache_admin_bar');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function admin_bar_form_alter(&$form, &$form_state, $form_id) {
+  $global_flush_ids = array(
+    'admin_bar_theme_settings',
+    // Update links for clean/non-clean URLs.
+    'system_clean_url_settings',
+    // Incorporate changed user permissions.
+    'user_admin_permissions',
+    // Removing a role potentially means less permissions.
+    'user_admin_role_delete_confirm',
+    // User name and roles may be changed on the user account form.
+    'user_profile_form',
+  );
+  if (in_array($form_id, $global_flush_ids)) {
+    $form['#submit'][] = 'admin_bar_form_alter_flush_cache_submit';
+
+    // Optionally limit the cache flush to a certain user ID.
+    $form_state['admin_bar_uid'] = NULL;
+    if ($form_id == 'user_profile_form') {
+      $form_state['admin_bar_uid'] = $form_state['user']->uid;
+    }
+  }
+
+  // UX: Add a confirmation to the permissions form to ask the user whether to
+  // auto-enable the 'access administration bar' permission along with
+  // 'access administration pages'.
+  if ($form_id == 'user_admin_permissions') {
+    $form['#attached']['js'][] = backdrop_get_path('module', 'admin_bar') . '/js/admin_bar.admin.js';
+  }
+}
+
+/**
+ * Form submission handler to flush Administration bar caches.
+ */
+function admin_bar_form_alter_flush_cache_submit($form, &$form_state) {
+  cache('admin_bar')->flush();
+}

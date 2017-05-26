@@ -1,0 +1,23 @@
+/**
+ * CSS for the admin section of the Config module.
+ */
+.config-import-single-form textarea,
+.config-export-single-form textarea {
+  font: 1.2em monospace;
+  white-space: pre;
+}
+.config-diff .config-old,
+.config-diff .config-new {
+  width: 50%;
+}
+.diff-context {
+  width: 49%;
+}
+.ui-dialog.config-diff {
+  max-width: 95%;
+}
+@media only screen and (min-width: 768px) {
+  .ui-dialog.config-diff {
+    max-width: 80%;
+  }
+}

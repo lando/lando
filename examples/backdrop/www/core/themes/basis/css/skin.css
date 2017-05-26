@@ -1,0 +1,1196 @@
+/**
+ * @file
+ * Colors and appearance styles.
+ *
+ * Component styles in this file are simple overrides for easy updating.
+ */
+body {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  /**
+   * Default font size for site should be set on body element in rem units.
+   * This is better for some accessibility technologies. Although it's not true
+   * under all circumstances, think of 1rem as being equal to 16px.
+   */
+  font-size: 1rem;
+  line-height: 1.6;
+  background: #fff;
+}
+
+a {
+  color: #0074bd;
+}
+
+a:focus,
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  background: #ddd;
+}
+
+blockquote,
+figcaption {
+  border-left-color: #c6cad2;
+}
+
+pre,
+code {
+  color: #20252e;
+}
+
+code {
+  border-color: #c6cad2;
+  background: #dee2ea;
+}
+
+pre code {
+  border-left-color: #c6cad2;
+  background: transparent;
+}
+
+code p {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Table tags
+ */
+td {
+  border-color: #dee2ea;
+}
+
+th {
+  border-right-color: #c6cad2;
+  background: #dee2ea;
+}
+
+th:last-child {
+  border-right-color: #dee2ea;
+}
+
+/* Sort arrow color */
+table [aria-sort="descending"] a:after {
+  border-top-color: #333;
+}
+
+table [aria-sort="ascending"] a:after {
+  border-bottom-color: #333;
+}
+
+/**
+ * Fieldsets.
+ */
+fieldset {
+  background-color: #fff;
+  border-color: #EAEAEA;
+}
+
+legend {
+  font-size: 1.1875em;
+  font-weight: normal;
+}
+
+fieldset .fieldset-legend {
+  text-transform: uppercase;
+}
+
+/**
+ * Small Text Components
+ */
+.marker {
+  background: #abdeff;
+}
+
+.more-help-link a:before {
+  color: #fff;
+  background: #0074bd;
+}
+
+/**
+ * Icon - External Link
+ * Add following markup:
+ * <span class="icon-external-link"><span class="icon-external-link-arrow"></span></span>
+ */
+.icon-external-link {
+  border-color: #0074bd;
+}
+
+.icon-external-link-arrow {
+  background: #0074bd;
+  /* Should be bg color */
+  border-color:  #fff;
+}
+
+.icon-external-link-arrow:before {
+  border-color: #0074bd;
+}
+
+.icon-external-link-arrow:after {
+  border-bottom-color: #0074bd;
+}
+
+/**
+ * Link list arrow color
+ */
+.links li:before,
+.links li:after {
+  border-color: #0074bd;
+}
+
+/**
+ * Header Region
+ * More layout styles included since they will effected by logo and
+ * site name word size
+ */
+.l-header {
+  background: #20252e;
+}
+
+@media (min-width: 34em) {
+  .l-header-inner {
+    min-height: 6.125rem;
+  }
+}
+
+.l-header-inner {
+  color: #fff;
+}
+
+.l-header a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.l-header a:hover {
+  color: #edf8ff;
+}
+
+.l-header a:active {
+  background: #114a75;
+}
+
+.block-system-header {
+  /* Helps center .header-identity-wrapper on smaller screens */
+  text-align: center;
+}
+
+.header-identity-wrapper {
+  /* BG color for slogan, and logo/site name if they don't have a bg */
+  background: #000;
+}
+
+@media (min-width: 34em) {
+  .header-identity-wrapper {
+    /* Helps center .header-identity-wrapper on smaller screens */
+    display: inline-block;
+  }
+}
+
+@media (min-width: 48em) {
+  .header-identity-wrapper {
+    text-align: left;
+  }
+}
+
+.header-site-name-wrapper {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 34em) {
+  .header-site-name-wrapper {
+    font-size: 1.5em;
+  }
+}
+
+@media (min-width: 62em) {
+  .header-site-name-wrapper {
+    font-size: 1.75em;
+  }
+}
+
+.header-logo-wrapper {
+  max-width: 6rem;
+  height: 3.5rem;
+  /* Keeps logo in same container as text but avoids padding */
+  margin: -1.25rem 1rem -1rem -1.25rem;
+}
+
+@media (min-width: 48em) {
+  .header-logo-wrapper {
+    height: 4.25rem;
+    /* Keeps logo in same container as text but avoids padding */
+    margin: -1.75rem 1.25rem -1.25rem -1.25rem;
+  }
+}
+
+.l-header .site-name {
+  font-weight: 200;
+  text-align: center;
+}
+
+.header-site-name-link {
+  background: #0074bd;
+  padding: 1.25rem 1.25rem 1rem;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+@media (min-width: 34em) {
+  .header-site-name-link {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 48em) {
+  .header-site-name-link {
+    padding: 1.75rem 1.25rem 1.25rem; /* Attempts to line up baselines */
+  }
+}
+
+.header-site-slogan {
+  line-height: 1.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+@media (min-width: 34em) {
+  .header-site-slogan {
+    height: 3.5rem;
+    padding: 1.5625rem 1rem 0.9375rem; /* Attempts to line up baselines */
+    float: left;
+  }
+}
+
+@media (min-width: 48em) {
+  .header-site-slogan {
+    height: 4.25rem;
+    padding: 2.0625rem 1.25rem 0.9375rem; /* Attempts to line up baselines */
+    font-size: 1rem;
+  }
+}
+
+/**
+ * Menus in header area
+ * More layout styles included since they'll be effected by menu item count
+ * and word size
+ */
+.header-menu {
+  /* Center menu at mobile */
+  text-align: center;
+}
+
+.header-menu > .links {
+  /* Center menu at mobile */
+  display: inline-block;
+}
+
+.l-header .menu,
+.l-header .menu > li {
+  text-align: left;
+}
+
+.l-header .menu > li {
+  font-size: 1em;
+}
+
+@media (min-width: 34em) {
+  .l-header .menu > li {
+    font-size: 1.125em;
+  }
+}
+
+@media (min-width: 62em) {
+  .l-header .menu > li {
+    font-size: 1.375em;
+  }
+}
+
+/**
+ * Responsive menu styles
+ */
+.menu-dropdown ul {
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom-color: #20252e;
+}
+
+.js .menu-dropdown > li {
+  border-bottom-color: #114a75;
+}
+
+.menu-dropdown a.disabled {
+  color: #bbbbbb;
+}
+
+@media (min-width: 48em) {
+  .menu-dropdown a.disabled {
+    color: #bbbbbb;
+  }
+
+  .js .menu-dropdown ul ul {
+    border-left-color: #20252e;
+  }
+
+  .js .menu-dropdown > li:hover {
+    background-color: #114a75;
+  }
+
+  .js .menu-dropdown > li.has-children > a:hover,
+  .js .menu-dropdown > li.has-children > a:focus {
+    background-color: #114a75;
+  }
+
+  .menu-dropdown a span.sub-arrow {
+    border-color-top: #fff;
+  }
+
+  .menu-dropdown ul {
+    background: #20252e;
+  }
+
+  .menu-dropdown ul a,
+  .menu-dropdown ul a:hover,
+  .menu-dropdown ul a:focus,
+  .menu-dropdown ul a:active,
+  .menu-dropdown ul a.highlighted {
+    color: #fff;
+  }
+
+  .menu-dropdown ul a:hover,
+  .menu-dropdown ul a:focus,
+  .menu-dropdown ul a:active,
+  .menu-dropdown ul a.highlighted {
+    background: #114a75;
+  }
+
+  .menu-dropdown ul a.disabled {
+    background: #fff;
+    color: #cccccc;
+  }
+
+  .menu-dropdown ul a span.sub-arrow {
+    border-color-left: #fff;
+  }
+
+  .menu-dropdown span.scroll-up,
+  .menu-dropdown span.scroll-down {
+    background: #fff;
+  }
+
+  .menu-dropdown span.scroll-up:hover,
+  .menu-dropdown span.scroll-down:hover {
+    background: #eeeeee;
+  }
+
+  .menu-dropdown span.scroll-up-arrow,
+  .menu-dropdown span.scroll-down-arrow {
+    border-color-bottom: #fff;
+  }
+
+  .menu-dropdown span.scroll-down-arrow {
+    border-color-top: #fff;
+  }
+
+  [dir="rtl"] .menu-dropdown span.sub-arrow {
+    border-color-right: #fff;
+  }
+}
+
+
+/**
+ * Footer styles
+ */
+.l-footer {
+  border-top: 0.25rem solid #c6cad2;
+  /* If footer text wraps, remove line-height & add padding styles to blocks */
+  line-height: 3;
+  padding: 0.5em 0 1em;
+  margin: 5em 0 0;
+}
+
+/**
+ * Powered by Backdrop Block
+ */
+.l-footer .block-system-powered-by a {
+  text-decoration: none;
+}
+
+.l-footer .block-system-powered-by a:hover {
+  text-decoration: underline;
+}
+
+.drop-lounging {
+  /* To make Drop larger/smaller, adjust the width below. */
+  width: 7em;
+}
+
+.drop-lounging:before {
+  /* Uncomment below to remove Drop, or remove markup from block--system--powered-by.tpl.php */
+  /* display: none; */
+  background-image: url("../images/drop-lounging.png");
+}
+
+/**
+ * Breadcrumb
+ */
+.breadcrumb {
+  background: #dee2ea;
+}
+
+.breadcrumb a {
+  color: #000;
+}
+
+/* Arrow color */
+.breadcrumb li:after {
+  border-color: #fff;
+}
+
+
+/**
+ * Tabledrag
+ */
+.draggable a.tabledrag-handle {
+  background: #ebeff7;
+}
+
+.draggable.drag td:after {
+  background: #dee2ea;
+  opacity: 0.3;
+}
+
+tr.draggable .handle,
+tr.draggable .handle .handle-inner {
+  background: #333; /* Resize icon color */
+}
+
+tr.draggable .handle:before {
+  border-bottom-color: #333; /* Resize icon color */
+}
+
+tr.draggable .handle:after {
+  border-top-color: #333; /* Resize icon color */
+}
+
+tr.draggable .handle .handle-inner:before {
+  border-left-color: #333; /* Resize icon color */
+}
+
+tr.draggable .handle .handle-inner:after {
+  border-right-color: #333; /* Resize icon color */
+}
+
+abbr.tabledrag-changed {
+  background: #FCE400;
+}
+
+/**
+ * Status messages
+ * Uncomment background-image styles to override, URL will need to be
+ * updated to work in a sub-theme.
+ */
+/* Neutral or Good status message colors */
+.status {
+  color: #234600;
+  background-color: #E9EEBC;
+}
+
+div.status:before {
+  /* background-image: url(../../../misc/message-24-ok.png); */
+  background-color: #CFDE56;
+}
+
+/* Warning status message colors */
+.warning {
+  color: #555;
+  background-color: #FAF5C9;
+}
+
+div.warning:before {
+  /* background-image: url(../../../misc/message-24-warning.png); */
+  background-color: #FCE400;
+}
+
+/* Error status message colors */
+.error {
+  color: #EC351C;
+  background-color: #F9EDEC;
+}
+
+div.error:before {
+  /* background-image: url(../../../misc/message-24-error.png); */
+  background-color: #EE3D23;
+}
+
+/* Desktop size icons */
+@media only screen and (min-width: 34em) {
+  div.status:before {
+    /* background-image: url(../../../misc/message-32-ok.png); */
+  }
+
+  div.warning:before {
+    /* background-image: url(../../../misc/message-32-warning.png); */
+  }
+
+  div.error:before {
+    /* background-image: url(../../../misc/message-32-error.png); */
+  }
+}
+
+/**
+ * SVG overrides for status messages
+ * Using linear-gradient so the style only applies to browsers that can render
+ * SVGs.
+ */
+div.status:before {
+  /* background-image: -webkit-linear-gradient(transparent, transparent), url(../../../misc/message-ok.svg); */
+  /* background-image: linear-gradient(transparent, transparent), url(../../../misc/message-ok.svg); */
+}
+
+div.warning:before {
+  /* background-image: -webkit-linear-gradient(transparent, transparent), url(../../../misc/message-warning.svg); */
+  /* background-image: linear-gradient(transparent, transparent), url(../../../misc/message-warning.svg); */
+}
+
+div.error:before {
+  /* background-image: -webkit-linear-gradient(transparent, transparent), url(../../../misc/message-error.svg); */
+  /* background-image: linear-gradient(transparent, transparent), url(../../../misc/message-error.svg); */
+}
+
+/**
+ * Backdrop Form Styles
+ */
+.form-item-radio label,
+.form-radios label,
+.form-item-checkbox label,
+.form-checkboxes label {
+  font-weight: 400;
+}
+
+.form-item .description,
+.password-strength,
+.password-match {
+  border-left-color: #c6cad2;
+}
+
+.field-suffix .machine-name-value {
+  border-color: #dee2ea;
+  font-family: Consolas, 'Lucida Console', 'Courier New', monospace;
+}
+
+select.form-select {
+  font-weight: 400;
+  border-color: #d0d0d0;
+  color: #444b53;
+  background: #fff;
+}
+
+select.form-select:focus {
+  color: #000;
+  border-color: #43afe4;
+}
+
+input.form-submit,
+button.form-submit,
+.button {
+  text-align: center;
+  text-transform: uppercase;
+  color: #333;
+  letter-spacing: 0.025em;
+  line-height: 2.875;
+  background: #e5e5e6;
+}
+
+.button:hover,
+.button:focus,
+input.form-submit:hover,
+input.form-submit:focus {
+  color: #333;
+  background: #e5e5e6;
+}
+
+.button:active,
+input.form-submit:active {
+  color: #333;
+  background: #e5e5e6;
+}
+
+.button,
+input.form-submit,
+input.button-primary,
+button.button-primary,
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+  color: white;
+  background: #0074bd;
+}
+
+input.button-primary:hover,
+input.button-primary:focus,
+button.button-primary:hover,
+button.button-primary:focus {
+  color: white;
+  background-color: #114a75;
+}
+
+input.button-primary:active,
+button.button-primary:active {
+  box-shadow: inset 0 0 0 0.125em #114a75;
+  background-color: #0074bd;
+  color: white;
+}
+
+input.button-secondary,
+button.button-secondary {
+  color: #828188;
+  background-color: white;
+  box-shadow: inset 0 0 0 0.125em #97979e;
+}
+
+input.button-secondary:hover,
+input.button-secondary:focus,
+button.button-secondary:hover,
+button.button-secondary:focus {
+  color: white;
+  background-color: #97979e;
+}
+
+input.button-secondary:active,
+button.button-secondary:active {
+  color: white;
+  background-color: #97979e;
+  box-shadow: inset 0 0 0 0.125em #555;
+}
+
+input.button-danger,
+button.button-danger {
+  color: #e7251b;
+  box-shadow: inset 0 0 0 0.125rem #e7251b;
+  background: transparent;
+}
+
+input.button-danger:hover,
+input.button-danger:focus,
+button.button-danger:hover,
+button.button-danger:focus {
+  color: #fff;
+  background-color: #e7251b;
+}
+
+input.form-button-disabled,
+input.form-button-disabled:active,
+input.form-submit[disabled],
+button.form-submit[disabled],
+.button[disabled] {
+  background: #eee;
+  border-color: #eee;
+  text-shadow: none;
+  color: #999;
+}
+
+input.button-danger[disabled],
+button.button-danger[disabled],
+input.button-secondary[disabled],
+button.button-secondary[disabled] {
+  background: #fefefe;
+  box-shadow: inset 0 0 0 0.125rem #ddd;
+  color: #ccc;
+}
+
+input.form-autocomplete,
+input.form-text,
+input.form-tel,
+input.form-email,
+input.form-url,
+input.form-color,
+input.form-number,
+input.form-search,
+input.form-file,
+textarea.form-textarea {
+  border-color: #d0d0d0;
+  font-weight: 400;
+  color: #444b53;
+  background: #fff;
+}
+
+input.form-text:focus,
+input.form-tel:focus,
+input.form-email:focus,
+input.form-url:focus,
+input.form-color:focus,
+input.form-number:focus,
+input.form-search:focus,
+input.form-file:focus,
+textarea.form-textarea:focus {
+  color: #000;
+  border-color: #43afe4;
+}
+
+.form-disabled input.form-autocomplete,
+.form-disabled input.form-text,
+.form-disabled input.form-tel,
+.form-disabled input.form-email,
+.form-disabled input.form-url,
+.form-disabled input.form-color,
+.form-disabled input.form-number,
+.form-disabled input.form-search,
+.form-disabled input.form-file,
+.form-disabled textarea.form-textarea,
+.form-disabled select.form-select,
+input.form-autocomplete[disabled],
+input.form-text[disabled],
+input.form-tel[disabled],
+input.form-email[disabled],
+input.form-url[disabled],
+input.form-color[disabled],
+input.form-number[disabled],
+input.form-search[disabled],
+input.form-file[disabled],
+textarea.form-textarea[disabled],
+select.form-select[disabled] {
+  background-color: #eee;
+  color: #777;
+}
+
+
+ul.action-links a {
+  background: transparent url(../images/add.png) no-repeat 0 center;
+  line-height: 1.875;
+}
+
+[dir="rtl"] ul.action-links a {
+  background-position: right center;
+}
+
+/**
+ * Collapsible Fieldsets
+ */
+.js fieldset.collapsible .fieldset-legend a:before {
+  border-top-color: #000;
+}
+
+/**
+ * Teaser
+ */
+.view-mode-teaser + .view-mode-teaser {
+  border-top-color: #c6cad2;
+}
+
+/**
+ * Pager
+ */
+.pager-first,
+.pager-previous,
+.pager-ellipsis,
+.pager-current,
+.pager-next,
+.pager-last,
+.pager-item {
+  background: #586172;
+  color: #fff;
+}
+
+.pager-ellipsis {
+  color: #586172;
+}
+
+.pager-first a,
+.pager-previous a,
+.pager-next a,
+.pager-last a,
+.pager-item a {
+  color: #fff;
+}
+
+.pager-first a:hover,
+.pager-previous a:hover,
+.pager-next a:hover,
+.pager-last a:hover,
+.pager-item a:hover {
+  background: #3c4350;
+}
+
+.pager-current {
+  background: #20252e;
+}
+
+.pager-first a:before,
+.pager-first a:after,
+.pager-previous a:before,
+.pager-next a:before,
+.pager-last a:before,
+.pager-last a:after {
+  /* Mobile chevron color */
+  border-color: #fff;
+}
+
+/**
+ * Progress Bar
+ * See system module
+ */
+.progress {
+  font-weight: bold;
+}
+
+.progress .bar {
+  border-color: #e5e5e6;
+  background: #e5e5e6;
+}
+
+.progress .filled {
+  background: #586172;
+}
+
+/* Progress Bar Animation */
+.progress .filled:after {
+  border-color: #3c4350;
+}
+
+/**
+ * Dialog overrides
+ */
+.ui-dialog {
+  border-color: #20252e;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+  background: #20252e;
+  color: #fff;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  background: #008be2;
+}
+
+/* Close X color */
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:before,
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:after {
+  background: #fff;
+}
+
+/**
+ * Custom Hero Component
+ */
+.block-hero {
+  font-size: 1em;
+}
+
+@media (min-width: 25em) {
+  .block-hero {
+    padding: 2rem 3rem 3rem;
+    font-size: 1.3em;
+  }
+}
+
+@media (min-width: 34em) {
+  .block-hero {
+    font-size: 1.5em;
+  }
+}
+
+/* Default background when hero doesn't have image */
+.block-hero-no-image {
+  background-color: #0074bd;
+  background-image: url(../images/texture.png);
+  background-repeat: repeat;
+  background-position: center center;
+  background-blend-mode: luminosity; /* Colorizes bg image */
+}
+
+.no-background-blend-mode .block-hero-no-image:before {
+  /* If we don't have blend-modes, use a more saturated version of overlay color */
+  /* Semi-transparent overlay has similar effect as luminosity */
+  background: #009dff;
+  opacity: 0.5;
+}
+
+.block-hero .block-title {
+  font-weight: 200;
+  line-height: 1.2;
+  font-size: 2.3em;
+}
+
+@media (min-width: 34em) {
+  .block-hero .block-title {
+    font-size: 2.625em;
+  }
+}
+
+/**
+ * Primary admin tabs
+ */
+nav.tabs:before {
+  /* Background behind primary tabs */
+  background-color: #586172;
+}
+
+ul.primary {
+  font-size: 0.9375em;
+  text-transform: uppercase;
+}
+
+ul.primary li a,
+ul.primary li a:visited,
+ul.primary li a:hover,
+ul.primary li.active a,
+.expand-dropdown-tabs-control,
+.responsive-tabs-mobile .expand-dropdown-tabs-control:before,
+.responsive-tabs-mobile .expand-dropdown-tabs-label {
+  border-color: #586172; /* Should be color of bg behind tabs */
+  color: #757575;
+  background-color: #dee2ea;
+}
+
+ul.primary li.active a,
+ul.primary li.active a.active,
+ul.primary li.active a:active,
+ul.primary li.active a:visited,
+.responsive-tabs-mobile .expand-dropdown-tabs-label {
+  color: #000;
+  background-color: #fff;
+  font-weight: bold;
+}
+
+ul.primary li a:hover,
+ul.primary li a:focus,
+.expand-dropdown-tabs-control:hover,
+.expand-dropdown-tabs-control:focus,
+.responsive-tabs-mobile .expand-dropdown-tabs-control:hover:before,
+.responsive-tabs-mobile .expand-dropdown-tabs-control:focus:before,
+.responsive-tabs-mobile .expand-dropdown-tabs-control.js-active:before,
+.expand-dropdown-tabs-control.js-active {
+  color: #000;
+  background: #bcc2cc;
+}
+
+ul.primary li a:active,
+.expand-dropdown-tabs-control:active,
+.responsive-tabs-mobile .expand-dropdown-tabs-control:active:before {
+  background: #dee2ea;
+  box-shadow: inset 0 0 0 0.125em #bcc2cc;
+}
+
+/**
+ * Secondary admin tabs
+ */
+ul.secondary {
+  font-size: 0.8125em;
+  font-weight: bold;
+  background-color: #fff;
+}
+
+ul.secondary li a {
+  border-color: #e3e2e2;
+  color: #444B53;
+}
+
+ul.secondary li a:hover,
+ul.secondary li a:focus,
+ul.secondary li.active a,
+ul.secondary li.active a.active {
+  color: #000;
+  background: #e3e2e2;
+}
+
+ul.secondary li a:active {
+  color: #000;
+  background: #e3e2e2;
+  box-shadow: inset 0 0 0 0.125em #fff;
+}
+
+/**
+ * Contextual Links font-size
+ */
+.contextual-links-wrapper {
+  font-size: 0.9rem;
+}
+
+/**
+ * Responsive tabs
+ */
+.responsive-tabs-mobile ul.primary {
+  background: #fff;
+}
+
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li a,
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li a:hover {
+  border-top-color: #fff;
+}
+
+.expand-dropdown-tabs-control:before {
+  content: '...';
+  font-weight: bold;
+}
+
+.responsive-tabs-after .expand-dropdown-tabs-control {
+  border-left-color: 2px solid #bcc2cc;
+}
+
+.expand-dropdown-tabs-label {
+  text-transform: uppercase;
+}
+
+.expand-dropdown-tabs-control:hover .expand-dropdown-tabs-label,
+.responsive-tabs-mobile.js-active .expand-dropdown-tabs-label {
+  background: #e8e8e8;
+}
+
+.responsive-tabs-mobile.expand-dropdown-tabs .expand-dropdown-tabs-label,
+.responsive-tabs-mobile.expand-dropdown-tabs:hover .expand-dropdown-tabs-label {
+  background: #fff;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control.js-active {
+  background: #fff;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control:before {
+  background: #dee2ea;
+}
+
+.responsive-tabs-mobile.expand-dropdown-tabs .expand-dropdown-tabs-control:before {
+  background: #fff;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control:after {
+  border-right-color: #000;
+}
+
+.expand-dropdown-tabs .expand-dropdown-tabs-control:after {
+  border-top-color: #bcc2cc;
+}
+
+.responsive-tabs-mobile ul.primary,
+.responsive-tabs-mobile.expand-dropdown-tabs ul.primary {
+  background: #fff;
+}
+
+.responsive-tabs-mobile ul.primary,
+.expand-dropdown-tabs.responsive-tabs-mobile ul.primary {
+  -webkit-border-radius: 0 0 4px 4px;
+  border-radius: 4px;
+}
+
+.responsive-tabs-mobile ul.primary li {
+  border-bottom-color: #fff;
+}
+
+.responsive-tabs-mobile ul.primary a:after {
+  background: #bcc2cc;
+}
+
+.responsive-tabs-mobile-header-padder {
+  background: #586172;
+}
+
+/**
+ * Comments
+ */
+.comments .indented:before {
+  top: -1em;
+  left: 0;
+  width: 0.5em;
+  height: 1.5em;
+  border-left-color: #dee2ea;
+  border-bottom-color: #dee2ea;
+}
+
+.comments .indented:after {
+  border-top-color: #dee2ea;
+  border-right-color: #dee2ea;
+}
+
+.comment-header:before {
+  border-bottom-color: #dee2ea;
+  border-left-color: #dee2ea;
+  background: #fff;
+}
+
+.comment .comment-text {
+  border-color: #dee2ea;
+}
+
+.comment-title {
+  padding: 1em 1.25em 0.25em;
+}
+
+.comment-title h3 {
+  font-size: 1.125em;
+}
+
+.comment-time {
+  font-size: 0.875em;
+}
+
+.comment-footer {
+  background: #dee2ea;
+}
+
+/**
+ * Font related override utility classes
+ */
+.color-inverse {
+  color: #fff;
+}
+
+.font-size-xxxxlarge {
+  font-size: 2.625rem;
+}
+
+.font-size-xxxlarge {
+  font-size: 2.25rem;
+}
+
+.font-size-xxlarge {
+  font-size: 1.8125rem;
+}
+
+.font-size-xlarge {
+  font-size: 1.625rem;
+  font-weight: 400;
+}
+
+.font-size-large {
+  font-size: 1.4375rem;
+}
+
+.font-size-medium {
+  font-size: 1.25rem;
+}
+
+.font-size-normal {
+  font-size: 1rem;
+}
+
+.font-size-small {
+  font-size: 0.875rem;
+}
+
+.font-size-xsmall {
+  font-size: 0.75rem;
+}
+
+.font-weight-bold {
+  font-weight: 600;
+}
+
+.font-weight-normal {
+  font-weight: 400;
+}
+
+.font-weight-light {
+  font-weight: 200;
+}
+
+.font-style-italic {
+  font-style: italic;
+}
+
+.font-style-normal {
+  font-style: normal;
+}
+

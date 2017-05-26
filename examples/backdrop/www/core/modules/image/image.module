@@ -1,0 +1,1265 @@
+<?php
+/**
+ * @file
+ * Exposes global functionality for creating image styles.
+ */
+
+/**
+ * Image style constant for user presets.
+ */
+define('IMAGE_STORAGE_NORMAL', 1);
+
+/**
+ * Image style constant for user presets that override module-defined presets.
+ */
+define('IMAGE_STORAGE_OVERRIDE', 2);
+
+/**
+ * Image style constant for module-defined presets.
+ */
+define('IMAGE_STORAGE_DEFAULT', 4);
+
+/**
+ * Image style constant to represent any module-based preset.
+ */
+define('IMAGE_STORAGE_MODULE', IMAGE_STORAGE_OVERRIDE | IMAGE_STORAGE_DEFAULT);
+
+// Load all Field module hooks for Image.
+require_once BACKDROP_ROOT . '/core/modules/image/image.field.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function image_menu() {
+  $items = array();
+
+  // Generate image derivatives of publicly available files.
+  // If clean URLs are disabled, image derivatives will always be served
+  // through the menu system.
+  // If clean URLs are enabled and the image derivative already exists,
+  // PHP will be bypassed.
+  $directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
+  $items[$directory_path . '/styles/%image_style'] = array(
+    'title' => 'Generate image style',
+    'page callback' => 'image_style_deliver',
+    'page arguments' => array(count(explode('/', $directory_path)) + 1),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  // Generate and deliver image derivatives of private files.
+  // These image derivatives are always delivered through the menu system.
+  $items['system/files/styles/%image_style'] = array(
+    'title' => 'Generate image style',
+    'page callback' => 'image_style_deliver',
+    'page arguments' => array(3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/media/image-styles'] = array(
+    'title' => 'Image styles',
+    'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
+    'page callback' => 'image_style_list',
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/list'] = array(
+    'title' => 'List image styles',
+    'description' => 'List the current image styles on the site.',
+    'page callback' => 'image_style_list',
+    'access arguments' => array('administer image styles'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 1,
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/add'] = array(
+    'title' => 'Add image style',
+    'description' => 'Add a new image style.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_style_add_form'),
+    'access arguments' => array('administer image styles'),
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 2,
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/edit/%image_style'] = array(
+    'title' => 'Edit style',
+    'description' => 'Configure an image style.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_style_form', 5),
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/delete/%image_style'] = array(
+    'title' => 'Delete style',
+    'description' => 'Delete an image style.',
+    'load arguments' => array((string) IMAGE_STORAGE_NORMAL),
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_style_delete_form', 5),
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/revert/%image_style'] = array(
+    'title' => 'Revert style',
+    'description' => 'Revert an image style.',
+    'load arguments' => array((string) IMAGE_STORAGE_MODULE),
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_style_revert_form', 5),
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
+    'title' => 'Edit image effect',
+    'description' => 'Edit an existing effect within a style.',
+    'load arguments' => array(5),
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_effect_form', 5, 7),
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
+    'title' => 'Delete image effect',
+    'description' => 'Delete an existing effect from a style.',
+    'load arguments' => array(5),
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_effect_delete_form', 5, 7),
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+  $items['admin/config/media/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
+    'title' => 'Add image effect',
+    'description' => 'Add a new effect to a style.',
+    'load arguments' => array(5),
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('image_effect_form', 5, 7),
+    'access arguments' => array('administer image styles'),
+    'file' => 'image.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function image_theme() {
+  $base = array(
+    'file' => 'image.theme.inc',
+  );
+
+  return array(
+    'image_style' => array(
+      'variables' => array(
+        'style_name' => NULL,
+        'path' => NULL,
+        'width' => NULL,
+        'height' => NULL,
+        'alt' => '',
+        'title' => NULL,
+        'uri' => NULL,
+        'attributes' => array(),
+      ),
+    ) + $base,
+    'image_style_list' => array(
+      'variables' => array('styles' => NULL),
+    ) + $base,
+    'image_style_effects' => array(
+      'render element' => 'form',
+    ) + $base,
+    'image_style_preview' => array(
+      'variables' => array('style' => NULL),
+    ) + $base,
+    'image_anchor' => array(
+      'render element' => 'element',
+    ) + $base,
+    'image_resize_summary' => array(
+      'variables' => array('data' => NULL),
+    ) + $base,
+    'image_scale_summary' => array(
+      'variables' => array('data' => NULL),
+    ) + $base,
+    'image_crop_summary' => array(
+      'variables' => array('data' => NULL),
+    ) + $base,
+    'image_rotate_summary' => array(
+      'variables' => array('data' => NULL),
+    ) + $base,
+    'image_widget' => array(
+      'render element' => 'element',
+    ) + $base,
+    'image_formatter' => array(
+      'variables' => array('item' => NULL, 'path' => NULL, 'image_style' => NULL),
+    ) + $base,
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function image_permission() {
+  return array(
+    'administer image styles' => array(
+      'title' => t('Administer image styles'),
+      'description' => t('Create and modify styles for generating image modifications such as thumbnails.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function image_views_api() {
+  return array(
+    'api' => '3.0',
+    'path' => backdrop_get_path('module', 'image') . '/views',
+  );
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function image_config_info() {
+  $prefixes['image.style'] = array(
+    'name_key' => 'name',
+    'label_key' => 'name',
+    'group' => t('Image styles'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function image_form_system_file_system_settings_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'image_system_file_system_settings_submit';
+}
+
+/**
+ * Submit handler for the file system settings form.
+ *
+ * Adds a menu rebuild after the public file path has been changed, so that the
+ * menu router item depending on that file path will be regenerated.
+ */
+function image_system_file_system_settings_submit($form, &$form_state) {
+  if ($form['file_public_path']['#default_value'] !== $form_state['values']['file_public_path']) {
+    state_set('menu_rebuild_needed', TRUE);
+  }
+}
+
+/**
+ * Implements hook_file_download().
+ *
+ * Control the access to files underneath the styles directory.
+ */
+function image_file_download($uri) {
+  $path = file_uri_target($uri);
+
+  // Private file access for image style derivatives.
+  if (strpos($path, 'styles/') === 0) {
+    $args = explode('/', $path);
+    // Discard the first part of the path (styles).
+    array_shift($args);
+    // Get the style name from the second part.
+    $style_name = array_shift($args);
+    // Remove the scheme from the path.
+    array_shift($args);
+
+    // Then the remaining parts are the path to the image.
+    $original_uri = file_uri_scheme($uri) . '://' . implode('/', $args);
+
+    // Check that the file exists and is an image.
+    if ($info = image_get_info($uri)) {
+      // Check the permissions of the original to grant access to this image.
+      $headers = module_invoke_all('file_download', $original_uri);
+      // Confirm there's at least one module granting access and none denying access.
+      if (!empty($headers) && !in_array(-1, $headers)) {
+        return array(
+          // Send headers describing the image's size, and MIME-type...
+          'Content-Type' => $info['mime_type'],
+          'Content-Length' => $info['file_size'],
+          // By not explicitly setting them here, this uses normal Backdrop
+          // Expires, Cache-Control and ETag headers to prevent proxy or
+          // browser caching of private images.
+        );
+      }
+    }
+    return -1;
+  }
+
+  // Private file access for the original files. Note that we only
+  // check access for non-temporary images, since file.module will
+  // grant access for all temporary files.
+  $files = file_load_multiple(array(), array('uri' => $uri));
+  if (count($files)) {
+    $file = reset($files);
+    if ($file->status) {
+      return file_file_download($uri, 'image');
+    }
+  }
+}
+
+/**
+ * Implements hook_file_move().
+ */
+function image_file_move(File $file, File $source) {
+  // Delete any image derivatives at the original image path.
+  image_path_flush($source->uri);
+}
+
+/**
+ * Implements hook_file_predelete().
+ */
+function image_file_predelete(File $file) {
+  // Delete any image derivatives of this image.
+  image_path_flush($file->uri);
+}
+
+/**
+ * Implements hook_image_style_save().
+ */
+function image_image_style_save($style) {
+  if (isset($style['old_name']) && $style['old_name'] != $style['name']) {
+    $instances = field_read_instances();
+    // Loop through all fields searching for image fields.
+    foreach ($instances as $instance) {
+      if ($instance['widget']['module'] == 'image') {
+        $instance_changed = FALSE;
+        foreach ($instance['display'] as $view_mode => $display) {
+          // Check if the formatter involves an image style.
+          if ($display['type'] == 'image' && $display['settings']['image_style'] == $style['old_name']) {
+            // Update display information for any instance using the image
+            // style that was just deleted.
+            $instance['display'][$view_mode]['settings']['image_style'] = $style['name'];
+            $instance_changed = TRUE;
+          }
+        }
+        if ($instance['widget']['settings']['preview_image_style'] == $style['old_name']) {
+          $instance['widget']['settings']['preview_image_style'] = $style['name'];
+          $instance_changed = TRUE;
+        }
+        if ($instance_changed) {
+          field_update_instance($instance);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_image_style_delete().
+ */
+function image_image_style_delete($style) {
+  image_image_style_save($style);
+}
+
+/**
+ * Implements hook_field_delete_field().
+ */
+function image_field_delete_field($field) {
+  if ($field['type'] != 'image') {
+    return;
+  }
+
+  // Remove the default image when the instance is deleted.
+  $uri = $field['settings']['default_image'];
+  if ($uri && file_exists($uri)) {
+    file_unmanaged_delete($uri);
+  }
+}
+
+/**
+ * Implements hook_field_update_field().
+ */
+function image_field_update_field($field, $prior_field, $has_data) {
+  if ($field['type'] != 'image') {
+    return;
+  }
+
+  $uri_new = $field['settings']['default_image'];
+  $uri_old = $prior_field['settings']['default_image'];
+
+  // Delete the old file if any.
+  if ($uri_old && $uri_new != $uri_old) {
+    file_unmanaged_delete($uri_old);
+  }
+
+  // If the upload destination changed, then move the file.
+  if ($uri_new && (file_uri_scheme($uri_new) != $field['settings']['uri_scheme'])) {
+    $directory = $field['settings']['uri_scheme'] . '://default_images/';
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    file_unmanaged_move($uri_new, $directory . basename($uri_new));
+  }
+}
+
+/**
+ * Implements hook_field_delete_instance().
+ */
+function image_field_delete_instance($instance) {
+  // Only act on image fields.
+  $field = field_read_field($instance['field_name']);
+  if ($field['type'] != 'image') {
+    return;
+  }
+
+  // Remove the default image when the instance is deleted.
+  $uri = $instance['settings']['default_image'];
+  if ($uri && file_exists($uri)) {
+    file_unmanaged_delete($uri);
+  }
+}
+
+/**
+ * Implements hook_field_update_instance().
+ */
+function image_field_update_instance($instance, $prior_instance) {
+  // Only act on image fields.
+  $field = field_read_field($instance['field_name']);
+  if ($field['type'] != 'image') {
+    return;
+  }
+
+  $uri_new = $instance['settings']['default_image'];
+  $uri_old = $prior_instance['settings']['default_image'];
+
+  // Delete the old file, if present.
+  if ($uri_old && $uri_new != $uri_old) {
+    file_unmanaged_delete($uri_old);
+  }
+
+  // If the upload destination changed, then move the file.
+  if ($uri_new && (file_uri_scheme($uri_new) != $field['settings']['uri_scheme'])) {
+    $directory = $field['settings']['uri_scheme'] . '://default_images/';
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    file_move($uri_new, $directory . basename($uri_new));
+  }
+}
+
+/**
+ * Clear cached versions of a specific file in all styles.
+ *
+ * @param $path
+ *   The Backdrop file path to the original image.
+ */
+function image_path_flush($path) {
+  $styles = image_styles();
+  foreach ($styles as $style) {
+    $image_path = image_style_path($style['name'], $path);
+    if (file_exists($image_path)) {
+      file_unmanaged_delete($image_path);
+    }
+  }
+}
+
+/**
+ * Get an array of all styles and their settings.
+ *
+ * @return
+ *   An array of styles keyed by the image style ID (isid).
+ * @see image_style_load()
+ */
+function image_styles() {
+  $styles = &backdrop_static(__FUNCTION__);
+
+  // Grab from cache or build the array.
+  if (!isset($styles)) {
+    if ($cache = cache()->get('image_styles')) {
+      $styles = $cache->data;
+    }
+    else {
+      $styles = array();
+
+      // Select the styles we have configured.
+      foreach (config_get_names_with_prefix('image.style') as $config_name) {
+        $style = array();
+        $config = config($config_name);
+        $style['label'] = $config->get('label');
+        $style['name'] = $config->get('name');
+        $style['effects'] = array();
+        if ($module = $config->get('module')) {
+          $style['module'] = $module;
+          $style['storage'] = $config->get('overridden') ? IMAGE_STORAGE_OVERRIDE : IMAGE_STORAGE_DEFAULT;
+        }
+        else {
+          $style['storage'] = IMAGE_STORAGE_NORMAL;
+        }
+        foreach ($config->get('effects') as $key => $effect) {
+          // Do not include effects for definitions that are missing.
+          if ($definition = image_effect_definition_load($effect['name'])) {
+            $effect = array_merge($definition, $effect);
+            $effect['ieid'] = $key;
+            $style['effects'][$key] = $effect;
+          }
+        }
+        // Sort the effects by weight.
+        backdrop_sort($style['effects'], array('weight', 'ieid'));
+        $styles[$style['name']] = $style;
+      }
+      backdrop_alter('image_styles', $styles);
+      cache()->set('image_styles', $styles);
+    }
+  }
+
+  return $styles;
+}
+
+/**
+ * Load a style by style name or ID. May be used as a loader for menu items.
+ *
+ * @param $name
+ *   The name of the style.
+ * @param $include
+ *   If set, this loader will restrict to a specific type of image style, may be
+ *   one of the defined Image style storage constants.
+ * @return
+ *   An image style array containing the following keys:
+ *   - "name": The unique image style name.
+ *   - "effects": An array of image effects within this image style.
+ *   If the image style name is not valid, an empty array is returned.
+ * @see image_effect_load()
+ */
+function image_style_load($name = NULL, $include = NULL) {
+  $styles = image_styles();
+
+  // If retrieving by name.
+  if (isset($name) && isset($styles[$name])) {
+    $style = $styles[$name];
+  }
+
+  // Restrict to the specific type of flag. This bitwise operation basically
+  // states "if the storage is X, then allow".
+  if (isset($style) && (!is_numeric($include) || ($style['storage'] & (int) $include))) {
+    return $style;
+  }
+
+  // Otherwise the style was not found.
+  return FALSE;
+}
+
+/**
+ * Save an image style.
+ *
+ * @param array $style
+ *   An image style array containing:
+ *   - name: An unique name for the style.
+ *   - effects: An optional array of effects.
+ *
+ * @return array
+ *   An image style array containing:
+ *   - name: An unique name for the style.
+ *   - effects: An array of effects.
+ *   - is_new: Is set to TRUE if this is a new style, and FALSE if it is an
+ *     existing style.
+ */
+function image_style_save($style) {
+  // Add in the effects key if missing.
+  $style += array('effects' => array());
+
+  $config = config('image.style.' . $style['name']);
+  if (is_null($config->get('name'))) {
+    $style['is_new'] = TRUE;
+  }
+  $config->set('label', $style['label']);
+  $config->set('name', $style['name']);
+  $config->set('effects', $style['effects']);
+  // Only write storage settings for default and overridden styles.
+  if (isset($style['module'])) {
+    $config->set('module', $style['module']);
+    $config->set('overridden', TRUE);
+  }
+  $config->save();
+
+  // Delete the previous configuration file if any.
+  if (isset($style['old_name']) && $style['old_name'] !== $style['name']) {
+    if ($old_style = image_style_load($style['old_name'])) {
+      image_style_flush($old_style);
+      config('image.style.' . $old_style['name'])->delete();
+    }
+  }
+
+  // Let other modules update as necessary on save.
+  module_invoke_all('image_style_save', $style);
+
+  // Clear all caches and flush.
+  image_style_flush($style);
+
+  return $style;
+}
+
+/**
+ * Delete an image style.
+ *
+ * @param $style
+ *   An image style array.
+ * @param $replacement_style_name
+ *   (optional) When deleting a style, specify a replacement style name so
+ *   that existing settings (if any) may be converted to a new style.
+ * @return
+ *   TRUE on success.
+ */
+function image_style_delete($style, $replacement_style_name = '') {
+  image_style_flush($style);
+
+  $config = config('image.style.' . $style['name']);
+  $config->delete();
+
+  // Let other modules update as necessary on save.
+  $style['old_name'] = $style['name'];
+  $style['name'] = $replacement_style_name;
+  module_invoke_all('image_style_delete', $style);
+
+  return TRUE;
+}
+
+/**
+ * Get an array of image styles suitable for using as select list options.
+ *
+ * @param $include_empty
+ *   If TRUE a <none> option will be inserted in the options array.
+ * @param $output
+ *   Optional flag determining how the options will be sanitized on output.
+ *   Leave this at the default (CHECK_PLAIN) if you are using the output of
+ *   this function directly in an HTML context, such as for checkbox or radio
+ *   button labels, and do not plan to sanitize it on your own. If using the
+ *   output of this function as select list options (its primary use case), you
+ *   should instead set this flag to PASS_THROUGH to avoid double-escaping of
+ *   the output (the form API sanitizes select list options by default).
+ * @return
+ *   Array of image styles with the machine name as key and the label as value.
+ */
+function image_style_options($include_empty = TRUE, $output = CHECK_PLAIN) {
+  $styles = image_styles();
+  $options = array();
+  if ($include_empty && !empty($styles)) {
+    $options[''] = t('<none>');
+  }
+  foreach ($styles as $name => $style) {
+    $options[$name] = ($output == PASS_THROUGH) ? $style['label'] : check_plain($style['label']);
+  }
+
+  // Use the array concatenation operator '+' here instead of array_merge(),
+  // because the latter loses the datatype of the array keys, turning
+  // associative string keys into numeric ones without warning.
+  $options = $options + backdrop_map_assoc(array_keys($styles));
+  if (empty($options)) {
+    $options[''] = t('No defined styles');
+  }
+  return $options;
+}
+
+/**
+ * Menu callback; Given a style and image path, generate a derivative.
+ *
+ * After generating an image, transfer it to the requesting agent.
+ *
+ * @param $style
+ *   The image style
+ * @param $scheme
+ *   The file scheme, for example 'public' for public files.
+ */
+function image_style_deliver($style, $scheme) {
+  // Check that the style is defined and the scheme is valid.
+  if (!$style || !file_stream_wrapper_valid_scheme($scheme)) {
+    backdrop_add_http_header('Status', '400 Bad Request');
+    backdrop_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    print t('Invalid request.');
+    backdrop_exit();
+  }
+
+  $args = func_get_args();
+  array_shift($args);
+  array_shift($args);
+  $target = implode('/', $args);
+
+  $image_uri = $scheme . '://' . $target;
+  $derivative_uri = image_style_path($style['name'], $image_uri);
+
+  // Image styles are not allowed to modify previously generated style images.
+  if (strpos($image_uri, $scheme . '://styles/') === 0) {
+    backdrop_add_http_header('Status', '400 Bad Request');
+    backdrop_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    print t('Image styles are not allowed to modify images generated by other styles.');
+    backdrop_exit();
+  }
+
+  // If using the private scheme, let other modules provide headers and
+  // control access to the file.
+  if ($scheme == 'private') {
+    if (file_exists($derivative_uri)) {
+      file_download($scheme, file_uri_target($derivative_uri));
+    }
+    else {
+      $headers = file_download_headers($image_uri);
+      if (empty($headers)) {
+        return MENU_ACCESS_DENIED;
+      }
+      if (count($headers)) {
+        foreach ($headers as $name => $value) {
+          backdrop_add_http_header($name, $value);
+        }
+      }
+    }
+  }
+
+  // Check if image_style_url() marked this image for creation.
+  $allowed_uris = image_style_get_allowed_uris();
+  if (!isset($allowed_uris[$derivative_uri])) {
+    // If an unknown request, limit using locking.
+    $flood_lock_name = image_style_flood_lock_name();
+    $flood_lock_acquired = (bool) $flood_lock_name;
+    if (!$flood_lock_acquired) {
+      backdrop_add_http_header('Status', '403 Access Denied');
+      backdrop_add_http_header('Content-Type', 'text/html; charset=utf-8');
+      print t('Image generation throttled after reaching maximum.');
+      backdrop_exit();
+    }
+  }
+
+  // Confirm that the original source image exists before trying to process it.
+  if (!is_file($image_uri)) {
+    watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
+    return MENU_NOT_FOUND;
+  }
+
+  // Don't start generating the image if the derivative already exists or if
+  // generation is in progress in another thread.
+  $generation_lock_name = 'image_style_deliver:' . $style['name'] . ':' . backdrop_hash_base64($image_uri);
+  if (!file_exists($derivative_uri)) {
+    $generation_lock_acquired = lock_acquire($generation_lock_name);
+    if (!$generation_lock_acquired) {
+      // Tell client to retry again in 3 seconds. Currently no browsers are known
+      // to support Retry-After.
+      backdrop_add_http_header('Status', '503 Service Unavailable');
+      backdrop_add_http_header('Content-Type', 'text/html; charset=utf-8');
+      backdrop_add_http_header('Retry-After', 3);
+      print t('Image generation in progress. Try again shortly.');
+      backdrop_exit();
+    }
+  }
+
+  // Try to generate the image, unless another thread just did it while we were
+  // acquiring the lock.
+  $success = file_exists($derivative_uri) || image_style_create_derivative($style, $image_uri, $derivative_uri);
+
+  // Release all locks.
+  if (!empty($flood_lock_acquired)) {
+    lock_release($flood_lock_name);
+  }
+  if (!empty($generation_lock_acquired)) {
+    lock_release($generation_lock_name);
+  }
+
+  if ($success) {
+    image_style_remove_allowed_uri($derivative_uri);
+
+    $image = image_load($derivative_uri);
+    file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
+  }
+  else {
+    watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
+    backdrop_add_http_header('Status', '500 Internal Server Error');
+    backdrop_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    print t('Error generating image.');
+    backdrop_exit();
+  }
+}
+
+/**
+ * Creates a new image derivative based on an image style.
+ *
+ * Generates an image derivative by creating the destination folder (if it does
+ * not already exist), applying all image effects defined in $style['effects'],
+ * and saving a cached version of the resulting image.
+ *
+ * @param $style
+ *   An image style array.
+ * @param $source
+ *   Path of the source file.
+ * @param $destination
+ *   Path or URI of the destination file.
+ *
+ * @return
+ *   TRUE if an image derivative was generated, or FALSE if the image derivative
+ *   could not be generated.
+ *
+ * @see image_style_load()
+ */
+function image_style_create_derivative($style, $source, $destination) {
+  // Get the folder for the final location of this style.
+  $directory = backdrop_dirname($destination);
+
+  // Build the destination folder tree if it doesn't already exist.
+  if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+    watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  if (!$image = image_load($source)) {
+    return FALSE;
+  }
+
+  foreach ($style['effects'] as $effect) {
+    image_effect_apply($image, $effect);
+  }
+
+  if (!image_save($image, $destination)) {
+    if (file_exists($destination)) {
+      watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $destination), WATCHDOG_ERROR);
+    }
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * Determines the dimensions of the styled image.
+ *
+ * Applies all of an image style's effects to $dimensions.
+ *
+ * @param $style_name
+ *   The name of the style to be applied.
+ * @param $dimensions
+ *   Dimensions to be modified - an array with components width and height, in
+ *   pixels.
+ */
+function image_style_transform_dimensions($style_name, array &$dimensions) {
+  module_load_include('inc', 'image', 'image.effects');
+  $style = image_style_load($style_name);
+
+  if (!is_array($style)) {
+    return;
+  }
+
+  foreach ($style['effects'] as $effect) {
+    if (isset($effect['dimensions passthrough'])) {
+      continue;
+    }
+
+    if (isset($effect['dimensions callback'])) {
+      $effect['dimensions callback']($dimensions, $effect['data']);
+    }
+    else {
+      $dimensions['width'] = $dimensions['height'] = NULL;
+    }
+  }
+}
+
+/**
+ * Flush cached media for a style.
+ *
+ * @param $style
+ *   An image style array.
+ */
+function image_style_flush($style) {
+  // Delete the style directory in each registered wrapper.
+  $wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE);
+  foreach ($wrappers as $wrapper => $wrapper_data) {
+    if (file_exists($directory = $wrapper . '://styles/' . $style['name'])) {
+      file_unmanaged_delete_recursive($directory);
+    }
+  }
+
+  // Let other modules update as necessary on flush.
+  module_invoke_all('image_style_flush', $style);
+
+  // Clear image style and effect caches.
+  cache()->delete('image_styles');
+  cache()->deletePrefix('image_effects:');
+  backdrop_static_reset('image_styles');
+  backdrop_static_reset('image_effects');
+
+  // Clear field caches so that formatters may be added for this style.
+  field_info_cache_clear();
+  backdrop_theme_rebuild();
+
+  // Clear page caches when flushing.
+  cache('page')->flush();
+}
+
+/**
+ * Return the URL for an image derivative given a style and image path.
+ *
+ * @param $style_name
+ *   The name of the style to be used with this image.
+ * @param $uri
+ *   The path to the image.
+ * @return
+ *   The absolute URL where a style image can be downloaded, suitable for use
+ *   in an <img> tag. Requesting the URL will cause the image to be created.
+ * @see image_style_deliver()
+ */
+function image_style_url($style_name, $uri) {
+  $uri = image_style_path($style_name, $uri);
+
+  $derivative_exists = file_exists($uri);
+  if (!$derivative_exists) {
+    image_style_add_allowed_uri($uri);
+  }
+
+  // If not using clean URLs, the image derivative callback is only available
+  // with the query string. If the file does not exist, use url() to ensure
+  // that it is included. Once the file exists it's fine to fall back to the
+  // actual file path, this avoids bootstrapping PHP once the files are built.
+  if (!config_get('system.core', 'clean_url') && file_uri_scheme($uri) == 'public' && !$derivative_exists) {
+    $directory_path = file_stream_wrapper_get_instance_by_uri($uri)->getDirectoryPath();
+    return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE));
+  }
+
+  return file_create_url($uri);
+}
+
+/**
+ * Return the URI of an image when using a style.
+ *
+ * The path returned by this function may not exist. The default generation
+ * method only creates images when they are requested by a user's browser.
+ *
+ * @param $style_name
+ *   The name of the style to be used with this image.
+ * @param $uri
+ *   The URI or path to the image.
+ * @return
+ *   The URI to an image style image.
+ * @see image_style_url()
+ */
+function image_style_path($style_name, $uri) {
+  $scheme = file_uri_scheme($uri);
+  if ($scheme) {
+    $path = file_uri_target($uri);
+  }
+  else {
+    $path = $uri;
+    $scheme = file_default_scheme();
+  }
+  return $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
+}
+
+/**
+ * Add an image style URI to the whitelist.
+ *
+ * When added to the whitelist, and image style will be generated immediately
+ * upon request. This function is usually called by the request that prints out
+ * the <img> tag with the image style in the src attribute. The whitelist is
+ * then loaded when serving the image if it needs to be generated. Image style
+ * requests that are not in the whitelist are throttled in
+ * image_style_deliver().
+ *
+ * @param $style_uri
+ *   The full URI to the image that will be generated.
+ *   e.g. public://styles/large/example.png.
+ *
+ * @return array
+ *   The list of all images added to the whitelist this request. This list is
+ *   returned by reference to allow the list to be modified.
+ *
+ * @see image_style_get_allowed_uris()
+ * @see image_style_remove_allowed_uri()
+ * @see image_style_save_allowed_uris()
+ */
+function &image_style_add_allowed_uri($style_uri = NULL) {
+  $added_uris = &backdrop_static('image_style_allowed_uris', array());
+
+  // It's likely that multiple images will be whitelisted during a single
+  // request, so we only save this list once at the end of the request.
+  if ($style_uri && empty($added_uris)) {
+    register_shutdown_function('image_style_save_allowed_uris');
+  }
+
+  if ($style_uri) {
+    $added_uris[$style_uri] = TRUE;
+  }
+
+  return $added_uris;
+}
+
+/**
+ * Get a list of all whitelisted URIs for image styles.
+ *
+ * @return array
+ *   An array of all whitelisted URIs.
+ */
+function image_style_get_allowed_uris() {
+  $added_uris = image_style_add_allowed_uri();
+  return $added_uris + (array) tempstore_get('image_style_allowed_uris', 'list');
+}
+
+/**
+ * Remove an image style URI from the whitelist.
+ *
+ * This is usually called after an image has been generated and no longer needs
+ * to be in the whitelist.
+ *
+ * @param $style_uri
+ *   The full URI to the image that should be removed from the whitelist.
+ */
+function image_style_remove_allowed_uri($style_uri) {
+  // Get the list of added URIs by reference and indicate removal with FALSE.
+  $added_uris = &image_style_add_allowed_uri();
+  $added_uris[$style_uri] = FALSE;
+}
+
+/**
+ * Shutdown callback used to save the whitelist of requested image styles.
+ *
+ * @see image_style_add_allowed_uri()
+ */
+function image_style_save_allowed_uris() {
+  $added_uris = &image_style_add_allowed_uri();
+
+  // This is not a blocking lock. If the lock is not acquired immediately, it is
+  // not worth making the page wait. Instead images will be generated using the
+  // throttled mode, or another page request will update the whitelist.
+  if (count($added_uris) && lock_acquire('image_style_allowed_uris')) {
+    $allowed_uris = (array) tempstore_get('image_style_allowed_uris', 'list');
+    $allowed_uris = array_filter(array_merge($allowed_uris, $added_uris));
+
+    // The tempstore record is only set for 60 seconds, which is plenty for the
+    // browser to make the image request. Tempstore is only cleared out on cron
+    // jobs, so this may persist quite a bit longer than 60 seconds.
+    if ($allowed_uris) {
+      tempstore_set('image_style_allowed_uris', 'list', $allowed_uris, REQUEST_TIME + 60);
+    }
+    else {
+      tempstore_clear('image_style_allowed_uris', 'list');
+    }
+    lock_release('image_style_allowed_uris');
+    $added_uris = array();
+  }
+}
+
+/**
+ * Check available image style locks to see if any are available.
+ *
+ * This function checks the site-wide setting for maximum simultaneous
+ * unauthorized image generations. It uses the locking mechanism rather than
+ * the flood control system because this is a site-wide limit and locks are
+ * released immediately when the image is generated. So rather than limiting
+ * the total number of images generated per time period, it limits the total
+ * number of simultaneous images.
+ *
+ * @return string|FALSE
+ *   The lock name if a lock could be acquired. FALSE if the maximum number of
+ *   images is already being generated.
+ */
+function image_style_flood_lock_name() {
+  $max_locks = config_get('system.core', 'image_style_flood_limit');
+  $max_locks = isset($max_locks) ? $max_locks : 5;
+  for ($n = 0; $n < $max_locks; $n++) {
+    $lock_name = 'image_style_flood_' . $n;
+    if (lock_may_be_available($lock_name) && lock_acquire($lock_name)) {
+      return $lock_name;
+    }
+  }
+
+  // No locks available.
+  return FALSE;
+}
+
+/**
+ * Revert the changes made by users to a default image style.
+ *
+ * @param style
+ *   An image style array.
+ * @return
+ *   Boolean TRUE if the operation succeeded.
+ */
+function image_default_style_revert($style) {
+  image_style_flush($style);
+  config('image.style.' . $style['name'])->delete();
+  config_install_default_config($style['module'], 'image.style.' . $style['name']);
+  return TRUE;
+}
+
+/**
+ * Pull in image effects exposed by modules implementing hook_image_effect_info().
+ *
+ * @return
+ *   An array of image effects to be used when transforming images.
+ * @see hook_image_effect_info()
+ * @see image_effect_definition_load()
+ */
+function image_effect_definitions() {
+  global $language;
+
+  // hook_image_effect_info() includes translated strings, so each language is
+  // cached separately.
+  $langcode = $language->langcode;
+
+  $effects = &backdrop_static(__FUNCTION__);
+
+  if (!isset($effects)) {
+    if ($cache = cache()->get("image_effect_definitions:$langcode")) {
+      $effects = $cache->data;
+    }
+    else {
+      $effects = array();
+      include_once BACKDROP_ROOT . '/core/modules/image/image.effects.inc';
+      foreach (module_implements('image_effect_info') as $module) {
+        foreach (module_invoke($module, 'image_effect_info') as $name => $effect) {
+          // Ensure the current toolkit supports the effect.
+          $effect['module'] = $module;
+          $effect['name'] = $name;
+          $effect['data'] = isset($effect['data']) ? $effect['data'] : array();
+          $effects[$name] = $effect;
+        }
+      }
+      backdrop_sort($effects, array('name' => SORT_STRING));
+      backdrop_alter('image_effect_info', $effects);
+      cache()->set("image_effect_definitions:$langcode", $effects);
+    }
+  }
+
+  return $effects;
+}
+
+/**
+ * Load the definition for an image effect.
+ *
+ * The effect definition is a set of core properties for an image effect, not
+ * containing any user-settings. The definition defines various functions to
+ * call when configuring or executing an image effect. This loader is mostly for
+ * internal use within image.module. Use image_effect_load() or
+ * image_style_load() to get image effects that contain configuration.
+ *
+ * @param $effect
+ *   The name of the effect definition to load.
+ * @return
+ *   An array containing the image effect definition with the following keys:
+ *   - "effect": The unique name for the effect being performed. Usually prefixed
+ *     with the name of the module providing the effect.
+ *   - "module": The module providing the effect.
+ *   - "help": A description of the effect.
+ *   - "function": The name of the function that will execute the effect.
+ *   - "form": (optional) The name of a function to configure the effect.
+ *   - "summary": (optional) The name of a theme function that will display a
+ *     one-line summary of the effect. Does not include the "theme_" prefix.
+ */
+function image_effect_definition_load($effect) {
+  $definitions = image_effect_definitions();
+  return isset($definitions[$effect]) ? $definitions[$effect] : FALSE;
+}
+
+/**
+ * Load a single image effect.
+ *
+ * @param $ieid
+ *   The image effect ID.
+ * @param $style_name
+ *   The image style name.
+ * @param $include
+ *   If set, this loader will restrict to a specific type of image style, may be
+ *   one of the defined Image style storage constants.
+ * @return
+ *   An image effect array, consisting of the following keys:
+ *   - "ieid": The unique image effect ID.
+ *   - "weight": The weight of this image effect within the image style.
+ *   - "name": The name of the effect definition that powers this image effect.
+ *   - "data": An array of configuration options for this image effect.
+ *   Besides these keys, the entirety of the image definition is merged into
+ *   the image effect array. Returns FALSE if the specified effect cannot be
+ *   found.
+ * @see image_style_load()
+ * @see image_effect_definition_load()
+ */
+function image_effect_load($ieid, $style_name, $include = NULL) {
+  if (($style = image_style_load($style_name, $include)) && isset($style['effects'][$ieid])) {
+    return $style['effects'][$ieid];
+  }
+  return FALSE;
+}
+
+/**
+ * Save an image effect.
+ *
+ * @param $style_name
+ *   The image style this effect belongs to.
+ * @param $effect
+ *   An image effect array.
+ * @return
+ *   An image effect array. In the case of a new effect, 'ieid' will be set.
+ */
+function image_effect_save($style_name, $effect) {
+  $config = config('image.style.' . $style_name);
+
+  $effects = $config->get('effects');
+  $filtered_effect = array(
+    'name' => $effect['name'],
+    'data' => isset($effect['data']) ? $effect['data'] : array(),
+    'weight' => isset($effect['weight']) ? $effect['weight'] : 0,
+  );
+  if (isset($effect['ieid'])) {
+    $effects[$effect['ieid']] = $filtered_effect;
+  }
+  else {
+    $effects[] = $filtered_effect;
+    end($effects);
+    $effect['ieid'] = key($effects);
+  }
+  $config->set('effects', $effects);
+
+  // Set default styles to overridden.
+  if ($config->get('module')) {
+    $config->set('overridden', TRUE);
+  }
+
+  $config->save();
+  $style = image_style_load(NULL, $style_name);
+  image_style_flush($style);
+  return $effect;
+}
+
+/**
+ * Delete an image effect.
+ *
+ * @param $style_name
+ *   The image style this effect belongs to.
+ * @param $effect
+ *   An image effect array.
+ */
+function image_effect_delete($style_name, $effect) {
+  $config = config('image.style.' . $style_name);
+  $config->clear('effects.' . $effect['ieid']);
+  $config->save();
+  $style = image_style_load($style_name);
+  image_style_flush($style);
+}
+
+/**
+ * Given an image object and effect, perform the effect on the file.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $effect
+ *   An image effect array.
+ * @return
+ *   TRUE on success. FALSE if unable to perform the image effect on the image.
+ */
+function image_effect_apply($image, $effect) {
+  module_load_include('inc', 'image', 'image.effects');
+  $function = $effect['effect callback'];
+  return $function($image, $effect['data']);
+}
+
+/**
+ * Accept a keyword (center, top, left, etc) and return it as a pixel offset.
+ *
+ * @param $value
+ * @param $current_pixels
+ * @param $new_pixels
+ *
+ * return int
+ */
+function image_filter_keyword($value, $current_pixels, $new_pixels) {
+  switch ($value) {
+    case 'top':
+    case 'left':
+      return 0;
+
+    case 'bottom':
+    case 'right':
+      return (int) round($current_pixels - $new_pixels);
+
+    case 'center':
+      return (int) round($current_pixels / 2 - $new_pixels / 2);
+  }
+  return (int) $value;
+}

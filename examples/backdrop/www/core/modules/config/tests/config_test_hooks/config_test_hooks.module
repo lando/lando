@@ -1,0 +1,68 @@
+<?php
+/**
+ * @file
+ * Tests the hooks provided by Configuration management module.
+ */
+
+/**
+ * Implements hook_config_create_validate().
+ */
+function config_test_hooks_config_create_validate(Config $staging_config, $all_changes) {
+  if ($staging_config->getName() === 'config_test.simple') {
+    // Test settings are matched in ConfigurationHooksTest::testValidation().
+    if ($staging_config->get('favorite_animal') === 'rabbits') {
+      throw new ConfigValidateException(t('Sorry, only bunnies allowed as favorite animals.'));
+    }
+  }
+}
+
+/**
+ * Implements hook_config_update_validate().
+ */
+function config_test_hooks_config_update_validate(Config $staging_config, Config $active_config, $all_changes) {
+  if ($staging_config->getName() === 'config_test.simple') {
+    // Test settings are matched in ConfigurationHooksTest::testValidation().
+    if ($active_config->get('favorite_animal') === 'cats' && $staging_config->get('favorite_animal') === 'rabbits') {
+      throw new ConfigValidateException(t('Sorry, cats must be preferred over rabbits.'));
+    }
+  }
+}
+
+/**
+ * Implements hook_config_delete_validate().
+ */
+function config_test_hooks_config_delete_validate(Config $active_config, $all_changes) {
+  if ($active_config->getName() === 'config_test.simple') {
+    throw new ConfigValidateException(t('Favorite animals are in use.'));
+  }
+}
+
+/**
+ * Implements hook_config_create().
+ */
+function config_test_hooks_config_create(Config $staging_config) {
+  if ($staging_config->getName() === 'config_test.new_config') {
+    // Set a value before the config is saved.
+    $staging_config->set('favorite_color', 'red');
+  }
+}
+
+/**
+ * Implements hook_config_update().
+ */
+function hook_config_update(Config $staging_config, Config $active_config) {
+  if ($staging_config->getName() === 'config_test.new_config') {
+    // Set a value before the config is saved.
+    $staging_config->set('favorite_animal', 'cats');
+  }
+}
+
+/**
+ * Implements hook_config_delete().
+ */
+function config_test_hooks_config_delete(Config $active_config) {
+  if ($active_config->getName() === 'config_test.new_config') {
+    // Set a value in a different config file before deleting this config.
+    config_set('config_test.simple', 'deleted_animal', $active_config->get('favorite_animal'));
+  }
+}

@@ -1,0 +1,13 @@
+name = Text
+description = Defines simple text field types.
+package = Fields
+version = BACKDROP_VERSION
+type = module
+backdrop = 1.x
+dependencies[] = field
+required = TRUE
+
+; Added by Backdrop CMS packaging script on 2017-03-15
+project = backdrop
+version = 1.6.3
+timestamp = 1489643437

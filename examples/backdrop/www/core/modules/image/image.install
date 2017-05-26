@@ -1,0 +1,359 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the image module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function image_install() {
+  // Create the styles directory and ensure it's writable.
+  $directory = file_default_scheme() . '://styles';
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function image_uninstall() {
+  // Remove the styles directory and generated images.
+  file_unmanaged_delete_recursive(file_default_scheme() . '://styles');
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function image_field_schema($field) {
+  return array(
+    'columns' => array(
+      'fid' => array(
+        'description' => 'The {file_managed}.fid being referenced in this field.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'unsigned' => TRUE,
+      ),
+      'alt' => array(
+        'description' => "Alternative image text, for the image's 'alt' attribute.",
+        'type' => 'varchar',
+        'length' => 512,
+        'not null' => FALSE,
+      ),
+      'title' => array(
+        'description' => "Image title text, for the image's 'title' attribute.",
+        'type' => 'varchar',
+        'length' => 1024,
+        'not null' => FALSE,
+      ),
+      'width' => array(
+        'description' => 'The width of the image in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+      'height' => array(
+        'description' => 'The height of the image in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'fid' => array('fid'),
+    ),
+    'foreign keys' => array(
+      'fid' => array(
+        'table' => 'file_managed',
+        'columns' => array('fid' => 'fid'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_requirements() to check the PHP GD Library.
+ *
+ * @param $phase
+ */
+function image_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Check for the PHP GD library.
+    if (function_exists('imagegd2')) {
+      $info = gd_info();
+      $requirements['image_gd'] = array(
+        'value' => $info['GD Version'],
+      );
+
+      // Check for filter and rotate support.
+      if (function_exists('imagefilter') && function_exists('imagerotate')) {
+        $requirements['image_gd']['severity'] = REQUIREMENT_OK;
+      }
+      else {
+        $requirements['image_gd']['severity'] = REQUIREMENT_WARNING;
+        $requirements['image_gd']['description'] = t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from http://www.libgd.org instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="http://www.php.net/manual/book.image.php">the PHP manual</a>.');
+      }
+    }
+    else {
+      $requirements['image_gd'] = array(
+        'value' => t('Not installed'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The GD library for PHP is missing or outdated. Check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/book.image.php')),
+      );
+    }
+    $requirements['image_gd']['title'] = t('GD library rotate and desaturate effects');
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function image_update_dependencies() {
+  // Ensure that field module has updated fields to config before updating image
+  // fields to use default image URIs.
+  $dependencies['image'][1004] = array(
+    'field' => 1000,
+  );
+
+  return $dependencies;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Provide default image styles for the Image module.
+ */
+function image_update_1000() {
+  $data = array(
+    'overridden' => FALSE,
+    'module' => 'image',
+    'label' => 'Thumbnail (100x100)',
+    'name' => 'thumbnail',
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 100,
+          'height' => 100,
+          'upscale' => 1,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+  $config = config('image.style.thumbnail');
+  $config->setData($data);
+  $config->save();
+
+  $data = array(
+    'overridden' => FALSE,
+    'module' => 'image',
+    'label' => 'Medium (220x220)',
+    'name' => 'medium',
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 220,
+          'height' => 220,
+          'upscale' => 1,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+  $config = config('image.style.medium');
+  $config->setData($data);
+  $config->save();
+
+  $data = array(
+    'overridden' => FALSE,
+    'module' => 'image',
+    'label' => 'Large (480x480)',
+    'name' => 'large',
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array(
+          'width' => 480,
+          'height' => 480,
+          'upscale' => 1,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+  $config = config('image.style.large');
+  $config->setData($data);
+  $config->save();
+}
+
+/**
+ * Convert available database image styles to configuration files.
+ */
+function image_update_1001() {
+  if (db_table_exists('image_styles')) {
+    $styles = db_query("SELECT * FROM {image_styles}");
+    $style = NULL;
+    foreach ($styles as $style) {
+      $style = (array) $style;
+      $style['effects'] = array();
+      if (!isset($style['label'])) {
+        $style['label'] = $style['name'];
+      }
+      $effects = db_query("SELECT * FROM {image_effects} WHERE isid = :isid ORDER BY weight ASC, ieid ASC", array(':isid' => $style['isid']));
+      foreach ($effects as $effect) {
+        $effect = (array) $effect;
+        $effect['data'] = unserialize($effect['data']);
+        unset($effect['isid']);
+        unset($effect['ieid']);
+        $style['effects'][] = $effect;
+      }
+      unset($style['isid']);
+      $config = config('image.style.' . $style['name']);
+      $config->setData($style);
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Drop image tables that were converted to configuration files.
+ *
+ * This update is separate from image_update_1001 so that other modules may read
+ * the image style tables before they are dropped using
+ * hook_update_dependencies() to come between these two updates.
+ */
+function image_update_1002() {
+  if (db_table_exists('image_styles')) {
+    db_drop_table('image_styles');
+    db_drop_table('image_effects');
+  }
+}
+
+/**
+ * Add labels to all available styles.
+ */
+function image_update_1003() {
+  $names = config_get_names_with_prefix('image.style.');
+  foreach ($names as $config_file) {
+    $config = config($config_file);
+    $label = $config->get('label');
+    if (!$label) {
+      $config->set('label', $config->get('name'));
+      $config->save();
+    }
+  }
+  cache('cache')->delete('image_styles');
+}
+
+/**
+ * Update all image fields to use a static default image URI.
+ */
+function image_update_1004() {
+  $old_fids = array();
+
+  // Update field configs.
+  $config_names = config_get_names_with_prefix('field.field.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $data = $config->get();
+    if (array_key_exists('default_image', $data['settings'])) {
+      if ($old_fid = _image_update_1004($data)) {
+        $old_fids[] = $old_fid;
+        $config->setData($data);
+        $config->save();
+      }
+    }
+  }
+
+  // Update field instances.
+  $config_names = config_get_names_with_prefix('field.instance.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $data = $config->get();
+    if (array_key_exists('default_image', $data['settings'])) {
+      if ($old_fid = _image_update_1004($data)) {
+        $old_fids[] = $old_fid;
+        $config->setData($data);
+        $config->save();
+      }
+    }
+  }
+
+  // Clean up the now unneeded file entities.
+  if ($old_fids) {
+    db_delete('file_managed')
+      ->condition('fid', $old_fids, 'IN')
+      ->execute();
+    db_delete('file_usage')
+      ->condition('fid', $old_fids, 'IN')
+      ->execute();
+  }
+}
+
+/**
+ * Helper function to update an image field or instance's default image.
+ */
+function _image_update_1004(&$data) {
+  $old_fid = NULL;
+  $old_default = $data['settings']['default_image'];
+  if ($old_default && is_numeric($old_default)) {
+    $old_default = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $old_default))->fetchAssoc();
+  }
+  if (is_array($old_default) && isset($old_default['uri'])) {
+    $data['settings']['default_image'] = $old_default['uri'];
+    $old_fid = $old_default['fid'];
+  }
+  else {
+    $data['settings']['default_image'] = '';
+  }
+  return $old_fid;
+}
+
+/**
+ * Rename image config files.
+ */
+function image_update_1005() {
+  $config_names = config_get_names_with_prefix('image.styles.');
+  foreach ($config_names as $config_name) {
+    $old_config = config($config_name);
+    $new_config = config(str_replace('image.styles.', 'image.style.', $config_name));
+    $new_config->setData($old_config->get());
+    $new_config->save();
+    $old_config->delete();
+  }
+}
+
+/**
+ * Add the configuration option for image_style_flood_limit.
+ */
+function image_update_1006() {
+  config_set('system.core', 'image_style_flood_limit', 5);
+}
+
+/**
+ * Update from Image size to more specific Image dimensions.
+ */
+function image_update_1007() {
+  $config_names = config_get_names_with_prefix('field.instance.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    if ($config->get('widget.type') == 'image_image') {
+      $config->set('settings.max_dimensions', $config->get('settings.max_resolution'));
+      $config->clear('settings.max_resolution');
+      $config->set('settings.min_dimensions', $config->get('settings.min_resolution'));
+      $config->clear('settings.min_resolution');
+      $config->save();
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

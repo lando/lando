@@ -1,0 +1,29 @@
+<?php
+/**
+ * Perform early bootstrap tests.
+ */
+class EarlyBootstrapTestCase extends BackdropWebTestCase {
+  function setUp() {
+    parent::setUp('boot_test_1', 'boot_test_2');
+  }
+
+  /**
+   * Test hook_boot() on both regular and "early exit" pages.
+   */
+  public function testHookBoot() {
+    $paths = array('', 'early_exit');
+    foreach ($paths as $path) {
+      // Empty the module_implements() caches.
+      module_implements(NULL, FALSE, TRUE);
+      // Do a request to the front page, which will call module_implements()
+      // during hook_boot().
+      $this->backdropGet($path);
+      // Reset the static cache so we get implementation data from the persistent
+      // cache.
+      backdrop_static_reset();
+      // Make sure we get a full list of all modules implementing hook_config_info().
+      $modules = module_implements('config_info');
+      $this->assertTrue(in_array('boot_test_2', $modules));
+    }
+  }
+}

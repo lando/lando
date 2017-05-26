@@ -1,0 +1,187 @@
+<?php
+/**
+ * @file
+ * Basic simpletests to test options on link module.
+ */
+
+require_once(__DIR__ . '/link.test');
+
+class LinkAttributeCrudTest extends LinkBaseTestClass {
+  private $zebra;
+  protected $field_name;
+
+  function setup() {
+    parent::setup();
+    $this->zebra = 0;
+  }
+
+  protected function assertLinkOnNode($field_name, $link_value, $message = '', $group = 'Other') {
+    $this->zebra++;
+    $zebra_string = ($this->zebra % 2 == 0) ? 'even' : 'odd';
+    $cssFieldLocator = 'field-' . str_replace('_', '-', $field_name);
+    $this->assertPattern('@<div class="field field-type-link ' . $cssFieldLocator . '".*<div class="field-item ' . $zebra_string . '">\s*' . $link_value . '\s*</div>@is', $message, $group);
+  }
+
+  protected function createNodeForTesting($title, $url, $node_title = '') {
+    $this->backdropGet('node/add/page');
+
+    if (!$node_title) {
+      $node_title = $this->randomName(20);
+    }
+    $edit = array(
+      'title' => $node_title,
+    );
+    if ($url) {
+      $edit[$this->field_name . '[und][0][url]'] = $url;
+    }
+    if ($title) {
+      $edit[$this->field_name . '[und][0][title]'] = $title;
+    }
+
+    $this->backdropPost(NULL, $edit, t('Save'));
+    $this->assertText(t('Basic page @title has been created', array('@title' => $node_title)));
+  }
+
+  /**
+   * Test the link_plain formatter and it's output.
+   */
+  function testFormatters() {
+    $this->field_name = $this->createLinkField();
+
+    // Test the plain formatter.
+    $this->backdropGet('admin/structure/types/manage/page/display/default');
+    $edit = array(
+      'fields[' . $this->field_name . '][label]' => 'above',
+      'fields[' . $this->field_name . '][type]' => 'link_plain',
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $link_tests = array(
+      'plain' => array(
+        'text' => 'Display',
+        'url' => 'http://www.example.com/',
+      ),
+      'query' => array(
+        'text' => 'Display',
+        'url' => 'http://www.example.com/?q=test',
+      ),
+      'fragment' => array(
+        'text' => 'Display',
+        'url' => 'http://www.example.com/#test',
+      ),
+    );
+
+    foreach ($link_tests as $key => $link_test) {
+      $link_text = $link_test['text'];
+      $link_url = $link_test['url'];
+      $this->createNodeForTesting($link_text, $link_url);
+
+      $this->assertText($link_url);
+      $this->assertNoText($link_text);
+      $this->assertNoLinkByHref($link_url);
+    }
+
+    // Test the URL formatter.
+    $this->backdropGet('admin/structure/types/manage/page/display/default');
+    $edit = array(
+      'fields[' . $this->field_name . '][label]' => 'above',
+      'fields[' . $this->field_name . '][type]' => 'link_url',
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    foreach ($link_tests as $key => $link_test) {
+      $link_text = $link_test['text'];
+      $link_url = $link_test['url'];
+      $this->createNodeForTesting($link_text, $link_url);
+
+      $this->assertNoText($link_text);
+      $this->assertLinkByHref($link_url);
+    }
+
+    // Test the short formatter.
+    $this->backdropGet('admin/structure/types/manage/page/display/default');
+    $edit = array(
+      'fields[' . $this->field_name . '][label]' => 'above',
+      'fields[' . $this->field_name . '][type]' => 'link_short',
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    foreach ($link_tests as $key => $link_test) {
+      $link_text = $link_test['text'];
+      $link_url = $link_test['url'];
+      $this->createNodeForTesting($link_text, $link_url);
+
+      $this->assertText('Link');
+      $this->assertNoText($link_text);
+      $this->assertLinkByHref($link_url);
+    }
+
+    // Test the label formatter.
+    $this->backdropGet('admin/structure/types/manage/page/display/default');
+    $edit = array(
+      'fields[' . $this->field_name . '][label]' => 'above',
+      'fields[' . $this->field_name . '][type]' => 'link_label',
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    foreach ($link_tests as $key => $link_test) {
+      $link_text = $link_test['text'];
+      $link_url = $link_test['url'];
+      $this->createNodeForTesting($link_text, $link_url);
+
+      $this->assertNoText($link_text);
+      $this->assertText(str_replace('field_', '', $this->field_name));
+      $this->assertLinkByHref($link_url);
+    }
+
+    // Test the separate formatter.
+    $this->backdropGet('admin/structure/types/manage/page/display/default');
+    $edit = array(
+      'fields[' . $this->field_name . '][label]' => 'above',
+      'fields[' . $this->field_name . '][type]' => 'link_separate',
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $plain_url = 'http://www.example.com/';
+    $link_tests = array(
+      'plain' => array(
+        'text' => $this->randomName(20),
+        'url' => $plain_url,
+      ),
+      'query' => array(
+        'text' => $this->randomName(20),
+        'url' => $plain_url . '?q=test',
+      ),
+      'fragment' => array(
+        'text' => $this->randomName(20),
+        'url' => $plain_url . '#test',
+      ),
+    );
+
+    foreach ($link_tests as $key => $link_test) {
+      $link_text = $link_test['text'];
+      $link_url = $link_test['url'];
+      $this->createNodeForTesting($link_text, $link_url);
+
+      $this->assertText($link_text);
+      $this->assertLink($plain_url);
+      $this->assertLinkByHref($link_url);
+    }
+
+    // Test the plain title formatter.
+    $this->backdropGet('admin/structure/types/manage/page/display/default');
+    $edit = array(
+      'fields[' . $this->field_name . '][label]' => 'above',
+      'fields[' . $this->field_name . '][type]' => 'link_title_plain',
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $link_text = 'Display';
+    $link_url = 'http://www.example.com/';
+    $this->createNodeForTesting($link_text, $link_url);
+
+    $this->assertText($link_text);
+    $this->assertNoText($link_url);
+    $this->assertNoLinkByHref($link_url);
+  }
+}

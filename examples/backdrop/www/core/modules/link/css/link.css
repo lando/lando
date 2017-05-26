@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Styles for Link module.
+ */
+.link-field-column {
+  display: inline-block;
+  width: 50%;
+}
+
+.link-field-column .form-text {
+  width: 95%;
+}
+@media only screen and (max-width: 500px) {
+  .link-field-column {
+    width: auto;
+  }
+  .link-field-column .form-text {
+    width: 100%;
+  }
+}

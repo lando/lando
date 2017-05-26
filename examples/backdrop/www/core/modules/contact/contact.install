@@ -1,0 +1,85 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the contact module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function contact_install() {
+  $email = db_query("SELECT mail FROM {users} WHERE uid = 1 AND status = 1")->fetchField();
+  if ($email) {
+    // Insert a default contact category.
+    $contact = array(
+      'cid' => 1,
+      'category' => 'Website feedback',
+      'recipients' => $email,
+      'reply' => '',
+      'weight' => 1,
+    );
+
+    $config_data['categories'][] = $contact;
+    $config_data['contact_default_category'] = 1;
+
+    $config = config('contact.categories');
+    $config->setData($config_data);
+    $config->save();
+  }
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Convert contact module settings to use configuration files.
+ */
+function contact_update_1000() {
+  // Migrate variables to config.
+  $config = config('contact.settings');
+  $config->set('contact_default_status', update_variable_get('contact_default_status', 1));
+  $config->set('contact_threshold_limit', update_variable_get('contact_threshold_limit', 5));
+  $config->set('contact_threshold_window', update_variable_get('contact_threshold_window', 3600));
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('contact_default_status');
+  update_variable_del('contact_threshold_limit');
+  update_variable_del('contact_threshold_window');
+}
+
+/**
+ * Convert available database contact categories to configuration files.
+ */
+function contact_update_1001() {
+  // Migrate categories to config.
+  if (db_table_exists('contact')) {
+    $contacts = db_query("SELECT * FROM {contact}");
+    $categories = array();
+    foreach ($contacts as $contact) {
+      if ($contact->selected == 1) {
+        // Add selected category to config.
+        $config_data['contact_default_category'] = $contact->cid;
+      }
+
+      unset($contact->selected);
+      $categories[] = (array) $contact;
+    }
+
+    $config_data['categories'] = $categories;
+
+    $config = config('contact.categories');
+    $config->setData($config_data);
+    $config->save();
+
+    db_drop_table('contact');
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */
+

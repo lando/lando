@@ -1,0 +1,249 @@
+<?php
+
+/**
+ * @file
+ * Tests that exercise the validation functions in the link module.
+ */
+
+require_once(__DIR__ . '/link.test');
+
+class LinkValidateTest extends LinkBaseTestClass {
+  protected $field_name;
+
+  function setUp() {
+    parent::setUp();
+    $this->field_name = $this->createLinkField();
+  }
+
+  protected function checkRequirements() {
+    $errors = parent::checkRequirements();
+
+    if (!extension_loaded('intl')) {
+      $errors[] = 'PHP intl extension is not present.';
+    }
+
+    return $errors;
+  }
+
+  /**
+   * Checks if a URL is valid through the UI.
+   *
+   * @param string $url
+   *   The URL to validate.
+   */
+  protected function validateUrl($url) {
+    $this->backdropGet('node/add/page');
+
+    $label = $this->randomName();
+    $edit = array(
+      'title' => $label,
+      $this->field_name . '[und][0][title]' => $label,
+      $this->field_name . '[und][0][url]' => $url,
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+    $this->assertRaw(' has been created.', 'Node created');
+
+    $nid = db_query("SELECT MAX(nid) FROM {node}")->fetchField();
+    $node = node_load($nid);
+
+    $this->assertEqual($url, $node->{$this->field_name}['und'][0]['url']);
+  }
+
+  /**
+   * Test all the common URL structures in the UI.
+   *
+   * Each of these tests creates a new node and ensures that the value of the
+   * URL is stored properly in the database.
+   */
+  function testUrls() {
+    $this->validateUrl('http://www.example.com');
+    $this->validateUrl('<front>');
+    $this->validateUrl('node/32');
+    $this->validateUrl('mailto:john@example.com');
+    $this->validateUrl('https://www.example.com/');
+    $this->validateUrl('ftp://www.example.com/');
+    $this->validateUrl('http://üÜü.exämple.com/nöde');
+    $this->validateUrl('mailto:Üser@exÅmple.com');
+    $this->validateUrl('http://www.test.com/ßstuff');
+    $this->validateUrl('http://www.testÑñ.com/');
+    $this->validateUrl('http://www.healthyteennetwork.org/index.asp?Type=B_PR&SEC={2AE1D600-4FC6-4B4D-8822-F1D5F072ED7B}&DE={235FD1E7-208D-4363-9854-4E6775EB8A4C}');
+    $this->validateUrl('http://th.wikipedia.org/wiki/%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%80%E0%B8%9A%E0%B8%8D%E0%B8%88%E0%B8%A1%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%B9%E0%B8%97%E0%B8%B4%E0%B8%A8_%E0%B8%99%E0%B8%84%E0%B8%A3%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%98%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%A3%E0%B8%B2%E0%B8%8A');
+    $this->validateUrl('news:comp.infosystems.www.misc');
+    $this->validateUrl('news:hj0db8$vrm$1@news.eternal-september.org');
+  }
+
+  /**
+   * Test if we can post a bad URL if the validation is expressly turned off.
+   */
+  function testBadUrlValidationOff() {
+    // Disable validation.
+    $edit = array(
+      'instance[settings][validate_url]' => FALSE,
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields/' . $this->field_name, $edit, t('Save settings'));
+
+    $edit = array(
+      'title' => 'Simple Title',
+      $this->field_name . '[und][0][url]' => 'edik:naw',
+    );
+
+    $this->backdropPost('node/add/page', $edit, t('Save'));
+    $this->assertNoText(t('The value %value provided for %field is not a valid URL.', array('%field' => $this->field_name, '%value' => 'edik:naw')));
+  }
+
+  /**
+   * Test if a bad URL will display if validation is disabled.
+   */
+  function testXss() {
+    // Disable validation.
+    $edit = array(
+      'instance[settings][validate_url]' => FALSE,
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields/' . $this->field_name, $edit, t('Save settings'));
+
+    $title = $this->randomName();
+    $url = 'javascript:alert("http://example.com/")';
+    $edit = array(
+      'title' => 'Simple title',
+      $this->field_name . '[und][0][url]' => $url,
+      $this->field_name . '[und][0][title]' => $title,
+    );
+    $this->backdropPost('node/add/page', $edit, t('Save'));
+    $this->assertNoText(t('The value %value provided for %field is not a valid URL.', array('%field' => $this->field_name, '%value' => trim($url))));
+
+    $nid = db_query("SELECT MAX(nid) FROM {node}")->fetchField();
+    $node = node_load($nid, NULL, TRUE);
+    $this->assertEqual($url, $node->{$this->field_name}['und'][0]['url']);
+
+    $this->backdropGet('node/' . $node->nid);
+    $this->assertNoRaw($url, 'Make sure Javascript does not display.');
+
+    // Enable validation.
+    $edit = array(
+      'instance[settings][validate_url]' => TRUE,
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields/' . $this->field_name, $edit, t('Save settings'));
+    $this->backdropGet('node/' . $node->nid);
+
+    // Ensure that the field still does not render JS.
+    $this->assertNoRaw($url, 'Make sure Javascript does not display.');
+  }
+
+}
+
+/**
+ * A series of tests of links, only going against the link_validate_url function in link.module.
+ *
+ * Validation is guided by the rules in http://tools.ietf.org/html/rfc1738!
+ */
+class LinkValidateUnitTest extends BackdropUnitTestCase {
+  function setUp() {
+    parent::setUp();
+    backdrop_load('module', 'link');
+  }
+
+  // Make sure that a link labelled <front> works.
+  function testValidateFrontLink() {
+    $valid = link_validate_url('<front>');
+    $this->assertEqual(LINK_FRONT, $valid, 'Make sure that front link is verfied and identified');
+  }
+
+  function testValidateEmailLink() {
+    $valid = link_validate_url('mailto:bob@example.com');
+    $this->assertEqual(LINK_EMAIL, $valid, "Make sure a basic mailto is verified and identified");
+  }
+
+  function testValidateEmailLinkBad() {
+    $valid = link_validate_url(':bob@example.com');
+    $this->assertEqual(FALSE, $valid, 'Make sure just a bad address is correctly failed');
+  }
+
+  function testValidateNewsgroupLink() {
+    $valid = link_validate_url('news:comp.infosystems.www.misc');
+    $this->assertEqual(LINK_NEWS, $valid, 'Make sure link to newsgroup validates as news.');
+  }
+
+  function testValidateNewsArticleLink() {
+    $valid = link_validate_url('news:hj0db8$vrm$1@news.eternal-september.org');
+    $this->assertEqual(LINK_NEWS, $valid, 'Make sure link to specific article valiates as news.');
+  }
+
+  function testValidateBadNewsgroupLink() {
+    $valid = link_validate_url('news:comp.bad_name.misc');
+    $this->assertEqual(FALSE, $valid, 'newsgroup names can\'t contain underscores, so it should come back as invalid.');
+  }
+
+  function testValidateInternalLinks() {
+    $links = array(
+      'node/5',
+      'feeds/rss.xml',
+      'files/test.jpg',
+      '/var/www/test',
+    );
+
+    foreach ($links as $link) {
+      $valid = link_validate_url($link);
+      $this->assertEqual(LINK_INTERNAL, $valid, 'Test ' . $link . ' internal link.');
+    }
+  }
+
+  function testValidateExternalLinks() {
+    $links = array(
+      'http://localhost:8080/',
+      'www.example.com',
+      'www.example.com/',
+      'http://username:p%40ssw0rd!@www.example.com/',
+      'http://username@www.example.com/',
+      'http://username:password@www.example.com:8080/',
+      'http://127.0.0.1:80/',
+      'http://127.173.24.255:4723/',
+      '127.173.24.255:4723/',
+      'http://255.255.255.255:4823/',
+      'www.test-site.com',
+      'http://example.com/index.php?q=node/123',
+      'http://example.com/index.php?page=this\that',
+      'http://example.com/?first_name=Joe Bob&last_name=Smith',
+      // Anchors
+      'http://www.example.com/index.php#test',
+      'http://www.example.com/index.php#this@that.',
+      'http://www.example.com/index.php#',
+      'http://www.cnn.com/video/#/video/politics/2008/12/09/intv.madeleine.albright.cnn',
+      'http://www.archive.org/stream/aesopsfables00aesorich#page/n7/mode/2up',
+      'http://www.example.com/blah/#this@that?',
+      'http://www.example.backdrop/',
+    );
+
+    // Check for internationalized domains.
+    if (function_exists('idn_to_ascii')) {
+      $links[] = 'http://www.сайт.рф/';
+    }
+
+    // Test all of the protocols.
+    $allowed_protocols = settings_get('filter_allowed_protocols', array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal'));
+    foreach ($allowed_protocols as $protocol) {
+      if ($protocol !== 'news' && $protocol !== 'mailto') {
+        $links[] = $protocol . '://www.example.com';
+      }
+    }
+    foreach ($links as $link) {
+      $valid = link_validate_url($link);
+      $this->assertEqual(LINK_EXTERNAL, $valid, 'Testing that ' . $link . ' is a valid external link.');
+    }
+  }
+
+  function testInvalidExternalLinks() {
+    $links = array(
+      'http://www.ex ample.com/',
+      'http://@www.example.com/',
+      'http://username:@www.example.com/',
+      'http://25.0.0/', // Bad ip!
+      'http://4827.0.0.2/',
+      '//www.example.com/',
+      'http://www.-fudge.com/', // Domains can't have sections starting with a dash.
+    );
+    foreach ($links as $link) {
+      $valid = link_validate_url($link);
+      $this->assertEqual(FALSE, $valid, 'Testing that ' . $link . ' is not a valid link.');
+    }
+  }
+}

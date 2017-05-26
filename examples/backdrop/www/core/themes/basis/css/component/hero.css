@@ -1,0 +1,99 @@
+/**
+ * @file
+ * Hero component styling.
+ */
+.block-hero {
+  /* Positioning, width and transform is to make hero full width on smaller screens */
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  min-height: 30vh;
+  padding: 1.5rem 2rem 2rem;
+  margin: 0 0 2rem;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  -webkit-transition: min-height 0.25s;
+  transition: min-height 0.25s;
+  will-change: min-height;
+  background-size: cover;
+}
+
+.block-hero .block-title,
+.block-hero .block-content {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.l-top .block-hero {
+  margin-top: -2rem;/* Negative top margin collapses spacing under header */
+}
+
+.container .block-hero {
+  margin-top: 0; /* If hero is in a container don't collapse top spacing */
+}
+
+@media (min-width: 25em) {
+  .block-hero {
+    padding: 2rem 3rem 3rem;
+    font-size: 1.3em;
+  }
+}
+
+@media (min-width: 34em) {
+  .block-hero {
+    font-size: 1.5em;
+  }
+}
+
+@media (min-width: 62em) {
+  .block-hero {
+    /* Remove full width styles on larger screens */
+    left: auto;
+    width: 100%;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.block-hero-no-image {
+  background: #0074bd url(../../images/texture.png) repeat center center;
+  background-blend-mode: luminosity;
+}
+
+.no-background-blend-mode .block-hero-no-image * {
+  position: relative;
+  z-index: 1;
+}
+
+.no-background-blend-mode .block-hero-no-image {
+  /* Fixes IE bug where text is behind pseudo-element */
+  position: relative;
+  z-index: 1;
+}
+
+.no-background-blend-mode .block-hero-no-image:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #009dff;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.block-hero .block-title {
+  margin: 0 0 0.2em;
+  padding: 0;
+  font-weight: 200;
+  line-height: 1.2;
+  font-size: 2.3em;
+}
+
+@media (min-width: 34em) {
+  .block-hero .block-title {
+    font-size: 2.625em;
+  }
+}

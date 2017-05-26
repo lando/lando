@@ -1,0 +1,6 @@
+{
+    "_config_name": "config_obj_test.settings",
+    "my_integer": 99,
+    "my_string": "foo",
+    "my_array": [0, 1, 2, 3]
+}
