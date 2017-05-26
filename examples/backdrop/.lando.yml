@@ -4,7 +4,7 @@ sharing:
     local: www
     remote: /var/www/html
 proxy:
-  appserver:
+  nginx:
     - port: 80/tcp
       default: true
     - port: 443/tcp
@@ -18,8 +18,12 @@ services:
     config:
       server: config/nginx/backdrop.conf
       conf: config/php/php.ini
+    overrides:
+      services:
+        environment:
+          BACKDROP_SETTINGS: "{\"databases\":{\"default\":{\"default\":{\"driver\":\"mysql\",\"database\":\"backdrop\",\"username\":\"backdrop\",\"password\":\"backdrop\",\"host\":\"database\"}}}}"
   database:
-    type: mysql:5.5.53
+    type: mysql:5.5
     portforward: 3399
     creds:
       user: backdrop
