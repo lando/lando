@@ -1,0 +1,344 @@
+/**
+ * The .seven.css file is intended to contain styles that override declarations
+ * in the Seven admin theme.
+ */
+
+/* @group Content */
+
+.views-ui-display-tab-bucket h1,
+.views-ui-display-tab-bucket h2,
+.views-ui-display-tab-bucket h3,
+.views-ui-display-tab-bucket h4,
+.views-ui-display-tab-bucket h5 {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+/* @end */
+
+/* @group Forms */
+
+.views-ui-dialog fieldset {
+  padding-top: 2.5em;
+}
+
+fieldset fieldset {
+  border: medium none;
+}
+
+/**
+ * Seven positions the legend absolutely, but does not have a way to ignore
+ * fieldsets without a legend so we make one up.
+ */
+fieldset.fieldset-no-legend {
+  padding-top: 0;
+}
+
+/**
+ * Being extra safe here and scoping this to the add view wizard form (where
+ * a layout problem occurs for the Display format fieldset if we don't fix its
+ * padding), but it's probably safe to just let it apply everywhere.
+ */
+#views-ui-add-form fieldset fieldset .fieldset-wrapper {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.views-display-tab fieldset {
+  padding: 0 12px;
+}
+
+.views-display-tab .fieldset-wrapper {
+  padding: 10px 12px 12px;
+}
+
+.views-display-tab fieldset.box-padding .fieldset-wrapper {
+  padding: 0;
+}
+
+.views-display-tab legend + .fieldset-wrapper {
+  padding-top: 2.5em;
+}
+
+.views-admin .form-item label.option,
+#views-ui-preview-form .form-item label.option {
+  font-size: 1em;
+}
+
+#views-ui-preview-form .form-item {
+  margin-top: 0;
+  line-height: 36px;
+}
+#views-ui-preview-form #preview-args {
+  width: 100%;
+  max-width: 300px;
+  padding: 5px;
+}
+#views-ui-preview-form .form-submit {
+  /* Make sure button doesn't hang over help text */
+  font-size: 0.875em;
+  padding: 0 18px;
+  line-height: 36px;
+}
+
+.form-item,
+.form-item .form-item {
+  margin-bottom: 0;
+  margin-top: 9px;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.form-actions {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.form-item .form-item {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.form-radios > .form-item {
+  margin-top: 3px;
+}
+
+/* @end */
+
+/* @group Lists */
+
+.views-admin .item-list ul {
+  margin: 0;
+  padding: 0;
+}
+
+.views-admin ul.secondary {
+  clear: none;
+}
+
+.views-admin .links li {
+  padding-right: 0; /* LTR */
+}
+
+.views-admin .button .links li {
+  padding-right: 12px; /* LTR */
+}
+
+.page-admin-structure-views #content ul.action-links {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* @end */
+
+/* @group Tables */
+
+table td,
+table th {
+  vertical-align: top;
+}
+
+/* @end */
+
+/* @group Attachment details */
+
+#edit-display-settings-title {
+  color: #008BCB;
+}
+
+#edit-display-settings-top {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0;
+  border-radius: 4px 4px 0 0;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+.views-display-top {
+  margin: 0 0 0 -6px; /* LTR */
+}
+[dir="rtl"] .views-display-top {
+  margin: 0 -6px 0 0;
+}
+.views-display-top ul.secondary {
+  background-color: transparent;
+}
+.views-displays .secondary a {
+  transition: none;
+  border: 2px solid #fff;
+  border-radius: 5px; /* Additional radius needed to include border width. */
+}
+.views-displays .secondary li.add a {
+  background-color: #fff;
+  color: #008BCB;
+}
+.views-displays .secondary li.add a:hover {
+  background-color: #f7f7f7;
+  color: #008BCB;
+}
+.views-displays .secondary a:hover > .icon.add {
+  background-position: center 3px;
+}
+
+.views-displays .secondary .action-list {
+  top: 30px;
+  box-shadow: 0 5px 5px -5px hsla(0, 0%, 0%, 0.3);
+}
+.views-displays .secondary .action-list li {
+  background-color: #fff;
+}
+.views-displays .secondary .action-list li:hover {
+  background-color: #f7f7f7;
+}
+.views-displays .secondary .open > a {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.views-displays .secondary .open > a:hover {
+  background-color: #f1f1f1;
+  color: #008BCB;
+}
+
+.views-displays .secondary .action-list  li:first-child {
+  -moz-border-radius: 0 3px 0 0;
+  -webkit-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
+}
+
+.views-displays .secondary .action-list  li:last-child {
+  -moz-border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 0 0 3px 3px;
+  border-radius: 0 0 3px 3px;
+}
+
+.views-displays .secondary .action-list input.form-submit {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  color: #008BCB;
+}
+
+/* @end */
+
+/* @group Attachment buckets
+ *
+ * These are the individual "buckets," or boxes, inside the display settings area
+ */
+
+.views-ui-display-tab-bucket h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: .5em;
+}
+
+.views-ui-display-tab-bucket .links {
+  padding: 2px 6px 4px;
+}
+
+.views-ui-display-tab-bucket .links li + li {
+  margin-left: 3px;
+}
+
+/* @end */
+
+/* @group Rearrange filter criteria */
+
+#views-ui-rearrange-filter-form .action-links {
+  margin: 0;
+  padding: 0;
+}
+
+#views-ui-rearrange-filter-form table {
+  border: medium none;
+}
+
+#views-ui-rearrange-filter-form [id^="views-row"] {
+  border: medium none;
+}
+
+#views-ui-rearrange-filter-form tr td:last-child {
+  border-right: medium none;
+}
+
+#views-ui-rearrange-filter-form .filter-group-operator-row {
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
+}
+
+#views-ui-rearrange-filter-form tr.drag td {
+  background-color: #FFEE77 !important;
+}
+
+#views-ui-rearrange-filter-form tr.drag-previous td {
+  background-color: #FFFFBB !important;
+}
+
+/* @end */
+
+/* @group Live preview elements */
+
+.views-query-info pre {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+/* @group Query info table */
+
+.views-query-info table {
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  -webkit-border-horizontal-spacing: 1px;
+  -webkit-border-vertical-spacing: 1px;
+}
+
+.views-query-info table tr td:last-child {
+  /* Fixes a Seven style that bleeds down into this table unnecessarily */
+  border-right: 0 none;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Add view */
+
+.form-item-page-create,
+.form-item-block-create {
+  margin-top: 13px;
+}
+
+/* @end */
+
+/* @group Modal dialog box
+ *
+ * The contents of the popup dialog on the views edit form.
+ */
+
+.views-ui-dialog {
+  font-size: normal;
+}
+
+.views-ui-dialog fieldset.collapsible {
+  padding-top: 2.5em;
+}
+
+.views-ui-dialog fieldset.collapsed {
+  padding-top: 1.5em;
+}
+
+.filterable-option .form-item.form-type-checkbox {
+  /* This selector is aggressive because Seven's reset for .form-items is aggressive. */
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-top: 8px;
+}
+
+/* @end */

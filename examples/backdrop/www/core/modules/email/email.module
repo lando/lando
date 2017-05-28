@@ -1,0 +1,142 @@
+<?php
+/**
+ * @file
+ * Module file for the email module, which creates a email address field.
+ */
+
+/**
+ * Implements hook_field_info().
+ */
+function email_field_info() {
+  return array(
+    'email' => array(
+      'label' => 'Email',
+      'description' => t('This field stores and renders email addresses.'),
+      'default_widget' => 'email_textfield',
+      'default_formatter' => 'email_default',
+      'property_type' => 'text',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'email_invalid': The email address is not valid
+ */
+function email_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if ($item['email'] != '' && !valid_email_address(trim($item['email']))) {
+      $message = t('"%mail" is not a valid email address', array('%mail' => $item['email']));
+      $errors[$field['field_name']][$langcode][$delta][] = array(
+        'error' => 'email_invalid',
+        'message' => $message,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_error().
+ */
+function email_field_widget_error($element, $error, $form, &$form_state) {
+  form_error($element, $error['message']);
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function email_field_is_empty($item, $field) {
+  return empty($item['email']);
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ *
+ */
+function email_field_formatter_info() {
+  $formats = array(
+    'email_default' => array(
+      'label' => t('Default email link'),
+      'description' => t('Display the email address as a mailto link.'),
+      'field types' => array('email'),
+    ),
+    'email_plain' => array(
+      'label' => t('Email plain text'),
+      'description' => t('Display the email address as plain text.'),
+      'field types' => array('email'),
+    ),
+  );
+  return $formats;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function email_field_formatter_view($object_type, $object, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'email_default':
+      foreach ($items as $delta => $item) {
+        $output = l($item['email'], 'mailto:' . $item['email']);
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+
+    case 'email_plain':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => check_plain($item['email']));
+      }
+      break;
+
+  }
+  return $element;
+}
+
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function email_field_widget_info() {
+  return array(
+    'email_textfield' => array(
+      'label' => t('Text field'),
+      'field types' => array('email'),
+      'settings' => array(
+        'size' => 60,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function email_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  $form['size'] = array(
+    '#type' => 'number',
+    '#title' => t('Size of textfield'),
+    '#default_value' => $settings['size'],
+    '#required' => TRUE,
+    '#min' => 1,
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function email_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+  $element = $base;
+  $element['email'] = $base + array(
+    '#type' => 'email',
+    '#default_value' => isset($items[$delta]['email']) ? $items[$delta]['email'] : NULL,
+    '#size' => $instance['widget']['settings']['size'],
+  );
+  return $element;
+}

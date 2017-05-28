@@ -1,0 +1,64 @@
+/**
+ * CSS added to iframe-based instances only.
+ */
+body {
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 14px;
+  color: #222;
+  background-color: #fff;
+  margin: 8px;
+}
+
+ol, ul, dl {
+  /* IE7: reset rtl list margin. (CKEditor issue #7334) */
+  *margin-right: 0px;
+  /* Preserved spaces for list items with text direction other than the list.
+   * (CKEditor issues #6249,#8049) */
+  padding: 0 40px;
+}
+
+/* The Backdrop <!--break--> tag is only shown in iframe based editing. */
+.cke_editable img.cke_backdrop_break {
+  background-image: url(../images/break-handle.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  clear: both;
+  display: block;
+  float: none;
+  width: 100%;
+  border-top: #999999 1px dotted;
+  border-bottom: #999999 1px dotted;
+  height: 5px;
+  cursor: move;
+  margin: 10px 0;
+}
+
+/**
+ * CKEditor Image2 widgets wrap images in a <span> tag that requires center
+ * alignment. As normally the image itself has the "align-center" class that
+ * sets margin left/right to auto, on the front-end it will center. However,
+ * with the <span> wrapper, we need to center-align the entire wrapping
+ * paragraph tag while within CKEditor.
+ */
+p.align-center {
+  text-align: center;
+}
+span.align-left,
+img.align-left {
+  margin-right: 2em;
+  margin-bottom: 1em;
+}
+span.align-right,
+img.align-right {
+  margin-left: 2em;
+  margin-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.cke_upload_uploading img {
+  opacity: 0.3;
+}

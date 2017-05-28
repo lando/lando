@@ -1,0 +1,8 @@
+{
+    "_config_name": "simpletest.settings",
+    "simpletest_clear_results": 1,
+    "simpletest_method": 1,
+    "simpletest_password": "",
+    "simpletest_username": "",
+    "simpletest_verbose": 1
+}

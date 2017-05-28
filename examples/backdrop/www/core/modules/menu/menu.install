@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the menu module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function menu_install() {
+  $system_menus = menu_list_system_menus();
+  $t = get_t();
+  $descriptions = array(
+    'main-menu' => $t('The <em>Primary navigation</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.'),
+    'management' => $t('The <em>Administration</em> menu contains links for administrative tasks and content entry.'),
+    'user-menu' => $t("The <em>Account</em> menu contains links related to each user's account, as well as links to 'Log in' and 'Log out'."),
+  );
+  foreach ($system_menus as $menu_name => $title) {
+    $menu = array(
+      'menu_name' => $menu_name,
+      'title' => $t($title),
+      'description' => $descriptions[$menu_name],
+    );
+    menu_save($menu);
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function menu_uninstall() {
+  menu_rebuild();
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function menu_update_dependencies() {
+  // menu_update_1001() updates menu variables to save into the node type config
+  // files, which are created in node_update_1005().
+  $dependencies['menu'][1001] = array(
+    'node' => 1005,
+  );
+  return $dependencies;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Moves menu settings from variables to config.
+ */
+function menu_update_1000() {
+  // Migrate variables to config.
+  $config = config('menu.settings');
+  $config->set('menu_main_links', update_variable_get('menu_main_links_source', 'main-menu'));
+  $config->set('menu_secondary_links_source', update_variable_get('menu_main_links_source', 'user-menu'));
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('menu_main_links_source');
+  update_variable_del('menu_secondary_links_source');
+}
+
+/**
+ * Move menu content type settings into configuration files.
+ */
+function menu_update_1001() {
+  // Ensure module-provided code is loaded.
+  backdrop_load('module', 'node');
+  backdrop_load('module', 'entity');
+
+  $node_types = node_type_get_types();
+  foreach ($node_types as $node_type) {
+    // Move the menu variables into each node type's config.
+    $settings = array(
+      'menu_options' => update_variable_get('menu_options_' . $node_type->type, array('main-menu')),
+      'menu_parent' => update_variable_get('menu_parent_' . $node_type->type, 'main-menu:0'),
+    );
+    $node_type->settings = array_merge($node_type->settings, $settings);
+    node_type_save($node_type);
+
+    // Delete the migrated variables.
+    update_variable_del('menu_options_' . $node_type->type);
+    update_variable_del('menu_parent_' . $node_type->type);
+  }
+}
+
+/**
+ * Move individual menus into config files.
+ */
+function menu_update_1002() {
+  if (!db_table_exists('menu_custom')) {
+    return;
+  }
+
+  $menus = db_query("SELECT * FROM {menu_custom}")->fetchAllAssoc('menu_name');
+  foreach ($menus as $menu) {
+    $menu = (array) $menu;
+    $config = config('menu.menu.' . $menu['menu_name']);
+    $config->setData($menu);
+    $config->save();
+  }
+
+  db_drop_table('menu_custom');
+}
+
+/**
+ * Delete primary and secondary menu settings.
+ */
+function menu_update_1003() {
+  $config = config('menu.settings');
+  $config->delete('menu.settings');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

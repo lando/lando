@@ -1,0 +1,65 @@
+<?php
+/**
+ * @file
+ * Install file for the link module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function link_field_schema($field) {
+  return array(
+    'columns' => array(
+      'url' => array(
+        'type' => 'varchar',
+        // Maximum URLs length.
+        'length' => 2048,
+        'not null' => FALSE,
+        'sortable' => TRUE,
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'sortable' => TRUE,
+      ),
+      'attributes' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function link_update_last_removed() {
+  return 7001;
+}
+
+/**
+ * @defgroup updates-7.x-to-1.x Updates from 7.x to 1.x
+ * @{
+ * Update functions from Drupal 7.x to Backdrop CMS 1.x.
+ */
+
+/**
+ * Move link settings from variables to config.
+ */
+function link_update_1000() {
+  // Update has been removed. Link no longer has any config in Backdrop.
+}
+
+/**
+ * Remove the Link config file. Link no longer has any config.
+ */
+function link_update_1001() {
+  config('link.settings')->delete();
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

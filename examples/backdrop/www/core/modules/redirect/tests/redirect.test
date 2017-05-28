@@ -1,0 +1,277 @@
+<?php
+
+/**
+ * @file
+ * Unit tests for the redirect module.
+ */
+
+class RedirectTestHelper extends BackdropWebTestCase {
+  protected $profile = 'minimal';
+
+  function setUp(array $modules = array()) {
+    $modules[] = 'node';
+    $modules[] = 'path';
+    $modules[] = 'redirect';
+    parent::setUp($modules);
+
+    // Disable default path patterns for nodes.
+    config_set('path.settings', 'node_pattern', '');
+  }
+
+  protected function assertRedirect($redirect) {
+    backdrop_static_reset('backdrop_lookup_path');
+    $source_url = url($redirect->source, array('absolute' => TRUE) + $redirect->source_options);
+    $redirect_url = url($redirect->redirect, array('absolute' => TRUE) + $redirect->redirect_options);
+    $this->backdropGet($source_url);
+    $this->assertEqual($this->getUrl(), $redirect_url, t('Page %source was redirected to %redirect.', array('%source' => $source_url, '%redirect' => $redirect_url)));
+
+    // Reload the redirect.
+    if (!empty($redirect->rid)) {
+      return redirect_load($redirect->rid, TRUE);
+    }
+    return FALSE;
+  }
+
+  protected function assertNoRedirect($redirect) {
+    $source_url = url($redirect->source, array('absolute' => TRUE) + $redirect->source_options);
+    $this->backdropGet($source_url);
+    $this->assertEqual($this->getUrl(), $source_url, t('Page %url was not redirected.', array('%url' => $source_url)));
+  }
+
+  /**
+   * Add an URL redirection.
+   *
+   * @param string $source_path
+   *   A source path.
+   * @param string $redirect_path
+   *   A redirect path.
+   * @param array $redirect
+   *   An array of values from which a Redirect object will be created.
+   *
+   * @return Redirect
+   *   A redirect object.
+   */
+  protected function addRedirect($source_path, $redirect_path, array $redirect = array()) {
+    $source_parsed = redirect_parse_url($source_path);
+    $redirect['source'] = $source_parsed['url'];
+    if (isset($source_parsed['query'])) {
+      $redirect['source_options']['query'] = $source_parsed['query'];
+    }
+
+    $redirect_parsed = redirect_parse_url($redirect_path);
+    $redirect['redirect'] = $redirect_parsed['url'];
+    if (isset($redirect_parsed['query'])) {
+      $redirect['redirect_options']['query'] = $redirect_parsed['query'];
+    }
+    if (isset($redirect_parsed['fragment'])) {
+      $redirect['redirect_options']['fragment'] = $redirect_parsed['fragment'];
+    }
+
+    $redirect_object = new Redirect($redirect);
+    redirect_save($redirect_object);
+    return $redirect_object;
+  }
+
+  protected function assertPageCached($url, array $options = array()) {
+    $options['absolute'] = TRUE;
+    $url = url($url, $options);
+    $cache = cache_get($url, 'cache_page');
+    $this->assertTrue($cache, t('Page %url was cached.', array('%url' => $url)));
+    return $cache;
+  }
+
+  protected function assertPageNotCached($url, array $options = array()) {
+    $options['absolute'] = TRUE;
+    $url = url($url, $options);
+    $cache = cache_get($url, 'cache_page');
+    $this->assertFalse($cache, t('Page %url was not cached.', array('%url' => $url)));
+  }
+
+  protected function assertHeader($name, $expected, $headers = NULL) {
+    if (!isset($headers)) {
+      $headers = $this->backdropGetHeaders();
+      $name = strtolower($name);
+    }
+    return $this->assertIdentical($headers[$name], $expected);
+  }
+}
+
+class RedirectUnitTest extends BackdropUnitTestCase {
+
+  /**
+   * Test the redirect_compare_array_recursive() function.
+   */
+  function testCompareArrayRecursive() {
+    backdrop_load('module', 'redirect');
+    $haystack = array('a' => 'aa', 'b' => 'bb', 'c' => array('c1' => 'cc1', 'c2' => 'cc2'));
+    $cases = array(
+      array('query' => array('a' => 'aa', 'b' => 'invalid'), 'result' => FALSE),
+      array('query' => array('b' => 'bb'), 'result' => TRUE),
+      array('query' => array('b' => 'bb', 'c' => 'invalid'), 'result' => FALSE),
+      array('query' => array('b' => 'bb', 'c' => array()), 'result' => TRUE),
+      array('query' => array('b' => 'bb', 'c' => array('invalid')), 'result' => FALSE),
+      array('query' => array('b' => 'bb', 'c' => array('c2' => 'invalid')), 'result' => FALSE),
+      array('query' => array('b' => 'bb', 'c' => array('c2' => 'cc2')), 'result' => TRUE),
+    );
+    foreach ($cases as $index => $case) {
+      $this->assertEqual($case['result'], redirect_compare_array_recursive($case['query'], $haystack));
+    }
+  }
+
+  /**
+   * Test redirect_sort_recursive().
+   */
+  function testSortRecursive() {
+    $test_cases = array(
+      array(
+        'input' => array('b' => 'aa', 'c' => array('c2' => 'aa', 'c1' => 'aa'), 'a' => 'aa'),
+        'expected' => array('a' => 'aa', 'b' => 'aa', 'c' => array('c1' => 'aa', 'c2' => 'aa')),
+        'callback' => 'ksort',
+      ),
+    );
+    foreach ($test_cases as $index => $test_case) {
+      $output = $test_case['input'];
+      redirect_sort_recursive($output, $test_case['callback']);
+      $this->assertIdentical($output, $test_case['expected']);
+    }
+  }
+}
+
+class RedirectFunctionalTest extends RedirectTestHelper {
+  protected $admin_user;
+
+  function setUp(array $modules = array()) {
+    parent::setUp($modules);
+
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+    $this->admin_user = $this->backdropCreateUser(array('administer redirects', 'access site reports', 'access content', 'create post content', 'edit any post content', 'create url aliases'));
+    $this->backdropLogin($this->admin_user);
+  }
+
+  /**
+   * Tests the links added to 404 pages for creating redirects.
+   */
+  function test404Interface() {
+    // Check that 404 pages do get "Add URL redirect" links for admin users.
+    $this->backdropGet('invalid-path1');
+    $this->backdropGet('invalid-path2');
+    $this->assertLink('Add a URL redirect from this page to another location');
+
+    // Check that 403 pages do not get the "Add URL redirect" link at all.
+    $this->backdropGet('admin/config/system/actions');
+    $this->assertNoLink('Add a URL redirect from this page to another location');
+
+    $this->backdropGet('admin/reports/page-not-found');
+    $this->clickLink('Fix 404 pages with URL redirects');
+
+    // Check that normal users do not see the "Add URL redirect" link on 404
+    // pages.
+    $this->backdropLogout();
+    $this->backdropGet('invalid-path3');
+    $this->assertNoLink('Add a URL redirect from this page to another location');
+  }
+
+  /**
+   * Tests the links added to 404 pages for creating URL redirects.
+   */
+  function testPageCache() {
+    // Set up cache variables.
+    config_set('system.core', 'cache', 1);
+    $edit = array(
+      'purge_inactive' => 604800,
+    );
+    $this->backdropPost('admin/config/urls/redirect/settings', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
+    $this->backdropLogout();
+
+    // Add a new redirect.
+    $redirect = $this->addRedirect('redirect', 'node');
+    $this->assertEqual($redirect->access, 0);
+    $this->assertEqual($redirect->count, 0);
+    $this->assertPageNotCached('redirect');
+
+    // Perform the redirect and check that count and access are updated.
+    $first_redirect_call = $this->assertRedirect($redirect);
+    $this->assertEqual($first_redirect_call->count, 1);
+    $this->assertTrue($first_redirect_call->access > 0);
+    $cache = $this->assertPageCached('redirect');
+    $this->assertHeader('Location', url('node', array('absolute' => TRUE)), $cache->data['headers']);
+    $this->assertHeader('X-Redirect-ID', $first_redirect_call->rid, $cache->data['headers']);
+
+    // Perform a second call, counts should not be updated due to the page
+    // cache.
+    $second_redirect_call = $this->assertRedirect($redirect);
+    $this->assertEqual($second_redirect_call->count, 1);
+    $this->assertEqual($second_redirect_call->access, $first_redirect_call->access);
+    $cache = $this->assertPageCached('redirect');
+    $this->assertHeader('Location', url('node', array('absolute' => TRUE)), $cache->data['headers']);
+    $this->assertHeader('X-Redirect-ID', $first_redirect_call->rid, $cache->data['headers']);
+
+    // Set a redirect to not accessed since the UNIX epoch, then run cron to
+    // see that it will be removed.
+    $redirect->access = 1;
+    redirect_save($redirect);
+    state_set('redirect_cron_last', 0);
+    $this->cronRun();
+    $this->assertNoRedirect($redirect);
+  }
+
+  /**
+   * Tests renaming automatic aliases in a circular loop.
+   */
+  function testPathChangeRedirects() {
+    // Create an initial post node with a path alias.
+    $node = $this->backdropCreateNode(array('type' => 'post', 'path' => array('alias' => 'first-alias')));
+    $node_path = 'node/' . $node->nid;
+
+    // Change the node's alias will create an automatic redirect from 'first-alias' to the node.
+    $this->backdropPost("$node_path/edit", array('path[alias]' => 'second-alias'), 'Save');
+    $redirect = redirect_load_by_source('first-alias');
+    $this->assertRedirect($redirect);
+    $this->assertEqual(url($node_path), base_path() . 'second-alias');
+
+    $this->backdropPost("$node_path/edit", array('path[alias]' => 'first-alias'), 'Save');
+    $redirect = redirect_load_by_source('second-alias');
+    $this->assertRedirect($redirect);
+    $this->assertEqual(url($node_path), base_path() . 'first-alias');
+
+    $this->backdropPost("$node_path/edit", array('path[alias]' => 'second-alias'), 'Save');
+    $redirect = redirect_load_by_source('first-alias');
+    $this->assertRedirect($redirect);
+    $this->assertEqual(url($node_path), base_path() . 'second-alias');
+
+    // Do a similar redirect loop test for manually created redirects.
+    $node = $this->backdropCreateNode(array('type' => 'post', 'path' => array('alias' => 'manual-test')));
+    $node_path = 'node/' . $node->nid;
+
+    // Redirects not allowed to point to their source path.
+    $edit = array(
+      'source' => 'manual-test',
+      'redirect' => $node_path,
+    );
+    $this->backdropPost('admin/config/urls/redirect/add', $edit, t('Save redirect'));
+    $this->assertText(t('You are attempting to redirect the page to itself. This will result in an infinite loop.'));
+
+    // Redirect that points to the alias.
+    $edit = array(
+      'source' => 'manual-redirect',
+      'redirect' => 'manual-test',
+    );
+    $this->backdropPost('admin/config/urls/redirect/add', $edit, t('Save redirect'));
+    $this->assertText(t('The redirect has been saved.'));
+
+    // The redirect will resolve from "manual-test" (the alias) to the internal
+    // path, which should be "node/2".
+    $redirect = redirect_load_by_source('manual-redirect');
+    $this->assertRedirect($redirect);
+    $this->assertEqual($redirect->redirect, $node_path);
+
+    // Update the node to give it the manual redirect path.
+    $this->backdropPost("$node_path/edit", array('path[alias]' => 'manual-redirect'), 'Save');
+
+    // Now the redirect takes on what had previously been the alias.
+    $redirect = redirect_load_by_source('manual-test');
+    $this->assertRedirect($redirect);
+    $this->assertEqual($redirect->redirect, $node_path);
+  }
+}

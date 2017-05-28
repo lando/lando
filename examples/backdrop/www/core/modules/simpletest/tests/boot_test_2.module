@@ -1,0 +1,12 @@
+<?php
+/**
+ * @file
+ * Defines a hook_config_info() implementation in a non-"bootstrap" module.
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function boot_test_2_config_info($path, $arg) {
+  // Empty hook.
+}

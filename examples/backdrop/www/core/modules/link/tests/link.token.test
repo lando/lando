@@ -1,0 +1,97 @@
+<?php
+/**
+ * @file
+ * Contains simpletests making sure token integration works.
+ */
+
+require_once(__DIR__ . '/link.test');
+
+/**
+ * Testing that tokens can be used in link titles
+ */
+class LinkTokenTest extends LinkBaseTestClass {
+  /**
+   * Creates a link field with a required title enabled for user-entered tokens.
+   * Creates a node with a token in the link title and checks the value.
+   */
+  function testUserTokenLinkCreate() {
+    $settings = array(
+      'instance[settings][enable_tokens]' => 1,
+    );
+    $field_name = $this->createLinkField('page', $settings);
+
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][title]', 'Title found');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+        'href' => 'http://example.com/' . $this->randomName(),
+        'label' => $this->randomName(),
+    );
+
+    $edit = array(
+      'title' => $input['label'],
+      $field_name . '[und][0][title]' => $input['label'] . " [node:content-type:machine-name]",
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost('node/add/page', $edit, t('Save'));
+    $this->assertRaw(l($input['label'] . ' page', $input['href']));
+  }
+
+  /**
+   * Creates a link field with a static title and an admin-entered token.
+   * Creates a node with a link and checks the title value.
+   */
+  function testStaticTokenLinkCreate() {
+    $name = $this->randomName();
+    $settings = array(
+      'instance[settings][title]' => 'value',
+      'instance[settings][title_value]' => $name . ' [node:title]');
+    $field_name = $this->createLinkField('page', $settings);
+
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+      'href' => 'http://example.com/' . $this->randomName()
+    );
+
+    $this->backdropGet('node/add/page');
+
+    $edit = array(
+      'title' => $name,
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+    $this->assertRaw(l($name . ' ' . $name, $input['href']));
+  }
+
+  /**
+   * Test that if you have a title and no URL on a field which does not have
+   * tokens enabled, that the title is sanitized once.
+   */
+  function testTitleOnlyTitleNoLink() {
+    $settings = array(
+      'instance[settings][url]' => 1,
+      'instance[settings][enable_tokens]' => 0,
+    );
+    $field_name = $this->createLinkField('page', $settings);
+
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+      'title' => 'This & That',
+      'href' => '',
+    );
+
+    $edit = array(
+      'title' => 'Simple title',
+      $field_name . '[und][0][title]' => $input['title'],
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $this->assertRaw('This &amp; That');
+  }
+}

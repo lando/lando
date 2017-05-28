@@ -1,0 +1,86 @@
+<?php
+/**
+ * Tests e-mail field functionality.
+ */
+class EmailFieldTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+  protected $web_user;
+  protected $field;
+  protected $instance;
+
+  function setUp() {
+    parent::setUp(array('field_test', 'email'));
+
+    $this->web_user = $this->backdropCreateUser(array(
+      'access field_test content',
+      'administer field_test content',
+      'administer content types',
+    ));
+    $this->backdropLogin($this->web_user);
+  }
+
+  /**
+   * Tests e-mail field.
+   */
+  function testEmailField() {
+    // Create a field with settings to validate.
+    $this->field = array(
+      'field_name' => backdrop_strtolower($this->randomName()),
+      'type' => 'email',
+    );
+    field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field['field_name'],
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'widget' => array(
+        'type' => 'email_default',
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'email_mailto',
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
+
+    // Display creation form.
+    $this->backdropGet('test-entity/add/test-bundle');
+    $this->assertFieldByName("{$this->field['field_name']}[und][0][email]", '', 'Widget found.');
+
+    // Submit a valid e-mail address and ensure it is accepted.
+    $value = 'test@example.com';
+    $edit = array(
+      "{$this->field['field_name']}[und][0][email]" => $value,
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)));
+    $this->assertRaw($value);
+
+    // Verify that a mailto link is displayed.
+    $entity = field_test_entity_test_load($id);
+    $entity->content = field_attach_view('test_entity', $entity, 'full');
+    $rendered_content = backdrop_render($entity->content);
+    $this->backdropSetContent($rendered_content);
+    $this->assertLinkByHref('mailto:test@example.com');
+
+    // Change the formatter to the raw version.
+    $this->instance['display'] = array(
+      'full' => array(
+        'label' => 'above',
+        'type' => 'email_plain',
+        'settings' => array()
+      ),
+    );
+    field_update_instance($this->instance);
+
+    // Verify that the raw version is displayed.
+    $entity->content = field_attach_view('test_entity', $entity, 'full');
+    $rendered_content = backdrop_render($entity->content);
+    $this->backdropSetContent($rendered_content);
+    $this->assertNoLinkByHref('mailto:test@example.com');
+    $this->assertText('test@example.com');
+  }
+}

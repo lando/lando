@@ -1,0 +1,65 @@
+/**
+ * @file
+ * CSS for the two column layout.
+ */
+
+/* Clearfix for all regions. */
+.layout--two-column .l-header:after,
+.layout--two-column .l-main-wrapper:after,
+.layout--two-column .l-footer:after,
+.layout--two-column .l-container:after,
+.layout--two-column .l-content:after,
+.layout--two-column .l-sidebar:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.layout--two-column .l-header,
+.layout--two-column .l-top,
+.layout--two-column .l-messages,
+.layout--two-column .l-container,
+.layout--two-column .l-footer {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  clear: both;
+}
+.layout--two-column .l-content,
+.layout--two-column .l-sidebar {
+  padding: 0 15px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media all and (min-width: 851px) {
+  .layout--two-column .l-content,
+  .layout--two-column .l-sidebar {
+    display: inline;
+    float: left; /* LTR */
+    position: relative;
+  }
+  [dir="rtl"] .layout--two-column .l-content,
+  [dir="rtl"] .layout--two-column .l-sidebar {
+    float: right;
+  }
+  .layout--two-column .l-content {
+    margin-right: 30%;
+    width: 70%;
+  }
+  [dir="rtl"] .layout--two-column .l-content {
+    margin-left: 30%;
+    margin-right: 0;
+  }
+  .layout--two-column .l-sidebar {
+    width: 30%;
+    margin-left: -30%; /* LTR */
+  }
+  [dir="rtl"] .layout--two-column .l-sidebar {
+    margin-right: -30%;
+  }
+}

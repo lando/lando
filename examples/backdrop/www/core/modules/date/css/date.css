@@ -1,0 +1,173 @@
+/**
+ * @file
+ * Main stylesheet for Date module.
+ */
+
+/* Force start/end dates to float using inline-block, where it works, otherwise inline. */
+.container-inline-date {
+  clear: both;
+}
+.container-inline-date .form-item {
+  float: none;
+  margin: 0;
+  padding: 0;
+}
+.container-inline-date > .form-item {
+  display: inline-block;
+  margin-right: 0.5em; /* LTR */
+  vertical-align: top;
+}
+[dir="rtl"] .container-inline-date > .form-item {
+  margin-left: 0.5em;
+  margin-right: 0;
+}
+fieldset.date-combo .container-inline-date > .form-item {
+  margin-bottom: 10px;
+}
+.container-inline-date .form-item {
+  display: inline-block;
+  vertical-align: baseline;
+}
+.container-inline-date .form-item,
+.container-inline-date .form-item input {
+  width: auto;
+}
+.container-inline-date .description {
+  clear: both;
+}
+
+.container-inline-date .form-item input,
+.container-inline-date .form-item select,
+.container-inline-date .form-item option {
+  margin: 0;
+}
+
+.container-inline-date .date-parts-spacer {
+  margin: 0 10px;
+}
+.container-inline-date .date-time-spacer {
+  margin: 0 5px;
+}
+.views-right-60 .container-inline-date div {
+  margin: 0;
+  padding: 0;
+}
+
+.container-inline-date .date-timezone .form-item {
+  clear: both;
+  float: none;
+  width: auto;
+}
+
+/* Fixes for date popup css so it will behave in Drupal */
+#calendar_div,
+#calendar_div td,
+#calendar_div th {
+  margin: 0;
+  padding: 0;
+}
+#calendar_div,
+.calendar_control,
+.calendar_links,
+.calendar_header,
+.calendar {
+  border-collapse: separate;
+  margin: 0;
+  width: 185px;
+}
+
+.calendar td {
+  padding: 0;
+}
+
+/* formatting for start/end dates in nodes and views */
+span.date-display-single {
+}
+span.date-display-start {
+}
+span.date-display-end {
+}
+
+.date-prefix-inline {
+  display: inline-block;
+}
+
+.date-container .date-format-delete {
+  float: left;
+  margin-top: 1.8em;
+  margin-left: 1.5em;
+}
+.date-container .date-format-name {
+  float: left;
+}
+.date-container .date-format-type {
+  float: left;
+  padding-left: 10px;
+}
+
+.date-container .select-container {
+  clear: left;
+  float: left;
+}
+
+/* Calendar day css */
+div.date-calendar-day {
+  background: #F3F3F3;
+  border-top: 1px solid #EEE;
+  border-left: 1px solid #EEE;
+  border-right: 1px solid #BBB;
+  border-bottom: 1px solid #BBB;
+  color: #999;
+  float: left;
+  line-height: 1;
+  margin: 6px 10px 0 0;
+  text-align: center;
+  width: 40px;
+}
+
+div.date-calendar-day span {
+  display: block;
+  text-align: center;
+}
+div.date-calendar-day span.month {
+  background-color: #B5BEBE;
+  color: white;
+  font-size: .9em;
+  padding: 2px;
+  text-transform: uppercase;
+}
+div.date-calendar-day span.day {
+  font-size: 2em;
+  font-weight: bold;
+}
+div.date-calendar-day span.year {
+  font-size: .9em;
+  padding: 2px;
+}
+
+/* Admin styling */
+.form-item.form-item-instance-widget-settings-input-format-custom,
+.form-item.form-item-field-settings-enddate-required {
+  margin-left: 1.3em;
+}
+
+#edit-field-settings-granularity .form-type-checkbox {
+  margin-right: .6em; /* LTR */
+}
+[dir="rtl"] #edit-field-settings-granularity .form-type-checkbox {
+  margin-right: 0;
+  margin-left: .6em;
+}
+
+.date-year-range-select {
+  margin-right: 1em;
+}
+
+/* TimeEntry styles */
+.timeEntry_control {
+  vertical-align: middle;
+  margin-left: 2px;
+}
+* html .timeEntry_control { /* IE only */
+  margin-top: -4px;
+}

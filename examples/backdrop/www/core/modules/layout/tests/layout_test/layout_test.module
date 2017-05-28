@@ -1,0 +1,190 @@
+<?php
+/**
+ * @file
+ * Layout test module.
+ */
+
+/**
+ * Implements hook_layout_info().
+ */
+function layout_test_layout_info() {
+  $layouts['layout_test_layout'] = array(
+    'title' => 'Layout test layout',
+    'regions' => array(
+      'header' => t('Header'),
+      'top' => t('Top'),
+      'content' => t('Content'),
+      'sidebar' => t('Sidebar'),
+      'footer' => t('Footer'),
+    ),
+    'default region' => 'content',
+    'path' => 'layout_test_layout',
+  );
+
+  return $layouts;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function layout_test_block_info() {
+  $blocks['foo'] = array(
+    'info' => t('Layout foo block'),
+    'description' => t('A testing block for layouts.'),
+  );
+  $blocks['bar'] = array(
+    'info' => t('Layout bar block'),
+    'description' => t('A testing block for layouts with contexts.'),
+    'required contexts' => array(
+      'my_node' => 'node',
+      'my_user' => 'user',
+    ),
+  );
+  $blocks['test_node_title'] = array(
+    'info' => t('Node title test'),
+    'description' => t('A testing block for layouts that shows the node title.'),
+    'required contexts' => array(
+      'node' => 'node',
+    ),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function layout_test_menu() {
+  $items['layout-test-path'] = array(
+    'title' => 'Layout test title',
+    'page callback' => 'layout_test_path',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function layout_test_block_view($delta = '', $settings = array(), $contexts = array()) {
+  $block = array();
+
+  switch ($delta) {
+    case 'foo':
+      $settings += array(
+        'count' => 0,
+      );
+      $block['subject'] = 'Foo subject';
+      $block['content'] = format_string('The setting of count is @setting.', array('@setting' => $settings['count']));
+      break;
+
+    case 'bar':
+      $block['subject'] = 'Bar subject';
+      $block['content'] = format_string('The user name is @name and the node title is @title', array('@name' => $contexts['my_user']->name, '@title' => $contexts['my_node']->title));
+      break;
+
+    case 'test_node_title':
+      $block['subject'] = 'Node title';
+      $block['content'] = format_string('The node title is @title', array('@title' => $contexts['node']->title));
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function layout_test_block_configure($delta = '', $settings = array()) {
+  $form = array();
+  if ($delta == 'foo') {
+    $settings += array(
+      'count' => 10,
+    );
+    $form['count'] = array(
+      '#type' => 'select',
+      '#title' => 'Foo count to display',
+      '#default_value' => $settings['count'],
+      '#options' => backdrop_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+    );
+  }
+  return $form;
+}
+
+/**
+ * Menu callback; Display a test page.
+ */
+function layout_test_path() {
+  return '<div id="layout-test-page-content">This is the layout test page.</div>';
+}
+
+/**
+ * Implements hook_layout_presave().
+ */
+function layout_test_layout_presave($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_insert().
+ */
+function layout_test_layout_insert($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_update().
+ */
+function layout_test_layout_update($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_disable().
+ */
+function layout_test_layout_disable($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_enable().
+ */
+function layout_test_layout_enable($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_delete().
+ */
+function layout_test_layout_delete($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_template_change().
+ */
+function layout_test_layout_template_change($layout, $old_template) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}
+
+/**
+ * Implements hook_layout_revert().
+ */
+function layout_test_layout_revert($layout) {
+  $return = state_get('layout_test');
+  $return[] = (__FUNCTION__ . ' called');
+  state_set('layout_test', $return);
+}

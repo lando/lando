@@ -1,0 +1,52 @@
+/**
+ * @file
+ * Breadcrumb styles.
+ */
+.breadcrumb {
+  overflow: hidden;
+  margin: 1em 0;
+}
+
+.breadcrumb ol,
+.breadcrumb li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb li {
+  position: relative;
+  padding: 0 1em;
+  float: left;
+}
+
+.breadcrumb li a,
+.breadcrumb li span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 0 -1em;
+  padding: 0.5em 1.4em;
+  text-decoration: none;
+}
+
+.breadcrumb li:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 2em;
+  height: 2em;
+  border: 0.0625rem solid #20252e;
+  border-width: 0.125rem 0.125rem 0 0;
+  -webkit-transform:
+    translate(0, -50%)
+    rotate(45deg);
+  transform:
+    translate(0, -50%)
+    rotate(45deg);
+}
+
+.breadcrumb li:last-child:after {
+  display: none;
+}

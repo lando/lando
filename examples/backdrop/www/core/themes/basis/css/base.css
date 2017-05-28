@@ -1,0 +1,208 @@
+/**
+ * @file
+ * Base element styles and normalize overrides.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+li {
+  margin: 0 0 0.5em;
+}
+
+figure {
+  margin: 0;
+}
+
+blockquote,
+figcaption {
+  border-left: 0.25rem solid #c6cad2;
+}
+
+figcaption {
+  margin: 0.5em 0 1em;
+  padding: 0.3em 0.5em;
+}
+
+blockquote {
+  margin: 0.5em 0 1em;
+  padding: 0.8em 1.3em;
+}
+
+blockquote > :first-child {
+  margin-top: 0;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+pre,
+code {
+  font-family: Consolas, 'Lucida Console', 'Courier New', monospace;
+  color: #20252e;
+}
+
+code {
+  display: inline-block;
+  padding: 0 0.375em;
+  border: 0.0625rem solid #c6cad2;
+  background: #dee2ea;
+}
+
+pre code {
+  margin: 0;
+  padding: 0.8em 1.3em;
+  border: 0;
+  border-left: 0.25rem solid #c6cad2;
+  background: transparent;
+}
+
+code p {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.4;
+  margin: 1rem 0 0.5rem;
+}
+
+h1,
+h2 {
+  font-weight: 200;
+}
+
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 1.8125rem;
+}
+
+h3 {
+  font-size: 1.625rem;
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 1.4375rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  text-decoration: none;
+}
+
+iframe,
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+label {
+  font-weight: 600;
+}
+
+/**
+ * Table tags
+ */
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption {
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+th,
+td,
+caption {
+  padding: 0.8em 0.8em;
+}
+
+th,
+td {
+  padding: 0.8em 0.8em;
+  line-height: 1.3;
+}
+
+td {
+  border: 0.0625rem solid #dee2ea;
+}
+
+th {
+  border-right: 0.0625rem solid #c6cad2;
+  background: #dee2ea;
+}
+
+th:last-child {
+  border-right-color: #dee2ea;
+}
+
+table [aria-sort] a:after {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border: 0.375em solid transparent;
+}
+
+table [aria-sort="descending"] a:after {
+  border-top-color: #333;
+  border-bottom-width: 0;
+}
+
+table [aria-sort="ascending"] a:after {
+  border-bottom-color: #333;
+  border-top-width: 0;
+}
+
+table [aria-sort] img {
+  visibility: hidden;
+}
+
+/**
+ * Fieldset styles
+ */
+fieldset {
+  position: relative;
+  max-width: 100%;
+  margin: 1em 0;
+  padding: 3.774em 0 0 0; /* LTR */
+  border: 0.125em solid #EAEAEA;
+  min-width: 0;
+}
+
+[dir="rtl"] fieldset {
+  padding: 2.5em 0 0;
+}

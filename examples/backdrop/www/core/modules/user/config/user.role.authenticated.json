@@ -1,0 +1,7 @@
+{
+    "_config_name": "user.role.authenticated",
+    "name": "authenticated",
+    "label": "Authenticated",
+    "weight": "1",
+    "permissions": []
+}

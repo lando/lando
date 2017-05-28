@@ -1,0 +1,179 @@
+<?php
+/**
+ * @file
+ * Definition of ViewsNodeRevisionRelationsTestCase.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/views_query.test';
+
+/**
+ * Tests basic node_revision table integration into views.
+ */
+class NodeViewsRevisionRelationsTestCase extends ViewsSqlTest {
+  protected $profile = 'testing';
+  protected $admin_user;
+
+  function setUp() {
+    parent::setUp();
+
+    // Create content type for testing.
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+  }
+
+  /**
+   * Create a node with revision and rest result count for both views.
+   */
+  public function testNodeRevisionRelationship() {
+    $node = $this->backdropCreateNode();
+    // Create revision of the node.
+    $node_revision = clone $node;
+    $node_revision->revision = 1;
+    $node_revision->save();
+    $column_map = array(
+      'vid' => 'vid',
+      'node_revision_nid' => 'node_revision_nid',
+      'node_node_revision_nid' => 'node_node_revision_nid',
+    );
+
+    // Here should be two rows.
+    $view_nid = $this->test_view_node_revision_nid();
+    $this->executeView($view_nid, array($node->nid));
+    $resultset_nid = array(
+      array(
+        'vid' => '1',
+        'node_revision_nid' => $node->nid,
+        'node_node_revision_nid' => $node->nid,
+      ),
+      array(
+        'vid' => '2',
+        'node_revision_nid' => $node->nid,
+        'node_node_revision_nid' => $node->nid,
+      ),
+    );
+    $this->assertIdenticalResultset($view_nid, $resultset_nid, $column_map);
+
+    // There should be only one row with active revision 2.
+    $view_vid = $this->test_view_node_revision_vid();
+    $this->executeView($view_vid, array($node->nid));
+    $resultset_vid = array(
+      array(
+        'vid' => '2',
+        'node_revision_nid' => '1',
+        'node_node_revision_nid' => '1',
+      ),
+    );
+    $this->assertIdenticalResultset($view_vid, $resultset_vid, $column_map);
+  }
+
+  /**
+   * Test view with default join on node.nid.
+   */
+  function test_view_node_revision_nid() {
+    $view = new view();
+    $view->name = 'test_node_revision_nid';
+    $view->description = '';
+    $view->tag = '';
+    $view->base_table = 'node_revision';
+    $view->human_name = 'Test node revision nid';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['use_more_always'] = FALSE;
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['access']['perm'] = 'view revisions';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Relationship: Content revision: Content */
+    $handler->display->display_options['relationships']['nid']['id'] = 'nid';
+    $handler->display->display_options['relationships']['nid']['table'] = 'node_revision';
+    $handler->display->display_options['relationships']['nid']['field'] = 'nid';
+    $handler->display->display_options['relationships']['nid']['label'] = 'NID';
+    $handler->display->display_options['relationships']['nid']['required'] = TRUE;
+    /* Field: Content revision: Vid */
+    $handler->display->display_options['fields']['vid']['id'] = 'vid';
+    $handler->display->display_options['fields']['vid']['table'] = 'node_revision';
+    $handler->display->display_options['fields']['vid']['field'] = 'vid';
+    /* Field: Content revision: Nid */
+    $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
+    $handler->display->display_options['fields']['nid_1']['table'] = 'node_revision';
+    $handler->display->display_options['fields']['nid_1']['field'] = 'nid';
+    /* Field: Content: Nid */
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    $handler->display->display_options['fields']['nid']['relationship'] = 'nid';
+    /* Contextual filter: Content revision: Nid */
+    $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+    $handler->display->display_options['arguments']['nid']['table'] = 'node_revision';
+    $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+    $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'fixed';
+    $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+    $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+    $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+
+    return $view;
+  }
+
+  /**
+   * Test view with default join on node.vid.
+   */
+  function test_view_node_revision_vid() {
+    $view = new view();
+    $view->name = 'test_node_revision_vid';
+    $view->description = '';
+    $view->tag = '';
+    $view->base_table = 'node_revision';
+    $view->human_name = 'Test node revision vid';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['use_more_always'] = FALSE;
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['access']['perm'] = 'view revisions';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Relationship: Content revision: Content */
+    $handler->display->display_options['relationships']['vid']['id'] = 'vid';
+    $handler->display->display_options['relationships']['vid']['table'] = 'node_revision';
+    $handler->display->display_options['relationships']['vid']['field'] = 'vid';
+    $handler->display->display_options['relationships']['vid']['label'] = 'VID';
+    $handler->display->display_options['relationships']['vid']['required'] = TRUE;
+    /* Field: Content revision: Vid */
+    $handler->display->display_options['fields']['vid']['id'] = 'vid';
+    $handler->display->display_options['fields']['vid']['table'] = 'node_revision';
+    $handler->display->display_options['fields']['vid']['field'] = 'vid';
+    /* Field: Content revision: Nid */
+    $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
+    $handler->display->display_options['fields']['nid_1']['table'] = 'node_revision';
+    $handler->display->display_options['fields']['nid_1']['field'] = 'nid';
+    /* Field: Content: Nid */
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    $handler->display->display_options['fields']['nid']['relationship'] = 'vid';
+    /* Contextual filter: Content revision: Nid */
+    $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+    $handler->display->display_options['arguments']['nid']['table'] = 'node_revision';
+    $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+    $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'fixed';
+    $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+    $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+    $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+
+    return $view;
+  }
+}

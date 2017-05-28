@@ -1,0 +1,89 @@
+.text-format-wrapper .form-item {
+  margin-bottom: 0;
+}
+.text-format-wrapper .form-text {
+  width: 100%;
+}
+.filter-wrapper {
+  border-top: 0;
+  margin: 0;
+  padding: 1.5em 0 1.5em;
+}
+.filter-wrapper .form-item label {
+  display: inline;
+}
+.text-format-wrapper .description {
+  margin-top: 0.5em;
+}
+
+#filter-order tr .form-item {
+  padding: 0.5em 0 0 3em;
+  white-space: normal;
+}
+#filter-order tr .form-type-checkbox .description {
+  padding: 0 0 0 2.5em;
+}
+input#edit-filters-filter-html-settings-allowed-html {
+  width: 100%;
+}
+
+.tips {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 0.9em;
+}
+
+.editor-dialog {
+  width: 100%;
+  max-width: 500px;
+  z-index: 9996 !important; /* To come above the full-screen CKEditor button. */
+}
+.editor-dialog .form-managed-file .form-file,
+.editor-dialog .form-managed-file .file {
+  max-width: 18em;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.editor-image-size div {
+  display: inline;
+}
+.editor-image-size .form-number {
+  width: 30%;
+  max-width: 120px;
+}
+.editor-image-align div {
+  display: inline;
+}
+.editor-image-align .option {
+  margin-right: 20px; /* LTR */
+}
+[dir="rtl"] .editor-image-align .option {
+  margin-right: 0;
+  margin-left: 20px;
+}
+.editor-image-toggle {
+  display: inline-block;
+  padding: 0 1em;
+  border-left: none;
+  border-right: 1px solid #CCC;
+}
+[dir="rtl"] .editor-image-toggle {
+  border-right: none;
+  border-left: 1px solid #CCC;
+}
+[dir="ltr"] .editor-image-toggle.first {
+  padding-left: 0;
+}
+[dir="ltr"] .editor-image-toggle.last {
+  border-right: none;
+}
+[dir="rtl"] .editor-image-toggle.first {
+  padding-right: 0;
+}
+[dir="rtl"] .editor-image-toggle.last {
+  border-left: none;
+}

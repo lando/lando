@@ -1,0 +1,27 @@
+/* ---------- General Layout ---------- */
+
+body,
+input,
+textarea,
+select {
+  color: #000;
+  background: none;
+}
+body.two-sidebars,
+body.sidebar-first,
+body.sidebar-second,
+body {
+  width: 640px;
+}
+#admin_menu,
+#footer,
+.tabs {
+  display: none;
+}
+/* ---------- Node Pages ---------- */
+
+#comments .title,
+#comments form,
+.comment-forbidden {
+  display: none;
+}

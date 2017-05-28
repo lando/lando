@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Filter module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function filter_schema() {
+  $schema['cache_filter'] = backdrop_get_schema_unprocessed('system', 'cache');
+  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by text format and hash of the text.';
+
+  return $schema;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Convert filter formats to configuration.
+ */
+function filter_update_1000() {
+  if (!db_table_exists('filter_format')) {
+    return;
+  }
+
+  $result = db_query('SELECT format, name, cache, status, weight FROM {filter_format}', array(), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $format) {
+    $format_name = $format['format'];
+
+    // Add user roles.
+    $format['roles'] = array_keys(user_roles(FALSE, 'use text format ' . $format['format']));
+
+    // Retrieve and prepare all filters.
+    $filters = db_query('SELECT name, module, status, weight, settings FROM {filter} WHERE format = :format ORDER BY weight, module, name', array(':format' => $format_name), array('fetch' => PDO::FETCH_ASSOC))->fetchAllAssoc('name');
+    foreach ($filters as $name => &$filter) {
+      // The filter name is used as key only.
+      unset($filter['name']);
+      if ($filter['settings']) {
+        $filter['settings'] = unserialize($filter['settings']);
+      }
+    }
+    $format['filters'] = $filters;
+
+    // Save the config object.
+    $config = config('filter.format.' . $format_name);
+    $config->setData($format);
+    $config->save();
+  }
+
+  db_drop_table('filter_format');
+  db_drop_table('filter');
+}
+
+/**
+ * Add a separate permission for image upload access.
+ */
+function filter_update_1001() {
+  user_role_grant_permissions(BACKDROP_AUTHENTICATED_ROLE, array('upload editor images'));
+
+  // Enable uploading on existing text formats. Access previously was not
+  // checked previously, so all formats had uploading enabled.
+  $format_configs = config_get_names_with_prefix('filter.format.');
+
+  foreach ($format_configs as $config_name) {
+    $config = config($config_name);
+    if ($config->get('editor')) {
+      $editor_settings = (array) $config->get('editor_settings');
+      $upload_settings = isset($editor_settings['image_upload']) ? $editor_settings['image_upload'] : array();
+      $upload_settings['status'] = 1;
+      $upload_settings += array(
+        'dimensions' => array('max_width' => '', 'max_height' => ''),
+        'max_size' => NULL,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+      );
+      $editor_settings['image_upload'] = $upload_settings;
+      $config->set('editor_settings', $editor_settings);
+      $config->save();
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

@@ -1,0 +1,60 @@
+{
+    "_config_name": "views.view.test_feed_http_headers_caching",
+    "name": "test_feed_http_headers_caching",
+    "module": "views_test",
+    "description": "",
+    "tag": "",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": null,
+    "core": 7,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "time",
+                    "results_lifespan": "3600",
+                    "results_lifespan_custom": "0",
+                    "output_lifespan": "3600",
+                    "output_lifespan_custom": "0"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "full"
+                },
+                "style_plugin": "default",
+                "row_plugin": "node"
+            }
+        },
+        "feed_1": {
+            "display_title": "Feed",
+            "display_plugin": "feed",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": "0"
+                    }
+                },
+                "style_plugin": "rss",
+                "row_plugin": "node_rss",
+                "path": "test_feed_http_headers_caching"
+            }
+        }
+    }
+}

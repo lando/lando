@@ -1,0 +1,2 @@
+This file is used to test file_scan_directory() includes hidden files.
+See FileScanDirectoryTest::testOptionNoMask().

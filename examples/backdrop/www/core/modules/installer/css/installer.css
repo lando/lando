@@ -1,0 +1,292 @@
+/**
+ * Styles for the Installer interfaces.
+ */
+.installer-browser-install-button-form {
+  clear: both;
+  margin: 10px 0 0;
+}
+
+.installer-browser-install-queue {
+  margin: 5px 0 0;
+}
+
+.installer-browser-install-queue-item {
+  margin: 5px 0;
+}
+
+.installer-browser-install-link {
+  clear: both;
+}
+
+.installer-browser-install-queue-item a {
+  padding-left: 22px;
+  background: url("../images/remove.png") no-repeat scroll left 3px transparent;
+}
+
+.installer-browser-selected-release {
+  display: none;
+}
+
+.installer-browser-show-releases-link {
+  cursor: pointer;
+}
+.item-list .installer-browser-sort-list {
+  margin: 0;
+}
+.installer-browser-sort-list li.first {
+  margin: 0;
+}
+.installer-browser-sort-list li {
+  display: block;
+  margin: 0;
+  list-style-image: none;
+}
+@media only screen and (min-width: 768px) {
+  .installer-browser-sort-list li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+}
+
+.installer-browser-sort-list li a {
+  color: #0074BD;
+}
+
+.installer-browser-sort-list li.sort-active a {
+  color: #000;
+}
+
+.installer-browser-sort-list li.sort-header {
+  font-weight: bold;
+}
+
+.installer-browser-sort-list li.sort-asc a {
+  background: url("/core/misc/arrow-asc.png") no-repeat scroll right 2px transparent; /* LTR */
+  padding-right: 17px; /* LTR */
+}
+
+.installer-browser-sort-list li.sort-desc a {
+  background: url("/core/misc/arrow-desc.png") no-repeat scroll right 2px transparent; /* LTR */
+  padding-right: 17px; /* LTR */
+}
+[dir="rtl"] .installer-browser-sort-list li.sort-asc a,
+[dir="rtl"] .installer-browser-sort-list li.sort-desc a {
+  background-position: left 2px;
+  padding-right: 0;
+  padding-left: 17px;
+}
+
+.project-extra {
+  clear: both;
+  color: gray;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] .project-extra {
+  text-align: left;
+}
+
+.project-install {
+  text-align: right;
+}
+[dir="rtl"] .project-install {
+  text-align: left;
+}
+
+.project-author {
+  color: gray;
+  font-size: 0.9em;
+}
+
+.project-updated {
+  color: gray;
+  font-size: 0.9em;
+}
+
+.project-page {
+  font-size: 0.9em;
+}
+
+.installer-browser-main ul, .installer-browser-main ol {
+  list-style-position: inside;
+}
+
+.project-item {
+  clear: both;
+  position: relative;
+}
+
+.project-item-first {
+  clear: both;
+  padding: 10px;
+  position: relative;
+}
+
+.install-disabled {
+  color: gray;
+}
+
+.install-enabled {
+  color: green;
+}
+
+/* Installer sidebar only shown on larger screens. */
+.installer-browser-install-sidebar {
+  display: none;
+}
+/* Larger screens show the progress steps when installing. */
+@media only screen and (min-width: 768px) {
+  .installer-browser-install-sidebar {
+    display: block;
+    float: left; /* LTR */
+    width: 19%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  [dir="rtl"] .installer-browser-install-sidebar {
+    float: right;
+  }
+
+  .installer-browser-install-main {
+    padding: 10px;
+    float: right; /* LTR */
+    width: 76%;
+    box-sizing: border-box;
+  }
+  [dir="rtl"] .installer-browser-install-main {
+    float: left;
+  }
+}
+
+.project-title {
+  font-size: 18px;
+}
+
+.project-dialog .project-title {
+  font-size: 1.385em;
+  font-weight: bold;
+}
+
+.installer-browser-main div.form-item-install {
+  float: right; /* LTR */
+}
+[dir="rtl"] .installer-browser-main .form-item-install {
+  float: left;
+}
+
+.installer-browser .installer-browser-region {
+  min-height: 1px;
+}
+
+.installer-browser .installer-browser-block {
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.installer-browser .installer-browser-region .installer-browser-block {
+  clear: both;
+}
+
+.installer-browser .installer-browser-block h2 {
+  float: none;
+  font-size: 1em;
+  margin: 0;
+  padding: 10px;
+  background: none repeat scroll 0 0 #e9e8e8;
+}
+.installer-browser .installer-browser-list-sidebar .installer-browser-block .content {
+  padding: 5px 10px;
+}
+
+.ui-dialog.project-dialog {
+  max-width:95%;
+}
+
+.project-dialog-description {
+  margin-top: 1em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 1em;
+}
+
+.project-dialog-info {
+  float: left; /* LTR */
+  max-width: 45%;
+}
+[dir="rtl"] .project-dialog-info {
+  float: right;
+}
+
+.project-dialog .project-status {
+  position: relative;
+  right: 0; /* LTR */
+}
+[dir="rtl"] .project-dialog .project-status {
+  left: 0;
+  right: auto;
+}
+.project-dialog .project-item {
+  border: none;
+}
+
+.installer-installed-theme img {
+  max-width: 300px;
+}
+
+th.installer-project-name {
+  width: 50%;
+}
+
+.installer-status-count-link {
+  display: inline;
+  float: right;
+}
+.installer-browser-filters-form {
+  display: inline-block;
+}
+.installer-browser-filters-form .form-item-search-text {
+  display: inline-block;
+  margin-right: 10px; /* LTR */
+}
+[dir="rtl"] .installer-browser-filters-form .form-item-search-text {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.installer-browser-sort {
+  display: block;
+}
+@media only screen and (min-width: 768px) {
+  .installer-browser-sort {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .installer-browser .installer-browser-main {
+    width: 75%;
+    float: left; /* LTR */
+    margin-right: 1%;
+  }
+  [dir="rtl"] .installer-browser .installer-browser-main {
+    float: right;
+    margin-right: 0;
+    margin-left: 1%;
+  }
+
+  .installer-browser .installer-browser-list-sidebar {
+    width: 23%;
+    float: right; /* LTR */
+  }
+  [dir="rtl"] .installer-browser .installer-browser-list-sidebar {
+    float: left; /* LTR */
+  }
+
+  .project-status {
+    position: absolute;
+    right: 10px; /* LTR */
+    text-align: right; /* LTR */
+    top: 5px;
+  }
+  [dir="rtl"] .project-status {
+    right: auto;
+    left: 10px;
+    text-align: left;
+  }
+}

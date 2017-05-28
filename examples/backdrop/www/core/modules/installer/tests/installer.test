@@ -1,0 +1,290 @@
+<?php
+/**
+ * Administration tests for Project Browser.
+ */
+class InstallerBrowserAdministrationTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+  protected $privileged_user;
+
+  public function setUp() {
+    parent::setUp('installer', 'update', 'installer_test');  // Enable any modules required for the test
+
+    // Set the default server variable
+    $server_url = url('installer_test', array('absolute' => TRUE));
+    config_set('installer.settings', 'installer_server', array(
+      'url' => $server_url,
+      'name' => 'Test Server',
+    ));
+
+    // Create and log in our privileged user.
+    $this->privileged_user = $this->backdropCreateUser(array(
+      'use installer browser',
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+      'access site in maintenance mode',
+    ));
+    $this->backdropLogin($this->privileged_user);
+  }
+
+  protected function checkRequirements() {
+    $errors = parent::checkRequirements();
+
+    if (!extension_loaded('zip')) {
+      $errors[] = 'PHP zip extension is not present.';
+    }
+
+    return $errors;
+  }
+
+  public function testProjectBrowserProjects() {
+    // Attempt to fetch the default projects
+    $edit = array();
+    $edit['search_text'] = '';
+    $this->backdropPost('admin/modules/install', $edit, t('Search'));
+    $this->assertText(t('Showing 1 to'), 'Module browser loaded');
+
+    $edit = array();
+    $edit['search_text'] = '';
+    $this->backdropPost('admin/appearance/install', $edit, t('Search'));
+    $this->assertText(t('Showing 1 to'), 'Theme browser loaded');
+
+    $edit = array();
+    $edit['search_text'] = '';
+    $this->backdropPost('admin/structure/layouts/install', $edit, t('Search'));
+    $this->assertText(t('Showing 1 to'), 'Layout browser loaded');
+    }
+
+  public function testProjectBrowserSearch() {
+    // Test searching for a project by name.
+    $edit = array();
+    $edit['search_text'] = 'aaa';
+    $this->backdropPost('admin/modules/install', $edit, t('Search'));
+    $this->assertText('Showing 1 to');
+  }
+
+  public function testProjectBrowserProjectEnabled() {
+    // Make sure project enabled detection works
+    module_load_include('inc', 'installer', 'installer.browser');
+    $this->assertTrue(_installer_browser_is_project_enabled('module', 'update'), t('Make sure project enabled detection works.'));
+  }
+
+  public function testProjectBrowserAddRemoveQueue() {
+    // Refresh the page
+    $this->backdropGet('admin/modules/install');
+
+    // Simulate adding a project to the install queue
+    $this->backdropGet('admin/installer/queue/nojs/add/ddd_installer_test', array('query' => array('destination' => 'admin/modules/install')));
+    $this->assertNoText(t('Installation queue is empty.'));
+    $this->assertNoText(t('Error: The project was not found.'));
+
+    // Simulate removing a project from the install queue
+    $this->backdropGet('admin/installer/queue/nojs/remove/ddd_installer_test', array('query' => array('destination' => 'admin/modules/install')));
+    $this->assertText(t('Installation queue is empty.'));
+    $this->assertNoText(t('Error: The project was not found.'));
+  }
+
+  public function testProjectBrowserInstallPage() {
+    // Refresh the page
+    $this->backdropGet('admin/modules/install');
+    $module_one = 'ddd_installer_test';
+    $module_two = 'eee_installer_test';
+
+    // Attempt to install a project
+    $this->backdropGet('admin/installer/queue/nojs/add/' . $module_one, array('query' => array('destination' => 'admin/modules/install')));
+    $this->backdropGet('admin/installer/queue/nojs/add/' . $module_two, array('query' => array('destination' => 'admin/modules/install')));
+    $this->backdropPost('admin/modules/install', array(), t('Install'));
+
+    // Check that this is the install page
+    $this->assertText("You're about to install");
+
+    // Check that two projects are listed for install and the recommended
+    // version is shown.
+    $module_one_data = $this->getProjectData($module_one);
+    $this->assertText($module_one_data['title'] . ' ' . $module_one_data['recommended']);
+    $module_two_data = $this->getProjectData($module_two);
+    $this->assertText($module_two_data['title'] . ' ' . $module_two_data['recommended']);
+
+    // Check that two versions of EEE Installer test are listed
+    $releases = $this->xpath('//div[contains(@class, "installer-browser-releases-radios")]//div[contains(@class, "form-item-releases-eee-installer-test-release-name")]');
+    $this->assertEqual(count($releases), 2, 'Two releases available for EEE Installer test.');
+
+    // Cancel and go back to project list
+    $this->backdropGet('admin/installer/reset/module/all');
+
+    // Check project installs
+    $this->backdropGet('admin/installer/queue/nojs/add/' . $module_one, array('query' => array('destination' => 'admin/modules/install')));
+    $this->backdropPost('admin/modules/install', array(), t('Install'));
+
+    // Check that this is the install page
+    $this->assertText("You're about to install");
+
+    // Set maintenance mode off
+    $edit = array(
+      // Cannot test in maintenance mode, as the HTTP request to fetch projects
+      // always will fail since we are fetching from the (now offline) site
+      // itself.
+      'maintenance_mode' => FALSE,
+    );
+    $this->backdropPost(NULL, $edit, t('Install'));
+
+    // Check that dependencies install page loaded with the recommended
+    // dependency selected.
+    $dependencies_page = $this->xpath('//h1[contains(@class, "page-title") and normalize-space(text()) = "Install Dependencies"]');
+    $this->assertTrue($dependencies_page, 'The Install Dependencies page was loaded');
+    $this->assertText($module_two . ' ' . $module_two_data['recommended']);
+
+    // Test that the test module was really downloaded.
+    $this->assertTrue(file_exists('modules/' . $module_one), $module_one_data['title'] . ' exists in the modules directory');
+
+    // Test that project two installs.
+    $this->backdropPost(NULL, $edit, t('Install'));
+
+    // Check that enable page loaded.
+    $dependencies_page = $this->xpath('//h1[contains(@class, "page-title") and normalize-space(text()) = "Enable modules"]');
+    $this->assertTrue($dependencies_page, 'The Enable modules page was loaded');
+
+    // Test that the test module was really downloaded.
+    $this->assertTrue(file_exists('modules/' . $module_two), $module_two_data['title'] . ' exists in the modules directory');
+
+    // Enable both modules.
+    $edit = array(
+      'modules[ddd_installer_test]' => TRUE,
+      'modules[eee_installer_test]' => TRUE,
+    );
+    $this->backdropPost(NULL, $edit, t('Enable modules'));
+    $this->resetAll();
+    $this->assertTrue(module_exists($module_one), $module_one_data['title'] . ' was enabled.');
+    $this->assertTrue(module_exists($module_two), $module_two_data['title'] . ' was enabled.');
+
+    // Delete the test module files.
+    foreach (array('ddd_installer_test', 'eee_installer_test') as $test_module) {
+      $directory = backdrop_get_path('module', $test_module);
+      $this->assertTrue(file_unmanaged_delete_recursive($directory), 'Deleted test module.');
+    }
+  }
+
+  /**
+   * Get the recommended version for a given project.
+   *
+   * @param $test_module
+   *   The test module.
+   *
+   * @return
+   *   The recommended version.
+   */
+  protected function getProjectData($test_module) {
+    module_load_include('inc', 'installer', 'installer.browser');
+    module_load_include('inc', 'update', 'update.compare');
+    // Build the filters.
+    $backdrop_version = explode('.', BACKDROP_CORE_COMPATIBILITY);
+    $filters = array(
+      'version' => $backdrop_version[0],
+      'type' => 'module',
+    );
+    $results = installer_browser_fetch_results($filters);
+    $release_data = installer_browser_get_project_release_data($results['projects'][$test_module]);
+    $project_data = array(
+      'existing_major' => 0,
+      'existing_version' => 0,
+      'install_type' => '',
+    );
+    update_calculate_project_update_status($project_data, $release_data);
+    return $project_data;
+  }
+
+}
+
+class InstallerTestUploadCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  public function setUp() {
+    parent::setUp(array('installer', 'update', 'installer_test'));
+    $admin_user = $this->backdropCreateUser(array(
+      'administer site configuration',
+      'use installer browser',
+    ));
+    $this->backdropLogin($admin_user);
+  }
+
+  /**
+   * Tests upload and extraction of a module.
+   */
+  public function testUploadModule() {
+    // Images are not valid archives, so get one and try to install it. We
+    // need an extra variable to store the result of backdropGetTestFiles()
+    // since reset() takes an argument by reference and passing in a constant
+    // emits a notice in strict mode.
+    $imageTestFiles = $this->backdropGetTestFiles('image');
+    $invalidArchiveFile = reset($imageTestFiles);
+    $edit = array(
+      'files[project_upload]' => $invalidArchiveFile->uri,
+    );
+    // This also checks that the correct archive extensions are allowed.
+    $this->backdropPost('admin/installer/manual', $edit, t('Install'));
+    $this->assertText(t('Only files with the following extensions are allowed: @archive_extensions.', array('@archive_extensions' => archiver_get_extensions())),'Only valid archives can be uploaded.');
+
+    // Check to ensure an existing module can't be reinstalled. Also checks that
+    // the archive was extracted since we can't know if the module is already
+    // installed until after extraction.
+    $validArchiveFile = backdrop_get_path('module', 'update') . '/tests/aaa_update_test/aaa_update_test.tar.gz';
+    $edit = array(
+      'files[project_upload]' => $validArchiveFile,
+    );
+    $this->backdropPost('admin/installer/manual', $edit, t('Install'));
+    $this->assertText(t('@module_name is already installed.', array('@module_name' => 'AAA Update test')), 'Existing module was extracted and not reinstalled.');
+  }
+
+  /**
+   * Ensures that archiver extensions are properly merged in the UI.
+   */
+  function testFileNameExtensionMerging() {
+    $this->backdropGet('admin/installer/manual');
+    // Make sure the bogus extension supported by installer_test.module is there.
+    $this->assertPattern('/file extensions are supported:.*installer-test-extension/', "Found 'installer-test-extension' extension");
+    // Make sure it didn't clobber the first option from core.
+    $this->assertPattern('/file extensions are supported:.*tar/', "Found 'tar' extension");
+  }
+
+  /**
+   * Checks the messages on update manager pages when missing a security update.
+   */
+  function testUpdateManagerCoreSecurityUpdateMessages() {
+    $config = config('update.settings');
+    $setting = array(
+      '#all' => array(
+        'version' => '1.0',
+      ),
+    );
+    $config->set('update_system_info', $setting)->save();
+    $config->set('update_url', url('update-test', array('absolute' => TRUE)))->save();
+    $config->set('update_xml_map', array('backdrop' => '2-sec'))->save();
+    // Initialize the update status.
+    $this->backdropGet('admin/reports/updates');
+
+    // Now, make sure none of the Update manager pages have duplicate messages
+    // about core missing a security update.
+
+    $this->backdropGet('admin/installer/manual');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+
+    $this->backdropGet('admin/modules/update');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+
+    $this->backdropGet('admin/appearance/install');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+
+    $this->backdropGet('admin/appearance/update');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+
+    $this->backdropGet('admin/reports/updates/install');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+
+    $this->backdropGet('admin/reports/updates/update');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+
+    $this->backdropGet('admin/update/ready');
+    $this->assertNoText(t('There is a security update available for your version of Backdrop.'));
+  }
+
+}

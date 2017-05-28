@@ -1,0 +1,126 @@
+/**
+ * @file
+ * Stylesheet for the administration pages of the Color module.
+ */
+
+/* Farbtastic placement */
+.color-form {
+  position: relative;
+}
+#placeholder {
+  display: inline-block;
+  margin: 0 20px 20px;
+  vertical-align: top;
+}
+
+/* Palette */
+
+.color-form .form-item label {
+  width: 60%;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+}
+@media only screen and (max-width: 600px) {
+  .color-form .form-item label {
+    max-width: 50%;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .color-form .form-item label {
+    max-width: 40%;
+  }
+}
+.color-form .form-text,
+.color-form .form-select {
+  vertical-align: middle;
+}
+.color-form .form-text {
+  text-align: center;
+  margin-right: 5px; /* LTR */
+  cursor: pointer;
+  max-width: 8em;
+}
+[dir="rtl"] .color-form .form-text {
+  margin-right: 0;
+  margin-left: 5px;
+}
+.color-form select {
+  max-width: 9em;
+}
+#palette{
+  float: left; /* LTR */
+  width: 100%;
+  max-width: 25em;
+}
+[dir="rtl"] #palette {
+  float: right;
+}
+#palette .hook {
+  display: inline-block;
+  margin-top: 14px;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+}
+#palette .down,
+#palette .up,
+#palette .both {
+  background: url(../images/hook.png) no-repeat 100% 0; /* LTR */
+}
+[dir="rtl"] #palette .down,
+[dir="rtl"] #palette .up,
+[dir="rtl"] #palette .both {
+  background: url(../images/hook-rtl.png) no-repeat 0 0;
+}
+#palette .up {
+  background-position: 100% -27px; /* LTR */
+}
+[dir="rtl"] #palette .up {
+  background-position: 0 -27px;
+}
+#palette .both {
+  background-position: 100% -54px; /* LTR */
+}
+[dir="rtl"] #palette .both {
+  background-position: 0 -54px;
+}
+#palette .lock {
+  position: absolute;
+  width: 20px;
+  height: 25px;
+  background: url(../images/lock.png) no-repeat 50% 3px;
+  margin: -1em 6px;
+  cursor: pointer;
+  display: inline-block;
+}
+[dir="rtl"] #palette .lock {
+  float: left;
+  left: auto;
+  right: -15px;
+}
+#palette .unlocked {
+  background-position: 50% -22px;
+}
+#palette .form-item {
+  margin-top: .2em;
+  margin-bottom: .2em;
+}
+
+/* Preview */
+.color-preview {
+  display: none;
+  position: relative;
+  max-width: 680px;
+  padding: 0 20px;
+  overflow: auto;
+  box-sizing: border-box;
+  width: 100%;
+}
+.color-preview h2 {
+  margin-top: 0;
+}
+.js .color-preview {
+  display: inline-block;
+}

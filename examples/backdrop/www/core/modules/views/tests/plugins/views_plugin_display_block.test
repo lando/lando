@@ -1,0 +1,172 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsBasicTest.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/views_query.test';
+
+/**
+ * Basic test class for Views query builder tests.
+ */
+class ViewsPluginDisplayBlockTestCase extends ViewsSqlTest {
+  protected $profile = 'minimal';
+  protected $admin_user;
+  protected $test_content = array();
+
+  protected function setUp() {
+    parent::setUp();
+
+    // Create a content type and content.
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+    for ($n = 0; $n < 20; $n++) {
+      $this->test_content[] = $this->backdropCreateNode(array('type' => 'post'));
+    }
+
+    // Create and log in as the admin user.
+    $this->admin_user = $this->backdropCreateUser(array(
+      'administer views',
+      'administer layouts',
+      'access administration pages',
+      'access content',
+      'view any unpublished content',
+      'bypass node access',
+      'administer nodes',
+    ));
+    $this->backdropLogin($this->admin_user);
+  }
+
+  /**
+   * Tests, whether and how the reset button can be renamed.
+   */
+  public function testViewBlocks() {
+    $layout = layout_load('default');
+    $layout_block = $layout->addBlock('views', 'test_block-block', 'content');
+    $layout->save();
+
+    $node = reset($this->test_content);
+    $this->backdropGet('node/' . $node->nid);
+
+    $block_element = $this->xpath('//div[contains(@class,"block-views-test-block-block")]');
+    $this->assertEqual(count($block_element), 1, 'The block is shown in the default layout.');
+    $block_element = $block_element[0];
+
+    $rows = $block_element->xpath('//div[contains(@class,"views-row")]');
+    $this->assertEqual(count($rows), 5, 'The block has the expected 5 default rows');
+    $first_row = (string)$rows[0]->asXML();
+    $this->assertTrue(strpos($first_row, $node->title), 'First node found on first row as expected.');
+
+    // Load the UI for this block in Layouts and check no options are enabled.
+    $this->backdropGet('admin/structure/layouts/manage/default/configure-block/editor/' . $layout_block->uuid);
+    $this->assertNoField('link_to_view');
+    $this->assertNoField('more_link');
+    $this->assertNoField('path_override');
+    $this->assertNoField('path');
+    $this->assertNoField('fields_override[title]');
+    $this->assertNoField('fields_override[nid]');
+    $this->assertNoField('exposed[status]');
+    $this->assertNoField('use_pager');
+    $this->assertNoField('items_per_page');
+    $this->assertNoField('offset');
+
+    // Enable all override options.
+    $view = views_get_view('test_block');
+    $view->set_display('block');
+    $view->display_handler->override_option('allow', array(
+      'use_pager' => 'use_pager',
+      'items_per_page' => 'items_per_page',
+      'offset' => 'offset',
+      'link_to_view' => 'link_to_view',
+      'more_link' => 'more_link',
+      'path_override' => 'path_override',
+      'exposed_form' => 'exposed_form',
+      'fields_override' => 'fields_override',
+    ));
+    $view->save();
+
+    // Load the UI for this block in Layouts and check options are defaults.
+    $this->backdropGet('admin/structure/layouts/manage/default/configure-block/editor/' . $layout_block->uuid);
+    $this->assertField('link_to_view', 0);
+    $this->assertField('more_link', 0);
+    $this->assertField('path_override', 0);
+    $this->assertField('path', 'block-test');
+    $this->assertField('fields_override[title]', 1);
+    $this->assertField('fields_override[nid]', 1);
+    $this->assertField('exposed[status]', 1);
+    $this->assertField('use_pager', 0);
+    $this->assertField('items_per_page', 5);
+    $this->assertField('offset', 0);
+
+    // Adjust all settings we can at the same time.
+    $data = array(
+      'link_to_view' => TRUE,
+      'more_link' => TRUE,
+      'path_override' => TRUE,
+      'path' => 'other-path',
+      'fields_override[nid]' => FALSE,
+      'use_pager' => TRUE,
+      'items_per_page' => 3,
+      'offset' => 2,
+    );
+    $this->backdropPost(NULL, $data, t('Update block'));
+    $this->backdropPost('admin/structure/layouts/manage/default', array(), t('Save layout'));
+
+    // Check the adjustments had effect.
+    $this->backdropGet('node/' . $node->nid);
+
+    $block_element = $this->xpath('//div[contains(@class,"block-views-test-block-block")]');
+    $rows = $block_element[0]->xpath('//div[contains(@class,"views-row")]');
+
+    // Check link_to_view (and path_override).
+    $title_link = $block_element[0]->xpath('//*[contains(@class,"block-title")]/a');
+    $this->assertEqual($title_link[0]['href'], url('other-path'));
+
+    // Check more_link (and path_override).
+    $more_link = $block_element[0]->xpath('//*[contains(@class,"more-link")]/a');
+    $this->assertEqual($more_link[0]['href'], url('other-path', array('query' => array('status' => '1'))));
+
+    // Check fields_override.
+    $nid_field = $block_element[0]->xpath('//*[contains(@class,"views-field-nid")]');
+    $this->assertEqual(count($nid_field), 0, 'NID field has been disabled.');
+
+    // Check use_pager.
+    $pager = $block_element[0]->xpath('//ul[contains(@class,"pager")]');
+    $this->assertEqual(count($pager), 1, 'Pager now enabled on the block.');
+
+    // Check items_per_page.
+    $this->assertEqual(count($rows), 3, 'Three rows shown, reflecting items_per_page override setting.');
+
+    // Check offset.
+    $first_row = (string)$rows[0]->asXML();
+    $this->assertTrue(strpos($first_row, $this->test_content[2]->title), 'Third node found on first row as expected (offset is 2).');
+
+    // Modify title and exposed filter settings.
+    $data = array(
+      'title_display' => 'custom',
+      'title' => 'Customized block title',
+      'exposed[status]' => '0',
+      'offset' => 0,
+      'fields_override[title]' => TRUE,
+      'fields_override[nid]' => TRUE,
+    );
+    $this->backdropPost('admin/structure/layouts/manage/default/configure-block/editor/' . $layout_block->uuid, $data, t('Update block'));
+    $this->backdropPost('admin/structure/layouts/manage/default', array(), t('Save layout'));
+
+    // Unpublish a node for checking.
+    $node->status = 0;
+    $node->save();
+
+    // Check the adjustments had effect.
+    $this->backdropGet('node/' . $node->nid);
+
+    $block_element = $this->xpath('//div[contains(@class,"block-views-test-block-block")]');
+    $rows = isset($block_element[0]) ? $block_element[0]->xpath('//div[contains(@class,"views-row")]') : array();
+    $this->assertEqual(count($rows), 1, 'One unpublished node found.');
+
+    // Check a custom title is still linked to the view path.
+    $title_link = isset($block_element[0]) ? $block_element[0]->xpath('//*[contains(@class,"block-title")]/a') : array();
+    $this->assertEqual($title_link[0]['href'], url('other-path'));
+    $this->assertEqual((string) $title_link[0], 'Customized block title');
+  }
+}

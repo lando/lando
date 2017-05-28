@@ -1,0 +1,419 @@
+<?php
+/**
+ * @file
+ * Tests for Configuration module.
+ */
+
+/**
+ * Tests reading and writing file contents.
+ */
+class ConfigurationTest extends BackdropWebTestCase {
+  protected function setUp() {
+    parent::setUp(array('config_test'));
+  }
+
+  /**
+   * Tests that a config setting can be written, read and deleted.
+   */
+  public function testReadWriteClearConfig() {
+    // Long-hand setting, getting and deleting.
+    $config = config('foo.bar');
+    $config->set('foo', 'bar');
+    $config->save();
+    $this->assertEqual('bar', config('foo.bar')->get('foo'), 'Content retrieved from written config data using Config classes.');
+    $config->clear('foo');
+    $config->save();
+    $this->assertNull(config('foo.bar')->get('foo'), 'Deleted config data cannot be retrieved using Config classes.');
+
+    // Short-hand setting, getting and deleting.
+    config_set('foo.bar', 'foo', 'baz');
+    $this->assertEqual('baz', config_get('foo.bar', 'foo'), 'Content retrieved from written config data using short cut functions.');
+    config_clear('foo.bar', 'foo');
+    $this->assertNull(config_get('foo.bar', 'foo'), 'Deleted config data cannot be retrieved using shortcut functions.');
+  }
+
+  /**
+   * Tests reading existing config files provided by a module.
+   */
+  public function testExistingConfig() {
+    // Get a list of all configuration files by prefix. Note that even doing
+    // this check also checks that the configuration provided by a module has
+    // been moved into the "active" storage directory when the module was
+    // installed.
+    $config_names = config_get_names_with_prefix('config_test.group', 'active');
+    $expected_names = array(
+      'config_test.group.item_1',
+      'config_test.group.item_2',
+    );
+    $this->assertEqual($config_names, $expected_names, 'Existing configuration files found by their prefixes.');
+
+    // Attempt to save a configuration without a name key.
+    $item_config = config('config_test.group.item_1');
+    try {
+      $item_config->validateData();
+      $this->pass('Configuration data validated successfully.');
+    }
+    catch (ConfigValidateException $e) {
+      $this->fail('Configuration data unexpectedly failed with the Exception message: ' . $e->getMessage());
+    }
+
+    // Attempt to save a configuration without a name key.
+    $item_name = $item_config->get('name');
+    $item_config->clear('name');
+    try {
+      $item_config->validateData();
+      $this->fail('Configuration data validated unexpectedly when a ConfigValidateException should have been thrown.');
+    }
+    catch (ConfigValidateException $e) {
+      $this->pass('Configuration data validation properly threw a ConfigValidateException when the name was removed.');
+    }
+    $item_config->set('name', $item_name);
+
+    // Attempt to save a configuration without a label key.
+    $item_label = $item_config->get('label');
+    $item_config->clear('label');
+    try {
+      $item_config->validateData();
+      $this->fail('Configuration data validated unexpectedly when a ConfigValidateException should have been thrown.');
+    }
+    catch (ConfigValidateException $e) {
+      $this->pass('Configuration data validation properly threw a ConfigValidateException when the label was removed.');
+    }
+    $item_config->set('label', $item_label);
+
+    // Get an individual configuration.
+    $config = config('config_test.simple');
+    $expected_config = array(
+      'favorite_animal' => 'cats',
+      'favorite_color' => 'blue',
+    );
+    $this->assertEqual($config->get(), $expected_config, 'The configuration file contained the expected configuration.');
+  }
+}
+
+/**
+ * Tests hooks for validation, creating, updating, and deleting configurations.
+ */
+class ConfigurationHooksTest extends BackdropWebTestCase {
+  protected function setUp() {
+    parent::setUp(array('config_test', 'config_test_hooks'));
+  }
+
+  /**
+   * Tests checking the validation hooks.
+   *
+   * This test does not include a test of hook_config_data_validate() as it is
+   * tested by ConfigurationTest::testExistingConfig().
+   */
+  public function testHooks() {
+    $config_data = config_get('config_test.simple');
+    module_load_include('inc', 'config', 'config.sync');
+
+    // Check validation.
+    $config_data['favorite_animal'] = 'rabbits';
+    $errors = array(
+      'create' => 'Sorry, only bunnies allowed as favorite animals.',
+      'update' => 'Sorry, cats must be preferred over rabbits.',
+      'delete' => 'Favorite animals are in use.',
+    );
+    foreach (array('create', 'update', 'delete') as $op) {
+      try {
+        config_sync_validate_file('config_test.simple', $op, NULL, $config_data);
+        $this->fail('Validation during "' . $op . '" unexpectedly passed when it should have failed.');
+      }
+      catch (ConfigValidateException $e) {
+        $this->assertEqual($errors[$op], $e->getMessage(), 'Validation during "' . $op . '" configuration threw an error correctly.');
+      }
+    }
+
+    // Check create, update, and delete hooks.
+    $expected_data = array(
+      'create' =>  array(
+        'favorite_animal' => 'rabbits',
+        'favorite_color' => 'red',
+      ),
+      'update' => array(
+        'favorite_animal' => 'rabbits',
+        'favorite_color' => 'blue',
+      ),
+      'delete' => array(
+        'favorite_animal' => 'cats',
+        'favorite_color' => 'blue',
+        'deleted_animal' => 'rabbits'
+      ),
+    );
+    foreach (array('create', 'update') as $op) {
+      config_sync_file('config_test.new_config', $op, $config_data);
+      $new_data = config_get('config_test.new_config');
+      $this->assertEqual($expected_data[$op], $new_data, 'Configuration hook for "' . $op . '" executed properly.');
+    }
+
+    // The delete hook modifies the "config_test.simple" configuration when the
+    // "config_test.new_config" configuration is deleted.
+    config_sync_file('config_test.new_config', 'delete');
+    $new_data = config_get('config_test.simple');
+    $this->assertEqual($expected_data['delete'], $new_data, 'Configuration hook for "delete" executed properly.');
+  }
+}
+
+/**
+ * Tests the UI for syncing, importing, and exporting.
+ */
+class ConfigurationUITest extends BackdropWebTestCase {
+  function setUp() {
+    parent::setUp(array('config_test'));
+
+    $this->webUser = $this->backdropCreateUser(array('synchronize configuration'));
+    $this->backdropLogin($this->webUser);
+  }
+
+  /**
+   * Tests importing configuration.
+   */
+  function testImport() {
+    $name = 'config_test.simple';
+    $dynamic_name = 'config_test.dynamic.new';
+    $staging_storage = new ConfigFileStorage(config_get_config_directory('staging'));
+
+    $this->backdropGet('admin/config/development/configuration');
+    $this->assertText('There are no configuration changes currently staged.');
+    $this->assertNoFieldById('edit-submit', t('Import all'));
+
+    // Copy all configuration to staging before modification.
+    $this->copyConfig('active', 'staging');
+
+    // Create updated configuration object.
+    $favorite_animal = 'Animal ' . $this->randomString();
+    $staging_config = config($name, 'staging');
+    $staging_config->set('favorite_animal', $favorite_animal);
+    $staging_config->save();
+
+    $this->assertIdentical($staging_storage->exists($name), TRUE, $name . ' found.');
+
+    // Create new config.
+    $original_dynamic_data = array(
+      'id' => 'new',
+      'label' => 'New',
+      'weight' => 0,
+      'status' => TRUE,
+    );
+    $staging_storage->write($dynamic_name, $original_dynamic_data);
+    $this->assertIdentical($staging_storage->exists($dynamic_name), TRUE, $dynamic_name . ' found in staging.');
+
+    // Verify that both appear as ready to import.
+    $this->backdropGet('admin/config/development/configuration');
+    $this->assertText($name);
+    $this->assertText($dynamic_name);
+    $this->assertFieldById('edit-submit', t('Import all'));
+
+    // Check that the locking message works when an import is in-progress.
+    state_set('config_sync', REQUEST_TIME);
+    $this->backdropPost(NULL, array(), t('Import all'));
+    $this->assertText('Another request may be synchronizing configuration already or a sync failed unexpectedly.');
+    state_del('config_sync');
+
+    // Import and verify that both do not appear anymore.
+    $this->backdropPost(NULL, array(), t('Import all'));
+    $this->assertNoText($name);
+    $this->assertNoText($dynamic_name);
+    $this->assertNoFieldById('edit-submit', t('Import all'));
+
+    // Verify that there are no further changes to import.
+    $this->assertText('There are no configuration changes currently staged.');
+
+    // Verify configuration has changed.
+    $this->assertIdentical($favorite_animal, config_get($name, 'favorite_animal'));
+
+    // Verify that new config exists.
+    $this->assertIdentical($original_dynamic_data, config_get($dynamic_name));
+
+    // Create a second config that is not declared in hook_config_info().
+    $this->copyConfig('active', 'staging');
+    $dynamic_name2 = $dynamic_name . '2';
+    $staging_storage->write($dynamic_name2, $original_dynamic_data);
+    $this->assertIdentical($staging_storage->exists($dynamic_name2), TRUE, $dynamic_name2 . ' found in staging.');
+
+    // Attempt an import which should fail.
+    $this->backdropPost('admin/config/development/configuration', array(), t('Import all'));
+
+    // Validation should fail, as this config file is not owned by a module.
+    $error_message = t('The configuration "@name" is not owned by any module. Try enabling the module that provides this configuration, then importing again.', array('@name' => $dynamic_name2));
+    $this->assertText($error_message, 'Validation properly prevents import when a config is not declared by a module.');
+
+    // Empty out the staging config.
+    $staging_storage->deleteAll();
+  }
+
+  /**
+   * Tests the screen that shows differences between active and staging.
+   */
+  function testDiff() {
+    $staging_storage = new ConfigFileStorage(config_get_config_directory('staging'));
+
+    $config_name = 'config_test.simple';
+    $change_key = 'favorite_animal';
+    $remove_key = 'favorite_color';
+    $add_key = 'favorite_day';
+    $add_data = 'friday';
+    $change_data = 'bunnies';
+    $original_data = array(
+      'favorite_animal' => 'cats',
+      'favorite_color' => 'blue',
+    );
+
+    // Copy all configuration to staging before modification.
+    $this->copyConfig('active', 'staging');
+
+    // Change a configuration value in staging.
+    $staging_data = $original_data;
+    $staging_data[$change_key] = $change_data;
+    $staging_data[$add_key] = $add_data;
+    unset($staging_data[$remove_key]);
+    $staging_storage->write($config_name, $staging_data);
+
+    // Load the diff UI and verify that the diff reflects the changes.
+    $this->backdropGet('admin/config/development/configuration/sync/diff/' . $config_name);
+    $deleted_words = $this->xpath('//td[contains(@class, :class)]//del', array(':class' => 'diff-deletedline'));
+    $this->assertEqual($original_data[$change_key], (string) $deleted_words[0]);
+    $this->assertEqual($remove_key, (string) $deleted_words[1]);
+    $this->assertEqual($original_data[$remove_key], (string) $deleted_words[2]);
+
+    $added_words = $this->xpath('//td[contains(@class, :class)]//ins', array(':class' => 'diff-addedline'));
+    $this->assertEqual($change_data, (string) $added_words[0]);
+    $this->assertEqual($add_key, (string) $added_words[1]);
+    $this->assertEqual($add_data, (string) $added_words[2]);
+  }
+
+  /**
+   * Tests export of configuration.
+   */
+  function testExport() {
+    // Verify the export page with export submit button is available.
+    $this->backdropGet('admin/config/development/configuration/full/export');
+    $this->assertFieldById('edit-submit', t('Export'));
+
+    // Submit the export form and verify response.
+    $this->backdropPost('admin/config/development/configuration/full/export', array(), t('Export'));
+    $this->assertResponse(200, 'User can access the download callback.');
+
+    // Get the archived binary file provided to user for download.
+    $archive_data = $this->backdropGetContent();
+
+    // Temporarily save the archive file.
+    $uri = 'temporary://config.tar.gz';
+    file_put_contents($uri, $archive_data);
+
+    // Extract the archive and verify it's not empty.
+    $file_path = file_directory_temp() . '/' . file_uri_target($uri);
+    $archiver = new Archive_Tar($file_path);
+    $archive_contents = $archiver->listContent();
+    $archive_files = array();
+    foreach ($archive_contents as $file) {
+      $archive_files[] = $file['filename'];
+    }
+    $this->assert(!empty($archive_files), 'Downloaded archive file is not empty.');
+
+    // Prepare the list of config files from active storage.
+    $storage_active = config_get_config_storage('active');
+    $config_files = array();
+    foreach ($storage_active->listAll() as $config_name) {
+      $config_files[] = $config_name . '.json';
+    }
+    // Assert that the downloaded archive file contents are the same as the test
+    // site active store.
+    $this->assertIdentical($archive_files, $config_files, 'Downloaded archive contains all active configuration files.');
+
+    // Delete the archive.
+    unlink($uri);
+  }
+
+  /**
+   * Test full import validation.
+   */
+  function testFullImportValidation() {
+    // Enable all non-test core modules to populate all default config files.
+    $core_modules = db_query("SELECT name FROM {system} WHERE type = 'module' AND filename LIKE 'core/modules%' AND filename NOT LIKE '%/tests/%'")->fetchCol();
+    module_enable($core_modules);
+
+    // Submit the export form and verify response.
+    $this->backdropPost('admin/config/development/configuration/full/export', array(), t('Export'));
+    $this->assertResponse(200, 'User can access the download callback.');
+
+    // Get the archived binary file provided to user for download.
+    $archive_data = $this->backdropGetContent();
+
+    // Save the archive file.
+    $uri = 'temporary://config.tar.gz';
+    file_put_contents($uri, $archive_data);
+    $realpath = backdrop_realpath($uri);
+
+    // Expand the archive file to modify its contents.
+    $directory = 'temporary://' . basename($uri, '.tar.gz');
+    $archiver = new Archive_Tar($realpath);
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    $archiver->extract($directory);
+
+    // Delete the old archive.
+    unset($archiver);
+    unlink($uri);
+
+    // Modify each and every config file.
+    $files = file_scan_directory($directory, '/.*\.json/');
+    foreach ($files as $filepath => $file) {
+      $config_data = json_decode(file_get_contents($filepath), TRUE);
+      $config_data['config_test_addition'] = 'test';
+      file_put_contents($filepath, backdrop_json_encode($config_data, TRUE));
+    }
+
+    // Add back into the archive.
+    $archiver = new Archive_Tar($realpath);
+    $archiver->createModify(array_keys($files), '', $directory);
+
+    // Delete the modified files.
+    file_unmanaged_delete_recursive($directory);
+
+    // Upload the archive into the import form.
+    $edit = array(
+      'files[import_tarball]' => $uri,
+    );
+    $this->backdropPost('admin/config/development/configuration/full', $edit, t('Stage import'));
+
+    // Delete the new archive.
+    unlink($uri);
+
+    $this->backdropGet('admin/config/development/configuration');
+
+    // Check that every config file is changed.
+    foreach ($files as $file) {
+      $this->assertText(str_replace('.json', '', $file->filename), format_string('Config file "@file" staged for import.', array('@file' => $file->filename)));
+    }
+
+    $this->backdropPost(NULL, array(), t('Import all'));
+
+    // Confirm the import was successful.
+    $this->assertText(t('Configuration sync completed. @files configuration files synced.', array('@files' => count($files))));
+
+    // Display any errors directly as a failure.
+    $errors = $this->xpath('//div[@id="messages"]//div[contains(@class, "error")]');
+    if (count($errors)) {
+      $this->fail(strip_tags($errors[0]->asXML()));
+    }
+  }
+
+  /**
+   * Copies configuration objects from source storage to target storage.
+   *
+   * @param string $source
+   *   The source config storage name.
+   * @param string $target
+   *   The target config storage name.
+   */
+  public function copyConfig($source = 'active', $target = 'staging') {
+    $source_storage = config_get_config_storage($source);
+    $target_storage = config_get_config_storage($target);
+    $target_storage->deleteAll();
+    foreach ($source_storage->listAll() as $name) {
+      $target_storage->write($name, $source_storage->read($name));
+    }
+  }
+}

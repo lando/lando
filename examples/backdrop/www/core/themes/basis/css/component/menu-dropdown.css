@@ -1,0 +1,227 @@
+/**
+ * @file
+ * Responsive menu styles
+ */
+.menu-dropdown {
+  position: relative;
+}
+
+.js .menu-dropdown li,
+.js .menu-dropdown a.has-submenu.highlighted {
+  float: none;
+  border-bottom: 1px solid #777;
+}
+
+.js .menu-dropdown li.last {
+  border-bottom: 0;
+}
+.js .menu-dropdown > li.last {
+  padding-bottom: 1px;
+}
+
+.js .menu-dropdown ul li a {
+  padding-left: 3em;
+}
+
+.js .menu-dropdown ul li li a {
+  padding-left: 5em;
+}
+
+.js .menu-dropdown li.has-children > a {
+  /* make room for the toggle button (sub indicator) */
+  padding-right: 3.625rem;
+}
+
+.menu-dropdown a span.sub-arrow {
+  position: absolute;
+  top: 1rem;
+  margin-top: -1.0625rem;
+  left: auto;
+  right: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  border: 1px solid #777;
+  background: #333;
+  font: normal 1.384615rem/2.125rem monospace;
+  text-align: center;
+  text-shadow: none;
+}
+
+.menu-dropdown span.sub-arrow:before {
+  display: block;
+  content: '+';
+  margin-top: 0.5625rem;
+}
+
+.menu-dropdown a.highlighted span.sub-arrow:before {
+  display: block;
+  content: '–';
+}
+
+@media (min-width: 34em) {
+  .menu-dropdown a span.sub-arrow {
+    width: 3.625rem;
+    height: 3.625rem;
+  }
+}
+
+@media (min-width: 48em) {
+  /**
+   * Switch to desktop layout
+   * These transform the menu tree from
+   * collapsible to desktop (navbar + dropdowns)
+   */
+
+  /* Begin section that shouldn't be edited */
+  .js .menu-dropdown ul {
+    position: absolute;
+    width: 12rem;
+    top: 1em;
+  }
+
+  .js .menu-dropdown li,
+  .js .menu-dropdown a.has-submenu.highlighted {
+    border-bottom: none;
+  }
+
+  .js .menu-dropdown ul li a,
+  .js .menu-dropdown ul li li a{
+    padding-left: 1.25rem;
+  }
+
+  .js .menu-dropdown > li {
+    float: left;
+  }
+
+  [dir="rtl"] .menu-dropdown li {
+    float: right;
+  }
+
+  .menu-dropdown ul li,
+  [dir="rtl"] .menu-dropdown ul li {
+    float: none;
+  }
+
+  .menu-dropdown a {
+    white-space: nowrap;
+  }
+
+  .menu-dropdown ul a {
+    white-space: normal;
+  }
+  /* END Rules that should not be edited */
+
+  .js .menu-dropdown ul ul {
+    border-left: 3px solid #20252e;
+  }
+
+  .js .menu-dropdown > li {
+    border-bottom: 0;
+  }
+  .js .menu-dropdown > li.last {
+    padding-bottom: 0;
+  }
+
+  .js .menu-dropdown li.has-children > a {
+    padding-right: 1.75rem;
+  }
+
+  .menu-dropdown a span.sub-arrow {
+    top: 50%;
+    margin-top: -0.125rem;
+    right: 0.75rem;
+    width: 0;
+    height: 0;
+    border-width: 0.25rem;
+    border-style: solid dashed dashed dashed;
+    border-color: #fff transparent transparent transparent;
+    background: transparent;
+  }
+
+  .menu-dropdown a.highlighted span.sub-arrow:before {
+    display: none;
+  }
+
+  .menu-dropdown li {
+    border-top: 0;
+  }
+
+  .menu-dropdown ul {
+    padding: 0.3125rem 0;
+  }
+
+  .menu-dropdown ul .has-children > a {
+    padding-right: 1.25rem;
+  }
+
+  .menu-dropdown ul a span.sub-arrow {
+    right: 0.5rem;
+    top: 50%;
+    margin-top: -0.3125rem;
+    border-width: 0.3125rem;
+    border-style: dashed dashed dashed solid;
+    border-color: transparent transparent transparent #fff;
+  }
+
+  .menu-dropdown span.scroll-up,
+  .menu-dropdown span.scroll-down {
+    position: absolute;
+    display: none;
+    visibility: hidden;
+    overflow: hidden;
+    height: 1.25rem;
+  }
+
+  .menu-dropdown span.scroll-up-arrow,
+  .menu-dropdown span.scroll-down-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -0.375rem;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border-width: 0.375rem;
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent #fff transparent;
+  }
+
+  .menu-dropdown span.scroll-down-arrow {
+    top: 0.5rem;
+    border-style: solid dashed dashed dashed;
+    border-color: #fff transparent transparent transparent;
+  }
+
+  [dir="rtl"] .menu-dropdown li.has-children > a {
+    padding-right: 0.75rem;
+    padding-left: 1.5rem;
+  }
+
+  [dir="rtl"] .menu-dropdown span.sub-arrow {
+    right: auto;
+    left: 0.75rem;
+  }
+
+  [dir="rtl"] .menu-dropdown > li > ul:before {
+    left: auto;
+    right: 1.875rem;
+  }
+
+  [dir="rtl"] .menu-dropdown > li > ul:after {
+    left: auto;
+    right: 1.9375rem;
+  }
+
+  [dir="rtl"] .menu-dropdown li.has-children > a {
+    padding: 0.625rem 1.25rem;
+  }
+
+  [dir="rtl"] .menu-dropdown span.sub-arrow {
+    right: auto;
+    left: 0.5rem;
+    border-style: dashed solid dashed dashed;
+    border-color: transparent #fff transparent transparent;
+  }
+
+}

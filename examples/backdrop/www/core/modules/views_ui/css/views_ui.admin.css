@@ -1,0 +1,444 @@
+/**
+ * The .admin.css file is intended to only contain positioning and size
+ * declarations. For example: display, position, float, clear, and overflow.
+ */
+
+/* @group Resets */
+
+.views-admin ul,
+.views-admin menu,
+.views-admin dir {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.views-admin pre {
+  margin-bottom: 0;
+  margin-top: 0;
+  white-space: pre-wrap;
+}
+
+/* @end */
+
+/* @group Views listing page */
+
+#views-list tr.disabled td {
+  color: #999;
+}
+
+/* @end */
+
+/* @group Columns */
+
+@media (min-width:768px) {
+  .views-left-25 {
+    float: left;
+    width: 25%;
+  }
+
+  .views-left-30 {
+    float: left;
+    width: 30%;
+  }
+
+  .views-left-40 {
+    float: left;
+    width: 40%;
+  }
+
+  .views-left-50 {
+    float: left;
+    width: 50%;
+  }
+
+  .views-left-75 {
+    float: left;
+    width: 75%;
+  }
+
+  .views-right-50 {
+    float: right;
+    width: 50%;
+  }
+
+  .views-right-60 {
+    float: right;
+    width: 60%;
+  }
+
+  .views-right-70 {
+    float: right;
+    width: 70%;
+  }
+
+  .views-group-box .form-item {
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+}
+
+/* @end */
+
+/* @group Attachment details
+ *
+ * The attachment details section, its tabs for each section and the buttons
+ * to add a new section
+ */
+
+.form-edit .form-actions {
+  float: right; /* LTR */
+}
+[dir="rtl"] .form-edit .form-actions {
+  float: left;
+}
+
+.views-displays {
+  clear: both;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+ .views-displays .secondary {
+   border-bottom: 0 none;
+   margin: 0;
+   overflow: visible;
+   padding: 0;
+ }
+
+.views-displays .secondary > li {
+  border-right: 0 none;
+  display: inline-block;
+  float: left; /* LTR */
+  padding: 0;
+}
+[dir="rtl"] .views-displays .secondary > li {
+  float: right;
+}
+
+.views-displays .secondary .open > a {
+  position: relative;
+  z-index: 51;
+}
+
+.views-displays .views-display-deleted-link {
+  text-decoration: line-through;
+}
+
+.views-display-deleted > fieldset > legend,
+.views-display-deleted .fieldset-wrapper > .views-ui-display-tab-bucket > *,
+.views-display-deleted .views-display-columns {
+  opacity: 0.25;
+}
+
+.views-display-disabled > fieldset > legend,
+.views-display-disabled .fieldset-wrapper > .views-ui-display-tab-bucket > *,
+.views-display-disabled .views-display-columns {
+  opacity: 0.5;
+}
+
+.views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
+  opacity: 1.0;
+}
+/* @end */
+
+/* @group Attachment details new section button */
+
+@media (min-width: 768px) {
+  .views-display-top .secondary {
+    margin-right: 23em; /* LTR */
+    text-align: left; /* LTR */
+    float: left; /* LTR */
+    clear: none;
+  }
+  [dir="rtl"] .views-display-top .secondary {
+    margin-right: 0;
+    margin-left: 23em;
+    text-align: right;
+    float: right;
+  }
+  .views-display-top .dropbutton-wrapper {
+    float: right;
+  }
+  [dir="rtl"] .views-display-top .dropbutton-wrapper {
+    float: left;
+  }
+}
+
+.views-display-top .secondary .action-list li {
+  float: none;
+  margin: 0;
+}
+
+.views-displays .secondary > li:first-child {
+  padding-left: 0;
+}
+
+.views-displays .secondary li.add {
+  position: relative;
+}
+
+.views-displays .secondary .action-list {
+  left: 0; /* LTR */
+  margin: 0;
+  position: absolute;
+  top: 25px;
+  z-index: 50;
+}
+[dir="rtl"] .views-displays .secondary .action-list {
+  left: auto;
+  right: 0;
+}
+
+.views-displays .secondary .action-list  li {
+  display: block;
+}
+
+/* @end */
+
+
+/* @group Display top area */
+
+#edit-display-settings-top .dropbutton-wrapper {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  float: right; /* LTR */
+}
+[dir="rtl"] #edit-display-settings-top .dropbutton-wrapper {
+  float: left;
+}
+#edit-display-settings-top .views-ui-display-tab-setting {
+  position: relative;
+  float: left; /* LTR */
+}
+[dir="rtl"] #edit-display-settings-top .views-ui-display-tab-setting {
+  float: right;
+}
+
+/* @end */
+
+/* @group Attachment details collapsible fieldset */
+
+.views-display-tab .fieldset-legend {
+  left: -5px; /* LTR */
+  position: relative;
+}
+[dir="rtl"] .views-display-tab .fieldset-legend {
+  left: auto;
+  right: -5px;
+}
+
+.views-display-tab .fieldset-wrapper {
+  position: relative;
+}
+
+/* @end */
+
+/* @group Attachment details actions
+ *
+ * Display the "Delete" and "Duplicate" buttons to the right.
+ */
+.views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
+  position: absolute;
+  right: 0; /* LTR */
+  top: -5px;
+}
+[dir="rtl"] .views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
+  left: 0;
+  right: auto;
+}
+
+/* @end */
+
+/* @group Attachment configuration columns */
+@media (min-width: 768px) {
+  #edit-display-settings-details {
+    padding: 0.5em;
+  }
+
+  #edit-display-settings-top,
+  .views-display-columns {
+    /* Prevent extra spacing on outer edges from child padding */
+    margin: 0 -0.5em;
+  }
+
+  .views-display-columns > * {
+    box-sizing: border-box;
+    float: left; /* LTR */
+    width: 33.333%;
+    padding: 0 0.5em;
+  }
+  [dir="rtl"] .views-display-columns > * {
+    float: right;
+  }
+}
+
+/* @end */
+
+/* @group Modal dialog box */
+
+.views-ui-dialog {
+  /* We need this so the button is visible. */
+  overflow: visible;
+  position: fixed;
+  max-width: 95%;
+}
+@media only screen and (min-width: 1200px) {
+  .views-ui-dialog {
+    max-width: 90%;
+  }
+}
+
+.views-ui-dialog .ui-dialog-titlebar {
+  border-bottom: none;
+}
+
+.views-ui-dialog .ui-dialog-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.views-ui-dialog .ui-dialog-content .form-actions {
+  border: 0;
+  height: 0;
+}
+
+.views-ui-dialog .ui-dialog-buttonpane {
+  margin-top: 0;
+}
+
+.views-ui-dialog #views-ajax-popup {
+  padding: 0;
+  overflow: hidden;
+}
+
+.views-ui-dialog #views-ajax-title,
+.views-ui-dialog #views-ajax-body {
+  margin: 0;
+  padding: 0;
+}
+
+.views-ui-dialog #views-ajax-popup {
+  overflow: hidden;
+}
+
+.views-ui-dialog .scroll {
+  max-height: 400px;
+  overflow: auto;
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media only screen and (min-height: 750px) {
+  .views-ui-dialog .scroll {
+    max-height: 600px;
+  }
+}
+
+#views-filterable-options-controls {
+  display: none;
+}
+
+.views-ui-dialog #views-filterable-options-controls {
+  display: block;
+}
+
+/* Don't let the messages overwhelm the modal */
+.views-ui-dialog .views-messages {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.views-ui-dialog input,
+.views-ui-dialog select,
+.views-ui-dialog textarea {
+  max-width: 100%;
+}
+
+/* @end */
+
+/* @group Settings forms */
+
+.views-display-setting .label,
+.views-display-setting .views-ajax-link {
+  display: inline-block;
+  float: left; /* LTR */
+}
+[dir="rtl"] .views-display-setting .label,
+[dir="rtl"] .views-display-setting .views-ajax-link {
+  float: right;
+}
+
+/* @end */
+
+/* @group Filter Settings form */
+
+div.form-item-options-value-all {
+  display: none;
+}
+/* @end */
+
+/* @group Backdrop overrides */
+
+/* The .progress-disabled class added to the form on submit floats the element
+ * left and causes the form width to shrink-wrap to the content. Setting the
+ * width to 100% prevents this.
+ */
+#views-ajax-body form {
+  width: 100%;
+}
+
+/* @end */
+
+
+
+/* @group Javascript dependent styling */
+
+.js-only {
+  display: none;
+}
+
+html.js .js-only {
+  display: inherit;
+}
+
+html.js span.js-only {
+  display: inline;
+}
+
+/* @end */
+
+/* @group AJAX throbber */
+
+/* Base Page */
+#views-ui-list-page .ajax-progress-throbber,
+.views-admin .ajax-progress-throbber {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+}
+#views-ui-list-page .ajax-progress-throbber .message,
+.views-admin .ajax-progress-throbber .message {
+  display: none;
+}
+
+/* Modal */
+#views-ajax-popup .ajax-progress-throbber {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+}
+#views-ajax-popup .ajax-progress-throbber .message {
+  display: none;
+}
+
+/* @end */

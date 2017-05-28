@@ -1,0 +1,392 @@
+<?php
+/**
+ * @file
+ * Handles installation and updates of contributed projects.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function installer_permission() {
+  return array(
+    'use installer browser' => array(
+      'title' => t('Install and update modules, themes & layouts'),
+      'description' => t('Allows the user to browse for and install new modules, themes and layouts.'),
+      'restrict access' => TRUE,
+    )
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function installer_menu() {
+  $items = array();
+
+  // Add the tabs for install and update on modules, themes, and layouts.
+  $paths = array(
+    'module' => 'admin/modules',
+    'theme' => 'admin/appearance',
+    'layout' => 'admin/structure/layouts',
+  );
+  foreach ($paths as $context => $path) {
+    $items[$path . '/install'] = array(
+      'page callback' => 'installer_browser_page',
+      'page arguments' => array($context),
+      'access callback' => 'installer_install_access',
+      'weight' => 4,
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'installer.pages.inc',
+    );
+    $items[$path . '/update'] = array(
+      'page callback' => 'backdrop_get_form',
+      'page arguments' => array('installer_manager_update_form', $context),
+      'access callback' => 'installer_update_access',
+      'weight' => 10,
+      'type' => MENU_LOCAL_TASK,
+      'file' => 'installer.manager.inc',
+    );
+  }
+
+  // Add menu titles with += for the translation extractor.
+  $items['admin/modules/install'] += array('title' => 'Install new modules');
+  $items['admin/modules/update'] += array('title' => 'Update modules');
+
+  $items['admin/appearance/install'] += array('title' => 'Install new themes');
+  $items['admin/appearance/update'] += array('title' => 'Update themes');
+
+  $items['admin/structure/layouts/install'] += array('title' => 'Install new layouts');
+  $items['admin/structure/layouts/update'] += array('title' => 'Update layouts');
+
+  $items['admin/installer/manual'] = array(
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('installer_manager_install_form'),
+    'access callback' => 'installer_install_access',
+    'access arguments' => array(),
+    'weight' => 25,
+    'type' => MENU_CALLBACK,
+    'file' => 'installer.manager.inc',
+  );
+  $items['admin/update/ready'] = array(
+    'title' => 'Ready to update',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('installer_manager_update_ready_form'),
+    'access callback' => 'installer_install_access',
+    'access arguments' => array(),
+    'type' => MENU_CALLBACK,
+    'file' => 'installer.manager.inc',
+  );
+  $items['admin/installer/bulk/%'] = array(
+    'title' => 'Install by names',
+    'description' => 'Install multiple projects by listing machine names.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('installer_browser_bulk_install_form', 3),
+    'access callback' => 'installer_install_access',
+    'file' => 'installer.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/installer/project/%'] = array(
+    'title' => 'Project details',
+    'description' => 'Project details',
+    'page callback' => 'installer_browser_project_display',
+    'page arguments' => array(3),
+    'access callback' => 'installer_install_access',
+    'file' => 'installer.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/installer/reset/%/%'] = array(
+    'title' => 'Reset',
+    'description' => 'Reset installer project list.',
+    'page callback' => 'installer_browser_installation_reset',
+    'page arguments' => array(3, 4),
+    'access callback' => 'installer_install_access',
+    'file' => 'installer.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/installer/install/%'] = array(
+    'title' => 'Install',
+    'page callback' => 'installer_browser_installation_page',
+    'page arguments' => array(3),
+    'access callback' => 'installer_install_access',
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'installer.pages.inc',
+  );
+  $items['admin/installer/queue/%/%/%'] = array(
+    'page callback' => 'installer_browser_install_queue_callback',
+    'page arguments' => array(3, 4, 5),
+    'access callback' => 'installer_install_access',
+    'type' => MENU_CALLBACK,
+    'file' => 'installer.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Access callback: Resolves if the current user can access updater menu items.
+ *
+ * It both enforces the 'administer software updates' permission and the global
+ * kill switch for the authorize.php script.
+ *
+ * @return
+ *   TRUE if the current user can access the updater menu items; FALSE
+ *   otherwise.
+ *
+ * @see installer_menu()
+ */
+function installer_update_access() {
+  return settings_get('allow_authorize_operations', TRUE) && user_access('administer software updates');
+}
+
+/**
+ * Access callback: Resolves if the current user can install via the installer.
+ *
+ * It both enforces the 'use installer browser' permission and the global
+ * kill switch for the authorize.php script.
+ *
+ * @return
+ *   TRUE if the current user can access the installer menu items; FALSE
+ *   otherwise.
+ *
+ * @see installer_menu()
+ */
+function installer_install_access() {
+  return settings_get('allow_authorize_operations', TRUE) && user_access('use installer browser');
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function installer_theme($existing, $type, $theme, $path) {
+  $base = array(
+    'file' => 'installer.theme.inc',
+  );
+
+  return array(
+    'installer_manager_update_form' => array(
+      'render element' => 'form',
+    ) + $base,
+    // Template for installation page.
+    'installer_browser_install' => array(
+      'variables' => array('current_task' => NULL, 'main_content' => NULL),
+      'template' => 'templates/installer-install',
+    ) + $base,
+    // Template for list of projects.
+    'installer_browser_list' => array(
+      'variables' => array('projects_list' => NULL, 'type' => NULL),
+      'template' => 'templates/installer-list',
+    ) + $base,
+    // Template for block.
+    'installer_browser_block' => array(
+      'render element' => 'element',
+      'template' => 'templates/installer-block',
+    ) + $base,
+    // Template for single project.
+    'installer_browser_project' => array(
+      'variables' => array('project' => NULL, 'first' => NULL),
+      'template' => 'templates/installer-project',
+    ) + $base,
+    // Template for project description.
+    'installer_browser_project_description' => array(
+      'render element' => 'description',
+    ) + $base,
+    // Template for project details dialog.
+    'installer_browser_project_dialog' => array(
+      'variables' => array('project' => NULL),
+      'template' => 'templates/installer-project-dialog',
+    ) + $base,
+    // Template for install queue item.
+    'installer_browser_install_queue' => array(
+      'variables' => array('projects' => NULL),
+      'template' => 'templates/installer-install-queue',
+    ) + $base,
+  );
+}
+
+/**
+ * Implements hook_verify_update_archive().
+ *
+ * First, we ensure that the archive isn't a copy of Backdrop core, which the
+ * update manager does not yet support. See http://drupal.org/node/606592
+ *
+ * Then, we make sure that at least one module included in the archive file has
+ * an .info file which claims that the code is compatible with the current
+ * version of Backdrop core.
+ *
+ * @see backdrop_system_listing()
+ * @see _system_rebuild_module_data()
+ */
+function installer_verify_update_archive($project, $archive_file, $directory) {
+  $errors = array();
+
+  // Make sure this isn't a tarball of Backdrop core.
+  if (
+    file_exists("$directory/$project/index.php")
+    && file_exists("$directory/$project/core/update.php")
+    && file_exists("$directory/$project/core/includes/bootstrap.inc")
+    && file_exists("$directory/$project/core/modules/node/node.module")
+    && file_exists("$directory/$project/core/modules/system/system.module")
+  ) {
+    return array(
+      'no-core' => t('Automatic updating of Backdrop CMS core is not supported. See the <a href="@upgrade-guide">upgrade guide</a> for information on how to update Backdrop CMS core manually.', array('@upgrade-guide' => 'https://backdropcms.org/guide/upgrade')),
+    );
+  }
+
+  // Parse all the .info files and make sure at least one is compatible with
+  // this version of Backdrop core. If one is compatible, then the project as a
+  // whole is considered compatible (since, for example, the project may ship
+  // with some out-of-date modules that are not necessary for its overall
+  // functionality).
+  $compatible_project = FALSE;
+  $incompatible = array();
+  $files = file_scan_directory("$directory/$project", '/^' . BACKDROP_PHP_FUNCTION_PATTERN . '\.info$/', array('key' => 'name', 'min_depth' => 0));
+  foreach ($files as $key => $file) {
+    // Get the .info file for the module, theme or layout this file belongs to.
+    $info = backdrop_parse_info_file($file->uri);
+
+    // If the module, theme or layout is incompatible with Backdrop core, set an error.
+    if (empty($info['backdrop']) || $info['backdrop'] != BACKDROP_CORE_COMPATIBILITY) {
+      $incompatible[] = !empty($info['name']) ? $info['name'] : t('Unknown');
+    }
+    else {
+      $compatible_project = TRUE;
+      break;
+    }
+  }
+
+  if (empty($files)) {
+    $errors[] = t('%archive_file does not contain any .info files.', array('%archive_file' => backdrop_basename($archive_file)));
+  }
+  elseif (!$compatible_project) {
+    $errors[] = format_plural(
+      count($incompatible),
+      '%archive_file contains a version of %names that is not compatible with Backdrop !version.',
+      '%archive_file contains versions of modules or themes that are not compatible with Backdrop !version: %names',
+      array('!version' => BACKDROP_CORE_COMPATIBILITY, '%archive_file' => backdrop_basename($archive_file), '%names' => implode(', ', $incompatible))
+    );
+  }
+
+  return $errors;
+}
+
+/**
+ * Returns a short unique identifier for this Backdrop installation.
+ *
+ * @return
+ *   An eight character string uniquely identifying this Backdrop installation.
+ */
+function _installer_manager_unique_identifier() {
+  $id = &backdrop_static(__FUNCTION__, '');
+  if (empty($id)) {
+    $id = substr(hash('sha256', backdrop_get_hash_salt()), 0, 8);
+  }
+  return $id;
+}
+
+/**
+ * Returns the directory where update archive files should be extracted.
+ *
+ * @param $create
+ *   (optional) Whether to attempt to create the directory if it does not
+ *   already exist. Defaults to TRUE.
+ *
+ * @return
+ *   The full path to the temporary directory where update file archives should
+ *   be extracted.
+ */
+function _installer_manager_extract_directory($create = TRUE) {
+  $directory = &backdrop_static(__FUNCTION__, '');
+  if (empty($directory)) {
+    $directory = 'temporary://update-extraction-' . _installer_manager_unique_identifier();
+    if ($create && !file_exists($directory)) {
+      mkdir($directory);
+    }
+  }
+  return $directory;
+}
+
+/**
+ * Returns the directory where update archive files should be cached.
+ *
+ * @param $create
+ *   (optional) Whether to attempt to create the directory if it does not
+ *   already exist. Defaults to TRUE.
+ *
+ * @return
+ *   The full path to the temporary directory where update file archives should
+ *   be cached.
+ */
+function _installer_manager_cache_directory($create = TRUE) {
+  $directory = &backdrop_static(__FUNCTION__, '');
+  if (empty($directory)) {
+    $directory = 'temporary://update-cache-' . _installer_manager_unique_identifier();
+    if ($create && !file_exists($directory)) {
+      mkdir($directory);
+    }
+  }
+  return $directory;
+}
+
+/**
+ * Clears the temporary files and directories based on file age from disk.
+ */
+function installer_clear_update_disk_cache() {
+  // List of update module cache directories. Do not create the directories if
+  // they do not exist.
+  $directories = array(
+    _installer_manager_cache_directory(FALSE),
+    _installer_manager_extract_directory(FALSE),
+  );
+
+  // Search for files and directories in base folder only without recursion.
+  foreach ($directories as $directory) {
+    file_scan_directory($directory, '/.*/', array('callback' => 'installer_delete_file_if_stale', 'recurse' => FALSE));
+  }
+}
+
+/**
+ * Deletes stale files and directories from the update manager disk cache.
+ *
+ * Files and directories older than 6 hours and development snapshots older than
+ * 5 minutes are considered stale. We only cache development snapshots for 5
+ * minutes since otherwise updated snapshots might not be downloaded as
+ * expected.
+ *
+ * When checking file ages, we need to use the ctime, not the mtime
+ * (modification time) since many (all?) tar implementations go out of their way
+ * to set the mtime on the files they create to the timestamps recorded in the
+ * tarball. We want to see the last time the file was changed on disk, which is
+ * left alone by tar and correctly set to the time the archive file was
+ * unpacked.
+ *
+ * @param $path
+ *   A string containing a file path or (streamwrapper) URI.
+ */
+function installer_delete_file_if_stale($path) {
+  if (file_exists($path)) {
+    $filectime = filectime($path);
+    if (REQUEST_TIME - $filectime > BACKDROP_MAXIMUM_TEMP_FILE_AGE || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
+      file_unmanaged_delete_recursive($path);
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function installer_cron() {
+  // Clear garbage from disk.
+  installer_clear_update_disk_cache();
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function installer_config_info() {
+  $prefixes['installer.settings'] = array(
+    'label' => t('Installer settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}

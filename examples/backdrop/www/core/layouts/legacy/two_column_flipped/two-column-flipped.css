@@ -1,0 +1,65 @@
+/**
+ * @file
+ * CSS for the two column flipped layout.
+ */
+
+/* Clearfix for all regions. */
+.layout--two-column-flipped .l-header:after,
+.layout--two-column-flipped .l-main-wrapper:after,
+.layout--two-column-flipped .l-footer:after,
+.layout--two-column-flipped .l-container:after,
+.layout--two-column-flipped .l-content:after,
+.layout--two-column-flipped .l-sidebar:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.layout--two-column-flipped .l-header,
+.layout--two-column-flipped .l-top,
+.layout--two-column-flipped .l-messages,
+.layout--two-column-flipped .l-container,
+.layout--two-column-flipped .l-footer {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  clear: both;
+}
+.layout--two-column-flipped .l-content,
+.layout--two-column-flipped .l-sidebar {
+  padding: 0 15px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media all and (min-width: 851px) {
+  .layout--two-column-flipped .l-content,
+  .layout--two-column-flipped .l-sidebar {
+    display: inline;
+    float: right; /* LTR */
+    position: relative;
+  }
+  [dir="rtl"] .layout--two-column-flipped .l-content,
+  [dir="rtl"] .layout--two-column-flipped .l-sidebar {
+    float: left;
+  }
+  .layout--two-column-flipped .l-content {
+    margin-left: 30%;
+    width: 70%;
+  }
+  [dir="rtl"] .layout--two-column-flipped .l-content {
+    margin-right: 30%;
+    margin-left: 0;
+  }
+  .layout--two-column-flipped .l-sidebar {
+    width: 30%;
+    margin-right: -30%; /* LTR */
+  }
+  [dir="rtl"] .layout--two-column-flipped .l-sidebar {
+    margin-left: -30%;
+  }
+}

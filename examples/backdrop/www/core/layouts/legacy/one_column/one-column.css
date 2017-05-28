@@ -1,0 +1,17 @@
+/**
+ * @file
+ * CSS for the one column layout.
+ */
+.layout--one-column .l-header,
+.layout--one-column .l-top,
+.layout--one-column .l-messages,
+.layout--one-column .l-container,
+.layout--one-column .l-footer {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  clear: both;
+}

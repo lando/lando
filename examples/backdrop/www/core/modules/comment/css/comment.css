@@ -1,0 +1,17 @@
+
+#comments {
+  margin-top: 15px;
+}
+.indented {
+  margin-left: 25px; /* LTR */
+}
+[dir="rtl"] .indented {
+  margin-left: 0;
+  margin-right: 25px;
+}
+.comment-unpublished {
+  background-color: #fff4f4;
+}
+.comment-preview {
+  background-color: #ffffea;
+}

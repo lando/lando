@@ -1,0 +1,59 @@
+/**
+ * Styles for displaying the token tree and dialog.
+ */
+/* Normally we would use a mobile-first media query, but in this case we only
+   apply max-width on smaller screens. Max-width/max-height settings interfere
+   with jQuery UI dialog resizing, but on a small screen we'll just take up
+   all available room. */
+.token-dialog {
+  max-width: none;
+  max-height: none;
+}
+@media only screen and (max-width: 600px) {
+  .token-dialog {
+    width: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+.token-tree {
+  font-size: 0.85em;
+}
+.token-tree td {
+  padding: 0;
+  vertical-align: top;
+}
+.token-tree th {
+  padding: 4px 0;
+}
+.token-tree th:first-child {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.token-tree .branch.collapsed .token-name,
+.token-tree .branch.expanded .token-name {
+  cursor: pointer;
+}
+.token-tree .token-name {
+  width: 30%;
+  white-space: nowrap;
+}
+.token-tree .token-token {
+  white-space: nowrap;
+}
+.token-tree .token-key {
+  float: left;
+}
+.token-tree .token-more {
+  float: right;
+}
+.token-tree .token-description {
+  color: #666;
+  white-space: normal;
+  clear: both;
+}
+.token-tree .token-group-description {
+  padding: 0;
+}
+

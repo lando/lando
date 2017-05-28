@@ -1,0 +1,9 @@
+{
+  "_config_name": "redirect.settings",
+  "_config_static": true,
+  "auto_redirect": true,
+  "passthrough_querystring": true,
+  "warning": false,
+  "additional_statuses": false,
+  "purge_inactive": false
+}

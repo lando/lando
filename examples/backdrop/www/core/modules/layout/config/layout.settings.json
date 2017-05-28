@@ -1,0 +1,9 @@
+{
+    "_config_name": "layout.settings",
+    "excluded_templates": [
+        "one_column",
+        "two_column",
+        "two_column_flipped",
+        "three_three_four_column"
+    ]
+}
