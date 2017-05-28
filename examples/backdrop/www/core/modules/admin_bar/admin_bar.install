@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the admin bar module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function admin_bar_schema() {
+  $schema['cache_admin_bar'] = backdrop_get_schema_unprocessed('system', 'cache');
+  $schema['cache_admin_bar']['description'] = 'Cache table for Administration bar to store client-side caching hashes.';
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function admin_bar_install() {
+  // Increase the module weight, so admin_bar catches any alterations made by
+  // other modules in hook_menu_alter().
+  db_update('system')
+    ->fields(array('weight' => 100))
+    ->condition('type', 'module')
+    ->condition('name', 'admin_bar')
+    ->execute();
+}

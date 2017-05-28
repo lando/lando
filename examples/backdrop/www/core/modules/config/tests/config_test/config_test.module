@@ -1,0 +1,25 @@
+<?php
+/**
+ * @file
+ * Provides sample configuration files for testing.
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function config_test_config_info() {
+  $prefixes['config_test.group'] = array(
+    'name_key' => 'name',
+    'label_key' => 'label',
+    'group' => t('Configuration test items'),
+  );
+  $prefixes['config_test.simple'] = array(
+    'name' => t('Configuration test simple'),
+    'group' => t('Configuration'),
+  );
+  $prefixes['config_test.dynamic.new'] = array(
+    'name' => t('Dynamic config file'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}

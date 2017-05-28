@@ -1,0 +1,341 @@
+
+/**
+ * @file
+ * Administration bar.
+ *
+ * Implementation of Sons of Suckerfish Dropdowns.
+ *
+ * @see www.htmldog.com/articles/suckerfish
+ */
+
+#admin-bar {
+  font: normal 11px "Lucida Grande", Verdana, sans-serif;
+  left: 0;
+  position: absolute;
+  text-align: left; /* LTR */
+  top: 0;
+  width: 100%;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  z-index: 999;
+  background: #2D2D2D; /* Old browsers */
+  background: -moz-linear-gradient(#2D2D2D 0%, #171717 100%); /* FF3.6+ */
+  background: -webkit-gradient(color-stop(0%, #2D2D2D), color-stop(100%, #171717)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(#2D2D2D 0%, #171717 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(#2D2D2D 0%, #171717 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(#2D2D2D 0%, #171717 100%); /* IE10+ */
+  background: linear-gradient(#2D2D2D 0%, #171717 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2D2D2D', endColorstr='#171717',GradientType=0); /* IE6-9 */
+}
+[dir="rtl"] #admin-bar {
+  text-align: right;
+}
+#admin-bar-wrapper {
+  overflow: hidden;
+}
+/* When body is a contextual links region. */
+.contextual-links-region #admin-bar {
+  top: -33px;
+}
+
+.admin-bar body {
+  border-top: 33px solid #2D2D2D !important;
+}
+
+/* Top level items. */
+#admin-bar .top-level {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: top;
+}
+#admin-bar .top-level > li > a,
+#admin-bar .top-level > li > span {
+  display: none;
+}
+#admin-bar .top-level > li > ul {
+  display: inline-block;
+  left: auto;
+  width: auto;
+  right: auto;
+  background: transparent;
+}
+#admin-bar .top-level > li > ul > li {
+  float: left;
+  width: auto;
+}
+#admin-bar-menu.top-level > li > ul > li > a.active-trail {
+  text-shadow: #333 0 1px 0;
+  background: #9F9F9F; /* Old browsers */
+  background: -moz-linear-gradient(#9F9F9F 0%, #808080 100%); /* FF3.6+ */
+  background: -webkit-gradient(color-stop(0%, #9F9F9F), color-stop(100%, #808080)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(#9F9F9F 0%, #808080 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(#9F9F9F 0%, #808080 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(#9F9F9F 0%, #808080 100%); /* IE10+ */
+  background: linear-gradient(#9F9F9F 0%, #808080 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#9F9F9F', endColorstr='#808080',GradientType=0); /* IE6-9 */
+}
+
+#admin-bar li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Dropdown lists */
+#admin-bar .dropdown {
+  line-height: 1.4em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 999;
+  display: inline-block;
+  position: static;
+  background: #202020;
+  vertical-align: top;
+}
+#admin-bar-wrapper > .dropdown {
+  background: transparent;
+}
+#admin-bar li > a,
+#admin-bar li > span {
+  background: transparent none;
+  border: none;
+  color: #EEE;
+  font-weight: normal;
+  text-align: left; /* LTR */
+  text-decoration: none;
+}
+[dir="rtl"] #admin-bar li > a,
+[dir="rtl"] #admin-bar li > span {
+  text-align: right;
+}
+#admin-bar .dropdown li > a,
+#admin-bar .dropdown li > span {
+  display: block;
+  padding: 9px 12px;
+}
+
+#admin-bar a.expanded-trail,
+#admin-bar span.expanded-trail {
+  background: #45454A;
+}
+
+#admin-bar .dropdown .admin-bar-tab a {
+  border-left: none; /* LTR */
+  border-right: 1px solid #52565E; /* LTR */
+}
+[dir="rtl"] #admin-bar .dropdown .admin-bar-tab a {
+  border-left: 1px solid #52565E;
+  border-right: none;
+}
+#admin-bar .dropdown li li a {
+  border-right: none; /* LTR */
+  border-top: 1px solid #323232;
+}
+[dir="rtl"] #admin-bar .dropdown li li a {
+  border-left: none;
+}
+#admin-bar .dropdown a:hover {
+  text-decoration: underline;
+}
+
+/* All dropdown list items */
+#admin-bar .dropdown li {
+  background-image: none;
+  float: left; /* LTR */
+  height: 100%;
+  list-style-image: none;
+  list-style-type: none;
+  margin: 0 !important;
+  padding: 0;
+}
+[dir="rtl"] #admin-bar .dropdown li {
+  float: right;
+}
+
+/* First level items */
+#admin-bar .dropdown li li {
+  width: 160px; /* Required for Opera */
+}
+#admin-bar .dropdown li li li {
+  filter: Alpha(opacity=100);
+  opacity: 1;
+}
+
+/* Second-level lists */
+/* Note: We must hide sub-lists or scrollbars might appear (display: none is not read by screen readers). */
+#admin-bar .dropdown li ul {
+  display: none;
+  left: -999em; /* LTR */
+  line-height: 1.2em;
+  margin: 0;
+  position: absolute;
+  width: 160px;
+}
+[dir="rtl"] #admin-bar .dropdown li ul {
+  left: auto;
+  right: -999em;
+}
+
+/* Third-and-above-level lists */
+#admin-bar .dropdown li li.expandable ul {
+  margin: -32px 0 0 160px; /* LTR */
+}
+[dir="rtl"] #admin-bar .dropdown li li.expandable ul {
+  margin-left: 160px;
+  margin-right: 0;
+}
+
+/* Lists nested under hovered list items */
+#admin-bar .dropdown ul.expanded {
+  display: block;
+  left: auto; /* LTR */
+}
+[dir="rtl"] #admin-bar .dropdown ul.expanded {
+  right: auto;
+}
+
+/* Second-and-more-level hovering */
+#admin-bar .dropdown li li.expandable > a {
+  background: #45454A url(../images/arrow.png) no-repeat 145px center; /* LTR */
+}
+[dir="rtl"] #admin-bar .dropdown li li.expandable > a {
+  background-image: url(../images/arrow-rtl.png);
+  background-position: 5px center;
+}
+#admin-bar .dropdown li li a.expanded-trail {
+  background-color: #111;
+  border-color: #444;
+  color: #EEE;
+}
+
+/* Icon menu */
+#admin-bar-icon.dropdown {
+  display: inline-block;
+  background: transparent;
+}
+#admin-bar-icon li.admin-bar-icon > a {
+  padding: 7px 8px 11px;
+}
+#admin-bar-icon .admin-bar-icon img {
+  vertical-align: bottom;
+}
+/* Add a border when using the default Backdrop logo. */
+#admin-bar-icon .admin-bar-icon img[src$="core/misc/favicon.ico"] {
+  outline: 1px solid #45454A;
+}
+
+/* Extras menu */
+#admin-bar-extra {
+  float: right; /* LTR */
+  direction: rtl; /* LTR */
+}
+[dir="rtl"] #admin-bar-extra {
+  float: left;
+  direction: ltr;
+}
+#admin-bar-extra .dropdown li {
+  direction: ltr; /* LTR */
+}[dir="rtl"] #admin-bar-extra .dropdown li {
+   direction: rtl;
+ }
+
+/* Online users */
+#admin-bar .dropdown .admin-bar-users a {
+  background: transparent url(../images/icon_users.png) 90% center no-repeat;
+  padding-right: 22px; /* LTR */
+}
+[dir="rtl"] #admin-bar .dropdown .admin-bar-users a {
+  background-position: 10% center;
+  padding-left: 22px;
+  padding-right: 0;
+}
+
+/* Search form */
+#admin-bar .admin-bar-search .form-item {
+  margin: 0;
+  padding: 6px;
+}
+#admin-bar .top-level .admin-bar-search {
+  width: 140px;
+}
+#admin-bar .top-level .admin-bar-search .form-item {
+  padding: 6px 0 0;
+}
+#admin-bar .admin-bar-search input {
+  background: #fff none center right no-repeat;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 12px;
+  margin: 0;
+  outline: none;
+  padding: 3px 22px 3px 8px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+#admin-bar .admin-bar-search-results .dropdown {
+  display: block !important;
+  left: auto !important;
+  top: 100%;
+}
+#admin-bar .admin-bar-search-results,
+#admin-bar .admin-bar-search-results li {
+  width: 186px;
+}
+
+#admin-bar li.active-search-item > a,
+#admin-bar li.highlight > a {
+  background-color: #0074BD !important;
+  color: white !important;
+}
+
+/* #210615: Mozilla on Mac fix */
+html.js fieldset.collapsible div.fieldset-wrapper {
+  overflow: visible;
+}
+
+/* Hide the menu on print output. */
+@media print {
+  #admin-bar {
+    display: none !important;
+  }
+  body.admin-bar {
+    margin-top: 0 !important;
+  }
+}
+
+/**
+ * Tweaks permissions, if enabled.
+ */
+tr.admin-bar-tweak-permissions-processed {
+  cursor: pointer;
+  cursor: hand;
+}
+tr.admin-bar-tweak-permissions-processed td.module {
+  border-top: 0;
+}
+
+/* Alert colors */
+#admin-bar .admin-bar-alert .error-count {
+  box-sizing: content-box;
+  padding: 4px 5px 5px 4px;
+  display: inline-block;
+  min-width: 13px;
+  border-radius: 2em;
+  margin: -4px 0 -5px;
+  text-align: center;
+  background-color: #ee3d23;
+  line-height: 1;
+}
+#admin-bar .admin-bar-alert .error-count {
+  margin-left: 0;
+  margin-right: 0;
+}
+#admin-bar .admin-bar-alert .error-label {
+  display: none;
+}

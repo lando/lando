@@ -1,0 +1,20 @@
+{
+    "_config_name": "layout.menu_item.home",
+    "name": "home",
+    "title": "",
+    "path": "home",
+    "menu": {
+        "title": null,
+        "weight": 0,
+        "type": "none",
+        "name": "main-menu",
+        "parent": {
+            "title": null,
+            "weight": 0,
+            "type": "none",
+            "name": "main-menu"
+        }
+    },
+    "conditions": [],
+    "arguments": []
+}

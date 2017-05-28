@@ -1,0 +1,174 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Redirect module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function redirect_schema() {
+  $schema['redirect'] = array(
+    'description' => 'Stores information on redirects.',
+    'fields' => array(
+      'rid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique redirect ID.',
+      ),
+      'hash' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'A unique hash based on source, source_options, and language.',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The redirect type; if value is 'redirect' it is a normal redirect handled by the module.",
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid of the user who created the redirect.',
+      ),
+      'source' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The source path from which to redirect.',
+      ),
+      'source_options' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+        'description' => 'A serialized array of source options.',
+      ),
+      'redirect' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'The destination path to which the user will be redirected.',
+      ),
+      'redirect_options' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+        'description' => 'A serialized array of redirect options.',
+      ),
+      'langcode' => array(
+        'description' => 'The language this redirect is for; if blank, the alias will be used for unknown languages.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => 'und',
+      ),
+      'status_code' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'description' => 'The HTTP status code to use for the redirect.',
+      ),
+      'count' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The number of times the redirect has been used.',
+      ),
+      'access' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The timestamp of when the redirect was last accessed.'
+      ),
+    ),
+    'primary key' => array('rid'),
+    'unique keys' => array(
+      'hash' => array('hash'),
+    ),
+    'indexes' => array(
+      'expires' => array('type', 'access'),
+      'source_langcode' => array('source', 'langcode'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function redirect_update_last_removed() {
+  return 7101;
+}
+
+/**
+ * Upgrade Drupal 7 Redirect variables to config.
+ */
+function redirect_update_1000() {
+  // Write the initial config file.
+  $config = config('redirect.settings');
+  $config->set('auto_redirect', update_variable_get('redirect_auto_redirect', TRUE));
+  $config->set('passthrough_querystring', update_variable_get('redirect_passthrough_querystring', TRUE));
+  $config->set('default_status_code', update_variable_get('redirect_default_status_code', '301'));
+  $config->set('purge_inactive', update_variable_get('redirect_purge_inactive', FALSE));
+  $config->save();
+
+  // Remove old variables.
+  update_variable_del('redirect_auto_redirect');
+  update_variable_del('redirect_passthrough_querystring');
+  update_variable_del('redirect_warning');
+  update_variable_del('redirect_default_status_code');
+  update_variable_del('redirect_page_cache');
+  update_variable_del('redirect_purge_inactive');
+}
+
+/**
+ * Rename the language column to langcode.
+ */
+function redirect_update_1001() {
+  if (db_index_exists('redirect', 'source_language')) {
+    db_drop_index('redirect', 'source_language');
+  }
+  if (db_field_exists('redirect', 'language')) {
+    $spec = array(
+      'description' => 'The language this redirect is for; if blank, the alias will be used for unknown languages.',
+      'type' => 'varchar',
+      'length' => 12,
+      'not null' => TRUE,
+      'default' => 'und',
+    );
+    db_change_field('redirect', 'language', 'langcode', $spec);
+    db_add_index('redirect', 'source_langcode', array('source', 'langcode'));
+  }
+}
+
+/**
+ * Enable config static caching.
+ */
+function redirect_update_1002() {
+  config('redirect.settings')
+    ->set('_config_static', true)
+    ->save();
+}
+
+/**
+ * Explicitly set the redirect status code and remove the default fallback.
+ */
+function redirect_update_1003() {
+  $config = config('redirect.settings');
+  $default_status = $config->get('default_status_code');
+  $additional_statuses = !in_array($default_status, array(301, 302));
+  $config->clear('default_status');
+  $config->clear('warning');
+  $config->set('additional_statuses', $additional_statuses);
+  $config->save();
+
+  db_query("UPDATE {redirect} SET status_code = :default_status WHERE status_code = 0", array(':default_status' => $default_status));
+}

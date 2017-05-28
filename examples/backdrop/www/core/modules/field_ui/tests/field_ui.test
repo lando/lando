@@ -1,0 +1,1041 @@
+<?php
+/**
+ * @file
+ * Tests for field_ui.module.
+ */
+
+/**
+ * Provides common functionality for the Field UI test classes.
+ */
+class FieldUITestCase extends BackdropWebTestCase {
+  protected $type;
+  protected $hyphen_type;
+
+  function setUp() {
+    // Since this is a base class for many test cases, support the same
+    // flexibility that BackdropWebTestCase::setUp() has for the modules to be
+    // passed in as either an array or a variable number of string arguments.
+    $modules = func_get_args();
+    if (isset($modules[0]) && is_array($modules[0])) {
+      $modules = $modules[0];
+    }
+    $modules[] = 'node';
+    $modules[] = 'field_ui';
+    $modules[] = 'field_test';
+    $modules[] = 'taxonomy';
+    parent::setUp($modules);
+
+    // Create test user.
+    $admin_user = $this->backdropCreateUser(array('access content', 'administer content types', 'administer taxonomy', 'administer fields', 'administer view modes'));
+    $this->backdropLogin($admin_user);
+
+    // Create content type, with underscores.
+    $type_name = strtolower($this->randomName(8)) . '_test';
+    $type = $this->backdropCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    $this->type = $type->type;
+    // Store a valid URL name, with hyphens instead of underscores.
+    $this->hyphen_type = str_replace('_', '-', $this->type);
+  }
+
+  /**
+   * Creates a new field through the Field UI.
+   *
+   * @param $bundle_path
+   *   Admin path of the bundle that the new field is to be attached to.
+   * @param $initial_edit
+   *   $edit parameter for backdropPost() on the first step ('Manage fields'
+   *   screen).
+   * @param $field_edit
+   *   $edit parameter for backdropPost() on the second step ('Field settings'
+   *   form).
+   * @param $instance_edit
+   *   $edit parameter for backdropPost() on the third step ('Instance settings'
+   *   form).
+   */
+  function fieldUIAddNewField($bundle_path, $initial_edit, $field_edit = array(), $instance_edit = array()) {
+    // Use 'test_field' field type by default.
+    $initial_edit += array(
+      'fields[_add_new_field][type]' => 'test_field',
+      'fields[_add_new_field][widget_type]' => 'test_field_widget',
+    );
+    $label = $initial_edit['fields[_add_new_field][label]'];
+    $field_name = $initial_edit['fields[_add_new_field][field_name]'];
+
+    // First step : 'Add new field' on the 'Manage fields' page.
+    $this->backdropPost("$bundle_path/fields",  $initial_edit, t('Save'));
+
+    // Second step : 'Field settings' form.
+    if (state_get('field_ui_test_field_settings', TRUE)) {
+      $this->assertRaw(format_string('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Field settings page was displayed.');
+      $this->backdropPost(NULL, $field_edit, t('Save field settings'));
+      $this->assertRaw(format_string('Updated field %label field settings.', array('%label' => $label)), 'Redirected to instance and widget settings page.');
+    }
+    // Second step is skipped if the field has no settings.
+    else {
+      $this->assertNoRaw(format_string('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Field settings page was skipped because it had no settings.');
+    }
+
+    // Third step : 'Instance settings' form.
+    $this->assertRaw(format_string('These settings apply only to the %field field', array('%field' => $label)), 'Field instance settings page was displayed.');
+    $this->backdropPost(NULL, $instance_edit, t('Save settings'));
+    $this->assertRaw(format_string('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
+
+    // Check that the field appears in the overview form.
+    $this->assertLinkByHref("$bundle_path/fields/field_$field_name", 0, 'Field was created and appears in the overview page.');
+  }
+
+  /**
+   * Adds an existing field through the Field UI.
+   *
+   * @param $bundle_path
+   *   Admin path of the bundle that the field is to be attached to.
+   * @param $initial_edit
+   *   $edit parameter for backdropPost() on the first step ('Manage fields'
+   *   screen).
+   * @param $instance_edit
+   *   $edit parameter for backdropPost() on the second step ('Instance settings'
+   *   form).
+   */
+  function fieldUIAddExistingField($bundle_path, $initial_edit, $instance_edit = array()) {
+    // Use 'test_field_widget' by default.
+    $initial_edit += array(
+      'fields[_add_existing_field][widget_type]' => 'test_field_widget',
+    );
+    $label = $initial_edit['fields[_add_existing_field][label]'];
+    $field_name = $initial_edit['fields[_add_existing_field][field_name]'];
+
+    // First step : 'Add existing field' on the 'Manage fields' page.
+    $this->backdropPost("$bundle_path/fields", $initial_edit, t('Save'));
+
+    // Second step : 'Instance settings' form.
+    $this->backdropPost(NULL, $instance_edit, t('Save settings'));
+    $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
+
+    // Check that the field appears in the overview form.
+    $this->assertLinkByHref("$bundle_path/fields/$field_name", 0, 'Field was created and appears in the overview page.');
+  }
+
+  /**
+   * Deletes a field instance through the Field UI.
+   *
+   * @param $bundle_path
+   *   Admin path of the bundle that the field instance is to be deleted from.
+   * @param $field_name
+   *   The name of the field.
+   * @param $label
+   *   The label of the field.
+   * @param $bundle_label
+   *   The label of the bundle.
+   */
+  function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label) {
+    // Display confirmation form.
+    $this->backdropGet("$bundle_path/fields/$field_name/delete");
+    $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), 'Delete confirmation was found.');
+
+    // Submit confirmation form.
+    $this->backdropPost(NULL, array(), t('Delete'));
+    $this->assertRaw(t('The field %label has been deleted from the %type content type.', array('%label' => $label, '%type' => $bundle_label)), 'Delete message was found.');
+
+    // Check that the field does not appear in the overview form.
+    $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, 'Field does not appear in the overview page.');
+  }
+}
+
+/**
+ * Tests the functionality of the 'Manage fields' screen.
+ */
+class FieldUIManageFieldsTestCase extends FieldUITestCase {
+  protected $profile = 'testing';
+  protected $field_label;
+  protected $field_name_input;
+  protected $field_name;
+
+  function setUp() {
+    parent::setUp();
+
+    // Create random field name.
+    $this->field_label = $this->randomName(8);
+    $this->field_name_input =  strtolower($this->randomName(8));
+    $this->field_name = 'field_'. $this->field_name_input;
+
+    // Create Page and Post node types.
+    $this->backdropCreateContentType(array('type' => 'page', 'name' => 'Page'));
+    $this->backdropCreateContentType(array('type' => 'post', 'name' => 'Post'));
+
+    // Create a vocabulary named "Tags".
+    $vocabulary = new TaxonomyVocabulary(array(
+      'name' => 'Tags',
+      'machine_name' => 'tags',
+    ));
+    taxonomy_vocabulary_save($vocabulary);
+
+    $field = array(
+      'field_name' => 'field_' . $vocabulary->machine_name,
+      'type' => 'taxonomy_term_reference',
+    );
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => 'field_' . $vocabulary->machine_name,
+      'entity_type' => 'node',
+      'label' => 'Tags',
+      'bundle' => 'post',
+    );
+    field_create_instance($instance);
+  }
+
+  /**
+   * Runs the field CRUD tests.
+   *
+   * In order to act on the same fields, and not create the fields over and over
+   * again the following tests create, update and delete the same fields.
+   */
+  function testCRUDFields() {
+    $this->manageFieldsPage();
+    $this->createField();
+    $this->updateField();
+    $this->addExistingField();
+  }
+
+  /**
+   * Create a field that has no global field settings.
+   *
+   * This test creates a field but in one fewer step because the field has
+   * no global field settings.
+   */
+  function testCreateFieldNoSettings() {
+    // This setting is checked in field_test_field_settings_form().
+    state_get('field_ui_test_field_settings', FALSE);
+    $this->createField();
+  }
+
+  /**
+   * Tests the manage fields page.
+   */
+  function manageFieldsPage() {
+    $this->backdropGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields');
+    // Check all table columns.
+    $table_headers = array(
+      t('Label'),
+      t('Machine name'),
+      t('Field type'),
+      t('Widget'),
+      t('Operations'),
+    );
+    foreach ($table_headers as $table_header) {
+      // We check that the label appear in the table headings.
+      $this->assertRaw($table_header . '</th>', format_string('%table_header table header was found.', array('%table_header' => $table_header)));
+    }
+
+    // "Add new field" and "Add existing field" aren't a table heading so just
+    // test the text.
+    foreach (array('Add new field', 'Add existing field') as $element) {
+      $this->assertText($element, format_string('"@element" was found.', array('@element' => $element)));
+    }
+  }
+
+  /**
+   * Tests adding a new field.
+   *
+   * @todo Assert properties can bet set in the form and read back in $field and
+   * $instances.
+   */
+  function createField() {
+    // Create a test field.
+    $edit = array(
+      'fields[_add_new_field][label]' => $this->field_label,
+      'fields[_add_new_field][field_name]' => $this->field_name_input,
+    );
+    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->hyphen_type, $edit);
+
+    // Assert the field appears in the "add existing field" section for
+    // different entity types; e.g. if a field was added in a node entity, it
+    // should also appear in the 'taxonomy term' entity.
+    $this->backdropGet('admin/structure/taxonomy/tags/fields');
+    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in term settings.');
+  }
+
+  /**
+   * Tests editing an existing field.
+   */
+  function updateField() {
+    // Go to the field edit page.
+    $this->backdropGet('admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $this->field_name);
+
+    // Populate the field settings with new settings.
+    $string = 'updated dummy test string';
+    $edit = array(
+      'field[settings][test_field_setting]' => $string,
+      'instance[settings][test_instance_setting]' => $string,
+      'instance[widget][settings][test_widget_setting]' => $string,
+    );
+    $this->backdropPost(NULL, $edit, t('Save settings'));
+
+    // Assert the field settings are correct.
+    $this->assertFieldSettings($this->type, $this->field_name, $string);
+
+    // Assert redirection back to the "manage fields" page.
+    $this->assertText(t('Saved @label configuration.', array('@label' => $this->field_label)), 'Redirected to "Manage fields" page.');
+  }
+
+  /**
+   * Tests adding an existing field in another content type.
+   */
+  function addExistingField() {
+    // Check "Add existing field" appears.
+    $this->backdropGet('admin/structure/types/manage/page/fields');
+    $this->assertRaw(t('Add existing field'), '"Add existing field" was found.');
+
+    // Check that the list of options respects entity type restrictions on
+    // fields. The 'comment' field is restricted to the 'comment' entity type
+    // and should not appear in the list.
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
+
+    // Add a new field based on an existing field.
+    $edit = array(
+      'fields[_add_existing_field][label]' => $this->field_label . '_2',
+      'fields[_add_existing_field][field_name]' => $this->field_name,
+    );
+    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $edit);
+  }
+
+  /**
+   * Tests the cardinality settings of a field.
+   *
+   * We do not test if the number can be submitted with anything else than a
+   * numeric value. That is tested already in FormsTestCase::testNumber().
+   */
+  function testCardinalitySettings() {
+    $this->createField();
+    $field_edit_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $this->field_name;
+
+    // Assert the cardinality other field cannot be empty when cardinality is
+    // set to 'number'.
+    $edit = array(
+      'field[cardinality]' => 'number',
+      'field[cardinality_number]' => '',
+    );
+    $this->backdropPost($field_edit_path, $edit, t('Save settings'));
+    $this->assertText('Number of values is required.');
+
+    // Submit a custom number.
+    $edit = array(
+      'field[cardinality]' => 'number',
+      'field[cardinality_number]' => 6,
+    );
+    $this->backdropPost($field_edit_path, $edit, t('Save settings'));
+    $this->assertRaw(format_string('Saved %label configuration.', array('%label' => $this->field_label)), 'Redirected to "Manage fields" page.');
+    $this->backdropGet($field_edit_path);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", 'number');
+    $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 6);
+
+    // Set to unlimited.
+    $edit = array(
+      'field[cardinality]' => FIELD_CARDINALITY_UNLIMITED,
+    );
+    $this->backdropPost($field_edit_path, $edit, t('Save settings'));
+    $this->assertRaw(format_string('Saved %label configuration.', array('%label' => $this->field_label)), 'Redirected to "Manage fields" page.');
+    $this->backdropGet($field_edit_path);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", FIELD_CARDINALITY_UNLIMITED);
+    $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 1);
+  }
+
+  /**
+   * Asserts field settings are as expected.
+   *
+   * @param $bundle
+   *   The bundle name for the instance.
+   * @param $field_name
+   *   The field name for the instance.
+   * @param $string
+   *   The settings text.
+   * @param $entity_type
+   *   The entity type for the instance.
+   */
+  function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
+    // Reset the fields info.
+    _field_info_collate_fields_reset();
+    // Assert field settings.
+    $field = field_info_field($field_name);
+    $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
+
+    // Assert instance and widget settings.
+    $instance = field_info_instance($entity_type, $field_name, $bundle);
+    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, 'Field instance settings were found.');
+    $this->assertTrue($instance['widget']['settings']['test_widget_setting'] == $string, 'Field widget settings were found.');
+  }
+
+  /**
+   * Tests that default value is correctly validated and saved.
+   */
+  function testDefaultValue() {
+    // Create a test field and instance.
+    $field_name = 'test';
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'test_field'
+    );
+    field_create_field($field);
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => $this->type,
+    );
+    field_create_instance($instance);
+
+    $langcode = LANGUAGE_NONE;
+    $admin_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields/' . $field_name;
+    $element_id = "edit-$field_name-$langcode-0-value";
+    $element_name = "{$field_name}[$langcode][0][value]";
+    $this->backdropGet($admin_path);
+    $this->assertFieldById($element_id, '', 'The default value widget was empty.');
+
+    // Check that invalid default values are rejected.
+    $edit = array($element_name => '-1');
+    $this->backdropPost($admin_path, $edit, t('Save settings'));
+    $this->assertText("$field_name does not accept the value -1", 'Form vaildation failed.');
+
+    // Check that the default value is saved.
+    $edit = array($element_name => '1');
+    $this->backdropPost($admin_path, $edit, t('Save settings'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    $instance = field_info_instance('node', $field_name, $this->type);
+    $this->assertEqual($instance['default_value'], array(array('value' => 1)), 'The default value was correctly saved.');
+
+    // Check that the default value shows up in the form
+    $this->backdropGet($admin_path);
+    $this->assertFieldById($element_id, '1', 'The default value widget was displayed with the correct value.');
+
+    // Check that the default value can be emptied.
+    $edit = array($element_name => '');
+    $this->backdropPost(NULL, $edit, t('Save settings'));
+    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    field_info_cache_clear();
+    $instance = field_info_instance('node', $field_name, $this->type);
+    $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
+  }
+
+  /**
+   * Tests that deletion removes fields and instances as expected.
+   */
+  function testDeleteField() {
+    // Create a new field.
+    $bundle_path1 = 'admin/structure/types/manage/' . $this->hyphen_type;
+    $edit1 = array(
+      'fields[_add_new_field][label]' => $this->field_label,
+      'fields[_add_new_field][field_name]' => $this->field_name_input,
+    );
+    $this->fieldUIAddNewField($bundle_path1, $edit1);
+
+    // Create an additional node type.
+    $type_name2 = strtolower($this->randomName(8)) . '_test';
+    $type2 = $this->backdropCreateContentType(array('name' => $type_name2, 'type' => $type_name2));
+    $type_name2 = $type2->type;
+    $hyphen_type2 = str_replace('_', '-', $type_name2);
+
+    // Add an instance to the second node type.
+    $bundle_path2 = 'admin/structure/types/manage/' . $hyphen_type2;
+    $edit2 = array(
+      'fields[_add_existing_field][label]' => $this->field_label,
+      'fields[_add_existing_field][field_name]' => $this->field_name,
+    );
+    $this->fieldUIAddExistingField($bundle_path2, $edit2);
+
+    // Delete the first instance.
+    $this->fieldUIDeleteField($bundle_path1, $this->field_name, $this->field_label, $this->type);
+
+    // Reset the fields info.
+    _field_info_collate_fields_reset();
+    // Check that the field instance was deleted.
+    $this->assertNull(field_info_instance('node', $this->field_name, $this->type), 'Field instance was deleted.');
+    // Check that the field was not deleted
+    $this->assertNotNull(field_info_field($this->field_name), 'Field was not deleted.');
+
+    // Delete the second instance.
+    $this->fieldUIDeleteField($bundle_path2, $this->field_name, $this->field_label, $type_name2);
+
+    // Reset the fields info.
+    _field_info_collate_fields_reset();
+    // Check that the field instance was deleted.
+    $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
+    // Check that the field was deleted too.
+    $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
+  }
+
+  /**
+   * Tests that Field UI respects the 'no_ui' option in hook_field_info().
+   */
+  function testHiddenFields() {
+    $bundle_path = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields';
+
+    // Check that the field type is not available in the 'add new field' row.
+    $this->backdropGet($bundle_path);
+    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
+
+    // Create a field and an instance programmatically.
+    $field_name = 'hidden_test_field';
+    field_create_field(array('field_name' => $field_name, 'type' => $field_name));
+    $instance = array(
+      'field_name' => $field_name,
+      'bundle' => $this->type,
+      'entity_type' => 'node',
+      'label' => t('Hidden field'),
+      'widget' => array('type' => 'test_field_widget'),
+    );
+    field_create_instance($instance);
+    $this->assertTrue(field_read_instance('node', $field_name, $this->type), format_string('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
+
+    // Check that the newly added instance appears on the 'Manage Fields'
+    // screen.
+    $this->backdropGet($bundle_path);
+    $this->assertLinkByHref("$bundle_path/$field_name", 0, 'Field was created and appears in the overview page.');
+
+    // Check that the instance does not appear in the 'add existing field' row
+    // on other bundles.
+    $bundle_path = 'admin/structure/types/manage/post/fields';
+    $this->backdropGet($bundle_path);
+    $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 'add existing field' select respects field types 'no_ui' property.");
+  }
+
+  /**
+   * Tests renaming a bundle.
+   */
+  function testRenameBundle() {
+    $type2 = strtolower($this->randomName(8)) . '_' .'test';
+    $hyphen_type2 = str_replace('_', '-', $type2);
+
+    $options = array(
+      'type' => $type2,
+    );
+    $this->backdropPost('admin/structure/types/manage/' . $this->hyphen_type, $options, t('Save content type'));
+
+    $this->backdropGet('admin/structure/types/manage/' . $hyphen_type2 . '/fields');
+  }
+
+  /**
+   * Tests that a duplicate field name is caught by validation.
+   */
+  function testDuplicateFieldName() {
+    // field_tags already exists, so we're expecting an error when trying to
+    // create a new field with the same name.
+    $edit = array(
+      'fields[_add_new_field][field_name]' => 'tags',
+      'fields[_add_new_field][label]' => $this->randomName(),
+      'fields[_add_new_field][type]' => 'taxonomy_term_reference',
+      'fields[_add_new_field][widget_type]' => 'options_select',
+    );
+    $url = 'admin/structure/types/manage/' . $this->hyphen_type . '/fields';
+    $this->backdropPost($url, $edit, t('Save'));
+
+    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertUrl($url, array(), 'Stayed on the same page.');
+  }
+
+  /**
+   * Tests that external URLs in the 'destinations' query parameter are blocked.
+   */
+  function testExternalDestinations() {
+    $path = 'admin/structure/types/manage/post/fields/field_tags/field-settings';
+    $options = array(
+      'query' => array('destinations' => array('http://example.com')),
+    );
+    $this->backdropPost($path, NULL, t('Save field settings'), $options);
+
+    $this->assertUrl('admin/structure/types/manage/post/fields', array(), 'Stayed on the same site.');
+  }
+}
+
+/**
+ * Tests the functionality of the 'Manage display' screens.
+ */
+class FieldUIManageDisplayTestCase extends FieldUITestCase {
+  function setUp() {
+    parent::setUp(array('search'));
+  }
+
+  /**
+   * Tests formatter settings.
+   */
+  function testFormatterUI() {
+    $manage_fields = 'admin/structure/types/manage/' . $this->hyphen_type;
+    $manage_display = $manage_fields . '/display/default';
+
+    // Create a field, and a node with some data for the field.
+    $edit = array(
+      'fields[_add_new_field][label]' => 'Test field',
+      'fields[_add_new_field][field_name]' => 'test',
+    );
+    $this->fieldUIAddNewField($manage_fields, $edit);
+
+    // Clear the test-side cache and get the saved field instance.
+    field_info_cache_clear();
+    $instance = field_info_instance('node', 'field_test', $this->type);
+    $format = $instance['display']['default']['type'];
+    $default_settings = field_info_formatter_settings($format);
+    $setting_name = key($default_settings);
+    $setting_value = $instance['display']['default']['settings'][$setting_name];
+
+    // Display the "Manage display" screen and check that the expected formatter
+    // is selected.
+    $this->backdropGet($manage_display);
+    $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
+    $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
+
+    // Change the formatter and check that the summary is updated.
+    $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
+    $this->backdropPostAJAX(NULL, $edit, array('op' => t('Refresh')));
+    $format = 'field_test_multiple';
+    $default_settings = field_info_formatter_settings($format);
+    $setting_name = key($default_settings);
+    $setting_value = $default_settings[$setting_name];
+    $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
+    $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
+
+    // Submit the form and check that the instance is updated.
+    $this->backdropPost(NULL, array(), t('Save'));
+    field_info_cache_clear();
+    $instance = field_info_instance('node', 'field_test', $this->type);
+    $current_format = $instance['display']['default']['type'];
+    $current_setting_value = $instance['display']['default']['settings'][$setting_name];
+    $this->assertEqual($current_format, $format, 'The formatter was updated.');
+    $this->assertEqual($current_setting_value, $setting_value, 'The setting was updated.');
+  }
+
+  /**
+   * Tests switching view modes to use custom or 'default' settings'.
+   */
+  function testViewModeCustom() {
+    // Create a field, and a node with some data for the field.
+    $edit = array(
+      'fields[_add_new_field][label]' => 'Test field',
+      'fields[_add_new_field][field_name]' => 'test',
+    );
+    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->hyphen_type, $edit);
+    // For this test, use a formatter setting value that is an integer unlikely
+    // to appear in a rendered node other than as part of the field being tested
+    // (for example, unlikely to be part of the "Submitted by ... on ..." line).
+    $value = 12345;
+    $settings = array(
+      'type' => $this->type,
+      'field_test' => array(LANGUAGE_NONE => array(array('value' => $value))),
+    );
+    $node = $this->backdropCreateNode($settings);
+
+    // Gather expected output values with the various formatters.
+    $formatters = field_info_formatter_types();
+    $output = array(
+      'field_test_default' => $formatters['field_test_default']['settings']['test_formatter_setting'] . '|' . $value,
+      'field_test_with_prepare_view' => $formatters['field_test_with_prepare_view']['settings']['test_formatter_setting_additional'] . '|' . $value. '|' . ($value + 1),
+    );
+
+    // Check that the field is displayed with the default formatter in 'rss'
+    // mode (uses 'default'), and hidden in 'teaser' mode (uses custom settings).
+    $this->assertNodeViewText($node, 'rss', $output['field_test_default'], "The field is displayed as expected in view modes that use 'default' settings.");
+    $this->assertNodeViewNoText($node, 'teaser', $value, "The field is hidden in view modes that use custom settings.");
+
+    // Change fomatter for 'default' mode, check that the field is displayed
+    // accordingly in 'rss' mode.
+    $edit = array(
+      'fields[field_test][type]' => 'field_test_with_prepare_view',
+    );
+    $this->backdropPost('admin/structure/types/manage/' . $this->hyphen_type . '/display/default', $edit, t('Save'));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in view modes that use 'default' settings.");
+
+    // Specialize the 'rss' mode, check that the field is displayed the same.
+    // The enable link is protected with a CSRF token, so get the link href
+    // directly using XPath.
+    $this->backdropGet('admin/structure/types/manage/' . $this->hyphen_type . '/display');
+    list($enable_link) = $this->xpath('//tr[contains(@class, "view-mode--rss")]//a');
+    $enable_href_parts = backdrop_parse_url($enable_link['href']);
+    $this->backdropGet($enable_href_parts['path'], $enable_href_parts);
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in newly specialized 'rss' mode.");
+
+    // Set the field to 'hidden' in the view mode, check that the field is
+    // hidden.
+    $edit = array(
+      'fields[field_test][type]' => 'hidden',
+    );
+    $this->backdropPost('admin/structure/types/manage/' . $this->hyphen_type . '/display/rss', $edit, t('Save'));
+    $this->assertNodeViewNoText($node, 'rss', $value, "The field is hidden in 'rss' mode.");
+
+    // Set the view mode back to 'default', check that the field is displayed
+    // accordingly.
+    $this->backdropPost('admin/structure/types/manage/' . $this->hyphen_type . '/display/rss/reset', array(), t('Reset'));
+    $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected when 'rss' mode is set back to 'default' settings.");
+
+    // Specialize the view mode again.
+    $this->backdropGet($enable_href_parts['path'], $enable_href_parts);
+    // Check that the previous settings for the view mode have been kept.
+    $this->assertNodeViewNoText($node, 'rss', $value, "The previous settings are kept when 'rss' mode is specialized again.");
+  }
+
+  /**
+   * Asserts that a string is found in the rendered node in a view mode.
+   *
+   * @param Node $node
+   *   The node.
+   * @param $view_mode
+   *   The view mode in which the node should be displayed.
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  function assertNodeViewText(Node $node, $view_mode, $text, $message) {
+    return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, FALSE);
+  }
+
+  /**
+   * Asserts that a string is not found in the rendered node in a view mode.
+   *
+   * @param Node $node
+   *   The node.
+   * @param $view_mode
+   *   The view mode in which the node should be displayed.
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  function assertNodeViewNoText(Node $node, $view_mode, $text, $message) {
+    return $this->assertNodeViewTextHelper($node, $view_mode, $text, $message, TRUE);
+  }
+
+  /**
+   * Asserts that a string is (not) found in the rendered nodein a view mode.
+   *
+   * This helper function is used by assertNodeViewText() and
+   * assertNodeViewNoText().
+   *
+   * @param Node $node
+   *   The node.
+   * @param $view_mode
+   *   The view mode in which the node should be displayed.
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   * @param $not_exists
+   *   TRUE if this text should not exist, FALSE if it should.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  function assertNodeViewTextHelper(Node $node, $view_mode, $text, $message, $not_exists) {
+    // Make sure caches on the tester side are refreshed after changes
+    // submitted on the tested side.
+    field_info_cache_clear();
+
+    // Save current content so that we can restore it when we're done.
+    $old_content = $this->backdropGetContent();
+
+    // Render a cloned node, so that we do not alter the original.
+    $clone = clone $node;
+    $element = node_view($clone, $view_mode);
+    $output = backdrop_render($element);
+    $this->verbose(t('Rendered node - view mode: @view_mode', array('@view_mode' => $view_mode)) . '<hr />'. $output);
+
+    // Assign content so that BackdropWebTestCase functions can be used.
+    $this->backdropSetContent($output);
+    $method = ($not_exists ? 'assertNoText' : 'assertText');
+    $return = $this->{$method}((string) $text, $message);
+
+    // Restore previous content.
+    $this->backdropSetContent($old_content);
+
+    return $return;
+  }
+}
+
+/**
+ * Tests custom widget hooks and callbacks on the field administration pages.
+ */
+class FieldUIAlterTestCase extends BackdropWebTestCase {
+  function setUp() {
+    parent::setUp(array('field_test'));
+
+    // Create test user.
+    $admin_user = $this->backdropCreateUser(array('access content', 'administer content types', 'administer users', 'administer fields', 'administer account settings'));
+    $this->backdropLogin($admin_user);
+  }
+
+  /**
+   * Tests hook_field_widget_properties_alter() on the default field widget.
+   *
+   * @see field_test_field_widget_properties_alter()
+   * @see field_test_field_widget_properties_user_alter()
+   * @see field_test_field_widget_form_alter()
+   */
+  function testDefaultWidgetPropertiesAlter() {
+    // Create the alter_test_text field and an instance on post nodes.
+    field_create_field(array(
+      'field_name' => 'alter_test_text',
+      'type' => 'text',
+    ));
+    field_create_instance(array(
+      'field_name' => 'alter_test_text',
+      'entity_type' => 'node',
+      'bundle' => 'post',
+      'widget' => array(
+        'type' => 'text_textfield',
+        'size' => 60,
+      ),
+    ));
+
+    // Test that field_test_field_widget_properties_alter() sets the size to
+    // 42 and that field_test_field_widget_form_alter() reports the correct
+    // size when the form is displayed.
+    $this->backdropGet('admin/structure/types/manage/post/fields/alter_test_text');
+    $this->assertText('Field size: 42', 'Altered field size is found in hook_field_widget_form_alter().');
+
+    // Create the alter_test_options field.
+    field_create_field(array(
+      'field_name' => 'alter_test_options',
+      'type' => 'list_text'
+    ));
+    // Create instances on users and page nodes.
+    field_create_instance(array(
+      'field_name' => 'alter_test_options',
+      'entity_type' => 'user',
+      'bundle' => 'user',
+      'widget' => array(
+        'type' => 'options_select',
+      )
+    ));
+    field_create_instance(array(
+      'field_name' => 'alter_test_options',
+      'entity_type' => 'node',
+      'bundle' => 'page',
+      'widget' => array(
+        'type' => 'options_select',
+      )
+    ));
+
+    // Test that field_test_field_widget_properties_user_alter() replaces
+    // the widget and that field_test_field_widget_form_alter() reports the
+    // correct widget name when the form is displayed.
+    $this->backdropGet('admin/config/people/manage/fields/alter_test_options');
+    $this->assertText('Widget type: options_buttons', 'Widget type is altered for users in hook_field_widget_form_alter().');
+
+    // Test that the widget is not altered on page nodes.
+    $this->backdropGet('admin/structure/types/manage/page/fields/alter_test_options');
+    $this->assertText('Widget type: options_select', 'Widget type is not altered for pages in hook_field_widget_form_alter().');
+  }
+}
+
+/**
+ * Helper class for testing view mode functionality.
+ */
+class FieldUIViewModeTestHelper extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  /**
+   * Overrides BackdropWebTestCase::setUp().
+   */
+  public function setUp(array $modules = array()) {
+    $modules[] = 'comment';
+    $modules[] = 'field_ui';
+    $modules[] = 'taxonomy';
+    $modules[] = 'view_mode_test';
+    parent::setUp($modules);
+
+    // Create an administrative user.
+    $this->admin_user = $this->backdropCreateUser(array(
+      'administer fields',
+      'administer view modes',
+      'administer content types',
+    ));
+
+    // Create content types for testing.
+    $this->backdropCreateContentType(array('type' => 'page', 'name' => 'Page'));
+    // Create a post content type with comments enabled.
+    $this->backdropCreateContentType(array(
+      'type' => 'post',
+      'name' => 'Post',
+      'settings' => array(
+        'comment_default' => COMMENT_NODE_OPEN,
+      ),
+    ));
+  }
+
+  /**
+   * Overrides BackdropWebTestCase::refreshVariables().
+   *
+   * Ensures that the entity and field view mode caches are cleared so they
+   * can be reliably checked in the test.
+   */
+  protected function refreshVariables() {
+    parent::refreshVariables();
+
+    // Clear the entity and display caches.
+    backdrop_static_reset('field_view_mode_settings');
+    entity_info_cache_clear();
+  }
+
+  public function assertViewModeExists($entity_type, $view_mode) {
+    $info = entity_get_info($entity_type);
+    return $this->assertTrue(!empty($info['view modes'][$view_mode]), "View mode $view_mode found for entity type $entity_type.");
+  }
+
+  public function assertNoViewModeExists($entity_type, $view_mode) {
+    $info = entity_get_info($entity_type);
+    return $this->assertTrue(!isset($info['view modes'][$view_mode]), "View mode $view_mode not found for entity type $entity_type.");
+  }
+
+  public function getActualViewMode($entity_type, $bundle, $view_mode) {
+    $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
+    return (!empty($view_mode_settings[$view_mode]['custom_settings']) ? $view_mode : 'default');
+  }
+
+  public function assertActualViewMode($entity_type, $bundle, $view_mode, $expected_view_mode) {
+    $actual_view_mode = $this->getActualViewMode($entity_type, $bundle, $view_mode);
+    return $this->assertIdentical($expected_view_mode, $actual_view_mode, "View mode $view_mode for entity type $entity_type and bundle $bundle actually uses view mode $actual_view_mode, expected $expected_view_mode.");
+  }
+
+  public function assertViewModeDefaultDisplay($entity_type, $bundle, $view_mode) {
+    return $this->assertActualViewMode($entity_type, $bundle, $view_mode, 'default');
+  }
+
+  public function assertViewModeCustomDisplay($entity_type, $bundle, $view_mode) {
+    return $this->assertActualViewMode($entity_type, $bundle, $view_mode, $view_mode);
+  }
+}
+
+/**
+ * Tests view mode functionality.
+ */
+class FieldUIViewModeFunctionalTest extends FieldUIViewModeTestHelper {
+
+  /**
+   * Tests view mode functionality.
+   */
+  public function testFieldUIViewModes() {
+    $this->backdropLogin($this->admin_user);
+    $this->backdropGet('admin/structure/types/manage/post/display');
+    $this->assertLinkByHref('admin/structure/types/manage/post/display/add');
+
+    // Set some 'default' settings under a field instance.
+    $settings = field_bundle_settings('node', 'post');
+    $settings['extra_fields']['display']['test']['default']['testing'] = TRUE;
+    field_bundle_settings('node', 'post', $settings);
+
+    $settings = field_bundle_settings('node', 'page');
+    $settings['extra_fields']['display']['test']['default']['testing'] = FALSE;
+    field_bundle_settings('node', 'page', $settings);
+
+    $settings = field_bundle_settings('comment', 'comment_node_post');
+    $settings['extra_fields']['display']['test']['default']['testing'] = TRUE;
+    field_bundle_settings('comment', 'comment_node_post', $settings);
+
+    // Attempt to create a view mode that already is provided by core.
+    $edit = array(
+      'label' => 'Custom 1',
+      'machine_name' => 'teaser',
+    );
+    $this->backdropPost('admin/structure/types/manage/post/display/add', $edit, 'Save');
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
+
+    // Save a valid custom view mode for the Post content type.
+    $edit['machine_name'] = 'custom_1';
+    $this->backdropPost('admin/structure/types/manage/post/display/add', $edit, 'Save');
+    $this->assertViewModeExists('node', 'custom_1');
+    $this->assertViewModeDefaultDisplay('node', 'page', 'custom_1');
+    $this->assertViewModeCustomDisplay('node', 'post', 'custom_1');
+
+    // Test that the default settings are applied to new custom view modes.
+    $settings = field_bundle_settings('node', 'post');
+    $this->assertEqual($settings['extra_fields']['display']['test']['custom_1']['testing'], TRUE, 'The default settings were applied to the new view mode.');
+
+    // Reset the view-mode on the post content type.
+    $this->backdropPost('admin/structure/types/manage/post/display/custom_1/reset', array(), 'Reset');
+    $this->assertViewModeExists('node', 'custom_1');
+    $this->assertViewModeDefaultDisplay('node', 'post', 'custom_1');
+    $this->assertViewModeDefaultDisplay('node', 'page', 'custom_1');
+
+    // Enable the view-mode on the page content type.
+    $this->backdropGet('admin/structure/types/manage/page/display');
+    list($enable_link) = $this->xpath('//tr[contains(@class, "view-mode--custom-1")]//a');
+    $enable_href_parts = backdrop_parse_url($enable_link['href']);
+    $this->backdropGet($enable_href_parts['path'], $enable_href_parts);
+    $this->assertViewModeExists('node', 'custom_1');
+    $this->assertViewModeCustomDisplay('node', 'page', 'custom_1');
+    $this->assertViewModeDefaultDisplay('node', 'post', 'custom_1');
+
+    // Test that the default settings are applied to newly enabled view modes.
+    $settings = field_bundle_settings('node', 'page');
+    $this->assertEqual($settings['extra_fields']['display']['test']['custom_1']['testing'], FALSE, 'The default settings were applied to the newly enabled view mode.');
+
+    // Delete the view mode.
+    $this->backdropPost('admin/structure/types/manage/page/display/custom_1/delete', array(), 'Delete');
+    $this->assertText('Deleted the Custom 1 view mode.');
+    $this->assertNoViewModeExists('node', 'custom_1');
+    $this->assertViewModeDefaultDisplay('node', 'page', 'custom_1');
+    $this->assertViewModeDefaultDisplay('node', 'post', 'custom_1');
+
+    //Create a comment view mode.
+    $edit = array(
+      'label' => 'Comment 1',
+      'machine_name' => 'com_1',
+    );
+    $this->backdropPost('admin/structure/types/manage/post/comment/display/add', $edit, 'Save');
+    $this->assertViewModeExists('comment', 'com_1');
+    $this->assertViewModeDefaultDisplay('comment', 'comment_node_page', 'com_1');
+    $this->assertViewModeCustomDisplay('comment', 'comment_node_post', 'com_1');
+
+    // Test that the default comment settings are applied to custom view modes.
+    $settings = field_bundle_settings('comment', 'comment_node_post');
+    $this->assertEqual($settings['extra_fields']['display']['test']['com_1']['testing'], TRUE, 'The default settings were applied to the comment view mode.');
+  }
+
+  /**
+   * Test the new entity view mode hooks.
+   */
+  public function testInfoHooks() {
+    config_set('entity.view_modes', 'view_modes', array(
+      'node' => array(
+        'info_3' => array(
+          'label' => t('Variable-altered view mode'),
+          'custom settings' => TRUE,
+        ),
+      ),
+      'taxonomy_term' => array(),
+    ));
+    $this->refreshVariables();
+
+    $info = entity_get_info();
+
+    // An invalid entity type in hook_entity_view_mode_info() does not pass
+    // into the entity info array.
+    $this->assertTrue(!isset($info['invalid-type']));
+
+    // Test hook-provided view modes.
+    $this->assertIdentical($info['node']['view modes']['info_1'], array(
+      'label' => t('Hook-defined view mode #1'),
+      'custom settings' => FALSE,
+    ));
+    $this->assertIdentical($info['node']['view modes']['info_2'], array(
+      'label' => t('Hook-altered view mode'),
+      'custom settings' => TRUE,
+    ));
+    $this->assertIdentical($info['node']['view modes']['info_3'], array(
+      'label' => t('Variable-altered view mode'),
+      'custom settings' => TRUE,
+    ));
+    $this->assertIdentical($info['taxonomy_term']['view modes']['info_1'], array(
+      'label' => t('Hook-defined view mode #1'),
+      'custom settings' => TRUE,
+    ));
+
+    // Test that entity view modes defined in hook_entity_info() are never
+    // overridden by custom view modes.
+    $this->assertIdentical($info['node']['view modes']['full'], array(
+      'label' => 'Full content',
+      'custom settings' => FALSE,
+    ));
+  }
+}

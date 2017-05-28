@@ -1,0 +1,123 @@
+{
+    "_config_name": "views.view.test_exposed_admin_ui",
+    "name": "test_exposed_admin_ui",
+    "module": "views_test",
+    "description": "",
+    "tag": "",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": null,
+    "core": null,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "items_per_page": null,
+                "offset": null,
+                "use_pager": null,
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": 0
+                    }
+                },
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic",
+                    "options": {
+                        "reset_button": true
+                    }
+                },
+                "style_plugin": "default",
+                "row_plugin": "node",
+                "row_options": {
+                    "links": 1,
+                    "comments": 0
+                },
+                "sorts": {
+                    "created": {
+                        "id": "created",
+                        "table": "node",
+                        "field": "created"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "id": "type",
+                        "table": "node",
+                        "field": "type",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "operator": "in",
+                        "value": {
+                            "all": "all",
+                            "post": "post",
+                            "page": "page"
+                        },
+                        "group": "1",
+                        "exposed": false,
+                        "expose": {
+                            "operator_id": "type_op",
+                            "label": "Content: Type",
+                            "description": "",
+                            "use_operator": true,
+                            "operator": "",
+                            "identifier": "",
+                            "required": false,
+                            "remember": false,
+                            "multiple": false,
+                            "remember_roles": {
+                                "2": 2
+                            },
+                            "reduce": false
+                        },
+                        "is_grouped": false,
+                        "group_info": {
+                            "label": "",
+                            "description": "",
+                            "identifier": "",
+                            "optional": true,
+                            "widget": "select",
+                            "multiple": false,
+                            "remember": 0,
+                            "default_group": "All",
+                            "default_group_multiple": [],
+                            "group_items": []
+                        }
+                    }
+                }
+            }
+        },
+        "page_1": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "items_per_page": null,
+                "offset": null,
+                "use_pager": null,
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": 0
+                    }
+                },
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "test_exposed_admin_ui"
+            }
+        }
+    }
+}

@@ -1,0 +1,88 @@
+/**
+ * @file
+ * jQuery UI dialog styles.
+ */
+.ui-widget {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.ui-dialog {
+  border: 0.125em solid #20252e;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.ui-corner-all {
+  border-radius: 0;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  top: 0;
+  top: calc(-0.125em);
+  right: 0;
+  right: calc(-0.125em);
+  width: 2.5em;
+  height: 100%;
+  height: calc(100% + 0.125em);
+  margin: 0;
+  border: 0;
+  outline: none;
+}
+
+.ui-dialog .ui-dialog-titlebar-close .ui-icon {
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  background: transparent;
+}
+
+/**
+ * Close X CSS art
+ */
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:before,
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 0.125em;
+  height: 0.875em;
+}
+
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:before {
+  -webkit-transform:
+    translate(0.5em, 0.125em)
+    rotate(45deg);
+  transform:
+    translate(0.5em, 0.125em)
+    rotate(45deg);
+}
+
+.ui-dialog .ui-dialog-titlebar-close .ui-icon:after {
+  -webkit-transform:
+    translate(0.5em, 0.125em)
+    rotate(-45deg);
+  transform:
+    translate(0.5em, 0.125em)
+    rotate(-45deg);
+}
+
+.ui-button-icon-only .ui-button-text,
+.ui-button-icons-only .ui-button-text {
+  padding: 0;
+}

@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the block module.
+ */
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function block_update_dependencies() {
+  // Do not drop the block tables until after System module has enabled and
+  // migrated blocks into layouts.
+  $dependencies['block'][1002] = array(
+    'system' => 1025,
+  );
+
+  return $dependencies;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Block cache is always enabled in Backdrop.
+ */
+function block_update_1000() {
+  update_variable_del('block_cache');
+}
+
+/**
+ * Add a column for title to the block_custom table.
+ */
+function block_update_1001() {
+  if (db_field_exists('block_custom', 'title')) {
+    return;
+  }
+
+  $schema = array(
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
+    'translatable' => TRUE,
+  );
+  db_add_field('block_custom', 'title', $schema);
+
+  $result = db_query("SELECT * FROM {block} WHERE module = 'block'");
+  foreach ($result as $row) {
+    db_update('block_custom')
+      ->condition('bid', $row->delta)
+      ->fields(array(
+        'title' => $row->title,
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Remove the legacy block tables.
+ */
+function block_update_1002() {
+  db_drop_table('block');
+  db_drop_table('block_role');
+  db_drop_table('cache_block');
+
+  // Set the system weight back to 0, previously it was -5, but this weight is
+  // no longer necessary as Block is no longer responsible for page layout.
+  db_update('system')
+    ->fields(array('weight' => 0))
+    ->condition('name', 'block')
+    ->execute();
+}
+
+/**
+ * Increase {block_custom}.title length to 255 characters.
+ */
+function block_update_1003() {
+  db_change_field('block_custom', 'title', 'title',
+    array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
+      'translatable' => TRUE,
+    )
+  );
+}
+
+/**
+ * Move individual blocks into config files.
+ */
+function block_update_1004() {
+  if (!db_table_exists('block_custom')) {
+    return;
+  }
+
+  $blocks = db_query("SELECT * FROM {block_custom}")->fetchAllAssoc('bid');
+  foreach ($blocks as $block) {
+    $block = (array) $block;
+    $data = array(
+      'delta' => $block['bid'],
+      'info' => $block['info'],
+      'title' => $block['title'],
+      'body' => array(
+        'value'=> $block['body'],
+        'format' => $block['format'],
+        ),
+      );
+    $config = config('block.custom.' . $block['bid']);
+    $config->setData($data);
+    $config->save();
+  }
+
+  db_drop_table('block_custom');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

@@ -5,8 +5,8 @@ check to make sure you have done the following. **The more boxes you can check
 the easier it will be for us to merge in your changes with confidence**
 
 - [ ] My code passes relevant CI status checks
-- [ ] My code includes a test if applicable ([see here](http://docs.lndo.io/developers/testing))
-- [ ] My code includes an update to `CHANGELOG.md` ([see here](https://github.com/kalabox/lando/blob/HEAD/CHANGELOG.md))
+- [ ] My code includes a test if applicable ([see here](https://docs.lndo.io/dev/testing.html))
+- [ ] My code includes an update to the `CHANGELOG` ([see here](https://github.com/kalabox/lando/tree/master/docs/changelog))
 - [ ] My code includes documentation updates if relevant.
 - [ ] I have pinged @pirog/@reynoldsalec/@serundeputy when I think my code is ready for prime time.
 

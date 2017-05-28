@@ -1,0 +1,18 @@
+{
+    "_config_name": "image.style.large.json",
+    "storage": 4,
+    "module": "image",
+    "label": "Large (800x600)",
+    "name": "large",
+    "effects": [
+        {
+            "name": "image_scale",
+            "data": {
+                "width": "800",
+                "height": "600",
+                "upscale": 1
+            },
+            "weight": 1
+        }
+    ]
+}

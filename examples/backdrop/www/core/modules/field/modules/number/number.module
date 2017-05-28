@@ -1,0 +1,358 @@
+<?php
+
+/**
+ * @file
+ * Defines numeric field types.
+ */
+
+/**
+ * Implements hook_field_info().
+ */
+function number_field_info() {
+  return array(
+    'number_integer' => array(
+      'label' => t('Number (integer)'),
+      'description' => t('This field stores a number in the database as an integer.'),
+      'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
+      'default_widget' => 'number',
+      'default_formatter' => 'number_integer',
+      'default_token_formatter' => 'number_unformatted',
+    ),
+    'number_decimal' => array(
+      'label' => t('Number (decimal)'),
+      'description' => t('This field stores a number in the database in a fixed decimal format.'),
+      'settings' => array('precision' => 10, 'scale' => 2),
+      'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
+      'default_widget' => 'number',
+      'default_formatter' => 'number_decimal',
+      'default_token_formatter' => 'number_unformatted',
+    ),
+    'number_float' => array(
+      'label' => t('Number (float)'),
+      'description' => t('This field stores a number in the database in a floating point format.'),
+      'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
+      'default_widget' => 'number',
+      'default_formatter' => 'number_decimal',
+      'default_token_formatter' => 'number_unformatted',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_settings_form().
+ */
+function number_field_settings_form($field, $instance, $has_data) {
+  $settings = $field['settings'];
+  $form = array();
+
+  if ($field['type'] == 'number_decimal') {
+    $form['precision'] = array(
+      '#type' => 'select',
+      '#title' => t('Precision'),
+      '#options' => backdrop_map_assoc(range(10, 32)),
+      '#default_value' => $settings['precision'],
+      '#description' => t('The total number of digits to store in the database, including those to the right of the decimal.'),
+      '#disabled' => $has_data,
+    );
+    $form['scale'] = array(
+      '#type' => 'select',
+      '#title' => t('Scale'),
+      '#options' => backdrop_map_assoc(range(0, 10)),
+      '#default_value' => $settings['scale'],
+      '#description' => t('The number of digits to the right of the decimal.'),
+      '#disabled' => $has_data,
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_instance_settings_form().
+ */
+function number_field_instance_settings_form($field, $instance) {
+  $settings = $instance['settings'];
+
+  $form['min'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Minimum'),
+    '#default_value' => $settings['min'],
+    '#description' => t('The minimum value that should be allowed in this field. Leave blank for no minimum.'),
+    '#element_validate' => array('form_validate_number'),
+  );
+  $form['max'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum'),
+    '#default_value' => $settings['max'],
+    '#description' => t('The maximum value that should be allowed in this field. Leave blank for no maximum.'),
+    '#element_validate' => array('form_validate_number'),
+  );
+  $form['prefix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Prefix'),
+    '#default_value' => $settings['prefix'],
+    '#size' => 60,
+    '#description' => t("Define a string that should be prefixed to the value, like '$ ' or '&euro; '. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
+  );
+  $form['suffix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Suffix'),
+    '#default_value' => $settings['suffix'],
+    '#size' => 60,
+    '#description' => t("Define a string that should be suffixed to the value, like ' m', ' kb/s'. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'number_min': The value is less than the allowed minimum value.
+ * - 'number_max': The value is greater than the allowed maximum value.
+ */
+function number_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if ($item['value'] != '') {
+      if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'number_min',
+          'message' => t('%name: the value may be no less than %min.', array('%name' => $instance['label'], '%min' => $instance['settings']['min'])),
+        );
+      }
+      if (is_numeric($instance['settings']['max']) && $item['value'] > $instance['settings']['max']) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'number_max',
+          'message' => t('%name: the value may be no greater than %max.', array('%name' => $instance['label'], '%max' => $instance['settings']['max'])),
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function number_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  if ($field['type'] == 'number_decimal') {
+    // Let PHP round the value to ensure consistent behavior across storage
+    // backends.
+    foreach ($items as $delta => $item) {
+      if (isset($item['value'])) {
+        $items[$delta]['value'] = round($item['value'], $field['settings']['scale']);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function number_field_is_empty($item, $field) {
+  if (empty($item['value']) && (string) $item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function number_field_formatter_info() {
+  return array(
+    // The 'Default' formatter is different for integer fields on the one hand,
+    // and for decimal and float fields on the other hand, in order to be able
+    // to use different default values for the settings.
+    'number_integer' => array(
+      'label' => t('Default'),
+      'field types' => array('number_integer'),
+      'settings' =>  array(
+        'thousand_separator' => '',
+        // The 'decimal_separator' and 'scale' settings are not configurable
+        // through the UI, and will therefore keep their default values. They
+        // are only present so that the 'number_integer' and 'number_decimal'
+        // formatters can use the same code.
+        'decimal_separator' => '.',
+        'scale' => 0,
+        'prefix_suffix' => TRUE,
+      ),
+    ),
+    'number_decimal' => array(
+      'label' => t('Default'),
+      'field types' => array('number_decimal', 'number_float'),
+      'settings' =>  array(
+        'thousand_separator' => '',
+        'decimal_separator' => '.',
+        'scale' => 2,
+        'prefix_suffix' => TRUE,
+      ),
+    ),
+    'number_unformatted' => array(
+      'label' => t('Unformatted'),
+      'field types' => array('number_integer', 'number_decimal', 'number_float'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function number_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $element = array();
+
+  if ($display['type'] == 'number_decimal' || $display['type'] == 'number_integer') {
+    $options = array(
+      ''  => t('<none>'),
+      '.' => t('Decimal point'),
+      ',' => t('Comma'),
+      ' ' => t('Space'),
+    );
+    $element['thousand_separator'] = array(
+      '#type' => 'select',
+      '#title' => t('Thousand marker'),
+      '#options' => $options,
+      '#default_value' => $settings['thousand_separator'],
+    );
+
+    if ($display['type'] == 'number_decimal') {
+      $element['decimal_separator'] = array(
+        '#type' => 'select',
+        '#title' => t('Decimal marker'),
+        '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
+        '#default_value' => $settings['decimal_separator'],
+      );
+      $element['scale'] = array(
+        '#type' => 'select',
+        '#title' => t('Scale'),
+        '#options' => backdrop_map_assoc(range(0, 10)),
+        '#default_value' => $settings['scale'],
+        '#description' => t('The number of digits to the right of the decimal.'),
+      );
+    }
+
+    $element['prefix_suffix'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display prefix and suffix.'),
+      '#default_value' => $settings['prefix_suffix'],
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function number_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = array();
+  if ($display['type'] == 'number_decimal' || $display['type'] == 'number_integer') {
+    $summary[] = number_format(1234.1234567890, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+    if ($settings['prefix_suffix']) {
+      $summary[] = t('Display with prefix and suffix.');
+    }
+  }
+
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function number_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  switch ($display['type']) {
+    case 'number_integer':
+    case 'number_decimal':
+      foreach ($items as $delta => $item) {
+        $output = number_format($item['value'], $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+        if ($settings['prefix_suffix']) {
+          $prefixes = isset($instance['settings']['prefix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['prefix'])) : array('');
+          $suffixes = isset($instance['settings']['suffix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['suffix'])) : array('');
+          $prefix = (count($prefixes) > 1) ? format_plural($item['value'], $prefixes[0], $prefixes[1]) : $prefixes[0];
+          $suffix = (count($suffixes) > 1) ? format_plural($item['value'], $suffixes[0], $suffixes[1]) : $suffixes[0];
+          $output = $prefix . $output . $suffix;
+        }
+        $element[$delta] = array('#markup' => $output);
+      }
+      break;
+
+    case 'number_unformatted':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array('#markup' => $item['value']);
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function number_field_widget_info() {
+  return array(
+    'number' => array(
+      'label' => t('Text field'),
+      'field types' => array('number_integer', 'number_decimal', 'number_float'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function number_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $value = isset($items[$delta]['value']) ? $items[$delta]['value'] : '';
+
+  $element += array(
+    '#type' => 'number',
+    '#default_value' => $value,
+    '#max' => 1000000,
+  );
+
+  // Set the step for floating point and decimal numbers.
+  switch ($field['type']) {
+    case 'number_decimal':
+      $element['#step'] = pow(0.1, $field['settings']['scale']);
+      break;
+
+    case 'number_float':
+      $element['#step'] = 'any';
+      break;
+  }
+
+  // Set minimum and maximum.
+  if (is_numeric($instance['settings']['min'])) {
+    $element['#min'] = $instance['settings']['min'];
+  }
+  if (is_numeric($instance['settings']['max'])) {
+    $element['#max'] = $instance['settings']['max'];
+  }
+
+  // Add prefix and suffix.
+  if (!empty($instance['settings']['prefix'])) {
+    $prefixes = explode('|', $instance['settings']['prefix']);
+    $element['#field_prefix'] = field_filter_xss(array_pop($prefixes));
+  }
+  if (!empty($instance['settings']['suffix'])) {
+    $suffixes = explode('|', $instance['settings']['suffix']);
+    $element['#field_suffix'] = field_filter_xss(array_pop($suffixes));
+  }
+
+  return array('value' => $element);
+}
+
+/**
+ * Implements hook_field_widget_error().
+ */
+function number_field_widget_error($element, $error, $form, &$form_state) {
+  form_error($element['value'], $error['message']);
+}

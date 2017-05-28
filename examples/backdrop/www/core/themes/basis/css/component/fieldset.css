@@ -1,0 +1,119 @@
+/**
+ * @file
+ * Fieldsets styling.
+ *
+ * Fieldset legends are displayed like containers in Seven. However, several
+ * browsers do not support styling of LEGEND elements. To achieve the desired
+ * styling:
+ * - All fieldsets use 'position: relative'.
+ * - All legend labels are wrapped in a single span.fieldset-legend that uses
+ *   'position: absolute', which means that the LEGEND element itself is not
+ *   rendered by browsers.
+ * - Due to using 'position: absolute', collapsed fieldsets do not have a
+ *   height; the fieldset requires a 'padding-top' to make the absolute
+ *   positioned .fieldset-legend appear as though it would have a height.
+ * - Various browsers are positioning the legend differently if there is a
+ *   'padding-left'/'padding-right' applied on a fieldset and inherit the
+ *   positioning even to absolute positioned elements within; we therefore have
+ *   to apply all padding to the inner .fieldset-wrapper instead.
+ */
+
+fieldset .fieldset-legend {
+  position: absolute;
+  left: 0; /* LTR */
+  top: 0;
+  width: 100%;
+  padding: 0.5em 0.78947em; /* LTR */
+  text-transform: uppercase;
+}
+
+[dir="rtl"] fieldset .fieldset-legend {
+  right: 0;
+  padding-right: 0.9375em;
+  padding-left: 0;
+}
+
+.fieldset-description {
+  margin: 0 0 0.75em;
+  padding: 0.75em 0.1875em;
+}
+
+.collapsible > .fieldset-wrapper > .fieldset-description {
+  margin: 0 0 0.75em;
+  padding: 0.75em 1.5625em;
+}
+
+/**
+ * Collapsible Fieldsets
+ */
+.js fieldset.collapsible {
+  position: relative;
+  backface-visibility: hidden;
+}
+
+fieldset .fieldset-wrapper {
+  padding: 0 13px 13px 15px; /* LTR */
+}
+
+[dir="rtl"] fieldset .fieldset-wrapper {
+  padding: 0 15px 13px 13px;
+}
+
+.js fieldset.collapsible .fieldset-title {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  padding: 0.3em 0.3em 0.3em 1.8em;
+  margin: 0 -0.5em;
+  border-radius: 4px;
+  background: transparent;
+  text-decoration: none;
+}
+
+.js fieldset.collapsible .fieldset-legend a:before {
+  content: "";
+  position: absolute;
+  left: 0.6em;
+  top: 0.8em;
+  width: 0;
+  height: 0;
+  border: .32em solid transparent;
+  border-top-color: #000;
+  border-bottom: 0;
+  -webkit-transform: translate(0, 0.125em);
+  transform: translate(0, 0.125em);
+  -webkit-transition: transform 0.25s ease-out;
+  -webkit-transition: -webkit-transform 0.25s ease-out;
+  transition: -webkit-transform 0.25s ease-out;
+  transition: transform 0.25s ease-out;
+  transition:
+    transform 0.25s ease-out,
+    -webkit-transform 0.25s ease-out;
+}
+
+.fieldset-legend span.summary {
+  position: absolute;
+  top: .4em;
+  right: 2em;
+  display: none;
+}
+
+@media (min-width: 34em) {
+  .fieldset-legend span.summary {
+    display: block;
+  }
+}
+/* Collapsed state styles */
+.js fieldset.collapsed {
+  padding: 3.774em 0 0!important;
+}
+
+.js fieldset.collapsed .fieldset-legend a:before {
+  -webkit-transform:
+    translate(0, 0.125em)
+    rotate(-90deg);
+  transform:
+    translate(0, 0.125em)
+    rotate(-90deg);
+}

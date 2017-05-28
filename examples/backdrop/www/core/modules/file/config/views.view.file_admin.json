@@ -1,0 +1,395 @@
+{
+    "_config_name": "views.view.file_admin",
+    "name": "file_admin",
+    "description": "Administrative listing for managing files.",
+    "module": "file",
+    "storage": 4,
+    "tag": "default",
+    "disabled": false,
+    "base_table": "file_managed",
+    "human_name": "Administer files",
+    "core": "1.6",
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "access": {
+                    "type": "perm",
+                    "perm": "access file overview"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic",
+                    "options": {
+                        "submit_button": "Filter",
+                        "reset_button": 0,
+                        "reset_button_label": "Reset",
+                        "exposed_sorts_label": "Sort by",
+                        "expose_sort_order": 1,
+                        "sort_asc_label": "Asc",
+                        "sort_desc_label": "Desc",
+                        "autosubmit": 0,
+                        "autosubmit_hide": 1
+                    }
+                },
+                "pager": {
+                    "type": "full",
+                    "options": {
+                        "items_per_page": "50",
+                        "offset": "0",
+                        "id": "0",
+                        "total_pages": "",
+                        "quantity": "9",
+                        "tags": {
+                            "first": "« first",
+                            "previous": "‹ previous",
+                            "next": "next ›",
+                            "last": "last »"
+                        },
+                        "expose": {
+                            "items_per_page": 0,
+                            "items_per_page_label": "Items per page",
+                            "items_per_page_options": "5, 10, 20, 40, 60",
+                            "items_per_page_options_all": 0,
+                            "items_per_page_options_all_label": "- All -",
+                            "offset": 0,
+                            "offset_label": "Offset"
+                        }
+                    }
+                },
+                "style_plugin": "table",
+                "row_plugin": "fields",
+                "fields": {
+                    "bulk_form": {
+                        "id": "bulk_form",
+                        "table": "file_managed",
+                        "field": "bulk_form",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Operations",
+                        "element_label_colon": 0,
+                        "element_default_classes": 0,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "include_exclude": "exclude",
+                        "selected_actions": []
+                    },
+                    "filename": {
+                        "id": "filename",
+                        "table": "file_managed",
+                        "field": "filename",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "link_to_file": 1
+                    },
+                    "filemime": {
+                        "id": "filemime",
+                        "table": "file_managed",
+                        "field": "filemime",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Type",
+                        "exclude": 0,
+                        "element_label_colon": 0,
+                        "element_default_classes": 1,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "link_to_file": 0,
+                        "filemime_image": 0
+                    },
+                    "timestamp": {
+                        "id": "timestamp",
+                        "table": "file_managed",
+                        "field": "timestamp",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Uploaded",
+                        "exclude": 0,
+                        "element_label_colon": 0,
+                        "element_default_classes": 1,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "date_format": "short",
+                        "custom_date_format": "",
+                        "timezone": ""
+                    },
+                    "filesize": {
+                        "id": "filesize",
+                        "table": "file_managed",
+                        "field": "filesize",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Size",
+                        "exclude": 0,
+                        "element_label_colon": 0,
+                        "element_default_classes": 1,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "file_size_display": "formatted"
+                    },
+                    "status": {
+                        "id": "status",
+                        "table": "file_managed",
+                        "field": "status",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Status",
+                        "exclude": 0,
+                        "element_label_colon": 0,
+                        "element_default_classes": 1,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1
+                    },
+                    "count": {
+                        "id": "count",
+                        "table": "file_usage",
+                        "field": "count",
+                        "relationship": "none",
+                        "group_type": "sum",
+                        "ui_name": "",
+                        "label": "Use count",
+                        "exclude": 0,
+                        "element_label_colon": 0,
+                        "element_default_classes": 1,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "set_precision": false,
+                        "precision": 0,
+                        "decimal": ".",
+                        "separator": ","
+                    },
+                    "delete": {
+                        "id": "delete",
+                        "table": "file_managed",
+                        "field": "delete",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "",
+                        "exclude": 1,
+                        "element_label_colon": 0,
+                        "element_default_classes": 0,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "text": ""
+                    },
+                    "dropbutton": {
+                        "id": "dropbutton",
+                        "table": "views",
+                        "field": "dropbutton",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "Operations",
+                        "exclude": 0,
+                        "element_label_colon": 0,
+                        "element_default_classes": 0,
+                        "empty": "",
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "fields": {
+                            "delete": "delete",
+                            "bulk_form": 0,
+                            "filename": 0,
+                            "filemime": 0,
+                            "timestamp": 0,
+                            "filesize": 0,
+                            "status": 0
+                        },
+                        "destination": 1
+                    }
+                },
+                "filters": {
+                    "filename": {
+                        "id": "filename",
+                        "table": "file_managed",
+                        "field": "filename",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "operator": "contains",
+                        "value": "",
+                        "group": "1",
+                        "exposed": true,
+                        "expose": {
+                            "operator_id": "filename_op",
+                            "label": "File name contains",
+                            "description": "",
+                            "use_operator": 0,
+                            "operator": "filename_op",
+                            "identifier": "filename",
+                            "required": 0,
+                            "remember": 0,
+                            "multiple": false,
+                            "remember_roles": {
+                                "authenticated": "authenticated",
+                                "anonymous": 0,
+                                "administrator": 0
+                            }
+                        },
+                        "is_grouped": false,
+                        "group_info": {
+                            "label": "",
+                            "description": "",
+                            "identifier": "",
+                            "optional": true,
+                            "widget": "select",
+                            "multiple": false,
+                            "remember": 0,
+                            "default_group": "All",
+                            "default_group_multiple": [],
+                            "group_items": []
+                        }
+                    }
+                },
+                "sorts": [],
+                "title": "Content",
+                "empty": {
+                    "area": {
+                        "id": "area",
+                        "table": "views",
+                        "field": "area",
+                        "relationship": "none",
+                        "group_type": "group",
+                        "ui_name": "",
+                        "label": "",
+                        "empty": true,
+                        "content": "<p>No files available.</p>\n",
+                        "format": "filtered_html",
+                        "tokenize": 0
+                    }
+                },
+                "group_by": 1,
+                "style_options": {
+                    "grouping": [],
+                    "row_class": "",
+                    "default_row_class": 1,
+                    "row_class_special": 1,
+                    "override": 1,
+                    "sticky": 0,
+                    "caption": "",
+                    "summary": "",
+                    "columns": {
+                        "bulk_form": "bulk_form",
+                        "filename": "filename",
+                        "filemime": "filemime",
+                        "timestamp": "timestamp",
+                        "filesize": "filesize",
+                        "status": "status",
+                        "count": "count",
+                        "delete": "delete",
+                        "dropbutton": "dropbutton"
+                    },
+                    "info": {
+                        "bulk_form": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "filename": {
+                            "sortable": 1,
+                            "default_sort_order": "asc",
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "filemime": {
+                            "sortable": 0,
+                            "default_sort_order": "asc",
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "timestamp": {
+                            "sortable": 1,
+                            "default_sort_order": "desc",
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "filesize": {
+                            "sortable": 1,
+                            "default_sort_order": "desc",
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "status": {
+                            "sortable": 1,
+                            "default_sort_order": "asc",
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "count": {
+                            "sortable": 1,
+                            "default_sort_order": "desc",
+                            "align": "views-align-center",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "delete": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "dropbutton": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        }
+                    },
+                    "default": "timestamp",
+                    "empty_table": 1
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "admin/content/files",
+                "menu": {
+                    "type": "tab",
+                    "title": "Manage files",
+                    "description": "Find and manage files.",
+                    "name": "management",
+                    "weight": "0",
+                    "context": 0,
+                    "context_only_inline": 0
+                }
+            }
+        }
+    }
+}

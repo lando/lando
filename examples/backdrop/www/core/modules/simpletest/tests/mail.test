@@ -1,0 +1,448 @@
+<?php
+
+/**
+ * @file
+ * Test the Backdrop mailing system.
+ */
+class MailTestCase extends BackdropWebTestCase implements MailSystemInterface {
+  /**
+   * The most recent message that was sent through the test case.
+   *
+   * We take advantage here of the fact that static variables are shared among
+   * all instance of the same class.
+   */
+  private static $sent_message;
+
+  function setUp() {
+    parent::setUp(array('simpletest'));
+
+    // Set MailTestCase (i.e. this class) as the SMTP library
+    config_set('system.mail', 'default-system', 'MailTestCase');
+  }
+
+  /**
+   * Assert that the pluggable mail system is functional.
+   */
+  function testPluggableFramework() {
+    global $language;
+
+    // Use MailTestCase for sending a message.
+    $message = backdrop_mail('simpletest', 'mail_test', 'testing@example.com', $language);
+
+    // Assert whether the message was sent through the send function.
+    $this->assertEqual(self::$sent_message['to'], 'testing@example.com', 'Pluggable mail system is extendable.');
+  }
+
+  /**
+   * Test that message sending may be canceled.
+   *
+   * @see simpletest_mail_alter()
+   */
+  function testCancelMessage() {
+    global $language;
+
+    // Reset the class variable holding a copy of the last sent message.
+    self::$sent_message = NULL;
+
+    // Send a test message that simpletest_mail_alter should cancel.
+    $message = backdrop_mail('simpletest', 'cancel_test', 'cancel@example.com', $language);
+
+    // Assert that the message was not actually sent.
+    $this->assertNull(self::$sent_message, 'Message was canceled.');
+  }
+
+  /**
+   * Concatenate and wrap the e-mail body for plain-text mails.
+   *
+   * @see DefaultMailSystem
+   */
+  public function format(array $message) {
+    // Join the body array into one string.
+    $message['body'] = implode("\n\n", $message['body']);
+    // Convert any HTML to plain-text.
+    $message['body'] = backdrop_html_to_text($message['body']);
+    // Wrap the mail body for sending.
+    $message['body'] = backdrop_wrap_mail($message['body']);
+    return $message;
+  }
+
+  /**
+   * Send function that is called through the mail system.
+   */
+  public function mail(array $message) {
+    self::$sent_message = $message;
+  }
+}
+
+/**
+ * Unit tests for backdrop_html_to_text().
+ */
+class BackdropHtmlToTextTestCase extends BackdropWebTestCase {
+  /**
+   * Converts a string to its PHP source equivalent for display in test messages.
+   *
+   * @param $text
+   *   The text string to convert.
+   *
+   * @return
+   *   An HTML representation of the text string that, when displayed in a
+   *   browser, represents the PHP source code equivalent of $text.
+   */
+  function stringToHtml($text) {
+    return '"' .
+      str_replace(
+        array("\n", ' '),
+        array('\n', '&nbsp;'),
+        check_plain($text)
+      ) . '"';
+  }
+
+  /**
+   * Helper function for testing backdrop_html_to_text().
+   *
+   * @param $html
+   *   The source HTML string to be converted.
+   * @param $text
+   *   The expected result of converting $html to text.
+   * @param $message
+   *   A text message to display in the assertion message.
+   * @param $allowed_tags
+   *   (optional) An array of allowed tags, or NULL to default to the full
+   *   set of tags supported by backdrop_html_to_text().
+   */
+  function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
+    preg_match_all('/<([a-z0-6]+)/', backdrop_strtolower($html), $matches);
+    $tested_tags = implode(', ', array_unique($matches[1]));
+    $message .= ' (' . $tested_tags . ')';
+    $result = backdrop_html_to_text($html, $allowed_tags);
+    $pass = $this->assertEqual($result, $text, check_plain($message));
+    $verbose = 'html = <pre>' . $this->stringToHtml($html)
+      . '</pre><br />' . 'result = <pre>' . $this->stringToHtml($result)
+      . '</pre><br />' . 'expected = <pre>' . $this->stringToHtml($text)
+      . '</pre>';
+    $this->verbose($verbose);
+    if (!$pass) {
+      $this->pass("Previous test verbose info:<br />$verbose");
+    }
+  }
+
+  /**
+   * Test all supported tags of backdrop_html_to_text().
+   */
+  function testTags() {
+    global $base_path, $base_url;
+    $tests = array(
+      // @todo Trailing linefeeds should be trimmed.
+      '<a href = "https://backdropcms.org">BackdropCMS.org</a>' => "BackdropCMS.org [1]\n\n[1] https://backdropcms.org\n",
+      // @todo Footer URLs should be absolute.
+      "<a href = \"$base_path\">Homepage</a>" => "Homepage [1]\n\n[1] $base_url/\n",
+      '<address>Backdrop</address>' => "Backdrop\n",
+      // @todo The <address> tag is currently not supported.
+      '<address>Backdrop</address><address>Backdrop</address>' => "BackdropBackdrop\n",
+      '<b>Backdrop</b>' => "*Backdrop*\n",
+      // @todo There should be a space between the '>' and the text.
+      '<blockquote>Backdrop</blockquote>' => ">Backdrop\n",
+      '<blockquote>Backdrop</blockquote><blockquote>Backdrop</blockquote>' => ">Backdrop\n>Backdrop\n",
+      '<br />Backdrop<br />Backdrop<br /><br />Backdrop' => "Backdrop\nBackdrop\nBackdrop\n",
+      '<br/>Backdrop<br/>Backdrop<br/><br/>Backdrop' => "Backdrop\nBackdrop\nBackdrop\n",
+      // @todo There should be two line breaks before the paragraph.
+      '<br/>Backdrop<br/>Backdrop<br/><br/>Backdrop<p>Backdrop</p>' => "Backdrop\nBackdrop\nBackdrop\nBackdrop\n\n",
+      '<div>Backdrop</div>' => "Backdrop\n",
+      // @todo The <div> tag is currently not supported.
+      '<div>Backdrop</div><div>Backdrop</div>' => "BackdropBackdrop\n",
+      '<em>Backdrop</em>' => "/Backdrop/\n",
+      '<h1>Backdrop</h1>' => "======== BACKDROP ============================================================\n\n",
+      '<h1>Backdrop</h1><p>Backdrop</p>' => "======== BACKDROP ============================================================\n\nBackdrop\n\n",
+      '<h2>Backdrop</h2>' => "-------- BACKDROP ------------------------------------------------------------\n\n",
+      '<h2>Backdrop</h2><p>Backdrop</p>' => "-------- BACKDROP ------------------------------------------------------------\n\nBackdrop\n\n",
+      '<h3>Backdrop</h3>' => ".... Backdrop\n\n",
+      '<h3>Backdrop</h3><p>Backdrop</p>' => ".... Backdrop\n\nBackdrop\n\n",
+      '<h4>Backdrop</h4>' => ".. Backdrop\n\n",
+      '<h4>Backdrop</h4><p>Backdrop</p>' => ".. Backdrop\n\nBackdrop\n\n",
+      '<h5>Backdrop</h5>' => "Backdrop\n\n",
+      '<h5>Backdrop</h5><p>Backdrop</p>' => "Backdrop\n\nBackdrop\n\n",
+      '<h6>Backdrop</h6>' => "Backdrop\n\n",
+      '<h6>Backdrop</h6><p>Backdrop</p>' => "Backdrop\n\nBackdrop\n\n",
+      '<hr />Backdrop<hr />' => "------------------------------------------------------------------------------\nBackdrop\n------------------------------------------------------------------------------\n",
+      '<hr/>Backdrop<hr/>' => "------------------------------------------------------------------------------\nBackdrop\n------------------------------------------------------------------------------\n",
+      '<hr/>Backdrop<hr/><p>Backdrop</p>' => "------------------------------------------------------------------------------\nBackdrop\n------------------------------------------------------------------------------\nBackdrop\n\n",
+      '<i>Backdrop</i>' => "/Backdrop/\n",
+      '<p>Backdrop</p>' => "Backdrop\n\n",
+      '<p>Backdrop</p><p>Backdrop</p>' => "Backdrop\n\nBackdrop\n\n",
+      '<strong>Backdrop</strong>' => "*Backdrop*\n",
+      // @todo Tables are currently not supported.
+      '<table><tr><td>Backdrop</td><td>Backdrop</td></tr><tr><td>Backdrop</td><td>Backdrop</td></tr></table>' => "BackdropBackdropBackdropBackdrop\n",
+      '<table><tr><td>Backdrop</td></tr></table><p>Backdrop</p>' => "Backdrop\nBackdrop\n\n",
+      // @todo The <u> tag is currently not supported.
+      '<u>Backdrop</u>' => "Backdrop\n",
+      '<ul><li>Backdrop</li></ul>' => " * Backdrop\n\n",
+      '<ul><li>Backdrop <em>Backdrop</em> Backdrop</li></ul>' => " * Backdrop /Backdrop/ Backdrop\n\n",
+      // @todo Lines containing nothing but spaces should be trimmed.
+      '<ul><li>Backdrop</li><li><ol><li>Backdrop</li><li>Backdrop</li></ol></li></ul>' => " * Backdrop\n *  1) Backdrop\n    2) Backdrop\n   \n\n",
+      '<ul><li>Backdrop</li><li><ol><li>Backdrop</li></ol></li><li>Backdrop</li></ul>' => " * Backdrop\n *  1) Backdrop\n   \n * Backdrop\n\n",
+      '<ul><li>Backdrop</li><li>Backdrop</li></ul>' => " * Backdrop\n * Backdrop\n\n",
+      '<ul><li>Backdrop</li></ul><p>Backdrop</p>' => " * Backdrop\n\nBackdrop\n\n",
+      '<ol><li>Backdrop</li></ol>' => " 1) Backdrop\n\n",
+      '<ol><li>Backdrop</li><li><ul><li>Backdrop</li><li>Backdrop</li></ul></li></ol>' => " 1) Backdrop\n 2)  * Backdrop\n     * Backdrop\n    \n\n",
+      '<ol><li>Backdrop</li><li>Backdrop</li></ol>' => " 1) Backdrop\n 2) Backdrop\n\n",
+      '<ol>Backdrop</ol>' => "Backdrop\n\n",
+      '<ol><li>Backdrop</li></ol><p>Backdrop</p>' => " 1) Backdrop\n\nBackdrop\n\n",
+      '<dl><dt>Backdrop</dt></dl>' => "Backdrop\n\n",
+      '<dl><dt>Backdrop</dt><dd>Backdrop</dd></dl>' => "Backdrop\n    Backdrop\n\n",
+      '<dl><dt>Backdrop</dt><dd>Backdrop</dd><dt>Backdrop</dt><dd>Backdrop</dd></dl>' => "Backdrop\n    Backdrop\nBackdrop\n    Backdrop\n\n",
+      '<dl><dt>Backdrop</dt><dd>Backdrop</dd></dl><p>Backdrop</p>' => "Backdrop\n    Backdrop\n\nBackdrop\n\n",
+      '<dl><dt>Backdrop<dd>Backdrop</dl>' => "Backdrop\n    Backdrop\n\n",
+      '<dl><dt>Backdrop</dt></dl><p>Backdrop</p>' => "Backdrop\n\nBackdrop\n\n",
+      // @todo Again, lines containing only spaces should be trimmed.
+      '<ul><li>Backdrop</li><li><dl><dt>Backdrop</dt><dd>Backdrop</dd><dt>Backdrop</dt><dd>Backdrop</dd></dl></li><li>Backdrop</li></ul>' => " * Backdrop\n * Backdrop\n       Backdrop\n   Backdrop\n       Backdrop\n   \n * Backdrop\n\n",
+      // Tests malformed HTML tags.
+      '<br>Backdrop<br>Backdrop' => "Backdrop\nBackdrop\n",
+      '<hr>Backdrop<hr>Backdrop' => "------------------------------------------------------------------------------\nBackdrop\n------------------------------------------------------------------------------\nBackdrop\n",
+      '<ol><li>Backdrop<li>Backdrop</ol>' => " 1) Backdrop\n 2) Backdrop\n\n",
+      '<ul><li>Backdrop <em>Backdrop</em> Backdrop</ul></ul>' => " * Backdrop /Backdrop/ Backdrop\n\n",
+      '<ul><li>Backdrop<li>Backdrop</ol>' => " * Backdrop\n * Backdrop\n\n",
+      '<ul><li>Backdrop<li>Backdrop</ul>' => " * Backdrop\n * Backdrop\n\n",
+      '<ul>Backdrop</ul>' => "Backdrop\n\n",
+      'Backdrop</ul></ol></dl><li>Backdrop' => "Backdrop\n * Backdrop\n",
+      '<dl>Backdrop</dl>' => "Backdrop\n\n",
+      '<dl>Backdrop</dl><p>Backdrop</p>' => "Backdrop\n\nBackdrop\n\n",
+      '<dt>Backdrop</dt>' => "Backdrop\n",
+      // Tests some unsupported HTML tags.
+      '<html>Backdrop</html>' => "Backdrop\n",
+      // @todo Perhaps the contents of <script> tags should be dropped.
+      '<script type="text/javascript">Backdrop</script>' => "Backdrop\n",
+      // A couple of tests for Unicode characters.
+      '<q>I <em>will</em> be back…</q>' => "I /will/ be back…\n",
+      'FrançAIS is ÜBER-åwesome' => "FrançAIS is ÜBER-åwesome\n",
+    );
+
+    foreach ($tests as $html => $text) {
+      $this->assertHtmlToText($html, $text, 'Supported tags');
+    }
+  }
+
+  /**
+   * Test $allowed_tags argument of backdrop_html_to_text().
+   */
+  function testBackdropHtmlToTextArgs() {
+    // The second parameter of backdrop_html_to_text() overrules the allowed tags.
+    $this->assertHtmlToText(
+      'Backdrop <b>Backdrop</b> Backdrop',
+      "Backdrop *Backdrop* Backdrop\n",
+      'Allowed <b> tag found',
+      array('b')
+    );
+    $this->assertHtmlToText(
+      'Backdrop <h1>Backdrop</h1> Backdrop',
+      "Backdrop Backdrop Backdrop\n",
+      'Disallowed <h1> tag not found',
+      array('b')
+    );
+
+    $this->assertHtmlToText(
+      'Backdrop <p><em><b>Backdrop</b></em><p> Backdrop',
+      "Backdrop Backdrop Backdrop\n",
+      'Disallowed <p>, <em>, and <b> tags not found',
+      array('a', 'br', 'h1')
+    );
+
+    $this->assertHtmlToText(
+      '<html><body>Backdrop</body></html>',
+      "Backdrop\n",
+      'Unsupported <html> and <body> tags not found',
+      array('html', 'body')
+    );
+  }
+
+  /**
+   * Tests that backdrop_wrap_mail() removes trailing whitespace before newlines.
+   */
+  function testBackdropHtmltoTextRemoveTrailingWhitespace() {
+    $text = "Hi there! \nHerp Derp";
+    $mail_lines = explode("\n", backdrop_wrap_mail($text));
+    $this->assertNotEqual(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
+  }
+
+  /**
+   * Tests backdrop_wrap_mail() retains whitespace from Usenet style signatures.
+   *
+   * RFC 3676 says, "This is a special case; an (optionally quoted or quoted and
+   * stuffed) line consisting of DASH DASH SP is neither fixed nor flowed."
+   */
+  function testBackdropHtmltoTextUsenetSignature() {
+    $text = "Hi there!\n-- \nHerp Derp";
+    $mail_lines = explode("\n", backdrop_wrap_mail($text));
+    $this->assertEqual("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
+
+    $text = "Hi there!\n--  \nHerp Derp";
+    $mail_lines = explode("\n", backdrop_wrap_mail($text));
+    $this->assertEqual("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
+  }
+
+  /**
+   * Test that whitespace is collapsed.
+   */
+  function testBackdropHtmltoTextCollapsesWhitespace() {
+    $input = "<p>Backdrop  Backdrop\n\nBackdrop<pre>Backdrop  Backdrop\n\nBackdrop</pre>Backdrop  Backdrop\n\nBackdrop</p>";
+    // @todo The whitespace should be collapsed.
+    $collapsed = "Backdrop  Backdrop\n\nBackdropBackdrop  Backdrop\n\nBackdropBackdrop  Backdrop\n\nBackdrop\n\n";
+    $this->assertHtmlToText(
+      $input,
+      $collapsed,
+      'Whitespace is collapsed',
+      array('p')
+    );
+  }
+
+  /**
+   * Test that text separated by block-level tags in HTML get separated by
+   * (at least) a newline in the plaintext version.
+   */
+  function testBackdropHtmlToTextBlockTagToNewline() {
+    $input = '[text]'
+      . '<blockquote>[blockquote]</blockquote>'
+      . '<br />[br]'
+      . '<dl><dt>[dl-dt]</dt>'
+      . '<dt>[dt]</dt>'
+      . '<dd>[dd]</dd>'
+      . '<dd>[dd-dl]</dd></dl>'
+      . '<h1>[h1]</h1>'
+      . '<h2>[h2]</h2>'
+      . '<h3>[h3]</h3>'
+      . '<h4>[h4]</h4>'
+      . '<h5>[h5]</h5>'
+      . '<h6>[h6]</h6>'
+      . '<hr />[hr]'
+      . '<ol><li>[ol-li]</li>'
+      . '<li>[li]</li>'
+      . '<li>[li-ol]</li></ol>'
+      . '<p>[p]</p>'
+      . '<ul><li>[ul-li]</li>'
+      . '<li>[li-ul]</li></ul>'
+      . '[text]';
+    $output = backdrop_html_to_text($input);
+    $pass = $this->assertFalse(
+      preg_match('/\][^\n]*\[/s', $output),
+      'Block-level HTML tags should force newlines'
+    );
+    if (!$pass) {
+      $this->verbose($this->stringToHtml($output));
+    }
+    $output_upper = backdrop_strtoupper($output);
+    $upper_input = backdrop_strtoupper($input);
+    $upper_output = backdrop_html_to_text($upper_input);
+    $pass = $this->assertEqual(
+      $upper_output,
+      $output_upper,
+      'Tag recognition should be case-insensitive'
+    );
+    if (!$pass) {
+      $this->verbose(
+        $upper_output
+        . '<br />should  be equal to <br />'
+        . $output_upper
+      );
+    }
+  }
+
+  /**
+   * Test that headers are properly separated from surrounding text.
+   */
+  function testHeaderSeparation() {
+    $html = 'Backdrop<h1>Backdrop</h1>Backdrop';
+    // @todo There should be more space above the header than below it.
+    $text = "Backdrop\n======== BACKDROP ============================================================\n\nBackdrop\n";
+    $this->assertHtmlToText($html, $text,
+      'Text before and after <h1> tag');
+    $html = '<p>Backdrop</p><h1>Backdrop</h1>Backdrop';
+    // @todo There should be more space above the header than below it.
+    $text = "Backdrop\n\n======== BACKDROP ============================================================\n\nBackdrop\n";
+    $this->assertHtmlToText($html, $text,
+      'Paragraph before and text after <h1> tag');
+    $html = 'Backdrop<h1>Backdrop</h1><p>Backdrop</p>';
+    // @todo There should be more space above the header than below it.
+    $text = "Backdrop\n======== BACKDROP ============================================================\n\nBackdrop\n\n";
+    $this->assertHtmlToText($html, $text,
+      'Text before and paragraph after <h1> tag');
+    $html = '<p>Backdrop</p><h1>Backdrop</h1><p>Backdrop</p>';
+    $text = "Backdrop\n\n======== BACKDROP ============================================================\n\nBackdrop\n\n";
+    $this->assertHtmlToText($html, $text,
+      'Paragraph before and after <h1> tag');
+  }
+
+  /**
+   * Test that footnote references are properly generated.
+   */
+  function testFootnoteReferences() {
+    global $base_path, $base_url;
+    $source = '<a href="http://www.example.com/node/1">Host and path</a>'
+      . '<br /><a href="http://www.example.com">Host, no path</a>'
+      . '<br /><a href="' . $base_path . 'node/1">Path, no host</a>'
+      . '<br /><a href="node/1">Relative path</a>';
+    // @todo Footnote URLs should be absolute.
+    $tt = "Host and path [1]"
+      . "\nHost, no path [2]"
+      // @todo The following two references should be combined.
+      . "\nPath, no host [3]"
+      . "\nRelative path [4]"
+      . "\n"
+      . "\n[1] http://www.example.com/node/1"
+      . "\n[2] http://www.example.com"
+      // @todo The following two references should be combined.
+      . "\n[3] $base_url/node/1"
+      . "\n[4] node/1\n";
+    $this->assertHtmlToText($source, $tt, 'Footnotes');
+  }
+
+  /**
+   * Test that combinations of paragraph breaks, line breaks, linefeeds,
+   * and spaces are properly handled.
+   */
+  function testBackdropHtmlToTextParagraphs() {
+    $tests = array();
+    $tests[] = array(
+        'html' => "<p>line 1<br />\nline 2<br />line 3\n<br />line 4</p><p>paragraph</p>",
+        // @todo Trailing line breaks should be trimmed.
+        'text' => "line 1\nline 2\nline 3\nline 4\n\nparagraph\n\n",
+    );
+    $tests[] = array(
+      'html' => "<p>line 1<br /> line 2</p> <p>line 4<br /> line 5</p> <p>0</p>",
+      // @todo Trailing line breaks should be trimmed.
+      'text' => "line 1\nline 2\n\nline 4\nline 5\n\n0\n\n",
+    );
+    foreach ($tests as $test) {
+      $this->assertHtmlToText($test['html'], $test['text'], 'Paragraph breaks');
+    }
+  }
+
+  /**
+   * Tests that backdrop_html_to_text() wraps before 1000 characters.
+   *
+   * RFC 3676 says, "The Text/Plain media type is the lowest common
+   * denominator of Internet email, with lines of no more than 998 characters."
+   *
+   * RFC 2046 says, "SMTP [RFC-821] allows a maximum of 998 octets before the
+   * next CRLF sequence."
+   *
+   * RFC 821 says, "The maximum total length of a text line including the
+   * <CRLF> is 1000 characters."
+   */
+  function testVeryLongLineWrap() {
+    $input = 'Backdrop<br /><p>' . str_repeat('x', 2100) . '</p><br />Backdrop';
+    $output = backdrop_html_to_text($input);
+    // This awkward construct comes from includes/mail.inc lines 8-13.
+    $eol = settings_get('mail_line_endings', MAIL_LINE_ENDINGS);
+    // We must use strlen() rather than backdrop_strlen() in order to count
+    // octets rather than characters.
+    $line_length_limit = 1000 - backdrop_strlen($eol);
+    $maximum_line_length = 0;
+    foreach (explode($eol, $output) as $line) {
+      // We must use strlen() rather than backdrop_strlen() in order to count
+      // octets rather than characters.
+      $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
+    }
+    $verbose = 'Maximum line length found was ' . $maximum_line_length . ' octets.';
+    $this->pass($verbose);
+    $this->assertTrue($maximum_line_length <= 1000, $verbose);
+  }
+}

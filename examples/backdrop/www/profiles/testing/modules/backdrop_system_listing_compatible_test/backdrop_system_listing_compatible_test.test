@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Helper to verify tests in installation profile modules.
+ */
+class BackdropSystemListingCompatibleTestCase extends BackdropWebTestCase {
+  /**
+   * Use the Minimal profile.
+   *
+   * This test needs to use a different installation profile than the test which
+   * asserts that this test is found.
+   *
+   * @see SimpleTestInstallationProfileModuleTestsTestCase
+   */
+  protected $profile = 'minimal';
+
+  function setUp() {
+    // Attempt to install a module in Testing profile, while this test runs with
+    // a different profile.
+    parent::setUp(array('backdrop_system_listing_compatible_test'));
+  }
+
+  /**
+   * Non-empty test* method required to executed the test case class.
+   */
+  function testBackdropSystemListing() {
+    $this->pass(__CLASS__ . ' test executed.');
+  }
+}

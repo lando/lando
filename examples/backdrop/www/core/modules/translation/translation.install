@@ -1,0 +1,27 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Translation module.
+ */
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Convert translation settings to config.
+ */
+function translation_update_1000() {
+  // Create the new config file.
+  $config = config('translation.settings');
+  $config->set('language_type', update_variable_get('translation_language_type', 'language'));
+  $config->save();
+
+  update_variable_del('translation_language_type');
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

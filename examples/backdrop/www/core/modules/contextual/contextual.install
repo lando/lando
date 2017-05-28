@@ -1,0 +1,30 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the contextual links module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function contextual_install() {
+  // Weight must be greater than that of views module.
+  db_query("UPDATE {system} SET weight = 11 WHERE name = 'contextual'");
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * Increases weight of contextual module so it runs after most other modules.
+ */
+function contextual_update_1000() {
+  db_query("UPDATE {system} SET weight = 11 WHERE name = 'contextual'");
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ * The next series of updates should start at 2000.
+ */

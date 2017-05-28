@@ -1,0 +1,111 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for Path module.
+ */
+
+/**
+ * Upgrades Drupal 7 Pathauto variables to Path config.
+ */
+function path_update_1000() {
+  $config = config('path.settings');
+
+  // Enable config static caching.
+  $config->set('_config_static', TRUE);
+
+  // Set defaults that previously were variables.
+  $config->set('verbose', FALSE);
+  $config->set('separator', '-');
+  $config->set('transliterate', FALSE);
+  $config->set('reduce_ascii', FALSE);
+
+  $config->set('case', 1);
+  $config->set('update_action', 2);
+  $config->set('ignore_words', 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with');
+  $config->set('max_component_length', 100);
+  $config->set('max_length', 100);
+
+  $config->set('punctuation_ampersand', 0);
+  $config->set('punctuation_asterisk', 0);
+  $config->set('punctuation_at', 0);
+  $config->set('punctuation_backtick', 0);
+  $config->set('punctuation_back_slash', 0);
+  $config->set('punctuation_caret', 0);
+  $config->set('punctuation_colon', 0);
+  $config->set('punctuation_comma', 0);
+  $config->set('punctuation_dollar', 0);
+  $config->set('punctuation_double_quotes', 0);
+  $config->set('punctuation_equal', 0);
+  $config->set('punctuation_exclamation', 0);
+  $config->set('punctuation_greater_than', 0);
+  $config->set('punctuation_hash', 0);
+  $config->set('punctuation_hyphen', 1);
+  $config->set('punctuation_left_curly', 0);
+  $config->set('punctuation_left_parenthesis', 0);
+  $config->set('punctuation_left_square', 0);
+  $config->set('punctuation_less_than', 0);
+  $config->set('punctuation_percent', 0);
+  $config->set('punctuation_period', 0);
+  $config->set('punctuation_pipe', 0);
+  $config->set('punctuation_plus', 0);
+  $config->set('punctuation_question_mark', 0);
+  $config->set('punctuation_quotes', 0);
+  $config->set('punctuation_right_curly', 0);
+  $config->set('punctuation_right_parenthesis', 0);
+  $config->set('punctuation_right_square', 0);
+  $config->set('punctuation_semicolon', 0);
+  $config->set('punctuation_slash', 0);
+  $config->set('punctuation_tilde', 0);
+  $config->set('punctuation_underscore', 0);
+
+  // The default URL alias patterns are all empty on upgrading, for sites that
+  // have never had Pathauto installed.
+  $config->set('node_pattern', '');
+  $config->set('taxonomy_term_pattern', '');
+  $config->set('user_pattern', '');
+
+  // Update with values from the database if present.
+  $results = db_query("SELECT * FROM {variable} WHERE name LIKE 'pathauto_%'");
+  foreach ($results as $row) {
+    $name = str_replace('pathauto_', '', $row->name);
+    $value = unserialize($row->value);
+
+    // Cast to proper data types if possible.
+    if (is_numeric($value)) {
+      $value = (int) $value;
+    }
+    if (in_array($name, array('verbose', 'transliterate', 'reduce_ascii'))) {
+      $value = (bool) $value;
+    }
+
+    // Convert old language-neutral variables to include LANGUAGE_NONE.
+    // See https://www.drupal.org/node/865356.
+    $name = str_replace('__pattern', '_und_pattern', $name);
+
+    update_variable_del($row->name);
+    $config->set($name, $value);
+  }
+  $config->save();
+}
+
+/**
+ * Moves Backdrop Pathauto configuration to Path module configuration.
+ */
+function path_update_1001() {
+  $pathauto_config = config('pathauto.settings');
+  if ($pathauto_config->isNew()) {
+    return;
+  }
+
+  $path_config = config('path.settings');
+  $pathauto_data = $pathauto_config->get();
+  $path_data = $path_config->get();
+  $path_data = array_merge($path_data, $pathauto_data);
+  $path_config->setData($path_data);
+  $path_config->save();
+  $pathauto_config->delete();
+
+  // Remove the entry for the pathauto module in the system table. This will
+  // "disable" the module if present.
+  db_query("DELETE FROM {system} WHERE name = 'pathauto' AND type = 'module'");
+}

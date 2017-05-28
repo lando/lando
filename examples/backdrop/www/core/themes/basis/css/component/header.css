@@ -1,0 +1,194 @@
+/**
+ * @file
+ * Header region styling.
+ */
+@media (min-width: 34em) {
+  .l-header-inner {
+    min-height: 6.125rem;
+  }
+}
+
+.l-header a {
+  -webkit-transition: background-color 0.25s ease-out;
+  transition: background-color 0.25s ease-out;
+}
+
+.header-identity-wrapper:after {
+  /* Clearfix */
+  content: '';
+  display: table;
+  clear: both;
+}
+.header-identity-wrapper strong {
+  font-weight: inherit;
+}
+
+@media (min-width: 48em) {
+  .header-identity-wrapper {
+    display: block;
+    float: left;
+  }
+
+  [dir="rtl"] .header-identity-wrapper {
+    float: right;
+  }
+}
+
+.header-site-name-wrapper {
+  margin: 0;
+  padding: 0;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 34em) {
+  .header-site-name-wrapper {
+    float: left;
+  }
+
+  [dir="rtl"] .header-site-name-wrapper {
+    float: right;
+  }
+}
+
+.header-logo-wrapper {
+  display: block;
+  float: left;
+}
+
+[dir="rtl"] .header-logo-wrapper {
+  float: right;
+}
+
+/* Makes sure images that are tall logos don't pop out of container */
+.header-logo-tall img {
+  width: auto;
+  height: 100%;
+}
+
+.header-site-name-link {
+  display: block;
+  margin: 0;
+}
+
+.header-site-slogan {
+  margin: 0;
+}
+
+.l-header .block-system-header .block-content:after {
+  /* Clearfix header block */
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/**
+ * Menus in header area
+ */
+.header-menu {
+  clear: both;
+}
+
+.header-menu:after {
+  /* Clearfix header menu */
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.header-menu > .links {
+  /* Center menu at mobile */
+  display: inline-block;
+}
+
+@media (min-width: 48em) {
+  .header-menu {
+    float: right;
+    clear: none;
+  }
+
+  [dir="rtl"] .header-menu {
+    float: left;
+    clear: none;
+  }
+}
+
+@media (min-width: 34em) {
+  .l-header .block-system-main-menu {
+    clear: both;
+  }
+}
+
+.l-header .menu,
+.l-header .menu li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.l-header .menu:after {
+  /* Clearfix menus */
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.l-header .menu > li,
+.header-menu li {
+  float: left;
+}
+
+[dir="rtl"] .l-header .menu > li,
+[dir="rtl"] .header-menu li {
+  float: right;
+}
+
+.l-header .menu a,
+.header-menu a {
+  display: block;
+  padding: 1rem 1.25rem;
+}
+.l-header .menu-toggle-button {
+  margin-left: .9375rem;
+  padding: .5rem 0;
+}
+.l-header .menu-toggle-button-text {
+  color: #bbb;
+}
+
+@media (min-width: 34em) {
+  /* Specific selector to avoid contextual links */
+  .l-header .menu a,
+  .header-menu a {
+    padding: 1rem 1.25rem;
+  }
+}
+
+@media (min-width: 48em) {
+  .header-menu a {
+    /* Attempt at lining up baseline of site name and header menu */
+    padding-top: 1.9375rem;
+    padding-bottom: 1.0625rem;
+    line-height: 1.25rem;
+  }
+}
+
+@media (min-width: 62em) {
+  .header-menu a {
+    /* Attempt at lining up baseline of site name and header menu */
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    line-height: 1.25rem;
+  }
+}
+
+.header-menu .links,
+.header-menu li {
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu .links li:before,
+.header-menu .links li:after {
+  /* Hides arrows intented for action links in body */
+  display: none;
+}

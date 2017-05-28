@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @file
+ * Definition of CommentViewsHandlerArgumentUserUidTest.
+ */
+
+require_once BACKDROP_ROOT . '/core/modules/views/tests/views_query.test';
+
+/**
+ * Tests the argument_comment_user_uid handler.
+ */
+class CommentViewsHandlerArgumentUserUidTest extends ViewsSqlTest {
+  /**
+   * Post comment.
+   *
+   * @param $node
+   *   Node to post comment on.
+   * @param $comment
+   *   Comment to save
+   */
+  function postComment($node, $comment = array()) {
+    $comment += array(
+      'uid' => $this->loggedInUser->uid,
+      'nid' => $node->nid,
+      'cid' => '',
+      'pid' => '',
+    );
+    $comment = entity_create('comment', $comment);
+    return comment_save($comment);
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Add two users, create a node with the user1 as author and another node with user2 as author.
+    // For the second node add a comment from user1.
+    $this->account = $this->backdropCreateUser();
+    $this->account2 = $this->backdropCreateUser();
+    $this->backdropLogin($this->account);
+    $this->node_user_posted = $this->backdropCreateNode();
+    $this->node_user_commented = $this->backdropCreateNode(array('uid' => $this->account2->uid));
+    $this->postComment($this->node_user_commented);
+  }
+
+  function testCommentUserUidTest() {
+    $view = $this->view_comment_user_uid();
+
+
+    $this->executeView($view, array($this->account->uid));
+    $resultset = array(
+      array(
+        'nid' => $this->node_user_posted->nid,
+      ),
+      array(
+        'nid' => $this->node_user_commented->nid,
+      ),
+    );
+    $this->column_map = array('nid' => 'nid');
+    debug($view->result);
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  function view_comment_user_uid() {
+    $view = new view;
+    $view->name = 'test_comment_user_uid';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = 'node';
+    $view->human_name = 'test_comment_user_uid';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'node';
+    /* Field: Content: nid */
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    /* Contextual filter: Content: User posted or commented */
+    $handler->display->display_options['arguments']['uid_touch']['id'] = 'uid_touch';
+    $handler->display->display_options['arguments']['uid_touch']['table'] = 'node';
+    $handler->display->display_options['arguments']['uid_touch']['field'] = 'uid_touch';
+    $handler->display->display_options['arguments']['uid_touch']['default_argument_type'] = 'fixed';
+    $handler->display->display_options['arguments']['uid_touch']['default_argument_skip_url'] = 0;
+    $handler->display->display_options['arguments']['uid_touch']['summary']['number_of_records'] = '0';
+    $handler->display->display_options['arguments']['uid_touch']['summary']['format'] = 'default_summary';
+    $handler->display->display_options['arguments']['uid_touch']['summary_options']['items_per_page'] = '25';
+
+    return $view;
+  }
+}

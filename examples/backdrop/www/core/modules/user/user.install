@@ -1,0 +1,1157 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the user module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function user_schema() {
+  // The table name here is plural, despite Backdrop table naming standards,
+  // because "user" is a reserved word in many databases.
+  $schema['users'] = array(
+    'description' => 'Stores user data.',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique user ID.',
+        'default' => 0,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Unique user name.',
+      ),
+      'pass' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "User's password (hashed).",
+      ),
+      'mail' => array(
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "User's e-mail address.",
+      ),
+      'signature' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "User's signature.",
+      ),
+      'signature_format' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'The {filter_format}.format of the signature.',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for when user was created.',
+      ),
+      'access' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp for previous time user accessed the site.',
+      ),
+      'login' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Timestamp for user's last login.",
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'Whether the user is active(1) or blocked(0).',
+      ),
+      'timezone' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+        'description' => "User's time zone.",
+      ),
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "User's default language.",
+      ),
+      'picture' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Foreign key: {file_managed}.fid of user's picture.",
+      ),
+      'init' => array(
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'E-mail address used for initial account creation.',
+      ),
+      'data' => array(
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Backdrop.',
+      ),
+    ),
+    'indexes' => array(
+      'access' => array('access'),
+      'created' => array('created'),
+      'mail' => array('mail'),
+      'picture' => array('picture'),
+    ),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  $schema['users_roles'] = array(
+    'description' => 'Maps users to roles.',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Primary Key: {users}.uid for user.',
+      ),
+      'role' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'description' => 'Primary Key: The name of the role.',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('uid', 'role'),
+    'indexes' => array(
+      'role' => array('role'),
+    ),
+    'foreign keys' => array(
+      'user' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function user_install() {
+  // Insert a row for the anonymous user.
+  db_insert('users')
+    ->fields(array(
+      'uid' => 0,
+      'name' => '',
+      'mail' => '',
+    ))
+    ->execute();
+
+  // We need some placeholders here as name and mail are uniques and data is
+  // presumed to be a serialized array. This will be changed by the settings
+  // form in the installer.
+  db_insert('users')
+    ->fields(array(
+      'uid' => 1,
+      'name' => 'placeholder-for-uid-1',
+      'mail' => 'placeholder-for-uid-1',
+      'created' => REQUEST_TIME,
+      'status' => 1,
+      'data' => NULL,
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function system_update_dependencies() {
+  // Ensure layouts have been converted before renaming our user roles.
+  $dependencies['user'][1007] = array(
+    'system' => 1025,
+  );
+  return $dependencies;
+}
+
+/**
+ * @addtogroup updates-7.x-to-1.x
+ * @{
+ */
+
+/**
+ * The 'Member for' extra field has moved one level up in the array.
+ */
+function user_update_1000() {
+  $settings = field_bundle_settings('user', 'user');
+  if (isset($settings['extra_fields']['display']['summary'])) {
+    $settings['extra_fields']['display']['member_for'] = $settings['extra_fields']['display']['summary'];
+    unset($settings['extra_fields']['display']['summary']);
+    field_bundle_settings('user', 'user', $settings);
+  }
+}
+
+/**
+ * Grant "administer account settings" to roles with "administer users."
+ */
+function user_update_1001() {
+  $rids = db_query("SELECT rid FROM {role_permission} WHERE permission = :perm", array(':perm' => 'administer users'))->fetchCol();
+  // None found.
+  if (empty($rids)) {
+    return;
+  }
+  $insert = db_insert('role_permission')->fields(array('rid', 'permission', 'module'));
+  foreach ($rids as $rid) {
+    $insert->values(array(
+      'rid' => $rid,
+      'permission' => 'administer account settings',
+      'module' => 'user'
+    ));
+  }
+  $insert->execute();
+}
+
+/**
+ * Remove the ability for users to select a theme.
+ */
+function user_update_1002() {
+  db_drop_field('users', 'theme');
+}
+
+/**
+ * Moves account settings from variable to config.
+ */
+function user_update_1003() {
+  // Migrate variables to config.
+  $config = config('system.core');
+  $config->set('user_admin_role', update_variable_get('user_admin_role', ''));
+  $config->set('anonymous', update_variable_get('anonymous', 'Anonymous'));
+  $config->set('user_email_verification', update_variable_get('user_email_verification', 1));
+  $config->set('user_mail_status_activated_notify', update_variable_get('user_mail_status_activated_notify', 1));
+  $config->set('user_mail_status_blocked_notify', update_variable_get('user_mail_status_blocked_notify', 0));
+  $config->set('user_mail_status_cancelled_notify', update_variable_get('user_mail_status_cancelled_notify', 0));
+  $config->set('user_signatures', update_variable_get('user_signatures', 0));
+  $config->set('user_password_reset_timeout', update_variable_get('user_password_reset_timeout', 86400));
+
+  // Convert the user.settings:register numeric value to text value.
+  $map = array(
+    '0' => 'admin_only',
+    '1' => 'visitors',
+    '2' => 'visitors_admin_approval',
+  );
+  $user_register = update_variable_get('user_register', 2);
+  if (isset($map[$user_register])) {
+    $config->set('user_register', $map[$user_register])->save();
+  }
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('anonymous');
+  update_variable_del('user_admin_role');
+  update_variable_del('user_register');
+  update_variable_del('user_signatures');
+  update_variable_del('user_mail_status_activated_notify');
+  update_variable_del('user_mail_status_blocked_notify');
+  update_variable_del('user_mail_status_cancelled_notify');
+  update_variable_del('user_email_verification');
+  update_variable_del('user_password_reset_timeout');
+}
+
+/**
+ * Moves login flood settings from variable to config.
+ */
+function user_update_1004() {
+  // Migrate variables to config.
+  $config = config('user.flood');
+  $config->set('flood_uid_only', update_variable_get('user_failed_login_identifier_uid_only', FALSE));
+  $config->set('flood_ip_limit', update_variable_get('user_failed_login_ip_limit', 50));
+  $config->set('flood_ip_window', update_variable_get('user_failed_login_ip_window', 3600));
+  $config->set('flood_user_limit', update_variable_get('user_failed_login_user_limit', 5));
+  $config->set('flood_user_window', update_variable_get('user_failed_login_user_window', 21600));
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('user_failed_login_identifier_uid_only');
+  update_variable_del('user_failed_login_ip_limit');
+  update_variable_del('user_failed_login_ip_window');
+  update_variable_del('user_failed_login_user_limit');
+  update_variable_del('user_failed_login_user_window');
+}
+
+/**
+ * Moves user mail settings from variable to config.
+ */
+function user_update_1005() {
+  // Migrate variables to config.
+  $config = config('user.mail');
+  $config->set('register_admin_created_subject', update_variable_get('register_admin_created_subject', 'An administrator created an account for you at [site:name]'));
+  $config->set('register_admin_created_body', update_variable_get('register_admin_created_body', '[user:name],\n\nA site administrator at [site:name] has created an account for you. You may now log in by clicking this link or copying and pasting it to your browser:\n\n[user:one-time-login-url]\n\nThis link can only be used once to log in and will lead you to a page where you can set your password.\n\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\n\nusername: [user:name]\npassword: Your password\n\n--  [site:name] team'));
+  $config->set('register_pending_approval_subject', update_variable_get('register_pending_approval_subject', 'Account details for [user:name] at [site:name] (pending admin approval)'));
+  $config->set('register_pending_approval_body', update_variable_get('register_pending_approval_body', '[user:name],\n\nThank you for registering at [site:name]. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\n\n\n--  [site:name] team'));
+  $config->set('register_no_approval_required_subject', update_variable_get('register_no_approval_required_subject', 'Account details for [user:name] at [site:name]'));
+  $config->set('register_no_approval_required_body', update_variable_get('register_no_approval_required_body', '[user:name],\n\nThank you for registering at [site:name]. You may now log in by clicking this link or copying and pasting it to your browser:\n\n[user:one-time-login-url]\n\nThis link can only be used once to log in and will lead you to a page where you can set your password.\n\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\n\nusername: [user:name]\npassword: Your password\n\n--  [site:name] team'));
+  $config->set('password_reset_subject', update_variable_get('password_reset_subject', 'Password reset information for [user:name] at [site:name]'));
+  $config->set('password_reset_body', update_variable_get('password_reset_body', '[user:name],\n\nA request to reset the password for your account has been made at [site:name].\n\nYou may now reset your password by clicking this link or copying and pasting it to your browser:\n\n[user:one-time-login-url]\n\nThis link can only be used once and will lead you to a page where you can set your password. It expires after one day and nothing will happen if it is not used.\n\n--  [site:name] team'));
+  $config->set('status_activated_subject', update_variable_get('status_activated_subject', 'Account details for [user:name] at [site:name] (approved)'));
+  $config->set('status_activated_body', update_variable_get('status_activated_body', '[user:name],\n\nYour account at [site:name] has been activated.\n\nYou may now log in by clicking this link or copying and pasting it into your browser:\n\n[user:one-time-login-url]\n\nThis link can only be used once to log in and will lead you to a page where you can set your password.\n\nAfter setting your password, you will be able to log in at [site:login-url] in the future using:\n\nusername: [user:name]\npassword: Your password\n\n--  [site:name] team'));
+  $config->set('status_blocked_subject', update_variable_get('status_blocked_subject', 'Account details for [user:name] at [site:name] (blocked)'));
+  $config->set('status_blocked_body', update_variable_get('status_blocked_body', '[user:name],\n\nYour account on [site:name] has been blocked.\n\n--  [site:name] team'));
+  $config->set('cancel_confirm_subject', update_variable_get('cancel_confirm_subject', 'Account cancellation request for [user:name] at [site:name]'));
+  $config->set('cancel_confirm_body', update_variable_get('cancel_confirm_body', '[user:name],\n\nA request to cancel your account has been made at [site:name].\n\nYou may now cancel your account on [site:url:brief] by clicking this link or copying and pasting it into your browser:\n\n[user:cancel-url]\n\nNOTE: The cancellation of your account is not reversible.\n\nThis link expires in one day and nothing will happen if it is not used.\n\n--  [site:name] team'));
+  $config->set('status_canceled_subject', update_variable_get('status_canceled_subject', 'Account details for [user:name] at [site:name] (canceled)'));
+  $config->set('status_canceled_body', update_variable_get('status_canceled_body', '[user:name],\n\nYour account on [site:name] has been canceled.\n\n--  [site:name] team'));
+  $config->save();
+
+  // Delete variables.
+  update_variable_del('register_admin_created_subject');
+  update_variable_del('register_admin_created_body');
+  update_variable_del('register_pending_approval_subject');
+  update_variable_del('register_pending_approval_body');
+  update_variable_del('register_no_approval_required_subject');
+  update_variable_del('register_no_approval_required_body');
+  update_variable_del('password_reset_subject');
+  update_variable_del('password_reset_body');
+  update_variable_del('status_activated_subject');
+  update_variable_del('status_activated_body');
+  update_variable_del('status_blocked_subject');
+  update_variable_del('status_blocked_body');
+  update_variable_del('cancel_confirm_subject');
+  update_variable_del('cancel_confirm_body');
+  update_variable_del('status_canceled_subject');
+  update_variable_del('status_canceled_body');
+}
+
+/**
+ * Moves user picture settings from variable to config.
+ */
+function user_update_1006() {
+  // Migrate variables if any.
+  $config = config('system.core');
+  $config->set('user_pictures', update_variable_get('user_pictures', 0));
+  $config->set('user_picture_path', update_variable_get('user_picture_path', 'pictures'));
+  $config->set('user_picture_default', update_variable_get('user_picture_default', ''));
+  $config->set('user_picture_style', update_variable_get('user_picture_style', ''));
+  $config->set('user_picture_dimensions', update_variable_get('user_picture_dimensions', '85x85'));
+  $config->set('user_picture_file_size', update_variable_get('user_picture_file_size', 30));
+  $config->set('user_picture_guidelines', update_variable_get('user_picture_guidelines', ''));
+  $config->save();
+  // Delete variables.
+  update_variable_del('user_pictures');
+  update_variable_del('user_picture_path');
+  update_variable_del('user_picture_default');
+  update_variable_del('user_picture_style');
+  update_variable_del('user_picture_dimensions');
+  update_variable_del('user_picture_file_size');
+  update_variable_del('user_picture_guidelines');
+}
+
+/**
+ * Convert user roles to configuration files.
+ */
+function user_update_1007() {
+  // Update role ID to be a varchar instead of an integer.
+  if (db_field_exists('users_roles', 'rid')) {
+    db_drop_primary_key('users_roles');
+    db_drop_index('users_roles', 'rid');
+    // This column is added as part of the initial Backdrop update fixing
+    // initial compatibility. See update_prepare_bootstrap().
+    if (db_field_exists('users_roles', 'role')) {
+      db_drop_field('users_roles', 'role');
+    }
+    $role_column = array(
+      'type' => 'varchar',
+      'length' => 64,
+      'description' => 'Primary Key: The name of the role.',
+      'not null' => TRUE,
+      'default' => '',
+    );
+    db_change_field('users_roles', 'rid', 'role', $role_column);
+
+    db_add_primary_key('users_roles', array('uid', 'role'));
+    db_add_index('users_roles', 'role', array('role'));
+  }
+
+  $admin_role_id = config_get('system.core', 'user_admin_role');
+  $role_result = db_query("SELECT * FROM {role}");
+  foreach ($role_result as $row) {
+    $role_data = array(
+      'name' => $row->rid,
+      'label' => backdrop_ucfirst($row->name),
+      'weight' => $row->weight,
+    );
+
+    // Ensure default role names are correct.
+    if ($row->rid == 1) {
+      $role_data['name'] = 'anonymous';
+      $role_data['label'] = 'Anonymous';
+    }
+    if ($row->rid == 2) {
+      $role_data['name'] = 'authenticated';
+      $role_data['label'] = 'Authenticated';
+    }
+
+    // Build the list of permissions.
+    $role_data['permissions'] = array();
+    $permission_result = db_query("SELECT * FROM {role_permission} WHERE rid = :rid", array(':rid' => $row->rid));
+    foreach ($permission_result as $permission_row) {
+      $role_data['permissions'][] = $permission_row->permission;
+    }
+
+    // Save the new user role.
+    $config = config('user.role.' . $role_data['name']);
+    $config->setData($role_data);
+    $config->save();
+
+    // Update the users table to match the new role names.
+    db_update('users_roles')
+      ->fields(array(
+        'role' => $role_data['name'],
+      ))
+      ->condition('role', $row->rid)
+      ->execute();
+
+    // Update the admin role.
+    if ($admin_role_id == $row->rid) {
+      config_set('system.core', 'user_admin_role', $role_data['name']);
+    }
+  }
+
+  db_drop_table('role');
+  db_drop_table('role_permission');
+  db_drop_field('users_roles', 'rid');
+}
+
+/**
+ * Update views that used the old role ID handlers to use role name instead.
+ */
+function user_update_1008() {
+  $configs = config_get_names_with_prefix('views.view.');
+  foreach ($configs as $config_name) {
+    $config = config($config_name);
+    $view_data = $config->get();
+    $changed = FALSE;
+    foreach ($view_data['display'] as $display_name => $display_data) {
+      foreach (array('fields', 'filters') as $handler_type) {
+        if (isset($display_data['display_options'][$handler_type])) {
+          foreach ($display_data['display_options'][$handler_type] as $handler_key => $handler_data) {
+            // Change users_roles.rid to users_roles.role.
+            if ($handler_data['table'] === 'users_roles' && $handler_data['field'] === 'rid') {
+              $view_data['display'][$display_name]['display_options'][$handler_type][$handler_key]['field'] = 'role';
+              $changed = TRUE;
+            }
+            // Change role_permission.permission to users_roles.permissions.
+            if ($handler_data['table'] === 'role_permission' && $handler_data['field'] === 'permission') {
+              $view_data['display'][$display_name]['display_options'][$handler_type][$handler_key]['table'] = 'users_roles';
+              $view_data['display'][$display_name]['display_options'][$handler_type][$handler_key]['field'] = 'permissions';
+              $changed = TRUE;
+            }
+          }
+        }
+      }
+    }
+    if ($changed) {
+      $config->setData($view_data);
+      $config->save();
+    }
+  }
+}
+
+/**
+ * Create the default view for user administration.
+ */
+function user_update_1009() {
+  $view_config = array(
+    'name' => 'user_admin',
+    'description' => 'Manage user accounts, roles, and permissions.',
+    'module' => 'user',
+    'storage' => 4,
+    'tag' => 'default',
+    'disabled' => FALSE,
+    'base_table' => 'users',
+    'human_name' => 'Administer users',
+    'core' => '1.0-dev',
+    'display' => array(
+      'default' => array(
+        'display_title' => 'Master',
+        'display_plugin' => 'default',
+        'display_options' => array(
+          'query' => array(
+            'type' => 'views_query',
+            'options' => array(),
+          ),
+          'access' => array(
+            'type' => 'perm',
+            'perm' => 'administer users',
+          ),
+          'cache' => array(
+            'type' => 'none',
+          ),
+          'exposed_form' => array(
+            'type' => 'basic',
+            'options' => array(
+              'submit_button' => 'Filter',
+              'reset_button' => 0,
+              'reset_button_label' => 'Reset',
+              'exposed_sorts_label' => 'Sort by',
+              'expose_sort_order' => 1,
+              'sort_asc_label' => 'Asc',
+              'sort_desc_label' => 'Desc',
+              'autosubmit' => 0,
+              'autosubmit_hide' => 1,
+            ),
+          ),
+          'pager' => array(
+            'type' => 'full',
+            'options' => array(
+              'items_per_page' => '50',
+              'offset' => '0',
+              'id' => '0',
+              'total_pages' => '',
+              'quantity' => '9',
+              'tags' => array(
+                'first' => '« first',
+                'previous' => '‹ previous',
+                'next' => 'next ›',
+                'last' => 'last »',
+              ),
+              'expose' => array(
+                'items_per_page' => 0,
+                'items_per_page_label' => 'Items per page',
+                'items_per_page_options' => '5, 10, 20, 40, 60',
+                'items_per_page_options_all' => 0,
+                'items_per_page_options_all_label' => '- All -',
+                'offset' => 0,
+                'offset_label' => 'Offset',
+              ),
+            ),
+          ),
+          'style_plugin' => 'table',
+          'row_plugin' => 'fields',
+          'fields' => array(
+            'bulk_form' => array(
+              'id' => 'bulk_form',
+              'table' => 'users',
+              'field' => 'bulk_form',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Operations',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => '',
+              'element_label_colon' => 1,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'include_exclude' => 'exclude',
+              'selected_actions' => array(),
+            ),
+            'name' => array(
+              'id' => 'name',
+              'table' => 'users',
+              'field' => 'name',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Username',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => '',
+              'element_label_colon' => 1,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'link_to_user' => 1,
+              'overwrite_anonymous' => 0,
+              'anonymous_text' => '',
+              'format_username' => 1,
+            ),
+            'status' => array(
+              'id' => 'status',
+              'table' => 'users',
+              'field' => 'status',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Status',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => 'priority-low',
+              'element_label_colon' => 1,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'type' => 'active-blocked',
+              'type_custom_true' => '',
+              'type_custom_false' => '',
+              'not' => 0,
+            ),
+            'role' => array(
+              'id' => 'role',
+              'table' => 'users_roles',
+              'field' => 'role',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Roles',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => 'priority-medium',
+              'element_label_colon' => 1,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'type' => 'ul',
+              'separator' => ', ',
+            ),
+            'created' => array(
+              'id' => 'created',
+              'table' => 'users',
+              'field' => 'created',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Member for',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => 'priority-low',
+              'element_label_colon' => 1,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'date_format' => 'raw time ago',
+              'custom_date_format' => '',
+              'timezone' => '',
+            ),
+            'access' => array(
+              'id' => 'access',
+              'table' => 'users',
+              'field' => 'access',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Last access',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => 'priority-low',
+              'element_label_colon' => 1,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'date_format' => 'raw time ago',
+              'custom_date_format' => '',
+              'timezone' => '',
+            ),
+            'edit_node' => array(
+              'id' => 'edit_node',
+              'table' => 'users',
+              'field' => 'edit_node',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Edit',
+              'exclude' => 1,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => '',
+              'element_label_colon' => 0,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'text' => '',
+            ),
+            'cancel_node' => array(
+              'id' => 'cancel_node',
+              'table' => 'users',
+              'field' => 'cancel_node',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Cancel',
+              'exclude' => 1,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => '',
+              'element_label_colon' => 0,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'text' => '',
+            ),
+            'dropbutton' => array(
+              'id' => 'dropbutton',
+              'table' => 'views',
+              'field' => 'dropbutton',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => 'Operations',
+              'exclude' => 0,
+              'element_type' => '',
+              'element_class' => '',
+              'element_label_type' => '',
+              'element_label_class' => '',
+              'element_label_colon' => 0,
+              'element_wrapper_type' => '',
+              'element_wrapper_class' => '',
+              'element_default_classes' => 0,
+              'empty' => '',
+              'hide_empty' => 0,
+              'empty_zero' => 0,
+              'hide_alter_empty' => 1,
+              'fields' => array(
+                'edit_node' => 'edit_node',
+                'cancel_node' => 'cancel_node',
+                'bulk_form' => 0,
+                'name' => 0,
+                'status' => 0,
+                'role' => 0,
+                'created' => 0,
+                'access' => 0,
+              ),
+              'destination' => 1,
+            ),
+          ),
+          'filters' => array(
+            'uid_raw' => array(
+              'id' => 'uid_raw',
+              'table' => 'users',
+              'field' => 'uid_raw',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'operator' => '!=',
+              'value' => array(
+                'min' => '',
+                'max' => '',
+                'value' => '0',
+              ),
+              'group' => 1,
+              'exposed' => FALSE,
+              'expose' => array(
+                'operator_id' => FALSE,
+                'label' => '',
+                'description' => '',
+                'use_operator' => FALSE,
+                'operator' => '',
+                'identifier' => '',
+                'required' => FALSE,
+                'remember' => FALSE,
+                'multiple' => FALSE,
+                'remember_roles' => array(
+                  'authenticated' => 'authenticated',
+                ),
+              ),
+              'is_grouped' => FALSE,
+              'group_info' => array(
+                'label' => '',
+                'description' => '',
+                'identifier' => '',
+                'optional' => TRUE,
+                'widget' => 'select',
+                'multiple' => FALSE,
+                'remember' => 0,
+                'default_group' => 'All',
+                'default_group_multiple' => array(),
+                'group_items' => array(),
+              ),
+            ),
+            'status' => array(
+              'id' => 'status',
+              'table' => 'users',
+              'field' => 'status',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'operator' => '=',
+              'value' => 'All',
+              'group' => 1,
+              'exposed' => TRUE,
+              'expose' => array(
+                'operator_id' => '',
+                'label' => 'Status',
+                'description' => '',
+                'use_operator' => FALSE,
+                'operator' => 'status_op',
+                'identifier' => 'status',
+                'required' => 0,
+                'remember' => 0,
+                'multiple' => FALSE,
+                'remember_roles' => array(
+                  'authenticated' => 'authenticated',
+                  'anonymous' => 0,
+                  'administrator' => 0,
+                ),
+              ),
+              'is_grouped' => FALSE,
+              'group_info' => array(
+                'label' => '',
+                'description' => '',
+                'identifier' => '',
+                'optional' => TRUE,
+                'widget' => 'select',
+                'multiple' => FALSE,
+                'remember' => 0,
+                'default_group' => 'All',
+                'default_group_multiple' => array(),
+                'group_items' => array(),
+              ),
+            ),
+            'role' => array(
+              'id' => 'role',
+              'table' => 'users_roles',
+              'field' => 'role',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'operator' => 'or',
+              'value' => array(),
+              'group' => 1,
+              'exposed' => TRUE,
+              'expose' => array(
+                'operator_id' => 'role_op',
+                'label' => 'Role',
+                'description' => '',
+                'use_operator' => 0,
+                'operator' => 'role_op',
+                'identifier' => 'role',
+                'required' => 0,
+                'remember' => 0,
+                'multiple' => 0,
+                'remember_roles' => array(
+                  'authenticated' => 'authenticated',
+                  'anonymous' => 0,
+                  'administrator' => 0,
+                ),
+                'reduce' => 0,
+              ),
+              'is_grouped' => FALSE,
+              'group_info' => array(
+                'label' => '',
+                'description' => '',
+                'identifier' => '',
+                'optional' => TRUE,
+                'widget' => 'select',
+                'multiple' => FALSE,
+                'remember' => 0,
+                'default_group' => 'All',
+                'default_group_multiple' => array(),
+                'group_items' => array(),
+              ),
+              'reduce_duplicates' => 0,
+            ),
+            'name' => array(
+              'id' => 'name',
+              'table' => 'users',
+              'field' => 'name',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'operator' => 'contains',
+              'value' => '',
+              'group' => '1',
+              'exposed' => TRUE,
+              'expose' => array(
+                'operator_id' => 'name_op',
+                'label' => 'Name',
+                'description' => '',
+                'use_operator' => 0,
+                'operator' => 'name_op',
+                'identifier' => 'name',
+                'required' => 0,
+                'remember' => 0,
+                'multiple' => FALSE,
+                'remember_roles' => array(
+                  'authenticated' => 'authenticated',
+                  'anonymous' => 0,
+                  'administrator' => 0,
+                ),
+              ),
+              'is_grouped' => FALSE,
+              'group_info' => array(
+                'label' => '',
+                'description' => '',
+                'identifier' => '',
+                'optional' => TRUE,
+                'widget' => 'select',
+                'multiple' => FALSE,
+                'remember' => 0,
+                'default_group' => 'All',
+                'default_group_multiple' => array(),
+                'group_items' => array(),
+              ),
+            ),
+          ),
+          'sorts' => array(
+            'created' => array(
+              'id' => 'created',
+              'table' => 'users',
+              'field' => 'created',
+              'order' => 'DESC',
+            ),
+          ),
+          'style_options' => array(
+            'grouping' => array(),
+            'row_class' => '',
+            'default_row_class' => 0,
+            'row_class_special' => 1,
+            'override' => 1,
+            'sticky' => 0,
+            'caption' => '',
+            'summary' => '',
+            'columns' => array(
+              'bulk_form' => 'bulk_form',
+              'name' => 'name',
+              'status' => 'status',
+              'role' => 'role',
+              'created' => 'created',
+              'access' => 'access',
+              'edit_node' => 'edit_node',
+              'cancel_node' => 'cancel_node',
+              'dropbutton' => 'dropbutton',
+            ),
+            'info' => array(
+              'bulk_form' => array(
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'name' => array(
+                'sortable' => 1,
+                'default_sort_order' => 'asc',
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'status' => array(
+                'sortable' => 1,
+                'default_sort_order' => 'asc',
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'role' => array(
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'created' => array(
+                'sortable' => 1,
+                'default_sort_order' => 'desc',
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'access' => array(
+                'sortable' => 1,
+                'default_sort_order' => 'asc',
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'edit_node' => array(
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'cancel_node' => array(
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+              'dropbutton' => array(
+                'align' => '',
+                'separator' => '',
+                'empty_column' => 0,
+              ),
+            ),
+            'default' => 'created',
+            'empty_table' => 1,
+          ),
+          'header' => array(),
+          'title' => 'People',
+          'empty' => array(
+            'area_text_custom' => array(
+              'id' => 'area_text_custom',
+              'table' => 'views',
+              'field' => 'area_text_custom',
+              'relationship' => 'none',
+              'group_type' => 'group',
+              'ui_name' => '',
+              'label' => '',
+              'empty' => TRUE,
+              'content' => 'No accounts found.',
+              'tokenize' => 0,
+            ),
+          ),
+          'filter_groups' => array(
+            'operator' => 'AND',
+            'groups' => array(
+              '1' => 'AND',
+            ),
+          ),
+        ),
+      ),
+      'page' => array(
+        'display_title' => 'Page',
+        'display_plugin' => 'page',
+        'display_options' => array(
+          'query' => array(
+            'type' => 'views_query',
+            'options' => array(),
+          ),
+          'path' => 'admin/people/list',
+          'menu' => array(
+            'type' => 'default tab',
+            'title' => 'Manage user accounts',
+            'description' => '',
+            'name' => 'management',
+            'weight' => '0',
+            'context' => 0,
+            'context_only_inline' => 0,
+          ),
+          'tab_options' => array(
+            'type' => 'normal',
+            'title' => 'People',
+            'description' => 'Manage user accounts, roles, and permissions.',
+            'name' => 'management',
+            'weight' => '-6',
+          ),
+        ),
+      ),
+    ),
+  );
+
+  $config = config('views.view.user_admin');
+  if ($config->isNew()) {
+    $config->setData($view_config);
+    $config->save();
+  }
+}
+
+/**
+ * Set default option for login method to use accounts only.
+ */
+function user_update_1010() {
+  $config = config('system.core');
+  $config->set('user_login_method', 'username_only');
+  $config->set('user_email_match', 1);
+  $config->save();
+}
+
+/**
+ * Update 'People' menus to 'User accounts'.
+ */
+function user_update_1011() {
+  $config = config('views.view.user_admin');
+  if ($config->get('display.default.display_options.title') == 'People') {
+    $config->set('display.default.display_options.title', 'User accounts');
+  }
+  if ($config->get('display.page.display_options.tab_options.title') == 'People') {
+    $config->set('display.page.display_options.tab_options.title', 'User accounts');
+  }
+  $config->save();
+}
+
+/**
+ * Update 'Find user accounts' to 'Manage user accounts'
+ */
+function user_update_1012() {
+  $config = config('views.view.user_admin');
+	if ($config->get('display.default.display_options.title') == 'User accounts') {
+    $config->set('display.default.display_options.title', 'Manage user accounts');
+  }
+  if ($config->get('display.page.display_options.menu.title') == 'Find user accounts') {
+    $config->set('display.page.display_options.menu.title', 'Manage user accounts');
+  }
+  $config->save();
+}
+
+/**
+ * Grant accounts with 'administer permissions' the new 'assign roles' permission.
+ */
+function user_update_1013() {
+  $names = config_get_names_with_prefix('user.role.');
+  foreach ($names as $config_name) {
+    $config = config($config_name);
+    $permissions = $config->get('permissions');
+    if (in_array('administer permissions', $permissions)) {
+      $permissions[] = 'assign roles';
+      $config->set('permissions', $permissions);
+      $config->save();
+    }
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-to-1.x"
+ */

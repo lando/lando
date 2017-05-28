@@ -1,0 +1,233 @@
+/**
+ * Styles for collapsible, responsive tabs.
+ */
+.responsive-tabs-processed {
+  position: relative;
+}
+.responsive-tabs-processed ul.primary {
+  height: 2.6em;
+  overflow: hidden;
+}
+.responsive-tabs-mobile ul.primary {
+  background: #fafafa;
+}
+.responsive-tabs-processed ul.primary li {
+  margin-bottom: 0;
+}
+.responsive-tabs-processed .duplicated-tab,
+.responsive-tabs-mobile ul.primary {
+  /* Hidden elements, hiding from sighted users only */
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.expand-dropdown-tabs.responsive-tabs-mobile ul.primary {
+  /* Reverse hidden elements styles */
+  visibility: visible;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+}
+.expand-dropdown-tabs .responsive-tabs-dropdown li {
+  width: 100%;
+  margin: 0;
+}
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li a,
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li a:hover {
+  border-top: 2px solid #fafafa;
+  position: relative;
+}
+.expand-dropdown-tabs ul.responsive-tabs-dropdown li:first-child a:before {
+  margin-top: -2px;
+  height: calc(100% + 2px);
+}
+.responsive-tabs-before.expand-dropdown-tabs ul.responsive-tabs-dropdown li a {
+  padding-right: 72px;
+}
+.responsive-tabs-after.expand-dropdown-tabs ul.responsive-tabs-dropdown li a {
+  padding-left: 72px;
+}
+.expand-dropdown-tabs .responsive-tabs-dropdown a:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 100%;
+  background: #c5c5c3;
+}
+.responsive-tabs-after.expand-dropdown-tabs .responsive-tabs-dropdown a:before {
+  right: auto;
+  left: 0;
+  width: 48px;
+}
+.expand-dropdown-tabs {
+  position: relative;
+}
+ul.primary.responsive-tabs-dropdown {
+  display: none;
+  height: auto;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}
+.expand-dropdown-tabs .primary.responsive-tabs-dropdown {
+  display: block;
+  position: absolute;
+}
+ul.primary.responsive-tabs-dropdown li:first-child a,
+ul.primary.responsive-tabs-dropdown li:last-child a {
+  border-radius: 0;
+}
+.expand-dropdown-tabs .primary.responsive-tabs-dropdown:after {
+  content: '';
+  display: table;
+}
+.expand-dropdown-tabs-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 50px;
+  height: auto;
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 0.9375em;
+  text-align: center;
+  visibility: visible;
+  clip: auto;
+  cursor: pointer;
+}
+.expand-dropdown-tabs-control:before {
+  content: '...';
+  font-weight: bold;
+}
+.responsive-tabs-after .expand-dropdown-tabs-control {
+  border-left: 0;
+  border-right: 2px solid #f0f0f0;
+  -webkit-border-radius: 4px 0 0 0;
+  -moz-border-radius: 4px 0 0 0;
+  border-radius: 4px 0 0 0;
+}
+.desktop-primary-tabs .expand-dropdown-tabs-control {
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.expand-dropdown-tabs-label {
+  display: none;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.expand-dropdown-tabs-label .responsive-tabs-link-text-wrapper {
+  display: block;
+  width: calc(100% - 3em + 10px);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.responsive-tabs-mobile .expand-dropdown-tabs-label {
+  display: block;
+  text-align: left;
+}
+.expand-dropdown-tabs-control:hover .expand-dropdown-tabs-label,
+.responsive-tabs-mobile.js-active .expand-dropdown-tabs-label {
+  background: #e8e8e8;
+}
+.responsive-tabs-mobile.expand-dropdown-tabs .expand-dropdown-tabs-label,
+.responsive-tabs-mobile.expand-dropdown-tabs:hover .expand-dropdown-tabs-label {
+  background: #fff;
+}
+.responsive-tabs-mobile .expand-dropdown-tabs-control {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  border-radius: 4px 4px 0 0;
+}
+.responsive-tabs-mobile .expand-dropdown-tabs-control.js-active {
+  background: #fafafa;
+  overflow: visible;
+}
+
+.responsive-tabs-mobile .expand-dropdown-tabs-control:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3em;
+  height: 100%;
+  box-sizing: border-box;
+  border-left: 2px solid transparent;
+  background: #dbdbd9;
+}
+.responsive-tabs-mobile.expand-dropdown-tabs .expand-dropdown-tabs-control:before {
+  background: #fafafa;
+}
+.responsive-tabs-mobile .expand-dropdown-tabs-control:after {
+  content: '';
+  position: absolute;
+  top: .85em;
+  right: 1.3em;
+  width: 0;
+  height: 0;
+  border: 0.4em solid transparent;
+  border-right-color: #000;
+  border-left: 0;
+}
+.expand-dropdown-tabs .expand-dropdown-tabs-control:after {
+  top: 1.08em;
+  right: 1em;
+  border: 0.4em solid transparent;
+  border-top-color: #c5c5c3;
+  border-bottom: 0;
+}
+.responsive-tabs-mobile ul.primary,
+.responsive-tabs-mobile.expand-dropdown-tabs ul.primary {
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  top: 2.6em;
+  background: #fafafa;
+}
+.responsive-tabs-mobile ul.primary,
+.expand-dropdown-tabs.responsive-tabs-mobile ul.primary {
+  overflow: hidden;
+  -webkit-border-radius: 0 0 4px 4px;
+  border-radius: 4px;
+}
+.responsive-tabs-mobile ul.primary li {
+  position: relative;
+  float: none;
+  border-right: 0;
+  border-bottom: 2px solid #fafafa;
+}
+.responsive-tabs-mobile ul.primary a:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 3em;
+  height: 100%;
+  background: #c5c5c3;
+}
+.responsive-tabs-mobile ul.primary li:last-child {
+  border-bottom: 0;
+}
+.responsive-tabs-mobile ul.primary li a {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.responsive-tabs-mobile-header-padder {
+  background: #f0f0f0;
+}

@@ -1,0 +1,364 @@
+<?php
+/**
+ * @file
+ * Testing CRUD API in the browser.
+ */
+
+require_once(__DIR__ . '/link.test');
+
+/**
+ * Testing that users can not input bad URLs or labels
+ */
+class LinkUITest extends LinkBaseTestClass {
+
+  /**
+   * Link supposed to be good.
+   */
+  const LINK_INPUT_TYPE_GOOD = 0;
+
+  /**
+   * Link supposed to have a bad title.
+   */
+  const LINK_INPUT_TYPE_BAD_TITLE = 1;
+
+  /**
+   * Link supposed to have a bad URL.
+   */
+  const LINK_INPUT_TYPE_BAD_URL = 2;
+
+  /**
+   * Creates a link field for the "page" type and creates a page with a link.
+   */
+  function testLinkCreate() {
+    $name = strtolower($this->randomName());
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(), t('Save settings'));
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    $permission = 'create page content';
+    $this->checkPermissions(array($permission), TRUE);
+
+    $this->backdropGet('node/add/page');
+    $field_name = 'field_' . $name;
+    $this->assertField('edit-field-' . $name . '-und-0-title', 'Title found');
+    $this->assertField('edit-field-' . $name . '-und-0-url', 'URL found');
+
+    $input_test_cases = array(
+      array(
+        'href' => 'http://example.com/' . $this->randomName(),
+        'label' => $this->randomName(),
+        'msg' => 'Link found',
+        'type' => self::LINK_INPUT_TYPE_GOOD
+      ),
+      array(
+        'href' => 'http://example.com/' . $this->randomName(),
+        'label' => $this->randomName() . '<script>alert("hi");</script>',
+        'msg' => 'js label',
+        'type' => self::LINK_INPUT_TYPE_BAD_TITLE
+      ),
+      array(
+        'href' => 'http://example.com/' . $this->randomName(),
+        'label' => $this->randomName() . '<script src="http://devil.site.com"></script>',
+        'msg' => 'js label',
+        'type' => self::LINK_INPUT_TYPE_BAD_TITLE
+      ),
+      array(
+        'href' => 'http://example.com/' . $this->randomName(),
+        'label' => $this->randomName() . '" onmouseover="alert(\'hi\')',
+        'msg' => 'js label',
+        'type' => self::LINK_INPUT_TYPE_BAD_TITLE
+      ),
+      array(
+        'href' => 'http://example.com/' . $this->randomName(),
+        'label' => $this->randomName() . '\' onmouseover="alert(\'hi\')',
+        'msg' => 'js label',
+        'type' => self::LINK_INPUT_TYPE_BAD_TITLE
+      ),
+      array(
+        'href' => 'javascript:alert("http://example.com/' . $this->randomName() . '")',
+        'label' => $this->randomName(),
+        'msg' => 'js url',
+        'type' => self::LINK_INPUT_TYPE_BAD_URL
+      ),
+      array(
+        'href' => 'http://ecs-es.kelkoo.es/ctl/go/sitesearchGo?.ts=1338833010331&.sig=qP9GXeEFH6syBzwmzYkxmsvp1EI-',
+        'label' => 'http://ecs-es.kelkoo.es/ctl/go/sitesearchGo?.ts=1338833010331&.sig=qP9GXeEFH6syBzwmzYkxmsvp1EI-',
+        'msg' => 'Url with . in querystring',
+        'type' => self::LINK_INPUT_TYPE_GOOD,
+      ),
+    );
+    $test_case = array(
+      'href' => 'www.example.com/' . $this->randomName(),
+      'label' => $this->randomName(),
+      'msg' => 'Link found',
+      'type' => self::LINK_INPUT_TYPE_GOOD,
+    );
+    $test_case['expected_href'] = 'http://' . $test_case['href'];
+    $input_test_cases[] = $test_case;
+
+    foreach ($input_test_cases as $input) {
+      $this->backdropLogin($this->web_user);
+      $this->backdropGet('node/add/page');
+
+      $edit = array(
+        'title' => $input['label'],
+        $field_name . '[und][0][title]' => $input['label'],
+        $field_name . '[und][0][url]' => $input['href'],
+      );
+      $this->backdropPost(NULL, $edit, t('Save'));
+      if ($input['type'] == self::LINK_INPUT_TYPE_BAD_URL) {
+        $this->assertRaw(t('The value %value provided for %field is not a valid URL.', array('%field' => $name, '%value' => trim($input['href']))), 'Not a valid URL: ' . $input['href']);
+        continue;
+      }
+      else {
+        $this->assertRaw(' ' . t('has been created.', array('@type' => 'Basic Page', '%title' => $edit['title'])), 'Page created: ' . $input['href']);
+      }
+
+      // If simpletest starts using something to override the error system, this
+      ///will flag us and let us know it's broken.
+      $this->assertFalse(libxml_use_internal_errors(TRUE));
+      if (isset($input['expected_href'])) {
+        $path = '//a[@href="' . $input['expected_href'] . '" and text()="' . $input['label'] . '"]';
+      }
+      else {
+        $path = '//a[@href="' . $input['href'] . '" and text()="' . $input['label'] . '"]';
+      }
+      $elements = $this->xpath($path);
+      libxml_use_internal_errors(FALSE);
+      $this->assertIdentical(isset($elements[0]), $input['type'] == self::LINK_INPUT_TYPE_GOOD, $input['msg']);
+    }
+  }
+
+  /**
+   * Testing that if you use <strong> in a static title for your link, that the
+   * title actually displays <strong>.
+   */
+  function testStaticLinkCreate() {
+    $name = strtolower($this->randomName());
+    $field_name = 'field_' . $name;
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(
+      'instance[settings][title]' => 'value',
+      'instance[settings][title_value]' => '<strong>' . $name . '</strong>'), t('Save settings')
+    );
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+      'href' => 'http://example.com/' . $this->randomName()
+    );
+
+    $edit = array(
+      'title' => $name,
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $this->assertRaw(l('<strong>' . $name . '</strong>', $input['href'], array('html' => TRUE)));
+  }
+
+  /**
+   * Testing that if you have the title but no URL, the title is not sanitized twice.
+   */
+  function testCRUDTitleOnlyTitleNoLink() {
+    $name = strtolower($this->randomName());
+    $field_name = 'field_' . $name;
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(
+      'instance[settings][url]' => 1,
+    ), t('Save settings'));
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+      'title' => 'This & That',
+      'href' => '',
+    );
+
+    $edit = array(
+      'title' => $name,
+      $field_name . '[und][0][title]' => $input['title'],
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $this->assertRaw('This &amp; That');
+  }
+
+  /**
+   * If we're creating a new field and just hit 'save' on the default options, we want to make
+   * sure they are set to the expected results.
+   */
+  function testCRUDCreateFieldDefaults() {
+    $name = strtolower($this->randomName());
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(), t('Save settings'));
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    field_info_cache_clear();
+    $instances = field_info_instances('node', 'page');
+
+    $instance = $instances['field_' . $name];
+    $this->assertFalse($instance['required'], 'Make sure field is not required.');
+    $this->assertEqual($instance['settings']['title'], 'optional', 'Title should be optional by default.');
+    $this->assertTrue($instance['settings']['validate_url'], 'Make sure validation is on.');
+    $this->assertFalse($instance['settings']['enable_tokens'], 'Enable Tokens should be off by default.');
+    $this->assertEqual($instance['settings']['display']['url_cutoff'], 80, 'Url cutoff should be at 80 characters.');
+    $this->assertEqual($instance['settings']['attributes']['target'], 'default', 'Target should be "default"');
+    $this->assertFalse($instance['settings']['attributes']['rel'], 'Rel should be blank by default.');
+    $this->assertFalse($instance['settings']['attributes']['class'], 'By default, no class should be set.');
+    $this->assertFalse($instance['settings']['title_value'], 'By default, no title should be set.');
+  }
+
+  /**
+   * If we're creating a new field and just hit 'save' on the default options, we want to make
+   * sure they are set to the expected results.
+   */
+  function testCRUDCreateFieldWithClass() {
+    $name = strtolower($this->randomName());
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+
+    $link_class_name = 'basic-link-' . strtolower($this->randomName());
+    $edit = array(
+      'instance[settings][attributes][class]' => $link_class_name,
+    );
+    $this->backdropPost(NULL, $edit, t('Save settings'));
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    field_info_cache_clear();
+    $instances = field_info_instances('node', 'page');
+
+    $instance = $instances['field_' . $name];
+    $this->assertFalse($instance['required'], 'Make sure field is not required.');
+    $this->assertEqual($instance['settings']['title'], 'optional', 'Title should be optional by default.');
+    $this->assertTrue($instance['settings']['validate_url'], 'Make sure validation is on.');
+    //$this->assertTrue($instance['settings']['enable_tokens'], 'Enable Tokens should be on by default.');
+    $this->assertEqual($instance['settings']['display']['url_cutoff'], 80, 'Url cutoff should be at 80 characters.');
+    $this->assertEqual($instance['settings']['attributes']['target'], 'default', 'Target should be "default"');
+    $this->assertFalse($instance['settings']['attributes']['rel'], 'Rel should be blank by default.');
+    $this->assertEqual($instance['settings']['attributes']['class'], $link_class_name, 'One class should be set.');
+    $this->assertFalse($instance['settings']['title_value'], 'By default, no title should be set.');
+
+    // Now, let's create a node with this field and make sure the link shows up:
+    $field_name = 'field_' . $name;
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+      'title' => 'This & That',
+      'href' => 'http://www.example.com/',
+    );
+
+    $edit = array(
+      'title' => $field_name,
+      $field_name . '[und][0][title]' => $input['title'],
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $this->assertRaw('This &amp; That');
+    $this->assertPattern('|class\s?=\s?"' . $link_class_name . '"|', "Class $link_class_name exists on page.");
+  }
+
+/**
+   * If we're creating a new field and just hit 'save' on the default options, we want to make
+   * sure they are set to the expected results.
+   */
+  function testCRUDCreateFieldWithTwoClasses() {
+    $name = strtolower($this->randomName());
+    $edit = array(
+      'fields[_add_new_field][label]' => $name,
+      'fields[_add_new_field][field_name]' => $name,
+      'fields[_add_new_field][type]' => 'link_field',
+      'fields[_add_new_field][widget_type]' => 'link_field',
+    );
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+
+    $link_class_name = 'basic-link ' . strtoupper($this->randomName());
+    $edit = array(
+      'instance[settings][attributes][class]' => $link_class_name,
+    );
+    $this->backdropPost(NULL, $edit, t('Save settings'));
+
+    // Is field created?
+    $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
+
+    field_info_cache_clear();
+    $instances = field_info_instances('node', 'page');
+
+    $instance = $instances['field_' . $name];
+    $this->assertFalse($instance['required'], 'Make sure field is not required.');
+    $this->assertEqual($instance['settings']['title'], 'optional', 'Title should be optional by default.');
+    $this->assertTrue($instance['settings']['validate_url'], 'Make sure validation is on.');
+    //$this->assertTrue($instance['settings']['enable_tokens'], 'Enable Tokens should be on by default.');
+    $this->assertEqual($instance['settings']['display']['url_cutoff'], 80, 'Url cutoff should be at 80 characters.');
+    $this->assertEqual($instance['settings']['attributes']['target'], 'default', 'Target should be "default"');
+    $this->assertFalse($instance['settings']['attributes']['rel'], 'Rel should be blank by default.');
+    $this->assertEqual($instance['settings']['attributes']['class'], $link_class_name, 'Two classes should be set.');
+    $this->assertFalse($instance['settings']['title_value'], 'By default, no title should be set.');
+
+    // Now, let's create a node with this field and make sure the link shows up:
+    $field_name = 'field_' . $name;
+    $this->backdropGet('node/add/page');
+    $this->assertField($field_name . '[und][0][url]', 'URL found');
+
+    $input = array(
+      'title' => 'This & That',
+      'href' => 'http://www.example.com/',
+    );
+
+    $edit = array(
+      'title' => $field_name,
+      $field_name . '[und][0][title]' => $input['title'],
+      $field_name . '[und][0][url]' => $input['href'],
+    );
+    $this->backdropPost(NULL, $edit, t('Save'));
+
+    $this->assertRaw('This &amp; That');
+    $this->assertPattern('|class\s?=\s?"' . $link_class_name . '"|', "Classes $link_class_name exist on page.");
+  }
+}

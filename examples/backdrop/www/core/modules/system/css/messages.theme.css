@@ -1,0 +1,107 @@
+/**
+ * @file
+ * Status messages styling.
+ */
+.messages {
+  position: relative;
+  box-sizing: border-box;
+  margin: 0.375rem 0;
+  padding: 0.9em 0.625em 1em 3.438em; /* LTR */
+  border-radius: 4px;
+  min-height: 3.2em;
+  overflow: hidden;
+}
+[dir="rtl"] .messages {
+  padding: .625em 3.438em .625em .625em;
+}
+.messages:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0; /* LTR */
+  width: 2.375em;
+  height: 100%;
+  background-position: center .625em;
+  background-repeat: no-repeat;
+  background-size: 1.5em;
+}
+.messages :nth-child(2) {
+  margin-top: 0;
+  padding-top: 0;
+}
+.messages :last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+@media only screen and (min-width: 34em) {
+  .messages {
+    padding-left: 4.375em;
+  }
+  [dir="rtl"] .messages {
+    padding-left: .625em;
+    padding-right: 4.375em;
+  }
+  .messages:before {
+    width: 3em;
+    background-size: 2em;
+  }
+}
+[dir="rtl"] .messages:before {
+  left: auto;
+  right: 0;
+}
+.messages ul,
+.messages .item-list ul {
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+.status {
+  color: #234600;
+  background-color: #E9EEBC;
+}
+div.status:before {
+  background-image: url(../../../misc/message-24-ok.png);
+  background-color: #CFDE56;
+}
+
+.warning {
+  color: #555;
+  background-color: #FAF5C9;
+}
+div.warning:before {
+  background-image: url(../../../misc/message-24-warning.png);
+  background-color: #FCE400;
+}
+
+.error {
+  color: #EC351C;
+  background-color: #F9EDEC;
+}
+div.error:before {
+  background-image: url(../../../misc/message-24-error.png);
+  background-color: #EE3D23;
+}
+
+/* Desktop size icons */
+@media only screen and (min-width: 34em) {
+  div.status:before {
+    background-image: url(../../../misc/message-32-ok.png);
+  }
+  div.warning:before {
+    background-image: url(../../../misc/message-32-warning.png);
+  }
+  div.error:before {
+    background-image: url(../../../misc/message-32-error.png);
+  }
+}
+/* SVG overrides */
+div.status:before {
+  background-image: linear-gradient(transparent, transparent), url(../../../misc/message-ok.svg);
+}
+div.warning:before {
+  background-image: linear-gradient(transparent, transparent), url(../../../misc/message-warning.svg);
+}
+div.error:before {
+  background-image: linear-gradient(transparent, transparent), url(../../../misc/message-error.svg);
+}

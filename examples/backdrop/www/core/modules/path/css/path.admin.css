@@ -1,0 +1,14 @@
+.path-bulk-update-form .path-type {
+  margin-left: 40px; /* LTR */
+}
+.path-bulk-update-form [dir="rtl"] .path-type {
+  margin-left: 0;
+  margin-right: 40px;
+}
+.path-bulk-update-form th .form-checkbox {
+  margin-right: 15px; /* LTR */
+}
+.path-bulk-update-form [dir="rtl"] th .form-checkbox {
+  margin-left: 15px;
+  margin-right: 0;
+}

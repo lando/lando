@@ -1,0 +1,39 @@
+/**
+ * @file
+ * Stark layout method
+ *
+ * To avoid obscuring CSS added to the page by Backdrop or a contrib module, the
+ * Stark theme itself has no styling, except just enough CSS to display the page
+ * in a readable manner.
+ */
+body {
+  margin: 0 10px;
+}
+body > .layout {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+table {
+  width: 100%;
+}
+
+/**
+ * Responsive tables.
+ */
+@media screen and (max-width:450px) {
+  th.priority-low,
+  td.priority-low,
+  th.priority-medium,
+  td.priority-medium {
+    display: none;
+  }
+}
+@media screen and (max-width:720px) {
+  th.priority-low,
+  td.priority-low {
+    display: none;
+  }
+}
+
+

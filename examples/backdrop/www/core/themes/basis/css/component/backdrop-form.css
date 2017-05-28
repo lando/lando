@@ -1,0 +1,326 @@
+/**
+ * @file
+ * Backdrop form styling.
+ */
+.form-item,
+.field-name-comment-body {
+  padding: 0;
+  margin: 0 0 1.5em;
+}
+
+.form-type-email label,
+.form-type-file label,
+.form-type-password label,
+.form-type-select label,
+.form-type-textarea label,
+.form-type-textfield label {
+  display: block;
+  margin: 0 0 0.25em;
+}
+
+abbr.form-required,
+abbr.tabledrag-changed,
+abbr.ajax-changed {
+  text-decoration: none;
+}
+
+.form-required {
+  color: #f00;
+}
+
+.form-item-radios label,
+.form-item-checkboxes label {
+  display: block;
+  margin: 0 0 0.8em;
+}
+
+.form-item-radio label,
+.form-radios label,
+.form-item-checkbox label,
+.form-checkboxes label {
+  display: inline-block;
+  font-weight: 400;
+  margin: 0;
+}
+
+.form-radios .form-item:last-child,
+.form-checkboxes .form-item:last-child {
+  margin: 0;
+}
+
+.filter-wrapper .form-item,
+.teaser-checkbox .form-item,
+.form-item .form-item {
+  padding: 0.3125em 0;
+  margin: 0;
+  border: 0;
+}
+
+.form-type-checkbox {
+  padding: 0;
+}
+
+.text-format-wrapper .form-item {
+  padding-bottom: 0;
+}
+
+.form-item label {
+  margin: 0 0 0.625em;
+}
+
+.field-label label {
+  margin: 0;
+  padding: 0;
+}
+
+.form-item input.form-radio,
+.form-item input.form-checkbox {
+  vertical-align: middle;
+  margin-right: 0.3125em;
+}
+
+td.checkbox .form-item input {
+  margin: 0;
+}
+
+/* Filter */
+.filter-wrapper {
+  border-top: 0;
+  padding: 0 0.125em;
+}
+
+.filter-wrapper .fieldset-wrapper {
+  padding-top: 3.774em;
+}
+
+.filter-wrapper .form-item,
+.filter-wrapper .filter-guidelines,
+.filter-wrapper .filter-help {
+  font-size: 0.923em;
+  padding: 0.125em 0 0 0;
+}
+
+.filter-wrapper .form-item label {
+  font-weight: normal;
+}
+
+.form-item .description,
+.password-strength,
+.password-match {
+  border-left: 0.25em solid #c6cad2;
+  margin: 0.6875em 0 2.5em;
+  padding: 0.5em 0.8em;
+}
+
+.form-item-radios .description,
+.form-item-checkboxes .description {
+  margin-top: 0.375em;
+}
+
+.resizable-textarea + .description,
+.form-item-date .description,
+.form-item-select .description {
+  margin-top: 0.875em;
+}
+
+.field-suffix {
+  display: block;
+  padding: 0.5em 0 0;
+}
+
+.field-suffix .machine-name-value {
+  display: inline-block;
+  margin: 0 0.5em;
+  padding: 0.375em;
+  border: 0.0625rem solid #dee2ea;
+  font-family: Consolas, 'Lucida Console', 'Courier New', monospace;
+}
+
+.password-strength {
+  padding-top: 0.375em;
+}
+
+ul.tips {
+  margin: 0.25em 0.25em 0;
+  padding: 0 1em;
+}
+
+input.form-submit,
+button.form-submit,
+.button {
+  display: inline-block;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  line-height: 2.875;
+  border: 0;
+  padding: 0 1.5625em;
+  margin-bottom: 1em;
+  margin-right: 1em; /* LTR */
+  -webkit-transition:
+    background-color 0.6s ease 0s,
+    color 0.6s ease 0s;
+  transition:
+    background-color 0.6s ease 0s,
+    color 0.6s ease 0s;
+}
+
+[dir="rtl"] input.form-submit,
+[dir="rtl"] .button {
+  margin-left: 1em;
+  margin-right: 0;
+}
+
+.form-managed-file input.form-submit {
+  margin-left: 0.5em; /* LTR */
+  position: relative;
+  top: 0.0625em;
+}
+
+[dir="rtl"] .form-managed-file input.form-submit {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+
+input.form-autocomplete,
+input.form-text,
+input.form-tel,
+input.form-email,
+input.form-url,
+input.form-color,
+input.form-number,
+input.form-search,
+input.form-file,
+textarea.form-textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 0.625em;
+  border: 0.125rem solid #d0d0d0;
+  font-weight: 400;
+  -webkit-transition: border-color 0.25s ease-in-out;
+  transition: border-color 0.25s ease-in-out;
+  will-change: border-color;
+}
+
+input.form-text,
+input.form-email,
+input.form-url,
+input.form-search,
+textarea.form-textarea {
+  max-width: 100%;
+}
+
+select.form-select {
+  box-sizing: border-box;
+  padding: 0.625em;
+  border: 0.125rem solid #d0d0d0;
+  font-weight: 400;
+  will-change: border-color;
+}
+
+/* De-emphasize the text format */
+select.filter-list {
+  padding: 0.125em 0.5em;
+  margin-left: 0.3125em; /* LTR */
+}
+
+[dir="rtl"] select.filter-list {
+  margin-left: 0;
+  margin-right: 0.3125em;
+}
+
+input.form-text:focus,
+input.form-tel:focus,
+input.form-email:focus,
+input.form-url:focus,
+input.form-color:focus,
+input.form-number:focus,
+input.form-search:focus,
+input.form-file:focus,
+textarea.form-textarea:focus {
+  outline: 0;
+}
+
+#autocomplete {
+  border: 0.125rem solid #d0d0d0;
+  border-top: 0;
+  box-sizing: content-box;
+}
+#autocomplete ul {
+  margin: 0;
+}
+#autocomplete li {
+  padding: 0.2em 0.625em;
+  margin: 0;
+}
+#autocomplete li.selected {
+  background: #008be2;
+  color: #fff;
+}
+
+ul.action-links {
+  margin: 1em 0;
+  padding: 0 1.25em 0; /* LTR */
+  list-style-type: none;
+  overflow: hidden;
+}
+
+ul.action-links li {
+  float: left; /* LTR */
+  margin: 0 1em 0 0; /* LTR */
+}
+
+[dir="rtl"] ul.action-links li {
+  float: right;
+  margin: 0 0 0 1em;
+}
+
+ul.action-links a {
+  position: relative;
+  padding-left: 1.125em; /* LTR */
+  line-height: 1.875;
+}
+
+[dir="rtl"] ul.action-links a {
+  padding-left: 0;
+  padding-right: 1.125em;
+}
+
+ul.action-links a:before,
+ul.action-links a:after {
+  content: '';
+  display: block;
+  position: absolute;
+  background: #0074bd;
+}
+
+ul.action-links a:before {
+  top: 0.375em;
+  left: 0.25em;
+  width: 0.125em;
+  height: 0.625em;
+}
+
+ul.action-links a:after {
+  top: 0.625em;
+  left: 0;
+  width: 0.625em;
+  height: 0.125em;
+}
+
+[dir="rtl"] ul.action-links a:before {
+  left: auto;
+  right: 0.25em;
+}
+
+[dir="rtl"] ul.action-links a:after {
+  left: auto;
+  right: 0;
+}
+
+/**
+ * Dropbutton overrides
+ */
+.dropbutton li {
+  margin: 0;
+}

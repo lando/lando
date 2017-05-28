@@ -1,0 +1,678 @@
+<?php
+
+/**
+ * @file
+ * Entity API for handling entities like nodes or users.
+ */
+
+/**
+ * Implements hook_modules_preenable().
+ */
+function entity_modules_preenable() {
+  entity_info_cache_clear();
+}
+
+/**
+ * Implements hook_modules_disabled().
+ */
+function entity_modules_disabled() {
+  entity_info_cache_clear();
+}
+
+/**
+ * Load a custom entity view mode by entity type and machine name.
+ *
+ * @param string $entity_type
+ *   The entity type of the view mode to be loaded, such as "node", "comment",
+ *   "user", or "taxonomy_term".
+ * @param  string $machine_name
+ *   Machine name of view mode.
+ *
+ * @return FALSE|array
+ *   Array representing the loaded view mode, or FALSE if not found.
+ */
+function entity_view_mode_load($entity_type, $machine_name) {
+  $view_modes = config_get('entity.view_modes', 'view_modes');
+
+  if (!empty($view_modes[$entity_type][$machine_name])) {
+    // Ensure that the machine name is always available.
+    return $view_modes[$entity_type][$machine_name] + array('machine_name' => $machine_name);
+  }
+  else {
+    $entity_info = entity_get_info($entity_type);
+    if (!empty($entity_info['view modes'][$entity_type][$machine_name])) {
+      return $entity_info['view modes'][$entity_type][$machine_name] + array('machine_name' => $machine_name);
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Save a custom view mode.
+ *
+ * @param string $entity_type
+ *   The entity type of the view mode to be saved, such as "node", "comment",
+ *   "user", or "taxonomy_term".
+ * @param array $view_mode
+ *   Fully loaded view mode, ready for saving.
+ */
+function entity_view_mode_save($entity_type, $view_mode) {
+  $view_mode_name = $view_mode['machine_name'];
+
+  // Load the original, unchanged view mode, if it exists.
+  if ($original = entity_view_mode_load($entity_type, $view_mode_name)) {
+    $view_mode['original'] = $original;
+  }
+
+  // Determine if we will be inserting a new view mode.
+  if (!isset($view_mode['is_new'])) {
+    $view_mode['is_new'] = empty($view_mode['original']);
+  }
+
+  // Let modules modify the view mode before it is saved.
+  $view_mode_invoke = module_invoke_all('entity_view_mode_presave', $view_mode, $entity_type);
+  if (isset($view_mode_invoke)) {
+    $view_mode = array_merge($view_mode, $view_mode_invoke);
+  }
+
+  // Save the view mode.
+  $view_modes = config_get('entity.view_modes', 'view_modes');
+  $view_modes[$entity_type][$view_mode_name] = array('label' => $view_mode['label']);
+  config_set('entity.view_modes', 'view_modes', $view_modes);
+
+  // Allow modules to respond after the view mode is saved.
+  if ($view_mode['is_new']) {
+    module_invoke_all('entity_view_mode_insert', $view_mode, $entity_type);
+  }
+  else {
+    module_invoke_all('entity_view_mode_update', $view_mode, $entity_type);
+  }
+
+  // Clear internal properties.
+  unset($view_mode['original']);
+  unset($view_mode['is_new']);
+
+  // Clear the static entity info cache and rebuild the menu.
+  entity_info_cache_clear();
+  state_set('menu_rebuild_needed', TRUE);
+}
+
+/**
+ * Delete a custom view mode.
+ *
+ * @param string $entity_type
+ *   The entity type of the view mode to be deleted, such as "node", "comment",
+ *   "user", or "taxonomy_term".
+ * @param string $machine_name
+ *   Machine name of view mode.
+ */
+function entity_view_mode_delete($entity_type, $machine_name) {
+  if ($view_mode = entity_view_mode_load($entity_type, $machine_name)) {
+    module_invoke_all('entity_view_mode_delete', $view_mode, $entity_type);
+
+    $config = config('entity.view_modes');
+    $view_modes = $config->get('view_modes');
+    unset($view_modes[$entity_type][$machine_name]);
+    $config->set('view_modes', $view_modes);
+    $config->save();
+
+    // Clear the static entity info cache and rebuild the menu.
+    entity_info_cache_clear();
+    state_set('menu_rebuild_needed', TRUE);
+  }
+}
+
+/**
+ * Helper function: checks if the view mode exists.
+ *
+ * This callback is used as a machine_name element "exists" callback.
+ *
+ * @param string $machine_name
+ *   The machine name of the view mode to check for.
+ *
+ * @return bool
+ *   Whether or not the machine name already exists.
+ *
+ * @see field_ui_view_mode_form().
+ */
+function entity_view_mode_exists($machine_name, $element, $form_state) {
+  $entity_info = entity_get_info($element['#entity_type']);
+  return !empty($entity_info['view modes'][$machine_name]);
+}
+
+/**
+ * Gets the entity info array of an entity type.
+ *
+ * @param $entity_type
+ *   The entity type, e.g. node, for which the info shall be returned, or NULL
+ *   to return an array with info about all types.
+ *
+ * @see hook_entity_info()
+ * @see hook_entity_info_alter()
+ */
+function entity_get_info($entity_type = NULL) {
+  global $language;
+
+  // Use the advanced backdrop_static() pattern, since this is called very often.
+  static $backdrop_static_fast;
+  if (!isset($backdrop_static_fast)) {
+    $backdrop_static_fast['entity_info'] = &backdrop_static(__FUNCTION__);
+  }
+  $entity_info = &$backdrop_static_fast['entity_info'];
+
+  // hook_entity_info() includes translated strings, so each language is cached
+  // separately.
+  $langcode = $language->langcode;
+
+  if (empty($entity_info)) {
+    if ($cache = cache()->get("entity_info:$langcode")) {
+      $entity_info = $cache->data;
+    }
+    else {
+      $entity_info = module_invoke_all('entity_info');
+      // Merge in default values.
+      foreach ($entity_info as $name => $data) {
+        $entity_info[$name] += array(
+          'fieldable' => FALSE,
+          'controller class' => 'DefaultEntityController',
+          'static cache' => TRUE,
+          'field cache' => TRUE,
+          'load hook' => $name . '_load',
+          'bundles' => array(),
+          'view modes' => array(),
+          'token type' => $name,
+          'entity keys' => array(),
+          'translation' => array(),
+        );
+        $entity_info[$name]['entity keys'] += array(
+          'revision' => '',
+          'bundle' => '',
+        );
+        // If no bundle key is provided, assume a single bundle, named after
+        // the entity type.
+        if (empty($entity_info[$name]['entity keys']['bundle']) && empty($entity_info[$name]['bundles'])) {
+          $entity_info[$name]['bundles'] = array($name => array('label' => $entity_info[$name]['label']));
+        }
+        // Prepare entity schema fields SQL info for
+        // EntityControllerInterface::buildQuery().
+        if (isset($entity_info[$name]['base table'])) {
+          $entity_info[$name]['schema_fields_sql']['base table'] = backdrop_schema_fields_sql($entity_info[$name]['base table']);
+          if (isset($entity_info[$name]['revision table'])) {
+            $entity_info[$name]['schema_fields_sql']['revision table'] = backdrop_schema_fields_sql($entity_info[$name]['revision table']);
+          }
+        }
+
+        $view_mode_info = module_invoke_all('entity_view_mode_info');
+        backdrop_alter('entity_view_mode_info', $view_mode_info);
+
+        // Add in the variable entity view modes which override hook-provided.
+        $config = config_get('entity.view_modes', 'view_modes');
+        if ($config) {
+          $view_mode_info = backdrop_array_merge_deep($view_mode_info, $config);
+        }
+
+        // Add in the combined custom entity view modes which override the existing
+        // view modes in the entity information.
+        foreach ($view_mode_info as $type => $view_modes) {
+          if (isset($entity_info[$type])) {
+            if (!isset($entity_info[$type]['view modes'])) {
+              $entity_info[$type]['view modes'] = array();
+            }
+            $entity_info[$type]['view modes'] = $entity_info[$type]['view modes'] + $view_modes;
+          }
+        }
+
+        foreach ($entity_info[$name]['view modes'] as $view_mode => $view_mode_info) {
+          $entity_info[$name]['view modes'][$view_mode] += array(
+            'custom settings' => FALSE,
+          );
+        }
+      }
+      // Let other modules alter the entity info.
+      backdrop_alter('entity_info', $entity_info);
+      cache()->set("entity_info:$langcode", $entity_info);
+    }
+  }
+
+  if (empty($entity_type)) {
+    return $entity_info;
+  }
+  elseif (isset($entity_info[$entity_type])) {
+    return $entity_info[$entity_type];
+  }
+}
+
+/**
+ * Resets the cached information about entity types.
+ */
+function entity_info_cache_clear() {
+  backdrop_static_reset('entity_get_info');
+  // Clear all languages.
+  cache()->deletePrefix('entity_info:');
+}
+
+/**
+ * Extracts ID, revision ID, and bundle name from an entity.
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity from which to extract values.
+ *
+ * @return
+ *   A numerically indexed array (not a hash table) containing these
+ *   elements:
+ *   - 0: Primary ID of the entity.
+ *   - 1: Revision ID of the entity, or NULL if $entity_type is not versioned.
+ *   - 2: Bundle name of the entity.
+ */
+function entity_extract_ids($entity_type, $entity) {
+  $info = entity_get_info($entity_type);
+
+  // Objects being created might not have id/vid yet.
+  $id = isset($entity->{$info['entity keys']['id']}) ? $entity->{$info['entity keys']['id']} : NULL;
+  $vid = ($info['entity keys']['revision'] && isset($entity->{$info['entity keys']['revision']})) ? $entity->{$info['entity keys']['revision']} : NULL;
+
+  if (!empty($info['entity keys']['bundle'])) {
+    // Explicitly fail for malformed entities missing the bundle property.
+    if (!isset($entity->{$info['entity keys']['bundle']}) || $entity->{$info['entity keys']['bundle']} === '') {
+      throw new EntityMalformedException(t('Missing bundle property on entity of type @entity_type.', array('@entity_type' => $entity_type)));
+    }
+    $bundle = $entity->{$info['entity keys']['bundle']};
+  }
+  else {
+    // The entity type provides no bundle key: assume a single bundle, named
+    // after the entity type.
+    $bundle = $entity_type;
+  }
+
+  return array($id, $vid, $bundle);
+}
+
+/**
+ * Assembles an object structure with initial IDs.
+ *
+ * This function can be seen as reciprocal to entity_extract_ids().
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $ids
+ *   A numerically indexed array, as returned by entity_extract_ids(),
+ *   containing these elements:
+ *   - 0: Primary ID of the entity.
+ *   - 1: Revision ID of the entity, or NULL if $entity_type is not versioned.
+ *   - 2: Bundle name of the entity, or NULL if $entity_type has no bundles.
+ *
+ * @return
+ *   An entity object, initialized with the IDs provided.
+ */
+function entity_create_stub_entity($entity_type, $ids) {
+  $entity = new stdClass();
+  $info = entity_get_info($entity_type);
+  $entity->{$info['entity keys']['id']} = $ids[0];
+  if (!empty($info['entity keys']['revision']) && isset($ids[1])) {
+    $entity->{$info['entity keys']['revision']} = $ids[1];
+  }
+  if (!empty($info['entity keys']['bundle']) && isset($ids[2])) {
+    $entity->{$info['entity keys']['bundle']} = $ids[2];
+  }
+  return $entity;
+}
+
+/**
+ * Loads entities from the database.
+ *
+ * This function should be used whenever you need to load more than one entity
+ * from the database. The entities are loaded into memory and will not require
+ * database access if loaded again during the same page request.
+ *
+ * The actual loading is done through a class that has to implement the
+ * EntityControllerInterface interface. By default, DefaultEntityController is
+ * used. Entity types can specify that a different class should be used by
+ * setting the 'controller class' key in hook_entity_info(). These classes can
+ * either implement the EntityControllerInterface interface, or, most commonly,
+ * extend the DefaultEntityController class. See node_entity_info() and the
+ * NodeController in node.module as an example.
+ *
+ * @param $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param $ids
+ *   An array of entity IDs, FALSE with no conditions to load all entities of
+ *   the requested entity type, or NULL with conditions to load all entities of
+ *   the requested entity type that meet the given conditions.
+ * @param $conditions
+ *   (deprecated) An associative array of conditions on the base table, where
+ *   the keys are the database fields and the values are the values those
+ *   fields must have. Instead, it is preferable to use EntityFieldQuery to
+ *   retrieve a list of entity IDs loadable by this function.
+ * @param $reset
+ *   Whether to reset the internal cache for the requested entity type.
+ *
+ * @return array
+ *   An array of entity objects indexed by their ids.
+ *
+ * @see hook_entity_info()
+ * @see EntityControllerInterface
+ * @see DefaultEntityController
+ * @see EntityFieldQuery
+ */
+function entity_load_multiple($entity_type, $ids = FALSE, $conditions = array(), $reset = FALSE) {
+  if ($reset) {
+    entity_get_controller($entity_type)->resetCache();
+  }
+  return entity_get_controller($entity_type)->load($ids, $conditions);
+}
+
+/**
+ * Loads a single entity from the database.
+ *
+ * Prior to Backdrop 1.2.0, this function was actually used to load multiple
+ * entities and no convenience function for loading a single entity existed.
+ * The previous version of this function was renamed to entity_load_multiple()
+ * and this function was written to preserve compatibility for modules
+ * depending on the previous behavior.
+ *
+ * If this function is called with either an array of IDs or FALSE as the $id
+ * parameter, the parameters are passed through to entity_load_multiple() and
+ * its return value will be returned instead of a single entity.
+ *
+ * @param string $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param int|array $id
+ *   The ID(s) of the entity to load.
+ *
+ * @return EntityInterface|bool
+ *   The fully loaded entity or FALSE if not found.
+ *
+ * @see entity_load_multiple()
+ */
+function entity_load($entity_type, $id) {
+  if (is_array($id) || $id === FALSE || $id === NULL) {
+    return call_user_func_array('entity_load_multiple', func_get_args());
+  }
+  else {
+    $result = entity_load_multiple($entity_type, array($id));
+    return reset($result);
+  }
+}
+
+/**
+ * Loads the unchanged, i.e. not modified, entity from the database.
+ *
+ * Unlike entity_load() this function ensures the entity is directly loaded from
+ * the database, thus bypassing any static cache. In particular, this function
+ * is useful to determine changes by comparing the entity being saved to the
+ * stored entity.
+ *
+ * @param $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param $id
+ *   The ID of the entity to load.
+ *
+ * @return
+ *   The unchanged entity, or FALSE if the entity cannot be loaded.
+ */
+function entity_load_unchanged($entity_type, $id) {
+  entity_get_controller($entity_type)->resetCache(array($id));
+  $result = entity_get_controller($entity_type)->load(array($id));
+  return reset($result);
+}
+
+/**
+ * Deletes multiple entities permanently.
+ *
+ * @param $entity_type
+ *   The type of the entity.
+ * @param $ids
+ *   An array of entity IDs of the entities to delete.
+ */
+function entity_delete_multiple($entity_type, $ids) {
+  entity_get_controller($entity_type)->delete($ids);
+}
+
+/**
+ * Constructs a new entity object, without permanently saving it.
+ *
+ * @param $entity_type
+ *   The type of the entity.
+ * @param $values
+ *   An array of values to set, keyed by property name. If the entity type has
+ *   bundles the bundle key has to be specified.
+ *
+ * @return EntityInterface
+ *   A new entity object.
+ */
+function entity_create($entity_type, array $values) {
+  return entity_get_controller($entity_type)->create($values);
+}
+
+/**
+ * Gets the entity controller class for an entity type.
+ *
+ * @return EntityStorageControllerInterface
+ */
+function entity_get_controller($entity_type) {
+  $controllers = &backdrop_static(__FUNCTION__, array());
+  if (!isset($controllers[$entity_type])) {
+    $type_info = entity_get_info($entity_type);
+    $class = $type_info['controller class'];
+    $controllers[$entity_type] = new $class($entity_type);
+  }
+  return $controllers[$entity_type];
+}
+
+/**
+ * Invokes hook_entity_prepare_view().
+ *
+ * If adding a new entity similar to nodes, comments or users, you should
+ * invoke this function during the ENTITY_build_content() or
+ * ENTITY_view_multiple() phases of rendering to allow other modules to alter
+ * the objects during this phase. This is needed for situations where
+ * information needs to be loaded outside of ENTITY_load() - particularly
+ * when loading entities into one another - i.e. a user object into a node, due
+ * to the potential for unwanted side-effects such as caching and infinite
+ * recursion. By convention, entity_prepare_view() is called after
+ * field_attach_prepare_view() to allow entity level hooks to act on content
+ * loaded by field API.
+ *
+ * @param $entity_type
+ *   The type of entity, i.e. 'node', 'user'.
+ * @param $entities
+ *   The entity objects which are being prepared for view, keyed by object ID.
+ *
+ * @see hook_entity_prepare_view()
+ */
+function entity_prepare_view($entity_type, $entities) {
+  // To ensure hooks are only run once per entity, check for an
+  // entity_view_prepared flag and only process items without it.
+  // @todo: resolve this more generally for both entity and field level hooks.
+  $prepare = array();
+  foreach ($entities as $id => $entity) {
+    if (empty($entity->entity_view_prepared)) {
+      // Add this entity to the items to be prepared.
+      $prepare[$id] = $entity;
+
+      // Mark this item as prepared.
+      $entity->entity_view_prepared = TRUE;
+    }
+  }
+
+  if (!empty($prepare)) {
+    module_invoke_all('entity_prepare_view', $prepare, $entity_type);
+  }
+}
+
+/**
+ * Invoke hook_entity_view_mode_alter().
+ *
+ * If adding a new entity similar to nodes, comments or users, you should invoke
+ * this function during the ENTITY_build_content() or ENTITY_view_multiple()
+ * phases of rendering to allow other modules to alter the view mode during this
+ * phase. This function needs to be called before field_attach_prepare_view() to
+ * ensure that the correct content is loaded by field API.
+ *
+ * @param $entity_type
+ *   The type of entity, i.e. 'node', 'user'.
+ * @param $entities
+ *   The entity objects which are being prepared for view, keyed by object ID.
+ * @param $view_mode
+ *   The original view mode e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   (optional) A language code to be used for rendering. Defaults to the global
+ *   content language of the current request.
+ * @return
+ *   An associative array with arrays of entities keyed by view mode.
+ *
+ * @see hook_entity_view_mode_alter()
+ */
+function entity_view_mode_prepare($entity_type, $entities, $view_mode, $langcode = NULL) {
+  if (!isset($langcode)) {
+    global $language_content;
+    $langcode = $language_content->langcode;
+  }
+
+  // To ensure hooks are never run after field_attach_prepare_view() only
+  // process items without the entity_view_prepared flag.
+  $entities_by_view_mode = array();
+  foreach ($entities as $id => $entity) {
+    $entity_view_mode = $view_mode;
+    if (empty($entity->entity_view_prepared)) {
+
+      // Allow modules to change the view mode.
+      $context = array(
+        'entity_type' => $entity_type,
+        'entity' => $entity,
+        'langcode' => $langcode,
+      );
+      backdrop_alter('entity_view_mode', $entity_view_mode, $context);
+    }
+
+    $entities_by_view_mode[$entity_view_mode][$id] = $entity;
+  }
+
+  return $entities_by_view_mode;
+}
+
+/**
+ * Returns the URI elements of an entity.
+ *
+ * @param $entity_type
+ *   The entity type; e.g. 'node' or 'user'.
+ * @param $entity
+ *   The entity for which to generate a path.
+ *
+ * @return
+ *   An array containing the 'path' and 'options' keys used to build the URI of
+ *   the entity, and matching the signature of url(). NULL if the entity has no
+ *   URI of its own.
+ */
+function entity_uri($entity_type, $entity) {
+  return $entity->uri();
+}
+
+/**
+ * Returns the label of an entity.
+ *
+ * See the 'label callback' component of the hook_entity_info() return value
+ * for more information.
+ *
+ * @param $entity_type
+ *   The entity type; e.g., 'node' or 'user'.
+ * @param $entity
+ *   The entity for which to generate the label.
+ *
+ * @return
+ *   The entity label, or FALSE if not found.
+ */
+function entity_label($entity_type, $entity) {
+  return $entity->label();
+}
+
+/**
+ * Attaches field API validation to entity forms.
+ */
+function entity_form_field_validate($entity_type, $form, &$form_state) {
+  // All field attach API functions act on an entity object, but during form
+  // validation, we don't have one. $form_state contains the entity as it was
+  // prior to processing the current form submission, and we must not update it
+  // until we have fully validated the submitted input. Therefore, for
+  // validation, act on a pseudo entity created out of the form values.
+  $pseudo_entity = (object) $form_state['values'];
+  field_attach_form_validate($entity_type, $pseudo_entity, $form, $form_state);
+}
+
+/**
+ * Copies submitted values to entity properties for simple entity forms.
+ *
+ * During the submission handling of an entity form's "Save", "Preview", and
+ * possibly other buttons, the form state's entity needs to be updated with the
+ * submitted form values. Each entity form implements its own builder function
+ * for doing this, appropriate for the particular entity and form, whereas
+ * modules may specify additional builder functions in $form['#entity_builders']
+ * for copying the form values of added form elements to entity properties.
+ * Many of the main entity builder functions can call this helper function to
+ * re-use its logic of copying $form_state['values'][PROPERTY] values to
+ * $entity->PROPERTY for all entries in $form_state['values'] that are not field
+ * data, and calling field_attach_submit() to copy field data. Apart from that
+ * this helper invokes any additional builder functions that have been specified
+ * in $form['#entity_builders'].
+ *
+ * For some entity forms (e.g., forms with complex non-field data and forms that
+ * simultaneously edit multiple entities), this behavior may be inappropriate,
+ * so the builder function for such forms needs to implement the required
+ * functionality instead of calling this function.
+ */
+function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_state) {
+  $info = entity_get_info($entity_type);
+  list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+
+  // Copy top-level form values that are not for fields to entity properties,
+  // without changing existing entity properties that are not being edited by
+  // this form. Copying field values must be done using field_attach_submit().
+  $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $bundle)) : $form_state['values'];
+  foreach ($values_excluding_fields as $key => $value) {
+    $entity->$key = $value;
+  }
+
+  // Invoke all specified builders for copying form values to entity properties.
+  if (isset($form['#entity_builders'])) {
+    foreach ($form['#entity_builders'] as $function) {
+      $function($entity_type, $entity, $form, $form_state);
+    }
+  }
+
+  // Copy field values to the entity.
+  if ($info['fieldable']) {
+    field_attach_submit($entity_type, $entity, $form, $form_state);
+  }
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function entity_autoload_info() {
+  return array(
+    'EntityInterface' => 'entity.class.inc',
+    'Entity' => 'entity.class.inc',
+    'EntityMalformedException' => 'entity.class.inc',
+    'EntityStorageControllerInterface' => 'entity.controller.inc',
+    'DefaultEntityController' => 'entity.controller.inc',
+    'EntityControllerInterface' => 'entity.controller.inc',
+    'EntityStorageException' => 'entity.controller.inc',
+    'EntityDatabaseStorageController' => 'entity.controller.inc',
+    'EntityFieldQueryException' => 'entity.query.inc',
+    'EntityFieldQuery' => 'entity.query.inc',
+  );
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function entity_config_info() {
+  $prefixes['entity.view_modes'] = array(
+    'label' => t('View mode settings'),
+    'group' => t('Entity'),
+  );
+  return $prefixes;
+}

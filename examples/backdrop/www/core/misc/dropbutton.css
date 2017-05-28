@@ -1,0 +1,191 @@
+/**
+ * @file
+ * Base styles for dropbuttons.
+ */
+
+/**
+ * When a dropbutton has only one option, it is simply a button.
+ */
+.dropbutton-wrapper,
+.dropbutton-wrapper div {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.js .dropbutton-wrapper {
+  min-height: 2em;
+  position: relative;
+  width: auto;
+}
+
+@media screen and (max-width:600px) {
+  .js .dropbutton-wrapper {
+    width: 100%;
+  }
+}
+
+.js .dropbutton-widget {
+  position: absolute;
+  top: 0;
+  right: 0; /* LTR */
+}
+[dir="rtl"].js .dropbutton-widget {
+  left: 0;
+  right: auto;
+}
+/* UL styles are over-scoped in core, so this selector needs weight parity. */
+.js .dropbutton-widget .dropbutton {
+  list-style-image: none;
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.js .dropbutton li,
+.js .dropbutton a {
+  display: block;
+  text-align: right; /* LTR */
+}
+[dir="rtl"].js .dropbutton li,
+[dir="rtl"].js .dropbutton a {
+  text-align: left;
+}
+
+/**
+ * The dropbutton styling.
+ *
+ * A dropbutton is a widget that displays a list of action links as a button
+ * with a primary action. Secondary actions are hidden behind a click on a
+ * twisty arrow.
+ *
+ * The arrow is created using border on a zero-width, zero-height span.
+ * The arrow inherits the link color, but can be overridden with border colors.
+ */
+.js .dropbutton-widget {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.js .dropbutton-multiple .dropbutton-widget {
+  padding-right: 2em; /* LTR */
+}
+[dir="rtl"].js .dropbutton-multiple .dropbutton-widget {
+  padding-left: 2em;
+  padding-right: 0;
+}
+.dropbutton-multiple.open,
+.dropbutton-multiple.open .dropbutton-widget {
+  max-width: none;
+}
+.dropbutton-multiple.open {
+  z-index: 100;
+}
+.dropbutton a {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.dropbutton-multiple .dropbutton a {
+  /* LTR */
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+[dir="rtl"] .dropbutton-multiple .dropbutton a {
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-top-right-radius:5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.dropbutton-multiple .dropbutton .secondary-action {
+  display: none;
+}
+.dropbutton-multiple.open .dropbutton .secondary-action {
+  display: block;
+}
+.dropbutton-toggle {
+  bottom: 0;
+  display: block;
+  position: absolute;
+  right: 0; /* LTR */
+  text-indent: 110%;
+  top: 0;
+  white-space: nowrap;
+  width: 2em;
+}
+[dir="rtl"] .dropbutton-toggle {
+  left: 0;
+  right: auto;
+}
+.dropbutton-toggle button {
+  /* LTR */
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+[dir="rtl"] .dropbutton-toggle button {
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.dropbutton-arrow {
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-width: 0.3333em 0.3333em 0;
+  display: block;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  right: 40%; /* 0.6667em; */ /* LTR */
+  top: 50%;
+  margin-top: -0.1666em;
+  width: 0;
+  overflow: hidden;
+}
+[dir="rtl"] .dropbutton-arrow {
+  left: 0.6667em;
+  right: auto;
+}
+.dropbutton-multiple.open .dropbutton-arrow {
+  border-bottom: 0.3333em solid;
+  border-top-color: transparent;
+  top: 0.6667em;
+}

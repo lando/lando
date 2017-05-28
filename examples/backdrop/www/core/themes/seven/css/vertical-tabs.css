@@ -1,0 +1,200 @@
+/**
+ * Override of misc/vertical-tabs.css.
+ */
+.vertical-tabs {
+  position: relative;
+  margin: 1em 0;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+ @media (min-width: 750px) {
+  .vertical-tabs {
+    padding: 0 0 0 15em; /* LTR */
+  }
+   [dir="rtl"] .vertical-tabs {
+     padding-left: 0;
+     padding-right: 15em;
+  }
+  .vertical-tabs:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    width: 15em;
+    height: 100%;
+    background: #ccc;
+  }
+}
+.vertical-tabs-list {
+  position: relative;
+  z-index: 1;
+  display: none;
+  width: 15em;
+  border-top: 1px solid #ccc;
+  padding: 0;
+}
+ @media (min-width: 750px) {
+  .vertical-tabs-list {
+    display:block;
+    float: left; /* LTR */
+    margin: -1px 0 -1px -15em; /* LTR */
+  }
+   [dir="rtl"] .vertical-tabs-list {
+    margin-left: 0;
+    margin-right: -15em;
+    float: right;
+  }
+}
+.vertical-tab-item {
+  list-style: none;
+  font-size: 0.923em;
+}
+.vertical-tabs-pane {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+}
+.vertical-tabs-pane:nth-last-child(2) {
+  border-bottom: 0;
+}
+.vertical-tabs-pane .fieldset-wrapper {
+  display: none;
+  padding: 0 1em;
+}
+.vertical-tab-selected .fieldset-wrapper {
+  display: block;
+}
+@media (min-width: 750px) {
+  .vertical-tabs-panes {
+    overflow: hidden;
+    width: 100%;
+  }
+  .vertical-tabs-pane {
+    /* Using position and height instead of display because of FF issue */
+    position: absolute;
+    left: -9999em;
+    height: 0;
+    border: 0;
+    background: transparent;
+  }
+  /* Show active pane */
+  .vertical-tabs-pane.vertical-tab-selected {
+    position: static;
+    height: auto;
+    padding: 10px 15px;
+    background: transparent;
+  }
+  .vertical-tabs-pane > legend {
+    display: none;
+  }
+  .vertical-tabs-pane .fieldset-wrapper {
+    display: block;
+  }
+}
+ /* Layout of each tab */
+.vertical-tab-item {
+  border: 1px solid #ccc;
+  border-left-width: 0; /* LTR */
+  border-top-width: 0;
+  padding: 0;
+  margin: 0;
+  background: #eee;
+}
+[dir="rtl"] .vertical-tab-item {
+  border-left-width: 1px;
+  border-right-width: 0;
+}
+/* .vertical-tab-link applies to fieldset legend at small screens and
+   a link in .vertical-tabs-list at larger screen sizes */
+.vertical-tab-link {
+  display: block;
+  text-decoration: none;
+  padding: 0.5em 0.6em;
+  font-size: 1em;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+.vertical-tab-link span{
+  display: block;
+}
+
+.vertical-tab-link strong,
+.vertical-tab-link .fieldset-legend {
+  position: static;
+  font-weight: bold;
+  color: #0074bd;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 750px) {
+  .vertical-tab-link strong,
+  .vertical-tab-link .fieldset-legend {
+    font-size: 0.923em;
+  }
+}
+.vertical-tab-link:focus,
+.vertical-tab-link:active,
+.vertical-tab-link:hover,
+.vertical-tab-link:focus,
+.vertical-tab-link:active,
+.vertical-tab-link:hover {
+  text-decoration: none;
+  background: #d5d5d5;
+}
+.vertical-tab-link .summary {
+  font-size: 0.846em;
+  text-transform: none;
+  color: #666;
+  word-wrap: break-word;
+}
+.vertical-tab-selected.vertical-tab-item {
+  background-color: #fff;
+  border-right-width: 0; /* LTR */
+  border-left-width: 1px;
+  box-shadow: 0 5px 5px -5px hsla(0,0%,0%,0.3);
+  z-index: 1;
+  position: relative;
+}
+ [dir="rtl"] .vertical-tab-selected.vertical-tab-item {
+  border-left-width: 0;
+  border-right-width: 1px;
+}
+.vertical-tab-selected .vertical-tab-link {
+  background: #fff;
+  border-left: 4px solid #0074bd;
+}
+[dir="rtl"] .vertical-tab-selected .vertical-tab-link {
+  border-right: 4px solid #0074bd;
+  border-left: none;
+}
+.vertical-tab-selected strong,
+.vertical-tab-selected .fieldset-legend {
+  color: #000;
+}
+.vertical-tabs .vertical-tabs .vertical-tabs-list .summary {
+  line-height: normal;
+  margin-bottom: 0;
+}
+/* Styles for legend at smaller screen sizes */
+.vertical-tabs-pane > .vertical-tab-link {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 1em;
+  padding-right: 1em;
+  background: #eee;
+}
+.vertical-tabs-pane.vertical-tab-selected > .vertical-tab-link {
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
+  background: transparent;
+  border-bottom: 1px solid #eee;
+}
+.vertical-tabs-pane.vertical-tab-selected > .vertical-tab-link .summary {
+  display: none;
+}

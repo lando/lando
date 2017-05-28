@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Tests for the installer.
+ */
+
+/**
+ * Tests installer language detection.
+ */
+class InstallerLanguageTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
+
+  function setUp() {
+    parent::setUp();
+
+    // Copy test translations to the active translations directory.
+    $source = backdrop_get_path('module', 'simpletest') . '/files/translations';
+    $destination = settings_get('locale_translate_file_directory', 'files/translations');
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+    $files = file_scan_directory($source, '/^.*\.po$/');
+    foreach ($files as $file) {
+      file_unmanaged_copy($file->uri, $destination, FILE_EXISTS_REPLACE);
+    }
+  }
+
+  /**
+   * Tests that the installer can find translation files.
+   */
+  function testInstallerTranslationFiles() {
+    include_once BACKDROP_ROOT . '/core/includes/install.core.inc';
+
+    // Different translation files would be found depending on which language
+    // we are looking for.
+    $expected_translation_files = array(
+      NULL => array('install.hu.po', 'install.de.po'),
+      'de' => array('install.de.po'),
+      'hu' => array('install.hu.po'),
+      'it' => array(),
+    );
+
+    foreach ($expected_translation_files as $langcode => $files_expected) {
+      $files_found = install_find_translation_files($langcode);
+      $this->assertTrue(count($files_found) == count($files_expected), t('@count installer languages found.', array('@count' => count($files_expected))));
+      foreach ($files_found as $file) {
+        $this->assertTrue(in_array($file->filename, $files_expected), t('@file found.', array('@file' => $file->filename)));
+      }
+    }
+  }
+
+}
