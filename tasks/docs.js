@@ -14,6 +14,7 @@ module.exports = function() {
       separateOutputFilePerInput: {
         files: [
           {src: 'lib/lando.js', dest: 'docs/dev/api/lando.md'},
+          {src: 'lib/events.js', dest: 'docs/dev/api/events.md'},
           {src: 'lib/app.js', dest: 'docs/dev/api/app.md'}
         ]
       }
