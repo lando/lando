@@ -1,94 +1,61 @@
-## Objects
+<a name="module_app"></a>
 
-<dl>
-<dt><a href="#app">app</a> : <code>object</code></dt>
-<dd><p>Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things</p>
-</dd>
-</dl>
+## app
+Contains methods and events related to app actions.
 
-## Events
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the lando object
+var lando = require('lando')(config);
 
-<dl>
-<dt><a href="#event_pre-app-instantiate">"pre-app-instantiate"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_post-instantiate-app">"post-instantiate-app"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_app-ready">"app-ready"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_pre-info">"pre-info"</a></dt>
-<dd><p>Snowball event.</p>
-</dd>
-<dt><a href="#event_post-info">"post-info"</a></dt>
-<dd><p>Snowball event.</p>
-</dd>
-<dt><a href="#event_pre-uninstall">"pre-uninstall"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_post-uninstall">"post-uninstall"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_pre-start">"pre-start"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_post-start">"post-start"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_pre-stop">"pre-stop"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_post-start">"post-start"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_pre-destroy">"pre-destroy"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_post-destroy">"post-destroy"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_pre-rebuild">"pre-rebuild"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-<dt><a href="#event_post-rebuild">"post-rebuild"</a></dt>
-<dd><p>stuff guys</p>
-</dd>
-</dl>
+// Start an app
+return lando.app.start(app)
 
-<a name="app"></a>
+// and then print a success message
+.then(function() {
+  console.log('App started!');
+ });
+```
 
-## app : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+* [app](#module_app)
+    * _static_
+        * [.list([opts])](#module_app.list) ⇒ <code>Array</code>
+        * [.get()](#module_app.get) ⇒ <code>number</code>
+        * [.isRunning()](#module_app.isRunning) ⇒ <code>number</code>
+        * [.exists()](#module_app.exists) ⇒ <code>number</code>
+        * [.info()](#module_app.info) ⇒ <code>number</code>
+        * [.uninstall()](#module_app.uninstall) ⇒ <code>number</code>
+        * [.cleanup()](#module_app.cleanup) ⇒ <code>number</code>
+        * [.start()](#module_app.start) ⇒ <code>number</code>
+        * [.stop()](#module_app.stop) ⇒ <code>number</code>
+        * [.restart()](#module_app.restart) ⇒ <code>number</code>
+        * [.destroy()](#module_app.destroy) ⇒ <code>number</code>
+        * [.rebuild()](#module_app.rebuild) ⇒ <code>number</code>
+        * ["event:pre-app-instantiate"](#module_app.event_pre-app-instantiate)
+    * _inner_
+        * [~instantiate()](#module_app..instantiate)
+        * ["post-instantiate-app"](#event_post-instantiate-app)
+        * ["app-ready"](#event_app-ready)
+        * ["pre-info"](#event_pre-info)
+        * ["post-info"](#event_post-info)
+        * ["pre-uninstall"](#event_pre-uninstall)
+        * ["post-uninstall"](#event_post-uninstall)
+        * ["pre-start"](#event_pre-start)
+        * ["post-start"](#event_post-start)
+        * ["pre-stop"](#event_pre-stop)
+        * ["post-start"](#event_post-start)
+        * ["pre-destroy"](#event_pre-destroy)
+        * ["post-destroy"](#event_post-destroy)
+        * ["pre-rebuild"](#event_pre-rebuild)
+        * ["post-rebuild"](#event_post-rebuild)
 
-**Kind**: global namespace  
+<a name="module_app.list"></a>
 
-* [app](#app) : <code>object</code>
-    * [.list](#app.list) ⇒ <code>Array</code>
-    * [.get](#app.get) ⇒ <code>number</code>
-    * [.isRunning](#app.isRunning) ⇒ <code>number</code>
-    * [.exists](#app.exists) ⇒ <code>number</code>
-    * [.info](#app.info) ⇒ <code>number</code>
-    * [.uninstall](#app.uninstall) ⇒ <code>number</code>
-    * [.cleanup](#app.cleanup) ⇒ <code>number</code>
-    * [.start](#app.start) ⇒ <code>number</code>
-    * [.stop](#app.stop) ⇒ <code>number</code>
-    * [.stop](#app.stop) ⇒ <code>number</code>
-    * [.destroy](#app.destroy) ⇒ <code>number</code>
-    * [.rebuild](#app.rebuild) ⇒ <code>number</code>
-
-<a name="app.list"></a>
-
-### app.list ⇒ <code>Array</code>
+### app.list([opts]) ⇒ <code>Array</code>
 Lists all the Lando apps
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>Array</code> - Returns the total.  
 **Since**: 3.0.0  
 
@@ -109,51 +76,12 @@ return lando.app.list()
  });
 });
 ```
-<a name="app.get"></a>
+<a name="module_app.get"></a>
 
-### app.get ⇒ <code>number</code>
+### app.get() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
-**Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
-**Example**  
-```js
-add(6, 4)
-// => 10
-```
-<a name="app.isRunning"></a>
-
-### app.isRunning ⇒ <code>number</code>
-Adds three numbers.
-
-**Kind**: static namespace of [<code>app</code>](#app)  
-**Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
-**Example**  
-```js
-add(6, 4)
-// => 10
-```
-<a name="app.exists"></a>
-
-### app.exists ⇒ <code>number</code>
-Adds three numbers.
-
-**Kind**: static namespace of [<code>app</code>](#app)  
-**Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
-**Example**  
-```js
-add(6, 4)
-// => 10
-```
-<a name="app.info"></a>
-
-### app.info ⇒ <code>number</code>
-Adds three numbers.
-
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
 **Since**: 3.0.0  
 **Example**  
@@ -161,124 +89,171 @@ Adds three numbers.
 add(6, 4)
 // => 10
 ```
-<a name="app.uninstall"></a>
+<a name="module_app.isRunning"></a>
 
-### app.uninstall ⇒ <code>number</code>
+### app.isRunning() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="app.cleanup"></a>
+<a name="module_app.exists"></a>
 
-### app.cleanup ⇒ <code>number</code>
+### app.exists() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="app.start"></a>
+<a name="module_app.info"></a>
 
-### app.start ⇒ <code>number</code>
+### app.info() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Emits**: [<code>pre-info</code>](#event_pre-info), [<code>post-info</code>](#event_post-info)  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="app.stop"></a>
+<a name="module_app.uninstall"></a>
 
-### app.stop ⇒ <code>number</code>
+### app.uninstall() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="app.stop"></a>
+<a name="module_app.cleanup"></a>
 
-### app.stop ⇒ <code>number</code>
+### app.cleanup() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="app.destroy"></a>
+<a name="module_app.start"></a>
 
-### app.destroy ⇒ <code>number</code>
+### app.start() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="app.rebuild"></a>
+<a name="module_app.stop"></a>
 
-### app.rebuild ⇒ <code>number</code>
+### app.stop() ⇒ <code>number</code>
 Adds three numbers.
 
-**Kind**: static namespace of [<code>app</code>](#app)  
+**Kind**: static method of [<code>app</code>](#module_app)  
 **Returns**: <code>number</code> - Returns the total.  
-**Since**: 3.4.0  
+**Since**: 3.0.0  
 **Example**  
 ```js
 add(6, 4)
 // => 10
 ```
-<a name="event_pre-app-instantiate"></a>
+<a name="module_app.restart"></a>
 
-## "pre-app-instantiate"
+### app.restart() ⇒ <code>number</code>
+Adds three numbers.
+
+**Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>number</code> - Returns the total.  
+**Since**: 3.0.0  
+**Example**  
+```js
+add(6, 4)
+// => 10
+```
+<a name="module_app.destroy"></a>
+
+### app.destroy() ⇒ <code>number</code>
+Adds three numbers.
+
+**Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>number</code> - Returns the total.  
+**Since**: 3.0.0  
+**Example**  
+```js
+add(6, 4)
+// => 10
+```
+<a name="module_app.rebuild"></a>
+
+### app.rebuild() ⇒ <code>number</code>
+Adds three numbers.
+
+**Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>number</code> - Returns the total.  
+**Since**: 3.0.0  
+**Example**  
+```js
+add(6, 4)
+// => 10
+```
+<a name="module_app.event_pre-app-instantiate"></a>
+
+### "event:pre-app-instantiate"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
+<a name="module_app..instantiate"></a>
+
+### app~instantiate()
+Instantiate
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Emits**: <code>event:pre-app-instantiate</code>, [<code>post-instantiate-app</code>](#event_post-instantiate-app), [<code>app-ready</code>](#event_app-ready)  
 <a name="event_post-instantiate-app"></a>
 
-## "post-instantiate-app"
+### "post-instantiate-app"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_app-ready"></a>
 
-## "app-ready"
+### "app-ready"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_pre-info"></a>
 
-## "pre-info"
+### "pre-info"
 Snowball event.
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Properties**
 
 | Name | Type | Description |
@@ -287,10 +262,10 @@ Snowball event.
 
 <a name="event_post-info"></a>
 
-## "post-info"
+### "post-info"
 Snowball event.
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Properties**
 
 | Name | Type | Description |
@@ -299,71 +274,71 @@ Snowball event.
 
 <a name="event_pre-uninstall"></a>
 
-## "pre-uninstall"
+### "pre-uninstall"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_post-uninstall"></a>
 
-## "post-uninstall"
+### "post-uninstall"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_pre-start"></a>
 
-## "pre-start"
+### "pre-start"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_post-start"></a>
 
-## "post-start"
+### "post-start"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_pre-stop"></a>
 
-## "pre-stop"
+### "pre-stop"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_post-start"></a>
 
-## "post-start"
+### "post-start"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_pre-destroy"></a>
 
-## "pre-destroy"
+### "pre-destroy"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_post-destroy"></a>
 
-## "post-destroy"
+### "post-destroy"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_pre-rebuild"></a>
 
-## "pre-rebuild"
+### "pre-rebuild"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  
 <a name="event_post-rebuild"></a>
 
-## "post-rebuild"
+### "post-rebuild"
 stuff guys
 
-**Kind**: event emitted  
+**Kind**: event emitted by [<code>app</code>](#module_app)  
 **Since**: 3.0.0  

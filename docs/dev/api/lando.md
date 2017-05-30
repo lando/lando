@@ -1,15 +1,37 @@
 <a name="lando"></a>
 
 ## lando : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+This is the high level object wrapper that contains the Lando libraries.
+Using this you can:
+
+ * Perform actions on Lando apps
+ * Bootstrap Lando
+ * Access caching utilities
+ *
 
 **Kind**: global namespace  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| config | <code>object</code> | [description] |
+
+**Example**  
+```js
+// Instantiate the Lando object
+var lando = require('./lando')(config);
+
+// Map each app to a summary and print results
+.map(function(app) {
+ return appSummary(app)
+  .then(function(summary) {
+   console.log(JSON.stringify(summary, null, 2));
+ });
+});
+```
 
 * [lando](#lando) : <code>object</code>
-    * [.app](#lando.app) ⇒ <code>Array</code>
+    * [.app](#lando.app)
     * [.bootstrap](#lando.bootstrap) ⇒ <code>Array</code>
     * [.cache](#lando.cache) ⇒ <code>Array</code>
     * [.cli](#lando.cli) ⇒ <code>Array</code>
@@ -29,18 +51,12 @@ Things Things Things Things Things Things
 
 <a name="lando.app"></a>
 
-### lando.app ⇒ <code>Array</code>
+### lando.app
 Lists all the Lando apps
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [app.md](app.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
 **Example**  
 ```js
 // List all the apps
