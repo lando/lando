@@ -12,7 +12,7 @@ proxy:
       secure: true
 services:
   appserver:
-    type: php:7.0
+    type: php:7.1
     via: nginx
     ssl: true
   database:

@@ -1,8 +1,14 @@
-# Basic php-fpm 7.0 appserver for Lando
-#
-# docker build -t kalabox/php:7.0-fpm .
+Lando Apache PHP 7.1 appserver
+==============================
 
-FROM php:7.0-fpm
+A decent cross purpose apache based php 7.1 appserver.
+
+```
+# Basic apache php 7.1 appserver for Lando
+#
+# docker build -t kalabox/php:7.1-apache .
+
+FROM php:7.1-apache
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
@@ -60,3 +66,4 @@ RUN apt-get update && apt-get install -y \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
+```
