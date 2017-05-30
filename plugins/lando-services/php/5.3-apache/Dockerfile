@@ -7,8 +7,10 @@ FROM eugeneware/php-5.3:master
 # Copy our helpers
 COPY docker-php-ext-enable /usr/local/bin/
 
-# Install the PHP extensions we need
+# Install dependencies we need
 RUN apt-get update && apt-get install -y \
+    ssh \
+    git-core \
     bzip2 \
     libbz2-dev \
     libc-client2007e-dev \
@@ -24,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     xfonts-base \
     xfonts-75dpi \
+  # Install php extensions
   && mkdir -p /usr/local/etc/php/conf.d \
   && pecl install apc \
   && pecl install imagick-3.3.0 \
@@ -54,6 +57,11 @@ RUN apt-get update && apt-get install -y \
     pdo_pgsql \
     soap \
     zip \
+  # Install composer
+  && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+  && php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+  && php -r "unlink('composer-setup.php');" \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
