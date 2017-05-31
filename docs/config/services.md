@@ -43,6 +43,22 @@ While you can also share in additional files and directories via our [sharing pl
 | `/path/to/my/app` | `/app` |
 | `$HOME` | `/user` |
 
+Build Extras
+------------
+
+If you do not want to use your own custom image or Dockerfile via [Advanced Service Configuration](#advanced-service-configuration) we let you run some extra build steps after each service is started. Note that these steps must make sense within the context of the container you are running eg you will not be able to run `dnf` inside of a `debian` flavored container.
+
+This is useful for adding in some additional dev tools you might prefer like `vim` or for adding in things like extra php extensions not installed by default.
+
+```yml
+services:
+  appserver:
+    type: php:7.1
+    extras:
+      - apt-get update -y
+      - apt-get install vim
+```
+
 Advanced Service Configuration
 ------------------------------
 
