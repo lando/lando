@@ -15,6 +15,9 @@ services:
     type: php:7.1
     via: nginx
     ssl: true
+    extras:
+      - apt-get update
+      - apt-get install vim -y
   database:
     type: mariadb
     portforward: true

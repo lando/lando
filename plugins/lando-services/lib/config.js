@@ -65,6 +65,51 @@ module.exports = function(lando) {
       });
     });
 
+    // Go through each service and run additional build commands as needed
+    // @todo: we need a way to run these only when they change eg hashing relevant
+    // sections like extras and
+    app.events.on('post-start', function() {
+
+      // Start up a build collector
+      var build = [];
+
+      // Go through each service
+      _.forEach(app.config.services, function(service, name) {
+
+        // If the service has extras let's loop through and run some commands
+        if (!_.isEmpty(service.extras)) {
+
+          // Normalize data for loopage
+          if (!Array.isArray(service.extras)) {
+            service.extras = [service.extras];
+          }
+
+          // Run each command
+          _.forEach(service.extras, function(cmd) {
+
+            // Build out the compose object
+            var compose = {
+              id: [app.name, name, '1'].join('_'),
+              cmd: cmd,
+              opts: {
+                mode: 'attach'
+              }
+            };
+
+            // Push to the build
+            build.push(compose);
+
+          });
+
+        }
+
+      });
+
+      // Run the command
+      return lando.engine.run(build);
+
+    });
+
   });
 
 };
