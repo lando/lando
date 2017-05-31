@@ -18,8 +18,7 @@ services:
     composer:
       drush/drush: "~8"
     extras:
-      - apt-get update
-      - apt-get install vim -y
+      - echo "test extras"
   database:
     type: mariadb
     portforward: true
