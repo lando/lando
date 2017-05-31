@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     xfonts-75dpi \
   && pecl install imagick \
   && pecl install oauth-2.0.2 \
-  && pecl install redis-3.0.0 \
+  && pecl install redis-3.1.2 \
   && pecl install xdebug \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \

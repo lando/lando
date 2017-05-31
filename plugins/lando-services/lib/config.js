@@ -65,6 +65,73 @@ module.exports = function(lando) {
       });
     });
 
+    // Make sure we remove our build cache
+    app.events.on('post-uninstall', function() {
+      lando.cache.remove(app.name + ':last_build');
+    });
+
+    // Go through each service and run additional build commands as needed
+    app.events.on('post-start', function() {
+
+      // Start up a build collector
+      var build = [];
+
+      // Go through each service
+      _.forEach(app.config.services, function(service, name) {
+
+        // If the service has extras let's loop through and run some commands
+        if (!_.isEmpty(service.extras)) {
+
+          // Normalize data for loopage
+          if (!Array.isArray(service.extras)) {
+            service.extras = [service.extras];
+          }
+
+          // Run each command
+          _.forEach(service.extras, function(cmd) {
+
+            // Build out the compose object
+            var compose = {
+              id: [app.name, name, '1'].join('_'),
+              cmd: cmd,
+              opts: {
+                mode: 'attach'
+              }
+            };
+
+            // Push to the build
+            build.push(compose);
+
+          });
+
+        }
+
+      });
+
+      // Only proceed if build is non-empty
+      if (!_.isEmpty(build)) {
+
+        // Get the last build cache key
+        var key = app.name + ':last_build';
+
+        // Compute the build hash
+        var newHash = lando.node.hasher(app.config.services);
+
+        // If our new hash is different then lets build
+        if (lando.cache.get(key) !== newHash) {
+
+          // Set the new hash
+          lando.cache.set(key, newHash, {persist:true});
+
+          // Run all our post build steps
+          return lando.engine.run(build);
+
+        }
+
+      }
+
+    });
+
   });
 
 };

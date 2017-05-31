@@ -12,9 +12,13 @@ proxy:
       secure: true
 services:
   appserver:
-    type: php:7.0
+    type: php:7.1
     via: nginx
     ssl: true
+    composer:
+      drush/drush: "~8"
+    extras:
+      - echo "test extras"
   database:
     type: mariadb
     portforward: true
