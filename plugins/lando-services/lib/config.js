@@ -65,9 +65,12 @@ module.exports = function(lando) {
       });
     });
 
+    // Make sure we remove our build cache
+    app.events.on('post-uninstall', function() {
+      lando.cache.remove(app.name + ':last_build');
+    });
+
     // Go through each service and run additional build commands as needed
-    // @todo: we need a way to run these only when they change eg hashing relevant
-    // sections like extras and
     app.events.on('post-start', function() {
 
       // Start up a build collector
@@ -105,8 +108,27 @@ module.exports = function(lando) {
 
       });
 
-      // Run the command
-      return lando.engine.run(build);
+      // Only proceed if build is non-empty
+      if (!_.isEmpty(build)) {
+
+        // Get the last build cache key
+        var key = app.name + ':last_build';
+
+        // Compute the build hash
+        var newHash = lando.node.hasher(app.config.services);
+
+        // If our new hash is different then lets build
+        if (lando.cache.get(key) !== newHash) {
+
+          // Set the new hash
+          lando.cache.set(key, newHash, {persist:true});
+
+          // Run all our post build steps
+          return lando.engine.run(build);
+
+        }
+
+      }
 
     });
 
