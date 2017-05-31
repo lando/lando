@@ -15,6 +15,8 @@ services:
     type: php:7.1
     via: nginx
     ssl: true
+    composer:
+      drush/drush: "~8"
     extras:
       - apt-get update
       - apt-get install vim -y

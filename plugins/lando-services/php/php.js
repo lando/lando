@@ -77,14 +77,29 @@ module.exports = function(lando) {
    */
   var php = function(config) {
 
+    // Path
+    var path = [
+      '/usr/local/sbin',
+      '/usr/local/bin',
+      '/usr/sbin',
+      '/usr/bin',
+      '/sbin',
+      '/bin',
+      '/root/.composer/vendor/bin'
+    ];
+
     // Start with the php base
     var php = {
       image: 'kalabox/php:' + config.image,
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
+        COMPOSER_ALLOW_SUPERUSER: 1,
+        PATH: path.join(':')
       },
       ports: ['80'],
-      volumes: [],
+      volumes: [
+        '/root'
+      ],
       command: config.command.join(' '),
     };
 
@@ -223,6 +238,33 @@ module.exports = function(lando) {
         services[name].volumes = addConfig(customConf, volumes);
       }
     });
+
+    // Add our composer things to build extra
+    if (!_.isEmpty(config.composer)) {
+      _.forEach(config.composer, function(version, pkg) {
+
+        // Ensure extras is arrayed
+        config.extras = config.extras || [];
+
+        // Queue up our global composer command
+        var cgr = ['composer', 'global', 'require'];
+
+        // Get the dep
+        var dep = [pkg];
+
+        // Add a version if we have one
+        if (!_.isEmpty(version)) {
+          dep.push(version);
+        }
+
+        // Build the command
+        cgr.push(dep.join(':'));
+
+        // Push in our composer deps
+        config.extras.push(cgr.join(' '));
+
+      });
+    }
 
     // Return our service
     return services;
