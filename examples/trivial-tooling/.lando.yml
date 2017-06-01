@@ -1,31 +1,73 @@
+# Tooling example
 name: trivial-tooling
+
+# Some basic sharing
 sharing:
   appserver:
     local: www
     remote: /var/www/html
+
+# Proxy the basics
 proxy:
   nginx:
     - port: 80/tcp
       default: true
+
+# Let up a basic LEMP stack
 services:
   appserver:
     type: php:7.1
     via: nginx
+    # Run composer install after we start our app
     extras:
       - "cd /app && composer install"
   database:
     type: mariadb
     portforward: true
+
+# This section defines our tooling routes
 tooling:
+
+  # Define `lando composer` as a command that runs `composer --ansi @` against
+  # the appserver service. Note that @ will be any additional arguments you pass
+  # into `lando composer`
+  #
+  # Example: typing `lando composer install` will run `composer --ansi install`
+  # inside the container.
   composer:
+
+    # Run the `lando composer` command against the appserver from the services
+    # section above
     service: appserver
+
+    # Give a nice description to describe what this does.
+    # If ommited this will default to "Run COMMAND commands" where COMMAND is
+    # composer in this case
     description: Run composer commands
+
+    # Define a specific command to start with inside the container. If ommited
+    # this will default to the name you give the service eg composer.
+    #
+    # This can be a string or an array. We recommend using an array if you are
+    # passing in additional options that you might want to enforce.
     cmd:
       - composer
       - --ansi
+
+  # Define `lando php` as a command that runs `php @` against the appserver where
+  # @ is additional input from the user.
   php:
+
+    # Run this command against the appserver
     service: appserver
+
+    # Run this command as the www-data inside of the container. If ommitted this
+    # will default to root. You can also pass in user:group.
+    # Note that the user needs to already exist inside of the container.
     user: www-data
+
+  # Define `lando mysql` as a command that will drop the user into a mysql shell
+  # inside of the database service
   mysql:
     service: database
     description: Drop into a MySQL shell

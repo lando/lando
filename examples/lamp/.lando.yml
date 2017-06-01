@@ -56,3 +56,18 @@ services:
       user: lamp
       password: lamp
       database: lamp
+
+# Add some nice command routing
+tooling:
+  composer:
+    service: appserver
+    description: Run composer commands
+    cmd:
+      - composer
+      - --ansi
+  php:
+    service: appserver
+    user: www-data
+  mysql:
+    service: database
+    description: Drop into a MySQL shell
