@@ -47,8 +47,20 @@ module.exports = function(lando) {
             }
           };
 
+          // Let's check to see if the app has been started
+          return lando.app.isRunning(app)
+
+          // If not let's make sure we start it
+          .then(function(isRunning) {
+            if (!isRunning) {
+              return lando.app.start(app);
+            }
+          })
+
           // Exec
-          return lando.engine.run(run);
+          .then(function() {
+            return lando.engine.run(run);
+          });
 
         }
 
