@@ -16,6 +16,7 @@ The following services are currently supported. Please check out each one to lea
   * ####[mariadb](./../services/mariadb.md)
   * ####[mysql](./../services/mysql.md)
   * ####[nginx](./../services/nginx.md)
+  * ####[node](./../services/node.md)
   * ####[php](./../services/php.md)
   * ####[postgres](./../services/postgres.md)
 

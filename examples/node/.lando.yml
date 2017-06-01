@@ -46,7 +46,7 @@ services:
 
     # Install our local package.json dependencies as part of a build step
     extras:
-    - "cd /app & npm install"
+      - "cd /app & npm install"
 
 # Add some nice command routing
 tooling:

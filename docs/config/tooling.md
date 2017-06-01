@@ -16,3 +16,26 @@ Directory Mapping
 
 Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally.
 
+Tool Discovery
+--------------
+
+If you are not sure about what tools live inside your container you can use `lando ssh` to drop into a shell on a specific service to both investigate and install any needed dependencies.
+
+```bash
+# SSH into the appserver
+lando ssh appserver
+
+# Explore whether grunt is installed
+which grunt
+  # not installed
+
+# Add grunt
+npm install -g grunt-cli
+
+# Exit the appserver container
+exit
+
+# Add grunt to the tooling in your .lando.yml
+```
+
+While you can do the above it's generally recommended to install any additional dependencies as part of the build process either using specific dependency management built into the service you are using or with Lando's more generic [build step proces](./../config/services.md#build-extras).
