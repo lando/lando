@@ -123,7 +123,7 @@ module.exports = function(lando) {
           // Set the new hash
           lando.cache.set(key, newHash, {persist:true});
 
-          // Run all our post build steps
+          // Run all our post build steps serially
           return lando.engine.run(build);
 
         }
