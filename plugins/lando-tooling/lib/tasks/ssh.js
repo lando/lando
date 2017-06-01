@@ -38,9 +38,12 @@ module.exports = function(lando) {
         // We have an app so lets try to build a ssh exec
         if (app) {
 
+          // Default to appserver if we have no second arg
+          var service = options.service || 'appserver';
+
           // Build out our run
           var run = {
-            id: [app.dockerName, options.service, '1'].join('_'),
+            id: [app.dockerName, service, '1'].join('_'),
             cmd: options.command || 'bash',
             opts: {
               mode: 'attach'
