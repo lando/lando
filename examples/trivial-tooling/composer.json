@@ -1,0 +1,18 @@
+{
+  "name": "lando/trivial-tooling",
+  "description": "Trivial Tooling Demo",
+  "require-dev": {
+    "overtrue/phplint": "*",
+    "squizlabs/php_codesniffer": "2.*",
+    "drupal/coder" : "dev-8.x-2.x"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "test": [
+      "./vendor/bin/phplint --no-cache",
+      "./vendor/bin/phpcs --config-set installed_paths ./../../drupal/coder/coder_sniffer",
+      "./vendor/bin/phpcs -n --report=full --standard=Drupal --ignore=*.tpl.php --extensions=install,module,php,inc www"
+    ]
+  }
+}

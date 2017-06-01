@@ -7,13 +7,12 @@ proxy:
   nginx:
     - port: 80/tcp
       default: true
-    - port: 443/tcp
-      default: true
-      secure: true
 services:
   appserver:
     type: php:7.1
     via: nginx
+    extras:
+      - "cd /app && composer install"
   database:
     type: mariadb
     portforward: true
@@ -22,3 +21,9 @@ tooling:
     service: appserver
     description: Run composer commands
     cmd: composer --ansi
+  php:
+    service: appserver
+    user: www-data
+  mysql:
+    service: database
+    description: Drop into a MySQL shell
