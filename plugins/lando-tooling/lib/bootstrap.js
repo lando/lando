@@ -17,6 +17,9 @@ module.exports = function(lando) {
     // Log
     lando.log.info('Initializing tooling');
 
+    // Add the SSH command
+    lando.tasks.add('ssh', require('./tasks/ssh')(lando));
+
     // Add services to lando
     lando.tooling = require('./tooling')(lando);
 
