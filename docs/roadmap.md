@@ -13,7 +13,7 @@ There are various features that need to be implemented to achieve the above.
 
   1. ~~Transition the core framework~~
   2. ~~Provide a services layer on top of docker compose~~
-  3. Provide a build and tooling layer
+  3. ~~Provide a build and tooling layer~~
   4. Provide additional core services and tools
   5. Provide a type layer on top of services
   6. Provide handling of upstream git remotes

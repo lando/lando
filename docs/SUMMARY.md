@@ -34,6 +34,7 @@
 * [mariadb](services/mariadb.md)
 * [mysql](services/mysql.md)
 * [nginx](services/nginx.md)
+* [node](services/node.md)
 * [php](services/php.md)
 * [postgres](services/postgres.md)
 
