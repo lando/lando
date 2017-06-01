@@ -3,5 +3,6 @@ plugins:
   - lando-proxy
   - lando-services
   - lando-sharing
+  - lando-tooling
 logLevelConsole: warn
 logLevel: debug
