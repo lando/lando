@@ -1,0 +1,24 @@
+name: trivial-tooling
+sharing:
+  appserver:
+    local: www
+    remote: /var/www/html
+proxy:
+  nginx:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  appserver:
+    type: php:7.1
+    via: nginx
+  database:
+    type: mariadb
+    portforward: true
+tooling:
+  composer:
+    service: appserver
+    description: Run composer commands
+    cmd: composer --ansi

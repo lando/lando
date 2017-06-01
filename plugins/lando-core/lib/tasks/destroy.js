@@ -46,6 +46,11 @@ module.exports = function(lando) {
             console.log(chalk.red('App destroyed!'));
           });
         }
+
+        // Warn user we couldn't find an app
+        else {
+          lando.log.warn('Could not find app in this dir');
+        }
       });
 
     }
