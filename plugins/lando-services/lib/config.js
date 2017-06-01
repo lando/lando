@@ -83,7 +83,7 @@ module.exports = function(lando) {
         if (!_.isEmpty(service.extras)) {
 
           // Normalize data for loopage
-          if (!Array.isArray(service.extras)) {
+          if (!_.isArray(service.extras)) {
             service.extras = [service.extras];
           }
 
@@ -92,7 +92,7 @@ module.exports = function(lando) {
 
             // Build out the compose object
             var compose = {
-              id: [app.name, name, '1'].join('_'),
+              id: [app.dockerName, name, '1'].join('_'),
               cmd: cmd,
               opts: {
                 mode: 'attach'

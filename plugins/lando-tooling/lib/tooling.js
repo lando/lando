@@ -10,6 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var path = require('path');
+  var format = require('util').format;
 
   /*
    * Helper to process args
@@ -21,7 +23,7 @@ module.exports = function(lando) {
     var argopts = process.argv.slice(3);
 
     // Shift on our command
-    argopts.unshift(config.cmd);
+    argopts.unshift(config.cmd || config.name);
 
     // Check to see if we have global lando opts and remove them if we do
     if (_.indexOf(argopts, '--') > 0) {
@@ -29,7 +31,7 @@ module.exports = function(lando) {
     }
 
     // Return
-    return argopts.join(' ');
+    return _.flatten(argopts);
 
   };
 
@@ -59,29 +61,38 @@ module.exports = function(lando) {
         // Build the command
         var cmd = largs(config);
 
-        // Get the appname
-        var appName = config.app.name.replace(/-/g, '');
+        // Break up our app root and cwd so we can get a diff
+        var appRoot = config.app.root.split(path.sep);
+        var cwd = process.cwd().split(path.sep);
+        var dir = _.difference(cwd, appRoot);
+
+        // Add our in-container app root
+        dir.unshift('/app');
+
+        // Build out our options
+        var options = {
+          id: [config.app.dockerName, config.service, '1'].join('_'),
+          cmd: cmd,
+          opts: {
+            mode: 'attach',
+            pre: ['cd', dir.join('/')].join(' '),
+            user: config.user || 'root'
+          }
+        };
 
         // Exec
-        return lando.engine.run({
-          id: [appName, config.service, '1'].join('_'),
-          cmd: cmd,
-          opts: {mode: 'attach'}
-        });
+        return lando.engine.run(options);
 
       });
 
     };
 
-    // Build the task
-    var task = {
+    // Return our tasks
+    return {
       command: config.name,
-      describe: config.description,
+      describe: config.description || format('Run %s commands', config.name),
       run: run
     };
-
-    // Return our tasks
-    return task;
 
   };
 
