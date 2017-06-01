@@ -36,6 +36,7 @@
   * [Proxy](config/proxy.md)
   * [Sharing](config/sharing.md)
   * [Services](config/services.md)
+  * [Tooling](config/tooling.md)
 * [config.yml](config/config.md)
 
 ## Services
@@ -57,6 +58,7 @@
 * [poweroff](cli/poweroff.md)
 * [rebuild](cli/rebuild.md)
 * [restart](cli/restart.md)
+* [ssh](cli/ssh.md)
 * [start](cli/start.md)
 * [stop](cli/stop.md)
 * [version](cli/version.md)
