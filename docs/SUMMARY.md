@@ -37,6 +37,7 @@
 * [node](services/node.md)
 * [php](services/php.md)
 * [postgres](services/postgres.md)
+* [solr](services/solr.md)
 
 ## Command Line
 
