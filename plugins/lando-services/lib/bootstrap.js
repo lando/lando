@@ -33,6 +33,7 @@ module.exports = function(lando) {
     lando.services.add('mysql', require('./../mysql/mysql')(lando));
     lando.services.add('postgres', require('./../postgres/postgres')(lando));
     lando.services.add('php', require('./../php/php')(lando));
+    lando.services.add('solr', require('./../solr/solr')(lando));
 
   });
 

@@ -1,0 +1,40 @@
+# solr server example
+name: solr
+
+# Give me http://solr.lndo.site and https://solr.lndo.site
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+
+# Spin up services to run a basic node server with solr backend
+services:
+
+  # Create a node instance
+  appserver:
+    type: node:6.10
+    ssl: true
+    globals:
+      gulp-cli: "latest"
+    command: node /app/app.js
+    extras:
+      - "cd /app & npm install"
+
+  # Create a solr index
+  index:
+    type: solr:3.6
+    portforward: 9999
+    #config:
+    #  conf: solrconf
+
+# Add some nice command routing
+tooling:
+  npm:
+    service: appserver
+  gulp:
+    service: appserver
+  node:
+    service: appserver
