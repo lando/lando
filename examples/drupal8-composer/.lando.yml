@@ -1,0 +1,51 @@
+name: drupal8-composer
+sharing:
+  appserver:
+    local: .
+    remote: /var/www/html
+proxy:
+  nginx:
+    - port: 80/tcp
+      default: true
+    - port: 443/tcp
+      default: true
+      secure: true
+services:
+  appserver:
+    type: php:7.0
+    via: nginx
+    ssl: true
+    config:
+      server: config/nginx/drupal.conf
+      conf: config/php/php.ini
+    extras:
+      - "cd /app && composer install"
+  database:
+    type: mariadb
+    portforward: 3310
+    creds:
+      user: drupal
+      password: drupal
+      database: drupal
+    config:
+      confd: config/mysql
+  index:
+    type: solr:5.5
+    core: drupal
+    config:
+      conf: config/solr
+tooling:
+  composer:
+    service: appserver
+  php:
+    service: appserver
+    user: www-data
+  drush:
+    service: appserver
+    cmd:
+      - /var/www/html/vendor/bin/drush
+      - -r
+      - /app/web
+  drupal:
+    service: appserver
+    cmd: /var/www/html/vendor/bin/drupal
