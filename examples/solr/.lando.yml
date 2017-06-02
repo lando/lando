@@ -27,7 +27,7 @@ services:
     type: solr:5.5
 
     # Optionally allow access to the database at localhost:9999
-    # You will need to make sure port 33999907 is open on your machine
+    # You will need to make sure port 9999 is open on your machine
     #
     # You can also set `portforward: true` to have Lando dynamically assign
     # a port. Unlike specifying an actual port setting this to true will give you
