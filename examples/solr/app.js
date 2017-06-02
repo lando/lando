@@ -9,22 +9,36 @@
 // Load modules
 var fs = require('fs');
 var http = require('http');
-var https = require('https');
 var express = require('express');
+var SolrNode = require('solr-node');
 var app = express();
 
-// Create our HTTPS server options
-var sslOpts = {
-  key: fs.readFileSync('/certs/cert.key'),
-  cert: fs.readFileSync('/certs/cert.crt')
-};
+// Create solr client
+// This uses the internal_connection info from `lando info`.
+var client = new SolrNode({
+    host: 'index',
+    port: '8983',
+    core: 'freedom',
+    protocol: 'http'
+});
 
 // Create our servers
-https.createServer(sslOpts, app).listen(443);
 http.createServer(app).listen(80);
 
 // Basic HTTP response
 app.get('/', function (req, res) {
+
+  // Set the header
   res.header('Content-type', 'text/html');
-  return res.end('<h1>I said "Oh my!" What a marvelous tune!</h1>');
+
+  // Ping the solr intance
+  client.ping(function(err, result) {
+    if (err) {
+      return res.end('<h1>I HAVE FAILED TO CONNECT</h1>');
+    }
+    else {
+      res.end('<h1>I HAVE MADE A CONNECTION TO SOLR!!!</h1>');
+    }
+  })
+
 });
