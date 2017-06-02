@@ -19,7 +19,7 @@ services:
       server: config/nginx/drupal.conf
       conf: config/php/php.ini
     extras:
-      - "cd /app && composer install"
+      - "cd /var/www/html && composer install"
   database:
     type: mariadb
     portforward: 3310
@@ -45,7 +45,7 @@ tooling:
     cmd:
       - /var/www/html/vendor/bin/drush
       - -r
-      - /app/web
+      - /var/www/html/web
   drupal:
     service: appserver
     cmd: /var/www/html/vendor/bin/drupal

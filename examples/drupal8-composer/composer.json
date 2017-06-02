@@ -18,15 +18,6 @@
         "webflo/drupal-finder": "^0.3.0",
         "webmozart/path-util": "^2.3"
     },
-    "require-dev": {
-        "behat/mink": "~1.7",
-        "behat/mink-goutte-driver": "~1.2",
-        "jcalderonzumba/gastonjs": "~1.0.2",
-        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
-        "mikey179/vfsstream": "~1.2",
-        "phpunit/phpunit": ">=4.8.28 <5",
-        "symfony/css-selector": "~2.8"
-    },
     "conflict": {
         "drupal/drupal": "*"
     },
