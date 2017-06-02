@@ -43,7 +43,7 @@ module.exports = function(lando) {
     // Start a services collector
     var services = {};
 
-    // Config version differences
+    // Early config version differences
     var versionConfig = {
       '3.6': {
         image: 'actency/docker-solr:3.6',
@@ -57,16 +57,31 @@ module.exports = function(lando) {
         confDir: '/opt/solr-4.10.4/example/solr/collection1/conf/',
         command: '/bin/bash -c "/opt/solr/bin/solr -f -p 8983"',
         dataDir: '/opt/solr-4.10.4/example/solr/collection1/data/'
-      },
-      custom: {}
+      }
     };
 
-    // Get our solr config
-    var solrConfig = versionConfig[config.version];
+    // Figure out the name of the core
+    var core = config.core || 'index1';
+
+    // Start up the solr config collector
+    var solrConfig = {};
+
+    // Figure out which config base to use
+    if (_.includes(['3.6', 4.10], config.version)) {
+      solrConfig = versionConfig[config.version];
+    }
+    else {
+      solrConfig = {
+        image: 'solr:' + config.version,
+        confDir: '/solrconf/conf',
+        dataDir: '/opt/solr/server/solr/mycores/',
+        command: ['docker-entrypoint.sh', 'solr-precreate', core].join(' ')
+      };
+    }
 
     // Define config mappings
     var configFiles = {
-      conf: solrConfig.confDir || '/solrconf'
+      conf: solrConfig.confDir || '/solrconf/conf'
     };
 
     // Default solr service
@@ -76,13 +91,11 @@ module.exports = function(lando) {
         TERM: 'xterm'
       },
       volumes: [
-        'data:' + solrConfig.dataDir
+        // @todo: figure out better handling around persistent data
+        // solrConfig.dataDir
       ],
       command: solrConfig.command
     };
-
-    // Add data dir if applicable
-    // @todo
 
     // Handle port forwarding
     if (config.portforward) {
@@ -99,8 +112,27 @@ module.exports = function(lando) {
 
     }
 
+    // Handle custom config files
+    _.forEach(configFiles, function(file, type) {
+      if (_.has(config, 'config.' + type)) {
+
+        // Share in the custom config
+        var local = config.config[type];
+        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        solr.volumes = addConfig(customConfig, solr.volumes);
+
+        // If this is a recent version of solr we need to add to the entry
+        if (!_.includes(['3.6', 4.10], config.version)) {
+          var command = solr.command.split(' ');
+          command.push('/solrconf');
+          solr.command = command.join(' ');
+        }
+
+      }
+    });
+
     // Handle ssl option
-    // @todo:
+    // @todo: figure out how to handle SSL options
     /*
     if (config.ssl) {
 
@@ -117,15 +149,6 @@ module.exports = function(lando) {
 
     }
     */
-
-    // Handle custom config files
-    _.forEach(configFiles, function(file, type) {
-      if (_.has(config, 'config.' + type)) {
-        var local = config.config[type];
-        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-        solr.volumes = addConfig(customConfig, solr.volumes);
-      }
-    });
 
     // Put it all together
     services[name] = solr;
