@@ -47,6 +47,7 @@ var lando = require('./lando')(config);
     * [.Promise](#lando.Promise) ⇒ <code>Array</code>
     * [.shell](#lando.shell) ⇒ <code>Array</code>
     * [.tasks](#lando.tasks) ⇒ <code>Array</code>
+    * [.user](#lando.user) ⇒ <code>Array</code>
     * [.utils](#lando.utils) ⇒ <code>Array</code>
 
 <a name="lando.app"></a>
@@ -456,6 +457,33 @@ Lists all the Lando apps
 **Kind**: static property of [<code>lando</code>](#lando)  
 **Returns**: <code>Array</code> - Returns the total.  
 **See**: [tasks.md](tasks.md)  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Things |
+
+**Example**  
+```js
+// List all the apps
+return lando.app.list()
+
+// Map each app to a summary and print results
+.map(function(app) {
+ return appSummary(app)
+  .then(function(summary) {
+   console.log(JSON.stringify(summary, null, 2));
+ });
+});
+```
+<a name="lando.user"></a>
+
+### lando.user ⇒ <code>Array</code>
+Lists all the Lando apps
+
+**Kind**: static property of [<code>lando</code>](#lando)  
+**Returns**: <code>Array</code> - Returns the total.  
+**See**: [user.md](user.md)  
 **Since**: 3.0.0  
 
 | Param | Type | Description |

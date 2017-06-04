@@ -1,60 +1,146 @@
-## Members
-
-<dl>
-<dt><a href="#tasks">tasks</a></dt>
-<dd><p>Place to store global tasks</p>
-</dd>
-<dt><a href="#largv">largv</a></dt>
-<dd><p>Get global lando verbose arg</p>
-</dd>
-</dl>
-
-## Objects
-
-<dl>
-<dt><a href="#tasks">tasks</a> : <code>object</code></dt>
-<dd><p>Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things</p>
-</dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#add">add()</a></dt>
-<dd><p>Add a task.</p>
-<p>Either to the global task object or the passed in object</p>
-</dd>
-</dl>
-
-<a name="tasks"></a>
+<a name="module_tasks"></a>
 
 ## tasks
-Place to store global tasks
+Contains some helpers to add and parse Lando tasks.
 
-**Kind**: global variable  
-<a name="largv"></a>
+Lando tasks are a high level abstraction that should contain the neded
+information for both a GUI or CLI to present relevant UX to the user.
 
-## largv
-Get global lando verbose arg
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the tasks that have been loaded
+var task = lando.tasks.tasks;
 
-**Kind**: global variable  
-<a name="tasks"></a>
+// Gets all the global options that have been specified.
+var largv = lando.tasks.largv;
 
-## tasks : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+// Load in two tasks during bootstrap
+lando.events.on('post-bootstrap', 1, function(lando) {
 
-**Kind**: global namespace  
-<a name="add"></a>
+  // Load a task stored in a task module
+  lando.tasks.add('config', require('./tasks/config')(lando));
 
-## add()
-Add a task.
+  // Load a task stored in an object called task
+  lando.tasks.add('config', task);
 
-Either to the global task object or the passed in object
+});
 
-**Kind**: global function  
+// Add a task so it shows up as a command in the CLI
+yargs.command(lando.tasks.parseToYargs(task));
+```
+
+* [tasks](#module_tasks)
+    * [.tasks](#module_tasks.tasks)
+    * [.largv](#module_tasks.largv)
+    * [.parseToYargs(task)](#module_tasks.parseToYargs) ⇒ <code>Object</code>
+    * [.add(name, task)](#module_tasks.add)
+
+<a name="module_tasks.tasks"></a>
+
+### tasks.tasks
+A singleton object that contains all the tasks that have been added.
+
+**Kind**: static property of [<code>tasks</code>](#module_tasks)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the tasks that have been loaded
+var task = lando.tasks.tasks;
+```
+<a name="module_tasks.largv"></a>
+
+### tasks.largv
+A singleton object that contains the Lando global options.
+
+This means all the options passed in after the `--` flag.
+
+**Kind**: static property of [<code>tasks</code>](#module_tasks)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the global options that have been specified.
+var largv = lando.tasks.largv;
+```
+<a name="module_tasks.parseToYargs"></a>
+
+### tasks.parseToYargs(task) ⇒ <code>Object</code>
+Parses a lando task object into something that can be used by the [yargs](http://yargs.js.org/docs/) CLI.
+
+A lando task object is an abstraction on top of yargs that also contains some
+metadata about how to interactively ask questions on both the CLI and GUI. While this
+method is useful, any task added to Lando via `lando.tasks.add` will automatically
+be parsed with this method.
+
+The interactivity metadata is light wrapper around [inquirer](https://github.com/sboudrias/Inquirer.js)
+
+**Kind**: static method of [<code>tasks</code>](#module_tasks)  
+**Returns**: <code>Object</code> - A yargs command object  
+**See**
+
+- [yargs docs](http://yargs.js.org/docs/)
+- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| task | <code>Object</code> | A Lando task object (@see add for definition) |
+
+**Example**  
+```js
+// Add that task to the CLI
+yargs.command(lando.tasks.parseToYargs(task));
+```
+<a name="module_tasks.add"></a>
+
+### tasks.add(name, task)
+Adds a Lando task to the global `lando.tasks.task` object.
+
+A lando task object is an abstraction on top of [yargs](http://yargs.js.org/docs/)
+and [inquirer](https://github.com/sboudrias/Inquirer.js) with a little extra special sauce.
+
+**Kind**: static method of [<code>tasks</code>](#module_tasks)  
+**See**
+
+- [yargs docs](http://yargs.js.org/docs/)
+- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | The name of the task. |
+| task | <code>Object</code> | A Lando task object |
+| task.command | <code>String</code> | A [yargs formatted command](http://yargs.js.org/docs/#methods-commandmodule-positional-arguments) |
+| task.description | <code>String</code> | A short description of the command |
+| task.options | <code>Object</code> | A [yargs builder object](http://yargs.js.org/docs/#methods-commandmodule). Each builder also has an 'interactive' key which is an [inquirier question object](https://github.com/sboudrias/Inquirer.js#objects) |
+| task.run | <code>function</code> | The function to run when the task is invoked. |
+| task.run.options | <code>Object</code> | The options selected by the user, available to the run function. |
+
+**Example**  
+```js
+// Define a task
+var task = {
+  command: 'destroy [appname]',
+  describe: 'Destroy app in current directory or [appname]',
+  options: {
+    yes: {
+      describe: 'Auto answer yes to prompts',
+      alias: ['y'],
+      default: false,
+      boolean: true,
+      interactive: {
+        type: 'confirm',
+        message: 'Are you sure you want to DESTROY?'
+      }
+    }
+  },
+  run: function(options) {
+    console.log(options);
+  }
+};
+
+// Add the task to Lando
+lando.tasks.add('destroy', task);
+```
