@@ -84,7 +84,7 @@
   * [networks](dev/api/networks.md)
   * [node](dev/api/node.md)
   * [plugins](dev/api/plugins.md)
-  * [promise](dev/api/promise.md)
+  * [Promise](dev/api/promise.md)
   * [registry](dev/api/registry.md)
   * [shell](dev/api/shell.md)
   * [tasks](dev/api/tasks.md)
