@@ -17,10 +17,13 @@ module.exports = function(lando) {
       // Try to get the app
       return lando.app.get(options.appname)
 
-      // Restart the app
+      // GEt the app info
       .then(function(app) {
         if (app) {
-          return lando.app.info(app);
+          return lando.app.info(app)
+          .then(function(info) {
+            console.log(JSON.stringify(info, null, 2));
+          });
         }
         // Warn user we couldn't find an app
         else {
