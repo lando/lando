@@ -29,18 +29,18 @@ return lando.app.list()
 ```
 
 * [app](#module_app)
-    * [.list([opts])](#module_app.list) ⇒ <code>Array</code>
-    * [.get([appName])](#module_app.get) ⇒ <code>Object</code> \| <code>undefined</code>
-    * [.isRunning(app)](#module_app.isRunning) ⇒ <code>Boolean</code>
-    * [.exists(appName)](#module_app.exists) ⇒ <code>Boolean</code>
-    * [.info(app)](#module_app.info) ⇒ <code>Object</code>
-    * [.uninstall(app)](#module_app.uninstall)
-    * [.cleanup(app)](#module_app.cleanup)
-    * [.start(app)](#module_app.start)
-    * [.stop(app)](#module_app.stop)
-    * [.restart(app)](#module_app.restart)
-    * [.destroy(app)](#module_app.destroy)
-    * [.rebuild(app)](#module_app.rebuild)
+    * [.list([opts])](#module_app.list) ⇒ <code>Promise</code>
+    * [.get([appName])](#module_app.get) ⇒ <code>Promise</code>
+    * [.isRunning(app)](#module_app.isRunning) ⇒ <code>Promise</code>
+    * [.exists(appName)](#module_app.exists) ⇒ <code>Promise</code>
+    * [.info(app)](#module_app.info) ⇒ <code>Promise</code>
+    * [.uninstall(app)](#module_app.uninstall) ⇒ <code>Promise</code>
+    * [.cleanup(app)](#module_app.cleanup) ⇒ <code>Promise</code>
+    * [.start(app)](#module_app.start) ⇒ <code>Promise</code>
+    * [.stop(app)](#module_app.stop) ⇒ <code>Promise</code>
+    * [.restart(app)](#module_app.restart) ⇒ <code>Promise</code>
+    * [.destroy(app)](#module_app.destroy) ⇒ <code>Promise</code>
+    * [.rebuild(app)](#module_app.rebuild) ⇒ <code>Promise</code>
     * ["event:pre-instantiate-app"](#module_app.event_pre-instantiate-app)
     * ["event:post-instantiate-app"](#module_app.event_post-instantiate-app)
     * ["event:app-ready"](#module_app.event_app-ready)
@@ -58,11 +58,11 @@ return lando.app.list()
 
 <a name="module_app.list"></a>
 
-### app.list([opts]) ⇒ <code>Array</code>
+### app.list([opts]) ⇒ <code>Promise</code>
 Lists all the Lando apps from the app registry.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Array</code> - Returns an array of apps from the registry  
+**Returns**: <code>Promise</code> - Returns a Promise with an array of apps from the registry  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -82,7 +82,7 @@ return lando.app.list()
 ```
 <a name="module_app.get"></a>
 
-### app.get([appName]) ⇒ <code>Object</code> \| <code>undefined</code>
+### app.get([appName]) ⇒ <code>Promise</code>
 Gets a fully instantiated app object.
 
 If you do not pass in an `appName` Lando will attempt to find an app in your
@@ -91,7 +91,7 @@ current working directory.
 Lando will also scan parent directories if no app is found.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Object</code> \| <code>undefined</code> - Returns an instantiated app object.  
+**Returns**: <code>Promise</code> - Returns a Pronise with an instantiated app object or nothing.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -110,14 +110,14 @@ return lando.app.get('myapp')
 ```
 <a name="module_app.isRunning"></a>
 
-### app.isRunning(app) ⇒ <code>Boolean</code>
+### app.isRunning(app) ⇒ <code>Promise</code>
 Determines whether an app is running or not.
 
 You can pass in an entire app object here but it really just needs an object
 with the app name eg {name: 'myapp'}
 
 **Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Boolean</code> - Returns `true` if the app is running, `false` if not.  
+**Returns**: <code>Promise</code> - Returns a Promise with a boolean of whether the app is running or not.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -139,11 +139,11 @@ return lando.app.isRunning(app)
 ```
 <a name="module_app.exists"></a>
 
-### app.exists(appName) ⇒ <code>Boolean</code>
+### app.exists(appName) ⇒ <code>Promise</code>
 Checks to see if the app exists or not.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Boolean</code> - `true` if app exists, `false` if not  
+**Returns**: <code>Promise</code> - A promise with a boolean of whether the app exists or not.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -164,7 +164,7 @@ return lando.app.exists('myapp')
 ```
 <a name="module_app.info"></a>
 
-### app.info(app) ⇒ <code>Object</code>
+### app.info(app) ⇒ <code>Promise</code>
 Prints useful information about the app's services.
 
 This should return information about the services the app is running,
@@ -172,7 +172,7 @@ URLs the app can be accessed at, relevant connection information like database
 credentials and any other information that is added by other plugins.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Object</code> - An object of information about the app keyed by its services  
+**Returns**: <code>Promise</code> - A Promise with an object of information about the app keyed by its services  
 **Emits**: <code>event:pre-info</code>  
 **Since**: 3.0.0  
 
@@ -194,13 +194,14 @@ return lando.app.info(app)
 ```
 <a name="module_app.uninstall"></a>
 
-### app.uninstall(app)
+### app.uninstall(app) ⇒ <code>Promise</code>
 Soft removes the apps services but maintains persistent data like app volumes.
 
 This differs from `destroy` in that destroy will hard remove all app services,
 volumes, networks, etc as well as remove the app from the appRegistry.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>  
 **Since**: 3.0.0  
 
@@ -220,13 +221,14 @@ catch(function(err) {
 ```
 <a name="module_app.cleanup"></a>
 
-### app.cleanup(app)
+### app.cleanup(app) ⇒ <code>Promise</code>
 Does some helpful cleanup before running an app operation.
 
 This command helps clean up apps in an inconsistent state and any orphaned
 containers they may have.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Since**: 3.0.0  
 **Todo**
 
@@ -244,12 +246,13 @@ return lando.app.cleanup(app)
 ```
 <a name="module_app.start"></a>
 
-### app.start(app)
+### app.start(app) ⇒ <code>Promise</code>
 Starts an app.
 
 This will start up all services/containers that have been defined for this app.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: <code>event:pre-start</code>, <code>event:post-start</code>  
 **Since**: 3.0.0  
 
@@ -269,12 +272,13 @@ catch(function(err) {
 ```
 <a name="module_app.stop"></a>
 
-### app.stop(app)
+### app.stop(app) ⇒ <code>Promise</code>
 Stops an app.
 
 This will stop all services/containers that have been defined for this app.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: <code>event:pre-stop</code>, <code>event:post-stop</code>  
 **Since**: 3.0.0  
 
@@ -294,12 +298,13 @@ catch(function(err) {
 ```
 <a name="module_app.restart"></a>
 
-### app.restart(app)
+### app.restart(app) ⇒ <code>Promise</code>
 Stops and then starts an app.
 
 This just runs `app.stop` and `app.start` in succession.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: <code>event:pre-stop</code>, <code>event:stop-stop</code>, <code>event:pre-start</code>, <code>event:post-start</code>  
 **Since**: 3.0.0  
 
@@ -319,7 +324,7 @@ catch(function(err) {
 ```
 <a name="module_app.destroy"></a>
 
-### app.destroy(app)
+### app.destroy(app) ⇒ <code>Promise</code>
 Hard removes all app services, olumes, networks, etc as well as removes the
 app from the appRegistry.
 
@@ -330,6 +335,7 @@ entry in the appRegistry.
 That said this DOES call both `stop` and `uninstall`.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: <code>event:pre-destroy</code>, <code>event:pre-stop</code>, <code>event:post-stop</code>, <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>, <code>event:post-destroy</code>  
 **Since**: 3.0.0  
 
@@ -349,7 +355,7 @@ catch(function(err) {
 ```
 <a name="module_app.rebuild"></a>
 
-### app.rebuild(app)
+### app.rebuild(app) ⇒ <code>Promise</code>
 Rebuilds an app.
 
 This will stop an app, soft remove its services, rebuild those services and
@@ -357,6 +363,7 @@ then, finally, start the app back up again. This is useful for developers who
 might want to tweak Dockerfiles or compose yamls.
 
 **Kind**: static method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: <code>event:pre-stop</code>, <code>event:post-stop</code>, <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>, <code>event:pre-start</code>, <code>event:post-start</code>  
 **Since**: 3.0.0  
 
