@@ -1,0 +1,54 @@
+# solr server example
+name: solr
+
+# Give me http://solr.lndo.site and https://solr.lndo.site
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+
+# Spin up services to run a basic node server with solr backend
+services:
+
+  # Create a node instance
+  appserver:
+    type: node:6.10
+    globals:
+      gulp-cli: "latest"
+    command: node /app/app.js
+    extras:
+      - "cd /app & npm install"
+
+  # Spin up a solr container called "index"
+  # NOTE: "index" is arbitrary, you could just as well call this "tswift" or "covfefe"
+  index:
+
+    # Use solr version 5.5
+    type: solr:5.5
+
+    # Optionally allow access to the database at localhost:9999
+    # You will need to make sure port 9999 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 9999
+
+    # Optionally declare the name of the solr core.
+    # This setting is only applicable for versions 5.5 and above
+    core: freedom
+
+    # Optionally use custom solr config files eg (schema.xml and solrconfig.xml)
+    # This is helpful if frameworks require custom config eg Drupal.
+    # This is relative to the app root.
+    #config:
+    #  conf: solrconf
+
+# Add some nice command routing
+tooling:
+  npm:
+    service: appserver
+  gulp:
+    service: appserver
+  node:
+    service: appserver
