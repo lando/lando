@@ -45,6 +45,7 @@ var lando = require('./lando')(config);
     * [.node](#lando.node) ⇒ <code>Array</code>
     * [.plugins](#lando.plugins) ⇒ <code>Array</code>
     * [.Promise](#lando.Promise) ⇒ <code>Array</code>
+    * [.registry](#lando.registry) ⇒ <code>Array</code>
     * [.shell](#lando.shell) ⇒ <code>Array</code>
     * [.tasks](#lando.tasks) ⇒ <code>Array</code>
     * [.user](#lando.user) ⇒ <code>Array</code>
@@ -403,6 +404,33 @@ Lists all the Lando apps
 **Kind**: static property of [<code>lando</code>](#lando)  
 **Returns**: <code>Array</code> - Returns the total.  
 **See**: [promise.md](promise.md)  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Things |
+
+**Example**  
+```js
+// List all the apps
+return lando.app.list()
+
+// Map each app to a summary and print results
+.map(function(app) {
+ return appSummary(app)
+  .then(function(summary) {
+   console.log(JSON.stringify(summary, null, 2));
+ });
+});
+```
+<a name="lando.registry"></a>
+
+### lando.registry ⇒ <code>Array</code>
+Lists all the Lando apps
+
+**Kind**: static property of [<code>lando</code>](#lando)  
+**Returns**: <code>Array</code> - Returns the total.  
+**See**: [registry.md](registry.md)  
 **Since**: 3.0.0  
 
 | Param | Type | Description |

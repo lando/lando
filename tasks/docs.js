@@ -27,6 +27,7 @@ module.exports = function() {
           {src: 'lib/node.js', dest: 'docs/dev/api/node.md'},
           {src: 'lib/plugins.js', dest: 'docs/dev/api/plugins.md'},
           {src: 'lib/promise.js', dest: 'docs/dev/api/promise.md'},
+          {src: 'lib/registry.js', dest: 'docs/dev/api/registry.md'},
           {src: 'lib/shell.js', dest: 'docs/dev/api/shell.md'},
           {src: 'lib/tasks.js', dest: 'docs/dev/api/tasks.md'},
           {src: 'lib/user.js', dest: 'docs/dev/api/user.md'},
