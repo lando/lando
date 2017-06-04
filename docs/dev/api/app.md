@@ -379,7 +379,7 @@ not `app.events.on` See example below:
 
 | Name | Type | Description |
 | --- | --- | --- |
-| config | <code>object</code> | The config from the app's .lando.yml |
+| config | <code>Object</code> | The config from the app's .lando.yml |
 
 **Example**  
 ```js
