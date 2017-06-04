@@ -1,39 +1,58 @@
 <a name="lando"></a>
 
 ## lando : <code>object</code>
-This is the high level object wrapper that contains the Lando libraries.
-Using this you can:
-
- * Perform actions on Lando apps
- * Bootstrap Lando
- * Access caching utilities
- *
+This is the high level object that contains the Lando libraries.
 
 **Kind**: global namespace  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| config | <code>object</code> | [description] |
-
 **Example**  
 ```js
-// Instantiate the Lando object
-var lando = require('./lando')(config);
+// Get lando
+var lando = require('./lando')(globalConfig);
 
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
+// Add an item to the cache
+lando.cache.set('mykey', data);
+
+// Start an app
+return lando.app.start(app);
+
+// Check to see if a docker container is running
+return lando.engine.isRunning({id: 'myapps_httpd_1'});
+
+// Log an error
+lando.log.error('Ive got a baaaad feeling about this');
+
+// Access a global config property
+var plugins = lando.config.plugins;
+
+// Emit an event
+return lando.events.emit('battle-of-yavin', fleetOpts);
+
+// Run a function when an event is triggered
+return lando.events.on('battle-of-yavin', stayOnTarget);
+
+// Get the lodash module for our plugin
+var _ = lando.node._;
+
+// Retry a function with a Promise.
+return lando.Promise.retry(lando.engine.start(container)));
+
+// Load a plugin
+return lando.plugins.load('hyperdrive');
+
+// Remove an app from the registry
+return lando.registry.remove({app: name, dir: dir});
+
+// Execute a command
+return lando.shell.sh(['docker', 'info']);
+
+// Add a new task to Lando
+lando.tasks.add('fireeverything', task);
 ```
 
 * [lando](#lando) : <code>object</code>
     * [.app](#lando.app)
-    * [.bootstrap](#lando.bootstrap) ⇒ <code>Array</code>
-    * [.cache](#lando.cache) ⇒ <code>Array</code>
+    * [.bootstrap](#lando.bootstrap)
     * [.cli](#lando.cli) ⇒ <code>Array</code>
     * [.config](#lando.config) ⇒ <code>Array</code>
     * [.engine](#lando.engine) ⇒ <code>Array</code>
@@ -53,78 +72,23 @@ var lando = require('./lando')(config);
 <a name="lando.app"></a>
 
 ### lando.app
-Lists all the Lando apps
+The app module.
+
+Contains helpful methods to manipulate Lando apps.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [app.md](app.md)  
 **Since**: 3.0.0  
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.bootstrap"></a>
 
-### lando.bootstrap ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.bootstrap
+The bootstrap module.
+
+Contains helpful methods to bootstrap Lando.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [bootstrap.md](bootstrap.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
-<a name="lando.cache"></a>
-
-### lando.cache ⇒ <code>Array</code>
-Lists all the Lando apps
-
-**Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
-**See**: [cache.md](cache.md)  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.cli"></a>
 
 ### lando.cli ⇒ <code>Array</code>
