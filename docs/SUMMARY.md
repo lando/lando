@@ -87,6 +87,7 @@
   * [promise](dev/api/promise.md)
   * [shell](dev/api/shell.md)
   * [tasks](dev/api/tasks.md)
+  * [user](dev/api/user.md)
   * [utils](dev/api/utils.md)
 * [Testing](dev/testing.md)
 * [Building](dev/building.md)
