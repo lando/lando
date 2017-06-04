@@ -53,21 +53,22 @@ lando.tasks.add('fireeverything', task);
 * [lando](#lando) : <code>object</code>
     * [.app](#lando.app)
     * [.bootstrap](#lando.bootstrap)
-    * [.cli](#lando.cli) ⇒ <code>Array</code>
-    * [.config](#lando.config) ⇒ <code>Array</code>
-    * [.engine](#lando.engine) ⇒ <code>Array</code>
-    * [.error](#lando.error) ⇒ <code>Array</code>
-    * [.events](#lando.events) ⇒ <code>Array</code>
-    * [.log](#lando.log) ⇒ <code>Array</code>
-    * [.networks](#lando.networks) ⇒ <code>Array</code>
-    * [.node](#lando.node) ⇒ <code>Array</code>
-    * [.plugins](#lando.plugins) ⇒ <code>Array</code>
-    * [.Promise](#lando.Promise) ⇒ <code>Array</code>
-    * [.registry](#lando.registry) ⇒ <code>Array</code>
-    * [.shell](#lando.shell) ⇒ <code>Array</code>
-    * [.tasks](#lando.tasks) ⇒ <code>Array</code>
-    * [.user](#lando.user) ⇒ <code>Array</code>
-    * [.utils](#lando.utils) ⇒ <code>Array</code>
+    * [.cache](#lando.cache)
+    * [.cli](#lando.cli)
+    * [.config](#lando.config)
+    * [.engine](#lando.engine)
+    * [.error](#lando.error)
+    * [.events](#lando.events)
+    * [.log](#lando.log)
+    * [.networks](#lando.networks)
+    * [.node](#lando.node)
+    * [.plugins](#lando.plugins)
+    * [.Promise](#lando.Promise)
+    * [.registry](#lando.registry)
+    * [.shell](#lando.shell)
+    * [.tasks](#lando.tasks)
+    * [.user](#lando.user)
+    * [.utils](#lando.utils)
 
 <a name="lando.app"></a>
 
@@ -89,408 +90,163 @@ Contains helpful methods to bootstrap Lando.
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [bootstrap.md](bootstrap.md)  
 **Since**: 3.0.0  
+<a name="lando.cache"></a>
+
+### lando.cache
+The cache module.
+
+Contains helpful methods to cache data.
+
+**Kind**: static property of [<code>lando</code>](#lando)  
+**See**: [cache.md](cache.md)  
+**Since**: 3.0.0  
 <a name="lando.cli"></a>
 
-### lando.cli ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.cli
+The cli module.
+
+Contains helpful methods to init a CLI, inject commands and display CLI data.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [cli.md](cli.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.config"></a>
 
-### lando.config ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.config
+The global config object
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [config.md](config.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.engine"></a>
 
-### lando.engine ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.engine
+The engine module.
+
+Contains helpful methods to manipulate the docker daemon, engine, its containers,
+volumes and networks.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [engine.md](engine.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.error"></a>
 
-### lando.error ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.error
+The error module.
+
+Contains helpful error handling methods.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [error.md](error.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.events"></a>
 
-### lando.events ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.events
+The events module.
+
+An instance of AsyncEvents.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [events.md](events.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.log"></a>
 
-### lando.log ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.log
+The logging module.
+
+Contains logging methods.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
-**See**: [logger.md](logger.md)  
+**See**: [log.md](log.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.networks"></a>
 
-### lando.networks ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.networks
+The networks module.
+
+Contains ways to interact with docker networks.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [networks.md](networks.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.node"></a>
 
-### lando.node ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.node
+The node module.
+
+Contains helpful node modules like `lodash` and `restler` that can be
+used in plugins.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [node.md](node.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.plugins"></a>
 
-### lando.plugins ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.plugins
+The plugins module.
+
+Contains helpful methods to load Lando plugins.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [plugins.md](plugins.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.Promise"></a>
 
-### lando.Promise ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.Promise
+The Promise module.
+
+An extended `bluebird` Promise object.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [promise.md](promise.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.registry"></a>
 
-### lando.registry ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.registry
+The registry module.
+
+Contains helpful methods to interact with the appRegistry.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [registry.md](registry.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.shell"></a>
 
-### lando.shell ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.shell
+The shell module.
+
+Contains helpful methods to parse and execute commands.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [shell.md](shell.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.tasks"></a>
 
-### lando.tasks ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.tasks
+The tasks module.
+
+Contains helpful methods to define and parse Lando tasks.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [tasks.md](tasks.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.user"></a>
 
-### lando.user ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.user
+The user module.
+
+Contains helpful methods to get information about user running Lando.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [user.md](user.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
 <a name="lando.utils"></a>
 
-### lando.utils ⇒ <code>Array</code>
-Lists all the Lando apps
+### lando.utils
+The utils module.
+
+Contains helpful utility methods.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**Returns**: <code>Array</code> - Returns the total.  
 **See**: [utils.md](utils.md)  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
-```
