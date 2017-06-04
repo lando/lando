@@ -1,93 +1,85 @@
-<a name="cache"></a>
+<a name="module_cache"></a>
 
-## cache : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+## cache
+Contains caching functions.
 
-**Kind**: global namespace  
-
-* [cache](#cache) : <code>object</code>
-    * [.set](#cache.set) ⇒ <code>Array</code>
-    * [.get](#cache.get) ⇒ <code>Array</code>
-    * [.remove](#cache.remove) ⇒ <code>Array</code>
-
-<a name="cache.set"></a>
-
-### cache.set ⇒ <code>Array</code>
-Lists all the Lando apps
-
-**Kind**: static namespace of [<code>cache</code>](#cache)  
-**Returns**: <code>Array</code> - Returns the total.  
 **Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
-
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
+// Add an item to the cache
+lando.cache.set('mykey', data);
 
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
+// Get an item from the cache
+var value = lando.cache.get('mykey');
+
+// Remove an item from the cache
+lando.cache.remove('mykey');
 ```
-<a name="cache.get"></a>
 
-### cache.get ⇒ <code>Array</code>
-Lists all the Lando apps
+* [cache](#module_cache)
+    * [.set(key, data, [opts])](#module_cache.set)
+    * [.get(key)](#module_cache.get) ⇒ <code>Any</code>
+    * [.remove(key)](#module_cache.remove)
 
-**Kind**: static namespace of [<code>cache</code>](#cache)  
-**Returns**: <code>Array</code> - Returns the total.  
+<a name="module_cache.set"></a>
+
+### cache.set(key, data, [opts])
+Sets an item in the cache
+
+**Kind**: static method of [<code>cache</code>](#module_cache)  
 **Since**: 3.0.0  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| key | <code>String</code> |  | The name of the key to store the data with. |
+| data | <code>Any</code> |  | The data to store in the cache. |
+| [opts] | <code>Object</code> |  | Options to pass into the cache |
+| [opts.persist] | <code>Boolean</code> | <code>false</code> | Whether this cache data should persist between processes. Eg in a file instead of memory |
+| [opts.ttl] | <code>Integer</code> | <code>0</code> | Seconds the cache should live. 0 mean forever. |
 
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
+// Add a string to the cache
+lando.cache.set('mykey', 'mystring');
 
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
+// Add an object to persist in the file cache
+lando.cache.set('mykey', data, {persist: true});
+
+// Add an object to the cache for five seconds
+lando.cache.set('mykey', data, {ttl: 5});
 ```
-<a name="cache.remove"></a>
+<a name="module_cache.get"></a>
 
-### cache.remove ⇒ <code>Array</code>
-Lists all the Lando apps
+### cache.get(key) ⇒ <code>Any</code>
+Gets an item in the cache
 
-**Kind**: static namespace of [<code>cache</code>](#cache)  
-**Returns**: <code>Array</code> - Returns the total.  
+**Kind**: static method of [<code>cache</code>](#module_cache)  
+**Returns**: <code>Any</code> - The data stored in the cache if applicable.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [opts] | <code>Object</code> | Things |
+| key | <code>String</code> | The name of the key to retrieve the data. |
 
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
+// Get the data stored with key mykey
+var data = lando.cache.get('mykey');
+```
+<a name="module_cache.remove"></a>
 
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
+### cache.remove(key)
+Manually remove an item from the cache.
+
+**Kind**: static method of [<code>cache</code>](#module_cache)  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>String</code> | The name of the key to remove the data. |
+
+**Example**  
+```js
+// Remove the data stored with key mykey
+lando.cache.remove('mykey');
 ```

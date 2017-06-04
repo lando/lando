@@ -6,6 +6,9 @@ Contains the main bootstrap function.
 **Since**: 3.0.0  
 **Example**  
 ```js
+// Get the bootstrap function
+var bootstrap = require('./../lib/bootstrap.js');
+
 // Initialize Lando in CLI mode
 bootstrap({mode: 'cli'})
 
@@ -46,15 +49,13 @@ This will:
 // Get the bootstrap function
 var bootstrap = require('./../lib/bootstrap.js');
 
-// Return the app info
-return lando.app.info(app)
+// Initialize Lando in CLI mode
+bootstrap({mode: 'cli'})
 
-// And print out any services with urls
-.each(function(service) {
-  if (_.has(service, 'urls')) {
-    console.log(service.urls);
-  }
-});
+// Initialize CLI
+.tap(function(lando) {
+  return lando.cli.init(lando);
+})
 ```
 <a name="module_bootstrap.event_pre-bootstrap"></a>
 
