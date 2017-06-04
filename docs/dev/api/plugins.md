@@ -1,34 +1,40 @@
-## Objects
+<a name="module_plugins"></a>
 
-<dl>
-<dt><a href="#plugins">plugins</a> : <code>object</code></dt>
-<dd><p>Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things</p>
-</dd>
-</dl>
+## plugins
+Contains functions to help find and load plugins.
 
-## Functions
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the plugins from the global config and try to load them
+return lando.config.plugins
 
-<dl>
-<dt><a href="#load">load()</a></dt>
-<dd><p>Load module and inject lando api into module.</p>
-</dd>
-</dl>
+// Load each plugin
+.map(function(plugin) {
+  return lando.plugins.load(plugin);
+});
+```
+<a name="module_plugins.load"></a>
 
-<a name="plugins"></a>
+### plugins.load(plugin, [dirs]) ⇒ <code>Promise</code>
+Loads a plugin.
 
-## plugins : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+See below for the default directories that are scanned. For each directory
+scanned plugins can live in either the `plugins` or `node_modules`
+subdirectories
 
-**Kind**: global namespace  
-<a name="load"></a>
+**Kind**: static method of [<code>plugins</code>](#module_plugins)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Since**: 3.0.0  
 
-## load()
-Load module and inject lando api into module.
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| plugin | <code>String</code> |  | The name of the plugin |
+| [dirs] | <code>Array</code> | <code>[config.srcRoot, config.sysConfRoot, config.userConfRoot]</code> | Additional directories to scan for the plugin. |
 
-**Kind**: global function  
+**Example**  
+```js
+// Load the plugin called 'shield-generator' and addition scan `/tmp` for
+// for the plugin
+return lando.plugins.load('shield-generator', ['/tmp']);
+```
