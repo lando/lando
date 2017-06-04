@@ -80,7 +80,6 @@
   * [error](dev/api/error.md)
   * [events](dev/api/events.md)
   * [log](dev/api/log.md)
-  * [metrics](dev/api/metrics.md)
   * [networks](dev/api/networks.md)
   * [node](dev/api/node.md)
   * [plugins](dev/api/plugins.md)

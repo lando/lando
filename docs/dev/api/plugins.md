@@ -34,7 +34,6 @@ subdirectories
 
 **Example**  
 ```js
-// Load the plugin called 'shield-generator' and addition scan `/tmp` for
-// for the plugin
+// Load the plugin called 'shield-generator' and additionally scan `/tmp` for the plugin
 return lando.plugins.load('shield-generator', ['/tmp']);
 ```

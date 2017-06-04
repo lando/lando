@@ -1,9 +1,14 @@
-<a name="events"></a>
+<a name="module_events"></a>
 
-## events : <code>object</code>
+## events
 Things Things Things Things Things Things Things Things Things Things
 Things Things Things Things Things Things
 Things Things Things Things Things Things Things Things
 Things Things Things Things Things Things
 
-**Kind**: global namespace  
+<a name="exp_module_events--module.exports"></a>
+
+### module.exports ⏏
+Export constructor.
+
+**Kind**: Exported member  

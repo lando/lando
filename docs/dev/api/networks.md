@@ -1,34 +1,54 @@
-## Objects
+<a name="module_networks"></a>
 
-<dl>
-<dt><a href="#networks">networks</a> : <code>object</code></dt>
-<dd><p>Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things</p>
-</dd>
-</dl>
+## networks
+Contains ways to interact with docker networks.
 
-## Functions
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the networks
+return lando.networks.get()
 
-<dl>
-<dt><a href="#get">get()</a></dt>
-<dd><p>Query docker for a list of network.</p>
-</dd>
-</dl>
+// Print the networks
+.then(function(networks) {
+  console.log(networks);
+});
+```
+<a name="module_networks.get"></a>
 
-<a name="networks"></a>
+### networks.get([opts]) ⇒ <code>Promise</code>
+Gets the docker networks.
 
-## networks : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+**Kind**: static method of [<code>networks</code>](#module_networks)  
+**Returns**: <code>Promise</code> - A Promise with an array of network objects.  
+**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.  
+**Since**: 3.0.0  
 
-**Kind**: global namespace  
-<a name="get"></a>
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Options to pass into the docker networks call |
+| [opts.filters] | <code>Object</code> | Filters options |
 
-## get()
-Query docker for a list of network.
+**Example**  
+```js
+// Options to filter the networks
+ var opts = {
+   filters: {
+     driver: {bridge: true},
+     name: {_default: true}
+   }
+ };
 
-**Kind**: global function  
+ // Get the networks
+ return lando.networks.get(opts)
+
+ // Filter out lando_default
+ .filter(function(network) {
+   return network.Name !== 'lando_default';
+ })
+
+ // Map to list of network names
+ .map(function(network) {
+   return network.Name;
+ });
+```
