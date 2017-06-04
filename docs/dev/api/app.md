@@ -6,16 +6,26 @@ Contains methods and events related to app actions.
 **Since**: 3.0.0  
 **Example**  
 ```js
-// Get the lando object
-var lando = require('lando')(config);
-
 // Start an app
-return lando.app.start(app)
+return lando.app.start(app);
 
-// and then print a success message
-.then(function() {
-  console.log('App started!');
- });
+// Stop an app
+return lando.app.stop(app);
+
+// Destroy an app
+return lando.app.destroy(app);
+
+// Get the app called myapp
+return lando.app.get('myapp')
+.then(function(app) {
+  console.log(app);
+});
+
+// Get a list of all the apps
+return lando.app.list()
+.then(function(apps) {
+  console.log(apps);
+});
 ```
 
 * [app](#module_app)

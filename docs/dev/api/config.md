@@ -1,9 +1,11 @@
-<a name="config"></a>
+<a name="module_config"></a>
 
-## config : <code>object</code>
-Things Things Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
-Things Things Things Things Things Things Things Things
-Things Things Things Things Things Things
+## config
+Generates and returns the global config object
 
-**Kind**: global namespace  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the config
+var config = lando.config;
+```
