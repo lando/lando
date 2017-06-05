@@ -1,7 +1,7 @@
 # solr server example
 name: solr
 
-# Give me http://solr.lndo.site and https://solr.lndo.site
+# Give me http://solr.lndo.site
 proxy:
   appserver:
     - port: 80/tcp
@@ -10,14 +10,16 @@ proxy:
 # Spin up services to run a basic node server with solr backend
 services:
 
-  # Create a node instance
+  # Create a node server
   appserver:
+    type: node:6.10
+    command: npm start
+
+  # Also created a node for CLI purposes
+  node:
     type: node:6.10
     globals:
       gulp-cli: "latest"
-    command: node /app/app.js
-    extras:
-      - "cd /app & npm install"
 
   # Spin up a solr container called "index"
   # NOTE: "index" is arbitrary, you could just as well call this "tswift" or "covfefe"
@@ -47,8 +49,8 @@ services:
 # Add some nice command routing
 tooling:
   npm:
-    service: appserver
+    service: node
   gulp:
-    service: appserver
+    service: node
   node:
-    service: appserver
+    service: node

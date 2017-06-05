@@ -64,6 +64,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         PATH: path.join(':')
       },
+      'working_dir': config.mount,
       ports: ['80'],
       expose: ['80'],
       volumes: [
@@ -81,6 +82,12 @@ module.exports = function(lando) {
       // Add in an add cert task
       node.volumes = addScript('add-cert.sh', node.volumes);
 
+    }
+
+    // If we have not specified a command we should assume this service was intended
+    // to be run for CLI purposes
+    if (!_.has(config, 'command')) {
+      node.ports = [];
     }
 
     // Add our npm things to build extra

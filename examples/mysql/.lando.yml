@@ -4,7 +4,6 @@ name: mysql
 # Share the www directory in my app into the webroot of the appserver container
 sharing:
   appserver:
-    local: www
     remote: /usr/share/nginx/html
 
 # Give me http://mysql.lndo.site and https://mysql.lndo.site
@@ -23,6 +22,7 @@ services:
   appserver:
     type: nginx
     ssl: true
+    webroot: www
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"

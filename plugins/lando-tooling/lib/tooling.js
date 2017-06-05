@@ -67,7 +67,7 @@ module.exports = function(lando) {
         var dir = _.difference(cwd, appRoot);
 
         // Add our in-container app root
-        dir.unshift('/app');
+        dir.unshift('"$LANDO_MOUNT"');
 
         // Build out our options
         var options = {

@@ -4,7 +4,6 @@ name: trivial-tooling
 # Some basic sharing
 sharing:
   appserver:
-    local: www
     remote: /var/www/html
 
 # Proxy the basics
@@ -18,9 +17,10 @@ services:
   appserver:
     type: php:7.1
     via: nginx
+    webroot: www
     # Run composer install after we start our app
     extras:
-      - "cd /app && composer install"
+      - "cd $LANDO_MOUNT && composer install"
   database:
     type: mariadb
     portforward: true

@@ -45,19 +45,35 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       server: '/usr/local/apache2/conf/httpd.conf',
-      webroot: '/usr/local/apache2/htdocs'
+      webroot: config.mount
     };
+
+    // Add the webroot if its there
+    if (_.has(config, 'webroot')) {
+      configFiles.webroot = configFiles.webroot + '/' + config.webroot;
+    }
 
     // Default apache service
     var apache = {
       image: 'httpd:' + config.version,
       ports: ['80'],
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
+        LANDO_WEBROOT: configFiles.webroot,
+        LANDO_WEBROOT_USER: 'www-data',
+        LANDO_WEBROOT_GROUP: 'www-data'
       },
-      volumes: ['data:' + configFiles.webroot],
+      volumes: [],
       command: 'httpd-foreground'
     };
+
+    // Set the default HTTPD conf file
+    var httpConf = ['apache', 'httpd.conf'];
+    var confVol = buildVolume(httpConf, configFiles.server, defaultConfDir);
+    apache.volumes = addConfig(confVol, apache.volumes);
+
+    // Add in the chown script
+    apache.volumes = addScript('webroot-chown.sh', apache.volumes);
 
     // Handle ssl option
     if (config.ssl) {

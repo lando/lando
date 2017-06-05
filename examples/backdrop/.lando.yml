@@ -1,7 +1,6 @@
 name: backdrop
 sharing:
   appserver:
-    local: www
     remote: /var/www/html
 proxy:
   nginx:
@@ -14,6 +13,7 @@ services:
   appserver:
     type: php:7.0
     via: nginx
+    webroot: www
     ssl: true
     config:
       server: config/nginx/backdrop.conf
@@ -31,3 +31,15 @@ services:
       database: backdrop
     config:
       confd: config/mysql
+tooling:
+  composer:
+    service: appserver
+    description: Run composer commands
+    cmd:
+      - composer
+      - --ansi
+  php:
+    service: appserver
+  mysql:
+    service: database
+    description: Drop into a MySQL shell

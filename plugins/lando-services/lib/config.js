@@ -22,10 +22,21 @@ module.exports = function(lando) {
         // Add the appname to the service info
         service.app = app.config.name;
 
+        // Add the app root bind directory
+        service.mount = app.mount;
+
         // If we have sharing config let's also add that
         // @todo: this is weird since it crosses the plugin barrier
         if (lando.config.sharing === 'ON' && !_.isEmpty(app.config.sharing)) {
+
+          // Let the service know about the sharing arrangement
           service.sharing = app.config.sharing;
+
+          // Update the service mount if we can
+          if (_.has(service.sharing[name], 'remote')) {
+            service.mount = service.sharing[name].remote;
+          }
+
         }
 
         // Get our new containers

@@ -1,7 +1,6 @@
 name: drupal7
 sharing:
   appserver:
-    local: www
     remote: /var/www/html
 proxy:
   nginx:
@@ -12,12 +11,15 @@ proxy:
       secure: true
 services:
   appserver:
-    type: php:7.0
+    type: php:5.6
+    webroot: www
     via: nginx
     ssl: true
     config:
       server: config/nginx/drupal.conf
       conf: config/php/php.ini
+    composer:
+      drush/drush: "~8"
   database:
     type: mariadb
     portforward: 3310
@@ -27,3 +29,27 @@ services:
       database: drupal
     config:
       confd: config/mysql
+  node:
+    type: node:6.10
+    globals:
+      grunt-cli: "latest"
+tooling:
+  drush:
+    service: appserver
+  composer:
+    service: appserver
+    description: Run composer commands
+    cmd:
+      - composer
+      - --ansi
+  php:
+    service: appserver
+  mysql:
+    service: database
+    description: Drop into a MySQL shell
+  node:
+    service: node
+  npm:
+    service: node
+  grunt:
+    service: node

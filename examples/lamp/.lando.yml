@@ -1,10 +1,9 @@
 # LAMP stack example
 name: lamp
 
-# Share my app's www directory into apache's webroot
+# Share my app into apache's webroot
 sharing:
   appserver:
-    local: www
     remote: /var/www/html
 
 # Give me http://lamp.lndo.site and https://lamp.lndo.site
@@ -32,6 +31,9 @@ services:
     # Optionally serve php over https
     ssl: true
 
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    webroot: www
+
     # Optionally customize the configuration for php and its underlying webserver
     # These paths are both relative to the app root directory
     # config:
@@ -45,8 +47,12 @@ services:
     # These follow the normal composer.json form
     # Note that many composer dependencies should not be installed globally but
     # on a per-project basis
-    composer:
-      drush/drush: "~8"
+    # composer:
+    #   drush/drush: "~8"
+
+    # Optionally run the following commands after the service is started
+    # extras:
+    #  - "cd $$LANDO_MOUNT && composer install"
 
   # My database service
   database:
@@ -67,7 +73,6 @@ tooling:
       - --ansi
   php:
     service: appserver
-    user: www-data
   mysql:
     service: database
     description: Drop into a MySQL shell
