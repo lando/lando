@@ -50,24 +50,19 @@ module.exports = function(lando) {
     var typeConfig = {
       nginx: {
         web: 'nginx',
-        webroot: config.mount,
+        mount: config.mount,
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.conf'
+        serverConf: '/etc/nginx/conf.d/default.template'
       },
       apache: {
         web: 'apache',
-        webroot: config.mount,
+        mount: config.mount,
         command: ['apache2-foreground'],
         image: [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-available/000-default.conf',
       }
     };
-
-    // Add the webroot if its there
-    if (_.has(config, 'webroot')) {
-      typeConfig[via].webroot = typeConfig[via].webroot + '/' + config.webroot;
-    }
 
     // Add the docker php entrypoint if we are on a supported php version
     if (version.split('.').join('') > 55) {
@@ -95,6 +90,14 @@ module.exports = function(lando) {
       '/root/.composer/vendor/bin'
     ];
 
+    // Build the webroot
+    var webroot = config.mount;
+
+    // Add the webroot if its there
+    if (_.has(config, 'webroot')) {
+      webroot = webroot + '/' + config.webroot;
+    }
+
     // Start with the php base
     var php = {
       image: 'kalabox/php:' + config.image,
@@ -102,7 +105,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
         PATH: path.join(':'),
-        LANDO_WEBROOT: config.webroot,
+        LANDO_WEBROOT: webroot,
         LANDO_WEBROOT_USER: 'www-data',
         LANDO_WEBROOT_GROUP: 'www-data'
       },
@@ -182,14 +185,8 @@ module.exports = function(lando) {
     var name = config.name;
     var nginx = lando.services.build(name, type, config).services[name];
 
-    // On darwin or if sharing is off we can just share the volume since we do
-    // not have potential volume transitivity via sharing
-    if (process.platform === 'darwin' || lando.config.sharing !== 'ON') {
-      nginx.volumes.push([name, config.mount].join(':'));
-    }
-
-    // on Linux and Windoze we need to make sure we also add sharing to nginx if applicable
-    else if (!_.isEmpty(config.sharing[name])) {
+    // Add sharing config to nginx
+    if (config.sharing && !_.isEmpty(config.sharing[name])) {
       config.sharing.nginx = config.sharing[name];
     }
 

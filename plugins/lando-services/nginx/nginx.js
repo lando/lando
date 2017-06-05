@@ -75,7 +75,7 @@ module.exports = function(lando) {
       ],
       command: [
         '/bin/sh -c',
-        '"envsubst',
+        '"envsubst \'$$LANDO_WEBROOT\'',
         '</etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf',
         '&&',
         'nginx -g \'daemon off;\'"'

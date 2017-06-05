@@ -1,7 +1,7 @@
 # LAMP stack example
 name: lamp
 
-# Share my app's www directory into apache's webroot
+# Share my app into apache's webroot
 sharing:
   appserver:
     remote: /var/www/html
@@ -49,6 +49,10 @@ services:
     # on a per-project basis
     # composer:
     #   drush/drush: "~8"
+
+    # Optionally run the following commands after the service is started
+    # extras:
+    #  - "cd $$LANDO_MOUNT && composer install"
 
   # My database service
   database:

@@ -1,8 +1,12 @@
+# LAMP stack example
 name: lemp
+
+# Share my app into php-fpm's webroot
 sharing:
   appserver:
-    local: www
     remote: /var/www/html
+
+# Give me http://lemp.lndo.site and https://lemp.lndo.site
 proxy:
   nginx:
     - port: 80/tcp
@@ -10,15 +14,68 @@ proxy:
     - port: 443/tcp
       default: true
       secure: true
+
+# Spin up services to run a basic LEMP stack
 services:
+
+  # Create a php 7.1 instance served by the latest nginx with https turned on and
+  # served from the www subdirectory
   appserver:
+
+    # PHP version .1
     type: php:7.1
+
+    # Served by the latest nginx
     via: nginx
+
+    # Optionally serve php over https
     ssl: true
+
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    webroot: www
+
+    # Optionally customize the configuration for php and its underlying webserver
+    # These paths are both relative to the app root directory
+    config:
+
+      # Use a custom nginx config file
+      server: config/nginx/default.conf
+
+      # Use a custom php.ini
+      conf: config/php/php.ini
+
+    # Optionally install the following composer dependencies globally
+    # These follow the normal composer.json form
+    # Note that many composer dependencies should not be installed globally but
+    # on a per-project basis
     composer:
-      drush/drush: "~8"
+      overtrue/phplint: '*'
+
+    # Optionally run the following commands after the service is started
+    # Runs composer install but dont fail on an error
     extras:
-      - echo "test extras"
+      - "cd $LANDO_MOUNT && composer install || true"
+
+  # Add in the latest mariadb
   database:
     type: mariadb
-    portforward: true
+    portforward: 3332
+    config:
+      confd: config/mysql
+
+
+# Add some nice command routing
+tooling:
+  phplint:
+    service: appserver
+  composer:
+    service: appserver
+    description: Run composer commands
+    cmd:
+      - composer
+      - --ansi
+  php:
+    service: appserver
+  mysql:
+    service: database
+    description: Drop into a MySQL shell
