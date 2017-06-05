@@ -32,10 +32,10 @@ return lando.engine.destroy(data);
     * [.exists(data)](#module_engine.exists) ⇒ <code>Promise</code>
     * [.inspect(data)](#module_engine.inspect) ⇒ <code>Promise</code>
     * [.start(data)](#module_engine.start) ⇒ <code>Promise</code>
-    * [.run()](#module_engine.run)
-    * [.stop()](#module_engine.stop)
-    * [.destroy()](#module_engine.destroy)
-    * [.build()](#module_engine.build)
+    * [.run(data)](#module_engine.run) ⇒ <code>Promise</code>
+    * [.stop(data)](#module_engine.stop) ⇒ <code>Promise</code>
+    * [.destroy(data)](#module_engine.destroy) ⇒ <code>Promise</code>
+    * [.build(data)](#module_engine.build) ⇒ <code>Promise</code>
     * ["event:pre-engine-up"](#module_engine.event_pre-engine-up)
     * ["event:post-engine-up"](#module_engine.event_post-engine-up)
     * ["event:pre-engine-down"](#module_engine.event_pre-engine-down)
@@ -268,18 +268,21 @@ return lando.engine.inspect(compose);
 <a name="module_engine.start"></a>
 
 ### engine.start(data) ⇒ <code>Promise</code>
-Starts the containers for an app.
+Starts the containers/services for the specified `compose` object.
+
+**NOTE:** Generally an instantiated `app` object is a valid `compose` object
 
 **Kind**: static method of [<code>engine</code>](#module_engine)  
 **Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-engine-start</code>, <code>event:post-engine-start</code>  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| data | <code>Object</code> |  | An `app` Object or an Array of `app` Objects if you want to start more than one app. |
+| data | <code>Object</code> |  | A `compose` Object or an Array of `compose` Objects if you want to start more than one set of services. |
 | data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
 | data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
-| [data.opts] | <code>Object</code> |  | Options on how to start the app's containers. |
+| [data.opts] | <code>Object</code> |  | Options on how to start the `compose` Objects containers. |
 | [data.opts.services] | <code>Array</code> | <code>&#x27;all services&#x27;</code> | The services to start. |
 | [data.opts.background] | <code>Boolean</code> | <code>true</code> | Start the services in the background. |
 | [data.opts.recreate] | <code>Boolean</code> | <code>false</code> | Recreate the services. |
@@ -300,83 +303,172 @@ return lando.engine.start(app);
 ```
 <a name="module_engine.run"></a>
 
-### engine.run()
-Lists all the Lando apps
+### engine.run(data) ⇒ <code>Promise</code>
+Runs a command on a given service/container. This is a wrapper around `docker exec`.
 
 **Kind**: static method of [<code>engine</code>](#module_engine)  
+**Returns**: <code>Promise</code> - A Promise with a string containing the command's output.  
+**Emits**: <code>event:pre-engine-run</code>, <code>event:post-engine-run</code>  
 **Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| data | <code>Object</code> |  | A run Object or an Array of run Objects if you want to run more tha one command. |
+| data.id | <code>String</code> |  | The container to run the command on. Must be an id that docker can recognize such as a container hash or name. |
+| data.cmd | <code>String</code> |  | A String of a command or an Array whose elements are the parts of the command. |
+| [data.opts] | <code>Object</code> |  | Options on how to run the command. |
+| [data.opts.mode] | <code>String</code> | <code>&#x27;collect&#x27;</code> | Either `collect` or `attach`. Attach will connect to the run `stdin`. |
+| [data.opts.pre] | <code>String</code> |  | A String or Array of additional arguments or options to append to the `cmd` before the user specified args and options are added. |
+| [data.opts.attachStdin] | <code>Boolean</code> | <code>false</code> | Attach to the run's `stdin`. Helpful if you think there will be interactive options or prompts. |
+| [data.opts.attachStdout] | <code>Boolean</code> | <code>true</code> | Attach to the run's `stdout`. Helpful to determine what the command is doing. |
+| [data.opts.attachStderr] | <code>Boolean</code> | <code>true</code> | Attach to the run's `stderr`. Helpful to determine any errors. |
+| [data.opts.env] | <code>Array</code> | <code>[]</code> | Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`. |
+| [data.opts.detachKeys] | <code>String</code> | <code>&#x27;ctrl-p,ctrl-q&#x27;</code> | Keystrokes that will detach the process. |
+| [data.opts.tty] | <code>Boolean</code> | <code>true</code> | Allocate a pseudo `tty`. |
+| [data.opts.user] | <code>String</code> | <code>&#x27;root&#x27;</code> | The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`. |
+
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
+// Run composer install on the appserver container for an app called myapp
+return lando.engine.run({id: 'myapp_appserver_1', cmd: ['composer', 'install']});
 
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
+// Drop into an interactive bash shell on the database continer for an app called myapp
+var bashRun = {
+  id: 'myapp_database_1',
+  cmd: ['bash'],
+  opts: {
+    mode: 'attach'
+  }
+};
+
+return lando.engine.run(bashRun);
 ```
 <a name="module_engine.stop"></a>
 
-### engine.stop()
-Lists all the Lando apps
+### engine.stop(data) ⇒ <code>Promise</code>
+Stops containers for a `compose` object or a particular container.
+
+There are two ways to stop containers:
+
+ 1. Using an object with `{id: id}` where `id` is a docker recognizable id
+ 2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
+
+These are detailed more below.
+
+**NOTE:** Generally an instantiated `app` object is a valid `compose` object
 
 **Kind**: static method of [<code>engine</code>](#module_engine)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-engine-stop</code>, <code>event:post-engine-stop</code>  
 **Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| data | <code>Object</code> |  | Stop criteria, Need eithers an ID or a service within a compose context |
+| data.id | <code>String</code> |  | An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`. |
+| data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
+| data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
+| [data.opts] | <code>Object</code> |  | Options on what services to setop |
+| [data.opts.services] | <code>Array</code> | <code>&#x27;all services&#x27;</code> | An Array of services to stop. |
+
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
+// Stop a specific container by id
+return lando.engine.stop({name: 'myapp_service_1'})
+.then(function() {
+  lando.log.info('Container has stopped.');
 });
+
+// Assume we have an `app` object called `app` already.
+
+// Stop all the containers for a particular app.
+return lando.engine.stop(app);
+
+// Stop a certain subset of an app's services.
+app.opts = {
+  services: ['index', 'appserver', 'db', 'db2']
+};
+return lando.engine.stop(app);
 ```
 <a name="module_engine.destroy"></a>
 
-### engine.destroy()
-Lists all the Lando apps
+### engine.destroy(data) ⇒ <code>Promise</code>
+Removes containers for a `compose` object or a particular container.
+
+There are two ways to remove containers:
+
+ 1. Using an object with `{id: id}` where `id` is a docker recognizable id
+ 2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
+
+These are detailed more below.
+
+**NOTE:** Generally an instantiated `app` object is a valid `compose` object
 
 **Kind**: static method of [<code>engine</code>](#module_engine)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-engine-destroy</code>, <code>event:post-engine-destroy</code>  
 **Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| data | <code>Object</code> |  | Remove criteria, Need eithers an ID or a service within a compose context |
+| data.id | <code>String</code> |  | An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`. |
+| data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
+| data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
+| [data.opts] | <code>Object</code> |  | Options on what services to remove. |
+| [data.opts.services] | <code>Array</code> | <code>&#x27;all services&#x27;</code> | An Array of services to remove. |
+| [data.opts.volumes] | <code>Boolean</code> | <code>true</code> | Also remove volumes associated with the container(s). |
+| [data.opts.force] | <code>Boolean</code> | <code>false</code> | Force remove the containers. |
+| [data.opts.purge] | <code>Boolean</code> | <code>false</code> | Implies `volumes` and `force`. |
+
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
+// Remove a specific container by id
+return lando.engine.destroy({name: 'myapp_service_1'})
+.then(function() {
+  lando.log.info('Container has been destroyed.');
 });
+
+// Assume we have an `app` object called `app` already.
+
+// Destroy all the containers for a particular app.
+return lando.engine.destroy(app);
+
+// Force remove a certain subset of an app's services and their volumes
+app.opts = {
+  services: ['index', 'appserver', 'db', 'db2'],
+  v: true,
+  force: true
+};
+return lando.engine.destroy(app);
 ```
 <a name="module_engine.build"></a>
 
-### engine.build()
-Lists all the Lando apps
+### engine.build(data) ⇒ <code>Promise</code>
+Tries to pull the services for a `compose` object, and then tries to build them if they are found
+locally. This is a wrapper around `docker pull` and `docker build`.
+
+**NOTE:** Generally an instantiated `app` object is a valid `compose` object
 
 **Kind**: static method of [<code>engine</code>](#module_engine)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-engine-build</code>, <code>event:post-engine-build</code>  
 **Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| data | <code>Object</code> |  | A `compose` Object or an Array of `compose` Objects if you want to build more than one set of services. |
+| data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
+| data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
+| [data.opts] | <code>Object</code> |  | Options on how to build the `compose` objects containers. |
+| [data.opts.services] | <code>Array</code> | <code>&#x27;all services&#x27;</code> | The services to build. |
+| [data.opts.nocache] | <code>Boolean</code> | <code>true</code> | Ignore the build cache. |
+| [data.opts.pull] | <code>Boolean</code> | <code>true</code> | Try to pull first. |
+
 **Example**  
 ```js
-// List all the apps
-return lando.app.list()
-
-// Map each app to a summary and print results
-.map(function(app) {
- return appSummary(app)
-  .then(function(summary) {
-   console.log(JSON.stringify(summary, null, 2));
- });
-});
+// Build the containers for an `app` object
+return lando.engine.build(app);
 ```
 <a name="module_engine.event_pre-engine-up"></a>
 
@@ -413,7 +505,7 @@ up.
 <a name="module_engine.event_pre-engine-start"></a>
 
 ### "event:pre-engine-start"
-Event that allows you to do some things before an app's containers are
+Event that allows you to do some things before a `compose` Objects containers are
 started
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
@@ -421,7 +513,7 @@ started
 <a name="module_engine.event_post-engine-start"></a>
 
 ### "event:post-engine-start"
-Event that allows you to do some things before an app's containers are
+Event that allows you to do some things after a `compose` Objects containers are
 started
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
@@ -429,232 +521,60 @@ started
 <a name="module_engine.event_pre-engine-run"></a>
 
 ### "event:pre-engine-run"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things before a command is run on a particular
+container.
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_post-engine-run"></a>
 
 ### "event:post-engine-run"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things after a command is run on a particular
+container.
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_pre-engine-stop"></a>
 
 ### "event:pre-engine-stop"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things before some containers are stopped.
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_post-engine-stop"></a>
 
 ### "event:post-engine-stop"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things after some containers are stopped.
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_pre-engine-destroy"></a>
 
 ### "event:pre-engine-destroy"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things before some containers are destroyed.
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_post-engine-destroy"></a>
 
 ### "event:post-engine-destroy"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things after some containers are destroyed.
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_pre-engine-build"></a>
 
 ### "event:pre-engine-build"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things before a `compose` Objects containers are
+started
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
 <a name="module_engine.event_post-engine-build"></a>
 
 ### "event:post-engine-build"
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
+Event that allows you to do some things before a `compose` Objects containers are
+started
 
 **Kind**: event emitted by [<code>engine</code>](#module_engine)  
 **Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
-
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
