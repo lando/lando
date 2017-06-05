@@ -83,6 +83,12 @@ module.exports = function(lando) {
 
     }
 
+    // If we have not specified a command we should assume this service was intended
+    // to be run for CLI purposes
+    if (!_.has(config, 'command')) {
+      node.ports = [];
+    }
+
     // Add our npm things to build extra
     if (!_.isEmpty(config.globals)) {
       _.forEach(config.globals, function(version, pkg) {

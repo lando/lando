@@ -63,6 +63,9 @@ services:
     config:
       confd: config/mysql
 
+  # Add latest node for cli tools
+  node:
+    type: node:6.10
 
 # Add some nice command routing
 tooling:
@@ -79,3 +82,7 @@ tooling:
   mysql:
     service: database
     description: Drop into a MySQL shell
+  npm:
+    service: node
+  node:
+    service: node
