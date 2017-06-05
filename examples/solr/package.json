@@ -1,10 +1,11 @@
 {
-  "name": "node",
+  "name": "solr",
   "version": "1.0.0",
-  "description": "Node example for Lando",
+  "description": "Node solr example for Lando",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm install && node app.js"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,6 @@
 name: trivial-services
 sharing:
   appserver:
-    local: www
     remote: /usr/share/nginx/html
 proxy:
   nginx:
@@ -14,6 +13,7 @@ services:
   appserver:
     type: nginx:stable
     ssl: true
+    webroot: www
     config:
       server: config/server.conf
     overrides:

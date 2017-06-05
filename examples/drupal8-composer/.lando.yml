@@ -1,7 +1,6 @@
 name: drupal8-composer
 sharing:
   appserver:
-    local: .
     remote: /var/www/html
 proxy:
   nginx:
@@ -15,11 +14,13 @@ services:
     type: php:7.0
     via: nginx
     ssl: true
+    webroot: web
     config:
       server: config/nginx/drupal.conf
       conf: config/php/php.ini
     extras:
-      - "cd /var/www/html && composer install"
+      - "cd $LANDO_MOUNT && composer install"
+      - "cd $LANDO_MOUNT && composer drupal-scaffold"
   database:
     type: mariadb
     portforward: 3310
@@ -34,6 +35,10 @@ services:
     core: drupal
     config:
       conf: config/solr
+  node:
+    type: node:6.10
+    globals:
+      grunt-cli: "latest"
 tooling:
   composer:
     service: appserver
@@ -42,10 +47,16 @@ tooling:
     user: www-data
   drush:
     service: appserver
-    cmd:
-      - /var/www/html/vendor/bin/drush
-      - -r
-      - /var/www/html/web
+    cmd: /var/www/html/vendor/bin/drush
   drupal:
     service: appserver
     cmd: /var/www/html/vendor/bin/drupal
+  mysql:
+    service: database
+    description: Drop into a MySQL shell
+  node:
+    service: node
+  npm:
+    service: node
+  grunt:
+    service: node

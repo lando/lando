@@ -4,7 +4,6 @@ name: mariadb
 # Share the www directory in my app into the webroot of the html container
 sharing:
   html:
-    local: www
     remote: /usr/share/nginx/html
 
 # Give me http://mariadb.lndo.site and https://mariadb.lndo.site
@@ -23,6 +22,7 @@ services:
   html:
     type: nginx
     ssl: true
+    webroot: www
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"

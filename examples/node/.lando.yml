@@ -42,11 +42,15 @@ services:
     #
     # If you are just spinning up a node container to run front end dependencies
     # you can leave this blank and the container will boot up and stay on
-    command: node /app/app.js
+    #
+    # You will likely want to use npm package.json scripts here so that you can
+    # run `npm install` before your server starts up. Check out the package.json
+    # in this example.
+    command: npm start
 
     # Install our local package.json dependencies as part of a build step
     extras:
-      - "cd /app & npm install"
+      - "cd $LANDO_MOUNT & npm install"
 
 # Add some nice command routing
 tooling:

@@ -185,9 +185,9 @@ module.exports = function(lando) {
     var name = config.name;
     var nginx = lando.services.build(name, type, config).services[name];
 
-    // Add sharing config to nginx
+    // Add correct volume to nginx if sharing is on
     if (config.sharing && !_.isEmpty(config.sharing[name])) {
-      config.sharing.nginx = config.sharing[name];
+      nginx.volumes.push([name, config.mount].join(':'));
     }
 
     // Return the object

@@ -11,6 +11,40 @@ Lando provides a way to easily define nice `lando MYCOMMAND` commands so that us
 
 {% codesnippet "./../examples/trivial-tooling/.lando.yml" %}{% endcodesnippet %}
 
+You can see the extra commands by running `lando` inside your app.
+
+```bash
+lando
+
+Usage: lando.dev <command> [args] [options] [-- global options]
+
+Commands:
+  config                   Display the lando configuration
+  destroy [appname]        Destroy app in current directory or [appname]
+  info [appname]           Prints info about app in current directory or
+                           [appname]
+  list                     List all lando apps
+  poweroff                 Spin down all lando related containers
+  rebuild [appname]        Rebuilds app in current directory or [appname]
+  restart [appname]        Restarts app in current directory or [appname]
+  start [appname]          Start app in current directory or [appname]
+  stop [appname]           Stops app in current directory or [appname]
+  version                  Display the lando version
+  ssh [appname] [service]  SSH into [service] in current app directory or
+                           [appname]
+  composer                 Run composer commands
+  php                      Run php commands
+  mysql                    Drop into a MySQL shell
+
+Options:
+  --help, -h  Show help                                                [boolean]
+
+Global Options:
+  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+
+You need at least one command before moving on
+```
+
 Directory Mapping
 -----------------
 
