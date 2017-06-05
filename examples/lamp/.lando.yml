@@ -2,10 +2,9 @@
 name: lamp
 
 # Share my app's www directory into apache's webroot
-#sharing:
-#  appserver:
-#    local: www
-#    remote: /var/www/html
+sharing:
+  appserver:
+    remote: /var/www/html
 
 # Give me http://lamp.lndo.site and https://lamp.lndo.site
 proxy:
@@ -33,7 +32,7 @@ services:
     ssl: true
 
     # Optionally specify a webroot if it is a subdirectory of the appRoot
-    # webroot: www
+    webroot: www
 
     # Optionally customize the configuration for php and its underlying webserver
     # These paths are both relative to the app root directory
@@ -48,8 +47,8 @@ services:
     # These follow the normal composer.json form
     # Note that many composer dependencies should not be installed globally but
     # on a per-project basis
-    composer:
-      drush/drush: "~8"
+    # composer:
+    #   drush/drush: "~8"
 
   # My database service
   database:
@@ -70,7 +69,6 @@ tooling:
       - --ansi
   php:
     service: appserver
-    user: www-data
   mysql:
     service: database
     description: Drop into a MySQL shell

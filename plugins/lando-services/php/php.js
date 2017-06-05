@@ -50,17 +50,24 @@ module.exports = function(lando) {
     var typeConfig = {
       nginx: {
         web: 'nginx',
+        webroot: config.mount,
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.conf'
       },
       apache: {
         web: 'apache',
+        webroot: config.mount,
         command: ['apache2-foreground'],
         image: [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-available/000-default.conf',
       }
     };
+
+    // Add the webroot if its there
+    if (_.has(config, 'webroot')) {
+      typeConfig[via].webroot = typeConfig[via].webroot + '/' + config.webroot;
+    }
 
     // Add the docker php entrypoint if we are on a supported php version
     if (version.split('.').join('') > 55) {
@@ -94,7 +101,10 @@ module.exports = function(lando) {
       environment: {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
-        PATH: path.join(':')
+        PATH: path.join(':'),
+        LANDO_WEBROOT: config.webroot,
+        LANDO_WEBROOT_USER: 'www-data',
+        LANDO_WEBROOT_GROUP: 'www-data'
       },
       ports: ['80'],
       volumes: [
@@ -103,19 +113,33 @@ module.exports = function(lando) {
       command: config.command.join(' '),
     };
 
-    // If this is apache lets do some checks
-    if (config.web === 'apache' && config.ssl) {
+    // Add in the chown script
+    php.volumes = addScript('webroot-chown.sh', php.volumes);
 
-      // Add the ssl port
-      php.ports.push('443');
+    // If this is apache lets set our default config
+    if (config.web === 'apache') {
 
-      // If we don't have a custom default ssl config lets use the default one
-      var sslConf = ['php', 'httpd-ssl.conf'];
-      var sslVolume = buildVolume(sslConf, config.serverConf, defaultConfDir);
-      php.volumes = addConfig(sslVolume, php.volumes);
+      // Set the default conf file
+      var defaultConfFile = 'httpd.conf';
 
-      // Add in an add cert task
-      php.volumes = addScript('add-cert.sh', php.volumes);
+      // Add ssl specific things if we need them
+      if (config.ssl) {
+
+        // Set the correct port
+        php.ports.push('443');
+
+        // Add in the add cert script
+        php.volumes = addScript('add-cert.sh', php.volumes);
+
+        // Change the default conf file
+        defaultConfFile = 'httpd-ssl.conf';
+
+      }
+
+      // Handle our apache config
+      var configFile = ['php', defaultConfFile];
+      var mount = buildVolume(configFile, config.serverConf, defaultConfDir);
+      php.volumes = addConfig(mount, php.volumes);
 
     }
 
@@ -161,7 +185,7 @@ module.exports = function(lando) {
     // On darwin or if sharing is off we can just share the volume since we do
     // not have potential volume transitivity via sharing
     if (process.platform === 'darwin' || lando.config.sharing !== 'ON') {
-      nginx.volumes.push([name, '/var/www/html'].join(':'));
+      nginx.volumes.push([name, config.mount].join(':'));
     }
 
     // on Linux and Windoze we need to make sure we also add sharing to nginx if applicable
@@ -210,7 +234,6 @@ module.exports = function(lando) {
 
     // Define config mappings
     var configFiles = {
-      webroot: '/var/www/html',
       php: {
         conf: '/usr/local/etc/php/php.ini'
       },

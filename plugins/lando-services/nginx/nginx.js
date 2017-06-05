@@ -66,7 +66,9 @@ module.exports = function(lando) {
       ports: ['80'],
       environment: {
         TERM: 'xterm',
-        LANDO_WEBROOT: configFiles.webroot
+        LANDO_WEBROOT: configFiles.webroot,
+        LANDO_WEBROOT_USER: 'www-data',
+        LANDO_WEBROOT_GROUP: 'www-data'
       },
       volumes: [
 
@@ -79,6 +81,9 @@ module.exports = function(lando) {
         'nginx -g \'daemon off;\'"'
       ].join(' ')
     };
+
+    // Add in the chown script
+    nginx.volumes = addScript('webroot-chown.sh', nginx.volumes);
 
     // Set the default server conf file
     var serverConf = ['nginx', 'default.conf'];

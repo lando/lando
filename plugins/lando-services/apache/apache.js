@@ -59,7 +59,9 @@ module.exports = function(lando) {
       ports: ['80'],
       environment: {
         TERM: 'xterm',
-        LANDO_WEBROOT: configFiles.webroot
+        LANDO_WEBROOT: configFiles.webroot,
+        LANDO_WEBROOT_USER: 'www-data',
+        LANDO_WEBROOT_GROUP: 'www-data'
       },
       volumes: [],
       command: 'httpd-foreground'
@@ -69,6 +71,9 @@ module.exports = function(lando) {
     var httpConf = ['apache', 'httpd.conf'];
     var confVol = buildVolume(httpConf, configFiles.server, defaultConfDir);
     apache.volumes = addConfig(confVol, apache.volumes);
+
+    // Add in the chown script
+    apache.volumes = addScript('webroot-chown.sh', apache.volumes);
 
     // Handle ssl option
     if (config.ssl) {
