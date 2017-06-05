@@ -48,14 +48,14 @@ module.exports = function(lando) {
       '/bin'
     ];
 
-    // Arrayify the command if needed
-    if (!_.isArray(config.command)) {
-      config.command = [config.command];
-    }
-
     // Build the basic config
     var version = config.version || '6.10';
     var command = config.command || ['tail', '-f', '/dev/null'];
+
+    // Arrayify the command if needed
+    if (!_.isArray(command)) {
+      command = [command];
+    }
 
     // Start with the node base
     var node = {

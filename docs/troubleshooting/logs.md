@@ -15,10 +15,12 @@ If you have a failed installation, you should be able to find logs in the follow
 Runtime Logs
 ------------
 
-If you encounter an error during runtime, check out the runtime log at...
+If you encounter an error during runtime, check out the runtime logs at...
 
   * **macOS/LINUX** - `~/.lando/logs`
-  * **Windows** - `C:\Users\{ME}\.lando\logs\kalabox.log`
+  * **Windows** - `C:\Users\{ME}\.lando\logs`
+
+There should be an `error.log` and a more robust `lando.log`.
 
 > #### Hint::Pro Tip: Use verbose mode
 >
