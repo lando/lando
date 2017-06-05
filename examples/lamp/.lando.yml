@@ -2,10 +2,10 @@
 name: lamp
 
 # Share my app's www directory into apache's webroot
-sharing:
-  appserver:
-    local: www
-    remote: /var/www/html
+#sharing:
+#  appserver:
+#    local: www
+#    remote: /var/www/html
 
 # Give me http://lamp.lndo.site and https://lamp.lndo.site
 proxy:
@@ -31,6 +31,9 @@ services:
 
     # Optionally serve php over https
     ssl: true
+
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    # webroot: www
 
     # Optionally customize the configuration for php and its underlying webserver
     # These paths are both relative to the app root directory

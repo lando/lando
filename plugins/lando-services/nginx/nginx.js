@@ -51,20 +51,39 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       http: '/etc/nginx/nginx.conf',
-      server: '/etc/nginx/conf.d/default.conf',
-      webroot: '/usr/share/nginx/html'
+      server: '/etc/nginx/conf.d/default.template',
+      webroot: config.mount
     };
+
+    // Add the webroot if its there
+    if (_.has(config, 'webroot')) {
+      configFiles.webroot = configFiles.webroot + '/' + config.webroot;
+    }
 
     // Default nginx service
     var nginx = {
       image: 'nginx:' + config.version,
       ports: ['80'],
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
+        LANDO_WEBROOT: configFiles.webroot
       },
-      volumes: ['data:' + configFiles.webroot],
-      command: 'nginx -g "daemon off;"'
+      volumes: [
+
+      ],
+      command: [
+        '/bin/sh -c',
+        '"envsubst',
+        '</etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf',
+        '&&',
+        'nginx -g \'daemon off;\'"'
+      ].join(' ')
     };
+
+    // Set the default server conf file
+    var serverConf = ['nginx', 'default.conf'];
+    var confVol = buildVolume(serverConf, configFiles.server, defaultConfDir);
+    nginx.volumes = addConfig(confVol, nginx.volumes);
 
     // Handle ssl option
     if (config.ssl) {

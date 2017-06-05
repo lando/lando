@@ -38,6 +38,7 @@ module.exports = function(lando) {
     app.env.LANDO_HOST_OS = lando.config.os.platform;
     app.env.LANDO_HOST_UID = lando.config.engineId;
     app.env.LANDO_HOST_GID = lando.config.engineGid;
+    app.env.LANDO_APP_ROOT = app.rootBind;
 
     // Add in some global labels
     app.labels = {'io.lando.container': 'TRUE'};

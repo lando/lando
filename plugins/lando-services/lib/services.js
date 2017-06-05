@@ -245,6 +245,7 @@ module.exports = function(lando) {
     var env = services[name].environment || {};
     env.LANDO_SERVICE_NAME = name;
     env.LANDO_SERVICE_TYPE = service;
+    env.LANDO_MOUNT = config.mount;
     services[name].environment = env;
 
     // Add in some helpful volumes

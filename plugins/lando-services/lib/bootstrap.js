@@ -1,5 +1,5 @@
 /**
- * This adds sharing settings to our config
+ * This adds service settings to our config
  *
  * @name bootstrap
  */

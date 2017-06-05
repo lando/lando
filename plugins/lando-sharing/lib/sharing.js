@@ -34,7 +34,7 @@ module.exports = function(lando) {
     /*
      * Get a list of unison options based on the platform
      */
-    var getUnisonOptions = function(local) {
+    var getUnisonOptions = function() {
 
       // Start with our basic options
       var opts = [
@@ -43,7 +43,7 @@ module.exports = function(lando) {
         '-retry',
         '5',
         '-prefer',
-        '/kalashare/' + local
+        '/kalashare'
       ];
 
       // Return our list
@@ -60,8 +60,8 @@ module.exports = function(lando) {
         restart: 'on-failure',
         environment: {
           'UNISON_WEBROOT': share.remote,
-          'UNISON_CODEROOT': '/kalashare/' + share.local,
-          'UNISON_OPTIONS': getUnisonOptions(share.local),
+          'UNISON_CODEROOT': '/kalashare',
+          'UNISON_OPTIONS': getUnisonOptions(),
           'UNISON_UID': share.uid,
           'UNISON_USER': share.user,
           'UNISON_GID': share.gid,
@@ -118,7 +118,7 @@ module.exports = function(lando) {
       // Add the volume directly
       services[service] = {
         volumes: [
-          '$LANDO_APP_ROOT_BIND/' + share.local + ':' + share.remote
+          '$LANDO_APP_ROOT_BIND:' + share.remote
         ]
       };
 
@@ -173,7 +173,7 @@ module.exports = function(lando) {
 
         // Make sure local webroots exist and our volumes TL is set
         _.forEach(shares, function(share, name) {
-          fs.mkdirpSync(path.join(app.root, share.local));
+          fs.mkdirpSync(path.join(app.root, '.'));
           app.volumes[name] = {};
         });
 
@@ -200,7 +200,7 @@ module.exports = function(lando) {
           // Log
           lando.log.verbose(
             'Sharing from %s to %s on %s for %s',
-            share.local, share.remote, name, app.name
+            app.root, share.remote, name, app.name
           );
 
         });

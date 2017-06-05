@@ -4,8 +4,7 @@ name: apache
 # Share the root directory of my app into apache's webroot
 sharing:
   html:
-    local: .
-    remote: /usr/local/apache2/htdocs/
+    remote: /usr/local/apache2/htdocs
 
 # Give me http://apache.lndo.site and https://apache.lndo.site
 proxy:
@@ -27,6 +26,9 @@ services:
 
     # Set this to true if you want to configure apache to also run over https
     ssl: true
+
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    webroot: web
 
     # Optionally use a custom apache conf file
     # This should live in your app root and is relative to it
