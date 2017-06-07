@@ -1,7 +1,7 @@
-redis
+Redis
 =====
 
-[Memcached](https://mariadb.org/) is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+[Redis](https://redis.io/) is an open source, in-memory and typed data structure store, used as a database, cache and message broker. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 ### Supported versions
 
