@@ -17,7 +17,8 @@ module.exports = function(lando) {
    * Supported versions for redis
    */
   var versions = [
-    '3',
+    '3.2',
+    '3.0',
     'latest',
     'custom'
   ];
@@ -38,32 +39,23 @@ module.exports = function(lando) {
     var services = {};
 
     // Define config mappings
-    // TODO: Redis ships with default dev conf whithout the need of a conf file.
-    // Do we need this configFiles section at all?
-    // https://redis.io/topics/config
-    // var configFiles = {
-    //   confd: '/etc/mysql/conf.d',
-    //   dataDir: '/var/lib/mysql'
-    // };
-
-    // GEt creds
-    var creds = config.creds || {};
+    var configFiles = {
+      config: '/usr/local/etc/redis/redis.conf'
+    };
 
     // Default redis service
     var redis = {
       image: 'redis:' + config.version,
-      // TODO: do we need env vars for redis?
-      // environment: {
-      //   MYSQL_USER: creds.user || 'mysql',
-      //   MYSQL_PASSWORD: creds.password || 'password',
-      //   MYSQL_ALLOW_EMPTY_PASSWORD: 'yes',
-      //   MYSQL_DATABASE: creds.database || 'database',
-      //   TERM: 'xterm'
-      // },
-      // TODO: do we need volumes for redis?
-      //volumes: ['data:' + configFiles.dataDir],
+      environment: {
+        TERM: 'xterm'
+      },
       command: 'docker-entrypoint.sh redis-server',
     };
+
+    // Persist data if applicable
+    if (config.persist) {
+      redis.command = redis.command + ' --appendonly yes';
+    }
 
     // Handle port forwarding
     if (config.portforward) {
@@ -85,7 +77,7 @@ module.exports = function(lando) {
       if (_.has(config, 'config.' + type)) {
         var local = config.config[type];
         var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-        //redis.volumes = addConfig(customConfig, redis.volumes);
+        redis.volumes = addConfig(customConfig, redis.volumes);
       }
     });
 
@@ -111,19 +103,13 @@ module.exports = function(lando) {
 
     // Add in generic info
     var info = {
-      // TODO: do we need creds for redis?
-      // creds: {
-      //   user: config.environment.MYSQL_USER,
-      //   password: config.environment.MYSQL_PASSWORD,
-      //   database: config.environment.MYSQL_DATABASE
-      // },
       'internal_connection': {
         host: name,
         port: 6379
       },
       'external_connection': {
         host: 'localhost',
-        port: config.portforward
+        port: config.portforward || 'not forwarded'
       }
     };
 

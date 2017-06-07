@@ -1,0 +1,53 @@
+# Redis example
+name: redis
+
+# Give me http://redis.lndo.site
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+
+# Spin up a basic nodes server with redis backend
+services:
+
+  # Spin up a redis container called "cache"
+  # NOTE: "cache" is arbitrary, you could just as well call this "theboss" or "eljefe"
+  cache:
+
+    # Use version 3.2 of redis
+    type: redis:3.2
+
+    # Optionally allow access to the cache at localhost:6380
+    # You will need to make sure port 6380 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 6380
+
+    # Optionally set the redis cache to persist
+    persist: true
+
+    # Optionally load in a custom redis.conf this is relative to your app root
+    # directory
+    # config:
+    #  config: config/redis.conf
+
+  # Spin up services to run a basic node server
+  appserver:
+    type: node:6.10
+    command: npm start
+    extras:
+      - "cd $LANDO_MOUNT & npm install"
+
+# Add some nice command routing
+tooling:
+  # Drop the user into a redis shell
+  redis-cli:
+    service: cache
+  npm:
+    service: appserver
+  gulp:
+    service: appserver
+  node:
+    service: appserver
