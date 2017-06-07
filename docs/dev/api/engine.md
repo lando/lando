@@ -35,6 +35,7 @@ return lando.engine.destroy(data);
     * [.run(data)](#module_engine.run) ⇒ <code>Promise</code>
     * [.stop(data)](#module_engine.stop) ⇒ <code>Promise</code>
     * [.destroy(data)](#module_engine.destroy) ⇒ <code>Promise</code>
+    * [.logs(data)](#module_engine.logs) ⇒ <code>Promise</code>
     * [.build(data)](#module_engine.build) ⇒ <code>Promise</code>
     * ["event:pre-engine-up"](#module_engine.event_pre-engine-up)
     * ["event:post-engine-up"](#module_engine.event_post-engine-up)
@@ -441,6 +442,31 @@ app.opts = {
   force: true
 };
 return lando.engine.destroy(app);
+```
+<a name="module_engine.logs"></a>
+
+### engine.logs(data) ⇒ <code>Promise</code>
+Returns logs for a given `compose` object
+
+**NOTE:** Generally an instantiated `app` object is a valid `compose` object
+
+**Kind**: static method of [<code>engine</code>](#module_engine)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| data | <code>Object</code> |  | A `compose` Object or an Array of `compose` Objects if you want to get logs for more than one set of services. |
+| data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
+| data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
+| [data.opts] | <code>Object</code> |  | Options on how to build the `compose` objects containers. |
+| [data.opts.follow] | <code>Boolean</code> | <code>false</code> | Whether to follow the log. Works like `tail -f`. |
+| [data.opts.timestamps] | <code>Boolean</code> | <code>true</code> | Show timestamps in log. |
+
+**Example**  
+```js
+// Get logs for an app
+return lando.engine.logs(app);
 ```
 <a name="module_engine.build"></a>
 
