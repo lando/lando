@@ -26,6 +26,7 @@ module.exports = function(lando) {
   lando.events.on('post-bootstrap', function(lando) {
 
     // Add the recipes
+    lando.recipes.add('drupal7', require('./../drupal7/drupal7')(lando));
     lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
     lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
 

@@ -11,7 +11,9 @@ config:
   #
   # If ommitted this will default to  the latest php version. Consult the `php`
   # service to see what version are available
-  php: 7.1
+  #
+  # NOTE: that this needs to be wrapped in quotes so that it is a string
+  php: '7.1'
 
   # Optionally specify the location of the webroot relative to your approot.
   #

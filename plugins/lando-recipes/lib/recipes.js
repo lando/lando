@@ -43,8 +43,16 @@ module.exports = function(lando) {
     lando.log.verbose('Building %s for %s', recipe, name);
     lando.log.debug('Building %s with config', name, config);
 
+    // Piggyback off of moveConfig
+    // Move our config into the userconfroot if we have some
+    // NOTE: we need to do this because on macOS and Windows not all host files
+    // are shared into the docker vm
+    if (_.has(registry[recipe], 'configDir')) {
+      lando.services.moveConfig(recipe, registry[recipe].configDir);
+    }
+
     // Return the built config file
-    return registry[recipe](name, config);
+    return registry[recipe].build(name, config);
 
   };
 

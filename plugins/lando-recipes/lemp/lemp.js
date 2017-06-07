@@ -26,8 +26,8 @@ module.exports = function(lando) {
   var build = function(name, config) {
 
     // Start by cheating
-    var builder = require('./../lamp/lamp')(lando);
-    var build = builder(name, config);
+    var lamp = require('./../lamp/lamp')(lando);
+    var build = lamp.build(name, config);
 
     // Replace the proxy
     build.proxy = proxy();
@@ -40,7 +40,9 @@ module.exports = function(lando) {
 
   };
 
-  // Return teh build func
-  return build;
+  // Return things
+  return {
+    build: build
+  };
 
 };
