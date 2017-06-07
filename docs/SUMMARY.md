@@ -58,6 +58,7 @@
 * [destroy](cli/destroy.md)
 * [info](cli/info.md)
 * [list](cli/list.md)
+* [logs](cli/logs.md)
 * [poweroff](cli/poweroff.md)
 * [rebuild](cli/rebuild.md)
 * [restart](cli/restart.md)
