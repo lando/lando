@@ -37,7 +37,7 @@ app.get('/', function (req, res) {
       return res.end('<h1>I HAVE FAILED TO CONNECT</h1>');
     }
     else {
-      res.end('<h1>I HAVE MADE A CONNECTION TO SOLR!!!</h1>');
+      return res.end('<h1>I HAVE MADE A CONNECTION TO SOLR!!!</h1>');
     }
   })
 

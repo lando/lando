@@ -43,6 +43,7 @@
 
 * [apache](services/apache.md)
 * [mariadb](services/mariadb.md)
+* [memcached](services/memcached.md)
 * [mysql](services/mysql.md)
 * [nginx](services/nginx.md)
 * [node](services/node.md)
