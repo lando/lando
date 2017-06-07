@@ -301,6 +301,7 @@ module.exports = function(lando) {
 
     // Add in appserver basics
     info.via = config.via;
+    info.webroot = _.get(config, 'webroot', '.');
 
     // Return the collected info
     return info;

@@ -19,18 +19,18 @@ module.exports = function(lando) {
 
       // Get some things
       var name = app.config.name;
-      var recipe = app.config.recipe
+      var recipe = app.config.recipe;
       var config = app.config.config || {};
 
       // Add some things to our config
       config.app = name;
       config.mount = app.mount;
 
-      // Get our new app config
+      // Get our new config
       var newConfig = lando.recipes.build(name, recipe, config);
 
-      console.log(_.merge(app.config, newConfig));
-      process.exit(1);
+      // Merge it in
+      app.config = _.merge(app.config, newConfig);
 
     }
 
