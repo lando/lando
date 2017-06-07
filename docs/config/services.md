@@ -20,6 +20,7 @@ The following services are currently supported. Please check out each one to lea
   * ####[node](./../services/node.md)
   * ####[php](./../services/php.md)
   * ####[postgres](./../services/postgres.md)
+  * ####[redis](./../services/redis.md)
   * ####[solr](./../services/solr.md)
 
 Environment
