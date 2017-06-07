@@ -26,6 +26,7 @@ Supported Recipes
 The following recipes are currently offered. Please check out each one to learn how to use them.
 
   * ####[LAMP](./../recipes/lamp.md)
+  * ####[LEMP](./../recipes/lemp.md)
 
 Extending and Overriding Recipes
 --------------------------------
@@ -35,7 +36,6 @@ Since recipes are loaded first you can still mix in other `services`, `proxy set
 > #### Hint::Service and Tooling discovery
 >
 > Running `lando info` in your app directory is a good way to see what things your recipe offers. This is useful if you want to override or extend the things it provides, as in the example below.
-
 
 ```yaml
 name: myapp
