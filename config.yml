@@ -1,6 +1,7 @@
 plugins:
   - lando-core
   - lando-proxy
+  - lando-recipes
   - lando-services
   - lando-sharing
   - lando-tooling
