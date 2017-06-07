@@ -3,6 +3,9 @@
   "root": "docs",
   "gitbook": ">=3.2",
   "language": "en",
+  "lunr": {
+    "maxIndexSize": 1000000000
+  },
   "plugins": [
     "anchors",
     "callouts",
