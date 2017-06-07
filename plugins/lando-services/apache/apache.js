@@ -111,10 +111,13 @@ module.exports = function(lando) {
   /**
    * Metadata about our service
    */
-  var info = function() {
+  var info = function(config) {
 
     // Start up an info collector
     var info = {};
+
+    // Add the webroot
+    info.webroot = _.get(config, 'webroot', '.');
 
     // Return the collected info
     return info;
