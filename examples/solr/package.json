@@ -1,5 +1,5 @@
 {
-  "name": "solr",
+  "name": "solr-lando",
   "version": "1.0.0",
   "description": "Node solr example for Lando",
   "main": "app.js",

@@ -1,0 +1,45 @@
+# Memcached example
+name: memcache
+
+# Give me http://memcache.lndo.site
+proxy:
+  appserver:
+    - port: 80/tcp
+      default: true
+
+# Spin up a basic nodes server with memcached backend
+services:
+
+  # Spin up a memcache container called "cache"
+  # NOTE: "cache" is arbitrary, you could just as well call this "theboss" or "eljefe"
+  cache:
+
+    # Use version 1.4 of memcached
+    type: memcached:1.4
+
+    # Optionally specify the size of the memcached store, defaults to 64
+    mem: 128
+
+    # Optionally allow access to the cache at localhost:11222
+    # You will need to make sure port 11222 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 11222
+
+  # Spin up services to run a basic node server
+  appserver:
+    type: node:6.10
+    command: npm start
+    extras:
+      - "cd $LANDO_MOUNT & npm install"
+
+# Add some nice command routing
+tooling:
+  npm:
+    service: appserver
+  gulp:
+    service: appserver
+  node:
+    service: appserver

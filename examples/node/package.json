@@ -1,5 +1,5 @@
 {
-  "name": "node",
+  "name": "node-lando",
   "version": "1.0.0",
   "description": "Node example for Lando",
   "main": "app.js",

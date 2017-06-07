@@ -111,8 +111,10 @@ module.exports = function(lando) {
         // Build the command
         nig.push(dep.join('@'));
 
-        // Push in our composer deps
-        config.extras.push(nig.join(' '));
+        // Add before our extras
+        // We want before because there might be extras that rely on globally
+        // installed dependencies eg `nodemon`
+        config.extras.unshift(nig.join(' '));
 
       });
     }
