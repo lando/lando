@@ -27,6 +27,7 @@ module.exports = function(lando) {
 
     // Add the recipes
     lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
+    lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
 
   });
 

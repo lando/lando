@@ -38,6 +38,7 @@
 ## Recipes
 
 * [LAMP](recipes/lamp.md)
+* [LEMP](recipes/lemp.md)
 
 ## Services
 

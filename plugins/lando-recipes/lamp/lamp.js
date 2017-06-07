@@ -72,8 +72,8 @@ module.exports = function(lando) {
       services.database.config = {};
 
       // Set custom server conf
-      if (_.has(config, 'conf.apache')) {
-        services.appserver.config.server = config.conf.apache;
+      if (_.has(config, 'conf.server')) {
+        services.appserver.config.server = config.conf.server;
       }
 
       // Set custom php conf
