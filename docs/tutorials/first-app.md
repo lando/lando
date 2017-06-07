@@ -1,5 +1,5 @@
-Running your first app
-======================
+Building Your First Custom App
+==============================
 
 Now that you've successfully [installed](./../installation/installing.md) Lando it's time to get rocking with your first app. Let's start by spinning up an app that is more or less what you get with MAMP (except using native linux versions of course).
 

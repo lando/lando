@@ -11,12 +11,6 @@
 * [Updating](installation/updating.md)
 * [Uninstalling](installation/uninstalling.md)
 
-## Getting Started
-
-* [Running my first app](tutorials/first-app.md)
-* [Running a LEMP app](tutorials/lemp-app.md)
-* [Running a Drupal 7 app](tutorials/drupal7-app.md)
-
 ## Known Issues
 
 * [DNS Rebinding Protection](issues/dns-rebind.md)
@@ -24,11 +18,12 @@
 * [Running VB and HyperV](issues/win-also-vb.md)
 * [Running behind a firewall](issues/firewall.md)
 
-## Troubleshooting and Support
+## Getting Started
 
-* [Accessing Logs](troubleshooting/logs.md)
-* [Reporting Issues](https://github.com/kalabox/lando/issues)
-* [Slack Channel](https://slackpass.io/kalabox)
+* [Running my first app](tutorials/first-recipe.md)
+* [Customizing my app](tutorials/customizing-app.md)
+* [Using Services](tutorials/using-services.md)
+* [Using Tooling](tutorials/using-tooling.md)
 
 ## Configuration
 
@@ -37,7 +32,12 @@
   * [Sharing](config/sharing.md)
   * [Services](config/services.md)
   * [Tooling](config/tooling.md)
+  * [Recipes](config/recipes.md)
 * [config.yml](config/config.md)
+
+## Recipes
+
+* [LAMP](recipes/lamp.md)
 
 ## Services
 
@@ -67,6 +67,18 @@
 * [start](cli/start.md)
 * [stop](cli/stop.md)
 * [version](cli/version.md)
+
+## Troubleshooting and Support
+
+* [Accessing Logs](troubleshooting/logs.md)
+* [Reporting Issues](https://github.com/kalabox/lando/issues)
+* [Slack Channel](https://slackpass.io/kalabox)
+
+## Tutorials
+
+* [Rebuilding MAMP](tutorials/first-app.md)
+* [Building a Custom LEMP app](tutorials/lemp-app.md)
+* [Building a Custom Drupal 7 app](tutorials/drupal7-app.md)
 
 ## Development
 
