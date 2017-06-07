@@ -50,7 +50,7 @@ and easily configure some of the basics of that recipe
 name: myproject
 recipe: lamp
 config:
-  php: 7.1
+  php: '7.1'
   webroot: www
   database: postgres:9.6
   config:
@@ -63,7 +63,7 @@ or go totally nuts and scaffold out a custom stack
 name: myproject
 recipe: lamp
 config:
-  php: 7.1
+  php: '7.1'
   webroot: www
   database: postgres:9.6
   config:

@@ -153,7 +153,9 @@ module.exports = function(lando) {
 
   };
 
-  // Return teh build func
-  return build;
+  // Return things
+  return {
+    build: build
+  };
 
 };

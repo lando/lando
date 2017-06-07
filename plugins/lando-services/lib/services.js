@@ -33,7 +33,6 @@ module.exports = function(lando) {
     fs.mkdirpSync(newDir);
 
     // Copy the old root to the new root
-    // NOTE: we do not overwrite to allow user customization
     fs.copySync(dir, newDir, copyOpts);
 
     // Log

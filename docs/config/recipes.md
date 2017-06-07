@@ -16,7 +16,7 @@ recipe: lamp
 name: myapp
 recipe: lamp
 config:
-  php: 5.6
+  php: '5.6'
   webroot: www
 ```
 
@@ -43,7 +43,7 @@ name: myapp
 # Start with the lamp recipe
 recipe: lamp
 config:
-  php: 5.6
+  php: '5.6'
   webroot: www
   database: postgres
 
