@@ -4,7 +4,6 @@ name: postgres
 # Share the www directory in my app into the webroot of the html container
 sharing:
   html:
-    local: www
     remote: /usr/share/nginx/html
 
 # Give me http://postgres.lndo.site and https://postgres.lndo.site
@@ -21,6 +20,7 @@ services:
 
   # Set up a basic webserver running the latest nginx with ssl turned on
   html:
+    webroot: www
     type: nginx
     ssl: true
 

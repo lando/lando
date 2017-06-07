@@ -91,7 +91,7 @@ module.exports = function(lando) {
 
     });
 
-      // Add the urls to the app
+    // Add the urls to the app
     app.events.on('pre-info', function() {
       return getUrls(app);
     });

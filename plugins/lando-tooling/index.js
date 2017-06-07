@@ -1,14 +1,14 @@
 /**
- * Sharing plugin
+ * Tooling plugin
  *
- * @name sharing
+ * @name tooling
  */
 
 'use strict';
 
 module.exports = function(lando) {
 
-  // Add sharing settings to the global config
+  // Add tooling settings to the global config
   require('./lib/bootstrap')(lando);
 
   // The tooling service

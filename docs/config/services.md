@@ -14,15 +14,20 @@ The following services are currently supported. Please check out each one to lea
 
   * ####[apache](./../services/apache.md)
   * ####[mariadb](./../services/mariadb.md)
+  * ####[memcached](./../services/memcached.md)
   * ####[mysql](./../services/mysql.md)
   * ####[nginx](./../services/nginx.md)
+  * ####[node](./../services/node.md)
   * ####[php](./../services/php.md)
   * ####[postgres](./../services/postgres.md)
+  * ####[solr](./../services/solr.md)
 
 Environment
 -----------
 
 While you can add additional environmental variables on a per service basis (see [Advanced Service Configuration](#advanced-service-configuration) below) Lando will inject some common and helpful environmental variables into each service.
+
+These are also helpful in your `.lando.yml` file.
 
 ```bash
 LANDO=ON
@@ -31,6 +36,7 @@ LANDO_HOST_UID=501
 LANDO_HOST_GID=20
 LANDO_SERVICE_NAME=appserver
 LANDO_HOST_OS=darwin
+LANDO_MOUNT=/path/to/your/approot
 ```
 
 Shared Files

@@ -1,7 +1,6 @@
 name: docs.lando
 sharing:
   appserver:
-    local: _book
     remote: /usr/share/nginx/html
 proxy:
   appserver:
@@ -14,3 +13,4 @@ services:
   appserver:
     type: nginx
     ssl: true
+    webroot: _book

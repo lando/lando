@@ -121,7 +121,7 @@ module.exports = function(lando) {
       },
       'external_connection': {
         host: 'localhost',
-        port: config.portforward
+        port: config.portforward || 'not forwarded'
       }
     };
 

@@ -9,6 +9,7 @@ module.exports = function(grunt) {
   var common = require('./tasks/common.js');
 
   // Load in delegated responsibilities because cleanliness => godliness
+  var docs = require('./tasks/docs')(common);
   var fs = require('./tasks/fs.js')(common);
   var shell = require('./tasks/shell.js')(common);
   var tests = require('./tasks/tests.js')(common);
@@ -53,6 +54,9 @@ module.exports = function(grunt) {
       installerlinuxBats: shell.batsTask(common.files.installerLinuxBats)
     },
 
+    // JS docs tasks
+    jsdoc2md: docs.jsdoc2md,
+
     // Utility tasks
     bump: util.bump
 
@@ -64,12 +68,15 @@ module.exports = function(grunt) {
   // Install and build our docs
   grunt.registerTask('docs', [
     'shell:gitBookInstall',
-    'shell:gitBookBuild'
+    'shell:gitBookBuild',
+    'jsdoc2md'
   ]);
 
   // Serve our docs
   // NOTE: use this if you don't want to dogfood lando
   grunt.registerTask('serve', [
+    'shell:gitBookInstall',
+    'jsdoc2md',
     'shell:gitBookServe'
   ]);
 

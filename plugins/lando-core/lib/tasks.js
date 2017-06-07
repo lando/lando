@@ -14,6 +14,7 @@ module.exports = function(lando) {
     lando.tasks.add('destroy', require('./tasks/destroy')(lando));
     lando.tasks.add('info', require('./tasks/info')(lando));
     lando.tasks.add('list', require('./tasks/list')(lando));
+    lando.tasks.add('logs', require('./tasks/logs')(lando));
     lando.tasks.add('poweroff', require('./tasks/poweroff')(lando));
     lando.tasks.add('rebuild', require('./tasks/rebuild')(lando));
     lando.tasks.add('restart', require('./tasks/restart')(lando));

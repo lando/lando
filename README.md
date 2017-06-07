@@ -6,10 +6,13 @@ Lando is a free and open source local development environment provisioning tool 
   * [Installation](http://docs.lndo.io/installation/installing.html)
   * [Getting Started](http://docs.lndo.io/tutorials/first-app.html)
   * [Configuration](http://docs.lndo.io/config/lando.html)
-  * [Supported Services](http://docs.lndo.io/services/apache.html)
+  * [Supported Services](http://docs.lndo.io/config/services.html)
+  * [Tooling Options](http://docs.lndo.io/config/tooling.html)
   * [CLI reference](http://docs.lndo.io/cli/usage.html)
   * [Contributing](http://docs.lndo.io/dev/contributing.html)
+  * [API](http://docs.lndo.io/dev/api.html)
   * [Troubleshooting and Support](http://docs.lndo.io/troubleshooting/logs.html)
+  * [Examples](https://github.com/kalabox/lando/tree/master/examples)
 
 Or browse all [our docs](http://docs.lndo.io).
 

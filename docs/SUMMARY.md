@@ -17,7 +17,18 @@
 * [Running a LEMP app](tutorials/lemp-app.md)
 * [Running a Drupal 7 app](tutorials/drupal7-app.md)
 
-----
+## Known Issues
+
+* [DNS Rebinding Protection](issues/dns-rebind.md)
+* [File Syncing Stalled](issues/file-sync.md)
+* [Running VB and HyperV](issues/win-also-vb.md)
+* [Running behind a firewall](issues/firewall.md)
+
+## Troubleshooting and Support
+
+* [Accessing Logs](troubleshooting/logs.md)
+* [Reporting Issues](https://github.com/kalabox/lando/issues)
+* [Slack Channel](https://slackpass.io/kalabox)
 
 ## Configuration
 
@@ -32,10 +43,13 @@
 
 * [apache](services/apache.md)
 * [mariadb](services/mariadb.md)
+* [memcached](services/memcached.md)
 * [mysql](services/mysql.md)
 * [nginx](services/nginx.md)
+* [node](services/node.md)
 * [php](services/php.md)
 * [postgres](services/postgres.md)
+* [solr](services/solr.md)
 
 ## Command Line
 
@@ -44,6 +58,7 @@
 * [destroy](cli/destroy.md)
 * [info](cli/info.md)
 * [list](cli/list.md)
+* [logs](cli/logs.md)
 * [poweroff](cli/poweroff.md)
 * [rebuild](cli/rebuild.md)
 * [restart](cli/restart.md)
@@ -52,33 +67,34 @@
 * [stop](cli/stop.md)
 * [version](cli/version.md)
 
-----
-
 ## Development
 
 * [Contributing](dev/contributing.md)
 * [Repo Structure](dev/structure.md)
 * [Plugins](dev/plugins.md)
-* [Lando object](dev/lando.md)
+* [API](dev/api/lando.md)
+  * [app](dev/api/app.md)
+  * [bootstrap](dev/api/bootstrap.md)
+  * [cache](dev/api/cache.md)
+  * [cli](dev/api/cli.md)
+  * [config](dev/api/config.md)
+  * [engine](dev/api/engine.md)
+  * [error](dev/api/error.md)
+  * [events](dev/api/events.md)
+  * [log](dev/api/log.md)
+  * [networks](dev/api/networks.md)
+  * [node](dev/api/node.md)
+  * [plugins](dev/api/plugins.md)
+  * [Promise](dev/api/promise.md)
+  * [registry](dev/api/registry.md)
+  * [shell](dev/api/shell.md)
+  * [tasks](dev/api/tasks.md)
+  * [user](dev/api/user.md)
+  * [utils](dev/api/utils.md)
 * [Testing](dev/testing.md)
 * [Building](dev/building.md)
 * [Shipping](dev/shipping.md)
 * [Documentation](dev/docs.md)
-
-----
-
-## Known Issues
-
-* [DNS Rebinding Protection](issues/dns-rebind.md)
-* [File Syncing Stalled](issues/file-sync.md)
-* [Running VB and HyperV](issues/win-also-vb.md)
-* [Running behind a firewall](issues/firewall.md)
-
-## Troubleshooting and Support
-
-* [Accessing Logs](troubleshooting/logs.md)
-* [Reporting Issues](https://github.com/kalabox/lando/issues)
-* [Slack Channel](https://slackpass.io/kalabox)
 
 ## Changelog
 

@@ -1,5 +1,5 @@
 /**
- * This adds sharing settings to our config
+ * This adds service settings to our config
  *
  * @name bootstrap
  */
@@ -28,10 +28,13 @@ module.exports = function(lando) {
     // Add the services
     lando.services.add('apache', require('./../apache/apache')(lando));
     lando.services.add('nginx', require('./../nginx/nginx')(lando));
+    lando.services.add('node', require('./../node/node')(lando));
     lando.services.add('mariadb', require('./../mariadb/mariadb')(lando));
+    lando.services.add('memcached', require('./../memcached/memcached')(lando));
     lando.services.add('mysql', require('./../mysql/mysql')(lando));
     lando.services.add('postgres', require('./../postgres/postgres')(lando));
     lando.services.add('php', require('./../php/php')(lando));
+    lando.services.add('solr', require('./../solr/solr')(lando));
 
   });
 
