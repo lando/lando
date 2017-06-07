@@ -23,7 +23,7 @@ config:
   # Optionally specify the location of the webroot relative to your approot.
   #
   # If ommitted this will be your approot itself.
-  webroot: www
+  webroot: web
 
   # Optionally specify the version of drush you want for your site
   #
@@ -43,20 +43,26 @@ config:
 
   # Optionally mix in your own config files
   #
-  # If ommitted this will use the default drupal config files for the respective services. Definitely
-  # consult the relevant documentaion for each service to make sure you are specifying the correct value
-  # for the config. As an example `mysql` will want a directory while `postgres` will want a specific config file.
+  # If ommitted this will use the default drupal config files for the respective
+  # services. Definitely consult the relevant documentaion for each service to
+  # make sure you are specifying the correct value for the config. As an example
+  # `mysql` will want a directory while `postgres` will want a specific config file.
   conf:
     # server: config/drupal7.conf
     # database: config/mysql
     # php: config/php.ini
 
-# The LEMP recipe is super slick but we want to augment this recipe so we can
-# run our front end tooling magix
+# The Drupal 7 recipe is super slick but we want to augment this recipe so we can
+# run our front end tooling magix and use a key value store
 services:
   node:
     type: node:6.10
+  cache:
+    type: redis
+    persist: true
 tooling:
+  redis-cli:
+    service: cache
   node:
     service: node
   npm:

@@ -25,6 +25,7 @@ Supported Recipes
 
 The following recipes are currently offered. Please check out each one to learn how to use them.
 
+  * ####[Drupal 7](./../recipes/d7.md)
   * ####[LAMP](./../recipes/lamp.md)
   * ####[LEMP](./../recipes/lemp.md)
 

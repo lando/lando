@@ -37,6 +37,7 @@
 
 ## Recipes
 
+* [Drupal 7](recipes/d7.md)
 * [LAMP](recipes/lamp.md)
 * [LEMP](recipes/lemp.md)
 

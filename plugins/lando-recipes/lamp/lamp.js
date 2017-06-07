@@ -103,11 +103,13 @@ module.exports = function(lando) {
       composer: {
         service: 'appserver',
         description: 'Run composer commands',
-        cmd: ['composer', '--ansi']
+        cmd: ['composer', '--ansi'],
+        user: 'www-data'
       },
       php: {
         service: 'appserver',
-        description: 'Run php commands'
+        description: 'Run php commands',
+        user: 'www-data'
       }
     };
 
