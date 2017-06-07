@@ -60,7 +60,8 @@ module.exports = function(lando) {
     };
     build.tooling.drush = {
       service: 'appserver',
-      description: 'Run Drush commands'
+      description: 'Run Drush commands',
+      user: 'www-data'
     };
 
     // Return the things

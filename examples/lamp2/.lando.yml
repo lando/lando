@@ -33,9 +33,10 @@ config:
 
   # Optionally mix in our own config files
   #
-  # If ommitted this will use the default config files for the respective services. Definitely
-  # consult the relevant documentaion for each service to make sure you are specifying the correct value
-  # for the config. As an example `mysql` will want a directory while `postgres` will want a specific config file.
+  # If ommitted this will use the default config files for the respective services.
+  # Definitely consult the relevant documentaion for each service to make sure
+  # you are specifying the correct value for the config. As an example `mysql`
+  # will want a directory while `postgres` will want a specific config file.
   conf:
     server: config/lamp.conf
     database: config/mysql
