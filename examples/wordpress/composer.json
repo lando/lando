@@ -1,0 +1,21 @@
+{
+  "name": "lando-wordpress",
+  "description": "Lando WordPress composer example",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  ],
+  "config": {
+    "vendor-dir": "vendor",
+    "secure-http": false
+  },
+  "require": {
+    "johnpbloch/wordpress": ">=4.2"
+  },
+  "extra":{
+    "wordpress-install-dir":"web"
+  }
+}

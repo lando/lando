@@ -1,7 +1,7 @@
 /**
- * Drupal7 recipe builder
+ * WordPress recipe builder
  *
- * @name drupal7
+ * @name wordpress
  */
 
 'use strict';
@@ -13,21 +13,21 @@ module.exports = function(lando) {
   var path = require('path');
 
   /**
-   * Build out Drupal7
+   * Build out WordPress
    */
   var build = function(name, config) {
 
     // Determine some things
     var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
     var database = _.get(config, 'database', 'mysql');
-    var configPath = path.join(lando.config.engineConfigDir, 'drupal7');
+    var configPath = path.join(lando.config.engineConfigDir, 'wordpress');
 
-    // Use our default drupal config files if they have not been specified by the user
+    // Use our default wordpress config files if they have not been specified by the user
     if (_.isEmpty(config.conf)) {
       config.conf = {};
     }
     if (!_.has(config, 'conf.server') && base === 'lemp') {
-      var nginxConf = path.join(configPath, 'drupal7.conf');
+      var nginxConf = path.join(configPath, 'wordpress.conf');
       config.conf.server = nginxConf;
     }
     if (!_.has(config, 'conf.php')) {
@@ -40,8 +40,8 @@ module.exports = function(lando) {
       config.conf.database = dbConf;
     }
 
-    // Set the default php version for D7
-    config.php = _.get(config, 'php', '7.0');
+    // Set the default php version for wordpress
+    config.php = _.get(config, 'php', '7.1');
 
     // Start by cheating
     var stack = require('./../' + [base, base].join('/'))(lando);
@@ -49,12 +49,12 @@ module.exports = function(lando) {
 
     // Override the database credentials
     build.services.database.creds = {
-      user: 'drupal',
-      password: 'drupal',
-      database: 'drupal'
+      user: 'wordpress',
+      password: 'wordpress',
+      database: 'wordpress'
     };
 
-    // Add db credentials into the ENV
+    // Add WP db credentials into the ENV
     build.services.appserver.overrides = {
       services: {
         environment: {
@@ -67,13 +67,13 @@ module.exports = function(lando) {
       }
     };
 
-    // Add in the drush things
+    // Add WPCLI
     build.services.appserver.composer = {
-      'drush/drush': '~' + _.get(config, 'drush', '8')
+      'wp-cli/wp-cli': '*'
     };
-    build.tooling.drush = {
+    build.tooling.wp = {
       service: 'appserver',
-      description: 'Run Drush commands'
+      description: 'Run wp-cli commands'
     };
 
     // Return the things

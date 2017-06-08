@@ -1,0 +1,64 @@
+# WordPress recipe
+name: wordpress
+
+# Start with the default Drupal7 recipe
+recipe: wordpress
+
+# Configure the WordPress recipe
+config:
+
+  # See: https://wordpress.org/about/requirements/
+
+  # Optionally specify the php version to use.
+  #
+  # If ommitted this will default to the latest php version supported by WordPress.
+  # Consult the `php` service to see what versions are available
+  #
+  # NOTE: that this needs to be wrapped in quotes so that it is a string
+  php: '7.0'
+
+  # Optionally specify whether you want to serve WordPress via nginx or apache
+  #
+  # If ommitted this will default to the latest apache
+  via: nginx
+
+  # Optionally specify the location of the webroot relative to your approot.
+  #
+  # If ommitted this will be your approot itself.
+  webroot: web
+
+  # Optionally specify the database type, this can be one of:
+  #
+  #   - `mysql`
+  #   - `mariadb`
+  #
+  # If ommitted this will default to the latest mysql. You can additionally provide
+  # a version with `type:version` but you will need to consult the documentation
+  # for the correct DB service to see what versions are available
+  database: mariadb:10.1
+
+  # Optionally mix in your own config files
+  #
+  # If ommitted this will use the default WordPress config files for the respective
+  # services. Definitely consult the relevant documentaion for each service to
+  # make sure you are specifying the correct value for the config.
+  # conf:
+    # server: config/wordpress.conf
+    # database: config/mysql
+    # php: config/php.ini
+
+# The WordPress recipe is super slick but we want to augment this recipe so we can
+# run our front end tooling magix and use a key value store
+services:
+  node:
+    type: node:6.10
+  cache:
+    type: memcached
+    mem: 32
+tooling:
+  redis-cli:
+    service: cache
+  node:
+    service: node
+  npm:
+    service: node
