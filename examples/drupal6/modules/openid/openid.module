@@ -1,0 +1,701 @@
+<?php
+
+/**
+ * @file
+ * Implement OpenID Relying Party support for Drupal
+ */
+
+/**
+ * Implementation of hook_menu.
+ */
+function openid_menu() {
+  $items['openid/authenticate'] = array(
+    'title' => 'OpenID Login',
+    'page callback' => 'openid_authentication_page',
+    'access callback' => 'user_is_anonymous',
+    'type' => MENU_CALLBACK,
+    'file' => 'openid.pages.inc',
+  );
+  $items['user/%user/openid'] = array(
+    'title' => 'OpenID identities',
+    'page callback' => 'openid_user_identities',
+    'page arguments' => array(1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'openid.pages.inc',
+  );
+  $items['user/%user/openid/delete'] = array(
+    'title' => 'Delete OpenID',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('openid_user_delete_form', 1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'file' => 'openid.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_help().
+ */
+function openid_help($path, $arg) {
+  switch ($path) {
+    case 'user/%/openid':
+      $output = '<p>'. t('This site supports <a href="@openid-net">OpenID</a>, a secure way to log into many websites using a single username and password. OpenID can reduce the necessity of managing many usernames and passwords for many websites.', array('@openid-net' => 'http://openid.net')) .'</p>';
+      $output .= '<p>'. t('To use OpenID you must first establish an identity on a public or private OpenID server. If you do not have an OpenID and would like one, look into one of the <a href="@openid-providers">free public providers</a>. You can find out more about OpenID at <a href="@openid-net">this website</a>.', array('@openid-providers' => 'http://openid.net/get/', '@openid-net' => 'http://openid.net')) .'</p>';
+      $output .= '<p>'. t('If you already have an OpenID, enter the URL to your OpenID server below (e.g. myusername.openidprovider.com). Next time you login, you will be able to use this URL instead of a regular username and password. You can have multiple OpenID servers if you like; just keep adding them here.') .'</p>';
+      return $output;
+
+    case 'admin/help#openid':
+      $output = '<p>'. t('OpenID is a secure method for logging into many websites with a single username and password. It does not require special software, and it does not share passwords with any site to which it is associated; including your site.') .'</p>';
+      $output .= '<p>'. t('Users can create accounts using their OpenID, assign one or more OpenIDs to an existing account, and log in using an OpenID. This lowers the barrier to registration, which is good for the site, and offers convenience and security to the users. OpenID is not a trust system, so email verification is still necessary. The benefit stems from the fact that users can have a single password that they can use on many websites. This means they can easily update their single password from a centralized location, rather than having to change dozens of passwords individually.') .'</p>';
+      $output .= '<p>'. t('The basic concept is as follows: A user has an account on an OpenID server. This account provides them with a unique URL (such as myusername.openidprovider.com). When the user comes to your site, they are presented with the option of entering this URL. Your site then communicates with the OpenID server, asking it to verify the identity of the user. If the user is logged into their OpenID server, the server communicates back to your site, verifying the user. If they are not logged in, the OpenID server will ask the user for their password. At no point does your site record, or need to record the user\'s password.') .'</p>';
+      $output .= '<p>'. t('More information on OpenID is available at <a href="@openid-net">OpenID.net</a>.', array('@openid-net' => url('http://openid.net'))) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@handbook">OpenID module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/openid')) .'</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function openid_user($op, &$edit, &$account, $category = NULL) {
+  if ($op == 'insert' && isset($_SESSION['openid']['values'])) {
+    // The user has registered after trying to login via OpenID.
+    if (variable_get('user_email_verification', TRUE)) {
+      drupal_set_message(t('Once you have verified your email address, you may log in via OpenID.'));
+    }
+    unset($_SESSION['openid']);
+  }
+}
+
+/**
+ * Implementation of hook_form_alter : adds OpenID login to the login forms.
+ */
+function openid_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'user_login_block' || $form_id == 'user_login') {
+    drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
+    drupal_add_js(drupal_get_path('module', 'openid') .'/openid.js');
+    if (!empty($form_state['post']['openid_identifier'])) {
+      $form['name']['#required'] = FALSE;
+      $form['pass']['#required'] = FALSE;
+      unset($form['#submit']);
+      $form['#validate'] = array('openid_login_validate');
+    }
+
+    $items = array();
+    $items[] = array(
+      'data' => l(t('Log in using OpenID'), '#'),
+      'class' => 'openid-link',
+    );
+    $items[] = array(
+      'data' => l(t('Cancel OpenID login'), '#'),
+      'class' => 'user-link',
+    );
+
+    $form['openid_links'] = array(
+      '#value' => theme('item_list', $items),
+      '#weight' => 1,
+    );
+
+    $form['links']['#weight'] = 2;
+
+    $form['openid_identifier'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Log in using OpenID'),
+      '#size' => ($form_id == 'user_login') ? 58 : 13,
+      '#maxlength' => 255,
+      '#weight' => -1,
+      '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
+    );
+    $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => user_login_destination())));
+  }
+  elseif ($form_id == 'user_register' && isset($_SESSION['openid']['values'])) {
+    // We were unable to auto-register a new user. Prefill the registration
+    // form with the values we have.
+    $form['name']['#default_value'] = $_SESSION['openid']['values']['name'];
+    $form['mail']['#default_value'] = $_SESSION['openid']['values']['mail'];
+    // If user_email_verification is off, hide the password field and just fill
+    // with random password to avoid confusion.
+    if (!variable_get('user_email_verification', TRUE)) {
+      $form['pass']['#type'] = 'hidden';
+      $form['pass']['#value'] = user_password();
+    }
+    $form['auth_openid'] = array('#type' => 'hidden', '#value' => $_SESSION['openid']['values']['auth_openid']);
+    $form['openid_display'] = array(
+      '#type' => 'item',
+      '#title' => t('Your OpenID'),
+      '#description' => t('This OpenID will be attached to your account after registration.'),
+      '#value' => check_plain($_SESSION['openid']['values']['auth_openid']),
+    );
+  }
+  return $form;
+}
+
+/**
+ * Login form _validate hook
+ */
+function openid_login_validate($form, &$form_state) {
+  $return_to = $form_state['values']['openid.return_to'];
+  if (empty($return_to)) {
+    $return_to = url('', array('absolute' => TRUE));
+  }
+
+  openid_begin($form_state['values']['openid_identifier'], $return_to, $form_state['values']);
+}
+
+/**
+ * The initial step of OpenID authentication responsible for the following:
+ *  - Perform discovery on the claimed OpenID.
+ *  - If possible, create an association with the Provider's endpoint.
+ *  - Create the authentication request.
+ *  - Perform the appropriate redirect.
+ *
+ * @param $claimed_id The OpenID to authenticate
+ * @param $return_to The endpoint to return to from the OpenID Provider
+ */
+function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
+  module_load_include('inc', 'openid');
+
+  $claimed_id = _openid_normalize($claimed_id);
+
+  $services = openid_discovery($claimed_id);
+  if (count($services) == 0) {
+    form_set_error('openid_identifier', t('Sorry, that is not a valid OpenID. Please ensure you have spelled your ID correctly.'));
+    return;
+  }
+
+  // Store discovered information in the users' session so we don't have to rediscover.
+  $_SESSION['openid']['service'] = $services[0];
+  // Store the claimed id
+  $_SESSION['openid']['claimed_id'] = $claimed_id;
+  // Store the login form values so we can pass them to
+  // user_exteral_login later.
+  $_SESSION['openid']['user_login_values'] = $form_values;
+
+  $op_endpoint = $services[0]['uri'];
+  // If bcmath is present, then create an association
+  $assoc_handle = '';
+  if (function_exists('bcadd')) {
+    $assoc_handle = openid_association($op_endpoint);
+  }
+
+  // Now that there is an association created, move on
+  // to request authentication from the IdP
+  // First check for LocalID. If not found, check for Delegate. Fall
+  // back to $claimed_id if neither is found.
+  if (!empty($services[0]['localid'])) {
+    $identity = $services[0]['localid'];
+  }
+  else if (!empty($services[0]['delegate'])) {
+    $identity = $services[0]['delegate'];
+  }
+  else {
+    $identity = $claimed_id;
+  }
+
+  if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
+    $claimed_id = $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
+  }
+  $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
+
+  if ($services[0]['version'] == 2) {
+    openid_redirect($op_endpoint, $authn_request);
+  }
+  else {
+    openid_redirect_http($op_endpoint, $authn_request);
+  }
+}
+
+/**
+ * Completes OpenID authentication by validating returned data from the OpenID
+ * Provider.
+ *
+ * @param $response Array of returned values from the OpenID Provider.
+ *
+ * @return $response Response values for further processing with
+ *   $response['status'] set to one of 'success', 'failed' or 'cancel'.
+ */
+function openid_complete($response = array()) {
+  global $base_url;
+  module_load_include('inc', 'openid');
+
+  if (count($response) == 0) {
+    $response = _openid_response();
+  }
+
+  // Default to failed response
+  $response['status'] = 'failed';
+  if (isset($_SESSION['openid']['service']['uri']) && isset($_SESSION['openid']['claimed_id'])) {
+    $service = $_SESSION['openid']['service'];
+    $claimed_id = $_SESSION['openid']['claimed_id'];
+    unset($_SESSION['openid']['service']);
+    unset($_SESSION['openid']['claimed_id']);
+    if (isset($response['openid.mode'])) {
+      if ($response['openid.mode'] == 'cancel') {
+        $response['status'] = 'cancel';
+      }
+      else {
+        if (openid_verify_assertion($service, $response)) {
+          // If the returned claimed_id is different from the session claimed_id,
+          // then we need to do discovery and make sure the op_endpoint matches.
+          if ($service['version'] == 2) {
+            // Returned Claimed Identifier could contain unique fragment
+            // identifier to allow identifier recycling so we need to preserve
+            // it in the response.
+            $response_claimed_id = _openid_normalize($response['openid.claimed_id']);
+
+            if ($response_claimed_id != $claimed_id || $response_claimed_id != $response['openid.identity']) {
+              $disco = openid_discovery($response['openid.claimed_id']);
+
+              if ($disco[0]['uri'] != $service['uri']) {
+                return $response;
+              }
+
+              if (!empty($disco[0]['localid'])) {
+                $identity = $disco[0]['localid'];
+              }
+              else if (!empty($disco[0]['delegate'])) {
+                $identity = $disco[0]['delegate'];
+              }
+              else {
+                $identity = FALSE;
+              }
+
+              // The OP-Local Identifier (if different than the Claimed
+              // Identifier) must be present in the XRDS document.
+              if ($response_claimed_id != $response['openid.identity'] && (!$identity || $identity != $response['openid.identity'])) {
+                return $response;
+              }
+            }
+          }
+          else {
+            $response['openid.claimed_id'] = $claimed_id;
+          }
+          // Verify that openid.return_to matches the current URL (see OpenID
+          // Authentication 2.0, section 11.1).
+          // While OpenID Authentication 1.1, section 4.3 does not mandate
+          // return_to verification, the received return_to should still
+          // match these constraints.
+          $return_to_parts = parse_url($response['openid.return_to']);
+
+          $base_url_parts = parse_url($base_url);
+          $current_parts = parse_url($base_url_parts['scheme'] .'://'. $base_url_parts['host'] . request_uri());
+
+          if ($return_to_parts['scheme'] != $current_parts['scheme'] ||
+              $return_to_parts['host'] != $current_parts['host'] ||
+              $return_to_parts['path'] != $current_parts['path']) {
+
+            return $response;
+          }
+          // Verify that all query parameters in the openid.return_to URL have
+          // the same value in the current URL. In addition, the current URL
+          // contains a number of other parameters added by the OpenID Provider.
+          parse_str(isset($return_to_parts['query']) ? $return_to_parts['query'] : '', $return_to_query_parameters);
+          foreach ($return_to_query_parameters as $name => $value) {
+            if (!array_key_exists($name, $_GET) || $_GET[$name] != $value) {
+              return $response;
+            }
+          }
+          $response['status'] = 'success';
+        }
+      }
+    }
+  }
+  return $response;
+}
+
+/**
+ * Perform discovery on a claimed ID to determine the OpenID provider endpoint.
+ *
+ * @param $claimed_id The OpenID URL to perform discovery on.
+ *
+ * @return Array of services discovered (including OpenID version, endpoint
+ * URI, etc).
+ */
+function openid_discovery($claimed_id) {
+  module_load_include('inc', 'openid');
+  module_load_include('inc', 'openid', 'xrds');
+
+  $services = array();
+
+  $xrds_url = $claimed_id;
+  if (_openid_is_xri($claimed_id)) {
+    $xrds_url = 'http://xri.net/'. $claimed_id;
+  }
+  $url = @parse_url($xrds_url);
+  if ($url['scheme'] == 'http' || $url['scheme'] == 'https') {
+    // For regular URLs, try Yadis resolution first, then HTML-based discovery
+    $headers = array('Accept' => 'application/xrds+xml');
+    $result = drupal_http_request($xrds_url, $headers);
+
+    if (!isset($result->error)) {
+      if (isset($result->headers['Content-Type']) && preg_match("/application\/xrds\+xml/", $result->headers['Content-Type'])) {
+        // Parse XML document to find URL
+        $services = xrds_parse($result->data);
+      }
+      else {
+        $xrds_url = NULL;
+        if (isset($result->headers['X-XRDS-Location'])) {
+          $xrds_url = $result->headers['X-XRDS-Location'];
+        }
+        else {
+          // Look for meta http-equiv link in HTML head
+          $xrds_url = _openid_meta_httpequiv('X-XRDS-Location', $result->data);
+        }
+        if (!empty($xrds_url)) {
+          $headers = array('Accept' => 'application/xrds+xml');
+          $xrds_result = drupal_http_request($xrds_url, $headers);
+          if (!isset($xrds_result->error)) {
+            $services = xrds_parse($xrds_result->data);
+          }
+        }
+      }
+
+      // Check for HTML delegation
+      if (count($services) == 0) {
+        // Look for 2.0 links
+        $uri = _openid_link_href('openid2.provider', $result->data);
+        $delegate = _openid_link_href('openid2.local_id', $result->data);
+        $version = 2;
+
+        // 1.0 links
+        if (empty($uri)) {
+          $uri = _openid_link_href('openid.server', $result->data);
+          $delegate = _openid_link_href('openid.delegate', $result->data);
+          $version = 1;
+        }
+        if (!empty($uri)) {
+          $services[] = array('uri' => $uri, 'delegate' => $delegate, 'version' => $version);
+        }
+      }
+    }
+  }
+  return $services;
+}
+
+/**
+ * Attempt to create a shared secret with the OpenID Provider.
+ *
+ * @param $op_endpoint URL of the OpenID Provider endpoint.
+ *
+ * @return $assoc_handle The association handle.
+ */
+function openid_association($op_endpoint) {
+  module_load_include('inc', 'openid');
+
+  // Remove Old Associations:
+  db_query("DELETE FROM {openid_association} WHERE created + expires_in < %d", time());
+
+  // Check to see if we have an association for this IdP already
+  $assoc_handle = db_result(db_query("SELECT assoc_handle FROM {openid_association} WHERE idp_endpoint_uri = '%s'", $op_endpoint));
+  if (empty($assoc_handle)) {
+    $mod = OPENID_DH_DEFAULT_MOD;
+    $gen = OPENID_DH_DEFAULT_GEN;
+    $r = _openid_dh_rand($mod);
+    $private = bcadd($r, 1);
+    $public = bcpowmod($gen, $private, $mod);
+
+    // If there is no existing association, then request one
+    $assoc_request = openid_association_request($public);
+    $assoc_message = _openid_encode_message(_openid_create_message($assoc_request));
+    $assoc_headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
+    $assoc_result = drupal_http_request($op_endpoint, $assoc_headers, 'POST', $assoc_message);
+    if (isset($assoc_result->error)) {
+      return FALSE;
+    }
+
+    $assoc_response = _openid_parse_message($assoc_result->data);
+    if (isset($assoc_response['mode']) && $assoc_response['mode'] == 'error') {
+      return FALSE;
+    }
+
+    if ($assoc_response['session_type'] == 'DH-SHA1') {
+      $spub = _openid_dh_base64_to_long($assoc_response['dh_server_public']);
+      $enc_mac_key = base64_decode($assoc_response['enc_mac_key']);
+      $shared = bcpowmod($spub, $private, $mod);
+      $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
+    }
+    db_query("INSERT INTO {openid_association} (idp_endpoint_uri, session_type, assoc_handle, assoc_type, expires_in, mac_key, created) VALUES('%s', '%s', '%s', '%s', %d, '%s', %d)",
+             $op_endpoint, $assoc_response['session_type'], $assoc_response['assoc_handle'], $assoc_response['assoc_type'], $assoc_response['expires_in'], $assoc_response['mac_key'], time());
+
+    $assoc_handle = $assoc_response['assoc_handle'];
+  }
+
+  return $assoc_handle;
+}
+
+/**
+ * Authenticate a user or attempt registration.
+ *
+ * @param $response Response values from the OpenID Provider.
+ */
+function openid_authentication($response) {
+  module_load_include('inc', 'openid');
+
+  $identity = $response['openid.claimed_id'];
+
+  $account = user_external_load($identity);
+  if (isset($account->uid)) {
+    if (!variable_get('user_email_verification', TRUE) || $account->login) {
+      user_external_login($account, $_SESSION['openid']['user_login_values']);
+    }
+    else {
+      drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
+    }
+  }
+  elseif (variable_get('user_register', 1)) {
+    // Register new user
+    $form_state['redirect'] = NULL;
+    // Only signed SREG keys are included as required by OpenID Simple
+    // Registration Extension 1.0, section 4.
+    $signed_keys = explode(',', $response['openid.signed']);
+    $form_state['values']['name'] = in_array('sreg.nickname', $signed_keys) ? $response['openid.sreg.nickname'] : '';
+    $form_state['values']['mail'] = in_array('sreg.email', $signed_keys) ? $response['openid.sreg.email'] : '';
+    $form_state['values']['pass']  = user_password();
+    $form_state['values']['status'] = variable_get('user_register', 1) == 1;
+    $form_state['values']['response'] = $response;
+    $form_state['values']['auth_openid'] = $identity;
+
+    if (empty($form_state['values']['name']) && empty($form_state['values']['mail'])) {
+      drupal_set_message(t('Please complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
+      $success = FALSE;
+    }
+    else {
+      $form = drupal_retrieve_form('user_register', $form_state);
+      drupal_prepare_form('user_register', $form, $form_state);
+      drupal_validate_form('user_register', $form, $form_state);
+      $success = !form_get_errors();
+      if (!$success) {
+        drupal_set_message(t('Account registration using the information provided by your OpenID provider failed due to the reasons listed below. Please complete the registration by filling out the form below. If you already have an account, you can <a href="@login">log in</a> now and add your OpenID under "My account".', array('@login' => url('user/login'))), 'warning');
+        // Append form validation errors below the above warning.
+        $messages = drupal_get_messages('error');
+        foreach ($messages['error'] as $message) {
+          drupal_set_message( $message, 'error');
+        }
+      }
+    }
+    if (!$success) {
+      // We were unable to register a valid new user, redirect to standard
+      // user/register and prefill with the values we received.
+      $_SESSION['openid']['values'] = $form_state['values'];
+      // We'll want to redirect back to the same place.
+      $destination = drupal_get_destination();
+      unset($_REQUEST['destination']);
+      drupal_goto('user/register', $destination);
+    }
+    else {
+      unset($form_state['values']['response']);
+      $account = user_save('', $form_state['values']);
+      // Terminate if an error occured during user_save().
+      if (!$account) {
+        drupal_set_message(t("Error saving user account."), 'error');
+        drupal_goto();
+      }
+      user_external_login($account);
+    }
+    drupal_redirect_form($form, $form_state['redirect']);
+  }
+  else {
+    drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');
+  }
+  drupal_goto();
+}
+
+function openid_association_request($public) {
+  module_load_include('inc', 'openid');
+
+  $request = array(
+    'openid.ns' => OPENID_NS_2_0,
+    'openid.mode' => 'associate',
+    'openid.session_type' => 'DH-SHA1',
+    'openid.assoc_type' => 'HMAC-SHA1'
+  );
+
+  if ($request['openid.session_type'] == 'DH-SHA1' || $request['openid.session_type'] == 'DH-SHA256') {
+    $cpub = _openid_dh_long_to_base64($public);
+    $request['openid.dh_consumer_public'] = $cpub;
+  }
+
+  return $request;
+}
+
+function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
+  global $base_url;
+
+  module_load_include('inc', 'openid');
+
+  $ns = ($version == 2) ? OPENID_NS_2_0 : OPENID_NS_1_0;
+  $request =  array(
+    'openid.ns' => $ns,
+    'openid.mode' => 'checkid_setup',
+    'openid.identity' => $identity,
+    'openid.claimed_id' => $claimed_id,
+    'openid.assoc_handle' => $assoc_handle,
+    'openid.return_to' => $return_to,
+  );
+
+  if ($version == 2) {
+    $request['openid.realm'] = $base_url . '/';
+  }
+  else {
+    $request['openid.trust_root'] = $base_url . '/';
+  }
+
+  // Simple Registration
+  $request['openid.sreg.required'] = 'nickname,email';
+  $request['openid.ns.sreg'] = "http://openid.net/extensions/sreg/1.1";
+
+  $request = array_merge($request, module_invoke_all('openid', 'request', $request));
+
+  return $request;
+}
+
+/**
+ * Attempt to verify the response received from the OpenID Provider.
+ *
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
+ *
+ * @return boolean
+ */
+function openid_verify_assertion($service, $response) {
+  module_load_include('inc', 'openid');
+
+  // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.3
+  // Check the Nonce to protect against replay attacks.
+  if (!openid_verify_assertion_nonce($service, $response)) {
+    return FALSE;
+  }
+
+  // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
+  // Verify the signatures.
+  $valid = FALSE;
+  $association = db_fetch_object(db_query("SELECT * FROM {openid_association} WHERE idp_endpoint_uri = '%s' AND assoc_handle = '%s'", $service['uri'], $response['openid.assoc_handle']));
+  if ($association && isset($association->session_type)) {
+    // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2
+    // Verification using an association.
+    $valid = openid_verify_assertion_signature($service, $association, $response);
+  }
+  else {
+    // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.3
+    // Direct verification.
+    $request = $response;
+    $request['openid.mode'] = 'check_authentication';
+    $message = _openid_create_message($request);
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
+    $result = drupal_http_request($service['uri'], $headers, 'POST', _openid_encode_message($message));
+    if (!isset($result->error)) {
+      $response = _openid_parse_message($result->data);
+      if (strtolower(trim($response['is_valid'])) == 'true') {
+        $valid = TRUE;
+      }
+      else {
+        $valid = FALSE;
+      }
+    }
+  }
+  return $valid;
+}
+
+/**
+ * Verify the signature of the response received from the OpenID provider.
+ *
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $association
+ *   Information on the association with the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
+ *
+ * @return
+ *   TRUE if the signature is valid and covers all fields required to be signed.
+ * @see http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
+ */
+function openid_verify_assertion_signature($service, $association, $response) {
+  if ($service['version'] == 2) {
+    // OpenID Authentication 2.0, section 10.1:
+    // These keys must always be signed.
+    $mandatory_keys = array('op_endpoint', 'return_to', 'response_nonce', 'assoc_handle');
+    if (isset($response['openid.claimed_id'])) {
+      // If present, these two keys must also be signed. According to the spec,
+      // they are either both present or both absent.
+      $mandatory_keys[] = 'claimed_id';
+      $mandatory_keys[] = 'identity';
+    }
+  }
+  else {
+    // OpenID Authentication 1.1. section 4.3.3.
+    $mandatory_keys = array('identity', 'return_to');
+  }
+
+  $keys_to_sign = explode(',', $response['openid.signed']);
+
+  if (count(array_diff($mandatory_keys, $keys_to_sign)) > 0) {
+    return FALSE;
+  }
+
+  return _openid_signature($association, $response, $keys_to_sign) == $response['openid.sig'];
+}
+
+/**
+ * Verify that the nonce has not been used in earlier assertions from the same OpenID provider.
+ *
+ * @param $service
+ *   Array describing the OpenID provider.
+ * @param $response
+ *   Array of response values from the provider.
+ *
+ * @return
+ *   TRUE if the nonce has not expired and has not been used earlier.
+ */
+function openid_verify_assertion_nonce($service, $response) {
+  if ($service['version'] != 2) {
+    return TRUE;
+  }
+
+  if (preg_match('/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z/', $response['openid.response_nonce'], $matches)) {
+    list(, $year, $month, $day, $hour, $minutes, $seconds) = $matches;
+    $nonce_timestamp = gmmktime($hour, $minutes, $seconds, $month, $day, $year);
+  }
+  else {
+    watchdog('openid', 'Nonce from @endpoint rejected because it is not correctly formatted, nonce: @nonce.', array('@endpoint' => $service['uri'], '@nonce' => $response['openid.response_nonce']), WATCHDOG_WARNING);
+    return FALSE;
+  }
+
+  // A nonce with a timestamp to far in the past or future will already have
+  // been removed and cannot be checked for single use anymore.
+  $time = time();
+  $expiry = 900;
+  if ($nonce_timestamp <= $time - $expiry || $nonce_timestamp >= $time + $expiry) {
+    watchdog('openid', 'Nonce received from @endpoint is out of range (time difference: @intervals). Check possible clock skew.', array('@endpoint' => $service['uri'], '@interval' => $time - $nonce_timestamp), WATCHDOG_WARNING);
+    return FALSE;
+  }
+
+  // Record that this nonce was used.
+  db_query("INSERT INTO {openid_nonce} (idp_endpoint_uri, nonce, expires) VALUES ('%s', '%s', %d)", $service['uri'], $response['openid.response_nonce'], $nonce_timestamp + $expiry);
+
+  // Count the number of times this nonce was used.
+  $count_used = db_result(db_query("SELECT COUNT(*) FROM {openid_nonce} WHERE nonce = '%s' AND idp_endpoint_uri = '%s'", $response['openid.response_nonce'], $service['uri']));
+
+  if ($count_used == 1) {
+    return TRUE;
+  }
+  else {
+    watchdog('openid', 'Nonce replay attempt blocked from @ip, nonce: @nonce.', array('@ip' => ip_address(), '@nonce' => $response['openid.response_nonce']), WATCHDOG_CRITICAL);
+    return FALSE;
+  }
+}
+
+/**
+ * Remove expired nonces from the database.
+ *
+ * Implementation of hook_cron().
+ */
+function openid_cron() {
+  db_query("DELETE FROM {openid_nonce} WHERE expires < %d", time());
+}

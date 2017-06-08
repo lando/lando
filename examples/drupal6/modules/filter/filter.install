@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * Implementation of hook_schema().
+ */
+function filter_schema() {
+  $schema['filters'] = array(
+    'description' => 'Table that maps filters (HTML corrector) to input formats (Filtered HTML).',
+    'fields' => array(
+      'fid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Auto-incrementing filter ID.',
+      ),
+      'format' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Foreign key: The {filter_formats}.format to which this filter is assigned.',
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The origin module of the filter.',
+      ),
+      'delta' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'ID to identify which filter within module is being referenced.',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'Weight of filter within format.',
+      )
+    ),
+    'primary key' => array('fid'),
+    'unique keys' => array(
+      'fmd' => array('format', 'module', 'delta'),
+    ),
+    'indexes' => array(
+      'list' => array('format', 'weight', 'module', 'delta'),
+    ),
+  );
+  $schema['filter_formats'] = array(
+    'description' => 'Stores input formats: custom groupings of filters, such as Filtered HTML.',
+    'fields' => array(
+      'format' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique ID for format.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the input format (Filtered HTML).',
+      ),
+      'roles' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'A comma-separated string of roles; references {role}.rid.', // This is bad since you can't use joins, nor index.
+      ),
+      'cache' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)',
+      ),
+    ),
+    'primary key' => array('format'),
+    'unique keys' => array('name' => array('name')),
+  );
+
+  $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by input format and md5 hash of the text.';
+
+  return $schema;
+}
+

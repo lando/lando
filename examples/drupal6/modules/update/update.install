@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function update_install() {
+  // Create cache table.
+  drupal_install_schema('update');
+  // Remove stale variables from update_status 5.x contrib, if any.
+  _update_remove_update_status_variables();
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function update_uninstall() {
+  // Remove cache table.
+  drupal_uninstall_schema('update');
+  // Clear any variables that might be in use
+  $variables = array(
+    'update_check_frequency',
+    'update_fetch_url',
+    'update_last_check',
+    'update_notification_threshold',
+    'update_notify_emails',
+  );
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function update_schema() {
+  $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_update']['description'] = 'Cache table for the Update module to store information about available releases, fetched from central server.';
+  return $schema;
+}
+
+/**
+ * Private helper to clear out stale variables from update_status 5.x contrib.
+ *
+ * @see update_install()
+ * @see update_update_6000()
+ */
+function _update_remove_update_status_variables() {
+  variable_del('update_status_settings');
+  variable_del('update_status_notify_emails');
+  variable_del('update_status_check_frequency');
+  variable_del('update_status_notification_threshold');
+  variable_del('update_status_last');
+  variable_del('update_status_fetch_url');
+}
+
+/**
+ * Clear out stale variables from update_status.
+ */
+function update_update_6000() {
+  _update_remove_update_status_variables();
+  return array();
+}

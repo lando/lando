@@ -1,0 +1,137 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function statistics_install() {
+  // Create tables.
+  drupal_install_schema('statistics');
+}
+
+/**
+ * Changes session ID  field to VARCHAR(64) to add support for SHA-1 hashes.
+ */
+function statistics_update_1000() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {accesslog} CHANGE COLUMN sid sid varchar(64) NOT NULL default ''");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'accesslog', 'sid', 'sid', 'varchar(64)', array('not null' => TRUE, 'default' => "''"));
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function statistics_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('statistics');
+
+  variable_del('statistics_count_content_views');
+  variable_del('statistics_enable_access_log');
+  variable_del('statistics_flush_accesslog_timer');
+  variable_del('statistics_day_timestamp');
+  variable_del('statistics_block_top_day_num');
+  variable_del('statistics_block_top_all_num');
+  variable_del('statistics_block_top_last_num');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function statistics_schema() {
+  $schema['accesslog'] = array(
+    'description' => 'Stores site access information for statistics.',
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique accesslog ID.',
+      ),
+      'sid' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Browser session ID of user that visited page.',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'Title of page visited.',
+      ),
+      'path' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => 'Internal path to page visited (relative to Drupal root.)',
+      ),
+      'url' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => 'Referrer URI.',
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'description' => 'Hostname of user that visited the page.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'User {users}.uid that visited the page.',
+      ),
+      'timer' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Time in milliseconds that the page took to load.',
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp of when the page was visited.',
+      ),
+    ),
+    'indexes' => array(
+      'accesslog_timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+    ),
+    'primary key' => array('aid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * @addtogroup updates-6.x-extra
+ * @{
+ */
+
+/**
+ * Allow longer referrers.
+ */
+function statistics_update_6000() {
+  $ret = array();
+  db_change_field($ret, 'accesslog', 'url', 'url', array('type' => 'text', 'not null' => FALSE));
+  return $ret;
+}
+
+/**
+ * @} End of "addtogroup updates-6.x-extra".
+ * The next series of updates should start at 7000.
+ */

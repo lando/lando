@@ -1,0 +1,249 @@
+<?php
+
+/**
+ * Implementation of hook_enable().
+ */
+function comment_enable() {
+  // Insert records into the node_comment_statistics for nodes that are missing.
+  db_query("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, n.changed, NULL, n.uid, 0 FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE c.comment_count IS NULL");
+}
+
+/**
+ * Changed node_comment_statistics to use node->changed to avoid future timestamps.
+ */
+function comment_update_1() {
+  // Change any future last comment timestamps to now.
+  db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE last_comment_timestamp > %d', time(), time());
+
+  // Unstuck node indexing timestamp if needed.
+  if (($last = variable_get('node_cron_last', FALSE)) !== FALSE) {
+    variable_set('node_cron_last', min(time(), $last));
+  }
+  return array();
+}
+
+function comment_update_6001() {
+  $ret[] = update_sql("ALTER TABLE {comments} DROP score");
+  $ret[] = update_sql("ALTER TABLE {comments} DROP users");
+  return $ret;
+}
+
+/**
+ * Changed comment settings from global to per-node -- copy global
+ * settings to all node types.
+ */
+function comment_update_6002() {
+  // Comment module might not be enabled when this is run, but we need the
+  // constants defined by the module for this update.
+  drupal_load('module', 'comment');
+  $settings = array(
+    'comment_default_mode' => COMMENT_MODE_THREADED_EXPANDED,
+    'comment_default_order' => COMMENT_ORDER_NEWEST_FIRST,
+    'comment_default_per_page' => 50,
+    'comment_controls' => COMMENT_CONTROLS_HIDDEN,
+    'comment_anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
+    'comment_subject_field' => 1,
+    'comment_preview' => COMMENT_PREVIEW_REQUIRED,
+    'comment_form_location' => COMMENT_FORM_SEPARATE_PAGE,
+  );
+  $types = node_get_types();
+  foreach ($settings as $setting => $default) {
+    $value = variable_get($setting, $default);
+    foreach ($types as $type => $object) {
+      variable_set($setting .'_'. $type, $value);
+    }
+    variable_del($setting);
+  }
+  return array(array('success' => TRUE, 'query' => 'Global comment settings copied to all node types.'));
+}
+
+/**
+ * Add index to parent ID field.
+ */
+function comment_update_6003() {
+  $ret = array();
+  db_add_index($ret, 'comments', 'pid', array('pid'));
+  return $ret;
+}
+
+/**
+ * @addtogroup updates-6.x-extra
+ * @{
+ */
+
+/**
+ * Add index to to node_comment_statistics on comment_count
+ */
+function comment_update_6004() {
+  $ret = array();
+  db_add_index($ret, 'node_comment_statistics', 'comment_count', array('comment_count'));
+  return $ret;
+}
+
+/**
+ * Add indices to uid fields.
+ */
+function comment_update_6005() {
+  $ret = array();
+  db_add_index($ret, 'comments', 'comment_uid', array('uid'));
+  db_add_index($ret, 'node_comment_statistics', 'last_comment_uid', array('last_comment_uid'));
+  return $ret;
+}
+
+/**
+ * @} End of "addtogroup updates-6.x-extra".
+ * The next series of updates should start at 7000.
+ */
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function comment_schema() {
+  $schema['comments'] = array(
+    'description' => 'Stores comments and associated data.',
+    'fields' => array(
+      'cid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique comment ID.',
+      ),
+      'pid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {comments}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid to which this comment is a reply.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
+      ),
+      'subject' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The comment title.',
+      ),
+      'comment' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'The comment body.',
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => "The author's host name.",
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The time that the comment was created, or last edited by its author, as a Unix timestamp.',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'The published status of a comment. (0 = Published, 1 = Not Published)',
+      ),
+      'format' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {filter_formats}.format of the comment body.',
+      ),
+      'thread' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => "The vancode representation of the comment's place in a thread.",
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'description' => "The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form.",
+      ),
+      'mail' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'description' => "The comment author's e-mail address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
+      ),
+      'homepage' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => "The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
+      )
+    ),
+    'indexes' => array(
+      'pid'    => array('pid'),
+      'nid'    => array('nid'),
+      'comment_uid'    => array('uid'),
+      'status' => array('status'), // This index is probably unused
+    ),
+    'primary key' => array('cid'),
+  );
+
+  $schema['node_comment_statistics'] = array(
+    'description' => 'Maintains statistics of node and comments posts to show "new" and "updated" flags.',
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {node}.nid for which the statistics are compiled.',
+      ),
+      'last_comment_timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comments}.timestamp.',
+      ),
+      'last_comment_name' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'description' => 'The name of the latest author to post a comment on this node, from {comments}.name.',
+      ),
+      'last_comment_uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user ID of the latest author to post a comment on this node, from {comments}.uid.',
+      ),
+      'comment_count' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The total number of comments on this node.',
+      ),
+    ),
+    'primary key' => array('nid'),
+    'indexes' => array(
+      'node_comment_timestamp' => array('last_comment_timestamp'),
+      'comment_count' => array('comment_count'),
+      'last_comment_uid' => array('last_comment_uid'),
+    ),
+  );
+
+  return $schema;
+}

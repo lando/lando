@@ -1,0 +1,51 @@
+<?php
+
+function color_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Check GD library
+    if (function_exists('imagegd2')) {
+      $info = gd_info();
+      $requirements['gd'] = array(
+        'value' => $info['GD Version'],
+      );
+
+      // Check PNG support
+      if (function_exists('imagecreatefrompng')) {
+        $requirements['gd']['severity'] = REQUIREMENT_OK;
+      }
+      else {
+        $requirements['gd']['severity'] = REQUIREMENT_ERROR;
+        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/ref.image.php'));
+      }
+    }
+    else {
+      $requirements['gd'] = array(
+        'value' => t('Not installed'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The GD library for PHP is missing or outdated. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/ref.image.php')),
+      );
+    }
+    $requirements['gd']['title'] = t('GD library');
+  }
+
+  return $requirements;
+}
+
+/**
+ * Warn site administrator if unsafe CSS color codes are found in the database.
+ */
+function color_update_6001() {
+  $ret = array();
+  $result = db_query("SELECT name FROM {variable} WHERE name LIKE 'color_%_palette'");
+  while ($variable = db_fetch_array($result)) {
+    $palette = variable_get($variable['name'], array());
+    foreach ($palette as $key => $color) {
+      if (!preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color)) {
+        drupal_set_message('Some of the custom CSS color codes specified via the color module are invalid. Please examine the themes which are making use of the color module at the <a href="'. url('admin/appearance/settings') .'">Appearance settings</a> page to verify their CSS color values.', 'warning');
+      }
+    }
+  }
+  return $ret;
+}

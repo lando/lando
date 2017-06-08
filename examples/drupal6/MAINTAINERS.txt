@@ -1,0 +1,85 @@
+
+List of maintainers
+--------------------------------------------------------------------------------
+
+LEGEND
+======
+
+- M: the maintainer
+- S: status:
+      "supported"     : someone is actually paid to look after this.
+      "maintained"    : someone actually looks after it.
+      "fixes/patches" : it has a maintainer but they don't have time to
+                        do much other than throw the odd patch in.
+      "orphan"        : no current maintainer, but maybe you could take
+                        the role as you write new code?
+
+--------------------------------------------------------------------------------
+
+BLOG API
+M: James Walker <walkah@walkah.net>
+S: maintained
+
+DISTRIBUTED AUTHENTICATION MODULES
+M: Moshe Weitzman <weitzman@tejasa.com>
+S: maintained
+
+DOCUMENTATION COORDINATOR
+M: Steven Peck <speck@blkmtn.org>
+S: maintained
+
+FILTER SYSTEM
+M: Steven Wittens <unconed@drupal.org>
+S: maintained
+
+FORM SYSTEM
+M: Károly Négyesi <chx@mail.tvnet.hu>
+S: maintained
+
+LOCALE MODULE
+M: Gabor Hojtsy <goba@php.net>
+S: maintained
+
+LOGGING
+M: Khalid Baheyeldin <drupal@2bits.com>
+S: maintained
+
+MENU SYSTEM
+M: Károly Négyesi <chx@mail.tvnet.hu>
+S: maintained
+
+PATH MODULE
+M: Matt Westgate <drupal@asitis.org>
+S: maintained
+
+POSTGRESQL
+M: Sammy Spets <sammys-drupal@synerger.com>
+S: maintained
+
+SECURITY COORDINATOR
+M: Greg Knaddison <http://drupal.org/user/36762>
+S: maintained
+
+STATISTICS MODULE
+M: Jeremy Andrews <jeremy@kerneltrap.com>
+S: maintained
+
+THEME SYSTEM
+M: Earl Miles <merlin@logrus.com>
+   Joon Park <joon@dvessel.com>
+S: maintained
+
+UPDATE MODULE
+M: Derek Wright <http://drupal.org/user/46549/contact>
+S: maintained
+
+XML-RPC SERVER/CLIENT
+M: John VanDyk <http://drupal.org/user/2375/contact>
+S: maintained
+
+TRANSLATIONS COORDINATOR
+M: Gerhard Killesreiter <gerhard@killesreiter.de>
+S: maintained
+
+THE REST:
+M: Dries <dries@drupal.org>
