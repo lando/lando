@@ -1,46 +1,44 @@
-Drupal 6
+Backdrop
 ========
 
-[Drupal 6](https://www.drupal.org/drupal-6.0) is an open source platform and content management system for building amazing digital experiences. It's made by a dedicated community. Anyone can use it, and it will always be free.
+[Backdrop](https://backdropcms.org/) is the comprehensive CMS for small to medium sized businesses and non-profits. Backdrop CMS is free and Open Source. There are no acquisition fees or licensing costs.
 
-You can easily boot up a best practices stack to run and develop Drupal 6 by adding the following to your app's `.lando.yml`.
+You can easily boot up a best practices stack to run and develop Backdrop by adding the following to your app's `.lando.yml`.
 
 ```yml
 name: myapp
-recipe: drupal6
+recipe: backdrop
 ```
 
-You can easily configure/override the Drupal 6 recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the Backdrop recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
 
 ### Example
 
-{% codesnippet "./../examples/drupal6/.lando.yml" %}{% endcodesnippet %}
+{% codesnippet "./../examples/backdrop/.lando.yml" %}{% endcodesnippet %}
 
-You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/drupal7-2)
+You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/backdrop)
 
-### Installing Drupal
+### Installing Backdrop
 
-You will need to make sure you [extract Drupal 6](https://api.drupal.org/api/drupal/INSTALL.txt/6.x) into either your application root directory or the subdirectory specified by `webroot` in your recipe config.
+You will need to make sure you [extract Backdrop](https://backdropcms.org/installation) into either your application root directory or the subdirectory specified by `webroot` in your recipe config.
 
-You will also want to scope out your database credentials (see [below](#getting-service-information)) so you can be prepped to enter them during the drupal installation. You will want to use `internal_connection` information.
+Lando will handle your database credentials automatically during install.
 
-If you want to see an example you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/drupal6) to get started.
+If you want to see an example you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/backdrop) to get started.
 
 ```bash
 # Get the lando example
 git clone https://github.com/kalabox/lando.git
-cd lando/examples/drupal6
+cd lando/examples/backdrop
 
 # Start the app up
 lando start
 
-# Get your database credentials
-lando info
+# Visit https://backdrop.lndo.site to complete your installation.
 
-# Visit https://d6.lndo.site to complete your installation.
-
-# Check the status of your site with drush
-lando drush status
+# Check the status of your site with backdrush
+cd www
+lando backdrush status
 ```
 
 ### Getting Service Information
@@ -55,16 +53,20 @@ cd /path/to/app
 lando info
 
 {
+  "node": {
+    "type": "node",
+    "version": "6.10"
+  },
   "appserver": {
     "type": "php",
-    "version": "5.6",
+    "version": "7.0",
     "via": "apache",
-    "webroot": ".",
+    "webroot": "www",
     "urls": [
-      "https://localhost:32911",
-      "http://localhost:32912",
-      "http://d6.lndo.site",
-      "https://d6.lndo.site"
+      "https://localhost:32950",
+      "http://localhost:32951",
+      "http://backdrop.lndo.site",
+      "https://backdrop.lndo.site"
     ],
     "share": {
       "remote": "/var/www/html"
@@ -74,9 +76,9 @@ lando info
     "type": "mysql",
     "version": "latest",
     "creds": {
-      "user": "drupal",
-      "password": "drupal",
-      "database": "drupal"
+      "user": "backdrop",
+      "password": "backdrop",
+      "database": "backdrop"
     },
     "internal_connection": {
       "host": "database",
@@ -116,10 +118,12 @@ Commands:
   stop [appname]           Stops app in current directory or [appname]
   version                  Display the lando version
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
+  node                     Run node commands
+  npm                      Run npm commands
   composer                 Run composer commands
   php                      Run php commands
   mysql                    Drop into a MySQL shell
-  drush                    Run Drush commands
+  backdrush                Run backdrush commands
 
 Options:
   --help, -h  Show help                                                [boolean]

@@ -50,6 +50,6 @@ recipe: drupal6
   # make sure you are specifying the correct value for the config. As an example
   # `mysql` will want a directory while `postgres` will want a specific config file.
   # conf:
-    # server: config/drupal7.conf
+    # server: config/drupal6.conf
     # database: config/mysql
     # php: config/php.ini

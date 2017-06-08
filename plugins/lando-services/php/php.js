@@ -283,8 +283,8 @@ module.exports = function(lando) {
         // Build the command
         cgr.push(dep.join(':'));
 
-        // Push in our composer deps
-        config.extras.push(cgr.join(' '));
+        // Unshift in our composer deps
+        config.extras.unshift(cgr.join(' '));
 
       });
     }
