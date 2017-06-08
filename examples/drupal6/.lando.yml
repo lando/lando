@@ -5,7 +5,7 @@ name: d6
 recipe: drupal6
 
 # Configure the Drupal6 recipe
-config:
+# config:
 
   # See: https://www.drupal.org/docs/7/system-requirements
 

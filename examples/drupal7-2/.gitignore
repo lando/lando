@@ -1,6 +1,7 @@
 node_modules
 
 web/*
+!web/.gitkeep
 vendor
 
 !web/sites
