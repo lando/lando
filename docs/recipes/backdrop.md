@@ -41,6 +41,19 @@ cd www
 lando backdrush status
 ```
 
+### Environmental Variables
+
+Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+
+```bash
+BACKDROP_SETTINGS=JSON_STRING_OF_BACKDROP_SETTINGS
+DB_HOST=database
+DB_USER=backdrop
+DB_PASSWORD=backdrop
+DB_NAME=backdrop
+DB_PORT=3306
+```
+
 ### Getting Service Information
 
 You can get more in depth information about the services this recipe provides by running `lando info`

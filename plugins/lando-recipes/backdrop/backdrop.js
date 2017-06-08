@@ -71,7 +71,12 @@ module.exports = function(lando) {
     build.services.appserver.overrides = {
       services: {
         environment: {
-          BACKDROP_SETTINGS: backdropSettings
+          BACKDROP_SETTINGS: backdropSettings,
+          DB_HOST: 'database',
+          DB_USER: build.services.database.creds.user,
+          DB_PASSWORD: build.services.database.creds.password,
+          DB_NAME: build.services.database.creds.database,
+          DB_PORT: 3306
         }
       }
     };
