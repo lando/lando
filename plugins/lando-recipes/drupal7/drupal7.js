@@ -20,7 +20,28 @@ module.exports = function(lando) {
     // Determine some things
     var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
     var database = _.get(config, 'database', 'mysql');
-    var drush = _.get(config, 'drush', '8');
+    var configPath = path.join(lando.config.engineConfigDir, 'drupal7');
+
+    // Use our default drupal config files if they have not been specified by the user
+    if (_.isEmpty(config.conf)) {
+      config.conf = {};
+    }
+    if (!_.has(config, 'conf.server') && base === 'lemp') {
+      var nginxConf = path.join(configPath, 'drupal7.conf');
+      config.conf.server = nginxConf;
+    }
+    if (!_.has(config, 'conf.php')) {
+      var phpConf = path.join(configPath, 'php.ini');
+      config.conf.php = phpConf;
+    }
+    // @TODO: add a custom/optimzed default postgres cong file
+    if (!_.has(config, 'conf.database') && !_.includes(database, 'postgres')) {
+      var dbConf = path.join(configPath, 'mysql');
+      config.conf.database = dbConf;
+    }
+
+    // Set the default php version for D7
+    config.php = _.get(config, 'php', '7.0');
 
     // Start by cheating
     var stack = require('./../' + [base, base].join('/'))(lando);
@@ -33,35 +54,13 @@ module.exports = function(lando) {
       database: 'drupal'
     };
 
-    // Determine the path to our config
-    var configPath = path.join(lando.config.engineConfigDir, 'drupal7');
-
-    // Determine if db type is MYSQL
-    // @TODO: add a custom/optimzed default postgres cong file
-    var isMySQL = !_.includes(database, 'postgres');
-
-    // Use our default drupal config files if they have not been specified by the user
-    if (!_.has(config, 'conf.server') && base === 'lemp') {
-      var nginxConf = path.join(configPath, 'drupal7.conf');
-      build.services.appserver.config.server = nginxConf;
-    }
-    if (!_.has(config, 'conf.php')) {
-      var phpConf = path.join(configPath, 'php.ini');
-      build.services.appserver.config.conf = phpConf;
-    }
-    if (!_.has(config, 'conf.database') && isMySQL) {
-      var dbConf = path.join(configPath, 'mysql');
-      build.services.database.config.confd = dbConf;
-    }
-
     // Add in the drush things
     build.services.appserver.composer = {
-      'drush/drush': '~' + drush
+      'drush/drush': '~' + _.get(config, 'drush', '8')
     };
     build.tooling.drush = {
       service: 'appserver',
-      description: 'Run Drush commands',
-      user: 'www-data'
+      description: 'Run Drush commands'
     };
 
     // Return the things

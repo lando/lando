@@ -1,0 +1,106 @@
+
+thead th {
+  text-align: right;
+  padding-left: 1em;
+  padding-right: 0.5em;
+}
+
+.item-list .icon {
+  float: left;
+  padding-left: 0;
+  padding-right: 0.25em;
+  clear: left;
+}
+.item-list ul li {
+  margin: 0 1.5em 0.25em 0;
+}
+
+.more-link {
+  text-align: left;
+}
+.more-help-link {
+  text-align: left;
+}
+
+dl.multiselect dt, dl.multiselect dd {
+  float: right;
+  margin: 0 0 0 1em;
+}
+
+.block ul {
+  padding: 0 1em 0.25em 0;
+}
+
+ul.primary {
+  padding: 0 1em 0 0;
+}
+ul.primary li a {
+  margin-right: 5px;
+  margin-left: 0.5em;
+}
+ul.secondary li {
+  display: inline;
+  padding: 0 1em;
+  border-right: none;
+  border-left: 1px solid #ccc;
+}
+html.js input.form-autocomplete {
+  background-position: 0% 2px;
+}
+html.js input.throbbing {
+  background-position: 0% -18px;
+}
+
+html.js fieldset.collapsible legend a {
+  padding-left: 0;
+  padding-right: 15px;
+  background-position: 98% 75%;
+}
+html.js fieldset.collapsed legend a {
+  background-image: url(../../misc/menu-collapsed-rtl.png);
+  background-position: 98% 50%;
+}
+
+div.teaser-button-wrapper {
+  float: left;
+  padding-right: 0;
+  padding-left: 5%;
+}
+.teaser-checkbox div.form-item {
+  float: left;
+  margin: 0 0 0 5%;
+}
+.progress .percentage {
+  float: left;
+}
+.progess-disabled {
+  float: right;
+}
+.ahah-progress {
+  float: right;
+}
+.ahah-progress .throbber {
+  float: right;
+}
+input.password-field {
+  margin-left: 10px;
+  margin-right: 0;
+}
+input.password-confirm {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+.draggable a.tabledrag-handle {
+  float: right;
+  margin: -0.4em -0.5em -0.4em 0;
+  padding: 0.42em 0.5em 0.42em 1.5em;
+}
+div.indentation {
+  margin: -0.4em -0.4em -0.4em 0.2em;
+  padding: 0.42em 0.6em 0.42em 0;
+  float: right;
+}
+div.tree-child, div.tree-child-last {
+  background-position: -65px center;
+}

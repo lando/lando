@@ -1,0 +1,642 @@
+<?php
+
+/**
+ * @file
+ * File-handling and attaching files to nodes.
+ *
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function upload_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#upload':
+      $output = '<p>'. t('The upload module allows users to upload files to the site. The ability to upload files is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to posts.') .'</p>';
+      $output .= '<p>'. t('Users with the upload files permission can upload attachments to posts. Uploads may be enabled for specific content types on the content types settings page. Each user role can be customized to limit or control the file size of uploads, or the maximum dimension of image files.') .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@upload">Upload module</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
+      return $output;
+    case 'admin/settings/uploads':
+      return '<p>'. t('Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.', array('@permissions' => url('admin/user/permissions', array('fragment' => 'module-upload')), '@types' => url('admin/content/types'))) .'</p>';
+  }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function upload_theme() {
+  return array(
+    'upload_attachments' => array(
+      'arguments' => array('files' => NULL),
+    ),
+    'upload_form_current' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'upload_form_new' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function upload_perm() {
+  return array('upload files', 'view uploaded files');
+}
+
+/**
+ * Implementation of hook_link().
+ */
+function upload_link($type, $node = NULL, $teaser = FALSE) {
+  $links = array();
+
+  // Display a link with the number of attachments
+  if ($teaser && $type == 'node' && isset($node->files) && user_access('view uploaded files')) {
+    $num_files = 0;
+    foreach ($node->files as $file) {
+      if ($file->list) {
+        $num_files++;
+      }
+    }
+    if ($num_files) {
+      $links['upload_attachments'] = array(
+        'title' => format_plural($num_files, '1 attachment', '@count attachments'),
+        'href' => "node/$node->nid",
+        'attributes' => array('title' => t('Read full article to view attachments.')),
+        'fragment' => 'attachments'
+      );
+    }
+  }
+
+  return $links;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function upload_menu() {
+  $items['upload/js'] = array(
+    'page callback' => 'upload_js',
+    'access arguments' => array('upload files'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/settings/uploads'] = array(
+    'title' => 'File uploads',
+    'description' => 'Control how files may be attached to content.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('upload_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'upload.admin.inc',
+  );
+  return $items;
+}
+
+function upload_menu_alter(&$items) {
+  $items['system/files']['access arguments'] = array('view uploaded files');
+}
+
+/**
+ * Determine the limitations on files that a given user may upload. The user
+ * may be in multiple roles so we select the most permissive limitations from
+ * all of their roles.
+ *
+ * @param $user
+ *   A Drupal user object.
+ * @return
+ *   An associative array with the following keys:
+ *     'extensions'
+ *       A white space separated string containing all the file extensions this
+ *       user may upload.
+ *     'file_size'
+ *       The maximum size of a file upload in bytes.
+ *     'user_size'
+ *       The total number of bytes for all for a user's files.
+ *     'resolution'
+ *       A string specifying the maximum resolution of images.
+ */
+function _upload_file_limits($user) {
+  $file_limit = variable_get('upload_uploadsize_default', 1);
+  $user_limit = variable_get('upload_usersize_default', 1);
+  $all_extensions = explode(' ', variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));
+  foreach ($user->roles as $rid => $name) {
+    $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));
+    $all_extensions = array_merge($all_extensions, explode(' ', $extensions));
+
+    // A zero value indicates no limit, take the least restrictive limit.
+    $file_size = variable_get("upload_uploadsize_$rid", variable_get('upload_uploadsize_default', 1)) * 1024 * 1024;
+    $file_limit = ($file_limit && $file_size) ? max($file_limit, $file_size) : 0;
+
+    $user_size = variable_get("upload_usersize_$rid", variable_get('upload_usersize_default', 1)) * 1024 * 1024;
+    $user_limit = ($user_limit && $user_size) ? max($user_limit, $user_size) : 0;
+  }
+  $all_extensions = implode(' ', array_unique($all_extensions));
+  return array(
+    'extensions' => $all_extensions,
+    'file_size' => $file_limit,
+    'user_size' => $user_limit,
+    'resolution' => variable_get('upload_max_resolution', 0),
+  );
+}
+
+/**
+ * Implementation of hook_file_download().
+ */
+function upload_file_download($filepath) {
+  $filepath = file_create_path($filepath);
+  $result = db_query("SELECT f.*, u.nid FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
+  while ($file = db_fetch_object($result)) {
+    if ($filepath !== $file->filepath) {
+      // Since some database servers sometimes use a case-insensitive
+      // comparison by default, double check that the filename is an exact
+      // match.
+      continue;
+    }
+    if (user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
+      return array(
+        'Content-Type: ' . $file->filemime,
+        'Content-Length: ' . $file->filesize,
+      );
+    }
+    else {
+      return -1;
+    }
+  }
+}
+
+/**
+ * Save new uploads and store them in the session to be associated to the node
+ * on upload_save.
+ *
+ * @param $node
+ *   A node object to associate with uploaded files.
+ */
+function upload_node_form_submit(&$form, &$form_state) {
+  global $user;
+
+  $limits = _upload_file_limits($user);
+  $validators = array(
+    'file_validate_extensions' => array($limits['extensions']),
+    'file_validate_image_resolution' => array($limits['resolution']),
+    'file_validate_size' => array($limits['file_size'], $limits['user_size']),
+  );
+
+  // Save new file uploads.
+  if (user_access('upload files') && ($file = file_save_upload('upload', $validators, file_directory_path()))) {
+    $file->list = variable_get('upload_list_default', 1);
+    $file->description = $file->filename;
+    $file->weight = 0;
+    $file->new = TRUE;
+    $form['#node']->files[$file->fid] = $file;
+    $form_state['values']['files'][$file->fid] = (array)$file;
+  }
+
+  if (isset($form_state['values']['files'])) {
+    foreach ($form_state['values']['files'] as $fid => $file) {
+      // If the node was previewed prior to saving, $form['#node']->files[$fid]
+      // is an array instead of an object. Convert file to object for compatibility.
+      $form['#node']->files[$fid] = (object) $form['#node']->files[$fid];
+      $form_state['values']['files'][$fid]['new'] = !empty($form['#node']->files[$fid]->new);
+    }
+  }
+
+  // Order the form according to the set file weight values.
+  if (!empty($form_state['values']['files'])) {
+    $microweight = 0.001;
+    foreach ($form_state['values']['files'] as $fid => $file) {
+      if (is_numeric($fid)) {
+        $form_state['values']['files'][$fid]['#weight'] = $file['weight'] + $microweight;
+        $microweight += 0.001;
+      }
+    }
+    uasort($form_state['values']['files'], 'element_sort');
+  }
+}
+
+function upload_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+    $form['workflow']['upload'] = array(
+      '#type' => 'radios',
+      '#title' => t('Attachments'),
+      '#default_value' => variable_get('upload_'. $form['#node_type']->type, 1),
+      '#options' => array(t('Disabled'), t('Enabled')),
+    );
+  }
+
+  if (isset($form['type']) && isset($form['#node'])) {
+    $node = $form['#node'];
+    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
+      // Attachments fieldset
+      $form['attachments'] = array(
+        '#type' => 'fieldset',
+        '#access' => user_access('upload files'),
+        '#title' => t('File attachments'),
+        '#collapsible' => TRUE,
+        '#collapsed' => empty($node->files),
+        '#description' => t('Changes made to the attachments are not permanent until you save this post. The first "listed" file will be included in RSS feeds.'),
+        '#prefix' => '<div class="attachments">',
+        '#suffix' => '</div>',
+        '#weight' => 30,
+      );
+
+      // Wrapper for fieldset contents (used by ahah.js).
+      $form['attachments']['wrapper'] = array(
+        '#prefix' => '<div id="attach-wrapper">',
+        '#suffix' => '</div>',
+      );
+
+      // Make sure necessary directories for upload.module exist and are
+      // writable before displaying the attachment form.
+      $path = file_directory_path();
+      $temp = file_directory_temp();
+      // Note: pass by reference
+      if (!file_check_directory($path, FILE_CREATE_DIRECTORY) || !file_check_directory($temp, FILE_CREATE_DIRECTORY)) {
+        $form['attachments']['#description'] =  t('File attachments are disabled. The file directories have not been properly configured.');
+        if (user_access('administer site configuration')) {
+          $form['attachments']['#description'] .= ' '. t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
+        }
+        else {
+          $form['attachments']['#description'] .= ' '. t('Please contact the site administrator.');
+        }
+      }
+      else {
+        $form['attachments']['wrapper'] += _upload_form($node);
+        $form['#attributes']['enctype'] = 'multipart/form-data';
+      }
+      $form['#submit'][] = 'upload_node_form_submit';
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function upload_nodeapi(&$node, $op, $teaser = NULL) {
+  switch ($op) {
+
+    case 'load':
+      $output = '';
+      if (variable_get("upload_$node->type", 1) == 1) {
+        $output['files'] = upload_load($node);
+        return $output;
+      }
+      break;
+
+    case 'view':
+      if (isset($node->files) && user_access('view uploaded files')) {
+        // Add the attachments list to node body with a heavy
+        // weight to ensure they're below other elements
+        if (count($node->files)) {
+          if (!$teaser && user_access('view uploaded files')) {
+            $node->content['files'] = array(
+              '#value' => theme('upload_attachments', $node->files),
+              '#weight' => 50,
+            );
+          }
+        }
+      }
+      break;
+
+    case 'insert':
+    case 'update':
+      if (user_access('upload files')) {
+        upload_save($node);
+      }
+      break;
+
+    case 'delete':
+      upload_delete($node);
+      break;
+
+    case 'delete revision':
+      upload_delete_revision($node);
+      break;
+
+    case 'search result':
+      return isset($node->files) && is_array($node->files) && user_access('view uploaded files') ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
+
+    case 'rss item':
+      if (is_array($node->files) && user_access('view uploaded files')) {
+        $files = array();
+        foreach ($node->files as $file) {
+          if ($file->list) {
+            $files[] = $file;
+          }
+        }
+        if (count($files) > 0) {
+          // RSS only allows one enclosure per item
+          $file = array_shift($files);
+          return array(
+            array(
+              'key' => 'enclosure',
+              'attributes' => array(
+                'url' => file_create_url($file->filepath),
+                'length' => $file->filesize,
+                'type' => $file->filemime
+              )
+            )
+          );
+        }
+      }
+      return array();
+  }
+}
+
+/**
+ * Displays file attachments in table
+ *
+ * @ingroup themeable
+ */
+function theme_upload_attachments($files) {
+  $header = array(t('Attachment'), t('Size'));
+  $rows = array();
+  foreach ($files as $file) {
+    $file = (object)$file;
+    if ($file->list && empty($file->remove)) {
+      $href = file_create_url($file->filepath);
+      $text = $file->description ? $file->description : $file->filename;
+      $rows[] = array(l($text, $href), format_size($file->filesize));
+    }
+  }
+  if (count($rows)) {
+    return theme('table', $header, $rows, array('id' => 'attachments'));
+  }
+}
+
+/**
+ * Determine how much disk space is occupied by a user's uploaded files.
+ *
+ * @param $uid
+ *   The integer user id of a user.
+ * @return
+ *   The amount of disk space used by the user in bytes.
+ */
+function upload_space_used($uid) {
+  return file_space_used($uid);
+}
+
+/**
+ * Determine how much disk space is occupied by uploaded files.
+ *
+ * @return
+ *   The amount of disk space used by uploaded files in bytes.
+ */
+function upload_total_space_used() {
+  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid'));
+}
+
+function upload_save(&$node) {
+  if (empty($node->files) || !is_array($node->files)) {
+    return;
+  }
+
+  foreach ($node->files as $fid => $file) {
+    // Convert file to object for compatibility
+    $file = (object)$file;
+
+    // Remove file. Process removals first since no further processing
+    // will be required.
+    if (!empty($file->remove)) {
+      db_query('DELETE FROM {upload} WHERE fid = %d AND vid = %d', $fid, $node->vid);
+
+      // If the file isn't used by any other revisions delete it.
+      $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $fid));
+      if ($count < 1) {
+        file_delete($file->filepath);
+        db_query('DELETE FROM {files} WHERE fid = %d', $fid);
+      }
+
+      // Remove it from the session in the case of new uploads,
+      // that you want to disassociate before node submission.
+      unset($node->files[$fid]);
+      // Move on, so the removed file won't be added to new revisions.
+      continue;
+    }
+
+    // Create a new revision, or associate a new file needed.
+    if (!empty($node->old_vid) || $file->new) {
+      db_query("INSERT INTO {upload} (fid, nid, vid, list, description, weight) VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
+      file_set_status($file, FILE_STATUS_PERMANENT);
+    }
+    // Update existing revision.
+    else {
+      db_query("UPDATE {upload} SET list = %d, description = '%s', weight = %d WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->weight, $file->fid, $node->vid);
+      file_set_status($file, FILE_STATUS_PERMANENT);
+    }
+  }
+}
+
+function upload_delete($node) {
+  $files = array();
+  $result = db_query('SELECT DISTINCT f.* FROM {upload} u INNER JOIN {files} f ON u.fid = f.fid WHERE u.nid = %d', $node->nid);
+  while ($file = db_fetch_object($result)) {
+    $files[$file->fid] = $file;
+  }
+
+  foreach ($files as $fid => $file) {
+    // Delete all files associated with the node
+    db_query('DELETE FROM {files} WHERE fid = %d', $fid);
+    file_delete($file->filepath);
+  }
+
+  // Delete all file revision information associated with the node
+  db_query('DELETE FROM {upload} WHERE nid = %d', $node->nid);
+}
+
+function upload_delete_revision($node) {
+  if (is_array($node->files)) {
+    foreach ($node->files as $file) {
+      // Check if the file will be used after this revision is deleted
+      $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $file->fid));
+
+      // if the file won't be used, delete it
+      if ($count < 2) {
+        db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
+        file_delete($file->filepath);
+      }
+    }
+  }
+
+  // delete the revision
+  db_query('DELETE FROM {upload} WHERE vid = %d', $node->vid);
+}
+
+function _upload_form($node) {
+  global $user;
+
+  $form = array(
+    '#theme' => 'upload_form_new',
+    '#cache' => TRUE,
+  );
+
+  if (!empty($node->files) && is_array($node->files)) {
+    $form['files']['#theme'] = 'upload_form_current';
+    $form['files']['#tree'] = TRUE;
+    foreach ($node->files as $key => $file) {
+      $file = (object)$file;
+      $description = file_create_url($file->filepath);
+      $description = "<small>". check_plain($description) ."</small>";
+      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
+      $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
+      $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
+      $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
+      $form['files'][$key]['weight'] = array('#type' => 'weight', '#delta' => count($node->files), '#default_value' => $file->weight);
+      $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
+      $form['files'][$key]['filepath'] = array('#type' => 'value',  '#value' => $file->filepath);
+      $form['files'][$key]['filemime'] = array('#type' => 'value',  '#value' => $file->filemime);
+      $form['files'][$key]['filesize'] = array('#type' => 'value',  '#value' => $file->filesize);
+      $form['files'][$key]['fid'] = array('#type' => 'value',  '#value' => $file->fid);
+      $form['files'][$key]['new'] = array('#type' => 'value', '#value' => FALSE);
+    }
+  }
+
+  if (user_access('upload files')) {
+    $limits = _upload_file_limits($user);
+    $form['new']['#weight'] = 10;
+    $form['new']['upload'] = array(
+      '#type' => 'file',
+      '#title' => t('Attach new file'),
+      '#size' => 40,
+      '#description' => ($limits['resolution'] ? t('Images are larger than %resolution will be resized. ', array('%resolution' => $limits['resolution'])) : '') . t('The maximum upload size is %filesize. Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions'], '%filesize' => format_size($limits['file_size']))),
+    );
+    $form['new']['attach'] = array(
+      '#type' => 'submit',
+      '#value' => t('Attach'),
+      '#name' => 'attach',
+      '#ahah' => array(
+        'path' => 'upload/js',
+        'wrapper' => 'attach-wrapper',
+        'progress' => array('type' => 'bar', 'message' => t('Please wait...')),
+      ),
+      '#submit' => array('node_form_submit_build_node'),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Theme the attachments list.
+ *
+ * @ingroup themeable
+ */
+function theme_upload_form_current($form) {
+  $header = array('', t('Delete'), t('List'), t('Description'), t('Weight'), t('Size'));
+  drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
+
+  foreach (element_children($form) as $key) {
+    // Add class to group weight fields for drag and drop.
+    $form[$key]['weight']['#attributes']['class'] = 'upload-weight';
+
+    $row = array('');
+    $row[] = drupal_render($form[$key]['remove']);
+    $row[] = drupal_render($form[$key]['list']);
+    $row[] = drupal_render($form[$key]['description']);
+    $row[] = drupal_render($form[$key]['weight']);
+    $row[] = drupal_render($form[$key]['size']);
+    $rows[] = array('data' => $row, 'class' => 'draggable');
+  }
+  $output = theme('table', $header, $rows, array('id' => 'upload-attachments'));
+  $output .= drupal_render($form);
+  return $output;
+}
+
+/**
+ * Theme the attachment form.
+ * Note: required to output prefix/suffix.
+ *
+ * @ingroup themeable
+ */
+function theme_upload_form_new($form) {
+  drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
+  $output = drupal_render($form);
+  return $output;
+}
+
+function upload_load($node) {
+  $files = array();
+
+  if ($node->vid) {
+    $result = db_query('SELECT * FROM {files} f INNER JOIN {upload} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY r.weight, f.fid', $node->vid);
+    while ($file = db_fetch_object($result)) {
+      $files[$file->fid] = $file;
+    }
+  }
+
+  return $files;
+}
+
+/**
+ * Menu-callback for JavaScript-based uploads.
+ */
+function upload_js() {
+  $cached_form_state = array();
+  $files = array();
+
+  // Load the form from the Form API cache.
+  if (!($cached_form = form_get_cache($_POST['form_build_id'], $cached_form_state)) || !isset($cached_form['#node']) || !isset($cached_form['attachments'])) {
+    form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+    $output = theme('status_messages');
+    print drupal_to_js(array('status' => TRUE, 'data' => $output));
+    exit();
+  }
+
+  $form_state = array('values' => $_POST);
+
+  // Handle new uploads, and merge tmp files into node-files.
+  upload_node_form_submit($cached_form, $form_state);
+
+  if(!empty($form_state['values']['files'])) {
+    foreach ($form_state['values']['files'] as $fid => $file) {
+      if (isset($cached_form['#node']->files[$fid])) {
+        $files[$fid] = $cached_form['#node']->files[$fid];
+      }
+    }
+  }
+
+  $node = $cached_form['#node'];
+
+  $node->files = $files;
+
+  $form = _upload_form($node);
+
+  unset($cached_form['attachments']['wrapper']['new']);
+  $cached_form['attachments']['wrapper'] = array_merge($cached_form['attachments']['wrapper'], $form);
+
+  $cached_form['attachments']['#collapsed'] = FALSE;
+
+  form_set_cache($_POST['form_build_id'], $cached_form, $cached_form_state);
+
+  foreach ($files as $fid => $file) {
+    if (is_numeric($fid)) {
+      $form['files'][$fid]['description']['#default_value'] = $form_state['values']['files'][$fid]['description'];
+      $form['files'][$fid]['list']['#default_value'] = !empty($form_state['values']['files'][$fid]['list']);
+      $form['files'][$fid]['remove']['#default_value'] = !empty($form_state['values']['files'][$fid]['remove']);
+      $form['files'][$fid]['weight']['#default_value'] = $form_state['values']['files'][$fid]['weight'];
+    }
+  }
+
+  // Render the form for output.
+  $form += array(
+    '#post' => $_POST,
+    '#programmed' => FALSE,
+    '#tree' => FALSE,
+    '#parents' => array(),
+  );
+
+  $empty_form_state = array();
+  $data = &$form;
+  $data['__drupal_alter_by_ref'] = array(&$empty_form_state);
+  drupal_alter('form', $data, 'upload_js');
+
+  $form_state = array('submitted' => FALSE);
+  $form = form_builder('upload_js', $form, $form_state);
+  $output = theme('status_messages') . drupal_render($form);
+
+  // We send the updated file attachments form.
+  // Don't call drupal_json(). ahah.js uses an iframe and
+  // the header output by drupal_json() causes problems in some browsers.
+  print drupal_to_js(array('status' => TRUE, 'data' => $output));
+  exit;
+}

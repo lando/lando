@@ -58,7 +58,10 @@ module.exports = function(lando) {
       apache: {
         web: 'apache',
         mount: config.mount,
-        command: ['apache2-foreground'],
+        command: [
+          'sh -c',
+          '\'a2enmod rewrite && apache2-foreground\''
+        ],
         image: [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-available/000-default.conf',
       }

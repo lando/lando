@@ -7,10 +7,12 @@ recipe: drupal7
 # Configure the Drupal7 recipe
 config:
 
+  # See: https://www.drupal.org/docs/7/system-requirements
+
   # Optionally specify the php version to use.
   #
-  # If ommitted this will default to the latest php version. Consult the `php`
-  # service to see what version are available
+  # If ommitted this will default to the latest php version supported by Drupal 7.
+  # Consult the `php` service to see what version are available
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   php: '7.0'
@@ -47,7 +49,7 @@ config:
   # services. Definitely consult the relevant documentaion for each service to
   # make sure you are specifying the correct value for the config. As an example
   # `mysql` will want a directory while `postgres` will want a specific config file.
-  conf:
+  # conf:
     # server: config/drupal7.conf
     # database: config/mysql
     # php: config/php.ini

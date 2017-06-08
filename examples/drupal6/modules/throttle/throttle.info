@@ -1,0 +1,11 @@
+name = Throttle
+description = Handles the auto-throttling mechanism, to control site congestion.
+package = Core - optional
+version = VERSION
+core = 6.x
+
+; Information added by Drupal.org packaging script on 2016-02-24
+version = "6.38"
+project = "drupal"
+datestamp = "1456343372"
+

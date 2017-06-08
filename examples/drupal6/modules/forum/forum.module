@@ -1,0 +1,970 @@
+<?php
+
+/**
+ * @file
+ * Enable threaded discussions about general topics.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function forum_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#forum':
+      $output = '<p>'. t('The forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. The <a href="@create-topic">forum topic</a> menu item (under <em>Create content</em> on the Navigation menu) creates the initial post of a new threaded discussion, or thread.', array('@create-topic' => url('node/add/forum'))) .'</p>';
+      $output .= '<p>'. t('A threaded discussion occurs as people leave comments on a forum topic (or on other comments within that topic). A forum topic is contained within a forum, which may hold many similar or related forum topics. Forums are (optionally) nested within a container, which may hold many similar or related forums. Both containers and forums may be nested within other containers and forums, and provide structure for your message board. By carefully planning this structure, you make it easier for users to find and comment on a specific forum topic.') .'</p>';
+      $output .= '<p>'. t('When administering a forum, note that:') .'</p>';
+      $output .= '<ul><li>'. t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') .'</li>';
+      $output .= '<li>'. t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') .'</li>';
+      $output .= '<li>'. t('selecting <em>Read only</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') .'</li>';
+      $output .= '<li>'. t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') .'</li></ul>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
+      return $output;
+    case 'admin/content/forum':
+      return '<p>'. t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums. To rearrange forums and containers, grab a drag-and-drop handle under the <em>Name</em> column and drag the forum or container to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') .'</p>';
+    case 'admin/content/forum/add/container':
+      return '<p>'. t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') .'</p>';
+    case 'admin/content/forum/add/forum':
+      return '<p>'. t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') .'</p>';
+    case 'admin/content/forum/settings':
+      return '<p>'. t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/content/taxonomy/edit/vocabulary/'. variable_get('forum_nav_vocabulary', '')))) .'</p>';
+  }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function forum_theme() {
+  return array(
+    'forums' => array(
+      'template' => 'forums',
+      'arguments' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+    ),
+    'forum_list' => array(
+      'template' => 'forum-list',
+      'arguments' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
+    ),
+    'forum_topic_list' => array(
+      'template' => 'forum-topic-list',
+      'arguments' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+    ),
+    'forum_icon' => array(
+      'template' => 'forum-icon',
+      'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
+    ),
+    'forum_topic_navigation' => array(
+      'template' => 'forum-topic-navigation',
+      'arguments' => array('node' => NULL),
+    ),
+    'forum_submitted' => array(
+      'template' => 'forum-submitted',
+      'arguments' => array('topic' => NULL),
+    ),
+  );
+}
+
+/**
+ * Fetch a forum term.
+ *
+ * @param $tid
+ *   The ID of the term which should be loaded.
+ *
+ * @return
+ *   An associative array containing the term data or FALSE if the term cannot be loaded, or is not part of the forum vocabulary.
+ */
+function forum_term_load($tid) {
+  $result = db_query(db_rewrite_sql('SELECT t.tid, t.vid, t.name, t.description, t.weight FROM {term_data} t WHERE t.tid = %d AND t.vid = %d', 't', 'tid'), $tid, variable_get('forum_nav_vocabulary', ''));
+  return db_fetch_array($result);
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function forum_menu() {
+  $items['forum'] = array(
+    'title' => 'Forums',
+    'page callback' => 'forum_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'forum.pages.inc',
+  );
+  $items['admin/content/forum'] = array(
+    'title' => 'Forums',
+    'description' => 'Control forums and their hierarchy and change forum settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('forum_overview'),
+    'access arguments' => array('administer forums'),
+    'file' => 'forum.admin.inc',
+  );
+  $items['admin/content/forum/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/content/forum/add/container'] = array(
+    'title' => 'Add container',
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('container'),
+    'access arguments' => array('administer forums'),
+    'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/forum',
+    'file' => 'forum.admin.inc',
+  );
+  $items['admin/content/forum/add/forum'] = array(
+    'title' => 'Add forum',
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('forum'),
+    'access arguments' => array('administer forums'),
+    'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/forum',
+    'file' => 'forum.admin.inc',
+  );
+  $items['admin/content/forum/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('forum_admin_settings'),
+    'access arguments' => array('administer forums'),
+    'weight' => 5,
+    'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/forum',
+    'file' => 'forum.admin.inc',
+  );
+  $items['admin/content/forum/edit/%forum_term'] = array(
+    'page callback' => 'forum_form_main',
+    'access arguments' => array('administer forums'),
+    'type' => MENU_CALLBACK,
+    'file' => 'forum.admin.inc',
+  );
+  $items['admin/content/forum/edit/container/%forum_term'] = array(
+    'title' => 'Edit container',
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('container', 5),
+    'access arguments' => array('administer forums'),
+    'type' => MENU_CALLBACK,
+    'file' => 'forum.admin.inc',
+  );
+  $items['admin/content/forum/edit/forum/%forum_term'] = array(
+    'title' => 'Edit forum',
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('forum', 5),
+    'access arguments' => array('administer forums'),
+    'type' => MENU_CALLBACK,
+    'file' => 'forum.admin.inc',
+  );
+  return $items;
+}
+
+
+/**
+ * Implementation of hook_init().
+ */
+function forum_init() {
+  drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function forum_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  // We are going to return if $node->type is not one of the node
+  // types assigned to the forum vocabulary.  If forum_nav_vocabulary
+  // is undefined or the vocabulary does not exist, it clearly cannot
+  // be assigned to $node->type, so return to avoid E_ALL warnings.
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (empty($vocabulary)) {
+    return;
+  }
+
+  // Operate only on node types assigned for the forum vocabulary.
+  if (!in_array($node->type, $vocabulary->nodes)) {
+    return;
+  }
+
+  switch ($op) {
+    case 'view':
+      if ($page && taxonomy_node_get_terms_by_vocabulary($node, $vid) && $tree = taxonomy_get_tree($vid)) {
+        // Get the forum terms from the (cached) tree
+        foreach ($tree as $term) {
+          $forum_terms[] = $term->tid;
+        }
+        foreach ($node->taxonomy as $term_id => $term) {
+          if (in_array($term_id, $forum_terms)) {
+            $node->tid = $term_id;
+          }
+        }
+        // Breadcrumb navigation
+        $breadcrumb[] = l(t('Home'), NULL);
+        $breadcrumb[] = l($vocabulary->name, 'forum');
+        if ($parents = taxonomy_get_parents_all($node->tid)) {
+          $parents = array_reverse($parents);
+          foreach ($parents as $p) {
+            $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
+          }
+        }
+        drupal_set_breadcrumb($breadcrumb);
+
+        if (!$teaser) {
+          $node->content['forum_navigation'] = array(
+            '#value' => theme('forum_topic_navigation', $node),
+            '#weight' => 100,
+          );
+        }
+      }
+      break;
+
+    case 'prepare':
+      if (empty($node->nid)) {
+        // New topic
+        $node->taxonomy[arg(3)]->vid = $vid;
+        $node->taxonomy[arg(3)]->tid = arg(3);
+      }
+      break;
+
+    // Check in particular that only a "leaf" term in the associated taxonomy
+    // vocabulary is selected, not a "container" term.
+    case 'validate':
+      if ($node->taxonomy) {
+        // Extract the node's proper topic ID.
+        $vocabulary = $vid;
+        $containers = variable_get('forum_containers', array());
+        foreach ($node->taxonomy as $term) {
+          if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
+            if (in_array($term, $containers)) {
+              $term = taxonomy_get_term($term);
+              form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
+            }
+          }
+        }
+      }
+      break;
+
+    // Assign forum taxonomy when adding a topic from within a forum.
+    case 'presave':
+      // Make sure all fields are set properly:
+      $node->icon = !empty($node->icon) ? $node->icon : '';
+
+      if ($node->taxonomy && $tree = taxonomy_get_tree($vid)) {
+        // Get the forum terms from the (cached) tree if we have a taxonomy.
+        foreach ($tree as $term) {
+          $forum_terms[] = $term->tid;
+        }
+        foreach ($node->taxonomy as $term_id) {
+          if (in_array($term_id, $forum_terms)) {
+            $node->tid = $term_id;
+          }
+        }
+        $old_tid = db_result(db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = %d ORDER BY f.vid DESC", $node->nid, 0, 1));
+        if ($old_tid && isset($node->tid) && ($node->tid != $old_tid) && !empty($node->shadow)) {
+          // A shadow copy needs to be created. Retain new term and add old term.
+          $node->taxonomy[] = $old_tid;
+        }
+      }
+      break;
+
+    case 'update':
+      if (empty($node->revision) && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
+        if (!empty($node->tid)) {
+          db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
+        }
+        // The node is removed from the forum.
+        else {
+          db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+        }
+        break;
+      }
+      // Deliberate no break -- for new revisions and for previously unassigned terms we need an insert.
+
+    case 'insert':
+      if (!empty($node->tid)) {
+        db_query('INSERT INTO {forum} (tid, vid, nid) VALUES (%d, %d, %d)', $node->tid, $node->vid, $node->nid);
+      }
+      break;
+
+    case 'delete':
+      db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+      break;
+
+    case 'load':
+      return db_fetch_array(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
+  }
+
+  return;
+}
+
+/**
+ * Implementation of hook_node_info().
+ */
+function forum_node_info() {
+  return array(
+    'forum' => array(
+      'name' => t('Forum topic'),
+      'module' => 'forum',
+      'description' => t('A <em>forum topic</em> is the initial post to a new discussion thread within a forum.'),
+      'title_label' => t('Subject'),
+    )
+  );
+}
+
+/**
+ * Implementation of hook_access().
+ */
+function forum_access($op, $node, $account) {
+  switch ($op) {
+    case 'create':
+      return user_access('create forum topics', $account) ? TRUE : NULL;
+    case 'update':
+      return user_access('edit any forum topic', $account) || (user_access('edit own forum topics', $account) && ($account->uid == $node->uid)) ? TRUE : NULL;
+    case 'delete':
+      return user_access('delete any forum topic', $account) || (user_access('delete own forum topics', $account) && ($account->uid == $node->uid)) ? TRUE : NULL;
+  }
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function forum_perm() {
+  return array('create forum topics', 'delete own forum topics', 'delete any forum topic', 'edit own forum topics', 'edit any forum topic', 'administer forums');
+}
+
+/**
+ * Implementation of hook_taxonomy().
+ */
+function forum_taxonomy($op, $type, $term = NULL) {
+  if ($op == 'delete' && $term['vid'] == variable_get('forum_nav_vocabulary', '')) {
+    switch ($type) {
+      case 'term':
+        $results = db_query('SELECT tn.nid FROM {term_node} tn WHERE tn.tid = %d', $term['tid']);
+        while ($node = db_fetch_object($results)) {
+          // node_delete will also remove any association with non-forum vocabularies.
+          node_delete($node->nid);
+        }
+
+        // For containers, remove the tid from the forum_containers variable.
+        $containers = variable_get('forum_containers', array());
+        $key = array_search($term['tid'], $containers);
+        if ($key !== FALSE) {
+          unset($containers[$key]);
+        }
+        variable_set('forum_containers', $containers);
+        break;
+      case 'vocabulary':
+        variable_del('forum_nav_vocabulary');
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function forum_form_alter(&$form, $form_state, $form_id) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  if (isset($form['vid']) && $form['vid']['#value'] == $vid) {
+    // Hide critical options from forum vocabulary.
+    if ($form_id == 'taxonomy_form_vocabulary') {
+      $form['help_forum_vocab'] = array(
+        '#value' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
+        '#weight' => -1,
+      );
+      $form['content_types']['nodes']['#required'] = TRUE;
+      $form['hierarchy'] = array('#type' => 'value', '#value' => 1);
+      $form['settings']['required'] = array('#type' => 'value', '#value' => FALSE);
+      $form['settings']['relations'] = array('#type' => 'value', '#value' => FALSE);
+      $form['settings']['tags'] = array('#type' => 'value', '#value' => FALSE);
+      $form['settings']['multiple'] = array('#type' => 'value', '#value' => FALSE);
+      unset($form['delete']);
+    }
+    // Hide multiple parents select from forum terms.
+    elseif ($form_id == 'taxonomy_form_term') {
+      $form['advanced']['parent']['#access'] = FALSE;
+    }
+  }
+  if ($form_id == 'forum_node_form') {
+    // Make the vocabulary required for 'real' forum-nodes.
+    $vid = variable_get('forum_nav_vocabulary', '');
+    $form['taxonomy'][$vid]['#required'] = TRUE;
+    $form['taxonomy'][$vid]['#options'][''] = t('- Please choose -');
+  }
+}
+
+/**
+ * Implementation of hook_load().
+ */
+function forum_load($node) {
+  $forum = db_fetch_object(db_query('SELECT * FROM {forum} WHERE vid = %d', $node->vid));
+
+  return $forum;
+}
+
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a block containing the currently active forum topics and the
+ * most recently added forum topics.
+ */
+function forum_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks[0]['info'] = t('Active forum topics');
+      $blocks[1]['info'] = t('New forum topics');
+      return $blocks;
+
+    case 'configure':
+      $form['forum_block_num_'. $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_'. $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      return $form;
+
+    case 'save':
+      variable_set('forum_block_num_'. $delta, $edit['forum_block_num_'. $delta]);
+      break;
+
+    case 'view':
+      if (user_access('access content')) {
+        switch ($delta) {
+          case 0:
+            $title = t('Active forum topics');
+            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY l.last_comment_timestamp DESC");
+            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_0', '5'));
+            $content = node_title_list($result);
+            break;
+
+          case 1:
+            $title = t('New forum topics');
+            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
+            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_1', '5'));
+            $content = node_title_list($result);
+            break;
+        }
+
+        if (!empty($content)) {
+          $block['subject'] = $title;
+          $block['content'] = $content . theme('more_link', url('forum'), t('Read the latest forum topics.'));
+          return $block;
+        }
+      }
+  }
+}
+
+/**
+ * Implementation of hook_form().
+ */
+function forum_form(&$node, $form_state) {
+  $type = node_get_types('type', $node);
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
+
+  if (!empty($node->nid)) {
+    $vid = variable_get('forum_nav_vocabulary', '');
+    $forum_terms = taxonomy_node_get_terms_by_vocabulary($node, $vid);
+    // if editing, give option to leave shadows
+    $shadow = (count($forum_terms) > 1);
+    $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
+  }
+
+  $form['body_field'] = node_body_field($node, $type->body_label, 1);
+
+  $form['#submit'][] = 'forum_submit';
+  // Assign the forum topic submit handler.
+
+  return $form;
+}
+
+/**
+ * Implementation of hook_term_path().
+ */
+function forum_term_path($term) {
+  return 'forum/'. $term->tid;
+}
+
+/**
+ * Returns a list of all forums for a given taxonomy id
+ *
+ * Forum objects contain the following fields
+ * -num_topics Number of topics in the forum
+ * -num_posts Total number of posts in all topics
+ * -last_post Most recent post for the forum
+ *
+ * @param $tid
+ *   Taxonomy ID of the vocabulary that holds the forum list.
+ * @return
+ *   Array of object containing the forum information.
+ */
+function forum_get_forums($tid = 0) {
+
+  $forums = array();
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $_forums = taxonomy_get_tree($vid, $tid);
+
+  if (count($_forums)) {
+  $counts = array();
+    $sql = "
+      SELECT r.tid AS tid, n.nid AS nid, l.comment_count AS nid_comment_count
+        FROM {node} n
+        INNER JOIN {node_comment_statistics} l ON n.nid = l.nid
+        INNER JOIN {term_node} r ON n.vid = r.vid
+        WHERE n.status = 1
+        GROUP BY r.tid, n.nid, l.comment_count";
+    $sql_rewritten = db_rewrite_sql($sql);
+    if ($sql_rewritten == $sql) {
+      $sql = "
+        SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count
+          FROM {node} n
+          INNER JOIN {node_comment_statistics} l ON n.nid = l.nid
+          INNER JOIN {term_node} r ON n.vid = r.vid
+          WHERE n.status = 1
+          GROUP BY r.tid";
+      $sql = db_rewrite_sql($sql);
+    }
+    else {
+      $sql = "
+        SELECT tid, COUNT(nid) AS topic_count, SUM(nid_comment_count) AS comment_count
+          FROM ($sql_rewritten) AS forum_content_list
+          GROUP BY tid";
+    }
+    $_counts = db_query($sql);
+    while ($count = db_fetch_object($_counts)) {
+      $counts[$count->tid] = $count;
+    }
+  }
+
+  foreach ($_forums as $forum) {
+    if (in_array($forum->tid, variable_get('forum_containers', array()))) {
+      $forum->container = 1;
+    }
+
+    if (!empty($counts[$forum->tid])) {
+      $forum->num_topics = $counts[$forum->tid]->topic_count;
+      $forum->num_posts = $counts[$forum->tid]->topic_count + $counts[$forum->tid]->comment_count;
+    }
+    else {
+      $forum->num_topics = 0;
+      $forum->num_posts = 0;
+    }
+
+    // This query does not use full ANSI syntax since MySQL 3.x does not support
+    // table1 INNER JOIN table2 INNER JOIN table3 ON table2_criteria ON table3_criteria
+    // used to join node_comment_statistics to users.
+    $sql = "SELECT ncs.last_comment_timestamp, IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name) AS last_comment_name, ncs.last_comment_uid FROM {node} n INNER JOIN {users} u1 ON n.uid = u1.uid INNER JOIN {term_node} tn ON n.vid = tn.vid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid INNER JOIN {users} u2 ON ncs.last_comment_uid=u2.uid WHERE n.status = 1 AND tn.tid = %d ORDER BY ncs.last_comment_timestamp DESC";
+    $sql = db_rewrite_sql($sql);
+    $topic = db_fetch_object(db_query_range($sql, $forum->tid, 0, 1));
+
+    $last_post = new stdClass();
+    if (!empty($topic->last_comment_timestamp)) {
+      $last_post->timestamp = $topic->last_comment_timestamp;
+      $last_post->name = $topic->last_comment_name;
+      $last_post->uid = $topic->last_comment_uid;
+    }
+    $forum->last_post = $last_post;
+
+    $forums[$forum->tid] = $forum;
+  }
+
+  return $forums;
+}
+
+/**
+ * Calculate the number of nodes the user has not yet read and are newer
+ * than NODE_NEW_LIMIT.
+ */
+function _forum_topics_unread($term, $uid) {
+  $sql = "SELECT COUNT(DISTINCT n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
+  $sql = db_rewrite_sql($sql);
+  return db_result(db_query($sql, $term, $uid, NODE_NEW_LIMIT));
+}
+
+function forum_get_topics($tid, $sortby, $forum_per_page) {
+  global $user, $forum_topic_list_header;
+
+  $forum_topic_list_header = array(
+    NULL,
+    array('data' => t('Topic'), 'field' => 'n.title'),
+    array('data' => t('Replies'), 'field' => 'l.comment_count'),
+    array('data' => t('Created'), 'field' => 'n.created'),
+    array('data' => t('Last reply'), 'field' => 'l.last_comment_timestamp'),
+  );
+
+  $order = _forum_get_topic_order($sortby);
+  for ($i = 0; $i < count($forum_topic_list_header); $i++) {
+    if ($forum_topic_list_header[$i]['field'] == $order['field']) {
+      $forum_topic_list_header[$i]['sort'] = $order['sort'];
+    }
+  }
+
+  $term = taxonomy_get_term($tid);
+
+  $sql = db_rewrite_sql("SELECT n.nid, r.tid, n.title, n.type, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments, f.tid AS forum_tid FROM {node_comment_statistics} l INNER JOIN {node} n ON n.nid = l.nid INNER JOIN {users} cu ON l.last_comment_uid = cu.uid INNER JOIN {term_node} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {forum} f ON n.vid = f.vid WHERE n.status = 1 AND r.tid = %d");
+  $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
+  $sql .= ', n.created DESC';  // Always add a secondary sort order so that the news forum topics are on top.
+
+  $sql_count = db_rewrite_sql("SELECT COUNT(DISTINCT n.nid) FROM {node} n INNER JOIN {term_node} r ON n.vid = r.vid AND r.tid = %d WHERE n.status = 1");
+
+  $result = pager_query($sql, $forum_per_page, 0, $sql_count, $tid);
+  $topics = array();
+  while ($topic = db_fetch_object($result)) {
+    if ($user->uid) {
+      // folder is new if topic is new or there are new comments since last visit
+      if ($topic->tid != $tid) {
+        $topic->new = 0;
+      }
+      else {
+        $history = _forum_user_last_visit($topic->nid);
+        $topic->new_replies = comment_num_new($topic->nid, $history);
+        $topic->new = $topic->new_replies || ($topic->timestamp > $history);
+      }
+    }
+    else {
+      // Do not track "new replies" status for topics if the user is anonymous.
+      $topic->new_replies = 0;
+      $topic->new = 0;
+    }
+
+    if ($topic->num_comments > 0) {
+      $last_reply = new stdClass();
+      $last_reply->timestamp = $topic->last_comment_timestamp;
+      $last_reply->name = $topic->last_comment_name;
+      $last_reply->uid = $topic->last_comment_uid;
+      $topic->last_reply = $last_reply;
+    }
+    $topics[] = $topic;
+  }
+
+  return $topics;
+}
+
+/**
+ * Finds the first unread node for a given forum.
+ */
+function _forum_new($tid) {
+  global $user;
+
+  $sql = "SELECT n.nid FROM {node} n LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND h.nid IS NULL AND n.created > %d ORDER BY created";
+  $sql = db_rewrite_sql($sql);
+  $nid = db_result(db_query_range($sql, $user->uid, $tid, NODE_NEW_LIMIT, 0, 1));
+
+  return $nid ? $nid : 0;
+}
+
+/**
+ * Process variables for forums.tpl.php
+ *
+ * The $variables array contains the following arguments:
+ * - $forums
+ * - $topics
+ * - $parents
+ * - $tid
+ * - $sortby
+ * - $forum_per_page
+ *
+ * @see forums.tpl.php
+ */
+function template_preprocess_forums(&$variables) {
+  global $user;
+
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  $title = !empty($vocabulary->name) ? $vocabulary->name : '';
+
+  // Breadcrumb navigation:
+  $breadcrumb[] = l(t('Home'), NULL);
+  if ($variables['tid']) {
+    $breadcrumb[] = l($vocabulary->name, 'forum');
+  }
+  if ($variables['parents']) {
+    $variables['parents'] = array_reverse($variables['parents']);
+    foreach ($variables['parents'] as $p) {
+      if ($p->tid == $variables['tid']) {
+        $title = $p->name;
+      }
+      else {
+        $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
+      }
+    }
+  }
+  drupal_set_breadcrumb($breadcrumb);
+  drupal_set_title(check_plain($title));
+
+  if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
+    // Format the "post new content" links listing.
+    $forum_types = array();
+
+    // Loop through all node types for forum vocabulary.
+    foreach ($vocabulary->nodes as $type) {
+      // Check if the current user has the 'create' permission for this node type.
+      if (node_access('create', $type)) {
+        // Fetch the "General" name of the content type;
+        // Push the link with title and URL to the array.
+        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/'. str_replace('_', '-', $type) .'/'. $variables['tid']);
+      }
+    }
+
+    if (empty($forum_types)) {
+      // The user is logged-in; but denied access to create any new forum content type.
+      if ($user->uid) {
+        $forum_types['disallowed'] = array('title' => t('You are not allowed to post new content in the forum.'));
+      }
+      // The user is not logged-in; and denied access to create any new forum content type.
+      else {
+        $forum_types['login'] = array('title' => t('<a href="@login">Login</a> to post new content in the forum.', array('@login' => url('user/login', array('query' => drupal_get_destination())))), 'html' => TRUE);
+      }
+    }
+    $variables['links'] = $forum_types;
+
+    if (!empty($variables['forums'])) {
+      $variables['forums'] = theme('forum_list', $variables['forums'], $variables['parents'], $variables['tid']);
+    }
+    else {
+      $variables['forums'] = '';
+    }
+
+    if ($variables['tid'] && !in_array($variables['tid'], variable_get('forum_containers', array()))) {
+      $variables['topics'] = theme('forum_topic_list', $variables['tid'], $variables['topics'], $variables['sortby'], $variables['forum_per_page']);
+      drupal_add_feed(url('taxonomy/term/'. $variables['tid'] .'/0/feed'), 'RSS - '. $title);
+    }
+    else {
+      $variables['topics'] = '';
+    }
+
+    // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
+    // Check both variables to be safe then the inverse. Forums with topic ID's take precedence.
+    if ($variables['forums'] && !$variables['topics']) {
+      $variables['template_files'][] = 'forums-containers';
+      $variables['template_files'][] = 'forums-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-containers-'. $variables['tid'];
+    }
+    elseif (!$variables['forums'] && $variables['topics']) {
+      $variables['template_files'][] = 'forums-topics';
+      $variables['template_files'][] = 'forums-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-topics-'. $variables['tid'];
+    }
+    else {
+      $variables['template_files'][] = 'forums-'. $variables['tid'];
+    }
+
+  }
+  else {
+    drupal_set_title(t('No forums defined'));
+    $variables['links'] = array();
+    $variables['forums'] = '';
+    $variables['topics'] = '';
+  }
+}
+
+/**
+ * Process variables to format a forum listing.
+ *
+ * $variables contains the following information:
+ * - $forums
+ * - $parents
+ * - $tid
+ *
+ * @see forum-list.tpl.php
+ * @see theme_forum_list()
+ */
+function template_preprocess_forum_list(&$variables) {
+  global $user;
+  $row = 0;
+  // Sanitize each forum so that the template can safely print the data.
+  foreach ($variables['forums'] as $id => $forum) {
+    $variables['forums'][$id]->description = !empty($forum->description) ? filter_xss_admin($forum->description) : '';
+    $variables['forums'][$id]->link = url("forum/$forum->tid");
+    $variables['forums'][$id]->name = check_plain($forum->name);
+    $variables['forums'][$id]->is_container = !empty($forum->container);
+    $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
+    $row++;
+
+    $variables['forums'][$id]->new_text = '';
+    $variables['forums'][$id]->new_url = '';
+    $variables['forums'][$id]->new_topics = 0;
+    $variables['forums'][$id]->old_topics = $forum->num_topics;
+    if ($user->uid) {
+      $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
+      if ($variables['forums'][$id]->new_topics) {
+        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new', '@count new');
+        $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
+      }
+      $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
+    }
+    $variables['forums'][$id]->last_reply = theme('forum_submitted', $forum->last_post);
+  }
+  // Give meaning to $tid for themers. $tid actually stands for term id.
+  $variables['forum_id'] = $variables['tid'];
+  unset($variables['tid']);
+}
+
+/**
+ * Preprocess variables to format the topic listing.
+ *
+ * $variables contains the following data:
+ * - $tid
+ * - $topics
+ * - $sortby
+ * - $forum_per_page
+ *
+ * @see forum-topic-list.tpl.php
+ * @see theme_forum_topic_list()
+ */
+function template_preprocess_forum_topic_list(&$variables) {
+  global $forum_topic_list_header;
+
+  // Create the tablesorting header.
+  $ts = tablesort_init($forum_topic_list_header);
+  $header = '';
+  foreach ($forum_topic_list_header as $cell) {
+    $cell = tablesort_header($cell, $forum_topic_list_header, $ts);
+    $header .= _theme_table_cell($cell, TRUE);
+  }
+  $variables['header'] = $header;
+
+  if (!empty($variables['topics'])) {
+    $row = 0;
+    foreach ($variables['topics'] as $id => $topic) {
+      $variables['topics'][$id]->icon = theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky);
+      $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
+      $row++;
+
+      // We keep the actual tid in forum table, if it's different from the
+      // current tid then it means the topic appears in two forums, one of
+      // them is a shadow copy.
+      if ($topic->forum_tid != $variables['tid']) {
+        $variables['topics'][$id]->moved = TRUE;
+        $variables['topics'][$id]->title = check_plain($topic->title);
+        $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
+      }
+      else {
+        $variables['topics'][$id]->moved = FALSE;
+        $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
+        $variables['topics'][$id]->message = '';
+      }
+      $variables['topics'][$id]->created = theme('forum_submitted', $topic);
+      $variables['topics'][$id]->last_reply = theme('forum_submitted', isset($topic->last_reply) ? $topic->last_reply : NULL);
+
+      $variables['topics'][$id]->new_text = '';
+      $variables['topics'][$id]->new_url = '';
+      if ($topic->new_replies) {
+        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new', '@count new');
+        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->num_comments, $topic->new_replies, $topic), 'fragment' => 'new'));
+      }
+
+    }
+  }
+  else {
+    // Make this safe for the template
+    $variables['topics'] = array();
+  }
+  // Give meaning to $tid for themers. $tid actually stands for term id.
+  $variables['topic_id'] = $variables['tid'];
+  unset($variables['tid']);
+
+  $variables['pager'] = theme('pager', NULL, $variables['forum_per_page'], 0);
+}
+
+/**
+ * Process variables to format the icon for each individual topic.
+ *
+ * $variables contains the following data:
+ * - $new_posts
+ * - $num_posts = 0
+ * - $comment_mode = 0
+ * - $sticky = 0
+ *
+ * @see forum-icon.tpl.php
+ * @see theme_forum_icon()
+ */
+function template_preprocess_forum_icon(&$variables) {
+  $variables['hot_threshold'] = variable_get('forum_hot_topic', 15);
+  if ($variables['num_posts'] > $variables['hot_threshold']) {
+    $variables['icon'] = $variables['new_posts'] ? 'hot-new' : 'hot';
+  }
+  else {
+    $variables['icon'] = $variables['new_posts'] ? 'new' : 'default';
+  }
+
+  if ($variables['comment_mode'] == COMMENT_NODE_READ_ONLY || $variables['comment_mode'] == COMMENT_NODE_DISABLED) {
+    $variables['icon'] = 'closed';
+  }
+
+  if ($variables['sticky'] == 1) {
+    $variables['icon'] = 'sticky';
+  }
+}
+
+/**
+ * Preprocess variables to format the next/previous forum topic navigation links.
+ *
+ * $variables contains $node.
+ *
+ * @see forum-topic-navigation.tpl.php
+ * @see theme_forum_topic_navigation()
+ */
+function template_preprocess_forum_topic_navigation(&$variables) {
+  $output = '';
+
+  // get previous and next topic
+  $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, ". _forum_get_topic_order_sql(variable_get('forum_order', 1));
+  $result = db_query(db_rewrite_sql($sql), isset($variables['node']->tid) ? $variables['node']->tid : 0);
+
+  $stop = $variables['prev'] = $variables['next'] = 0;
+
+  while ($topic = db_fetch_object($result)) {
+    if ($stop == 1) {
+      $variables['next'] = $topic->nid;
+      $variables['next_title'] = check_plain($topic->title);
+      $variables['next_url'] = url("node/$topic->nid");
+      break;
+    }
+    if ($topic->nid == $variables['node']->nid) {
+      $stop = 1;
+    }
+    else {
+      $variables['prev'] = $topic->nid;
+      $variables['prev_title'] = check_plain($topic->title);
+      $variables['prev_url'] = url("node/$topic->nid");
+    }
+  }
+}
+
+/**
+ * Process variables to format submission info for display in the forum list and topic list.
+ *
+ * $variables will contain: $topic
+ *
+ * @see forum-submitted.tpl.php
+ * @see theme_forum_submitted()
+ */
+function template_preprocess_forum_submitted(&$variables) {
+  $variables['author'] = isset($variables['topic']->uid) ? theme('username', $variables['topic']) : '';
+  $variables['time'] = isset($variables['topic']->timestamp) ? format_interval(time() - $variables['topic']->timestamp) : '';
+}
+
+function _forum_user_last_visit($nid) {
+  global $user;
+  static $history = array();
+
+  if (empty($history)) {
+    $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = %d', $user->uid);
+    while ($t = db_fetch_object($result)) {
+      $history[$t->nid] = $t->timestamp > NODE_NEW_LIMIT ? $t->timestamp : NODE_NEW_LIMIT;
+    }
+  }
+  return isset($history[$nid]) ? $history[$nid] : NODE_NEW_LIMIT;
+}
+
+function _forum_get_topic_order($sortby) {
+  switch ($sortby) {
+    case 1:
+      return array('field' => 'l.last_comment_timestamp', 'sort' => 'desc');
+      break;
+    case 2:
+      return array('field' => 'l.last_comment_timestamp', 'sort' => 'asc');
+      break;
+    case 3:
+      return array('field' => 'l.comment_count', 'sort' => 'desc');
+      break;
+    case 4:
+      return array('field' => 'l.comment_count', 'sort' => 'asc');
+      break;
+  }
+}
+
+function _forum_get_topic_order_sql($sortby) {
+  $order = _forum_get_topic_order($sortby);
+  return $order['field'] .' '. strtoupper($order['sort']);
+}

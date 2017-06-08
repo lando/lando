@@ -1,0 +1,115 @@
+<?php
+
+/**
+ * @file
+ * Redirects logging messages to syslog.
+ */
+
+if (defined('LOG_LOCAL0')) {
+  define('DEFAULT_SYSLOG_FACILITY', LOG_LOCAL0);
+}
+else {
+  define('DEFAULT_SYSLOG_FACILITY', LOG_USER);
+}
+
+/**
+ * Implementation of hook_help().
+ */
+function syslog_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#syslog':
+      $output = '<p>'. t("The syslog module enables Drupal to send messages to the operating system's logging facility.") .'</p>';
+      $output .= '<p>'. t('Syslog is an operating system administrative logging tool, and provides valuable information for use in system management and security auditing. Most suited to medium and large sites, syslog provides filtering tools that allow messages to be routed by type and severity. On UNIX/Linux systems, the file /etc/syslog.conf defines this routing configuration; on Microsoft Windows, all messages are sent to the Event Log. For more information on syslog facilities, severity levels, and how to set up a syslog.conf file, see <a href="@syslog_conf">UNIX/Linux syslog.conf</a> and PHP\'s <a href="@php_openlog">openlog</a> and <a href="@php_syslog">syslog</a> functions.', array('@syslog_conf' => url('http://www.rt.com/man/syslog.5.html'), '@php_openlog' => url('http://www.php.net/manual/en/function.openlog.php'), '@php_syslog' => url('http://www.php.net/manual/en/function.syslog.php'))) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@syslog">Syslog module</a>.', array('@syslog' => 'http://drupal.org/handbook/modules/syslog')) .'</p>';
+      return $output;
+  }
+}
+
+function syslog_menu() {
+  $items['admin/settings/logging/syslog'] = array(
+    'title'          => 'Syslog',
+    'description'    => 'Settings for syslog logging. Syslog is an operating system administrative logging tool used in systems management and security auditing. Most suited to medium and large sites, syslog provides filtering tools that allow messages to be routed by type and severity.',
+    'page callback'  => 'drupal_get_form',
+    'page arguments' => array('syslog_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+function syslog_admin_settings() {
+  $form['syslog_identity'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Syslog identity'),
+    '#default_value' => variable_get('syslog_identity', 'drupal'),
+    '#description'   => t('A string that will be prepended to every message logged to Syslog. If you have multiple sites logging to the same Syslog log file, a unique identity per site makes it easy to tell the log entries apart. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
+      '@syslog_help' => url('admin/help/syslog'))),
+  );
+  $form['syslog_facility'] = array(
+    '#type'          => 'select',
+    '#title'         => t('Send events to this syslog facility'),
+    '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
+    '#options'       => syslog_facility_list(),
+    '#description'   => t('Select the syslog facility code under which Drupal\'s messages should be sent. On UNIX/Linux systems, Drupal can flag its messages with the code LOG_LOCAL0 through LOG_LOCAL7; for Microsoft Windows, all messages are flagged with the code LOG_USER. Depending on the system configuration, syslog and other logging tools use this code to identify or filter Drupal messages from within the entire system log. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
+      '@syslog_help' => url('admin/help/syslog'))),
+  );
+  return system_settings_form($form);
+}
+
+function syslog_facility_list() {
+  $facility_list = array(
+    LOG_USER   => t('LOG_USER - User level messages. Use this for Windows.'),
+  );
+  if (defined('LOG_LOCAL0')) {
+    $facility_list += array(
+      LOG_LOCAL0 => t('LOG_LOCAL0 - Local 0'),
+      LOG_LOCAL1 => t('LOG_LOCAL1 - Local 1'),
+      LOG_LOCAL2 => t('LOG_LOCAL2 - Local 2'),
+      LOG_LOCAL3 => t('LOG_LOCAL3 - Local 3'),
+      LOG_LOCAL4 => t('LOG_LOCAL4 - Local 4'),
+      LOG_LOCAL5 => t('LOG_LOCAL5 - Local 5'),
+      LOG_LOCAL6 => t('LOG_LOCAL6 - Local 6'),
+      LOG_LOCAL7 => t('LOG_LOCAL7 - Local 7'),
+    );
+  }
+  return $facility_list;
+}
+
+function syslog_watchdog($entry) {
+  static $log_init = FALSE;
+
+  if (!$log_init) {
+    $log_init = TRUE;
+    openlog(variable_get('syslog_identity', 'drupal'), LOG_NDELAY, variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY));
+  }
+
+  syslog($entry['severity'], theme('syslog_format', $entry));
+}
+
+function syslog_theme() {
+  return array(
+    'syslog_format' => array(
+      'arguments' => array('entry' => NULL),
+    ),
+  );
+}
+
+/**
+ * Format a system log entry.
+ *
+ * @ingroup themeable
+ */
+function theme_syslog_format($entry) {
+  global $base_url;
+
+  $message  = $base_url;
+  $message .= '|'. $entry['timestamp'];
+  $message .= '|'. $entry['type'];
+  $message .= '|'. $entry['ip'];
+  $message .= '|'. $entry['request_uri'];
+  $message .= '|'. $entry['referer'];
+  $message .= '|'. $entry['user']->uid;
+  $message .= '|'. strip_tags($entry['link']);
+  $message .= '|'. strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables']));
+
+  return $message;
+}
