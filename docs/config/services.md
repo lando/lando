@@ -38,6 +38,12 @@ LANDO_HOST_GID=20
 LANDO_SERVICE_NAME=appserver
 LANDO_HOST_OS=darwin
 LANDO_MOUNT=/path/to/your/approot
+
+# The below may be overriden on a per-service basis
+LANDO_WEBROOT_USER=www-data
+LANDO_WEBROOT_GROUP=www-data
+LANDO_WEBROOT_UID=33
+LANDO_WEBROOT_GID=33
 ```
 
 Shared Files

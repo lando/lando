@@ -14,10 +14,6 @@ macOS
 Windows
 -------
 
-> #### Warning::YMMV
->
-> Windows support is currently not well tested so your mileage may vary. If you are feeling intrepid and run into an issue please post it over [here](https://github.com/kalabox/lando/issues/new).
-
 1. Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
 2. Double-click on `lando.exe`
 3. Go through the setup workflow
