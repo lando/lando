@@ -19,6 +19,10 @@ module.exports = function(lando) {
       command: {
         describe: 'Run a command in the service',
         alias: ['c']
+      },
+      user: {
+        describe: 'Run as a specific user',
+        alias: ['u']
       }
     },
     run: function(options) {
@@ -46,7 +50,8 @@ module.exports = function(lando) {
             id: [app.dockerName, service, '1'].join('_'),
             cmd: options.command || 'bash',
             opts: {
-              mode: 'attach'
+              mode: 'attach',
+              user: options.user || 'root'
             }
           };
 

@@ -57,7 +57,7 @@ config:
   #
   # See: https://backdropcms.org/requirements
   #
-  # database: mariadb:10.1
+  database: mariadb
 
   # Optionally mix in your own config files
   #

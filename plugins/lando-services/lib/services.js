@@ -253,6 +253,9 @@ module.exports = function(lando) {
     vols.push('$LANDO_ENGINE_HOME:/user');
     services[name].volumes = _.uniq(vols);
 
+    // And some permission helpers
+    services[name].volumes = addScript('user-perms.sh', services[name].volumes);
+
     // Process any compose overrides we might have
     if (_.has(config, 'overrides')) {
       lando.log.debug('Overriding %s with', name, config.overrides);

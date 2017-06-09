@@ -52,7 +52,7 @@ module.exports = function(lando) {
 
     // Get the URL and dest
     var download = baseUrl + release + '.tar.gz';
-    var dest = '/usr/share/drush/commands/backdrop';
+    var dest = '~/.drush';
 
     // Curl and tar
     var curl = ['curl', '-fsSL', download];

@@ -45,6 +45,11 @@ module.exports = function(lando) {
     // Start by cheating
     var build = stack.build(name, config);
 
+    // Add wp-cli to volumes
+    var volumesKey = 'services.appserver.volumes';
+    build.services.appserver.volumes = _.get(build, volumesKey, []);
+    build.services.appserver.volumes.push('/var/www/.wp-cli');
+
     // Build what we need to get the wp-cli install command
     var pharUrl = wpCliUrl();
     var src = 'wp-cli.phar';

@@ -47,6 +47,7 @@ tooling:
   mysql:
     service: database
     description: Drop into a MySQL shell
+    user: root
   node:
     service: node
   npm:

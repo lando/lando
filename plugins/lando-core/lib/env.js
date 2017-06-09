@@ -39,6 +39,10 @@ module.exports = function(lando) {
     app.env.LANDO_HOST_UID = lando.config.engineId;
     app.env.LANDO_HOST_GID = lando.config.engineGid;
     app.env.LANDO_APP_ROOT = app.rootBind;
+    app.env.LANDO_WEBROOT_USER = 'www-data';
+    app.env.LANDO_WEBROOT_GROUP = 'www-data';
+    app.env.LANDO_WEBROOT_UID = '33';
+    app.env.LANDO_WEBROOT_GID = '33';
     app.env.COLUMNS = 256;
 
     // Add in some global labels

@@ -80,6 +80,7 @@ tooling:
   php:
     service: appserver
   mysql:
+    user: root
     service: database
     description: Drop into a MySQL shell
   npm:

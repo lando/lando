@@ -46,7 +46,7 @@ config:
   #
   # see: https://wordpress.org/about/requirements/
   #
-  database: mariadb:10.1
+  database: mariadb
 
   # Optionally mix in your own config files
   #
