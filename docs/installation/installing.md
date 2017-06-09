@@ -14,12 +14,13 @@ macOS
 Windows
 -------
 
-1. Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
-2. Double-click on `lando.exe`
-3. Go through the setup workflow
-4. Approve various UAC prompts during install
-5. After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#shared-drives)
-6. [Spin up your first Lando app](./../tutorials/first-app.md)
+1. Make sure you are using **at least** Windows 10 Professional with the latest updates installed.
+2. Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
+3. Double-click on `lando.exe`
+4. Go through the setup workflow
+5. Approve various UAC prompts during install
+6. After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#shared-drives)
+7. [Spin up your first Lando app](./../tutorials/first-app.md)
 
 > #### Warning::YOU MUST SET UP SHARED DRIVES AND HAVE HYPER-V ENABLED
 >
