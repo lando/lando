@@ -32,11 +32,7 @@ Windows
 Linux
 -----
 
-> #### Warning::YMMV
->
-> Linux support is currently not well tested so your mileage may vary. If you are feeling intrepid and run into an issue please post it over [here](https://github.com/kalabox/lando/issues/new).
-
-1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version.
+1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. (17.03.1-ce or higher)
 2. Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/kalabox/lando/releases)
 3. Double-click on the package to launch Software Center
 4. Click the "Install" button and enter your password when prompted

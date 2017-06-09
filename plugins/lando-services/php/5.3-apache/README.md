@@ -15,6 +15,8 @@ COPY docker-php-ext-enable /usr/local/bin/
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
     ssh \
     git-core \
     bzip2 \

@@ -12,6 +12,10 @@ FROM php:7.0-apache
 
 # Install the PHP extensions we need
 RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    ssh \
+    git-core \
     bzip2 \
     libbz2-dev \
     libc-client2007e-dev \

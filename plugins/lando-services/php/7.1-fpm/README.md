@@ -12,6 +12,8 @@ FROM php:7.1-fpm
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
     ssh \
     git-core \
     bzip2 \
