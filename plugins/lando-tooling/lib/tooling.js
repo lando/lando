@@ -69,6 +69,10 @@ module.exports = function(lando) {
         // Add our in-container app root
         dir.unshift('"$LANDO_MOUNT"');
 
+        // Get the backup user
+        var userPath = 'environment.LANDO_WEBROOT_USER';
+        var user = _.get(config.app.services[config.service], userPath, 'root');
+
         // Build out our options
         var options = {
           id: [config.app.dockerName, config.service, '1'].join('_'),
@@ -76,7 +80,7 @@ module.exports = function(lando) {
           opts: {
             mode: 'attach',
             pre: ['cd', dir.join('/')].join(' '),
-            user: config.user || 'root'
+            user: config.user || user
           }
         };
 

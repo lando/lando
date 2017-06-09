@@ -90,7 +90,7 @@ module.exports = function(lando) {
       '/usr/bin',
       '/sbin',
       '/bin',
-      '/root/.composer/vendor/bin'
+      '/var/www/.composer/vendor/bin'
     ];
 
     // Build the webroot
@@ -108,19 +108,15 @@ module.exports = function(lando) {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
         PATH: path.join(':'),
-        LANDO_WEBROOT: webroot,
-        LANDO_WEBROOT_USER: 'www-data',
-        LANDO_WEBROOT_GROUP: 'www-data'
+        LANDO_WEBROOT: webroot
       },
       ports: ['80'],
       volumes: [
-        '/root'
+        '/var/www/.composer',
+        '/usr/local/bin'
       ],
       command: config.command.join(' '),
     };
-
-    // Add in the chown script
-    php.volumes = addScript('webroot-chown.sh', php.volumes);
 
     // If this is apache lets set our default config
     if (config.web === 'apache') {

@@ -101,12 +101,17 @@ module.exports = function(lando) {
           // Run each command
           _.forEach(service.extras, function(cmd) {
 
+            // Get the user
+            var userPath = 'environment.LANDO_WEBROOT_USER';
+            var user = _.get(app.services[name], userPath, 'root');
+
             // Build out the compose object
             var compose = {
               id: [app.dockerName, name, '1'].join('_'),
               cmd: cmd,
               opts: {
-                mode: 'attach'
+                mode: 'attach',
+                user: user
               }
             };
 

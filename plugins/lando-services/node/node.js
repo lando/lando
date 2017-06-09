@@ -68,7 +68,9 @@ module.exports = function(lando) {
       ports: ['80'],
       expose: ['80'],
       volumes: [
-        '/root'
+        '/usr/local/bin',
+        '/usr/local/share',
+        '/usr/local/lib/node_modules'
       ],
       command: command.join(' '),
     };
@@ -112,8 +114,6 @@ module.exports = function(lando) {
         nig.push(dep.join('@'));
 
         // Add before our extras
-        // We want before because there might be extras that rely on globally
-        // installed dependencies eg `nodemon`
         config.extras.unshift(nig.join(' '));
 
       });

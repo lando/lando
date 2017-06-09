@@ -29,7 +29,7 @@ config:
   # If ommitted this will default to the latest mysql. You can additionally provide
   # a version with `type:version` but you will need to consult the documentation
   # for the correct DB service to see what versions are available
-  database: mariadb:10.1
+  database: postgres
 
   # Optionally mix in our own config files
   #

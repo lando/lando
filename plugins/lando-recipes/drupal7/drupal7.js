@@ -55,6 +55,11 @@ module.exports = function(lando) {
     // Get the specified version of Drush
     var drush = _.get(config, 'drush', 'stable');
 
+    // Volume mount the drush cache
+    var volumesKey = 'services.appserver.volumes';
+    build.services.appserver.volumes = _.get(build, volumesKey, []);
+    build.services.appserver.volumes.push('/var/www/.drush');
+
     // Build what we need to get the drush install command
     var pharUrl = drushUrl(drush);
     var src = 'drush.phar';
@@ -66,8 +71,8 @@ module.exports = function(lando) {
     var cgrInstall = stack.getCgr('drush/drush', drush);
 
     // Set extras if needed
-    var key = 'services.appserver.extras';
-    build.services.appserver.extras = _.get(build, key, []);
+    var extrasKey = 'services.appserver.extras';
+    build.services.appserver.extras = _.get(build, extrasKey, []);
 
     // Add our drush cmds
     var drushCmd = [pharInstall, cgrInstall].join(' || ');

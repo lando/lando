@@ -210,13 +210,11 @@ module.exports = function(lando) {
       composer: {
         service: 'appserver',
         description: 'Run composer commands',
-        cmd: ['composer', '--ansi'],
-        user: 'www-data'
+        cmd: ['composer', '--ansi']
       },
       php: {
         service: 'appserver',
-        description: 'Run php commands',
-        user: 'www-data'
+        description: 'Run php commands'
       }
     };
 
@@ -227,14 +225,24 @@ module.exports = function(lando) {
     if (_.includes(database, 'mysql') || _.includes(database, 'mariadb')) {
       tooling.mysql = {
         service: 'database',
-        description: 'Drop into a MySQL shell'
+        description: 'Drop into a MySQL shell',
+        user: 'root'
       };
     }
     else if (_.includes(database, 'postgres')) {
       tooling.pgsql = {
         service: 'database',
         description: 'Drop into a pgsql shell',
-        cmd: ['psql', '-h', 'localhost', '-p', '5432', 'database', 'database']
+        cmd: [
+          'psql',
+          '-h',
+          'localhost',
+          '-p',
+          '5432',
+          config.recipe,
+          config.recipe
+        ],
+        user: 'root'
       };
     }
 
