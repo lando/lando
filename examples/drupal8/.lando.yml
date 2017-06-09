@@ -1,25 +1,25 @@
-# Drupal 7 recipe
-name: d7
+# Drupal 8 recipe
+name: d8
 
-# Start with the default Drupal 7 recipe
-recipe: drupal7
+# Start with the default Drupal 8 recipe
+recipe: drupal8
 
-# Configure the Drupal 7 recipe
+# Configure the Drupal8 recipe
 config:
 
   # See: https://www.drupal.org/docs/7/system-requirements
 
   # Optionally specify the php version to use.
   #
-  # If ommitted this will default to the latest php version supported by Drupal 7.
+  # If ommitted this will default to the latest php version supported by Drupal 8.
   # Consult the `php` service to see what versions are available. Note that all
-  # such versions may not be supported in Drupal 7 so YMMV.
+  # such versions may not be supported in Drupal 8s so YMMV.
   #
   # See: https://www.drupal.org/docs/7/system-requirements/php
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.0'
+  php: '7.1'
 
   # Optionally specify whether you want to serve drupal via nginx or apache
   #
@@ -35,24 +35,29 @@ config:
   #
   webroot: web
 
-  # Optionally specify the version of Drush you want for your site
+  # Optionally specify the version of global drush on your site
   #
-  # If omitted (which is recommended) this will use the stable Drush
+  # If omitted this will install the latest stable version
   #
-  # This will take any version to which there is a corresponding phar over on
-  # the drush github release page eg `drush: 8.1.12`
+  # You should also highly consider a site-local install of drush.
   #
-  # see: https://github.com/drush-ops/drush/releasess
+  # See: http://docs.drush.org/en/master/install/
   #
-  # Alternatively this will also take any supported composer version eg `~7`
-  # THIS SHOULD BE USED WITH CAUTION.
+  # This will also grab any version to which there is a corresponding phar over
+  # on the drush github release page eg `8.1.12` or "stable" for the latest
+  # stable version
   #
-  # Obviously, if you have a site-local drush installed via composer that will be
-  # used instead of this one.
+  # See: https://github.com/drush-ops/drush/releases
   #
-  # see: http://docs.drush.org/en/master/install/
+  drush: stable
+
+  # Optionally specify whether you want a global install of drupal console.
   #
-  # drush: stable
+  # You should also consider a site-local install of drupal console via composer
+  #
+  # See: https://hechoendrupal.gitbooks.io/drupal-console/content/en/getting/composer.html
+  #
+  drupal: true
 
   # Optionally specify the database type, this can be one of:
   #
@@ -66,11 +71,11 @@ config:
   #
   # see: https://www.drupal.org/docs/7/system-requirements/database-server
   #
-  database: mariadb:10.1
+  # database: mariadb:10.1
 
   # Optionally mix in your own config files
   #
-  # If ommitted this will use the default Drupal 7 config files for the respective
+  # If ommitted this will use the default Drupal 8 config files for the respective
   # services.
   #
   # Definitely consult the relevant documentaion for each service to make sure
@@ -78,7 +83,7 @@ config:
   # will want a directory while `postgres` will want a specific config file.
   #
   # conf:
-    # server: config/drupal7.conf
+    # server: config/drupal8.conf
     # database: config/mysql
     # php: config/php.ini
 

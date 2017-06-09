@@ -29,6 +29,7 @@ module.exports = function(lando) {
     lando.recipes.add('backdrop', require('./../backdrop/backdrop')(lando));
     lando.recipes.add('drupal6', require('./../drupal6/drupal6')(lando));
     lando.recipes.add('drupal7', require('./../drupal7/drupal7')(lando));
+    lando.recipes.add('drupal8', require('./../drupal8/drupal8')(lando));
     lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
     lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
     lando.recipes.add('wordpress', require('./../wordpress/wordpress')(lando));

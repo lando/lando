@@ -10,70 +10,73 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var path = require('path');
+  var lamp = require('./../lamp/lamp')(lando);
+  var lemp = require('./../lemp/lemp')(lando);
+  var stacks = {lamp: lamp, lemp: lemp};
+
+  /**
+   * Helper to get DRUSH URL
+   */
+  var drushUrl = function(drush) {
+
+    // Base URL
+    var ghRelease = 'https://github.com/drush-ops/drush/releases/download/';
+
+    // Start with version
+    var download = ghRelease + drush + '/drush.phar';
+
+    // Overrule to stable if needed
+    if (drush === 'stable') {
+      download = 'http://files.drush.org/drush.phar';
+    }
+    // return URL
+    return download;
+
+  };
 
   /**
    * Build out Drupal7
    */
   var build = function(name, config) {
 
-    // Determine some things
+    // Get the via so we can grab our builder
     var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
-    var database = _.get(config, 'database', 'mysql');
-    var configPath = path.join(lando.config.engineConfigDir, 'drupal7');
+    var stack = stacks[base];
 
-    // Use our default drupal config files if they have not been specified by the user
-    if (_.isEmpty(config.conf)) {
-      config.conf = {};
-    }
-    if (!_.has(config, 'conf.server') && base === 'lemp') {
-      var nginxConf = path.join(configPath, 'drupal7.conf');
-      config.conf.server = nginxConf;
-    }
-    if (!_.has(config, 'conf.php')) {
-      var phpConf = path.join(configPath, 'php.ini');
-      config.conf.php = phpConf;
-    }
-    // @TODO: add a custom/optimzed default postgres cong file
-    if (!_.has(config, 'conf.database') && !_.includes(database, 'postgres')) {
-      var dbConf = path.join(configPath, 'mysql');
-      config.conf.database = dbConf;
-    }
+    // Update with new config defaults if needed
+    config = stack.resetConfig(config.recipe, config);
 
     // Set the default php version for D7
     config.php = _.get(config, 'php', '7.0');
 
     // Start by cheating
-    var stack = require('./../' + [base, base].join('/'))(lando);
     var build = stack.build(name, config);
 
-    // Override the database credentials
-    build.services.database.creds = {
-      user: 'drupal',
-      password: 'drupal',
-      database: 'drupal'
-    };
+    // Get the specified version of Drush
+    var drush = _.get(config, 'drush', 'stable');
 
-    // Add db credentials into the ENV
-    build.services.appserver.overrides = {
-      services: {
-        environment: {
-          DB_HOST: 'database',
-          DB_USER: build.services.database.creds.user,
-          DB_PASSWORD: build.services.database.creds.password,
-          DB_NAME: build.services.database.creds.database,
-          DB_PORT: 3306
-        }
-      }
-    };
+    // Build what we need to get the drush install command
+    var pharUrl = drushUrl(drush);
+    var src = 'drush.phar';
+    var dest = '/usr/local/bin/drush';
+    var drushStatusCheck = ['./' + src, 'core-status'];
 
-    // Add in the drush things
-    build.services.appserver.composer = {
-      'drush/drush': '~' + _.get(config, 'drush', '8')
-    };
+    // Get the drush commands
+    var pharInstall = stack.getPhar(pharUrl, src, dest, drushStatusCheck);
+    var cgrInstall = stack.getCgr('drush/drush', drush);
+
+    // Set extras if needed
+    var key = 'services.appserver.extras';
+    build.services.appserver.extras = _.get(build, key, []);
+
+    // Add our drush cmds
+    var drushCmd = [pharInstall, cgrInstall].join(' || ');
+    build.services.appserver.extras.push(drushCmd);
+
+    // Add drush to the tooling
     build.tooling.drush = {
       service: 'appserver',
-      description: 'Run Drush commands'
+      description: 'Run drush commands'
     };
 
     // Return the things
@@ -84,7 +87,9 @@ module.exports = function(lando) {
   // Return the things
   return {
     build: build,
-    configDir: __dirname
+    configDir: __dirname,
+    getCgr: lamp.getCgr,
+    getPhar: lamp.getPhar
   };
 
 };

@@ -10,6 +10,100 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var path = require('path');
+
+  /*
+   * Helper to get a CGR commanc
+   */
+  var getCgr = function(pkg, version) {
+
+    // Add version if needed
+    if (!_.isEmpty(version)) {
+      pkg = [pkg, version].join(':');
+    }
+
+    // Start the collector
+    var cgr = [
+      'composer',
+      'global',
+      'require',
+      pkg
+    ];
+
+    // Return the whole shebang
+    return cgr.join(' ');
+
+  };
+
+  /*
+   * Helper to download and make a phar executable
+   */
+  var getPhar = function(url, src, dest, check) {
+
+    // Status checker
+    var statusCheck = check || 'true';
+
+    // Arrayify the check if needed
+    if (_.isString(statusCheck)) {
+      statusCheck = [statusCheck];
+    }
+
+    // Phar install command
+    var pharInstall = [
+      ['cd', '/tmp'],
+      ['curl', url, '-L', '-o', src],
+      ['chmod', '+x', src],
+      statusCheck,
+      ['mv', src, dest]
+    ];
+
+    // Return
+    return _.map(pharInstall, function(cmd) {
+      return cmd.join(' ');
+    }).join(' && ');
+
+  };
+
+  /**
+   * Helper to reset with default config for a new recipe
+   * Because we are "extending" this we want to provide this for children
+   */
+  var resetConfig = function(name, config) {
+
+    // Get the config path
+    var configPath = path.join(lando.config.engineConfigDir, name);
+
+    // Get the database
+    var database = _.get(config, 'database', 'mysql');
+
+    // Get the via
+    var via = _.get(config, 'via', 'apache');
+
+    // Start an object if we need it
+    if (_.isEmpty(config.conf)) {
+      config.conf = {};
+    }
+
+    // Add in default server config if applicable eg for nginx
+    if (!_.has(config, 'conf.server') && _.includes(via, 'nginx')) {
+      config.conf.server = path.join(configPath, name + '.conf');
+    }
+
+    // Add in default php.ini if applicable
+    if (!_.has(config, 'conf.php')) {
+      config.conf.php = path.join(configPath, 'php.ini');
+    }
+
+    // Add in default mysql config if applicable
+    // @TODO: add a custom/optimzed default postgres cong file
+    if (!_.has(config, 'conf.database') && !_.includes(database, 'postgres')) {
+      config.conf.database = path.join(configPath, 'mysql');
+    }
+
+    // Return the mix
+    return config;
+
+  };
 
   /*
    * Helper to return sharing config
@@ -54,9 +148,9 @@ module.exports = function(lando) {
         type: database,
         portforward: true,
         creds: {
-          user: 'database',
-          password: 'database',
-          database: 'database'
+          user: config.recipe,
+          password: config.recipe,
+          database: config.recipe
         }
       }
     };
@@ -170,7 +264,10 @@ module.exports = function(lando) {
 
   // Return things
   return {
-    build: build
+    build: build,
+    resetConfig: resetConfig,
+    getCgr: getCgr,
+    getPhar: getPhar
   };
 
 };
