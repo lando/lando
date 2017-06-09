@@ -8,9 +8,6 @@ set -e
 : ${LANDO_WEBROOT_UID:='33'}
 : ${LANDO_WEBROOT_GID:='33'}
 
-echo "toiehgseg"
-echo `id`
-
 # Lets only do this if we are root
 if [ $(id -u) = 0 ]; then
 
@@ -28,7 +25,7 @@ if [ $(id -u) = 0 ]; then
   # Correctly map users if we are on linux
   if [ "$LANDO_HOST_OS" = "linux" ]; then
     echo "Remapping ownership to handle Linux docker volume sharing..."
-    usermod -u "$LANDO_HOST_UID" "$LANDO_WEBROOT_USER"
+    usermod -o -u "$LANDO_HOST_UID" "$LANDO_WEBROOT_USER"
     groupmod -g "$LANDO_HOST_GID" "$LANDO_WEBROOT_GROUP" || true
   fi
 
