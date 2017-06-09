@@ -77,7 +77,12 @@ config:
 services:
   node:
     type: node:6.10
+  cache:
+    type: redis
+    persist: true
 tooling:
+  redis-cli:
+    service: cache
   node:
     service: node
   npm:
