@@ -62,8 +62,10 @@ tooling:
     service: appserver
 
     # Run this command as the www-data inside of the container. If ommitted this
-    # will default to root. You can also pass in user:group.
-    # Note that the user needs to already exist inside of the container.
+    # will default to the LANDO_WEBROOT_USER envvar for the service and then root.
+    # if undefiend. You can also pass in user:group.
+    #
+    # Note that the user needs to already exist inside of the container
     user: www-data
 
   # Define `lando mysql` as a command that will drop the user into a mysql shell
