@@ -1,10 +1,10 @@
-# Drupal6 recipe
+# Drupal 6 recipe
 name: d6
 
-# Start with the default Drupal6 recipe
+# Start with the default Drupa 6 recipe
 recipe: drupal6
 
-# Configure the Drupal6 recipe
+# Configure the Drupal 6 recipe
 # config:
 
   # See: https://www.drupal.org/docs/7/system-requirements
@@ -12,25 +12,47 @@ recipe: drupal6
   # Optionally specify the php version to use.
   #
   # If ommitted this will default to the latest php version supported by Drupal 6.
-  # Consult the `php` service to see what version are available
+  # Consult the `php` service to see what versions are available. Note that all
+  # such versions may not be supported in Drupal 6 so YMMV.
+  #
+  # See: https://www.drupal.org/docs/7/system-requirements/php
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
+  #
   # php: '7.0'
 
   # Optionally specify whether you want to serve drupal via nginx or apache
   #
   # If ommitted this will default to the latest apache
+  #
+  # See: https://www.drupal.org/docs/7/system-requirements/web-server
+  #
   # via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   #
   # If ommitted this will be your approot itself.
+  #
   # webroot: web
 
-  # Optionally specify the version of drush you want for your site
+  # Optionally specify the version of Drush you want for your site
   #
-  # If ommitted this will use the stable drush 8
-  # drush: 8
+  # If omitted (which is recommended) this will use the stable Drush
+  #
+  # This will take any version to which there is a corresponding phar over on
+  # the drush github release page eg `drush: 8.1.12`
+  #
+  # see: https://github.com/drush-ops/drush/releasess
+  #
+  # Alternatively this will also take any supported composer version eg `~7`
+  # THIS SHOULD BE USED WITH CAUTION.
+  #
+  # Obviously, if you have a site-local drush installed via composer that will be
+  # used instead of this one.
+  #
+  # see: http://docs.drush.org/en/master/install/
+  #
+  # drush: stable
 
   # Optionally specify the database type, this can be one of:
   #
@@ -41,14 +63,20 @@ recipe: drupal6
   # If ommitted this will default to the latest mysql. You can additionally provide
   # a version with `type:version` but you will need to consult the documentation
   # for the correct DB service to see what versions are available
+  #
+  # see: https://www.drupal.org/docs/7/system-requirements/database-server
+  #
   # database: mariadb:10.1
 
   # Optionally mix in your own config files
   #
-  # If ommitted this will use the default drupal config files for the respective
-  # services. Definitely consult the relevant documentaion for each service to
-  # make sure you are specifying the correct value for the config. As an example
-  # `mysql` will want a directory while `postgres` will want a specific config file.
+  # If ommitted this will use the default Drupal 6 config files for the respective
+  # services.
+  #
+  # Definitely consult the relevant documentaion for each service to make sure
+  # you are specifying the correct value for the config. As an example `mysql`
+  # will want a directory while `postgres` will want a specific config file.
+  #
   # conf:
     # server: config/drupal6.conf
     # database: config/mysql

@@ -1,5 +1,5 @@
 {
-    "name": "lando/drupal8-composer",
+    "name": "lando/drupal8r",
     "description": "A Drupal8 composer example (with solr!) for Lando",
     "repositories": [
         {

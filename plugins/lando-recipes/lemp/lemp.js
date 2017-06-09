@@ -8,6 +8,9 @@
 
 module.exports = function(lando) {
 
+  // Modules
+  var lamp = require('./../lamp/lamp')(lando);
+
   /*
    * Helper to return proxy config
    */
@@ -26,7 +29,6 @@ module.exports = function(lando) {
   var build = function(name, config) {
 
     // Start by cheating
-    var lamp = require('./../lamp/lamp')(lando);
     var build = lamp.build(name, config);
 
     // Replace the proxy
@@ -42,7 +44,10 @@ module.exports = function(lando) {
 
   // Return things
   return {
-    build: build
+    build: build,
+    resetConfig: lamp.resetConfig,
+    getCgr: lamp.getCgr,
+    getPhar: lamp.getPhar
   };
 
 };
