@@ -3,9 +3,9 @@ Testing
 
 You should be able to use this guide to...
 
-  1. Check code styling and linting
-  2. Run tests
-  3. Learn how to write tests
+1.  Check code styling and linting
+2.  Run tests
+3.  Learn how to write tests
 
 Code linting and standards
 --------------------------
@@ -45,8 +45,8 @@ Tests reside in the `test` folder. For examples of unit tests look for `*.spec.j
 
 Looking at existing tests will give you a good idea of how to write your own, but if you're looking for more tips, we recommend:
 
-* [Mocha documentation](http://mochajs.org/)
-* [Chai documentation](http://chaijs.com/)
-* [Chai-As-Promised documentation](http://chaijs.com/plugins/chai-as-promised/)
-* [BATS wiki](https://github.com/sstephenson/bats)
-* [BATS tutorial](https://blog.engineyard.com/2014/bats-test-command-line-tools)
+*   [Mocha documentation](http://mochajs.org/)
+*   [Chai documentation](http://chaijs.com/)
+*   [Chai-As-Promised documentation](http://chaijs.com/plugins/chai-as-promised/)
+*   [BATS wiki](https://github.com/sstephenson/bats)
+*   [BATS tutorial](https://blog.engineyard.com/2014/bats-test-command-line-tools)

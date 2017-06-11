@@ -1,5 +1,5 @@
 File syncing issues
--------------------
+===================
 
 There are generally a few causes of slow or stalled file sharing. Here are some workaround and checks you can do in each circumstances.
 
@@ -33,4 +33,3 @@ Also note that you can add additional folders and shares to Windows/macOS throug
 > #### Hint::Shared drives is a manual step on Windows
 >
 >  You will want to make sure you have [enabled shared drives](https://docs.docker.com/docker-for-windows/#/shared-drives).
-
