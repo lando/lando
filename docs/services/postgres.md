@@ -3,23 +3,26 @@ PostgreSQL
 
 [Postgres](https://www.postgresql.org/) is an advanced open source database server. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
-### Supported versions
+Supported versions
+------------------
 
-  * 9.6
-  * 9.5
-  * 9.4
-  * 9.3
-  * 9.2
-  * latest
-  * custom
+*   9.6
+*   9.5
+*   9.4
+*   9.3
+*   9.2
+*   latest
+*   custom
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/postgres/.lando.yml" %}{% endcodesnippet %}
 
 You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/postgres)
 
-### Getting information
+Getting information
+-------------------
 
 You can get connection and credential information about your database by running `lando info` from inside your app.
 

@@ -3,20 +3,22 @@ nginx
 
 [nginx](https://www.nginx.com/resources/wiki/) is a very common webserver and reverse proxy which you can easily add to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
-### Supported versions
+Supported versions
+------------------
 
-  * 1.13
-  * 1.12
-  * 1.11
-  * 1.10
-  * 1.9
-  * 1.8
-  * mainline
-  * stable
-  * latest
-  * custom
+*   1.13
+*   1.12
+*   1.11
+*   1.10
+*   1.9
+*   1.8
+*   mainline
+*   stable
+*   latest
+*   custom
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/nginx/.lando.yml" %}{% endcodesnippet %}
 

@@ -3,14 +3,16 @@ Apache
 
 [Apache](https://www.apache.org/) is a very common webserver which you can easily add to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
-### Supported versions
+Supported versions
+------------------
 
-  * 2.4
-  * 2.2
-  * latest
-  * custom
+*   2.4
+*   2.2
+*   latest
+*   custom
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/apache/.lando.yml" %}{% endcodesnippet %}
 
