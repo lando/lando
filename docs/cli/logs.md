@@ -4,7 +4,8 @@ logs
 Prints out the logs for your app. You can optionally filter by a particular service,
 show timestamps for follow the logs a la `tail -f`
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -20,7 +21,8 @@ lando logs -t -f
 lando logs -s cache -database
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h        Show help                                          [boolean]

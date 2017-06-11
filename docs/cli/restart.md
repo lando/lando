@@ -7,7 +7,8 @@ restart
 >
 > Sometimes if your Lando app is giving you a tough go, doing a simple restart can help flush out the issue.
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -17,7 +18,8 @@ lando restart
 lando restart myapp
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]

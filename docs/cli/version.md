@@ -3,13 +3,15 @@ version
 
 Prints out the version of Lando.
 
-### Usage
+Usage
+-----
 
 ```bash
 lando version
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]

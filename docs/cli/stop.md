@@ -3,7 +3,8 @@ stop
 
 Stops an app. This will spin down all containers and services associated with this app.
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -13,7 +14,8 @@ lando stop
 lando stop myapp
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]

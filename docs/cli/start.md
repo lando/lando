@@ -7,7 +7,8 @@ Starts an app. This will build all relevant containers needed to run the app.
 >
 > If you start an app with a new service or container it will need to pull that container image down. This can take a moment depending on your internet connection. Subsequent pulls to that container or service are cached so they should be much faster.
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -17,7 +18,8 @@ lando start
 lando start myapp
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]
