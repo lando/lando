@@ -12,16 +12,16 @@ Supported Services
 
 The following services are currently supported. Please check out each one to learn how to use them.
 
-  * ####[apache](./../services/apache.md)
-  * ####[mariadb](./../services/mariadb.md)
-  * ####[memcached](./../services/memcached.md)
-  * ####[mysql](./../services/mysql.md)
-  * ####[nginx](./../services/nginx.md)
-  * ####[node](./../services/node.md)
-  * ####[php](./../services/php.md)
-  * ####[postgres](./../services/postgres.md)
-  * ####[redis](./../services/redis.md)
-  * ####[solr](./../services/solr.md)
+*   ####[apache](./../services/apache.md)
+*   ####[mariadb](./../services/mariadb.md)
+*   ####[memcached](./../services/memcached.md)
+*   ####[mysql](./../services/mysql.md)
+*   ####[nginx](./../services/nginx.md)
+*   ####[node](./../services/node.md)
+*   ####[php](./../services/php.md)
+*   ####[postgres](./../services/postgres.md)
+*   ####[redis](./../services/redis.md)
+*   ####[solr](./../services/solr.md)
 
 Environment
 -----------
@@ -44,6 +44,14 @@ LANDO_WEBROOT_USER=www-data
 LANDO_WEBROOT_GROUP=www-data
 LANDO_WEBROOT_UID=33
 LANDO_WEBROOT_GID=33
+```
+
+It will also make the following available **ON YOUR HOST MACHINE** so that you can use them in your `.lando.yml` file.
+
+```bash
+LANDO_APP_NAME=myapp
+LANDO_APP_ROOT=/path/to/app/on/my/host
+LANDO_APP_ROOT_BIND=/path/to/app/in/container
 ```
 
 Shared Files
@@ -70,6 +78,47 @@ services:
     extras:
       - apt-get update -y
       - apt-get install vim
+```
+
+Pre-Run Scripting
+-----------------
+
+Lando will run any shell script it finds in your services `/scripts` directory before it boots up each service. We dogfood this functionality in our core plugins to generate self-signed certs and handle user permissions, but it can be used by the user to provide some additional customizations before a service is started. Consider the trivial example below.
+
+A `bash` script located in `scripts/my-script.sh` in your app root directory.
+
+```bash
+#!/bin/sh
+
+echo "Hey this script is actually running!"
+
+```
+
+A `.lando.yml` that injects the script into the `appserver`'s `/scripts` directory.
+
+```yml
+sevices:
+  appserver:
+    overrides:
+      services:
+        volumes:
+          - $LANDO_APP_ROOT_BIND/scripts/my-script.sh:/scripts/run-this.sh
+```
+
+Expected behavior
+
+```bash
+# Restart the app
+lando restart
+
+# Inspect the log to see if it printed our message
+lando logs -s appserver
+Attaching to backdrop_appserver_1
+appserver_1        | Generating RSA private key, 2048 bit long modulus
+appserver_1        | ..........+++
+appserver_1        | .......+++
+appserver_1        | e is 65537 (0x10001)
+appserver_1        | Hey this script is actually running!
 ```
 
 Advanced Service Configuration

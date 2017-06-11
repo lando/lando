@@ -3,10 +3,10 @@ Global Config
 
 You can also configure how Lando itself works with a `config.yml`. This config system is highly flexible and allows you to configure a few things, such as...
 
-  * Plugins it should load
-  * The verbosity of its logs and console output
-  * The location of its config directories
-  * The config of its loaded plugins
+*   Plugins it should load
+*   The verbosity of its logs and console output
+*   The location of its config directories
+*   The config of its loaded plugins
 
 > #### Info::Discover other configs
 >
@@ -17,9 +17,9 @@ config.yml
 
 This file specifies the core configuration options for Lando. If you wanted to fork Lando and use your own plugins or alter plugin config like proxy ports this is the file you would want to change. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one it will override the default config. Here is the order the overrides take place.
 
-  1. The default `config.yml`. If you've installed Lando from source this will be in the source root.
-  2. The `config.yml` inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.
-  3. The `config.yml` inside of the `userConfRoot`. For examples `~/.lando/` on macOS.
+1.  The default `config.yml`. If you've installed Lando from source this will be in the source root.
+2.  The `config.yml` inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.
+3.  The `config.yml` inside of the `userConfRoot`. For examples `~/.lando/` on macOS.
 
 > #### Hint::Where are `sysConfRoot` and `userConfRoot`?
 >

@@ -11,13 +11,15 @@ As soon as Docker offers a file sharing solution with tolerable page load speeds
 
 Please note that the initial sync of files or running commands like `composer install` or `npm install` can take a few moments to fully sync. Small and single file changes should be instantaneous. To add syncing to your app just modify its `.lando.yml`.
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/trivial-sharing/.lando.yml" %}{% endcodesnippet %}
 
 You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/trivial-sharing)
 
-### Configuration
+Configuration
+-------------
 
 By default sharing is turned on but is configurable by editing the [Lando global configuration](./config.yml).
 

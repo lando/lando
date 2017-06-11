@@ -25,11 +25,13 @@ Supported Recipes
 
 The following recipes are currently offered. Please check out each one to learn how to use them.
 
-  * ####[Backdrop](./../recipes/backdrop.md)
-  * ####[Drupal 6](./../recipes/d6.md)
-  * ####[Drupal 7](./../recipes/d7.md)
-  * ####[LAMP](./../recipes/lamp.md)
-  * ####[LEMP](./../recipes/lemp.md)
+*   ####[Backdrop](./../recipes/backdrop.md)
+*   ####[Drupal 6](./../recipes/d6.md)
+*   ####[Drupal 7](./../recipes/d7.md)
+*   ####[Drupal 8](./../recipes/d8.md)
+*   ####[LAMP](./../recipes/lamp.md)
+*   ####[LEMP](./../recipes/lemp.md)
+*   ####[WordPress](./../recipes/wordpress.md)
 
 Extending and Overriding Recipes
 --------------------------------
