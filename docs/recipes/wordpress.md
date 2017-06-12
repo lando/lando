@@ -24,7 +24,7 @@ Installing WordPress
 
 You will need to make sure you [extract WordPress](https://wordpress.org) into either your application root directory or the subdirectory specified by `webroot` in your recipe config.
 
-You will also want to scope out your database credentials (see [below](#getting-service-information)) so you can be prepped to enter them during the drupal installation. You will want to use `internal_connection` information.
+You will also want to scope out your database credentials (see [below](#getting-service-information)) so you can be prepped to enter them during the WordPress installation. You will want to use `internal_connection` information.
 
 If you want to try a composer based installation you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/wordpress) to get started.
 
