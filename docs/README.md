@@ -6,14 +6,14 @@ Lando
 Lando is a free, open source and cross-platform local development environment tool built on [Docker](http://docker.com) container technology. It is the successor project to [Kalabox](http://kalabox.io).
 
 *   [Installation](http://docs.lndo.io/installation/installing.html)
-*   [Getting Started](http://docs.lndo.io/tutorials/first-app.html)
+*   [Getting Started](http://docs.lndo.io/tutorials/basics.html)
 *   [Configuration](http://docs.lndo.io/config/lando.html)
 *   [Recipes](http://docs.lndo.io/config/services.html)
 *   [Services](http://docs.lndo.io/config/services.html)
 *   [Tooling Options](http://docs.lndo.io/config/tooling.html)
 *   [CLI reference](http://docs.lndo.io/cli/usage.html)
 *   [Contributing](http://docs.lndo.io/dev/contributing.html)
-*   [API](http://docs.lndo.io/dev/api.html)
+*   [API](http://docs.lndo.io/dev/lando.html)
 *   [Troubleshooting and Support](http://docs.lndo.io/troubleshooting/logs.html)
 *   [Examples](https://github.com/kalabox/lando/tree/master/examples)
 
@@ -22,7 +22,7 @@ Or browse all [our docs](http://docs.lndo.io).
 The Big Picture
 ---------------
 
-Lando seeks to provide stored-in-version-control, single-config-file and per-app configuration to manage the dependencies a project needs to run and developers need to develop. It aim's to be easy to use and fast.
+Lando seeks to provide stored-in-version-control, single-config-file and per-app configuration to manage the dependencies a project needs to run and developers need to develop. It aims to be easy to use and fast.
 
 With Lando you can...
 
@@ -32,10 +32,9 @@ With Lando you can...
 *   Easily customize or extend tooling, deployment options and basically any other functionality.
 *   Free yourself from the tyranny of inferior local development products.
 
-A developer should be able to get a running site and the tools needed to develop that site with a single, short config file and a few commands.
+A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands. 
 
 ```yml
-# .lando.yml lives in your repo root
 name: myproject
 recipe: lamp
 ```

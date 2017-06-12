@@ -19,11 +19,9 @@
 
 ## Getting Started
 
-*   [Lando basics](tutorials/basics.md)
-*   [Customizing my app](tutorials/customizing-app.md)
-*   [Rebuilding MAMP](tutorials/first-app.md)
-*   [Building a Custom LEMP app](tutorials/lemp-app.md)
-*   [Building a Custom Drupal 7 app](tutorials/drupal7-app.md)
+*   [The Basics](tutorials/basics.md)
+*   [Recipe Config](tutorials/recipe-config.md)
+*   [Additional Services and Tooling](tutorials/ast.md)
 
 ## Configuration
 
@@ -40,8 +38,10 @@
 *   [Backdrop](recipes/backdrop.md)
 *   [Drupal 6](recipes/d6.md)
 *   [Drupal 7](recipes/d7.md)
+*   [Drupal 8](recipes/d8.md)
 *   [LAMP](recipes/lamp.md)
 *   [LEMP](recipes/lemp.md)
+*   [WordPress](recipes/wordpress.md)
 
 ## Services
 
@@ -80,7 +80,7 @@
 
 ## Tutorials
 
-*   [Something](tutorials/first-app.md)
+*   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development
 
