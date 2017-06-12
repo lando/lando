@@ -3,8 +3,8 @@ Running a Drupal7 App
 
 Now that you've successfully [built your first Lando app](./lemp-app.md) it's time to try something a little more complicated like a Drupal 7 app. Let's turn to our examples again.
 
-1. Start up your app
---------------------
+1.  Start up your app
+---------------------
 
 ```bash
 # Clone down the Lando repo so we can use some examples
@@ -17,8 +17,8 @@ lando start
 
 Try visting `https://drupal7.lndo.site/install.php` in your browser. You should see the Drupal 7 install page.
 
-2. Install Drupal
------------------
+2.  Install Drupal
+------------------
 
 Using `lando info` get credentials and internal connection info for your database so you can use it during the Drupal install.
 
@@ -28,7 +28,7 @@ Proceed through the Drupal install. When it prompts you for database credentials
 
 When you complete this installation you should have a fully running D7 site.
 
-3. Check out the app directory structure
+3.  Check out the app directory structure
 ----------------------------------------
 
 If you inspect the directory structure of this example app you will see that it contains:

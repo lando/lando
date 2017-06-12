@@ -12,25 +12,28 @@ recipe: lamp
 
 You can easily configure/override the LAMP recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/lamp2/.lando.yml" %}{% endcodesnippet %}
 
 You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lamp2)
 
-### Environmental Variables
+Environmental Variables
+-----------------------
 
 Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
 
 ```bash
 DB_HOST=database
-DB_USER=database
-DB_PASSWORD=database
-DB_NAME=database
+DB_USER=lamp
+DB_PASSWORD=lamp
+DB_NAME=lamp
 DB_PORT=3306
 ```
 
-### Getting Service Information
+Getting Service Information
+---------------------------
 
 You can get more in depth information about the services this recipe provides by running `lando info`
 
@@ -65,9 +68,9 @@ lando info
     "type": "mysql",
     "version": "latest",
     "creds": {
-      "user": "database",
-      "password": "database",
-      "database": "database"
+      "user": "lamp",
+      "password": "lamp",
+      "database": "lamp"
     },
     "internal_connection": {
       "host": "database",

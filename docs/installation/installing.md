@@ -4,23 +4,23 @@ Installing
 macOS
 -----
 
-1. Download the latest `.dmg` package from [GitHub](https://github.com/kalabox/lando/releases)
-2. Mount the DMG by double-clicking it
-3. Double-click on the `LandoInstaller.pkg`
-4. Go through the setup workflow
-5. Enter your username and password when prompted
-6. [Spin up your first Lando app](./../tutorials/first-app.md)
+1.  Download the latest `.dmg` package from [GitHub](https://github.com/kalabox/lando/releases)
+2.  Mount the DMG by double-clicking it
+3.  Double-click on the `LandoInstaller.pkg`
+4.  Go through the setup workflow
+5.  Enter your username and password when prompted
+6.  [Spin up your first Lando app](./../tutorials/basics.md)
 
 Windows
 -------
 
-1. Make sure you are using **at least** Windows 10 Professional with the latest updates installed.
-2. Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
-3. Double-click on `lando.exe`
-4. Go through the setup workflow
-5. Approve various UAC prompts during install
-6. After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#shared-drives)
-7. [Spin up your first Lando app](./../tutorials/first-app.md)
+1.  Make sure you are using **at least** Windows 10 Professional with the latest updates installed.
+2.  Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
+3.  Double-click on `lando.exe`
+4.  Go through the setup workflow
+5.  Approve various UAC prompts during install
+6.  After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#shared-drives)
+7.  [Spin up your first Lando app](./../tutorials/basics.md)
 
 > #### Warning::YOU MUST SET UP SHARED DRIVES AND HAVE HYPER-V ENABLED
 >
@@ -29,11 +29,11 @@ Windows
 Linux
 -----
 
-1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. (17.03.1-ce or higher)
-2. Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/kalabox/lando/releases)
-3. Double-click on the package to launch Software Center
-4. Click the "Install" button and enter your password when prompted
-5. [Spin up your first Lando app](./../tutorials/first-app.md)
+1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. **(17.03.1-ce or higher)**
+2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/kalabox/lando/releases)
+3.  Double-click on the package to launch Software Center
+4.  Click the "Install" button and enter your password when prompted
+5.  [Spin up your first Lando app](./../tutorials/basics.md)
 
 > #### Hint::Install from source for other Linux distros
 >
@@ -47,13 +47,12 @@ If you want to roll like a ninja you can install from our development builds or 
 
 ### Development Builds
 
-We produce development releases for every commit merged into our `master` branch. **These releases are not officially supported** but we have made them available to intrepid users who want to try the bleeding edge or are interested in trying out a recent bug fix before
-an official release is rolled.
+We produce development releases for every commit merged into our `master` branch. **These releases are not officially supported** but we have made them available to intrepid users who want to try the bleeding edge or are interested in trying out a recent bug fix before an official release is rolled.
 
-  * **Windows** - [http://installer.kalabox.io/lando-latest-dev.exe](http://installer.kalabox.io/lando-latest-dev.exe)
-  * **Debian** - [http://installer.kalabox.io/lando-latest-dev.deb](http://installer.kalabox.io/lando-latest-dev.deb)
-  * **Fedora** - [http://installer.kalabox.io/lando-latest-dev.rpm](http://installer.kalabox.io/lando-latest-dev.rpm)
-  * **macOS** - [http://installer.kalabox.io/lando-latest-dev.dmg](http://installer.kalabox.io/lando-latest-dev.dmg)
+*   **Windows** - [http://installer.kalabox.io/lando-latest-dev.exe](http://installer.kalabox.io/lando-latest-dev.exe)
+*   **Debian** - [http://installer.kalabox.io/lando-latest-dev.deb](http://installer.kalabox.io/lando-latest-dev.deb)
+*   **Fedora** - [http://installer.kalabox.io/lando-latest-dev.rpm](http://installer.kalabox.io/lando-latest-dev.rpm)
+*   **macOS** - [http://installer.kalabox.io/lando-latest-dev.dmg](http://installer.kalabox.io/lando-latest-dev.dmg)
 
 **NOTE:** Releases can take some time to build after we merge in commits. For that reason you might want to check the time of the last commit and if it is within a few hours you might want to hold off a bit before trying the new latest release.
 

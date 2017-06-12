@@ -8,7 +8,8 @@ Rebuilds the containers and tooling for your app. This command is great for deve
 > Most app services allow data to persist between rebuilds but there are some services where a rebuild will result in a loss of data.
 
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -24,7 +25,8 @@ lando rebuild --yes
 lando rebuild appname -- -v
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]

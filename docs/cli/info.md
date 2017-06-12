@@ -3,7 +3,8 @@ info
 
 Displays relevant information for an app. Using this command you can see useful information such as which container volumes are being shared, which database ports are exposed (both internally and externally), and which URLs you can use to access an app.
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -13,7 +14,8 @@ lando info
 lando info myapp
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]

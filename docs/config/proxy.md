@@ -9,7 +9,8 @@ There is also a [known issue](./../issues/dns-rebind.md) called DNS rebinding pr
 >
 > As long as your containers or services expose ports `80` and/or `443` Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/trivial-proxy/.lando.yml" %}{% endcodesnippet %}
 
@@ -19,7 +20,8 @@ There is also a [known issue](./../issues/dns-rebind.md) called DNS rebinding pr
 
 You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/trivial-proxy)
 
-### Configuration
+Configuration
+-------------
 
 By default proxying is turned on and will try to bind to ports `80` and `443`. If these ports are taken, Lando will attempt to bind to alternate ports. These things are all configurable by editing the [Lando global configuration](./config.yml).
 
@@ -43,7 +45,8 @@ proxyHttpsFallbacks:
 
 You will need to do a `lando poweroff` for these changes to take. **You also should not change the `proxyDomain` unless you know what you are doing!**
 
-### Working Offline or Using Custom Domains
+Working Offline or Using Custom Domains
+---------------------------------------
 
 If you are working offline and/or have added custom domains and want to get them to work you will need to edit your `hosts` file. Generally this file is located at `/etc/hosts` on Linux and macOS and `C:\Windows\System32\Drivers\etc\host` on Windows. You will need administrative privileges to edit this file.
 

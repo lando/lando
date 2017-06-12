@@ -3,13 +3,15 @@ list
 
 Prints out a list of installed Lando apps with some basic information about each.
 
-### Usage
+Usage
+-----
 
 ```bash
 lando list
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]

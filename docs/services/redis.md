@@ -3,20 +3,23 @@ Redis
 
 [Redis](https://redis.io/) is an open source, in-memory and typed data structure store, used as a database, cache and message broker. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
-### Supported versions
+Supported versions
+------------------
 
-  * 3.2
-  * 3.0
-  * latest
-  * custom
+*   3.2
+*   3.0
+*   latest
+*   custom
 
-### Example
+Example
+-------
 
 {% codesnippet "./../examples/redis/.lando.yml" %}{% endcodesnippet %}
 
 You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/redis)
 
-### Getting information
+Getting information
+-------------------
 
 You can get connection and credential information about your redis instance by running `lando info` from inside your app.
 

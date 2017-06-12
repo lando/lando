@@ -1,13 +1,14 @@
 destroy
 =======
 
-Destroys the infrastructure needed to run an app. After you run this command you will not be able to access the app or use Lando tooling for development. The files (eg the git repo) for the app will not be removed
+Destroys the infrastructure needed to run an app. After you run this command you will not be able to access the app or use Lando tooling for development. The files (eg the git repo) for the app will not be removed.
 
 > #### Info::Only destroys an app, not Lando itself!
 >
 > This command should not be confused with uninstalling Lando. It **will only** destroy the app that you use it on.
 
-### Usage
+Usage
+-----
 
 ```bash
 # From an app directory or its subdirectories
@@ -23,7 +24,8 @@ lando destroy -y
 lando destroy appname -- -vvv
 ```
 
-### Options
+Options
+-------
 
 ```bash
   --help, -h  Show help                                                [boolean]
