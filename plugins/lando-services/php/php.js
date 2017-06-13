@@ -262,8 +262,8 @@ module.exports = function(lando) {
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, function(version, pkg) {
 
-        // Ensure extras is arrayed
-        config.extras = config.extras || [];
+        // Ensure build is arrayed
+        config.build = config.build || [];
 
         // Queue up our global composer command
         var cgr = ['composer', 'global', 'require'];
@@ -280,7 +280,7 @@ module.exports = function(lando) {
         cgr.push(dep.join(':'));
 
         // Unshift in our composer deps
-        config.extras.unshift(cgr.join(' '));
+        config.build.unshift(cgr.join(' '));
 
       });
     }

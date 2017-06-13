@@ -97,7 +97,7 @@ module.exports = function(lando) {
       _.forEach(config.globals, function(version, pkg) {
 
         // Ensure globals is arrayed
-        config.extras = config.extras || [];
+        config.build = config.build || [];
 
         // Queue up our global composer command
         var nig = ['npm', 'install', '-g'];
@@ -113,8 +113,8 @@ module.exports = function(lando) {
         // Build the command
         nig.push(dep.join('@'));
 
-        // Add before our extras
-        config.extras.unshift(nig.join(' '));
+        // Add before our other builds
+        config.build.unshift(nig.join(' '));
 
       });
     }

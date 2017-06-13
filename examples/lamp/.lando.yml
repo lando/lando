@@ -50,9 +50,14 @@ services:
     # composer:
     #   drush/drush: "~8"
 
-    # Optionally run the following commands after the service is started
-    # extras:
+    # Optionally run the following build steps
+    # build:
     #  - "cd $$LANDO_MOUNT && composer install"
+
+    # Optionally install additional server software
+    # extras:
+    #  - "apt-get update -y"
+    #  - "apt-get install netcat -y"
 
   # My database service
   database:

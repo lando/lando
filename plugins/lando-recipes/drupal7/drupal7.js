@@ -70,13 +70,13 @@ module.exports = function(lando) {
     var pharInstall = stack.getPhar(pharUrl, src, dest, drushStatusCheck);
     var cgrInstall = stack.getCgr('drush/drush', drush);
 
-    // Set extras if needed
-    var extrasKey = 'services.appserver.extras';
-    build.services.appserver.extras = _.get(build, extrasKey, []);
+    // Set builders if needed
+    var buildersKey = 'services.appserver.build';
+    build.services.appserver.builders = _.get(build, buildersKey, []);
 
     // Add our drush cmds
     var drushCmd = [pharInstall, cgrInstall].join(' || ');
-    build.services.appserver.extras.push(drushCmd);
+    build.services.appserver.builders.push(drushCmd);
 
     // Add drush to the tooling
     build.tooling.drush = {

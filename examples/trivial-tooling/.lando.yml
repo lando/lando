@@ -19,7 +19,7 @@ services:
     via: nginx
     webroot: www
     # Run composer install after we start our app
-    extras:
+    build:
       - "cd $LANDO_MOUNT && composer install"
   database:
     type: mariadb

@@ -105,13 +105,13 @@ module.exports = function(lando) {
       cmd: ['drush']
     };
 
-    // Get appserver extras
-    var extrasKey = 'services.appserver.extras';
-    var extras = _.get(build, extrasKey, []);
+    // Get appserver build
+    var buildersKey = 'services.appserver.build';
+    var builders = _.get(build, buildersKey, []);
 
     // Add the backdrop install command
-    extras.push(getBackdrush(config));
-    _.set(build, extrasKey, extras);
+    builders.push(getBackdrush(config));
+    _.set(build, buildersKey, builders);
 
     // Return the things
     return build;

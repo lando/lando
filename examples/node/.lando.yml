@@ -48,12 +48,19 @@ services:
     # in this example.
     command: npm start
 
-    # Install our local package.json dependencies as part of a build step
+    # Install some extra server packages
     extras:
+      - "apt-get update -y"
+      - "apt-get install vim -y"
+
+    # Install our local package.json dependencies as part of a build step
+    build:
       - "cd $LANDO_MOUNT & npm install"
 
 # Add some nice command routing
 tooling:
+  vim:
+    service: appserver
   npm:
     service: appserver
   gulp:

@@ -87,40 +87,55 @@ module.exports = function(lando) {
       // Start up a build collector
       var build = [];
 
+      /*
+       * Helper to build out some runs
+       */
+      var buildRun = function(container, cmd, user) {
+        return {
+          id: container,
+          cmd: cmd,
+          opts: {
+            mode: 'attach',
+            user: user
+          }
+        };
+      };
+
       // Go through each service
       _.forEach(app.config.services, function(service, name) {
 
-        // If the service has extras let's loop through and run some commands
-        if (!_.isEmpty(service.extras)) {
+        // Loop through both extras and build
+        _.forEach(['extras', 'build'], function(section) {
 
-          // Normalize data for loopage
-          if (!_.isArray(service.extras)) {
-            service.extras = [service.extras];
+          // If the service has extras let's loop through and run some commands
+          if (!_.isEmpty(service[section])) {
+
+            // Normalize data for loopage
+            if (!_.isArray(service[section])) {
+              service[section] = [service[section]];
+            }
+
+            // Run each command
+            _.forEach(service[section], function(cmd) {
+
+              // Get the user
+              var userPath = 'environment.LANDO_WEBROOT_USER';
+              var user = _.get(app.services[name], userPath, 'root');
+
+              // Force root if we are doing extras
+              var by = (section === 'extras') ? 'root' : user;
+
+              // Get teh container name
+              var container = [app.dockerName, name, '1'].join('_');
+
+              // Push to the build
+              build.push(buildRun(container, cmd, by));
+
+            });
+
           }
 
-          // Run each command
-          _.forEach(service.extras, function(cmd) {
-
-            // Get the user
-            var userPath = 'environment.LANDO_WEBROOT_USER';
-            var user = _.get(app.services[name], userPath, 'root');
-
-            // Build out the compose object
-            var compose = {
-              id: [app.dockerName, name, '1'].join('_'),
-              cmd: cmd,
-              opts: {
-                mode: 'attach',
-                user: user
-              }
-            };
-
-            // Push to the build
-            build.push(compose);
-
-          });
-
-        }
+        });
 
       });
 

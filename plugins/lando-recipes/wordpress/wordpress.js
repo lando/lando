@@ -59,12 +59,12 @@ module.exports = function(lando) {
     // Get the wp install command
     var wpInstall = stack.getPhar(pharUrl, src, dest, wpStatusCheck);
 
-    // Set extras if needed
-    var key = 'services.appserver.extras';
-    build.services.appserver.extras = _.get(build, key, []);
+    // Set builders if needed
+    var key = 'services.appserver.build';
+    build.services.appserver.builders = _.get(build, key, []);
 
     // Add our isntall cmds
-    build.services.appserver.extras.push(wpInstall);
+    build.services.appserver.builders.push(wpInstall);
 
     // Add wp command
     build.tooling.wp = {
