@@ -1,11 +1,17 @@
 # solr server example
 name: solr
 
-# Give me http://solr.lndo.site
+# Give me http://solr.lndo.site and http://admin.solr.lndo.site
 proxy:
   appserver:
     - port: 80/tcp
       default: true
+
+  # Lets get a nice lndo url for the solr web interface
+  index:
+    - port: 8983/tcp
+      subdomains:
+        - admin
 
 # Spin up services to run a basic node server with solr backend
 services:

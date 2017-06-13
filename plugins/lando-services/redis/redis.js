@@ -114,6 +114,11 @@ module.exports = function(lando) {
       }
     };
 
+    // Show the config files being used if they are custom
+    if (!_.isEmpty(config.config)) {
+      info.config  = config.config;
+    }
+
     // Return the collected info
     return info;
 
