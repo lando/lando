@@ -30,8 +30,8 @@ module.exports = function(lando) {
       // Get our new config
       var newConfig = lando.recipes.build(name, recipe, config);
 
-      // Merge it in
-      app.config = _.merge(app.config, newConfig);
+      // Our yml config on top of the new one, this allows for overrides to work
+      app.config = _.merge(newConfig, app.config);
 
     }
 
