@@ -264,7 +264,7 @@ module.exports = function(lando) {
         services[name].volumes = addConfig(mount, services[name].volumes);
       });
     }
-    
+
     // Process any compose overrides we might have
     if (_.has(config, 'overrides')) {
       lando.log.debug('Overriding %s with', name, config.overrides);
