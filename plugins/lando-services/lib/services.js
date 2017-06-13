@@ -256,6 +256,15 @@ module.exports = function(lando) {
     // And some permission helpers
     services[name].volumes = addScript('user-perms.sh', services[name].volumes);
 
+    // Add in any custom pre-runscripts
+    if (!_.isEmpty(config.scripts)) {
+      _.forEach(config.scripts, function(script) {
+        var r = path.join('/scripts', path.basename(script));
+        var mount = buildVolume(script, r, '$LANDO_APP_ROOT_BIND');
+        services[name].volumes = addConfig(mount, services[name].volumes);
+      });
+    }
+    
     // Process any compose overrides we might have
     if (_.has(config, 'overrides')) {
       lando.log.debug('Overriding %s with', name, config.overrides);

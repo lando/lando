@@ -34,10 +34,10 @@ module.exports = function(lando) {
 
       // Set builders if needed
       var key = 'services.appserver.build';
-      build.services.appserver.builders = _.get(build, key, []);
+      build.services.appserver.build = _.get(build, key, []);
 
       // Add our drupal cmds
-      build.services.appserver.builders.push(drupalInstall);
+      build.services.appserver.build.push(drupalInstall);
 
       // Set tooling
       // Add drupal to the tooling
