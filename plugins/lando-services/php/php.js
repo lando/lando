@@ -302,6 +302,11 @@ module.exports = function(lando) {
     info.via = config.via;
     info.webroot = _.get(config, 'webroot', '.');
 
+    // Show the config files being used if they are custom
+    if (!_.isEmpty(config.config)) {
+      info.config  = config.config;
+    }
+
     // Return the collected info
     return info;
 
