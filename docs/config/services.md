@@ -98,7 +98,7 @@ Pre-Run Scripting
 
 Lando will run any shell script it finds in your services `/scripts` directory before it boots up each service. We dogfood this functionality in our core plugins to generate self-signed certs and handle user permissions, but it can be used by the user to provide some additional customizations before a service is started. Consider the trivial example below.
 
-A `bash` script located in `scripts/my-script.sh` in your app root directory.
+An executable (eg `chmod +x`) `bash` script located in `scripts/my-script.sh` in your app root directory.
 
 ```bash
 #!/bin/sh
@@ -112,10 +112,8 @@ A `.lando.yml` that injects the script into the `appserver`'s `/scripts` directo
 ```yml
 sevices:
   appserver:
-    overrides:
-      services:
-        volumes:
-          - $LANDO_APP_ROOT_BIND/scripts/my-script.sh:/scripts/run-this.sh
+    scripts:
+      - scripts/run-this.sh
 ```
 
 Expected behavior

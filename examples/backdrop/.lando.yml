@@ -78,10 +78,8 @@ config:
 services:
   # Inject a pre-run script
   appserver:
-    overrides:
-      services:
-        volumes:
-          - $LANDO_APP_ROOT_BIND/scripts/my-script.sh:/scripts/run-this.sh
+    scripts:
+      - scripts/my-script.sh
   node:
     type: node:6.10
   cache:

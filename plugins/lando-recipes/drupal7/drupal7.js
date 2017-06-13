@@ -72,11 +72,11 @@ module.exports = function(lando) {
 
     // Set builders if needed
     var buildersKey = 'services.appserver.build';
-    build.services.appserver.builders = _.get(build, buildersKey, []);
+    build.services.appserver.build = _.get(build, buildersKey, []);
 
     // Add our drush cmds
     var drushCmd = [pharInstall, cgrInstall].join(' || ');
-    build.services.appserver.builders.push(drushCmd);
+    build.services.appserver.build.push(drushCmd);
 
     // Add drush to the tooling
     build.tooling.drush = {
