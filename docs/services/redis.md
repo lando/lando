@@ -8,6 +8,7 @@ Supported versions
 
 *   3.2
 *   3.0
+*   2.8
 *   latest
 *   custom
 
