@@ -32,12 +32,12 @@ module.exports = function(lando) {
       var dest = '/usr/local/bin/drupal';
       var drupalInstall = stack.getPhar(pharUrl, src, dest);
 
-      // Set extras if needed
-      var key = 'services.appserver.extras';
-      build.services.appserver.extras = _.get(build, key, []);
+      // Set builders if needed
+      var key = 'services.appserver.build';
+      build.services.appserver.builders = _.get(build, key, []);
 
       // Add our drupal cmds
-      build.services.appserver.extras.push(drupalInstall);
+      build.services.appserver.builders.push(drupalInstall);
 
       // Set tooling
       // Add drupal to the tooling

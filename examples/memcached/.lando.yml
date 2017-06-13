@@ -32,7 +32,7 @@ services:
   appserver:
     type: node:6.10
     command: npm start
-    extras:
+    build:
       - "cd $LANDO_MOUNT & npm install"
 
 # Add some nice command routing
