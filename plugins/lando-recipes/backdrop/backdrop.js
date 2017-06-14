@@ -121,7 +121,8 @@ module.exports = function(lando) {
   // Return the things
   return {
     build: build,
-    configDir: __dirname
+    configDir: __dirname,
+    resetConfig: require('./../lamp/lamp')(lando).resetConfig
   };
 
 };

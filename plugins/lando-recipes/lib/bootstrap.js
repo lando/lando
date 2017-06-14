@@ -32,6 +32,7 @@ module.exports = function(lando) {
     lando.recipes.add('drupal8', require('./../drupal8/drupal8')(lando));
     lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
     lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
+    lando.recipes.add('pantheon', require('./../pantheon/pantheon')(lando));
     lando.recipes.add('wordpress', require('./../wordpress/wordpress')(lando));
 
   });

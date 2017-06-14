@@ -94,7 +94,8 @@ module.exports = function(lando) {
     build: build,
     configDir: __dirname,
     getCgr: lamp.getCgr,
-    getPhar: lamp.getPhar
+    getPhar: lamp.getPhar,
+    resetConfig: lamp.resetConfig
   };
 
 };

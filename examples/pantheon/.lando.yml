@@ -1,0 +1,5 @@
+# Pantheon
+name: pantheon
+recipe: pantheon
+config:
+  framework: drupal8

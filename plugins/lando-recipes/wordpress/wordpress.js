@@ -81,7 +81,8 @@ module.exports = function(lando) {
   // Return the things
   return {
     build: build,
-    configDir: __dirname
+    configDir: __dirname,
+    resetConfig: lamp.resetConfig
   };
 
 };
