@@ -55,6 +55,7 @@
 *   [postgres](services/postgres.md)
 *   [redis](services/redis.md)
 *   [solr](services/solr.md)
+*   [varnish](services/varnish.md)
 
 ## Command Line
 

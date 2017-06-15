@@ -22,6 +22,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[postgres](./../services/postgres.md)
 *   ####[redis](./../services/redis.md)
 *   ####[solr](./../services/solr.md)
+*   ####[varnish](./../services/varnish.md)
 
 Environment
 -----------
