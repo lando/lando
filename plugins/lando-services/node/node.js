@@ -50,7 +50,7 @@ module.exports = function(lando) {
 
     // Build the basic config
     var version = config.version || '6.10';
-    var command = config.command || ['tail', '-f', '/dev/null'];
+    var command = config.command || 'tail -f /dev/null';
 
     // Arrayify the command if needed
     if (!_.isArray(command)) {
@@ -72,7 +72,7 @@ module.exports = function(lando) {
         '/usr/local/share',
         '/usr/local/lib/node_modules'
       ],
-      command: command.join(' '),
+      command: '/bin/sh -c "' + command.join(' && ') + '"'
     };
 
     // Generate some certs we can use
