@@ -7,11 +7,9 @@
 'use strict';
 
 // Load modules
-var redis = require('thunk-redis')
-var fs = require('fs');
+var redis = require('thunk-redis');
 var http = require('http');
 var express = require('express');
-var util = require('util');
 var app = express();
 
 // Create our server
