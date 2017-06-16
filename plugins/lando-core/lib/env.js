@@ -38,6 +38,7 @@ module.exports = function(lando) {
     app.env.LANDO_HOST_OS = lando.config.os.platform;
     app.env.LANDO_HOST_UID = lando.config.engineId;
     app.env.LANDO_HOST_GID = lando.config.engineGid;
+    app.env.LANDO_HOST_IP = lando.config.env.LANDO_ENGINE_REMOTE_IP;
     app.env.LANDO_APP_ROOT = app.rootBind;
     app.env.LANDO_WEBROOT_USER = 'www-data';
     app.env.LANDO_WEBROOT_GROUP = 'www-data';

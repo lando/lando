@@ -53,7 +53,8 @@ module.exports = function(lando) {
         mount: config.mount,
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.template'
+        serverConf: '/etc/nginx/conf.d/default.template',
+        phpConf: '/usr/local/etc/php/php.ini'
       },
       apache: {
         web: 'apache',
@@ -64,6 +65,7 @@ module.exports = function(lando) {
         ],
         image: [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-available/000-default.conf',
+        phpConf: '/usr/local/etc/php/php.ini'
       }
     };
 
@@ -108,7 +110,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
         PATH: path.join(':'),
-        LANDO_WEBROOT: webroot
+        LANDO_WEBROOT: webroot,
       },
       ports: ['80'],
       volumes: [
@@ -117,6 +119,25 @@ module.exports = function(lando) {
       ],
       command: config.command.join(' '),
     };
+
+    // Add our default php ini
+    var phpIniFile = ['php', 'php.ini'];
+    var iniMount = buildVolume(phpIniFile, config.phpConf, defaultConfDir);
+    php.volumes = addConfig(iniMount, php.volumes);
+
+    // Add in our xdebug config
+    if (config.xdebug) {
+
+      // Conf
+      var xconfig = [
+        'remote_enable=true',
+        'remote_host=' + lando.config.env.LANDO_ENGINE_REMOTE_IP
+      ];
+
+      // Add the conf
+      php.environment.XDEBUG_CONFIG = xconfig.join(' ');
+
+    }
 
     // If this is apache lets set our default config
     if (config.web === 'apache') {
@@ -231,7 +252,7 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       php: {
-        conf: '/usr/local/etc/php/php.ini'
+        conf: config.phpConf
       },
       web: {
         server: config.serverConf

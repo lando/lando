@@ -27,3 +27,24 @@ LEMP Example
 {% codesnippet "./../examples/lemp/.lando.yml" %}{% endcodesnippet %}
 
 You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lemp)
+
+Using Xdebug
+------------
+
+You can activate `xdebug` for remote debugging by setting `xdebug: true` in the config for your `php` service. This will enable `xdebug` and configure it so you can connect from your host machine. You will need to configure your IDE so that it can connect. Here is some example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin:
+
+```
+"php-debug":
+  {
+    ServerPort: 9000
+    PathMaps: [
+      "/var/www/html/www;/Users/pirog/Desktop/work/lando/examples/lando/www"
+    ]
+  }
+```
+
+The first part of a pathmap will be the location of your code in the container. This is eiher `/var/www/html` or `/app` depending on whether you are using sharing or not. When in doubt use `/app`, which is the non-sharing path and should work in either case, although with potential performance impacts. Also note that if your app is in a nested docroot you will need to append that to the paths. The example above uses an app with a nested webroot called `www`.
+
+> #### Info::Problems starting XDEBUG
+>
+> If you are visting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_START_SESSION=LANDO` to your request and seeing if that does the trick.
