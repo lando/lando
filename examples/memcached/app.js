@@ -7,11 +7,9 @@
 'use strict';
 
 // Load modules
-var fs = require('fs');
 var http = require('http');
 var express = require('express');
 var Memcached = require('memcached');
-var util = require('util');
 var app = express();
 
 // Get our memcached client
@@ -26,11 +24,11 @@ app.get('/', function(req, res) {
   res.header('Content-type', 'text/html');
 
   // Try to get stats about our memcache connection
-  memcached.set('foo', 'bar', 10, function(err) {
-    memcached.gets('foo', function(err, data) {
+  memcached.set('foo', 'bar', 10, function() {
+    memcached.gets('foo', function() {
       memcached.stats(function(err, data) {
         return res.end(JSON.stringify(data, null, 2));
-      })
+      });
     });
   });
 

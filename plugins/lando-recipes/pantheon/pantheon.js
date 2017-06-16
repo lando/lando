@@ -19,14 +19,20 @@ module.exports = function(lando) {
     // Get the framework
     var framework = _.get(config, 'framework', 'drupal7');
 
+    // If the framework is drupal, then use drupal7
+    if (framework === 'drupal') {
+      framework = 'drupal7';
+    }
+
     // Load up the stack
     var stack = require('./../' + [framework, framework].join('/'))(lando);
 
     // Update with new config defaults if needed
     config = stack.resetConfig(framework, config);
 
-    // Pantheon uses nginx
-    config.via = 'nginx';
+    // Pantheon uses the following:
+    config.via = 'nginx:1.8';
+    config.database = 'mariadb:10.0';
 
     // Start by cheating
     var build = stack.build(name, config);

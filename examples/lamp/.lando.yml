@@ -43,6 +43,9 @@ services:
       # Use a custom php.ini
       # conf: config/php/php.ini
 
+    # Optionally activate xdebug
+    xdebug: true
+
     # Optionally install the following composer dependencies globally
     # These follow the normal composer.json form
     # Note that many composer dependencies should not be installed globally but

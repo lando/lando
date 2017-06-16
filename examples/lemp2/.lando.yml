@@ -31,6 +31,9 @@ config:
   # for the correct DB service to see what versions are available
   database: postgres
 
+  # Optionally activate xdebug
+  xdebug: true
+
   # Optionally mix in our own config files
   #
   # If ommitted this will use the default config files for the respective services.

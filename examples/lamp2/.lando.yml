@@ -30,6 +30,9 @@ config:
   # a version with `type:version` but you will need to consult the documentation
   # for the correct DB service to see what versions are available
   database: mysql
+  
+  # Optionally activate xdebug
+  xdebug: true
 
   # Optionally mix in our own config files
   #

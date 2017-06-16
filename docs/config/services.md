@@ -22,6 +22,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[postgres](./../services/postgres.md)
 *   ####[redis](./../services/redis.md)
 *   ####[solr](./../services/solr.md)
+*   ####[varnish](./../services/varnish.md)
 
 Environment
 -----------
@@ -35,6 +36,7 @@ LANDO=ON
 LANDO_SERVICE_TYPE=nginx
 LANDO_HOST_UID=501
 LANDO_HOST_GID=20
+LANDO_HOST_IP=192.68.56.1
 LANDO_SERVICE_NAME=appserver
 LANDO_HOST_OS=darwin
 LANDO_MOUNT=/path/to/your/approot

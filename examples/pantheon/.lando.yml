@@ -2,4 +2,4 @@
 name: pantheon
 recipe: pantheon
 config:
-  framework: drupal8
+  framework: drupal

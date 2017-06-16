@@ -36,6 +36,7 @@ module.exports = function(lando) {
     lando.services.add('php', require('./../php/php')(lando));
     lando.services.add('redis', require('./../redis/redis')(lando));
     lando.services.add('solr', require('./../solr/solr')(lando));
+    lando.services.add('varnish', require('./../varnish/varnish')(lando));
 
   });
 

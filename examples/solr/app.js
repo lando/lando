@@ -7,7 +7,6 @@
 'use strict';
 
 // Load modules
-var fs = require('fs');
 var http = require('http');
 var express = require('express');
 var SolrNode = require('solr-node');
