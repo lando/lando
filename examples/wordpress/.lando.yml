@@ -48,6 +48,9 @@ config:
   #
   database: mariadb
 
+  # Optionally activate xdebug
+  xdebug: true
+
   # Optionally mix in your own config files
   #
   # If ommitted this will use the default WordPress config files for the respective
