@@ -68,6 +68,9 @@ recipe: drupal6
   #
   # database: mariadb:10.1
 
+  # Optionally activate xdebug
+  # xdebug: true
+
   # Optionally mix in your own config files
   #
   # If ommitted this will use the default Drupal 6 config files for the respective

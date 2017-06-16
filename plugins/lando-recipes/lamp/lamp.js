@@ -142,7 +142,8 @@ module.exports = function(lando) {
       appserver: {
         type: 'php:' + phpVersion,
         via: 'apache',
-        ssl: true
+        ssl: true,
+        xdebug: _.get(config, 'xdebug', false)
       },
       database: {
         type: database,
