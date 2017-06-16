@@ -64,7 +64,7 @@ module.exports = function(lando) {
         // Break up our app root and cwd so we can get a diff
         var appRoot = config.app.root.split(path.sep);
         var cwd = process.cwd().split(path.sep);
-        var dir = _.difference(cwd, appRoot);
+        var dir = _.drop(cwd, appRoot.length);
 
         // Add our in-container app root
         dir.unshift('"$LANDO_MOUNT"');
