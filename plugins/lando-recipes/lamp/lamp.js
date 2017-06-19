@@ -149,9 +149,9 @@ module.exports = function(lando) {
         type: database,
         portforward: true,
         creds: {
-          user: config.recipe,
-          password: config.recipe,
-          database: config.recipe
+          user: config._recipe,
+          password: config._recipe,
+          database: config._recipe
         }
       }
     };
@@ -240,8 +240,8 @@ module.exports = function(lando) {
           'localhost',
           '-p',
           '5432',
-          config.recipe,
-          config.recipe
+          config._recipe,
+          config._recipe
         ],
         user: 'root'
       };

@@ -19,11 +19,10 @@ module.exports = function(lando) {
     if (!_.isEmpty(app.config.services)) {
       _.forEach(app.config.services, function(service, name) {
 
-        // Add the appname to the service info
-        service.app = app.config.name;
-
-        // Add the app root bind directory
-        service.mount = app.mount;
+        // Add some internal properties
+        service._app = app.config.name;
+        service._root = app.root;
+        service._mount = app.mount;
 
         // If we have sharing config let's also add that
         // @todo: this is weird since it crosses the plugin barrier

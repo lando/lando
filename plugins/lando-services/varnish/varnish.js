@@ -12,6 +12,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var addConfig = lando.services.addConfig;
   var buildVolume = lando.services.buildVolume;
+  var path = require('path');
 
   // "Constants"
   var defaultConfDir = lando.config.engineConfigDir;
@@ -110,7 +111,7 @@ module.exports = function(lando) {
     // Handle custom vcl file
     if (_.has(config, 'vcl')) {
       var local = config.vcl;
-      var remote = '/etc/varnish/conf.d/' + local;
+      var remote = '/etc/varnish/conf.d/' + path.basename(local);
       var customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
       varnish.volumes = addConfig(customConfig, varnish.volumes);
     }

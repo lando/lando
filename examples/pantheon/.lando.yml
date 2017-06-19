@@ -3,3 +3,4 @@ name: pantheon
 recipe: pantheon
 config:
   framework: drupal
+  xdebug: true

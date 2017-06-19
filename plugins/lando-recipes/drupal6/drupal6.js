@@ -20,8 +20,7 @@ module.exports = function(lando) {
     config.php = _.get(config, 'php', '5.6');
 
     // Start by cheating
-    var stack = require('./../drupal7/drupal7')(lando);
-    var build = stack.build(name, config);
+    var build = lando.recipes.build(name, 'drupal7', config);
 
     // Return the things
     return build;
@@ -31,8 +30,7 @@ module.exports = function(lando) {
   // Return the things
   return {
     build: build,
-    configDir: __dirname,
-    resetConfig: require('./../lamp/lamp')(lando).resetConfig
+    configDir: __dirname
   };
 
 };

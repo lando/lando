@@ -83,6 +83,9 @@ module.exports = function(lando) {
       // If we have some services lets create the file
       if (!_.isEmpty(compose)) {
 
+        console.log(JSON.stringify(compose, null, 2));
+        process.exit(1);
+
         // Set the compose version
         compose.version = '3';
 

@@ -64,7 +64,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         PATH: path.join(':')
       },
-      'working_dir': config.mount,
+      'working_dir': config._mount,
       ports: ['80'],
       expose: ['80'],
       volumes: [

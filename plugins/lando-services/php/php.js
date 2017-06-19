@@ -50,7 +50,7 @@ module.exports = function(lando) {
     var typeConfig = {
       nginx: {
         web: 'nginx',
-        mount: config.mount,
+        mount: config._mount,
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.template',
@@ -58,7 +58,7 @@ module.exports = function(lando) {
       },
       apache: {
         web: 'apache',
-        mount: config.mount,
+        mount: config._mount,
         command: [
           'sh -c',
           '\'a2enmod rewrite && apache2-foreground\''
@@ -96,7 +96,7 @@ module.exports = function(lando) {
     ];
 
     // Build the webroot
-    var webroot = config.mount;
+    var webroot = config._mount;
 
     // Add the webroot if its there
     if (_.has(config, 'webroot')) {
@@ -207,7 +207,7 @@ module.exports = function(lando) {
 
     // Add correct volume to nginx if sharing is on
     if (config.sharing && !_.isEmpty(config.sharing[name])) {
-      nginx.volumes.push([name, config.mount].join(':'));
+      nginx.volumes.push([name, config._mount].join(':'));
     }
 
     // Return the object
