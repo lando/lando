@@ -64,6 +64,9 @@ module.exports = function(lando) {
     nginx.ports = ['443'];
     nginx.expose = ['443'];
 
+    // Depends on varnish being up
+    _.set(nginx, 'depends_on', [config.depends]);
+
     // Return the object
     return nginx;
 
@@ -124,6 +127,7 @@ module.exports = function(lando) {
 
       // Get the nginx ssl termination
       var sslConfig = _.cloneDeep(config);
+      sslConfig.depends = name;
       sslConfig.name = [name, 'ssl'].join('_');
       services[sslConfig.name] = nginx(sslConfig);
 

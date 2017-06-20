@@ -14,6 +14,29 @@ module.exports = function(lando) {
   var path = require('path');
 
   /*
+   * Helper to merge overrides
+   *
+   * @todo: this is currently incomplete and only merges in the big things
+   * like volumes and environment. All other keys should be regarded skeptically
+   */
+  var mergeOver = function(service, overrides) {
+
+    // Handle volumes specially
+    var oldVols = service.volumes || [];
+    var newVols = _.flatten([oldVols, overrides.volumes]);
+
+    // Merge in everythign else
+    service = _.merge(service, overrides);
+
+    // Reset the volumes
+    service.volumes = _.uniq(newVols);
+
+    // Return the new service
+    return service;
+
+  };
+
+  /*
    * Helper to move conf into a mountable dir
    */
   var moveConfig = function(service, dir) {
@@ -268,9 +291,14 @@ module.exports = function(lando) {
     // Process any compose overrides we might have
     if (_.has(config, 'overrides')) {
       lando.log.debug('Overriding %s with', name, config.overrides);
-      services[name] = _.merge(services[name], config.overrides.services);
+
+      // Handle service merging
+      services[name] = mergeOver(services[name], config.overrides.services);
+
+      // Merge in the other things
       volumes = _.merge(volumes, config.overrides.volumes);
       networks = _.merge(networks, config.overrides.networks);
+
     }
 
     // Return the built compose file
@@ -290,6 +318,7 @@ module.exports = function(lando) {
     buildVolume: buildVolume,
     get: get,
     info: info,
+    mergeOver: mergeOver,
     moveConfig: moveConfig
   };
 

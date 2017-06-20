@@ -33,7 +33,7 @@ module.exports = function(lando) {
 
           // Update the service mount if we can
           if (_.has(service.sharing[name], 'remote')) {
-            service.mount = service.sharing[name].remote;
+            service._mount = service.sharing[name].remote;
           }
 
         }
