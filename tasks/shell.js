@@ -83,14 +83,28 @@ module.exports = function(common) {
    */
   var cliPkgTask = function() {
 
-    // Path to the enclose command
-    var encloseDir = path.resolve(__dirname, '..', 'node_modules', 'enclose');
-    var encloseBin = path.join(encloseDir, 'bin', 'enclose.js');
+    // Path to the pkg command
+    var binDir = path.resolve(__dirname, '..', 'node_modules', 'pkg');
+    var pkg = path.join(binDir, 'lib-es5', 'bin.js');
 
-    // "Constants"
+    // Get target info
+    var node = 'node6';
+    var os = process.platform;
+    var arch = 'x64';
+
+    // Rename the OS because i guess we want to be different than process.platform?
+    if (process.platform === 'darwin') {
+      os = 'macos';
+    }
+    else if (process.platform === 'win32') {
+      os = 'win';
+    }
+
+    // Exec options
     var pkgName = 'lando-' + common.lando.pkgSuffix;
-    var configFile = path.join('encloseConfig.js');
+    var configFile = path.join('package.json');
     var entrypoint = path.join('bin', 'lando.js');
+    var target = [node, os, arch].join('-');
     var shellOpts = {
       execOptions: {
         maxBuffer: 20 * 1024 * 1024,
@@ -98,19 +112,20 @@ module.exports = function(common) {
       }
     };
 
-    // Enclose package command
-    var encloseCmd = [
+    // Package command
+    var pkgCmd = [
       'node',
-      encloseBin,
-      '-c ' + configFile,
-      '-o ' + pkgName,
+      pkg,
+      '--targets ' + target,
+      '--config ' + configFile,
+      '--output ' + pkgName,
       entrypoint
     ];
 
     // Start to build the command
     var cmd = [];
     cmd.push(npmInstallCmd());
-    cmd.push(encloseCmd.join(' '));
+    cmd.push(pkgCmd.join(' '));
 
     // Add executable perms on POSIX
     if (platform !== 'win32') {
