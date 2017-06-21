@@ -18,7 +18,10 @@ module.exports = function(lando) {
    * Get a recipe
    */
   var get = function(name) {
-    return registry[name];
+    if (name) {
+      return registry[name];
+    }
+    return _.keys(registry);
   };
 
   /*

@@ -97,26 +97,35 @@ module.exports = function(lando) {
     };
 
     var env = {
+
+      // Basics
       FRAMEWORK: config.framework,
-      // @todo: does below need to consider nested docroot?
       DOCROOT: '/',
       FILEMOUNT: frameworkSpec[config.framework].filemount,
       DRUPAL_HASH_SALT: _.get(settings, 'drupal_hash_salt'),
+      PANTHEON_SITE: '',
+      PANTHEON_SITE_NAME: '',
+      PANTHEON_ENVIRONMENT: 'lando',
+
+      // DB
       DB_HOST: 'database',
       DB_PORT: 3306,
       DB_USER: 'pantheon',
       DB_PASSWORD: 'pantheon',
       DB_NAME: 'pantheon',
-      PANTHEON_SITE: '',
-      PANTHEON_SITE_NAME: '',
-      PANTHEON_ENVIRONMENT: 'lando',
-      PRESSFLOW_SETTINGS: JSON.stringify(settings),
+
+      // Cache
       CACHE_HOST: _.get(settings, 'conf.redis_client_host'),
       CACHE_PORT: _.get(settings, 'conf.redis_client_port'),
       CACHE_PASSWORD: _.get(settings, 'conf.redis_client_password'),
+
+      // Index
       PANTHEON_INDEX_HOST: _.get(settings, 'conf.pantheon_index_host'),
       PANTHEON_INDEX_PORT: _.get(settings, 'conf.pantheon_index_port'),
+
+      // Framework
       BACKDROP_SETTINGS: JSON.stringify(settings),
+      PRESSFLOW_SETTINGS: JSON.stringify(settings),
       AUTH_KEY: drupalHashSalt,
       SECURE_AUTH_KEY: getHash(config._app),
       LOGGED_IN_KEY: getHash(config._app),
@@ -124,7 +133,14 @@ module.exports = function(lando) {
       SECURE_AUTH_SALT: getHash(config._app + config._root),
       LOGGED_IN_SALT: getHash(config._root + config._app),
       NONCE_SALT: getHash(config._root + config._root),
-      NONCE_KEY: getHash(config._root + config.framework)
+      NONCE_KEY: getHash(config._root + config.framework),
+
+      // Terminus
+      //TERMINUS_SITE: 'TBD',
+      TERMINUS_ENV: 'dev'
+      //TERMINUS_ORG: ''
+      //TERMINUS_USER="devuser@pantheon.io"
+
     };
 
     // Return the env
@@ -135,19 +151,30 @@ module.exports = function(lando) {
   /*
    * Helper to mix in the correct tooling
    */
-   /*
   var tooling = function(config) {
 
     // Add in default pantheon tooling
     var tools = {
+      'redis-cli': {
+        service: 'cache'
+      },
+      varnishadm: {
+        service: 'edge',
+        user: 'root'
+      }
+    };
 
+    // Add in terminus if this is not php 5.3
+    if (config.php !== '5.3') {
+      tools.terminus = {
+        service: 'appserver'
+      };
     }
 
     // Return the tools
     return tools;
 
   };
-  */
 
   /*
    * Helper to return proxy config
@@ -281,6 +308,11 @@ module.exports = function(lando) {
       config.php = '7.0';
     }
 
+    // If this is Drupal8 let's add in drupal console as well
+    if (config.framework === 'drupal8') {
+      config.drupal = true;
+    }
+
     // Update with new config defaults
     config.conf = config.cong || {};
     config.conf.server = path.join(configDir, config.framework + '.conf');
@@ -311,7 +343,16 @@ module.exports = function(lando) {
     // Need to cp backdrush command files into ~/.drush
     if (config.framework === 'backdrop') {
       build.services.appserver.build = [
-        'cp -rf /var/www/.backdrush/* /var/www/.drush/',
+        'mkdir -p /var/www/.drush/backdrush',
+        'cp -rf /var/www/.backdrush/* /var/www/.drush/backdrush/',
+        'drush cc drush'
+      ];
+    }
+
+    // Make sure we clean up if we switch to something else
+    else {
+      build.services.appserver.build = [
+        'rm -rf /var/www/.drush/backdrush/',
         'drush cc drush'
       ];
     }
@@ -325,18 +366,15 @@ module.exports = function(lando) {
     build.proxy = proxy();
 
     // Grab our tooling
-    //build.tooling = _.merge(build.tooling, tooling(config));
-
-    //console.log(JSON.stringify(build, null, 2));
-    //process.exit(1);
+    build.tooling = _.merge(build.tooling, tooling(config));
 
     // Reset build and extras because we are using a custom appserver
     // for pantheon things
     // Add pantheon boot up scripts that also
     // * set $HOME/tmp
     // * handle solr certs?
-
-    // Add terminus/drush/wp-cli tooling option
+    /*
+    */
 
     // Return the things
     return build;

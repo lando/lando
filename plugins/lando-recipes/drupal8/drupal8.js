@@ -43,7 +43,7 @@ module.exports = function(lando) {
       // Add drupal to the tooling
       build.tooling.drupal = {
         service: 'appserver',
-        description: 'Run drupal commands',
+        description: 'Run drupal console commands',
       };
 
     }

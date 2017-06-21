@@ -2,5 +2,5 @@
 name: pantheon
 recipe: pantheon
 config:
-  framework: backdrop
+  framework: drupal
   xdebug: true

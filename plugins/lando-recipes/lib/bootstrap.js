@@ -38,7 +38,7 @@ module.exports = function(lando) {
   });
 
   // Go through our recipes and log them
-  lando.events.on('post-bootstrap', 9, function(lando) {
+  lando.events.on('post-bootstrap', 8, function(lando) {
     _.forEach(lando.recipes.get(), function(recipe) {
       lando.log.verbose('Recipe %s loaded', recipe);
     });

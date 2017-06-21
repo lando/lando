@@ -18,6 +18,7 @@ RUN apt-get update \
   && mv wp-cli.phar /usr/local/bin/wp \
 
   # Get Drush
+  && mkdir -p /var/www/.composer \
   && /var/www/.composer \
   && composer require drush/drush:7.* \
 
