@@ -198,12 +198,22 @@ module.exports = function(lando) {
       server: mount.split(':')[0]
     };
 
+    // Clone the config so we can separate concerns
+    // This is mostly done so we can remove undesireable overrides like
+    // resetting the service image
+    var appConfig = _.cloneDeep(config);
+
+    // Don't allow us to override the image here
+    if (_.has(appConfig, 'overrides.services.image')) {
+      delete appConfig.overrides.services.image;
+    }
+
     // Set the nginx config
-    config.config = _.merge(nginxConfigDefaults, config.config);
+    appConfig.config = _.merge(nginxConfigDefaults, appConfig.config);
 
     // Generate a config object to build the service with
-    var name = config.name;
-    var nginx = lando.services.build(name, type, config).services[name];
+    var name = appConfig.name;
+    var nginx = lando.services.build(name, type, appConfig).services[name];
 
     // Add correct volume to nginx if sharing is on
     if (config.sharing && !_.isEmpty(config.sharing[name])) {

@@ -53,9 +53,10 @@ module.exports = function(lando) {
     var drush = _.get(config, 'drush', 'stable');
 
     // Volume mount the drush cache
-    var volumesKey = 'services.appserver.volumes';
-    build.services.appserver.volumes = _.get(build, volumesKey, []);
-    build.services.appserver.volumes.push('/var/www/.drush');
+    var volumesKey = 'services.appserver.overrides.services.volumes';
+    var vols = _.get(build, volumesKey, []);
+    vols.push('/var/www/.drush');
+    _.set(build, volumesKey, vols);
 
     // Build what we need to get the drush install command
     var pharUrl = drushUrl(drush);

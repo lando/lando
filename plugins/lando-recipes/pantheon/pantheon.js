@@ -133,6 +133,23 @@ module.exports = function(lando) {
   };
 
   /*
+   * Helper to mix in the correct tooling
+   */
+   /*
+  var tooling = function(config) {
+
+    // Add in default pantheon tooling
+    var tools = {
+
+    }
+
+    // Return the tools
+    return tools;
+
+  };
+  */
+
+  /*
    * Helper to return proxy config
    */
   var proxy = function() {
@@ -178,9 +195,9 @@ module.exports = function(lando) {
   };
 
   /*
-   * Mixin other needed pantheon files like prepend.php
+   * Mixin other needed pantheon volume based config like prepend.php
    */
-  var helpers = function(volumes) {
+  var pVols = function(volumes) {
 
     // The where and what to mount
     var mounts = [
@@ -204,6 +221,10 @@ module.exports = function(lando) {
       volumes = addConfig(buildVolume(local, remote), volumes);
 
     });
+
+    // Add a volume for terminus and drupal console cache
+    volumes.push('/var/www/.terminus');
+    volumes.push('/var/www/.drupal');
 
     // Return the new volumes
     return volumes;
@@ -239,8 +260,6 @@ module.exports = function(lando) {
    * Build out Pantheon
    */
   var build = function(name, config) {
-
-    // @todo: spin up pantheon containers
 
     // Get the lando/pantheon base recipe/framework
     var base = _.get(config, 'framework', 'drupal7');
@@ -278,7 +297,24 @@ module.exports = function(lando) {
     // Mount additonal helpers like prepend.php
     var volPath = 'services.appserver.overrides.services.volumes';
     var vols = _.get(build, volPath, []);
-    _.set(build, volPath, helpers(vols));
+    _.set(build, volPath, pVols(vols));
+
+    // Overide our default php images with special pantheon ones
+    var imagePath = 'services.appserver.overrides.services.image';
+    var image = 'kalabox/pantheon-php:' + config.php + '-fpm';
+    _.set(build, imagePath, image);
+
+    // Remove any build steps we've inherited
+    build.services.appserver.build = [];
+
+    // But add some extra steps if we are on backdrop
+    // Need to cp backdrush command files into ~/.drush
+    if (config.framework === 'backdrop') {
+      build.services.appserver.build = [
+        'cp -rf /var/www/.backdrush/* /var/www/.drush/',
+        'drush cc drush'
+      ];
+    }
 
     // Mix in our additional services
     build.services.cache = redis();
@@ -288,8 +324,17 @@ module.exports = function(lando) {
     // Reset the proxy to route through the edge
     build.proxy = proxy();
 
+    // Grab our tooling
+    //build.tooling = _.merge(build.tooling, tooling(config));
+
+    //console.log(JSON.stringify(build, null, 2));
+    //process.exit(1);
+
     // Reset build and extras because we are using a custom appserver
     // for pantheon things
+    // Add pantheon boot up scripts that also
+    // * set $HOME/tmp
+    // * handle solr certs?
 
     // Add terminus/drush/wp-cli tooling option
 

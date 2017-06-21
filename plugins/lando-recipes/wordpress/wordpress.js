@@ -43,9 +43,10 @@ module.exports = function(lando) {
     var build = lando.recipes.build(name, base, config);
 
     // Add wp-cli to volumes
-    var volumesKey = 'services.appserver.volumes';
-    build.services.appserver.volumes = _.get(build, volumesKey, []);
-    build.services.appserver.volumes.push('/var/www/.wp-cli');
+    var volumesKey = 'services.appserver.overrides.services.volumes';
+    var vols = _.get(build, volumesKey, []);
+    vols.push('/var/www/.wp-cli');
+    _.set(build, volumesKey, vols);
 
     // Build what we need to get the wp-cli install command
     var pharUrl = wpCliUrl();
