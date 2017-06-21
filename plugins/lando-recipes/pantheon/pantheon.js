@@ -17,7 +17,6 @@ module.exports = function(lando) {
 
   // Lando things
   var addConfig = lando.services.addConfig;
-  //var addScript = lando.services.addScript;
   var buildVolume = lando.services.buildVolume;
 
   // "Constants"
@@ -181,10 +180,25 @@ module.exports = function(lando) {
    */
   var proxy = function() {
     return {
-      edge: [{port: '80/tcp', default: true}],
-      'edge_ssl': [{port: '443/tcp', default: true, secure: true}]
+      edge: [{
+        port: '80/tcp',
+        default: true
+      }],
+      'edge_ssl': [{
+        port: '443/tcp',
+        default: true,
+        secure: true
+      }]
     };
   };
+
+/*
+,
+index: [{
+  port: '449/tcp',
+  secure: true,
+  subdomains: ['solr']
+}]*/
 
   /*
    * Add in redis
@@ -222,6 +236,28 @@ module.exports = function(lando) {
   };
 
   /*
+   * Add in solr
+   */
+  var solr = function() {
+
+    // The solr config
+    var config = {
+      type: 'solr:custom',
+      overrides: {
+        services: {
+          image: 'kalabox/pantheon-index:3.6',
+          ports: ['449'],
+          command: '/bin/bash /start.sh'
+        }
+      }
+    };
+
+    // Return the solr service
+    return config;
+
+  };
+
+  /*
    * Mixin other needed pantheon volume based config like prepend.php
    */
   var pVols = function(volumes) {
@@ -230,7 +266,8 @@ module.exports = function(lando) {
     var mounts = [
       '/srv/includes:fastcgi_params',
       '/srv/includes:prepend.php',
-      '/etc/nginx:nginx.conf'
+      '/etc/nginx:nginx.conf',
+      '/scripts:pantheon.sh'
     ];
 
     // Loop
@@ -298,12 +335,12 @@ module.exports = function(lando) {
     // Mixin anything from pantheon.yml if it exists
     config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));
 
-    // If the framework is drupal, then use drupal7 recipe
+    // If the pantheon framework is drupal, then use lando d7 recipe
     if (base === 'drupal') {
       base = 'drupal7';
     }
 
-    // Normalize because 7.0 gets handled strangely
+    // Normalize because 7.0 gets handled strangely by js-yaml
     if (config.php === 7) {
       config.php = '7.0';
     }
@@ -336,6 +373,10 @@ module.exports = function(lando) {
     var image = 'kalabox/pantheon-php:' + config.php + '-fpm';
     _.set(build, imagePath, image);
 
+    // Set the appserver to depend on index start up so we know our certs will be there
+    var dependsPath = 'services.appserver.overrides.services.depends_on';
+    _.set(build, dependsPath, ['index']);
+
     // Remove any build steps we've inherited
     build.services.appserver.build = [];
 
@@ -357,24 +398,21 @@ module.exports = function(lando) {
       ];
     }
 
+    // @todo: auto run composer install?
+
     // Mix in our additional services
     build.services.cache = redis();
     build.services.edge = varnish();
-    // build.services.index = solr();
+    build.services.index = solr();
 
     // Reset the proxy to route through the edge
     build.proxy = proxy();
 
-    // Grab our tooling
+    // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));
 
-    // Reset build and extras because we are using a custom appserver
-    // for pantheon things
-    // Add pantheon boot up scripts that also
-    // * set $HOME/tmp
-    // * handle solr certs?
-    /*
-    */
+    //console.log(JSON.stringify(build, null, 2));
+    //process.exit(1);
 
     // Return the things
     return build;

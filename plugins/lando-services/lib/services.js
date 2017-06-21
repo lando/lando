@@ -28,8 +28,9 @@ module.exports = function(lando) {
     // Merge in everythign else
     service = _.merge(service, overrides);
 
-    // Reset the volumes
-    service.volumes = _.uniq(newVols);
+    // Reset the volume and remove any null values which might get added
+    // if we are using a custom image
+    service.volumes = _.compact(_.uniq(newVols));
 
     // Return the new service
     return service;

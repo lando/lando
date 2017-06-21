@@ -220,6 +220,9 @@ module.exports = function(lando) {
       nginx.volumes.push([name, config._mount].join(':'));
     }
 
+    // Add a depends on
+    _.set(nginx, 'depends_on', [name]);
+
     // Return the object
     return nginx;
 

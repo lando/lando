@@ -24,7 +24,8 @@ RUN apt-get update \
   && mv wp-cli.phar /usr/local/bin/wp \
 
   # Get Drush
-  && /var/www/.composer \
+  && mkdir -p /var/www/.composer \
+  && cd /var/www/.composer \
   && composer require drush/drush:7.* \
 
   # Get Pantheon External libraies

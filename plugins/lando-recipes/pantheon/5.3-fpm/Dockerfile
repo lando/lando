@@ -19,7 +19,7 @@ RUN apt-get update \
 
   # Get Drush
   && mkdir -p /var/www/.composer \
-  && /var/www/.composer \
+  && cd /var/www/.composer \
   && composer require drush/drush:7.* \
 
   # Get Pantheon External libraies

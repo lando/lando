@@ -17,7 +17,7 @@ drush_version: 8
 
 # Nested Docroot
 # https://pantheon.io/docs/pantheon-yml#nested-docroot
-# web_docroot: true
+web_docroot: true
 
 # Quicksilver Platform Integration Hooks
 # https://pantheon.io/docs/pantheon-yml#quicksilver
