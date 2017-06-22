@@ -55,10 +55,12 @@ services:
     # varnish works.
     #
     # See: https://hub.docker.com/r/eeacms/varnish/
+    # Note: We set BACKENDS_PROBE_ENABLED to false by default
     #
     # overrides:
       # services:
         # environment:
+          # BACKENDS_PROBE_ENABLED: false
           # BACKENDS_PORT: 8080
           # DNS_ENABLED: true
           # BACKENDS_PROBE_INTERVAL: 3s

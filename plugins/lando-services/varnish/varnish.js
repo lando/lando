@@ -106,6 +106,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         BACKENDS: backends.join(' '),
         ADDRESS_PORT: ':80',
+        BACKENDS_PROBE_ENABLED: 'false'
       },
       'depends_on': backends,
       command: ['/usr/local/bin/chaperone', '--user', 'root', '--force']

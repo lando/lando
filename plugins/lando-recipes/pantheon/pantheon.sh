@@ -4,15 +4,14 @@ set -e
 
 echo "Pantheon pre-run scripting"
 
-# Make tmp dir and set permissions
+# Make tmp dir
 mkdir -p /var/www/tmp
 
 # Emulate /srv/bindings
-mkdir -p /srv/bindings
-ln -sf "/srv/bindings/lando" $LANDO_MOUNT || true
-
-# Set some perms
-nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/tmp &>/dev/null &
+if [ "$LANDO_SERVICE_NAME" == "appserver" ]; then
+  mkdir -p /srv/bindings
+  ln -sf $LANDO_MOUNT "/srv/bindings/lando" || true
+fi
 
 # Wait until our solr crt is ready and then whitelist it
 # @todo: this is probably unneeded now that we can use `depends_on`
@@ -48,3 +47,6 @@ update-ca-certificates --fresh
 # else
 #   $(terminus site connection-info --field=sftp_command):certs/binding.pem /certs/binding.pem
 # fi
+
+# Set some perms
+nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/tmp &>/dev/null &

@@ -29,10 +29,9 @@ sub vcl_recv {
   }
 
   # Do not cache these paths, note that sometimes query strings are appended.
-  if (req.url ~ "^/install\.php" ||
+  if (req.url ~ "^/install.php" ||
       req.url ~ "^/update\.php" ||
-      req.url ~ "^/cron\.php")
-      {
+      req.url ~ "^/cron\.php") {
         return (pass);
   }
 
