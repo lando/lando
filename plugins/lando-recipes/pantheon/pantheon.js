@@ -373,8 +373,8 @@ index: [{
     _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
-    //var dependsPath = 'services.appserver.overrides.services.depends_on';
-    //_.set(build, dependsPath, ['index']);
+    var dependsPath = 'services.appserver.overrides.services.depends_on';
+    _.set(build, dependsPath, ['index']);
 
     // Remove any build steps we've inherited
     build.services.appserver.build = [];
@@ -402,7 +402,7 @@ index: [{
     // Mix in our additional services
     build.services.cache = redis();
     build.services.edge = varnish();
-    //build.services.index = solr();
+    build.services.index = solr();
 
     // Reset the proxy to route through the edge
     build.proxy = proxy();

@@ -43,6 +43,7 @@ $_ENV['PANTHEON_INDEX_HOST'] = PANTHEON_INDEX_HOST;
 $_ENV['DOCROOT'] = getenv('DOCROOT');
 $_ENV['FILEMOUNT'] = getenv('FILEMOUNT');
 $_ENV['FRAMEWORK'] = getenv('FRAMEWORK');
+$_ENV['HOME'] = getenv('HOME');
 
 // Framework things
 $_ENV['DRUPAL_HASH_SALT'] = getenv('DRUPAL_HASH_SALT');
