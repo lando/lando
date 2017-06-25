@@ -19,6 +19,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[nginx](./../services/nginx.md)
 *   ####[node](./../services/node.md)
 *   ####[php](./../services/php.md)
+*   ####[phpmyadmin](./../services/phpmyadmin.md)
 *   ####[postgres](./../services/postgres.md)
 *   ####[redis](./../services/redis.md)
 *   ####[solr](./../services/solr.md)
