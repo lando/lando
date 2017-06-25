@@ -41,6 +41,7 @@
 *   [Drupal 8](recipes/d8.md)
 *   [LAMP](recipes/lamp.md)
 *   [LEMP](recipes/lemp.md)
+*   [Pantheon](recipes/pantheon.md)
 *   [WordPress](recipes/wordpress.md)
 
 ## Services
@@ -82,6 +83,7 @@
 ## Tutorials
 
 *   [Accessing Your Services Externally](tutorials/external-access.md)
+*   [Working with Pantheon](tutorials/pantheon-working.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development

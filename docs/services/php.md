@@ -19,14 +19,14 @@ LAMP Example
 
 {% codesnippet "./../examples/lamp/.lando.yml" %}{% endcodesnippet %}
 
-You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lamp)
+You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lamp)
 
 LEMP Example
 ------------
 
 {% codesnippet "./../examples/lemp/.lando.yml" %}{% endcodesnippet %}
 
-You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lemp)
+You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lemp)
 
 Using Xdebug
 ------------

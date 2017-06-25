@@ -117,7 +117,7 @@ module.exports = function(lando) {
       },
       'internal_connection': {
         host: name,
-        port: 3306
+        port: config.port || 3306
       },
       'external_connection': {
         host: 'localhost',

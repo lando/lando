@@ -31,6 +31,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ####[Drupal 8](./../recipes/d8.md)
 *   ####[LAMP](./../recipes/lamp.md)
 *   ####[LEMP](./../recipes/lemp.md)
+*   ####[Pantheon](./../recipes/pantheon.md)
 *   ####[WordPress](./../recipes/wordpress.md)
 
 Extending and Overriding Recipes

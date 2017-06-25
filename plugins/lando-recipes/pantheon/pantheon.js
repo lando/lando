@@ -235,6 +235,7 @@ module.exports = function(lando) {
     // The solr config
     var config = {
       type: version,
+      port: 449,
       overrides: {
         services: {
           image: 'kalabox/pantheon-index:3.6',
