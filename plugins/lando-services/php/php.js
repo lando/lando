@@ -218,6 +218,9 @@ module.exports = function(lando) {
     // Add correct volume to nginx if sharing is on
     if (config.sharing && !_.isEmpty(config.sharing[name])) {
       nginx.volumes.push([name, config._mount].join(':'));
+      if (process.platform !== 'darwin') {
+        config.sharing.nginx = config.sharing[name];
+      }
     }
 
     // Add a depends on
