@@ -10,7 +10,7 @@ name: myapp
 recipe: backdrop
 ```
 
-You can easily configure/override the Backdrop recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the Backdrop recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -84,10 +84,7 @@ lando info
       "http://localhost:32951",
       "http://backdrop.lndo.site",
       "https://backdrop.lndo.site"
-    ],
-    "share": {
-      "remote": "/var/www/html"
-    }
+    ]
   },
   "database": {
     "type": "mysql",

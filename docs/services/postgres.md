@@ -42,11 +42,7 @@ lando info
       "http://localhost:32812",
       "http://postgres.lndo.site",
       "https://postgres.lndo.site"
-    ],
-    "share": {
-      "local": "www",
-      "remote": "/usr/share/nginx/html"
-    }
+    ]
   },
   "tswift": {
     "type": "postgres",

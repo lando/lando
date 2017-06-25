@@ -59,7 +59,7 @@ module.exports = function(lando) {
         MYSQL_DATABASE: creds.database || 'database',
         TERM: 'xterm'
       },
-      volumes: ['data:' + configFiles.dataDir],
+      volumes: ['data_' + name + ':' + configFiles.dataDir],
       command: 'docker-entrypoint.sh mysqld',
     };
 
@@ -98,8 +98,10 @@ module.exports = function(lando) {
   /**
    * Return the volumes needed
    */
-  var volumes = function() {
-    return {data: {}};
+  var volumes = function(name) {
+    var vols = {};
+    vols['data_' + name] = {};
+    return vols;
   };
 
   /**

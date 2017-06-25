@@ -1,11 +1,6 @@
 # LAMP stack example
 name: lemp
 
-# Share my app into php-fpm's webroot
-sharing:
-  appserver:
-    remote: /var/www/html
-
 # Give me http://lemp.lndo.site and https://lemp.lndo.site
 proxy:
   nginx:
