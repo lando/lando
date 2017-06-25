@@ -12,7 +12,14 @@ module.exports = function(lando) {
   var _ = lando.node._;
 
   // Registry of recipes
-  var registry = {};
+  var registry = {
+
+    // Add a custom recipe that will just passthrough without doing anything
+    custom: {
+      build: function() { return {}; }
+    }
+
+  };
 
   /*
    * Get a recipe

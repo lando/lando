@@ -23,4 +23,9 @@ module.exports = function(lando) {
     lando.tasks.add('version', require('./tasks/version')(lando));
   });
 
+  // The init task is special
+  lando.events.on('post-bootstrap', 9, function(lando) {
+    lando.tasks.add('init', require('./tasks/init')(lando));
+  });
+
 };
