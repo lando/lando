@@ -8,6 +8,9 @@
 
 module.exports = function(lando) {
 
+  // Bootstrap init framework
+  require('./lib/bootstrap')(lando);
+
   // Basic environment handling
   require('./lib/env')(lando);
 
