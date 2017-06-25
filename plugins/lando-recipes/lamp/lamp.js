@@ -191,7 +191,7 @@ module.exports = function(lando) {
           DB_USER: services.database.creds.user,
           DB_PASSWORD: services.database.creds.password,
           DB_NAME: services.database.creds.database,
-          DB_PORT: 3306
+          DB_PORT: (_.includes(database, 'postgres')) ? 5432 : 3306
         }
       }
     };
