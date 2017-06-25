@@ -1,16 +1,16 @@
 Tooling
 =======
 
-Lando provides a way to easily define nice `lando MYCOMMAND` commands so that users can take advantage of development tools that are installed inside of containers. Setting up some common routes for things like `composer` or `npm` allows the user to get a "native" experience but perhaps more importantly allows project specific development dependencies to be isolated and run in containers instead of on the users host machine. Never worry about which version of `php` or `grunt` you need for each project.
+Lando provides a way to easily define nice `lando MYCOMMAND` commands so that users can take advantage of development tools that are installed inside of containers. Setting up some common routes for things like `composer` or `npm` allows the user to get a "native" experience but perhaps more importantly allows project specific development dependencies to be isolated and run in containers instead of on the users' host machine. You never need to worry about which version of `php` or `grunt` you need for each project.
 
-You can think of tooling configuration as nice way to alias a superset of commands that would otherwise need to be run as something like `lando ssh -c "composer install"`.
+You can think of tooling configuration as a nice way to alias a superset of commands that would otherwise need to be run as something like `lando ssh -c "composer install"`.
 
 > #### Warning::Make sure to install your dependencies
 >
-> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this check out either [build steps](./../config/services.md#build-extras) or our [`ssh`](./../cli/ssh.md) command.
+> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./../config/services.md#build-extras) or our [`ssh`](./../cli/ssh.md) command.
 
 Example
--------s
+-------
 
 {% codesnippet "./../examples/trivial-tooling/.lando.yml" %}{% endcodesnippet %}
 
@@ -56,7 +56,7 @@ Lando will try to map your host directory to the analogous directory inside the 
 Tool Discovery
 --------------
 
-If you are not sure about what tools live inside your container you can use `lando ssh` to drop into a shell on a specific service to both investigate and install any needed dependencies.
+If you are not sure about what tools live inside your container, you can use `lando ssh` to drop into a shell on a specific service to both investigate and install any needed dependencies.
 
 ```bash
 # SSH into the appserver
@@ -75,4 +75,4 @@ exit
 # Add grunt to the tooling in your .lando.yml
 ```
 
-While you can do the above it's generally recommended to install any additional dependencies as part of the build process either using specific dependency management built into the service you are using or with Lando's more generic [build step proces](./../config/services.md#build-extras).
+While you can do the above, it's generally recommended to install any additional dependencies as part of the build process either using specific dependency management built into the service you are using or with Lando's more generic [build step process](./../config/services.md#build-extras).
