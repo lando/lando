@@ -7,3 +7,4 @@
 *.cnf text eol=lf
 *.ini text eol=lf
 *.php text eol=lf
+*.vcl text eol=lf
