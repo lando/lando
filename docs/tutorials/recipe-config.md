@@ -22,7 +22,7 @@ lando ssh -c "curl nginx" | grep SERVER_SOFTWARE
 Configuring Recipes
 -------------------
 
-Awesome! We were able to easily switch our app from `apache` to `nginx` by changing recipes. Now, what if we want to do deeper configuration to our app? It's best to consult the documentation to see what config options your recipe has. Here are the [docs](./../recipes/lemp.md) for our current LEMP recipe.
+Awesome! We were able to easily switch our app from `apache` to `nginx` by changing recipes. Now, what if we want to do deeper configuration to our app? It's best to consult the documentation to see the config options for your recipe. Here are the [docs](./../recipes/lemp.md) for our current LEMP recipe.
 
 Looks like we can easily change the `php` version, the database we are using, the location of our webroot and which config files our underlying services are using. Let's go ahead and switch a few things around.
 
@@ -52,7 +52,7 @@ lando php -v
 
 > #### Warning::Not seeing my changes!
 >
->  If you are not seeing your changes reflected try a hard rebuild of your app with `lando rebuild`.
+>  If you are not seeing your changes reflected, try a hard rebuild of your app with `lando rebuild`.
 
 Connecting to Services
 ----------------------
@@ -65,7 +65,7 @@ cd web
 cp -rf index.php info.php
 ```
 
-Now, let's replace our old `index.php` with the following. We will use some special environmental variables set by lando to connect.
+Now, let's replace our old `index.php` with the following. We will use some special environment variables set by lando to connect.
 
 ```php
 <?php

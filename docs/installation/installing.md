@@ -64,7 +64,13 @@ To install from source you need to first make sure you've [installed the latest 
 
 On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`. 
 
-Then do the following
+Finally, you will need to install the [lts/boron release of node](https://nodejs.org/en/download/).
+
+> #### Warning::DO NOT USE THE LATEST RELEASE OF node
+>
+> The [latest release of node](https://nodejs.org/en/download/current/) which includes npm is not compatible with Lando at this time.
+
+Then do the following:
 
 ```bash
 # Clone the Lando source

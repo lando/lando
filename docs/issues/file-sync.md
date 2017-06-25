@@ -1,11 +1,11 @@
 File syncing issues
 ===================
 
-There are generally a few causes of slow or stalled file sharing. Here are some workaround and checks you can do in each circumstances.
+There are generally a few causes of slow or stalled file sharing. Here are some workarounds and checks you can do in each circumstance.
 
 ### 1. Is my sync complete?
 
-If you've just synced a large amount of files, as can be the case after a `npm install` you can check on the status of your sync by invoking docker directly.
+If you've just synced a large amount of files, as can be the case after a `npm install`, you can check on the status of your sync by invoking docker directly.
 
 ```bash
 # For an app named "myapp" with sharing enabled on a service called "web"
@@ -18,7 +18,7 @@ There are two common reasons for a failed sync: the sharing container or docker 
 
 ### 3. Is my app located in a shared directory?
 
-Your app need to live inside of a shared drive or folder. Here are the following default shared drive/folder locations:
+Your app needs to live inside of a shared drive or folder. Here are the following default shared drive/folder locations:
 
 | OS | Shared Drives/Folders |
 | -- | -- | -- |
@@ -26,7 +26,7 @@ Your app need to live inside of a shared drive or folder. Here are the following
 | `macOS` | `/Users`, `/Volumes`, `/tmp`, `/private` |
 | `Linux` | `All the folders` |
 
-Note that on macOS these need to be HARD LINKS aka you cannot symlink `/Users` to `/SomethingElse` and expect it to work. This is often the case if you have an external drive.
+Note that on macOS these need to be HARD LINKS. In other words, you cannot symlink `/Users` to `/SomethingElse` and expect it to work. This is often the case if you have an external drive.
 
 Also note that you can add additional folders and shares to Windows/macOS through the Docker GUI.
 
