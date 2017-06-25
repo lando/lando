@@ -1,7 +1,7 @@
 Recipes
 =======
 
-Recipes are Lando's highest level abstraction and they contain common mixes of proxy settings, sharing, services and tooling. Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
+Recipes are Lando's highest level abstraction and they contain common mixes of proxy settings, services and tooling. Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
 
 To do this, recipes provide a base environment for a common development use case with configurability of its most obvious pieces. In your `.lando.yml`:
 

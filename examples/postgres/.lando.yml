@@ -1,11 +1,6 @@
 # The name of the app
 name: postgres
 
-# Share the www directory in my app into the webroot of the html container
-sharing:
-  html:
-    remote: /usr/share/nginx/html
-
 # Give me http://postgres.lndo.site and https://postgres.lndo.site
 proxy:
   html:

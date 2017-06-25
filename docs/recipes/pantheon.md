@@ -10,7 +10,7 @@ name: myapp
 recipe: pantheon
 ```
 
-You can easily configure/override the Pantheon recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the Pantheon recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -168,9 +168,6 @@ lando info
     "config": {
       "server": "/Users/pirog/.lando/services/config/pantheon/drupal.conf",
       "conf": "/Users/pirog/.lando/services/config/pantheon/php.ini"
-    },
-    "share": {
-      "remote": "/var/www/html"
     }
   },
   "nginx": {

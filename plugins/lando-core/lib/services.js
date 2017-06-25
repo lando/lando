@@ -84,7 +84,7 @@ module.exports = function(lando) {
       if (!_.isEmpty(compose)) {
 
         // Set the compose version
-        compose.version = '3';
+        compose.version = '3.2';
 
         // Get project name
         var project = app.project || app.name;

@@ -1,7 +1,4 @@
 name: drupal7
-sharing:
-  appserver:
-    remote: /var/www/html
 proxy:
   nginx:
     - port: 80/tcp

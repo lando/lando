@@ -1,11 +1,6 @@
 # Tooling example
 name: trivial-tooling
 
-# Some basic sharing
-sharing:
-  appserver:
-    remote: /var/www/html
-
 # Proxy the basics
 proxy:
   nginx:

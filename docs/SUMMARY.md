@@ -27,7 +27,6 @@
 
 *   [.lando.yml](config/lando.md)
 *   [Proxy](config/proxy.md)
-*   [Sharing](config/sharing.md)
 *   [Services](config/services.md)
 *   [Tooling](config/tooling.md)
 *   [Recipes](config/recipes.md)

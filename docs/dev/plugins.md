@@ -12,9 +12,9 @@ Lando has an advanced plugin system that allows developers to add and extend Lan
 Plugin Basics
 -------------
 
-Plugins give you access to the [Lando API](./api/lando.md) so that you can modify and/or extend Lando. Here is the part of the sharing plugin that adds some sharing config options to the Lando global config.
+Plugins give you access to the [Lando API](./api/lando.md) so that you can modify and/or extend Lando. Here is the part of the proxy plugin that adds some proxy config options to the Lando global config.
 
-{% codesnippet "./../plugins/lando-sharing/lib/bootstrap.js" %}{% endcodesnippet %}
+{% codesnippet "./../plugins/lando-proxy/lib/bootstrap.js" %}{% endcodesnippet %}
 
 Running your own plugins
 ------------------------

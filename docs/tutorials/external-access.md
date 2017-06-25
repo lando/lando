@@ -28,10 +28,7 @@ lando info
       "http://localhost:32786",
       "http://backdrop.lndo.site",
       "https://backdrop.lndo.site"
-    ],
-    "share": {
-      "remote": "/var/www/html"
-    }
+    ]
   },
   "database": {
     "type": "mariadb",
@@ -92,10 +89,7 @@ lando info
       "http://localhost:32786",
       "http://backdrop.lndo.site",
       "https://backdrop.lndo.site"
-    ],
-    "share": {
-      "remote": "/var/www/html"
-    }
+    ]
   },
   "database": {
     "type": "mariadb",

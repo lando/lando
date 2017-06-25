@@ -41,11 +41,7 @@ lando info
       "http://localhost:32809",
       "http://mysql.lndo.site",
       "https://mysql.lndo.site"
-    ],
-    "share": {
-      "local": "www",
-      "remote": "/usr/share/nginx/html"
-    }
+    ]
   },
   "db": {
     "type": "mysql",
