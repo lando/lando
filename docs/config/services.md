@@ -5,7 +5,7 @@ Lando provides a way to easily specify the services and tooling your app needs v
 
 > #### Info::Docker compose files are loaded first
 >
-> If you want to load Docker compose files **and** use services you should note that compose files are loaded first. This means that depending on how you name things your services could override things set in your compose files.
+> If you want to load Docker compose files **and** use services, you should note that compose files are loaded first. This means that depending on how you name things, your services could override things set in your compose files.
 
 Supported Services
 ------------------
@@ -27,7 +27,7 @@ The following services are currently supported. Please check out each one to lea
 Environment
 -----------
 
-While you can add additional environmental variables on a per service basis (see [Advanced Service Configuration](#advanced-service-configuration) below) Lando will inject some common and helpful environmental variables into each service.
+While you can add additional environment variables on a per service basis (see [Advanced Service Configuration](#advanced-service-configuration) below), Lando will inject some common and helpful environment variables into each service.
 
 These are also helpful in your `.lando.yml` file.
 
@@ -59,7 +59,7 @@ LANDO_APP_ROOT_BIND=/path/to/app/in/container
 Shared Files
 ------------
 
-While you can also share in additional files and directories via our [sharing plugin](./sharing.md) or with docker volumes (see [Advanced Service Configuration](#advanced-service-configuration) below) we share a few useful host directories into each service.
+While you can also share in additional files and directories via our [sharing plugin](./sharing.md) or with docker volumes (see [Advanced Service Configuration](#advanced-service-configuration) below), we share a few useful host directories into each service.
 
 | Host Location | Container Location |
 | -- | -- | -- |
@@ -69,7 +69,7 @@ While you can also share in additional files and directories via our [sharing pl
 Build Steps
 -----------
 
-If you want to script out some common build steps your app needs such as `composer install` or `grunt sass` we let you run some additional commands on each services using the `build` key. Note that these steps must make sense within the context of the container you are running aka if you want to do `composer` things you probably want to set up a `build` on your `php` service and not on your `node` cli container. These commands are run as you so you cannot do `sudo-y` things. For that sort of thing see [Build Extras](#build-extras) below.
+If you want to script out some common build steps your app needs such as `composer install` or `grunt sass`, we let you run some additional commands on each service using the `build` key. Note that these steps must make sense within the context of the container you are running. In other words, if you want to do `composer` things, you probably want to set up a `build` on your `php` service and not on your `node` cli container. These commands are run as you, so you cannot do `sudo-y` things. For that sort of thing, see [Build Extras](#build-extras) below.
 
 ```yml
 services:
@@ -79,10 +79,10 @@ services:
       - "cd $LANDO_MOUNT && composer install"
 ```
 
-Build Extas
------------
+Build Extras
+------------
 
-If you do not want to use your own custom image or Dockerfile via [Advanced Service Configuration](#advanced-service-configuration) we let you do some extra service construction steps after each service is started. Note that these steps must make sense within the context of the container you are running eg you will not be able to run `dnf` inside of a `debian` flavored container. Unlike [Build Steps](#build-steps) these commands are **ALL RUN AS ROOT** so take care with what you do.
+If you do not want to use your own custom image or Dockerfile via [Advanced Service Configuration](#advanced-service-configuration), we let you do some extra service construction steps after each service is started. Note that these steps must make sense within the context of the container you are running. For example, you will not be able to run `dnf` inside of a `debian` flavored container. Unlike [Build Steps](#build-steps), these commands are **ALL RUN AS ROOT**, so take care with what you do.
 
 This is useful for adding in some additional dev tools you might prefer like `vim` or for adding in things like extra php extensions not installed by default.
 
@@ -139,7 +139,7 @@ Advanced Service Configuration
 
 Our services layer is an abstraction on top of the [Docker compose v3 file format](https://docs.docker.com/compose/compose-file/). Specifically, Lando will translate the configuration you specify for each service into relevant docker compose files and execute them at runtime. This gives you a lot of power to hypertune your services at the docker compose level. You can pass docker compose config into each service using the `overrides` key.
 
-Here is an example of an overriden apache service that uses a custom image and injects some additional envvars.
+Here is an example of an overriden apache service that uses a custom image and injects some additional environment variables.
 
 ```yml
 services:
