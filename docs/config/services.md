@@ -33,6 +33,8 @@ These are also helpful in your `.lando.yml` file.
 
 ```bash
 LANDO=ON
+LANDO_APP_NAME=myapp
+LANDO_APP_ROOT=/path/to/app/on/my/host
 LANDO_SERVICE_TYPE=nginx
 LANDO_HOST_UID=501
 LANDO_HOST_GID=20

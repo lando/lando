@@ -83,7 +83,7 @@ module.exports = function() {
     var info = {
       'internal_connection': {
         host: name,
-        port: 11211
+        port: config.port || 11211
       },
       'external_connection': {
         host: 'localhost',

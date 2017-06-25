@@ -52,7 +52,7 @@ module.exports = function(lando) {
     var configFiles = {
       http: '/etc/nginx/nginx.conf',
       server: '/etc/nginx/conf.d/default.template',
-      webroot: config.mount
+      webroot: config._mount
     };
 
     // Add the webroot if its there

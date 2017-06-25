@@ -168,7 +168,7 @@ module.exports = function(lando) {
       'internal_connection': {
         core: config.core || 'index1',
         host: name,
-        port: 8983
+        port: config.port || 8983
       },
       'external_connection': {
         core: config.core || 'index1',

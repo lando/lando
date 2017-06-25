@@ -46,7 +46,9 @@ module.exports = function(lando) {
           lando.log.verbose('Adding app cli task %s', name);
 
           // Build our config
-          var config = _.merge(task, {name: name, app:app});
+          var config = task;
+          task.app = app;
+          task.name = name;
 
           // Build and add the task
           lando.tasks.add(name, lando.tooling.build(config));

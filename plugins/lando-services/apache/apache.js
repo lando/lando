@@ -45,7 +45,7 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       server: '/usr/local/apache2/conf/httpd.conf',
-      webroot: config.mount
+      webroot: config._mount
     };
 
     // Add the webroot if its there

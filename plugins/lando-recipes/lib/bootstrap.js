@@ -30,14 +30,16 @@ module.exports = function(lando) {
     lando.recipes.add('drupal6', require('./../drupal6/drupal6')(lando));
     lando.recipes.add('drupal7', require('./../drupal7/drupal7')(lando));
     lando.recipes.add('drupal8', require('./../drupal8/drupal8')(lando));
+    lando.recipes.add('laravel', require('./../laravel/laravel')(lando));
     lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
     lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
+    lando.recipes.add('pantheon', require('./../pantheon/pantheon')(lando));
     lando.recipes.add('wordpress', require('./../wordpress/wordpress')(lando));
 
   });
 
   // Go through our recipes and log them
-  lando.events.on('post-bootstrap', 9, function(lando) {
+  lando.events.on('post-bootstrap', 8, function(lando) {
     _.forEach(lando.recipes.get(), function(recipe) {
       lando.log.verbose('Recipe %s loaded', recipe);
     });

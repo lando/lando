@@ -20,9 +20,9 @@ module.exports = function(lando) {
         default: {
           default: {
             driver: 'mysql',
-            database: config.recipe,
-            username: config.recipe,
-            password: config.recipe,
+            database: config._recipe,
+            username: config._recipe,
+            password: config._recipe,
             host: 'database',
             port: 3306
           }
@@ -84,8 +84,7 @@ module.exports = function(lando) {
     config.drush = 'stable';
 
     // Start by cheating
-    var stack = require('./../drupal7/drupal7')(lando);
-    var build = stack.build(name, config);
+    var build = lando.recipes.build(name, 'drupal7', config);
 
     // Get appserver ENV
     var envKey = 'services.appserver.overrides.services.environment';

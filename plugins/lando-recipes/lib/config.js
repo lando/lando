@@ -22,10 +22,11 @@ module.exports = function(lando) {
       var recipe = app.config.recipe;
       var config = app.config.config || {};
 
-      // Add some things to our config
-      config.app = name;
-      config.mount = app.mount;
-      config.recipe = recipe;
+      // Add some internal properties to our config
+      config._app = name;
+      config._root = app.root;
+      config._mount = app.mount;
+      config._recipe = recipe;
 
       // Get our new config
       var newConfig = lando.recipes.build(name, recipe, config);

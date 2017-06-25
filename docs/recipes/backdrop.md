@@ -17,7 +17,7 @@ Example
 
 {% codesnippet "./../examples/backdrop/.lando.yml" %}{% endcodesnippet %}
 
-You will need to restart your app with `lando restart` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/backdrop)
+You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/backdrop)
 
 Installing Backdrop
 -------------------
@@ -46,7 +46,7 @@ lando backdrush status
 Environmental Variables
 -----------------------
 
-Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 BACKDROP_SETTINGS=JSON_STRING_OF_BACKDROP_SETTINGS

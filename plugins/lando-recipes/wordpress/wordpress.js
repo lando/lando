@@ -10,9 +10,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var lamp = require('./../lamp/lamp')(lando);
-  var lemp = require('./../lemp/lemp')(lando);
-  var stacks = {lamp: lamp, lemp: lemp};
+  var helpers = require('./../lamp/lamp')(lando);
 
   /**
    * Helper to get WPCLI URL
@@ -34,21 +32,21 @@ module.exports = function(lando) {
 
     // Get the via so we can grab our builder
     var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
-    var stack = stacks[base];
 
     // Update with new config defaults if needed
-    config = stack.resetConfig(config.recipe, config);
+    config = helpers.resetConfig(config._recipe, config);
 
     // Set the default php version for WordPress
     config.php = _.get(config, 'php', '7.1');
 
     // Start by cheating
-    var build = stack.build(name, config);
+    var build = lando.recipes.build(name, base, config);
 
     // Add wp-cli to volumes
-    var volumesKey = 'services.appserver.volumes';
-    build.services.appserver.volumes = _.get(build, volumesKey, []);
-    build.services.appserver.volumes.push('/var/www/.wp-cli');
+    var volumesKey = 'services.appserver.overrides.services.volumes';
+    var vols = _.get(build, volumesKey, []);
+    vols.push('/var/www/.wp-cli');
+    _.set(build, volumesKey, vols);
 
     // Build what we need to get the wp-cli install command
     var pharUrl = wpCliUrl();
@@ -57,7 +55,7 @@ module.exports = function(lando) {
     var wpStatusCheck = ['php', src, '--allow-root', '--info'];
 
     // Get the wp install command
-    var wpInstall = stack.getPhar(pharUrl, src, dest, wpStatusCheck);
+    var wpInstall = helpers.getPhar(pharUrl, src, dest, wpStatusCheck);
 
     // Set builders if needed
     var key = 'services.appserver.build';

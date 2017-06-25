@@ -122,7 +122,7 @@ module.exports = function(lando) {
       },
       'internal_connection': {
         host: name,
-        port: 5432
+        port: config.port || 5432
       },
       'external_connection': {
         host: 'localhost',

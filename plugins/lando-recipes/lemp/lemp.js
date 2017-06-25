@@ -29,13 +29,13 @@ module.exports = function(lando) {
   var build = function(name, config) {
 
     // Start by cheating
-    var build = lamp.build(name, config);
+    var build = lando.recipes.build(name, 'lamp', config);
 
     // Replace the proxy
     build.proxy = proxy();
 
     // Set via to nginx
-    build.services.appserver.via = 'nginx';
+    build.services.appserver.via = config.via || 'nginx';
 
     // Return the things
     return build;

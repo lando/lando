@@ -50,7 +50,7 @@ module.exports = function(lando) {
     var typeConfig = {
       nginx: {
         web: 'nginx',
-        mount: config.mount,
+        mount: config._mount,
         command: ['php-fpm'],
         image: [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.template',
@@ -58,7 +58,7 @@ module.exports = function(lando) {
       },
       apache: {
         web: 'apache',
-        mount: config.mount,
+        mount: config._mount,
         command: [
           'sh -c',
           '\'a2enmod rewrite && apache2-foreground\''
@@ -96,7 +96,7 @@ module.exports = function(lando) {
     ];
 
     // Build the webroot
-    var webroot = config.mount;
+    var webroot = config._mount;
 
     // Add the webroot if its there
     if (_.has(config, 'webroot')) {
@@ -198,17 +198,33 @@ module.exports = function(lando) {
       server: mount.split(':')[0]
     };
 
+    // Clone the config so we can separate concerns
+    // This is mostly done so we can remove undesireable overrides like
+    // resetting the service image
+    var appConfig = _.cloneDeep(config);
+
+    // Don't allow us to override the image here
+    if (_.has(appConfig, 'overrides.services.image')) {
+      delete appConfig.overrides.services.image;
+    }
+
     // Set the nginx config
-    config.config = _.merge(nginxConfigDefaults, config.config);
+    appConfig.config = _.merge(nginxConfigDefaults, appConfig.config);
 
     // Generate a config object to build the service with
-    var name = config.name;
-    var nginx = lando.services.build(name, type, config).services[name];
+    var name = appConfig.name;
+    var nginx = lando.services.build(name, type, appConfig).services[name];
 
     // Add correct volume to nginx if sharing is on
     if (config.sharing && !_.isEmpty(config.sharing[name])) {
-      nginx.volumes.push([name, config.mount].join(':'));
+      nginx.volumes.push([name, config._mount].join(':'));
+      if (process.platform !== 'darwin') {
+        config.sharing.nginx = config.sharing[name];
+      }
     }
+
+    // Add a depends on
+    _.set(nginx, 'depends_on', [name]);
 
     // Return the object
     return nginx;

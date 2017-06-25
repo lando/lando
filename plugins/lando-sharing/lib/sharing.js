@@ -185,17 +185,9 @@ module.exports = function(lando) {
             app.services[name] = share;
           }
 
-          // Get old volumes if they exist and add them to the new
-          var oldVols = app.services[name].volumes || [];
-          var newVols = _.flatten([oldVols, shareCompose[name].volumes]);
-
-          // Reset shareCompsoe volumes
-          app.services[name].volumes = _.uniq(newVols);
-
-          // Merge in any added envars
-          var oldEnv = app.services[name].environment;
-          var newEnv = shareCompose[name].environment;
-          app.services[name].environment = _.merge(oldEnv, newEnv);
+          // Merge in things
+          var merger = lando.services.mergeOver;
+          app.services[name] = merger(app.services[name], shareCompose[name]);
 
           // Log
           lando.log.verbose(

@@ -12,6 +12,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var addConfig = lando.services.addConfig;
   var buildVolume = lando.services.buildVolume;
+  var path = require('path');
 
   // "Constants"
   var defaultConfDir = lando.config.engineConfigDir;
@@ -63,6 +64,9 @@ module.exports = function(lando) {
     nginx.ports = ['443'];
     nginx.expose = ['443'];
 
+    // Depends on varnish being up
+    _.set(nginx, 'depends_on', [config.depends]);
+
     // Return the object
     return nginx;
 
@@ -102,6 +106,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         BACKENDS: backends.join(' '),
         ADDRESS_PORT: ':80',
+        BACKENDS_PROBE_ENABLED: 'false'
       },
       'depends_on': backends,
       command: ['/usr/local/bin/chaperone', '--user', 'root', '--force']
@@ -110,7 +115,7 @@ module.exports = function(lando) {
     // Handle custom vcl file
     if (_.has(config, 'vcl')) {
       var local = config.vcl;
-      var remote = '/etc/varnish/conf.d/' + local;
+      var remote = '/etc/varnish/conf.d/' + path.basename(local);
       var customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
       varnish.volumes = addConfig(customConfig, varnish.volumes);
     }
@@ -123,6 +128,7 @@ module.exports = function(lando) {
 
       // Get the nginx ssl termination
       var sslConfig = _.cloneDeep(config);
+      sslConfig.depends = name;
       sslConfig.name = [name, 'ssl'].join('_');
       services[sslConfig.name] = nginx(sslConfig);
 

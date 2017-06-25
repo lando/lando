@@ -142,16 +142,16 @@ module.exports = function(lando) {
       appserver: {
         type: 'php:' + phpVersion,
         via: 'apache',
-        ssl: true,
+        ssl: _.get(config, 'ssl', true),
         xdebug: _.get(config, 'xdebug', false)
       },
       database: {
         type: database,
         portforward: true,
         creds: {
-          user: config.recipe,
-          password: config.recipe,
-          database: config.recipe
+          user: config._recipe,
+          password: config._recipe,
+          database: config._recipe
         }
       }
     };
@@ -191,7 +191,7 @@ module.exports = function(lando) {
           DB_USER: services.database.creds.user,
           DB_PASSWORD: services.database.creds.password,
           DB_NAME: services.database.creds.database,
-          DB_PORT: 3306
+          DB_PORT: (_.includes(database, 'postgres')) ? 5432 : 3306
         }
       }
     };
@@ -240,8 +240,8 @@ module.exports = function(lando) {
           'localhost',
           '-p',
           '5432',
-          config.recipe,
-          config.recipe
+          config._recipe,
+          config._recipe
         ],
         user: 'root'
       };
