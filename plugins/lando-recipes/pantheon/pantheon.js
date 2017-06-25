@@ -74,7 +74,7 @@ module.exports = function(lando) {
       conf: {
         'pressflow_smart_start': true,
         'pantheon_binding': 'lando',
-        'pantheon_site_uuid': 'uuid',
+        'pantheon_site_uuid': _.get(config, 'id', 'lando'),
         'pantheon_environment': 'lando',
         'pantheon_tier': 'lando',
         'pantheon_index_host': 'index',
@@ -102,8 +102,8 @@ module.exports = function(lando) {
       DOCROOT: '/',
       FILEMOUNT: frameworkSpec[config.framework].filemount,
       DRUPAL_HASH_SALT: _.get(settings, 'drupal_hash_salt'),
-      PANTHEON_SITE: '',
-      PANTHEON_SITE_NAME: '',
+      PANTHEON_SITE: _.get(settings, 'conf.pantheon_site_uuid'),
+      PANTHEON_SITE_NAME: _.get(config, 'site'),
       PANTHEON_ENVIRONMENT: 'lando',
 
       // DB
@@ -135,8 +135,8 @@ module.exports = function(lando) {
       NONCE_KEY: getHash(config._root + config.framework),
 
       // Terminus
-      //TERMINUS_SITE: 'TBD',
-      TERMINUS_ENV: 'dev'
+      TERMINUS_SITE: _.get(config, 'site'),
+      TERMINUS_ENV: _.get(config, 'env', 'dev')
       //TERMINUS_ORG: ''
       //TERMINUS_USER="devuser@pantheon.io"
 
@@ -192,22 +192,14 @@ module.exports = function(lando) {
     };
   };
 
-/*
-,
-index: [{
-  port: '449/tcp',
-  secure: true,
-  subdomains: ['solr']
-}]*/
-
   /*
    * Add in redis
    */
-  var redis = function() {
+  var redis = function(version) {
 
     // The redis config
     var config = {
-      type: 'redis:2.8',
+      type: version,
       persist: true,
       portforward: true
     };
@@ -220,11 +212,11 @@ index: [{
   /*
    * Add in varnish
    */
-  var varnish = function() {
+  var varnish = function(version) {
 
     // The redis config
     var config = {
-      type: 'varnish:4.1',
+      type: version,
       backends: ['nginx'],
       ssl: true,
       vcl: path.join(configDir, 'pantheon.vcl')
@@ -238,11 +230,11 @@ index: [{
   /*
    * Add in solr
    */
-  var solr = function() {
+  var solr = function(version) {
 
     // The solr config
     var config = {
-      type: 'solr:custom',
+      type: version,
       overrides: {
         services: {
           image: 'kalabox/pantheon-index:3.6',
@@ -320,34 +312,42 @@ index: [{
   };
 
   /*
+   * Helper for build steps
+   */
+  var buildSteps = function(config) {
+
+    // But add some extra steps if we are on backdrop
+    // Need to cp backdrush command files into ~/.drush
+    if (config.framework === 'backdrop') {
+      return [
+        'mkdir -p /var/www/.drush/backdrush',
+        'cp -rf /var/www/.backdrush/* /var/www/.drush/backdrush/',
+        'drush cc drush'
+      ];
+    }
+
+    // Make sure we clean up if we switch to something else
+    else {
+      return [
+        'rm -rf /var/www/.drush/backdrush/',
+        'drush cc drush'
+      ];
+    }
+
+  };
+
+  /*
    * Build out Pantheon
    */
   var build = function(name, config) {
 
-    // Get the lando/pantheon base recipe/framework
-    var base = _.get(config, 'framework', 'drupal7');
-
-    // Set our static high level config
+    // Set versions to match pantheon
     config.via = 'nginx:1.8';
     config.database = 'mariadb:10.0';
-
-    // Mixin anything from pantheon.yml if it exists
-    config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));
-
-    // If the pantheon framework is drupal, then use lando d7 recipe
-    if (base === 'drupal') {
-      base = 'drupal7';
-    }
-
-    // Normalize because 7.0 gets handled strangely by js-yaml
-    if (config.php === 7) {
-      config.php = '7.0';
-    }
-
-    // If this is Drupal8 let's add in drupal console as well
-    if (config.framework === 'drupal8') {
-      config.drupal = true;
-    }
+    config.cache = 'redis:2.8';
+    config.edge = 'varnish:4.1';
+    config.index = 'solr:custom';
+    config.framework = _.get(config, 'framework', 'drupal');
 
     // Update with new config defaults
     config.conf = config.cong || {};
@@ -355,7 +355,22 @@ index: [{
     config.conf.php = path.join(configDir, 'php.ini');
     config.conf.database = path.join(configDir, 'mysql');
 
-    // Start by cheating and mixing
+    // Mixin anything from pantheon.yml if it exists
+    config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));
+
+    // Normalize because 7.0 gets handled strangely by js-yaml
+    if (config.php === 7) { config.php = '7.0'; }
+
+    // If this is Drupal8 let's add in drupal console as well
+    if (config.framework === 'drupal8') { config.drupal = true; }
+
+    // Get the lando/pantheon base recipe/framework
+    var base = _.get(config, 'framework', 'drupal7');
+
+    // If the pantheon framework is drupal, then use lando d7 recipe
+    if (base === 'drupal') { base = 'drupal7'; }
+
+    // Delegate and use a recipe
     var build = lando.recipes.build(name, base, config);
 
     // Set the pantheon environment
@@ -376,33 +391,13 @@ index: [{
     var dependsPath = 'services.appserver.overrides.services.depends_on';
     _.set(build, dependsPath, ['index']);
 
-    // Remove any build steps we've inherited
-    build.services.appserver.build = [];
-
-    // But add some extra steps if we are on backdrop
-    // Need to cp backdrush command files into ~/.drush
-    if (config.framework === 'backdrop') {
-      build.services.appserver.build = [
-        'mkdir -p /var/www/.drush/backdrush',
-        'cp -rf /var/www/.backdrush/* /var/www/.drush/backdrush/',
-        'drush cc drush'
-      ];
-    }
-
-    // Make sure we clean up if we switch to something else
-    else {
-      build.services.appserver.build = [
-        'rm -rf /var/www/.drush/backdrush/',
-        'drush cc drush'
-      ];
-    }
-
-    // @todo: auto run composer install?
+    // Reset our build steps
+    build.services.appserver.build = buildSteps(config);
 
     // Mix in our additional services
-    build.services.cache = redis();
-    build.services.edge = varnish();
-    build.services.index = solr();
+    build.services.cache = redis(config.cache);
+    build.services.edge = varnish(config.edge);
+    build.services.index = solr(config.index);
 
     // Reset the proxy to route through the edge
     build.proxy = proxy();
@@ -410,8 +405,11 @@ index: [{
     // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));
 
-    //console.log(JSON.stringify(build, null, 2));
-    //process.exit(1);
+    // Run composer install if we have the file
+    if (fs.existsSync((path.join(config._root, 'composer.json')))) {
+      var composerInstall = 'cd $LANDO_MOUNT && composer install';
+      build.services.appserver.build.push(composerInstall);
+    }
 
     // Return the things
     return build;

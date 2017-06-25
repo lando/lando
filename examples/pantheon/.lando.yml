@@ -4,3 +4,6 @@ recipe: pantheon
 config:
   framework: drupal
   xdebug: true
+  id: 7587b3ea-95b6-44ab-b36b-6ebd9c3e9866
+  site: kalabox-drupal7
+  env: dev

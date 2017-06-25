@@ -15,9 +15,9 @@ mkdir -p /var/www/tmp
 mkdir -p /var/www/certs
 
 # Emulate /srv/bindings
-if [ "$LANDO_SERVICE_NAME" == "appserver" ]; then
+if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
   mkdir -p /srv/bindings
-  ln -sf $LANDO_MOUNT "/srv/bindings/lando" || true
+  ln -s /var/www "/srv/bindings/lando" || true
 fi
 
 # Wait until our solr crt is ready and then whitelist it
