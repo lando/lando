@@ -29,6 +29,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ####[Drupal 6](./../recipes/d6.md)
 *   ####[Drupal 7](./../recipes/d7.md)
 *   ####[Drupal 8](./../recipes/d8.md)
+*   ####[Larvel](./../recipes/laravel.md)
 *   ####[LAMP](./../recipes/lamp.md)
 *   ####[LEMP](./../recipes/lemp.md)
 *   ####[Pantheon](./../recipes/pantheon.md)

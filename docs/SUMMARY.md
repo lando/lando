@@ -39,6 +39,7 @@
 *   [Drupal 6](recipes/d6.md)
 *   [Drupal 7](recipes/d7.md)
 *   [Drupal 8](recipes/d8.md)
+*   [Laravel](recipes/laravel.md)
 *   [LAMP](recipes/lamp.md)
 *   [LEMP](recipes/lemp.md)
 *   [Pantheon](recipes/pantheon.md)
