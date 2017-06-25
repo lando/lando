@@ -38,12 +38,12 @@ You can activate `xdebug` for remote debugging by setting `xdebug: true` in the 
   {
     ServerPort: 9000
     PathMaps: [
-      "/var/www/html/www;/Users/pirog/Desktop/work/lando/examples/lando/www"
+      "/app/www;/Users/pirog/Desktop/work/lando/examples/lando/www"
     ]
   }
 ```
 
-The first part of a pathmap will be the location of your code in the container. This is eiher `/var/www/html` or `/app` depending on whether you are using sharing or not. When in doubt use `/app`, which is the non-sharing path and should work in either case, although with potential performance impacts. Also note that if your app is in a nested docroot you will need to append that to the paths. The example above uses an app with a nested webroot called `www`.
+The first part of a pathmap will be the location of your code in the container. Generally, this should be `/app`. Also note that if your app is in a nested docroot you will need to append that to the paths. The example above uses an app with a nested webroot called `www`.
 
 > #### Info::Problems starting XDEBUG
 >

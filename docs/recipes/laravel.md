@@ -10,7 +10,7 @@ name: myapp
 recipe: laravel
 ```
 
-You can easily configure/override the Larvel recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the Larvel recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -84,9 +84,6 @@ lando info
     "config": {
       "server": "/Users/pirog/.lando/services/config/laravel/laravel.conf",
       "conf": "/Users/pirog/.lando/services/config/laravel/php.ini"
-    },
-    "share": {
-      "remote": "/var/www/html"
     }
   },
   "nginx": {

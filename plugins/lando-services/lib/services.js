@@ -273,8 +273,9 @@ module.exports = function(lando) {
 
     // Add in some helpful volumes
     var vols = services[name].volumes || [];
-    vols.push('$LANDO_APP_ROOT_BIND:/app');
-    vols.push('$LANDO_ENGINE_HOME:/user');
+    var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
+    vols.push('$LANDO_APP_ROOT_BIND:/app' + shareMode);
+    vols.push('$LANDO_ENGINE_HOME:/user' + shareMode);
     services[name].volumes = _.uniq(vols);
 
     // And some permission helpers

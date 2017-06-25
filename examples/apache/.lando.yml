@@ -1,11 +1,6 @@
 # Name of my app
 name: apache
 
-# Share the root directory of my app into apache's webroot
-sharing:
-  html:
-    remote: /usr/local/apache2/htdocs
-
 # Give me http://apache.lndo.site and https://apache.lndo.site
 proxy:
   html:
