@@ -47,7 +47,7 @@ module.exports = function(lando) {
     var remote = '/etc/nginx/conf.d/default.template';
     var mount = buildVolume(configFile, remote, defaultConfDir);
     var nginxConf = {
-      server: mount.split(':')[0]
+      server: _.dropRight(mount.split(':')).join(':')
     };
 
     // Generate a config object to build the service with

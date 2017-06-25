@@ -195,7 +195,7 @@ module.exports = function(lando) {
     var configFile = ['php', defaultConfFile];
     var mount = buildVolume(configFile, config.serverConf, defaultConfDir);
     var nginxConfigDefaults = {
-      server: mount.split(':')[0]
+      server: _.dropRight(mount.split(':')).join(':')
     };
 
     // Clone the config so we can separate concerns
