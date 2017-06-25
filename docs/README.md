@@ -32,7 +32,7 @@ With Lando you can...
 *   Easily customize or extend tooling, deployment options and basically any other functionality.
 *   Free yourself from the tyranny of inferior local development products.
 
-A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands. 
+A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
 
 ```yml
 name: myproject
@@ -105,12 +105,13 @@ There are various features that need to be implemented to achieve the above.
 1.  ~~Transition the core framework~~
 2.  ~~Provide a services layer on top of docker compose~~
 3.  ~~Provide a build and tooling layer~~
-4.  Provide additional core services and tools
+4.  ~~Provide additional core services and tools~~
 5.  ~~Provide a recipes layer on top of services~~
-6.  Provide handling of upstream git remotes
+6.  Provide handling of upstream git remotes (lando init command)
 7.  Provide a push/pull layer on top of the tooling layer
-8.  Replicate Pantheon integration
-9.  Build GUI
+8.  ~~Recipe to replicate Pantheon environment~~
+9.  Integration with Pantheon
+10. Build GUI
 
 Other Resources
 ---------------
