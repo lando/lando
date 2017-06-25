@@ -26,11 +26,13 @@
     ],
     "assets": [
       "package.json",
+      "**/*.cnf",
+      "**/*.conf",
+      "**/*.ini",
+      "**/*.php",
       "**/*.yml",
       "**/*.sh",
-      "**/*.conf",
-      "**/*.cnf",
-      "**/*.ini"
+      "**/*.vcl"
     ]
   },
   "dependencies": {
