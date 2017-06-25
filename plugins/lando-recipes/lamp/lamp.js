@@ -106,17 +106,6 @@ module.exports = function(lando) {
   };
 
   /*
-   * Helper to return sharing config
-   */
-  var sharing = function() {
-    return {
-      appserver: {
-        remote: '/var/www/html'
-      }
-    };
-  };
-
-  /*
    * Helper to return proxy config
    */
   var proxy = function() {
@@ -261,7 +250,6 @@ module.exports = function(lando) {
     var build = {};
 
     // Get our things
-    build.sharing = sharing();
     build.proxy = proxy();
     build.services = services(config);
     build.tooling = tooling(config);

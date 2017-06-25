@@ -10,7 +10,7 @@ name: myapp
 recipe: lamp
 ```
 
-You can easily configure/override the LAMP recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the LAMP recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -59,10 +59,7 @@ lando info
       "http://localhost:32840",
       "http://lamp2.lndo.site",
       "https://lamp2.lndo.site"
-    ],
-    "share": {
-      "remote": "/var/www/html"
-    }
+    ]
   },
   "database": {
     "type": "mysql",

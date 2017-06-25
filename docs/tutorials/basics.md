@@ -79,9 +79,6 @@ lando info
   "version": "7.1",
   "via": "apache",
   "webroot": ".",
-  "share": {
-    "remote": "/var/www/html"
-  },
   "urls": [
     "https://localhost:32801",
     "http://localhost:32802",

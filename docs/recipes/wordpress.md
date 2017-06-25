@@ -10,7 +10,7 @@ name: myapp
 recipe: wordpress
 ```
 
-You can easily configure/override the WordPress recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the WordPress recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -91,10 +91,7 @@ lando info
     "type": "php",
     "version": "7.0",
     "via": "nginx",
-    "webroot": "web",
-    "share": {
-      "remote": "/var/www/html"
-    }
+    "webroot": "web"
   },
   "nginx": {
     "urls": [

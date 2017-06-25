@@ -10,7 +10,7 @@ name: myapp
 recipe: lemp
 ```
 
-You can easily configure/override the LEMP recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the LEMP recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -53,10 +53,7 @@ lando info
     "type": "php",
     "version": "7.1",
     "via": "nginx",
-    "webroot": ".",
-    "share": {
-      "remote": "/var/www/html"
-    }
+    "webroot": "."
   },
   "nginx": {
     "urls": [

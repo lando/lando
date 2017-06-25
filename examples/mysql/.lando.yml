@@ -1,11 +1,6 @@
 # The name of the app
 name: mysql
 
-# Share the www directory in my app into the webroot of the appserver container
-sharing:
-  appserver:
-    remote: /usr/share/nginx/html
-
 # Give me http://mysql.lndo.site and https://mysql.lndo.site
 proxy:
   appserver:

@@ -61,7 +61,7 @@ LANDO_APP_ROOT_BIND=/path/to/app/in/container
 Shared Files
 ------------
 
-While you can also share in additional files and directories via our [sharing plugin](./sharing.md) or with docker volumes (see [Advanced Service Configuration](#advanced-service-configuration) below), we share a few useful host directories into each service.
+While you can also share in additional files and directories via docker volumes (see [Advanced Service Configuration](#advanced-service-configuration) below), we share a few useful host directories into each service by default.
 
 | Host Location | Container Location |
 | -- | -- | -- |

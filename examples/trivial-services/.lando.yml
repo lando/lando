@@ -1,7 +1,4 @@
 name: trivial-services
-sharing:
-  appserver:
-    remote: /usr/share/nginx/html
 proxy:
   nginx:
     - port: 80/tcp

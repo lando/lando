@@ -81,11 +81,7 @@ lando info
       "http://localhost:32771",
       "http://lamp.lndo.site",
       "https://lamp.lndo.site"
-    ],
-    "share": {
-      "local": "www",
-      "remote": "/var/www/html"
-    }
+    ]
   },
   "database": {
     "type": "mysql",
@@ -121,11 +117,7 @@ Using the mysql client of your choice enter in the following credential and the 
 Let's give a brief look at the `.lando.yml` file that makes this possible.
 
 ```yml
-name: lamp
-sharing:
-  appserver:
-    local: www
-    remote: /var/www/html
+name: lamps
 proxy:
   appserver:
     - port: 80/tcp

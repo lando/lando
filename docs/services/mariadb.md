@@ -42,11 +42,7 @@ lando info
       "http://localhost:32803",
       "http://mariadb.lndo.site",
       "https://mariadb.lndo.site"
-    ],
-    "share": {
-      "local": "www",
-      "remote": "/usr/share/nginx/html"
-    }
+    ]
   },
   "database": {
     "type": "mariadb",

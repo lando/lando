@@ -1,11 +1,6 @@
 # LAMP stack example
 name: lamp
 
-# Share my app into apache's webroot
-sharing:
-  appserver:
-    remote: /var/www/html
-
 # Give me http://lamp.lndo.site and https://lamp.lndo.site
 proxy:
   appserver:
