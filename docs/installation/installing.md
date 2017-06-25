@@ -68,7 +68,7 @@ Finally, you will need to install the [lts/boron release of node](https://nodejs
 
 > #### Warning::DO NOT USE THE LATEST RELEASE OF node
 >
-> The [latest release of node](https://nodejs.org/dist/latest/) which includes npm is not compatible with Lando at this time.
+> The [latest release of node](https://nodejs.org/en/download/current/) which includes npm is not compatible with Lando at this time.
 
 Then do the following:
 
