@@ -8,6 +8,9 @@
 
 module.exports = function(lando) {
 
+  // Load in our init method
+  //lando.init.add('pantheon', require('./init')(lando));
+
   // Modules
   var _ = lando.node._;
   var crypto = require('crypto');
@@ -103,7 +106,7 @@ module.exports = function(lando) {
       FILEMOUNT: frameworkSpec[config.framework].filemount,
       DRUPAL_HASH_SALT: _.get(settings, 'drupal_hash_salt'),
       PANTHEON_SITE: _.get(settings, 'conf.pantheon_site_uuid'),
-      PANTHEON_SITE_NAME: _.get(config, 'site'),
+      PANTHEON_SITE_NAME: _.get(config, 'site', config._app),
       PANTHEON_ENVIRONMENT: 'lando',
 
       // DB
@@ -135,7 +138,7 @@ module.exports = function(lando) {
       NONCE_KEY: getHash(config._root + config.framework),
 
       // Terminus
-      TERMINUS_SITE: _.get(config, 'site'),
+      TERMINUS_SITE: _.get(config, 'site', config._app),
       TERMINUS_ENV: _.get(config, 'env', 'dev')
       //TERMINUS_ORG: ''
       //TERMINUS_USER="devuser@pantheon.io"
