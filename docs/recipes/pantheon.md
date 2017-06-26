@@ -45,7 +45,7 @@ git clone https://github.com/kalabox/lando.git
 cd lando/examples/pantheon
 
 # Clone drops-7 into a nested docroot
-git clone git@github.com:pantheon-systems/drops-7.git web
+git clone https://github.com/pantheon-systems/drops-7.git web
 
 # Visit https://pantheon.lndo.site to complete your installation.
 
