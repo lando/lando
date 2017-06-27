@@ -10,14 +10,24 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var Promise = lando.Promise;
-  var rest = lando.node.rest;
-  var urls = require('url');
+  var api = require('./client')(lando);
 
   // "Constants"
   var tokenCacheKey = 'init:auth:pantheon:tokens';
-  var sessionCacheKey = 'init:auth:pantheon:session:';
-  var sitesCacheKey = 'init:auth:pantheon:sites:';
+
+  /*
+   * Helper to determine whether we should ask the questions or not
+   */
+  var askQuestions = function(answers) {
+
+    // Get our things
+    var method = lando.tasks.argv()._[2];
+    var recipe = answers.recipe;
+
+    // return
+    return (method === 'pantheon') || (recipe === 'pantheon');
+
+  };
 
   /*
    * Helper to get pantheon accounts
@@ -42,237 +52,6 @@ module.exports = function(lando) {
 
   };
 
-  /*
-   * Return auth headers we need for session protected endpoints
-   */
-  var getAuthHeaders = function(session) {
-    return {
-      'Content-Type': 'application/json',
-      'Cookie': 'X-Pantheon-Session=' + session.session,
-      'User-Agent': 'Terminus/Lando'
-    };
-  };
-
-  /*
-   * Helper to make requests to pantheon api
-   */
-  var pantheonRequest = function(verb, pathname, data, options) {
-
-    // Target
-    var target = {
-      protocol: 'https',
-      hostname: 'terminus.pantheon.io',
-      port: '443'
-    };
-
-    // Prepend the pathname
-    pathname.unshift('api');
-
-    // Log the actual request we are about to make
-    lando.log.info('Making %s request to %s', verb, pathname);
-    lando.log.debug('Request data: %j', data);
-    lando.log.debug('Request options: %j.', options);
-
-    // Build the request
-    var request = _.merge(target, {pathname: pathname.join('/')});
-
-    // Attempt the request and retry a few times
-    return Promise.retry(function() {
-
-      // Send REST request.
-      return new Promise(function(fulfill, reject) {
-
-        // Make the actual request
-        rest[verb](urls.format(request), data, options)
-
-        // Log result and fulfil promise
-        .on('success', function(data) {
-          lando.log.debug('Response recieved: %j.', data);
-          fulfill(data);
-        })
-
-        // Throw an error on fail/error
-        .on('fail', function(data) {
-          var err = new Error(data);
-          reject(err);
-        }).on('error', reject);
-
-      });
-
-    });
-
-  };
-
-  /*
-   * Auth with pantheon directly
-   */
-  var pantheonAuth = function(token) {
-
-    // Check to see if token is cached already and use that
-    var tokens = lando.cache.get(tokenCacheKey) || {};
-    if (_.includes(_.keys(tokens), token)) {
-      token = tokens[token];
-    }
-
-    // If we have a process cached token lets use that
-    var sessionKey = sessionCacheKey + token;
-    if (lando.cache.get(sessionKey)) {
-      return lando.cache.get(sessionKey);
-    }
-
-    // Request deets
-    var endpoint = ['authorize', 'machine-token'];
-    var data = {'machine_token': token, client: 'terminus'};
-    var options = {
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Terminus/Lando'
-      }
-    };
-
-    // Send REST request.
-    return pantheonRequest('postJson', endpoint, data, options)
-
-    // Use the session to get information about the user
-    .then(function(session) {
-
-      // RThe user get path
-      var getUser = ['users', _.get(session, 'user_id')];
-
-      // Get more user info
-      return pantheonRequest('get', getUser, {headers: getAuthHeaders(session)})
-
-      // Add our token to the cache
-      .then(function(user) {
-
-        // Get the email from the user
-        var email = _.get(user, 'email');
-
-        // Log
-        lando.log.info('Got session: %j for user %s', session, email);
-
-        // Persistenly cache token
-        tokens[email] = token;
-        lando.cache.set(tokenCacheKey, tokens, {persist: true});
-
-        // Process cache the session
-        lando.cache.set(sessionKey, session);
-
-      })
-
-      // Return the session
-      .then(function() {
-        return session;
-      });
-
-    });
-
-  };
-
-  /*
-   * Get full list of org sites
-   */
-  var pantheonOrgSites = function(token) {
-
-    // Start with auth
-    return pantheonAuth(token)
-
-    // Get the sites
-    .then(function(session) {
-
-      // Headers options
-      var options = {headers: getAuthHeaders(session)};
-
-      // Get org path
-      var userId = _.get(session, 'user_id');
-      var getOrgs = ['users', userId, 'memberships', 'organizations'];
-
-      // Get the orgs
-      return pantheonRequest('get', getOrgs, options)
-
-      // Map each org into sites
-      .map(function(org) {
-
-        // If the role make sense get the sites
-        if (org.role !== 'unprivileged') {
-          var orgSites = ['organizations', org.id, 'memberships', 'sites'];
-          return pantheonRequest('get', orgSites, options)
-          .map(function(site) {
-            var data = site.site;
-            data.id = site.id;
-            return data;
-          });
-        }
-      })
-
-      // Flatten the sites
-      .then(function(sites) {
-        return _.flatten(sites);
-      });
-
-    });
-
-  };
-
-  /*
-   * Get full list of users sites
-   */
-  var pantheonUserSites = function(token) {
-
-    // Start with auth
-    return pantheonAuth(token)
-
-    // Get the sites
-    .then(function(session) {
-      var getSites = ['users', _.get(session, 'user_id'), 'sites'];
-      var options = {headers: getAuthHeaders(session)};
-      return pantheonRequest('get', getSites, options);
-    })
-
-    // Map them into something we can merge with org sites better
-    .then(function(sites) {
-      return _.map(sites, function(site, id) {
-        var data = site.information;
-        data.id = id;
-        return data;
-      });
-    });
-
-  };
-
-  /*
-   * Get full list of sites
-   */
-  var pantheonSites = function(token) {
-
-    // If we have a process cached sites list lets use that
-    var sitesKey = sitesCacheKey + token;
-    if (lando.cache.get(sitesKey)) {
-      return lando.cache.get(sitesKey);
-    }
-
-    // Start with auth
-    return Promise.all([
-      pantheonUserSites(token),
-      pantheonOrgSites(token)
-    ])
-
-    // Combine, cache and all the things
-    .then(function(sites) {
-
-      // Order up our sites
-      sites = _.sortBy(_.flatten(sites), 'name');
-
-      // Cache
-      lando.cache.set(sitesKey, sites);
-
-      // Return
-      return sites;
-
-    });
-
-  };
-
   // List of additional options
   var options = {
     'pantheon-auth': {
@@ -282,8 +61,8 @@ module.exports = function(lando) {
         type: 'list',
         message: 'Choose a Pantheon account',
         choices: pantheonAccounts(),
-        when: function() {
-          return !_.isEmpty(pantheonAccounts());
+        when: function(answers) {
+          return !_.isEmpty(pantheonAccounts()) && askQuestions(answers);
         },
         weight: 600
       }
@@ -295,7 +74,7 @@ module.exports = function(lando) {
         message: 'Enter a Pantheon machine token',
         when: function(answers) {
           var token = _.get(answers, 'pantheon-auth');
-          return (!token || token === 'more');
+          return (!token || token === 'more') && askQuestions(answers);
         },
         weight: 601
       }
@@ -315,7 +94,7 @@ module.exports = function(lando) {
           var done = this.async();
 
           // Get the pantheon sites using the token
-          pantheonSites(_.get(lando.tasks.argv(), tpath, answers[tpath]))
+          api.getSites(_.get(lando.tasks.argv(), tpath, answers[tpath]))
 
           // Parse the sites into choices
           .map(function(site) {
@@ -327,6 +106,9 @@ module.exports = function(lando) {
             done(null, sites);
           });
 
+        },
+        when: function(answers) {
+          return askQuestions(answers);
         },
         weight: 602
       }
@@ -343,10 +125,56 @@ module.exports = function(lando) {
 
   };
 
+  /*
+   * Determine whether we need to show the recipe question or not
+   */
+  var when = function(answers) {
+
+    // Set some things
+    answers.recipe = 'pantheon';
+
+    // return
+    return false;
+
+  };
+
+  /*
+   * Helper to mix in other pantheon options
+   */
+  var yaml = function(config, options) {
+
+    // Let's get our sites
+    return api.getSites(_.get(options, 'pantheon-auth'))
+
+    // Filter out our site
+    .filter(function(site) {
+      return site.name === _.get(options, 'pantheon-site');
+    })
+
+    // Set the config
+    .then(function(site) {
+
+      // Augment the config
+      config.config = {};
+      config.config.framework = _.get(site[0], 'framework', 'drupal');
+      config.config.env = 'dev';
+      config.config.site = _.get(site[0], 'name', config.name);
+      config.config.id = _.get(site[0], 'id', 'lando');
+
+      // Return it
+      return config;
+
+    });
+
+  };
+
   // Return the things
   return {
     build: build,
-    options: options
+    options: options,
+    whenRecipe: when,
+    whenWebRoot: when,
+    yaml: yaml
   };
 
 };
