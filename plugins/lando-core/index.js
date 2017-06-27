@@ -20,9 +20,6 @@ module.exports = function(lando) {
   // Basic app services handling
   require('./lib/services')(lando);
 
-  // Load tasks for this plugin.
-  require('./lib/tasks')(lando);
-
   // App url handling and discovery
   require('./lib/urls')(lando);
 
