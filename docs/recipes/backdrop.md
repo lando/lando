@@ -39,9 +39,9 @@ lando start
 
 # Visit https://backdrop.lndo.site to complete your installation.
 
-# Check the status of your site with backdrush
+# Check the status of your site with drush
 cd www
-lando backdrush status
+lando drush status
 ```
 
 Environmental Variables
@@ -138,7 +138,7 @@ Commands:
   composer                 Run composer commands
   php                      Run php commands
   mysql                    Drop into a MySQL shell
-  backdrush                Run backdrush commands
+  drush                    Run drush commands
 
 Options:
   --help, -h  Show help                                                [boolean]

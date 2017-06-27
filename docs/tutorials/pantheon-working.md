@@ -114,15 +114,12 @@ Other Helpful Things
 # Get a list of wp-cli commands
 lando wp
 
-# Download a dependency with drushl
+# Download a dependency with drush
 lando drush dl views
 
 # Download a dependency with composer
 lando composer config repositories.drupal composer https://packages.drupal.org/8
 lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
-
-# Download a backdrop dependency
-lando backdrush dl panels
 ```
 
 Check out our [Pantheon Recipe](./../recipes/pantheon.md) for details on more advanced usage.

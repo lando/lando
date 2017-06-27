@@ -131,15 +131,12 @@ lando terminus auth:login --machine-token=MYSPECIALTOKEN
 # Get a list of wp-cli commands
 lando wp
 
-# Download a dependency with drushl
+# Download a dependency with drush
 lando drush dl views
 
 # Download a dependency with composer
 lando composer config repositories.drupal composer https://packages.drupal.org/8
 lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
-
-# Download a backdrop dependency
-lando backdrush dl panels
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands.
