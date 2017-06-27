@@ -20,22 +20,32 @@ module.exports = function(lando) {
     // Add init to lando
     lando.init = require('./init')(lando);
 
-  });
-
-  // Add init plugins
-  lando.events.on('post-bootstrap', 2, function(lando) {
-
-    // Add init methods
-    lando = lando;
-    //lando.init.add('core', require('./init/core')(lando));
+    // Load our tasks
+    lando.tasks.add('config', require('./tasks/config')(lando));
+    lando.tasks.add('destroy', require('./tasks/destroy')(lando));
+    lando.tasks.add('info', require('./tasks/info')(lando));
+    lando.tasks.add('list', require('./tasks/list')(lando));
+    lando.tasks.add('logs', require('./tasks/logs')(lando));
+    lando.tasks.add('poweroff', require('./tasks/poweroff')(lando));
+    lando.tasks.add('rebuild', require('./tasks/rebuild')(lando));
+    lando.tasks.add('restart', require('./tasks/restart')(lando));
+    lando.tasks.add('start', require('./tasks/start')(lando));
+    lando.tasks.add('stop', require('./tasks/stop')(lando));
+    lando.tasks.add('version', require('./tasks/version')(lando));
 
   });
 
   // Go through our init methods and log them
   lando.events.on('post-bootstrap', 9, function(lando) {
+
+    // Load the init task here because its special
+    lando.tasks.add('init', require('./tasks/init')(lando));
+
+    // Log
     _.forEach(lando.init.get(), function(method) {
       lando.log.verbose('Init method %s loaded', method);
     });
+
   });
 
 };

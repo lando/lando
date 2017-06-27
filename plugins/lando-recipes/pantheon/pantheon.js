@@ -9,7 +9,7 @@
 module.exports = function(lando) {
 
   // Load in our init method
-  //lando.init.add('pantheon', require('./init')(lando));
+  lando.init.add('pantheon', require('./init')(lando));
 
   // Modules
   var _ = lando.node._;

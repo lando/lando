@@ -14,8 +14,8 @@ module.exports = function(lando) {
   var fs = lando.node.fs;
   var path = require('path');
 
-  // Create the default set of options/questions
-  var defaultOpts = {
+  // Create the starting set of options/questions
+  var options = {
     recipe: {
       describe: 'The recipe to use',
       choices: lando.recipes.get(),
@@ -28,9 +28,18 @@ module.exports = function(lando) {
         choices: _.map(lando.recipes.get(), function(recipe) {
           return {name: recipe, value: recipe};
         }),
-        weight: 70
+        weight: 700
       }
-    },
+    }
+  };
+
+  // Merge in other options provided by method plugins
+  _.forEach(lando.init.get(), function(method) {
+    options = _.merge(options, lando.init.get(method).options);
+  });
+
+  // Specify more auxopts
+  var auxOpts = {
     destination: {
       describe: 'Specify where to init the app',
       alias: ['dest', 'd'],
@@ -39,7 +48,7 @@ module.exports = function(lando) {
         type: 'input',
         message: 'Where do you want to create this app?',
         default: process.cwd(),
-        weight: 80
+        weight: 800
       }
     },
     webroot: {
@@ -49,7 +58,7 @@ module.exports = function(lando) {
         type: 'input',
         message: 'Where is your webroot relative to the init destination?',
         default: '.',
-        weight: 90
+        weight: 900
       }
     },
     yes: {
@@ -60,14 +69,14 @@ module.exports = function(lando) {
       interactive: {
         type: 'confirm',
         message: 'Initialize?',
-        weight: 100
+        weight: 1000
       }
     },
     overwrite: {
       interactive: {
         type: 'confirm',
         message: 'Are you sure you want to overwrite existing .lando.yml?',
-        weight: 110,
+        weight: 1100,
         when: function(answers) {
 
           // Get things to check
@@ -83,15 +92,17 @@ module.exports = function(lando) {
     }
   };
 
-  // @todo: Merge in additinal questions from any sources
+  // Build optional init method arg
+  var methods = ' [' + lando.init.get().join('|') + ']';
 
   // The task object
   return {
-    // @todo: add in [github|pantheon|etc] as opt arg
-    command: 'init <appname>',
-    describe: 'Initializes a lando app.',
-    options: defaultOpts,
+    command: 'init <appname>' + methods,
+    describe: 'Initializes a lando app called <appname> with optional [method]',
+    options: _.merge(options, auxOpts),
     run: function(options) {
+
+      //console.log(options);
 
       // If we decline to overwrite then we are done
       if (options.overwrite === false) {
@@ -100,6 +111,7 @@ module.exports = function(lando) {
       }
 
       // Run any build tasks defined by our source selection
+      //lando.init.build(options)
 
       // Do the normal lando create jam
       return lando.init.yamlme(options);
