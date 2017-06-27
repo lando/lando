@@ -10,9 +10,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var fs = lando.node.fs;
-  var path = require('path');
-  var yaml = lando.node.yaml;
 
   // Registry of init methods
   var registry = {};
@@ -57,22 +54,19 @@ module.exports = function(lando) {
   /*
    * Helper to spit out a .lando.yml file
    */
-  var yamlme = function(options) {
+  var yaml = function(recipe, config, options) {
 
-    // Build the .lando.yml file
-    var config = {
-      name: options.appname,
-      recipe: options.recipe,
-      config: {
-        webroot: options.webroot
-      }
-    };
+    // Check to verify whether the recipe exists in the registry
+    if (!registry[recipe]) {
+      return config;
+    }
 
-    // Name the file
-    var dest = path.join(options.destination, '.lando.yml');
+    // Log
+    lando.log.verbose('Getting more config for %s app %s', recipe, config.name);
+    lando.log.debug('Getting more for %s using %j', config.name, options);
 
-    // Construct the yamlfile
-    fs.writeFileSync(dest, yaml.safeDump(config));
+    // Return the .lando.yml
+    return registry[recipe].yaml(config, options);
 
   };
 
@@ -80,7 +74,7 @@ module.exports = function(lando) {
     add: add,
     build: build,
     get: get,
-    yamlme: yamlme
+    yaml: yaml
   };
 
 };

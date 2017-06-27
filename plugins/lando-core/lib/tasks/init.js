@@ -13,6 +13,27 @@ module.exports = function(lando) {
   var chalk = lando.node.chalk;
   var fs = lando.node.fs;
   var path = require('path');
+  var Promise = lando.Promise;
+  var yaml = lando.node.yaml;
+
+  /*
+   * Helper function to determine wheness
+   */
+  var whenIt = function(method, func, answers) {
+
+    // Run the whenit func if applicable
+    if (_.includes(lando.init.get(), method)) {
+      if (_.isFunction(lando.init.get(method)[func])) {
+        return lando.init.get(method)[func](answers);
+      }
+    }
+
+    // Otherwise show it
+    else {
+      return true;
+    }
+
+  };
 
   // Create the starting set of options/questions
   var options = {
@@ -25,10 +46,13 @@ module.exports = function(lando) {
         type: 'list',
         message: 'What recipe do you want to use?',
         default: 'custom',
+        when: function(answers) {
+          return whenIt(lando.tasks.argv()._[2], 'whenRecipe', answers);
+        },
         choices: _.map(lando.recipes.get(), function(recipe) {
           return {name: recipe, value: recipe};
         }),
-        weight: 700
+        weight: 100
       }
     }
   };
@@ -58,6 +82,9 @@ module.exports = function(lando) {
         type: 'input',
         message: 'Where is your webroot relative to the init destination?',
         default: '.',
+        when: function(answers) {
+          return whenIt(answers.recipe, 'whenWebRoot', answers);
+        },
         weight: 900
       }
     },
@@ -65,18 +92,13 @@ module.exports = function(lando) {
       describe: 'Auto answer yes to prompts',
       alias: ['y'],
       default: false,
-      boolean: true,
-      interactive: {
-        type: 'confirm',
-        message: 'Initialize?',
-        weight: 1000
-      }
+      boolean: true
     },
     overwrite: {
       interactive: {
         type: 'confirm',
         message: 'Are you sure you want to overwrite existing .lando.yml?',
-        weight: 1100,
+        weight: 1000,
         when: function(answers) {
 
           // Get things to check
@@ -92,17 +114,12 @@ module.exports = function(lando) {
     }
   };
 
-  // Build optional init method arg
-  var methods = ' [' + lando.init.get().join('|') + ']';
-
   // The task object
   return {
-    command: 'init <appname>' + methods,
+    command: 'init <appname> [method]',
     describe: 'Initializes a lando app called <appname> with optional [method]',
     options: _.merge(options, auxOpts),
     run: function(options) {
-
-      //console.log(options);
 
       // If we decline to overwrite then we are done
       if (options.overwrite === false) {
@@ -110,11 +127,39 @@ module.exports = function(lando) {
         return;
       }
 
-      // Run any build tasks defined by our source selection
-      //lando.init.build(options)
+      // Set the basics
+      var config = {
+        name: options.appname,
+        recipe: options.recipe,
+      };
 
-      // Do the normal lando create jam
-      return lando.init.yamlme(options);
+      // If we have a webroot let's set it
+      if (!_.isEmpty(options.webroot)) {
+        _.set(config, 'config.webroot', options.webroot);
+      }
+
+      // Check to see if our recipe provides additional yaml augment
+      return Promise.try(function() {
+        return lando.init.yaml(options.recipe, config, options) || config;
+      })
+
+      // Build step
+      .then(function(config) {
+        // @todo: build step?
+        // @todo: create new directory of appname? (seems safest) maybe we can alter options.destination inside the build step?
+        return config;
+      })
+
+      // Create the lando yml
+      .then(function(config) {
+
+        // Create the file
+        var dest = path.join(options.destination, '.lando.yml');
+
+        // Construct the yamlfile
+        fs.writeFileSync(dest, yaml.safeDump(config));
+
+      });
 
     }
   };
