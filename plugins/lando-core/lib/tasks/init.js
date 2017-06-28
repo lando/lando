@@ -14,7 +14,6 @@ module.exports = function(lando) {
   var fs = lando.node.fs;
   var path = require('path');
   var Promise = lando.Promise;
-  var yaml = lando.node.yaml;
 
   /*
    * Helper function to determine wheness
@@ -157,7 +156,7 @@ module.exports = function(lando) {
         var dest = path.join(options.destination, '.lando.yml');
 
         // Construct the yamlfile
-        fs.writeFileSync(dest, yaml.safeDump(config));
+        lando.yaml.dump(dest, config);
 
       });
 

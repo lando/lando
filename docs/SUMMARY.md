@@ -111,6 +111,7 @@
     *   [tasks](dev/api/tasks.md)
     *   [user](dev/api/user.md)
     *   [utils](dev/api/utils.md)
+    *   [yaml](dev/api/yaml.md)
 *   [Testing](dev/testing.md)
 *   [Building](dev/building.md)
 *   [Shipping](dev/shipping.md)

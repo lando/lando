@@ -15,7 +15,6 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var fs = lando.node.fs;
   var path = require('path');
-  var yaml = lando.node.yaml;
 
   // Add in some high level config so our app can handle parsing container objects
   // and compose files
@@ -45,7 +44,7 @@ module.exports = function(lando) {
         if (fs.existsSync(composeFile)) {
 
           // Get our object from file
-          var data = yaml.safeLoad(fs.readFileSync(composeFile));
+          var data = lando.yaml.load(composeFile);
 
           // Merge things in
           app.services = _.merge(app.services, data.services);

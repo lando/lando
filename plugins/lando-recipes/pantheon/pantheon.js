@@ -16,7 +16,6 @@ module.exports = function(lando) {
   var crypto = require('crypto');
   var fs = lando.node.fs;
   var path = require('path');
-  var yaml = lando.node.yaml;
 
   // Lando things
   var addConfig = lando.services.addConfig;
@@ -302,7 +301,7 @@ module.exports = function(lando) {
     if (fs.existsSync(pyaml)) {
 
       // Get the pantheon config
-      var pconfig = yaml.safeLoad(fs.readFileSync(pyaml));
+      var pconfig = lando.yaml.load(pyaml);
 
       // Set a php version
       config.php = _.get(pconfig, 'php_version', '5.6');
