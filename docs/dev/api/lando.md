@@ -69,6 +69,7 @@ lando.tasks.add('fireeverything', task);
     * [.tasks](#lando.tasks)
     * [.user](#lando.user)
     * [.utils](#lando.utils)
+    * [.yaml](#lando.yaml)
 
 <a name="lando.app"></a>
 
@@ -249,4 +250,14 @@ Contains helpful utility methods.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [utils.md](utils.md)  
+**Since**: 3.0.0  
+<a name="lando.yaml"></a>
+
+### lando.yaml
+The yaml module.
+
+Contains helpful yaml methods.
+
+**Kind**: static property of [<code>lando</code>](#lando)  
+**See**: [yaml.md](yaml.md)  
 **Since**: 3.0.0  
