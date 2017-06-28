@@ -137,18 +137,14 @@ module.exports = function(lando) {
         _.set(config, 'config.webroot', options.webroot);
       }
 
-      // @todo: build step?
-      // @todo: create new directory of appname? (seems safest) maybe we can alter options.destination inside the build step?
-      // Build step
+      // Method specific build steps if applicable
       return Promise.try(function() {
-        var cmd = 'ssh-keygen -t rsa -N "" -C "lando" -f ' +
-          '"/user/.lando/keys/test.id_rsa"';
-        return lando.init.run(config.name, options.destination, cmd);
+        return lando.init.build(config.name, options.method, options);
       })
 
       // Check to see if our recipe provides additional yaml augment
       .then(function() {
-        return lando.init.yaml(options.recipe, config, options) || config;
+        return lando.init.yaml(options.recipe, config, options);
       })
 
       // Create the lando yml

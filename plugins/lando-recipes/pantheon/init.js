@@ -11,6 +11,10 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var api = require('./client')(lando);
+  var fs = lando.node.fs;
+  var path = require('path');
+  var Promise = lando.Promise;
+  var url = require('url');
 
   // "Constants"
   var tokenCacheKey = 'init:auth:pantheon:tokens';
@@ -118,10 +122,80 @@ module.exports = function(lando) {
   /**
    * Build out pantheon recipe
    */
-  var build = function() {
+  var build = function(name, options) {
 
-    // Return the things
-    return {};
+    // Set some things up
+    var dest = options.destination;
+    var key = 'pantheon.lando.id_rsa';
+
+    // Check if directory is non-empty
+    if (!_.isEmpty(fs.readdirSync(dest))) {
+      lando.log.error('Directory %s must be empty to Pantheon init.', dest);
+    }
+
+    // Check if ssh key exists and create if not
+    return Promise.try(function() {
+      if (!fs.existsSync(path.join(lando.config.userConfRoot, 'keys', key))) {
+
+        // Create keys
+        lando.log.verbose('Creating key %s for Pantheon', key);
+        return lando.init.run(name, dest, lando.init.createKey(key))
+
+        // And refresh keys
+        .then(function() {
+          return lando.init.run(name, dest, '/scripts/load-keys.sh', 'root');
+        });
+
+      }
+      else {
+        lando.log.verbose('Key %s exists for Pantheon', key);
+      }
+    })
+
+    // Post SSH key to pantheon
+    .then(function() {
+      return api.postKey(_.get(options, 'pantheon-auth'));
+    })
+
+    // Git clone the project
+    .then(function() {
+
+      // Let's get our sites
+      return api.getSites(_.get(options, 'pantheon-auth'))
+
+      // Get our site
+      .filter(function(site) {
+        return site.name === _.get(options, 'pantheon-site');
+      })
+
+      // Git clone
+      .then(function(site) {
+
+        // Build the clone url
+        var user = 'codeserver.dev.' + site[0].id;
+        var hostname = user + '.drush.in';
+        var port = '2222';
+        var gitUrl = {
+          auth: user,
+          protocol: 'ssh:',
+          slashes: true,
+          hostname: hostname,
+          port: port,
+          pathname: '/~/repository.git'
+        };
+
+        // Clone cmd
+        var cmd = [
+          'cd $LANDO_MOUNT',
+          'git clone ' + url.format(gitUrl) + ' ./'
+        ].join(' && ');
+
+        // Clone
+        return lando.init.run(name, dest, cmd);
+
+      });
+
+    });
 
   };
 
