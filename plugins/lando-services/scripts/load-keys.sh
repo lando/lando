@@ -15,6 +15,7 @@ mkdir -p $SSH_CONF
 # Scan the following directories for keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   echo "Scanning $SSH_DIR for keys..."
+  mkdir -p $SSH_DIR
   SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -type f | xargs))
 done
 
