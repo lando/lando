@@ -10,6 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var fs = lando.node.fs;
+  var path = require('path');
   var Promise = lando.Promise;
   var rest = lando.node.rest;
   var urls = require('url');
@@ -218,6 +220,26 @@ module.exports = function(lando) {
   };
 
   /*
+   * Post our key
+   */
+  var pantheonPostKey = function(token) {
+
+    // Start with auth
+    return pantheonAuth(token)
+
+    // Get the sites
+    .then(function(session) {
+      var postKey = ['users', _.get(session, 'user_id'), 'keys'];
+      var keyFile = 'pantheon.lando.id_rsa.pub';
+      var keyPath = path.join(lando.config.userConfRoot, 'keys', keyFile);
+      var data = _.trim(fs.readFileSync(keyPath, 'utf8'));
+      var options = {headers: getAuthHeaders(session)};
+      return pantheonRequest('postJson', postKey, data, options);
+    });
+
+  };
+
+  /*
    * Get full list of sites
    */
   var pantheonSites = function(token) {
@@ -258,7 +280,8 @@ module.exports = function(lando) {
 
   // Return the things
   return {
-    getSites: pantheonSites
+    getSites: pantheonSites,
+    postKey: pantheonPostKey
   };
 
 };

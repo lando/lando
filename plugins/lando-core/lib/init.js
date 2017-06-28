@@ -101,9 +101,19 @@ module.exports = function(lando) {
   };
 
   /*
+   * Helper to return a create key command
+   */
+  var createKey = function(key) {
+    return [
+      'ssh-keygen',
+      '-t rsa -N "" -C "lando" -f "/user/.lando/keys/' + key + '"'
+    ].join(' ');
+  };
+
+  /*
    * Run a command during the init process
    */
-  var run = function(name, app, cmd) {
+  var run = function(name, app, cmd, user) {
 
     // Get the service
     var service = utilService(name, app);
@@ -114,7 +124,7 @@ module.exports = function(lando) {
       cmd: cmd,
       opts: {
         mode: 'attach',
-        user: 'www-data',
+        user: user || 'www-data',
       }
     };
 
@@ -137,11 +147,16 @@ module.exports = function(lando) {
     var service = utilService(name, app);
 
     // Start the container
-    return lando.engine.stop(service)
+    return lando.engine.isRunning(service.container)
 
-    // Exec
-    .then(function() {
-      return lando.engine.destroy(service);
+    // Killing in the name of
+    .then(function(isRunning) {
+      if (isRunning) {
+        return lando.engine.stop(service)
+        .then(function() {
+          return lando.engine.destroy(service);
+        });
+      }
     });
 
   };
@@ -149,20 +164,19 @@ module.exports = function(lando) {
   /**
    * The core init method
    */
-  var build = function(name, method, config) {
+  var build = function(name, method, options) {
 
-    // Check to verify whether the recipe exists in the registry
+    // Check to verify whether the method exists in the registry
     if (!registry[method]) {
-      lando.log.warn('%s is not a supported init method.', method);
       return {};
     }
 
     // Log
-    lando.log.verbose('Building %s for %s', method, name);
-    lando.log.debug('Building %s with config', name, config);
+    lando.log.verbose('Building %s with %s method', name, method);
+    lando.log.debug('Building %s with config', name, options);
 
-    // Return the init function
-    return registry[method].build(name, config);
+    // Run the build function
+    return registry[method].build(name, options);
 
   };
 
@@ -188,6 +202,7 @@ module.exports = function(lando) {
   return {
     add: add,
     build: build,
+    createKey: createKey,
     get: get,
     kill: kill,
     run: run,

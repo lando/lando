@@ -93,7 +93,7 @@ lando terminus backup:create drupal-7-pantheon-basicz.dev --element=files
 
 # Download and extract backup of the files
 lando terminus backup:get drupal-7-pantheon-basicz.dev --element=files --to=/tmp/files.tar.gz
-lando ssh -c "tar -xzvf /tmp/files.tar.gz -C $LANDO_MOUNT/$FILEMOUNT"
+lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_MOUNT/\$FILEMOUNT --strip-components 1"
 ```
 
 In the example above you can access the `mariadb` database from your host at `localhost:32787`. Note that this port is automatically assigned by Docker itself and will change every time you restart your app.
