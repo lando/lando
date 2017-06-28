@@ -33,13 +33,14 @@ yargs.command(lando.tasks.parseToYargs(task));
 * [tasks](#module_tasks)
     * [.tasks](#module_tasks.tasks)
     * [.largv](#module_tasks.largv)
+    * [.argv()](#module_tasks.argv)
     * [.parseToYargs(task)](#module_tasks.parseToYargs) ⇒ <code>Object</code>
     * [.add(name, task)](#module_tasks.add)
 
 <a name="module_tasks.tasks"></a>
 
 ### tasks.tasks
-A singleton object that contains all the tasks that have been added.
+A singleton array that contains all the tasks that have been added.
 
 **Kind**: static property of [<code>tasks</code>](#module_tasks)  
 **Since**: 3.0.0  
@@ -61,6 +62,20 @@ This means all the options passed in after the `--` flag.
 ```js
 // Gets all the global options that have been specified.
 var largv = lando.tasks.largv;
+```
+<a name="module_tasks.argv"></a>
+
+### tasks.argv()
+Returns the lando options
+
+This means all the options passed in before the `--` flag.
+
+**Kind**: static method of [<code>tasks</code>](#module_tasks)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the global options that have been specified.
+var argv = lando.tasks.argv;
 ```
 <a name="module_tasks.parseToYargs"></a>
 

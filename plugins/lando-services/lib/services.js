@@ -281,6 +281,9 @@ module.exports = function(lando) {
     // And some permission helpers
     services[name].volumes = addScript('user-perms.sh', services[name].volumes);
 
+    // Add in SSH key loading
+    services[name].volumes = addScript('load-keys.sh', services[name].volumes);
+
     // Add in any custom pre-runscripts
     if (!_.isEmpty(config.scripts)) {
       _.forEach(config.scripts, function(script) {
