@@ -137,16 +137,18 @@ module.exports = function(lando) {
         _.set(config, 'config.webroot', options.webroot);
       }
 
-      // Check to see if our recipe provides additional yaml augment
+      // @todo: build step?
+      // @todo: create new directory of appname? (seems safest) maybe we can alter options.destination inside the build step?
+      // Build step
       return Promise.try(function() {
-        return lando.init.yaml(options.recipe, config, options) || config;
+        var cmd = 'ssh-keygen -t rsa -N "" -C "lando" -f ' +
+          '"/user/.lando/keys/test.id_rsa"';
+        return lando.init.run(config.name, options.destination, cmd);
       })
 
-      // Build step
-      .then(function(config) {
-        // @todo: build step?
-        // @todo: create new directory of appname? (seems safest) maybe we can alter options.destination inside the build step?
-        return config;
+      // Check to see if our recipe provides additional yaml augment
+      .then(function() {
+        return lando.init.yaml(options.recipe, config, options) || config;
       })
 
       // Create the lando yml
