@@ -31,7 +31,8 @@ module.exports = function() {
           {src: 'lib/shell.js', dest: 'docs/dev/api/shell.md'},
           {src: 'lib/tasks.js', dest: 'docs/dev/api/tasks.md'},
           {src: 'lib/user.js', dest: 'docs/dev/api/user.md'},
-          {src: 'lib/utils.js', dest: 'docs/dev/api/utils.md'}
+          {src: 'lib/utils.js', dest: 'docs/dev/api/utils.md'},
+          {src: 'lib/yaml.js', dest: 'docs/dev/api/yaml.md'}
         ]
       }
     }

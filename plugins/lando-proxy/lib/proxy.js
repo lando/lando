@@ -15,7 +15,6 @@ module.exports = function(lando) {
   var Promise = lando.Promise;
   var redis = require('redis');
   var u = require('url');
-  var yaml = lando.node.yaml;
 
   // Fixed location of our proxy service compose file
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
@@ -316,7 +315,7 @@ module.exports = function(lando) {
       else {
 
         // Get the current proxy
-        var proxyOld = yaml.safeLoad(fs.readFileSync(proxyFile));
+        var proxyOld = lando.yaml.load(proxyFile);
 
         // If the proxy is different, rebuild with new and stop the old
         if (JSON.stringify(proxyOld) !== JSON.stringify(proxy)) {
