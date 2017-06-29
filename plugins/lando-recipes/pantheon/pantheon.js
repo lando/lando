@@ -414,6 +414,14 @@ module.exports = function(lando) {
       build.services.appserver.build.push(composerInstall);
     }
 
+    // Login with terminus if we have a token
+    var cache = lando.cache.get('site:meta:' + config._app);
+    if (_.has(cache, 'token')) {
+      var token = _.get(cache, 'token');
+      var terminusLogin = 'terminus auth:login --machine-token=' + token;
+      build.services.appserver.build.push(terminusLogin);
+    }
+
     // Return the things
     return build;
 

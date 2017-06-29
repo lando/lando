@@ -18,6 +18,7 @@ module.exports = function(lando) {
 
   // "Constants"
   var tokenCacheKey = 'init:auth:pantheon:tokens';
+  var siteMetaDataKey = 'site:meta:';
 
   /*
    * Helper to determine whether we should ask the questions or not
@@ -38,13 +39,28 @@ module.exports = function(lando) {
    */
   var pantheonAccounts = function() {
 
-    // Start an account collector
+    // Get some paths
+    var homeDir = lando.config.home;
+    var tokenDir = path.join(homeDir, '.terminus', 'cache', 'tokens');
+
+    // Start account collectors
     var accounts = [];
 
     // Get our list of tokens
     _.forEach(lando.cache.get(tokenCacheKey), function(token, name) {
       accounts.push({name: name, value: token});
     });
+
+    // Mixin preexisting tokenss
+    if (fs.existsSync(tokenDir)) {
+      _.forEach(fs.readdirSync(tokenDir), function(token) {
+        var dataPath = path.join(tokenDir, token);
+        var data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        if (_.isEmpty(_.find(accounts, ['name', data.email]))) {
+          accounts.push({name: data.email, value: data.token});
+        }
+      });
+    }
 
     // Add option to add another token if we have accounts
     if (!_.isEmpty(accounts)) {
@@ -131,6 +147,7 @@ module.exports = function(lando) {
     // Check if directory is non-empty
     if (!_.isEmpty(fs.readdirSync(dest))) {
       lando.log.error('Directory %s must be empty to Pantheon init.', dest);
+      process.exit(1);
     }
 
     // Check if ssh key exists and create if not
@@ -234,6 +251,15 @@ module.exports = function(lando) {
       config.config.env = 'dev';
       config.config.site = _.get(site[0], 'name', config.name);
       config.config.id = _.get(site[0], 'id', 'lando');
+
+      // Set some cached things as well
+      var token = _.get(options, 'pantheon-auth');
+      var tokens = lando.cache.get(tokenCacheKey);
+      var email = _.findKey(tokens, function(value) {
+        return value === token;
+      });
+      var data = {email: email, token: token};
+      lando.cache.set(siteMetaDataKey + options.appname, data, {persist: true});
 
       // Return it
       return config;

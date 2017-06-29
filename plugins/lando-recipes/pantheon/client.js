@@ -266,7 +266,7 @@ module.exports = function(lando) {
     .then(function(sites) {
 
       // Clean things up
-      sites = _.sortBy(_.uniqBy(_.flatten(sites), 'name'), 'name');
+      sites = _.compact(_.sortBy(_.uniqBy(_.flatten(sites), 'name'), 'name'));
 
       // Cache
       lando.cache.set(sitesKey, sites);
