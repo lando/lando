@@ -76,7 +76,7 @@ module.exports = function(lando) {
     var entrypoint = 'lando-entrypoint.sh';
 
     // Make sure the entrypoint is executable
-    fs.chmodSync(path.join(lando.config.engineScriptsDir, entrypoint), '755');
+    fs.chmodSync(path.join(lando.config.engineScriptsDir, entrypoint), '777');
 
     // Entrypoint files
     var host = path.join('$LANDO_ENGINE_SCRIPTS_DIR', entrypoint);
