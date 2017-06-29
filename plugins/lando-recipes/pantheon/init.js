@@ -27,7 +27,7 @@ module.exports = function(lando) {
 
     // Get our things
     var method = lando.tasks.argv()._[2];
-    var recipe = answers.recipe;
+    var recipe = answers.recipe || lando.tasks.argv().recipe;
 
     // return
     return (method === 'pantheon') || (recipe === 'pantheon');
