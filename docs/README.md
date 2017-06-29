@@ -1,7 +1,7 @@
 Lando
 =====
 
-![screenshot](./images/lando-screenshot.png)
+![screenshot](https://raw.githubusercontent.com/kalabox/lando/master/docs/images/lando-screenshot.png)
 
 Lando is a free, open source and cross-platform local development environment tool built on [Docker](http://docker.com) container technology. It is the successor project to [Kalabox](http://kalabox.io).
 
