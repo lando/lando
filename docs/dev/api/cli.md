@@ -12,6 +12,7 @@ return lando.cli.init(lando);
 
 * [cli](#module_cli)
     * [.startHeader()](#module_cli.startHeader) ⇒ <code>String</code>
+    * [.initHeader()](#module_cli.initHeader) ⇒ <code>String</code>
     * [.Table([opts])](#module_cli.Table) ⇒ <code>Object</code>
     * [.init(lando)](#module_cli.init)
     * ["event:pre-cli-load"](#module_cli.event_pre-cli-load)
@@ -20,6 +21,19 @@ return lando.cli.init(lando);
 
 ### cli.startHeader() ⇒ <code>String</code>
 Returns a cheeky header that can be used after an app is started.
+
+**Kind**: static method of [<code>cli</code>](#module_cli)  
+**Returns**: <code>String</code> - A header string we can print to the CLI  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Print the header to the console
+console.log(lando.cli.startHeader());
+```
+<a name="module_cli.initHeader"></a>
+
+### cli.initHeader() ⇒ <code>String</code>
+Returns a cheeky header that can be used after an app is init.
 
 **Kind**: static method of [<code>cli</code>](#module_cli)  
 **Returns**: <code>String</code> - A header string we can print to the CLI  

@@ -103,6 +103,12 @@ module.exports = function(lando) {
           var options = {affliation: 'owner,collaborator', 'per_page': 100};
           var done = this.async();
 
+          // Check to see if token is cached already and use that
+          var tokens = lando.cache.get(tokenCacheKey) || {};
+          if (_.includes(_.keys(tokens), token)) {
+            token = tokens[token];
+          }
+
           /*
            * Helper to resursively load all our repos
            */
@@ -159,6 +165,14 @@ module.exports = function(lando) {
     var tokens = lando.cache.get(tokenCacheKey) || {};
     var repo = _.get(options, 'github-repo');
 
+    // Check to see if token is cached already and use that
+    if (_.includes(_.keys(tokens), token)) {
+      token = tokens[token];
+    }
+
+    // Start the github authchain
+    github.authenticate({type: 'token', token: token});
+
     // Check if directory is non-empty
     if (!_.isEmpty(fs.readdirSync(dest))) {
       lando.log.error('Directory %s must be empty to GitHub init.', dest);
@@ -213,9 +227,6 @@ module.exports = function(lando) {
 
     // Cache some relevant things
     .then(function() {
-
-      // GitHub Auth
-      github.authenticate({type: 'token', token: token});
 
       // Get myself
       return github.users.get({})
