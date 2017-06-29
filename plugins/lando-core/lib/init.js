@@ -10,6 +10,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var fs = lando.node.fs;
   var path = require('path');
 
   // Fixed location of our util service compose file
@@ -67,6 +68,13 @@ module.exports = function(lando) {
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/scripts/load-keys.sh'
       ]
     };
+
+    // Set up our scripts
+    // @todo: get volumes above into this
+    var scripts = ['lando-entrypoint.sh', 'user-perms.sh', 'load-keys.sh'];
+    _.forEach(scripts, function(script) {
+      fs.chmodSync(path.join(lando.config.engineScriptsDir, script), '755');
+    });
 
     // Add important ref points
     var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
