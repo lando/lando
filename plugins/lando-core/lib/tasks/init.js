@@ -51,7 +51,7 @@ module.exports = function(lando) {
         choices: _.map(lando.recipes.get(), function(recipe) {
           return {name: recipe, value: recipe};
         }),
-        weight: 100
+        weight: 500
       }
     }
   };

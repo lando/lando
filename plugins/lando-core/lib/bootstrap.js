@@ -35,6 +35,11 @@ module.exports = function(lando) {
 
   });
 
+  // Add github init method
+  lando.events.on('post-bootstrap', function(lando) {
+    lando.init.add('github', require('./github')(lando));
+  });
+
   // Go through our init methods and log them
   lando.events.on('post-bootstrap', 9, function(lando) {
 
