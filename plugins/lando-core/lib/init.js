@@ -146,12 +146,12 @@ module.exports = function(lando) {
     // Get the service
     var service = utilService(name, app);
 
-    // Start the container
-    return lando.engine.isRunning(service.container)
+    // Check if we have a container
+    return lando.engine.exists(service)
 
     // Killing in the name of
-    .then(function(isRunning) {
-      if (isRunning) {
+    .then(function(exists) {
+      if (exists) {
         return lando.engine.stop(service)
         .then(function() {
           return lando.engine.destroy(service);

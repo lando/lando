@@ -142,6 +142,11 @@ module.exports = function(lando) {
         return lando.init.build(config.name, options.method, options);
       })
 
+      // Kill any build containers if needed
+      .then(function() {
+        return lando.init.kill(config.name, options.destination);
+      })
+
       // Check to see if our recipe provides additional yaml augment
       .then(function() {
         return lando.init.yaml(options.recipe, config, options);
@@ -149,12 +154,33 @@ module.exports = function(lando) {
 
       // Create the lando yml
       .then(function(config) {
-
-        // Create the file
         var dest = path.join(options.destination, '.lando.yml');
-
-        // Construct the yamlfile
         lando.yaml.dump(dest, config);
+      })
+
+      // Tell the user things
+      .then(function() {
+
+        // Header it
+        console.log(lando.cli.initHeader());
+
+        // Grab a new cli table
+        var table = new lando.cli.Table();
+
+        // Add data
+        table.add('NAME', config.name);
+        table.add('RECIPE', config.recipe);
+
+        // Add some other things if needed
+        if (!_.isEmpty(options.method)) {
+          table.add('METHOD', options.method);
+        }
+
+        // Print the table
+        console.log(table.toString());
+
+        // Space it
+        console.log('');
 
       });
 
