@@ -40,6 +40,7 @@
     "cli-table": "^0.3.1",
     "dockerode": "^2.4.2",
     "fs-extra": "^0.18.2",
+    "github": "^9.2.0",
     "inquirer": "^3.1.1",
     "js-yaml": "^3.4.6",
     "jsonfile": "^2.4.0",

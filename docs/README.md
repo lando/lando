@@ -107,10 +107,10 @@ There are various features that need to be implemented to achieve the above.
 3.  ~~Provide a build and tooling layer~~
 4.  ~~Provide additional core services and tools~~
 5.  ~~Provide a recipes layer on top of services~~
-6.  Provide handling of upstream git remotes (lando init command)
+6.  ~~Provide handling of upstream git remotes (lando init command)~~
 7.  Provide a push/pull layer on top of the tooling layer
-8.  ~~Recipe to replicate Pantheon environment~~
-9.  Integration with Pantheon
+8.  ~~Replicate Pantheon environment~~
+9.  Integrate with Pantheon
 10. Build GUI
 
 Other Resources

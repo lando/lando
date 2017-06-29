@@ -18,7 +18,7 @@ chmod +x lando
 
 # Get Docker for mac
 # @todo: Would be great to pin this version
-curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/Docker.dmg" && \
+curl -fsSL -o docker.dmg "https://download.docker.com/mac/edge/Docker.dmg" && \
   mkdir -p /tmp/lando/docker && \
   hdiutil attach -mountpoint /tmp/lando/docker Docker.dmg && \
   cp -rf /tmp/lando/docker/Docker.app ./Docker.app && \
