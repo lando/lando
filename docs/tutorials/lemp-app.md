@@ -19,10 +19,6 @@ Open up the `.lando.yml` we created above and let's add some config.
 
 ```yml
 name: lemp
-sharing:
-  appserver:
-    local: www
-    remote: /var/www/html
 proxy:
   nginx:
     - port: 80/tcp

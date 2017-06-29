@@ -10,7 +10,7 @@ name: myapp
 recipe: pantheon
 ```
 
-You can easily configure/override the Pantheon recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the Pantheon recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -126,7 +126,7 @@ lando terminus auth:login --machine-token=MYSPECIALTOKEN
 # Get a list of wp-cli commands
 lando wp
 
-# Download a dependency with drushl
+# Download a dependency with drush
 lando drush dl views
 
 # Download a dependency with composer
@@ -134,7 +134,7 @@ lando composer config repositories.drupal composer https://packages.drupal.org/8
 lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
 
 # Download a backdrop dependency
-lando backdrush dl panels
+lando drush dl webform
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands.
@@ -168,9 +168,6 @@ lando info
     "config": {
       "server": "/Users/pirog/.lando/services/config/pantheon/drupal.conf",
       "conf": "/Users/pirog/.lando/services/config/pantheon/php.ini"
-    },
-    "share": {
-      "remote": "/var/www/html"
     }
   },
   "nginx": {

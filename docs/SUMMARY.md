@@ -27,7 +27,6 @@
 
 *   [.lando.yml](config/lando.md)
 *   [Proxy](config/proxy.md)
-*   [Sharing](config/sharing.md)
 *   [Services](config/services.md)
 *   [Tooling](config/tooling.md)
 *   [Recipes](config/recipes.md)
@@ -54,6 +53,7 @@
 *   [nginx](services/nginx.md)
 *   [node](services/node.md)
 *   [php](services/php.md)
+*   [phpmyadmin](services/phpmyadmin.md)
 *   [postgres](services/postgres.md)
 *   [redis](services/redis.md)
 *   [solr](services/solr.md)

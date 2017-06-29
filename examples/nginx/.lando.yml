@@ -1,11 +1,6 @@
 # The name of my app
 name: nginx
 
-# Share the www directory of my app into nginx's webroot
-sharing:
-  appserver:
-    remote: /usr/share/nginx/html
-
 # Give me http://nginx.lndo.site and https://nginx.lndo.site
 proxy:
   appserver:

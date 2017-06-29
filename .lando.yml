@@ -1,7 +1,4 @@
 name: docs.lando
-sharing:
-  appserver:
-    remote: /usr/share/nginx/html
 proxy:
   appserver:
     - port: 80/tcp

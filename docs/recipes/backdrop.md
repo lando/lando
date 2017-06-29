@@ -10,7 +10,7 @@ name: myapp
 recipe: backdrop
 ```
 
-You can easily configure/override the Backdrop recipe and add in additional `.lando.yml` config such as `services`, `tooling`, `proxy setting` and `sharing`.
+You can easily configure/override the Backdrop recipe and add in additional `.lando.yml` config such as `services`, `tooling`, and `proxy setting`.
 
 Example
 -------
@@ -38,9 +38,9 @@ lando start
 
 # Visit https://backdrop.lndo.site to complete your installation.
 
-# Check the status of your site with backdrush
+# Check the status of your site with drush
 cd www
-lando backdrush status
+lando drush status
 ```
 
 Environmental Variables
@@ -84,10 +84,7 @@ lando info
       "http://localhost:32951",
       "http://backdrop.lndo.site",
       "https://backdrop.lndo.site"
-    ],
-    "share": {
-      "remote": "/var/www/html"
-    }
+    ]
   },
   "database": {
     "type": "mysql",
@@ -140,7 +137,7 @@ Commands:
   composer                 Run composer commands
   php                      Run php commands
   mysql                    Drop into a MySQL shell
-  backdrush                Run backdrush commands
+  drush                    Run drush commands
 
 Options:
   --help, -h  Show help                                                [boolean]

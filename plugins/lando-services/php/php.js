@@ -195,7 +195,7 @@ module.exports = function(lando) {
     var configFile = ['php', defaultConfFile];
     var mount = buildVolume(configFile, config.serverConf, defaultConfDir);
     var nginxConfigDefaults = {
-      server: mount.split(':')[0]
+      server: _.dropRight(mount.split(':')).join(':')
     };
 
     // Clone the config so we can separate concerns
@@ -214,14 +214,6 @@ module.exports = function(lando) {
     // Generate a config object to build the service with
     var name = appConfig.name;
     var nginx = lando.services.build(name, type, appConfig).services[name];
-
-    // Add correct volume to nginx if sharing is on
-    if (config.sharing && !_.isEmpty(config.sharing[name])) {
-      nginx.volumes.push([name, config._mount].join(':'));
-      if (process.platform !== 'darwin') {
-        config.sharing.nginx = config.sharing[name];
-      }
-    }
 
     // Add a depends on
     _.set(nginx, 'depends_on', [name]);
