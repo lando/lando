@@ -64,6 +64,7 @@
 *   [Usage](cli/usage.md)
 *   [config](cli/config.md)
 *   [destroy](cli/destroy.md)
+*   [init](cli/init.md)
 *   [info](cli/info.md)
 *   [list](cli/list.md)
 *   [logs](cli/logs.md)

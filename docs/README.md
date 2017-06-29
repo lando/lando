@@ -34,10 +34,7 @@ With Lando you can...
 
 A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
 
-```yml
-name: myproject
-recipe: lamp
-```
+#### 1. Pull a repo that already has a `.lando.yml`
 
 ```bash
 git clone myproject.git
@@ -45,7 +42,24 @@ cd myproject
 lando start
 ```
 
-and easily configure some of the basics of that recipe
+#### 2. Or init a local codebase with a `lando` recipe
+
+```bash
+cd /path/to/my/local/code
+lando init appname
+land start
+```
+
+#### 3. Or pull from GitHub or Pantheon
+
+```bash
+mkdir -p mysite
+cd mysite
+lando init mysite pantheon | lando init mysite github
+lando start
+```
+
+You can also easily configure a `lando.yml` [recipe](http://docs.lndo.io/config/services.html)
 
 ```yml
 name: myproject
@@ -58,7 +72,7 @@ config:
     php: config/php.ini
 ```
 
-or go totally nuts and scaffold out a custom stack
+or go totally nuts and scaffold out a [custom stack](http://docs.lndo.io/config/services.html)
 
 ```yml
 name: myproject

@@ -29,11 +29,12 @@ Lando will handle your database credentials automatically during install.
 If you want to see an example you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/backdrop) to get started.
 
 ```bash
-# Get the lando example
-git clone https://github.com/kalabox/lando.git
-cd lando/examples/backdrop
+# Get backdrop
+git clone https://github.com/backdrop/backdrop.git
+cd backdrop
 
-# Start the app up
+# Initialize and start the app up
+lando init backdrop --recipe backdrop
 lando start
 
 # Visit https://backdrop.lndo.site to complete your installation.

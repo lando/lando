@@ -40,14 +40,19 @@ You will want to make sure your codebase is fundamentally based on one of Panthe
 If you do not do this Lando will not know how to automatically handle things like your database connection or SOLR infrastructure.
 
 ```bash
-# Get the lando examples
-git clone https://github.com/kalabox/lando.git
-cd lando/examples/pantheon
+# Pull a repo, init and start
+git clone https://github.com/pantheon-systems/drops-8.git drupal8
+cd drupal 8
+lando init --recipe pantheon
 
-# Clone drops-7 into a nested docroot
-git clone git@github.com:pantheon-systems/drops-7.git web
+# Or pull from github but init as pantheon
+lando init mysite github --recipe pantheon
+lando start
 
-# Visit https://pantheon.lndo.site to complete your installation.
+# Or pull directly from pantheon
+lando init mysite pantheon
+
+# Visit https://mysite.lndo.site to complete your installation.
 
 # Navigate to the webroot and check the status of your site with drush
 cd web
