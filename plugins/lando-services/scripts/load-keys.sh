@@ -9,6 +9,12 @@ SSH_CANDIDATES=()
 SSH_KEYS=()
 SSH_IDENTITIES=()
 
+# Set defaults
+: ${LANDO_WEBROOT_USER:='www-data'}
+: ${LANDO_WEBROOT_GROUP:='www-data'}
+: ${LANDO_WEBROOT_UID:='33'}
+: ${LANDO_WEBROOT_GID:='33'}
+
 # Make sure we have the system wide confdir
 mkdir -p $SSH_CONF
 
@@ -41,3 +47,6 @@ Host *
 ${SSH_IDENTITIES[*]}
 EOF
 IFS="${OLDIFS}"
+
+# Refresh permissions (mostly for linux)
+nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user &>/dev/null &
