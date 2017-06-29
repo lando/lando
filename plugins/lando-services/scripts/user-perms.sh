@@ -29,6 +29,11 @@ if [ $(id -u) = 0 ]; then
     groupmod -g "$LANDO_HOST_GID" "$LANDO_WEBROOT_GROUP" || true
   fi
 
+  # Move over .gitconfig if it exists
+  if [ -f "/user/.gitconfig" ]; then
+    cp -rf /user/.gitconfig /var/www/.gitconfig
+  fi
+
   # Make sure we set the ownership of the mount when we start a service
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $LANDO_MOUNT &>/dev/null &
 

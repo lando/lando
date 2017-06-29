@@ -8,12 +8,14 @@
 
 module.exports = function(lando) {
 
+  // Load in our init method
+  lando.init.add('pantheon', require('./init')(lando));
+
   // Modules
   var _ = lando.node._;
   var crypto = require('crypto');
   var fs = lando.node.fs;
   var path = require('path');
-  var yaml = lando.node.yaml;
 
   // Lando things
   var addConfig = lando.services.addConfig;
@@ -103,7 +105,7 @@ module.exports = function(lando) {
       FILEMOUNT: frameworkSpec[config.framework].filemount,
       DRUPAL_HASH_SALT: _.get(settings, 'drupal_hash_salt'),
       PANTHEON_SITE: _.get(settings, 'conf.pantheon_site_uuid'),
-      PANTHEON_SITE_NAME: _.get(config, 'site'),
+      PANTHEON_SITE_NAME: _.get(config, 'site', config._app),
       PANTHEON_ENVIRONMENT: 'lando',
 
       // DB
@@ -135,7 +137,7 @@ module.exports = function(lando) {
       NONCE_KEY: getHash(config._root + config.framework),
 
       // Terminus
-      TERMINUS_SITE: _.get(config, 'site'),
+      TERMINUS_SITE: _.get(config, 'site', config._app),
       TERMINUS_ENV: _.get(config, 'env', 'dev')
       //TERMINUS_ORG: ''
       //TERMINUS_USER="devuser@pantheon.io"
@@ -299,7 +301,7 @@ module.exports = function(lando) {
     if (fs.existsSync(pyaml)) {
 
       // Get the pantheon config
-      var pconfig = yaml.safeLoad(fs.readFileSync(pyaml));
+      var pconfig = lando.yaml.load(pyaml);
 
       // Set a php version
       config.php = _.get(pconfig, 'php_version', '5.6');
@@ -410,6 +412,14 @@ module.exports = function(lando) {
     if (fs.existsSync((path.join(config._root, 'composer.json')))) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
       build.services.appserver.build.push(composerInstall);
+    }
+
+    // Login with terminus if we have a token
+    var cache = lando.cache.get('site:meta:' + config._app);
+    if (_.has(cache, 'token')) {
+      var token = _.get(cache, 'token');
+      var terminusLogin = 'terminus auth:login --machine-token=' + token;
+      build.services.appserver.build.push(terminusLogin);
     }
 
     // Return the things

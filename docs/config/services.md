@@ -65,9 +65,19 @@ Shared Files
 While you can also share in additional files and directories via docker volumes (see [Advanced Service Configuration](#advanced-service-configuration) below), we share a few useful host directories into each service by default.
 
 | Host Location | Container Location |
-| -- | -- | -- |
+| -- | -- |
 | `/path/to/my/app` | `/app` |
 | `$HOME` | `/user` |
+
+SSH Keys
+--------
+
+Lando will forward all the **NOT PASSWORD PROTECTED** keys in your `~/.ssh` and `~/.lando/keys` directories into each service. This means that you should be able to use your ssh keys like you were running commands natively on your machine. Please note that `~/.lando/keys` is a location managed by Lando so it is recommended that you do not alter anything in this folder.
+
+| Host Location | Managed |
+| -- | -- |
+| `~/.ssh` | `no` |
+| `~/.lando/keys` | `yes` |
 
 Build Steps
 -----------
