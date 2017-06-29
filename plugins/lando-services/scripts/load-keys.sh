@@ -22,6 +22,7 @@ mkdir -p $SSH_CONF
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   echo "Scanning $SSH_DIR for keys..."
   mkdir -p $SSH_DIR
+  chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $SSH_DIR
   SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -type f | xargs))
 done
 
@@ -47,6 +48,3 @@ Host *
 ${SSH_IDENTITIES[*]}
 EOF
 IFS="${OLDIFS}"
-
-# Refresh permissions (mostly for linux)
-nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user &>/dev/null &
