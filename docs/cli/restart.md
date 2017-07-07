@@ -17,10 +17,3 @@ lando restart
 # From outside of an app directory
 lando restart myapp
 ```
-
-Options
--------
-
-```bash
-  --help, -h  Show help                                                [boolean]
-```

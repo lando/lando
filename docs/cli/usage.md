@@ -19,11 +19,9 @@ Commands:
   stop [appname]           Stops app in current directory or [appname]
   version                  Display the lando version
 
-Options:
-  --help, -h  Show help                                                [boolean]
-
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 
 You need at least one command before moving on
 ```
@@ -52,8 +50,8 @@ lando start
 # Stop an app from anywhere
 lando stop myapp
 
-# Get help on destroy
-lando destroy --help
+# Get help on init
+lando init -- --help
 
 # Non-interactively destroy an app called myapp with max verbosity
 lando destroy myapp -y -- -vvvv
@@ -93,11 +91,9 @@ Commands:
   php                      Run php commands
   mysql                    Drop into a MySQL shell
 
-Options:
-  --help, -h  Show help                                                [boolean]
-
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 
 You need at least one command before moving on
 ```
@@ -111,5 +107,6 @@ The following global options are available for every command.
 
 ```bash
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 ```

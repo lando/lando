@@ -30,7 +30,6 @@ Options
 -------
 
 ```bash
-  --help, -h     Show help                                             [boolean]
   --command, -c  Run a command in the service
   --user, -u     Run as a specific user
 ```
