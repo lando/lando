@@ -13,10 +13,3 @@ lando stop
 # From outside of an app directory
 lando stop myapp
 ```
-
-Options
--------
-
-```bash
-  --help, -h  Show help                                                [boolean]
-```

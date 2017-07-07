@@ -39,7 +39,6 @@ Options
 -------
 
 ```bash
-  --help, -h                 Show help                                                                                                                                   [boolean]
   --recipe, -r               The recipe to use       [string] [choices: "custom", "backdrop", "drupal6", "drupal7", "drupal8", "laravel", "lamp", "lemp", "pantheon", "wordpress"]
   --github-auth              GitHub token or email of previously used token                                                                                               [string]
   --github-repo              GitHub repo URL                                                                                                                              [string]

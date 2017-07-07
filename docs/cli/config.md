@@ -9,10 +9,3 @@ Usage
 ```bash
 lando config
 ```
-
-Options
--------
-
-```bash
-  --help, -h  Show help                                                [boolean]
-```
