@@ -37,15 +37,9 @@ module.exports = function(lando) {
     // Start a services collector
     var services = {};
 
-    // @TODO: remove?
-    // Define config mappings
-    // var configFiles = {
-    //   config: '/usr/local/etc/redis/redis.conf'
-    // };
-
     // Default mailhog service
     var mailhog = {
-      image: 'mailhog:' + config.version,
+      image: 'mailhog/mailhog:' + config.version,
       environment: {
         TERM: 'xterm'
       },
@@ -71,16 +65,6 @@ module.exports = function(lando) {
       }
 
     }
-
-    // @TODO: ok to remove?
-    // // Handle custom config directory
-    // _.forEach(configFiles, function(file, type) {
-    //   if (_.has(config, 'config.' + type)) {
-    //     var local = config.config[type];
-    //     var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-    //     mailhog.volumes = addConfig(customConfig, mailhog.volumes);
-    //   }
-    // });
 
     // Put it all together
     services[name] = mailhog;
