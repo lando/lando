@@ -28,6 +28,5 @@ Options
 -------
 
 ```bash
-  --help, -h  Show help                                                [boolean]
   --yes, -y   Auto answer yes to prompts              [boolean] [default: false]
 ```

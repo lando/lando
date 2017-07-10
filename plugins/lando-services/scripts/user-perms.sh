@@ -34,13 +34,13 @@ if [ $(id -u) = 0 ]; then
     cp -rf /user/.gitconfig /var/www/.gitconfig
   fi
 
-  # Make sure we set the ownership of the mount and /user when we start a service
-  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $LANDO_MOUNT &>/dev/null &
+  # Make sure we chown the $LANDO_WEBROOT_USER home directory
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $(getent passwd $LANDO_WEBROOT_USER | cut -d : -f 6) &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.ssh &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.lando &>/dev/null &
 
-  # Also make sure we chown the $LANDO_WEBROOT_USER home directory
-  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $(getent passwd $LANDO_WEBROOT_USER | cut -d : -f 6) &>/dev/null &
+  # Make sure we set the ownership of the mount and /user when we start a service
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $LANDO_MOUNT &>/dev/null &
 
   # Lets also make some /usr/locals chowned
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/bin &>/dev/null &

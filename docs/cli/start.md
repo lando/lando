@@ -17,10 +17,3 @@ lando start
 # From outside of an app directory
 lando start myapp
 ```
-
-Options
--------
-
-```bash
-  --help, -h  Show help                                                [boolean]
-```

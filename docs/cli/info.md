@@ -18,6 +18,5 @@ Options
 -------
 
 ```bash
-  --help, -h  Show help                                                [boolean]
   --deep, -d  Get ALL the info                        [boolean] [default: false]
 ```

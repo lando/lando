@@ -25,7 +25,6 @@ Options
 -------
 
 ```bash
-  --help, -h        Show help                                          [boolean]
   --follow, -f      Follow the logs                   [boolean] [default: false]
   --services, -s    Show logs for the specified services only            [array]
   --timestamps, -t  Show log timestamps               [boolean] [default: false]
