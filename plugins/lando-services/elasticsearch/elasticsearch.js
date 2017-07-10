@@ -40,7 +40,16 @@ module.exports = function(lando) {
 
     // Default elasticsearch service
     var elastic = {
-      image: 'docker.elastic.co/elasticsearch/elasticsearch:' + config.version
+      image: 'docker.elastic.co/elasticsearch/elasticsearch:' + config.version,
+      command: '/usr/share/elasticsearch/bin/elasticsearch',
+      environment: {
+        LANDO_NO_SCRIPTS: 'true',
+        TERM: 'xterm',
+        'HTTP.HOST': '0.0.0.0',
+        'TRANSPORT.HOST': '127.0.0.1',
+        'NODE.MASTER': 'false',
+        'DISCOVERY.ZEN.PING.UNICAST.HOSTS': 'elasticsearch1'
+      },
     };
 
     // Handle port forwarding
