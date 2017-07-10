@@ -304,7 +304,7 @@ module.exports = function(lando) {
       var pconfig = lando.yaml.load(pyaml);
 
       // Set a php version
-      config.php = _.get(pconfig, 'php_version', '5.6');
+      config.php = _.get(pconfig, 'php_version');
       config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
 
     }
@@ -312,6 +312,19 @@ module.exports = function(lando) {
     // Return settings
     return config;
 
+  };
+
+  /*
+   * Helper to set default php version based on framework
+   */
+  var phpVersion = function(framework) {
+    switch (framework) {
+      case 'backdrop': return '5.6';
+      case 'drupal': return '5.6';
+      case 'drupal8': return '7.0';
+      case 'wordpress': return '7.0';
+      default: return '5.6';
+    }
   };
 
   /*
@@ -357,6 +370,9 @@ module.exports = function(lando) {
     config.conf.server = path.join(configDir, config.framework + '.conf');
     config.conf.php = path.join(configDir, 'php.ini');
     config.conf.database = path.join(configDir, 'mysql');
+
+    // Set the default php version based on framework
+    config.php = phpVersion(config.framework);
 
     // Mixin anything from pantheon.yml if it exists
     config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));

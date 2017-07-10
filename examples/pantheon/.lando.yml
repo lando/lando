@@ -15,7 +15,7 @@ config:
   #   - `drupal8`
   #   - `wordpress`
   #
-  framework: drupal
+  framework: drupal8
 
   # Optionally activate xdebug
   xdebug: true
