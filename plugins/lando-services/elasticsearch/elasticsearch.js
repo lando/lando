@@ -17,7 +17,8 @@ module.exports = function(lando) {
    * Supported versions for elasticsearch
    */
   var versions = [
-    '5.5.0',
+    '5.4',
+    'latest',
   ];
 
   /**
@@ -40,8 +41,8 @@ module.exports = function(lando) {
 
     // Default elasticsearch service
     var elastic = {
-      image: 'docker.elastic.co/elasticsearch/elasticsearch:' + config.version,
-      command: '/usr/share/elasticsearch/bin/elasticsearch',
+      image: 'itzg/elasticsearch:' + config.version,
+      command: '/start',
       environment: {
         LANDO_NO_SCRIPTS: 'true',
         TERM: 'xterm',
@@ -49,7 +50,7 @@ module.exports = function(lando) {
         'TRANSPORT.HOST': '127.0.0.1',
         'NODE.MASTER': 'false',
         'DISCOVERY.ZEN.PING.UNICAST.HOSTS': 'elasticsearch1'
-      },
+      }
     };
 
     // Handle port forwarding
@@ -57,12 +58,13 @@ module.exports = function(lando) {
 
       // If true assign a port automatically
       if (config.portforward === true) {
-        elastic.ports = ['9200'];
+        elastic.ports = ['9200', '9300'];
       }
 
       // Else use the specified port
       else {
-        elastic.ports = [config.portforward + ':9200'];
+        var newPort = config.portforward + 100;
+        elastic.ports = [config.portforward + ':9200', newPort + ':9300'];
       }
 
     }
