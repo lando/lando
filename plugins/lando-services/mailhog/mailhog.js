@@ -41,29 +41,32 @@ module.exports = function(lando) {
     var mailhog = {
       image: 'mailhog/mailhog:' + config.version,
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
+        LANDO_NO_SCRIPTS: 'true',
       },
-      command: 'docker-entrypoint.sh mailhog-server',
+      command: 'MailHog',
     };
 
-    // Persist data if applicable
-    if (config.persist) {
-      mailhog.command = mailhog.command + ' --appendonly yes';
-    }
+    var exposed = {'local_smtp_port': 1025, 'local_http_port': 8025};
+    var ports = [];
 
-    // Handle port forwarding
-    if (config.portforward) {
+    _.forEach(exposed, function (value, key) {
 
-      // If true assign a port automatically
-      if (config.portforward === true) {
-        mailhog.ports = ['1025'];
+      if (config[key]) {
+
+        if (config[key] === true) {
+          ports.push(value);
+        }
+        else {
+          ports.push(config[key] + ':' + value);
+        }
+
       }
 
-      // Else use the specified port
-      else {
-        mailhog.ports = [config.portforward + ':1025'];
-      }
+    });
 
+    if (!_.isEmpty(ports)) {
+      mailhog.ports = ports
     }
 
     // Put it all together
