@@ -8,10 +8,7 @@ A decent cross purpose fpm based php 5.4 appserver.
 #
 # docker build -t kalabox/php:5.4-fpm .
 
-FROM helder/php-5.4
-
-# Copy our helpers
-COPY docker-php-ext-* /usr/local/bin/
+FROM php:5.4-fpm
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
