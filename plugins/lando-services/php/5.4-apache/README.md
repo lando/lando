@@ -8,10 +8,7 @@ A decent cross purpose apache based php 5.4 appserver.
 #
 # docker build -t kalabox/php:5.4-apache .
 
-FROM eugeneware/php-5.4:master
-
-# Copy our helpers
-COPY docker-php-ext-enable /usr/local/bin/
+FROM php:5.4-apache
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \

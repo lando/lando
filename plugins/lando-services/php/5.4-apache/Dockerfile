@@ -1,12 +1,8 @@
 # Basic apache php 5.4 appserver for Lando
 #
-# docker build -t zajca/apache-php5.4 .
+# docker build -t kalabox/php:5.4-apache .
 
-#FROM eugeneware/php-5.4:master
-FROM zajca/apache-php5.4:master
-
-# Copy our helpers
-COPY docker-php-ext-enable /usr/local/bin/
+FROM php:5.4-apache
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
