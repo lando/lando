@@ -12,7 +12,6 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var addConfig = lando.services.addConfig;
   var buildVolume = lando.services.buildVolume;
-  var path = require('path');
 
   /**
    * Supported versions for elasticsearch
@@ -40,9 +39,6 @@ module.exports = function(lando) {
 
     // Start a services collector
     var services = {};
-
-    // Get creds
-    var creds = config.creds || {};
 
     // Default elasticsearch service
     var elastic = {
@@ -93,7 +89,7 @@ module.exports = function(lando) {
   /**
    * Return the volumes needed
    */
-  var volumes = function(name) {
+  var volumes = function() {
     return {data: {}};
   };
 
@@ -104,23 +100,15 @@ module.exports = function(lando) {
 
     // Add in generic info
     var info = {
-      creds: {
-        // @todo.
-      },
       'internal_connection': {
         host: name,
-        port: config.port || 3306
+        port: config.port || 9200
       },
       'external_connection': {
         host: 'localhost',
         port: config.portforward || 'not forwarded'
       }
     };
-
-    // Show the config files being used if they are custom
-    if (!_.isEmpty(config.config)) {
-      info.config  = config.config;
-    }
 
     // Return the collected info
     return info;
