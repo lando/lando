@@ -25,6 +25,21 @@ services:
     # a different port every time you restart your app
     portforward: 9999
 
+    # Optionally load in a custom config file. This is relative to the app root.
+    #
+    # config: customElasticsearch.yml
+
+    # There are various envvars you can specify to further customize how
+    # elasticsearch works.
+    #
+    # See: https://hub.docker.com/r/eeacms/varnish/
+    #
+    # overrides:
+      # services:
+        # environment:
+          # ES_JAVA_OPTS: -Xms16g -Xmx16g
+          # PLUGINS: elasticsearch/marvel/latest
+
   # Spin up services to run a basic node server
   appserver:
     type: node:6.10

@@ -12,12 +12,17 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var addConfig = lando.services.addConfig;
   var buildVolume = lando.services.buildVolume;
+  var path = require('path');
 
   /**
    * Supported versions for elasticsearch
    */
   var versions = [
+    '5.5',
     '5.4',
+    '5.3',
+    '5.2',
+    '5.1',
     'latest',
   ];
 
@@ -52,6 +57,14 @@ module.exports = function(lando) {
         'DISCOVERY.ZEN.PING.UNICAST.HOSTS': 'elasticsearch1'
       }
     };
+
+    // Handle custom vcl file
+    if (_.has(config, 'config')) {
+      var local = config.config;
+      var remote = '/conf/elasticsearch.yml';
+      var customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
+      elastic.volumes = addConfig(customConfig, elastic.volumes);
+    }
 
     // Handle port forwarding
     if (config.portforward) {
