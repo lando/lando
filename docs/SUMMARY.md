@@ -93,6 +93,8 @@
 *   [Contributing](dev/contributing.md)
 *   [Repo Structure](dev/structure.md)
 *   [Plugins](dev/plugins.md)
+*   [Services](dev/services.md)
+*   [Recipes](dev/recipes.md)
 *   [API](dev/api/lando.md)
     *   [app](dev/api/app.md)
     *   [bootstrap](dev/api/bootstrap.md)
