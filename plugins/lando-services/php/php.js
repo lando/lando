@@ -25,6 +25,7 @@ module.exports = function(lando) {
     '7.0',
     '5.6',
     '5.5',
+    '5.4',
     '5.3',
     'latest',
     'custom'
@@ -64,7 +65,7 @@ module.exports = function(lando) {
           '\'a2enmod rewrite && apache2-foreground\''
         ],
         image: [version, 'apache'].join('-'),
-        serverConf: '/etc/apache2/sites-available/000-default.conf',
+        serverConf: '/etc/apache2/sites-enabled/000-default.conf',
         phpConf: '/usr/local/etc/php/php.ini'
       }
     };

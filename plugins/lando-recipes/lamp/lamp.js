@@ -196,7 +196,7 @@ module.exports = function(lando) {
   var tooling = function(config) {
 
     // Get our default tooling opts
-    var  tooling = {
+    var tooling = {
       composer: {
         service: 'appserver',
         description: 'Run composer commands',
