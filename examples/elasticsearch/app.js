@@ -14,7 +14,7 @@ var app = express();
 
 // Get our elasticsearch client
 var elasticsearch = new Elasticsearch.Client({
-  host: 'search:9999',
+  host: 'search:9200',
   log: 'trace'
 });
 
