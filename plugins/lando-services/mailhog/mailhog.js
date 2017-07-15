@@ -10,8 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var addConfig = lando.services.addConfig;
-  var buildVolume = lando.services.buildVolume;
+  //var addConfig = lando.services.addConfig;
+  //var buildVolume = lando.services.buildVolume;
 
   /**
    * Supported versions for mailhog
@@ -37,16 +37,26 @@ module.exports = function(lando) {
     // Start a services collector
     var services = {};
 
+    // Get the hostname
+    var hostname = [name, lando.config.proxyDomain].join('.');
+
     // Default mailhog service
     var mailhog = {
       image: 'mailhog/mailhog:' + config.version,
+      user: 'root',
       environment: {
         TERM: 'xterm',
         LANDO_NO_SCRIPTS: 'true',
+        MH_API_BIND_ADDR: ':80',
+        //MH_API_HOST: 'http://localhost:80/',
+        MH_HOSTNAME: hostname,
+        MH_UI_BIND_ADDR: ':80'
       },
-      command: 'MailHog',
+      ports: ['80'],
+      command: 'MailHog'
     };
 
+    /*
     var exposed = {'local_smtp_port': 1025, 'local_http_port': 8025};
     var ports = [];
 
@@ -68,6 +78,7 @@ module.exports = function(lando) {
     if (!_.isEmpty(ports)) {
       mailhog.ports = ports
     }
+    */
 
     // Put it all together
     services[name] = mailhog;
