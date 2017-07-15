@@ -4,5 +4,5 @@ plugins:
   - lando-recipes
   - lando-services
   - lando-tooling
-logLevelConsole: warn
+logLevelConsole: info
 logLevel: debug
