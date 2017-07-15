@@ -1,0 +1,17 @@
+# Mailhog recipe example
+name: mailhog
+
+# Start with the default LEMP recipe
+recipe: lemp
+
+# Additional mailhog proxy settings
+proxy:
+  mailhog:
+    - port: 80/tcp
+      subdomains:
+        - admin
+
+# Mailhog things
+services:
+  mailhog:
+    type: mailhog:v1.0.0
