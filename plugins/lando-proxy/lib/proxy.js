@@ -445,7 +445,7 @@ module.exports = function(lando) {
   });
 
   // Turn on the proxy automatically and get info about its urls
-  lando.events.on('post-instantiate-app', 2, function(app) {
+  lando.events.on('post-instantiate-app', function(app) {
 
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
