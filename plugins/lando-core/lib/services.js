@@ -28,9 +28,9 @@ module.exports = function(lando) {
 
     // Add an object to hold docker compose services, volumes and networks
     // for now we mostly care about services
-    app.services = {};
-    app.volumes = {};
-    app.networks = {};
+    app.services = app.services || {};
+    app.volumes = app.volumes || {};
+    app.networks = app.networks || {};
 
     // Check to see if we have any compose files in our .lando.yml and parse
     // them into the relevant compose definitions

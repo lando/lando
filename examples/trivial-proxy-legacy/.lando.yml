@@ -1,5 +1,5 @@
 # My apps name
-name: trivial-proxy
+name: trivial-proxy-legacy
 
 # Docker compose files that contain my apps services and tools
 compose:
