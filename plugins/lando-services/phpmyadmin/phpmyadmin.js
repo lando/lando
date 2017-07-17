@@ -51,7 +51,6 @@ module.exports = function(lando) {
       image: 'phpmyadmin/phpmyadmin:' + config.version,
       environment: {
         MYSQL_ROOT_PASSWORD: '',
-        LANDO_NO_SCRIPTS: 'true',
         PMA_HOSTS: hosts.join(','),
         PMA_PORT: 3306,
         PMA_USER: 'root',
