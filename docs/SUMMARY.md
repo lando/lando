@@ -22,6 +22,7 @@
 *   [The Basics](tutorials/basics.md)
 *   [Recipe Config](tutorials/recipe-config.md)
 *   [Additional Services and Tooling](tutorials/ast.md)
+*   [Frontend Tooling](tutorials/frontend.md)
 
 ## Configuration
 
