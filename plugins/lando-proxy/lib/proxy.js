@@ -174,7 +174,17 @@ module.exports = function(lando) {
     var domain = lando.config.proxyDomain;
     var engineHost = lando.config.engineHost;
     var proxyDash = lando.config.proxyDash;
-    var cmd = ['--web', '--docker', '--docker.domain=' + domain];
+    var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
+    var cmd = [
+      '/entrypoint.sh',
+      '--defaultEntryPoints=https,http',
+      '--docker',
+      '--docker.domain=' + domain,
+      '--entryPoints="Name:http Address::80"',
+      '--entrypoints="Name:https Address::443 TLS:' + certs + '"',
+      '--logLevel=DEBUG',
+      '--web',
+    ].join(' ');
 
     // Determine the ports and networks for our proxy
     return getPorts()
@@ -192,20 +202,26 @@ module.exports = function(lando) {
 
       // Proxy service
       var proxy = {
-        image: 'traefik',
-        command: cmd.join(' ') + ' --logLevel=DEBUG',
+        image: 'traefik:1.3-alpine',
+        entrypoint: '/lando-entrypoint.sh',
+        command: cmd,
         labels: {
           'io.lando.container': 'TRUE'
+        },
+        environment: {
+          LANDO_SERVICE_TYPE: 'proxy'
         },
         networks: ['edge'],
         ports: [
           [engineHost, http, '80'].join(':'),
-          //[engineHost, https, '443'].join(':'),
+          [engineHost, https, '443'].join(':'),
           [proxyDash, 8080].join(':')
         ],
         volumes: [
           '/var/run/docker.sock:/var/run/docker.sock',
-          '/dev/null:/traefik.toml'
+          '/dev/null:/traefik.toml',
+          '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
+          '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh'
         ],
         restart: 'on-failure'
       };
@@ -219,7 +235,7 @@ module.exports = function(lando) {
 
       // Get the new proxy service
       return {
-        version: '3',
+        version: lando.config.composeVersion,
         services: {proxy: proxy},
         networks: networks
       };
@@ -450,11 +466,6 @@ module.exports = function(lando) {
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
 
-      // Make sure the proxy is up and ready
-      app.events.on('pre-start', 1, function() {
-        return startProxy();
-      });
-
       // Add relevant URLS
       app.events.on('post-start', function() {
         return addUrls(app);
@@ -481,49 +492,81 @@ module.exports = function(lando) {
 
       });
 
-      // Prep the networks
-      var networks = app.networks || {};
+      app.events.on('pre-start', 1, function() {
 
-      // Add in the proxy network
-      var edge = {
-        'lando_proxyedge': {
-          external: {
-            name: 'lando_edge'
-          }
-        }
-      };
+        // Get project name
+        var project = app.project || app.name;
 
-      // Merge
-      app.networks = _.merge(networks, edge);
+        // Kick off the proxy compose file
+        var compose = {
+          version: lando.config.composeVersion,
+          networks: {
+            'lando_proxyedge': {
+              external: {
+                name: 'lando_edge'
+              }
+            }
+          },
+          services: {}
+        };
 
-      // GEt the proxy data
-      return getProxyData(app)
+        // Start the proxy
+        return startProxy()
 
-      // Go through those services one by one and add dns entries
-      .map(function(service) {
+        // Get the data
+        .then(function() {
+          return getProxyData(app);
+        })
 
-        // Add in the edgenet
-        var networks = _.get(app.services[service.name], 'networks', []);
-        networks.push('lando_proxyedge', 'default');
-        _.set(app.services[service.name], 'networks', networks);
+        // Go through those services one by one
+        .map(function(service) {
 
-        // Get name and port
-        var name = service.name;
-        var port = _.get(service, 'routes[0].port', '80');
+          // Get name and port
+          var name = service.name;
 
-        // Get hostnames
-        var hosts = _.map(_.get(service, 'routes[0].urls', []), function(url) {
-          var hasProtocol = !_.isEmpty(url.split('://')[1]);
-          return (hasProtocol) ? (url.split('://')[1]) : (url.split('://')[0]);
+          // Get hostnames
+          var hosts = _.map(_.get(service, 'routes[0].urls', []), function(u) {
+            var hasProtocol = !_.isEmpty(u.split('://')[1]);
+            var f = (hasProtocol) ? (u.split('://')[1]) : (u.split('://')[0]);
+            return f.split(':')[0];
+          });
+
+          // Add in relevant labels
+          var labels = _.get(app.services[service.name], 'labels', {});
+          labels['traefik.backend'] = name;
+          labels['traefik.port'] = '80';
+          labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
+
+          // Service
+          var augment = {
+            networks: ['lando_proxyedge', 'default'],
+            labels: labels
+          };
+
+          // Add the service
+          compose.services[name] = augment;
+
+          // @TODO: port handling (443->80)
+          // @TODO: new config format
+          // @TODO: extra_hosts
+          //labels['traefik.port'] = _.toString(port);
+          //var port = _.get(service, 'routes[0].port', '80');
+
+        })
+
+        // Spit out the proxy compose file
+        .then(function() {
+
+          // Write the services
+          var projectDir = path.join(lando.config.userConfRoot, 'tmp', project);
+          var fileName = [project, 'proxy', _.uniqueId()].join('-');
+          var file = path.join(projectDir, fileName + '.yml');
+
+          // Add that file to our compose list
+          app.compose.push(lando.utils.compose(file, compose));
+          lando.log.verbose('App %s has proxy compose file %s', project, file);
+
         });
-
-        // Add in relevant labels
-        var labels = _.get(app.services[service.name], 'labels', {});
-        labels['traefik.backend'] = name;
-        labels['traefik.port'] = _.toString(port);
-        labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
-        _.set(app.services[service.name], 'labels', labels);
-
       });
 
     }

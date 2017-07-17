@@ -16,7 +16,7 @@ if [ ! -f "/certs/cert.pem" ]; then
 
   # Check if openssl is installed, it not install it
   if ! [ -x "$(command -v openssl)" ]; then
-    apt-get update -y && apt-get install openssl -y
+    apt-get update -y && apt-get install openssl -y || apk add --no-cache openssl
   fi
 
   # Generate the cert

@@ -33,7 +33,8 @@
       "**/*.yml",
       "**/*.sh",
       "**/*.vcl",
-      "**/*.json"
+      "**/*.json",
+      "**/*.toml"
     ]
   },
   "dependencies": {
