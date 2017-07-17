@@ -86,6 +86,7 @@
 
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Working with Pantheon](tutorials/pantheon-working.md)
+*   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development
