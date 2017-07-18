@@ -534,12 +534,17 @@ module.exports = function(lando) {
           // Add in relevant labels
           var labels = _.get(app.services[service.name], 'labels', {});
           labels['traefik.backend'] = name;
-          labels['traefik.port'] = '80';
+          labels['traefik.docker.network'] = 'lando_edge';
           labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
+          labels['traefik.port'] = '80';
 
-          // Service
+          // Get any networks that might already exist
+          var defaultNets = {'lando_proxyedge': {}, 'default': {}};
+          var preNets = _.get(app.services[name], 'networks', {});
+
+          // Build the augment
           var augment = {
-            networks: ['lando_proxyedge', 'default'],
+            networks: _.merge(defaultNets, preNets),
             labels: labels
           };
 
