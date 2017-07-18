@@ -9,5 +9,4 @@ services:
     image: nginx
     ports:
       - "8086:80"
-      #- "443"
       - "80"

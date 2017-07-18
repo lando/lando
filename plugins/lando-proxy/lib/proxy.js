@@ -285,6 +285,115 @@ module.exports = function(lando) {
   };
 
   /*
+   * Map new proxy config format to old one
+   */
+  var map2Legacy = function(data, name) {
+
+    // Start a config collector
+    var config = [];
+    var secures = [];
+
+    // Get 443z
+    _.forEach(data, function(datum) {
+      if (_.get(datum.split(':'), '[1]', '80') === '80') {
+        secures.push([datum.split(':')[0], '443'].join(':'));
+      }
+    });
+
+    // Map to array of port/host objects
+    var phosts = _.map(data.concat(secures), function(datum) {
+      return {
+        port: _.get(datum.split(':'), '[1]', '80') + '/tcp',
+        host: datum.split(':')[0]
+      };
+    });
+
+    // Start to build the config object
+    _.forEach(_.groupBy(phosts, 'port'), function(value, key) {
+      config.push({
+        port: key,
+        hosts: _.map(value, 'host')
+      });
+    });
+
+    // Determine the hostname situation
+    _.forEach(config, function(service) {
+
+      // Handle secure
+      if (service.port === '443/tcp') {
+        service.secure = true;
+      }
+
+      // Basic collectors
+      var subdomains = [];
+      var custom = [];
+
+      // Go through each host and try to build the legacy confg
+      _.forEach(service.hosts, function(host) {
+
+        // Handle proxyDomain hosts
+        if (_.endsWith(host, lando.config.proxyDomain)) {
+
+          // Save the original
+          var original = host;
+
+          // Strip opts
+          var sopts = {
+            length: host.length - lando.config.proxyDomain.length - 1,
+            omission: ''
+          };
+
+          // Start to strip the host down
+          host = _.truncate(host, sopts);
+
+          // Set default if stripped is the app.name
+          if (host === name) {
+            service.default = true;
+          }
+
+          // Strip more to remove any app.name refs
+          if (_.endsWith(host, name)) {
+            sopts.length = host.length - name.length - 1;
+            host = _.truncate(host, sopts);
+            if (!_.isEmpty(host)) {
+              subdomains.push(host);
+            }
+          }
+
+          // Else should be custom
+          else {
+            custom.push(original);
+          }
+
+        }
+
+        // Must be a custom domain
+        else {
+          custom.push(host);
+        }
+      });
+
+      // Add in subdomains if they are not empty
+      if (!_.isEmpty(subdomains)) {
+        service.subdomains = subdomains;
+      }
+
+      // Ditto custom domains
+      if (!_.isEmpty(custom)) {
+        service.custom = custom;
+      }
+
+      // Remove the old hosts
+      delete service.hosts;
+
+    });
+
+    // Return the mapped things
+    return config;
+
+  };
+
+  /*
    * Legacy parse a proxy config object into an array of URLs
    */
   var getLegacyRouteUrls = function(route, name, ports) {
@@ -323,7 +432,7 @@ module.exports = function(lando) {
     var protocol = (route.secure) ? 'https://' : 'http://';
 
     // Return an array of parsed hostnames
-    return _.map(hostnames, function(hostname) {
+    var routes = _.map(hostnames, function(hostname) {
 
       // Optional port TBD
       var port = '';
@@ -342,6 +451,12 @@ module.exports = function(lando) {
       return protocol + hostname + port;
 
     });
+
+    // Return the route object
+    return {
+      port: route.port,
+      urls: routes
+    };
 
   };
 
@@ -369,12 +484,15 @@ module.exports = function(lando) {
     // Transform our config into services objects
     var services = _.map(config, function(data, key) {
 
+      // If this is the new proxy config format lets translate it to the old
+      // one
+      if (_.isString(data[0])) {
+        data = map2Legacy(data, app.name);
+      }
+
       // Map each route into an object of ports and urls
       var routes = _.map(data, function(route) {
-        return {
-          port: route.port,
-          urls: getLegacyRouteUrls(route, app.name, ports)
-        };
+        return getLegacyRouteUrls(route, app.name, ports);
       });
 
       // Return the service
@@ -394,7 +512,7 @@ module.exports = function(lando) {
 
     // Throw an error if there are dupes
     if (hasDupes) {
-      throw new Error('Duplicate URL detected: %j', urlCount);
+      lando.log.error('Duplicate URL detected: %j', urlCount);
     }
 
     // Return the list
@@ -430,7 +548,10 @@ module.exports = function(lando) {
   /*
    * Helper to add URLS
    */
-  var addUrls = function(app) {
+  var addUrls = function(app, happyPorts) {
+
+    // Use happyPorts or set the default
+    var ports = happyPorts || [];
 
     // Get thet proxy data
     return getProxyData(app)
@@ -441,7 +562,11 @@ module.exports = function(lando) {
 
         // Get old urls
         var old = app.info[service.name].urls || [];
-        var updated = _.map(service.routes, 'urls');
+
+        var updated = _.map(service.routes, function(route) {
+          var getPorts = _.includes(ports, route.port) || _.isEmpty(ports);
+          return (getPorts) ? route.urls : [];
+        });
 
         // Log
         lando.log.debug('Adding app URLs', updated);
@@ -468,7 +593,7 @@ module.exports = function(lando) {
 
       // Add relevant URLS
       app.events.on('post-start', function() {
-        return addUrls(app);
+        return addUrls(app, ['80/tcp', '443/tcp']);
       });
 
       // Add proxy URLS to our app info
@@ -523,8 +648,14 @@ module.exports = function(lando) {
 
           // Get name and port
           var name = service.name;
+          var port = _.get(service, 'routes[0].port', '80');
 
-          // Get hostnames
+          // If port is 443 switch back to 80
+          if (port === 443) {
+            port = 80;
+          }
+
+          // Get hostnames without ports
           var hosts = _.map(_.get(service, 'routes[0].urls', []), function(u) {
             var hasProtocol = !_.isEmpty(u.split('://')[1]);
             var f = (hasProtocol) ? (u.split('://')[1]) : (u.split('://')[0]);
@@ -536,26 +667,36 @@ module.exports = function(lando) {
           labels['traefik.backend'] = name;
           labels['traefik.docker.network'] = 'lando_edge';
           labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
-          labels['traefik.port'] = '80';
+          labels['traefik.port'] = _.toString(port);
 
           // Get any networks that might already exist
           var defaultNets = {'lando_proxyedge': {}, 'default': {}};
           var preNets = _.get(app.services[name], 'networks', {});
 
-          // Build the augment
-          var augment = {
+          // Start building the augment
+          compose.services[name] = {
             networks: _.merge(defaultNets, preNets),
-            labels: labels
+            labels: labels,
           };
 
-          // Add the service
-          compose.services[name] = augment;
+          // Send hosts down the pipe
+          return hosts;
 
-          // @TODO: port handling (443->80)
-          // @TODO: new config format
-          // @TODO: extra_hosts
-          //labels['traefik.port'] = _.toString(port);
-          //var port = _.get(service, 'routes[0].port', '80');
+        })
+
+        // Add extra hosts to all the service
+        .then(function(hosts) {
+
+          // Compute extra hosts
+          var hostList = _.map(hosts, function(host) {
+            return [host, lando.config.env.LANDO_ENGINE_REMOTE_IP].join(':');
+          });
+          var ehs = {'extra_hosts': hostList};
+
+          // Add ehs to all the services
+          _.forEach(_.keys(app.services), function(name) {
+            compose.services[name] = _.merge(compose.services[name], ehs);
+          });
 
         })
 
