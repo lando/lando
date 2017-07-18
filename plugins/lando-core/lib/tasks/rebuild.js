@@ -9,6 +9,7 @@
 module.exports = function(lando) {
 
   // Modules
+  var _ = lando.node._;
   var chalk = lando.node.chalk;
 
   // The task object
@@ -43,7 +44,35 @@ module.exports = function(lando) {
         if (app) {
           return lando.app.rebuild(app)
           .then(function() {
-            console.log(chalk.green('App rebuilt!'));
+
+            // Header it
+            console.log(lando.cli.startHeader());
+
+            // Rebuilt!
+            console.log(chalk.yellow('App rebuilt!'));
+
+            // Grab a new cli table
+            var table = new lando.cli.Table();
+
+            // Colorize URLS
+            var urls = _.map(app.urls, function(url) {
+              var uri = url.url;
+              return (url.status) ? chalk.green(uri) : chalk.red(uri);
+            });
+
+            // Add data
+            console.log('');
+            table.add('NAME', app.name);
+            table.add('LOCATION', app.root);
+            table.add('SERVICES', _.keys(app.services));
+            table.add('URLS', urls, {arrayJoiner: '\n'});
+
+            // Print the table
+            console.log(table.toString());
+
+            // Space it
+            console.log('');
+
           });
         }
         // Warn user we couldn't find an app

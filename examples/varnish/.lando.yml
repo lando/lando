@@ -13,7 +13,7 @@ proxy:
 
   # Replace with our varnish and ssl termination endpoints
   edge:
-    - varish.lndo.site
+    - varnish.lndo.site
 
 # Set up my services
 services:

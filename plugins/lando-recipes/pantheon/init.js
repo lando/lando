@@ -153,20 +153,17 @@ module.exports = function(lando) {
     // Check if ssh key exists and create if not
     return Promise.try(function() {
       if (!fs.existsSync(path.join(lando.config.userConfRoot, 'keys', key))) {
-
-        // Create keys
         lando.log.verbose('Creating key %s for Pantheon', key);
-        return lando.init.run(name, dest, lando.init.createKey(key))
-
-        // And refresh keys
-        .then(function() {
-          return lando.init.run(name, dest, '/scripts/load-keys.sh', 'root');
-        });
-
+        return lando.init.run(name, dest, lando.init.createKey(key));
       }
       else {
         lando.log.verbose('Key %s exists for Pantheon', key);
       }
+    })
+
+    // Refresh and set keys
+    .then(function() {
+      return lando.init.run(name, dest, '/load-keys.sh', 'root');
     })
 
     // Post SSH key to pantheon

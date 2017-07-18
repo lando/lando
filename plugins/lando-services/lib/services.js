@@ -276,6 +276,7 @@ module.exports = function(lando) {
     var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
     vols.push('$LANDO_APP_ROOT_BIND:/app' + shareMode);
     vols.push('$LANDO_ENGINE_HOME:/user' + shareMode);
+    vols.push('$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh');
     services[name].volumes = _.uniq(vols);
 
     // Add in SSH key loading

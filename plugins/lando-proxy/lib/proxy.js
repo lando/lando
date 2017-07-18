@@ -486,7 +486,7 @@ module.exports = function(lando) {
 
       // If this is the new proxy config format lets translate it to the old
       // one
-      if (_.isString(data[0])) {
+      if (!_.isEmpty(data) && _.isString(data[0])) {
         data = map2Legacy(data, app.name);
       }
 
@@ -662,21 +662,23 @@ module.exports = function(lando) {
             return f.split(':')[0];
           });
 
-          // Add in relevant labels
-          var labels = _.get(app.services[service.name], 'labels', {});
-          labels['traefik.docker.network'] = 'lando_edge';
-          labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
-          labels['traefik.port'] = _.toString(port);
+          // Add in relevant labels if we have hosts
+          if (!_.isEmpty(hosts)) {
+            var labels = _.get(app.services[service.name], 'labels', {});
+            labels['traefik.docker.network'] = 'lando_edge';
+            labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
+            labels['traefik.port'] = _.toString(port);
 
-          // Get any networks that might already exist
-          var defaultNets = {'lando_proxyedge': {}, 'default': {}};
-          var preNets = _.get(app.services[name], 'networks', {});
+            // Get any networks that might already exist
+            var defaultNets = {'lando_proxyedge': {}, 'default': {}};
+            var preNets = _.get(app.services[name], 'networks', {});
 
-          // Start building the augment
-          compose.services[name] = {
-            networks: _.merge(defaultNets, preNets),
-            labels: labels,
-          };
+            // Start building the augment
+            compose.services[name] = {
+              networks: _.merge(defaultNets, preNets),
+              labels: labels,
+            };
+          }
 
           // Send hosts down the pipe
           return hosts;
@@ -687,15 +689,18 @@ module.exports = function(lando) {
         .then(function(hosts) {
 
           // Compute extra hosts
-          var hostList = _.map(hosts, function(host) {
+          var hostList = _.map(_.flatten(hosts), function(host) {
             return [host, lando.config.env.LANDO_ENGINE_REMOTE_IP].join(':');
           });
-          var ehs = {'extra_hosts': hostList};
 
-          // Add ehs to all the services
-          _.forEach(_.keys(app.services), function(name) {
-            compose.services[name] = _.merge(compose.services[name], ehs);
-          });
+          // And add them if applicable
+          if (!_.isEmpty(hostList)) {
+            _.forEach(_.keys(app.services), function(name) {
+              compose.services[name] = _.merge(compose.services[name], {
+                'extra_hosts': hostList
+              });
+            });
+          }
 
         })
 
