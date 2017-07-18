@@ -278,9 +278,6 @@ module.exports = function(lando) {
     vols.push('$LANDO_ENGINE_HOME:/user' + shareMode);
     services[name].volumes = _.uniq(vols);
 
-    // And some permission helpers
-    services[name].volumes = addScript('user-perms.sh', services[name].volumes);
-
     // Add in SSH key loading
     services[name].volumes = addScript('load-keys.sh', services[name].volumes);
 

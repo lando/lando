@@ -64,14 +64,13 @@ module.exports = function(lando) {
       labels: {'io.lando.container': 'TRUE'},
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/scripts/user-perms.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/scripts/load-keys.sh'
       ]
     };
 
     // Set up our scripts
     // @todo: get volumes above into this
-    var scripts = ['lando-entrypoint.sh', 'user-perms.sh', 'load-keys.sh'];
+    var scripts = ['lando-entrypoint.sh', 'load-keys.sh'];
     _.forEach(scripts, function(script) {
       fs.chmodSync(path.join(lando.config.engineScriptsDir, script), '755');
     });
