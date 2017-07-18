@@ -255,7 +255,7 @@ module.exports = function(lando) {
     var mounts = [
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
-      '/scripts:pantheon.sh'
+      '/srv/includes:pantheon.sh'
     ];
 
     // Loop
@@ -403,6 +403,11 @@ module.exports = function(lando) {
     // Set the appserver to depend on index start up so we know our certs will be there
     var dependsPath = 'services.appserver.overrides.services.depends_on';
     _.set(build, dependsPath, ['index']);
+
+    // Add in our pantheon script
+    // NOTE: We do this here instead of in /scripts because we need to gaurantee
+    // it runs before the other build steps so it can reset our CA correctly
+    build.services.appserver.extras = ['/srv/includes/pantheon.sh'];
 
     // Reset our build steps
     build.services.appserver.build = buildSteps(config);
