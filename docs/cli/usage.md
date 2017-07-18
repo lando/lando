@@ -8,21 +8,20 @@ Commands:
   config                   Display the lando configuration
   destroy [appname]        Destroy app in current directory or [appname]
   info [appname]           Prints info about app in current directory or [appname]
+  init <appname> [method]  Initializes a lando app called <appname> with optional [method]
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
+  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   start [appname]          Start app in current directory or [appname]
   stop [appname]           Stops app in current directory or [appname]
   version                  Display the lando version
-  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
-
-Options:
-  --help, -h  Show help                                                [boolean]
 
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 
 You need at least one command before moving on
 ```
@@ -39,6 +38,9 @@ Examples
 # Display usage
 lando
 
+# Initialize a lando app called myapp from github
+lando init myapp github
+
 # Get config with some verbosity
 lando config -- -vv
 
@@ -48,14 +50,17 @@ lando start
 # Stop an app from anywhere
 lando stop myapp
 
-# Get help on destroy
-lando destroy --help
+# Get help on init
+lando init -- --help
 
 # Non-interactively destroy an app called myapp with max verbosity
 lando destroy myapp -y -- -vvvv
 
 # Run a php command against myapp's appserver container
 lando ssh myapp appserver -c "php -i"
+
+# Run a composer command (assumes this command is defined in your .lando.yml)
+lando composer install
 ```
 
 Tooling Commands
@@ -72,24 +77,23 @@ Commands:
   config                   Display the lando configuration
   destroy [appname]        Destroy app in current directory or [appname]
   info [appname]           Prints info about app in current directory or [appname]
+  init <appname> [method]  Initializes a lando app called <appname> with optional [method]
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
+  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   start [appname]          Start app in current directory or [appname]
   stop [appname]           Stops app in current directory or [appname]
   version                  Display the lando version
-  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   composer                 Run composer commands
   php                      Run php commands
   mysql                    Drop into a MySQL shell
 
-Options:
-  --help, -h  Show help                                                [boolean]
-
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 
 You need at least one command before moving on
 ```
@@ -103,5 +107,6 @@ The following global options are available for every command.
 
 ```bash
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 ```

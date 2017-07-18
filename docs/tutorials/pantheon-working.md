@@ -3,25 +3,26 @@ Working with Pantheon
 
 Lando offers a [recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage. You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
-Make a COMMITment to Lando
---------------------------
+Pull from Pantheon or GitHub
+----------------------------
 
-You will first want to clone down your Pantheon site so you can configure and commit a `.lando.yml` to your repo. For this example we will be using an external Pantheon repo stored on GitHub.
+While you can clone down any repo and [manually configure](./../recipes/pantheon.md) a `.lando.yml` file for your Pantheon site Lando provides a `lando init` command so that you can easily pull a site from Pantheon or GitHub. **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES** but you can read below on how to do that manually.
+
+If you do not already have a Pantheon [machine token](https://pantheon.io/docs/machine-tokens/) we suggest you [create one](https://pantheon.io/docs/machine-tokens/). If you are pulling from GitHub we recommend you [generate a personal access token](./../cli/init.md#github) as well.
 
 ```bash
-# Clone Pantheon Sites
-git clone git@github.com:thinktandem/pantheon-workflow-demo.git workflow
-cd workflow
+# Pull and init site from Pantheon
+lando init myapp pantheon
 
-# Create a .lando.yml file in the root and populate it with below
-touch .lando.yml
+# Or pull from github
+lando init myapp github --recipe pantheon
 
-# Commit the file to your repo
+# Commit the `.lando.yml` file to your repo
 git add .
 git commit -m "You look absolutely beautiful"
 
 # Start the Pantheon app
-# If you have composer.json Lando will automatically run composer install
+# If you have a composer.json Lando will automatically run composer install
 lando start
 ```
 
@@ -49,7 +50,13 @@ tooling:
 Authenticate with Terminus
 --------------------------
 
-If you do not already have a Pantheon [machine token](https://pantheon.io/docs/machine-tokens/) we suggest you [create one](https://pantheon.io/docs/machine-tokens/).
+If you used `lando init` to set up your Pantheon site you should already be authenticated.
+
+```bash
+lando terminus auth:whoami
+```
+
+If you did not you can authenticate manually. You will need a Pantheon [machine token](https://pantheon.io/docs/machine-tokens/) for this.
 
 ```bash
 # Authenticate with terminus
@@ -93,7 +100,7 @@ lando terminus backup:create drupal-7-pantheon-basicz.dev --element=files
 
 # Download and extract backup of the files
 lando terminus backup:get drupal-7-pantheon-basicz.dev --element=files --to=/tmp/files.tar.gz
-lando ssh -c "tar -xzvf /tmp/files.tar.gz -C $LANDO_MOUNT/$FILEMOUNT"
+lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_MOUNT/\$FILEMOUNT --strip-components 1"
 ```
 
 In the example above you can access the `mariadb` database from your host at `localhost:32787`. Note that this port is automatically assigned by Docker itself and will change every time you restart your app.
@@ -107,7 +114,7 @@ Other Helpful Things
 # Get a list of wp-cli commands
 lando wp
 
-# Download a dependency with drushl
+# Download a dependency with drush
 lando drush dl views
 
 # Download a dependency with composer
@@ -115,7 +122,7 @@ lando composer config repositories.drupal composer https://packages.drupal.org/8
 lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
 
 # Download a backdrop dependency
-lando backdrush dl panels
+lando drush dl webform
 ```
 
 Check out our [Pantheon Recipe](./../recipes/pantheon.md) for details on more advanced usage.

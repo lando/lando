@@ -117,11 +117,9 @@ Commands:
   php                      Run php commands
   mysql                    Drop into a MySQL shell
 
-Options:
-  --help, -h  Show help                                                [boolean]
-
 Global Options:
-  --verbose, -v, -vv, -vvv, -vvvv  verbosity of output
+  --help, -h  Show help
+  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 
 You need at least one command before moving on
 ```

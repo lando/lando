@@ -29,11 +29,18 @@ if [ $(id -u) = 0 ]; then
     groupmod -g "$LANDO_HOST_GID" "$LANDO_WEBROOT_GROUP" || true
   fi
 
-  # Make sure we set the ownership of the mount when we start a service
-  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $LANDO_MOUNT &>/dev/null &
+  # Move over .gitconfig if it exists
+  if [ -f "/user/.gitconfig" ]; then
+    cp -rf /user/.gitconfig /var/www/.gitconfig
+  fi
 
-  # Also make sure we chown the $LANDO_WEBROOT_USER home directory
+  # Make sure we chown the $LANDO_WEBROOT_USER home directory
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $(getent passwd $LANDO_WEBROOT_USER | cut -d : -f 6) &>/dev/null &
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.ssh &>/dev/null &
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.lando &>/dev/null &
+
+  # Make sure we set the ownership of the mount and /user when we start a service
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $LANDO_MOUNT &>/dev/null &
 
   # Lets also make some /usr/locals chowned
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/bin &>/dev/null &

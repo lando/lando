@@ -1,7 +1,7 @@
 Lando
 =====
 
-![screenshot](./images/lando-screenshot.png)
+![screenshot](https://raw.githubusercontent.com/kalabox/lando/master/docs/images/lando-screenshot.png)
 
 Lando is a free, open source and cross-platform local development environment tool built on [Docker](http://docker.com) container technology. It is the successor project to [Kalabox](http://kalabox.io).
 
@@ -34,10 +34,7 @@ With Lando you can...
 
 A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
 
-```yml
-name: myproject
-recipe: lamp
-```
+#### 1. Pull a repo that already has a `.lando.yml`
 
 ```bash
 git clone myproject.git
@@ -45,7 +42,24 @@ cd myproject
 lando start
 ```
 
-and easily configure some of the basics of that recipe
+#### 2. Or init a local codebase with a `lando` recipe
+
+```bash
+cd /path/to/my/local/code
+lando init appname
+land start
+```
+
+#### 3. Or pull from GitHub or Pantheon
+
+```bash
+mkdir -p mysite
+cd mysite
+lando init mysite pantheon | lando init mysite github
+lando start
+```
+
+You can also easily configure a `lando.yml` [recipe](http://docs.lndo.io/config/services.html)
 
 ```yml
 name: myproject
@@ -58,7 +72,7 @@ config:
     php: config/php.ini
 ```
 
-or go totally nuts and scaffold out a custom stack
+or go totally nuts and scaffold out a [custom stack](http://docs.lndo.io/config/services.html)
 
 ```yml
 name: myproject
@@ -107,10 +121,10 @@ There are various features that need to be implemented to achieve the above.
 3.  ~~Provide a build and tooling layer~~
 4.  ~~Provide additional core services and tools~~
 5.  ~~Provide a recipes layer on top of services~~
-6.  Provide handling of upstream git remotes (lando init command)
+6.  ~~Provide handling of upstream git remotes (lando init command)~~
 7.  Provide a push/pull layer on top of the tooling layer
-8.  ~~Recipe to replicate Pantheon environment~~
-9.  Integration with Pantheon
+8.  ~~Replicate Pantheon environment~~
+9.  Integrate with Pantheon
 10. Build GUI
 
 Other Resources

@@ -9,10 +9,3 @@ Usage
 ```bash
 lando poweroff
 ```
-
-Options
--------
-
-```bash
-  --help, -h  Show help                                                [boolean]
-```

@@ -1,7 +1,7 @@
 Memcached
 =========
 
-[Memcached](https://mariadb.org/) is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+[Memcached](https://memcached.org/) is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 Supported versions
 ------------------

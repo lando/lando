@@ -24,7 +24,6 @@ var restler = lando.node.restler;
     * [.hasher](#module_node.hasher)
     * [.jsonfile](#module_node.jsonfile)
     * [.rest](#module_node.rest)
-    * [.yaml](#module_node.yaml)
 
 <a name="module_node._"></a>
 
@@ -97,16 +96,4 @@ Get restler
 ```js
 // Get the restler module
 var rest = lando.node.rest;
-```
-<a name="module_node.yaml"></a>
-
-### node.yaml
-Get js-yaml
-
-**Kind**: static property of [<code>node</code>](#module_node)  
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the js-yaml module
-var yaml = lando.node.yaml;
 ```

@@ -39,7 +39,7 @@ module.exports = function(lando) {
     // Define stable and dev versions
     var version = {
       dev: '1.x-0.x',
-      stable: '0.0.4'
+      stable: '0.0.5'
     };
 
     // Get the base URL
@@ -93,16 +93,6 @@ module.exports = function(lando) {
     // Set backdrop ENV
     env.BACKDROP_SETTINGS = backdropSettings(config);
     _.set(build, envKey, env);
-
-    // Remove drush
-    delete build.tooling.drush;
-
-    // Add backdrush
-    build.tooling.backdrush = {
-      service: 'appserver',
-      description: 'Run backdrush commands',
-      cmd: ['drush']
-    };
 
     // Get appserver build
     var buildersKey = 'services.appserver.build';
