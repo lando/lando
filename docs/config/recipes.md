@@ -26,9 +26,9 @@ Supported Recipes
 The following recipes are currently offered. Please check out each one to learn how to use them.
 
 *   ####[Backdrop](./../recipes/backdrop.md)
-*   ####[Drupal 6](./../recipes/d6.md)
-*   ####[Drupal 7](./../recipes/d7.md)
-*   ####[Drupal 8](./../recipes/d8.md)
+*   ####[Drupal 6](./../recipes/drupal6.md)
+*   ####[Drupal 7](./../recipes/drupal7.md)
+*   ####[Drupal 8](./../recipes/drupal8.md)
 *   ####[Larvel](./../recipes/laravel.md)
 *   ####[LAMP](./../recipes/lamp.md)
 *   ####[LEMP](./../recipes/lemp.md)
