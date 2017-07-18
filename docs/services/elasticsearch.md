@@ -6,7 +6,11 @@ Elasticsearch
 Supported versions
 ------------------
 
-*   5.5/.4/.3/.2/.1
+*   5.5
+*   5.4
+*   5.3
+*   5.2
+*   5.1
 *   latest
 
 Example
@@ -28,7 +32,6 @@ cd /path/to/app
 # Get info (app needs to be running to get this)
 lando info
 
-```
 {
   "search": {
     "type": "elasticsearch",

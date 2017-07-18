@@ -27,6 +27,7 @@ module.exports = function(lando) {
 
     // 80 Char Violators
     var pma = 'phpmyadmin';
+    var es = 'elasticsearch';
 
     // Add the services
     lando.services.add('apache', require('./../apache/apache')(lando));
@@ -42,8 +43,7 @@ module.exports = function(lando) {
     lando.services.add('redis', require('./../redis/redis')(lando));
     lando.services.add('solr', require('./../solr/solr')(lando));
     lando.services.add('varnish', require('./../varnish/varnish')(lando));
-    lando.services.add('elasticsearch',
-      require('./../elasticsearch/elasticsearch')(lando));
+    lando.services.add(es, require('./../elasticsearch/elasticsearch')(lando));
 
   });
 

@@ -110,6 +110,11 @@ module.exports = function(lando) {
       }
     };
 
+    // Surfaces the config file if specified
+    if (_.has(config, 'config')) {
+      info.config = config.config;
+    }
+
     // Return the collected info
     return info;
 

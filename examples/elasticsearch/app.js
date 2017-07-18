@@ -32,7 +32,7 @@ app.get('/', function(req, res) {
       console.log(error);
       return res.end('elasticsearch cluster is down!' + JSON.stringify(error, null, 2));
     } else {
-      return res.end('All is well.');
+      return res.end('Elastic search contacted! All is well.');
     }
   });
 });
