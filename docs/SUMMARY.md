@@ -88,6 +88,7 @@
 
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Working with Pantheon](tutorials/pantheon-working.md)
+*   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development
