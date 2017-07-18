@@ -4,11 +4,7 @@ name: lamp
 # Give me http://lamp.lndo.site and https://lamp.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - lamp.lndo.site
 
 # Spin up services to run a basic LAMP stack
 services:

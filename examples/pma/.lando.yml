@@ -7,9 +7,7 @@ recipe: lemp
 # Add in a proxy route to phpmyadmin
 proxy:
   pma:
-    - port: 80/tcp
-      subdomains:
-        - admin.dbs
+    - pma.lemp.lndo.site
 
 # Add in phpmyadmin
 services:

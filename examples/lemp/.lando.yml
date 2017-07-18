@@ -4,11 +4,7 @@ name: lemp
 # Give me http://lemp.lndo.site and https://lemp.lndo.site
 proxy:
   nginx:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - lemp.lndo.site
 
 # Spin up services to run a basic LEMP stack
 services:
