@@ -47,6 +47,7 @@
 ## Services
 
 *   [apache](services/apache.md)
+*   [elasticsearch](services/elasticsearch.md)
 *   [mailhog](services/mailhog.md)
 *   [mariadb](services/mariadb.md)
 *   [memcached](services/memcached.md)

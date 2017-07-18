@@ -17,7 +17,7 @@ services:
   appserver:
 
     # PHP version 5.6
-    type: php:5.6
+    type: php:5.4
 
     # Serve php by either apache or nginx. You can put in any `service:version`
     # string that is supported by Lando's nginx and apache services.
