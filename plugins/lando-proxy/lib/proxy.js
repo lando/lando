@@ -664,7 +664,6 @@ module.exports = function(lando) {
 
           // Add in relevant labels
           var labels = _.get(app.services[service.name], 'labels', {});
-          labels['traefik.backend'] = name;
           labels['traefik.docker.network'] = 'lando_edge';
           labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
           labels['traefik.port'] = _.toString(port);
