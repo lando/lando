@@ -10,8 +10,11 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  //var addConfig = lando.services.addConfig;
-  //var buildVolume = lando.services.buildVolume;
+  var addConfig = lando.services.addConfig;
+  var buildVolume = lando.services.buildVolume;
+
+  // "Constants"
+  var defaultConfDir = lando.config.engineConfigDir;
 
   /**
    * Supported versions for mailhog
@@ -46,39 +49,72 @@ module.exports = function(lando) {
       user: 'root',
       environment: {
         TERM: 'xterm',
-        LANDO_NO_SCRIPTS: 'true',
         MH_API_BIND_ADDR: ':80',
-        //MH_API_HOST: 'http://localhost:80/',
         MH_HOSTNAME: hostname,
         MH_UI_BIND_ADDR: ':80'
       },
       ports: ['80'],
-      command: 'MailHog'
+      command: 'MailHog',
+      networks: {
+        default: {
+          aliases: ['sendmailhog']
+        }
+      }
     };
 
-    /*
-    var exposed = {'local_smtp_port': 1025, 'local_http_port': 8025};
-    var ports = [];
+    // Handle port forwarding
+    if (config.portforward) {
 
-    _.forEach(exposed, function (value, key) {
-
-      if (config[key]) {
-
-        if (config[key] === true) {
-          ports.push(value);
-        }
-        else {
-          ports.push(config[key] + ':' + value);
-        }
-
+      // If true assign a port automatically
+      if (config.portforward === true) {
+        mailhog.ports.push('1025');
       }
 
-    });
+      // Else use the specified port
+      else {
+        mailhog.ports.push(config.portforward + ':1025');
+      }
 
-    if (!_.isEmpty(ports)) {
-      mailhog.ports = ports
     }
-    */
+
+    // Mailhog is weird and needs to modify other services and right now
+    // this seems to be the only way to do this from here
+    lando.events.on('post-instantiate-app', function(app) {
+
+      // Stuff we needs
+      var smtp = 'sendmailhog:1025';
+      var mailHogConf = ['mailhog', 'mailhog.ini'];
+      var container = '/usr/local/etc/php/conf.d/lando-mailhog.ini';
+      var iniMount = buildVolume(mailHogConf, container, defaultConfDir);
+      var mhsendmail = '/usr/local/bin/mhsendmail';
+      var github = 'https://github.com/mailhog/mhsendmail/releases/download/';
+      var sendmail = 'v0.2.0/mhsendmail_linux_amd64';
+      var smUrl = github + sendmail;
+      var downloadCmd = ['curl', '-fsSL', '-o', mhsendmail, smUrl].join(' ');
+      var chmodCmd = ['chmod', '+x', mhsendmail].join(' ');
+
+      // Go through each and set up the hogfroms
+      _.forEach(_.get(config, 'hogfrom', []), function(hog) {
+
+        // Add in environmental variables
+        var env = _.get(app.services[hog], 'environment', {});
+        env.MH_SENDMAIL_SMTP_ADDR = smtp;
+        _.set(app.services[hog], 'environment', env);
+
+        // Add our default mailhog ini
+        var volumes = _.get(app.services[hog], 'volumes', {});
+        volumes = addConfig(iniMount, volumes);
+        _.set(app.services[hog], 'volumes', volumes);
+
+        // Add in mhsendmail build extra
+        var extras = _.get(app.config.services[hog], 'extras', []);
+        extras.push(downloadCmd);
+        extras.push(chmodCmd);
+        _.set(app.config.services[hog], 'extras', extras);
+
+      });
+
+    });
 
     // Put it all together
     services[name] = mailhog;

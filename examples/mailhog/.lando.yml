@@ -1,10 +1,10 @@
-# Mailhog recipe example
+# The name of the app
 name: mailhog
 
 # Start with the default LEMP recipe
 recipe: lemp
 
-# Additional mailhog proxy settings
+# Additional mailhog proxy settings so we get a nice URL for the mailhog ui
 proxy:
   mailhog:
     - port: 80/tcp
@@ -13,5 +13,24 @@ proxy:
 
 # Mailhog things
 services:
+
+  # Spin up a mailhog container called "mailhog"
+  # NOTE: "mailhog" is arbitrary, you could just as well call this "blackhole" or "weezer"
   mailhog:
-    type: mailhog:v1.0.0
+
+    # Use the latest mailhog version
+    type: mailhog
+
+    # List of services that we want to capture mail from
+    # You can run `lando info` to get a list of services that are available
+    # Mailhog expects that these services will be php services
+    hogfrom:
+      - appserver
+
+    # Optionally allow access to the smtp service at localhost:1026
+    # You will need to make sure port 1026 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # an open port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 1026
