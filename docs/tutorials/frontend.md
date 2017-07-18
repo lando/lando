@@ -54,14 +54,16 @@ Note we've now added a further bash command to `build` to automatically run gulp
 Making Tooling Available on the CLI
 ------------------------------------
 
-Almost there! All our services are installed, but how do we run a command on the fly, say starting a watch task or running `npm install hot-new-thing` to start experimenting with a new package? We could SSH into our node container, but that's SO 2016. Instead, we'll expose our new tooling via the CLI by adding this `tooling` section to our .lando.yml file:
+Almost there! All our services are installed, but how do we run a command on the fly, say starting a watch task or running `lando npm install hot-new-thing` to start experimenting with a new package? We could SSH into our node container, but that's SO 2016. Instead, we'll expose our new tooling via the CLI by adding this [`tooling`](./../config/tooling.md) section to our `.lando.yml` file:
 
 ```yml
 tooling:
+  npm:
+    service: npm
   node:
-    service: node  
+    service: node
   gulp:
     service: node
 ```
 
-After restarting your app, you should be able to run `lando node` or `lando gulp` and have the corresponding commands run. This is particularly useful if you want to kickoff a watch task you might have configured, say `lando gulp watch`.
+After restarting your app, you should be able to run `lando node`, `lando gulp` or `lando npm` and have the corresponding commands run. This is particularly useful if you want to kickoff a watch task you might have configured, say `lando gulp watch`.

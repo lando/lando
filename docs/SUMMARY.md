@@ -22,7 +22,6 @@
 *   [The Basics](tutorials/basics.md)
 *   [Recipe Config](tutorials/recipe-config.md)
 *   [Additional Services and Tooling](tutorials/ast.md)
-*   [Frontend Tooling](tutorials/frontend.md)
 
 ## Configuration
 
@@ -87,6 +86,7 @@
 
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Working with Pantheon](tutorials/pantheon-working.md)
+*   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development
