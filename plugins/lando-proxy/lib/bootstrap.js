@@ -21,9 +21,9 @@ module.exports = function(lando) {
     var defaults = {
       proxy: 'ON',
       proxyDomain: 'lndo.site',
+      proxyDash: '58087',
       proxyHttpPort: '80',
       proxyHttpsPort: '443',
-      proxyRedisPort: '8161',
       proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
       proxyHttpsFallbacks: ['444', '4433', '4444', '4443']
     };
@@ -34,6 +34,7 @@ module.exports = function(lando) {
     // Grab the merged config
     var proxyConf = {
       proxy: lando.config.proxy,
+      proxyDash: lando.config.proxyDash,
       proxyHttpPort: lando.config.proxyHttpPort,
       proxyHttpsPort: lando.config.proxyHttpsPort,
       proxyHttpFallbacks: lando.config.proxyHttpFallbacks,
