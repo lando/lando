@@ -4,8 +4,7 @@ name: memcache
 # Give me http://memcache.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
+    - memcache.lndo.site
 
 # Spin up a basic nodes server with memcached backend
 services:

@@ -1,11 +1,7 @@
 name: trivial-services
 proxy:
   nginx:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - trivial-services.lndo.site
 services:
   appserver:
     type: nginx:stable

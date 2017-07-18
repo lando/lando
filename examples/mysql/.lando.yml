@@ -4,11 +4,7 @@ name: mysql
 # Give me http://mysql.lndo.site and https://mysql.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - mysql.lndo.site
 
 # Set up my services
 services:

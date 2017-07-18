@@ -180,17 +180,11 @@ module.exports = function(lando) {
   /*
    * Helper to return proxy config
    */
-  var proxy = function() {
+  var proxy = function(name) {
     return {
-      edge: [{
-        port: '80/tcp',
-        default: true
-      }],
-      'edge_ssl': [{
-        port: '443/tcp',
-        default: true,
-        secure: true
-      }]
+      edge: [
+        [name, lando.config.proxyDomain].join('.')
+      ]
     };
   };
 
@@ -419,7 +413,7 @@ module.exports = function(lando) {
     build.services.index = solr(config.index);
 
     // Reset the proxy to route through the edge
-    build.proxy = proxy();
+    build.proxy = proxy(name);
 
     // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));

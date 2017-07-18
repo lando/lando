@@ -4,11 +4,7 @@ name: apache
 # Give me http://apache.lndo.site and https://apache.lndo.site
 proxy:
   html:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - apache.lndo.site
 
 # Build me an apache worthy of the internet
 services:

@@ -4,8 +4,7 @@ name: trivial-tooling
 # Proxy the basics
 proxy:
   nginx:
-    - port: 80/tcp
-      default: true
+    - trivial-tooling.lndo.site
 
 # Let up a basic LEMP stack
 services:

@@ -7,9 +7,7 @@ recipe: lemp
 # Additional mailhog proxy settings so we get a nice URL for the mailhog ui
 proxy:
   mailhog:
-    - port: 80/tcp
-      subdomains:
-        - admin
+    - mail.lemp.lndo.site
 
 # Mailhog things
 services:

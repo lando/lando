@@ -4,8 +4,7 @@ name: elasticsearch
 # Give me http://elasticsearch.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
+    - elasticsearch.lndo.site
 
 # Spin up a basic nodes server with elasticsearch backend
 services:

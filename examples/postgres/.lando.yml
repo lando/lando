@@ -4,11 +4,7 @@ name: postgres
 # Give me http://postgres.lndo.site and https://postgres.lndo.site
 proxy:
   html:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - postgres.lndo.site
 
 # Service configuration
 services:
