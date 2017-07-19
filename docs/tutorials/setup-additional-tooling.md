@@ -1,9 +1,12 @@
 Setting Up Additional Tooling
 ===
 
-Lando allows you to set up additional tools in addition to the ones it comes with.  In this tutorial we will add a `git` tool.
+Lando allows you to set up additional tools in addition to the ones it comes with.  In this tutorial we will add some tooling routes:
+* To an existing service `lando git`
+* To a build step service `lando phpunit`
+* To a server installed service `lando phantomjs`
 
-Adding a `lando git` Command
+Existing Service: Adding a `lando git` Command
 --
 
 * Add a `lando git` command to an existing git service inside the appserver container.
@@ -11,14 +14,12 @@ Adding a `lando git` Command
 
 
 * Open the `.lando.yml` file for your app.
-
 * If there is no `tooling` section of the yml file then add one.  If there is a `tooling` section add the new tooling command in this case `git` by adding the following lines:
 
 ```yml
-
-    git:
-      service: appserver
-
+tooling:
+  git:
+    service: appserver
 ```
 
 * Save the `.lando.yml` file.
@@ -56,9 +57,84 @@ replace `{someGitCommand}` with a specific command for example:
 ```
 
 Further Reading
----
+--
 These steps show you how to add a `lando git` command to run inside one of
 your services. To see the general docs on tooling here:
 https://docs.lndo.io/config/tooling.html.
 
 For more documentation on available `git` commands: https://git-scm.com/docs
+
+Build Step Service: Adding `lando phpunit` Command
+---
+
+The Git command was already installed on the appserver so we just had to add the lando route to it and it works! Here we will install `phpunit` that is not installed on the appserver and add a lando route to it so we can use it with `lando phpunit`.
+
+* Open the `.lando.yml` file for your app.
+* Add a `composer` section and get `phpunit` like so:
+
+```yml
+composer:
+  phpunit/phpunit: '*'
+```
+
+* Add a build step that runs `composer install`:
+
+```yml
+build:
+  - "cd $LANDO_MOUNT && composer install || true"
+```
+
+* Now to add a route add a `phpunit` key to the tooling section of `.lando.yml`:
+
+```yml
+tooling:
+  phpunit:
+    service: appserver
+    description: "Run PHP Unit tests: lando phpunit"
+```
+
+Now the command `phpunit` is available in the list when typing: `lando` at your command prompt. The description key under the `phpunit` key will be the message in the help section that is optional but can be useful. To run `phpunit` now just type:
+
+```bash
+lando phpunit
+```
+Happy testing!
+
+Server Installed Service: Adding `lando phantomjs` Command
+---
+
+We can add lando routes to server installed commands as well.  Here we will add a `lando phantomjs` command.
+
+* Open the `.lando.yml` file for your app.
+* We will intstall `phantomjs` on the appserver:
+  * add and `extras` key to your `.lando.yml` file and add the commands to get the `phantomjs` dependencies and the `phantomjs` binary:
+
+```yml
+extras:
+  - "apt-get update -y"
+  - "apt-get install build-essential chrpath libssl-dev libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 -y"
+  - "wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2"
+  - "tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/"
+  - "ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/"
+```
+The `extras` section will issue these commands against the appserver. After adding the `extras` key you will need to restart lando in order to have it issue these commands against the container:
+
+```bash
+lando restart
+```
+
+* Now to add your `phantomjs` lando route to the `tooling` key in `.lando.yml`:
+
+```yml
+tooling:
+  phantomjs:
+    service: appserver
+    description: "Run phantomjs commands"
+```
+
+Now you can run `phantomjs` commands trough lando! To test the installation issue this command at the command line:
+
+```bash
+lando phantomjs --version
+```
+Happy testing!
