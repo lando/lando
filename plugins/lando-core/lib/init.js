@@ -112,6 +112,12 @@ module.exports = function(lando) {
    * Helper to return a create key command
    */
   var createKey = function(key) {
+
+    // Ensure that cache directory exists
+    var keysDir = path.join(lando.config.userConfRoot, 'keys');
+    fs.mkdirpSync(path.join(keysDir));
+
+    // Key cmd
     return [
       'ssh-keygen',
       '-t rsa -N "" -C "lando" -f "/user/.lando/keys/' + key + '"'
