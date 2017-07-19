@@ -36,7 +36,7 @@
 
 *   [Backdrop](recipes/backdrop.md)
 *   [Drupal 6](recipes/drupal6.md)
-*   [Drupal 7](recipes/drupal.md)
+*   [Drupal 7](recipes/drupal7.md)
 *   [Drupal 8](recipes/drupal8.md)
 *   [Laravel](recipes/laravel.md)
 *   [LAMP](recipes/lamp.md)
