@@ -4,6 +4,11 @@ name: backdrop
 # Start with the default Backdrop recipe
 recipe: backdrop
 
+# Add address for mailhog
+proxy:
+  mailhog:
+    - mail.backdrop.lndo.site
+
 # Configure the Backdrop recipe
 config:
 
@@ -88,6 +93,10 @@ services:
   cache:
     type: redis
     persist: true
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
 tooling:
   redis-cli:
     service: cache

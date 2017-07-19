@@ -4,8 +4,7 @@ name: redis
 # Give me http://redis.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
+    - redis.lndo.site
 
 # Spin up a basic nodes server with redis backend
 services:

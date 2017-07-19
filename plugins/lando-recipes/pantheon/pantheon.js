@@ -180,17 +180,11 @@ module.exports = function(lando) {
   /*
    * Helper to return proxy config
    */
-  var proxy = function() {
+  var proxy = function(name) {
     return {
-      edge: [{
-        port: '80/tcp',
-        default: true
-      }],
-      'edge_ssl': [{
-        port: '443/tcp',
-        default: true,
-        secure: true
-      }]
+      edge: [
+        [name, lando.config.proxyDomain].join('.')
+      ]
     };
   };
 
@@ -261,7 +255,7 @@ module.exports = function(lando) {
     var mounts = [
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
-      '/scripts:pantheon.sh'
+      '/srv/includes:pantheon.sh'
     ];
 
     // Loop
@@ -410,6 +404,14 @@ module.exports = function(lando) {
     var dependsPath = 'services.appserver.overrides.services.depends_on';
     _.set(build, dependsPath, ['index']);
 
+    // Add in our pantheon script
+    // NOTE: We do this here instead of in /scripts because we need to gaurantee
+    // it runs before the other build steps so it can reset our CA correctly
+    build.services.appserver.extras = [
+      'chmod +x /srv/includes/pantheon.sh',
+      '/srv/includes/pantheon.sh'
+    ];
+
     // Reset our build steps
     build.services.appserver.build = buildSteps(config);
 
@@ -419,7 +421,7 @@ module.exports = function(lando) {
     build.services.index = solr(config.index);
 
     // Reset the proxy to route through the edge
-    build.proxy = proxy();
+    build.proxy = proxy(name);
 
     // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));

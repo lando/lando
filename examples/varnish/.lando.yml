@@ -13,12 +13,7 @@ proxy:
 
   # Replace with our varnish and ssl termination endpoints
   edge:
-    - port: 80/tcp
-      default: true
-  edge_ssl:
-    - port: 443/tcp
-      default: true
-      secure: true
+    - varnish.lndo.site
 
 # Set up my services
 services:

@@ -4,11 +4,7 @@ name: mariadb
 # Give me http://mariadb.lndo.site and https://mariadb.lndo.site
 proxy:
   html:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - mariadb.lndo.site
 
 # Set up my services
 services:

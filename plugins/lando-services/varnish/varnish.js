@@ -98,6 +98,16 @@ module.exports = function(lando) {
       backends = [backends];
     }
 
+    // Build cmd
+    // Ee want to turn off host and dns tracking to make this more reliable
+    var chap = '/etc/chaperone.d/chaperone.conf';
+    var cmd = [
+      '/bin/sh -c',
+      '"sed -i \\\"/  enabled: /c\  enabled: false,\\\" ' + chap,
+      '&&',
+      '/usr/local/bin/chaperone --user root --force --debug"',
+    ].join(' ');
+
     // Default varnish service
     var varnish = {
       image: versionConfig[config.version].image,
@@ -109,7 +119,7 @@ module.exports = function(lando) {
         BACKENDS_PROBE_ENABLED: 'false'
       },
       'depends_on': backends,
-      command: ['/usr/local/bin/chaperone', '--user', 'root', '--force']
+      command: cmd
     };
 
     // Handle custom vcl file

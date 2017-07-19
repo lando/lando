@@ -4,11 +4,7 @@ name: nginx
 # Give me http://nginx.lndo.site and https://nginx.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - nginx.lndo.site
 
 # Configure my services
 services:

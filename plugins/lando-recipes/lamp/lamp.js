@@ -108,11 +108,10 @@ module.exports = function(lando) {
   /*
    * Helper to return proxy config
    */
-  var proxy = function() {
+  var proxy = function(name) {
     return {
       appserver: [
-        {port: '80/tcp', default: true},
-        {port: '443/tcp', default: true, secure: true}
+        [name, lando.config.proxyDomain].join('.')
       ]
     };
   };
@@ -250,7 +249,7 @@ module.exports = function(lando) {
     var build = {};
 
     // Get our things
-    build.proxy = proxy();
+    build.proxy = proxy(name);
     build.services = services(config);
     build.tooling = tooling(config);
 

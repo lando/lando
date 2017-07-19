@@ -64,8 +64,8 @@ module.exports = function(lando) {
       labels: {'io.lando.container': 'TRUE'},
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/scripts/user-perms.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/scripts/load-keys.sh'
+        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
       ]
     };
 
@@ -112,6 +112,12 @@ module.exports = function(lando) {
    * Helper to return a create key command
    */
   var createKey = function(key) {
+
+    // Ensure that cache directory exists
+    var keysDir = path.join(lando.config.userConfRoot, 'keys');
+    fs.mkdirpSync(path.join(keysDir));
+
+    // Key cmd
     return [
       'ssh-keygen',
       '-t rsa -N "" -C "lando" -f "/user/.lando/keys/' + key + '"'

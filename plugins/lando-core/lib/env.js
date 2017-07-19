@@ -48,7 +48,8 @@ module.exports = function(lando) {
     app.env.COLUMNS = 256;
 
     // Add in some global labels
-    app.labels = {'io.lando.container': 'TRUE'};
+    var labels = app.labels || {};
+    app.labels = _.merge(labels, {'io.lando.container': 'TRUE'});
 
     // Add the global env object to all our services
     app.events.on('app-ready', function() {

@@ -4,11 +4,7 @@ name: node
 # Give me http://node.lndo.site and https://node.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - node.lndo.site
 
 # Spin up services to run a basic node server
 services:

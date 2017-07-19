@@ -167,9 +167,14 @@ module.exports = function(lando) {
         // Grab a new cli table
         var table = new lando.cli.Table();
 
+        // Get docs link
+        var docBase = 'https://docs.lndo.io/recipes/';
+        var docUrl = docBase + config.recipe + '.html';
+
         // Add data
         table.add('NAME', config.name);
         table.add('RECIPE', config.recipe);
+        table.add('DOCS', docUrl);
 
         // Add some other things if needed
         if (!_.isEmpty(options.method)) {

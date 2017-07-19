@@ -12,29 +12,23 @@ proxy:
   # NOTE: You can specify more than one service.
   web:
 
-    # A port to proxy (generally this will be 80 or 443)
-    - port: 80/tcp
+    # By default this will proxy both port 80 and 443 giving you
+    # http://trivial-proxy.lndo.site and https://trivial-proxy.lndo.site
+    - trivial-proxy.lndo.site
 
-      # Points `http://trivial-proxy.lndo.site` to your app
-      default: true
+    # You can also add any subdomains you want
+    - sub.trivial-proxy.lndo.site
 
-      # Also points `http://{site1|site2|site3|site4}.trivial-proxy.lndo.site` to your site
-      subdomains:
-        - site1
-        - site2
-        - site3
-        - site4
+    # If you do not specify a domain ending in `.lndo.site` you will need
+    # to add an entry in /etc/hosts
+    #
+    # See: https://docs.lndo.io/config/proxy.html#working-offline-or-using-custom-domains
+    - bob.frank.kbox.com
+    - frank.bob.joe
+    - tippecanoe.tyler.too
 
-      # Set this to true if you want to access these addresses over https.
-      # You will need to make sure the underlying service is set up to do this.
-      # secure: true
-
-      # Points the below addresses to your site as well
-      # NOTE: You likely will want to add these to your /etc/hosts file so that they
-      # point to 127.0.0.1
-      custom:
-        - bob.frank.kbox.com
-        - frank.bob.joe
-        - tippecanoe.tyler.too
-
-
+    # If your service uses a different port you can add that to the end of the service
+    # If your service uses both http and https use the http port
+    - another.lndo.site:80
+    #- andonemore.lndo.site:8000
+    #- db.lndo.site:3306

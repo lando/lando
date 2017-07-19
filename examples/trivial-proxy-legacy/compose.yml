@@ -4,7 +4,9 @@ services:
     image: httpd
     ports:
       - "80"
+      - "8088:80"
   web2:
     image: nginx
     ports:
+      - "8121:80"
       - "80"

@@ -14,11 +14,10 @@ module.exports = function(lando) {
   /*
    * Helper to return proxy config
    */
-  var proxy = function() {
+  var proxy = function(name) {
     return {
       nginx: [
-        {port: '80/tcp', default: true},
-        {port: '443/tcp', default: true, secure: true}
+        [name, lando.config.proxyDomain].join('.')
       ]
     };
   };
@@ -32,7 +31,7 @@ module.exports = function(lando) {
     var build = lando.recipes.build(name, 'lamp', config);
 
     // Replace the proxy
-    build.proxy = proxy();
+    build.proxy = proxy(name);
 
     // Set via to nginx
     build.services.appserver.via = config.via || 'nginx';

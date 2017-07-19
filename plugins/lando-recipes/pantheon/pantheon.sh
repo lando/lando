@@ -39,15 +39,7 @@ update-ca-certificates --fresh
 echo "Setting up client key $INDEX_PEM"
 cp -rf $INDEX_PEM /var/www/certs/binding.pem
 
-# If we don't have an SSH key already let's create one
-# if [ ! -f "$HOME/keys/${KALABOX_SSH_KEY}" ]; then
-#   ssh-keygen -t rsa -N "" -C "${TERMINUS_USER}.kbox" -f "$HOME/keys/${KALABOX_SSH_KEY}"
-# fi
-
-# Post that key to pantheon
-# NOTE: Pantheon is smart and will not add the same key twice
-# terminus ssh-keys add --file="$HOME/keys/${KALABOX_SSH_KEY}.pub"
-
+# LOCKR integration
 # If we don't have our dev cert already let's get it
 # if [ ! -f "/certs/binding.pem" ]; then
 #   $(terminus site connection-info --field=sftp_command):certs/binding.pem /certs/binding.pem
@@ -61,4 +53,4 @@ cp -rf $INDEX_PEM /var/www/certs/binding.pem
 # fi
 
 # Set some perms
-nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/tmp &>/dev/null &
+chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/tmp

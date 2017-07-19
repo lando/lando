@@ -35,9 +35,9 @@
 ## Recipes
 
 *   [Backdrop](recipes/backdrop.md)
-*   [Drupal 6](recipes/d6.md)
-*   [Drupal 7](recipes/d7.md)
-*   [Drupal 8](recipes/d8.md)
+*   [Drupal 6](recipes/drupal6.md)
+*   [Drupal 7](recipes/drupal.md)
+*   [Drupal 8](recipes/drupal8.md)
 *   [Laravel](recipes/laravel.md)
 *   [LAMP](recipes/lamp.md)
 *   [LEMP](recipes/lemp.md)
@@ -47,6 +47,8 @@
 ## Services
 
 *   [apache](services/apache.md)
+*   [elasticsearch](services/elasticsearch.md)
+*   [mailhog](services/mailhog.md)
 *   [mariadb](services/mariadb.md)
 *   [memcached](services/memcached.md)
 *   [mysql](services/mysql.md)
@@ -87,6 +89,7 @@
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Working with Pantheon](tutorials/pantheon-working.md)
 *   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
+*   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development

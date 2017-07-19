@@ -4,11 +4,7 @@ name: lamp
 # Give me http://lamp.lndo.site and https://lamp.lndo.site
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - lamp.lndo.site
 
 # Spin up services to run a basic LAMP stack
 services:
@@ -17,7 +13,7 @@ services:
   appserver:
 
     # PHP version 5.6
-    type: php:5.6
+    type: php:5.4
 
     # Serve php by either apache or nginx. You can put in any `service:version`
     # string that is supported by Lando's nginx and apache services.
