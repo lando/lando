@@ -42,7 +42,7 @@ If you do not do this Lando will not know how to automatically handle things lik
 ```bash
 # Pull a repo, init and start
 git clone https://github.com/pantheon-systems/drops-8.git drupal8
-cd drupal 8
+cd drupal8
 lando init --recipe pantheon
 
 # Or pull from github but init as pantheon
