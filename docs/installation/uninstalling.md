@@ -15,7 +15,7 @@ Windows
 1.  Open "Programs and Features" or "Add/Remove Programs"
 2.  Find and select Lando in the list
 3.  Click on "Uninstall"
-4.  Optionally you can remove "Docker for Mac" via "Add/Remove Programs" as well. This will destroy **ALL** your containers.
+4.  Optionally you can remove "Docker for Windows" via "Add/Remove Programs" as well. This will destroy **ALL** your containers.
 
 Linux
 -----
