@@ -92,7 +92,7 @@ You can get more in-depth information about the tooling this recipe provides by 
 cd /path/to/app
 
 # Get list of available commands
-lando-
+lando
 
 Usage: lando <command> [args] [options] [-- global options]
 
