@@ -1,7 +1,7 @@
 MySQL
 =====
 
-[MariaDB](https://www.mysql.com/) is a very common database server. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+[MySQL](https://www.mysql.com/) is a very common database server. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 Supported versions
 ------------------
