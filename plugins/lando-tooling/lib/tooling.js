@@ -76,11 +76,15 @@ module.exports = function(lando) {
         // Build out our options
         var options = {
           id: [config.app.dockerName, config.service, '1'].join('_'),
+          compose: config.app.compose,
+          project: config.app.name,
           cmd: cmd,
           opts: {
+            app: config.app,
             mode: 'attach',
             pre: ['cd', dir.join('/')].join(' '),
-            user: config.user || user
+            user: config.user || user,
+            services: [config.service]
           }
         };
 

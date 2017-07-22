@@ -98,8 +98,8 @@ module.exports = function(lando) {
 
     // Try to start the util
     return {
-      compose: [utilFile],
       project: project.join('_'),
+      compose: [utilFile],
       container: [project.join('').replace(/-/g, ''), 'util', '1'].join('_'),
       opts: {
         services: ['util']
@@ -135,10 +135,14 @@ module.exports = function(lando) {
     // Build out our run
     var run = {
       id: service.container,
+      compose: service.compose,
+      project: service.project,
       cmd: cmd,
       opts: {
+        app: {},
         mode: 'attach',
         user: user || 'www-data',
+        services: service.opts.services || ['util']
       }
     };
 

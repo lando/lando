@@ -48,10 +48,14 @@ module.exports = function(lando) {
           // Build out our run
           var run = {
             id: [app.dockerName, service, '1'].join('_'),
+            compose: app.compose,
+            project: app.name,
             cmd: options.command || 'cd $LANDO_MOUNT && bash',
             opts: {
+              app: app,
               mode: 'attach',
-              user: options.user || 'root'
+              user: options.user || 'root',
+              services: [service]
             }
           };
 
