@@ -57,15 +57,15 @@ lando php -v
 Connecting to Services
 ----------------------
 
-Now lets try to connect with the `database` that ships as part of the LEMP recipe. We can either run `lando info` to get connection info to our database or use the [environmental variables](http://localhost:4000/recipes/lemp.html#environmental-variables) the recipe injects into our appserver.
+Now, let's try to connect with the `database` that ships as part of the LEMP recipe. We can either run `lando info` to get connection info to our database or use the [environmental variables](http://localhost:4000/recipes/lemp.html#environmental-variables) the recipe injects into our appserver.
 
 ```bash
-# Lets copy index.php to info.php
+# Let's copy index.php to info.php
 cd web
 cp -rf index.php info.php
 ```
 
-Now, let's replace our old `index.php` with the following. We will use some special environment variables set by lando to connect.
+Next, let's replace our old `index.php` with the following. We will use some special environment variables set by lando to connect.
 
 ```php
 <?php

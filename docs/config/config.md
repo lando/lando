@@ -15,7 +15,7 @@ You can also configure how Lando itself works with a `config.yml`. This config s
 config.yml
 ----------
 
-This file specifies the core configuration options for Lando. If you wanted to fork Lando and use your own plugins or alter plugin config like proxy ports this is the file you would want to change. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one it will override the default config. Here is the order the overrides take place.
+This file specifies the core configuration options for Lando. If you wanted to fork Lando and use your own plugins or alter plugin config like proxy ports, this is the file you would want to change. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. The order of the overrides is below:
 
 1.  The default `config.yml`. If you've installed Lando from source this will be in the source root.
 2.  The `config.yml` inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.

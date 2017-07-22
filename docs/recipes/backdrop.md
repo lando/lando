@@ -17,16 +17,16 @@ Example
 
 {% codesnippet "./../examples/backdrop/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/backdrop)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/backdrop).
 
 Installing Backdrop
 -------------------
 
 You will need to make sure you [extract Backdrop](https://backdropcms.org/installation) into either your application root directory or the subdirectory specified by `webroot` in your recipe config.
 
-Lando will handle your database credentials automatically during install.
+Lando will handle your database credentials automatically during the install.
 
-If you want to see an example you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/backdrop) to get started.
+If you want to see an example, you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/backdrop) to get started.
 
 ```bash
 # Get backdrop
@@ -44,10 +44,10 @@ cd www
 lando drush status
 ```
 
-Environmental Variables
------------------------
+Environment Variables
+---------------------
 
-Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 BACKDROP_SETTINGS=JSON_STRING_OF_BACKDROP_SETTINGS
@@ -61,7 +61,7 @@ DB_PORT=3306
 Getting Service Information
 ---------------------------
 
-You can get more in depth information about the services this recipe provides by running `lando info`
+You can get more in-depth information about the services this recipe provides by running `lando info`.
 
 ```bash
 # Navigate to the app
@@ -109,7 +109,7 @@ lando info
 
 ### Getting Tooling Information
 
-You can get more in depth information about the tooling this recipe provides by running `lando`
+You can get more in-depth information about the tooling this recipe provides by running `lando`.
 
 ```bash
 # Navigate to the app

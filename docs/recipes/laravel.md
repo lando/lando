@@ -1,7 +1,7 @@
-Larvel
-======
+Laravel
+=======
 
-[Laravel](https://laravel.com/) is a free, open-source PHP web framework, created by Taylor Otwell and intended for the development of web applications following the model–view–controller (MVC) architectural pattern. It is the Ruby-on-Rails of PHP.
+[Laravel](https://laravel.com/) is a free, open-source PHP web framework created by Taylor Otwell and intended for the development of web applications following the model–view–controller (MVC) architectural pattern. It is the Ruby-on-Rails of PHP.
 
 You can easily boot up a best practices stack to run and develop Laravel by adding the following to your app's `.lando.yml`.
 
@@ -17,7 +17,7 @@ Example
 
 {% codesnippet "./../examples/laravel/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/laravel)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/laravel).
 
 Installing Laravel
 ------------------
@@ -44,10 +44,10 @@ rm -rf site
 lando artisan env
 ```
 
-Environmental Variables
------------------------
+Environment Variables
+---------------------
 
-Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 # Cache
@@ -66,7 +66,7 @@ Note that these can be vary based on the choices you make in your recipe config.
 
 ### Getting Service Information
 
-You can get more in depth information about the services this recipe provides by running `lando info`
+You can get more in-depth information about the services this recipe provides by running `lando info`.
 
 ```bash
 # Navigate to the app
@@ -136,7 +136,7 @@ lando info
 Getting Tooling Information
 ---------------------------
 
-You can get more in depth information about the tooling this recipe provides by running `lando`
+You can get more in-depth information about the tooling this recipe provides by running `lando`.
 
 ```bash
 # Navigate to the app

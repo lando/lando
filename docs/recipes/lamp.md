@@ -1,7 +1,7 @@
 LAMP
 ====
 
-[LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) is a common technology stack designed to run `php` applications. It specifically means **L**inux, **A**pache **M**ySQL and **P**HP but is usually generalized to include other webservers like `nginx` and other relationship SQL databases such as `postgres` or `sqlite`.
+[LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) is a common technology stack designed to run `php` applications. It specifically means **L**inux, **A**pache **M**ySQL and **P**HP but is usually generalized to include other webservers like `nginx` and other SQL relational databases such as `postgres` or `sqlite`.
 
 You can easily boot up a LAMP stack for your app by adding the following to your app's `.lando.yml`.
 
@@ -17,12 +17,12 @@ Example
 
 {% codesnippet "./../examples/lamp2/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lamp2)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lamp2).
 
-Environmental Variables
------------------------
+Environment Variables
+---------------------
 
-Lando will add some helpful environmental variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 DB_HOST=database
@@ -35,7 +35,7 @@ DB_PORT=3306
 Getting Service Information
 ---------------------------
 
-You can get more in depth information about the services this recipe provides by running `lando info`
+You can get more in-depth information about the services this recipe provides by running `lando info`.
 
 ```bash
 # Navigate to the app
@@ -83,7 +83,7 @@ lando info
 
 ### Getting Tooling Information
 
-You can get more in depth information about the tooling this recipe provides by running `lando`
+You can get more in-depth information about the tooling this recipe provides by running `lando`.
 
 ```bash
 # Navigate to the app

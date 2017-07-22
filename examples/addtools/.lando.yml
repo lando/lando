@@ -1,0 +1,24 @@
+# Example for a basic lemp stack with some extra tools installed
+name: addtools
+recipe: lemp
+config:
+  php: '7.1'
+services:
+  appserver:
+    composer:
+      phpunit/phpunit: '*'
+    extras:
+      - "apt-get update -y"
+      - "apt-get install build-essential chrpath libssl-dev libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 -y"
+      - "wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2"
+      - "tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/"
+      - "ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/"
+tooling:
+  phpunit:
+    service: appserver
+    description: "Run PHP Unit tests: lando phpunit"
+  phantomjs:
+    service: appserver
+    description: "Run phantomjs commands"
+  git:
+    service: appserver
