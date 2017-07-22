@@ -114,5 +114,5 @@ lando node -e "console.log(process.platform);"
 lando npm install -g grunt-cli
 
 # See the version of grunt we just installed
-lando.dev ssh node -c "grunt --version"
+lando ssh node -c "grunt --version"
 ```
