@@ -1,5 +1,5 @@
 Elasticsearch
-=========
+=============
 
 [Elasticsearch](https://www.elastic.co/products/elasticsearch) is a search and analytics engine, commonly used as a substitute for Solr or for collecting log and metrics data. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
@@ -18,7 +18,7 @@ Example
 
 {% codesnippet "./../examples/elasticsearch/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/elasticsearch)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/elasticsearch).
 
 Getting information
 -------------------
