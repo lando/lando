@@ -47,7 +47,7 @@ lando start
 ```bash
 cd /path/to/my/local/code
 lando init appname
-land start
+lando start
 ```
 
 #### 3. Or pull from GitHub or Pantheon
