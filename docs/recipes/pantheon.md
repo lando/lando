@@ -17,12 +17,12 @@ Example
 
 {% codesnippet "./../examples/pantheon/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/pantheon)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/pantheon).
 
 pantheon.yml
 ------------
 
-If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/) you will want to do that in your  [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would for Pantheon itself.
+If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would for Pantheon itself.
 
 {% codesnippet "./../examples/pantheon/pantheon.yml" %}{% endcodesnippet %}
 
@@ -37,7 +37,7 @@ You will want to make sure your codebase is fundamentally based on one of Panthe
 *   [Drupal 8](https://github.com/pantheon-systems/drops-8)
 *   [WordPress](https://github.com/pantheon-systems/WordPress)
 
-If you do not do this Lando will not know how to automatically handle things like your database connection or SOLR infrastructure.
+If you do not do this, Lando will not know how to automatically handle things like your database connection or SOLR infrastructure.
 
 ```bash
 # Pull a repo, init and start
@@ -119,7 +119,7 @@ Each Lando Pantheon recipe will also ship with the Pantheon toolchain. This mean
 
 > #### Warning::Tools are dependent on framework
 >
-> Lando will load up tools that are appropriate to the framework you specified in the recipe config section of your `.lando.yml` eg `wp-cli` will be available for WordPress sites and Drush will be available for Drupal sites.
+> Lando will load up tools that are appropriate to the framework you specified in the recipe config section of your `.lando.yml`. eg. `wp-cli` will be available for WordPress sites and Drush will be available for Drupal sites.
 
 ```bash
 # GEt to my app
@@ -155,7 +155,7 @@ Lando attempts to closely mimic the Pantheon environment. Please review the foll
 
 What works on Pantheon **should** also work on Lando.
 
-You can get more in depth information about the services this recipe provides by running `lando info`
+You can get more in-depth information about the services this recipe provides by running `lando info`.
 
 ```bash
 # Navigate to the app
