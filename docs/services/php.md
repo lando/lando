@@ -1,7 +1,7 @@
-php
+PHP
 ===
 
-[php](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md) You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+[PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md) You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 Supported versions
 ------------------
@@ -20,14 +20,14 @@ LAMP Example
 
 {% codesnippet "./../examples/lamp/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lamp)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lamp).
 
 LEMP Example
 ------------
 
 {% codesnippet "./../examples/lemp/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` for changes to this file to take. You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/lemp)
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lemp).
 
 Using Xdebug
 ------------
@@ -44,7 +44,7 @@ You can activate `xdebug` for remote debugging by setting `xdebug: true` in the 
   }
 ```
 
-The first part of a pathmap will be the location of your code in the container. Generally, this should be `/app`. Also note that if your app is in a nested docroot you will need to append that to the paths. The example above uses an app with a nested webroot called `www`.
+The first part of a pathmap will be the location of your code in the container. Generally, this should be `/app`. Also note that if your app is in a nested docroot, you will need to append that to the paths. The example above uses an app with a nested webroot called `www`.
 
 > #### Info::Problems starting XDEBUG
 >
