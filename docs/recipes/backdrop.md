@@ -45,7 +45,7 @@ lando drush status
 ```
 
 Environment Variables
------------------------
+---------------------
 
 Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
