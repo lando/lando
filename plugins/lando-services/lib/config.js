@@ -79,9 +79,13 @@ module.exports = function(lando) {
         return {
           id: container,
           cmd: cmd,
+          compose: app.compose,
+          project: app.name,
           opts: {
+            app: app,
             mode: 'attach',
-            user: user
+            user: user,
+            services: [container.split('_')[1]]
           }
         };
       };
