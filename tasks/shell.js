@@ -88,7 +88,7 @@ module.exports = function(common) {
     var pkg = path.join(binDir, 'lib-es5', 'bin.js');
 
     // Get target info
-    var node = 'node6';
+    var node = 'node8';
     var os = process.platform;
     var arch = 'x64';
 
