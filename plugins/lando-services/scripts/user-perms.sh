@@ -31,9 +31,11 @@ if [ $(id -u) = 0 ]; then
   # Make sure we set the ownership of the mount and HOME when we start a service
   chown $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP "$LANDO_MOUNT"
   chown $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www
+  chown $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/bin
   chmod 755 /var/www
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP "$LANDO_MOUNT" &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www &>/dev/null &
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/bin &>/dev/null &
   nohup chmod -R 755 /var/www &>/dev/null &
 
   # Make sure we chown the $LANDO_WEBROOT_USER home directory
@@ -42,7 +44,6 @@ if [ $(id -u) = 0 ]; then
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.lando &>/dev/null &
 
   # Lets also make some /usr/locals chowned
-  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/bin &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/lib &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/share &>/dev/null &
 

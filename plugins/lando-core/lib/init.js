@@ -149,6 +149,13 @@ module.exports = function(lando) {
     // Start the container
     return lando.engine.start(service)
 
+    // On linux lets provide a little delay to make sure our user is set up
+    .then(function() {
+      if (process.platform === 'linux') {
+        return lando.Promise.delay(1000);
+      }
+    })
+
     // Exec
     .then(function() {
       return lando.engine.run(run);
