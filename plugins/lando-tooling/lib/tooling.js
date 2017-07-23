@@ -99,7 +99,8 @@ module.exports = function(lando) {
     return {
       command: config.name,
       describe: config.description || format('Run %s commands', config.name),
-      run: run
+      run: run,
+      options: config.options || {}
     };
 
   };
