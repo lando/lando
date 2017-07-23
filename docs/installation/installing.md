@@ -19,12 +19,11 @@ Windows
 3.  Double-click on `lando.exe`
 4.  Go through the setup workflow
 5.  Approve various UAC prompts during install
-6.  After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#shared-drives)
 7.  [Spin up your first Lando app](./../tutorials/basics.md)
 
-> #### Warning::YOU MUST SET UP SHARED DRIVES AND HAVE HYPER-V ENABLED
+> #### Warning::YOU MUST HAVE HYPER-V ENABLED
 >
-> After installation is finished make sure you [set up Shared Drives](https://docs.docker.com/docker-for-windows/#/shared-drives) and if you have further problems, check to see if [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install).
+> Make sure that [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install) or lando will not work!
 
 Linux
 -----
