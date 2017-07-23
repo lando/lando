@@ -67,3 +67,21 @@ tooling:
   mysql:
     service: database
     description: Drop into a MySQL shell
+
+  # Define `lando test` that passes through to a script that can handle options
+  #
+  # This isnt supposed to do anything it's just to demonstrate options declaration
+  # for the lando cli eg if you run `lando ps -- --help` you should see some
+  # options
+  #
+  # Note that options get passed into commands no matter what and AS IS, this is
+  # purely to provide helpers when running `lando CMD -- --help`. That means that
+  # in this example `lando ps --ef` will fail while `lando -ef` will succeed.
+  ps:
+    service: appserver
+    cmd: ps
+    options:
+      ef:
+        alias:
+          - ef
+        describe: Show more process stuff
