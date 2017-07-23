@@ -101,6 +101,11 @@ module.exports = function(lando) {
   lando.config.engineScriptsDir = scriptsDir;
   lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = scriptsDir;
 
+  // Set an envvar for our helpers directory
+  var helpersDir = path.join(__dirname, '..', 'helpers');
+  lando.config.engineHelpersDir = helpersDir;
+  lando.config.env.LANDO_ENGINE_HELPERS_DIR = helpersDir;
+
   // Set an envvar for our config directory
   var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
   lando.config.engineConfigDir = confDir;
@@ -163,13 +168,17 @@ module.exports = function(lando) {
   };
 
   /**
-   * Helper function to inject scripts
+   * Helper function to inject utility scripts
    */
-  var addScript = function(script, volumes) {
+  var addThing = function(script, volumes, here, there) {
+
+    // Set the base
+    var local = here || lando.config.engineScriptsDir;
+    var remote = there || 'scripts';
 
     // Construct the local path
-    var localFile = path.join(lando.config.engineScriptsDir, script);
-    var scriptFile = '/scripts/' + script;
+    var localFile = path.join(local, script);
+    var scriptFile = '/' + remote + '/' + script;
 
     // Filter the volumes by the host mount
     volumes = _.filter(volumes, function(volume) {
@@ -182,9 +191,26 @@ module.exports = function(lando) {
     // Push to volume
     volumes.push([localFile, scriptFile].join(':'));
 
+    // Log
+    lando.log.verbose('Injecting %s from %s to %s', script, here, there);
+
     // Return the volumes
     return volumes;
 
+  };
+
+  /**
+   * Helper function to inject utility scripts
+   */
+  var addHelper = function(script, volumes) {
+    return addThing(script, volumes, lando.config.engineHelpersDir, 'helpers');
+  };
+
+  /**
+   * Helper function to inject pre-run scripts
+   */
+  var addScript = function(script, volumes) {
+    return addThing(script, volumes, lando.config.engineScriptsDir, 'scripts');
   };
 
   /**
@@ -282,6 +308,9 @@ module.exports = function(lando) {
     // Add in SSH key loading
     services[name].volumes = addScript('load-keys.sh', services[name].volumes);
 
+    // Add generic helper scripts
+    services[name].volumes = addHelper('helper.sh', services[name].volumes);
+
     // Add in any custom pre-runscripts
     if (!_.isEmpty(config.scripts)) {
       _.forEach(config.scripts, function(script) {
@@ -316,6 +345,7 @@ module.exports = function(lando) {
   return {
     add: add,
     addConfig: addConfig,
+    addHelper: addHelper,
     addScript: addScript,
     build: build,
     buildVolume: buildVolume,

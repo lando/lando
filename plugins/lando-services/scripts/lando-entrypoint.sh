@@ -14,6 +14,11 @@ if [ -d "/scripts" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
   find /scripts/ -type f -exec {} \;
 fi;
 
+# Executable all the helpers
+if [ -d "/helpers" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
+  chmod +x /helpers/*
+fi;
+
 # Run the COMMAND
 echo "Running command $@"
 "$@"
