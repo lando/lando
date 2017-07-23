@@ -20,7 +20,3 @@ Your app needs to live inside of a shared drive or folder. Here are the followin
 Note that on macOS these need to be HARD LINKS. In other words, you cannot symlink `/Users` to `/SomethingElse` and expect it to work. This is often the case if you have an external drive.
 
 Also note that you can add additional folders and shares to Windows/macOS through the Docker GUI.
-
-> #### Hint::Shared drives is a manual step on Windows
->
->  You will want to make sure you have [enabled shared drives](https://docs.docker.com/docker-for-windows/#/shared-drives).
