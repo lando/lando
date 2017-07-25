@@ -190,6 +190,42 @@ module.exports = function(lando) {
   };
 
   /*
+   * Helper to return import tooling route
+   * @TODO: Add pgsql cmd at some point
+   */
+  var dbImport = function() {
+    return {
+      service: 'appserver',
+      description: 'Import <file> into database. File is relative to approot.',
+      cmd: '/helpers/mysql-import.sh',
+      options: {
+        host: {
+          description: 'The database host',
+          alias: ['h']
+        },
+        user: {
+          description: 'The database user',
+          default: 'root',
+          alias: ['u']
+        },
+        database: {
+          description: 'The database name',
+          alias: ['d']
+        },
+        password: {
+          description: 'The database password',
+          alias: ['p']
+        },
+        port: {
+          description: 'The database port',
+          default: 3306,
+          alias: ['P']
+        }
+      }
+    };
+  };
+
+  /*
    * Helper to return tooling config
    */
   var tooling = function(config) {
@@ -217,7 +253,9 @@ module.exports = function(lando) {
         description: 'Drop into a MySQL shell',
         user: 'root'
       };
+      tooling['db-import <file>'] = dbImport();
     }
+    // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {
       tooling.pgsql = {
         service: 'database',

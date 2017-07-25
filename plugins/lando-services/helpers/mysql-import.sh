@@ -112,10 +112,11 @@ fi
 # Put the pieces together
 CMD="$CMD | mysql -h $HOST -P $PORT -u $USER"
 if [ ! -z "$PASSWORD" ]; then
-   CMD="$CMD -p $PASSWORD $DATABASE"
+   CMD="$CMD -p$PASSWORD $DATABASE"
 else
   CMD="$CMD $DATABASE"
 fi
+echo $CMD
 
 # Import
 echo "Importing $FILE..."

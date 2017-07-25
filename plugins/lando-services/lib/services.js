@@ -95,6 +95,11 @@ module.exports = function(lando) {
 
   };
 
+  // Set an envvar for our config directory
+  var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
+  lando.config.engineConfigDir = confDir;
+  lando.config.env.LANDO_ENGINE_CONFIG_DIR = confDir;
+
   // Move our scripts over and set useful ENV we can use
   var scriptsDir = path.join(__dirname, '..', 'scripts');
   scriptsDir = moveConfig('scripts', scriptsDir);
@@ -103,13 +108,9 @@ module.exports = function(lando) {
 
   // Set an envvar for our helpers directory
   var helpersDir = path.join(__dirname, '..', 'helpers');
+  helpersDir = moveConfig('helpers', helpersDir);
   lando.config.engineHelpersDir = helpersDir;
   lando.config.env.LANDO_ENGINE_HELPERS_DIR = helpersDir;
-
-  // Set an envvar for our config directory
-  var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
-  lando.config.engineConfigDir = confDir;
-  lando.config.env.LANDO_ENGINE_CONFIG_DIR = confDir;
 
   // Registry of services
   var registry = {};
@@ -305,11 +306,14 @@ module.exports = function(lando) {
     vols.push('$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh');
     services[name].volumes = _.uniq(vols);
 
-    // Add in SSH key loading
+    // Add SSH key loading to every container
     services[name].volumes = addScript('load-keys.sh', services[name].volumes);
 
-    // Add generic helper scripts
-    services[name].volumes = addHelper('mysql-import.sh', services[name].volumes);
+    // Add generic helper scripts to every contaniner
+    var helpers = ['mysql-import.sh'];
+    _.forEach(helpers, function(helper) {
+      services[name].volumes = addHelper(helper, services[name].volumes);
+    });
 
     // Add in any custom pre-runscripts
     if (!_.isEmpty(config.scripts)) {
