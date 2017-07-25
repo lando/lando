@@ -90,6 +90,7 @@
 *   [Working with Pantheon](tutorials/pantheon-working.md)
 *   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
+*   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Development
