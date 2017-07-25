@@ -7,6 +7,7 @@ FROM php:5.6-fpm
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
     wget \
+    pv \
     unzip \
     ssh \
     git-core \

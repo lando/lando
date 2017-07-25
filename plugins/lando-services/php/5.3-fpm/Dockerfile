@@ -10,6 +10,7 @@ COPY docker-php-ext-* /usr/local/bin/
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
     wget \
+    pv \
     unzip \
     ssh \
     git-core \

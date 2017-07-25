@@ -255,7 +255,7 @@ module.exports = function(lando) {
     var mounts = [
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
-      '/srv/includes:pantheon.sh'
+      '/helpers:pantheon.sh'
     ];
 
     // Loop
@@ -407,10 +407,7 @@ module.exports = function(lando) {
     // Add in our pantheon script
     // NOTE: We do this here instead of in /scripts because we need to gaurantee
     // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.extras = [
-      'chmod +x /srv/includes/pantheon.sh',
-      '/srv/includes/pantheon.sh'
-    ];
+    build.services.appserver.extras = ['/helpers/pantheon.sh'];
 
     // Reset our build steps
     build.services.appserver.build = buildSteps(config);

@@ -309,7 +309,7 @@ module.exports = function(lando) {
     services[name].volumes = addScript('load-keys.sh', services[name].volumes);
 
     // Add generic helper scripts
-    services[name].volumes = addHelper('helper.sh', services[name].volumes);
+    services[name].volumes = addHelper('mysql-import.sh', services[name].volumes);
 
     // Add in any custom pre-runscripts
     if (!_.isEmpty(config.scripts)) {

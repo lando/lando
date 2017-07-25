@@ -49,7 +49,7 @@ module.exports = function(lando) {
         _.forEach(ports, function(externalPorts, port) {
 
           // Check to see if we have a port being forwarded and add it to the info
-          if (_.get(app, 'config.services[service].portforward', false)) {
+          if (_.get(app.config.services[service], 'portforward', false)) {
             var portPath = 'external_connection.port';
             _.set(app.info[service], portPath, externalPorts[0].HostPort);
           }
