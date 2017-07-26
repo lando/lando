@@ -43,6 +43,7 @@ cat > $SSH_CONF/ssh_config <<EOF
 Host *
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
+  LogLevel=ERROR
 ${SSH_IDENTITIES[*]}
 EOF
 IFS="${OLDIFS}"

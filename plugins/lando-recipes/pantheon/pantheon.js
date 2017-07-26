@@ -172,6 +172,30 @@ module.exports = function(lando) {
       };
     }
 
+    // Add in the pull command
+    tools.pull = {
+      service: 'appserver',
+      description: 'Pull database and/or files from Pantheon.',
+      cmd: '/helpers/pull.sh',
+      options: {
+        database: {
+          description: 'The environment to get the db from or [none]',
+          default: config.env,
+          alias: ['d']
+        },
+        files: {
+          description: 'The environment to get the files from or [none]',
+          default: config.env,
+          alias: ['f']
+        },
+        rsync: {
+          description: 'Rsync the files, good for subsequent pulls',
+          boolean: true,
+          default: false
+        }
+      }
+    };
+
     // Return the tools
     return tools;
 
@@ -210,7 +234,7 @@ module.exports = function(lando) {
    */
   var varnish = function(version) {
 
-    // The redis config
+    // The varnish config
     var config = {
       type: version,
       backends: ['nginx'],
@@ -218,7 +242,7 @@ module.exports = function(lando) {
       vcl: path.join(configDir, 'pantheon.vcl')
     };
 
-    // Return the redis service
+    // Return the varnish service
     return config;
 
   };
@@ -255,7 +279,8 @@ module.exports = function(lando) {
     var mounts = [
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
-      '/helpers:pantheon.sh'
+      '/helpers:pantheon.sh',
+      '/helpers:pull.sh'
     ];
 
     // Loop
