@@ -116,7 +116,6 @@ if [ ! -z "$PASSWORD" ]; then
 else
   CMD="$CMD $DATABASE"
 fi
-echo $CMD
 
 # Import
 echo "Importing $FILE..."
