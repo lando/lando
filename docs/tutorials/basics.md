@@ -1,70 +1,82 @@
 Getting Started
 ===============
 
+To get started, Lando needs to know where your code lives.
+
+- [Start from an existing codebase](#start-with-an-existing-codebase)
+- [Start from Github](#start-from-github)
+
 Start with an existing codebase
 -------------------------------
 
-Generally you will want to start by pulling down an existing codebase for a site with `git`, extracting an archive of a codebase or switching to a directory that contains the code for your app. For these getting started examples we will assume we are already in a directory with the following contents and structure.
+If you have a codebase that isn't on Github, then you'll want to download the code and switch to the directory that contains the code for your app.
 
-**Directory Structure**
 
-```bash
-./
-|-- index.php
-```
+1. Run lando init
 
-**index.php Contents**
-```php
-<?php
+  `lando init myapp`
 
-phpinfo();
+  This will initialize a dialogue which will guide you through the rest of the process, including selecting a [recipe](./../config/recipes.md) that is closest to the kind of app you want to run and creating a `.lando.yml` file in the root of your app directory, which should look somethint like this:
 
-?>
-```
+  ```yml
+  name: myapp
+  recipe: lamp
+  ```
 
-> #### Info::Does not need to be PHP
->
->  You can use Lando for [more than just php projects](./../config/services.md)
+2. Run `lando start`
 
-Choose a recipe
----------------
+  ```bash
+  # Start up your app
+  lando start
+  Creating network "myapp_default" with the default driver
+  Creating volume "myapp_appserver" with default driver
+  Creating volume "myapp_data" with default driver
+  Creating myapp_appserver_1
+  Creating myapp_database_1
+  Creating myapp_unisonappserver_1
+  Recreating lando_proxy_1
 
-Choose a [recipe](./../config/recipes.md) that is closest to the kind of app you want to run and create a `.lando.yml` file in the root of your app directory. In this example we will start with the [LAMP](./../recipes/lamp.md) recipe.
+  BOOMSHAKALAKA!!!
 
-```yml
-name: myapp
-recipe: lamp
-```
+  Your app has started up correctly.
+  Here are some vitals:
 
-Start your app
---------------
+   NAME      myapp
+   LOCATION  /Users/pirog/Desktop/work/lando/examples/started
+   SERVICES  appserver, database, unisonappserver
+   URLS      https://localhost:32778
+             http://localhost:32779
+             http://myapp.lndo.site
+             https://myapp.lndo.site
+  ```
 
-```bash
-# Start up your app
-lando start
-Creating network "myapp_default" with the default driver
-Creating volume "myapp_appserver" with default driver
-Creating volume "myapp_data" with default driver
-Creating myapp_appserver_1
-Creating myapp_database_1
-Creating myapp_unisonappserver_1
-Recreating lando_proxy_1
+  You can now access your app (in this case just the php info) on any of the accessible (eg green) urls specified!
 
-BOOMSHAKALAKA!!!
+Start from Github
+-----------------
 
-Your app has started up correctly.
-Here are some vitals:
+If you already have project source code on Github, you can easily pull it down with Lando.
 
- NAME      myapp
- LOCATION  /Users/pirog/Desktop/work/lando/examples/started
- SERVICES  appserver, database, unisonappserver
- URLS      https://localhost:32778
-           http://localhost:32779
-           http://myapp.lndo.site
-           https://myapp.lndo.site
-```
+1. Generate a Github Personal Access Token
 
-You can now access your app (in this case just the php info) on any of the accessible (eg green) urls specified!
+  If you don't already have one, simply visit the [personal access token](https://github.com/settings/tokens/new) page in your Github account's settings to generate a new token for Lando (note you will need a [free Github account](https://github.com/join) for this to work). You need to grant the repo, admin:public_key and user scopes:
+
+  ![Github Personal Access Generation](../images/github-personal-access.png)
+
+2. Create your project directory.
+
+  `mkdir github-app-name && cd github-app-name`
+
+3. Run lando init
+
+  To instantiate from Github, `lando init` command takes two arguments: your new app's name, and the method of pulling it down. Here we would run...
+
+  `lando init github-app-name github`
+
+  This will initialize a dialogue which will guide you through the rest of the process.
+
+4. Run `lando start`
+
 
 Discover Services
 -----------------

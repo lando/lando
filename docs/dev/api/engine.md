@@ -307,6 +307,10 @@ return lando.engine.start(app);
 ### engine.run(data) ⇒ <code>Promise</code>
 Runs a command on a given service/container. This is a wrapper around `docker exec`.
 
+UNTIL the resolution of https://github.com/apocas/docker-modem/issues/83 data needs to also be or be an
+array of compose objects for this to work correctly on Windows as well. See some of the other engine
+documentation for what a compose object looks like.
+
 **Kind**: static method of [<code>engine</code>](#module_engine)  
 **Returns**: <code>Promise</code> - A Promise with a string containing the command's output.  
 **Emits**: <code>event:pre-engine-run</code>, <code>event:post-engine-run</code>  
