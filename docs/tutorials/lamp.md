@@ -1,8 +1,73 @@
 Working with LAMP
 =================
 
-Environment Variables
----------------------
+Lando offers a [recipe](./../recipes/lamp.md) for spinning up apps that use the [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack, a common infrastructure designed to run PHP applications. Note that you'll only want to use this recipe if you have a custom PHP application not supported by one of Lando's other recipes. Let's go over some basic usage.
+
+Getting Started
+---------------
+
+Before you can use all the awesome Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
+
+
+### 1. Start with an existing codebase
+
+```bash
+# Clone codebase from git, un-tar codebase, receive as gift from the gods, etc.
+git clone https://private-repository.com/lamp-project.git mysite
+
+# Go into the cloned site
+cd mysite
+
+# Initialize a .lando.yml for this site
+# NOTE: You will need to choose the same site you cloned
+lando init mysite --recipe lamp
+```
+
+### 2. Get your site from GitHub
+
+```bash
+# Create a folder to clone your site to
+mkdir mysite
+
+# Initialize a Pantheon .lando.yml after getting code from GitHub
+# This require a GitHub Personal Access Token
+# See: https://docs.lndo.io/cli/init.html#github
+lando init mysite github --recipe lamp
+```
+
+Starting Your Site
+------------------
+
+Once you've completed the above you should be able to start your LAMP site.
+
+```bash
+lando start
+```
+
+If you vist any of the green-listed URLS that show up afterwards you should be welcomed with either the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file.
+
+Importing Your Database and Files
+---------------------------------
+
+
+Other Helpful Things
+--------------------
+
+The LAMP recipe comes pre-loaded with a few handy commands:
+
+```bash
+# Download a dependency with composer
+lando composer config repositories.drupal composer https://packages.drupal.org/8
+lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
+
+# Access MySQL CLI
+lando mysql
+```
+
+Check out our [LAMP Recipe](./../recipes/pantheon.md) for details on more advanced usage.
+
+Configuration
+-------------
 
 Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
@@ -14,10 +79,10 @@ DB_NAME=lamp
 DB_PORT=3306
 ```
 
-Getting Service Information
----------------------------
+Advanced Service Usage
+-----------------------
 
-You can get more in-depth information about the services this recipe provides by running `lando info`.
+You can get more in-depth information about the services this recipe provides by running `lando info`. See the [services](../config/services.md) for details on how to add more services or further customize these existing ones.
 
 ```bash
 # Navigate to the app
@@ -61,43 +126,4 @@ lando info
     }
   }
 }
-```
-
-### Getting Tooling Information
-
-You can get more in-depth information about the tooling this recipe provides by running `lando`.
-
-```bash
-# Navigate to the app
-cd /path/to/app
-
-# Get list of available commands
-lando
-
-Usage: lando <command> [args] [options] [-- global options]
-
-Commands:
-  config                   Display the lando configuration
-  destroy [appname]        Destroy app in current directory or [appname]
-  info [appname]           Prints info about app in current directory or [appname]
-  list                     List all lando apps
-  logs [appname]           Get logs for app in current directory or [appname]
-  poweroff                 Spin down all lando related containers
-  rebuild [appname]        Rebuilds app in current directory or [appname]
-  restart [appname]        Restarts app in current directory or [appname]
-  start [appname]          Start app in current directory or [appname]
-  stop [appname]           Stops app in current directory or [appname]
-  version                  Display the lando version
-  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
-  node                     Run node commands
-  npm                      Run npm commands
-  composer                 Run composer commands
-  php                      Run php commands
-  mysql                    Drop into a MySQL shell
-
-Global Options:
-  --help, -h  Show help
-  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
-
-You need at least one command before moving on
 ```
