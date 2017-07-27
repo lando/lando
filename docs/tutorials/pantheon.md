@@ -1,84 +1,78 @@
 Working with Pantheon
 =====================
 
-
-
-
-
-. Recipe config?
-
-
-
 Lando offers a [recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage. You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
-Pull from Pantheon or GitHub
-----------------------------
+Getting Started
+---------------
 
-While you can clone down any repo and [manually configure](./../recipes/pantheon.md) a `.lando.yml` file for your Pantheon site Lando provides a `lando init` command so that you can easily pull a site from Pantheon or GitHub. **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES** but you can read below on how to do that manually.
+Before you can use all the awesome Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
-If you do not already have a Pantheon [machine token](https://pantheon.io/docs/machine-tokens/) we suggest you [create one](https://pantheon.io/docs/machine-tokens/). If you are pulling from GitHub we recommend you [generate a personal access token](./../cli/init.md#github) as well.
+### 1. Start with an existing codebase
 
 ```bash
-# Pull and init site from Pantheon
-lando init myapp pantheon
+# Clone pantheon codebase from git
+# See: https://pantheon.io/docs/git/
+git clone ssh://codeserver.dev.PANTHEONID@codeserver.dev.PANTHEONIDdrush.in:2222/~/repository.git mysite
 
-# Or pull from github
-lando init myapp github --recipe pantheon
+# Go into the cloned site
+cd mysite
 
-# Commit the `.lando.yml` file to your repo
-git add .
-git commit -m "You look absolutely beautiful"
+# Initialize a .lando.yml for this site
+# NOTE: You will need to choose the same site you cloned
+lando init mysite --recipe pantheon
+```
 
-# Start the Pantheon app
-# If you have a composer.json Lando will automatically run composer install
+### 2. Get your site from Pantheon
+
+```bash
+# Create a folder to clone your site to
+mkdir mysite
+
+# Initialize a Pantheon .lando.yml after getting code from Pantheon
+# This require a Pantheon Machine Token
+# See: https://docs.lndo.io/cli/init.html#pantheon
+lando init mysite pantheon
+```
+
+### 3. Get your site from GitHub
+
+```bash
+# Create a folder to clone your site to
+mkdir mysite
+
+# Initialize a Pantheon .lando.yml after getting code from GitHub
+# This require a GitHub Personal Access Token
+# See: https://docs.lndo.io/cli/init.html#github
+lando init mysite github --recipe pantheon
+```
+
+Starting Your Site
+------------------
+
+Once you've completed the above you should be able to start your Pantheon site. **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES** but you can read below on how to do that with our helper commands or manually. If your Pantheon site has a `composer.json` Lando will attempt to run `composer install` on it automatically.
+
+```bash
 lando start
 ```
 
-### .lando.yml
+If you vist any of the green-listed URLS that show up afterwards you should be welcomed with either the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file.
 
-```yml
-name: workflow
-recipe: pantheon
-config:
-  framework: drupal
-  xdebug: true
-  id: 0d4eedc2-183e-4d80-8f00-9c9720b5c816
-  site: drupal-7-pantheon-basicz
-  env: dev
-services:
-  node:
-    type: node:6.10
-tooling:
-  node:
-    service: node
-  npm:
-    service: node
-```
+Importing Your Database and Files
+---------------------------------
 
-Authenticate with Terminus
---------------------------
-
-If you used `lando init` to set up your Pantheon site you should already be authenticated.
-
-```bash
-lando terminus auth:whoami
-```
-
-If you did not you can authenticate manually. You will need a Pantheon [machine token](https://pantheon.io/docs/machine-tokens/) for this.
-
-```bash
-# Authenticate with terminus
-lando terminus auth:login --machine-token=MYTOKEN
-
-# Verify authentication
-lando terminus auth:whoami
-
-# Optionally pull down drush aliases
-lando terminus aliases
-
-# Verify we have some aliases
-lando drush sa
-```
+Importing my data
+  Pulling files and data
+  Manually files and data import
+Tooling?
+Config
+  (envvars/
+  pantheon.yml)
+Advanced (redis/solr/varnish && lando info)
+multidev?
+Other helpful tutorials
+  build steps (composer)
+  front end
 
 Import your Pantheon Database
 -----------------------------
