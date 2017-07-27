@@ -78,9 +78,9 @@ Lando will add some helpful environment variables into your `appserver` so you c
 
 ```bash
 DB_HOST=database
-DB_USER=mariadb
-DB_PASSWORD=password
-DB_NAME=database
+DB_USER=lemp
+DB_PASSWORD=lemp
+DB_NAME=lemp
 DB_PORT=3306
 ```
 
