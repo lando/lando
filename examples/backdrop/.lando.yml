@@ -79,28 +79,3 @@ config:
     # server: config/backdrop.conf
     # database: config/mysql
     # php: config/php.ini
-
-
-# The Backdrop recipe is super slick but we want to augment this recipe so we can
-# run our front end tooling magix
-services:
-  # Inject a pre-run script
-  appserver:
-    scripts:
-      - scripts/my-script.sh
-  node:
-    type: node:6.10
-  cache:
-    type: redis
-    persist: true
-  mailhog:
-    type: mailhog
-    hogfrom:
-      - appserver
-tooling:
-  redis-cli:
-    service: cache
-  node:
-    service: node
-  npm:
-    service: node

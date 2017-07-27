@@ -74,14 +74,3 @@ config:
     # server: config/laravel.conf
     # database: config/mysql
     # php: config/php.ini
-
-# The Laravel recipe is super slick but we want to augment this recipe so we can
-# run our front end tooling magix
-services:
-  node:
-    type: node:6.10
-tooling:
-  node:
-    service: node
-  npm:
-    service: node
