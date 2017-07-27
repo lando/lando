@@ -5,8 +5,42 @@ Lando
 
 Lando is a free, open source and cross-platform local development environment tool built on [Docker](http://docker.com) container technology. It is the successor project to [Kalabox](http://kalabox.io).
 
+With Lando you can...
+
+*   Easily mimic your production environment locally.
+*   Standardize your teams dev environments and tooling on OSX, Windows and Linux.
+*   Integrate with hosting providers like [Pantheon](https://pantheon.io)
+*   Store all of the above in a version controlled config file called `.lando.yml`
+*   Easily customize or extend tooling, deployment options and basically any other functionality.
+*   Free yourself from the tyranny of inferior local development products.
+
+First Step
+----------
+
 *   [Installation](http://docs.lndo.io/installation/installing.html)
-*   [Getting Started](http://docs.lndo.io/tutorials/basics.html)
+
+Getting Started With...
+-----------------------
+
+*   [Backdrop](http://docs.lndo.io/tutorials/backdrop.md)
+*   [Drupal 6](http://docs.lndo.io/tutorials/drupal6.md)
+*   [Drupal 7](http://docs.lndo.io/tutorials/drupal7.md)
+*   [Drupal 8](http://docs.lndo.io/tutorials/drupal8.md)
+*   [Laravel](http://docs.lndo.io/tutorials/laravel.md)
+*   [LAMP](http://docs.lndo.io/tutorials/lamp.md)
+*   [LEMP](http://docs.lndo.io/tutorials/lemp.md)
+*   [Pantheon](http://docs.lndo.io/tutorials/pantheon.md)
+*   [WordPress](http://docs.lndo.io/tutorials/wordpress.md)
+*   [Custom](http://docs.lndo.io/tutorials/custom.md)
+
+Advanced Usage
+--------------
+
+*   [Setting up fornt end tooling]()
+
+Reference
+---------
+
 *   [Configuration](http://docs.lndo.io/config/lando.html)
 *   [Recipes](http://docs.lndo.io/config/services.html)
 *   [Services](http://docs.lndo.io/config/services.html)
@@ -17,20 +51,8 @@ Lando is a free, open source and cross-platform local development environment to
 *   [Troubleshooting and Support](http://docs.lndo.io/troubleshooting/logs.html)
 *   [Examples](https://github.com/kalabox/lando/tree/master/examples)
 
-Or browse all [our docs](http://docs.lndo.io).
-
-The Big Picture
----------------
-
-Lando seeks to provide stored-in-version-control, single-config-file and per-app configuration to manage the dependencies a project needs to run and developers need to develop. It aims to be easy to use and fast.
-
-With Lando you can...
-
-*   Easily mimic your production environment locally.
-*   Setup, develop, pull and deploy your sites super fast.
-*   Standardize your teams dev environments and tools on OSX, Windows and Linux.
-*   Easily customize or extend tooling, deployment options and basically any other functionality.
-*   Free yourself from the tyranny of inferior local development products.
+TL;DR
+-----
 
 A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
 
@@ -47,7 +69,7 @@ lando start
 ```bash
 cd /path/to/my/local/code
 lando init appname
-land start
+lando start
 ```
 
 #### 3. Or pull from GitHub or Pantheon
@@ -59,7 +81,7 @@ lando init mysite pantheon | lando init mysite github
 lando start
 ```
 
-You can also easily configure a `lando.yml` [recipe](http://docs.lndo.io/config/services.html)
+You can also easily configure a `lando.yml` [recipe](http://docs.lndo.io/config/recipe.html)
 
 ```yml
 name: myproject
@@ -88,6 +110,11 @@ services:
     type: node:6.10
     globals:
       grunt-cli: "latest"
+    build:
+      - cd /app && npm install --production
+  appserver:
+    build:
+      - cd /app && composer install
   cache:
     type: memcached:1.4
     mem: 128
@@ -101,6 +128,9 @@ tooling:
     service: node
   grunt:
     service: node
+  mycustomthing:
+    service: appserver
+    cmd: ps
 ```
 
 Roadmap
