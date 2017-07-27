@@ -19,8 +19,8 @@ First Step
 
 *   [Installation](http://docs.lndo.io/installation/installing.html)
 
-Getting Started With...
------------------------
+Get Started With...
+-------------------
 
 *   [Backdrop](http://docs.lndo.io/tutorials/backdrop.md)
 *   [Drupal 6](http://docs.lndo.io/tutorials/drupal6.md)

@@ -89,19 +89,3 @@ config:
     # server: config/drupal8.conf
     # database: config/mysql
     # php: config/php.ini
-
-# The Drupal 7 recipe is super slick but we want to augment this recipe so we can
-# run our front end tooling magix and use a key value store
-services:
-  node:
-    type: node:6.10
-  cache:
-    type: redis
-    persist: true
-tooling:
-  redis-cli:
-    service: cache
-  node:
-    service: node
-  npm:
-    service: node

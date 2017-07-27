@@ -44,17 +44,3 @@ config:
     server: config/lamp.conf
     database: config/mysql
     php: config/php.ini
-
-# The LAMP recipe is super slick but we want to augment this recipe so we can run our front end tooling magix
-services:
-  node:
-    type: node:6.10
-    globals:
-      grunt-cli: "latest"
-tooling:
-  grunt:
-    service: node
-  node:
-    service: node
-  npm:
-    service: node

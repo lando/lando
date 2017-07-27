@@ -24,3 +24,8 @@ Example
 {% codesnippet "./../examples/drupal8/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/drupal8-2).
+
+Advanced Configuration
+----------------------
+
+If you are looking to add additional [services](./../config/services.md), [tooling](./../config/tooling.md) or [proxy config](./../config/proxy.md) check out the [Custom Recipe Guide](./../tutorials/custom.md).
