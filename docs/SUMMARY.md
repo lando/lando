@@ -10,56 +10,26 @@
 *   [Updating](installation/updating.md)
 *   [Uninstalling](installation/uninstalling.md)
 
-## Known Issues
+## Get Started With...
 
-*   [DNS Rebinding Protection](issues/dns-rebind.md)
-*   [File Syncing Stalled](issues/file-sync.md)
-*   [Running VB and HyperV](issues/win-also-vb.md)
-*   [Running behind a firewall](issues/firewall.md)
+*   [Backdrop](tutorials/backdrop.md)
+*   [Drupal 6](tutorials/drupal6.md)
+*   [Drupal 7](tutorials/drupal7.md)
+*   [Drupal 8](tutorials/drupal8.md)
+*   [Laravel](tutorials/laravel.md)
+*   [LAMP](tutorials/lamp.md)
+*   [LEMP](tutorials/lemp.md)
+*   [Pantheon](tutorials/pantheon.md)
+*   [WordPress](tutorials/wordpress.md)
+*   [Custom](tutorials/custom.md)
 
-## Getting Started
+## Advanced Usage
 
-*   [The Basics](tutorials/basics.md)
-*   [Recipe Config](tutorials/recipe-config.md)
+*   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Additional Services and Tooling](tutorials/ast.md)
-
-## Configuration
-
-*   [.lando.yml](config/lando.md)
-*   [Proxy](config/proxy.md)
-*   [Services](config/services.md)
-*   [Tooling](config/tooling.md)
-*   [Recipes](config/recipes.md)
-*   [config.yml](config/config.md)
-
-## Recipes
-
-*   [Backdrop](recipes/backdrop.md)
-*   [Drupal 6](recipes/drupal6.md)
-*   [Drupal 7](recipes/drupal7.md)
-*   [Drupal 8](recipes/drupal8.md)
-*   [Laravel](recipes/laravel.md)
-*   [LAMP](recipes/lamp.md)
-*   [LEMP](recipes/lemp.md)
-*   [Pantheon](recipes/pantheon.md)
-*   [WordPress](recipes/wordpress.md)
-
-## Services
-
-*   [apache](services/apache.md)
-*   [elasticsearch](services/elasticsearch.md)
-*   [mailhog](services/mailhog.md)
-*   [mariadb](services/mariadb.md)
-*   [memcached](services/memcached.md)
-*   [mysql](services/mysql.md)
-*   [nginx](services/nginx.md)
-*   [node](services/node.md)
-*   [php](services/php.md)
-*   [phpmyadmin](services/phpmyadmin.md)
-*   [postgres](services/postgres.md)
-*   [redis](services/redis.md)
-*   [solr](services/solr.md)
-*   [varnish](services/varnish.md)
+*   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
+*   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
+*   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Command Line
 
@@ -78,19 +48,50 @@
 *   [stop](cli/stop.md)
 *   [version](cli/version.md)
 
+## Known Issues
+
+*   [DNS Rebinding Protection](issues/dns-rebind.md)
+*   [File Syncing Stalled](issues/file-sync.md)
+*   [Running VB and HyperV](issues/win-also-vb.md)
+*   [Running behind a firewall](issues/firewall.md)
+
 ## Troubleshooting and Support
 
 *   [Accessing Logs](troubleshooting/logs.md)
 *   [Reporting Issues](https://github.com/kalabox/lando/issues)
 *   [Slack Channel](https://slackpass.io/kalabox)
 
-## Tutorials
+## Configuration
 
-*   [Accessing Your Services Externally](tutorials/external-access.md)
-*   [Working with Pantheon](tutorials/pantheon-working.md)
-*   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
-*   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
-*   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
+*   [.lando.yml](config/lando.md)
+*   [Recipes](config/recipes.md)
+    *   [Backdrop](recipes/backdrop.md)
+    *   [Drupal 6](recipes/drupal6.md)
+    *   [Drupal 7](recipes/drupal7.md)
+    *   [Drupal 8](recipes/drupal8.md)
+    *   [Laravel](recipes/laravel.md)
+    *   [LAMP](recipes/lamp.md)
+    *   [LEMP](recipes/lemp.md)
+    *   [Pantheon](recipes/pantheon.md)
+    *   [WordPress](recipes/wordpress.md)
+*   [Proxy](config/proxy.md)
+*   [Services](config/services.md)
+    *   [apache](services/apache.md)
+    *   [elasticsearch](services/elasticsearch.md)
+    *   [mailhog](services/mailhog.md)
+    *   [mariadb](services/mariadb.md)
+    *   [memcached](services/memcached.md)
+    *   [mysql](services/mysql.md)
+    *   [nginx](services/nginx.md)
+    *   [node](services/node.md)
+    *   [php](services/php.md)
+    *   [phpmyadmin](services/phpmyadmin.md)
+    *   [postgres](services/postgres.md)
+    *   [redis](services/redis.md)
+    *   [solr](services/solr.md)
+    *   [varnish](services/varnish.md)
+*   [Tooling](config/tooling.md)
+*   [config.yml](config/config.md)
 
 ## Development
 
