@@ -44,7 +44,7 @@ Once you've completed the above you should be able to start your LAMP site.
 lando start
 ```
 
-If you vist any of the green-listed URLS that show up afterwards you should be welcomed with either the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file.
+If you visit any of the green-listed URLS that show up afterwards you should be presented with whatever content is rendered by your `index.php`. Read below on how to import your database.
 
 Importing Your Database
 -----------------------
@@ -73,7 +73,7 @@ Check out our [LAMP Recipe](./../recipes/lamp.md) for details on more advanced u
 Configuration
 -------------
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via PHP's [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 DB_HOST=database
