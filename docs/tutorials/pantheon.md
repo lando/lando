@@ -1,7 +1,9 @@
 Working with Pantheon
 =====================
 
-Lando offers a [recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage. You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
+Lando offers a [recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
+
+You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
 Getting Started
 ---------------
@@ -50,69 +52,100 @@ lando init mysite github --recipe pantheon
 Starting Your Site
 ------------------
 
-Once you've completed the above you should be able to start your Pantheon site. **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES** but you can read below on how to do that with our helper commands or manually. If your Pantheon site has a `composer.json` Lando will attempt to run `composer install` on it automatically.
+Once you've completed the above you should be able to start your Pantheon site. **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES** but you can read below on how to do that with our helper `pull` command or via a manual import.
+
+If your Pantheon site has a `composer.json` Lando will attempt to run `composer install` on it automatically.
 
 ```bash
 lando start
 ```
 
-If you vist any of the green-listed URLS that show up afterwards you should be welcomed with either the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file.
+If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file so you can visit your site like it exits on Pantheon.
 
 Importing Your Database and Files
 ---------------------------------
 
-Importing my data
-  Pulling files and data
-  Manually files and data import
-Tooling?
-Config
-  (envvars/
-  pantheon.yml)
-Advanced (redis/solr/varnish && lando info)
-multidev?
-Other helpful tutorials
-  build steps (composer)
-  front end
+Once you've started up your Pantheon site you will need to pull in your database and files before you can really start to dev all the dev. There are two easy ways to do this...
 
-Import your Pantheon Database
------------------------------
+### 1. Using `lando pull`
+
+Lando provides a command for Pantheon sites called `lando pull` to get your database and files. The `database` pull currently only works if your site is not a `wordpress` site and if you have a valid `drush alias` for that site.
+
+Please consult the manual import documentation below if you are using a WordPress site or this command produces an error.
+
+#### Usage
 
 ```bash
+# Pull the latest database and files
+lando pull
+
+# Pull only the database from the test environment
+lando pull --database=test --files=none
+
+# Pull only the files
+lando pull --database=none
+
+# Pull only the latest files without grabbing a files backup
+lando pull --database=none --rsync
+```
+
+#### Options
+
+```bash
+--database, -d  The environment to get the db from or [none]  [default: "dev"]
+--files, -f     The environment to get the files from or [none]
+                                                              [default: "dev"]
+--rsync         Rsync the files, good for subsequent pulls                                                  [boolean] [default: false]
+```
+
+### 2. Manually Importing Your DB and Files
+
+You will want to the replace `MYSITE` and `MYENV` below with the Pantheon site and environment from which you want to import.
+
+#### Database
+
+```bash
+# Remove lingering DB dumps
+lando ssh -c "rm -f /app/database.sql.gz"
+
 # Create a new backup of your database
-lando terminus backup:create drupal-7-pantheon-basicz.dev --element=db
+# If you've created a db backup recently this step is not needed.
+lando terminus backup:create MYSITE.MYENV --element=db
 
 # Download and import backup of the database
-lando terminus backup:get drupal-7-pantheon-basicz.dev --element=db --to=/tmp/database.sql.gz
-lando ssh -c "cat /tmp/database.sql.gz | gunzip | mysql -h database pantheon"
-
-# Drush to Verify
-# If you are using a nested docroot make sure you go into web first
-lando drush cc all
-lando drush status
+lando terminus backup:get MYSITE.MYENV --element=db --to=/app/database.sql.gz
+lando db-import database.sql.gz
 ```
 
-Import your Pantheon Files
---------------------------
-
-If you've spun up a Lando app using one of our [recipes](./../config/recipes.md) then its likely relevant services are already exposed and ready for access.
+#### Files
 
 ```bash
+# Remove the DB dump
+lando ssh -c "rm -f /tmp/files.sql.gz"
+
 # Create a new backup of your files
-lando terminus backup:create drupal-7-pantheon-basicz.dev --element=files
+# If you've created a files backup recently this step is not needed.
+lando terminus backup:create MYSITE.MYENV --element=files
 
 # Download and extract backup of the files
-lando terminus backup:get drupal-7-pantheon-basicz.dev --element=files --to=/tmp/files.tar.gz
-lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_MOUNT/\$FILEMOUNT --strip-components 1"
+lando terminus backup:get MYSITE.MYENV --element=files --to=/tmp/files.tar.gz
+lando ssh -c "mkdir -p \$LANDO_WEBROOT/\$FILEMOUNT"
+lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_WEBROOT/\$FILEMOUNT --strip-components 1"
 ```
 
-In the example above you can access the `mariadb` database from your host at `localhost:32787`. Note that this port is automatically assigned by Docker itself and will change every time you restart your app.
+Tooling
+-------
 
-That said, Lando provides a way to "lock down" these ports so they are more predictable.
+Each Lando Pantheon recipe will also ship with the Pantheon toolchain. This means you can use `drush`, `wp-cli` and `terminus` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
-Other Helpful Things
---------------------
+> #### Warning::Tools are dependent on framework
+>
+> Lando will load up tools that are appropriate to the framework you specified in the recipe config section of your `.lando.yml`. eg. `wp-cli` will be available for WordPress sites and Drush will be available for Drupal sites.
 
 ```bash
+# Login to terminus with a machine token
+lando terminus auth:login --machine-token=MYSPECIALTOKEN
+
 # Get a list of wp-cli commands
 lando wp
 
@@ -127,54 +160,22 @@ lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
 lando drush dl webform
 ```
 
-Check out our [Pantheon Recipe](./../recipes/pantheon.md) for details on more advanced usage.
+You can also run `lando` from inside your app directory for a complete list of commands.
 
+Configuration
+-------------
 
-
-pantheon.yml
-------------
+### pantheon.yml
 
 If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would for Pantheon itself.
 
 {% codesnippet "./../examples/pantheon/pantheon.yml" %}{% endcodesnippet %}
 
-Installing
-----------
+A `lando restart` or `lando rebuild` is needed to apply these changes.
 
-You will want to make sure your codebase is fundamentally based on one of Pantheon's core upstreams:
+### Environment Variables
 
-*   [Backdrop](https://github.com/backdrop-ops/backdrop-pantheon)
-*   [Drupal 6](https://github.com/pantheon-systems/drops-6)
-*   [Drupal 7](https://github.com/pantheon-systems/drops-7)
-*   [Drupal 8](https://github.com/pantheon-systems/drops-8)
-*   [WordPress](https://github.com/pantheon-systems/WordPress)
-
-If you do not do this, Lando will not know how to automatically handle things like your database connection or SOLR infrastructure.
-
-```bash
-# Pull a repo, init and start
-git clone https://github.com/pantheon-systems/drops-8.git drupal8
-cd drupal8
-lando init --recipe pantheon
-
-# Or pull from github but init as pantheon
-lando init mysite github --recipe pantheon
-lando start
-
-# Or pull directly from pantheon
-lando init mysite pantheon
-
-# Visit https://mysite.lndo.site to complete your installation.
-
-# Navigate to the webroot and check the status of your site with drush
-cd web
-lando drush status
-```
-
-Configuration
--------------
-
-Like Pantheon, Lando will also [inject configuration](https://pantheon.io/docs/read-environment-config/) into your runtime container so that you have useful information stored about your app. These are stored directly in the environment (eg accessible via [`getenv()`](http://php.net/manual/en/function.getenv.php)), `$_ENV`, `$_SERVER` or as defined `php` constants.
+Like Pantheon, Lando will also [inject variables](https://pantheon.io/docs/read-environment-config/) into your runtime container so that you have useful information stored about your app. These are stored directly in the environment (eg accessible via [`getenv()`](http://php.net/manual/en/function.getenv.php)), `$_ENV`, `$_SERVER` or as defined `php` constants.
 
 Here is a non-exhuastive list of some of the most commonly used config.
 
@@ -223,38 +224,6 @@ DRUPAL_HASH_SALT: Needed for Drupal8. We set this automatically.
 ```
 
 These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
-
-Tooling
--------
-
-Each Lando Pantheon recipe will also ship with the Pantheon toolchain. This means you can use `drush`, `wp-cli` and `terminus` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
-
-> #### Warning::Tools are dependent on framework
->
-> Lando will load up tools that are appropriate to the framework you specified in the recipe config section of your `.lando.yml`. eg. `wp-cli` will be available for WordPress sites and Drush will be available for Drupal sites.
-
-```bash
-# GEt to my app
-cd /path/to/my/pantheon/app
-
-# Login to terminus with a machine token
-lando terminus auth:login --machine-token=MYSPECIALTOKEN
-
-# Get a list of wp-cli commands
-lando wp
-
-# Download a dependency with drush
-lando drush dl views
-
-# Download a dependency with composer
-lando composer config repositories.drupal composer https://packages.drupal.org/8
-lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
-
-# Download a backdrop dependency
-lando drush dl webform
-```
-
-You can also run `lando` from inside your app directory for a complete list of commands.
 
 Advanced Service Usage
 ----------------------
@@ -363,3 +332,9 @@ lando info
   }
 }
 ```
+
+
+Recipe Config
+-------------
+
+Check out our [Pantheon Recipe](./../recipes/pantheon.md) for details on more advanced usage.
