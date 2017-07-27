@@ -22,24 +22,24 @@ First Step
 Get Started With...
 -------------------
 
-*   [Backdrop](http://docs.lndo.io/tutorials/backdrop.md)
-*   [Drupal 6](http://docs.lndo.io/tutorials/drupal6.md)
-*   [Drupal 7](http://docs.lndo.io/tutorials/drupal7.md)
-*   [Drupal 8](http://docs.lndo.io/tutorials/drupal8.md)
-*   [Laravel](http://docs.lndo.io/tutorials/laravel.md)
-*   [LAMP](http://docs.lndo.io/tutorials/lamp.md)
-*   [LEMP](http://docs.lndo.io/tutorials/lemp.md)
-*   [Pantheon](http://docs.lndo.io/tutorials/pantheon.md)
-*   [WordPress](http://docs.lndo.io/tutorials/wordpress.md)
-*   [Custom](http://docs.lndo.io/tutorials/custom.md)
+*   [Backdrop](http://docs.lndo.io/tutorials/backdrop.html)
+*   [Drupal 6](http://docs.lndo.io/tutorials/drupal6.html)
+*   [Drupal 7](http://docs.lndo.io/tutorials/drupal7.html)
+*   [Drupal 8](http://docs.lndo.io/tutorials/drupal8.html)
+*   [Laravel](http://docs.lndo.io/tutorials/laravel.html)
+*   [LAMP](http://docs.lndo.io/tutorials/lamp.html)
+*   [LEMP](http://docs.lndo.io/tutorials/lemp.html)
+*   [Pantheon](http://docs.lndo.io/tutorials/pantheon.html)
+*   [WordPress](http://docs.lndo.io/tutorials/wordpress.html)
+*   [Custom](http://docs.lndo.io/tutorials/custom.html)
 
 Advanced Usage
 --------------
 
-*   [Setting up fornt end tooling]()
+*   [Setting up fornt end tooling](http://docs.lndo.io/tutorials/frontend.html)
 
-Reference
----------
+References
+----------
 
 *   [Configuration](http://docs.lndo.io/config/lando.html)
 *   [Recipes](http://docs.lndo.io/config/services.html)
