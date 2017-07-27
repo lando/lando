@@ -102,7 +102,7 @@ if [ "$DATABASE" != "none" ]; then
     # if [ "$FRAMEWORK" == "wordpress" ]; then
     #  wp search-replace '$ENV-$SITE.pantheon.io' '$LANDO_APP_NAME.lndo.site'
     # fi
-    echo "WordPress database pull not currently supported. See: https://docs.lndo.io/tutorials/pantheon-working.html for manual db import steps."
+    echo "WordPress database pull not currently supported. See: https://docs.lndo.io/tutorials/pantheon.html for manual db import steps."
   fi
 
 fi
