@@ -29,7 +29,7 @@ lando init mysite --recipe lamp
 # Create a folder to clone your site to
 mkdir mysite
 
-# Initialize a Pantheon .lando.yml after getting code from GitHub
+# Initialize a LAMP .lando.yml after getting code from GitHub
 # This require a GitHub Personal Access Token
 # See: https://docs.lndo.io/cli/init.html#github
 lando init mysite github --recipe lamp
@@ -46,9 +46,14 @@ lando start
 
 If you vist any of the green-listed URLS that show up afterwards you should be welcomed with either the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file.
 
-Importing Your Database and Files
----------------------------------
+Importing Your Database
+-----------------------
 
+If you have an existing database for your application, you can easily import it:
+
+```bash
+lando db-import my-db.sql --database=lamp
+```
 
 Other Helpful Things
 --------------------
@@ -57,14 +62,13 @@ The LAMP recipe comes pre-loaded with a few handy commands:
 
 ```bash
 # Download a dependency with composer
-lando composer config repositories.drupal composer https://packages.drupal.org/8
-lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
+lando composer require guzzlehttp/guzzle
 
 # Access MySQL CLI
 lando mysql
 ```
 
-Check out our [LAMP Recipe](./../recipes/pantheon.md) for details on more advanced usage.
+Check out our [LAMP Recipe](./../recipes/lamp.md) for details on more advanced usage.
 
 Configuration
 -------------
