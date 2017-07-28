@@ -1,34 +1,112 @@
 Working with Drupal 6
 =====================
 
-Installing Drupal
------------------
+Lando offers a [configurable recipe](./../recipes/drupal6.md) for spinning up [Drupal 6](https://drupal.org/) apps. Let's go over some basic usage.
 
-You will need to make sure you [extract Drupal 6](https://api.drupal.org/api/drupal/INSTALL.txt/6.x) into either your application root directory or the subdirectory specified by `webroot` in your recipe config.
+Getting Started
+---------------
 
-You will also want to scope out your database credentials (see [below](#getting-service-information)) so you can be prepped to enter them during the drupal installation. You will want to use `internal_connection` information.
+Before you can use all the awesome Lando magic you need a Drupal 6 codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
-If you want to see an example, you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/drupal6) to get started.
+### 1. Start with an existing codebase
 
 ```bash
-# Get the lando example
-git clone https://github.com/kalabox/lando.git
-cd lando/examples/drupal6
+# Clone or extract your Drupal 6 site
+# See: https://github.com/drupal/drupal/tree/6.x
+git clone -b 6.x https://github.com/drupal/drupal.git mysite
 
-# Start the app up
-lando start
+# Go into the cloned site
+cd mysite
 
-# Get your database credentials
-lando info
-
-# Visit https://d6.lndo.site to complete your installation.
-
-# Check the status of your site with drush
-lando drush status
+# Initialize a .lando.yml for this site
+lando init mysite --recipe drupal6
 ```
 
-Environment Variables
----------------------
+### 2. Get your site from GitHub
+
+```bash
+# Create a folder to clone your site to
+mkdir mysite && cd mysite
+
+# Initialize a Drupal 6 .lando.yml after getting code from GitHub
+# This requires a GitHub Personal Access Token
+# See: https://docs.lndo.io/cli/init.html#github
+lando init mysite github --recipe drupal6
+```
+
+Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
+
+Starting Your Site
+------------------
+
+Once you've completed the above you should be able to start your Drupal 6 site.
+
+```bash
+lando start
+```
+
+If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the Drupal 6 installation screen. Read below on how to import your database.
+
+Importing Your Database
+-----------------------
+
+Once you've started up your Drupal 6 site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+
+```bash
+# Go into my app
+cd /path/to/my/app
+
+# Grab your database dump
+curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
+
+# Import the database
+# NOTE: db-import can handle uncompressed, gzipped or zipped files
+lando db-import database.sql.gz
+```
+
+You can learn more about the `db-import` command [over here](./db-import.md)
+
+Tooling
+-------
+
+Each Lando Backdrop recipe will also ship with helpful dev utilities. This means you can use things like `drush`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
+
+```bash
+lando composer                 Run composer commands
+lando db-import <file>         Import <file> into database. File is relative to approot.
+lando drush                    Run drush commands
+lando mysql                    Drop into a MySQL shell
+lando php                      Run php commands
+```
+
+```bash
+# Download a dependency with drush
+lando drush dl views
+
+# Run composer tests
+lando composer test
+
+# Drop into a mysql shell
+lando mysql
+
+# Check hte app's php version
+lando php -v
+```
+
+You can also run `lando` from inside your app directory for a complete list of commands.
+
+Configuration
+-------------
+
+### Recipe
+
+You can also manually configure the `.lando.yml` file to switch `php` or `drush` versions, toggle between `apache` and `nginx`, activate `xdebug`, choose a database type and version, set a custom webroot locaton and use your own configuration files.
+
+{% codesnippet "./../examples/drupal6/.lando.yml" %}{% endcodesnippet %}
+
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/drupal6).
+
+### Environment Variables
 
 Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
@@ -40,85 +118,19 @@ DB_NAME=drupal6
 DB_PORT=3306
 ```
 
-Getting Service Information
----------------------------
+These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+
+Advanced Service Usage
+----------------------
 
 You can get more in-depth information about the services this recipe provides by running `lando info`.
 
-```bash
-# Navigate to the app
-cd /path/to/app
+Next Steps
+----------
 
-# Get info (app needs to be running to get this)
-lando info
-
-{
-  "appserver": {
-    "type": "php",
-    "version": "5.6",
-    "via": "apache",
-    "webroot": ".",
-    "urls": [
-      "https://localhost:32911",
-      "http://localhost:32912",
-      "http://d6.lndo.site",
-      "https://d6.lndo.site"
-    ]
-  },
-  "database": {
-    "type": "mysql",
-    "version": "latest",
-    "creds": {
-      "user": "drupal6",
-      "password": "drupal6",
-      "database": "drupal6"
-    },
-    "internal_connection": {
-      "host": "database",
-      "port": 3306
-    },
-    "external_connection": {
-      "host": "localhost",
-      "port": true
-    }
-  }
-}
-```
-
-### Getting Tooling Information
-
-You can get more in-depth information about the tooling this recipe provides by running `lando`.
-
-```bash
-# Navigate to the app
-cd /path/to/app
-
-# Get list of available commands
-lando
-
-Usage: lando <command> [args] [options] [-- global options]
-
-Commands:
-  config                   Display the lando configuration
-  destroy [appname]        Destroy app in current directory or [appname]
-  info [appname]           Prints info about app in current directory or [appname]
-  list                     List all lando apps
-  logs [appname]           Get logs for app in current directory or [appname]
-  poweroff                 Spin down all lando related containers
-  rebuild [appname]        Rebuilds app in current directory or [appname]
-  restart [appname]        Restarts app in current directory or [appname]
-  start [appname]          Start app in current directory or [appname]
-  stop [appname]           Stops app in current directory or [appname]
-  version                  Display the lando version
-  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
-  composer                 Run composer commands
-  php                      Run php commands
-  mysql                    Drop into a MySQL shell
-  drush                    Run Drush commands
-
-Global Options:
-  --help, -h  Show help
-  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
-
-You need at least one command before moving on
-```
+*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
+*   [Adding additional tooling](./../tutorials/tutorials/setup-additional-tooling.md)
+*   [Adding additional routes](./../tutorials/tutorials/setup-additional-routes.md)
+*   [Setting up front end tooling](./../tutorials/tutorials/frontend.md)
+*   [Accessing services (eg your database) from the host](./../tutorials/tutorials/frontend.md)
+*   [Importing databases](./../tutorials/tutorials/db-import.md)
