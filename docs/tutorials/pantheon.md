@@ -1,7 +1,7 @@
 Working with Pantheon
 =====================
 
-Lando offers a [recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
+Lando offers a [configurable recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
@@ -29,7 +29,7 @@ lando init mysite --recipe pantheon
 
 ```bash
 # Create a folder to clone your site to
-mkdir mysite
+mkdir mysite && cd mysite
 
 # Initialize a Pantheon .lando.yml after getting code from Pantheon
 # This require a Pantheon Machine Token
@@ -41,7 +41,7 @@ lando init mysite pantheon
 
 ```bash
 # Create a folder to clone your site to
-mkdir mysite
+mkdir mysite && cd mysite
 
 # Initialize a Pantheon .lando.yml after getting code from GitHub
 # This require a GitHub Personal Access Token
@@ -49,10 +49,16 @@ mkdir mysite
 lando init mysite github --recipe pantheon
 ```
 
+Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
+
 Starting Your Site
 ------------------
 
-Once you've completed the above you should be able to start your Pantheon site. **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES** but you can read below on how to do that with our helper `pull` command or via a manual import.
+Once you've completed the above you should be able to start your Pantheon site.
+
+**AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES**
+
+You can read below on how to do that with our helper `pull` command or via a manual import.
 
 If your Pantheon site has a `composer.json` Lando will attempt to run `composer install` on it automatically.
 
@@ -117,6 +123,8 @@ lando terminus backup:get MYSITE.MYENV --element=db --to=/app/database.sql.gz
 lando db-import database.sql.gz
 ```
 
+You can learn more about the `db-import` command [over here](./db-import.md)
+
 #### Files
 
 ```bash
@@ -133,10 +141,25 @@ lando ssh -c "mkdir -p \$LANDO_WEBROOT/\$FILEMOUNT"
 lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_WEBROOT/\$FILEMOUNT --strip-components 1"
 ```
 
+You can alternatively download the backup and manually extract it to the correct location.
+
 Tooling
 -------
 
 Each Lando Pantheon recipe will also ship with the Pantheon toolchain. This means you can use `drush`, `wp-cli` and `terminus` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
+
+```bash
+lando composer                 Run composer commands
+lando db-import <file>         Import <file> into database. File is relative to approot.
+lando drush                    Run drush commands
+lando mysql                    Drop into a MySQL shell
+lando php                      Run php commands
+landp pull                     Pull database and/or files from Pantheon.
+lando redis-cli                Run redis-cli commands
+lando terminus                 Run terminus commands
+lando varnishadm               Run varnishadm commands
+lando wp                       Run wp-cli commands
+```
 
 > #### Warning::Tools are dependent on framework
 >
@@ -165,9 +188,17 @@ You can also run `lando` from inside your app directory for a complete list of c
 Configuration
 -------------
 
+### Recipe
+
+You can also manually configure the `.lando.yml` file.
+
+{% codesnippet "./../examples/pantheon/.lando.yml" %}{% endcodesnippet %}
+
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/pantheon).
+
 ### pantheon.yml
 
-If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would for Pantheon itself.
+If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would on Pantheon itself.
 
 {% codesnippet "./../examples/pantheon/pantheon.yml" %}{% endcodesnippet %}
 
@@ -223,7 +254,7 @@ PRESSFLOW_SETTINGS: JSON object of Drupal config and settings.
 DRUPAL_HASH_SALT: Needed for Drupal8. We set this automatically.
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
 
 Advanced Service Usage
 ----------------------
@@ -238,103 +269,12 @@ What works on Pantheon **should** also work on Lando.
 
 You can get more in-depth information about the services this recipe provides by running `lando info`.
 
-```bash
-# Navigate to the app
-cd /path/to/app
+Next Steps
+----------
 
-# Get info (app needs to be running to get this)
-lando info
-
-{
-  "appserver": {
-    "type": "php",
-    "version": "7.0",
-    "via": "nginx:1.8",
-    "webroot": "web",
-    "config": {
-      "server": "/Users/pirog/.lando/services/config/pantheon/drupal.conf",
-      "conf": "/Users/pirog/.lando/services/config/pantheon/php.ini"
-    }
-  },
-  "nginx": {
-    "urls": [
-      "https://localhost:33091",
-      "http://localhost:33092"
-    ]
-  },
-  "database": {
-    "type": "mariadb",
-    "version": "10.0",
-    "creds": {
-      "user": "pantheon",
-      "password": "pantheon",
-      "database": "pantheon"
-    },
-    "internal_connection": {
-      "host": "database",
-      "port": 3306
-    },
-    "external_connection": {
-      "host": "localhost",
-      "port": "33088"
-    },
-    "config": {
-      "confd": "/Users/pirog/.lando/services/config/pantheon/mysql"
-    }
-  },
-  "cache": {
-    "type": "redis",
-    "version": "2.8",
-    "internal_connection": {
-      "host": "cache",
-      "port": 6379
-    },
-    "external_connection": {
-      "host": "localhost",
-      "port": "33090"
-    }
-  },
-  "edge_ssl": {
-    "urls": [
-      "https://localhost:33094",
-      "https://pantheon.lndo.site"
-    ]
-  },
-  "edge": {
-    "type": "varnish",
-    "version": "4.1",
-    "vcl": "/Users/pirog/.lando/services/config/pantheon/pantheon.vcl",
-    "backends": [
-      "nginx"
-    ],
-    "urls": [
-      "http://localhost:33093",
-      "http://pantheon.lndo.site"
-    ]
-  },
-  "index": {
-    "type": "solr",
-    "version": "custom",
-    "internal_connection": {
-      "core": "index1",
-      "host": "index",
-      "port": 449
-    },
-    "external_connection": {
-      "core": "index1",
-      "host": "localhost",
-      "port": "not forwarded"
-    }
-  },
-  "node": {
-    "type": "node",
-    "version": "6.10"
-  }
-}
-```
-
-
-Recipe Config
--------------
-
-Check out our [Pantheon Recipe](./../recipes/pantheon.md) for details on more advanced usage.
+*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
+*   [Adding additional tooling](./../tutorials/tutorials/setup-additional-tooling.md)
+*   [Adding additional routes](./../tutorials/tutorials/setup-additional-routes.md)
+*   [Setting up front end tooling](./../tutorials/tutorials/frontend.md)
+*   [Accessing services (eg your database) from the host](./../tutorials/tutorials/frontend.md)
+*   [Importing databases](./../tutorials/tutorials/db-import.md)

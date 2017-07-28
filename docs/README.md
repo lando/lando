@@ -36,7 +36,12 @@ Get Started With...
 Advanced Usage
 --------------
 
-*   [Setting up fornt end tooling](http://docs.lndo.io/tutorials/frontend.html)
+*   [Adding additional services](http://docs.lndo.io/tutorials/setup-additional-services.html)
+*   [Adding additional tooling](http://docs.lndo.io/tutorials/setup-additional-tooling.html)
+*   [Adding additional routes](http://docs.lndo.io/tutorials/setup-additional-routes.html)
+*   [Setting up front end tooling](http://docs.lndo.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.lndo.io/tutorials/frontend.html)
+*   [Importing databases](http://docs.lndo.io/tutorials/db-import.html)
 
 References
 ----------
@@ -44,8 +49,8 @@ References
 *   [Configuration](http://docs.lndo.io/config/lando.html)
 *   [Recipes](http://docs.lndo.io/config/services.html)
 *   [Services](http://docs.lndo.io/config/services.html)
-*   [Tooling Options](http://docs.lndo.io/config/tooling.html)
-*   [CLI reference](http://docs.lndo.io/cli/usage.html)
+*   [Tooling](http://docs.lndo.io/config/tooling.html)
+*   [CLI](http://docs.lndo.io/cli/usage.html)
 *   [Contributing](http://docs.lndo.io/dev/contributing.html)
 *   [API](http://docs.lndo.io/dev/lando.html)
 *   [Troubleshooting and Support](http://docs.lndo.io/troubleshooting/logs.html)

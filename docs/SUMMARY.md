@@ -25,10 +25,12 @@
 
 ## Advanced Usage
 
-*   [Accessing Your Services Externally](tutorials/external-access.md)
-*   [Additional Services and Tooling](tutorials/ast.md)
+*   [Setting up Additional Services](tutorials/setup-additional-services.md)
 *   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
+*   [Setting up Additional Routes](tutorials/setup-additional-routes.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
+*   [Accessing Your Services Externally](tutorials/external-access.md)
+*   [Importing Databases](tutorials/db-import.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Command Line
