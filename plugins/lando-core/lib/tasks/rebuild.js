@@ -17,6 +17,11 @@ module.exports = function(lando) {
     command: 'rebuild [appname]',
     describe: 'Rebuilds app in current directory or [appname]',
     options: {
+      services: {
+        describe: 'Rebuild only the specified services',
+        alias: ['s'],
+        array: true
+      },
       yes: {
         describe: 'Auto answer yes to prompts',
         alias: ['y'],
@@ -42,6 +47,12 @@ module.exports = function(lando) {
       // Rebuild the app
       .then(function(app) {
         if (app) {
+
+          // Rebuild only particlar services if specified
+          if (!_.isEmpty(options.services)) {
+            app.opts.services = options.services;
+          }
+
           return lando.app.rebuild(app)
           .then(function() {
 
