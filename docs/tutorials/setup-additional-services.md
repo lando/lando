@@ -1,118 +1,99 @@
-Adding Additional Services and Tooling
-======================================
+Setting Up Additional Services
+==============================
 
-Adding Services
----------------
+Lando allows you to override and add services in addition to the ones it comes with via recipes. In this tutorial we will...
 
-Sweet! We've spun up a basic LEMP stack and connected to its `database`. Now, what if we want **EVEN MORE** things? Luckily, Lando has a way to add more [services](./../config/services.md) and [tooling](./../config/tooling.md).
+*   Override the services provided by a recipe
+*   Add additional services to a recipe
 
-Let's add a persistent `redis` cache and an ability to access it via the `redis-cli`.
+Overriding Recipe Services
+--------------------------
 
-Modify your `.lando.yml`
+Consider the starting `.lando.yml` file.
 
 ```yml
-name: myapp
-recipe: lemp
+name: addservices
+recipe: drupal8
 config:
-    webroot: web
-    php: '5.6'
+  php: '7.1'
+```
+
+Let's say we want to add some global composer dependencies, use a custom `php.ini` that is unique to our app and run an automatic `composer install` build step when we start up or rebuild our app.
+
+First, run `lando info` to see the names of the services provided by the `drupal8` recipe. Generally, you will have an `appserver` and `database` container. Now let's override the `appserver` and run `lando rebuild` for our changes to reflect.
+
+```yml
 services:
+  appserver:
+    composer:
+      phpunit/phpunit: '*'
+    build:
+      # Uncomment this when you have a composer.json in the root directory
+      # - cd $LANDO_MOUNT && composer install
+    config:
+      conf: php.ini
+```
+
+Now let's override our `database` service to lock down its external port and to change the database credentials. Again, `lando rebuild` for the changes to apply.
+
+```yml
+services:
+  appserver:
+    composer:
+      phpunit/phpunit: '*'
+    build:
+      # Uncomment this when you have a composer.json in the root directory
+      # - cd $LANDO_MOUNT && composer install
+    config:
+      conf: php.ini
+  database:
+    portforward: 1337
+    creds:
+      user: tswift
+      password: troubletroubletrouble
+      database: songz
+```
+
+Adding Additional Services
+--------------------------
+
+Let's say our app requires more services and devtools. Specifically we need a `redis` caching backend, an `elasticsearch` index, `node` based cli tools and `mailhog` to test out our campaigns. You can easily add any of the [supported services](./../config/services.md#supported-services) to your `.lando.yml` to give any of the default recipes a little more muscle.
+
+```yml
+# Overriden recipe services
+services:
+  appserver:
+    composer:
+      phpunit/phpunit: '*'
+    build:
+      # Uncomment this when you have a composer.json in the root directory
+      # - cd $LANDO_MOUNT && composer install
+    config:
+      conf: php.ini
+  database:
+    portforward: 1337
+    creds:
+      user: tswift
+      password: troubletroubletrouble
+      database: songz
+
+# Additional services
   cache:
     type: redis
     persist: true
-tooling:
-  redis-cli:
-    service: cache
-```
-
-And then run `lando restart`. You should immediately be able to see connection info and access creds for your `cache` by running `lando info`. You should also be able to access `redis` via the CLI by running `lando redis-cli`. Now, let's modify our `index.php` to connect to `redis` using the info from `lando info`.
-
-```php
-<?php
-
-$link = mysqli_connect(
-  getenv("DB_HOST"),
-  getenv("DB_USER"),
-  getenv("DB_PASSWORD"),
-  getenv("DB_NAME"),
-  getenv("DB_PORT")
-);
-
-if (!$link) {
-    echo "Error: Unable to connect to MySQL." . PHP_EOL;
-    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
-    exit;
-}
-
-echo "Success: A proper connection to MySQL was made! The database is great." . PHP_EOL;
-echo "Host information: " . mysqli_get_host_info($link) . PHP_EOL;
-
-mysqli_close($link);
-
-?>
-
-<br />
-
-<?php
-
-$redis = new Redis();
-
-$connected = $redis->connect('cache', 6379);
-
-if ($connected) {
-  echo "Tippecanoe and redis too!";
-}
-else {
-  echo "Redis connection failed!";
-}
-
-?>
-```
-
-Refresh the site in the browser and you should see a message indicating you've connected to redis as well!
-
-Adding Tooling
---------------
-
-Our app also needs some great front end development tools to take things to the next level. Let's add `node` and `npm` to our app. You know the drill at this point: modify `.lando.yml` and `lando restart` your app.
-
-```yml
-name: myapp
-recipe: lemp
-config:
-    webroot: web
-    php: '5.6'
-services:
-  cache:
-    type: redis
-    persist: true
-  node:
+  search:
+    type: elasticsearch:5.4
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+  node-cli:
     type: node:6.10
-tooling:
-  redis-cli:
-    service: cache
-  node:
-    service: node
-  npm:
-    service: node
+    globals:
+      gulp-cli: "latest"
 ```
 
-Now try the awesomeness of sandboxed, version-locked dev tools for your app.
+Full Example
+------------
 
-```bash
-# Check the node version
-lando node -v
-
-# Check the npm version
-lando npm -v
-
-# Run a basic node command to show what OS we are running in our service
-lando node -e "console.log(process.platform);"
-
-# Globally install the `grunt-cli`
-lando npm install -g grunt-cli
-
-# See the version of grunt we just installed
-lando ssh node -c "grunt --version"
-```
+{% codesnippet "./../examples/addservices/.lando.yml" %}{% endcodesnippet %}

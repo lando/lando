@@ -37,7 +37,7 @@ You can check out the full code for this example [over here](https://github.com/
 Building A Custom Stack
 -----------------------
 
-You also can build up a custom stack without a starting recipe at all.
+You also can build up a custom stack by creating a `.lando.yml` file from scratch and putting it in your applications code root. This means you don't have to run `lando init`.
 
 ### LAMP recipe without the recipe
 
