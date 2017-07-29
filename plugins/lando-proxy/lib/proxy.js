@@ -696,9 +696,18 @@ module.exports = function(lando) {
           // And add them if applicable
           if (!_.isEmpty(hostList)) {
             _.forEach(_.keys(app.services), function(name) {
+
+              // Look for preexisting extra_hosts
+              var peeh = [];
+              if (!_.isEmpty(_.get(app.services[name], 'extra_hosts', []))) {
+                peeh = _.get(app.services[name], 'extra_hosts', []);
+              }
+
+              // Merge the whole shebang
               compose.services[name] = _.merge(compose.services[name], {
-                'extra_hosts': hostList
+                'extra_hosts': _.flatten(hostList.concat(peeh))
               });
+
             });
           }
 
