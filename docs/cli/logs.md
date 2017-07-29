@@ -18,7 +18,7 @@ lando logs myapp
 lando logs -t -f
 
 # Show logs for only the database and cache services
-lando logs -s cache -database
+lando logs -s cache -s database
 ```
 
 Options

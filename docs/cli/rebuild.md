@@ -23,11 +23,15 @@ lando rebuild --yes
 
 # Rebuild from anywhere in info mode
 lando rebuild appname -- -v
+
+# Rebuild only the appserver and cache services
+lando rebuild -s cache -s appserver
 ```
 
 Options
 -------
 
 ```bash
-  --yes, -y   Auto answer yes to prompts              [boolean] [default: false]
+  --services, -s    Rebuild only the specific services           [array]
+  --yes, -y         Auto answer yes to prompts                           [boolean] [default: false]
 ```
