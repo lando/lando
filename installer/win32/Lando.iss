@@ -46,7 +46,6 @@ Name: "full"; Description: "Full installation"
 Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Tasks]
-Name: desktopicon; Description: "{cm:CreateDesktopIcon}"
 Name: modifypath; Description: "Add lando binary to PATH"
 
 [Components]
@@ -60,10 +59,6 @@ Source: "{#engineSetup}"; DestDir: "{app}"; Components: "Docker"; AfterInstall: 
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"
 Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lando"
 Source: "{#git}"; DestDir: "{app}\installers\git"; DestName: "git.exe"; AfterInstall: RunInstallGit(); Components: "Git"
-
-[Icons]
-Name: "{userprograms}\Lando"; WorkingDir: "{app}\gui"; Filename: "{app}\gui\lando.exe"; Components: "Lando"; IconFilename: "{app}\lando.ico"
-Name: "{commondesktop}\Lando"; WorkingDir: "{app}\gui"; Filename: "{app}\gui\lando.exe"; Tasks: desktopicon; Components: "Lando"; IconFilename: "{app}\lando.ico"
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;
