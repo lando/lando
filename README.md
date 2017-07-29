@@ -38,7 +38,7 @@ Advanced Usage
 
 *   [Adding additional services](http://docs.lndo.io/tutorials/setup-additional-services.html)
 *   [Adding additional tooling](http://docs.lndo.io/tutorials/setup-additional-tooling.html)
-*   [Adding additional routes](http://docs.lndo.io/tutorials/setup-additional-routes.html)
+*   [Adding additional routes](http://docs.lndo.io/config/proxy.html)
 *   [Setting up front end tooling](http://docs.lndo.io/tutorials/frontend.html)
 *   [Accessing services (eg your database) from the host](http://docs.lndo.io/tutorials/frontend.html)
 *   [Importing databases](http://docs.lndo.io/tutorials/db-import.html)

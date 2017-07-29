@@ -16,6 +16,17 @@ services:
     ssl: true
     webroot: www
 
+    # These environmental variables will set the default host/user/port/name/password options for
+    # db-import
+    overrides:
+      services:
+        environment:
+          DB_HOST: db
+          DB_USER: mysql
+          DB_PASSWORD: mysql
+          DB_NAME: data1
+          DB_PORT: 3306
+
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
   db:
@@ -31,10 +42,10 @@ services:
     portforward: 5309
 
     # Optionally change the default db credentials
-    # creds:
-      # user: mysql
-      # password: mysql
-      # database: mysql
+    creds:
+      user: mysql
+      password: mysql
+      database: data1
 
     # Optionally load in all the mysql config files in the config directory
     # This is relative to the app root

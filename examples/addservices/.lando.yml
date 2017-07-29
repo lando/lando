@@ -1,0 +1,81 @@
+# Example for overriding and augmenting a d8 recipe with additional things
+name: addservices
+
+# Start with the normal drupal recipe running php 7.1
+# See: https://docs.lndo.io/recipes/drupal8.html
+recipe: drupal8
+config:
+  php: '7.1'
+
+# Add routing to mailhog ui
+# See: https://docs.lndo.io/config/proxy.html
+proxy:
+  mailhog:
+    - mailhog.addservices.lndo.site
+
+# Service overrides and augments
+# See: https://docs.lndo.io/config/services.html
+services:
+
+  # Override the appserver with composer globals, build step and custom php.ini
+  # See: https://docs.lndo.io/services/php.html
+  appserver:
+    composer:
+      phpunit/phpunit: '*'
+    build:
+      # Uncomment this when you have a composer.json in the root directory
+      # - cd $LANDO_MOUNT && composer install
+    config:
+      conf: php.ini
+
+  # Override the default database credentials and lock down the exposed port
+  # See: https://docs.lndo.io/services/mysql.html
+  database:
+
+    # Set a static port
+    # This port needs to be free otherwise all hell will break lose
+    portforward: 1337
+
+    # Optionally change the default db credentials
+    creds:
+      user: tswift
+      password: troubletroubletrouble
+      database: songz
+
+  # Add a caching backend
+  # See: https://docs.lndo.io/services/redis.html
+  cache:
+    type: redis
+    persist: true
+
+  # Add an indexing backend
+  # See: https://docs.lndo.io/services/elasticsearch.html
+  search:
+    type: elasticsearch:5.4
+
+  # Add mailhog capturing
+  # See: https://docs.lndo.io/services/mailhog.html
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
+
+  # Add node cli
+  # See: https://docs.lndo.io/services/node.html
+  node-cli:
+    type: node:6.10
+    globals:
+      gulp-cli: "latest"
+
+# Add a php unit command and node commands
+# See: https://docs.lndo.io/config/tooling.html
+tooling:
+  phpunit:
+    service: appserver
+    description: "Run PHP Unit tests: lando phpunit"
+  npm:
+    service: node-cli
+  node:
+    service: node-cli
+  gulp:
+    service: node-cli
