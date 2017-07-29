@@ -75,6 +75,11 @@ module.exports = function(lando) {
       typeConfig[via].command.unshift('docker-php-entrypoint');
     }
 
+    // Switch apache php.ini if on 5.3
+    if (via === 'apache' && version === '5.3') {
+      typeConfig.apache.phpConf = '/usr/local/lib/php.ini';
+    }
+
     // Return type specific config
     return _.merge(config, typeConfig[via]);
 
@@ -158,6 +163,11 @@ module.exports = function(lando) {
         // Change the default conf file
         defaultConfFile = 'httpd-ssl.conf';
 
+      }
+
+      // If php version 5.3 we need to set the logs dir
+      if (config.version === '5.3') {
+        php.environment.APACHE_LOG_DIR = '/var/log';
       }
 
       // Handle our apache config

@@ -9,11 +9,11 @@ proxy:
 # Spin up services to run a basic LAMP stack
 services:
 
-  # Create a php 5.6 instance served by the latest apache with https turned on
+  # Create a php 5.3 instance served by the latest apache with https turned on
   appserver:
 
-    # PHP version 5.6
-    type: php:5.4
+    # PHP version 5.3
+    type: php:5.3
 
     # Serve php by either apache or nginx. You can put in any `service:version`
     # string that is supported by Lando's nginx and apache services.
