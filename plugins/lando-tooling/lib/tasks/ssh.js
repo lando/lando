@@ -54,7 +54,7 @@ module.exports = function(lando) {
             opts: {
               app: app,
               mode: 'attach',
-              user: options.user || 'root',
+              user: options.user || 'www-data',
               services: [service]
             }
           };

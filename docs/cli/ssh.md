@@ -22,8 +22,8 @@ lando ssh myapp database
 # List all the files in the root directory of the appserver
 lando ssh appserver -c "ls -ls /"
 
-# Drop into a shell on the appserver as www-data
-lando ssh --user=www-data
+# Drop into a shell on the appserver as root
+lando ssh --user=root
 ```
 
 Options

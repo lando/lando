@@ -31,10 +31,10 @@ Container Logs
 
 See the [lando logs](./../cli/logs.md) command.
 
-Advanced Logs
--------------
+Advanced Troubleshooting
+------------------------
 
-One of the best ways to troubleshoot an issue is to use Docker commands directly.
+One of the best ways to troubleshoot an issue is to use Docker commands directly or use the [lando ssh](./../cli/ssh.md) command.
 
 ```bash
 # List all my containers
