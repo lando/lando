@@ -675,7 +675,7 @@ module.exports = function(lando) {
 
             // Start building the augment
             compose.services[name] = {
-              networks: _.merge(defaultNets, preNets),
+              networks: _.mergeWith(defaultNets, preNets, lando.utils.merger),
               labels: labels,
             };
           }

@@ -29,7 +29,7 @@ module.exports = function(lando) {
     };
 
     // Merge config over defaults
-    lando.config = _.merge(defaults, lando.config);
+    lando.config = _.mergeWith(defaults, lando.config, lando.utils.merger);
 
     // Grab the merged config
     var proxyConf = {

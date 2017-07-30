@@ -10,6 +10,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var merger = lando.utils.merger;
 
   // Do all the services magix
   lando.events.on('post-instantiate-app', 3, function(app) {
@@ -34,7 +35,7 @@ module.exports = function(lando) {
           var oldService = app.services[name] || {};
 
           // Merge the new container on top of the old
-          service = _.merge(oldService, service);
+          service = _.mergeWith(oldService, service, merger);
 
           // Clone deeply
           app.services[name] = _.cloneDeep(service);
@@ -42,8 +43,8 @@ module.exports = function(lando) {
         });
 
         // Merge in the volumes and networks as well
-        app.volumes = _.merge(app.volumes, newCompose.volumes);
-        app.networks = _.merge(app.networks, newCompose.networks);
+        app.volumes = _.mergeWith(app.volumes, newCompose.volumes, merger);
+        app.networks = _.mergeWith(app.networks, newCompose.networks, merger);
 
       });
     }
@@ -53,7 +54,7 @@ module.exports = function(lando) {
       _.forEach(app.config.services, function(service, name) {
 
         // Merge in any computed service info with starting conf
-        var config = _.merge(app.services[name], service);
+        var config = _.mergeWith(app.services[name], service, merger);
 
         // Merge create the info for the service
         app.info[name] = lando.services.info(name, service.type, config);
