@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var fs = lando.node.fs;
+  var merger = lando.utils.merger;
   var path = require('path');
 
   /*
@@ -26,7 +27,7 @@ module.exports = function(lando) {
     var newVols = _.flatten([oldVols, overrides.volumes]);
 
     // Merge in everythign else
-    service = _.merge(service, overrides);
+    service = _.mergeWith(service, overrides, merger);
 
     // Reset the volume and remove any null values which might get added
     // if we are using a custom image
@@ -237,7 +238,7 @@ module.exports = function(lando) {
     info.version = version;
 
     // Get additional information
-    info = _.merge(info, registry[service].info(name, config));
+    info = _.mergeWith(info, registry[service].info(name, config), merger);
 
     // Log
     lando.log.verbose('Info get for %s:%s named %s', service, version, name);
@@ -332,8 +333,8 @@ module.exports = function(lando) {
       services[name] = mergeOver(services[name], config.overrides.services);
 
       // Merge in the other things
-      volumes = _.merge(volumes, config.overrides.volumes);
-      networks = _.merge(networks, config.overrides.networks);
+      volumes = _.mergeWith(volumes, config.overrides.volumes, merger);
+      networks = _.mergeWith(networks, config.overrides.networks, merger);
 
     }
 

@@ -14,6 +14,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var fs = lando.node.fs;
+  var merger = lando.utils.merger;
   var path = require('path');
 
   // Add in some high level config so our app can handle parsing container objects
@@ -47,9 +48,9 @@ module.exports = function(lando) {
           var data = lando.yaml.load(composeFile);
 
           // Merge things in
-          app.services = _.merge(app.services, data.services);
-          app.volumes = _.merge(app.volumes, data.volumes);
-          app.networks = _.merge(app.networks, data.networks);
+          app.services = _.mergeWith(app.services, data.services, merger);
+          app.volumes = _.mergeWith(app.volumes, data.volumes, merger);
+          app.networks = _.mergeWith(app.networks, data.networks, merger);
 
           // Log
           lando.log.verbose('Added compose file %s to app.', composeFile);
