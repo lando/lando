@@ -9,8 +9,8 @@ Using Lando it is easy to augment recipes with additional services, tooling or r
 
 Now that you've read all deep magic here are some common scenarios and examples.
 
-Overriding Extending Recipes
-----------------------------
+Overriding & Extending Recipes
+------------------------------
 
 It is easy to both augment the services, tooling and routes provided by recipes and to add additonal things. We recommend you run `lando info` on your app before you customize so you can check out the names of the services provided by your recipe. Once you change your `.lando.yml` file you'll likely want to `lando restart` or `lando rebuild` for the changes to apply.
 

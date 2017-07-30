@@ -9,7 +9,6 @@ macOS
 3.  Double-click on the `LandoInstaller.pkg`
 4.  Go through the setup workflow
 5.  Enter your username and password when prompted
-6.  [Spin up your first Lando app](./../tutorials/basics.md)
 
 Windows
 -------
@@ -19,7 +18,6 @@ Windows
 3.  Double-click on `lando.exe`
 4.  Go through the setup workflow
 5.  Approve various UAC prompts during install
-7.  [Spin up your first Lando app](./../tutorials/basics.md)
 
 > #### Warning::YOU MUST HAVE HYPER-V ENABLED
 >
@@ -32,7 +30,6 @@ Linux
 2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/kalabox/lando/releases)
 3.  Double-click on the package to launch Software Center
 4.  Click the "Install" button and enter your password when prompted
-5.  [Spin up your first Lando app](./../tutorials/basics.md)
 
 > #### Hint::Install from source for other Linux distros
 >
