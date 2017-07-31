@@ -72,6 +72,8 @@ module.exports = function(lando) {
         // Get the backup user
         var userPath = 'environment.LANDO_WEBROOT_USER';
         var user = _.get(config.app.services[config.service], userPath, 'root');
+        var name = config.name;
+        var eventName = name.split(' ')[0];
 
         // Build out our options
         var options = {
@@ -88,8 +90,18 @@ module.exports = function(lando) {
           }
         };
 
+        // Run a pre-event
+        return config.app.events.emit(['pre', eventName].join('-'), config)
+
         // Exec
-        return lando.engine.run(options);
+        .then(function() {
+          return lando.engine.run(options);
+        })
+
+        // Post event
+        .then(function() {
+          return config.app.events.emit(['post', eventName].join('-'), config);
+        });
 
       });
 
