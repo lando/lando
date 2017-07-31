@@ -10,7 +10,6 @@ module.exports = function(lando) {
 
   // Modules
   var _  = lando.node._;
-  var chalk = lando.node.chalk;
   var fs = lando.node.fs;
   var path = require('path');
   var Promise = lando.Promise;
@@ -92,24 +91,6 @@ module.exports = function(lando) {
       alias: ['y'],
       default: false,
       boolean: true
-    },
-    overwrite: {
-      interactive: {
-        type: 'confirm',
-        message: 'Are you sure you want to overwrite existing .lando.yml?',
-        weight: 1000,
-        when: function(answers) {
-
-          // Get things to check
-          var lyaml = path.join(answers.destination, '.lando.yml');
-          var yes = lando.tasks.argv().yes;
-          var hasYaml = fs.existsSync(lyaml);
-
-          // Determine whether to show
-          return hasYaml && !yes;
-
-        }
-      }
     }
   };
 
@@ -119,12 +100,6 @@ module.exports = function(lando) {
     describe: 'Initializes a lando app called <appname> with optional [method]',
     options: _.merge(options, auxOpts),
     run: function(options) {
-
-      // If we decline to overwrite then we are done
-      if (options.overwrite === false) {
-        console.log(chalk.yellow('Init cancelled!'));
-        return;
-      }
 
       // Set the basics
       var config = {
@@ -154,8 +129,19 @@ module.exports = function(lando) {
 
       // Create the lando yml
       .then(function(config) {
+
+        // Where are we going?
         var dest = path.join(options.destination, '.lando.yml');
+
+        // Rebase on top of any existing yaml
+        if (fs.existsSync(dest)) {
+          var pec = lando.yaml.load(dest);
+          config = _.mergeWith(pec, config, lando.utils.merger);
+        }
+
+        // Dump it
         lando.yaml.dump(dest, config);
+
       })
 
       // Tell the user things
