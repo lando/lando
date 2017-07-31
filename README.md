@@ -39,6 +39,7 @@ Advanced Usage
 *   [Adding additional services](http://docs.lndo.io/tutorials/setup-additional-services.html)
 *   [Adding additional tooling](http://docs.lndo.io/tutorials/setup-additional-tooling.html)
 *   [Adding additional routes](http://docs.lndo.io/config/proxy.html)
+*   [Adding additional events](http://docs.lndo.io/config/events.html)
 *   [Setting up front end tooling](http://docs.lndo.io/tutorials/frontend.html)
 *   [Accessing services (eg your database) from the host](http://docs.lndo.io/tutorials/frontend.html)
 *   [Importing databases](http://docs.lndo.io/tutorials/db-import.html)
@@ -111,6 +112,12 @@ config:
   database: postgres:9.6
   config:
     php: config/php.ini
+events:
+  post-start:
+    - appserver: echo SOMECOMMAND
+    - echo SOMETHINGELSE
+  post-mycustomthing
+    - echo TEST
 services:
   node:
     type: node:6.10
@@ -121,6 +128,10 @@ services:
   appserver:
     build:
       - cd /app && composer install
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
   cache:
     type: memcached:1.4
     mem: 128
@@ -158,7 +169,7 @@ There are various features that need to be implemented to achieve the above.
 4.  ~~Provide additional core services and tools~~
 5.  ~~Provide a recipes layer on top of services~~
 6.  ~~Provide handling of upstream git remotes (lando init command)~~
-7.  Provide a push/pull layer on top of the tooling layer
+7.  ~~Provide an events layer~
 8.  ~~Replicate Pantheon environment~~
 9.  Integrate with Pantheon
 10. Build GUI

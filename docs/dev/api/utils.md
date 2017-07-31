@@ -17,9 +17,22 @@ return lando.utils.scanUrls(urls)
 ```
 
 * [utils](#module_utils)
+    * [.merger()](#module_utils.merger)
     * [.compose(file, data)](#module_utils.compose) ⇒ <code>String</code>
     * [.scanUrls(urls, [opts])](#module_utils.scanUrls) ⇒ <code>Array</code>
 
+<a name="module_utils.merger"></a>
+
+### utils.merger()
+Used with _.mergeWith to concat arrays
+
+**Kind**: static method of [<code>utils</code>](#module_utils)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Take an object and write a docker compose file
+var newObject = _.mergeWith(a, b, lando.utils.merger);
+```
 <a name="module_utils.compose"></a>
 
 ### utils.compose(file, data) ⇒ <code>String</code>

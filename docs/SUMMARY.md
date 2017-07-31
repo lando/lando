@@ -78,6 +78,7 @@
     *   [LEMP](recipes/lemp.md)
     *   [Pantheon](recipes/pantheon.md)
     *   [WordPress](recipes/wordpress.md)
+*   [Events](config/events.md)
 *   [Proxy](config/proxy.md)
 *   [Services](config/services.md)
     *   [apache](services/apache.md)
