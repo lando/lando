@@ -1,7 +1,7 @@
 Recipes
 =======
 
-Recipes are Lando's highest level abstraction and they contain common mixes of proxy settings, services and tooling. Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
+Recipes are Lando's highest level abstraction and they contain common mixes of routing, events, services and tooling. Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
 
 To do this, recipes provide a base environment for a common development use case with configurability of its most obvious pieces. In your `.lando.yml`:
 
@@ -38,7 +38,7 @@ The following recipes are currently offered. Please check out each one to learn 
 Extending and Overriding Recipes
 --------------------------------
 
-Since recipes are loaded first you can still mix in other `services`, `proxy settings` or `tooling` or override the config provided by the recipe itself. Here is an example that adds some additional services and tooling and overrides to the LAMP recipe.
+Since recipes are loaded first you can still mix in other `services`, `events`, `routing` or `tooling` or override the config provided by the recipe itself. Here is an example that adds some additional services and tooling and overrides to the LAMP recipe.
 
 > #### Hint::Service and Tooling discovery
 >

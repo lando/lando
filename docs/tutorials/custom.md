@@ -56,6 +56,10 @@ Additional Reading
 
 Check out these individual tutorials for adding `routes`, `services` and `tooling` to take your knowledge to the next level.
 
-*   [Setting up Additional Services](./setup-additional-services.md)
-*   [Setting up Additional Tooling](./setup-additional-tooling.md)
-*   [Setting up Additional Routes](./setup-additional-routes.md)
+*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
+*   [Adding additional tooling](./../tutorials/tutorials/setup-additional-tooling.md)
+*   [Adding additional routes](./../config/proxy.md)
+*   [Adding additional events](./../config/events.md)
+*   [Setting up front end tooling](./../tutorials/tutorials/frontend.md)
+*   [Accessing services (eg your database) from the host](./../tutorials/tutorials/frontend.md)
+*   [Importing databases](./../tutorials/tutorials/db-import.md)
