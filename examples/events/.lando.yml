@@ -1,0 +1,17 @@
+# The name of the app
+name: events
+recipe: drupal7
+config:
+  via: nginx
+  php: 7.1
+  webroot: www
+events:
+  post-db-import:
+    - appserver: drush version
+  post-test:
+    - echo start2
+tooling:
+  test:
+    description: Test command for event framework
+    cmd: echo
+    service: appserver
