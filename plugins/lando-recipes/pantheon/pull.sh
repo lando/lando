@@ -71,7 +71,7 @@ if [ "$DATABASE" != "none" ]; then
 
   # Only pull the DB on drupal for now
   if [ "$FRAMEWORK" != "wordpress" ]; then
-    if drush sa | grep @pantheon.playbox.dev 2>&1; then
+    if drush sa | grep @pantheon.$SITE.$ENV 2>&1; then
 
       # Cleaning things up for a more efficient pull
       echo "Clearing remote cache to shrink db size"
