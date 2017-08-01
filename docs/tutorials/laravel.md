@@ -145,9 +145,9 @@ Next Steps
 ----------
 
 *   [Adding additional services](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional tooling](./../tutorials/tutorials/setup-additional-tooling.md)
+*   [Adding additional tooling](./../tutorials/setup-additional-tooling.md)
 *   [Adding additional routes](./../config/proxy.md)
 *   [Adding additional events](./../config/events.md)
-*   [Setting up front end tooling](./../tutorials/tutorials/frontend.md)
-*   [Accessing services (eg your database) from the host](./../tutorials/tutorials/frontend.md)
-*   [Importing databases](./../tutorials/tutorials/db-import.md)
+*   [Setting up front end tooling](./../tutorials/frontend.md)
+*   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
+*   [Importing databases](./../tutorials/db-import.md)
