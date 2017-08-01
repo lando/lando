@@ -6,7 +6,7 @@ Lando offers a [configurable recipe](./../recipes/wordpress.md) for spinning up 
 Getting Started
 ---------------
 
-Before you can use all the awesome Lando magic you need a Drupal 8 codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
+Before you can use all the awesome Lando magic you need a WordPress codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
 ### 1. Start with an existing codebase
 
@@ -28,7 +28,7 @@ lando init mysite --recipe wordpress
 # Create a folder to clone your site to
 mkdir mysite && cd mysite
 
-# Initialize a Drupal 8 .lando.yml after getting code from GitHub
+# Initialize a WordPress .lando.yml after getting code from GitHub
 # This requires a GitHub Personal Access Token
 # See: https://docs.lndo.io/cli/init.html#github
 lando init mysite github --recipe wordpress
@@ -36,7 +36,7 @@ lando init mysite github --recipe wordpress
 
 Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
 
-If you want to try a composer based installation, you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/wordpress) to get started.
+If you want to try a Composer-based installation, you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/wordpress) to get started.
 
 Starting Your Site
 ------------------
@@ -79,7 +79,7 @@ You can learn more about the `db-import` command [over here](./db-import.md).
 Tooling
 -------
 
-Each Lando WordPress recipe will also ship with helpful dev utilities. This means you can use things like `wp-cli`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
+Each Lando WordPress recipe will also ship with helpful dev utilities. This means you can use things like `wp-cli`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage PHP versions and tooling.
 
 ```bash
 lando composer                 Run composer commands
