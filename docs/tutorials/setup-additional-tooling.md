@@ -60,7 +60,7 @@ For more documentation on available `git` commands [click here](https://git-scm.
 Build Step Service: Adding `lando phpunit` Command
 --------------------------------------------------
 
-The Git command was already installed on the appserver so we just had to add the lando route to it and it works! Here we will install `phpunit` that is not installed on the appserver and add a lando route to it so we can use it with `lando phpunit`.
+The Git command was already installed on the appserver, so we just had to add the lando route to it and it works! Here we will install `phpunit` that is not installed on the appserver and add a lando route to it so we can use it via the a convenient `lando phpunit` command.
 
 Open the `.lando.yml` file for your app. Add a `composer` section to your `appserver` to get `phpunit` like so:
 
