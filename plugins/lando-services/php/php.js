@@ -134,17 +134,10 @@ module.exports = function(lando) {
     // Add in our xdebug config
     if (config.xdebug) {
 
-      // Linux uses this apparently?
-      // @TODO: this cant possibly be consistent
-      var remoteIp = lando.config.env.LANDO_ENGINE_REMOTE_IP;
-      if (process.platform === 'linux') {
-        remoteIp = '192.168.0.1';
-      }
-
       // Conf
       var xconfig = [
         'remote_enable=true',
-        'remote_host=' + remoteIp
+        'remote_host=' + lando.config.env.LANDO_ENGINE_REMOTE_IP
       ];
 
       // Add the conf
