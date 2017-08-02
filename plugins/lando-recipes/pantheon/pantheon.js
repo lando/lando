@@ -178,6 +178,11 @@ module.exports = function(lando) {
       description: 'Pull database and/or files from Pantheon.',
       cmd: '/helpers/pull.sh',
       options: {
+        code: {
+          description: 'The env to get the code from or [none]',
+          default: config.env,
+          alias: ['c']
+        },
         database: {
           description: 'The environment to get the db from or [none]',
           default: config.env,
