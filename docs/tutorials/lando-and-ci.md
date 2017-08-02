@@ -77,3 +77,8 @@ That's great! More importantly though now each time we file a PR against the Git
 * Run the phplint code check
 
 If the CI checks pass you can merge with confidence!
+
+Full Example
+------------
+
+{% codesnippet "./../examples/lando-and-ci/.lando.yml" %}{% endcodesnippet %}
