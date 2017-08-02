@@ -172,7 +172,6 @@ module.exports = function(lando) {
 
     // Get some stuff for our things
     var domain = lando.config.proxyDomain;
-    var engineHost = lando.config.engineHost;
     var proxyDash = lando.config.proxyDash;
     var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
     var cmd = [
