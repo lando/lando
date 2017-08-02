@@ -354,6 +354,10 @@ default:
         root: /app
 ```
 
+> #### Warning::Replace `base_url`
+>
+> Be sure to replace the `base_url` with the URL to your Lando app.
+
 Writing Some Behat Tests
 -----
 
@@ -382,6 +386,11 @@ Feature: Content
       Then I should see "Log out"
 
 ```
+
+> #### Warning::Replace "Welcome to CI Tutorial"`
+>
+> I named my Drupal App "CI Tutorial"; so if you named yours differently be sure
+> to replace with your site name.
 
 Set up `composer.json` to Run Behat Tests
 -----
