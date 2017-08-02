@@ -147,6 +147,36 @@ lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_WEBROOT/\$FILEMOUNT --strip
 
 You can alternatively download the backup and manually extract it to the correct location.
 
+Pushing Your Changes
+--------------------
+
+While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally.
+
+### Usage
+
+```bash
+# Push the latest code, database and files
+lando push
+
+# Push the latest code, database and files with a description of the change
+lando push -m "Updated the widget to do awesome feature x"
+
+# Push only the database
+lando push --files=none
+
+# Pull only the files
+lando push --database=none
+```
+
+### Options
+
+```bash
+--message, -m   A message describing your change
+                                   [default: "My awesome Lando-based changes"]
+--database, -d  The environment to push the db to or [none]   [default: "dev"]
+--files, -f     The environment to push the files to or [none][default: "dev"]
+```
+
 Tooling
 -------
 
