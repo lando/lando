@@ -197,8 +197,8 @@ module.exports = function(lando) {
       var https = ports.https;
 
       // Log
-      lando.log.verbose('Proxying on %s:%s', engineHost, http);
-      lando.log.verbose('Proxying on %s:%s', engineHost, https);
+      lando.log.verbose('Proxying on %s:%s', http);
+      lando.log.verbose('Proxying on %s:%s', https);
 
       // Proxy service
       var proxy = {
@@ -213,8 +213,8 @@ module.exports = function(lando) {
         },
         networks: ['edge'],
         ports: [
-          [engineHost, http, '80'].join(':'),
-          [engineHost, https, '443'].join(':'),
+          [http, '80'].join(':'),
+          [https, '443'].join(':'),
           [proxyDash, 8080].join(':')
         ],
         volumes: [
