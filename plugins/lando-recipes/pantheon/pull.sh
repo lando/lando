@@ -93,7 +93,10 @@ if [ "$DATABASE" != "none" ]; then
       eval "$PULL_DB"
 
     else
-      echo "No drush alias detected for $SITE.$ENV. Please make sure you have full access to this site."
+      echo "No drush alias detected for @pantheon.$SITE.$ENV. Please make sure you have full access to this site."
+      echo "You can verify this by running lando terminus aliases && lando drush sa | grep MYSITE"
+      echo "If your site is not listed try the manual import instructions:"
+      echo "See: https://docs.lndo.io/tutorials/pantheon.html"
       exit 1
     fi
 
@@ -102,7 +105,8 @@ if [ "$DATABASE" != "none" ]; then
     # if [ "$FRAMEWORK" == "wordpress" ]; then
     #  wp search-replace '$ENV-$SITE.pantheon.io' '$LANDO_APP_NAME.lndo.site'
     # fi
-    echo "WordPress database pull not currently supported. See: https://docs.lndo.io/tutorials/pantheon.html for manual db import steps."
+    echo "WordPress database pull not currently supported."
+    echo "See: https://docs.lndo.io/tutorials/pantheon.html for manual db import steps."
   fi
 
 fi
