@@ -175,11 +175,11 @@ module.exports = function(lando) {
     // Add in the pull command
     tools.pull = {
       service: 'appserver',
-      description: 'Pull database and/or files from Pantheon.',
+      description: 'Pull code, database and/or files from Pantheon.',
       cmd: '/helpers/pull.sh',
       options: {
         code: {
-          description: 'The env to get the code from or [none]',
+          description: 'The environment to get the code from or [none]',
           default: config.env,
           alias: ['c']
         },
@@ -197,6 +197,30 @@ module.exports = function(lando) {
           description: 'Rsync the files, good for subsequent pulls',
           boolean: true,
           default: false
+        }
+      }
+    };
+
+    // Add in the push command
+    tools.push = {
+      service: 'appserver',
+      description: 'Push code, database and/or files to Pantheon.',
+      cmd: '/helpers/push.sh',
+      options: {
+        message: {
+          description: 'A message describing your change',
+          default: 'My awesome Lando-based changes',
+          alias: ['m']
+        },
+        database: {
+          description: 'The environment to push the db to or [none]',
+          default: config.env,
+          alias: ['d']
+        },
+        files: {
+          description: 'The environment to push the files to or [none]',
+          default: config.env,
+          alias: ['f']
         }
       }
     };
@@ -285,7 +309,8 @@ module.exports = function(lando) {
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
       '/helpers:pantheon.sh',
-      '/helpers:pull.sh'
+      '/helpers:pull.sh',
+      '/helpers:push.sh'
     ];
 
     // Loop
