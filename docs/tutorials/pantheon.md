@@ -75,15 +75,18 @@ Once you've started up your Pantheon site you will need to pull in your database
 
 ### 1. Using `lando pull`
 
-Lando provides a command for Pantheon sites called `lando pull` to get your database and files. The `database` pull currently only works if your site is not a `wordpress` site and if you have a valid `drush alias` for that site.
+Lando provides a command for Pantheon sites called `lando pull` to get your database and files.
 
-Please consult the manual import documentation below if you are using a WordPress site or this command produces an error.
+Please consult the manual import documentation below if this command produces an error.
 
 #### Usage
 
 ```bash
-# Pull the latest database and files
+# Pull the latest code, database and files
 lando pull
+
+# Skip a code merge
+lando pull --code=none
 
 # Pull only the database from the test environment
 lando pull --database=test --files=none
@@ -98,6 +101,7 @@ lando pull --database=none --rsync
 #### Options
 
 ```bash
+--code, -c      The environment to get the code from or [none]  [default: "dev"]
 --database, -d  The environment to get the db from or [none]  [default: "dev"]
 --files, -f     The environment to get the files from or [none]
                                                               [default: "dev"]
