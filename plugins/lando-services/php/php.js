@@ -27,6 +27,7 @@ module.exports = function(lando) {
     '5.5',
     '5.4',
     '5.3',
+    'hhvm',
     'latest',
     'custom'
   ];
@@ -53,7 +54,7 @@ module.exports = function(lando) {
         web: 'nginx',
         mount: config._mount,
         command: ['php-fpm'],
-        image: [version, 'fpm'].join('-'),
+        image: 'kalabox/php:' + [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.template',
         phpConf: '/usr/local/etc/php/php.ini'
       },
@@ -64,7 +65,7 @@ module.exports = function(lando) {
           'sh -c',
           '\'a2enmod rewrite && apache2-foreground\''
         ],
-        image: [version, 'apache'].join('-'),
+        image: 'kalabox/php:' + [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-enabled/000-default.conf',
         phpConf: '/usr/local/etc/php/php.ini'
       }
@@ -78,6 +79,22 @@ module.exports = function(lando) {
     // Switch apache php.ini if on 5.3
     if (via === 'apache' && version === '5.3') {
       typeConfig.apache.phpConf = '/usr/local/lib/php.ini';
+    }
+
+    // If hhvm is the "version" then refactor the typeconf
+    // @TODO: if people are into the HHVM we will want to make this more robust
+    // eg have actual hhvm version and via support for apache/nginx/etc
+    if (version === 'hhvm') {
+      via = 'nginx';
+      typeConfig.nginx.image = 'baptistedonaux/hhvm';
+      typeConfig.nginx.phpConf = '/etc/hhvm/php.ini';
+      typeConfig.nginx.command = [
+        'hhvm',
+        '-m server',
+        '-vServer.Type=fastcgi',
+        '-vServer.Port=9000',
+        '-vServer.AllowRunAsRoot=1'
+      ];
     }
 
     // Return type specific config
@@ -111,7 +128,7 @@ module.exports = function(lando) {
 
     // Start with the php base
     var php = {
-      image: 'kalabox/php:' + config.image,
+      image: config.image,
       environment: {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
