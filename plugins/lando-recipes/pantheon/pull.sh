@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Set the default terminus environment to the currently checked out branch
+TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+
+# Map the master branch to dev
+if [ "$TERMINUS_ENV" == "master" ]; then
+  TERMINUS_ENV="dev"
+fi
+
 # Set option defaults
 CODE=${TERMINUS_ENV:-dev}
 DATABASE=${TERMINUS_ENV:-dev}
@@ -69,7 +77,7 @@ terminus site:info $SITE || exit 1
 echo "Logged in as `terminus auth:whoami`"
 echo "Detected that $SITE is a $FRAMEWORK site"
 
-# Get the database
+# Get the codez
 if [ "$CODE" != "none" ]; then
 
   # Get the git branch
@@ -80,7 +88,7 @@ if [ "$CODE" != "none" ]; then
 
   # Fetch the origin if this is a new branch and set the branch
   if [ "$CODE" != "dev" ]; then
-    git fetch origin --all
+    git fetch --all
     GIT_BRANCH=$CODE
   fi
 

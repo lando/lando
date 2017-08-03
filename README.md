@@ -169,9 +169,9 @@ There are various features that need to be implemented to achieve the above.
 4.  ~~Provide additional core services and tools~~
 5.  ~~Provide a recipes layer on top of services~~
 6.  ~~Provide handling of upstream git remotes (lando init command)~~
-7.  ~~Provide an events layer~
+7.  ~~Provide an events layer~~
 8.  ~~Replicate Pantheon environment~~
-9.  Integrate with Pantheon
+9.  ~~Integrate with Pantheon~~
 10. Build GUI
 
 Other Resources

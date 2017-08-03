@@ -3,6 +3,8 @@ Working with WordPress
 
 Lando offers a [configurable recipe](./../recipes/wordpress.md) for spinning up [WordPress](https://wordpress.org/) apps. Let's go over some basic usage.
 
+<!-- toc -->
+
 Getting Started
 ---------------
 

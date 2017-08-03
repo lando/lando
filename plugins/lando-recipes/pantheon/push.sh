@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Set the default terminus environment to the currently checked out branch
+TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+
+# Map the master branch to dev
+if [ "$TERMINUS_ENV" == "master" ]; then
+  TERMINUS_ENV="dev"
+fi
+
 # Set option defaults
 MESSAGE="My Awesome Lando-based commit"
 DATABASE=${TERMINUS_ENV:-dev}
@@ -9,7 +17,6 @@ FILES=${TERMINUS_ENV:-dev}
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
-DB_DUMP="/tmp/db.tar.gz"
 PV=""
 PUSH_DB=""
 PUSH_FILES=""

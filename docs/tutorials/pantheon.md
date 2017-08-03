@@ -5,6 +5,8 @@ Lando offers a [configurable recipe](./../recipes/pantheon.md) for spinning up a
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
+ <!-- toc -->
+
 Getting Started
 ---------------
 
@@ -75,7 +77,7 @@ Once you've started up your Pantheon site you will need to pull in your database
 
 ### 1. Using `lando pull`
 
-Lando provides a command for Pantheon sites called `lando pull` to get your database and files.
+Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
 
 Please consult the manual import documentation below if this command produces an error.
 
@@ -83,6 +85,7 @@ Please consult the manual import documentation below if this command produces an
 
 ```bash
 # Pull the latest code, database and files
+# This will pull the environment associated with your currently checked out git branch
 lando pull
 
 # Skip a code merge
@@ -101,10 +104,9 @@ lando pull --database=none --rsync
 #### Options
 
 ```bash
---code, -c      The environment to get the code from or [none]  [default: "dev"]
---database, -d  The environment to get the db from or [none]  [default: "dev"]
+--code, -c      The environment to get the code from or [none]
+--database, -d  The environment to get the db from or [none]
 --files, -f     The environment to get the files from or [none]
-                                                              [default: "dev"]
 --rsync         Rsync the files, good for subsequent pulls                                                  [boolean] [default: false]
 ```
 
@@ -150,12 +152,13 @@ You can alternatively download the backup and manually extract it to the correct
 Pushing Your Changes
 --------------------
 
-While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally.
+While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally. **If you do not specify `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
 
 ### Usage
 
 ```bash
 # Push the latest code, database and files
+# This will push the environment associated with your currently checked out git branch
 lando push
 
 # Push the latest code, database and files with a description of the change
@@ -171,10 +174,32 @@ lando push --database=none
 ### Options
 
 ```bash
---message, -m   A message describing your change
-                                   [default: "My awesome Lando-based changes"]
---database, -d  The environment to push the db to or [none]   [default: "dev"]
---files, -f     The environment to push the files to or [none][default: "dev"]
+--message, -m   A message describing your change [default: "My awesome Lando-based changes"]
+--database, -d  The environment to push the db to or [none]
+--files, -f     The environment to push the files to or [none]
+```
+
+Working With Multidev
+---------------------
+
+Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
+
+### Usage
+
+```bash
+# Switch to the env called "feature-1"
+lando switch feature-1
+
+# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
+# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
+lando switch feature-1 --no-db --no-files
+```
+
+### Options
+
+```bash
+  --no-db     Do not switch the database              [boolean] [default: false]
+  --no-files  Do not switch the files                 [boolean] [default: false]
 ```
 
 Tooling
@@ -188,8 +213,10 @@ lando db-import <file>         Import <file> into database. File is relative to 
 lando drush                    Run drush commands
 lando mysql                    Drop into a MySQL shell
 lando php                      Run php commands
-landp pull                     Pull database and/or files from Pantheon.
+lando pull                     Pull code, database and/or files from Pantheon
+lando push                     Push code, database and/or files to Pantheon
 lando redis-cli                Run redis-cli commands
+lando switch <env>             Switch to a different multidev environment
 lando terminus                 Run terminus commands
 lando varnishadm               Run varnishadm commands
 lando wp                       Run wp-cli commands
