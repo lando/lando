@@ -3,6 +3,8 @@ Working with Drupal 8
 
 Lando offers a [configurable recipe](./../recipes/drupal8.md) for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
 
+<!-- toc -->
+
 Getting Started
 ---------------
 

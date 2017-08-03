@@ -175,22 +175,19 @@ module.exports = function(lando) {
     // Add in the pull command
     tools.pull = {
       service: 'appserver',
-      description: 'Pull code, database and/or files from Pantheon.',
+      description: 'Pull code, database and/or files from Pantheon',
       cmd: '/helpers/pull.sh',
       options: {
         code: {
           description: 'The environment to get the code from or [none]',
-          default: config.env,
           alias: ['c']
         },
         database: {
           description: 'The environment to get the db from or [none]',
-          default: config.env,
           alias: ['d']
         },
         files: {
           description: 'The environment to get the files from or [none]',
-          default: config.env,
           alias: ['f']
         },
         rsync: {
@@ -204,7 +201,7 @@ module.exports = function(lando) {
     // Add in the push command
     tools.push = {
       service: 'appserver',
-      description: 'Push code, database and/or files to Pantheon.',
+      description: 'Push code, database and/or files to Pantheon',
       cmd: '/helpers/push.sh',
       options: {
         message: {
@@ -214,13 +211,30 @@ module.exports = function(lando) {
         },
         database: {
           description: 'The environment to push the db to or [none]',
-          default: config.env,
           alias: ['d']
         },
         files: {
           description: 'The environment to push the files to or [none]',
-          default: config.env,
           alias: ['f']
+        }
+      }
+    };
+
+    // Add in the switch command
+    tools['switch <env>'] = {
+      service: 'appserver',
+      description: 'Switch to a different multidev environment',
+      cmd: '/helpers/switch.sh',
+      options: {
+        'no-db': {
+          description: 'Do not switch the database',
+          boolean: true,
+          default: false
+        },
+        'no-files': {
+          description: 'Do not switch the files',
+          boolean: true,
+          default: false
         }
       }
     };
@@ -310,7 +324,8 @@ module.exports = function(lando) {
       '/etc/nginx:nginx.conf',
       '/helpers:pantheon.sh',
       '/helpers:pull.sh',
-      '/helpers:push.sh'
+      '/helpers:push.sh',
+      '/helpers:switch.sh'
     ];
 
     // Loop
