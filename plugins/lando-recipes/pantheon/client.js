@@ -20,6 +20,7 @@ module.exports = function(lando) {
   var tokenCacheKey = 'init:auth:pantheon:tokens';
   var sessionCacheKey = 'init:auth:pantheon:session:';
   var sitesCacheKey = 'init:auth:pantheon:sites:';
+  var envCacheKey = 'init:auth:pantheon:site:envs:';
 
   /*
    * Return auth headers we need for session protected endpoints
@@ -278,9 +279,41 @@ module.exports = function(lando) {
 
   };
 
+  /*
+   * Get full list of a sites environments
+   */
+  var pantheonSiteEnvs = function(token, site) {
+
+    // If we have a process cached env list lets use that first
+    var envKey = envCacheKey + site;
+    if (lando.cache.get(envKey)) {
+      return Promise.resolve(lando.cache.get(envKey));
+    }
+
+    // Start with auth
+    return pantheonAuth(token)
+
+    // Get the envs
+    .then(function(session) {
+      var getSites = ['sites', site, 'environments'];
+      var options = {headers: getAuthHeaders(session)};
+      return pantheonRequest('get', getSites, options);
+    })
+
+    // Map them into something we can merge with org sites better
+    .then(function(envs) {
+      return _.map(envs, function(data, id) {
+        data.id = id;
+        return data;
+      });
+    });
+
+  };
+
   // Return the things
   return {
     getSites: pantheonSites,
+    getEnvs: pantheonSiteEnvs,
     postKey: pantheonPostKey
   };
 
