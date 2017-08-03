@@ -43,7 +43,7 @@ module.exports = function(lando) {
     /*
      * Get the run handler
      */
-    var run = function(/*options*/) {
+    var run = function(answers) {
 
       // Let's check to see if the app has been started
       return lando.app.isRunning(config.app)
@@ -89,6 +89,14 @@ module.exports = function(lando) {
             services: [config.service]
           }
         };
+
+        // If this is a specal "passthrough" command lets augment the cmd
+        _.forEach(config.options, function(option) {
+          if (option.passthrough && _.get(option, 'interactive.name')) {
+            cmd.push('--' + _.get(option, 'interactive.name'));
+            cmd.push(answers[_.get(option, 'interactive.name')]);
+          }
+        });
 
         // Run a pre-event
         return config.app.events.emit(['pre', eventName].join('-'), config)

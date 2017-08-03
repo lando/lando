@@ -18,6 +18,7 @@ module.exports = function(lando) {
   var path = require('path');
 
   // Lando things
+  var api = require('./client')(lando);
   var addConfig = lando.services.addConfig;
   var buildVolume = lando.services.buildVolume;
 
@@ -154,6 +155,46 @@ module.exports = function(lando) {
    */
   var tooling = function(config) {
 
+    // Helper func to get envs
+    var getEnvs = function(done, nopes) {
+
+      // Envs to remove
+      var restricted = nopes || [];
+
+      // Get token
+      var token = lando.cache.get('site:meta:' + config._app).token;
+
+      // Validate we have a token and siteid
+      _.forEach([token, config.id], function(prop) {
+        if (_.isEmpty(prop)) {
+          lando.log.error('Error getting token or siteid.', prop);
+          lando.log.error('Make sure you run:');
+          lando.log.error('lando init %s pantheon', config._app);
+          process.exit(1);
+        }
+      });
+
+      // Get the pantheon sites using the token
+      api.getEnvs(token, config.id)
+
+      // Parse the evns into choices
+      .map(function(env) {
+        return {name: env.id, value: env.id};
+      })
+
+      // Filter out any restricted envs
+      .filter(function(env) {
+        return (!_.includes(restricted, env.value));
+      })
+
+      // Done
+      .then(function(envs) {
+        envs.push({name: 'none', value: 'none'});
+        done(null, envs);
+      });
+
+    };
+
     // Add in default pantheon tooling
     var tools = {
       'redis-cli': {
@@ -180,15 +221,45 @@ module.exports = function(lando) {
       options: {
         code: {
           description: 'The environment to get the code from or [none]',
-          alias: ['c']
+          passthrough: true,
+          alias: ['c'],
+          interactive: {
+            type: 'list',
+            message: 'Pull code from?',
+            choices: function() {
+              getEnvs(this.async());
+            },
+            default: config.env || 'dev',
+            weight: 600
+          }
         },
         database: {
           description: 'The environment to get the db from or [none]',
-          alias: ['d']
+          passthrough: true,
+          alias: ['d'],
+          interactive: {
+            type: 'list',
+            message: 'Pull DB from?',
+            choices: function() {
+              getEnvs(this.async());
+            },
+            default: config.env || 'dev',
+            weight: 601
+          }
         },
         files: {
           description: 'The environment to get the files from or [none]',
-          alias: ['f']
+          passthrough: true,
+          alias: ['f'],
+          interactive: {
+            type: 'list',
+            message: 'Pull files from?',
+            choices: function() {
+              getEnvs(this.async());
+            },
+            default: config.env || 'dev',
+            weight: 602
+          }
         },
         rsync: {
           description: 'Rsync the files, good for subsequent pulls',
@@ -206,16 +277,46 @@ module.exports = function(lando) {
       options: {
         message: {
           description: 'A message describing your change',
+          passthrough: true,
           default: 'My awesome Lando-based changes',
-          alias: ['m']
+          alias: ['m'],
+          interactive: {
+            type: 'list',
+            message: 'Push code to?',
+            choices: function() {
+              getEnvs(this.async(), ['test', 'live']);
+            },
+            default: config.env || 'dev',
+            weight: 600
+          }
         },
         database: {
           description: 'The environment to push the db to or [none]',
-          alias: ['d']
+          passthrough: true,
+          alias: ['d'],
+          interactive: {
+            type: 'list',
+            message: 'Push db to?',
+            choices: function() {
+              getEnvs(this.async(), ['test', 'live']);
+            },
+            default: config.env || 'dev',
+            weight: 601
+          }
         },
         files: {
           description: 'The environment to push the files to or [none]',
-          alias: ['f']
+          passthrough: true,
+          alias: ['f'],
+          interactive: {
+            type: 'list',
+            message: 'Push files to?',
+            choices: function() {
+              getEnvs(this.async(), ['test', 'live']);
+            },
+            default: config.env || 'dev',
+            weight: 602
+          }
         }
       }
     };

@@ -20,6 +20,7 @@ ENV=${TERMINUS_ENV:-dev}
 PV=""
 PUSH_DB=""
 PUSH_FILES=""
+GREEN='\033[0;32m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -164,3 +165,8 @@ if [ "$FILES" != "none" ]; then
   eval "$PUSH_FILES"
 
 fi
+
+# Finish up!
+echo ""
+printf "${GREEN}Push complete!"
+echo ""

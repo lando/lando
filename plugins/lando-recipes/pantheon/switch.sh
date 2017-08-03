@@ -13,6 +13,7 @@ FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
 SWITCH_ENV=""
+GREEN='\033[0;32m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -65,3 +66,8 @@ eval "$SWITCH_ENV"
 if [ ! -f "$CURRENT_LANDO_YML" ]; then
   cp -rf "$STASHED_LANDO_YML" "$CURRENT_LANDO_YML"
 fi
+
+# Finish up!
+echo ""
+printf "${GREEN}Switch complete!"
+echo ""

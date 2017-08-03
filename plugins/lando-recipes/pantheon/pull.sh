@@ -22,6 +22,7 @@ FILE_DUMP="/tmp/files.tar.gz"
 PV=""
 PULL_DB=""
 PULL_FILES=""
+GREEN='\033[0;32m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -191,3 +192,8 @@ if [ "$FILES" != "none" ]; then
   eval "$PULL_FILES"
 
 fi
+
+# Finish up!
+echo ""
+printf "${GREEN}Pull complete!"
+echo ""
