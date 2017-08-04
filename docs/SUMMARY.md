@@ -19,6 +19,7 @@
 *   [Laravel](tutorials/laravel.md)
 *   [LAMP](tutorials/lamp.md)
 *   [LEMP](tutorials/lemp.md)
+*   [MEAN](tutorials/mean.md)
 *   [Pantheon](tutorials/pantheon.md)
 *   [WordPress](tutorials/wordpress.md)
 *   [Custom](tutorials/custom.md)
