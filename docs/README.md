@@ -29,6 +29,7 @@ Get Started With...
 *   [Laravel](http://docs.lndo.io/tutorials/laravel.html)
 *   [LAMP](http://docs.lndo.io/tutorials/lamp.html)
 *   [LEMP](http://docs.lndo.io/tutorials/lemp.html)
+*   [MEAN](http://docs.lndo.io/tutorials/mean.html)
 *   [Pantheon](http://docs.lndo.io/tutorials/pantheon.html)
 *   [WordPress](http://docs.lndo.io/tutorials/wordpress.html)
 *   [Custom](http://docs.lndo.io/tutorials/custom.html)

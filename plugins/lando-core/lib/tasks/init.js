@@ -19,11 +19,19 @@ module.exports = function(lando) {
    */
   var whenIt = function(method, func, answers) {
 
+    // Recipes that do not require a webroot
+    var noWeb = ['mean'];
+
     // Run the whenit func if applicable
     if (_.includes(lando.init.get(), method)) {
       if (_.isFunction(lando.init.get(method)[func])) {
         return lando.init.get(method)[func](answers);
       }
+    }
+
+    // Fail the nowebz
+    else if (_.includes(noWeb, answers.recipe)) {
+      return false;
     }
 
     // Otherwise show it

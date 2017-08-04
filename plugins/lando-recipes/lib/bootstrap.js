@@ -33,6 +33,7 @@ module.exports = function(lando) {
     lando.recipes.add('laravel', require('./../laravel/laravel')(lando));
     lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
     lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
+    lando.recipes.add('mean', require('./../mean/mean')(lando));
     lando.recipes.add('pantheon', require('./../pantheon/pantheon')(lando));
     lando.recipes.add('wordpress', require('./../wordpress/wordpress')(lando));
 
