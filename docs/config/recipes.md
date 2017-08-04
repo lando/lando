@@ -32,6 +32,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ####[Larvel](./../recipes/laravel.md)
 *   ####[LAMP](./../recipes/lamp.md)
 *   ####[LEMP](./../recipes/lemp.md)
+*   ####[MEAN](./../recipes/mean.md)
 *   ####[Pantheon](./../recipes/pantheon.md)
 *   ####[WordPress](./../recipes/wordpress.md)
 
