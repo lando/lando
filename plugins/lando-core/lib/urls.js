@@ -51,7 +51,9 @@ module.exports = function(lando) {
           // Check to see if we have a port being forwarded and add it to the info
           if (_.get(app.config.services[service], 'portforward', false)) {
             var portPath = 'external_connection.port';
-            _.set(app.info[service], portPath, externalPorts[0].HostPort);
+            if (!_.isEmpty(externalPorts)) {
+              _.set(app.info[service], portPath, externalPorts[0].HostPort);
+            }
           }
 
           // If internal port is 80
