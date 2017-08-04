@@ -1,0 +1,49 @@
+# Mongo example
+name: mongo
+
+# Give me http://mongo.lndo.site
+proxy:
+  appserver:
+    - mongo.lndo.site
+
+# Spin up a basic nodes server with mongo backend
+services:
+
+  # Spin up a mongo container called "database"
+  # NOTE: "database" is arbitrary, you could just as well call this "thing" or "stuff"
+  database:
+
+    # Use latest stable version of mongo
+    type: mongo
+
+    # Optionally allow access to the database at localhost:27018
+    # You will need to make sure port 27018 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 27018
+
+    # Optionally use the following mongo config file
+    # This is relative to the app root
+    config: config.yml
+
+  # Spin up services to run a basic node server
+  appserver:
+    type: node:6.10
+    command: npm start
+    globals:
+      gulp-cli: "latest"
+
+# Add some nice command routing
+tooling:
+  npm:
+    service: appserver
+  gulp:
+    service: appserver
+  node:
+    service: appserver
+  # Add a route to the mongo shell
+  mongo:
+    service: database
+    description: Drop into the mongo shell

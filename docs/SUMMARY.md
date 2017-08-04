@@ -87,6 +87,7 @@
     *   [mailhog](services/mailhog.md)
     *   [mariadb](services/mariadb.md)
     *   [memcached](services/memcached.md)
+    *   [mongo](services/mongo.md)
     *   [mysql](services/mysql.md)
     *   [nginx](services/nginx.md)
     *   [node](services/node.md)
