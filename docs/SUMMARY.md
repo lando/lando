@@ -29,7 +29,7 @@
 *   [Setting up Additional Services](tutorials/setup-additional-services.md)
 *   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
 *   [Setting up Additional Routes](config/proxy.md)
-*   [Setings up Additional Events](config/events.md)
+*   [Setting up Additional Events](config/events.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Importing Databases](tutorials/db-import.md)
