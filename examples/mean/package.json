@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install && ./node_modules/.bin/nodemon app.js"
+    "start": "./node_modules/.bin/nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
-    "mongodb": "^2.2.30"
-  },
-  "devDependencies": {
+    "mongodb": "^2.2.30",
     "nodemon": "^1.11.0"
   }
 }

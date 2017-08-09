@@ -196,6 +196,7 @@ module.exports = function(lando) {
   var dbImport = function() {
     return {
       service: 'appserver',
+      needs: ['database'],
       description: 'Import <file> into database. File is relative to approot.',
       cmd: '/helpers/mysql-import.sh',
       options: {
