@@ -48,9 +48,17 @@ module.exports = function(lando) {
       '/bin'
     ];
 
-    // Build the basic config
+    // Volumes
+    var vols = [
+      '/usr/local/bin',
+      '/usr/local/share',
+      '/usr/local/lib/node_modules'
+    ];
+
+    // Basic config
+    var cliCmd = 'tail -f /dev/null';
     var version = config.version || '6.10';
-    var command = config.command || 'tail -f /dev/null';
+    var command = config.command || cliCmd;
 
     // Arrayify the command if needed
     if (!_.isArray(command)) {
@@ -67,13 +75,33 @@ module.exports = function(lando) {
       'working_dir': config._mount,
       ports: ['80'],
       expose: ['80'],
-      volumes: [
-        '/usr/local/bin',
-        '/usr/local/share',
-        '/usr/local/lib/node_modules'
-      ],
+      volumes: vols,
       command: '/bin/sh -c "' + command.join(' && ') + '"'
     };
+
+    // If we have not specified a command we should assume this service was intended
+    // to be run for CLI purposes
+    if (!_.has(config, 'command')) {
+      node.ports = [];
+    }
+
+    // And if not we need to add in an additional cli container so that we can
+    // run things like lando npm install before our app starts up
+    else {
+
+      // Spoof the config and add some internal properties
+      var cliConf = {
+        type: 'node:' + version,
+        _app: config._app,
+        _root: config._root,
+        _mount: config._mount
+      };
+
+      // Extract the cli service and add here
+      var cliCompose = lando.services.build('cli', 'node:' + version, cliConf);
+      services[name + '_cli'] = cliCompose.services.cli;
+
+    }
 
     // Generate some certs we can use
     if (config.ssl) {
@@ -84,12 +112,6 @@ module.exports = function(lando) {
       // Add in an add cert task
       node.volumes = addScript('add-cert.sh', node.volumes);
 
-    }
-
-    // If we have not specified a command we should assume this service was intended
-    // to be run for CLI purposes
-    if (!_.has(config, 'command')) {
-      node.ports = [];
     }
 
     // Add our npm things to build extra

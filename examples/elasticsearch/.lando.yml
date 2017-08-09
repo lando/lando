@@ -1,6 +1,11 @@
 # elasticsearch example
 name: elasticsearch
 
+#
+# You need to run `lando npm install` before you run `lando start` for this
+# example to work
+#
+
 # Give me http://elasticsearch.lndo.site
 proxy:
   appserver:
@@ -46,9 +51,9 @@ services:
 
 # Add some nice command routing
 tooling:
+  yarn:
+    service: appserver_cli
   npm:
-    service: appserver
-  gulp:
-    service: appserver
+    service: appserver_cli
   node:
-    service: appserver
+    service: appserver_cli

@@ -15,6 +15,13 @@ services:
     # Run composer install after we start our app
     build:
       - "cd $LANDO_MOUNT && composer install"
+    # Add in a helper script to showcase some magic below
+    overrides:
+      services:
+        volumes:
+          - $LANDO_APP_ROOT_BIND/word.sh:/helpers/word.sh
+  cli:
+    type: node:6.10
   database:
     type: mariadb
     portforward: true
@@ -68,20 +75,50 @@ tooling:
     service: database
     description: Drop into a MySQL shell
 
-  # Define `lando test` that passes through to a script that can handle options
+  # Define `lando word` that passes through to a script that can handle options.
+  # The script is mounted into our appserver in the service overrides above
   #
-  # This isnt supposed to do anything it's just to demonstrate options declaration
-  # for the lando cli eg if you run `lando ps -- --help` you should see some
-  # options
+  # This script doesnt really do anything it's just to demonstrate options declaration
+  # for the lando cli eg if you run `lando word -- --help` you should see some
+  # options.
   #
-  # Note that options get passed into commands no matter what and AS IS, this is
-  # purely to provide helpers when running `lando CMD -- --help`. That means that
-  # in this example `lando ps --ef` will fail while `lando -ef` will succeed.
-  ps:
+  # Note that you can also specify options for the commands above as well but
+  # generally it makes more sense to just delegate to the options of the command
+  # you are invoking itself
+  #
+  # Note that options get passed into commands no matter what and AS IS. They do
+  # not need to be defined explicitly here. This is purely to provide helpers
+  # when running `lando CMD -- --help` or to get interactive prompts. As an
+  # example try running `lando word -w bird --surprise`. `--surprise` is not defined below but
+  # has a handler in our word.sh.
+  word:
     service: appserver
-    cmd: ps
+    cmd: /helpers/word.sh
     options:
-      ef:
+      word:
+        # If you are specifying interactive options, as is the case here,
+        # you will want to set passthrough to true so that interactive answers
+        # get translated into command line args for the script to handle
+        passthrough: true
         alias:
-          - ef
-        describe: Show more process stuff
+          - w
+        describe: Print what the word is
+        interactive:
+          type: input
+          message: What is the word?
+          default: bird
+          weight: 600
+
+  # Define `lando npm` so that it also requires the `database` service to be running
+  # in order to work.
+  #
+  # This is useful for complex commands that can act on multiple services eg
+  # a database-import, or drush status check, or pull from a hosting provider
+  # like pantheon
+  npm:
+    service: cli
+
+    # Add a string or array of services that also need to load up for this
+    # command to function properly
+    needs:
+      - database

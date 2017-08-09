@@ -78,6 +78,7 @@
     *   [Laravel](recipes/laravel.md)
     *   [LAMP](recipes/lamp.md)
     *   [LEMP](recipes/lemp.md)
+    *   [MEAN](tutorials/mean.md)
     *   [Pantheon](recipes/pantheon.md)
     *   [WordPress](recipes/wordpress.md)
 *   [Events](config/events.md)

@@ -43,10 +43,8 @@ Starting Your Site
 Once you've completed the above you should be able to start your MEAN site.
 
 ```bash
-# You will likely want to make sure that `npm start` also does an `npm install`
-# otherwise you will want to do an `npm install` here first
-# NOTE: We are working on a better way to handle this automatically
-npm install
+# Install dependencies your app needs to run
+lando npm install || lando yarn install
 
 # Start up app
 lando start
@@ -65,6 +63,7 @@ If you are interested in installing other helpful global `node` commands like `b
 lando mongo                    Drop into the mongo shell
 lando node                     Run node commands
 lando npm                      Run npm commands
+lando yarn                     Run yarn commands
 ```
 
 ```bash
@@ -73,6 +72,9 @@ lando mongo
 
 # Install the redis module
 lando npm install redis --save
+
+# Install wahts in my package.json with yarn
+lando yarn install
 
 # Run a node command
 lando node -e "console.log('hi');"

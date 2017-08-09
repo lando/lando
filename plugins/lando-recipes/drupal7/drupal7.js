@@ -79,6 +79,7 @@ module.exports = function(lando) {
     // Add drush to the tooling
     build.tooling.drush = {
       service: 'appserver',
+      needs: ['database'],
       description: 'Run drush commands'
     };
 

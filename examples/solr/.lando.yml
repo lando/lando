@@ -1,6 +1,11 @@
 # solr server example
 name: solr
 
+#
+# You need to run `lando npm install` before you run `lando start` for this
+# example to work
+#
+
 # Give me http://solr.lndo.site and http://admin.solr.lndo.site
 proxy:
   appserver:
@@ -52,8 +57,8 @@ services:
 # Add some nice command routing
 tooling:
   npm:
-    service: node
+    service: node_cli
   gulp:
     service: node
   node:
-    service: node
+    service: node_cli

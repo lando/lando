@@ -56,6 +56,11 @@ module.exports = function(lando) {
 
     }
 
+    // Mix in globals
+    if (_.has(config, 'globals')) {
+      services.appserver.globals = config.globals;
+    }
+
     // Add db credentials into the ENV
     services.appserver.overrides = {
       services: {
@@ -79,10 +84,13 @@ module.exports = function(lando) {
     // Get our default tooling opts
     var tooling = {
       node: {
-        service: 'appserver'
+        service: 'appserver_cli'
       },
       npm: {
-        service: 'appserver'
+        service: 'appserver_cli'
+      },
+      yarn: {
+        service: 'appserver_cli'
       },
       mongo: {
         service: 'database',

@@ -1,0 +1,22 @@
+{
+  "name": "trivial-tooling-lando",
+  "version": "1.0.0",
+  "description": "Trivial tooling example for Lando",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kalabox/lando/tree/master/examples/trivial-tooling"
+  },
+  "keywords": [
+    "node",
+    "docker",
+    "localdev"
+  ],
+  "author": "Mike Pirog",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "latest"
+  }
+}
