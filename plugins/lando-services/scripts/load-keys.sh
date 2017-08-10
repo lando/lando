@@ -24,13 +24,22 @@ for SSH_DIR in "${SSH_DIRS[@]}"; do
   SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -type f | xargs))
 done
 
-# Filter out password protected keys
+# Filter out non private keys or keys that are password ENCRYPTED
 for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
-  echo "Checking whether $SSH_CANDIDATE is a suitable key..."
-  if ! grep -L ENCRYPTED $SSH_CANDIDATE &> /dev/null; then
-    SSH_KEYS+=($SSH_CANDIDATE)
-    SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+  echo "Checking whether $SSH_CANDIDATE is a private key..."
+  if grep -L "PRIVATE KEY" $SSH_CANDIDATE &> /dev/null; then
+    echo "Checking whether $SSH_CANDIDATE does not have a passphrase..."
+    if ! grep -L ENCRYPTED $SSH_CANDIDATE &> /dev/null; then
+      SSH_KEYS+=($SSH_CANDIDATE)
+      SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+    fi
   fi
+done
+
+# Make sure the keys have the correct permissions
+for SSH_KEY in "${SSH_KEYS[@]}"; do
+  echo "Ensuring permissions for $SSH_KEY..."
+  chmod 700 $SSH_KEY
 done
 
 # Log
