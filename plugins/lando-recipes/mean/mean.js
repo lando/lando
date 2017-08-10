@@ -123,7 +123,9 @@ module.exports = function(lando) {
 
   // Return things
   return {
-    build: build
+    build: build,
+    configDir: __dirname,
+    webroot: false
   };
 
 };

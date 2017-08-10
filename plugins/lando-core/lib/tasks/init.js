@@ -14,33 +14,6 @@ module.exports = function(lando) {
   var path = require('path');
   var Promise = lando.Promise;
 
-  /*
-   * Helper function to determine wheness
-   */
-  var whenIt = function(method, func, answers) {
-
-    // Recipes that do not require a webroot
-    var noWeb = ['mean'];
-
-    // Run the whenit func if applicable
-    if (_.includes(lando.init.get(), method)) {
-      if (_.isFunction(lando.init.get(method)[func])) {
-        return lando.init.get(method)[func](answers);
-      }
-    }
-
-    // Fail the nowebz
-    else if (_.includes(noWeb, answers.recipe)) {
-      return false;
-    }
-
-    // Otherwise show it
-    else {
-      return true;
-    }
-
-  };
-
   // Create the starting set of options/questions
   var options = {
     recipe: {
@@ -52,9 +25,6 @@ module.exports = function(lando) {
         type: 'list',
         message: 'What recipe do you want to use?',
         default: 'custom',
-        when: function(answers) {
-          return whenIt(lando.tasks.argv()._[2], 'whenRecipe', answers);
-        },
         choices: _.map(lando.recipes.get(), function(recipe) {
           return {name: recipe, value: recipe};
         }),
@@ -63,7 +33,7 @@ module.exports = function(lando) {
     }
   };
 
-  // Merge in other options provided by method plugins
+  // Merge in or alter other options provided by method plugins
   _.forEach(lando.init.get(), function(method) {
     options = _.merge(options, lando.init.get(method).options);
   });
@@ -74,12 +44,7 @@ module.exports = function(lando) {
       describe: 'Specify where to init the app',
       alias: ['dest', 'd'],
       string: true,
-      interactive: {
-        type: 'input',
-        message: 'Where do you want to create this app?',
-        default: process.cwd(),
-        weight: 800
-      }
+      default: process.cwd()
     },
     webroot: {
       describe: 'Specify the webroot relative to destination',
@@ -89,9 +54,10 @@ module.exports = function(lando) {
         message: 'Where is your webroot relative to the init destination?',
         default: '.',
         when: function(answers) {
-          return whenIt(answers.recipe, 'whenWebRoot', answers);
+          var recipe = answers.recipe || lando.tasks.argv().recipe;
+          return lando.recipes.webroot(recipe);
         },
-        weight: 900
+        weight: 900,
       }
     },
     yes: {
@@ -105,7 +71,7 @@ module.exports = function(lando) {
   // The task object
   return {
     command: 'init <appname> [method]',
-    describe: 'Initializes a lando app called <appname> with optional [method]',
+    describe: 'Initialize a lando app called <appname> using optional [method]',
     options: _.merge(options, auxOpts),
     run: function(options) {
 

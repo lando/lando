@@ -21,6 +21,23 @@ module.exports = function(lando) {
   var siteMetaDataKey = 'site:meta:';
 
   /*
+   * Modify init things
+   */
+  lando.events.on('task-init-answers', function(answers) {
+    if (answers.argv.method === 'pantheon') {
+
+      // Autoset the recipe
+      answers.argv.recipe = 'pantheon';
+
+      // Remove the webroot question
+      _.remove(answers.inquirer, function(question) {
+        return question.name === 'webroot';
+      });
+
+    }
+  });
+
+  /*
    * Helper to determine whether we should ask the questions or not
    */
   var askQuestions = function(answers) {
@@ -221,19 +238,6 @@ module.exports = function(lando) {
   };
 
   /*
-   * Determine whether we need to show the recipe question or not
-   */
-  var when = function(answers) {
-
-    // Set some things
-    answers.recipe = 'pantheon';
-
-    // return
-    return false;
-
-  };
-
-  /*
    * Helper to mix in other pantheon options
    */
   var yaml = function(config, options) {
@@ -276,8 +280,6 @@ module.exports = function(lando) {
   return {
     build: build,
     options: options,
-    whenRecipe: when,
-    whenWebRoot: when,
     yaml: yaml
   };
 
