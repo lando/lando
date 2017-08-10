@@ -105,7 +105,7 @@ if [ "$DATABASE" != "none" ]; then
 
   # Holla at @uberhacker for this fu
   # Start with this by default
-  PULL_DB="$(echo $(terminus connection:info $SITE.$ENV --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
+  PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
 
   # Switch to drushy pull if we can
   if [ "$FRAMEWORK" != "wordpress" ]; then
@@ -115,14 +115,14 @@ if [ "$DATABASE" != "none" ]; then
     terminus aliases
 
     # Use drush if we can (this is always faster for some reason)
-    if drush sa | grep @pantheon.$SITE.$ENV 2>&1; then
+    if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
 
       # Cleaning things up for a more efficient pull
       echo "Clearing remote cache to shrink db size"
       if [ "$FRAMEWORK" == "drupal8" ]; then
-        drush @pantheon.$SITE.$ENV cr all --strict=0
+        drush @pantheon.$SITE.$DATABASE cr all --strict=0
       else
-        drush @pantheon.$SITE.$ENV cc all --strict=0
+        drush @pantheon.$SITE.$DATABASE cc all --strict=0
       fi
 
       # Build the DB command
@@ -133,7 +133,7 @@ if [ "$DATABASE" != "none" ]; then
   fi
 
   # Wake up the database so we can actually connect
-  terminus env:wake $SITE.$ENV
+  terminus env:wake $SITE.$DATABASE
 
   # Build out the rest of the command
   if command -v pv >/dev/null 2>&1; then

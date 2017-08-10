@@ -102,10 +102,6 @@ if [ "$CONNECTION_MODE" != "git" ]; then
 
 fi
 
-# Wake up the site so we can actually connect
-echo "Making sure your site is awake!"
-terminus env:wake $SITE.$ENV
-
 # Switch to git root
 cd $LANDO_MOUNT
 
@@ -132,10 +128,17 @@ fi
 
 # Push the database
 if [ "$DATABASE" != "none" ]; then
+
+  # Wake up the site so we can actually connect
+  echo "Making sure your database is awake!"
+  terminus env:wake $SITE.$ENV
+
+  # And push
   echo "Pushing DB..."
   REMOTE_CONNECTION="$(terminus connection:info $SITE.$ENV --field=mysql_command)"
   PUSH_DB="mysqldump -u pantheon -ppantheon -h database --no-autocommit --single-transaction --opt -Q pantheon | $REMOTE_CONNECTION"
   eval "$PUSH_DB"
+
 fi
 
 # Push the files
