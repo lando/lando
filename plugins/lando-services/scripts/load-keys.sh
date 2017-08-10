@@ -56,3 +56,6 @@ Host *
 ${SSH_IDENTITIES[*]}
 EOF
 IFS="${OLDIFS}"
+
+# Make it loose so other things can do stuff
+chmod 777 "$SSH_CONF/ssh_config"

@@ -33,20 +33,27 @@ module.exports = function(lando) {
   };
 
   /*
-   * Helper to reset terminus auth
+   * Event based logix
    */
   lando.events.on('post-instantiate-app', function(app) {
+
+    // Cache key helpers
+    var siteMetaDataKey = 'site:meta:';
+
+    // Set new terminus key into the cache
     app.events.on('pre-terminus', function() {
       if (_.get(lando.tasks.argv()._, '[1]') === 'auth:login') {
         if (_.has(lando.tasks.argv(), 'machineToken')) {
-
-          // Cache key helpers
-          var siteMetaDataKey = 'site:meta:';
 
           // Build the cache
           // @TODO: what do do about email?
           var token = _.get(lando.tasks.argv(), 'machineToken');
           var data = {token: token};
+
+          // Mix in any existing cache data
+          if (!_.isEmpty(lando.cache.get(siteMetaDataKey + app.name))) {
+            data = _.merge(lando.cache.get(siteMetaDataKey + app.name), data);
+          }
 
           // Reset the cache
           lando.cache.set(siteMetaDataKey + app.name, data, {persist: true});
@@ -54,6 +61,12 @@ module.exports = function(lando) {
         }
       }
     });
+
+    // Destroy the cached site data
+    app.events.on('post-destroy', function() {
+      lando.cache.remove(siteMetaDataKey + app.name);
+    });
+
   });
 
   /*
