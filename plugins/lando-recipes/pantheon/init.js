@@ -263,9 +263,22 @@ module.exports = function(lando) {
       // Set some cached things as well
       var token = _.get(options, 'pantheon-auth');
       var tokens = lando.cache.get(tokenCacheKey);
-      var email = _.findKey(tokens, function(value) {
-        return value === token;
-      });
+      var email = '';
+
+      // Check to see if our "token" is actually an email
+      if (_.includes(_.keys(tokens), token)) {
+        email = token;
+        token = tokens[email];
+      }
+
+      // If not, do it nasty
+      else {
+        email = _.findKey(tokens, function(value) {
+          return value === token;
+        });
+      }
+
+      // Set and cache the TOKENZZZZ
       var data = {email: email, token: token};
       lando.cache.set(siteMetaDataKey + options.appname, data, {persist: true});
 

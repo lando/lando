@@ -17,7 +17,7 @@ module.exports = function(lando) {
   // Fixed location of our proxy service compose file
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
   var proxyFile = path.join(proxyDir, 'proxy' + '.yml');
-  var projectName = 'landoproxy0ywebgwge';
+  var projectName = 'landoproxyhyperion5000gandalfedition';
 
   /*
    * Helper to extract ports from inspect data
