@@ -185,6 +185,13 @@ module.exports = function(lando) {
       // Git clone
       .then(function(site) {
 
+        // Error if no site was found, this is mostly for non-interactive things
+        if (_.isEmpty(site)) {
+          var badSite = _.get(options, 'pantheon-site');
+          lando.log.error('%s does not appear to be a valid site!', badSite);
+          process.exit(1222);
+        }
+
         // Build the clone url
         var user = 'codeserver.dev.' + site[0].id;
         var hostname = user + '.drush.in';

@@ -61,7 +61,10 @@ module.exports = function(lando) {
       },
       command: ['tail', '-f', '/dev/null'],
       entrypoint: '/lando-entrypoint.sh',
-      labels: {'io.lando.container': 'TRUE'},
+      labels: {
+        'io.lando.container': 'TRUE',
+        'io.lando.service-container': 'TRUE'
+      },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
@@ -94,13 +97,13 @@ module.exports = function(lando) {
     lando.utils.compose(utilFile, service);
 
     // Name the project
-    var project = ['lando', name, 'util'];
+    var project = 'landoinit' + name;
 
     // Try to start the util
     return {
-      project: project.join('_'),
+      project: project,
       compose: [utilFile],
-      container: [project.join('').replace(/-/g, ''), 'util', '1'].join('_'),
+      container: [project.replace(/-/g, ''), 'util', '1'].join('_'),
       opts: {
         services: ['util']
       }
@@ -139,7 +142,6 @@ module.exports = function(lando) {
       project: service.project,
       cmd: cmd,
       opts: {
-        app: {},
         mode: 'attach',
         user: user || 'www-data',
         services: service.opts.services || ['util']

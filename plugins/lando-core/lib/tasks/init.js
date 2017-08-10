@@ -166,8 +166,8 @@ module.exports = function(lando) {
         var docUrl = docBase + config.recipe + '.html';
 
         // Add data
-        table.add('NAME', config.name);
-        table.add('RECIPE', config.recipe);
+        table.add('NAME', options.appname);
+        table.add('RECIPE', options.recipe);
         table.add('DOCS', docUrl);
 
         // Add some other things if needed
