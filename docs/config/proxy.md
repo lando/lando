@@ -30,7 +30,7 @@ proxy: ON
 proxyDomain: lndo.site
 proxyHttpPort: 80
 proxyHttpsPort: 443
-proxyDash: 58087
+proxyDash: 58086
 proxyHttpFallbacks:
   - 8000
   - 8080

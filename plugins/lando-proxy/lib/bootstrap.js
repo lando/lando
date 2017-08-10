@@ -21,7 +21,7 @@ module.exports = function(lando) {
     var defaults = {
       proxy: 'ON',
       proxyDomain: 'lndo.site',
-      proxyDash: '58087',
+      proxyDash: '58086',
       proxyHttpPort: '80',
       proxyHttpsPort: '443',
       proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
