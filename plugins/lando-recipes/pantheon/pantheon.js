@@ -33,6 +33,30 @@ module.exports = function(lando) {
   };
 
   /*
+   * Helper to reset terminus auth
+   */
+  lando.events.on('post-instantiate-app', function(app) {
+    app.events.on('pre-terminus', function() {
+      if (_.get(lando.tasks.argv()._, '[1]') === 'auth:login') {
+        if (_.has(lando.tasks.argv(), 'machineToken')) {
+
+          // Cache key helpers
+          var siteMetaDataKey = 'site:meta:';
+
+          // Build the cache
+          // @TODO: what do do about email?
+          var token = _.get(lando.tasks.argv(), 'machineToken');
+          var data = {token: token};
+
+          // Reset the cache
+          lando.cache.set(siteMetaDataKey + app.name, data, {persist: true});
+
+        }
+      }
+    });
+  });
+
+  /*
    * Set various pantheon environmental variables
    */
   var env = function(config) {
@@ -162,7 +186,14 @@ module.exports = function(lando) {
       var restricted = nopes || [];
 
       // Get token
-      var token = lando.cache.get('site:meta:' + config._app).token;
+      var token = _.get(lando.cache.get('site:meta:' + config._app), 'token');
+
+      // If token does not exist prmpt for auth
+      if (_.isEmpty(token)) {
+        lando.log.error('Looks like you dont have a machine token!');
+        lando.log.error('Run lando terminus auth:login --machine-token=TOKEN');
+        process.exit(1);
+      }
 
       // Validate we have a token and siteid
       _.forEach([token, config.id], function(prop) {
