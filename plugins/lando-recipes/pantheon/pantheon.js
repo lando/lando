@@ -278,15 +278,11 @@ module.exports = function(lando) {
         message: {
           description: 'A message describing your change',
           passthrough: true,
-          default: 'My awesome Lando-based changes',
           alias: ['m'],
           interactive: {
-            type: 'list',
-            message: 'Push code to?',
-            choices: function() {
-              getEnvs(this.async(), ['test', 'live']);
-            },
-            default: config.env || 'dev',
+            type: 'string',
+            message: 'What did you change?',
+            default: 'My awesome Lando-based changes',
             weight: 600
           }
         },
