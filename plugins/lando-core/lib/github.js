@@ -256,13 +256,6 @@ module.exports = function(lando) {
   };
 
   /*
-   * Determine whether we need to show the recipe question or not
-   */
-  var when = function() {
-    return true;
-  };
-
-  /*
    * Helper to mix in other github options
    */
   var yaml = function(config) {
@@ -273,8 +266,6 @@ module.exports = function(lando) {
   return {
     build: build,
     options: options,
-    whenRecipe: when,
-    whenWebRoot: when,
     yaml: yaml
   };
 

@@ -31,7 +31,7 @@ return lando.app.list()
 * [app](#module_app)
     * [.list([opts])](#module_app.list) ⇒ <code>Promise</code>
     * [.get([appName])](#module_app.get) ⇒ <code>Promise</code>
-    * [.isRunning(app)](#module_app.isRunning) ⇒ <code>Promise</code>
+    * [.isRunning(app, checkall)](#module_app.isRunning) ⇒ <code>Promise</code>
     * [.exists(appName)](#module_app.exists) ⇒ <code>Promise</code>
     * [.info(app)](#module_app.info) ⇒ <code>Promise</code>
     * [.uninstall(app)](#module_app.uninstall) ⇒ <code>Promise</code>
@@ -110,8 +110,9 @@ return lando.app.get('myapp')
 ```
 <a name="module_app.isRunning"></a>
 
-### app.isRunning(app) ⇒ <code>Promise</code>
-Determines whether an app is running or not.
+### app.isRunning(app, checkall) ⇒ <code>Promise</code>
+Determines whether an app is running or not. By defualt it only requires
+that a single service for that be running to return true but see opts below.
 
 You can pass in an entire app object here but it really just needs an object
 with the app name eg {name: 'myapp'}
@@ -124,6 +125,7 @@ with the app name eg {name: 'myapp'}
 | --- | --- | --- |
 | app | <code>Object</code> | An app object. |
 | app.name | <code>String</code> | The name of the app |
+| checkall | <code>Boolean</code> | Make sure ALL the apps containers are running |
 
 **Example**  
 ```js

@@ -66,10 +66,27 @@ module.exports = function(lando) {
 
   };
 
+  /**
+   * Helper to let us know whether this app requires a webroot question or not
+   */
+  var webroot = function(recipe) {
+
+    // Check to verify whether the recipe exists in the registry
+    if (!registry[recipe]) {
+      lando.log.warn('%s is not a supported recipe.', recipe);
+      return {};
+    }
+
+    // Return things
+    return _.get(registry[recipe], 'webroot', true);
+
+  };
+
   return {
     add: add,
     build: build,
     get: get,
+    webroot: webroot
   };
 
 };
