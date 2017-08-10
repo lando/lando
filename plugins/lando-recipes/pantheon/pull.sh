@@ -15,6 +15,7 @@ FILES=${TERMINUS_ENV:-dev}
 RSYNC=false
 
 # Set helpers
+SSH_KEY="/user/.lando/keys/pantheon.lando.id_rsa"
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
@@ -77,6 +78,14 @@ echo "Verifying that you are logged in and authenticated by getting info about $
 terminus site:info $SITE || exit 1
 echo "Logged in as `terminus auth:whoami`"
 echo "Detected that $SITE is a $FRAMEWORK site"
+
+# Ensuring a viable ssh key
+echo "Checking for $SSH_KEY"
+if [ ! -f "$SSH_KEY" ]; then
+  ssh-keygen -t rsa -N "" -C "lando" -f "$SSH_KEY"
+  terminus ssh-key:add "$SSH_KEY.pub"
+  /scripts/load-keys.sh
+fi
 
 # Get the codez
 if [ "$CODE" != "none" ]; then
