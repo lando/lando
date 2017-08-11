@@ -154,4 +154,4 @@ Next Steps
 *   [Adding additional events](./../config/events.md)
 *   [Setting up front end tooling](./../tutorials/frontend.md)
 *   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
-*   [Importing databases](./../tutorials/db-import.md))
+*   [Importing databases](./../tutorials/db-import.md)
