@@ -24,6 +24,7 @@ PV=""
 PULL_DB=""
 PULL_FILES=""
 GREEN='\033[0;32m'
+DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -204,5 +205,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Pull complete!"
+printf "${GREEN}Pull complete!${DEFAULT_COLOR}"
 echo ""
