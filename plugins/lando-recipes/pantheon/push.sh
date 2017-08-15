@@ -22,6 +22,7 @@ PV=""
 PUSH_DB=""
 PUSH_FILES=""
 GREEN='\033[0;32m'
+DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -180,5 +181,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Push complete!"
+printf "${GREEN}Push complete!${DEFAULT_COLOR}"
 echo ""
