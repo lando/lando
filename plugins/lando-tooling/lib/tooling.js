@@ -156,6 +156,13 @@ module.exports = function(lando) {
           return lando.engine.run(options);
         })
 
+        // Check for error code and kill with that code, this ensures that
+        // the correct error code is bubbling up and should help provide similar
+        // experience when running these commands in something like travis
+        .catch(function(error) {
+          process.exit(error.code);
+        })
+
         // Post event
         .then(function() {
           return config.app.events.emit(['post', eventName].join('-'), config);
