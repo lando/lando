@@ -5,36 +5,28 @@ In this example we will spin up a Lando LEMP app and add a `.travis.yml` config 
 
 This will be a barebones example that does basic php linting.
 
-Here is the `.travis.yml` file I am using:
+Start with a Lando app
+----------------------
 
-```yaml
-language: php
-php:
-- '7.0'
-services:
-- docker
+We will assume the user already has a Lando app rolling. For this example we will use the following:
 
-before_install:
-- sudo apt-get -y update
-- sudo apt-get -y install cgroup-bin curl
-- curl -fsSL -o /tmp/lando-latest.deb http://installer.kalabox.io/lando-latest-dev.deb
-- sudo dpkg -i /tmp/lando-latest.deb
+{% codesnippet "./../examples/lando-and-ci/.lando.yml" %}{% endcodesnippet %}
 
-script:
-# start lando and perform some setup tasks.
-- lando start -- -v
-- lando version
-- cd /home/travis/build/serundeputy/ci-tutorial/
-- lando composer install
+Note that we've configure our lando app in two special ways.
 
-# Run phplint code check.
-- lando composer test
+1.  It will run `composer install` when it is being built
+2.  It defines a wrapper `lando test` command that can aggregate lower levels test commands eg `composer test`
+
+Define Some Tests Normally
+--------------------------
+
+In this example we are doing some basic `phplint`ing. We can get the `phplint` tools via `composer`.
+
+```bash
+composer require overtrue/phplint --dev
 ```
 
-Now we need to add the `overtrue/phplint` library to the project.
-* `composer require overtrue/phplint --dev`
-
-Now you can add a `scripts` key to you `composer.json` file like so:
+Now you can also add a `scripts` key to you `composer.json` file like so:
 
 ```json
 "scripts": {
@@ -44,22 +36,45 @@ Now you can add a `scripts` key to you `composer.json` file like so:
 },
 ```
 
-Now we can run the linting check against the lando app with:
+This will allow you to lint your code by running `composer test`. Note that this requires you use a `.phplint.yml`. Here is an example `.phplint.yml`
 
+{% codesnippet "./../examples/lando-and-ci/.phplint.yml" %}{% endcodesnippet %}
+
+And the full `composer.json`.
+
+{% codesnippet "./../examples/lando-and-ci/composer.json" %}{% endcodesnippet %}
+
+You should now be able to run your tests
+
+```bash
+# `lando test` will only work if you've explicitly defined that in your `.lando.yml`
+# As in this example
+lando test || lando composer test
 ```
-lando composer test
-```
+
+Lando-ify your .travis.yml
+--------------------------
+
+We will assume the user is knowledgable and comfortable about setting up a [project on Travis](https://docs.travis-ci.com/user/getting-started/). On a high level your travis file will want to do three things
+
+1.  Install the linux version of lando
+2.  Start your lando app
+3.  Run your test command
+
+Here is a `.travis.yml` file that accomplishes the above for our current example.
+
+{% codesnippet "./../examples/lando-and-ci/.travis.yml" %}{% endcodesnippet %}
 
 That's great! More importantly though now each time we file a PR against the GitHub repo it will:
 
-* Spin up a Travis CI environment
-* Install Lando on Travis
-* Install composer dependencies
-* Run the phplint code check
+*   Spin up a Travis CI environment
+*   Install Lando on Travis
+*   Install composer dependencies
+*   Run the phplint code check
 
 If the CI checks pass you can merge with confidence!
 
 Full Example
 ------------
 
-{% codesnippet "./../examples/lando-and-ci/.lando.yml" %}{% endcodesnippet %}
+You can check out the full code for this example [over here](https://github.com/kalabox/lando-ci-example).
