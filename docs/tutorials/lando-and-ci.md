@@ -1,28 +1,9 @@
-Run Lando with CI
-----
+Using Lando with a CI Service
+=============================
 
-In this example we will spin up a Lando Drupal 8 app and add a `.travis.yml` config file to demonstrate how to use Lando in conjunction with a Continuous Integration (CI) service. In practice this could be Travis CI, Circle CI, or any CI provider.
+In this example we will spin up a Lando LEMP app and add a `.travis.yml` config file to demonstrate how to use Lando in conjunction with a Continuous Integration (CI) service. In practice this could be Travis CI, Circle CI, or any CI provider but this example will use Travis CI.
 
-Spin up an App
-----
-
-In this case we will use a Pantheon Drupal 8 app.
-
-* Visit your Pantheon Dashboard
-* Add a new site and get its machine name. I used `ci-tutorial`. Use whatever name you want for your app and replace `ci-tutorial` out for your app name.
-* Make a directory on your local machine for the app:
-  * `mkdir ci-tutorial`
-  * `cd ci-tutorial`
-* Pull down the `ci-tutorial` app from Pantheon
-  * `lando ci-tutorial pantheon`
-  * Full details at [Pantheon](pantheon.md)
-
-Add Travis CI and GitHub into the Mix
-----
-
-* Spin up a repo on GitHub and add it as a remote
-  * `git remote add github {URL_TO_GITHUB_REPO}`
-* Add a `.travis.yml` file.
+This will be a barebones example that does basic php linting.
 
 Here is the `.travis.yml` file I am using:
 

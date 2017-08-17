@@ -1,0 +1,33 @@
+name: kalabox
+type: nodejs:6.10
+
+dependencies:
+  nodejs:
+    pm2: "^2.0.0"
+    gulp: "latest"
+    bower: "latest"
+
+web:
+  commands:
+    start: "PM2_HOME=$PLATFORM_APP_DIR/run pm2 start server.js --no-daemon"
+  locations:
+    "/public":
+      passthru: false
+      root: "public"
+      allow: true
+      rules:
+        '\.png$':
+          allow: true
+          expires: -1
+
+mounts:
+  "/run": "shared:files/run"
+  "/nimble": "shared:files/nimble"
+
+disk: 512
+
+hooks:
+  build: |
+    npm install
+    bower install
+    gulp build

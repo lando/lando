@@ -1,0 +1,7 @@
+name: ci-tutorial
+recipe: pantheon
+config:
+  framework: drupal8
+  env: dev
+  site: ci-tutorial
+  id: 8dc769da-8a78-4ffc-9820-334f9f804055
