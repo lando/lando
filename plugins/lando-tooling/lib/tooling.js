@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var path = require('path');
+  var Promise = lando.Promise;
   var format = require('util').format;
 
   /*
@@ -43,15 +44,64 @@ module.exports = function(lando) {
     /*
      * Get the run handler
      */
-    var run = function(/*options*/) {
+    var run = function(answers) {
 
-      // Let's check to see if the app has been started
-      return lando.app.isRunning(config.app)
+      // Kick off some collectors
+      var ids = [config.service];
+      var existsCheck = [];
+      var runCheck = [];
+
+      // Add our needs
+      if (_.has(config, 'needs')) {
+
+        // Normalize
+        if (!_.isArray(config.needs)) {
+          config.needs = [config.needs];
+        }
+
+        // And add
+        ids = _.flatten(ids.concat(config.needs));
+
+      }
+
+      // Build our checkers
+      _.forEach(ids, function(id) {
+        var container = [config.app.dockerName, id, '1'].join('_');
+        existsCheck.push(lando.engine.exists({id: container}));
+        runCheck.push(lando.engine.isRunning(container));
+      });
+
+      // Let's check to see if the container exists
+      return Promise.all(existsCheck)
+
+      // If they dont, immediately start, if not check if they are running already
+      .then(function(exists) {
+
+        // Helper
+        var decartes = function(current, exist) {
+          return current && exist;
+        };
+
+        // Pass to should start if something doesnt exist
+        if (!_.reduce(exists, decartes, true)) {
+          return true;
+        }
+
+        // Else pass to check for startage
+        else {
+          return Promise.all(runCheck)
+          .then(function(isRunning) {
+            return !_.reduce(isRunning, decartes, true);
+          });
+        }
+
+      })
 
       // If not let's make sure we start it
-      .then(function(isRunning) {
-        if (!isRunning) {
-          return lando.app.start(config.app);
+      .then(function(shouldStart) {
+        if (shouldStart) {
+          _.set(config, 'app.opts.services', ids);
+          return lando.engine.start(config.app);
         }
       })
 
@@ -90,12 +140,27 @@ module.exports = function(lando) {
           }
         };
 
+        // If this is a specal "passthrough" command lets augment the cmd
+        _.forEach(config.options, function(option) {
+          if (option.passthrough && _.get(option, 'interactive.name')) {
+            cmd.push('--' + _.get(option, 'interactive.name'));
+            cmd.push(answers[_.get(option, 'interactive.name')]);
+          }
+        });
+
         // Run a pre-event
         return config.app.events.emit(['pre', eventName].join('-'), config)
 
         // Exec
         .then(function() {
           return lando.engine.run(options);
+        })
+
+        // Check for error code and kill with that code, this ensures that
+        // the correct error code is bubbling up and should help provide similar
+        // experience when running these commands in something like travis
+        .catch(function(error) {
+          process.exit(error.code);
         })
 
         // Post event

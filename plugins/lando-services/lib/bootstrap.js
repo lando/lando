@@ -36,6 +36,7 @@ module.exports = function(lando) {
     lando.services.add('mailhog', require('./../mailhog/mailhog')(lando));
     lando.services.add('mariadb', require('./../mariadb/mariadb')(lando));
     lando.services.add('memcached', require('./../memcached/memcached')(lando));
+    lando.services.add('mongo', require('./../mongo/mongo')(lando));
     lando.services.add('mysql', require('./../mysql/mysql')(lando));
     lando.services.add('postgres', require('./../postgres/postgres')(lando));
     lando.services.add('php', require('./../php/php')(lando));

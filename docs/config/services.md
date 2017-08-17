@@ -17,6 +17,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[mailhog](./../services/mailhog.md)
 *   ####[mariadb](./../services/mariadb.md)
 *   ####[memcached](./../services/memcached.md)
+*   ####[mongo](./../services/mongo.md)
 *   ####[mysql](./../services/mysql.md)
 *   ####[nginx](./../services/nginx.md)
 *   ####[node](./../services/node.md)

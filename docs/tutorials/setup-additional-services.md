@@ -20,7 +20,7 @@ config:
 
 Let's say we want to add some global composer dependencies, use a custom `php.ini` that is unique to our app and run an automatic `composer install` build step when we start up or rebuild our app.
 
-First, run `lando info` to see the names of the services provided by the `drupal8` recipe. Generally, you will have an `appserver` and `database` container. Now let's override the `appserver` and run `lando rebuild` for our changes to reflect.
+First, run `lando info` to see the names of the services provided by the `drupal8` recipe. Generally, you will have an `appserver` and `database` container. Now let's update our `.lando.yml` file and override the `appserver` service, making a change to install phpunit. Run `lando rebuild` for our changes to take effect.
 
 ```yml
 services:

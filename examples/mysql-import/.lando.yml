@@ -55,6 +55,8 @@ services:
 tooling:
   'db-import <file>':
     service: appserver
+    needs:
+      - db
     description: Import <file> into database
     cmd: /helpers/mysql-import.sh
     options:

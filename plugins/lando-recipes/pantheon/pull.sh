@@ -1,11 +1,21 @@
 #!/bin/bash
 
+# Set the default terminus environment to the currently checked out branch
+TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+
+# Map the master branch to dev
+if [ "$TERMINUS_ENV" == "master" ]; then
+  TERMINUS_ENV="dev"
+fi
+
 # Set option defaults
+CODE=${TERMINUS_ENV:-dev}
 DATABASE=${TERMINUS_ENV:-dev}
 FILES=${TERMINUS_ENV:-dev}
 RSYNC=false
 
 # Set helpers
+SSH_KEY="/user/.lando/keys/pantheon.lando.id_rsa"
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
@@ -13,10 +23,21 @@ FILE_DUMP="/tmp/files.tar.gz"
 PV=""
 PULL_DB=""
 PULL_FILES=""
+GREEN='\033[0;32m'
+DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
+    -c|--code|--code=*)
+      if [ "${1##--code=}" != "$1" ]; then
+        CODE="${1##--code=}"
+        shift
+      else
+        CODE=$2
+        shift 2
+      fi
+      ;;
     -d|--database|--database=*)
       if [ "${1##--database=}" != "$1" ]; then
         DATABASE="${1##--database=}"
@@ -53,56 +74,91 @@ while (( "$#" )); do
   esac
 done
 
-# Inform the user of things
-echo "Preparing to grab database and files from the $DATABASE and $FILES environments respectively..."
-
 # Do some basic validation to make sure we are logged in
 echo "Verifying that you are logged in and authenticated by getting info about $SITE..."
 terminus site:info $SITE || exit 1
 echo "Logged in as `terminus auth:whoami`"
 echo "Detected that $SITE is a $FRAMEWORK site"
 
+# Ensuring a viable ssh key
+echo "Checking for $SSH_KEY"
+if [ ! -f "$SSH_KEY" ]; then
+  ssh-keygen -t rsa -N "" -C "lando" -f "$SSH_KEY"
+  terminus ssh-key:add "$SSH_KEY.pub"
+  /scripts/load-keys.sh
+fi
+
+# Get the codez
+if [ "$CODE" != "none" ]; then
+
+  # Get the git branch
+  GIT_BRANCH=master
+
+  # Make sure we are in the git root
+  cd $LANDO_MOUNT
+
+  # Fetch the origin if this is a new branch and set the branch
+  if [ "$CODE" != "dev" ]; then
+    git fetch --all
+    GIT_BRANCH=$CODE
+  fi
+
+  # Checkout and pull
+  echo "Pulling code..."
+  git checkout $GIT_BRANCH
+  git pull -Xtheirs --no-edit origin $GIT_BRANCH
+
+fi;
+
 # Get the database
 if [ "$DATABASE" != "none" ]; then
 
-  # Get drush aliases
-  echo "Downloading drush aliases..."
-  terminus aliases
+  # Holla at @uberhacker for this fu
+  # Start with this by default
+  PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
 
-  # Only pull the DB on drupal for now
+  # Switch to drushy pull if we can
   if [ "$FRAMEWORK" != "wordpress" ]; then
-    if drush sa | grep @pantheon.playbox.dev 2>&1; then
+
+    # Get drush aliases
+    echo "Downloading drush aliases..."
+    terminus aliases
+
+    # Use drush if we can (this is always faster for some reason)
+    if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
 
       # Cleaning things up for a more efficient pull
       echo "Clearing remote cache to shrink db size"
       if [ "$FRAMEWORK" == "drupal8" ]; then
-        drush @pantheon.$SITE.$ENV cr all --strict=0
+        drush @pantheon.$SITE.$DATABASE cr all --strict=0
       else
-        drush @pantheon.$SITE.$ENV cc all --strict=0
+        drush @pantheon.$SITE.$DATABASE cc all --strict=0
       fi
 
       # Build the DB command
       PULL_DB="drush @pantheon.$SITE.$DATABASE sql-dump"
-      if command -v pv >/dev/null 2>&1; then
-        PULL_DB="$PULL_DB | pv"
-      fi
-      PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
-      # Importing database
-      echo "Importing database..."
-      eval "$PULL_DB"
-
-    else
-      echo "No drush alias detected for $SITE.$ENV. Please make sure you have full access to this site."
-      exit 1
     fi
 
-  else
-    # Do some post DB things on WP
-    # if [ "$FRAMEWORK" == "wordpress" ]; then
-    #  wp search-replace '$ENV-$SITE.pantheon.io' '$LANDO_APP_NAME.lndo.site'
-    # fi
-    echo "WordPress database pull not currently supported. See: https://docs.lndo.io/tutorials/pantheon.html for manual db import steps."
+  fi
+
+  # Wake up the database so we can actually connect
+  terminus env:wake $SITE.$DATABASE
+
+  # Build out the rest of the command
+  if command -v pv >/dev/null 2>&1; then
+    PULL_DB="$PULL_DB | pv"
+  fi
+  PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
+
+  # Importing database
+  echo "Pulling database..."
+  eval "$PULL_DB"
+
+  # Do some post DB things on WP
+  if [ "$FRAMEWORK" == "wordpress" ]; then
+    echo "Doing the ole post-migration search-replace on WordPress..."
+    wp search-replace "http://$ENV-$SITE.pantheonsite.io" "http://$LANDO_APP_NAME.lndo.site"
   fi
 
 fi
@@ -142,7 +198,12 @@ if [ "$FILES" != "none" ]; then
   PULL_FILES="$PULL_FILES $RSYNC_CMD"
 
   # Importing database
-  echo "Importing files..."
+  echo "Pulling files..."
   eval "$PULL_FILES"
 
 fi
+
+# Finish up!
+echo ""
+printf "${GREEN}Pull complete!${DEFAULT_COLOR}"
+echo ""

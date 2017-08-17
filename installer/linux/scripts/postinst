@@ -15,8 +15,11 @@ chmod 755 -R "$LANDO_ROOT"
 mkdir -p /usr/local/bin
 ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
 
-# Add all our sudo users to docker group
-for u in $(awk -F':' '/sudo/{print $4}' /etc/group)
+# Strictly grab all sudoers
+SUDOERS=$(awk -F':' '$1 == "sudo" {print $4}' /etc/group)
+
+# Transform sudoers into IFS default separation and loop
+for u in ${SUDOERS//,/ }
 do
   usermod -a -G docker $u
 done

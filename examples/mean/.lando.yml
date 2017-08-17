@@ -1,0 +1,47 @@
+# MEAN recipe example
+name: mean
+
+# Start with the default MEAN recipe
+recipe: mean
+
+# Configure the MEAN recipe
+config:
+
+  # Specify the command you want to run to start up your node appserver
+  #
+  # If unspecified this will run `npm start`
+  command: npm start
+
+  # Optionally specify the node version to use.
+  #
+  # If ommitted this will default to the node LTS 6.10. Consult the `node`
+  # service to see what versions are available
+  #
+  # NOTE: that this needs to be wrapped in quotes so that it is a string
+  node: '8.0'
+
+  # Optionally specify the node version to use.
+  #
+  # If ommitted this will default to the mongo LTS 3.4. Consult the `mongo`
+  # service to see what versions are available
+  #
+  # NOTE: that this needs to be wrapped in quotes so that it is a string
+  mongo: '3.2'
+
+  # Optionally specify global dependencies you need a la gulp-cli.
+  #
+  # NOTE: you will need to make sure you add tooling routes for these if applicable
+  globals:
+    gulp-cli: "latest"
+
+  # Optionally mix in our own config files
+  #
+  # If ommitted this will use the default config files for the respective services.
+  # Definitely consult the relevant documentaion for each service to make sure
+  # you are specifying the correct value for the config.
+  # conf:
+  #   database: mongo.yml
+
+tooling:
+  gulp:
+    service: appserver

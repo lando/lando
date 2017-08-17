@@ -9,7 +9,7 @@ config:
 
   # Optionally specify the php version to use.
   #
-  # If ommitted this will default to  the latest php version. Consult the `php`
+  # If ommitted this will default to the latest php version. Consult the `php`
   # service to see what version are available
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string

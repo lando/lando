@@ -27,6 +27,7 @@ Get Started With...
 *   [Drupal 7](http://docs.lndo.io/tutorials/drupal7.html)
 *   [Drupal 8](http://docs.lndo.io/tutorials/drupal8.html)
 *   [Laravel](http://docs.lndo.io/tutorials/laravel.html)
+*   [MEAN](http://docs.lndo.io/tutorials/mean.html)
 *   [LAMP](http://docs.lndo.io/tutorials/lamp.html)
 *   [LEMP](http://docs.lndo.io/tutorials/lemp.html)
 *   [Pantheon](http://docs.lndo.io/tutorials/pantheon.html)
@@ -169,9 +170,9 @@ There are various features that need to be implemented to achieve the above.
 4.  ~~Provide additional core services and tools~~
 5.  ~~Provide a recipes layer on top of services~~
 6.  ~~Provide handling of upstream git remotes (lando init command)~~
-7.  ~~Provide an events layer~
+7.  ~~Provide an events layer~~
 8.  ~~Replicate Pantheon environment~~
-9.  Integrate with Pantheon
+9.  ~~Integrate with Pantheon~~
 10. Build GUI
 
 Other Resources

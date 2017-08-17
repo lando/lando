@@ -17,6 +17,7 @@ module.exports = function(lando) {
   // Fixed location of our proxy service compose file
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
   var proxyFile = path.join(proxyDir, 'proxy' + '.yml');
+  var projectName = 'landoproxyhyperion5000gandalfedition';
 
   /*
    * Helper to extract ports from inspect data
@@ -36,7 +37,7 @@ module.exports = function(lando) {
     // Return engine object
     return {
       compose: [file],
-      project: 'lando',
+      project: projectName,
       opts: {
         services: ['proxy']
       }
@@ -172,7 +173,6 @@ module.exports = function(lando) {
 
     // Get some stuff for our things
     var domain = lando.config.proxyDomain;
-    var engineHost = lando.config.engineHost;
     var proxyDash = lando.config.proxyDash;
     var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
     var cmd = [
@@ -197,8 +197,8 @@ module.exports = function(lando) {
       var https = ports.https;
 
       // Log
-      lando.log.verbose('Proxying on %s:%s', engineHost, http);
-      lando.log.verbose('Proxying on %s:%s', engineHost, https);
+      lando.log.verbose('Proxying on %s:%s', http);
+      lando.log.verbose('Proxying on %s:%s', https);
 
       // Proxy service
       var proxy = {
@@ -206,15 +206,16 @@ module.exports = function(lando) {
         entrypoint: '/lando-entrypoint.sh',
         command: cmd,
         labels: {
-          'io.lando.container': 'TRUE'
+          'io.lando.container': 'TRUE',
+          'io.lando.service-container': 'TRUE'
         },
         environment: {
           LANDO_SERVICE_TYPE: 'proxy'
         },
         networks: ['edge'],
         ports: [
-          [engineHost, http, '80'].join(':'),
-          [engineHost, https, '443'].join(':'),
+          [http, '80'].join(':'),
+          [https, '443'].join(':'),
           [proxyDash, 8080].join(':')
         ],
         volumes: [
@@ -628,7 +629,7 @@ module.exports = function(lando) {
           networks: {
             'lando_proxyedge': {
               external: {
-                name: 'lando_edge'
+                name: projectName + '_edge'
               }
             }
           },
@@ -665,7 +666,7 @@ module.exports = function(lando) {
           // Add in relevant labels if we have hosts
           if (!_.isEmpty(hosts)) {
             var labels = _.get(app.services[service.name], 'labels', {});
-            labels['traefik.docker.network'] = 'lando_edge';
+            labels['traefik.docker.network'] = projectName + '_edge';
             labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
             labels['traefik.port'] = _.toString(port);
 

@@ -1,0 +1,29 @@
+{
+  "name": "mongo-lando",
+  "version": "1.0.0",
+  "description": "Mongo example for Lando",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kalabox/lando/tree/master/examples/mean"
+  },
+  "keywords": [
+    "node",
+    "docker",
+    "localdev",
+    "mongo"
+  ],
+  "author": "Mike Pirog",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.3",
+    "mongodb": "^2.2.30"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

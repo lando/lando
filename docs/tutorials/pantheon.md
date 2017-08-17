@@ -5,12 +5,14 @@ Lando offers a [configurable recipe](./../recipes/pantheon.md) for spinning up a
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
+ <!-- toc -->
+
 Getting Started
 ---------------
 
 Before you can use all the awesome Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
-### 1. Start with an existing codebase
+### 1. Start a codebase that already has a `.lando.yml`
 
 ```bash
 # Clone pantheon codebase from git
@@ -20,12 +22,30 @@ git clone ssh://codeserver.dev.PANTHEONID@codeserver.dev.PANTHEONIDdrush.in:2222
 # Go into the cloned site
 cd mysite
 
+# Start the site
+lando start
+
+# Authorize with pantheon
+# NOTE: if you dont do this step you wont be able to do `lando pull/push/switch`
+# NOTE: you need to put in the actual machine-token here, not the email
+lando terminus auth:login --machine-token=MYSPECIALTOKEN
+```
+
+### 2. Init a codebase that doesn't yet have a `.lando.yml`
+
+```bash
+# Clone a codebase from some git repo
+git clone /path/to/git/repo mysite
+
+# Go into the cloned site
+cd mysite
+
 # Initialize a .lando.yml for this site
-# NOTE: You will need to choose the same site you cloned
+# NOTE: You will need to choose the pantheon site that makes sense
 lando init mysite --recipe pantheon
 ```
 
-### 2. Get your site from Pantheon
+### 3. Get your site from Pantheon
 
 ```bash
 # Create a folder to clone your site to
@@ -37,7 +57,7 @@ mkdir mysite && cd mysite
 lando init mysite pantheon
 ```
 
-### 3. Get your site from GitHub
+### 4. Get your site from GitHub
 
 ```bash
 # Create a folder to clone your site to
@@ -75,15 +95,19 @@ Once you've started up your Pantheon site you will need to pull in your database
 
 ### 1. Using `lando pull`
 
-Lando provides a command for Pantheon sites called `lando pull` to get your database and files. The `database` pull currently only works if your site is not a `wordpress` site and if you have a valid `drush alias` for that site.
+Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
 
-Please consult the manual import documentation below if you are using a WordPress site or this command produces an error.
+Please consult the manual import documentation below if this command produces an error.
 
 #### Usage
 
 ```bash
-# Pull the latest database and files
+# Pull the latest code, database and files
+# This will pull the environment associated with your currently checked out git branch
 lando pull
+
+# Skip a code merge
+lando pull --code=none
 
 # Pull only the database from the test environment
 lando pull --database=test --files=none
@@ -98,9 +122,9 @@ lando pull --database=none --rsync
 #### Options
 
 ```bash
---database, -d  The environment to get the db from or [none]  [default: "dev"]
+--code, -c      The environment to get the code from or [none]
+--database, -d  The environment to get the db from or [none]
 --files, -f     The environment to get the files from or [none]
-                                                              [default: "dev"]
 --rsync         Rsync the files, good for subsequent pulls                                                  [boolean] [default: false]
 ```
 
@@ -143,6 +167,59 @@ lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_WEBROOT/\$FILEMOUNT --strip
 
 You can alternatively download the backup and manually extract it to the correct location.
 
+Pushing Your Changes
+--------------------
+
+While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally. **If you do not specify `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
+
+### Usage
+
+```bash
+# Push the latest code, database and files
+# This will push the environment associated with your currently checked out git branch
+lando push
+
+# Push the latest code, database and files with a description of the change
+lando push -m "Updated the widget to do awesome feature x"
+
+# Push only the database
+lando push --files=none
+
+# Pull only the files
+lando push --database=none
+```
+
+### Options
+
+```bash
+--message, -m   A message describing your change [default: "My awesome Lando-based changes"]
+--database, -d  The environment to push the db to or [none]
+--files, -f     The environment to push the files to or [none]
+```
+
+Working With Multidev
+---------------------
+
+Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
+
+### Usage
+
+```bash
+# Switch to the env called "feature-1"
+lando switch feature-1
+
+# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
+# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
+lando switch feature-1 --no-db --no-files
+```
+
+### Options
+
+```bash
+  --no-db     Do not switch the database              [boolean] [default: false]
+  --no-files  Do not switch the files                 [boolean] [default: false]
+```
+
 Tooling
 -------
 
@@ -154,8 +231,10 @@ lando db-import <file>         Import <file> into database. File is relative to 
 lando drush                    Run drush commands
 lando mysql                    Drop into a MySQL shell
 lando php                      Run php commands
-landp pull                     Pull database and/or files from Pantheon.
+lando pull                     Pull code, database and/or files from Pantheon
+lando push                     Push code, database and/or files to Pantheon
 lando redis-cli                Run redis-cli commands
+lando switch <env>             Switch to a different multidev environment
 lando terminus                 Run terminus commands
 lando varnishadm               Run varnishadm commands
 lando wp                       Run wp-cli commands
@@ -273,9 +352,9 @@ Next Steps
 ----------
 
 *   [Adding additional services](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional tooling](./../tutorials/tutorials/setup-additional-tooling.md)
+*   [Adding additional tooling](./../tutorials/setup-additional-tooling.md)
 *   [Adding additional routes](./../config/proxy.md)
 *   [Adding additional events](./../config/events.md)
-*   [Setting up front end tooling](./../tutorials/tutorials/frontend.md)
-*   [Accessing services (eg your database) from the host](./../tutorials/tutorials/frontend.md)
-*   [Importing databases](./../tutorials/tutorials/db-import.md)
+*   [Setting up front end tooling](./../tutorials/frontend.md)
+*   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
+*   [Importing databases](./../tutorials/db-import.md)

@@ -53,6 +53,9 @@ module.exports = function(lando) {
     // Start by cheating
     var build = lando.recipes.build(name, base, config);
 
+    // Figure out some tooling needs
+    var needs = ['database'];
+
     // Add in cache func if needed
     if (_.has(config, 'cache')) {
 
@@ -69,6 +72,9 @@ module.exports = function(lando) {
       var envKey = 'services.appserver.overrides.services.environment';
       _.set(build, envKey, _.merge(_.get(build, envKey), cacheCreds));
 
+      // Add it as something our tooling needs
+      needs.push('cache');
+
     }
 
     // Add in installation of laravel tool
@@ -84,11 +90,13 @@ module.exports = function(lando) {
     // Add artisan command
     build.tooling.artisan = {
       service: 'appserver',
+      needs: needs,
       cmd: ['php', 'artisan']
     };
 
     // Add laravel command
     build.tooling.laravel = {
+      needs: needs,
       service: 'appserver'
     };
 
