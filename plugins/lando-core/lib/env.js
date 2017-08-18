@@ -13,6 +13,9 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var dotenv = require('dotenv');
+  var fs = lando.node.fs;
+  var path = require('path');
 
   // Add in some high level config so our app can handle
   lando.events.on('post-instantiate-app', 1, function(app) {
@@ -46,6 +49,28 @@ module.exports = function(lando) {
     app.env.LANDO_WEBROOT_UID = '33';
     app.env.LANDO_WEBROOT_GID = '33';
     app.env.COLUMNS = 256;
+
+    // Inject values from an .env file if it exists
+    // Look for a .env file and inject its vars into the service as well
+    if (fs.existsSync(path.join(app.root, '.env'))) {
+
+      // Log
+      lando.log.debug('.env file found for %s, loading its config', app.name);
+
+      // Load .env file
+      var result = dotenv.config();
+
+      // warn if needed
+      if (result.error) {
+        lando.log.warn('Trouble parsing .env file with %s', result.error);
+      }
+
+      // Merge in values to app.env
+      if (!_.isEmpty(result.parsed)) {
+        app.env = _.merge(app.env, result.parsed);
+      }
+
+    }
 
     // Add in some global labels
     var labels = app.labels || {};
