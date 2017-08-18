@@ -35,7 +35,7 @@
 *   [Importing Databases](tutorials/db-import.md)
 *   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
 *   [Lando and CI](tutorials/lando-and-ci.md)
-*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-ci-and-behat.md)
+*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Command Line

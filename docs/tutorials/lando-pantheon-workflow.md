@@ -1,8 +1,63 @@
-Lando, CI, and Behat (BDD)
------
+Pantheon GitHub PR/CI/Behat Workflow Using Lando
+================================================
+
+GitHub PR - Composer - CI Service workflows are all the rage these days and Pantheon has [some docs](https://pantheon.io/docs/guides/github-pull-requests/) on how to get rolling with a version of this.
+
+Here is another way to get a nice PR based workflow using Lando that:
+
+1.  Uses GitHub for pull requests
+2.  Runs tests like Behat
+3.  Pushes code back to Pantheon when pull requests are merged
+
+Before you get started you will want to have
+
+1.  A vanilla Pantheon D8 site **(dont use a preexisting site because we will be overwriting it!!!)**
+2.  An empty GitHub repo
+3.  A Travis project that is set to track the repo in 2.
+
+Getting Your Code Into GitHub
+-----------------------------
+
+You can start by cloning our [example workflow repo](https://github.com/kalabox/lando-pantheon-ci-workflow-example) and then pushing it up to the GitHub repo you created earlier.
+
+```bash
+# Get our example
+git clone https://github.com/kalabox/lando-pantheon-ci-workflow-example.git my-site
+cd my-site
+
+# Set up a remote and push back to your repo
+git remote add gh git@github.com:path/to/your/repo
+git push gh master
+
+# Remove the original origin remote and replace with yours
+git remote remove origin
+git remote remove gh
+git remote add origin git@github.com:path/to/your/repo
+```
+
+You should now have a copy of our example pushed up to your new GitHub repo.
+
+Lando-ifying Your Repo
+----------------------
+
+Now we want to update the default `.lando.yml` that ships with our example so it is tied to the Pantheon site you created earlier.
+
+```bash
+# Update the lando.yml with info about your site
+# Go through the interactive prompts
+lando init my-site --recipe=pantheon
+
+# Or run it non-interactively
+lando init my-site --recipe=pantheon --pantheon-auth=MYPANTHEONMACHINETOKEN --pantheon-site=MYPANTHEONSITEMACHINENAME
+```
 
 Let's extend our [Lando and CI](lando-and-ci.md) example to include Behat Behavior Driven Tests (BDD) into our Lando, CI, PR workflow.
 
+1. Create Pantheon Drops 8 site on dashboard
+2. Create local drops8 example
+3. push that to github
+4. landoify the local app
+5. set up travis.yml
 
 Spin up an App
 --------------

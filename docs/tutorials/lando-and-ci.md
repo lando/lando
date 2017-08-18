@@ -28,13 +28,7 @@ composer require overtrue/phplint --dev
 
 Now you can also add a `scripts` key to you `composer.json` file like so:
 
-```json
-"scripts": {
-  "test": [
-    "./vendor/bin/phplint --configuration=./.phplint.yml --no-cache --exclude=contrib modules/custom"
-  ]
-},
-```
+{% codesnippet "./../examples/lando-and-ci/.lando.yml" %}{% endcodesnippet %}
 
 This will allow you to lint your code by running `composer test`. Note that this requires you use a `.phplint.yml`. Here is an example `.phplint.yml`
 
