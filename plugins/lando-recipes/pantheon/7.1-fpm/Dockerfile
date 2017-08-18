@@ -1,16 +1,11 @@
-Lando Pantheon appserver
-========================
-
-A container that approximates the appserver used on Pantheon.
-
-```
-# Pantheon php 5.3 fpm appserver for Lando
+# Pantheon php 7.1 fpm appserver for Lando
 #
-# docker build -t kalabox/pantheon-php:5.3-fpm .
+# docker build -t kalabox/pantheon-php:7.1-fpm .
 
-FROM kalabox/php:5.3-fpm
+FROM kalabox/php:7.1-fpm
 
 # Version information
+ENV BACKDRUSH_VERSION 0.0.5
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
 
@@ -23,9 +18,26 @@ RUN apt-get update \
   && mv wp-cli.phar /usr/local/bin/wp \
 
   # Get Drush
+  && wget http://files.drush.org/drush.phar \
+  && php drush.phar core-status \
+  && chmod +x drush.phar \
+  && mv drush.phar /usr/local/bin/drush \
+
+  # Get Terminus
   && mkdir -p /var/www/.composer \
   && cd /var/www/.composer \
-  && composer require drush/drush:7.* \
+  && curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
+  && php installer.phar install \
+
+  # Get Drupal console
+  && curl https://drupalconsole.com/installer -L -o drupal.phar \
+  && chmod +x drupal.phar \
+  && mv drupal.phar /usr/local/bin/drupal \
+
+  # Get Backdrush extensions
+  && mkdir -p /var/www/.drush \
+  && mkdir -p /var/www/.backdrush \
+  && curl -fsSL "https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz" | tar -xz --strip-components=1 -C /var/www/.backdrush \
 
   # Get Pantheon External libraies
   # see: https://pantheon.io/docs/external-libraries/
@@ -41,4 +53,3 @@ RUN apt-get update \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
-```
