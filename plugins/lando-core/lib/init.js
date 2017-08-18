@@ -103,7 +103,7 @@ module.exports = function(lando) {
     return {
       project: project,
       compose: [utilFile],
-      container: [project.replace(/-/g, ''), 'util', '1'].join('_'),
+      container: [lando.utils.dockerComposify(project), 'util', '1'].join('_'),
       opts: {
         services: ['util']
       }
