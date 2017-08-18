@@ -41,6 +41,7 @@
     "bluebird": "^3.4.1",
     "cli-table": "^0.3.1",
     "dockerode": "^2.4.2",
+    "dotenv": "^4.0.0",
     "fs-extra": "^0.18.2",
     "github": "^9.2.0",
     "inquirer": "^3.1.1",

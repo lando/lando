@@ -70,7 +70,7 @@ module.exports = function(lando) {
       // Start a compose collector
       var compose = {};
 
-      // Check if some properties exit and then add them if they do
+      // Check if some properties exist and then add them if they do
       var tlos = ['services', 'volumes', 'networks'];
 
       // Check for each and add as needed

@@ -31,7 +31,7 @@ The following services are currently supported. Please check out each one to lea
 Environment
 -----------
 
-While you can add additional environment variables on a per service basis (see [Advanced Service Configuration](#advanced-service-configuration) below), Lando will inject some common and helpful environment variables into each service.
+While you can add additional environment variables on a per service basis (see [Advanced Service Configuration](#advanced-service-configuration) below), or globally using a `.env` file (see [Environment File](#environment-file)) Lando will inject some common and helpful environment variables into each service.
 
 These are also helpful in your `.lando.yml` file.
 
@@ -60,6 +60,23 @@ It will also make the following available **ON YOUR HOST MACHINE** so that you c
 LANDO_APP_NAME=myapp
 LANDO_APP_ROOT=/path/to/app/on/my/host
 LANDO_APP_ROOT_BIND=/path/to/app/in/container
+```
+
+Environment File
+----------------
+
+If you drop a `.env` file into the root directory of your app Lando will automatically inject the variables into all your services. This is particularly useful if you want
+
+1. To inject sensitive credentials into the environment (a la the 12-factor app model)
+2. Store credentials in a `.gitignored` file that is not committed to the repo
+3. Set config on a per environment basis
+
+That file will generally take the form below.
+
+```yaml
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=s1mpl3
 ```
 
 Shared Files
