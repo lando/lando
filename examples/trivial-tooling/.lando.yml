@@ -75,6 +75,12 @@ tooling:
     service: database
     description: Drop into a MySQL shell
 
+  # Define a tooling command with a stringed command
+  test:
+    service: cli
+    cmd: npm test:code & npm test:unit
+    description: Run our tests
+
   # Define `lando word` that passes through to a script that can handle options.
   # The script is mounted into our appserver in the service overrides above
   #
