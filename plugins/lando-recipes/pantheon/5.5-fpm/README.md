@@ -11,7 +11,7 @@ A container that approximates the appserver used on Pantheon.
 FROM kalabox/php:5.5-fpm
 
 # Version information
-ENV BACKDRUSH_VERSION 0.0.4
+ENV BACKDRUSH_VERSION 0.0.5
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
 
