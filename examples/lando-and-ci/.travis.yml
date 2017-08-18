@@ -1,0 +1,28 @@
+# Because lando is managing our things the `language` and `php` sections below here
+# could presumably be anything eg `language: nodejs` and `node_js: '6'`
+language: php
+php:
+  - '7.0'
+
+# This part is required!!!
+services:
+  - docker
+
+# Install all the lando magic and do a sanity check to verify its working
+before_install:
+  - sudo apt-get -y update
+  - sudo apt-get -y install cgroup-bin curl
+  - curl -fsSL -o /tmp/lando-latest.deb http://installer.kalabox.io/lando-latest-dev.deb
+  - sudo dpkg -i /tmp/lando-latest.deb
+  - lando version
+
+# Because we've set appropriate build steps and test commands directly in `.lando.yml`
+# This part becomes super easy
+script:
+
+  # Start lando in verbose mode
+  # This will also perform our composer install task
+  - lando start -- -v
+
+  # Run relevant tests, also in verbose mode
+  - lando test -- -v

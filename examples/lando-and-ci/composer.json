@@ -1,0 +1,13 @@
+{
+  "name": "lando/lando-and-ci",
+  "description": "This is a basic example on how to run lando in a ci environment.",
+  "license": "MIT",
+  "require-dev": {
+    "overtrue/phplint": "^0.2.4"
+  },
+  "scripts": {
+    "test": [
+      "./vendor/bin/phplint --configuration=./.phplint.yml --no-cache ./"
+    ]
+  }
+}

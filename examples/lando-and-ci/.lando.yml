@@ -1,0 +1,18 @@
+# Start with a basic lemp stack
+name: lando-and-ci
+recipe: lemp
+
+# Automatically run composer install on builds
+services:
+  appserver:
+    build:
+      - cd $LANDO_MOUNT && composer install
+
+# Lets make a high level wrapper that runs various test commands
+# Ideally you'd put more than just one thing in here
+tooling:
+  test:
+    service: appserver
+    cmd:
+      - composer
+      - test
