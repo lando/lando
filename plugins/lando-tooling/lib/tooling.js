@@ -23,6 +23,12 @@ module.exports = function(lando) {
     // the first three assuming they are [node, lando.js, options.name]
     var argopts = process.argv.slice(3);
 
+    // Arrayify the command if needed
+    // @todo: this could probably be improved even more to handle chained commands
+    if (_.has(config, 'cmd') && typeof config.cmd === 'string') {
+      config.cmd = config.cmd.split(' ');
+    }
+
     // Shift on our command
     argopts.unshift(config.cmd || config.name);
 
