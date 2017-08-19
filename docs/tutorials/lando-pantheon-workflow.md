@@ -45,10 +45,10 @@ Now we want to update the default `.lando.yml` that ships with our example so it
 ```bash
 # Update the lando.yml with info about your site
 # Go through the interactive prompts
-lando init my-site --recipe=pantheon
+lando init --recipe=pantheon
 
 # Or run it non-interactively
-lando init my-site --recipe=pantheon --pantheon-auth=MYPANTHEONMACHINETOKEN --pantheon-site=MYPANTHEONSITEMACHINENAME
+lando init --recipe=pantheon --pantheon-auth=MYPANTHEONMACHINETOKEN --pantheon-site=MYPANTHEONSITEMACHINENAME
 
 # Start up your app
 lando start

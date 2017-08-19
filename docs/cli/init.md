@@ -7,11 +7,11 @@ Usage
 -----
 
 ```bash
-# Generate a .lando.yml in your current directory, app is called "myapp"
-lando init myapp
+# Generate a .lando.yml in your current directory
+lando init
 
 # Non interactively pull a site form github and set it up as a lamp site
-lando init myapp github \
+lando init github \
   --recipe lamp \
   --github-auth MYTOKEN \
   --github-repo git@github.com:kalabox/lando.git \
@@ -19,16 +19,23 @@ lando init myapp github \
   --webroot .
 
 # Interactively pull and set up a site from pantheon
-lando init myapp pantheon
+lando init pantheon
 
 # Set up a local repo with the pantheon recipe
-lando init myapp --recipe pantheon
+lando init --recipe pantheon
 ```
 
 Pantheon
 --------
 
-In order to pull down and initialize a Lando app from Pantheon you will need to make sure you have created a [machine token](https://pantheon.io/docs/machine-tokens/). While you **CAN** pull a site from Pantheon using `lando init myapp pantheon` you can also initialize a local site or pull from GitHub and initialize that repo as a Pantheon site.
+In order to pull down and initialize a Lando app from Pantheon you will need to make sure you have created a [machine token](https://pantheon.io/docs/machine-tokens/).
+
+While you **CAN** pull a site from Pantheon using `lando init pantheon` you can also initialize a local site or pull from GitHub and initialize that repo as a Pantheon site.
+
+```bash
+# Pull code from github but connect it to a pantheon site
+lando init github --recipe=pantheon
+```
 
 GitHub
 ------
@@ -46,5 +53,6 @@ Options
   --pantheon-site            Pantheon site machine name                                                                                                                   [string]
   --destination, --dest, -d  Specify where to init the app                                                                                                                [string]
   --webroot                  Specify the webroot relative to destination                                                                                                  [string]
+  --name                     The name of the app                        [string]
   --yes, -y                  Auto answer yes to prompts                                                                                                 [boolean] [default: false]
 ```

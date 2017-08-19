@@ -25,7 +25,7 @@ composer create-project drupal-composer/drupal-project:8.x-dev mysite --stabilit
 cd mysite
 
 # Initialize a .lando.yml for this site
-lando init mysite --recipe drupal8
+lando init --recipe drupal8
 ```
 
 ### 2. Get your site from GitHub
@@ -37,7 +37,7 @@ mkdir mysite && cd mysite
 # Initialize a Drupal 8 .lando.yml after getting code from GitHub
 # This requires a GitHub Personal Access Token
 # See: https://docs.lndo.io/cli/init.html#github
-lando init mysite github --recipe drupal8
+lando init github --recipe drupal8
 ```
 
 Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
@@ -139,6 +139,24 @@ DB_PORT=3306
 ```
 
 These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+
+### Automation
+
+You can take advantage of Lando's [events framework](./../config/events.md) to automate common tasks. Here are some useful examples you can drop in your `.lando.yml` to make your Drupal 8 app super slick.
+
+```yml
+events:
+
+  # Clear caches after a database import
+  post-db-import:
+    - appserver: cd $LANDO_WEBROOT && drush cr -y
+
+  # Runs composer install and a custom php script after your app starts
+  post-start:
+    - appserver: cd $LANDO_MOUNT && composer install
+    - appserver: cd $LANDO_WEBROOT && php script.php
+
+```
 
 Advanced Service Usage
 ----------------------

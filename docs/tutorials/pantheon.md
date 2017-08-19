@@ -42,7 +42,7 @@ cd mysite
 
 # Initialize a .lando.yml for this site
 # NOTE: You will need to choose the pantheon site that makes sense
-lando init mysite --recipe pantheon
+lando init --recipe pantheon
 ```
 
 ### 3. Get your site from Pantheon
@@ -54,7 +54,7 @@ mkdir mysite && cd mysite
 # Initialize a Pantheon .lando.yml after getting code from Pantheon
 # This require a Pantheon Machine Token
 # See: https://docs.lndo.io/cli/init.html#pantheon
-lando init mysite pantheon
+lando init pantheon
 ```
 
 ### 4. Get your site from GitHub
@@ -66,7 +66,7 @@ mkdir mysite && cd mysite
 # Initialize a Pantheon .lando.yml after getting code from GitHub
 # This require a GitHub Personal Access Token
 # See: https://docs.lndo.io/cli/init.html#github
-lando init mysite github --recipe pantheon
+lando init github --recipe pantheon
 ```
 
 Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
@@ -334,6 +334,47 @@ DRUPAL_HASH_SALT: Needed for Drupal8. We set this automatically.
 ```
 
 These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+
+### Automation
+
+You can take advantage of Lando's [events framework](./../config/events.md) to automate common tasks. Here are some useful examples you can drop in your `.lando.yml` to make your Pantheon app super slick.
+
+Note that these suggestions are framework specific and that you can only define each event hook once, unlike below.
+
+```yml
+events:
+
+  # Runs composer install and npm install/npm compile-sass after you start
+  # NOTE: this assume you've set up a node cli container called `node` with `gulp`
+  # installed globally and a sass compile task called `gulp sass`
+  post-start:
+    - appserver: cd $LANDO_MOUNT && composer install
+    - node: cd $LANDO_WEBROOT/path/to/theme && npm install
+    - node: cd $LANDO_WEBROOT/path/to/theme && gulp sass
+
+  # Runs wp search-replace after you do a pull
+  post-pull:
+    - appserver: wp search-replace OLDURL NEWURL
+
+  # Does a features revert clear cache after a pull
+  post-pull:
+    - appserver: cd $LANDO_WEBROOT && drush fra -y
+    - appserver: cd $LANDO_WEBROOT && drush cc all -y
+
+  # Does a config import clear cache after a pull
+  post-pull:
+    - appserver: cd $LANDO_WEBROOT && drush config-import -y
+    - appserver: cd $LANDO_WEBROOT && drush cr
+
+  # Does a config export before a push
+  pre-push:
+    - appserver: cd $LANDO_WEBROOT && drush config-export -y
+
+  # Clears the remote sites cache and updates its db after a push
+  post-push:
+    - appserver: drush @pantheon.MYSITE.MYENV drush updb -y
+    - appserver: drush @pantheon.MYSITE.MYENV drush cr
+```
 
 Advanced Service Usage
 ----------------------

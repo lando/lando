@@ -21,7 +21,7 @@ git clone https://github.com/WordPress/WordPress mysite
 cd mysite
 
 # Initialize a .lando.yml for this site
-lando init mysite --recipe wordpress
+lando init --recipe wordpress
 ```
 
 ### 2. Get your site from GitHub
@@ -33,7 +33,7 @@ mkdir mysite && cd mysite
 # Initialize a WordPress .lando.yml after getting code from GitHub
 # This requires a GitHub Personal Access Token
 # See: https://docs.lndo.io/cli/init.html#github
-lando init mysite github --recipe wordpress
+lando init github --recipe wordpress
 ```
 
 Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
@@ -131,6 +131,24 @@ DB_PORT=3306
 ```
 
 These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+
+### Automation
+
+You can take advantage of Lando's [events framework](./../config/events.md) to automate common tasks. Here are some useful examples you can drop in your `.lando.yml` to make your WordPress app super slick.
+
+```yml
+events:
+
+  # Runs composer install and a custom php script after your app starts
+  post-start:
+    - appserver: cd $LANDO_MOUNT && composer install
+    - appserver: cd $LANDO_WEBROOT && php script.php
+
+  # Runs wp search-replace after a db import
+  post-db-import:
+    - appserver: wp search-replace OLDURL NEWURL
+
+```
 
 Advanced Service Usage
 ----------------------

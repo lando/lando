@@ -38,8 +38,8 @@ Examples
 # Display usage
 lando
 
-# Initialize a lando app called myapp from github
-lando init myapp github
+# Initialize a lando app from github
+lando init github
 
 # Get config with some verbosity
 lando config -- -vv
