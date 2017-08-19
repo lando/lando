@@ -78,7 +78,7 @@ lando start
 
 ```bash
 cd /path/to/my/local/code
-lando init appname
+lando init
 lando start
 ```
 
@@ -87,7 +87,7 @@ lando start
 ```bash
 mkdir -p mysite
 cd mysite
-lando init mysite pantheon | lando init mysite github
+lando init pantheon | lando init github
 lando start
 ```
 

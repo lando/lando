@@ -26,16 +26,16 @@ cd composer-drupal7
 Generate a `.lando.yml` File for your Project
 ---------------------------------------------
 
-You can issue `lando init composer-drupal7` and follow the prompts where `composer-drupal7`
+You can issue `lando init` and name the app `composer-drupal7`
 
 ```bash
-lando init composer-drupal7 --recipe drupal7
+lando init --recipe drupal7 --name composer-drupal7
 ```
 
 Output should be similar to:
 
 ```bash
-geoff@yep composer-drupal7 $ lando.dev init composer-drupal7
+geoff@yep composer-drupal7 $ lando.dev init --name composer-drupal7
 ? What recipe do you want to use? drupal7
 ? Where do you want to create this app? /Users/geoff/code/composer-drupal7
 ? Where is your webroot relative to the init destination? web

@@ -22,7 +22,7 @@ git clone https://private-repository.com/lamp-project.git mysite
 cd mysite
 
 # Initialize a .lando.yml for this site
-lando init mysite --recipe lamp
+lando init --recipe lamp
 ```
 
 ### 2. Get your site from GitHub
@@ -34,7 +34,7 @@ mkdir mysite
 # Initialize a LAMP .lando.yml after getting code from GitHub
 # This require a GitHub Personal Access Token
 # See: https://docs.lndo.io/cli/init.html#github
-lando init mysite github --recipe lamp
+lando init github --recipe lamp
 ```
 
 Starting Your Site
@@ -120,6 +120,20 @@ DB_PORT=3306
 ```
 
 These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+
+### Automation
+
+You can take advantage of Lando's [events framework](./../config/events.md) to automate common tasks. Here are some useful examples you can drop in your `.lando.yml` to make your LAMP app super slick.
+
+```yml
+events:
+
+  # Runs composer install and a custom php script after your app starts
+  post-start:
+    - appserver: cd $LANDO_MOUNT && composer install
+    - appserver: cd $LANDO_WEBROOT && php script.php
+
+```
 
 Advanced Service Usage
 ----------------------
