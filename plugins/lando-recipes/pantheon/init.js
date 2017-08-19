@@ -294,7 +294,7 @@ module.exports = function(lando) {
 
       // Set and cache the TOKENZZZZ
       var data = {email: email, token: token};
-      lando.cache.set(siteMetaDataKey + options.appname, data, {persist: true});
+      lando.cache.set(siteMetaDataKey + options.name, data, {persist: true});
 
       // Return it
       return config;
