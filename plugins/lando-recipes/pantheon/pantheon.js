@@ -657,7 +657,8 @@ module.exports = function(lando) {
   return {
     build: build,
     configDir: __dirname,
-    webroot: false
+    webroot: false,
+    name: false
   };
 
 };

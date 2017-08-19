@@ -82,10 +82,27 @@ module.exports = function(lando) {
 
   };
 
+  /**
+   * Helper to let us know whether this app requires a name question or not
+   */
+  var name = function(recipe) {
+
+    // Check to verify whether the recipe exists in the registry
+    if (!registry[recipe]) {
+      lando.log.warn('%s is not a supported recipe.', recipe);
+      return {};
+    }
+
+    // Return things
+    return _.get(registry[recipe], 'name', true);
+
+  };
+
   return {
     add: add,
     build: build,
     get: get,
+    name: name,
     webroot: webroot
   };
 

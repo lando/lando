@@ -23,12 +23,45 @@ module.exports = function(lando) {
   var siteMetaDataKey = 'site:meta:';
 
   /*
+   * Modify init pre-prompt things
+   */
+  lando.events.on('task-init-answers', function(answers) {
+    if (answers.argv.method === 'github') {
+
+      // Remove the name question
+      _.remove(answers.inquirer, function(question) {
+        return question.name === 'name';
+      });
+
+    }
+  });
+
+  /*
+   * Modify init pre-run things
+   */
+  lando.events.on('task-init-run', function(answers) {
+    if (answers.method === 'github') {
+
+      // Set name if unset at this point, which it should be unless flagged in.
+      if (answers.name === undefined) {
+
+        // Get and set the name
+        var repoUrl = _.get(answers, 'github-repo', 'l/lando-app.git');
+        var gitUrl = repoUrl.split('/')[1];
+        answers.name = gitUrl.split('.')[0];
+
+      }
+
+    }
+  });
+
+  /*
    * Helper to determine whether we should ask the questions or not
    */
   var askQuestions = function(answers) {
 
     // Get our things
-    var method = lando.tasks.argv()._[2];
+    var method = lando.tasks.argv()._[1];
     var recipe = answers.recipe;
 
     // return

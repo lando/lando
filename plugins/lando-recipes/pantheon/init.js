@@ -21,7 +21,7 @@ module.exports = function(lando) {
   var siteMetaDataKey = 'site:meta:';
 
   /*
-   * Modify init things
+   * Modify init pre-prompt things
    */
   lando.events.on('task-init-answers', function(answers) {
     if (answers.argv.method === 'pantheon') {
@@ -29,10 +29,24 @@ module.exports = function(lando) {
       // Autoset the recipe
       answers.argv.recipe = 'pantheon';
 
-      // Remove the webroot question
+      // Remove the webroot and name question
       _.remove(answers.inquirer, function(question) {
-        return question.name === 'webroot';
+        return question.name === 'webroot' || question.name === 'name';
       });
+
+    }
+  });
+
+  /*
+   * Modify init pre-run things
+   */
+  lando.events.on('task-init-run', function(answers) {
+    if (answers.method === 'pantheon' || answers.recipe === 'pantheon') {
+
+      // Set name if unset at this point, which it should be unless flagged in.
+      if (answers.name === undefined) {
+        answers.name = _.get(answers, 'pantheon-site', 'lando-app');
+      }
 
     }
   });
@@ -43,7 +57,7 @@ module.exports = function(lando) {
   var askQuestions = function(answers) {
 
     // Get our things
-    var method = lando.tasks.argv()._[2];
+    var method = lando.tasks.argv()._[1];
     var recipe = answers.recipe || lando.tasks.argv().recipe;
 
     // return

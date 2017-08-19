@@ -14,6 +14,9 @@ module.exports = function(lando) {
   var path = require('path');
   var Promise = lando.Promise;
 
+  // Collect the methods
+  var methods = [];
+
   // Create the starting set of options/questions
   var options = {
     recipe: {
@@ -35,6 +38,7 @@ module.exports = function(lando) {
 
   // Merge in or alter other options provided by method plugins
   _.forEach(lando.init.get(), function(method) {
+    methods.push(method);
     options = _.merge(options, lando.init.get(method).options);
   });
 
@@ -60,6 +64,25 @@ module.exports = function(lando) {
         weight: 900,
       }
     },
+    name: {
+      describe: 'The name of the app',
+      string: true,
+      interactive: {
+        type: 'input',
+        message: 'What do you want to call this app?',
+        default: 'My Lando App',
+        filter: function(value) {
+          if (value) {
+            return _.kebabCase(value);
+          }
+        },
+        when: function(answers) {
+          var recipe = answers.recipe || lando.tasks.argv().recipe;
+          return lando.recipes.name(recipe);
+        },
+        weight: 1000,
+      }
+    },
     yes: {
       describe: 'Auto answer yes to prompts',
       alias: ['y'],
@@ -70,14 +93,14 @@ module.exports = function(lando) {
 
   // The task object
   return {
-    command: 'init <appname> [method]',
-    describe: 'Initialize a lando app called <appname> using optional [method]',
+    command: 'init [method]',
+    describe: 'Initialize a lando app, optional methods: ' + methods.join(', '),
     options: _.merge(options, auxOpts),
     run: function(options) {
 
       // Set the basics
       var config = {
-        name: options.appname,
+        name: options.name,
         recipe: options.recipe,
       };
 
@@ -132,7 +155,7 @@ module.exports = function(lando) {
         var docUrl = docBase + config.recipe + '.html';
 
         // Add data
-        table.add('NAME', options.appname);
+        table.add('NAME', config.name);
         table.add('RECIPE', options.recipe);
         table.add('DOCS', docUrl);
 
