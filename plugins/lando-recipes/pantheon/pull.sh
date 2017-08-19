@@ -184,6 +184,11 @@ if [ "$FILES" != "none" ]; then
     $ENV.$PANTHEON_SITE@appserver.$ENV.$PANTHEON_SITE.drush.in:files/ \
     $LANDO_WEBROOT/$FILEMOUNT"
 
+  # Verify we have a files dump, it not let's switch to rsync mode
+  if ! terminus backup:list $SITE.$FILES --element=files --format=list | grep "files" 2>&1; then
+    RSYNC=true
+  fi
+
   # Build the extract CMD
   if [ "$RSYNC" == "false" ]; then
     PULL_FILES="rm -f $FILE_DUMP && terminus backup:get $SITE.$FILES --element=files --to=$FILE_DUMP && mkdir -p $LANDO_WEBROOT/$FILEMOUNT &&"
