@@ -40,7 +40,7 @@ module.exports = function(lando) {
   /*
    * Modify init pre-run things
    */
-  lando.events.on('task-init-run', function(answers) {
+  lando.events.on('task-init-run', 1, function(answers) {
     if (answers.method === 'pantheon' || answers.recipe === 'pantheon') {
 
       // Set name if unset at this point, which it should be unless flagged in.
