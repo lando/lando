@@ -227,6 +227,43 @@ module.exports = function(lando) {
   };
 
   /*
+   * Helper to return db-export tooling route
+   * @TODO: Add pgsql version of the cmd at some point
+   */
+  var dbExport = function() {
+    return {
+      service: 'appserver',
+      needs: ['database'],
+      description: 'Export a datbase. Resulting {DB_NAME}.TIMESTAMP.gz file is in /app.',
+      cmd: '/helpers/mysql-export.sh',
+      options: {
+        host: {
+          description: 'The database host',
+          alias: ['h']
+        },
+        user: {
+          description: 'The database user',
+          default: 'root',
+          alias: ['u']
+        },
+        database: {
+          description: 'The database name',
+          alias: ['d']
+        },
+        password: {
+          description: 'The database password',
+          alias: ['p']
+        },
+        port: {
+          description: 'The database port',
+          default: 3306,
+          alias: ['P']
+        }
+      }
+    };
+  };
+
+  /*
    * Helper to return tooling config
    */
   var tooling = function(config) {
@@ -255,6 +292,7 @@ module.exports = function(lando) {
         user: 'root'
       };
       tooling['db-import <file>'] = dbImport();
+      tooling['db-export'] = dbExport();
     }
     // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {
