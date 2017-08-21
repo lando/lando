@@ -234,7 +234,7 @@ module.exports = function(lando) {
     return {
       service: 'appserver',
       needs: ['database'],
-      description: 'Export a datbase. Resulting {DB_NAME}.TIMESTAMP.gz file is in /app.',
+      description: 'Export a datbase. Resulting file: {DB_NAME}.TIMESTAMP.gz',
       cmd: '/helpers/mysql-export.sh',
       options: {
         host: {
