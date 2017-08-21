@@ -44,6 +44,7 @@ Advanced Usage
 *   [Setting up front end tooling](http://docs.lndo.io/tutorials/frontend.html)
 *   [Accessing services (eg your database) from the host](http://docs.lndo.io/tutorials/frontend.html)
 *   [Importing databases](http://docs.lndo.io/tutorials/db-import.html)
+*   [Exporting databases](http://docs.lndo.io/tutorials/db-export.html)
 *   [Using Composer to Manage a Project](http://docs.lndo.io/tutorials/composer-tutorial.md)
 *   [Lando and CI](tutorials/lando-and-ci.md)
 *   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
