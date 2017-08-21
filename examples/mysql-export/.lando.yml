@@ -1,0 +1,61 @@
+# The name of the app
+name: mysql-export
+
+# Give me http://mysql-export.lndo.site and https://mysql-export.lndo.site
+proxy:
+  nginx:
+    - mysql-export.lndo.site
+
+# Set up my services
+services:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
+  appserver:
+    via: nginx
+    type: php:7.1
+    ssl: true
+    webroot: www
+
+    # These environmental variables will set the default host/user/port/name/password options for
+    # db-export
+    overrides:
+      services:
+        environment:
+          DB_HOST: db
+          DB_USER: mysql
+          DB_PASSWORD: mysql
+          DB_NAME: data1
+          DB_PORT: 3306
+
+  # Spin up a mariadb container called "database"
+  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
+  db:
+
+    # Use the latest version of mysql
+    type: mysql
+
+    # Optionally forward out our port so we can access it at `localhost:someport`.
+    # This port will change every time you restart this app
+    #
+    # You can also set this to a static port you want to use `portforward:3311`.
+    # You will need to make sure the port is open and avialable
+    portforward: 5309
+
+    # Optionally change the default db credentials
+    creds:
+      user: mysql
+      password: mysql
+      database: data1
+
+    # Optionally load in all the mysql config files in the config directory
+    # This is relative to the app root
+    # config:
+    #  confd: config
+
+tooling:
+  db-export:
+    service: appserver
+    needs:
+      - db
+    description: Export a database from your lando app
+    cmd: /helpers/mysql-export.sh
