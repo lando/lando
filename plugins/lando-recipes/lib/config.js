@@ -31,8 +31,15 @@ module.exports = function(lando) {
       // Get our new config
       var newConfig = lando.recipes.build(name, recipe, config);
 
+      // Proxy settings should be handled a bit differently
+      if (_.has(app.config, 'proxy') && _.has(newConfig, 'proxy')) {
+        app.config.proxy = _.merge(newConfig.proxy, app.config.proxy);
+        delete newConfig.proxy;
+      }
+
       // Our yml config on top of the new one, this allows for overrides to work
       app.config = _.mergeWith(newConfig, app.config, lando.utils.merger);
+
     }
 
   });
