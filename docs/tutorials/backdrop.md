@@ -83,7 +83,7 @@ lando php                      Run php commands
 
 ```bash
 # Download a dependency with drush
-lando drush dl views
+lando drush dl webform
 
 # Download a dependency with composer
 lando composer config repositories.drupal composer https://packages.drupal.org/8
