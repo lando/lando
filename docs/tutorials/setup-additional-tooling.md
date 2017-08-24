@@ -138,6 +138,41 @@ lando phantomjs --version
 
 Happy testing!
 
+Multi-Service Tooling With Events
+---------------------------------
+
+Tooling can only run on one service, but if you want to create more complex workflows that require multiple services, you can do that by adding an [`events`](./../config/events.md) section to your `.lando.yml` file. For example, let’s say you want to add a `lando update` command which updates local dependencies using Composer, compiles SASS using Gulp, and then runs Drupal database updates.
+
+First add a Node service to your app:
+
+```yml
+services:
+  node:
+    type: node:6.10
+    globals:
+      gulp-cli: "latest"
+ ```
+ 
+Next you can add your `update` command to the tooling, but it doesn’t actually have to do much of anything. Let’s just have it echo some text:
+
+```yml
+tooling:
+  update:
+    service: appserver
+    description: "Builds local dependencies, compiles SASS, runs DB updates"
+    cmd: echo Updating your local dependencies and database…
+```
+
+Now here’s the fun part, in the `events` section you can add a series of commands along with the service they should run on:
+
+```yml
+events:
+  post-update:
+    - appserver: cd $LANDO_MOUNT && composer install
+    - node: cd $LANDO_MOUNT && gulp
+    - appserver: cd $LANDO_WEBROOT && drush updb -y
+```
+
 Full Example
 ------------
 
