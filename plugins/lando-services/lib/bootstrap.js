@@ -42,6 +42,7 @@ module.exports = function(lando) {
     lando.services.add('php', require('./../php/php')(lando));
     lando.services.add(pma, require('./../phpmyadmin/phpmyadmin')(lando));
     lando.services.add('redis', require('./../redis/redis')(lando));
+    lando.services.add('ruby', require('./../ruby/ruby')(lando));
     lando.services.add('solr', require('./../solr/solr')(lando));
     lando.services.add('varnish', require('./../varnish/varnish')(lando));
     lando.services.add(es, require('./../elasticsearch/elasticsearch')(lando));

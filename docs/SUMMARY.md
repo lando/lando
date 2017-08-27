@@ -100,6 +100,7 @@
     *   [phpmyadmin](services/phpmyadmin.md)
     *   [postgres](services/postgres.md)
     *   [redis](services/redis.md)
+    *   [ruby](services/ruby.md)
     *   [solr](services/solr.md)
     *   [varnish](services/varnish.md)
 *   [Tooling](config/tooling.md)

@@ -1,7 +1,7 @@
 /**
- * Lando node service builder
+ * Lando ruby service builder
  *
- * @name node
+ * @name ruby
  */
 
 'use strict';
@@ -13,19 +13,13 @@ module.exports = function(lando) {
   var addScript = lando.services.addScript;
 
   /**
-   * Supported versions for node
+   * Supported versions for ruby
    */
   var versions = [
-    '8',
-    '8.0',
-    '8.4',
-    '6',
-    'boron',
-    '6.10',
-    '6.11',
-    '4',
-    'argon',
-    '4.8',
+    '2.4',
+    '2.2',
+    '2.1',
+    '1.9',
     'latest',
     'custom'
   ];
@@ -38,7 +32,7 @@ module.exports = function(lando) {
   };
 
   /**
-   * Build out php
+   * Build out ruby
    */
   var services = function(name, config) {
 
@@ -46,9 +40,11 @@ module.exports = function(lando) {
     var services = {};
 
     // Path
+    // @todo: need to add global gem locaation?
     var path = [
       '/usr/local/sbin',
       '/usr/local/bin',
+      '/usr/local/bundle/bin',
       '/usr/sbin',
       '/usr/bin',
       '/sbin',
@@ -56,15 +52,16 @@ module.exports = function(lando) {
     ];
 
     // Volumes
+    // Need to add gloval ruby gem location?
     var vols = [
       '/usr/local/bin',
       '/usr/local/share',
-      '/usr/local/lib/node_modules'
+      '/usr/local/bundle'
     ];
 
     // Basic config
     var cliCmd = 'tail -f /dev/null';
-    var version = config.version || '6';
+    var version = config.version || '2';
     var command = config.command || cliCmd;
 
     // Arrayify the command if needed
@@ -72,9 +69,9 @@ module.exports = function(lando) {
       command = [command];
     }
 
-    // Start with the node base
-    var node = {
-      image: 'node:' + version,
+    // Start with the ruby base
+    var ruby = {
+      image: 'ruby:' + version,
       environment: {
         TERM: 'xterm',
         PATH: path.join(':')
@@ -89,11 +86,11 @@ module.exports = function(lando) {
     // If we have not specified a command we should assume this service was intended
     // to be run for CLI purposes
     if (!_.has(config, 'command')) {
-      node.ports = [];
+      ruby.ports = [];
     }
 
     // And if not we need to add in an additional cli container so that we can
-    // run things like lando npm install before our app starts up
+    // run things like lando bundler install before our app starts up
     else {
 
       // Spoof the config and add some internal properties
@@ -105,7 +102,7 @@ module.exports = function(lando) {
       };
 
       // Extract the cli service and add here
-      var cliCompose = lando.services.build('cli', 'node:' + version, cliConf);
+      var cliCompose = lando.services.build('cli', 'ruby:' + version, cliConf);
       services[name + '_cli'] = cliCompose.services.cli;
 
     }
@@ -114,42 +111,15 @@ module.exports = function(lando) {
     if (config.ssl) {
 
       // Add the ssl port
-      node.ports.push('443');
+      ruby.ports.push('443');
 
       // Add in an add cert task
-      node.volumes = addScript('add-cert.sh', node.volumes);
+      ruby.volumes = addScript('add-cert.sh', ruby.volumes);
 
-    }
-
-    // Add our npm things to build extra
-    if (!_.isEmpty(config.globals)) {
-      _.forEach(config.globals, function(version, pkg) {
-
-        // Ensure globals is arrayed
-        config.build = config.build || [];
-
-        // Queue up our global composer command
-        var nig = ['npm', 'install', '-g'];
-
-        // Get the dep
-        var dep = [pkg];
-
-        // Add a version if we have one
-        if (!_.isEmpty(version)) {
-          dep.push(version);
-        }
-
-        // Build the command
-        nig.push(dep.join('@'));
-
-        // Add before our other builds
-        config.build.unshift(nig.join(' '));
-
-      });
     }
 
     // Put it all together
-    services[name] = node;
+    services[name] = ruby;
 
     // Return our service
     return services;
