@@ -33,6 +33,7 @@
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Importing Databases](tutorials/db-import.md)
+*   [Exporting Databases](tutorials/db-export.md)
 *   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
 *   [Lando and CI](tutorials/lando-and-ci.md)
 *   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)

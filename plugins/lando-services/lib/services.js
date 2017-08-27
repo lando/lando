@@ -311,7 +311,7 @@ module.exports = function(lando) {
     services[name].volumes = addScript('load-keys.sh', services[name].volumes);
 
     // Add generic helper scripts to every contaniner
-    var helpers = ['mysql-import.sh'];
+    var helpers = ['mysql-import.sh', 'mysql-export.sh'];
     _.forEach(helpers, function(helper) {
       services[name].volumes = addHelper(helper, services[name].volumes);
     });
