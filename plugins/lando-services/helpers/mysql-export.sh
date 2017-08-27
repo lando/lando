@@ -83,7 +83,7 @@ rm ${FILE}     2> /dev/null
 rm ${FILE}.gz  2> /dev/null
 
 # Use this command for a database server on localhost. Add other options if need be
-mysqldump --opt --user=${USER} --host=${DB_HOST} --port=${PORT} --password=${PASSWORD} ${DATABASE} > ${FILE}
+mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} --password=${PASSWORD} ${DATABASE} > ${FILE}
 ret_val=$?
 
 # Show the user the result

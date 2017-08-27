@@ -43,11 +43,11 @@ Advanced Usage
 *   [Adding additional events](http://docs.lndo.io/config/events.html)
 *   [Setting up front end tooling](http://docs.lndo.io/tutorials/frontend.html)
 *   [Accessing services (eg your database) from the host](http://docs.lndo.io/tutorials/frontend.html)
-*   [Importing databases](http://docs.lndo.io/tutorials/db-import.html)
-*   [Exporting databases](http://docs.lndo.io/tutorials/db-export.html)
-*   [Using Composer to Manage a Project](http://docs.lndo.io/tutorials/composer-tutorial.md)
-*   [Lando and CI](tutorials/lando-and-ci.md)
-*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
+*   [Importing SQL databases](http://docs.lndo.io/tutorials/db-import.html)
+*   [Exporting SQL databases](http://docs.lndo.io/tutorials/db-export.html)
+*   [Using Composer to Manage a Project](http://docs.lndo.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.lndo.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.lndo.io/tutorials/lando-pantheon-workflow.html)
 
 References
 ----------
