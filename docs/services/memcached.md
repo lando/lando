@@ -6,8 +6,9 @@ Memcached
 Supported versions
 ------------------
 
-*   1.4
-*   latest
+*   [1.5](https://hub.docker.com/r/_/memcached/)
+*   [1.4](https://hub.docker.com/r/_/memcached/)
+*   [latest](https://hub.docker.com/r/_/memcached/)
 *   custom
 
 Example

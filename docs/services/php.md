@@ -10,14 +10,14 @@ You can easily add `php` or `hhvm` to your Lando app by adding an entry to the `
 Supported versions
 ------------------
 
-*   7.1
-*   7.0
-*   5.6
-*   5.5
-*   5.4
-*   5.3
-*   hhvm
-*   latest
+*   [7.1](https://hub.docker.com/r/kalabox/php)
+*   [7.0](https://hub.docker.com/r/kalabox/php)
+*   [5.6](https://hub.docker.com/r/kalabox/php)
+*   [5.5](https://hub.docker.com/r/kalabox/php)
+*   [5.4](https://hub.docker.com/r/kalabox/php)
+*   [5.3](https://hub.docker.com/r/kalabox/php)
+*   [hhvm](https://hub.docker.com/r/baptistedonaux/hhvm)
+*   [latest](https://hub.docker.com/r/kalabox/php)
 *   custom
 
 LAMP Example

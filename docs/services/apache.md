@@ -6,9 +6,9 @@ Apache
 Supported versions
 ------------------
 
-*   2.4
-*   2.2
-*   latest
+*   [2.4](https://hub.docker.com/r/_/httpd/)
+*   [2.2](https://hub.docker.com/r/_/httpd/)
+*   [latest](https://hub.docker.com/r/_/httpd/)
 *   custom
 
 Example

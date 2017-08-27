@@ -6,11 +6,11 @@ MongoDB
 Supported versions
 ------------------
 
-*   3.5
-*   3.4
-*   3.2
-*   3.0
-*   latest
+*   [3.5](https://hub.docker.com/r/_/mongo/)
+*   [3.4](https://hub.docker.com/r/_/mongo/)
+*   [3.2](https://hub.docker.com/r/_/mongo/)
+*   [3.0](https://hub.docker.com/r/_/mongo/)
+*   [latest](https://hub.docker.com/r/_/mongo/)
 *   custom
 
 Example

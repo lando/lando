@@ -12,6 +12,7 @@ module.exports = function() {
    * Supported versions for memcached
    */
   var versions = [
+    '1.5',
     '1.4',
     'latest',
     'custom'

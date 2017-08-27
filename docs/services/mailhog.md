@@ -6,8 +6,8 @@ MailHog
 Supported versions
 ------------------
 
-*   v1.0.0
-*   latest
+*   [v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)
+*   [latest](https://hub.docker.com/r/mailhog/mailhog/)
 *   custom
 
 Example

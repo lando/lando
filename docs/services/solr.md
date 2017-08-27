@@ -6,13 +6,13 @@ Solr
 Supported versions
 ------------------
 
-*   6.5
-*   6.4
-*   6.3
-*   5.5
-*   4.10
-*   3.6
-*   latest
+*   [6.5](https://hub.docker.com/r/_/solr/)
+*   [6.4](https://hub.docker.com/r/_/solr/)
+*   [6.3](https://hub.docker.com/r/_/solr/)
+*   [5.5](https://hub.docker.com/r/_/solr/)
+*   [4.10](https://hub.docker.com/r/actency/docker-solr)
+*   [3.6](https://hub.docker.com/r/actency/docker-solr)
+*   [latest](https://hub.docker.com/r/_/solr/)
 *   custom
 
 Example

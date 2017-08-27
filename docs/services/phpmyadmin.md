@@ -6,9 +6,9 @@ phpMyAdmin
 Supported versions
 ------------------
 
-*   4.7
-*   4.6
-*   latest
+*   [4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+*   [4.6](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+*   [latest](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   custom
 
 Example

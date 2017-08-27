@@ -6,15 +6,15 @@ nginx
 Supported versions
 ------------------
 
-*   1.13
-*   1.12
-*   1.11
-*   1.10
-*   1.9
-*   1.8
-*   mainline
-*   stable
-*   latest
+*   [1.13](https://hub.docker.com/r/_/nginx/)
+*   [1.12](https://hub.docker.com/r/_/nginx/)
+*   [1.11](https://hub.docker.com/r/_/nginx/)
+*   [1.10](https://hub.docker.com/r/_/nginx/)
+*   [1.9](https://hub.docker.com/r/_/nginx/)
+*   [1.8](https://hub.docker.com/r/_/nginx/)
+*   [mainline](https://hub.docker.com/r/_/nginx/)
+*   [stable](https://hub.docker.com/r/_/nginx/)
+*   [latest](https://hub.docker.com/r/_/nginx/)
 *   custom
 
 Example

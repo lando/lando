@@ -6,12 +6,12 @@ MariaDB
 Supported versions
 ------------------
 
-*   10.3
-*   10.2
-*   10.1
-*   10.0
-*   5.5
-*   latest
+*   [10.3](https://hub.docker.com/r/_/mariadb/)
+*   [10.2](https://hub.docker.com/r/_/mariadb/)
+*   [10.1](https://hub.docker.com/r/_/mariadb/)
+*   [10.0](https://hub.docker.com/r/_/mariadb/)
+*   [5.5](https://hub.docker.com/r/_/mariadb/)
+*   [latest](https://hub.docker.com/r/_/mariadb/)
 *   custom
 
 Example

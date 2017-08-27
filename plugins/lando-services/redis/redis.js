@@ -17,6 +17,7 @@ module.exports = function(lando) {
    * Supported versions for redis
    */
   var versions = [
+    '4.0',
     '3.2',
     '3.0',
     '2.8',

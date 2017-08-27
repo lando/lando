@@ -6,11 +6,11 @@ MySQL
 Supported versions
 ------------------
 
-*   8
-*   5.7
-*   5.6
-*   5.5
-*   latest
+*   [8](https://hub.docker.com/r/_/mysql/)
+*   [5.7](https://hub.docker.com/r/_/mysql/)
+*   [5.6](https://hub.docker.com/r/_/mysql/)
+*   [5.5](https://hub.docker.com/r/_/mysql/)
+*   [latest](https://hub.docker.com/r/_/mysql/)
 *   custom
 
 Example
