@@ -37,6 +37,7 @@ yargs.command(lando.tasks.parseToYargs(task));
     * [.parseToYargs(task)](#module_tasks.parseToYargs) ⇒ <code>Object</code>
     * [.add(name, task)](#module_tasks.add)
     * ["event:task-CMD-answers"](#module_tasks.event_task-CMD-answers)
+    * ["event:task-CMD-run"](#module_tasks.event_task-CMD-run)
 
 <a name="module_tasks.tasks"></a>
 
@@ -163,7 +164,8 @@ lando.tasks.add('destroy', task);
 <a name="module_tasks.event_task-CMD-answers"></a>
 
 ### "event:task-CMD-answers"
-Event that allows altering of argv or inquirer before a command is run
+Event that allows altering of argv or inquirer before interactive prompts
+are run
 
 **Kind**: event emitted by [<code>tasks</code>](#module_tasks)  
 **Since**: 3.0.0  
@@ -172,4 +174,17 @@ Event that allows altering of argv or inquirer before a command is run
 | Name | Type | Description |
 | --- | --- | --- |
 | answers | <code>Object</code> | argv and inquirer questions |
+
+<a name="module_tasks.event_task-CMD-run"></a>
+
+### "event:task-CMD-run"
+Event that allows final altering of answers
+
+**Kind**: event emitted by [<code>tasks</code>](#module_tasks)  
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| answers | <code>Object</code> | object |
 

@@ -17,10 +17,19 @@ return lando.utils.scanUrls(urls)
 ```
 
 * [utils](#module_utils)
+    * [.dockerComposify()](#module_utils.dockerComposify)
     * [.merger()](#module_utils.merger)
     * [.compose(file, data)](#module_utils.compose) ⇒ <code>String</code>
     * [.scanUrls(urls, [opts])](#module_utils.scanUrls) ⇒ <code>Array</code>
 
+<a name="module_utils.dockerComposify"></a>
+
+### utils.dockerComposify()
+Translate a name for use by docker-compose eg strip `-` and `.` and
+
+**Kind**: static method of [<code>utils</code>](#module_utils)  
+**Todo:**: possibly more than that  
+**Since**: 3.0.0  
 <a name="module_utils.merger"></a>
 
 ### utils.merger()
