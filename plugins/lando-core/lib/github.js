@@ -247,8 +247,10 @@ module.exports = function(lando) {
         var message = JSON.parse(err.message);
 
         // Report error for everything else
-        if (message.errors[0].message !== 'key is already in use') {
-          lando.log.error(err);
+        if (_.has(message.errors, '[0].message')) {
+          if (message.errors[0].message !== 'key is already in use') {
+            lando.log.error(err);
+          }
         }
 
       });
