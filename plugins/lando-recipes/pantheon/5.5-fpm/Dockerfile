@@ -8,6 +8,7 @@ FROM kalabox/php:5.5-fpm
 ENV BACKDRUSH_VERSION 0.0.5
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
+ENV TERMINUS_VERSION 1.5.0
 
 # Install the additional things that make the pantheon
 RUN apt-get update \
@@ -27,7 +28,7 @@ RUN apt-get update \
   && mkdir -p /var/www/.composer \
   && cd /var/www/.composer \
   && curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
-  && php installer.phar install \
+  && php installer.phar install --install-version=$TERMINUS_VERSION \
 
   # Get Drupal console
   && curl https://drupalconsole.com/installer -L -o drupal.phar \
