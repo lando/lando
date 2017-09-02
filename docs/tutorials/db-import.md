@@ -16,6 +16,10 @@ Usage
 lando db-import somedumpfile.sql.gz
 ```
 
+> #### Warning::DB dump must reside within app directory
+>
+> Due to restrictions in how Docker handles file sharing your database dump **MUST** exist somewhere inside of your app directory. This means that **IT IS A VERY GOOD IDEA** to make sure you add SQL dumps to your `.gitignore` file.
+
 ### Examples
 
 ```bash
