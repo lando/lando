@@ -66,7 +66,7 @@ while (( "$#" )); do
       exit 1
       ;;
     *)
-      FILE="/app/$1"
+      FILE="$(pwd)/$1"
       shift
       ;;
   esac
