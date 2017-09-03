@@ -1,7 +1,7 @@
 /**
- * Lando ruby service builder
+ * Lando python service builder
  *
- * @name ruby
+ * @name python
  */
 
 'use strict';
@@ -13,13 +13,16 @@ module.exports = function(lando) {
   var addScript = lando.services.addScript;
 
   /**
-   * Supported versions for ruby
+   * Supported versions for python
    */
   var versions = [
-    '2.4',
-    '2.2',
-    '2.1',
-    '1.9',
+    '3',
+    '3.6',
+    '3.5',
+    '3.4',
+    '3.3',
+    '2',
+    '2.7',
     'latest',
     'custom'
   ];
@@ -32,7 +35,7 @@ module.exports = function(lando) {
   };
 
   /**
-   * Build out ruby
+   * Build out python
    */
   var services = function(name, config) {
 
@@ -44,7 +47,6 @@ module.exports = function(lando) {
     var path = [
       '/usr/local/sbin',
       '/usr/local/bin',
-      '/usr/local/bundle/bin',
       '/usr/sbin',
       '/usr/bin',
       '/sbin',
@@ -52,11 +54,11 @@ module.exports = function(lando) {
     ];
 
     // Volumes
-    // Need to add gloval ruby gem location?
     var vols = [
       '/usr/local/bin',
       '/usr/local/share',
-      '/usr/local/bundle'
+      '/usr/local/bundle',
+      '/var/www/.cache/pip'
     ];
 
     // Basic config
@@ -69,9 +71,9 @@ module.exports = function(lando) {
       command = [command];
     }
 
-    // Start with the ruby base
-    var ruby = {
-      image: 'ruby:' + version,
+    // Start with the python base
+    var python = {
+      image: 'python:' + version + '-jessie',
       environment: {
         TERM: 'xterm',
         PATH: path.join(':')
@@ -86,7 +88,7 @@ module.exports = function(lando) {
     // If we have not specified a command we should assume this service was intended
     // to be run for CLI purposes
     if (!_.has(config, 'command')) {
-      ruby.ports = [];
+      python.ports = [];
     }
 
     // And if not we need to add in an additional cli container so that we can
@@ -95,15 +97,15 @@ module.exports = function(lando) {
 
       // Spoof the config and add some internal properties
       var cliConf = {
-        type: 'ruby:' + version,
+        type: 'python:' + version,
         _app: config._app,
         _root: config._root,
         _mount: config._mount
       };
 
       // Extract the cli service and add here
-      var cliCompose = lando.services.build('cli', 'ruby:' + version, cliConf);
-      services[name + '_cli'] = cliCompose.services.cli;
+      var cliCompos = lando.services.build('cli', 'python:' + version, cliConf);
+      services[name + '_cli'] = cliCompos.services.cli;
 
     }
 
@@ -111,15 +113,15 @@ module.exports = function(lando) {
     if (config.ssl) {
 
       // Add the ssl port
-      ruby.ports.push('443');
+      python.ports.push('443');
 
       // Add in an add cert task
-      ruby.volumes = addScript('add-cert.sh', ruby.volumes);
+      python.volumes = addScript('add-cert.sh', python.volumes);
 
     }
 
     // Put it all together
-    services[name] = ruby;
+    services[name] = python;
 
     // Return our service
     return services;

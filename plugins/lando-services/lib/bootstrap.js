@@ -25,27 +25,32 @@ module.exports = function(lando) {
   // Add particular services to lando
   lando.events.on('post-bootstrap', function(lando) {
 
-    // 80 Char Violators
-    var pma = 'phpmyadmin';
-    var es = 'elasticsearch';
+    // Services
+    var services = [
+      'apache',
+      'elasticsearch',
+      'nginx',
+      'node',
+      'mailhog',
+      'mariadb',
+      'memcached',
+      'mongo',
+      'mysql',
+      'postgres',
+      'php',
+      'phpmyadmin',
+      'python',
+      'redis',
+      'ruby',
+      'solr',
+      'varnish'
+    ];
 
-    // Add the services
-    lando.services.add('apache', require('./../apache/apache')(lando));
-    lando.services.add('nginx', require('./../nginx/nginx')(lando));
-    lando.services.add('node', require('./../node/node')(lando));
-    lando.services.add('mailhog', require('./../mailhog/mailhog')(lando));
-    lando.services.add('mariadb', require('./../mariadb/mariadb')(lando));
-    lando.services.add('memcached', require('./../memcached/memcached')(lando));
-    lando.services.add('mongo', require('./../mongo/mongo')(lando));
-    lando.services.add('mysql', require('./../mysql/mysql')(lando));
-    lando.services.add('postgres', require('./../postgres/postgres')(lando));
-    lando.services.add('php', require('./../php/php')(lando));
-    lando.services.add(pma, require('./../phpmyadmin/phpmyadmin')(lando));
-    lando.services.add('redis', require('./../redis/redis')(lando));
-    lando.services.add('ruby', require('./../ruby/ruby')(lando));
-    lando.services.add('solr', require('./../solr/solr')(lando));
-    lando.services.add('varnish', require('./../varnish/varnish')(lando));
-    lando.services.add(es, require('./../elasticsearch/elasticsearch')(lando));
+    // Load the services
+    _.forEach(services, function(service) {
+      var serviceModule = './../' + [service, service].join('/');
+      lando.services.add(service, require(serviceModule)(lando));
+    });
 
   });
 

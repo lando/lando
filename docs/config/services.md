@@ -24,6 +24,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[php](./../services/php.md)
 *   ####[phpmyadmin](./../services/phpmyadmin.md)
 *   ####[postgres](./../services/postgres.md)
+*   ####[python](./../services/python.md)
 *   ####[redis](./../services/redis.md)
 *   ####[ruby](./../services/ruby.md)
 *   ####[solr](./../services/solr.md)

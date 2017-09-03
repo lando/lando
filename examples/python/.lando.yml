@@ -1,0 +1,71 @@
+# Python app
+name: python
+
+# Give me http://python.lndo.site and https://python.lndo.site
+proxy:
+  appserver:
+    - python.lndo.site
+
+# Spin up services to run a basic python server
+services:
+
+  # Create a python instance
+  appserver:
+
+    # Python version 3.6
+    type: python:3.6
+
+    # Optionally create certs in /certs that can be used by your application
+    # to listen over https. Creates the following certs your app can use
+    #
+    #   - /certs/cert.key
+    #   - /certs/cert.crt
+    #   - /certs/cert.pem
+    #
+    # ssl: true
+
+    # Optionally specify a command/script to run when you start your python service up.
+    #
+    # If you are using python as a server you are going to want to define this.
+    # This can be either a string or array.
+    #
+    # If you are just spinning up a python container for usage as a cli tool
+    # you can leave this blank and the container will boot up and stay on
+    #
+    # You will likely want to run needed build steps eg `lando pip install`
+    # first so needed dependencies are installed before your server starts up.
+    #
+    command: python /app/server.py
+
+    # Install some extra server packages
+    # extras:
+    #  - "apt-get update -y"
+    #  - "apt-get install vim -y"
+
+    # Print a message just to demonstrate this
+    # build:
+    # - "cd $LANDO_MOUNT & echo 'Holla!'"
+
+# Add some nice command routing
+tooling:
+
+  # Any python service with a defined command (aka not running in cli only mode)
+  # Will also spin up a python cli container called `SERVICENAME_cli` (appserver_cli)
+  # in this example.
+  #
+  # This will allow you to run things like `lando pip install` without needing
+  # to `lando start` first. This is particularly needed for python based projects
+  # since you almost always need to run `pip install` before you can boot up your
+  # app successfully.
+  pip:
+    service: appserver_cli
+  python:
+    service: appserver_cli
+  easy_install:
+    service: appserver_cli
+  pyvenv:
+    service: appserver_cli
+
+  # This will only be available if you run `lando pip install livereload` first
+  livereload:
+    service: appserver_cli
