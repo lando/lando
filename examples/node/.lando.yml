@@ -45,10 +45,8 @@ services:
     # If you are just spinning up a node container to run front end dependencies
     # you can leave this blank and the container will boot up and stay on
     #
-    # You will likely want to run `npm install` first so needed dependencies are
-    # installed before your server starts up. Note that if you are installing
-    # a decent amount of dependencies it might take a second for your app to
-    # boot up the first time you do this.
+    # You will likely want to run `lando npm install` first so needed dependencies are
+    # installed before your server starts up.
     #
     command: npm start
 

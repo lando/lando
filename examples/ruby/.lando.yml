@@ -26,16 +26,14 @@ services:
 
     # Optionally specify a command/script to run when you start your ruby service up.
     #
-    # If you are using node as a server you are going to want to define this.
+    # If you are using ruby as a server you are going to want to define this.
     # This can be either a string or array.
     #
-    # If you are just spinning up a node container to run front end dependencies
+    # If you are just spinning up a ruby container for usage as a cli tool
     # you can leave this blank and the container will boot up and stay on
     #
-    # You will likely want to run `npm install` first so needed dependencies are
-    # installed before your server starts up. Note that if you are installing
-    # a decent amount of dependencies it might take a second for your app to
-    # boot up the first time you do this.
+    # You will likely want to run needed build steps eg `lando bundler install`
+    # first so needed dependencies are installed before your server starts up.
     #
     command: ruby /app/server.rb
 
