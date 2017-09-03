@@ -3,7 +3,9 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/kalabox/lando/master/docs/images/lando-screenshot.png)
 
-Lando is a free, open source and cross-platform local development environment tool built on [Docker](http://docker.com) container technology. It is the successor project to [Kalabox](http://kalabox.io).
+Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology. It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
+
+In that way it can be thought of as a development dependency management tool.
 
 With Lando you can...
 
@@ -31,6 +33,8 @@ Get Started With...
 *   [LEMP](http://docs.lndo.io/tutorials/lemp.html)
 *   [MEAN](http://docs.lndo.io/tutorials/mean.html)
 *   [Pantheon](http://docs.lndo.io/tutorials/pantheon.html)
+*   [Python](http://docs.lndo.io/services/python.html)
+*   [Ruby](http://docs.lndo.io/services/ruby.html)
 *   [WordPress](http://docs.lndo.io/tutorials/wordpress.html)
 *   [Custom](http://docs.lndo.io/tutorials/custom.html)
 
