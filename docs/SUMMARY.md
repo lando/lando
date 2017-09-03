@@ -21,6 +21,8 @@
 *   [LEMP](tutorials/lemp.md)
 *   [MEAN](tutorials/mean.md)
 *   [Pantheon](tutorials/pantheon.md)
+*   [Python](services/python.md)
+*   [Ruby](services/ruby.md)
 *   [WordPress](tutorials/wordpress.md)
 *   [Custom](tutorials/custom.md)
 
@@ -67,6 +69,7 @@
 ## Troubleshooting and Support
 
 *   [Accessing Logs](troubleshooting/logs.md)
+*   [Using Lando with Kalabox](troubleshooting/wkbox.md)
 *   [Reporting Issues](https://github.com/kalabox/lando/issues)
 *   [Slack Channel](https://slackpass.io/kalabox)
 
