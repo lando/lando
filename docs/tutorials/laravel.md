@@ -84,6 +84,7 @@ Each Lando Laravel recipe will also ship with helpful dev utilities. This means 
 lando artisan                  Run artisan commands
 lando composer                 Run composer commands
 lando db-import <file>         Import <file> into database. File is relative to approot.
+lando db-export                Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
 lando laravel                  Run laravel commands
 lando mysql                    Drop into a MySQL shell
 lando php                      Run php commands

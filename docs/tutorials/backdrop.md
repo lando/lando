@@ -76,6 +76,7 @@ Each Lando Backdrop recipe will also ship with helpful dev utilities. This means
 ```bash
 lando composer                 Run composer commands
 lando db-import <file>         Import <file> into database. File is relative to approot.
+lando db-export                Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
 lando drush                    Run drush commands
 lando mysql                    Drop into a MySQL shell
 lando php                      Run php commands
