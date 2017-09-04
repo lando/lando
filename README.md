@@ -3,7 +3,7 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/kalabox/lando/master/docs/images/lando-screenshot.png)
 
-Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology. It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
+Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology and built by [Tandem](http://thinktandem.io). It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
 
 In that way it can be thought of as a development dependency management tool.
 
@@ -16,13 +16,13 @@ With Lando you can...
 *   Easily customize or extend tooling, deployment options and basically any other functionality.
 *   Free yourself from the tyranny of inferior local development products.
 
-First Step
-----------
+Begin by checking out the
+-------------------------
 
-*   [Installation](http://docs.lndo.io/installation/installing.html)
+*   [Installation Guide](http://docs.lndo.io/installation/installing.html)
 
-Get Started With...
--------------------
+Then spin up one of our preconfigured recipe start states
+---------------------------------------------------------
 
 *   [Backdrop](http://docs.lndo.io/tutorials/backdrop.html)
 *   [Drupal 6](http://docs.lndo.io/tutorials/drupal6.html)
@@ -33,13 +33,38 @@ Get Started With...
 *   [LAMP](http://docs.lndo.io/tutorials/lamp.html)
 *   [LEMP](http://docs.lndo.io/tutorials/lemp.html)
 *   [Pantheon](http://docs.lndo.io/tutorials/pantheon.html)
-*   [Python](http://docs.lndo.io/services/python.html)
-*   [Ruby](http://docs.lndo.io/services/ruby.html)
 *   [WordPress](http://docs.lndo.io/tutorials/wordpress.html)
 *   [Custom](http://docs.lndo.io/tutorials/custom.html)
 
-Advanced Usage
---------------
+Or build up from a base language
+--------------------------------
+
+*   [dotnet](http://docs.lndo.io/services/dotnet.html)
+*   [node](http://docs.lndo.io/services/node.html)
+*   [php](http://docs.lndo.io/services/php.html)
+*   [python](http://docs.lndo.io/services/python.html)
+*   [ruby](http://docs.lndo.io/services/ruby.html)
+
+And then mix in additional auxiliary services
+---------------------------------------------
+
+*   [apache](http://docs.lndo.io/services/apache.html)
+*   [elasticsearch](http://docs.lndo.io/services/elasticsearch.html)
+*   [mailhog](http://docs.lndo.io/services/mailhog.html)
+*   [mariadb](http://docs.lndo.io/services/mariadb.html)
+*   [memcached](http://docs.lndo.io/services/memcached.html)
+*   [mongo](http://docs.lndo.io/services/mongo.html)
+*   [mssql](http://docs.lndo.io/services/mssql.html)
+*   [mysql](http://docs.lndo.io/services/mysql.html)
+*   [nginx](http://docs.lndo.io/services/nginx.html)
+*   [phpmyadmin](http://docs.lndo.io/services/phpmyadmin.html)
+*   [postgres](http://docs.lndo.io/services/postgres.html)
+*   [redis](http://docs.lndo.io/services/redis.html)
+*   [solr](http://docs.lndo.io/services/solr.html)
+*   [varnish](http://docs.lndo.io/services/varnish.html)
+
+And then try out some advanced stuff
+------------------------------------
 
 *   [Adding additional services](http://docs.lndo.io/tutorials/setup-additional-services.html)
 *   [Adding additional tooling](http://docs.lndo.io/tutorials/setup-additional-tooling.html)
@@ -53,8 +78,8 @@ Advanced Usage
 *   [Lando and CI](http://docs.lndo.io/tutorials/lando-and-ci.html)
 *   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.lndo.io/tutorials/lando-pantheon-workflow.html)
 
-References
-----------
+And then dive deep into reference materials
+-------------------------------------------
 
 *   [Configuration](http://docs.lndo.io/config/lando.html)
 *   [Recipes](http://docs.lndo.io/config/services.html)
@@ -66,8 +91,8 @@ References
 *   [Troubleshooting and Support](http://docs.lndo.io/troubleshooting/logs.html)
 *   [Examples](https://github.com/kalabox/lando/tree/master/examples)
 
-TL;DR
------
+Or TL;DR
+--------
 
 A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
 
@@ -124,7 +149,7 @@ events:
   post-start:
     - appserver: echo SOMECOMMAND
     - echo SOMETHINGELSE
-  post-mycustomthing
+  post-mycustomthing:
     - echo TEST
 services:
   node:
