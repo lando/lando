@@ -27,6 +27,7 @@ module.exports = function(lando) {
 
     // Services
     var services = [
+      'asp',
       'apache',
       'elasticsearch',
       'nginx',
