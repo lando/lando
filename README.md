@@ -3,7 +3,7 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/kalabox/lando/master/docs/images/lando-screenshot.png)
 
-Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology and built by [Tandem](http://thinktandem.io). It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
+Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
 
 In that way it can be thought of as a development dependency management tool.
 
