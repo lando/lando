@@ -28,6 +28,7 @@ Then spin up one of our preconfigured recipe start states
 *   [Drupal 6](http://docs.lndo.io/tutorials/drupal6.html)
 *   [Drupal 7](http://docs.lndo.io/tutorials/drupal7.html)
 *   [Drupal 8](http://docs.lndo.io/tutorials/drupal8.html)
+*   [Joomla](http://docs.lndo.io/tutorials/joomla.html)
 *   [Laravel](http://docs.lndo.io/tutorials/laravel.html)
 *   [MEAN](http://docs.lndo.io/tutorials/mean.html)
 *   [LAMP](http://docs.lndo.io/tutorials/lamp.html)

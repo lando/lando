@@ -79,6 +79,7 @@ Each LAMP recipe will also ship with some helpful php dev utilities. This means 
 ```bash
 lando composer                 Run composer commands
 lando db-import <file>         Import <file> into database. File is relative to approot.
+lando db-export                Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
 lando mysql|pgsql              Drops into either a MySQL or Postgres shell depending on what DB you use
 lando php                      Run php commands
 ```
