@@ -13,11 +13,13 @@ Supported Services
 The following services are currently supported. Please check out each one to learn how to use them.
 
 *   ####[apache](./../services/apache.md)
+*   ####[dotnet](./../services/dotnet.md)
 *   ####[elasticsearch](./../services/elasticsearch.md)
 *   ####[mailhog](./../services/mailhog.md)
 *   ####[mariadb](./../services/mariadb.md)
 *   ####[memcached](./../services/memcached.md)
 *   ####[mongo](./../services/mongo.md)
+*   ####[mssql](./../services/mssql.md)
 *   ####[mysql](./../services/mysql.md)
 *   ####[nginx](./../services/nginx.md)
 *   ####[node](./../services/node.md)
