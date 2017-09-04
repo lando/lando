@@ -25,17 +25,26 @@ module.exports = function(lando) {
   // Add particular recipes to lando
   lando.events.on('post-bootstrap', function(lando) {
 
-    // Add the recipes
-    lando.recipes.add('backdrop', require('./../backdrop/backdrop')(lando));
-    lando.recipes.add('drupal6', require('./../drupal6/drupal6')(lando));
-    lando.recipes.add('drupal7', require('./../drupal7/drupal7')(lando));
-    lando.recipes.add('drupal8', require('./../drupal8/drupal8')(lando));
-    lando.recipes.add('laravel', require('./../laravel/laravel')(lando));
-    lando.recipes.add('lamp', require('./../lamp/lamp')(lando));
-    lando.recipes.add('lemp', require('./../lemp/lemp')(lando));
-    lando.recipes.add('mean', require('./../mean/mean')(lando));
-    lando.recipes.add('pantheon', require('./../pantheon/pantheon')(lando));
-    lando.recipes.add('wordpress', require('./../wordpress/wordpress')(lando));
+    // Recipes
+    var recipes = [
+      'backdrop',
+      'drupal6',
+      'drupal7',
+      'drupal8',
+      'joomla',
+      'laravel',
+      'lamp',
+      'lemp',
+      'mean',
+      'pantheon',
+      'wordpress'
+    ];
+
+    // Load the recipes
+    _.forEach(recipes, function(recipe) {
+      var recipeModule = './../' + [recipe, recipe].join('/');
+      lando.recipes.add(recipe, require(recipeModule)(lando));
+    });
 
   });
 
