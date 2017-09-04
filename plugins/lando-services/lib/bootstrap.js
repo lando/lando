@@ -27,14 +27,15 @@ module.exports = function(lando) {
 
     // Services
     var services = [
-      'asp',
       'apache',
+      'dotnet',
       'elasticsearch',
       'nginx',
       'node',
       'mailhog',
       'mariadb',
       'memcached',
+      'mssql',
       'mongo',
       'mysql',
       'postgres',

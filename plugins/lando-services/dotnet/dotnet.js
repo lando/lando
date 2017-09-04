@@ -1,7 +1,7 @@
 /**
- * Lando asp service builder
+ * Lando dotnet service builder
  *
- * @name asp
+ * @name dotnet
  */
 
 'use strict';
@@ -13,7 +13,7 @@ module.exports = function(lando) {
   var addScript = lando.services.addScript;
 
   /**
-   * Supported versions for asp
+   * Supported versions for dotnet
    */
   var versions = [
     '2',
@@ -33,7 +33,7 @@ module.exports = function(lando) {
   };
 
   /**
-   * Build out asp
+   * Build out dotnet
    */
   var services = function(name, config) {
 
@@ -69,7 +69,7 @@ module.exports = function(lando) {
     }
 
     // Start with the python base
-    var asp = {
+    var dotnet = {
       image: 'microsoft/dotnet:' + version + '-sdk-jessie',
       environment: {
         TERM: 'xterm',
@@ -86,7 +86,7 @@ module.exports = function(lando) {
     // If we have not specified a command we should assume this service was intended
     // to be run for CLI purposes
     if (!_.has(config, 'command')) {
-      asp.ports = [];
+      dotnet.ports = [];
     }
 
     // And if not we need to add in an additional cli container so that we can
@@ -95,14 +95,14 @@ module.exports = function(lando) {
 
       // Spoof the config and add some internal properties
       var cliConf = {
-        type: 'asp:' + version,
+        type: 'dotnet:' + version,
         _app: config._app,
         _root: config._root,
         _mount: config._mount
       };
 
       // Extract the cli service and add here
-      var cliCompos = lando.services.build('cli', 'asp:' + version, cliConf);
+      var cliCompos = lando.services.build('cli', 'dotnet:' + version, cliConf);
       services[name + '_cli'] = cliCompos.services.cli;
 
     }
@@ -111,15 +111,15 @@ module.exports = function(lando) {
     if (config.ssl) {
 
       // Add the ssl port
-      asp.ports.push('443');
+      dotnet.ports.push('443');
 
       // Add in an add cert task
-      asp.volumes = addScript('add-cert.sh', asp.volumes);
+      dotnet.volumes = addScript('add-cert.sh', dotnet.volumes);
 
     }
 
     // Put it all together
-    services[name] = asp;
+    services[name] = dotnet;
 
     // Return our service
     return services;
