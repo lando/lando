@@ -181,7 +181,7 @@ if [ "$FILES" != "none" ]; then
     --exclude styles \
     --exclude less \
     -e 'ssh -p 2222' \
-    $ENV.$PANTHEON_SITE@appserver.$ENV.$PANTHEON_SITE.drush.in:files/ \
+    $FILES.$PANTHEON_SITE@appserver.$FILES.$PANTHEON_SITE.drush.in:files/ \
     $LANDO_WEBROOT/$FILEMOUNT"
 
   # Verify we have a files dump, it not let's switch to rsync mode

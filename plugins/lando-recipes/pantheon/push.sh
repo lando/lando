@@ -171,7 +171,7 @@ if [ "$FILES" != "none" ]; then
     -e 'ssh -p 2222' \
     $LANDO_WEBROOT/$FILEMOUNT/. \
      --temp-dir=~/tmp/ \
-    $ENV.$PANTHEON_SITE@appserver.$ENV.$PANTHEON_SITE.drush.in:files/"
+    $FILES.$PANTHEON_SITE@appserver.$FILES.$PANTHEON_SITE.drush.in:files/"
 
   # Pushing files
   echo "Pushing files..."
