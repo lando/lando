@@ -17,8 +17,8 @@ Getting Started
 
 This documentation is geared towards configuring the `.lando.yml` for the `lemp` recipe. If you just want to learn how to get up and running with a `lemp` app check out our [Getting Start With LEMP Guide](./../tutorials/lemp.md).
 
-Example
--------
+Example .lando.yml
+------------------
 
 {% codesnippet "./../examples/lemp2/.lando.yml" %}{% endcodesnippet %}
 

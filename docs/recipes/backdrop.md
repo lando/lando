@@ -17,8 +17,8 @@ Getting Started
 
 This documentation is geared towards configuring the `.lando.yml` for the `backdrop` recipe. If you just want to learn how to get up and running with a `backdrop` app check out our [Getting Start With Backdrop Guide](./../tutorials/backdrop.md).
 
-Example
--------
+Example .lando.yml
+------------------
 
 {% codesnippet "./../examples/backdrop/.lando.yml" %}{% endcodesnippet %}
 

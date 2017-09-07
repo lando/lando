@@ -17,8 +17,8 @@ Getting Started
 
 This documentation is geared towards configuring the `.lando.yml` for the `laravel` recipe. If you just want to learn how to get up and running with a `laravel` app check out our [Getting Start With Laravel Guide](./../tutorials/laravel.md).
 
-Example
--------
+Example .lando.yml
+------------------
 
 {% codesnippet "./../examples/laravel/.lando.yml" %}{% endcodesnippet %}
 
