@@ -18,8 +18,8 @@ Getting Started
 This documentation is geared towards configuring the `.lando.yml` for the `drupal8` recipe. If you just want to learn how to get up and running with a `drupal8` app check out our [Getting Start With Drupal 8 Guide](./../tutorials/drupal8.md).
 
 
-Example
--------
+Example .lando.yml
+------------------
 
 {% codesnippet "./../examples/drupal8/.lando.yml" %}{% endcodesnippet %}
 

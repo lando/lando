@@ -17,8 +17,8 @@ Getting Started
 
 This documentation is geared towards configuring the `.lando.yml` for the `pantheon` recipe. If you just want to learn how to get up and running with a `pantheon` app check out our [Getting Start With Pantheon Guide](./../tutorials/pantheon.md).
 
-Example
--------
+Example .lando.yml
+------------------
 
 {% codesnippet "./../examples/pantheon/.lando.yml" %}{% endcodesnippet %}
 

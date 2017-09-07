@@ -17,8 +17,8 @@ Getting Started
 
 This documentation is geared towards configuring the `.lando.yml` for the `lamp` recipe. If you just want to learn how to get up and running with a `lamp` app check out our [Getting Start With LAMP Guide](./../tutorials/lamp.md).
 
-Example
--------
+Example .lando.yml
+------------------
 
 {% codesnippet "./../examples/lamp2/.lando.yml" %}{% endcodesnippet %}
 
