@@ -12,7 +12,7 @@ Getting Started
 
 Before you can use all the awesome LAMP Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
-### 1. Start with an existing codebase
+### Option 1. Start with an existing codebase
 
 ```bash
 # Clone codebase from git, un-tar codebase, receive as gift from the gods, etc.
@@ -25,7 +25,7 @@ cd mysite
 lando init --recipe lemp
 ```
 
-### 2. Get your site from GitHub
+### Option 2. Get your site from GitHub
 
 ```bash
 # Create a folder to clone your site to

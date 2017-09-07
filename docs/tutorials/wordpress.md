@@ -10,7 +10,7 @@ Getting Started
 
 Before you can use all the awesome Lando magic you need a WordPress codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
-### 1. Start with an existing codebase
+### Option 1. Start with an existing codebase
 
 ```bash
 # Clone or extract your WordPress site
@@ -24,7 +24,7 @@ cd mysite
 lando init --recipe wordpress
 ```
 
-### 2. Get your site from GitHub
+### Option 2. Get your site from GitHub
 
 ```bash
 # Create a folder to clone your site to
