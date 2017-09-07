@@ -12,7 +12,7 @@ Getting Started
 
 Before you can use all the awesome Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
 
-### 1. Start a codebase that already has a `.lando.yml`
+### Option 1. Start a codebase that already has a `.lando.yml`
 
 ```bash
 # Clone pantheon codebase from git
@@ -31,7 +31,7 @@ lando start
 lando terminus auth:login --machine-token=MYSPECIALTOKEN
 ```
 
-### 2. Init a codebase that doesn't yet have a `.lando.yml`
+### Option 2. Init a codebase that doesn't yet have a `.lando.yml`
 
 ```bash
 # Clone a codebase from some git repo
@@ -45,7 +45,7 @@ cd mysite
 lando init --recipe pantheon
 ```
 
-### 3. Get your site from Pantheon
+### Option 3. Get your site from Pantheon
 
 ```bash
 # Create a folder to clone your site to
@@ -57,7 +57,7 @@ mkdir mysite && cd mysite
 lando init pantheon
 ```
 
-### 4. Get your site from GitHub
+### Option 4. Get your site from GitHub
 
 ```bash
 # Create a folder to clone your site to
