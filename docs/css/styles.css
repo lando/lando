@@ -2,22 +2,40 @@ body {
   padding-top: 78px;
 }
 
+.book-body {
+  font-family: "Montserrat", "Trebuchet", sans-serif;
+  font-weight: 400;
+}
+
+.book-body h1, h2, h3, h4, h5 {
+  font-family: "Montserrat", "Trebuchet", sans-serif;
+  text-transform: uppercase;
+}
+
+.book-body h1 {
+  color: #ED3F7A;
+}
+
+.book-body h2, h3, h4, h5 {
+  color: #47474A;
+}
+
 .panel {
   border: 0px;
   border-radius: 0px;
 }
 
 .panel-info > .panel-heading {
-  background-color: #0d8fba;
+  background-color: #69B8E3;
 }
 
 .panel-primary > .panel-heading {
-  background-color: #0d63ba;
-  border-color: #0d63ba;
+  background-color: #035F91;
+  border-color: #035F91;
 }
 
 .panel-success > .panel-heading {
-  background-color: #72F0A1;
+  background-color: #85D3C9;
 }
 
 .panel-success {
@@ -25,7 +43,7 @@ body {
 }
 
 .panel-warning > .panel-heading {
-  background-color: #FFCC4F;
+  background-color: #FB8666;
 }
 
 .panel-warning {
@@ -33,11 +51,11 @@ body {
 }
 
 .panel-danger > .panel-heading {
-  background-color: #FF8E79;
+  background-color: #AB2500;
 }
 
 .panel-quote {
-  border-left: 5px solid #FFCC4F;
+  border-left: 5px solid #FB8666;
   -webkit-box-shadow: none;
   box-shadow: none;
   padding: 30px;
@@ -50,25 +68,25 @@ body {
 }
 
 .markdown-section a {
-  color: #0dbc96;
+  color: #ED3F7A;
 }
 
 .book-summary ul.summary li.active>a {
-  color: #0ca785;
+  color: #664b9d;
 }
 
 .lando-header {
-  padding: 20px 40px;
+  height: 80px;
+  min-height: 80px;
+  padding: 20px 40px 20px 20px;
   box-sizing:border-box;
   box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);
-  height: 80px;
-  background-color: #0dbc96;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 2;
-  min-height: 80px;
+  background-color: #fff;
 }
 
 .lando-header .lando-header-limiter {
@@ -77,34 +95,45 @@ body {
 }
 
 .lando-header .lando-header-limiter .fa {
-  color: #fff;
   font-size: 32px;
 }
 
-/* Logo */
+/* Logo and branding */
 
-.lando-header .lando-header-limiter h1 {
+.lando-header .lando-header-limiter .logo {
   float: left;
-  font: normal 32px Cookie, Arial, Helvetica, sans-serif;
-  line-height: 40px;
-  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-top: -8px;
+  font-family: "Montserrat", "Trebuchet", sans-serif;
+  font-size: 2em;
+  font-weight: 500;
+  color: #47474A;
 }
 
-.lando-header .lando-header-limiter h1 span {
-  color: #88f7df;
+.lando-header .lando-header-limiter .logo img {
+  height: 53px;
+  display: block;
+}
+
+.lando-header .lando-header-limiter .logo span {
+  margin-left: 1em;
 }
 
 /* The header links */
 
 .lando-header .lando-header-limiter a {
-  color: #ffffff;
+  display: block;
+  color: #47474A;
   text-decoration: none;
 }
 
 .lando-header .lando-header-limiter nav {
-  font:15px Arial, Helvetica, sans-serif;
-  line-height: 40px;
   float: right;
+  font-family: "Montserrat", "Trebuchet", sans-serif;
+  font-size: 15px;
+  line-height: 40px;
 }
 
 .lando-header .lando-header-limiter nav a {
@@ -112,19 +141,19 @@ body {
   padding: 0 5px;
   opacity: 0.9;
   text-decoration:none;
-  color: #ffffff;
+  color: #47474A;
   font-size: 24px;
-  text-transform: uppercase;
   line-height:1;
+  font-weight: 300;
 }
 
 .lando-header .lando-header-limiter nav a:hover {
-  text-decoration:underline;
+  color: #47474A;
 }
 
 .lando-header .lando-header-limiter nav a.selected {
   background-color: #88f7df;
-  color: #ffffff;
+  color: #47474A;
   border-radius: 3px;
   padding:6px 10px;
 }
