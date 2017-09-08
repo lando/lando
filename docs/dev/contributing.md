@@ -11,7 +11,7 @@ To work directly on Lando code you will want to [install from source](./../insta
 Creating Issues
 ---------------
 
-**ALL ISSUES** for the lando should be created on the main [lando project page](https://github.com/kalabox/lando/issues).
+**ALL ISSUES** for the lando should be created on the main [lando project page](https://github.com/lando/lando/issues).
 
 Once you create an issue please follow the guidelines that are posted as the first comment on your issue.
 
@@ -45,4 +45,4 @@ Perform all of your work in a forked branch of lando, preferably named in the co
 
 When you feel like your code is ready for review open a pull request against the lando repository. The pull request will auto-generate a checklist of things you need to do before your code will be considered merge-worthy.
 
-Please always reference the main lando issue in your commit messages and pull requests using the `kalabox/lando#issue-number` syntax.
+Please always reference the main lando issue in your commit messages and pull requests using the `lando/lando#issue-number` syntax.

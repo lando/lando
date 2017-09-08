@@ -71,4 +71,4 @@ If the CI checks pass you can merge with confidence!
 Full Example
 ------------
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando-ci-example).
+You can check out the full code for this example [over here](https://github.com/lando/lando-ci-example).

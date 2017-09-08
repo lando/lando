@@ -6,7 +6,7 @@ A container that approximates the solr service used on Pantheon.
 ```
 # Pantheon solr 3.6 index server for Lando
 #
-# docker build -t kalabox/pantheon-index:3.6 .
+# docker build -t devwithlando/pantheon-index:3.6 .
 
 FROM debian:jessie
 

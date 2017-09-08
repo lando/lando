@@ -20,19 +20,19 @@ Here are a few examples:
 
 {% codesnippet "./../examples/pma/.lando.yml" %}{% endcodesnippet %}
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/pma).
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/pma).
 
 ### A LEMP recipe with a bunch of extra tools
 
 {% codesnippet "./../examples/addtools/.lando.yml" %}{% endcodesnippet %}
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/addtools).
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/addtools).
 
 ### A LEMP recipe that uses mailhog
 
 {% codesnippet "./../examples/mailhog/.lando.yml" %}{% endcodesnippet %}
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/mailhog).
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mailhog).
 
 Building A Custom Stack
 -----------------------
@@ -43,13 +43,13 @@ You also can build up a custom stack by creating a `.lando.yml` file from scratc
 
 {% codesnippet "./../examples/lamp/.lando.yml" %}{% endcodesnippet %}
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lamp).
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lamp).
 
 ### Node webserver with elasticsearch
 
 {% codesnippet "./../examples/elasticsearch/.lando.yml" %}{% endcodesnippet %}
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/elasticsearch).
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/elasticsearch).
 
 Additional Reading
 ------------------

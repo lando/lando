@@ -1,6 +1,6 @@
 # Basic php-fpm 5.3 appserver for Lando
 #
-# docker build -t kalabox/php:5.3-fpm .
+# docker build -t devwithlando/php:5.3-fpm .
 
 FROM helder/php-5.3
 

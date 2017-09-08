@@ -106,7 +106,7 @@ You can also manually configure the `.lando.yml` file to switch `php` versions, 
 
 {% codesnippet "./../examples/lemp2/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lemp2).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lemp2).
 
 ### Environment Variables
 

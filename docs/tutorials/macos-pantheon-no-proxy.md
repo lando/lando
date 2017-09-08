@@ -1,7 +1,7 @@
 How to set up a Pantheon application without a proxy on macOS 10.12+
 ====================================================================
 
-This guide explains how to use a pantheon [lando](https://github.com/kalabox/lando) application without the proxy server on your local machine. Instead of using a proxy server, you will use `dnsmasq` and `pfctl` to port forward your lando application's webserver ports to 80 and 443.
+This guide explains how to use a pantheon [lando](https://github.com/lando/lando) application without the proxy server on your local machine. Instead of using a proxy server, you will use `dnsmasq` and `pfctl` to port forward your lando application's webserver ports to 80 and 443.
 
 > **Note:** you will have to perform some manual interactions for each lando application you create. See the instructions below.
 

@@ -38,7 +38,7 @@ lando init github --recipe wordpress
 
 Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
 
-If you want to try a Composer-based installation, you can use the [example above](https://github.com/kalabox/lando/tree/master/examples/wordpress) to get started.
+If you want to try a Composer-based installation, you can use the [example above](https://github.com/lando/lando/tree/master/examples/wordpress) to get started.
 
 Starting Your Site
 ------------------
@@ -116,7 +116,7 @@ You can also manually configure the `.lando.yml` file to switch `php` versions, 
 
 {% codesnippet "./../examples/wordpress/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/wordpress).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/wordpress).
 
 ### Environment Variables
 

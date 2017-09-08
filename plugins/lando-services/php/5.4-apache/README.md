@@ -6,7 +6,7 @@ A decent cross purpose apache based php 5.4 appserver.
 ```
 # Basic apache php 5.4 appserver for Lando
 #
-# docker build -t kalabox/php:5.4-apache .
+# docker build -t devwithlando/php:5.4-apache .
 
 FROM php:5.4-apache
 

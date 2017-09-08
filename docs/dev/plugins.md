@@ -37,4 +37,4 @@ Lando looks for plugins in either the `node_modules` or `plugins` folder in thre
 Plugin Examples
 ---------------
 
-Check out some of our [core plugins](https://github.com/kalabox/lando/tree/master/plugins) for motivation in creating your own.
+Check out some of our [core plugins](https://github.com/lando/lando/tree/master/plugins) for motivation in creating your own.

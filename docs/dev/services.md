@@ -12,7 +12,7 @@ On a more technical level a service will do the following:
 Loading Services
 ----------------
 
-You can load a service from any plugin with the `post-bootstrap` event. See [this](https://github.com/kalabox/lando/blob/master/plugins/lando-services/lib/bootstrap.js#L26) for how we load services from our core plugins.
+You can load a service from any plugin with the `post-bootstrap` event. See [this](https://github.com/lando/lando/blob/master/plugins/lando-services/lib/bootstrap.js#L26) for how we load services from our core plugins.
 
 ```js
 // Add particular services to lando
@@ -269,7 +269,7 @@ Here are some helpful tips and tricks to get you building your own service.
 
 While you can (and its sometimes necessary to) roll your own base image it's usually easier to build your Lando service on top of a preexisting image with wide community adoption and/or easy configuration options.
 
-For many services you can use either the [official docker version](https://hub.docker.com/explore/) or the image provided by the team for the service itself like [this image](https://hub.docker.com/r/mailhog/mailhog/) for `mailhog`. If neither of these images exist or are desirable you can search the [docker hub](https://hub.docker.com/) for community provided images or build your own image. Also note that since you can dynamically build a compose definition based on user config you can mix in multiple images like we do in our [`solr`](https://github.com/kalabox/lando/blob/master/plugins/lando-services/solr/solr.js#L47) service.
+For many services you can use either the [official docker version](https://hub.docker.com/explore/) or the image provided by the team for the service itself like [this image](https://hub.docker.com/r/mailhog/mailhog/) for `mailhog`. If neither of these images exist or are desirable you can search the [docker hub](https://hub.docker.com/) for community provided images or build your own image. Also note that since you can dynamically build a compose definition based on user config you can mix in multiple images like we do in our [`solr`](https://github.com/lando/lando/blob/master/plugins/lando-services/solr/solr.js#L47) service.
 
 Generally, you will want to choose images based on this order of things:
 

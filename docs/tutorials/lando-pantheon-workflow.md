@@ -18,11 +18,11 @@ Before you get started you will want to have
 Getting Your Code Into GitHub
 -----------------------------
 
-You can start by cloning our [example workflow repo](https://github.com/kalabox/lando-pantheon-ci-workflow-example) and then pushing it up to the GitHub repo you created earlier.
+You can start by cloning our [example workflow repo](https://github.com/lando/lando-pantheon-ci-workflow-example) and then pushing it up to the GitHub repo you created earlier.
 
 ```bash
 # Get our example
-git clone https://github.com/kalabox/lando-pantheon-ci-workflow-example.git my-site
+git clone https://github.com/lando/lando-pantheon-ci-workflow-example.git my-site
 cd my-site
 
 # Set up a remote and push back to your repo
@@ -103,7 +103,7 @@ git commit -m "All the Lando magic"
 git push origin master
 ```
 
-If you've set up your Travis to track your project already you should see a build happening that looks like [this](https://travis-ci.org/kalabox/lando-pantheon-ci-workflow-example).
+If you've set up your Travis to track your project already you should see a build happening that looks like [this](https://travis-ci.org/lando/lando-pantheon-ci-workflow-example).
 
 Deploy Back to Pantheon
 -----------------------
@@ -113,4 +113,4 @@ Eventually this example will include an auto-deploy feature so that any PR merge
 Full Example
 ------------
 
-* [Lando-Pantheon Workflow Example](https://github.com/kalabox/lando-pantheon-ci-workflow-example)
+* [Lando-Pantheon Workflow Example](https://github.com/lando/lando-pantheon-ci-workflow-example)

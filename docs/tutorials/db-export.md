@@ -25,4 +25,4 @@ If you are not using one of our `php`-y recipes you can add the `db-export` comm
 
 {% codesnippet "./../examples/mysql-export/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/mysql-export).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mysql-export).

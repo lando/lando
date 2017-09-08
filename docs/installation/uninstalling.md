@@ -4,7 +4,7 @@ Uninstalling
 macOS
 -----
 
-1.  Mount the DMG you downloaded to install Lando. Visit [GitHub](https://github.com/kalabox/lando/releases) if you no longer have the DMG
+1.  Mount the DMG you downloaded to install Lando. Visit [GitHub](https://github.com/lando/lando/releases) if you no longer have the DMG
 2.  Double click on the `uninstall.command` script
 3.  Agree to remove Lando and enter your user password when prompted
 4.  Optionally you can remove your "Docker for Mac" installation. This will destroy **ALL** your containers.

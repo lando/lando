@@ -32,7 +32,7 @@ The installer tests use the [BATS framework](https://github.com/sstephenson/bats
 
 > #### Danger::USE EXTREME CAUTION
 >
-> If you run these tests on a machine that already has Kalabox installed it is most likely going to wipe away your currently installed version of Kalabox. For that reason please **BE CAREFUL USING THIS!!!**
+> If you run these tests on a machine that already has Lando installed it is most likely going to wipe away your currently installed version of Lando. For that reason please **BE CAREFUL USING THIS!!!**
 
 ```bash
 grunt bats

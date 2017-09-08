@@ -4,7 +4,7 @@ Installing
 macOS
 -----
 
-1.  Download the latest `.dmg` package from [GitHub](https://github.com/kalabox/lando/releases)
+1.  Download the latest `.dmg` package from [GitHub](https://github.com/lando/lando/releases)
 2.  Mount the DMG by double-clicking it
 3.  Double-click on the `LandoInstaller.pkg`
 4.  Go through the setup workflow
@@ -14,7 +14,7 @@ Windows
 -------
 
 1.  Make sure you are using **at least** Windows 10 Professional with the latest updates installed.
-2.  Download the latest Windows `.exe` installer from [GitHub](https://github.com/kalabox/lando/releases)
+2.  Download the latest Windows `.exe` installer from [GitHub](https://github.com/lando/lando/releases)
 3.  Double-click on `lando.exe`
 4.  Go through the setup workflow
 5.  Approve various UAC prompts during install
@@ -27,7 +27,7 @@ Linux
 -----
 
 1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. **(17.06.1-ce or higher)**
-2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/kalabox/lando/releases)
+2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
 3.  Double-click on the package to launch Software Center
 4.  Click the "Install" button and enter your password when prompted
 
@@ -68,7 +68,7 @@ Then do the following:
 
 ```bash
 # Clone the Lando source
-git clone https://github.com/kalabox/lando.git
+git clone https://github.com/lando/lando.git
 
 # Install its dependencies
 cd lando && npm install

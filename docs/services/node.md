@@ -22,4 +22,4 @@ Example
 
 {% codesnippet "./../examples/node/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/node).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/node).

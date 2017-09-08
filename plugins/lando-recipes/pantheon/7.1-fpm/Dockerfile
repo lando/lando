@@ -1,8 +1,8 @@
 # Pantheon php 7.1 fpm appserver for Lando
 #
-# docker build -t kalabox/pantheon-php:7.1-fpm .
+# docker build -t devwithlando/pantheon-appserver:7.1-fpm .
 
-FROM kalabox/php:7.1-fpm
+FROM devwithlando/php:7.1-fpm
 
 # Version information
 ENV BACKDRUSH_VERSION 0.0.5

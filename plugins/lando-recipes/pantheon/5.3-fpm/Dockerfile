@@ -1,8 +1,8 @@
 # Pantheon php 5.3 fpm appserver for Lando
 #
-# docker build -t kalabox/pantheon-php:5.3-fpm .
+# docker build -t devwithlando/pantheon-appserver:5.3-fpm .
 
-FROM kalabox/php:5.3-fpm
+FROM devwithlando/php:5.3-fpm
 
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2

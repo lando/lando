@@ -91,7 +91,7 @@ You can also manually configure the `.lando.yml` file to switch `node` or `mongo
 
 {% codesnippet "./../examples/mean/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/mean).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mean).
 
 ### Environment Variables
 

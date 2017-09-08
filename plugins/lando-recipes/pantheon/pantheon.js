@@ -442,7 +442,7 @@ module.exports = function(lando) {
       port: 449,
       overrides: {
         services: {
-          image: 'kalabox/pantheon-index:3.6',
+          image: 'devwithlando/pantheon-index:3.6',
           ports: ['449'],
           command: '/bin/bash /start.sh'
         }
@@ -608,7 +608,7 @@ module.exports = function(lando) {
 
     // Overide our default php images with special pantheon ones
     var imagePath = 'services.appserver.overrides.services.image';
-    var image = 'kalabox/pantheon-php:' + config.php + '-fpm';
+    var image = 'devwithlando/pantheon-appserver:' + config.php + '-fpm';
     _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
