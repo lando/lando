@@ -10,14 +10,14 @@ You can easily add `php` or `hhvm` to your Lando app by adding an entry to the `
 Supported versions
 ------------------
 
-*   [7.1](https://hub.docker.com/r/kalabox/php)
-*   [7.0](https://hub.docker.com/r/kalabox/php)
-*   [5.6](https://hub.docker.com/r/kalabox/php)
-*   [5.5](https://hub.docker.com/r/kalabox/php)
-*   [5.4](https://hub.docker.com/r/kalabox/php)
-*   [5.3](https://hub.docker.com/r/kalabox/php)
+*   [7.1](https://hub.docker.com/r/devwithlando/php)
+*   [7.0](https://hub.docker.com/r/devwithlando/php)
+*   [5.6](https://hub.docker.com/r/devwithlando/php)
+*   [5.5](https://hub.docker.com/r/devwithlando/php)
+*   [5.4](https://hub.docker.com/r/devwithlando/php)
+*   [5.3](https://hub.docker.com/r/devwithlando/php)
 *   [hhvm](https://hub.docker.com/r/baptistedonaux/hhvm)
-*   [latest](https://hub.docker.com/r/kalabox/php)
+*   [latest](https://hub.docker.com/r/devwithlando/php)
 *   custom
 
 LAMP Example
@@ -25,14 +25,14 @@ LAMP Example
 
 {% codesnippet "./../examples/lamp/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lamp).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lamp).
 
 LEMP Example
 ------------
 
 {% codesnippet "./../examples/lemp/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/lemp).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lemp).
 
 Using Xdebug
 ------------

@@ -6,7 +6,7 @@ Utils for initing
 ```
 # Basic util container for lando
 #
-# docker build -t kalabox/util:stable .
+# docker build -t devwithlando/util:stable .
 
 FROM debian:jessie
 

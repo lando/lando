@@ -67,8 +67,6 @@ notifications:
   email:
     recipients:
       - mike@thinktandem.io
-      - alec@thinktandem.io
-      - geoff@thinktandem.io
     on_failure: always
 deploy:
   - provider: releases

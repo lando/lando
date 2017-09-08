@@ -2,7 +2,7 @@ Please complete the following steps.
 
 **The more steps you complete the more likely we are to address your issue!**
 
-1.  Please review the [current list of issues](https://github.com/kalabox/lando/issues) to make sure you are not submitting a duplicate.
+1.  Please review the [current list of issues](https://github.com/lando/lando/issues) to make sure you are not submitting a duplicate.
 2.  Please tag your issue appropriately. Please review the [tagging criteria](https://docs.lndo.io/dev/contributing.html).
 3.  Based on the issue type tag selected above please fill in the relevant section below.
 

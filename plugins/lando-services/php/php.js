@@ -54,7 +54,7 @@ module.exports = function(lando) {
         web: 'nginx',
         mount: config._mount,
         command: ['php-fpm'],
-        image: 'kalabox/php:' + [version, 'fpm'].join('-'),
+        image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.template',
         phpConf: '/usr/local/etc/php/php.ini'
       },
@@ -65,7 +65,7 @@ module.exports = function(lando) {
           'sh -c',
           '\'a2enmod rewrite && apache2-foreground\''
         ],
-        image: 'kalabox/php:' + [version, 'apache'].join('-'),
+        image: 'devwithlando/php:' + [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-enabled/000-default.conf',
         phpConf: '/usr/local/etc/php/php.ini'
       }

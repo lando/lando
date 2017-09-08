@@ -1,7 +1,7 @@
 Lando
 =====
 
-![screenshot](https://raw.githubusercontent.com/kalabox/lando/master/docs/images/lando-screenshot.png)
+![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
 
 Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
 
@@ -90,7 +90,7 @@ And then dive deep into reference materials
 *   [Contributing](http://docs.lndo.io/dev/contributing.html)
 *   [API](http://docs.lndo.io/dev/api/lando.html)
 *   [Troubleshooting and Support](http://docs.lndo.io/troubleshooting/logs.html)
-*   [Examples](https://github.com/kalabox/lando/tree/master/examples)
+*   [Examples](https://github.com/lando/lando/tree/master/examples)
 
 Or TL;DR
 --------

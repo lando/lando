@@ -44,7 +44,7 @@ module.exports = function(lando) {
 
     // Let's get a service container
     var util = {
-      image: 'kalabox/util:stable',
+      image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
         LANDO_HOST_OS: lando.config.os.platform,

@@ -83,6 +83,4 @@ notifications:
   - provider: Email
     to:
       - mike@thinktandem.io
-      - alec@thinktandem.io
-      - geoff@thinktandem.io
     on_build_failure: true

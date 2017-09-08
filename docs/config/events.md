@@ -14,7 +14,7 @@ Consider the following example to get an understanding on how the events framewo
 
 {% codesnippet "./../examples/events/.lando.yml" %}{% endcodesnippet %}
 
-You can check out the full code for this example [over here](https://github.com/kalabox/lando/tree/master/examples/events).
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/events).
 
 Discovering Events
 ------------------

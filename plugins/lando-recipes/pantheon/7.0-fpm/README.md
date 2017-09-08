@@ -6,9 +6,9 @@ A container that approximates the appserver used on Pantheon.
 ```
 # Pantheon php 7.0 fpm appserver for Lando
 #
-# docker build -t kalabox/pantheon-php:7.0-fpm .
+# docker build -t devwithlando/pantheon-appserver:7.0-fpm .
 
-FROM kalabox/php:7.0-fpm
+FROM devwithlando/php:7.0-fpm
 
 # Version information
 ENV BACKDRUSH_VERSION 0.0.5
