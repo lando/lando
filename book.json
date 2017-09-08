@@ -20,7 +20,7 @@
       "showTypeInHeader": false
     },
     "edit-link": {
-      "base": "https://github.com/kalabox/lando/edit/master/docs",
+      "base": "https://github.com/lando/lando/edit/master/docs",
       "label": "Edit Page"
     },
     "gtm": {
