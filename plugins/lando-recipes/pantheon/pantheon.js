@@ -247,15 +247,11 @@ module.exports = function(lando) {
       varnishadm: {
         service: 'edge',
         user: 'root'
+      },
+      terminus: {
+        service: 'appserver'
       }
     };
-
-    // Add in terminus if this is not php 5.3
-    if (config.php !== '5.3') {
-      tools.terminus = {
-        service: 'appserver'
-      };
-    }
 
     // Add in the pull command
     tools.pull = {
@@ -379,6 +375,25 @@ module.exports = function(lando) {
         }
       }
     };
+
+    // If we are on php 5.3 we need to bump our cli tools to a 5.5 container
+    if (config.php === '5.3' || config.php === 5.3) {
+      var cliOver = {
+        composer: {
+          service: 'appserver_cli'
+        },
+        drush: {
+          service: 'appserver_cli'
+        },
+        terminus: {
+          service: 'appserver_cli'
+        },
+        wp: {
+          service: 'appserver_cli'
+        }
+      };
+      tools = _.merge(tools, cliOver);
+    }
 
     // Return the tools
     return tools;
@@ -634,10 +649,29 @@ module.exports = function(lando) {
     // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));
 
+    // Determine the service to run cli things on
+    var unsupportedCli = (config.php === '5.3' || config.php === 5.3);
+    var cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
+
+    // Build an additional cli container if we are running unsupported
+    if (unsupportedCli) {
+
+      // Build out a CLI container and modify as appropriate
+      var cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
+      build.services[cliService] = _.cloneDeep(build.services.appserver);
+      build.services[cliService].type = 'php:5.5';
+      build.services[cliService].via = 'cli';
+      build.services[cliService].overrides.services.image = cliImage;
+
+      // Remove stuff from appserver
+      delete build.services.appserver.build;
+
+    }
+
     // Run composer install if we have the file
     if (fs.existsSync((path.join(config._root, 'composer.json')))) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
-      build.services.appserver.build.push(composerInstall);
+      build.services[cliService].build.push(composerInstall);
     }
 
     // Login with terminus if we have a token
@@ -645,7 +679,7 @@ module.exports = function(lando) {
     if (_.has(cache, 'token')) {
       var token = _.get(cache, 'token');
       var terminusLogin = 'terminus auth:login --machine-token=' + token;
-      build.services.appserver.build.push(terminusLogin);
+      build.services[cliService].build.push(terminusLogin);
     }
 
     // Return the things

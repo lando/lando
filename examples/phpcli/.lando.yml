@@ -1,5 +1,5 @@
 # phpcli example
-name: lemp
+name: phpcli
 
 # Spin up a php cli
 services:
