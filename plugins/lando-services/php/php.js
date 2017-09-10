@@ -46,7 +46,7 @@ module.exports = function(lando) {
 
     // Get the version and type
     var version = config.version || '7.0';
-    var via = config.via.split(':')[0] || 'nginx';
+    var via = _.has(config, 'via') ? config.via.split(':')[0] : 'cli';
 
     // Define type specific config things
     var typeConfig = {

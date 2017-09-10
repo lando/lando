@@ -376,25 +376,6 @@ module.exports = function(lando) {
       }
     };
 
-    // If we are on php 5.3 we need to bump our cli tools to a 5.5 container
-    if (config.php === '5.3' || config.php === 5.3) {
-      var cliOver = {
-        composer: {
-          service: 'appserver_cli'
-        },
-        drush: {
-          service: 'appserver_cli'
-        },
-        terminus: {
-          service: 'appserver_cli'
-        },
-        wp: {
-          service: 'appserver_cli'
-        }
-      };
-      tools = _.merge(tools, cliOver);
-    }
-
     // Return the tools
     return tools;
 
@@ -665,6 +646,9 @@ module.exports = function(lando) {
 
       // Remove stuff from appserver
       delete build.services.appserver.build;
+
+      // Override some tooling things
+      build.tooling.terminus.service = cliService;
 
     }
 
