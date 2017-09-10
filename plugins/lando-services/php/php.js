@@ -50,14 +50,6 @@ module.exports = function(lando) {
 
     // Define type specific config things
     var typeConfig = {
-      nginx: {
-        web: 'nginx',
-        mount: config._mount,
-        command: ['php-fpm'],
-        image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.template',
-        phpConf: '/usr/local/etc/php/php.ini'
-      },
       apache: {
         web: 'apache',
         mount: config._mount,
@@ -67,6 +59,22 @@ module.exports = function(lando) {
         ],
         image: 'devwithlando/php:' + [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-enabled/000-default.conf',
+        phpConf: '/usr/local/etc/php/php.ini'
+      },
+      cli: {
+        web: 'cli',
+        mount: config._mount,
+        command: ['tail -f /dev/null'],
+        image: 'devwithlando/php:' + [version, 'apache'].join('-'),
+        serverConf: '/etc/nginx/conf.d/default.template',
+        phpConf: '/usr/local/etc/php/php.ini'
+      },
+      nginx: {
+        web: 'nginx',
+        mount: config._mount,
+        command: ['php-fpm'],
+        image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
+        serverConf: '/etc/nginx/conf.d/default.template',
         phpConf: '/usr/local/etc/php/php.ini'
       }
     };
@@ -203,6 +211,11 @@ module.exports = function(lando) {
       // Set ports to empty
       php.ports = [];
 
+    }
+
+    // Unset our ports if this is a CLI service
+    if (config.web === 'cli') {
+      php.ports = [];
     }
 
     // REturn the service
