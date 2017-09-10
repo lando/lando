@@ -53,9 +53,7 @@ RUN apt-get update && apt-get install -y \
     ldap \
     mcrypt \
     mbstring \
-    mysql \
     mysqli \
-    pdo \
     pdo_mysql \
     pdo_pgsql \
     soap \

@@ -649,6 +649,8 @@ module.exports = function(lando) {
 
       // Override some tooling things
       build.tooling.terminus.service = cliService;
+      build.tooling.pull.service = cliService;
+      build.tooling.push.service = cliService;
 
     }
 

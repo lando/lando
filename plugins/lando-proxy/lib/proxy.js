@@ -197,8 +197,8 @@ module.exports = function(lando) {
       var https = ports.https;
 
       // Log
-      lando.log.verbose('Proxying on %s:%s', http);
-      lando.log.verbose('Proxying on %s:%s', https);
+      lando.log.verbose('Proxying on %s', http);
+      lando.log.verbose('Proxying on %s', https);
 
       // Proxy service
       var proxy = {
