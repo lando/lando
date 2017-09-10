@@ -6,6 +6,7 @@ FROM helder/php-5.3
 
 # Copy our helpers
 COPY docker-php-ext-* /usr/local/bin/
+COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
