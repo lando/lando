@@ -120,7 +120,7 @@ if (
    * PANTHEON_DATABASE_STATE to `empty` to allow for correct redirect to
    * install.php. This is for users who create sites on Pantheon but
    * don't go through the database setup before they pull them down
-   * on Kalabox.
+   * on Lando.
    *
    * Issue: https://github.com/pantheon-systems/drops-8/issues/139
    *

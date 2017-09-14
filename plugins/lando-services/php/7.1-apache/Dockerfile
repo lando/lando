@@ -1,6 +1,6 @@
 # Basic apache php 7.1 appserver for Lando
 #
-# docker build -t kalabox/php:7.1-apache .
+# docker build -t devwithlando/php:7.1-apache .
 
 FROM php:7.1-apache
 

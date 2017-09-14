@@ -1,11 +1,12 @@
 # Basic php-fpm 5.3 appserver for Lando
 #
-# docker build -t kalabox/php:5.3-fpm .
+# docker build -t devwithlando/php:5.3-fpm .
 
 FROM helder/php-5.3
 
 # Copy our helpers
 COPY docker-php-ext-* /usr/local/bin/
+COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
@@ -52,9 +53,7 @@ RUN apt-get update && apt-get install -y \
     ldap \
     mcrypt \
     mbstring \
-    mysql \
     mysqli \
-    pdo \
     pdo_mysql \
     pdo_pgsql \
     soap \

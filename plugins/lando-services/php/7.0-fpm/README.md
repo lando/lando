@@ -6,7 +6,7 @@ A decent cross purpose fpm based php 7.0 appserver.
 ```
 # Basic php-fpm 7.0 appserver for Lando
 #
-# docker build -t kalabox/php:7.0-fpm .
+# docker build -t devwithlando/php:7.0-fpm .
 
 FROM php:7.0-fpm
 

@@ -1,0 +1,46 @@
+# phpcli example
+name: phpcli
+
+# Spin up a php cli
+services:
+
+  # Create a php 7.1 cli
+  phpcli:
+
+    # PHP version .1
+    type: php:7.1
+
+    # Set to run in CLI mode
+    via: cli
+
+    # Optionally activate xdebug
+    # xdebug: true
+
+    # Optionally customize the configuration for php
+    # This path is relative to the app root directory
+    # config:
+      # Use a custom php.ini
+      # conf: config/php/php.ini
+
+    # Optionally install the following composer dependencies globally
+    # These follow the normal composer.json form
+    # Note that many composer dependencies should not be installed globally but
+    # on a per-project basis
+    # composer:
+    #  overtrue/phplint: '*'
+
+    # Optionally run the following commands after the service is started
+    # Runs composer install but dont fail on an error
+    # build:
+    #  - "cd $LANDO_MOUNT && composer install || true"
+
+# Add some nice command routing
+tooling:
+  composer:
+    service: phpcli
+    description: Run composer commands
+    cmd:
+      - composer
+      - --ansi
+  php:
+    service: phpcli

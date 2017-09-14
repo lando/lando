@@ -6,7 +6,7 @@ A decent cross purpose apache based php 7.0 appserver.
 ```
 # Basic apache php appserver for Lando
 #
-# docker build -t kalabox/php:7.0-apache .
+# docker build -t devwithlando/php:7.0-apache .
 
 FROM php:7.0-apache
 

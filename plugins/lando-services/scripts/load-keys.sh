@@ -30,8 +30,16 @@ for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
   if grep -L "PRIVATE KEY" $SSH_CANDIDATE &> /dev/null; then
     echo "Checking whether $SSH_CANDIDATE does not have a passphrase..."
     if ! grep -L ENCRYPTED $SSH_CANDIDATE &> /dev/null; then
-      SSH_KEYS+=($SSH_CANDIDATE)
-      SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+      if command -v ssh-keygen >/dev/null 2>&1; then
+        echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
+        if ssh-keygen -l -f $SSH_CANDIDATE &> /dev/null; then
+          SSH_KEYS+=($SSH_CANDIDATE)
+          SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+        fi
+      else
+        SSH_KEYS+=($SSH_CANDIDATE)
+        SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+      fi
     fi
   fi
 done

@@ -1,6 +1,6 @@
 # Basic apache php 5.5 appserver for Lando
 #
-# docker build -t kalabox/php:5.5-apache .
+# docker build -t devwithlando/php:5.5-apache .
 
 FROM php:5.5-apache
 

@@ -26,4 +26,4 @@ lando start
 >
 > The first time you start an app it *may* need to pull down container images. This can take a moment depending on your internet connection. Subsequent pulls to that container or service are cached so they should be much faster.
 
-You can check out the full code for this example [over here.](https://github.com/kalabox/lando/tree/master/examples/trivial) Keep reading to learn about more powerful configuration options for `.lando.yml`.
+You can check out the full code for this example [over here.](https://github.com/lando/lando/tree/master/examples/trivial) Keep reading to learn about more powerful configuration options for `.lando.yml`.

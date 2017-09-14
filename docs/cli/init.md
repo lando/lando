@@ -14,7 +14,7 @@ lando init
 lando init github \
   --recipe lamp \
   --github-auth MYTOKEN \
-  --github-repo git@github.com:kalabox/lando.git \
+  --github-repo git@github.com:lando/lando.git \
   --dest ./ \
   --webroot .
 

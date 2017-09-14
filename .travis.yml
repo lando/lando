@@ -67,8 +67,6 @@ notifications:
   email:
     recipients:
       - mike@thinktandem.io
-      - alec@thinktandem.io
-      - geoff@thinktandem.io
     on_failure: always
 deploy:
   - provider: releases
@@ -77,7 +75,7 @@ deploy:
     file: release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
     skip_cleanup: true
     on:
-      repo: kalabox/lando
+      repo: lando/lando
       tags: true
   - provider: s3
     access_key_id: AKIAJXCGUYNMSXQPAKYQ
@@ -89,5 +87,5 @@ deploy:
     region: us-west-2
     skip_cleanup: true
     on:
-      repo: kalabox/lando
+      repo: lando/lando
       branch: master
