@@ -276,12 +276,12 @@ Create or edit `/sites/default/settings.local.php` and add these lines:
 
 ```
 // Set the base URL for the Drupal site.
-$base_url = "https://mysite.lndo.site"
+$base_url = "http://mysite.lndo.site"
 ```
 
 **Drupal 8**
 
-Create or edit the file `/sites/default/drushrc.php` and add these lines:
+Create or edit `/sites/default/drushrc.php` and add these lines:
 
 ```
 <?php
