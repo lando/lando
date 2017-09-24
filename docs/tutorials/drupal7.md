@@ -152,6 +152,18 @@ events:
 
 ```
 
+Drush URL Setup
+---------------
+
+To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
+
+Create or edit `/sites/default/settings.local.php` and add these lines:
+
+```
+// Set the base URL for the Drupal site.
+$base_url = "http://mysite.lndo.site"
+```
+
 Advanced Service Usage
 ----------------------
 
