@@ -1,7 +1,10 @@
-http://{default}/:
+http://docs.lndo.io/:
+  type: redirect
+  to: http://{default}/
+https://docs.lndo.io/:
   type: redirect
   to: https://{default}/
-https://docs.lndo.io/:
+http://{default}/:
   type: redirect
   to: https://{default}/
 https://{default}/:
