@@ -1,7 +1,7 @@
-http://docs.devwithlando.io/:
+http://docs.lndo.io/:
   type: redirect
   to: http://{default}/
-https://docs.devwithlando.io/:
+https://docs.lndo.io/:
   type: redirect
   to: https://{default}/
 http://{default}/:
