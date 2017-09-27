@@ -53,7 +53,7 @@ mkdir mysite && cd mysite
 
 # Initialize a Pantheon .lando.yml after getting code from Pantheon
 # This require a Pantheon Machine Token
-# See: https://docs.lndo.io/cli/init.html#pantheon
+# See: https://docs.devwithlando.io/cli/init.html#pantheon
 lando init pantheon
 ```
 
@@ -65,7 +65,7 @@ mkdir mysite && cd mysite
 
 # Initialize a Pantheon .lando.yml after getting code from GitHub
 # This require a GitHub Personal Access Token
-# See: https://docs.lndo.io/cli/init.html#github
+# See: https://docs.devwithlando.io/cli/init.html#github
 lando init github --recipe pantheon
 ```
 

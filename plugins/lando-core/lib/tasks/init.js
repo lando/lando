@@ -151,7 +151,7 @@ module.exports = function(lando) {
         var table = new lando.cli.Table();
 
         // Get docs link
-        var docBase = 'https://docs.lndo.io/tutorials/';
+        var docBase = 'https://docs.devwithlando.io/tutorials/';
         var docUrl = docBase + config.recipe + '.html';
 
         // Add data

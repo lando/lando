@@ -53,7 +53,7 @@ lando git status
 
 ### Further Reading
 
-These steps show you how to add a `lando git` command to run inside one of your services. To see the general docs on tooling [click here](https://docs.lndo.io/config/tooling.html)
+These steps show you how to add a `lando git` command to run inside one of your services. To see the general docs on tooling [click here](https://docs.devwithlando.io/config/tooling.html)
 
 For more documentation on available `git` commands [click here](https://git-scm.com/docs).
 
@@ -115,7 +115,7 @@ services:
       - "ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/"
 ```
 
-The `extras` section will issue these commands against the appserver. Note that `extras` will run as `root` while `build` will run as you. You can read more about that [here](https://docs.lndo.io/config/services.html#build-steps). After adding the `extras` key you will need to restart your app in order to have it issue these commands against the container.
+The `extras` section will issue these commands against the appserver. Note that `extras` will run as `root` while `build` will run as you. You can read more about that [here](https://docs.devwithlando.io/config/services.html#build-steps). After adding the `extras` key you will need to restart your app in order to have it issue these commands against the container.
 
 ```bash
 lando restart

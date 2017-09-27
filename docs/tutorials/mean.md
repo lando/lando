@@ -33,7 +33,7 @@ mkdir mysite
 
 # Initialize a MEAN .lando.yml after getting code from GitHub
 # This require a GitHub Personal Access Token
-# See: https://docs.lndo.io/cli/init.html#github
+# See: https://docs.devwithlando.io/cli/init.html#github
 lando init github --recipe mean
 ```
 

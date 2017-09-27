@@ -36,7 +36,7 @@ mkdir mysite && cd mysite
 
 # Initialize a Drupal 8 .lando.yml after getting code from GitHub
 # This requires a GitHub Personal Access Token
-# See: https://docs.lndo.io/cli/init.html#github
+# See: https://docs.devwithlando.io/cli/init.html#github
 lando init github --recipe drupal8
 ```
 

@@ -31,7 +31,7 @@ This guide explains how to use a pantheon [lando](https://github.com/lando/lando
     echo "proxy: OFF" >> ~/.lando/config.yml
     ```
 
-5. [Set up your app with lando](https://docs.lndo.io/tutorials/basics.html). Make sure your application is stopped before proceeding.
+5. [Set up your app with lando](https://docs.devwithlando.io/tutorials/basics.html). Make sure your application is stopped before proceeding.
 6. Start your application using `lando start`.
 7. In terminal, run the following command all at once:
 

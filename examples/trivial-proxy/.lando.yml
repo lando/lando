@@ -22,7 +22,7 @@ proxy:
     # If you do not specify a domain ending in `.lndo.site` you will need
     # to add an entry in /etc/hosts
     #
-    # See: https://docs.lndo.io/config/proxy.html#working-offline-or-using-custom-domains
+    # See: https://docs.devwithlando.io/config/proxy.html#working-offline-or-using-custom-domains
     - bob.frank.kbox.com
     - frank.bob.joe
     - tippecanoe.tyler.too

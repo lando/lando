@@ -49,7 +49,7 @@ Here are some vitals:
 
  NAME    composer-drupal7
  RECIPE  drupal7
- DOCS    https://docs.lndo.io/recipes/drupal7.html
+ DOCS    https://docs.devwithlando.io/recipes/drupal7.html
 ```
 
 That should generate the following `.lando.yml` file:
