@@ -1,6 +1,9 @@
 http://{default}/:
   type: redirect
   to: https://{default}/
+https://docs.lndo.io/:
+  type: redirect
+  to: https://{default}/
 https://{default}/:
   type: upstream
   upstream: app:http
