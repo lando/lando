@@ -11,3 +11,12 @@
 
 'UNSUPPORTED_OS_TLE' = "Unsupported OS version detected!";
 'UNSUPPORTED_OS_MSG' = "The installer has detected an unsupported operation system. Please upgrade to Mac OS X 10.8 or later.";
+
+'DOCKER_INSTALLED_TLE' = "Docker installation detected!";
+'DOCKER_INSTALLED_MSG' = "The installer has detected that Docker for Mac is already installed!
+
+If you are using the Stable version make sure you close Docker before continuing this installation as Lando will install the latest version.
+
+If you wish to continue with your current version of Docker without upgrading make sure you customize your installation on the next step and choose to not install Docker.
+
+Keeping your current version of Docker is not supported so YMMV.";
