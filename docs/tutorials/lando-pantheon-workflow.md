@@ -66,13 +66,13 @@ Configuring Behat and Travis
 
 You will have to make two small edits in your `.lando.yml` file to make sure your `behat` tests run smoothly. Eventually we will eliminate this step but for now you need to do things manually. You will want to make a note of two things:
 
-1. The URL of your Lando site, usually `http://MY-SITE.lndo.site`
+1. Docker Compose assigns hostnames to your services under the hood. When running Behat, we are executing PHP from within the `appserver` service, and we are attempting to access the website over HTTP via the `nginx` service. Since the `nginx` service is available over the network at `http://nginx/`, PHP can access the site at that hostname. You can find more information about your services using `lando info`.
 2. The webroot of your app INSIDE LANDO, usually either `/app` or `/app/web`.
 
 You will want to edit the `BEHAT_PARAMS` variable in `.lando.yml` and replace `base_url` and `root` with 1. and 2. from above.
 
 ```yml
-BEHAT_PARAMS: '{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://lando-pantheon-workflow.lndo.site/"}, "Drupal\\DrupalExtension" : {"drush" :   {  "root":  "/app/web" }}}}'
+BEHAT_PARAMS: '{"extensions" : {"Behat\\MinkExtension" : {"base_url" : "http://nginx/"}, "Drupal\\DrupalExtension" : {"drush" :   {  "root":  "/app/web" }}}}'
 ```
 
 And then restart your app with `lando restart`. Once restarted you should be able to run `behat` tests locally.
