@@ -265,6 +265,29 @@ lando drush dl webform
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Drush URL Setup
+---------------
+
+To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
+
+**Drupal 7**
+
+Create or edit `/sites/default/settings.local.php` and add these lines:
+
+```
+// Set the base URL for the Drupal site.
+$base_url = "http://mysite.lndo.site"
+```
+
+**Drupal 8**
+
+Create or edit `/sites/default/drushrc.php` and add these lines:
+
+```
+<?php
+$options['uri'] = "http://mysite.lndo.site";
+```
+
 Configuration
 -------------
 
