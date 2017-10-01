@@ -10,7 +10,7 @@ var _ = require('lodash');
 var bump = require('./../tasks/util.js')();
 var fs = require('fs-extra');
 var path = require('path');
-var Promise = require('./../lib/promise');
+var Promise = require('bluebird');
 var shell = require('shelljs');
 
 // Get the location of the files we need to edit
@@ -42,4 +42,4 @@ return new Promise(function(resolve, reject) {
     data.version = newVersion;
     fs.writeFileSync(location, JSON.stringify(data, null, 2));
   });
-})
+});
