@@ -65,10 +65,24 @@ module.exports = function(lando) {
             // Grab a new cli table
             var table = new lando.cli.Table();
 
-            // Colorize URLS
-            var urls = _.map(app.urls, function(url) {
+            // Organize app URLS
+            var vanityUrls = [];
+            // TODO: how to determine which are Cache service and which are Web
+            //Service URLS
+            var localHostUrls = [];
+
+            // Colorize and categorize URLS
+            _.map(app.urls, function(url) {
               var uri = url.url;
-              return (url.status) ? chalk.green(uri) : chalk.red(uri);
+
+              uri = (url.status) ? chalk.green(uri) : chalk.red(uri);
+
+              if (_.includes(uri, 'lndo.site')) {
+                vanityUrls.push(uri);
+              }
+              else {
+                localHostUrls.push(uri);
+              }
             });
 
             // Add data
@@ -76,7 +90,10 @@ module.exports = function(lando) {
             table.add('NAME', app.name);
             table.add('LOCATION', app.root);
             table.add('SERVICES', _.keys(app.services));
-            table.add('URLS', urls, {arrayJoiner: '\n'});
+            table.add('', '');
+            table.add('Vanity URLS', vanityUrls, {arrayJoiner: '\n'});
+            table.add('', '');
+            table.add('Localhost URLS', localHostUrls, {arrayJoiner: '\n'});
 
             // Print the table
             console.log(table.toString());
