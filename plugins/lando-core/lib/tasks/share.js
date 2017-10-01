@@ -12,22 +12,32 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var chalk = lando.node.chalk;
   var localtunnel = require('localtunnel');
+  var u = require('url');
 
   // Task object
   return {
     command: 'share [appname]',
-    describe: 'Get a url to share your local site publicly',
+    describe: 'Get a publicly available url',
     options: {
-      service: {
-        describe: 'Share a specific service',
-        alias: ['s'],
-        default: 'appserver'
+      url: {
+        describe: 'Url to share. Needs to be in the form ' +
+          'http://localhost:port',
+        alias: ['u'],
+        required: true
       }
     },
     run: function(options) {
 
-      // Service option
-      var ltService = options.service || 'appserver';
+      // Do some validation of the url
+      var url = u.parse(options.url);
+
+      // Validate URL
+      var hnf = _.isEmpty(url.hostname) || url.hostname !== 'localhost';
+      if (hnf || url.protocol !== 'http:') {
+        lando.log.error('Need a url of the form http://localhost:port!');
+        lando.log.error('Run "lando info" for help finding the correct url!');
+        process.exit(153);
+      }
 
       // Try to get the app
       return lando.app.get(options.appname)
@@ -44,42 +54,34 @@ module.exports = function(lando) {
             }
           })
 
-          // Get the info
-          .then(function() {
-            return lando.app.info(app);
-          })
-
           // Get the URLS
-          .then(function(info) {
+          .then(function() {
 
-            // Collect appropriate URLS
-            var urls = {};
+            // Assume a port to start
+            var port = 80;
 
-            // Discover the URLs
-            _.forEach(info, function(service, name) {
-              if (!_.isEmpty(service.urls)) {
-                urls[name] = _.filter(service.urls, function(url) {
-                  return (_.includes(url, 'http://localhost'));
-                });
-              }
-            });
-
-            // Validate service
-            if (!_.includes(_.keys(urls), ltService)) {
-
-              // Warn the user
-              lando.log.warn('%s has no valid urls.', ltService);
-              lando.log.warn('Trying to discover some among %j', _.keys(urls));
-
-              // Try the first service with a url
-              // @TODO: make ths smarter
-              ltService = _.keys(urls)[0];
-
+            // Override port if specified
+            if (!_.isEmpty(url.port)) {
+              port = url.port;
             }
 
-            // Get the port and opts
-            var port = _.last(urls[ltService][0].split(':'));
-            var opts = {subdomain: app.name};
+            // Translate the app.name into a localtunnel suitable address
+            // eg lowercase/alphanumeric 4-63 chars
+            // lowercase and alphanumeric it
+            var tunnelHost = _.lowerCase(app.name).replace(/[^0-9a-z]/g, '');
+
+            // Make sure we are at least 4 characters
+            if (_.size(tunnelHost) <= 4) {
+              tunnelHost = tunnelHost + 'xxxx';
+            }
+
+            // Makes sure we are at most 64 chars
+            if (_.size(tunnelHost) >= 63) {
+              tunnelHost = tunnelHost.substring(0, 57);
+            }
+
+            // Build opts array
+            var opts = {subdomain: tunnelHost};
 
             // Set up the localtunnel
             var tunnel = localtunnel(port, opts, function(err, tunnel) {

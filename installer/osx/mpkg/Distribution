@@ -27,7 +27,6 @@
 
     <product id="io.lando.mpkg.lando" version="%LANDO_VERSION%"/>
 
-    <!-- Manually imported VBox Stuff -->
     <installation-check script="checkPrerequisite()"/>
     <script>
     <![CDATA[
@@ -63,6 +62,16 @@
            my.result.message = system.localizedString('UNSUPPORTED_OS_MSG');
            return result;
        }
+
+      try {
+          dockerplist = system.files.plistAtPath('/Applications/Docker.app/Contents/Info.plist');
+          if (dockerplist) {
+            my.result.type = 'Warning';
+            my.result.title = system.localizedString('DOCKER_INSTALLED_TLE');
+            my.result.message = system.localizedString('DOCKER_INSTALLED_MSG');
+            return false;
+          }
+      } catch (e){ system.log(e); return false; }
 
        system.log("result:" + result);
        return result;
