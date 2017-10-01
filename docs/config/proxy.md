@@ -23,7 +23,7 @@ You will need to restart your app with `lando restart` to apply the changes. You
 Configuration
 -------------
 
-By default, proxying is turned on and will try to bind to ports `80` and `443`. If these ports are taken, Lando will attempt to bind to alternate ports. These things are all configurable by editing the [Lando global configuration](./config.yml).
+By default, proxying is turned on and will try to bind to ports `80` and `443`. If these ports are taken, Lando will attempt to bind to alternate ports. These things are all configurable by editing the [Lando global configuration .config.yml](./config.html).
 
 ```yml
 proxy: ON
