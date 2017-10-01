@@ -59,41 +59,41 @@ module.exports = function(lando) {
             // Header it
             console.log(lando.cli.startHeader());
 
-            // Rebuilt!
-            console.log(chalk.yellow('App rebuilt!'));
+            // Spin up a url collector
+            var urls = {};
 
             // Grab a new cli table
             var table = new lando.cli.Table();
 
-            // Organize app URLS
-            var vanityUrls = [];
-            // TODO: how to determine which are Cache service and which are Web
-            //Service URLS
-            var localHostUrls = [];
-
-            // Colorize and categorize URLS
-            _.map(app.urls, function(url) {
-              var uri = url.url;
-
-              uri = (url.status) ? chalk.green(uri) : chalk.red(uri);
-
-              if (_.includes(uri, 'lndo.site')) {
-                vanityUrls.push(uri);
-              }
-              else {
-                localHostUrls.push(uri);
+            // Categorize and colorize URLS if and as appropriate
+            _.forEach(app.info, function(info, service) {
+              if (_.has(info, 'urls') && !_.isEmpty(info.urls))  {
+                urls[service] = _.filter(app.urls, function(item) {
+                  var good = chalk.green(item.url);
+                  var bad = chalk.red(item.url);
+                  item.theme = (item.status) ? good : bad;
+                  return _.includes(info.urls, item.url);
+                });
               }
             });
 
-            // Add data
-            console.log('');
+            // Add generic data
             table.add('NAME', app.name);
             table.add('LOCATION', app.root);
             table.add('SERVICES', _.keys(app.services));
-            table.add('', '');
-            table.add('Vanity URLS', vanityUrls, {arrayJoiner: '\n'});
-            table.add('', '');
-            table.add('Localhost URLS', localHostUrls, {arrayJoiner: '\n'});
+
+            // Add service URLS
+            _.forEach(urls, function(items, service) {
+
+              // Build table data
+              var header = _.upperCase(service) + ' URLS';
+              var data = _.map(items, 'theme');
+
+              // And add to table
+              table.add('', '');
+              table.add(header, data, {arrayJoiner: '\n'});
+
+            });
 
             // Print the table
             console.log(table.toString());

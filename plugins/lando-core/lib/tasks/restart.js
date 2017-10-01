@@ -34,20 +34,41 @@ module.exports = function(lando) {
             // Header it
             console.log(lando.cli.startHeader());
 
+            // Spin up a url collector
+            var urls = {};
+
             // Grab a new cli table
             var table = new lando.cli.Table();
 
-            // Colorize URLS
-            var urls = _.map(app.urls, function(url) {
-              var uri = url.url;
-              return (url.status) ? chalk.green(uri) : chalk.red(uri);
+            // Categorize and colorize URLS if and as appropriate
+            _.forEach(app.info, function(info, service) {
+              if (_.has(info, 'urls') && !_.isEmpty(info.urls))  {
+                urls[service] = _.filter(app.urls, function(item) {
+                  var good = chalk.green(item.url);
+                  var bad = chalk.red(item.url);
+                  item.theme = (item.status) ? good : bad;
+                  return _.includes(info.urls, item.url);
+                });
+              }
             });
 
-            // Add data
+            // Add generic data
             table.add('NAME', app.name);
             table.add('LOCATION', app.root);
             table.add('SERVICES', _.keys(app.services));
-            table.add('URLS', urls, {arrayJoiner: '\n'});
+
+            // Add service URLS
+            _.forEach(urls, function(items, service) {
+
+              // Build table data
+              var header = _.upperCase(service) + ' URLS';
+              var data = _.map(items, 'theme');
+
+              // And add to table
+              table.add('', '');
+              table.add(header, data, {arrayJoiner: '\n'});
+
+            });
 
             // Print the table
             console.log(table.toString());
