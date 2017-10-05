@@ -59,7 +59,7 @@ Almost there! All our services are installed, but how do we run a command on the
 ```yml
 tooling:
   npm:
-    service: npm
+    service: node
   node:
     service: node
   gulp:
