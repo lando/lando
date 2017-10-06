@@ -10,6 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var fs = lando.node.fs;
+  var path = require('path');
   var helpers = require('./../lamp/lamp')(lando);
 
   /**
@@ -47,6 +49,19 @@ module.exports = function(lando) {
         description: 'Run drupal console commands',
       };
 
+    }
+
+    // Determine the service to run cli things on
+    var cliService = 'appserver';
+
+    // Run composer install if we have the file
+    if (fs.existsSync((path.join(config._root, 'composer.json')))) {
+      var composerInstall = 'cd $LANDO_MOUNT ';
+      composerInstall += '&& composer require drupal/console:~1.0 ';
+      composerInstall += '--prefer-dist --optimize-autoloader';
+      composerInstall += '&& composer install';
+
+      build.services[cliService].build.push(composerInstall);
     }
 
     // Return the things
