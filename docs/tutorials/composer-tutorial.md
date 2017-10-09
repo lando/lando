@@ -190,7 +190,7 @@ Let's add `phpcs`, `drupal/coder`, and add linting to the `scripts` key in `comp
 ```bash
 lando composer require overtrue/phplint --dev
 lando composer require squizlabs/php_codesniffer:2.7.0 --dev
-lando.dev composer require drupal/coder:8.2.9 --dev
+lando composer require drupal/coder:8.2.9 --dev
 ```
 
 Add a `.phplint.yml` configuration file to tell what code to test and what to ignore.  Put the `.phplint.yml` file in the root of your app.
