@@ -80,3 +80,18 @@ sudo ln -s /absolute/path/to/above/repo/bin/lando.js /usr/local/bin/lando.dev
 # Run lando
 lando.dev
 ```
+
+#### Toubleshooting Linux Installs from Source
+
+Because each Linux distribution handles things differently, these considerations may or may not apply to you:
+
+ - If your distro uses a `docker` group, make sure your user is a member of it:
+   
+   ```
+   sudo usermod -aG docker $USER
+   ```
+   
+   You will need to log out for this change to take effect.
+   
+ - If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
+ 
