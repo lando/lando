@@ -115,6 +115,12 @@
     *   [varnish](services/varnish.md)
 *   [Tooling](config/tooling.md)
 *   [config.yml](config/config.md)
+*   [Environment](config/env.md)
+*   [SSH Keys](config/ssh.md)
+*   [Shared Files](config/files.md)
+*   [Build Steps](config/build.md)
+*   [Scripting](config/scripting.md)
+*   [Advanced](config/advanced.md)
 
 ## Development
 
