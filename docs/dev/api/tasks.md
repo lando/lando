@@ -33,6 +33,7 @@ yargs.command(lando.tasks.parseToYargs(task));
 * [tasks](#module_tasks)
     * [.tasks](#module_tasks.tasks)
     * [.largv](#module_tasks.largv)
+    * [.parseGlobals()](#module_tasks.parseGlobals)
     * [.argv()](#module_tasks.argv)
     * [.parseToYargs(task)](#module_tasks.parseToYargs) ⇒ <code>Object</code>
     * [.add(name, task)](#module_tasks.add)
@@ -64,6 +65,19 @@ This means all the options passed in after the `--` flag.
 ```js
 // Gets all the global options that have been specified.
 var largv = lando.tasks.largv;
+```
+<a name="module_tasks.parseGlobals"></a>
+
+### tasks.parseGlobals()
+Helper function to parse global opts
+
+**Kind**: static method of [<code>tasks</code>](#module_tasks)  
+**See**: https://github.com/lando/lando/issues/351  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the tasks that have been loaded
+var largv = lando.tasks.parseGlobals();
 ```
 <a name="module_tasks.argv"></a>
 
