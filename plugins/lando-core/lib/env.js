@@ -48,6 +48,8 @@ module.exports = function(lando) {
     app.env.LANDO_WEBROOT_GROUP = 'www-data';
     app.env.LANDO_WEBROOT_UID = '33';
     app.env.LANDO_WEBROOT_GID = '33';
+    var ppk = lando.config.loadPassphraseProtectedKeys;
+    app.env.LANDO_LOAD_PP_KEYS = _.toString(ppk);
     app.env.COLUMNS = 256;
 
     // Inject values from an .env file if it exists

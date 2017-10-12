@@ -12,6 +12,7 @@ SSH_IDENTITIES=()
 # Set defaults
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
+: ${LANDO_LOAD_PP_KEYS:='false'}
 
 # Make sure we have the system wide confdir
 mkdir -p $SSH_CONF
@@ -24,12 +25,11 @@ for SSH_DIR in "${SSH_DIRS[@]}"; do
   SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -type f | xargs))
 done
 
-# Filter out non private keys or keys that are password ENCRYPTED
+# Filter out non private keys and keys that are passphrased unless LANDO_LOAD_PP_KEYS is set to true
 for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
   echo "Checking whether $SSH_CANDIDATE is a private key..."
   if grep -L "PRIVATE KEY" $SSH_CANDIDATE &> /dev/null; then
-    echo "Checking whether $SSH_CANDIDATE does not have a passphrase..."
-    if ! grep -L ENCRYPTED $SSH_CANDIDATE &> /dev/null; then
+    if ! grep -L ENCRYPTED $SSH_CANDIDATE &> /dev/null || [ "$LANDO_LOAD_PP_KEYS" == "true" ]; then
       if command -v ssh-keygen >/dev/null 2>&1; then
         echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
         if ssh-keygen -l -f $SSH_CANDIDATE &> /dev/null; then
