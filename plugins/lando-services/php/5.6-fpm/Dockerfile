@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y \
     imagemagick \
     xfonts-base \
     xfonts-75dpi \
-  # Install php extensions
   && pecl install imagick \
+  && pecl install memcached-2.2.0 \
   && pecl install oauth-1.2.3 \
   && pecl install redis-2.2.8 \
   && pecl install xdebug \
@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable imagick \
+  && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
   && docker-php-ext-enable xdebug \

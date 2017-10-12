@@ -15,12 +15,9 @@ COPY apache2-foreground /usr/local/bin/
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
-    wget \
-    pv \
-    unzip \
-    ssh \
-    git-core \
     bzip2 \
+    git-core \
+    imagemagick \
     libbz2-dev \
     libc-client2007e-dev \
     libjpeg-dev \
@@ -28,17 +25,23 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libmagickwand-dev \
     libmcrypt-dev \
+    libmemcached-dev \
     libpng12-dev \
     libpq-dev \
     libxml2-dev \
     mysql-client \
-    imagemagick \
+    pv \
+    ssh \
+    unzip \
+    wget \
     xfonts-base \
     xfonts-75dpi \
+    zlib1g-dev \
   # Install php extensions
   && mkdir -p /usr/local/etc/php/conf.d \
   && pecl install apc \
   && pecl install imagick-3.3.0 \
+  && pecl install memcached-2.2.0 \
   && pecl install oauth-1.2.3 \
   && pecl install redis-2.2.8 \
   && pecl install xdebug-2.2.7 \
@@ -47,6 +50,7 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apc \
   && docker-php-ext-enable imagick \
+  && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
   && docker-php-ext-enable xdebug \
