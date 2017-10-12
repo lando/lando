@@ -7,6 +7,7 @@ USER=${DB_USER:-${MYSQL_USER:-root}}
 PASSWORD=${DB_PASSWORD:-${MYSQL_PASSWORD:-}}
 DATABASE=${DB_NAME:-${MYSQL_DATABASE:-database}}
 PORT=${DB_PORT:-3306}
+WIPE=true
 
 # PARSE THE ARGZZ
 # TODO: compress the mostly duplicate code below?
@@ -57,6 +58,10 @@ while (( "$#" )); do
         shift 2
       fi
       ;;
+    --no-wipe)
+        WIPE=false
+        shift
+      ;;
     --)
       shift
       break
@@ -85,6 +90,32 @@ fi
 
 # Inform the user of things
 echo "Preparing to import $FILE into $DATABASE on $HOST:$PORT as $USER..."
+
+# Wipe the database
+if [ "$WIPE" == "true" ]; then
+
+  # Build the SQL prefix
+  SQLSTART="mysql -h $HOST -P $PORT -u $USER"
+
+  # Get the pdub in there if needed
+  if [ ! -z "$PASSWORD" ]; then
+     SQLSTART="$SQLSTART -p$PASSWORD $DATABASE"
+  else
+    SQLSTART="$SQLSTART $DATABASE"
+  fi
+
+  # Gather and destroy tables
+  TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
+  echo "Destroying all current tables in $DATABASE... "
+  echo "NOTE: See the --no-wipe flag to avoid this step!"
+
+  # PURGE IT ALL! BURN IT TO THE GROUND!!!
+  for t in $TABLES; do
+    echo "Dropping $t table from $DATABASE database..."
+    $SQLSTART -e "DROP TABLE $t"
+  done
+
+fi
 
 # Check to see if we have any unzipping options or GUI needs
 if command -v gunzip >/dev/null 2>&1 && gunzip -t $FILE >/dev/null 2>&1; then
