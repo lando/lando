@@ -67,6 +67,7 @@
 *   [File Syncing Stalled](issues/file-sync.md)
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
+*   [Running behind a proxy](issues/proxy.md)
 
 ## Troubleshooting and Support
 
