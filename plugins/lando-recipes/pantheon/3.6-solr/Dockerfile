@@ -8,7 +8,7 @@ FROM debian:jessie
 ENV SOLR_VERSION 3.6.2
 
 # Build out solr on tomcat7
-RUN apt-get update && apt-get -y install \
+RUN apt-get update && apt-get install -y && apt-get -y install \
     curl \
     incron \
     tomcat7 \

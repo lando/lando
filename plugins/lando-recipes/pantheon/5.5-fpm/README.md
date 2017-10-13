@@ -4,11 +4,11 @@ Lando Pantheon appserver
 A container that approximates the appserver used on Pantheon.
 
 ```
-# Pantheon php 5.5 fpm appserver for Lando
+# Pantheon php 5.6 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:5.5-fpm .
+# docker build -t devwithlando/pantheon-appserver:5.6-fpm .
 
-FROM devwithlando/php:5.5-fpm
+FROM devwithlando/php:5.6-fpm
 
 # Version information
 ENV BACKDRUSH_VERSION 0.0.5
@@ -17,7 +17,9 @@ ENV PHANTOMJS_VERSION 2.1.1
 ENV TERMINUS_VERSION 1.6.0
 
 # Install the additional things that make the pantheon
-RUN apt-get update \
+RUN apt-get update && apt-get install -y \
+    openjdk-7-jre-headless \
+    openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
@@ -44,6 +46,13 @@ RUN apt-get update \
   && mv phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
   && rm -rf phantomjs-${PHANTOMJS_VERSION}-linux-x86_64 && rm -f phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 \
   && chmod +x /srv/bin/phantomjs \
+  && curl -fsSL "http://www-us.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz" | tar -xz -C /tmp \
+  && cd /tmp && curl -OL "http://archive.apache.org/dist/tika/apache-tika-1.1-src.zip" \
+  && unzip /tmp/apache-tika-1.1-src.zip \
+  && rm /tmp/apache-tika-1.1-src.zip \
+  && cd /tmp/apache-tika-1.1 && /tmp/apache-maven-3.5.0/bin/mvn install \
+  && cp -rf /tmp/apache-tika-1.1/tika-app/target/tika-app-1.1.jar /srv/bin/tika-app-1.1.jar \
+  && apt-get -y remove openjdk-7-jdk \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
