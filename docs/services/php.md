@@ -7,7 +7,7 @@ You can also use the [Hip Hop Virtual Machine](http://hhvm.com/) by specifyin `h
 
 You can easily add `php` or `hhvm` to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
-Supported versions
+Supported Versions
 ------------------
 
 *   [7.1](https://hub.docker.com/r/devwithlando/php)
@@ -19,6 +19,76 @@ Supported versions
 *   [hhvm](https://hub.docker.com/r/baptistedonaux/hhvm)
 *   [latest](https://hub.docker.com/r/devwithlando/php)
 *   custom
+
+Installed Extensions
+--------------------
+
+* apc (in php 5.3 and 5.4)
+* bcmath
+* bz2
+* calendar
+* Core
+* ctype
+* curl
+* date
+* dom
+* fileinfo
+* filter
+* ftp
+* gd
+* hash
+* iconv
+* imagick
+* imap
+* json
+* ldap
+* libxml
+* mbstring
+* mcrypt
+* memcached
+* mysqli
+* mysqlnd
+* OAuth
+* openssl
+* pcre
+* PDO
+* pdo_mysql
+* pdo_pgsql
+* pdo_sqlite
+* Phar
+* posix
+* readline
+* redis
+* Reflection
+* session
+* SimpleXML
+* soap
+* SPL
+* sqlite3
+* standard
+* tokenizer
+* xdebug
+* xml
+* xmlreader
+* xmlwriter
+* Zend OPcache (in php 5.5+)
+* zip
+* zlib
+
+Installing Your Own Extensions
+------------------------------
+
+You can install your own extensions using the [`extras`](./../config/services.md#build-extras) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
+
+```bash
+services:
+  appserver:
+    extras:
+      - "apt-get update"
+      - "apt-get install libmemcached-dev -y"
+      - "pecl install memcached"
+      - "docker-php-ext-enable memcached"
+```
 
 LAMP Example
 ------------

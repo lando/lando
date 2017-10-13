@@ -1,5 +1,5 @@
 DNS Rebinding Protection
-------------------------
+========================
 
 If you are using [Lando proxying](./../config/proxy.md) (which is enabled by default) some Routers and Firewalls may prevent Lando from properly routing `yourapp.lndo.site` to your local environment through [DNS Rebinding](https://en.wikipedia.org/wiki/DNS_rebinding) protection. DD-WRT router firmware enables this protection by default.
 

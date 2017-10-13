@@ -221,6 +221,9 @@ module.exports = function(lando) {
           description: 'The database port',
           default: 3306,
           alias: ['P']
+        },
+        'no-wipe': {
+          description: 'Do not destroy the existing database before an import'
         }
       }
     };

@@ -14,40 +14,28 @@ FROM devwithlando/php:7.0-fpm
 ENV BACKDRUSH_VERSION 0.0.5
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.5.0
+ENV TERMINUS_VERSION 1.6.0
 
 # Install the additional things that make the pantheon
 RUN apt-get update \
-
-  # Get WP CLI
+  && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
   && mv wp-cli.phar /usr/local/bin/wp \
-
-  # Get Drush
   && wget http://files.drush.org/drush.phar \
   && php drush.phar core-status \
   && chmod +x drush.phar \
   && mv drush.phar /usr/local/bin/drush \
-
-  # Get Terminus
   && mkdir -p /var/www/.composer \
   && cd /var/www/.composer \
   && curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
   && php installer.phar install --install-version=$TERMINUS_VERSION \
-
-  # Get Drupal console
   && curl https://drupalconsole.com/installer -L -o drupal.phar \
   && chmod +x drupal.phar \
   && mv drupal.phar /usr/local/bin/drupal \
-
-  # Get Backdrush extensions
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
   && curl -fsSL "https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz" | tar -xz --strip-components=1 -C /var/www/.backdrush \
-
-  # Get Pantheon External libraies
-  # see: https://pantheon.io/docs/external-libraries/
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
   && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
   && mkdir -p /srv/bin && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \

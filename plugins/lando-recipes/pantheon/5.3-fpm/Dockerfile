@@ -10,19 +10,13 @@ ENV PHANTOMJS_VERSION 2.1.1
 
 # Install the additional things that make the pantheon
 RUN apt-get update \
-
-  # Get WP CLI
+  && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
   && mv wp-cli.phar /usr/local/bin/wp \
-
-  # Get Drush
   && mkdir -p /var/www/.composer \
   && cd /var/www/.composer \
   && composer require drush/drush:7.* \
-
-  # Get Pantheon External libraies
-  # see: https://pantheon.io/docs/external-libraries/
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
   && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
   && mkdir -p /srv/bin && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \

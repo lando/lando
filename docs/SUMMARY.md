@@ -67,6 +67,7 @@
 *   [File Syncing Stalled](issues/file-sync.md)
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
+*   [Running behind a proxy](issues/proxy.md)
 
 ## Troubleshooting and Support
 
@@ -114,6 +115,12 @@
     *   [varnish](services/varnish.md)
 *   [Tooling](config/tooling.md)
 *   [config.yml](config/config.md)
+*   [Environment](config/env.md)
+*   [SSH Keys](config/ssh.md)
+*   [Shared Files](config/files.md)
+*   [Build Steps](config/build.md)
+*   [Scripting](config/scripting.md)
+*   [Advanced](config/advanced.md)
 
 ## Development
 
