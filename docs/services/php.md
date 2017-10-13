@@ -32,6 +32,7 @@ Installed Extensions
 * curl
 * date
 * dom
+* exif
 * fileinfo
 * filter
 * ftp
