@@ -36,6 +36,7 @@
 *   [Setting up Additional Events](config/events.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
+*   [Accessing Lando from Other Devices](tutorials/access-by-other-devices.md)
 *   [Importing Databases](tutorials/db-import.md)
 *   [Exporting Databases](tutorials/db-export.md)
 *   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
