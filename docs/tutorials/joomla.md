@@ -142,10 +142,14 @@ You can get more in-depth information about the services this recipe provides by
 Next Steps
 ----------
 
-*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional tooling](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional routes](./../config/proxy.md)
-*   [Adding additional events](./../config/events.md)
-*   [Setting up front end tooling](./../tutorials/frontend.md)
-*   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
-*   [Importing databases](./../tutorials/db-import.md)
+*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
+*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
+*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
+*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
+*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
+*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)

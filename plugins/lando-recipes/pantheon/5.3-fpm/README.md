@@ -15,7 +15,7 @@ ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
 
 # Install the additional things that make the pantheon
-RUN apt-get update \
+RUN apt-get update && apt-get install -y \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \

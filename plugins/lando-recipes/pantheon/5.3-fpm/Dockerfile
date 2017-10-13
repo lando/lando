@@ -9,7 +9,9 @@ ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
 
 # Install the additional things that make the pantheon
-RUN apt-get update \
+RUN apt-get update && apt-get install -y \
+    openjdk-7-jre-headless \
+    openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
@@ -25,6 +27,7 @@ RUN apt-get update \
   && mv phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
   && rm -rf phantomjs-${PHANTOMJS_VERSION}-linux-x86_64 && rm -f phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 \
   && chmod +x /srv/bin/phantomjs \
+  && apt-get -y remove openjdk-7-jdk \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \

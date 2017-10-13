@@ -6,13 +6,10 @@ FROM php:5.6-fpm
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
-    wget \
-    pv \
-    unzip \
-    ssh \
-    git-core \
     bzip2 \
     exiftool \
+    git-core \
+    imagemagick \
     libbz2-dev \
     libc-client2007e-dev \
     libjpeg-dev \
@@ -20,13 +17,18 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libmagickwand-dev \
     libmcrypt-dev \
+    libmemcached-dev \
     libpng12-dev \
     libpq-dev \
     libxml2-dev \
     mysql-client \
-    imagemagick \
+    pv \
+    ssh \
+    unzip \
+    wget \
     xfonts-base \
     xfonts-75dpi \
+    zlib1g-dev \
   && pecl install imagick \
   && pecl install memcached-2.2.0 \
   && pecl install oauth-1.2.3 \
