@@ -261,6 +261,9 @@ module.exports = function(lando) {
           description: 'The database port',
           default: 3306,
           alias: ['P']
+        },
+        stdout: {
+          description: 'Dump database to stdout'
         }
       }
     };
