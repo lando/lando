@@ -15,6 +15,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[apache](./../services/apache.md)
 *   ####[dotnet](./../services/dotnet.md)
 *   ####[elasticsearch](./../services/elasticsearch.md)
+*   ####[go](./../services/go.md)
 *   ####[mailhog](./../services/mailhog.md)
 *   ####[mariadb](./../services/mariadb.md)
 *   ####[memcached](./../services/memcached.md)

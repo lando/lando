@@ -43,6 +43,7 @@ Or build up from a base language
 --------------------------------
 
 *   [dotnet](http://docs.devwithlando.io/services/dotnet.html)
+*   [go](http://docs.devwithlando.io/services/go.html)
 *   [node](http://docs.devwithlando.io/services/node.html)
 *   [php](http://docs.devwithlando.io/services/php.html)
 *   [python](http://docs.devwithlando.io/services/python.html)

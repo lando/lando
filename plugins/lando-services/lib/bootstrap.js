@@ -30,6 +30,7 @@ module.exports = function(lando) {
       'apache',
       'dotnet',
       'elasticsearch',
+      'go',
       'nginx',
       'node',
       'mailhog',
