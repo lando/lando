@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     ssh \
     git-core \
     bzip2 \
+    exiftool \
     libbz2-dev \
     libc-client2007e-dev \
     libjpeg-dev \
@@ -43,6 +44,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     bz2 \
     calendar \
+    exif \
     gd \
     imap \
     ldap \
