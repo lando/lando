@@ -409,17 +409,45 @@ Lando attempts to closely mimic the Pantheon environment. Please review the foll
 *   [Pantheon Index and Solr](https://pantheon.io/docs/solr/)
 *   [Pantheon Caching and Redis](https://pantheon.io/docs/redis/)
 
+You can get more in-depth information about the services this recipe provides by running `lando info`.
+
 What works on Pantheon **should** also work on Lando.
 
-You can get more in-depth information about the services this recipe provides by running `lando info`.
+External Libraries
+------------------
+
+Lando also supports the same [external libraries](https://pantheon.io/docs/external-libraries/) as Pantheon so you can use Lando to test code that uses `phantomjs`, `wkhtmltopdf`, `tika` and more.
+
+If you'd like to utilize these libraries as outside-the-container command line tools then either add or augment the `tooling` section of your `.lando.yml` with:
+
+```yaml
+tooling:
+  node:
+    service: node
+  npm:
+    service: node
+  phantomjs:
+    service: appserver
+    cmd: /srv/bin/phantomjs
+  wkhtmltopdf:
+    service: appserver
+    cmd: /srv/bin/wkhtmltopdf
+  tika:
+    service: appserver
+    cmd: java -jar /srv/bin/tika-app-1.1.jar
+```
 
 Next Steps
 ----------
 
-*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional tooling](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional routes](./../config/proxy.md)
-*   [Adding additional events](./../config/events.md)
-*   [Setting up front end tooling](./../tutorials/frontend.md)
-*   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
-*   [Importing databases](./../tutorials/db-import.md)
+*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
+*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
+*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
+*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
+*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
+*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
