@@ -71,6 +71,7 @@
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
 *   [Running behind a proxy](issues/proxy.md)
+*   [Overlapping IPv4 Address](issues/overlapping-ip.md)
 
 ## Troubleshooting and Support
 
