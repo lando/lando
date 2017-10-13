@@ -35,21 +35,19 @@ Linux
 >
 > If your Linux distro does not support our `.deb` or `.rpm` packages you can [install from source](#from-source)
 
-#### Toubleshooting Linux Installs from Source
+### Caveats
 
 Because each Linux distribution handles things differently, these considerations may or may not apply to you:
 
- - If your distro uses a `docker` group, make sure your user is a member of it:
+* If your distro uses a `docker` group, make sure your user is a member of it:
 
-   ```
-   sudo usermod -aG docker $USER
-   ```
+  ```
+  sudo usermod -aG docker $USER
+  ```
 
-   You will need to log out for this change to take effect.
+  You will need to log out for this change to take effect.
 
- - If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
-
-
+* If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
 
 Bleeding Edge
 -------------
