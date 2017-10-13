@@ -4,7 +4,7 @@ Environment
 Default Variables
 -----------------
 
-While you can add additional environment variables on a per service basis (see [Advanced Service Configuration](./overrides.md)), or globally using a `.env` file (see [Environment File](#environment-file)) Lando will inject some common and helpful environment variables into each service.
+While you can add additional environment variables on a per service basis (see [Advanced Service Configuration](./advanced.md)), or globally using a `.env` file (see [Environment File](#environment-file)) Lando will inject some common and helpful environment variables into each service.
 
 These are also helpful in your `.lando.yml` file.
 
