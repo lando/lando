@@ -16,6 +16,7 @@ COPY apache2.conf /etc/apache2/apache2.conf
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
     bzip2 \
+    exiftool \
     git-core \
     imagemagick \
     libbz2-dev \
@@ -57,6 +58,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     bz2 \
     calendar \
+    exif \
     gd \
     imap \
     ldap \

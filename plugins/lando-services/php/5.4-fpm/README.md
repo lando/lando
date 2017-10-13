@@ -13,6 +13,7 @@ FROM php:5.4-fpm
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
     bzip2 \
+    exiftool \
     git-core \
     imagemagick \
     libbz2-dev \
@@ -53,6 +54,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     bz2 \
     calendar \
+    exif \
     gd \
     imap \
     ldap \
