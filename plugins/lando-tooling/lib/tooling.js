@@ -142,7 +142,8 @@ module.exports = function(lando) {
             mode: 'attach',
             pre: ['cd', dir.join('/')].join(' '),
             user: config.user || user,
-            services: [config.service]
+            services: [config.service],
+            hijack: config.hijack || false
           }
         };
 

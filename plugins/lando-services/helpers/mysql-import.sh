@@ -79,13 +79,34 @@ done
 
 # Set positional arguments in their proper place
 eval set -- "$FILE"
-CMD="$FILE"
 PV=""
+CMD=""
 
-# Validate we have a file
-if [ ! -f "$FILE" ]; then
-  echo "File $FILE not found!"
-  exit 1;
+# Use file or stdin
+if [ ! -z "$FILE" ]; then
+
+  # Validate we have a file
+  if [ ! -f "$FILE" ]; then
+    echo "File $FILE not found!"
+    exit 1;
+  fi
+
+  CMD="$FILE"
+
+else
+
+  # Build connection string
+  CMD="mysql -h $HOST -P $PORT -u $USER"
+  if [ ! -z "$PASSWORD" ]; then
+     CMD="$CMD -p$PASSWORD $DATABASE"
+  else
+    CMD="$CMD $DATABASE"
+  fi
+
+  # Read stdin into DB
+  $CMD #>/dev/null
+  exit 0;
+
 fi
 
 # Inform the user of things

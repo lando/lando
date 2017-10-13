@@ -34,6 +34,10 @@ lando db-import dump.zip --host db2 --database dataz
 
 # Import without destroying the target database
 lando db-import dump.zip --no-wipe
+
+# Pipe stdout into db-import
+# NOTE: this is a bit finicky right now
+cat dump.sql | lando db-import
 ```
 
 ### Options

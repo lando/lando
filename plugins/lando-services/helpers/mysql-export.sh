@@ -113,7 +113,7 @@ else
     else
       # Gzip the mysql database dump file
       gzip $FILE
-      echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created:"
+      echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
   fi
 
 fi
