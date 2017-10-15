@@ -24,7 +24,8 @@ proxyDomain: dev
 Again, allow your creativity to flourish and use whatever TLD makes you smile.
 7. Power Lando down with `lando poweroff`
 8. Start up your favorite Lando app to test it out with `lando start` from within your app's root directory. You should see something like:
-```
+
+```bash
 BOOMSHAKALAKA!!!
 
 Your app has started up correctly.
