@@ -136,12 +136,14 @@ if [ "$DATABASE" != "none" ]; then
     # Use drush if we can (this is always faster for some reason)
     if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
 
-      # Cleaning things up for a more efficient pull
-      echo "Clearing remote cache to shrink db size"
-      if [ "$FRAMEWORK" == "drupal8" ]; then
-        drush @pantheon.$SITE.$DATABASE cr all --strict=0
-      else
-        drush @pantheon.$SITE.$DATABASE cc all --strict=0
+      # If we aint pulling the live DB then lets clear caches to minimize the DL time
+      if [ "$DATABASE" != "live" ]; then
+        echo "Clearing remote cache to shrink db size"
+        if [ "$FRAMEWORK" == "drupal8" ]; then
+          drush @pantheon.$SITE.$DATABASE cr all --strict=0
+        else
+          drush @pantheon.$SITE.$DATABASE cc all --strict=0
+        fi
       fi
 
       # Build the DB command

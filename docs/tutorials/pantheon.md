@@ -97,6 +97,8 @@ Once you've started up your Pantheon site you will need to pull in your database
 
 Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
 
+On a database pull Lando will attempt to clear the cache of the remote environment (unless it is the live environment) to minimize the size of the import.
+
 Please consult the manual import documentation below if this command produces an error.
 
 #### Usage
