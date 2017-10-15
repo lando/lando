@@ -34,10 +34,11 @@ Here are some vitals:
  NAME      bestappever
  LOCATION  /Users/McFly/timemachines/bestappever
  SERVICES  appserver, nginx, database, cache, node
- URLS      https://localhost:32770
-           http://localhost:32771
-           http://bestappever.dev
-           https://bestappever.dev
+
+ APPSERVER URLS https://localhost:32791
+                http://localhost:32792
+                http://bestappever.dev
+                https://bestappever.dev
 ```
 9. Load it up in the browser and confirm everything is happy and working.
 
