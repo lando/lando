@@ -39,7 +39,7 @@ module.exports = function(lando) {
     // Define stable and dev versions
     var version = {
       dev: '1.x-0.x',
-      stable: '0.0.5'
+      stable: '0.0.6'
     };
 
     // Get the base URL
