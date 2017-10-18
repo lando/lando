@@ -53,6 +53,9 @@ Once you've completed the above you should be able to start your Drupal 8 site.
 # Start up app
 lando start
 
+# List information about this app.
+lando info
+
 # Optionally run composer install if needed
 lando composer install
 ```
