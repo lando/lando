@@ -575,6 +575,12 @@ module.exports = function(lando) {
     // Set the default php version based on framework
     config.php = phpVersion(config.framework);
 
+    // Mixin anything from pantheon.upstream.yml if it exists
+    config = _.merge(
+      config,
+      pyaml(path.join(config._root, 'pantheon.upstream.yml'))
+    );
+
     // Mixin anything from pantheon.yml if it exists
     config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));
 
