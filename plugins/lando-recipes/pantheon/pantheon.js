@@ -336,7 +336,7 @@ module.exports = function(lando) {
             choices: function() {
               getEnvs(this.async(), ['test', 'live']);
             },
-            default: config.env || 'dev',
+            default: 'none',
             weight: 601
           }
         },
@@ -350,7 +350,7 @@ module.exports = function(lando) {
             choices: function() {
               getEnvs(this.async(), ['test', 'live']);
             },
-            default: config.env || 'dev',
+            default: 'none',
             weight: 602
           }
         }

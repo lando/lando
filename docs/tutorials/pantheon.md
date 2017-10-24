@@ -172,7 +172,7 @@ You can alternatively download the backup and manually extract it to the correct
 Pushing Your Changes
 --------------------
 
-While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally. **If you do not specify `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
+While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally. **By default we set `--database` or `--files` to `none` since this is the suggested best practice**.
 
 ### Usage
 
@@ -182,12 +182,12 @@ While a best practices workflow suggests you put all your changes in code and pu
 lando push
 
 # Push the latest code, database and files with a description of the change
-lando push -m "Updated the widget to do awesome feature x"
+lando push -m "Updated the widget to do awesome thing x"
 
-# Push only the database
+# Push only the database and code
 lando push --files=none
 
-# Pull only the files
+# Pull only the files and code
 lando push --database=none
 ```
 
