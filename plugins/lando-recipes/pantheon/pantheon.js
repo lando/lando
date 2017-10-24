@@ -491,18 +491,18 @@ module.exports = function(lando) {
   };
 
   /*
-   * Mixin settings from pantheon.yml
+   * Mixin settings from pantheon.ymls
    */
-  var pyaml = function(pyaml) {
+  var mergePyaml = function(configFile) {
 
     // Collect more setting
     var config = {};
 
     // Check pantheon.yml settings if needed
-    if (fs.existsSync(pyaml)) {
+    if (fs.existsSync(configFile)) {
 
       // Get the pantheon config
-      var pconfig = lando.yaml.load(pyaml);
+      var pconfig = lando.yaml.load(configFile);
 
       // Set a php version
       config.php = _.get(pconfig, 'php_version');
@@ -575,14 +575,16 @@ module.exports = function(lando) {
     // Set the default php version based on framework
     config.php = phpVersion(config.framework);
 
-    // Mixin anything from pantheon.upstream.yml if it exists
-    config = _.merge(
-      config,
-      pyaml(path.join(config._root, 'pantheon.upstream.yml'))
-    );
+    // Define our possible pantheon.ymls
+    var pyamls = [
+      path.join(config._root, 'pantheon.upstream.yml'),
+      path.join(config._root, 'pantheon.yml')
+    ];
 
-    // Mixin anything from pantheon.yml if it exists
-    config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));
+    // Mixin pyamls if applicable
+    _.forEach(pyamls, function(pyaml) {
+      config = _.merge(config, mergePyaml(pyaml));
+    });
 
     // Normalize because 7.0 gets handled strangely by js-yaml
     if (config.php === 7) { config.php = '7.0'; }

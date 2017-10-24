@@ -303,7 +303,7 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### pantheon.yml
 
-If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would on Pantheon itself.
+If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would on Pantheon itself. Note that Lando will support both `pantheon.upstream.yml` and `pantheon.yml`.
 
 {% codesnippet "./../examples/pantheon/pantheon.yml" %}{% endcodesnippet %}
 
