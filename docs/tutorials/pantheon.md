@@ -86,7 +86,7 @@ If your Pantheon site has a `composer.json` Lando will attempt to run `composer 
 lando start
 ```
 
-If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file so you can visit your site like it exits on Pantheon.
+If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file so you can visit your site like it exists on Pantheon.
 
 Importing Your Database and Files
 ---------------------------------
