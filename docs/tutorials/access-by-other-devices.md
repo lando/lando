@@ -23,10 +23,10 @@ Open a command prompt and enter the command `ipconfig /all` and look for the "IP
 
 Open System Preferences, Network, and then choose the network adapter you are using to connect to the Internet (Ethernet or Wireless).  The local IP address will then be displayed.
 
-Next, get the port of your lando app.  You can do this by running `lando info` from a command prompt and looking for the URL to your site, which should look something like this: `http://localhost:33333`.  In this case, `33333` is the port number.
-
-You can now visit your lando app from other devices by going to `IP address: Port number`.  (Example: `http://192.168.0.123:33333`)
-
 **Linux**
 
 Open a command prompt and enter the command `hostname -I | cut -d' ' -f1`.
+
+Next, get the port of your lando app.  You can do this by running `lando info` from a command prompt and looking for the URL to your site, which should look something like this: `http://localhost:33333`.  In this case, `33333` is the port number.
+
+You can now visit your lando app from other devices by going to `IP address: Port number`.  (Example: `http://192.168.0.123:33333`)
