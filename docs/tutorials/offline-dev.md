@@ -16,14 +16,44 @@ To enable offline custom TLD goodness, we'll use DNSMasq to route traffic to our
 address=/dev/127.0.0.1
 ```
 Sub in your favorite TLD for 'dev' here if you want to use something more flashy.
-5. Restart DNSMasq: `brew services restart dnsmasq`
+5. Restart DNSMasq: `sudo brew services restart dnsmasq`  ( make sure you use `sudo` as other users are not able to change the mappings ).
 6. Open your `~/.lando/config.yml` file and add the following line:
 ```yaml
 proxyDomain: dev
 ```
 Again, allow your creativity to flourish and use whatever TLD makes you smile.
-7. Power Lando down with `lando poweroff`
-8. Start up your favorite Lando app to test it out with `lando start` from within your app's root directory. You should see something like:
+
+7. Notify macOS that you are using a local DNS server by adding it to your Network configuration.
+
+Assuming you are on a Wifi Network you would run the following :
+
+```bash
+networksetup -setdnsservers Wi-Fi 127.0.0.1 192.168.0.1
+```
+
+Replace 192.168.0.1 with your router IP.
+
+8. Make sure your local DNS server is working.
+
+```bash
+dig test.dev @127.0.0.1
+```
+
+The output of the above should contain something like the following :
+
+```bash
+;; ANSWER SECTION:
+test.dev.		0	IN	A	127.0.0.1
+```
+
+Further make sure your are able to ping it as well.
+
+```bash
+ping test.dev
+```
+
+9. Power Lando down with `lando poweroff`
+10. Start up your favorite Lando app to test it out with `lando start` from within your app's root directory. You should see something like:
 
 ```bash
 BOOMSHAKALAKA!!!
@@ -40,6 +70,6 @@ Here are some vitals:
                 http://bestappever.dev
                 https://bestappever.dev
 ```
-9. Load it up in the browser and confirm everything is happy and working.
+11. Load it up in the browser and confirm everything is happy and working.
 
 Enjoy your signature top level domain while you hack away in complete wifi-less splendor.
