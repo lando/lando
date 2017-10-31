@@ -26,7 +26,7 @@ Windows
 Linux
 -----
 
-[1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script.**(17.06.1-ce or higher)**
+1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script.**(17.06.1-ce or higher)**
 2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
 3.  Double-click on the package to launch Software Center
 4.  Click the "Install" button and enter your password when prompted
