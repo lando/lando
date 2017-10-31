@@ -3,11 +3,9 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
 
-Lando is for developers who want to easily specify and quickly spin up the services and tools needed to develop their projects.
+Lando is for developers who want to quickly specify and painlessly spin up the services and tools needed to develop their projects.
 
-Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
-
-In that way it can be thought of as a development dependency management tool.
+It's a free, open source, cross-platform, local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them. Think of it as your local development's dependency management tool. It can even be installed right beside an old Kalabox installation with no interference, or used as a complete upgrade-replacement.
 
 With Lando you can...
 
@@ -186,30 +184,6 @@ tooling:
     service: appserver
     cmd: ps
 ```
-
-Roadmap
--------
-
-Lando is seeking to eventually merge into and then replace the [Kalabox](http://kalabox.io) project. This means that eventually Lando will have all the great features you've come to love in the Kalabox project. That said the primary high level goals for this transition are to
-
-*   Provide a more reliable and robust underlying product
-*   Replace [MAMP](http://mamp.info) and other local dev stacks
-*   Reduce the complexity of building out complicated apps a la [Pantheon](http://pantheon.io)
-*   Implement a simple per-app configuration file that can be stored in version control
-*   Provide mechanisms for packaging in development tools and build steps along with services
-
-There are various features that need to be implemented to achieve the above.
-
-1.  ~~Transition the core framework~~
-2.  ~~Provide a services layer on top of docker compose~~
-3.  ~~Provide a build and tooling layer~~
-4.  ~~Provide additional core services and tools~~
-5.  ~~Provide a recipes layer on top of services~~
-6.  ~~Provide handling of upstream git remotes (lando init command)~~
-7.  ~~Provide an events layer~~
-8.  ~~Replicate Pantheon environment~~
-9.  ~~Integrate with Pantheon~~
-10. Build GUI
 
 Other Resources
 ---------------
