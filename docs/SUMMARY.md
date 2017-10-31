@@ -67,6 +67,7 @@
 ## Known Issues
 
 *   [DNS Rebinding Protection](issues/dns-rebind.md)
+*   [Drupal File Uploads](issues/drupal-win-upload.md)
 *   [File Syncing Stalled](issues/file-sync.md)
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
