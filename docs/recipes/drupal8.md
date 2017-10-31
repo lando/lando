@@ -25,17 +25,6 @@ Example .lando.yml
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/drupal8).
 
-Troubleshooting Upload Issues
------------------------------
-
-When uploading files in Lando, you may see an error like the following:
-
-```
-The upload directory private://TESTDIR for the file field field_TESTFIELD could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.
-```
-
-This error is caused by a bug in Drupal core. To perform file uploads in Lando, [apply the latest version of this patch](https://www.drupal.org/node/944582).
-
 Advanced Configuration
 ----------------------
 
