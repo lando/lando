@@ -49,6 +49,9 @@ Once you've completed the above you should be able to start your WordPress site.
 # Start up app
 lando start
 
+# List information about this app.
+lando info
+
 # Optionally run composer install if needed
 lando composer install
 ```
@@ -73,6 +76,8 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 
 # Import the database
 # NOTE: db-import can handle uncompressed, gzipped or zipped files
+# Due to restrictions in how Docker handles file sharing your database 
+# dump MUST exist somewhere inside of your app directory. 
 lando db-import database.sql.gz
 ```
 
