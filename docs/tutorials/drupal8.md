@@ -176,6 +176,22 @@ Create or edit `/sites/default/drushrc.php` and add these lines:
 $options['uri'] = "http://mysite.lndo.site";
 ```
 
+### Aliases
+
+You can also use drush aliases with command like `lando drush @sitealias cr all` by adding the following to to your .lando.yml file: 
+
+```
+services:
+  appserver:
+    build:
+      - "mkdir -p ~/.drush/site-aliases"
+      - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
+ ```
+ 
+Make sure the alias file exists within the drush folder in your app. For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522).
+ 
+Please refer the [ssh section](./../cli/ssh.html)if you need to set-up keys that require a passphrase.
+
 Advanced Service Usage
 ----------------------
 
