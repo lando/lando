@@ -20,6 +20,14 @@ config:
   # Optionally activate xdebug
   xdebug: true
 
+  # By default the operations `lando start`, `lando restart`, and
+  # `lando rebuild` run `composer install` on the app.
+  #
+  # The `composerSwitch` key allows users to disable this behavior and run
+  # `composer install` when and if you choose by setting a value of false.
+  #
+  # composerSwitch: false
+
   # Optionally specify the site id, name and environment for your Pantheon site
   #
   # This is helpful for running terminus commands or performing similar operations
