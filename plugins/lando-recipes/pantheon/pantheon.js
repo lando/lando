@@ -662,8 +662,14 @@ module.exports = function(lando) {
 
     }
 
-    // Run composer install if we have the file
-    if (fs.existsSync((path.join(config._root, 'composer.json')))) {
+    // Check if the user specified the compserSwitch key to false
+    var composerSwitch = config.composerSwitch;
+
+    // Run composer install if we have the file and they did not compserSwitch
+    if (
+      fs.existsSync((path.join(config._root, 'composer.json'))) &&
+      composerSwitch !== false
+    ) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
       build.services[cliService].build.push(composerInstall);
     }
