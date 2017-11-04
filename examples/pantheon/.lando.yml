@@ -23,7 +23,7 @@ config:
   # By default the operations `lando start`, `lando restart`, and
   # `lando rebuild` run `composer install` on the app.
   #
-  # The `compserSwitch` key allows users to disable this behavior and run
+  # The `composerSwitch` key allows users to disable this behavior and run
   # `composer install` when and if you choose by setting a value of false.
   #
   # composerSwitch: false
