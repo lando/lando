@@ -160,7 +160,7 @@ Next Steps
 *   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
 *   [Adding additional events](http://docs.devwithlando.io/config/events.html)
 *   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/access-by-other-devices.html)
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
 *   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
