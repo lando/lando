@@ -79,15 +79,23 @@ You can learn more about the `db-import` command [over here](./db-import.md)
 Tooling
 -------
 
-Each Lando Joomla recipe will also ship with helpful dev utilities. This means you can use things like `drush`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
+Each Lando Joomla recipe will also ship with helpful dev utilities. This means you can use things like `joomla`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
 ```bash
-lando composer                 Run composer commands
-lando db-import <file>         Import <file> into database. File is relative to approot.
-lando db-export                Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
-lando drush                    Run drush commands
-lando mysql                    Drop into a MySQL shell
-lando php                      Run php commands
+composer                 Run composer commands
+config                   Display the lando configuration
+db-export [file]         Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
+db-import [file]         Import into database.
+destroy [appname]        Destroy app in current directory or [appname]
+info [appname]           Prints info about app in current directory or [appname]
+init [method]            Initialize a lando app, optional methods: github, pantheon
+joomla                   Run joomla commands
+list                     List all lando apps
+logs [appname]           Get logs for app in current directory or [appname]
+mysql                    Drop into a MySQL shell
+php                      Run php commands
+poweroff                 Spin down all lando related containers
+rebuild [appname]        Rebuilds app in current directory or [appname]
 ```
 
 ```bash
@@ -114,7 +122,7 @@ Configuration
 
 ### Recipe
 
-You can also manually configure the `.lando.yml` file to switch `php` or `drush` versions, toggle between `apache` and `nginx`, activate `xdebug`, choose a database type and version, set a custom webroot locaton and use your own configuration files.
+You can also manually configure the `.lando.yml` file to switch `php` or `joomla` versions, toggle between `apache` and `nginx`, activate `xdebug`, choose a database type and version, set a custom webroot locaton and use your own configuration files.
 
 {% codesnippet "./../examples/joomla/.lando.yml" %}{% endcodesnippet %}
 
