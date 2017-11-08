@@ -51,3 +51,17 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASS=s1mpl3
 ```
+Per User Global ENV VARS
+------------------------
+
+If you need vars injected into the containers of all your lando apps you can
+drop a `.global_env` file into your `~/.lando/` directory.  In the case that
+there is a collision in variable names in `~/.lando/.global_env` and `.env` the
+app local `.env` file wins, i.e. the local `.env` file can ovrerride the
+`~/.lando/.global_env` file.
+
+The syntax for the `~/.lando/.global_env` file is the same:
+
+```yaml
+DRUSH_ALIAS_SSH_USER=memow
+```
