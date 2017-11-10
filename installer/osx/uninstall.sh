@@ -22,9 +22,6 @@ uninstall-lando() {
   echo "Removing Application..."
   sudo rm -rf /usr/local/bin/lando
 
-  echo "Removing config directory"
-  rm -rf "$HOME/.lando"
-
   echo "Lando Removed!"
 
 }
