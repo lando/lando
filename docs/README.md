@@ -65,6 +65,14 @@ And then mix in additional auxiliary services
 *   [solr](http://docs.devwithlando.io/services/solr.html)
 *   [varnish](http://docs.devwithlando.io/services/varnish.html)
 
+And then get some pro workflow dialed
+-------------------------------------
+
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
 And then try out some advanced stuff
 ------------------------------------
 
@@ -76,9 +84,6 @@ And then try out some advanced stuff
 *   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
-*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
-*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
-*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
 
 And then dive deep into reference materials
 -------------------------------------------

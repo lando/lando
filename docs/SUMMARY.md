@@ -29,6 +29,13 @@
 *   [WordPress](tutorials/wordpress.md)
 *   [Custom](tutorials/custom.md)
 
+## Workflow Docs
+
+*   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
+*   [Lando and CI](tutorials/lando-and-ci.md)
+*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
 ## Advanced Usage
 
 *   [Setting up Additional Services](tutorials/setup-additional-services.md)
@@ -40,9 +47,6 @@
 *   [Accessing Lando from Other Devices](tutorials/access-by-other-devices.md)
 *   [Importing Databases](tutorials/db-import.md)
 *   [Exporting Databases](tutorials/db-export.md)
-*   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
-*   [Lando and CI](tutorials/lando-and-ci.md)
-*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
 *   [Offline Development](tutorials/offline-dev.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
