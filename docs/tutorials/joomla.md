@@ -82,20 +82,20 @@ Tooling
 Each Lando Joomla recipe will also ship with helpful dev utilities. This means you can use things like `joomla`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
 ```bash
-composer                 Run composer commands
-config                   Display the lando configuration
-db-export [file]         Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
-db-import [file]         Import into database.
-destroy [appname]        Destroy app in current directory or [appname]
-info [appname]           Prints info about app in current directory or [appname]
-init [method]            Initialize a lando app, optional methods: github, pantheon
-joomla                   Run joomla commands
-list                     List all lando apps
-logs [appname]           Get logs for app in current directory or [appname]
-mysql                    Drop into a MySQL shell
-php                      Run php commands
-poweroff                 Spin down all lando related containers
-rebuild [appname]        Rebuilds app in current directory or [appname]
+lando composer                 Run composer commands
+lando config                   Display the lando configuration
+lando db-export [file]         Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz
+lando db-import [file]         Import into database.
+lando destroy [appname]        Destroy app in current directory or [appname]
+lando info [appname]           Prints info about app in current directory or [appname]
+lando init [method]            Initialize a lando app, optional methods: github, pantheon
+lando joomla                   Run joomla commands
+lando list                     List all lando apps
+lando logs [appname]           Get logs for app in current directory or [appname]
+lando mysql                    Drop into a MySQL shell
+lando php                      Run php commands
+lando poweroff                 Spin down all lando related containers
+lando rebuild [appname]        Rebuilds app in current directory or [appname]
 ```
 
 ```bash
