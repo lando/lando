@@ -51,17 +51,15 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASS=s1mpl3
 ```
-Per User Global ENV VARS
-------------------------
 
-If you need vars injected into the containers of all your lando apps you can
-drop a `.global_env` file into your `~/.lando/` directory.  In the case that
-there is a collision in variable names in `~/.lando/.global_env` and `.env` the
-app local `.env` file wins, i.e. the local `.env` file can ovrerride the
-`~/.lando/.global_env` file.
+Global Environment Variables
+-----------------------------
 
-The syntax for the `~/.lando/.global_env` file is the same:
+If you want to inject the same environment variables into every container in every app then you need to define the `containerGlobalEnv` in your [`config.yml`](./config.md). We do not recommend using this setting because it is not something you can set in your repository and needs to be set on a user basis.
+
+Here is an example `config.yml` for Global ENV injection.
 
 ```yaml
-DRUSH_ALIAS_SSH_USER=memow
+containerGlobalEnv:
+  nicklewis: THEBLOG
 ```
