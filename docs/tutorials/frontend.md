@@ -20,8 +20,8 @@ recipe: lamp
 services:
   node:
     type: node:6.10
-  build:
-    - "cd $LANDO_MOUNT && npm install"
+    build:
+      - "cd $LANDO_MOUNT && npm install"
 ```
 
 Note the `build` section. This bash command will automatically run when we start our app, installing any Node packages specified in our package.json file.
@@ -36,9 +36,9 @@ While we're now able to install Node packages for our project, we still need to 
 services:
   node:
     type: node:6.10
-  build:
-    - "cd $LANDO_MOUNT && npm install"
-    - "cd $LANDO_MOUNT && gulp"
+    build:
+      - "cd $LANDO_MOUNT && npm install"
+      - "cd $LANDO_MOUNT && gulp"
 globals:
   gulp-cli: "latest"
 ```
