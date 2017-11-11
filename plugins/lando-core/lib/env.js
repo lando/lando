@@ -26,7 +26,8 @@ module.exports = function(lando) {
     app.processEnv = {};
 
     // Add a env object, these are envvars that get added to every container
-    app.env = {};
+    // Mix in containerGlobalEnv
+    app.env = _.merge(lando.config.containerGlobalEnv, {});
 
     // Add a label object, these are labels that get added to every container
     app.labels = {};

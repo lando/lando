@@ -51,3 +51,15 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASS=s1mpl3
 ```
+
+Global Environment Variables
+-----------------------------
+
+If you want to inject the same environment variables into every container in every app then you need to define the `containerGlobalEnv` in your [`config.yml`](./config.md). We do not recommend using this setting because it is not something you can set in your repository and needs to be set on a user basis.
+
+Here is an example `config.yml` for Global ENV injection.
+
+```yaml
+containerGlobalEnv:
+  nicklewis: THEBLOG
+```
