@@ -26,7 +26,8 @@ module.exports = function(lando) {
     app.processEnv = {};
 
     // Add a env object, these are envvars that get added to every container
-    app.env = {};
+    // Mix in containerGlobalEnv
+    app.env = _.merge(lando.config.containerGlobalEnv, {});
 
     // Add a label object, these are labels that get added to every container
     app.labels = {};
@@ -51,37 +52,6 @@ module.exports = function(lando) {
     var ppk = lando.config.loadPassphraseProtectedKeys;
     app.env.LANDO_LOAD_PP_KEYS = _.toString(ppk);
     app.env.COLUMNS = 256;
-
-    // Inject values from an .global_env file if it exists
-    // Look for a .global_env file and inject its vars into the service as well
-    // Keep this before .env parsing so the app has a chance to override
-    if (fs.existsSync(path.join(lando.config.userConfRoot, '.global_env'))) {
-
-      // Load .global_env file
-      const envConfig = dotenv.parse(
-        fs.readFileSync(lando.config.userConfRoot + '/.global_env')
-      );
-
-      // Merge in values to app.env
-      if (!_.isEmpty(envConfig)) {
-        app.env = _.merge(app.env, envConfig);
-      }
-
-      // Log
-      lando.log.debug(
-        '.global_env file found for %s, loading its config',
-        app.name
-      );
-
-      // warn if needed
-      if (envConfig.error) {
-        lando.log.warn(
-          'Trouble parsing .global_env file with %s',
-          envConfig.error
-        );
-      }
-
-    }
 
     // Inject values from an .env file if it exists
     // Look for a .env file and inject its vars into the service as well
