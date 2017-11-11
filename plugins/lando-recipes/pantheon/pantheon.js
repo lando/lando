@@ -493,10 +493,7 @@ module.exports = function(lando) {
   /*
    * Mixin settings from pantheon.ymls
    */
-  var mergePyaml = function(configFile) {
-
-    // Collect more setting
-    var config = {};
+  var mergePyaml = function(configFile, config) {
 
     // Check pantheon.yml settings if needed
     if (fs.existsSync(configFile)) {
@@ -505,8 +502,18 @@ module.exports = function(lando) {
       var pconfig = lando.yaml.load(configFile);
 
       // Set a php version
-      config.php = _.get(pconfig, 'php_version');
-      config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
+      /* jshint ignore:start */
+      // jscs:disable
+      if (pconfig.php_version) {
+        config.php = pconfig.php_version;
+      }
+      // jscs:enable
+      /* jshint ignore:end */
+
+      // Set up a webroot
+      if (_.isEmpty(config.webroot)) {
+        config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
+      }
 
     }
 
@@ -583,7 +590,7 @@ module.exports = function(lando) {
 
     // Mixin pyamls if applicable
     _.forEach(pyamls, function(pyaml) {
-      config = _.merge(config, mergePyaml(pyaml));
+      config = _.merge(config, mergePyaml(pyaml, config));
     });
 
     // Normalize because 7.0 gets handled strangely by js-yaml
