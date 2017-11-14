@@ -161,29 +161,6 @@ lando push --database=none
 --files, -f     The environment to push the files to or [none]
 ```
 
-Working With Multidev
----------------------
-
-Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
-
-### Usage
-
-```bash
-# Switch to the env called "feature-1"
-lando switch feature-1
-
-# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
-# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
-lando switch feature-1 --no-db --no-files
-```
-
-### Options
-
-```bash
-  --no-db     Do not switch the database              [boolean] [default: false]
-  --no-files  Do not switch the files                 [boolean] [default: false]
-```
-
 Tooling
 -------
 
@@ -228,6 +205,36 @@ lando drush dl webform
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands.
+
+Terminus
+--------
+
+1. basic usage
+2. installing plugins
+3. caveats the `--` flag
+
+Working With Multidev
+---------------------
+
+Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
+
+### Usage
+
+```bash
+# Switch to the env called "feature-1"
+lando switch feature-1
+
+# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
+# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
+lando switch feature-1 --no-db --no-files
+```
+
+### Options
+
+```bash
+  --no-db     Do not switch the database              [boolean] [default: false]
+  --no-files  Do not switch the files                 [boolean] [default: false]
+```
 
 Drush URL Setup
 ---------------
