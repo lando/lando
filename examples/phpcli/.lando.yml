@@ -13,15 +13,6 @@ services:
     # Set to run in CLI mode
     via: cli
 
-    # Optionally activate xdebug
-    # xdebug: true
-
-    # Optionally customize the configuration for php
-    # This path is relative to the app root directory
-    # config:
-      # Use a custom php.ini
-      # conf: config/php/php.ini
-
     # Optionally install the following composer dependencies globally
     # These follow the normal composer.json form
     # Note that many composer dependencies should not be installed globally but
@@ -33,6 +24,25 @@ services:
     # Runs composer install but dont fail on an error
     # build:
     #  - "cd $LANDO_MOUNT && composer install || true"
+
+    # Optionally activate xdebug
+    #
+    # If you are having trouble getting xdebug to work please see:
+    # https://docs.devwithlando.io/services/php.html#using-xdebug
+    xdebug: true
+
+    # Optionally mix in your own config files
+    #
+    # If ommitted this will use "sane defaults" for your recipe type
+    # conf:
+
+      # For more information on setting these files check out the documentation
+      # and examples
+      #
+      # Docs: https://docs.devwithlando.io/services/php.html
+      # Examples: https://github.com/lando/lando/tree/master/examples
+      #
+      # php: config/php.ini
 
 # Add some nice command routing
 tooling:

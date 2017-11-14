@@ -49,17 +49,32 @@ config:
   database: mariadb
 
   # Optionally activate xdebug
+  #
+  # If you are having trouble getting xdebug to work please see:
+  # https://docs.devwithlando.io/services/php.html#using-xdebug
   xdebug: true
 
   # Optionally mix in your own config files
   #
-  # If ommitted this will use the default WordPress config files for the respective
-  # services.
-  #
-  # Definitely consult the relevant documentaion for each service to make sure
-  # you are specifying the correct value for the config.
-  #
+  # If ommitted this will use "sane defaults" for your recipe type
   conf:
+
+    # For more information on setting these files check out the documentation
+    # and examples
+    #
+    # Docs: https://docs.devwithlando.io/services/php.html
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
     server: wordpress2.conf
-    # database: config/mysql
     # php: config/php.ini
+
+    # For more information on setting these files check out the documentation
+    # and examples for the relevant services:
+    #
+    # MySQL: https://docs.devwithlando.io/services/mysql.html
+    # MariaDB: https://docs.devwithlando.io/services/mariadb.html
+    # PostGres: https://docs.devwithlando.io/services/postgres.html
+    #
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
+    # database: config/mysql

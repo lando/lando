@@ -132,3 +132,17 @@ The first part of a pathmap will be the location of your code in the container. 
 > #### Info::Problems starting XDEBUG
 >
 > If you are visting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_START_SESSION=LANDO` to your request and seeing if that does the trick.
+
+### Troubleshooting
+
+If you have set `xdebug: true` in your recipe or service config and run `lando restart` but are still having issues getting `xdebug` to work correctly we recommend that you remove `xdebug: true`, run `lando restart` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something like below.
+
+```yaml
+xdebug.max_nesting_level = 256
+xdebug.show_exception_trace = 0
+xdebug.collect_params = 0
+xdebug.remote_enable = 1
+xdebug.remote_host = YOUR HOST IP ADDRESS
+```
+
+You can use `lando info --deep | grep IPAddress` to help discover the correct host ip address but please note that this can change and will likely differ from dev to dev.
