@@ -209,9 +209,40 @@ You can also run `lando` from inside your app directory for a complete list of c
 Terminus
 --------
 
-1. basic usage
-2. installing plugins
-3. caveats the `--` flag
+You should be able to use `terminus` commands in the exact same way by prefixing them with `lando` eg `lando terminus auth:whoami`. There is a caveat to that behavior however. Both `lando` and `terminus` utilize the `--` flag to separate options that need to be delegated to subcommands. Consider the following example:
+
+```bash
+# Pass -- options to drush
+terminus remote:drush edosensei.dev -- cim -y
+
+# Pass -- options to lando
+lando terminus remote:drush mysite.dev -- cim -y
+```
+
+As a workaround to the above we recommend that you invoke `drush` directly
+
+```bash
+# Config import using drush
+lando drush @PANTHEON.ALIAS cim -y
+```
+
+### Terminus Plugins
+
+By default Lando will only install `terminus` proper. But you can add [Terminus Plugins](https://pantheon.io/docs/terminus/plugins/directory/) to your `.lando.yml` file. You will want to consult the relevant install instructions for each plugin but here is an example `.lando.yml` that installs the [Terminus Build Tools](https://github.com/pantheon-systems/terminus-build-tools-plugin) plugin.
+
+```yml
+name: sitename
+recipe: pantheon
+config:
+  framework: drupal8
+  site: sitename
+  id: someid
+services:
+  appserver:
+    build:
+      - mkdir -p ~/.terminus/plugins
+      - composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1
+```
 
 Working With Multidev
 ---------------------
