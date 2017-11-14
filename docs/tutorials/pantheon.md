@@ -213,7 +213,7 @@ You should be able to use `terminus` commands in the exact same way by prefixing
 
 ```bash
 # Pass -- options to drush
-terminus remote:drush edosensei.dev -- cim -y
+terminus remote:drush mysite.dev -- cim -y
 
 # Pass -- options to lando
 lando terminus remote:drush mysite.dev -- cim -y
