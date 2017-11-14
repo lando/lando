@@ -39,8 +39,8 @@ services:
     build:
       - "cd $LANDO_MOUNT && npm install"
       - "cd $LANDO_MOUNT && gulp"
-globals:
-  gulp-cli: "latest"
+    globals:
+      gulp-cli: "latest"
 ```
 
 You can do the same thing for any NPM project; for example Grunt would be `grunt-cli: "latest"`. This is the equivalent to installing a package with `npm -g project-name`.
