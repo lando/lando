@@ -8,7 +8,7 @@ FROM devwithlando/php:5.6-fpm
 ENV BACKDRUSH_VERSION 0.0.5
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.6.0
+ENV TERMINUS_VERSION 1.6.1
 
 # Install the additional things that make the pantheon
 RUN apt-get update && apt-get install -y \

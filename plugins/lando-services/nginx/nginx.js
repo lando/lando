@@ -52,6 +52,7 @@ module.exports = function(lando) {
     var configFiles = {
       http: '/etc/nginx/nginx.conf',
       server: '/etc/nginx/conf.d/default.template',
+      params: '/etc/nginx/fastcgi_params',
       webroot: config._mount
     };
 
@@ -68,9 +69,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         LANDO_WEBROOT: configFiles.webroot
       },
-      volumes: [
-
-      ],
+      volumes: [],
       command: [
         '/bin/sh -c',
         '"envsubst \'$$LANDO_WEBROOT\'',
@@ -80,10 +79,20 @@ module.exports = function(lando) {
       ].join(' ')
     };
 
+    // Set the default http conf file
+    var httpConf = ['nginx', 'nginx.conf'];
+    var httpVol = buildVolume(httpConf, configFiles.http, defaultConfDir);
+    nginx.volumes = addConfig(httpVol, nginx.volumes);
+
     // Set the default server conf file
     var serverConf = ['nginx', 'default.conf'];
-    var confVol = buildVolume(serverConf, configFiles.server, defaultConfDir);
-    nginx.volumes = addConfig(confVol, nginx.volumes);
+    var serverVol = buildVolume(serverConf, configFiles.server, defaultConfDir);
+    nginx.volumes = addConfig(serverVol, nginx.volumes);
+
+    // Set the default params conf file
+    var paramConf = ['nginx', 'fastcgi_params'];
+    var paramVol = buildVolume(paramConf, configFiles.params, defaultConfDir);
+    nginx.volumes = addConfig(paramVol, nginx.volumes);
 
     // Handle ssl option
     if (config.ssl) {

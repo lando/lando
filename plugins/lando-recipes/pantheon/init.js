@@ -270,7 +270,6 @@ module.exports = function(lando) {
       // Augment the config
       config.config = {};
       config.config.framework = _.get(site[0], 'framework', 'drupal');
-      config.config.env = 'dev';
       config.config.site = _.get(site[0], 'name', config.name);
       config.config.id = _.get(site[0], 'id', 'lando');
 

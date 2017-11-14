@@ -8,6 +8,3 @@ set -e -u
 if [ "$1" = "purge" ] ; then
   rm -rf /usr/share/lando
 fi
-
-# Remove config directory
-rm -rf "$HOME/.lando"
