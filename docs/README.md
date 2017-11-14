@@ -16,12 +16,13 @@ With Lando you can...
 *   Easily customize or extend tooling, deployment options and basically any other functionality.
 *   Free yourself from the tyranny of inferior local development products.
 
-Begin by checking out the
--------------------------
+Begin by checking out
+---------------------
 
-*   [Installation Guide](http://docs.devwithlando.io/installation/installing.html)
+*   [How to install Lando](http://docs.devwithlando.io/installation/installing.html)
+*   [Lando basics](http://docs.devwithlando.io/started.html)
 
-Then spin up one of our preconfigured recipe start states
+Then try out one of our preconfigured recipe start states
 ---------------------------------------------------------
 
 *   [Backdrop](http://docs.devwithlando.io/tutorials/backdrop.html)
