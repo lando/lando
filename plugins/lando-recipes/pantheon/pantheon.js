@@ -494,7 +494,10 @@ module.exports = function(lando) {
   /*
    * Mixin settings from pantheon.ymls
    */
-  var mergePyaml = function(configFile, config) {
+  var mergePyaml = function(configFile) {
+
+    // Start with a config collector
+    var config = {};
 
     // Check pantheon.yml settings if needed
     if (fs.existsSync(configFile)) {
@@ -503,16 +506,12 @@ module.exports = function(lando) {
       var pconfig = lando.yaml.load(configFile);
 
       // Set a php version
-      /* jshint ignore:start */
-      // jscs:disable
-      if (pconfig.php_version) {
-        config.php = pconfig.php_version;
+      if (_.has(pconfig, 'php_version')) {
+        config.php = _.get(pconfig, 'php_version');
       }
-      // jscs:enable
-      /* jshint ignore:end */
 
       // Set up a webroot
-      if (_.isEmpty(config.webroot)) {
+      if (_.has(pconfig, 'web_docroot')) {
         config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
       }
 
