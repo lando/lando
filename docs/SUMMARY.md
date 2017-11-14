@@ -1,6 +1,7 @@
-## Overview
+## Basics
 
-*   [README](README.md)
+*   [Overview](README.md)
+*   [Getting Started](started.md)
 
 ## Installation
 
@@ -10,7 +11,7 @@
 *   [Updating](installation/updating.md)
 *   [Uninstalling](installation/uninstalling.md)
 
-## Get Started With...
+## Recipes
 
 *   [Backdrop](tutorials/backdrop.md)
 *   [Dotnet](services/dotnet.md)

@@ -7,69 +7,31 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
 
  <!-- toc -->
 
-Getting Started
----------------
+ Getting Started
+ ---------------
 
-Before you can use all the awesome Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
+ Before you get started with this recipe we assume that you have:
 
-### Option 1. Start a codebase that already has a `.lando.yml`
+ 1. [Installed Lando](./../installation/system-requirements.md)
+ 2. [Read up on how to get a `.lando.yml`](./../started.md)
 
-```bash
-# Clone pantheon codebase from git
-# See: https://pantheon.io/docs/git/
-git clone ssh://codeserver.dev.PANTHEONID@codeserver.dev.PANTHEONIDdrush.in:2222/~/repository.git mysite
+ If after reading #2 above you are still unclear how to get started then try this
 
-# Go into the cloned site
-cd mysite
+ ```bash
+ # Go into a local folder with your site or app codebase
+ # You can get this via git clone or from an archive
+ cd /path/to/my/codebase
 
-# Start the site
-lando start
+ # Initialize a basic .lando.yml file for my recipe with sane defaults
+ lando init
 
-# Authorize with pantheon
-# NOTE: if you dont do this step you wont be able to do `lando pull/push/switch`
-# NOTE: you need to put in the actual machine-token here, not the email
-lando terminus auth:login --machine-token=MYSPECIALTOKEN
-```
+ # Commit the .lando.yml to your git repo (Optional but recommended)
+ git add -A
+ git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+ git push
+ ```
 
-### Option 2. Init a codebase that doesn't yet have a `.lando.yml`
-
-```bash
-# Clone a codebase from some git repo
-git clone /path/to/git/repo mysite
-
-# Go into the cloned site
-cd mysite
-
-# Initialize a .lando.yml for this site
-# NOTE: You will need to choose the pantheon site that makes sense
-lando init --recipe pantheon
-```
-
-### Option 3. Get your site from Pantheon
-
-```bash
-# Create a folder to clone your site to
-mkdir mysite && cd mysite
-
-# Initialize a Pantheon .lando.yml after getting code from Pantheon
-# This require a Pantheon Machine Token
-# See: https://docs.devwithlando.io/cli/init.html#pantheon
-lando init pantheon
-```
-
-### Option 4. Get your site from GitHub
-
-```bash
-# Create a folder to clone your site to
-mkdir mysite && cd mysite
-
-# Initialize a Pantheon .lando.yml after getting code from GitHub
-# This require a GitHub Personal Access Token
-# See: https://docs.devwithlando.io/cli/init.html#github
-lando init github --recipe pantheon
-```
-
-Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
+ For more info on how `lando init` works check out [this](./../cli/init.md).
 
 Starting Your Site
 ------------------
@@ -439,8 +401,17 @@ tooling:
     cmd: java -jar /srv/bin/tika-app-1.1.jar
 ```
 
-Next Steps
-----------
+Read More
+---------
+
+### Workflow Docs
+
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
+### Advanced Usage
 
 *   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
 *   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
@@ -450,6 +421,3 @@ Next Steps
 *   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
-*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
-*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
-*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
