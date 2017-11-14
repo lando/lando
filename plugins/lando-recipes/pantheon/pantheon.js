@@ -175,6 +175,7 @@ module.exports = function(lando) {
       NONCE_KEY: getHash(config._root + config.framework),
 
       // Terminus
+      // @todo: i am pretty sure these dont do anything yet
       TERMINUS_SITE: _.get(config, 'site', config._app),
       TERMINUS_ENV: _.get(config, 'env', 'dev')
       //TERMINUS_ORG: ''
@@ -663,13 +664,12 @@ module.exports = function(lando) {
     }
 
     // Check if the user specified the compserSwitch key to false
-    var composerSwitch = config.composerSwitch;
+    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
+    var composerJson = path.join(config._root, 'composer.json');
+    var runComposer = fs.existsSync(composerJson) && !disableComposer;
 
-    // Run composer install if we have the file and they did not compserSwitch
-    if (
-      fs.existsSync((path.join(config._root, 'composer.json'))) &&
-      composerSwitch !== false
-    ) {
+    // Run composer install if we have the file and it isnt explicitly disabled in config
+    if (runComposer) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
       build.services[cliService].build.push(composerInstall);
     }
