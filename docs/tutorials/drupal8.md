@@ -14,8 +14,8 @@ Before you can use all the awesome Lando magic you need a Drupal 8 codebase with
 
 ```bash
 # Clone or extract your Drupal 8 site
-# See: https://github.com/drupal/drupal/tree/8.x
-git clone -b 8.5.x https://github.com/drupal/drupal.git mysite
+# See: https://github.com/drupal/drupal
+git clone https://github.com/drupal/drupal.git mysite
 
 # Or install with composer
 # When you lando init below you need to use `web` as your webroot
