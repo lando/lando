@@ -3,7 +3,7 @@ php
 
 [PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md)
 
-You can also use the [Hip Hop Virtual Machine](http://hhvm.com/) by specifyin `hhvm` as the version. This will currently run `hvvm:3.20`. In the future we will support more version of `hhvm`. Note that if you specify `hhvm` it will for usage of `nginx`.
+You can also use the [Hip Hop Virtual Machine](http://hhvm.com/) by specifyin `hhvm` as the version. This will currently run `hvvm:3.20`. In the future we will support more version of `hhvm`. Note that if you specify `hhvm` it will force usage of `nginx`.
 
 You can easily add `php` or `hhvm` to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
