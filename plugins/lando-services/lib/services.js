@@ -71,7 +71,7 @@ module.exports = function(lando) {
       var f = _.get(error, 'path');
 
       // If we dont have the dataz we need to actually error
-      if (code !== 'EPERM' || syscall !== 'unlink' || !!fs.ensureDirSync(f)) {
+      if (code !== 'EISDIR' || syscall !== 'open' || !!fs.ensureDirSync(f)) {
         lando.log.error(error);
         process.exit(542);
       }
