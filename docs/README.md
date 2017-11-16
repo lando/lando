@@ -90,7 +90,7 @@ And then dive deep into reference materials
 -------------------------------------------
 
 *   [Configuration](http://docs.devwithlando.io/config/lando.html)
-*   [Recipes](http://docs.devwithlando.io/config/services.html)
+*   [Recipes](http://docs.devwithlando.io/config/recipes.html)
 *   [Services](http://docs.devwithlando.io/config/services.html)
 *   [Tooling](http://docs.devwithlando.io/config/tooling.html)
 *   [CLI](http://docs.devwithlando.io/cli/usage.html)
