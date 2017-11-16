@@ -11,13 +11,14 @@ INDEX_PEM="$CERT_DIR/index.pem"
 echo "Pantheon pre-run scripting"
 
 # Set up some new dirs
-mkdir -p /var/www/tmp
 mkdir -p /var/www/certs
 
 # Emulate /srv/bindings
 if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
   mkdir -p /srv/bindings
   ln -s /var/www "/srv/bindings/lando" || true
+  # Set the tmp directory
+  ln -sf /tmp /srv/bindings/lando/tmp
 fi
 
 # Wait until our solr crt is ready and then whitelist it
@@ -51,6 +52,3 @@ cp -rf $INDEX_PEM /var/www/certs/binding.pem
 # else
 #   $(terminus site connection-info --field=sftp_command):certs/binding.pem /certs/binding.pem
 # fi
-
-# Set some perms
-chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/tmp
