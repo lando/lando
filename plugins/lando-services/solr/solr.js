@@ -24,6 +24,9 @@ module.exports = function(lando) {
     '6.3',
     '6.4',
     '6.5',
+    '6.6',
+    '7.0',
+    '7.1',
     'latest',
     'custom'
   ];
