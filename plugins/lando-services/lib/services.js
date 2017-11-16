@@ -57,6 +57,9 @@ module.exports = function(lando) {
     var newDir = path.join(ucr, 'services', 'config', service);
     fs.mkdirpSync(newDir);
 
+    // Log
+    lando.log.verbose('Copying %s config from %s to %s', service, dir, newDir);
+
     // Try to copy the assets over
     try {
       fs.copySync(dir, newDir, copyOpts);
@@ -76,6 +79,10 @@ module.exports = function(lando) {
         process.exit(542);
       }
 
+      // Log
+      lando.log.warn('Detected a bad situation moving %s config...', service);
+      lando.log.warn('Trying to fix it');
+
       // Try to take corrective action
       fs.removeSync(f);
 
@@ -83,9 +90,6 @@ module.exports = function(lando) {
       fs.copySync(dir, newDir, copyOpts);
 
     }
-
-    // Log
-    lando.log.verbose('Copying %s config from %s to %s', service, dir, newDir);
 
     // Return the new scripts directory
     return newDir;
