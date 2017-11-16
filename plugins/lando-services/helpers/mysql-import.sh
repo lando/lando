@@ -8,6 +8,9 @@ PASSWORD=${DB_PASSWORD:-${MYSQL_PASSWORD:-}}
 DATABASE=${DB_NAME:-${MYSQL_DATABASE:-database}}
 PORT=${DB_PORT:-3306}
 WIPE=true
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 # TODO: compress the mostly duplicate code below?
@@ -171,5 +174,19 @@ fi
 
 # Import
 echo "Importing $FILE..."
-eval "$CMD"
-echo "Import completed with status code $?"
+if command eval "$CMD"; then
+  STATUS=$?
+else
+  STATUS=1
+fi
+
+# Finish up!
+if [ $STATUS -eq 0 ]; then
+  echo ""
+  printf "${GREEN}Import complete!${DEFAULT_COLOR}"
+  echo ""
+else
+  echo ""
+  printf "${RED}Import failed.${DEFAULT_COLOR}"
+  echo ""
+fi
