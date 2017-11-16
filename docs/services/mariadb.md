@@ -1,7 +1,7 @@
 MariaDB
 =======
 
-[MariaDB](https://mariadb.org/) is a very common database server which is *EXTREMELY* similar to MySQL and has a guarantee of being open source. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+[MariaDB](https://mariadb.org/) is a very common database server which is *EXTREMELY* similar to MySQL but has a guarantee of being open source. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 Supported versions
 ------------------
@@ -13,6 +13,12 @@ Supported versions
 *   [5.5](https://hub.docker.com/r/_/mariadb/)
 *   [latest](https://hub.docker.com/r/_/mariadb/)
 *   custom
+
+> #### Warning::Be Careful Switching Database Type or Version
+>
+> You should be careful switching database types or versions as the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!**
+>
+> You can read more about this [here](./../issues/switching-dbs.md)
 
 Example
 -------
