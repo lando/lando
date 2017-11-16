@@ -1,0 +1,58 @@
+# Go server example
+name: go
+
+# Give me http://go.lndo.site and https://go.lndo.site
+proxy:
+  appserver:
+    - go.lndo.site
+
+# Spin up services to run a basic go server
+services:
+
+  # Create a go instance
+  appserver:
+
+    # go version 1.8
+    type: go:1.8
+
+    # Optionally create certs in /certs that can be used by your application
+    # to listen over https. Creates the following certs your app can use
+    #
+    #   - /certs/cert.key
+    #   - /certs/cert.crt
+    #   - /certs/cert.pem
+    #
+    # ssl: true
+
+    # Optionally specify a command to run when you start your go service up.
+    #
+    # If you are using go as a server you are going to want to define this.
+    # This can be either a string or array.
+    #
+    # If you are just spinning up a go container to run cli things
+    # you can leave this blank and the container will boot up and stay on
+    #
+    command: go run /app/http1.go
+
+    # Install some extra server packages
+    # extras:
+    #  - "apt-get update -y"
+    #  - "apt-get install vim -y"
+
+    # Print a message just to demonstrate this
+    # build:
+    # - "cd $LANDO_MOUNT & echo 'Holla!'"
+
+# Add some nice command routing
+tooling:
+
+  # Any go service with a defined command (aka not running in cli only mode)
+  # Will also spin up a go cli container called `SERVICENAME_cli` (appserver_cli)
+  # in this example.
+  #
+  # This will allow you to run things like `lando npm install` without needing
+  # to `lando start` first. This is particularly needed for go based projects
+  # since you almost always need to run `npm install` before you can boot up your
+  # app successfully.
+  go:
+    service: appserver_cli

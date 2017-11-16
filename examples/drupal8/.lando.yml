@@ -51,13 +51,13 @@ config:
   #
   drush: stable
 
-  # Optionally specify whether you want a global install of drupal console.
+  # Optionally specify whether you want to disable the global install of drupal console.
   #
   # You should also consider a site-local install of drupal console via composer
   #
   # See: https://hechoendrupal.gitbooks.io/drupal-console/content/en/getting/composer.html
   #
-  drupal: true
+  # drupal: false
 
   # Optionally specify the database type, this can be one of:
   #
@@ -74,18 +74,32 @@ config:
   # database: mariadb:10.1
 
   # Optionally activate xdebug
+  #
+  # If you are having trouble getting xdebug to work please see:
+  # https://docs.devwithlando.io/services/php.html#using-xdebug
   xdebug: true
 
   # Optionally mix in your own config files
   #
-  # If ommitted this will use the default Drupal 8 config files for the respective
-  # services.
-  #
-  # Definitely consult the relevant documentaion for each service to make sure
-  # you are specifying the correct value for the config. As an example `mysql`
-  # will want a directory while `postgres` will want a specific config file.
-  #
+  # If ommitted this will use "sane defaults" for your recipe type
   # conf:
+
+    # For more information on setting these files check out the documentation
+    # and examples
+    #
+    # Docs: https://docs.devwithlando.io/services/php.html
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
     # server: config/drupal8.conf
-    # database: config/mysql
     # php: config/php.ini
+
+    # For more information on setting these files check out the documentation
+    # and examples for the relevant services:
+    #
+    # MySQL: https://docs.devwithlando.io/services/mysql.html
+    # MariaDB: https://docs.devwithlando.io/services/mariadb.html
+    # PostGres: https://docs.devwithlando.io/services/postgres.html
+    #
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
+    # database: config/mysql

@@ -59,7 +59,7 @@ module.exports = function(lando) {
         ],
         image: 'devwithlando/php:' + [version, 'apache'].join('-'),
         serverConf: '/etc/apache2/sites-enabled/000-default.conf',
-        phpConf: '/usr/local/etc/php/php.ini'
+        phpConf: '/usr/local/etc/php/conf.d/zzz-lando-custom.ini'
       },
       cli: {
         web: 'cli',
@@ -67,7 +67,7 @@ module.exports = function(lando) {
         command: ['tail -f /dev/null'],
         image: 'devwithlando/php:' + [version, 'apache'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.template',
-        phpConf: '/usr/local/etc/php/php.ini'
+        phpConf: '/usr/local/etc/php/conf.d/zzz-lando-custom.ini'
       },
       nginx: {
         web: 'nginx',
@@ -75,7 +75,7 @@ module.exports = function(lando) {
         command: ['php-fpm'],
         image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
         serverConf: '/etc/nginx/conf.d/default.template',
-        phpConf: '/usr/local/etc/php/php.ini'
+        phpConf: '/usr/local/etc/php/conf.d/zzz-lando-custom.ini'
       }
     };
 
@@ -86,7 +86,7 @@ module.exports = function(lando) {
 
     // Switch apache php.ini if on 5.3
     if (via === 'apache' && version === '5.3') {
-      typeConfig.apache.phpConf = '/usr/local/lib/php.ini';
+      typeConfig.apache.phpConf = '/usr/local/lib/conf.d/zzz-lando-custom.ini';
     }
 
     // If hhvm is the "version" then refactor the typeconf
@@ -141,7 +141,7 @@ module.exports = function(lando) {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
         PATH: path.join(':'),
-        LANDO_WEBROOT: webroot,
+        LANDO_WEBROOT: webroot
       },
       ports: ['80'],
       volumes: [

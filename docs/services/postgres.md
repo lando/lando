@@ -6,14 +6,20 @@ PostgreSQL
 Supported versions
 ------------------
 
-*   10-beta3(https://hub.docker.com/r/_/postgres/)
-*   9.6(https://hub.docker.com/r/_/postgres/)
-*   9.5(https://hub.docker.com/r/_/postgres/)
-*   9.4(https://hub.docker.com/r/_/postgres/)
-*   9.3(https://hub.docker.com/r/_/postgres/)
-*   9.2(https://hub.docker.com/r/_/postgres/)
-*   latest(https://hub.docker.com/r/_/postgres/)
+*   [10-beta3](https://hub.docker.com/r/_/postgres/)
+*   [9.6](https://hub.docker.com/r/_/postgres/)
+*   [9.5](https://hub.docker.com/r/_/postgres/)
+*   [9.4](https://hub.docker.com/r/_/postgres/)
+*   [9.3](https://hub.docker.com/r/_/postgres/)
+*   [9.2](https://hub.docker.com/r/_/postgres/)
+*   [latest](https://hub.docker.com/r/_/postgres/)
 *   custom
+
+> #### Warning::Be Careful Switching Database Type or Version
+>
+> You should be careful switching database types or versions as the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!**
+>
+> You can read more about this [here](./../issues/switching-dbs.md)
 
 Example
 -------

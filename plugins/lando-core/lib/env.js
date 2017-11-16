@@ -26,7 +26,8 @@ module.exports = function(lando) {
     app.processEnv = {};
 
     // Add a env object, these are envvars that get added to every container
-    app.env = {};
+    // Mix in containerGlobalEnv
+    app.env = _.merge(lando.config.containerGlobalEnv, {});
 
     // Add a label object, these are labels that get added to every container
     app.labels = {};
@@ -48,6 +49,8 @@ module.exports = function(lando) {
     app.env.LANDO_WEBROOT_GROUP = 'www-data';
     app.env.LANDO_WEBROOT_UID = '33';
     app.env.LANDO_WEBROOT_GID = '33';
+    var ppk = lando.config.loadPassphraseProtectedKeys;
+    app.env.LANDO_LOAD_PP_KEYS = _.toString(ppk);
     app.env.COLUMNS = 256;
 
     // Inject values from an .env file if it exists

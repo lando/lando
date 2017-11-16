@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var fs = lando.node.fs;
+  var os = require('os');
   var path = require('path');
 
   // Fixed location of our util service compose file
@@ -120,10 +121,13 @@ module.exports = function(lando) {
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
     fs.mkdirpSync(path.join(keysDir));
 
+    // Construct a helpful and box-specific comment
+    var comment = 'lando@' + os.hostname();
+
     // Key cmd
     return [
       'ssh-keygen',
-      '-t rsa -N "" -C "lando" -f "/user/.lando/keys/' + key + '"'
+      '-t rsa -N "" -C "' + comment + '" -f "/user/.lando/keys/' + key + '"'
     ].join(' ');
   };
 

@@ -175,6 +175,7 @@ module.exports = function(lando) {
       NONCE_KEY: getHash(config._root + config.framework),
 
       // Terminus
+      // @todo: i am pretty sure these dont do anything yet
       TERMINUS_SITE: _.get(config, 'site', config._app),
       TERMINUS_ENV: _.get(config, 'env', 'dev')
       //TERMINUS_ORG: ''
@@ -336,7 +337,7 @@ module.exports = function(lando) {
             choices: function() {
               getEnvs(this.async(), ['test', 'live']);
             },
-            default: config.env || 'dev',
+            default: 'none',
             weight: 601
           }
         },
@@ -350,7 +351,7 @@ module.exports = function(lando) {
             choices: function() {
               getEnvs(this.async(), ['test', 'live']);
             },
-            default: config.env || 'dev',
+            default: 'none',
             weight: 602
           }
         }
@@ -491,22 +492,28 @@ module.exports = function(lando) {
   };
 
   /*
-   * Mixin settings from pantheon.yml
+   * Mixin settings from pantheon.ymls
    */
-  var pyaml = function(pyaml) {
+  var mergePyaml = function(configFile) {
 
-    // Collect more setting
+    // Start with a config collector
     var config = {};
 
     // Check pantheon.yml settings if needed
-    if (fs.existsSync(pyaml)) {
+    if (fs.existsSync(configFile)) {
 
       // Get the pantheon config
-      var pconfig = lando.yaml.load(pyaml);
+      var pconfig = lando.yaml.load(configFile);
 
       // Set a php version
-      config.php = _.get(pconfig, 'php_version');
-      config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
+      if (_.has(pconfig, 'php_version')) {
+        config.php = _.get(pconfig, 'php_version');
+      }
+
+      // Set up a webroot
+      if (_.has(pconfig, 'web_docroot')) {
+        config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
+      }
 
     }
 
@@ -575,8 +582,16 @@ module.exports = function(lando) {
     // Set the default php version based on framework
     config.php = phpVersion(config.framework);
 
-    // Mixin anything from pantheon.yml if it exists
-    config = _.merge(config, pyaml(path.join(config._root, 'pantheon.yml')));
+    // Define our possible pantheon.ymls
+    var pyamls = [
+      path.join(config._root, 'pantheon.upstream.yml'),
+      path.join(config._root, 'pantheon.yml')
+    ];
+
+    // Mixin pyamls if applicable
+    _.forEach(pyamls, function(pyaml) {
+      config = _.merge(config, mergePyaml(pyaml, config));
+    });
 
     // Normalize because 7.0 gets handled strangely by js-yaml
     if (config.php === 7) { config.php = '7.0'; }
@@ -654,8 +669,13 @@ module.exports = function(lando) {
 
     }
 
-    // Run composer install if we have the file
-    if (fs.existsSync((path.join(config._root, 'composer.json')))) {
+    // Check if the user specified the compserSwitch key to false
+    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
+    var composerJson = path.join(config._root, 'composer.json');
+    var runComposer = fs.existsSync(composerJson) && !disableComposer;
+
+    // Run composer install if we have the file and it isnt explicitly disabled in config
+    if (runComposer) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
       build.services[cliService].build.push(composerInstall);
     }

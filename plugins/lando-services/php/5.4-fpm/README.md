@@ -12,12 +12,10 @@ FROM php:5.4-fpm
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
-    wget \
-    pv \
-    unzip \
-    ssh \
-    git-core \
     bzip2 \
+    exiftool \
+    git-core \
+    imagemagick \
     libbz2-dev \
     libc-client2007e-dev \
     libjpeg-dev \
@@ -25,16 +23,21 @@ RUN apt-get update && apt-get install -y \
     libldap2-dev \
     libmagickwand-dev \
     libmcrypt-dev \
+    libmemcached-dev \
     libpng12-dev \
     libpq-dev \
     libxml2-dev \
     mysql-client \
-    imagemagick \
+    pv \
+    ssh \
+    unzip \
+    wget \
     xfonts-base \
     xfonts-75dpi \
-  # Install php extensions
+    zlib1g-dev \
   && pecl install apc \
   && pecl install imagick-3.3.0 \
+  && pecl install memcached-2.2.0 \
   && pecl install oauth-1.2.3 \
   && pecl install redis-2.2.8 \
   && pecl install xdebug-2.2.7 \
@@ -43,6 +46,7 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apc \
   && docker-php-ext-enable imagick \
+  && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
   && docker-php-ext-enable xdebug \
@@ -50,6 +54,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     bz2 \
     calendar \
+    exif \
     gd \
     imap \
     ldap \
@@ -62,9 +67,8 @@ RUN apt-get update && apt-get install -y \
     pdo_pgsql \
     soap \
     zip \
-  # Install composer
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+  && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
   && php -r "unlink('composer-setup.php');" \
   && apt-get -y clean \

@@ -39,7 +39,7 @@ module.exports = function(lando) {
     // Define stable and dev versions
     var version = {
       dev: '1.x-0.x',
-      stable: '0.0.5'
+      stable: '0.0.6'
     };
 
     // Get the base URL
@@ -94,8 +94,30 @@ module.exports = function(lando) {
     env.BACKDROP_SETTINGS = backdropSettings(config);
     _.set(build, envKey, env);
 
+    // Determine the service to run cli things on
+    var unsupportedCli = (config.php === '5.3' || config.php === 5.3);
+    var cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
+
+    // Build an additional cli container if we are running unsupported
+    if (unsupportedCli) {
+
+      // Build out a CLI container and modify as appropriate
+      var cliImage = 'devwithlando/php:5.5-fpm';
+      build.services[cliService] = _.cloneDeep(build.services.appserver);
+      build.services[cliService].type = 'php:5.5';
+      build.services[cliService].via = 'cli';
+      build.services[cliService].overrides.services.image = cliImage;
+
+      // Remove stuff from appserver
+      delete build.services.appserver.build;
+
+      // Override some tooling things
+      build.tooling.drush.service = cliService;
+
+    }
+
     // Get appserver build
-    var buildersKey = 'services.appserver.build';
+    var buildersKey = 'services.' + cliService + '.build';
     var builders = _.get(build, buildersKey, []);
 
     // Add the backdrop install command

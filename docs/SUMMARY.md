@@ -1,6 +1,7 @@
-## Overview
+## Basics
 
-*   [README](README.md)
+*   [Overview](README.md)
+*   [Getting Started](started.md)
 
 ## Installation
 
@@ -10,13 +11,14 @@
 *   [Updating](installation/updating.md)
 *   [Uninstalling](installation/uninstalling.md)
 
-## Get Started With...
+## Recipes
 
 *   [Backdrop](tutorials/backdrop.md)
 *   [Dotnet](services/dotnet.md)
 *   [Drupal 6](tutorials/drupal6.md)
 *   [Drupal 7](tutorials/drupal7.md)
 *   [Drupal 8](tutorials/drupal8.md)
+*   [Go](services/go.md)
 *   [Joomla](tutorials/joomla.md)
 *   [Laravel](tutorials/laravel.md)
 *   [LAMP](tutorials/lamp.md)
@@ -28,6 +30,13 @@
 *   [WordPress](tutorials/wordpress.md)
 *   [Custom](tutorials/custom.md)
 
+## Workflow Docs
+
+*   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
+*   [Lando and CI](tutorials/lando-and-ci.md)
+*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
 ## Advanced Usage
 
 *   [Setting up Additional Services](tutorials/setup-additional-services.md)
@@ -36,11 +45,10 @@
 *   [Setting up Additional Events](config/events.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
+*   [Accessing Lando from Other Devices](tutorials/access-by-other-devices.md)
 *   [Importing Databases](tutorials/db-import.md)
 *   [Exporting Databases](tutorials/db-export.md)
-*   [Using Composer to Manage a Project](tutorials/composer-tutorial.md)
-*   [Lando and CI](tutorials/lando-and-ci.md)
-*   [Lando, Pantheon, CI, and Behat (BDD)](tutorials/lando-pantheon-workflow.md)
+*   [Offline Development](tutorials/offline-dev.md)
 *   [Reasons to climb a mountain](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Command Line
@@ -64,9 +72,13 @@
 ## Known Issues
 
 *   [DNS Rebinding Protection](issues/dns-rebind.md)
+*   [Drupal File Uploads](issues/drupal-win-upload.md)
 *   [File Syncing Stalled](issues/file-sync.md)
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
+*   [Running behind a proxy](issues/proxy.md)
+*   [Switching Databases](issues/switching-dbs.md)
+*   [Overlapping IPv4 Address](issues/overlapping-ip.md)
 
 ## Troubleshooting and Support
 
@@ -96,6 +108,7 @@
     *   [apache](services/apache.md)
     *   [dotnet](services/dotnet.md)
     *   [elasticsearch](services/elasticsearch.md)
+    *   [go](services/go.md)
     *   [mailhog](services/mailhog.md)
     *   [mariadb](services/mariadb.md)
     *   [memcached](services/memcached.md)
@@ -114,6 +127,12 @@
     *   [varnish](services/varnish.md)
 *   [Tooling](config/tooling.md)
 *   [config.yml](config/config.md)
+*   [Environment](config/env.md)
+*   [SSH Keys](config/ssh.md)
+*   [Shared Files](config/files.md)
+*   [Build Steps](config/build.md)
+*   [Scripting](config/scripting.md)
+*   [Advanced](config/advanced.md)
 
 ## Development
 

@@ -18,7 +18,7 @@ $bin_dir = "$bundle_dir\bin"
 $plugins_dir = "$bundle_dir\plugins"
 
 # Build dependencies
-$inno_url = "http://files.jrsoftware.org/is/5/isetup-5.5.9.exe"
+$inno_url = "http://www.jrsoftware.org/download.php/is.exe"
 $inno_dest = "$temp_dir\inno-installer.exe"
 $inno_bin = "C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
 
@@ -80,7 +80,7 @@ Copy-Item "dist\cli\lando-win32-x64-v$lando_version.exe" "$bin_dir\lando.exe" -f
 Download -Url "https://github.com/git-for-windows/git/releases/download/v$git_version.windows.1/Git-$git_version-64-bit.exe" -Destination "$base_dir\Git.exe"
 
 # Docker for Windows
-Download -Url "https://download.docker.com/win/stable/InstallDocker.msi" -Destination "$base_dir\Docker.msi"
+Download -Url "https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe" -Destination "$base_dir\Docker.exe"
 
 # Copy over some other assets
 Write-Output "Copying over static assets..."

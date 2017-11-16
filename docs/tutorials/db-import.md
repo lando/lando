@@ -3,7 +3,9 @@ Importing Databases
 
 Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default.
 
-You can also import databases into other hosts. It will currently handle uncompressed, gzipped or zipped dump files.
+You can also import databases into other hosts and databases. It will currently handle uncompressed, gzipped or zipped dump files.
+
+**This command will wipe out the target database before it runs the import unless you use the `--no-wipe` flag!**
 
 > #### Warning::Postgres import not yet supported
 >
@@ -29,6 +31,13 @@ lando db-import dump.sql
 # Import a file into an auxiliary second database called 'db2'
 # with a db called `dataz`
 lando db-import dump.zip --host db2 --database dataz
+
+# Import without destroying the target database
+lando db-import dump.zip --no-wipe
+
+# Pipe stdout into db-import
+# NOTE: this is a bit finicky right now
+cat dump.sql | lando db-import
 ```
 
 ### Options
@@ -40,6 +49,7 @@ Options:
   --database, -d  The database name
   --password, -p  The database password
   --port, -P      The database port                              [default: 3306]
+  --no-wipe       Do not destroy the existing database before an import
 ```
 
 Adding the `db-import` command

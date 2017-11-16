@@ -13,6 +13,12 @@ Supported versions
 *   [latest](https://hub.docker.com/r/_/mysql/)
 *   custom
 
+> #### Warning::Be Careful Switching Database Type or Version
+>
+> You should be careful switching database types or versions as the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!**
+>
+> You can read more about this [here](./../issues/switching-dbs.md)
+
 Example
 -------
 

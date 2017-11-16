@@ -57,11 +57,39 @@ module.exports = function(lando) {
     var newDir = path.join(ucr, 'services', 'config', service);
     fs.mkdirpSync(newDir);
 
-    // Copy the old root to the new root
-    fs.copySync(dir, newDir, copyOpts);
-
     // Log
     lando.log.verbose('Copying %s config from %s to %s', service, dir, newDir);
+
+    // Try to copy the assets over
+    try {
+      fs.copySync(dir, newDir, copyOpts);
+    }
+
+    // If we have an EPERM, try to remove the file/directory and then retry
+    catch (error) {
+
+      // Parse the error for dataz
+      var code = _.get(error, 'code');
+      var syscall = _.get(error, 'syscall');
+      var f = _.get(error, 'path');
+
+      // If we dont have the dataz we need to actually error
+      if (code !== 'EISDIR' || syscall !== 'open' || !!fs.ensureDirSync(f)) {
+        lando.log.error(error);
+        process.exit(542);
+      }
+
+      // Log
+      lando.log.warn('Detected a bad situation moving %s config...', service);
+      lando.log.warn('Trying to fix it');
+
+      // Try to take corrective action
+      fs.removeSync(f);
+
+      // Try to move again
+      fs.copySync(dir, newDir, copyOpts);
+
+    }
 
     // Return the new scripts directory
     return newDir;

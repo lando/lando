@@ -26,15 +26,23 @@ services:
     webroot: www
 
     # Optionally customize the configuration for php and its underlying webserver
-    # These paths are both relative to the app root directory
+    # These paths are both relative to (and must reside within) the app root directory
+    #
+    # For some examples that use this fairly well please check out
+    # https://github.com/lando/lando/tree/master/examples
     # config:
       # Use a custom apache config file
       # server: config/apache/lamp.conf
 
       # Use a custom php.ini
+      # This **should** load last which means you should be able to override
+      # any previously set php settings.
       # conf: config/php/php.ini
 
     # Optionally activate xdebug
+    #
+    # If you are having trouble getting xdebug to work please see:
+    # https://docs.devwithlando.io/services/php.html#using-xdebug
     xdebug: true
 
     # Optionally install the following composer dependencies globally

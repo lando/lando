@@ -3,9 +3,9 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
 
-Lando is a free, open source and cross-platform local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). It is designed to work with most major languages, frameworks and services and to provide an easy way for users to specify simple or complex development requirements for their projects.
+Lando is for developers who want to quickly specify and painlessly spin up the services and tools needed to develop their projects.
 
-In that way it can be thought of as a development dependency management tool.
+It's a free, open source, cross-platform, local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them. Think of it as your local development's dependency management tool. It can even be installed right beside an old Kalabox installation with no interference, or used as a complete upgrade-replacement.
 
 With Lando you can...
 
@@ -16,12 +16,13 @@ With Lando you can...
 *   Easily customize or extend tooling, deployment options and basically any other functionality.
 *   Free yourself from the tyranny of inferior local development products.
 
-Begin by checking out the
--------------------------
+Begin by checking out
+---------------------
 
-*   [Installation Guide](http://docs.devwithlando.io/installation/installing.html)
+*   [How to install Lando](http://docs.devwithlando.io/installation/installing.html)
+*   [Lando basics](http://docs.devwithlando.io/started.html)
 
-Then spin up one of our preconfigured recipe start states
+Then try out one of our preconfigured recipe start states
 ---------------------------------------------------------
 
 *   [Backdrop](http://docs.devwithlando.io/tutorials/backdrop.html)
@@ -41,6 +42,7 @@ Or build up from a base language
 --------------------------------
 
 *   [dotnet](http://docs.devwithlando.io/services/dotnet.html)
+*   [go](http://docs.devwithlando.io/services/go.html)
 *   [node](http://docs.devwithlando.io/services/node.html)
 *   [php](http://docs.devwithlando.io/services/php.html)
 *   [python](http://docs.devwithlando.io/services/python.html)
@@ -64,6 +66,14 @@ And then mix in additional auxiliary services
 *   [solr](http://docs.devwithlando.io/services/solr.html)
 *   [varnish](http://docs.devwithlando.io/services/varnish.html)
 
+And then get some pro workflow dialed
+-------------------------------------
+
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
 And then try out some advanced stuff
 ------------------------------------
 
@@ -75,15 +85,12 @@ And then try out some advanced stuff
 *   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
-*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
-*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
-*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
 
 And then dive deep into reference materials
 -------------------------------------------
 
 *   [Configuration](http://docs.devwithlando.io/config/lando.html)
-*   [Recipes](http://docs.devwithlando.io/config/services.html)
+*   [Recipes](http://docs.devwithlando.io/config/recipes.html)
 *   [Services](http://docs.devwithlando.io/config/services.html)
 *   [Tooling](http://docs.devwithlando.io/config/tooling.html)
 *   [CLI](http://docs.devwithlando.io/cli/usage.html)
@@ -183,30 +190,6 @@ tooling:
     service: appserver
     cmd: ps
 ```
-
-Roadmap
--------
-
-Lando is seeking to eventually merge into and then replace the [Kalabox](http://kalabox.io) project. This means that eventually Lando will have all the great features you've come to love in the Kalabox project. That said the primary high level goals for this transition are to
-
-*   Provide a more reliable and robust underlying product
-*   Replace [MAMP](http://mamp.info) and other local dev stacks
-*   Reduce the complexity of building out complicated apps a la [Pantheon](http://pantheon.io)
-*   Implement a simple per-app configuration file that can be stored in version control
-*   Provide mechanisms for packaging in development tools and build steps along with services
-
-There are various features that need to be implemented to achieve the above.
-
-1.  ~~Transition the core framework~~
-2.  ~~Provide a services layer on top of docker compose~~
-3.  ~~Provide a build and tooling layer~~
-4.  ~~Provide additional core services and tools~~
-5.  ~~Provide a recipes layer on top of services~~
-6.  ~~Provide handling of upstream git remotes (lando init command)~~
-7.  ~~Provide an events layer~~
-8.  ~~Replicate Pantheon environment~~
-9.  ~~Integrate with Pantheon~~
-10. Build GUI
 
 Other Resources
 ---------------

@@ -7,69 +7,31 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
 
  <!-- toc -->
 
-Getting Started
----------------
+ Getting Started
+ ---------------
 
-Before you can use all the awesome Lando magic you need a codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
+ Before you get started with this recipe we assume that you have:
 
-### Option 1. Start a codebase that already has a `.lando.yml`
+ 1. [Installed Lando](./../installation/system-requirements.md)
+ 2. [Read up on how to get a `.lando.yml`](./../started.md)
 
-```bash
-# Clone pantheon codebase from git
-# See: https://pantheon.io/docs/git/
-git clone ssh://codeserver.dev.PANTHEONID@codeserver.dev.PANTHEONIDdrush.in:2222/~/repository.git mysite
+ If after reading #2 above you are still unclear how to get started then try this
 
-# Go into the cloned site
-cd mysite
+ ```bash
+ # Go into a local folder with your site or app codebase
+ # You can get this via git clone or from an archive
+ cd /path/to/my/codebase
 
-# Start the site
-lando start
+ # Initialize a basic .lando.yml file for my recipe with sane defaults
+ lando init
 
-# Authorize with pantheon
-# NOTE: if you dont do this step you wont be able to do `lando pull/push/switch`
-# NOTE: you need to put in the actual machine-token here, not the email
-lando terminus auth:login --machine-token=MYSPECIALTOKEN
-```
+ # Commit the .lando.yml to your git repo (Optional but recommended)
+ git add -A
+ git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+ git push
+ ```
 
-### Option 2. Init a codebase that doesn't yet have a `.lando.yml`
-
-```bash
-# Clone a codebase from some git repo
-git clone /path/to/git/repo mysite
-
-# Go into the cloned site
-cd mysite
-
-# Initialize a .lando.yml for this site
-# NOTE: You will need to choose the pantheon site that makes sense
-lando init --recipe pantheon
-```
-
-### Option 3. Get your site from Pantheon
-
-```bash
-# Create a folder to clone your site to
-mkdir mysite && cd mysite
-
-# Initialize a Pantheon .lando.yml after getting code from Pantheon
-# This require a Pantheon Machine Token
-# See: https://docs.devwithlando.io/cli/init.html#pantheon
-lando init pantheon
-```
-
-### Option 4. Get your site from GitHub
-
-```bash
-# Create a folder to clone your site to
-mkdir mysite && cd mysite
-
-# Initialize a Pantheon .lando.yml after getting code from GitHub
-# This require a GitHub Personal Access Token
-# See: https://docs.devwithlando.io/cli/init.html#github
-lando init github --recipe pantheon
-```
-
-Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
+ For more info on how `lando init` works check out [this](./../cli/init.md).
 
 Starting Your Site
 ------------------
@@ -86,7 +48,7 @@ If your Pantheon site has a `composer.json` Lando will attempt to run `composer 
 lando start
 ```
 
-If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file so you can visit your site like it exits on Pantheon.
+If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the Drupal, Backdrop or WordPress installation screens. Read below on how to import your database and file so you can visit your site like it exists on Pantheon.
 
 Importing Your Database and Files
 ---------------------------------
@@ -96,6 +58,8 @@ Once you've started up your Pantheon site you will need to pull in your database
 ### 1. Using `lando pull`
 
 Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
+
+On a database pull Lando will attempt to clear the cache of the remote environment (unless it is the live environment) to minimize the size of the import.
 
 Please consult the manual import documentation below if this command produces an error.
 
@@ -170,7 +134,7 @@ You can alternatively download the backup and manually extract it to the correct
 Pushing Your Changes
 --------------------
 
-While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally. **If you do not specify `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
+While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally. **By default we set `--database` or `--files` to `none` since this is the suggested best practice**.
 
 ### Usage
 
@@ -180,12 +144,12 @@ While a best practices workflow suggests you put all your changes in code and pu
 lando push
 
 # Push the latest code, database and files with a description of the change
-lando push -m "Updated the widget to do awesome feature x"
+lando push -m "Updated the widget to do awesome thing x"
 
-# Push only the database
+# Push only the database and code
 lando push --files=none
 
-# Pull only the files
+# Pull only the files and code
 lando push --database=none
 ```
 
@@ -195,29 +159,6 @@ lando push --database=none
 --message, -m   A message describing your change [default: "My awesome Lando-based changes"]
 --database, -d  The environment to push the db to or [none]
 --files, -f     The environment to push the files to or [none]
-```
-
-Working With Multidev
----------------------
-
-Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
-
-### Usage
-
-```bash
-# Switch to the env called "feature-1"
-lando switch feature-1
-
-# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
-# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
-lando switch feature-1 --no-db --no-files
-```
-
-### Options
-
-```bash
-  --no-db     Do not switch the database              [boolean] [default: false]
-  --no-files  Do not switch the files                 [boolean] [default: false]
 ```
 
 Tooling
@@ -265,6 +206,67 @@ lando drush dl webform
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Terminus
+--------
+
+You should be able to use `terminus` commands in the exact same way by prefixing them with `lando` eg `lando terminus auth:whoami`. There is a caveat to that behavior however. Both `lando` and `terminus` utilize the `--` flag to separate options that need to be delegated to subcommands. Consider the following example:
+
+```bash
+# Pass -- options to drush
+terminus remote:drush mysite.dev -- cim -y
+
+# Pass -- options to lando
+lando terminus remote:drush mysite.dev -- cim -y
+```
+
+As a workaround to the above we recommend that you invoke `drush` directly
+
+```bash
+# Config import using drush
+lando drush @PANTHEON.ALIAS cim -y
+```
+
+### Terminus Plugins
+
+By default Lando will only install `terminus` proper. But you can add [Terminus Plugins](https://pantheon.io/docs/terminus/plugins/directory/) to your `.lando.yml` file. You will want to consult the relevant install instructions for each plugin but here is an example `.lando.yml` that installs the [Terminus Build Tools](https://github.com/pantheon-systems/terminus-build-tools-plugin) plugin.
+
+```yml
+name: sitename
+recipe: pantheon
+config:
+  framework: drupal8
+  site: sitename
+  id: someid
+services:
+  appserver:
+    build:
+      - mkdir -p ~/.terminus/plugins
+      - composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1
+```
+
+Working With Multidev
+---------------------
+
+Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
+
+### Usage
+
+```bash
+# Switch to the env called "feature-1"
+lando switch feature-1
+
+# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
+# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
+lando switch feature-1 --no-db --no-files
+```
+
+### Options
+
+```bash
+  --no-db     Do not switch the database              [boolean] [default: false]
+  --no-files  Do not switch the files                 [boolean] [default: false]
+```
+
 Drush URL Setup
 ---------------
 
@@ -301,7 +303,7 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### pantheon.yml
 
-If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would on Pantheon itself.
+If you want to [change your php version](https://pantheon.io/docs/php-versions/) or make use of a [nested docroot](https://pantheon.io/docs/nested-docroot/), you will want to do that in your [`pantheon.yml`](https://pantheon.io/docs/pantheon-yml/) file just like you would on Pantheon itself. Note that Lando will support both `pantheon.upstream.yml` and `pantheon.yml`.
 
 {% codesnippet "./../examples/pantheon/pantheon.yml" %}{% endcodesnippet %}
 
@@ -409,17 +411,51 @@ Lando attempts to closely mimic the Pantheon environment. Please review the foll
 *   [Pantheon Index and Solr](https://pantheon.io/docs/solr/)
 *   [Pantheon Caching and Redis](https://pantheon.io/docs/redis/)
 
-What works on Pantheon **should** also work on Lando.
-
 You can get more in-depth information about the services this recipe provides by running `lando info`.
 
-Next Steps
-----------
+What works on Pantheon **should** also work on Lando.
 
-*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional tooling](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional routes](./../config/proxy.md)
-*   [Adding additional events](./../config/events.md)
-*   [Setting up front end tooling](./../tutorials/frontend.md)
-*   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
-*   [Importing databases](./../tutorials/db-import.md)
+External Libraries
+------------------
+
+Lando also supports the same [external libraries](https://pantheon.io/docs/external-libraries/) as Pantheon so you can use Lando to test code that uses `phantomjs`, `wkhtmltopdf`, `tika` and more.
+
+If you'd like to utilize these libraries as outside-the-container command line tools then either add or augment the `tooling` section of your `.lando.yml` with:
+
+```yaml
+tooling:
+  node:
+    service: node
+  npm:
+    service: node
+  phantomjs:
+    service: appserver
+    cmd: /srv/bin/phantomjs
+  wkhtmltopdf:
+    service: appserver
+    cmd: /srv/bin/wkhtmltopdf
+  tika:
+    service: appserver
+    cmd: java -jar /srv/bin/tika-app-1.1.jar
+```
+
+Read More
+---------
+
+### Workflow Docs
+
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
+### Advanced Usage
+
+*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
+*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
+*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
+*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
+*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
+*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)

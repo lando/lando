@@ -8,37 +8,28 @@ Lando offers a [configurable recipe](./../recipes/drupal7.md) for spinning up [D
 Getting Started
 ---------------
 
-Before you can use all the awesome Lando magic you need a Drupal 7 codebase with a `.lando.yml` file in its root directory. There are a few ways you can do this...
+Before you get started with this recipe we assume that you have:
 
-### Option 1. Start with an existing codebase
+1. [Installed Lando](./../installation/system-requirements.md)
+2. [Read up on how to get a `.lando.yml`](./../started.md)
 
-```bash
-# Clone or extract your Drupal 7 site
-# See: https://github.com/drupal/drupal/tree/7.x
-git clone -b 7.x https://github.com/drupal/drupal.git mysite
-
-# Go into the cloned site
-cd mysite
-
-# Initialize a .lando.yml for this site
-lando init --recipe drupal7
-```
-
-### Option 2. Get your site from GitHub
+If after reading #2 above you are still unclear how to get started then try this
 
 ```bash
-# Create a folder to clone your site to
-mkdir mysite && cd mysite
+# Go into a local folder with your site or app codebase
+# You can get this via git clone or from an archive
+cd /path/to/my/codebase
 
-# Initialize a Drupal 7 .lando.yml after getting code from GitHub
-# This requires a GitHub Personal Access Token
-# See: https://docs.devwithlando.io/cli/init.html#github
-lando init github --recipe drupal7
+# Initialize a basic .lando.yml file for my recipe with sane defaults
+lando init
+
+# Commit the .lando.yml to your git repo (Optional but recommended)
+git add -A
+git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+git push
 ```
 
-Once you've initialized the `.lando.yml` file for your app you should commit it to your repository. This will allow you to forgo the `lando init` step in subsequent clones.
-
-If you want to try a composer based installation, you can use the [this example](https://github.com/lando/lando/tree/master/examples/drupal7-2) to get started.
+For more info on how `lando init` works check out [this](./../cli/init.md).
 
 Starting Your Site
 ------------------
@@ -48,6 +39,9 @@ Once you've completed the above you should be able to start your Drupal 7 site.
 ```bash
 # Start up app
 lando start
+
+# List information about this app.
+lando info
 
 # Optionally run composer install if needed
 lando composer install
@@ -73,6 +67,8 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 
 # Import the database
 # NOTE: db-import can handle uncompressed, gzipped or zipped files
+# Due to restrictions in how Docker handles file sharing your database
+# dump MUST exist somewhere inside of your app directory.
 lando db-import database.sql.gz
 ```
 
@@ -164,18 +160,59 @@ Create or edit `/sites/default/settings.local.php` and add these lines:
 $base_url = "http://mysite.lndo.site"
 ```
 
+
+### Aliases
+
+You can also use drush aliases with command like `lando drush @sitealias cc all` by following the instructions below.
+
+Make sure the alias file exists within the drush folder in your app.
+An example could be the files structure below.
+
+```
+/app
+  /drush
+    yoursite.aliases.drushrc.php
+```
+
+For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
+
+and by adding the following example to your .lando.yml file:
+
+```
+services:
+  appserver:
+    build:
+      - "mkdir -p ~/.drush/site-aliases"
+      - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
+ ```
+
+Depending on your file structure and alias name the .lando.yml file should change accordingly.
+
+Please refer the [ssh section](./../cli/ssh.html)if you need to set-up keys that require a passphrase.
+
+
 Advanced Service Usage
 ----------------------
 
 You can get more in-depth information about the services this recipe provides by running `lando info`.
 
-Next Steps
-----------
+Read More
+---------
 
-*   [Adding additional services](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional tooling](./../tutorials/setup-additional-tooling.md)
-*   [Adding additional routes](./../config/proxy.md)
-*   [Adding additional events](./../config/events.md)
-*   [Setting up front end tooling](./../tutorials/frontend.md)
-*   [Accessing services (eg your database) from the host](./../tutorials/frontend.md)
-*   [Importing databases](./../tutorials/db-import.md)
+### Workflow Docs
+
+*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
+*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
+*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+
+### Advanced Usage
+
+*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
+*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
+*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
+*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
+*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
+*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)

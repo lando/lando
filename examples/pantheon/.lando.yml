@@ -18,6 +18,9 @@ config:
   framework: drupal8
 
   # Optionally activate xdebug
+  #
+  # If you are having trouble getting xdebug to work please see:
+  # https://docs.devwithlando.io/services/php.html#using-xdebug
   xdebug: true
 
   # Optionally specify the site id, name and environment for your Pantheon site
@@ -25,4 +28,12 @@ config:
   # This is helpful for running terminus commands or performing similar operations
   id: 7587b3ea-95b6-44ab-b36b-6ebd9c3e9866
   site: kalabox-drupal7
-  env: dev
+
+  # By default the operations `lando start`, `lando restart`, and
+  # `lando rebuild` run `composer install` on the app if lando detects a
+  # `composer.json` in the root directory.
+  #
+  # The `disableAutoComposerInstall` key allows users to disable this behavior and run
+  # `composer install` when and if you choose by setting a value of true.
+  #
+  # disableAutoComposerInstall: true

@@ -22,9 +22,10 @@ module.exports = function(lando) {
 
     // Start by cheating
     var build = lando.recipes.build(name, 'drupal7', config);
+    var drupalConsole = _.get(config, 'drupal', true);
 
     // Add drupal console install command if needed
-    if (_.has(config, 'drupal')) {
+    if (drupalConsole === true) {
 
       // Get the install cmd
       var pharUrl = 'https://drupalconsole.com/installer';

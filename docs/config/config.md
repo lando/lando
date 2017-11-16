@@ -31,5 +31,5 @@ Examples
 ### Turning the proxy off
 
 ```bash
-echo "proxy: 'OFF'" > ~/.lando/config.yml
+echo "proxy: 'OFF'" >> ~/.lando/config.yml
 ```

@@ -26,7 +26,7 @@ Windows
 Linux
 -----
 
-1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. **(17.06.1-ce or higher)**
+1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script.**(17.06.1-ce or higher)**
 2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
 3.  Double-click on the package to launch Software Center
 4.  Click the "Install" button and enter your password when prompted
@@ -35,6 +35,19 @@ Linux
 >
 > If your Linux distro does not support our `.deb` or `.rpm` packages you can [install from source](#from-source)
 
+### Caveats
+
+Because each Linux distribution handles things differently, these considerations may or may not apply to you:
+
+* If your distro uses a `docker` group, make sure your user is a member of it:
+
+  ```
+  sudo usermod -aG docker $USER
+  ```
+
+  You will need to log out for this change to take effect.
+
+* If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
 
 Bleeding Edge
 -------------

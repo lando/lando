@@ -197,7 +197,7 @@ module.exports = function(lando) {
     return {
       service: 'appserver',
       needs: ['database'],
-      description: 'Import <file> into database. File is relative to approot.',
+      description: 'Import into database.',
       cmd: '/helpers/mysql-import.sh',
       options: {
         host: {
@@ -221,6 +221,9 @@ module.exports = function(lando) {
           description: 'The database port',
           default: 3306,
           alias: ['P']
+        },
+        'no-wipe': {
+          description: 'Do not destroy the existing database before an import'
         }
       }
     };
@@ -258,6 +261,9 @@ module.exports = function(lando) {
           description: 'The database port',
           default: 3306,
           alias: ['P']
+        },
+        stdout: {
+          description: 'Dump database to stdout'
         }
       }
     };
@@ -291,8 +297,8 @@ module.exports = function(lando) {
         description: 'Drop into a MySQL shell',
         user: 'root'
       };
-      tooling['db-import <file>'] = dbImport();
-      tooling['db-export'] = dbExport();
+      tooling['db-import [file]'] = dbImport();
+      tooling['db-export [file]'] = dbExport();
     }
     // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {

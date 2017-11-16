@@ -1,5 +1,5 @@
 Windows is also running VirtualBox
-----------------------------------
+==================================
 
 In some cases you cannot use VirtualBox (a common development tool) with Hyper-V, however, there is a documented workaround you can check out over at [https://derekgusoff.wordpress.com/2012/09/05/run-hyper-v-and-virtualbox-on-the-same-machine/](https://derekgusoff.wordpress.com/2012/09/05/run-hyper-v-and-virtualbox-on-the-same-machine/).
 

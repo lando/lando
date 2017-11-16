@@ -172,8 +172,3 @@ events:
     - node: cd $LANDO_MOUNT && gulp
     - appserver: cd $LANDO_WEBROOT && drush updb -y
 ```
-
-Full Example
-------------
-
-{% codesnippet "./../examples/addtools/.lando.yml" %}{% endcodesnippet %}

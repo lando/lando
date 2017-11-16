@@ -96,7 +96,7 @@ module.exports = function(lando) {
 
 ### versions
 
-The versions array is a list of the docker tags for the docker image you've chosen to use as the basis of your service. It is a common convention to add in two special tags `latest` and `custom`.  `latest` will need to be a valid docker tag (it usually exists by default). `custom` will tell Lando that the image is provided downstream in the [advanced service configuration](./../config/services.md#advanced-service-configuration).
+The versions array is a list of the docker tags for the docker image you've chosen to use as the basis of your service. It is a common convention to add in two special tags `latest` and `custom`.  `latest` will need to be a valid docker tag (it usually exists by default). `custom` will tell Lando that the image is provided downstream in the [advanced service configuration](./../config/overrides.md).
 
 ```js
 /**

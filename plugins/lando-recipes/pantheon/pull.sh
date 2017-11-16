@@ -113,6 +113,15 @@ fi;
 # Get the database
 if [ "$DATABASE" != "none" ]; then
 
+  # Destroy existing tables
+  # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
+  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
+  echo "Destroying all current tables in database... "
+  for t in $TABLES; do
+    echo "Dropping $t table from lando database..."
+    mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "DROP TABLE $t"
+  done
+
   # Holla at @uberhacker for this fu
   # Start with this by default
   PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
@@ -127,12 +136,14 @@ if [ "$DATABASE" != "none" ]; then
     # Use drush if we can (this is always faster for some reason)
     if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
 
-      # Cleaning things up for a more efficient pull
-      echo "Clearing remote cache to shrink db size"
-      if [ "$FRAMEWORK" == "drupal8" ]; then
-        drush @pantheon.$SITE.$DATABASE cr all --strict=0
-      else
-        drush @pantheon.$SITE.$DATABASE cc all --strict=0
+      # If we aint pulling the live DB then lets clear caches to minimize the DL time
+      if [ "$DATABASE" != "live" ]; then
+        echo "Clearing remote cache to shrink db size"
+        if [ "$FRAMEWORK" == "drupal8" ]; then
+          drush @pantheon.$SITE.$DATABASE cr all --strict=0
+        else
+          drush @pantheon.$SITE.$DATABASE cc all --strict=0
+        fi
       fi
 
       # Build the DB command
@@ -202,7 +213,7 @@ if [ "$FILES" != "none" ]; then
   # Add in rsync regardless
   PULL_FILES="$PULL_FILES $RSYNC_CMD"
 
-  # Importing database
+  # Importing files
   echo "Pulling files..."
   eval "$PULL_FILES"
 

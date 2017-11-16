@@ -67,7 +67,7 @@ module.exports = function(lando) {
     var solrConfig = {};
 
     // Figure out which config base to use
-    if (_.includes(['3.6', 4.10], config.version)) {
+    if (_.includes(['3.6', '4.10'], config.version)) {
       solrConfig = versionConfig[config.version];
     }
     else {

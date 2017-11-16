@@ -1,8 +1,8 @@
 {
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
-  "license": "MIT",
-  "version": "3.0.0-beta.19",
+  "license": "GPL-3.0",
+  "version": "3.0.0-beta.25",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -26,6 +26,7 @@
     ],
     "assets": [
       "package.json",
+      "**/fastcgi_params",
       "**/*.cnf",
       "**/*.conf",
       "**/*.ini",

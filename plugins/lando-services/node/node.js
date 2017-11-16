@@ -38,7 +38,7 @@ module.exports = function(lando) {
   };
 
   /**
-   * Build out php
+   * Build out node
    */
   var services = function(name, config) {
 

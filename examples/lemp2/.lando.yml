@@ -29,18 +29,32 @@ config:
   # If ommitted this will default to the latest mysql. You can additionally provide
   # a version with `type:version` but you will need to consult the documentation
   # for the correct DB service to see what versions are available
-  database: postgres
+  database: mysql
 
   # Optionally activate xdebug
   xdebug: true
 
-  # Optionally mix in our own config files
+  # Optionally mix in your own config files
   #
-  # If ommitted this will use the default config files for the respective services.
-  # Definitely consult the relevant documentaion for each service to make sure
-  # you are specifying the correct value for the config. As an example `mysql`
-  # will want a directory while `postgres` will want a specific config file.
+  # If ommitted this will use "sane defaults" for your recipe type
   conf:
+
+    # For more information on setting these files check out the documentation
+    # and examples
+    #
+    # Docs: https://docs.devwithlando.io/services/php.html
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
     server: config/nginx.conf
-    # database: config/mysql
     php: config/php.ini
+
+    # For more information on setting these files check out the documentation
+    # and examples for the relevant services:
+    #
+    # MySQL: https://docs.devwithlando.io/services/mysql.html
+    # MariaDB: https://docs.devwithlando.io/services/mariadb.html
+    # PostGres: https://docs.devwithlando.io/services/postgres.html
+    #
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
+    # database: config/mysql
