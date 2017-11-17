@@ -11,7 +11,7 @@ We **HIGHLY** recommend you read through our documentation to get a sense of the
 * Instantiate "sane defaults" for various pre-baked recipes like Drupal, Laravel or MEAN
 * Integrate with various hosting providers like [Pantheon](http://pantheon.io)
 * Add configurable auxiliary services like `elasticsearch`, `redis` or `mailhog`
-* Lock down versions, on a pre-project basis, for front end tools like `node`, `yarn`, `gulp`, etc.
+* Lock down versions, on a per-project basis, for front end tools like `node`, `yarn`, `gulp`, etc.
 * Setup relevant build steps like `composer install`, `yarn install` or `gulp sass`
 * Add in additional dependencies like `php-extensions`, `apache tika`, `phantomjs` or even `vim`
 * Add in event-driven hooks like `drush cim -y` after a `db-import`
