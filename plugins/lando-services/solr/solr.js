@@ -191,9 +191,9 @@ module.exports = function(lando) {
    * Return the volumes needed
    */
   var volumes = function(name) {
-      var vols = {};
-      vols['data_' + name] = {};
-      return vols;
+    var vols = {};
+    vols['data_' + name] = {};
+    return vols;
   };
 
   return {
