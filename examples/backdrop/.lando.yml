@@ -13,7 +13,7 @@ config:
   #
   # If ommitted this will default to the latest php version supported by Backdrop.
   # Consult the `php` service to see what versions are available. Note that all
-  # such versions may not be supported in Backdrop 6 so YMMV.
+  # such versions may not be supported in Backdrop so YMMV.
   #
   # See: https://backdropcms.org/requirements
   #
