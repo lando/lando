@@ -85,10 +85,6 @@ lando php                      Run php commands
 # Download a dependency with drush
 lando drush dl webform
 
-# Download a dependency with composer
-lando composer config repositories.drupal composer https://packages.drupal.org/8
-lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
-
 # Check hte app's php version
 lando php -v
 ```
