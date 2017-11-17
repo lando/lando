@@ -96,7 +96,7 @@ Configuration
 
 ### Recipe
 
-You can also manually configure the `.lando.yml` file to switch `php` versions, toggle between `apache` and `nginx`, activate `xdebug`, choose a database type and version, set a custom webroot locaton and use your own configuration files.
+You can also manually configure the `.lando.yml` file to switch `php` versions, toggle between `apache` and `nginx`, activate `xdebug`, choose a database type and version, set a custom webroot location and use your own configuration files.
 
 {% codesnippet "./../examples/backdrop/.lando.yml" %}{% endcodesnippet %}
 
