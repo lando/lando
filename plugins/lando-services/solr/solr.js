@@ -24,6 +24,9 @@ module.exports = function(lando) {
     '6.3',
     '6.4',
     '6.5',
+    '6.6',
+    '7.0',
+    '7.1',
     'latest',
     'custom'
   ];
@@ -90,10 +93,7 @@ module.exports = function(lando) {
       environment: {
         TERM: 'xterm'
       },
-      volumes: [
-        // @todo: figure out better handling around persistent data
-        // solrConfig.dataDir
-      ],
+      volumes: ['data_' + name + ':' + solrConfig.dataDir],
       command: solrConfig.command
     };
 
@@ -190,8 +190,10 @@ module.exports = function(lando) {
   /**
    * Return the volumes needed
    */
-  var volumes = function() {
-    return {data: {}};
+  var volumes = function(name) {
+    var vols = {};
+    vols['data_' + name] = {};
+    return vols;
   };
 
   return {
