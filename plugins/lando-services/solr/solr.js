@@ -10,6 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var path = require('path');
+
   var addConfig = lando.services.addConfig;
   //var addScript = lando.services.addScript;
   var buildVolume = lando.services.buildVolume;
@@ -82,11 +84,6 @@ module.exports = function(lando) {
       };
     }
 
-    // Define config mappings
-    var configFiles = {
-      conf: solrConfig.confDir || '/solrconf/conf'
-    };
-
     // Default solr service
     var solr = {
       image: solrConfig.image,
@@ -112,24 +109,34 @@ module.exports = function(lando) {
 
     }
 
-    // Handle custom config files
-    _.forEach(configFiles, function(file, type) {
-      if (_.has(config, 'config.' + type)) {
+    // Handle custom config dir
+    if (_.has(config, 'config.conf')) {
 
-        // Share in the custom config
-        var local = config.config[type];
-        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
-        solr.volumes = addConfig(customConfig, solr.volumes);
+      // Grab the local file
+      var local = config.config.conf;
+      var confDir = solrConfig.confDir;
 
-        // If this is a recent version of solr we need to add to the entry
-        if (!_.includes(['3.6', 4.10], config.version)) {
-          var command = solr.command.split(' ');
-          command.push('/solrconf');
-          solr.command = command.join(' ');
-        }
+      // Share in the custom config to the conf dir spot
+      var globalConfig = buildVolume(local, confDir, '$LANDO_APP_ROOT_BIND');
+      solr.volumes = addConfig(globalConfig, solr.volumes);
+
+      // If this is a recent version of solr we need to add to the config as an arg
+      // and also map to the core
+      if (!_.includes(['3.6', 4.10], config.version)) {
+
+        // Augment the start up command
+        var command = solr.command.split(' ');
+        command.push('/solrconf');
+        solr.command = command.join(' ');
+
+        // Share the config to the core as well
+        var coreConf = path.join(solrConfig.dataDir, core, 'conf');
+        var coreConfig = buildVolume(local, coreConf, '$LANDO_APP_ROOT_BIND');
+        solr.volumes = addConfig(coreConfig, solr.volumes);
 
       }
-    });
+
+    }
 
     // Handle ssl option
     // @todo: figure out how to handle SSL options
