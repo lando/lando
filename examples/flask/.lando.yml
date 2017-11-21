@@ -1,0 +1,46 @@
+# Flask app
+name: flask
+
+# Give me http://flask.lndo.site and https://flask.lndo.site
+proxy:
+  appserver:
+    - flask.lndo.site
+
+# Spin up services to run a basic flask server
+services:
+
+  # Create a flask instance
+  appserver:
+
+    # Python version 3.6
+    type: python:3.6
+
+    # Start flask
+    #
+    # You will likely want to run needed build steps eg `lando pip install -r requirements`
+    # first so needed dependencies are installed before your server starts up.
+    #
+    command: flask run
+
+    # Set the flask app envvar
+    overrides:
+      services:
+        environment:
+          FLASK_APP: /app/hello.py
+
+# Add some nice command routing
+tooling:
+  pip:
+    service: appserver_cli
+  python:
+    service: appserver_cli
+  easy_install:
+    service: appserver_cli
+  pyvenv:
+    service: appserver_cli
+
+  # These will only be available if you run `lando pip install -r requirements.txt` first
+  flask:
+    service: appserver_cli
+  livereload:
+    service: appserver_cli

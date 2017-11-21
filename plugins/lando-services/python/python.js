@@ -42,9 +42,13 @@ module.exports = function(lando) {
     // Start a services collector
     var services = {};
 
+    // pip install path
+    var pythonUserBase = '/var/www/.local';
+
     // Path
     // @todo: need to add global gem locaation?
     var path = [
+      pythonUserBase + '/bin',
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
@@ -58,7 +62,8 @@ module.exports = function(lando) {
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      '/var/www/.cache/pip'
+      'python_share:/var/www/.cache/pip',
+      'python_share:' + pythonUserBase
     ];
 
     // Basic config
@@ -76,7 +81,9 @@ module.exports = function(lando) {
       image: 'python:' + version + '-jessie',
       environment: {
         TERM: 'xterm',
-        PATH: path.join(':')
+        PATH: path.join(':'),
+        PIP_USER: 'true',
+        PYTHONUSERBASE: pythonUserBase
       },
       'working_dir': config._mount,
       ports: ['80'],
@@ -139,15 +146,9 @@ module.exports = function(lando) {
    * Return the volumes needed
    */
   var volumes = function() {
-
-    // Construct our volumes
-    var volumes = {
-      data: {}
+    return {
+      'python_share': {}
     };
-
-    // Return the volumes
-    return volumes;
-
   };
 
   return {
