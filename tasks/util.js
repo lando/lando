@@ -6,17 +6,20 @@
 
 module.exports = function() {
 
+  // Files to change
+  var files = ['package.json'];
+
   /*
    * Increments the version number, etc.
    */
   return {
     bump: {
       options: {
-        files: ['package.json', 'package-lock.json'],
+        files: files,
         updateConfigs: [],
         commit: true,
         commitMessage: 'Release v%VERSION%',
-        commitFiles: ['package.json', 'package-lock.json'],
+        commitFiles: files,
         createTag: true,
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
