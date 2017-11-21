@@ -1,0 +1,23 @@
+name: deepweb
+proxy:
+  nginx:
+    - deepweb.lndo.site
+services:
+  appserver:
+    type: php:7.1
+    via: nginx
+    webroot: www/docroot
+  database:
+    type: mariadb
+tooling:
+  phplint:
+    service: appserver
+  composer:
+    service: appserver
+    description: Run composer commands
+  php:
+    service: appserver
+  mysql:
+    user: root
+    service: database
+    description: Drop into a MySQL shell
