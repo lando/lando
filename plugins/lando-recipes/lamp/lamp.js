@@ -364,7 +364,7 @@ module.exports = function(lando) {
     // Run composer install if we have the file and it isnt explicitly disabled in config
     if (runComposer) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
-      build.services[cliService]['build'] = [composerInstall];
+      build.services[cliService].build = [composerInstall];
     }
 
     // Return the things
