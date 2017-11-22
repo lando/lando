@@ -120,6 +120,8 @@ lando init
 lando start
 ```
 
+Note: Lando will not spin up a new codebase for you unless you init with either the `pantheon` or `github` method (see below). Otherwise, remember to always have an already existing project to init from.
+
 #### 3. Or pull from GitHub or Pantheon
 
 ```bash

@@ -1,7 +1,9 @@
 Lando Basics
 ============
 
-In order for you to experience all the awesome Lando power a `.lando.yml` needs to exist in the root directory of your project. On a high level the `.lando.yml` should contain **ALL** the things you need to both run and develop your project. The ideal workflow here is:
+In order for you to experience all the awesome Lando power a `.lando.yml` needs to exist in the root directory of an existing project. Lando does **not** install a new codebase for you unless you init with either the `pantheon` or `github` method.
+
+On a high level the `.lando.yml` should contain **ALL** the things you need to both run and develop your project. The ideal workflow here is:
 
 1. The person who sets up your DevOps creates a `.lando.yml` file for your project and ideally checks it into version control
 2. Subsequent devs clone down the project, run `lando start` and get equipped with all the things they need for the devs
