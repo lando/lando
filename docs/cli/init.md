@@ -10,7 +10,7 @@ Usage
 # Generate a .lando.yml in your current directory
 lando init
 
-# Non interactively pull a site form github and set it up as a lamp site
+# Non interactively pull a site from github and set it up as a lamp site
 lando init github \
   --recipe lamp \
   --github-auth MYTOKEN \
