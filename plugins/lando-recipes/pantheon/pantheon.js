@@ -652,13 +652,6 @@ module.exports = function(lando) {
     // Build an additional cli container if we are running unsupported
     if (unsupportedCli) {
 
-      // Build out a CLI container and modify as appropriate
-      var cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
-      build.services[cliService] = _.cloneDeep(build.services.appserver);
-      build.services[cliService].type = 'php:5.5';
-      build.services[cliService].via = 'cli';
-      build.services[cliService].overrides.services.image = cliImage;
-
       // Remove stuff from appserver
       delete build.services.appserver.build;
 

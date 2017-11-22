@@ -10,10 +10,11 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var fs = lando.node.fs;
   var path = require('path');
 
   /*
-   * Helper to get a CGR commanc
+   * Helper to get a CGR command
    */
   var getCgr = function(pkg, version) {
 
@@ -335,6 +336,36 @@ module.exports = function(lando) {
     build.proxy = proxy(name);
     build.services = services(config);
     build.tooling = tooling(config);
+
+    // Determine the service to run cli things on
+    var unsupportedCli = (config.php === '5.3' || config.php === 5.3);
+    var cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
+
+    // Build an additional cli container if we are running unsupported
+    if (unsupportedCli) {
+
+      // Build out a CLI container and modify as appropriate
+      var cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
+      build.services[cliService] = _.cloneDeep(build.services.appserver);
+      build.services[cliService].type = 'php:5.5';
+      build.services[cliService].via = 'cli';
+      build.services[cliService].overrides.services.image = cliImage;
+
+      // Remove stuff from appserver
+      delete build.services.appserver.build;
+
+    }
+
+    // Check if the user specified the compserSwitch key to false
+    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
+    var composerJson = path.join(config._root, 'composer.json');
+    var runComposer = fs.existsSync(composerJson) && !disableComposer;
+
+    // Run composer install if we have the file and it isnt explicitly disabled in config
+    if (runComposer) {
+      var composerInstall = 'cd $LANDO_MOUNT && composer install';
+      build.services[cliService]['build'] = [composerInstall];
+    }
 
     // Return the things
     return build;
