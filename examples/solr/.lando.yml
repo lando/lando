@@ -22,10 +22,6 @@ services:
   appserver:
     type: node:6.10
     command: npm start
-
-  # Also created a node for CLI purposes
-  node:
-    type: node:6.10
     globals:
       gulp-cli: "latest"
 
@@ -57,8 +53,8 @@ services:
 # Add some nice command routing
 tooling:
   npm:
-    service: node_cli
+    service: appserver_cli
   gulp:
-    service: node
+    service: appserver
   node:
-    service: node_cli
+    service: appserver_cli
