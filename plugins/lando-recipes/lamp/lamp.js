@@ -337,25 +337,6 @@ module.exports = function(lando) {
     build.services = services(config);
     build.tooling = tooling(config);
 
-    // Determine the service to run cli things on
-    var unsupportedCli = (config.php === '5.3' || config.php === 5.3);
-    var cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
-
-    // Build an additional cli container if we are running unsupported
-    if (unsupportedCli) {
-
-      // Build out a CLI container and modify as appropriate
-      var cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
-      build.services[cliService] = _.cloneDeep(build.services.appserver);
-      build.services[cliService].type = 'php:5.5';
-      build.services[cliService].via = 'cli';
-      build.services[cliService].overrides.services.image = cliImage;
-
-      // Remove stuff from appserver
-      delete build.services.appserver.build;
-
-    }
-
     // Check if the user specified the compserSwitch key to false
     var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
     var composerJson = path.join(config._root, 'composer.json');
@@ -364,7 +345,7 @@ module.exports = function(lando) {
     // Run composer install if we have the file and it isnt explicitly disabled in config
     if (runComposer) {
       var composerInstall = 'cd $LANDO_MOUNT && composer install';
-      build.services[cliService].build = [composerInstall];
+      build.services.appserver.build = [composerInstall];
     }
 
     // Return the things
