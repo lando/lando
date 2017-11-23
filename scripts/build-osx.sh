@@ -4,9 +4,24 @@
 set -x
 set -e
 
-# Lando things
+# Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="1.13.1"
+DOCKER_VERSION="17.09.0-ce-mac35"
+TEAM_ID="FY8GAUX282"
+PKG_SIGN=false
+DMG_SIGN=false
+
+# Check our certificates situation
+if security find-identity -v | grep "$TEAM_ID" | grep "Developer ID Application"; then
+  echo "Developer ID Installer Found"
+  security find-identity -v | grep "$TEAM_ID" | grep "Developer ID Application"
+  DMG_SIGN=true
+fi
+if security find-identity -v | grep "$TEAM_ID" | grep "Developer ID Installer"; then
+  echo "Developer ID Installer Found"
+  security find-identity -v | grep "$TEAM_ID" | grep "Developer ID Installer"
+  PKG_SIGN=true
+fi
 
 # Start up our build directory and go into it
 mkdir -p build/installer
@@ -75,17 +90,47 @@ cd mpkg/docker.pkg && \
 sed -i "" -e "s/%LANDO_VERSION%/$LANDO_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 sed -i "" -e "s/%DOCKER_VERSION%/$DOCKER_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 
-# Build the package
-mkdir -p dmg && mkdir -p dist && cd mpkg && \
-  xar -c --compression=none -f ../dmg/LandoInstaller.pkg . && cd .. && \
-  mv -f uninstall.sh dmg/uninstall.command && \
-  mv -f lando.icns dmg/.VolumeIcon.icns && \
-  cp -rf ../../README.md dmg/README.md && \
-  cp -rf ../../TERMS.md dmg/TERMS.md && \
-  cp -rf ../../LICENSE.md dmg/LICENSE.md
+# Build the package and sign it if we can
+mkdir -p dmg && mkdir -p dist && cd mpkg && xar -c --compression=none -f ../dmg/LandoInstaller.pkg .
+
+# Sign the package if applicable
+if [ "$PKG_SIGN" == "true" ]; then
+
+  # Move around the pkg
+  mv ../dmg/LandoInstaller.pkg ../dmg/UnsignedLandoInstaller.pkg
+
+  # Sign
+  productsign --sign "$TEAM_ID" ../dmg/UnsignedLandoInstaller.pkg ../dmg/LandoInstaller.pkg
+
+  # Verify
+  pkgutil --check-signature ../dmg/LandoInstaller.pkg
+
+  # Remove unsigned
+  rm -f ../dmg/UnsignedLandoInstaller.pkg
+
+fi
+
+# Copy in other DMG  asssets
+cd .. && \
+mv -f uninstall.sh dmg/uninstall.command && \
+mv -f lando.icns dmg/.VolumeIcon.icns && \
+cp -rf ../../README.md dmg/README.md && \
+cp -rf ../../TERMS.md dmg/TERMS.md && \
+cp -rf ../../LICENSE.md dmg/LICENSE.md
 
 # This seems to fail on travis periodically so lets add a retry to it
 NEXT_WAIT_TIME=0
 until hdiutil create -volname Lando -srcfolder dmg -ov -format UDZO dist/lando.dmg || [ $NEXT_WAIT_TIME -eq 5 ]; do
   sleep $(( NEXT_WAIT_TIME++ ))
 done
+
+# Codesign the DMG if applicable
+if [ "$DMG_SIGN" == "true" ]; then
+
+  # Sign
+  codesign -s "$TEAM_ID" -v dist/lando.dmg
+
+  # Verify
+  codesign -v dist/lando.dmg
+
+fi
