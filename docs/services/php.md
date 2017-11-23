@@ -37,10 +37,12 @@ Installed Extensions
 * filter
 * ftp
 * gd
+* gettext
 * hash
 * iconv
 * imagick
 * imap
+* intl
 * json
 * ldap
 * libxml
