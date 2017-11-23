@@ -1,17 +1,19 @@
+**Before you submit an issue make sure you have [downloaded](https://github.com/lando/lando/releases) the latest version of Lando and checked to see if the latest version resolves your issue!**
+
 Please complete the following steps.
 
 **The more steps you complete the more likely we are to address your issue!**
 
-1.  Please review the [current list of issues](https://github.com/lando/lando/issues) to make sure you are not submitting a duplicate.
-2.  Please tag your issue appropriately. Please review the [tagging criteria](https://docs.devwithlando.io/dev/contributing.html).
-3.  Based on the issue type tag selected above please fill in the relevant section below.
+1.  Update to the [latest version](https://github.com/lando/lando/releases) of Lando and make sure the issue isn't fixed already.
+2.  Please review the [current list of issues](https://github.com/lando/lando/issues) to make sure you are not submitting a duplicate.
+3.  Fill out either the `BUG REPORT` or `FEATURE REQUEST` below.
 
 Bug Report
 ==========
 
 **Tell us about your setup**
 
-What is your lando version and operating system?
+What is your lando version and operating system? **(note that the older your version the less likely we are to reply)**
 
 *Example: v3.0.0-alpha1 on Windows 10 Professional*
 
@@ -83,8 +85,8 @@ Could better documentation have prevented this issue? if so what should we chang
 Does this bug prevent you from using lando?
 
 
-Feature/Enhancement Request
-===========================
+Feature Request
+===============
 
 Please explain your request and its importance in the form of a user story.
 
