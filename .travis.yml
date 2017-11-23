@@ -3,13 +3,13 @@ matrix:
   include:
   - os: linux
     env: LANDO_PKG_TYPE=rpm LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
   - os: linux
     env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
   - os: osx
     env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
 services:
   - docker
 sudo: required
