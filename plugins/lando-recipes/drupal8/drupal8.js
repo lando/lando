@@ -17,8 +17,9 @@ module.exports = function(lando) {
    */
   var build = function(name, config) {
 
-    // Set the default php version for Drupal 8
+    // Set Drupal 8 defaults
     config.php = _.get(config, 'php', '7.1');
+    config.drush = _.get(config, 'drush', 'composer');
 
     // Start by cheating
     var build = lando.recipes.build(name, 'drupal7', config);

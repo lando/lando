@@ -35,16 +35,22 @@ config:
   #
   webroot: www
 
-  # Optionally specify the version of Backdrush you want for your site
+  # Optionally specify how you want Lando to handle Backdrop Drush. There are a few options
   #
-  # This can be either
-  #   - `stable`
-  #   - `dev`
-  #   - `any valid git ref for which there will be a github download` eg 0.0.3
+  # If omitted this will globally install the latest stable version of Backdrop Drush 8
   #
-  # If ommitted this will use the stable Backdrush.
+  # 1. Install Globally
   #
-  backdrush: stable
+  # This will globally install the corresponding version posted over at
+  # https://github.com/backdrop-contrib/drush/releases
+  # backdrush: 0.0.6
+  #
+  # 2. Do nothing
+  #
+  # This will tell Lando to not do anything, e.g. it's up to the user
+  # backdrush: false
+  #
+  backdrush: 0.0.6
 
   # Optionally specify the database type, this can be one of:
   #

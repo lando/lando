@@ -12,23 +12,93 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var helpers = require('./../lamp/lamp')(lando);
 
+  // "Constants"
+  var DRUSH8 = '8.1.15';
+  var DRUSH7 = '7.4.0';
+  var DRUSHLAUNCHER = '0.4.3';
+
   /**
-   * Helper to get DRUSH URL
+   * Helper to get DRUSH 8 or DRUSH LAUNCHER phar
    */
-  var drushUrl = function(drush) {
+  var drushUrl = function(thing, version) {
 
     // Base URL
-    var ghRelease = 'https://github.com/drush-ops/drush/releases/download/';
+    var base = 'https://github.com/drush-ops/' + thing + '/releases/download/';
 
     // Start with version
-    var download = ghRelease + drush + '/drush.phar';
+    return base + version + '/drush.phar';
 
-    // Overrule to stable if needed
-    if (drush === 'stable') {
-      download = 'http://files.drush.org/drush.phar';
+  };
+
+  /**
+   * Helper to get the phar build command
+   */
+  var pharOut = function(url, status) {
+    return helpers.getPhar(url, 'drush.phar', '/usr/local/bin/drush', status);
+  };
+
+  /**
+   * Helper to figure out how to handle drush
+   */
+  var drush = function(build, config) {
+
+    // If config is false we are done
+    if (!config) {
+      return build;
     }
-    // return URL
-    return download;
+
+    // Otherwise get the config type
+    var type = config.split(':')[0];
+    var value = config.split(':')[1] || type;
+
+    // Backwards compatibility for older drush config
+    // This assumes versions set in the old format will be installed globally
+    if (!_.includes(['composer', 'global', 'path'], type)) {
+      value = (type === 'stable') ? DRUSH8 : type;
+      type = 'global';
+    }
+
+    // Add drush to the tooling
+    build.tooling.drush = {
+      service: 'appserver',
+      needs: ['database'],
+      description: 'Run drush commands'
+    };
+
+    // Add a different path to the drush binary if specified
+    if (type === 'path' && !_.isEmpty(value)) {
+      build.tooling.drush.cmd = value;
+    }
+
+    // Or run the correct install command
+    else if (type === 'composer' || (type === 'global' && !_.isEmpty(value))) {
+
+      // Assume a global composer install to start
+      var cmd = helpers.getCgr('drush/drush', value);
+
+      // If composer or drush 8
+      if (type === 'composer' || (value && value.split('.')[0] === '8')) {
+        var isComposer = (type === 'composer');
+        var repo = isComposer ? 'drush-launcher' : 'drush';
+        var version = isComposer ? DRUSHLAUNCHER : value;
+        var status = isComposer ? '--drush-launcher-version' : 'core-status';
+        var url = drushUrl(repo, version);
+        cmd = pharOut(url, ['./drush.phar', status]);
+      }
+
+      // Set the command
+      build.services.appserver.build.push(cmd);
+
+    }
+
+    // Volume mount the drush cache
+    var volumesKey = 'services.appserver.overrides.services.volumes';
+    var vols = _.get(build, volumesKey, []);
+    vols.push('/var/www/.drush');
+    _.set(build, volumesKey, vols);
+
+    // Return
+    return build;
 
   };
 
@@ -49,39 +119,16 @@ module.exports = function(lando) {
     // Start by cheating
     var build = lando.recipes.build(name, base, config);
 
-    // Get the specified version of Drush
-    var drush = _.get(config, 'drush', 'stable');
+    // Determine the default drush setup for D7
+    var defaultDrush = (config.php === '5.3' ? DRUSH7 : DRUSH8);
 
-    // Volume mount the drush cache
-    var volumesKey = 'services.appserver.overrides.services.volumes';
-    var vols = _.get(build, volumesKey, []);
-    vols.push('/var/www/.drush');
-    _.set(build, volumesKey, vols);
+    // Get the drush config
+    var drushConfig = _.get(config, 'drush', 'global:' + defaultDrush);
 
-    // Build what we need to get the drush install command
-    var pharUrl = drushUrl(drush);
-    var src = 'drush.phar';
-    var dest = '/usr/local/bin/drush';
-    var drushStatusCheck = ['./' + src, 'core-status'];
-
-    // Get the drush commands
-    var pharInstall = helpers.getPhar(pharUrl, src, dest, drushStatusCheck);
-    var cgrInstall = helpers.getCgr('drush/drush', drush);
-
-    // Set builders if needed
+    // Handle drush
     var buildersKey = 'services.appserver.build';
     build.services.appserver.build = _.get(build, buildersKey, []);
-
-    // Add our drush cmds
-    var drushCmd = [pharInstall, cgrInstall].join(' || ');
-    build.services.appserver.build.push(drushCmd);
-
-    // Add drush to the tooling
-    build.tooling.drush = {
-      service: 'appserver',
-      needs: ['database'],
-      description: 'Run drush commands'
-    };
+    build = drush(build, drushConfig);
 
     // Return the things
     return build;
