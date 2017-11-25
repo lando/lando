@@ -28,7 +28,7 @@ Installed Extensions
 --------------------
 
 * apc (in php 5.3 and 5.4)
-* apcu (in php 5.6+)
+* apcu (in php 5.5+)
 * bcmath
 * bz2
 * calendar

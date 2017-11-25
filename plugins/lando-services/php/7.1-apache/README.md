@@ -36,6 +36,7 @@ RUN apt-get update && apt-get install -y \
     xfonts-base \
     xfonts-75dpi \
     zlib1g-dev \
+  && pecl install apcu \
   && pecl install imagick \
   && pecl install memcached \
   && pecl install oauth-2.0.2 \
@@ -44,6 +45,7 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+  && docker-php-ext-enable apcu \
   && docker-php-ext-enable imagick \
   && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
