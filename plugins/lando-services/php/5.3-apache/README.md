@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
     libpng12-dev \
     libpq-dev \
     libxml2-dev \
+    libicu-dev \
     mysql-client \
     pv \
     ssh \
@@ -71,6 +72,8 @@ RUN apt-get update && apt-get install -y \
     pdo_pgsql \
     soap \
     zip \
+    intl \
+    gettext \
   && rm -rf /usr/local/lib/conf.d \
   && ln -s /usr/local/etc/php/conf.d /usr/local/lib/conf.d \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \

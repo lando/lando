@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
     libpng12-dev \
     libpq-dev \
     libxml2-dev \
+    libicu-dev \
     mysql-client \
     pv \
     ssh \
@@ -38,7 +39,6 @@ RUN apt-get update && apt-get install -y \
     xfonts-base \
     xfonts-75dpi \
     zlib1g-dev \
-  # Install php extensions
   && mkdir -p /usr/local/etc/php/conf.d \
   && pecl install apc \
   && pecl install imagick-3.3.0 \
@@ -72,7 +72,8 @@ RUN apt-get update && apt-get install -y \
     pdo_pgsql \
     soap \
     zip \
-  # Install composer
+    intl \
+    gettext \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \

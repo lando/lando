@@ -20,10 +20,15 @@ Supported Versions
 *   [latest](https://hub.docker.com/r/devwithlando/php)
 *   custom
 
+> #### Warning::Using Unsupported PHP Versions
+>
+> While you can use [currently EOL](http://php.net/supported-versions.php) `php` versions with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
+
 Installed Extensions
 --------------------
 
 * apc (in php 5.3 and 5.4)
+* apcu (in php 5.6+)
 * bcmath
 * bz2
 * calendar
