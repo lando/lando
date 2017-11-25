@@ -16,13 +16,17 @@ module.exports = function(lando) {
    * Supported versions for node
    */
   var versions = [
+    '9',
     '8',
+    'carbon',
     '8.0',
     '8.4',
+    '8.9',
     '6',
     'boron',
     '6.10',
     '6.11',
+    '6.12',
     '4',
     'argon',
     '4.8',

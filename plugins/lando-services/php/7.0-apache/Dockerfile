@@ -2,7 +2,7 @@
 #
 # docker build -t devwithlando/php:7.0-apache .
 
-FROM php:7.0-apache
+FROM php:7.0-apache-jessie
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \

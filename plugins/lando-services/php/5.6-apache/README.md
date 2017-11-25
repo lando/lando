@@ -6,7 +6,7 @@ A decent cross purpose apache based php 5.6 appserver.
 ```
 # Basic apache php 5.6 appserver for Lando
 #
-# docker build -t devwithlando/php:5.6-apache .
+# docker build -t devwithlando/php:5.6-apache-jessie .
 
 FROM php:5.6-apache
 

@@ -8,7 +8,7 @@ A decent cross purpose apache based php 7.1 appserver.
 #
 # docker build -t devwithlando/php:7.1-apache .
 
-FROM php:7.1-apache
+FROM php:7.1-apache-jessie
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \

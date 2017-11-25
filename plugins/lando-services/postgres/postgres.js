@@ -18,7 +18,7 @@ module.exports = function(lando) {
    */
   var versions = [
     '10',
-    '10-beta3',
+    '10.1',
     '9.6',
     '9.5',
     '9.4',
