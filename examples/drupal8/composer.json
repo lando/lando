@@ -14,7 +14,7 @@
         "drupal/console": "~1.0",
         "drupal/core": "~8.0",
         "drupal/search_api_solr": "^1.0@RC",
-        "drush/drush": "~8.0",
+        "drush/drush": "~8",
         "webflo/drupal-finder": "^0.3.0",
         "webmozart/path-util": "^2.3"
     },

@@ -35,24 +35,41 @@ config:
   #
   webroot: web
 
-  # Optionally specify the version of Drush you want for your site
+  # Optionally specify how you want Lando to handle Drush. There are a few options
   #
-  # If omitted (which is recommended) this will use the stable Drush
+  # If omitted this will globally install the latest version of Drush 8, unless
+  # you are on php 5.3 in which case Drush 7 will be used.
   #
-  # This will take any version to which there is a corresponding phar over on
-  # the drush github release page eg `drush: 8.1.12`
+  # You can also configure it in the following ways:
   #
-  # see: https://github.com/drush-ops/drush/releasess
+  # 1. Install via Composer
   #
-  # Alternatively this will also take any supported composer version eg `~7`
-  # THIS SHOULD BE USED WITH CAUTION.
+  # This will install the Drush Launcher (https://github.com/drush-ops/drush-launcher)
+  # and will delegate to the site-local version of Drush you've installed with Composer
+  # http://docs.drush.org/en/master/install/
+  # drush: composer
   #
-  # Obviously, if you have a site-local drush installed via composer that will be
-  # used instead of this one.
+  # 2. Install Globally
   #
-  # see: http://docs.drush.org/en/master/install/
+  # This will globally install the corresponding Drush 8 PHAR posted over at
+  # https://github.com/drush-ops/drush/releases
+  # drush: global:8.1.12
   #
-  # drush: stable
+  # This will ATTEMPT to globally install any pre Drush 8 versions via Composer
+  # drush: global:~7
+  #
+  # 3. Specify a path
+  #
+  # This assumes the user has already installed Drush but wishes to tell Lando where
+  # it exists.
+  # drush: path:/app/vendor/bin/drush
+  #
+  # 4. Do nothing
+  #
+  # This will tell Lando to not do anything, e.g. it's up to the user
+  # drush: false
+  #
+  drush: global:8.1.15
 
   # Optionally specify the database type, this can be one of:
   #

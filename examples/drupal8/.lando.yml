@@ -35,21 +35,41 @@ config:
   #
   webroot: web
 
-  # Optionally specify the version of global drush on your site
+  # Optionally specify how you want Lando to handle Drush. There are a few options
   #
-  # If omitted this will install the latest stable version
+  # If omitted this will install the Drush Launcher and assume you've installed a
+  # site-local version of Drush with Composer
   #
-  # You should also highly consider a site-local install of drush.
+  # You can also configure it in the following ways:
   #
-  # See: http://docs.drush.org/en/master/install/
+  # 1. Install via Composer
   #
-  # This will also grab any version to which there is a corresponding phar over
-  # on the drush github release page eg `8.1.12` or "stable" for the latest
-  # stable version
+  # This will install the Drush Launcher (https://github.com/drush-ops/drush-launcher)
+  # and will delegate to the site-local version of Drush you've installed with Composer
+  # http://docs.drush.org/en/master/install/
+  # drush: composer
   #
-  # See: https://github.com/drush-ops/drush/releases
+  # 2. Install Globally
   #
-  drush: stable
+  # This will globally install the corresponding Drush 8 PHAR posted over at
+  # https://github.com/drush-ops/drush/releases
+  # drush: global:8.1.12
+  #
+  # This will ATTEMPT to globally install any pre Drush 8 versions via Composer
+  # drush: global:~7
+  #
+  # 3. Specify a path
+  #
+  # This assumes the user has already installed Drush but wishes to tell Lando where
+  # it exists.
+  # drush: path:/app/vendor/bin/drush
+  #
+  # 4. Do nothing
+  #
+  # This will tell Lando to not do anything, e.g. it's up to the user
+  # drush: false
+  #
+  drush: composer
 
   # Optionally specify whether you want to disable the global install of drupal console.
   #

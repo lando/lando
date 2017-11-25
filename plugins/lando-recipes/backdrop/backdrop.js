@@ -34,7 +34,12 @@ module.exports = function(lando) {
   /*
    * Helper to download and install backdrop drush cmds
    */
-  var getBackdrush = function(config) {
+  var getBackdrush = function(backdrush) {
+
+    // Return immediately if no backdrush
+    if (!backdrush) {
+      return 'echo "Not installing Backdrop Drush"';
+    }
 
     // Define stable and dev versions
     var version = {
@@ -46,7 +51,6 @@ module.exports = function(lando) {
     var baseUrl = 'https://github.com/backdrop-contrib/drush/archive/';
 
     // Get the user config
-    var backdrush = _.get(config, 'backdrush', 'stable');
     var isSpecial = _.includes(['dev', 'stable'], backdrush);
     var release = (isSpecial) ? version[backdrush] : backdrush;
 
@@ -80,8 +84,13 @@ module.exports = function(lando) {
     // Set the default php version for Backdrop
     config.php = _.get(config, 'php', '7.0');
 
-    // Make sure we are enforcing latest stable drush
-    config.drush = 'stable';
+    // Get the backdrush config
+    var backdrush = _.get(config, 'backdrush', 'stable');
+
+    // Use drush defaults for D7 unless backdrush is set to false
+    if (backdrush === false) {
+      config.drush = false;
+    }
 
     // Start by cheating
     var build = lando.recipes.build(name, 'drupal7', config);
@@ -121,7 +130,7 @@ module.exports = function(lando) {
     var builders = _.get(build, buildersKey, []);
 
     // Add the backdrop install command
-    builders.push(getBackdrush(config));
+    builders.push(getBackdrush(backdrush));
     _.set(build, buildersKey, builders);
 
     // Return the things
