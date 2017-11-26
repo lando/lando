@@ -12,9 +12,9 @@
         "cweagans/composer-patches": "^1.6",
         "drupal-composer/drupal-scaffold": "^2.2",
         "drupal/console": "~1.0",
-        "drupal/core": "~8.0",
+        "drupal/core": "~8",
         "drupal/search_api_solr": "^1.0@RC",
-        "drush/drush": "~8",
+        "drush/drush": "~9",
         "webflo/drupal-finder": "^0.3.0",
         "webmozart/path-util": "^2.3"
     },
