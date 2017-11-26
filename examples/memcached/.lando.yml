@@ -1,5 +1,5 @@
 # Memcached example
-name: memcache
+name: memcached
 
 #
 # You need to run `lando npm install` before you run `lando start` for this
@@ -9,7 +9,7 @@ name: memcache
 # Give me http://memcache.lndo.site
 proxy:
   appserver:
-    - memcache.lndo.site
+    - memcached.lndo.site
 
 # Spin up a basic nodes server with memcached backend
 services:

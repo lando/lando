@@ -1,15 +1,15 @@
-# NODE server example
-name: node
+# Express server example
+name: express
 
 #
 # You need to run `lando npm install` before you run `lando start` for this
 # example to work
 #
 
-# Give me http://node.lndo.site and https://node.lndo.site
+# Give me http://express.lndo.site and https://express.lndo.site
 proxy:
   appserver:
-    - node.lndo.site
+    - express.lndo.site
 
 # Spin up services to run a basic node server
 services:
