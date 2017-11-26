@@ -1,8 +1,8 @@
 # Name of the events example
 name: events
 
-# Start with the drupal7 recipe and some recipe config
-recipe: drupal7
+# Start with the lemp recipe and some recipe config
+recipe: lemp
 config:
   via: nginx
   php: 7.1
