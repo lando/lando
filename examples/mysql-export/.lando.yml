@@ -59,3 +59,63 @@ tooling:
       - db
     description: Export a database from your lando app
     cmd: /helpers/mysql-export.sh
+    options:
+      host:
+        description: The database host
+        alias:
+          - h
+      user:
+        description: The database user
+        default: root
+        alias:
+          - u
+      database:
+        description: The database name
+        alias:
+          - d
+      password:
+        description: The database password
+        alias:
+          - p
+      port:
+        description: The database port
+        default: 3306
+        alias:
+          - P
+      stdout:
+        description: Dump database to stdout
+  'db-import <file>':
+    service: appserver
+    needs:
+      - db
+    description: Import <file> into database
+    cmd: /helpers/mysql-import.sh
+    options:
+      host:
+        description: The database host
+        alias:
+          - h
+      user:
+        description: The database user
+        default: root
+        alias:
+          - u
+      database:
+        description: The database name
+        alias:
+          - d
+      password:
+        description: The database password
+        alias:
+          - p
+      port:
+        description: The database port
+        default: 3306
+        alias:
+          - P
+  mysql:
+    service: appserver
+    description: Drop into a mysql shell for the import target
+    needs:
+      - db
+    cmd: mysql -h db -u mysql -pmysql data1

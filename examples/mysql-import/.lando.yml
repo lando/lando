@@ -53,6 +53,12 @@ services:
     #  confd: config
 
 tooling:
+  mysql:
+    service: appserver
+    description: Drop into a mysql shell for the import target
+    needs:
+      - db
+    cmd: mysql -h db -u mysql -pmysql data1
   'db-import <file>':
     service: appserver
     needs:
