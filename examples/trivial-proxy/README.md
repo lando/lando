@@ -3,7 +3,7 @@ Proxy Format Example
 
 This example uses an `apache` and `nginx` webserver to demonstrate the proxy routing format.
 
-See the `.lando.yml` in this directory for configuration options.
+See the `.lando.yml` in this directory for proxy configuration options.
 
 Getting Started
 ---------------

@@ -3,7 +3,7 @@ Varnish Example
 
 This example provides a LEMP stack running behind Varnish.
 
-See the `.lando.yml` in this directory for configuration options.
+See the `.lando.yml` in this directory for Varnish configuration options.
 
 Getting Started
 ---------------

@@ -1,3 +1,0 @@
-name: trivial-ports
-compose:
-  - compose.yml

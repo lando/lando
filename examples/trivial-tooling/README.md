@@ -3,7 +3,7 @@ Tooling Example
 
 This example provides a basic example of Lando tooling using a LEMP stack with node cli tools.
 
-See the `.lando.yml` in this directory for configuration options.
+See the `.lando.yml` in this directory for tooling configuration options.
 
 Getting Started
 ---------------

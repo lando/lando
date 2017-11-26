@@ -1,9 +1,9 @@
-WordPress Composer Example
-==========================
+Solr Example
+============
 
-This example provides a Composer powered spin up of a WordPress site.
+This example provides a NodeJS based SOLR example.
 
-See the `.lando.yml` in this directory for WordPress configuration options.
+See the `.lando.yml` in this directory for SOLR configuration options.
 
 Getting Started
 ---------------
@@ -11,8 +11,8 @@ Getting Started
 You should be able to run the following steps to get up and running with this example.
 
 ```bash
-# Install dependencies with Composer
-lando composer install
+# Install our node dependencies
+lando npm install
 
 # Start up the example
 lando start
@@ -27,9 +27,12 @@ Helpful Commands
 Here is a non-exhaustive list of commands that are relevant to this example.
 
 ```bash
-# Get service (eg database) connection info
+# Get solr connection info
 lando info
 
-# Run WP-cli commands
-lando wp
+# Verify we can connect to solr
+curl solr.lndo.site
+
+# Verify the solr admin site is available
+curl admin.solr.lndo.site/solr/#
 ```

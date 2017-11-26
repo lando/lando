@@ -3,7 +3,7 @@ Services Example
 
 This example provides an `nginx` webserver and showcases some basic service overrides.
 
-See the `.lando.yml` in this directory for configuration options.
+See the `.lando.yml` in this directory for services configuration options.
 
 Getting Started
 ---------------
