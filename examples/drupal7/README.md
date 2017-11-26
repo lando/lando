@@ -1,9 +1,9 @@
-Drupal 6 Recipe Example
-=======================
+Drupal 7 Services Example
+=========================
 
-This example provides a very basic `drupal6` recipe example.
+This example provides a very basic `drupal7` example using Lando services and not a recipe.
 
-See the `.lando.yml` in this directory for Drupal 6 configuration options.
+See the `.lando.yml` in this directory for Drupal 7 configuration options.
 
 Getting Started
 ---------------
@@ -28,5 +28,11 @@ Here is a non-exhaustive list of commands that are relevant to this example.
 lando info
 
 # Run drush commands
+cd www
 lando drush status
+
+# Run NODE dev tools
+lando node -v
+lando npm -v
+lando grunt -v
 ```

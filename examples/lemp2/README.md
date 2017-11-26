@@ -1,9 +1,9 @@
-Drupal 6 Recipe Example
-=======================
+LEMP Recipe Example
+===================
 
-This example provides a very basic `drupal6` recipe example.
+This example provides a very basic `lemp` recipe example.
 
-See the `.lando.yml` in this directory for Drupal 6 configuration options.
+See the `.lando.yml` in this directory for LEMP configuration options.
 
 Getting Started
 ---------------
@@ -26,7 +26,4 @@ Here is a non-exhaustive list of commands that are relevant to this example.
 ```bash
 # Get DB connection info
 lando info
-
-# Run drush commands
-lando drush status
 ```
