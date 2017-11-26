@@ -77,8 +77,8 @@ tooling:
 
   # Define a tooling command with a stringed command
   test:
-    service: cli
-    cmd: npm test:code & npm test:unit
+    service: appserver
+    cmd: composer test
     description: Run our tests
 
   # Define `lando word` that passes through to a script that can handle options.
