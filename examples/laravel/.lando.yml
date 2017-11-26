@@ -34,7 +34,7 @@ config:
   #
   # If ommitted this will be your approot itself.
   #
-  webroot: public
+  webroot: web/public
 
   # Optionally specify a primary database, this can be one of:
   #

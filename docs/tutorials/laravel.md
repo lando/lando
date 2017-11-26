@@ -34,7 +34,7 @@ For more info on how `lando init` works check out [this](./../cli/init.md).
 Starting Your Site
 ------------------
 
-Once you've completed the above you should be able to start your Drupal 8 site.
+Once you've completed the above you should be able to start your Laravel site.
 
 ```bash
 # Start up app

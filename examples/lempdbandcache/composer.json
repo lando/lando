@@ -1,5 +1,0 @@
-{
-    "require": {
-        "phplint/phplint": "^0.0.1"
-    }
-}
