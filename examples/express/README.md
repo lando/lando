@@ -32,7 +32,4 @@ lando node -v
 lando npm -v
 lando yarn -v
 lando gulp -v
-
-# Confirm redis connection and drop into redis-cli
-lando redis-cli
 ```
