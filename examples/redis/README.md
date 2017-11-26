@@ -3,7 +3,7 @@ Redis Example
 
 This example provides a NodeJS based redis cache example.
 
-See the `.lando.yml` in this directory for Ruby configuration options.
+See the `.lando.yml` in this directory for redis configuration options.
 
 Getting Started
 ---------------
