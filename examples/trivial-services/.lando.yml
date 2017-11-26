@@ -1,10 +1,10 @@
 name: trivial-services
 proxy:
-  nginx:
+  appserver:
     - trivial-services.lndo.site
 services:
   appserver:
-    type: nginx:stable
+    type: nginx
     ssl: true
     webroot: www
     config:
