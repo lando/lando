@@ -1,7 +1,7 @@
 /**
  * Command to start a lando app
  *
- * @name stop
+ * @name start
  */
 
 'use strict';
