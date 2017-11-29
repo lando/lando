@@ -10,7 +10,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var path = require('path');
 
   var addConfig = lando.services.addConfig;
   //var addScript = lando.services.addScript;
