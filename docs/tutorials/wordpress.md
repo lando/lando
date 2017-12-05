@@ -89,7 +89,7 @@ lando wp                       Run wp-cli commands
 
 ```bash
 # Search-replace the domain name
-wp search-replace 'some.old.domain' 'mysite.lndo.site'
+lando wp search-replace 'some.old.domain' 'mysite.lndo.site'
 
 # Run composer install
 lando composer install
