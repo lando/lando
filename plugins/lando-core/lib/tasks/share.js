@@ -110,6 +110,9 @@ module.exports = function(lando) {
                 tunnel.close();
               });
 
+              // Report lando share use to metrics
+              lando.metrics.reportAction('share', {app: app});
+
             });
 
             tunnel.on('close', function() {
