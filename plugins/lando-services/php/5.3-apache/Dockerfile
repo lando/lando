@@ -33,6 +33,8 @@ RUN apt-get update && apt-get install -y \
     xfonts-base \
     xfonts-75dpi \
     zlib1g-dev \
+    wkhtmltopdf \
+    xvfb \
   && mkdir -p /usr/local/etc/php/conf.d \
   && pecl install apc \
   && pecl install imagick-3.3.0 \

@@ -30,6 +30,8 @@ RUN apt-get update && apt-get install -y \
     xfonts-base \
     xfonts-75dpi \
     zlib1g-dev \
+    wkhtmltopdf \
+    xvfb \
   && pecl install apcu \
   && pecl install imagick \
   && pecl install memcached \
