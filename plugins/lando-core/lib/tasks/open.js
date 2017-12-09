@@ -15,7 +15,7 @@ module.exports = function(lando) {
   // Open the app in a browser
   return {
     command: 'open [url]',
-    describe: 'Open the app in a web browser.',
+    describe: 'Open the app in a web browser',
     run: function(options) {
 
       // Try to get the app
