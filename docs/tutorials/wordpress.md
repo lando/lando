@@ -89,7 +89,7 @@ lando wp                       Run wp-cli commands
 
 ```bash
 # Search-replace the domain name
-wp search-replace 'some.old.domain' 'mysite.lndo.site'
+lando wp search-replace 'some.old.domain' 'mysite.lndo.site'
 
 # Run composer install
 lando composer install
@@ -168,6 +168,6 @@ Read More
 *   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
 *   [Adding additional events](http://docs.devwithlando.io/config/events.html)
 *   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
+*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/external-access.html)
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
