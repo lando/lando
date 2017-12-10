@@ -18,6 +18,7 @@ Commands:
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
   poweroff                 Spin down all lando related containers
+  pull                     Pull down updates to your code, database, and/or files
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
@@ -87,6 +88,7 @@ Commands:
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
   poweroff                 Spin down all lando related containers
+  pull                     Pull down updates to your code, database, and/or files
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
