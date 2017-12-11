@@ -54,6 +54,11 @@ module.exports = function(lando) {
             }
           })
 
+          .then(function(app) {
+            // Report lando share use to metrics
+            return lando.metrics.reportAction('share', {app: app});
+          })
+
           // Get the URLS
           .then(function() {
 
