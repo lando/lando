@@ -26,6 +26,9 @@ before_install:
       # Export
       echo $APPLE_CERTS_DATA | base64 --decode > /tmp/certs.p12
 
+      # Empty out keychain
+      rm /Library/Keychains/System.keychain
+
       # Create keychain and import things
       security create-keychain -p travis macos-build.keychain
       security default-keychain -s macos-build.keychain
