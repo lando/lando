@@ -70,7 +70,7 @@ script:
   - grunt test:unit
 
   # Make sure we can build the docs
-  - 30 grunt docs
+  - grunt docs
 
   # Run the build
   - mkdir -p release
