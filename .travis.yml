@@ -70,7 +70,7 @@ script:
   - grunt test:unit
 
   # Make sure we can build the docs
-  - grunt docs
+  - travis_wait 30 grunt docs
 
   # Run the build
   - mkdir -p release
