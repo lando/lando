@@ -31,7 +31,7 @@ before_install:
       security default-keychain -s macos-build.keychain
       security unlock-keychain -p travis macos-build.keychain
       security set-keychain-settings -t 3600 -u macos-build.keychain
-      travis_wait security import /tmp/certs.p12 -k ~/Library/Keychains/macos-build.keychain -P "$APPLE_CERTS_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign
+      travis_wait security import /tmp/certs.p12 -k ~/Library/Keychains/macos-build.keychain -P "$APPLE_CERTS_PASSWORD" -T /usr/bin/codesign -T travis_wait /usr/bin/productsign
 
       # Key signing
       security set-key-partition-list -S apple-tool:,apple: -s -k $APPLE_CERTS_PASSWORD macos-build.keychain
