@@ -34,7 +34,7 @@ before_install:
       travis_wait 40 security import /tmp/certs.p12 -k ~/Library/Keychains/macos-build.keychain -P "$APPLE_CERTS_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign
 
       # Key signing
-      security set-key-partition-list -S apple-tool:,apple: -s -k $APPLE_CERTS_PASSWORD macos-build.keychain
+      security set-key-partition-list -S apple-tool:,apple: -s -k travis macos-build.keychain
 
       # Verify the things
       security find-identity -v macos-build.keychain | grep FY8GAUX282 | grep "Developer ID Installer"
