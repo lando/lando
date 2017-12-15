@@ -149,7 +149,7 @@ lando push -m "Updated the widget to do awesome thing x"
 # Push only the database and code
 lando push --files=none
 
-# Pull only the files and code
+# Push only the files and code
 lando push --database=none
 ```
 
