@@ -45,6 +45,10 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       serverxmlfile: '/usr/local/tomcat/conf/server.xml',
+      tomcatusersfile: '/usr/local/tomcat/conf/tomcat-users.xml',
+      contextfile: '/usr/local/tomcat/conf/context.xml',
+      managercontextfile: '/usr/local/tomcat/webapps/manager/META-INF/context.xml',
+      contextfragmentspath: '/usr/local/tomcat/conf/Catalina/localhost',
       webroot: config._mount
     };
 
@@ -68,6 +72,19 @@ module.exports = function(lando) {
     // Set the default server.xml conf file
     var serverXml = ['tomcat', 'server.xml'];
     var confVol = buildVolume(serverXml, configFiles.serverxmlfile, defaultConfDir);
+    // Set the default tomcat-users.xml conf file
+    var tomcatUsersXml = ['tomcat', 'tomcat-users.xml'];
+    var confVol = buildVolume(tomcatUsersXml, configFiles.tomcatusersfile, defaultConfDir);
+    // Set the default context.xml conf file
+    var contextXml = ['tomcat', 'context.xml'];
+    // Set the default manager context.xml conf file to allow access to the host
+    var managerContextXml = ['tomcat', 'manager-context.xml'];
+    var confVol = buildVolume(managerContextXml, configFiles.managercontextfile, defaultConfDir);
+
+    var contextFragments = ['tomcat', 'contextFragments'];
+    var confVol = buildVolume(contextFragments, configFiles.contextfragmentspath, defaultConfDir);
+
+    // write the configs out
     tomcat.volumes = addConfig(confVol, tomcat.volumes);
 
     // Handle ssl option
