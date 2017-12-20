@@ -18,7 +18,8 @@ module.exports = function(lando) {
   var defaultConfDir = lando.config.engineConfigDir;
 
   /**
-   * Supported versions for tomcat (many more available, look at the supported tags list on Docker Hub: https://hub.docker.com/r/library/tomcat/)
+   * Supported versions for tomcat (many more available, look at the supported
+   * tags list on Docker Hub: https://hub.docker.com/r/library/tomcat/)
    */
   var versions = [
     '7-jre8',
@@ -47,7 +48,7 @@ module.exports = function(lando) {
       serverxmlfile: '/usr/local/tomcat/conf/server.xml',
       tomcatusersfile: '/usr/local/tomcat/conf/tomcat-users.xml',
       contextfile: '/usr/local/tomcat/conf/context.xml',
-      managercontextfile: '/usr/local/tomcat/webapps/manager/META-INF/context.xml',
+      managercontext: '/usr/local/tomcat/webapps/manager/META-INF/context.xml',
       contextfragmentspath: '/usr/local/tomcat/conf/Catalina/localhost',
       webroot: config._mount
     };
@@ -71,18 +72,28 @@ module.exports = function(lando) {
 
     // Set the default server.xml conf file
     var serverXml = ['tomcat', 'server.xml'];
-    var confVol = buildVolume(serverXml, configFiles.serverxmlfile, defaultConfDir);
+    var confVol = buildVolume(serverXml, configFiles.serverxmlfile,
+      defaultConfDir);
+
     // Set the default tomcat-users.xml conf file
     var tomcatUsersXml = ['tomcat', 'tomcat-users.xml'];
-    var confVol = buildVolume(tomcatUsersXml, configFiles.tomcatusersfile, defaultConfDir);
+    confVol = buildVolume(tomcatUsersXml, configFiles.tomcatusersfile,
+      defaultConfDir);
+
     // Set the default context.xml conf file
     var contextXml = ['tomcat', 'context.xml'];
+    confVol = buildVolume(contextXml, configFiles.contextfile, defaultConfDir);
+
     // Set the default manager context.xml conf file to allow access to the host
     var managerContextXml = ['tomcat', 'manager-context.xml'];
-    var confVol = buildVolume(managerContextXml, configFiles.managercontextfile, defaultConfDir);
+    confVol = buildVolume(managerContextXml, configFiles.managercontext,
+      defaultConfDir);
 
+    // Set the context fragments path to allow defining and controlling new
+    // Tomcat webapp contexts
     var contextFragments = ['tomcat', 'contextFragments'];
-    var confVol = buildVolume(contextFragments, configFiles.contextfragmentspath, defaultConfDir);
+    confVol = buildVolume(contextFragments, configFiles.contextfragmentspath,
+      defaultConfDir);
 
     // write the configs out
     tomcat.volumes = addConfig(confVol, tomcat.volumes);
@@ -95,7 +106,8 @@ module.exports = function(lando) {
 
       // If we don't have a custom default ssl config lets use the default one
       var sslConf = ['tomcat', 'httpd-ssl.conf'];
-      var sslVolume = buildVolume(sslConf, configFiles.serverxmlfile, defaultConfDir);
+      var sslVolume = buildVolume(sslConf, configFiles.serverxmlfile,
+        defaultConfDir);
       tomcat.volumes = addConfig(sslVolume, tomcat.volumes);
 
       // Add in an add cert task
