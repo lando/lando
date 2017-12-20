@@ -1,0 +1,41 @@
+# Tomcat example server
+name: tomcat-example
+
+# Give me http://tomcat.lndo.site and https://tomcat.lndo.site
+proxy:
+  tomcat:
+      - tomcat-example.lndo.site:8080
+
+# Spin up services to run a basic tomcat server
+services:
+
+  # Create a tomcat instance
+  tomcat:
+
+    # tomcat version 8
+    type: tomcat:8
+    config:
+        webroot: ./webapps
+        serverxmlfile: ./config/server.xml
+        tomcatusersfile: ./config/tomcat-users.xml
+        contextfragmentspath: ./config/contextFragments
+
+
+    # Optionally specify a command/script to run when you start your tomcat service up.
+    #
+    # This can be either a string or array.
+    #
+    # command: tomcat /app/server.rb
+
+    # Install some extra server packages
+    # extras:
+    #  - "apt-get update -y"
+    #  - "apt-get install vim -y"
+
+    # Print a message just to demonstrate this
+    # build:
+    # - "cd $LANDO_MOUNT & echo 'Holla!'"
+
+# Add some nice command routing
+tooling:
+
