@@ -27,7 +27,7 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
 
  # Commit the .lando.yml to your git repo (Optional but recommended)
  git add -A
- git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+ git commit -m "This will be easy, my friend."
  git push
  ```
 
