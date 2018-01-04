@@ -13,7 +13,6 @@ module.exports = function(lando) {
   var path = require('path');
 
   var addConfig = lando.services.addConfig;
-  //var addScript = lando.services.addScript;
   var buildVolume = lando.services.buildVolume;
 
   /**
@@ -94,6 +93,11 @@ module.exports = function(lando) {
       command: solrConfig.command
     };
 
+    // Make sure we set perms on the data directory
+    config.extras = config.extras || [];
+    var dataDir = solrConfig.dataDir;
+    config.extras.unshift(['chown', '-R', 'solr:solr', dataDir].join(' '));
+
     // Handle port forwarding
     if (config.portforward) {
 
@@ -121,18 +125,17 @@ module.exports = function(lando) {
       solr.volumes = addConfig(globalConfig, solr.volumes);
 
       // If this is a recent version of solr we need to add to the config as an arg
-      // and also map to the core
-      if (!_.includes(['3.6', 4.10], config.version)) {
+      if (!_.includes(['3.6', '4.10'], config.version)) {
 
         // Augment the start up command
         var command = solr.command.split(' ');
         command.push('/solrconf');
         solr.command = command.join(' ');
 
-        // Share the config to the core as well
+        // Symlink the core config to the system config
         var coreConf = path.join(solrConfig.dataDir, core, 'conf');
-        var coreConfig = buildVolume(local, coreConf, '$LANDO_APP_ROOT_BIND');
-        solr.volumes = addConfig(coreConfig, solr.volumes);
+        config.extras.unshift(['ln', '-sf', confDir, coreConf].join(' '));
+        config.extras.unshift(['rm', '-rf', coreConf].join(' '));
 
       }
 

@@ -294,11 +294,9 @@ module.exports = function(lando) {
     var config = [];
     var secures = [];
 
-    // Get 443z
+    // Mock add "secure" urls to all our proxy domains
     _.forEach(data, function(datum) {
-      if (_.get(datum.split(':'), '[1]', '80') === '80') {
-        secures.push([datum.split(':')[0], '443'].join(':'));
-      }
+      secures.push([datum.split(':')[0], '443'].join(':'));
     });
 
     // Map to array of port/host objects
@@ -594,7 +592,7 @@ module.exports = function(lando) {
 
       // Add relevant URLS
       app.events.on('post-start', function() {
-        return addUrls(app, ['80/tcp', '443/tcp']);
+        return addUrls(app);
       });
 
       // Add proxy URLS to our app info

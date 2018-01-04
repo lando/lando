@@ -124,6 +124,7 @@
     *   [redis](services/redis.md)
     *   [ruby](services/ruby.md)
     *   [solr](services/solr.md)
+    *   [tomcat](services/tomcat.md)
     *   [varnish](services/varnish.md)
 *   [Tooling](config/tooling.md)
 *   [config.yml](config/config.md)

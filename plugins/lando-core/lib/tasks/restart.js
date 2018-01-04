@@ -72,8 +72,6 @@ module.exports = function(lando) {
 
             // Print the table
             console.log(table.toString());
-
-            // Space it
             console.log('');
 
           });

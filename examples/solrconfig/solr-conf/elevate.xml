@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+ This file allows you to boost certain search items to the top of search
+ results. You can find out an item's ID by searching directly on the Solr
+ server. Search API generally constructs item IDs (esp. for entities) as:
+     $document->id = "$site_hash-$index_id-$datasource:$entity_id:$language_id";
+
+ If you want this file to be automatically re-loaded when a Solr commit takes
+ place (e.g., if you have an automatic script active which updates elevate.xml
+ according to newly-indexed data), place it into Solr's data/ directory.
+ Otherwise, place it with the other configuration files into the conf/
+ directory.
+
+ See http://wiki.apache.org/solr/QueryElevationComponent for more information.
+-->
+
+<elevate>
+<!-- Example for ranking the node #789 first in searches for "example query": -->
+<!--
+  <query text="example query">
+    <doc id="ab12cd34-site_index-entity:789:en" />
+ </query>
+-->
+<!-- Multiple <query> elements can be specified, contained in one <elevate>. -->
+<!-- <query text="...">...</query> -->
+</elevate>
