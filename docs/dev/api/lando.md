@@ -67,6 +67,7 @@ lando.tasks.add('fireeverything', task);
     * [.registry](#lando.registry)
     * [.shell](#lando.shell)
     * [.tasks](#lando.tasks)
+    * [.update](#lando.update)
     * [.user](#lando.user)
     * [.utils](#lando.utils)
     * [.yaml](#lando.yaml)
@@ -230,6 +231,16 @@ Contains helpful methods to define and parse Lando tasks.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [tasks.md](tasks.md)  
+**Since**: 3.0.0  
+<a name="lando.update"></a>
+
+### lando.update
+The update module.
+
+Contains warnings and help if update is needed
+
+**Kind**: static property of [<code>lando</code>](#lando)  
+**See**: [update.md](update.md)  
 **Since**: 3.0.0  
 <a name="lando.user"></a>
 

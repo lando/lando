@@ -25,7 +25,6 @@ lando
 
 If you'd like a simple webapp to try first, you should try the useful and handy [Psi-probe](https://github.com/psi-probe/psi-probe/wiki/InstallationApacheTomcat).
 
-
 Helpful Commands
 ----------------
 

@@ -21,10 +21,11 @@ var restler = lando.node.restler;
     * [._](#module_node._)
     * [.chalk](#module_node.chalk)
     * [.fs](#module_node.fs)
-    * [.ip](#module_node.ip)
     * [.hasher](#module_node.hasher)
+    * [.ip](#module_node.ip)
     * [.jsonfile](#module_node.jsonfile)
     * [.rest](#module_node.rest)
+    * [.semver](#module_node.semver)
 
 <a name="module_node._"></a>
 
@@ -62,18 +63,6 @@ Get fs-extra
 // Get the fs-extra module
 var fs = lando.node.fs;
 ```
-<a name="module_node.ip"></a>
-
-### node.ip
-Get ip utils
-
-**Kind**: static property of [<code>node</code>](#module_node)  
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the ip module
-var ip = lando.node.ip;
-```
 <a name="module_node.hasher"></a>
 
 ### node.hasher
@@ -85,6 +74,18 @@ Get object-hash
 ```js
 // Get the object-hash module
 var hasher = lando.node.hasher;
+```
+<a name="module_node.ip"></a>
+
+### node.ip
+Get ip utils
+
+**Kind**: static property of [<code>node</code>](#module_node)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the ip module
+var ip = lando.node.ip;
 ```
 <a name="module_node.jsonfile"></a>
 
@@ -109,4 +110,16 @@ Get restler
 ```js
 // Get the restler module
 var rest = lando.node.rest;
+```
+<a name="module_node.semver"></a>
+
+### node.semver
+Get semver
+
+**Kind**: static property of [<code>node</code>](#module_node)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the semver module
+var semver = lando.node.semver;
 ```

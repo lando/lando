@@ -1,24 +1,24 @@
 # Tomcat example server
-name: tomcat-example
+name: tomcat
 
 # Give me http://tomcat.lndo.site and https://tomcat.lndo.site
 proxy:
-  tomcat:
-      - tomcat-example.lndo.site:8080
+  appserver:
+    - tomcat.lndo.site
 
 # Spin up services to run a basic tomcat server
 services:
 
   # Create a tomcat instance
-  tomcat:
+  appserver:
 
     # tomcat version 8
     type: tomcat:8
     config:
-        webroot: ./webapps
-        serverxmlfile: ./config/server.xml
-        tomcatusersfile: ./config/tomcat-users.xml
-        contextfragmentspath: ./config/contextFragments
+      webroot: ./webapps
+      serverxmlfile: ./config/server.xml
+      tomcatusersfile: ./config/tomcat-users.xml
+      contextfragmentspath: ./config/contextFragments
 
 
     # Optionally specify a command/script to run when you start your tomcat service up.
@@ -37,5 +37,4 @@ services:
     # - "cd $LANDO_MOUNT & echo 'Holla!'"
 
 # Add some nice command routing
-tooling:
-
+# tooling:

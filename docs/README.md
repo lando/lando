@@ -64,6 +64,7 @@ And then mix in additional auxiliary services
 *   [postgres](http://docs.devwithlando.io/services/postgres.html)
 *   [redis](http://docs.devwithlando.io/services/redis.html)
 *   [solr](http://docs.devwithlando.io/services/solr.html)
+*   [tomcat](http://docs.devwithlando.io/services/tomcat.html)
 *   [varnish](http://docs.devwithlando.io/services/varnish.html)
 
 And then get some pro workflow dialed

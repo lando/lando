@@ -22,8 +22,8 @@ module.exports = function(lando) {
    * tags list on Docker Hub: https://hub.docker.com/r/library/tomcat/)
    */
   var versions = [
-    '7-jre8',
-    '8-jre8',
+    '7',
+    '8',
     'latest',
     'custom'
   ];
@@ -61,7 +61,7 @@ module.exports = function(lando) {
     // Default tomcat service
     var tomcat = {
       image: 'tomcat:' + config.version,
-      ports: ['8080'],
+      ports: ['80'],
       environment: {
         TERM: 'xterm',
         LANDO_WEBROOT: configFiles.webroot
@@ -102,7 +102,7 @@ module.exports = function(lando) {
     if (config.ssl) {
 
       // Add the SSL port
-      tomcat.ports.push('8443');
+      tomcat.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
       var sslConf = ['tomcat', 'httpd-ssl.conf'];

@@ -1,12 +1,13 @@
 Tomcat
-====
+======
 
 [Tomcat](https://tomcat.apache.org/) The Apache Tomcat® software is an open source implementation of the Java Servlet, JavaServer Pages, Java Expression Language and Java WebSocket technologies. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 Supported versions
 ------------------
 
-*   [8.5](https://hub.docker.com/_/tomcat/)
+*   [7](https://hub.docker.com/_/tomcat/)
+*   [8](https://hub.docker.com/_/tomcat/)
 *   [latest](https://hub.docker.com/_/tomcat/)
 *   custom
 
