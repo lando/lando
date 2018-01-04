@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
   && pecl install apcu \
   && pecl install imagick \
+  && pecl install mcrypt-1.0.1 \
   && pecl install memcached \
   && pecl install oauth-2.0.2 \
   && pecl install redis-3.1.2 \
