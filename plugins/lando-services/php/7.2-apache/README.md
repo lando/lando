@@ -8,7 +8,7 @@ A decent cross purpose apache based php 7.2 appserver.
 #
 # docker build -t devwithlando/php:7.2-apache .
 
-FROM php:7.2-apache-jessie
+FROM php:7.2-apache
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \

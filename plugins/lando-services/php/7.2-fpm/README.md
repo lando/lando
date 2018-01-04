@@ -8,7 +8,7 @@ A decent cross purpose fpm based php 7.2 appserver.
 #
 # docker build -t devwithlando/php:7.2-fpm .
 
-FROM php:7.2-fpm-jessie
+FROM php:7.2-fpm
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
