@@ -60,6 +60,7 @@
 *   [info](cli/info.md)
 *   [list](cli/list.md)
 *   [logs](cli/logs.md)
+*   [open](cli/open.md)
 *   [poweroff](cli/poweroff.md)
 *   [rebuild](cli/rebuild.md)
 *   [restart](cli/restart.md)
