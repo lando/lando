@@ -1,0 +1,32 @@
+<!--
+  Example: Adding German language field types to our Solr Schema.
+  If you enable this, make sure you have a folder called lang containing
+  stopwords_de.txt and synonyms_de.txt.
+
+  For examples from other languages, see
+  ./server/solr/configsets/sample_techproducts_configs/conf/schema.xml
+  from your Solr installation.
+-->
+<!--
+  <fieldType name="text_de" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_de.txt" format="snowball" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" splitOnCaseChange="1" splitOnNumerics="1" catenateWords="1" catenateNumbers="1" catenateAll="0" protected="protwords.txt" preserveOriginal="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.GermanLightStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <charFilter class="solr.MappingCharFilterFactory" mapping="mapping-ISOLatin1Accent.txt"/>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <filter class="solr.SynonymFilterFactory" synonyms="lang/synonyms_de.txt" ignoreCase="true" expand="true"/>
+      <filter class="solr.StopFilterFactory" words="lang/stopwords_de.txt" format="snowball" ignoreCase="true"/>
+      <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" splitOnCaseChange="1" splitOnNumerics="1" catenateWords="0" catenateNumbers="0" catenateAll="0" protected="protwords.txt" preserveOriginal="1"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.GermanLightStemFilterFactory"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+    </analyzer>
+  </fieldType>
+-->

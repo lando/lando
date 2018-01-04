@@ -10,9 +10,9 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var path = require('path');
 
   var addConfig = lando.services.addConfig;
-  //var addScript = lando.services.addScript;
   var buildVolume = lando.services.buildVolume;
 
   /**
@@ -126,6 +126,13 @@ module.exports = function(lando) {
         var command = solr.command.split(' ');
         command.push('/solrconf');
         solr.command = command.join(' ');
+
+        // Symlink the core config to the system config
+        config.extras = config.extras || [];
+        var coreConf = path.join(solrConfig.dataDir, core, 'conf');
+        config.extras.unshift(['ln', '-sf', solrConfig.confDir, coreConf].join(' '));
+        config.extras.unshift(['rm', '-rf', coreConf].join(' '));
+
       }
 
     }

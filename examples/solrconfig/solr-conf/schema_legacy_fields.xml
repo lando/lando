@@ -1,0 +1,61 @@
+<!-- Search Api specific fields -->
+<!-- item_id contains the entity ID, e.g. a node's nid. -->
+<field name="item_id"  type="string" indexed="true" stored="true" />
+
+<!-- Apache Solr Search Integration specific fields -->
+<!-- entity_id is the numeric object ID, e.g. Node ID, File ID -->
+<field name="entity_id"  type="long" indexed="true" stored="true" />
+<!-- entity_type is 'node', 'file', 'user', or some other Drupal object type -->
+<field name="entity_type" type="string" indexed="true" stored="true" />
+<!-- bundle is a node type, or as appropriate for other entity types -->
+<field name="bundle" type="string" indexed="true" stored="true"/>
+<field name="bundle_name" type="string" indexed="true" stored="true"/>
+<field name="url" type="string" indexed="true" stored="true"/>
+<!-- label is the default field for a human-readable string for this entity (e.g. the title of a node) -->
+<field name="label" type="text" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+
+<!-- content is the default field for full text search - dump crap here -->
+<field name="content" type="text" indexed="true" stored="true" termVectors="true"/>
+<field name="teaser" type="text" indexed="false" stored="true"/>
+<field name="path" type="string" indexed="true" stored="true"/>
+<field name="path_alias" type="text" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+
+<!-- These are the fields that correspond to a Drupal node. The beauty of having
+  Lucene store title, body, type, etc., is that we retrieve them with the search
+  result set and don't need to go to the database with a node_load. -->
+<field name="tid"  type="long" indexed="true" stored="true" multiValued="true"/>
+<field name="taxonomy_names" type="text" indexed="true" stored="false" termVectors="true" multiValued="true" omitNorms="true"/>
+<!-- copyField commands copy one field to another at the time a document
+  is added to the index.  It's used either to index the same field differently,
+  or to add multiple fields to the same field for easier/faster searching.  -->
+<!-- Since sorting by ID is explicitly allowed, store item_id also in a sortable way. -->
+<copyField source="item_id" dest="sort_search_api_id" />
+
+<!-- The string version of the title is used for sorting -->
+<copyField source="label" dest="sort_label"/>
+
+<!-- Copy terms to a single field that contains all taxonomy term names -->
+<copyField source="tm_vid_*" dest="taxonomy_names"/>
+
+<copyField source="label" dest="spell"/>
+<copyField source="content" dest="spell"/>
+
+<copyField source="ss_*" dest="sort_*"/>
+
+<dynamicField name="hss_*" type="sint"   indexed="true"  stored="true" multiValued="false"/>
+<dynamicField name="hsm_*" type="sint"   indexed="true"  stored="true" multiValued="true"/>
+<!-- Sortable fields, good for sortMissingLast support &
+  We use long for integer since 64 bit ints are now common in PHP. -->
+<dynamicField name="iss_*" type="slong"   indexed="true"  stored="true" multiValued="false"/>
+<dynamicField name="ism_*" type="slong"   indexed="true"  stored="true" multiValued="true"/>
+<!-- In rare cases a sfloat rather than tfloat is needed for sortMissingLast -->
+<dynamicField name="fss_*" type="sfloat"  indexed="true"  stored="true" multiValued="false"/>
+<dynamicField name="fsm_*" type="sfloat"  indexed="true"  stored="true" multiValued="true"/>
+<dynamicField name="pss_*" type="sdouble" indexed="true"  stored="true" multiValued="false"/>
+<dynamicField name="psm_*" type="sdouble" indexed="true"  stored="true" multiValued="true"/>
+
+<!--
+  A set of fields to contain text extracted from HTML tag contents which we
+  can boost at query time.
+-->
+<dynamicField name="tags_*" type="text"   indexed="true" stored="false" omitNorms="true"/>
