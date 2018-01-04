@@ -1,7 +1,7 @@
 /**
- * Command to print info about an app
+ * Command to share an app via localtunnel.me
  *
- * @name info
+ * @name share
  */
 
 'use strict';
@@ -52,6 +52,11 @@ module.exports = function(lando) {
             if (!isRunning) {
               return lando.app.start(app);
             }
+          })
+
+          .then(function(app) {
+            // Report lando share use to metrics
+            return lando.metrics.reportAction('share', {app: app});
           })
 
           // Get the URLS
