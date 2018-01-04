@@ -93,6 +93,11 @@ module.exports = function(lando) {
       command: solrConfig.command
     };
 
+    // Make sure we set perms on the data directory
+    config.extras = config.extras || [];
+    var dataDir = solrConfig.dataDir;
+    config.extras.unshift(['chown', '-R', 'solr:solr', dataDir].join(' '));
+
     // Handle port forwarding
     if (config.portforward) {
 
@@ -128,7 +133,6 @@ module.exports = function(lando) {
         solr.command = command.join(' ');
 
         // Symlink the core config to the system config
-        config.extras = config.extras || [];
         var coreConf = path.join(solrConfig.dataDir, core, 'conf');
         config.extras.unshift(['ln', '-sf', confDir, coreConf].join(' '));
         config.extras.unshift(['rm', '-rf', coreConf].join(' '));
