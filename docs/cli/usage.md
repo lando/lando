@@ -17,7 +17,6 @@ Commands:
   init [method]            Initialize a lando app, optional methods: github, pantheon
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
-  open [url]               Open the app in a web browser
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
@@ -90,7 +89,6 @@ Commands:
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
   mysql                    Drop into a MySQL shell
-  open [url]               Open the app in a web browser
   php                      Run php commands
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]

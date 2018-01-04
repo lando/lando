@@ -54,7 +54,6 @@
     "lodash": "^4.15.0",
     "node-cache": "^4.1.1",
     "object-hash": "^1.1.8",
-    "openurl": "^1.1.1",
     "restler": "^3.4.0",
     "semver": "^5.4.1",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
