@@ -45,6 +45,19 @@ proxyHttpsFallbacks:
 
 You will need to do a `lando poweroff` to apply these changes. **You also should not change the `proxyDomain` unless you know what you are doing!**
 
+If you are new to Docker, figuring out what processes are bound to which ports can be confusing. You can find what is bound to ports 80 and 443 and kill those processes to have lando create URLs like `trivial-proxy.lndo.site` instead of `trivial-proxy.lndo.site:444`.
+
+```bash
+# Find out if any service listens on those ports. 
+sudo lsof -n -i :80 | grep LISTEN
+sudo lsof -n -i :443 | grep LISTEN
+
+# If any services are listed, you can try killing them or stop them a different way. 
+sudo kill -9 $PID
+```
+
+**NOTE: Kalabox uses a process called "vpnkit" that listens to ports 443 and 80. You can free up those ports by uninstalling Kalabox.**
+
 Working Offline or Using Custom Domains
 ---------------------------------------
 
