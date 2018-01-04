@@ -130,7 +130,7 @@ module.exports = function(lando) {
         // Symlink the core config to the system config
         config.extras = config.extras || [];
         var coreConf = path.join(solrConfig.dataDir, core, 'conf');
-        config.extras.unshift(['ln', '-sf', solrConfig.confDir, coreConf].join(' '));
+        config.extras.unshift(['ln', '-sf', confDir, coreConf].join(' '));
         config.extras.unshift(['rm', '-rf', coreConf].join(' '));
 
       }
