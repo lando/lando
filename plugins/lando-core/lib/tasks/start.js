@@ -72,12 +72,7 @@ module.exports = function(lando) {
 
             // Print the table
             console.log(table.toString());
-
-            // Give suggested next steps
             console.log('');
-            console.log(
-              'Use ' + chalk.bold('lando open') + ' to open your app.\n'
-            );
 
           });
 
