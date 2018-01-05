@@ -70,6 +70,9 @@ module.exports = function(lando) {
     // Start up the solr config collector
     var solrConfig = {};
 
+    // Normalize our extras
+    config.extras = config.extras || [];
+
     // Figure out which config base to use
     if (_.includes(['3.6', '4.10'], config.version)) {
       solrConfig = versionConfig[config.version];
@@ -93,11 +96,6 @@ module.exports = function(lando) {
       command: solrConfig.command
     };
 
-    // Make sure we set perms on the data directory
-    config.extras = config.extras || [];
-    var dataDir = solrConfig.dataDir;
-    config.extras.unshift(['chown', '-R', 'solr:solr', dataDir].join(' '));
-
     // Handle port forwarding
     if (config.portforward) {
 
@@ -111,6 +109,14 @@ module.exports = function(lando) {
         solr.ports = [config.portforward + ':8983'];
       }
 
+    }
+
+    // Add some permission helpers for non custom versions
+    // This is conditional for things like the pantheon recipe that need to
+    // use a custom image that may or may not have the solr user
+    if (config.version !== 'custom') {
+      var dataDir = solrConfig.dataDir;
+      config.extras.unshift(['chown', '-R', 'solr:solr', dataDir].join(' '));
     }
 
     // Handle custom config dir
