@@ -45,6 +45,17 @@ proxyHttpsFallbacks:
 
 You will need to do a `lando poweroff` to apply these changes. **You also should not change the `proxyDomain` unless you know what you are doing!**
 
+You can find what process is bound to the default ports of 80 and 443 and try to kill those processes to have lando automatically create URLs like `trivial-proxy.lndo.site` instead of `trivial-proxy.lndo.site:444`.
+
+```bash
+# Find out if any service listens on those ports. 
+sudo lsof -n -i :80 | grep LISTEN
+sudo lsof -n -i :443 | grep LISTEN
+
+# If any services are listed, you can try killing them or stop them a different way. 
+sudo kill -9 $PID
+```
+
 Working Offline or Using Custom Domains
 ---------------------------------------
 
