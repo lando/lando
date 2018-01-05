@@ -1,7 +1,7 @@
 Plugins
 =======
 
-Lando has an advanced plugin system that allows developers to add and extend Landos's core functionality. Here are a few examples of things you can do with plugins:
+Lando has an advanced plugin system that allows developers to add and extend Lando's core functionality. Here are a few examples of things you can do with plugins:
 
 1.  Create CLI commands like `lando danceparty`
 2.  Add services like `solr`, `redis` or `ruby`
