@@ -20,9 +20,7 @@ module.exports = function(lando) {
     app.events.on('post-start', 9, function() {
 
       // Get non-wildcard app URLs
-      var urls = _.filter(_.flatMap(app.info, 'urls'), function(url) {
-        return _.identity(url) && url.indexOf('*') < 0;
-      });
+      var urls = _.filter(_.flatMap(app.info, 'urls'), _.identity);
 
       // Scan the urls
       return lando.utils.scanUrls(urls, {max: 17})

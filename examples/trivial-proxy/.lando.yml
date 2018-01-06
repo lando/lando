@@ -32,3 +32,8 @@ proxy:
     - another.lndo.site:80
     #- andonemore.lndo.site:8000
     #- db.lndo.site:3306
+
+    # Add a wildcard domain
+    # NOTE: this needs to be encapsulated in quotes because * is a special character
+    - "*.wild.trivial-proxy.lndo.site"
+    - "wild.*.trivial-proxy.lndo.site"
