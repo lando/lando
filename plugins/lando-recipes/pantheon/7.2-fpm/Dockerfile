@@ -6,7 +6,7 @@ FROM devwithlando/php:7.2-fpm
 
 # Version information
 ENV BACKDRUSH_VERSION 0.0.6
-ENV WKHTMLTOPDF_VERSION 0.12.2
+ENV WKHTMLTOPDF_VERSION 0.12.3
 ENV PHANTOMJS_VERSION 2.1.1
 ENV TERMINUS_VERSION 1.6.1
 ENV MAVEN_VERSION 3.5.2
@@ -33,10 +33,10 @@ RUN mkdir -p /usr/share/man/man1 \
   && mv drupal.phar /usr/local/bin/drupal \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
+  && mkdir -p /srv/bin \
   && curl -fsSL "https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz" | tar -xz --strip-components=1 -C /var/www/.backdrush \
-  && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
-  && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
-  && mkdir -p /srv/bin && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \
+  && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \
+  && tar xJfv "wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" && cp -rf /tmp/wkhtmltox/bin/* /srv/bin \
   && cd /srv/bin \
   && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v${PHANTOMJS_VERSION}/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2" | tar -xjv \
   && mv phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
