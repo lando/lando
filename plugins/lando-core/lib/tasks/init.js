@@ -98,6 +98,17 @@ module.exports = function(lando) {
     options: _.merge(options, auxOpts),
     run: function(options) {
 
+      // Get absolute path of destination
+      options.destination = path.resolve(options.destination);
+
+      // Create directory if needed
+      if (!fs.existsSync(options.destination)) {
+        fs.ensureDirSync(options.destination);
+      }
+
+      // Set node working directory to the destination
+      process.chdir(options.destination);
+
       // Set the basics
       var config = {
         name: options.name,
@@ -156,6 +167,7 @@ module.exports = function(lando) {
 
         // Add data
         table.add('NAME', config.name);
+        table.add('LOCATION', options.destination);
         table.add('RECIPE', options.recipe);
         table.add('DOCS', docUrl);
 
