@@ -14,12 +14,13 @@ Commands:
   config                   Display the lando configuration
   destroy [appname]        Destroy app in current directory or [appname]
   info [appname]           Prints info about app in current directory or [appname]
-  init <appname> [method]  Initializes a lando app called <appname> with optional [method]
+  init [method]            Initialize a lando app, optional methods: github, pantheon
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
+  share [appname]          Get a publicly available url
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   start [appname]          Start app in current directory or [appname]
   stop [appname]           Stops app in current directory or [appname]
@@ -80,22 +81,23 @@ Run `lando` inside of an app to see if it offers any app specific tooling option
 Usage: lando <command> [args] [options] [-- global options]
 
 Commands:
+  composer                 Run composer commands
   config                   Display the lando configuration
   destroy [appname]        Destroy app in current directory or [appname]
   info [appname]           Prints info about app in current directory or [appname]
-  init <appname> [method]  Initializes a lando app called <appname> with optional [method]
+  init [method]            Initialize a lando app, optional methods: github, pantheon
   list                     List all lando apps
   logs [appname]           Get logs for app in current directory or [appname]
+  mysql                    Drop into a MySQL shell
+  php                      Run php commands
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
+  share [appname]          Get a publicly available url
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   start [appname]          Start app in current directory or [appname]
   stop [appname]           Stops app in current directory or [appname]
   version                  Display the lando version
-  composer                 Run composer commands
-  php                      Run php commands
-  mysql                    Drop into a MySQL shell
 
 Global Options:
   --help, -h  Show help

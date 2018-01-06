@@ -32,7 +32,6 @@ module.exports = function(lando) {
     lando.tasks.add('share', require('./tasks/share')(lando));
     lando.tasks.add('start', require('./tasks/start')(lando));
     lando.tasks.add('stop', require('./tasks/stop')(lando));
-    lando.tasks.add('open', require('./tasks/open')(lando));
     lando.tasks.add('version', require('./tasks/version')(lando));
 
   });

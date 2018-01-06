@@ -1,7 +1,7 @@
 /**
- * Command to print info about an app
+ * Command to share an app via localtunnel.me
  *
- * @name info
+ * @name share
  */
 
 'use strict';

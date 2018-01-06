@@ -1,6 +1,10 @@
 Environment
 ===========
 
+> #### Warning::This ONLY injects directly into the container environment.
+>
+> All of the below methods will inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on the application side to grab them. For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
+
 Default Variables
 -----------------
 

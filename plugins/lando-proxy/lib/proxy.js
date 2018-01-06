@@ -294,11 +294,9 @@ module.exports = function(lando) {
     var config = [];
     var secures = [];
 
-    // Get 443z
+    // Mock add "secure" urls to all our proxy domains
     _.forEach(data, function(datum) {
-      if (_.get(datum.split(':'), '[1]', '80') === '80') {
-        secures.push([datum.split(':')[0], '443'].join(':'));
-      }
+      secures.push([datum.split(':')[0], '443'].join(':'));
     });
 
     // Map to array of port/host objects
@@ -594,7 +592,7 @@ module.exports = function(lando) {
 
       // Add relevant URLS
       app.events.on('post-start', function() {
-        return addUrls(app, ['80/tcp', '443/tcp']);
+        return addUrls(app);
       });
 
       // Add proxy URLS to our app info
@@ -667,7 +665,8 @@ module.exports = function(lando) {
           if (!_.isEmpty(hosts)) {
             var labels = _.get(app.services[service.name], 'labels', {});
             labels['traefik.docker.network'] = projectName + '_edge';
-            labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
+            labels['traefik.frontend.rule'] = 'HostRegexp:' + hosts.join(',')
+              .replace(new RegExp('\\*', 'g'), '{wildcard:[a-z0-9-]+}');
             labels['traefik.port'] = _.toString(port);
 
             // Get any networks that might already exist
@@ -680,6 +679,11 @@ module.exports = function(lando) {
               labels: labels,
             };
           }
+
+          // Remove hosts with wildcards
+          hosts = _.filter(hosts, function(host) {
+            return host.indexOf('*') < 0;
+          });
 
           // Send hosts down the pipe
           return hosts;

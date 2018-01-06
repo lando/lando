@@ -1,0 +1,14 @@
+<!--
+  Note:
+  These should only be used for compatibility with existing indexes (created with older Solr versions)
+  or if "sortMissingFirst" or "sortMissingLast" functionality is needed. Use Trie based fields instead.
+
+  Numeric field types that manipulate the value into
+  a string value that isn't human-readable in its internal form,
+  but with a lexicographic ordering the same as the numeric ordering,
+  so that range queries work correctly.
+-->
+<fieldType name="sint" class="solr.TrieIntField" sortMissingLast="true"/>
+<fieldType name="sfloat" class="solr.TrieFloatField" sortMissingLast="true"/>
+<fieldType name="slong" class="solr.TrieLongField" sortMissingLast="true"/>
+<fieldType name="sdouble" class="solr.TrieDoubleField" sortMissingLast="true"/>

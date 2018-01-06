@@ -25,6 +25,7 @@ return lando.engine.destroy(data);
 
 * [engine](#module_engine)
     * [.up()](#module_engine.up) ⇒ <code>Promise</code>
+    * [.isInstalled()](#module_engine.isInstalled) ⇒ <code>Promise</code>
     * [.isUp()](#module_engine.isUp) ⇒ <code>Promise</code>
     * [.down()](#module_engine.down) ⇒ <code>Promise</code>
     * [.isRunning(data)](#module_engine.isRunning) ⇒ <code>Promise</code>
@@ -84,6 +85,14 @@ return lando.app.list()
  });
 });
 ```
+<a name="module_engine.isInstalled"></a>
+
+### engine.isInstalled() ⇒ <code>Promise</code>
+Determines whether the docker engine is installed or not
+
+**Kind**: static method of [<code>engine</code>](#module_engine)  
+**Returns**: <code>Promise</code> - A Promise with a boolean containing the installed status.  
+**Since**: 3.0.0  
 <a name="module_engine.isUp"></a>
 
 ### engine.isUp() ⇒ <code>Promise</code>

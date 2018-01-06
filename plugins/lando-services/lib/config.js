@@ -47,6 +47,7 @@ module.exports = function(lando) {
         app.networks = _.mergeWith(app.networks, newCompose.networks, merger);
 
       });
+
     }
 
     // Go through each config service and add additional info as needed

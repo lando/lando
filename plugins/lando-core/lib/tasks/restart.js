@@ -44,9 +44,7 @@ module.exports = function(lando) {
             _.forEach(app.info, function(info, service) {
               if (_.has(info, 'urls') && !_.isEmpty(info.urls))  {
                 urls[service] = _.filter(app.urls, function(item) {
-                  var good = chalk.green(item.url);
-                  var bad = chalk.red(item.url);
-                  item.theme = (item.status) ? good : bad;
+                  item.theme = chalk[item.color](item.url);
                   return _.includes(info.urls, item.url);
                 });
               }
@@ -72,12 +70,7 @@ module.exports = function(lando) {
 
             // Print the table
             console.log(table.toString());
-
-            // Give suggested next steps
             console.log('');
-            console.log(
-              'Use ' + chalk.bold('lando open') + ' to open your app.\n'
-            );
 
           });
         }

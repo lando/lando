@@ -31,4 +31,5 @@ The following services are currently supported. Please check out each one to lea
 *   ####[redis](./../services/redis.md)
 *   ####[ruby](./../services/ruby.md)
 *   ####[solr](./../services/solr.md)
+*   ####[tomcat](./../services/tomcat.md)
 *   ####[varnish](./../services/varnish.md)

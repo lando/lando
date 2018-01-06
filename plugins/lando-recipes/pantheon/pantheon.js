@@ -530,7 +530,7 @@ module.exports = function(lando) {
       case 'backdrop': return '5.6';
       case 'drupal': return '5.6';
       case 'drupal8': return '7.0';
-      case 'wordpress': return '7.0';
+      case 'wordpress': return '7.2';
       default: return '5.6';
     }
   };
