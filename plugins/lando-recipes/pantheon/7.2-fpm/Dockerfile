@@ -12,7 +12,8 @@ ENV TERMINUS_VERSION 1.6.1
 ENV MAVEN_VERSION 3.5.2
 
 # Install the additional things that make the pantheon
-RUN apt-get update && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1 \
+  && apt-get update && apt-get install -y \
     openjdk-8-jre-headless \
     openjdk-8-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
@@ -47,7 +48,7 @@ RUN apt-get update && apt-get install -y \
   && rm /tmp/apache-tika-1.1-src.zip \
   && cd /tmp/apache-tika-1.1 && /tmp/apache-maven-${MAVEN_VERSION}/bin/mvn install \
   && cp -rf /tmp/apache-tika-1.1/tika-app/target/tika-app-1.1.jar /srv/bin/tika-app-1.1.jar \
-  && apt-get -y remove openjdk-7-jdk \
+  && apt-get -y remove openjdk-8-jdk \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
