@@ -13,8 +13,8 @@ ENV MAVEN_VERSION 3.5.2
 
 # Install the additional things that make the pantheon
 RUN apt-get update && apt-get install -y \
-    openjdk-7-jre-headless \
-    openjdk-7-jdk \
+    openjdk-8-jre-headless \
+    openjdk-8-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \
