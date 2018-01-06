@@ -103,7 +103,11 @@ module.exports = function(lando) {
 
       // Extract the cli service and add here
       var cliCompose = lando.services.build('cli', 'ruby:' + version, cliConf);
-      services[name + '_cli'] = cliCompose.services.cli;
+      var cliName = name + '_cli';
+      services[cliName] = cliCompose.services.cli;
+
+      // Add a config flag so we know we also need to handle overrides for this as well
+      config._needsOverrides = [cliName];
 
     }
 
