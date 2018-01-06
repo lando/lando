@@ -73,6 +73,13 @@ Here is an example:
 127.0.0.1 billy.dee.williams
 ```
 
+Using Wildcards in Custom Domains
+---------------------------------
+
+If a service should be be able to listen to multiple domain names following a common pattern you can use the `*` wildcard character to match any amount of alphanumeric characters and hyphens/dashes (`-`).
+
+To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example use `*.myapp.lndo.site` or `*.*.lndo.site`.  
+
 Checking Proxy Routes
 ---------------------
 
