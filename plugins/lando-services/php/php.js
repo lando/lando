@@ -13,6 +13,7 @@ module.exports = function(lando) {
   var addConfig = lando.services.addConfig;
   var addScript = lando.services.addScript;
   var buildVolume = lando.services.buildVolume;
+  var path = require('path');
 
   // "Constants"
   var defaultConfDir = lando.config.engineConfigDir;
@@ -53,32 +54,35 @@ module.exports = function(lando) {
     var typeConfig = {
       apache: {
         web: 'apache',
-        mount: config._mount,
         command: [
           'sh -c',
           '\'a2enmod rewrite && apache2-foreground\''
         ],
         image: 'devwithlando/php:' + [version, 'apache'].join('-'),
-        serverConf: '/etc/apache2/sites-enabled/000-default.conf',
-        phpConf: '/usr/local/etc/php/conf.d/zzz-lando-custom.ini'
+        serverConf: '/etc/apache2/sites-enabled/000-default.conf'
       },
       cli: {
         web: 'cli',
-        mount: config._mount,
         command: ['tail -f /dev/null'],
         image: 'devwithlando/php:' + [version, 'apache'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.template',
-        phpConf: '/usr/local/etc/php/conf.d/zzz-lando-custom.ini'
+        serverConf: '/etc/apache2/sites-enabled/000-default.conf'
       },
       nginx: {
         web: 'nginx',
-        mount: config._mount,
         command: ['php-fpm'],
         image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.template',
-        phpConf: '/usr/local/etc/php/conf.d/zzz-lando-custom.ini'
+        serverConf: '/etc/nginx/conf.d/default.template'
       }
     };
+
+    // Merge in defaults
+    _.forEach(typeConfig, function(c) {
+      _.merge(c, {
+        mount: config._mount,
+        phpConf: '/usr/local/etc/php/conf.d/xxx-lando-default.ini',
+        phpConfDir: '/usr/local/etc/php/conf.d'
+      });
+    });
 
     // Add the docker php entrypoint if we are on a supported php version
     if (version.split('.').join('') > 55) {
@@ -87,7 +91,8 @@ module.exports = function(lando) {
 
     // Switch apache php.ini if on 5.3
     if (via === 'apache' && version === '5.3') {
-      typeConfig.apache.phpConf = '/usr/local/lib/conf.d/zzz-lando-custom.ini';
+      typeConfig.apache.phpConf = '/usr/local/lib/conf.d/xxx-lando-default.ini';
+      typeConfig.apache.phpConf = '/usr/local/lib/conf.d';
     }
 
     // If hhvm is the "version" then refactor the typeconf
@@ -302,7 +307,7 @@ module.exports = function(lando) {
     // Define config mappings
     var configFiles = {
       php: {
-        conf: config.phpConf
+        conf: config.phpConfDir
       },
       web: {
         server: config.serverConf
@@ -320,9 +325,11 @@ module.exports = function(lando) {
     });
 
     // Handle custom php config files/dirs
-    _.forEach(configFiles.php, function(file, type) {
+    _.forEach(configFiles.php, function(dir, type) {
       if (_.has(config, 'config.' + type)) {
         var local = config.config[type];
+        var prefix = 'zzz-lando-my-custom-ini-file-called-';
+        var file = path.join(dir, prefix + path.basename(local));
         var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         var volumes = services[name].volumes;
         services[name].volumes = addConfig(customConf, volumes);
