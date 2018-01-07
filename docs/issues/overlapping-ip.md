@@ -10,6 +10,11 @@ ERROR: could not find an available, non-overlapping IPv4 address pool among the 
 error:  Error: Error: 1
 ```
 
+For more detail see:
+
+  * [Issue #274](https://github.com/lando/lando/issues/274)
+  * [Issue #451](https://github.com/lando/lando/issues/451)
+
 You have two corrective pathways to choose from.
 
 1. Update Lando
@@ -32,7 +37,3 @@ docker networm rm NETWORK_ID_OR_NAME_FROM_ABOVE_COMMAND
 ```
 
 Once you do the above you should be able to rerun the `lando` command that failed.
-
-See:
-  * [Issue #274](https://github.com/lando/lando/issues/274)
-  * [Issue #451](https://github.com/lando/lando/issues/451)
