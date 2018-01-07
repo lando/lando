@@ -12,6 +12,13 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var merger = lando.utils.merger;
 
+  // Let's also add in some config that we can pass down the stream
+  lando.events.on('task-rebuild-run', function(options) {
+    lando.events.on('post-instantiate-app', 9, function(app) {
+      app.config._rebuildOnly = options.services || [];
+    });
+  });
+
   // Do all the services magix
   lando.events.on('post-instantiate-app', 3, function(app) {
 
@@ -71,9 +78,6 @@ module.exports = function(lando) {
     // Go through each service and run additional build commands as needed
     app.events.on('post-start', function() {
 
-      // Start up a build collector
-      var build = [];
-
       /*
        * Helper to build out some runs
        */
@@ -92,8 +96,20 @@ module.exports = function(lando) {
         };
       };
 
+      // Start up a build collector and set target build services
+      var build = [];
+      var buildServices = app.config.services;
+
+      // Check to see if we have to filter out build services
+      // Currently this only exists so we can ensure lando rebuild's -s option
+      // is respected re: build steps
+      if (!_.isEmpty(_.get(app, 'config._rebuildOnly', []))) {
+        var picker = _.get(app, 'config._rebuildOnly');
+        buildServices = _.pick(buildServices, picker);
+      }
+
       // Go through each service
-      _.forEach(app.config.services, function(service, name) {
+      _.forEach(buildServices, function(service, name) {
 
         // Loop through both extras and build
         _.forEach(['extras', 'build'], function(section) {
