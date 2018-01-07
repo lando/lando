@@ -53,7 +53,7 @@ if [ $(id -u) = 0 ]; then
     ln -sf /user/.gitconfig /var/www/.gitconfig
   fi
 
-  # Move over known_hosts if it exists
+  # Symlink the known_hosts
   if [ -f "/user/.ssh/known_hosts" ]; then
     mkdir -p /var/www/.ssh
     nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/.ssh &>/dev/null &

@@ -19,7 +19,7 @@ module.exports = function(lando) {
     // Scan our URLs and add a list of them and their status to the app
     app.events.on('post-start', 9, function() {
 
-      // Get non-wildcard app URLs
+      // Get app URLs
       var urls = _.filter(_.flatMap(app.info, 'urls'), _.identity);
 
       // Scan the urls
