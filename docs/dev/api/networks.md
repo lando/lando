@@ -14,6 +14,11 @@ return lando.networks.get()
   console.log(networks);
 });
 ```
+
+* [networks](#module_networks)
+    * [.get([opts])](#module_networks.get) ⇒ <code>Promise</code>
+    * [.prune([opts])](#module_networks.prune) ⇒ <code>Promise</code>
+
 <a name="module_networks.get"></a>
 
 ### networks.get([opts]) ⇒ <code>Promise</code>
@@ -51,4 +56,24 @@ Gets the docker networks.
  .map(function(network) {
    return network.Name;
  });
+```
+<a name="module_networks.prune"></a>
+
+### networks.prune([opts]) ⇒ <code>Promise</code>
+Prunes the docker networks.
+
+**Kind**: static method of [<code>networks</code>](#module_networks)  
+**Returns**: <code>Promise</code> - A Promise with teh status  
+**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkPrune) for info on filters option.  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Options to pass into the docker networks call |
+| [opts.filters] | <code>Object</code> | Filters options |
+
+**Example**  
+```js
+// Prune the networks
+ return lando.networks.prune()
 ```
