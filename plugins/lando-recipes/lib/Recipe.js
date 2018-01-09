@@ -5,9 +5,6 @@
 
 'use strict';
 
-// Modules
-const { URL } = require('url');
-
 /**
 * Recipes are a collection of Services and Tools
 * that implement common tech stacks.
@@ -16,7 +13,7 @@ class Recipe {
 
   /**
   * Recipe Constructor
-  * @param object lando Global Lando object to access modules.
+  * @param {object} lando Global Lando object to access modules.
   */
   constructor(lando) {
     // Modules
@@ -72,7 +69,7 @@ class Recipe {
       };
     }
     return config;
-  };
+  }
 
   /**
    * Inject database credentials into appserver environment variables.
@@ -114,7 +111,7 @@ class Recipe {
 
       // Merge in cache creds
       let envKey = 'services.appserver.overrides.services.environment';
-      this._.set(build, envKey, this._.merge(this._.get(build, envKey), cacheCreds));
+      this._.set(this.buildData, envKey, this._.merge(this._.get(this.buildData, envKey), cacheCreds));
 
       // Add it as something our tooling needs
       this.needs.push('cache');
@@ -135,6 +132,8 @@ class Recipe {
 
       // Start setting config
       this.serviceData.database.config = {};
+
+      let database = this.getDbType(config);
 
       // Set custom DB conf
       if (this._.has(config, 'conf.database')) {
@@ -202,8 +201,9 @@ class Recipe {
    * @return {bool}
    */
   includesMySQL(config) {
-    let database = this.getDbType(config)
-    return this._.includes(database, 'mysql') || this._.includes(database, 'mariadb');
+    let database = this.getDbType(config);
+    return this._.includes(database, 'mysql') ||
+      this._.includes(database, 'mariadb');
   }
 
   /**
