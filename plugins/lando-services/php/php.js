@@ -329,7 +329,7 @@ module.exports = function(lando) {
       if (_.has(config, 'config.' + type)) {
         var local = config.config[type];
         var prefix = 'zzz-lando-my-custom-ini-file-called-';
-        var file = path.join(dir, prefix + path.basename(local));
+        var file = path.posix.join(dir, prefix + path.basename(local));
         var customConf = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         var volumes = services[name].volumes;
         services[name].volumes = addConfig(customConf, volumes);
