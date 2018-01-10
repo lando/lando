@@ -19,8 +19,7 @@ module.exports = function(grunt) {
   var config = {
 
     // Linting, standards and styles tasks
-    jshint: tests.jshint,
-    jscs: tests.jscs,
+    eslint: tests.eslint,
 
     // Mocha tests
     mochacli: tests.unit,
@@ -82,8 +81,7 @@ module.exports = function(grunt) {
 
   // Check Linting, standards and styles
   grunt.registerTask('test:code', [
-    'jshint',
-    'jscs'
+    'eslint',
   ]);
 
   // Unit tests

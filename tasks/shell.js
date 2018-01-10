@@ -34,6 +34,7 @@ module.exports = function(common) {
 
     // BATS binary
     var bin = 'node_modules/bats/libexec/bats';
+      /* eslint no-template-curly-in-string: 0 */
     var opts = '${CI:+--tap}';
     var cmd = [bin, opts, files.join(' ')];
 
