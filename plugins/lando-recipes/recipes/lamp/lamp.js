@@ -138,6 +138,13 @@ module.exports = function(lando) {
       }
     };
 
+    // Add Blackfire when PHP is higher than 5.3.
+    if (phpVersion !== '5.3') {
+      services.blackfire = {
+        type: 'blackfire:latest'
+      };
+    }
+
     // Mix in any additional config
     if (_.has(config, 'webroot')) {
       services.appserver.webroot = config.webroot;
