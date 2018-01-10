@@ -1,0 +1,23 @@
+# The name of the app
+name: mysql
+
+# Give me http://blackfire.lndo.site and https://blackfire.lndo.site
+proxy:
+  appserver:
+    - blackfire.lndo.site
+
+# Set up my services
+services:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
+  appserver:
+    type: nginx
+    ssl: true
+    webroot: www
+
+  # Spin up a blackfire container called "blackfire"
+  # NOTE: "blackfire" is arbitrary, you could just as well call this "profile"
+  blackfire:
+
+    # Use the latest version of mysql
+    type: blackfire
