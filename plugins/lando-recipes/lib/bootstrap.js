@@ -36,6 +36,7 @@ module.exports = function(lando) {
       'lamp',
       'lemp',
       'mean',
+      'rails',
       'pantheon',
       'wordpress'
     ];
