@@ -189,6 +189,18 @@ array-back@^2.0.0:
   dependencies:
     typical "^2.6.1"
 
+array-filter@~0.0.0:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/array-filter/-/array-filter-0.0.1.tgz#7da8cf2e26628ed732803581fd21f67cacd2eeec"
+
+array-map@~0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/array-map/-/array-map-0.0.0.tgz#88a2bab73d1cf7bcd5c1b118a003f66f665fa662"
+
+array-reduce@~0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/array-reduce/-/array-reduce-0.0.0.tgz#173899d3ffd1c7d9383e4479525dbe278cab5f2b"
+
 array-union@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-1.0.2.tgz#9a34410e4f4e3da23dea375be5be70f24778ec39"
@@ -1949,7 +1961,7 @@ init-package-json@~1.9.4:
     validate-npm-package-license "^3.0.1"
     validate-npm-package-name "^3.0.0"
 
-inquirer@^3.0.6, inquirer@^3.1.1:
+inquirer@^3.0.6, inquirer@^3.1.1, inquirer@^3.2.2:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-3.3.0.tgz#9dd2f2ad765dcab1ff0443b491442a20ba227dc9"
   dependencies:
@@ -2712,6 +2724,14 @@ normalize-package-data@~2.3.5:
     is-builtin-module "^1.0.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
+
+npm-bump@^0.0.23:
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/npm-bump/-/npm-bump-0.0.23.tgz#2e7c7843d0a82d5256204f943d8ddbe3e68c30cd"
+  dependencies:
+    inquirer "^3.2.2"
+    semver "^5.4.1"
+    shell-quote "^1.6.1"
 
 npm-cache-filename@~1.0.2:
   version "1.0.2"
@@ -3770,6 +3790,15 @@ shebang-regex@^1.0.0:
 "shell-escape@https://github.com/thinktandem/node-shell-escape/tarball/master":
   version "0.2.1"
   resolved "https://github.com/thinktandem/node-shell-escape/tarball/master#90957b7639387fea822ff77f8b6f7ceb48d5adfc"
+
+shell-quote@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.6.1.tgz#f4781949cce402697127430ea3b3c5476f481767"
+  dependencies:
+    array-filter "~0.0.0"
+    array-map "~0.0.0"
+    array-reduce "~0.0.0"
+    jsonify "~0.0.0"
 
 shelljs@^0.6.0:
   version "0.6.1"
