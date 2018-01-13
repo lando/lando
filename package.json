@@ -69,6 +69,7 @@
   "devDependencies": {
     "bats": "git+https://github.com/sstephenson/bats.git#master",
     "chai": "^3.5.0",
+    "copy": "^0.3.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
     "gitbook-cli": "^2.3.0",
@@ -81,6 +82,20 @@
     "grunt-mocha-cli": "^3.0.0",
     "grunt-shell": "^1.1.1",
     "matchdep": "^0.3.0",
-    "pkg": "^4.1.0"
+    "mocha": "^4.1.0",
+    "pkg": "^4.3.0-beta.5"
+  },
+  "scripts": {
+    "docs": "gitbook install && gitbook build && ./scripts/docs.js",
+    "lint": "eslint bin/**/*.js lib/**/*.js plugins/**/*.js test/**/*.js scripts/**/**/*.js",
+    "release:major": "./scripts/bump.js --stage=major",
+    "pkg:cli": "./scripts/pkg.js --stage=cli",
+    "pkg:full": "./scripts/pkg.js --stage=full",
+    "release:minor": "./scripts/bump.js --stage=minor",
+    "release:patch": "./scripts/bump.js --stage=patch",
+    "release:pre": "./scripts/bump.js --stage=prerelease",
+    "serve": "gitbook install && ./scripts/docs.js && gitbook serve",
+    "test:spec": "mocha",
+    "test": "npm run lint && npm run test:spec"
   }
 }

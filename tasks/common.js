@@ -53,8 +53,8 @@ var buildFiles = [
   'lib/**',
   'plugins/**',
   '*.json',
-  'config.yml',
-  'encloseConfig.js'
+  'yarn.lock',
+  'config.yml'
 ];
 
 // Return our objects

@@ -1,9 +1,7 @@
 /**
- * Basic test to just confirm our framework works
- * @file test.js
+ * Tests for cache system.
+ * @file cache.spec.js
  */
-
-/*jshint expr:true */
 
 'use strict';
 
