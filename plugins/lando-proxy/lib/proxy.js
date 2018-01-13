@@ -280,7 +280,28 @@ module.exports = function(lando) {
 
     // Try to start the proxy
     .then(function() {
-      return lando.engine.start(getProxy(proxyFile));
+
+      // Retry this a few times so we can cover situations like
+      // https://github.com/lando/lando/issues/632
+      // This is important because if the proxy fails it sort of botches the whole thing
+      return Promise.retry(function() {
+
+        // Start the proxy
+        return lando.engine.start(getProxy(proxyFile))
+
+        // If there is an error let's destroy and try to recreate
+        .catch(function(error) {
+          lando.log.warn('Something is wrong with the proxy! %j', error);
+          lando.log.warn('Trying to take corrective action...');
+          var id = [projectName, 'proxy', '1'].join('_');
+          return lando.engine.destroy({id: id, opts: {force: true}})
+          .then(function() {
+            return Promise.reject();
+          });
+        });
+
+      });
+
     });
 
   };
@@ -690,7 +711,7 @@ module.exports = function(lando) {
 
         })
 
-        // Add extra hosts to all the service
+        // Add extra hosts to all the services
         .then(function(hosts) {
 
           // Compute extra hosts
