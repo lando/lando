@@ -15,7 +15,7 @@ module.exports = function(grunt) {
   var tests = require('./tasks/tests.js')(common);
   var util = require('./tasks/util.js')(common);
 
-  // Our Grut config object
+  // Our Grunt config object
   var config = {
 
     // Linting, standards and styles tasks
@@ -113,8 +113,8 @@ module.exports = function(grunt) {
   // Build the installer
   //
   // @NOTE: for reasons that make me want to stab my eyes out with a fucking
-  // spoon, you need to grun pkg:gui BEFORE pkg:cli or sass:compile will
-  // hang on Windows. THOU HATH BEEN WARNED.
+  // spoon, you need to grunt pkg:gui BEFORE pkg:cli or sass:compile will
+  // hang on Windows. THOU HAST BEEN WARNED.
   //
   grunt.registerTask('pkg', [
     'clean:installerBuild',
