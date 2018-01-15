@@ -58,15 +58,15 @@ First pass on proposed changes!
 
 * Maybe this should just be part of `config.js`?
 
-### lando.js
+#### lando.js
 
 * Remove non-core stuff
 
-### logger.js
+#### logger.js
 
 * Remove coupling to `config.js`, make into some sort of classy thing
 
-### plugins.js
+#### plugins.js
 
 * Remove almost inexplicable coupling to `lando.js`, have `load` take an `injectTHIS` arg (which would be lando)
 
