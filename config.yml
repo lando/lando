@@ -1,9 +1,9 @@
-plugins:
-  - lando-core
-  - lando-events
-  - lando-proxy
-  - lando-recipes
-  - lando-services
-  - lando-tooling
+# plugins:
+#   - lando-core
+#   - lando-events
+#   - lando-proxy
+#   - lando-recipes
+#   - lando-services
+#   - lando-tooling
 logLevelConsole: warn
 logLevel: debug
