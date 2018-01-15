@@ -1,7 +1,7 @@
 Some Refactor Notes
 ===================
 
-1. Determining "Core" modules
+Determining "Core" modules
 -----------------------------
 
 ```
@@ -27,7 +27,7 @@ Some Refactor Notes
 |- lib/yaml.js
 ```
 
-2. Core Decoupling and Deconstruction Considerations
+Core Decoupling and Deconstruction Considerations
 ----------------------------------------------------
 
 First pass on proposed changes!
@@ -58,15 +58,15 @@ First pass on proposed changes!
 
 * Maybe this should just be part of `config.js`?
 
-### lando.js
+#### lando.js
 
 * Remove non-core stuff
 
-### logger.js
+#### logger.js
 
 * Remove coupling to `config.js`, make into some sort of classy thing
 
-### plugins.js
+#### plugins.js
 
 * Remove almost inexplicable coupling to `lando.js`, have `load` take an `injectTHIS` arg (which would be lando)
 
@@ -78,7 +78,7 @@ First pass on proposed changes!
 
 * We probably just want to break this up and put its pieces elsewhere
 
-3. Pluginification
+Pluginification
 ------------------
 
 A bunch of stuff currently in `lib` is probably better placed as plugins. This would
@@ -104,7 +104,7 @@ lib/registry.js
 
 * Figure out **exactly** how we want to move the above into `lando-core` with an eye to 4.
 
-4. Plugin Standarization
+Plugin Standarization
 ------------------------
 
 We want to make provide a conventional plugin structure standard to maximize testability and minimize WTFIT.
