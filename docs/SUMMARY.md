@@ -129,6 +129,7 @@
 *   [Tooling](config/tooling.md)
 *   [config.yml](config/config.md)
 *   [Environment](config/env.md)
+*   [Networking](config/networking.md)
 *   [SSH Keys](config/ssh.md)
 *   [Shared Files](config/files.md)
 *   [Build Steps](config/build.md)
@@ -173,4 +174,5 @@
 
 ## Changelog
 
+*   [2018](changelog/2018.md)
 *   [2017](changelog/2017.md)

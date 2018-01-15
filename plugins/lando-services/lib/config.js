@@ -12,11 +12,36 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var merger = lando.utils.merger;
 
+  // Constants
+  var landoBridgeNet = 'lando_bridge_network';
+
   // Let's also add in some config that we can pass down the stream
   lando.events.on('task-rebuild-run', function(options) {
     lando.events.on('post-instantiate-app', 9, function(app) {
       app.config._rebuildOnly = options.services || [];
     });
+  });
+
+  // Make sure we have a lando bridge network
+  // We do this here so we can take advantage of docker up assurancs in engine.js
+  // and to make sure it covers all non-app services
+  lando.events.on('pre-engine-start', 1, function() {
+
+    // Let's get a list of network
+    return lando.networks.get()
+
+    // Reduce to a true false so we know whether we need to create or not
+    .reduce(function(bridged, network) {
+      return bridged || (network.Name === landoBridgeNet);
+    }, false)
+
+    // Create if needed
+    .then(function(bridged) {
+      if (!bridged) {
+        return lando.networks.create(landoBridgeNet);
+      }
+    });
+
   });
 
   // Do all the services magix
@@ -53,6 +78,40 @@ module.exports = function(lando) {
         app.volumes = _.mergeWith(app.volumes, newCompose.volumes, merger);
         app.networks = _.mergeWith(app.networks, newCompose.networks, merger);
 
+        // Add in default network stuff
+        // @TODO: putting this here for now because the next version will
+        // feature some heavy refactoring and we will deal with it then
+        var bridgeNet = {
+          'lando_bridge': {
+            external: {
+              name: landoBridgeNet
+            }
+          }
+        };
+        app.networks = _.mergeWith(app.networks, bridgeNet, merger);
+
+        // Go through all the services and add in the lando bridgenet
+        _.forEach(app.services, function(service, name) {
+
+          // Get the base networks
+          service.networks = service.networks || {};
+
+          // Collect aliases
+          var defaultAlias = [name, app.name, 'internal'].join('.');
+          var aliases = [defaultAlias];
+
+          // Add in our aliases
+          var bridge = {
+            'lando_bridge': {
+              aliases: aliases
+            }
+          };
+
+          // Merge
+          service.networks = _.merge(service.networks, bridge);
+
+        });
+
       });
 
     }
@@ -66,6 +125,11 @@ module.exports = function(lando) {
 
         // Merge create the info for the service
         app.info[name] = lando.services.info(name, service.type, config);
+
+        // Add in hostnames
+        var alias = [name, app.dockerName, 'internal'].join('.');
+        app.info[name].hostnames = [name];
+        app.info[name].hostnames.push(alias);
 
       });
     });

@@ -18,6 +18,7 @@ module.exports = function(lando) {
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
   var proxyFile = path.join(proxyDir, 'proxy' + '.yml');
   var projectName = 'landoproxyhyperion5000gandalfedition';
+  var networkName = [projectName, 'edge'].join('_');
 
   /*
    * Helper to extract ports from inspect data
@@ -645,13 +646,7 @@ module.exports = function(lando) {
         // Kick off the proxy compose file
         var compose = {
           version: lando.config.composeVersion,
-          networks: {
-            'lando_proxyedge': {
-              external: {
-                name: projectName + '_edge'
-              }
-            }
-          },
+          networks: {'lando_proxyedge': {external: {name: networkName}}},
           services: {}
         };
 
@@ -684,21 +679,28 @@ module.exports = function(lando) {
 
           // Add in relevant labels if we have hosts
           if (!_.isEmpty(hosts)) {
+
+            // Get preexisting things and parse hosts
             var labels = _.get(app.services[service.name], 'labels', {});
-            labels['traefik.docker.network'] = projectName + '_edge';
-            labels['traefik.frontend.rule'] = 'HostRegexp:' + hosts.join(',')
-              .replace(new RegExp('\\*', 'g'), '{wildcard:[a-z0-9-]+}');
+            var preNets = _.get(app.services[name], 'networks', {});
+            var hRegex = new RegExp('\\*', 'g');
+            var hReplace = '{wildcard:[a-z0-9-]+}';
+            var parsedHosts = hosts.join(',').replace(hRegex, hReplace);
+
+            // Set our traefik labels
+            labels['traefik.docker.network'] = networkName;
+            labels['traefik.frontend.rule'] = 'HostRegexp:' + parsedHosts;
             labels['traefik.port'] = _.toString(port);
 
             // Get any networks that might already exist
             var defaultNets = {'lando_proxyedge': {}, 'default': {}};
-            var preNets = _.get(app.services[name], 'networks', {});
 
             // Start building the augment
             compose.services[name] = {
               networks: _.mergeWith(defaultNets, preNets, lando.utils.merger),
               labels: labels,
             };
+
           }
 
           // Remove hosts with wildcards
@@ -708,34 +710,6 @@ module.exports = function(lando) {
 
           // Send hosts down the pipe
           return hosts;
-
-        })
-
-        // Add extra hosts to all the services
-        .then(function(hosts) {
-
-          // Compute extra hosts
-          var hostList = _.map(_.flatten(hosts), function(host) {
-            return [host, lando.config.env.LANDO_ENGINE_REMOTE_IP].join(':');
-          });
-
-          // And add them if applicable
-          if (!_.isEmpty(hostList)) {
-            _.forEach(_.keys(app.services), function(name) {
-
-              // Look for preexisting extra_hosts
-              var peeh = [];
-              if (!_.isEmpty(_.get(app.services[name], 'extra_hosts', []))) {
-                peeh = _.get(app.services[name], 'extra_hosts', []);
-              }
-
-              // Merge the whole shebang
-              compose.services[name] = _.merge(compose.services[name], {
-                'extra_hosts': _.flatten(hostList.concat(peeh))
-              });
-
-            });
-          }
 
         })
 

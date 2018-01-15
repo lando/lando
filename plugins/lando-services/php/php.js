@@ -257,6 +257,7 @@ module.exports = function(lando) {
 
     // Set the nginx config
     appConfig.config = _.merge(nginxConfigDefaults, appConfig.config);
+    appConfig._hiddenServices = ['appserver'];
 
     // Generate a config object to build the service with
     var name = appConfig.name;
@@ -264,6 +265,11 @@ module.exports = function(lando) {
 
     // Add a depends on
     _.set(nginx, 'depends_on', [name]);
+
+    // Make sure we add a hidden service
+    lando.events.on('post-instantiate-app', 9, function(app) {
+      app.config.services.nginx = appConfig;
+    });
 
     // Return the object
     return nginx;

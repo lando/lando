@@ -366,8 +366,8 @@ module.exports = function(lando) {
 
       // If we need to provide overrides for other things, eg behind the scenes
       // cli services let's do that here
-      if (_.has(config, '_needsOverrides')) {
-        _.forEach(config._needsOverrides, function(o) {
+      if (_.has(config, '_hiddenServices')) {
+        _.forEach(config._hiddenServices, function(o) {
           services[o] = mergeOver(services[o], config.overrides.services);
         });
       }

@@ -89,8 +89,8 @@ module.exports = function(lando) {
       var cliName = name + '_cli';
       services[cliName] = cliCompose.services.cli;
 
-      // Add a config flag so we know we also need to handle overrides for this as well
-      config._needsOverrides = [cliName];
+      // Add a flag so we know this is built behind the the scenes
+      config._hiddenServices = [cliName];
 
     }
 
