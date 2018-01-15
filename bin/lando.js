@@ -26,6 +26,9 @@ var yargs = require('yargs');
 var bootstrap = require('./../lib/bootstrap.js');
 var errorHandler;
 
+// @TODO:
+// Set a more complicated config here with the relevant LANDO thingss eg sys confRoot etc
+
 // Initialize Lando
 bootstrap({mode: 'cli'})
 
