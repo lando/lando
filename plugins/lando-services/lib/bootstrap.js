@@ -28,6 +28,7 @@ module.exports = function(lando) {
     // Services
     var services = [
       'apache',
+      'blackfire',
       'dotnet',
       'elasticsearch',
       'go',

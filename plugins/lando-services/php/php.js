@@ -147,7 +147,9 @@ module.exports = function(lando) {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
         PATH: path.join(':'),
-        LANDO_WEBROOT: webroot
+        LANDO_WEBROOT: webroot,
+        BLACKFIRE_CLIENT_ID: process.env.BLACKFIRE_CLIENT_ID,
+        BLACKFIRE_CLIENT_TOKEN: process.env.BLACKFIRE_CLIENT_TOKEN
       },
       ports: ['80'],
       volumes: [
