@@ -11,55 +11,34 @@
 
 // Modules
 var _ = require('lodash');
-var chalk = require('chalk');
+var cli = require('./../lib/cli');
+var os = require('os');
 var path = require('path');
-var sudoBlock = require('sudo-block');
-
-// Yargonaut must come before yargs
-var yargonaut = require('yargonaut');
-yargonaut.style('green').errorsStyle('red');
-
-// Get yargs
-var yargs = require('yargs');
 
 // Grab the bootstrap func
 var bootstrap = require('./../lib/bootstrap.js');
 
-// @TODO:
-// Set a more complicated config here with the relevant LANDO thingss eg sys confRoot etc
+// Allow envvars to override a few core things
+var userConfRoot = path.join(os.homedir(), '.lando');
+var ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO_';
+var LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
+var USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
 
-// @TODO:
-// Grab verbose mode counter so we can override the defualt logLevelConsole
+// If we have CLI verbosity args let's use those instead
+if (cli.largv.verbose) {
+  LOGLEVELCONSOLE = cli.largv.verbose + 1;
+}
 
-
-/*
- * Get our log level
- */
-/*
-var getLogLevelConsole = function() {
-
-  // If we are in the GUI then assume the higest level here
-  if (config.mode === 'gui') {
-    return 'debug';
-  }
-
-  // Otherwise get the log level from the args
-  var cliLevel = tasks.largv.verbose + 1 || 0;
-
-  // Get the log level from the config
-  var confLevel = getLogLevel(config.logLevelConsole) || 0;
-
-  // Get the max log level between the two
-  var maxLog = _.max([cliLevel, confLevel]);
-
-  // Use MAX cli or conf or warn by default
-  return logLevels[maxLog] || 'warn';
-
-};
-*/
-
-// Initialize Lando
-bootstrap({mode: 'cli'})
+// Initialize Lando with some start up config
+bootstrap({
+  configSources: [path.join(USERCONFROOT, 'config.yml')],
+  envPrefix: ENVPREFIX,
+  logLevelConsole: LOGLEVELCONSOLE,
+  logDir: path.join(USERCONFROOT, 'logs'),
+  mode: 'cli',
+  pluginDirs: [USERCONFROOT],
+  userConfRoot: USERCONFROOT
+})
 
 /*
  * Initializes the CLI.
@@ -68,6 +47,14 @@ bootstrap({mode: 'cli'})
  * options given by the user to the correct place.
  */
 .then(function(lando) {
+
+  // Yargonaut must come before yargs
+  var sudoBlock = require('sudo-block');
+  var yargonaut = require('yargonaut');
+  yargonaut.style('green').errorsStyle('red');
+
+  // Get yargs
+  var yargs = require('yargs');
 
   // Log
   lando.log.info('Initializing cli');
@@ -110,12 +97,9 @@ bootstrap({mode: 'cli'})
   // Print our result
   .then(function() {
 
-    // Parse any global opts for usage later
-    tasks.largv = lando.tasks.parseGlobals();
-
     // Create epilogue for our global options
     var epilogue = [
-      chalk.green('Global Options:\n'),
+      lando.node.chalk.green('Global Options:\n'),
       '  --help, -h  Show help\n',
       '  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output'
     ];
@@ -123,11 +107,11 @@ bootstrap({mode: 'cli'})
     // Loop through the tasks and add them to the CLI
     _.forEach(tasks, function(task) {
       lando.log.verbose('Loading cli task %s', task.name);
-      yargs.command(lando.tasks.parseToYargs(task));
+      yargs.command(lando.cli.parseToYargs(task));
     });
 
     // Invoke help if global option is specified
-    if (tasks.largv.help) {
+    if (lando.cli.largv.help) {
       yargs.showHelp();
       process.exit(0);
     }

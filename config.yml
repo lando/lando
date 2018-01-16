@@ -6,4 +6,6 @@ plugins:
   # - lando-services
   - lando-test
   # - lando-tooling
-logLevelConsole: 'debug'
+stats:
+  - report: true
+    url: https://metrics.devwithlando.io
