@@ -22,12 +22,41 @@ yargonaut.style('green').errorsStyle('red');
 // Get yargs
 var yargs = require('yargs');
 
-// Grab stuff so we can bootstrap
+// Grab the bootstrap func
 var bootstrap = require('./../lib/bootstrap.js');
-var errorHandler;
 
 // @TODO:
 // Set a more complicated config here with the relevant LANDO thingss eg sys confRoot etc
+
+// @TODO:
+// Grab verbose mode counter so we can override the defualt logLevelConsole
+
+
+/*
+ * Get our log level
+ */
+/*
+var getLogLevelConsole = function() {
+
+  // If we are in the GUI then assume the higest level here
+  if (config.mode === 'gui') {
+    return 'debug';
+  }
+
+  // Otherwise get the log level from the args
+  var cliLevel = tasks.largv.verbose + 1 || 0;
+
+  // Get the log level from the config
+  var confLevel = getLogLevel(config.logLevelConsole) || 0;
+
+  // Get the max log level between the two
+  var maxLog = _.max([cliLevel, confLevel]);
+
+  // Use MAX cli or conf or warn by default
+  return logLevels[maxLog] || 'warn';
+
+};
+*/
 
 // Initialize Lando
 bootstrap({mode: 'cli'})
@@ -38,7 +67,7 @@ bootstrap({mode: 'cli'})
  * This will either print the CLI usage to the console or route the command and
  * options given by the user to the correct place.
  */
-.tap(function(lando) {
+.then(function(lando) {
 
   // Log
   lando.log.info('Initializing cli');
@@ -119,7 +148,7 @@ bootstrap({mode: 'cli'})
 })
 
 // Handle uncaught errors
-.tap(function(lando) {
-  errorHandler = lando.error.handleError;
-  process.on('uncaughtException', errorHandler);
+// @TODO: this doesn't seem altogether correct
+.catch(function(error) {
+  throw new Error(error);
 });

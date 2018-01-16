@@ -6,5 +6,4 @@ plugins:
   # - lando-services
   - lando-test
   # - lando-tooling
-logLevelConsole: warn
-logLevel: debug
+logLevelConsole: 'debug'
