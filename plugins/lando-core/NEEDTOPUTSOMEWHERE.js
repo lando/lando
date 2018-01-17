@@ -1,28 +1,22 @@
-/**
- * Contains utility functions.
- *
- * @since 3.0.0
- * @module utils
- * @example
- *
- * // Take an object and write a docker compose file
- * var filename = lando.utils.compose(filename, data);
- *
- * // Scan URLs and print results
- * return lando.utils.scanUrls(urls)
- * .then(function(results) {
- *   console.log(results);
- * });
- */
+/*
+var APP_ROOT_DIRNAME = process.env.LANDO_CORE_APP_ROOT_DIRNAME || 'Lando';
+var LANDOFILE_NAME = process.env.LANDO_CORE_LANDOFILE_NAME || '.lando.yml';
+var user = require('./user');
 
-'use strict';
+//appConfigFilename: LANDOFILE_NAME,
+//appsRoot: path.join(env.home, APP_ROOT_DIRNAME),
+//appRegistry: path.join(env.userConfRoot, 'appRegistry.json'),
+//cache: true,
+//composeBin: env.composeBin,
+//composeVersion: '3.2',
+//containerGlobalEnv: {},
+//dockerBin: env.dockerBin,
+//dockerBinDir: env.dockerBinDir,
+//engineId: user.getEngineUserId(),
+//engineGid: user.getEngineUserGid(),
+//loadPassphraseProtectedKeys: false,
 
-// Modules
-var _ = require('./node')._;
-var log = require('./logger');
-var Promise = require('./promise');
-var rest = require('./node').rest;
-var yaml = require('./yaml');
+/*
 
 /**
  * Translate a name for use by docker-compose eg strip `-` and `.` and
@@ -30,52 +24,11 @@ var yaml = require('./yaml');
  *
  * @since 3.0.0
  */
+ /*
 exports.dockerComposify = function(data) {
   return data.replace(/-/g, '').replace(/\./g, '');
 };
 
-/**
- * Used with _.mergeWith to concat arrays
- *
- * @since 3.0.0
- * @example
- *
- * // Take an object and write a docker compose file
- * var newObject = _.mergeWith(a, b, lando.utils.merger);
- */
-exports.merger = function(objValue, srcValue) {
-  if (_.isArray(objValue)) {
-    return objValue.concat(srcValue);
-  }
-};
-
-/**
- * Writes a docker compose object to a file.
- *
- * @since 3.0.0
- * @param {String} file - The absolute path to the destination file.
- * @param {Object} data - The data to write to the file.
- * @returns {String} The absolute path to the destination file.
- * @example
- *
- * // Take an object and write a docker compose file
- * var filename = lando.utils.compose(filename, data);
- */
-exports.compose = function(file, data) {
-
-  // Do the dump
-  yaml.dump(file, data);
-
-  // Log
-  var services = _.keys(data);
-  log.verbose('Building compose file at %s with services.', file, services);
-  log.verbose('Writing %j to %s', services, file);
-  log.debug('Full services for %s', file, data);
-
-  // Return the filename
-  return file;
-
-};
 
 /**
  * Scans URLs to determine if they are up or down.
@@ -94,6 +47,7 @@ exports.compose = function(file, data) {
  *   console.log(results);
  * });
  */
+ /*
 exports.scanUrls = function(urls, opts) {
 
   // Scan opts
@@ -175,3 +129,68 @@ exports.scanUrls = function(urls, opts) {
   });
 
 };
+
+// Add docker executables path to path to handle weird situations where
+// the user may not have machine in their path
+var pathString = (process.platform === 'win32') ? 'Path' : 'PATH';
+var binPath = getDockerBinPath();
+if (!_.startsWith(env[pathString], binPath)) {
+  env[pathString] = [binPath, process.env[pathString]].join(path.delimiter);
+}
+
+/*
+ * Helper to get location of docker bin directory
+ */
+/*
+var getDockerBinPath = function() {
+  switch (process.platform) {
+    case 'darwin':
+      return path.join('/Applications/Docker.app/Contents/Resources', 'bin');
+    case 'linux':
+      return path.join(getSysConfRoot(), 'bin');
+    case 'win32':
+      var programFiles = process.env.ProgramW6432 || process.env.ProgramFiles;
+      return path.join(programFiles + '\\Docker\\Docker\\resources\\bin');
+  }
+};
+*/
+
+/*
+ * Get docker compose binary path
+ */
+ /*
+var getComposeExecutable = function() {
+
+  // Get compose bin path
+  var composePath = getDockerBinPath();
+  var composeBin = path.join(composePath, 'docker-compose');
+
+  // Return exec based on path
+  switch (process.platform) {
+    case 'darwin': return composeBin;
+    case 'linux': return composeBin;
+    case 'win32': return composeBin + '.exe';
+  }
+
+};
+*/
+
+/*
+ * This should only be needed for linux
+ */
+ /*
+var getDockerExecutable = function() {
+
+  // Get docker bin path
+  var dockerPath = getDockerBinPath();
+  var dockerBin = path.join(dockerPath, 'docker');
+
+  // Return exec based on path
+  switch (process.platform) {
+    case 'darwin': return dockerBin;
+    case 'linux': return '/usr/bin/docker';
+    case 'win32': return dockerBin + '.exe';
+  }
+
+};
+*/
