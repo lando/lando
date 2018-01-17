@@ -92,7 +92,7 @@ module.exports = function(lando) {
     // Switch apache php.ini if on 5.3
     if (via === 'apache' && version === '5.3') {
       typeConfig.apache.phpConf = '/usr/local/lib/conf.d/xxx-lando-default.ini';
-      typeConfig.apache.phpConf = '/usr/local/lib/conf.d';
+      typeConfig.apache.phpConfDir = '/usr/local/lib/conf.d';
     }
 
     // If hhvm is the "version" then refactor the typeconf
