@@ -1,8 +1,8 @@
 Some Refactor Notes
 ===================
 
-Determining "Core" modules
------------------------------
+~~Determining "Core" modules~~
+------------------------------
 
 ```
 |- lib/bootstrap.js
@@ -27,8 +27,8 @@ Determining "Core" modules
 |- lib/yaml.js
 ```
 
-Core Decoupling and Deconstruction Considerations
-----------------------------------------------------
+~~Core Decoupling and Deconstruction Considerations~~
+-----------------------------------------------------
 
 First pass on proposed changes!
 
@@ -79,7 +79,7 @@ First pass on proposed changes!
 * We probably just want to break this up and put its pieces elsewhere
 
 Pluginification
-------------------
+---------------
 
 A bunch of stuff currently in `lib` is probably better placed as plugins. This would
 
@@ -105,7 +105,7 @@ lib/registry.js
 * Figure out **exactly** how we want to move the above into `lando-core` with an eye to 4.
 
 Plugin Standarization
-------------------------
+---------------------
 
 We want to make provide a conventional plugin structure standard to maximize testability and minimize WTFIT.
 
@@ -126,3 +126,9 @@ Should contain the mocha testzzzz
 ### index.js
 
 This is the module that gets injected with `lando` and **ideally** should contain almost exclusively `lando` events that pull in stuff from `lib`.
+
+Other Misc Tasks
+----------------
+
+* Error handling in bin/lando.js and uncaught/promises, needs to send to logs and metrics
+* Env handling in shell.js
