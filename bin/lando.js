@@ -12,6 +12,8 @@
 // Modules
 var _ = require('lodash');
 var cli = require('./../lib/cli');
+var Log = require('./../lib/logger');
+var Metrics = require('./../lib/metrics');
 var os = require('os');
 var path = require('path');
 
@@ -132,7 +134,33 @@ bootstrap({
 })
 
 // Handle uncaught errors
-// @TODO: this doesn't seem altogether correct
+// @TODO: Replace the error.js to include some of the below
 .catch(function(error) {
-  throw new Error(error);
+
+  // Log and report our errors
+  var log = new Log({logDir: path.join(USERCONFROOT, 'logs')});
+  var metrics = new Metrics({
+    log: log,
+    idDir: USERCONFROOT,
+    endpoints: [{
+      report: true,
+      url: 'https://metrics.devwithlando.io',
+    }],
+    data: {
+      //mode: 'cli',
+      //devMode: false,
+      version: 'pirog5000',
+      //os: {
+      //  type: os.type(),
+      //  platform: os.platform(),
+      //  release: os.release(),
+      //  arch: os.arch()
+      //},
+      //nodeVersion: process.version
+    },
+  });
+
+  log.error(error);
+  metrics.report('error', {message: 'hello', stack: 'wedwd'});
+
 });

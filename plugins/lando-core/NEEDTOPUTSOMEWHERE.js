@@ -3,6 +3,33 @@ var APP_ROOT_DIRNAME = process.env.LANDO_CORE_APP_ROOT_DIRNAME || 'Lando';
 var LANDOFILE_NAME = process.env.LANDO_CORE_LANDOFILE_NAME || '.lando.yml';
 var user = require('./user');
 
+
+  // App identifier
+  var appId = [
+    _.get(opts, 'app.name', 'unknown'),
+    _.get(opts, 'app.root', 'someplace')
+  ];
+
+  // Metadata to report.
+  var obj = {
+    action: action,
+    app: hash(appId),
+    type: _.get(opts, 'app.config.recipe', 'none')
+  };
+
+  // Build an array of services to send as well
+  if (_.has(opts, 'app.config.services')) {
+    obj.services = _.map(_.get(opts, 'app.config.services'), function(service) {
+      return service.type;
+    });
+  }
+
+  // Get the email
+  var data = cache.get('site:meta:' + config.name);
+  if (_.has(data, 'email')) {
+    obj.email = _.get(data, 'email');
+  }
+
 //appConfigFilename: LANDOFILE_NAME,
 //appsRoot: path.join(env.home, APP_ROOT_DIRNAME),
 //appRegistry: path.join(env.userConfRoot, 'appRegistry.json'),
