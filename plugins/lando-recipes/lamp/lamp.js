@@ -10,10 +10,11 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var fs = lando.node.fs;
   var path = require('path');
 
   /*
-   * Helper to get a CGR commanc
+   * Helper to get a CGR command
    */
   var getCgr = function(pkg, version) {
 
@@ -335,6 +336,17 @@ module.exports = function(lando) {
     build.proxy = proxy(name);
     build.services = services(config);
     build.tooling = tooling(config);
+
+    // Check if the user specified the compserSwitch key to false
+    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
+    var composerJson = path.join(config._root, 'composer.json');
+    var runComposer = fs.existsSync(composerJson) && !disableComposer;
+
+    // Run composer install if we have the file and it isnt explicitly disabled in config
+    if (runComposer) {
+      var composerInstall = 'cd $LANDO_MOUNT && composer install';
+      build.services.appserver.build = [composerInstall];
+    }
 
     // Return the things
     return build;

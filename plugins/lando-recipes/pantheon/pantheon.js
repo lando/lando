@@ -662,6 +662,9 @@ module.exports = function(lando) {
       // Remove stuff from appserver
       delete build.services.appserver.build;
 
+      // Remove stuff from appserver
+      delete build.services.appserver.build;
+
       // Override some tooling things
       build.tooling.terminus.service = cliService;
       build.tooling.pull.service = cliService;
