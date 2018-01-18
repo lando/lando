@@ -132,3 +132,4 @@ Other Misc Tasks
 
 * Error handling in bin/lando.js and uncaught/promises, needs to send to logs and metrics
 * Env handling in shell.js
+* Provide some reporting parsing for apps (particularly for email data!)
