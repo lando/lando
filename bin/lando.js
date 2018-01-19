@@ -119,7 +119,7 @@ bootstrap(options)
     // Loop through the tasks and add them to the CLI
     _.forEach(tasks, function(task) {
       lando.log.verbose('Loading cli task %s', task.name);
-      yargs.command(lando.cli.parseToYargs(task));
+      yargs.command(lando.cli.parseToYargs(task, lando.events));
     });
 
     // Invoke help if global option is specified

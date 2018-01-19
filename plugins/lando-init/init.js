@@ -1,5 +1,5 @@
 /**
- * This provides a way to load new init methods
+ * Command to init a lando app
  *
  * @name init
  */
@@ -9,235 +9,182 @@
 module.exports = function(lando) {
 
   // Modules
-  var _ = lando.node._;
+  var _  = lando.node._;
   var fs = lando.node.fs;
-  var os = require('os');
   var path = require('path');
+  var Promise = lando.Promise;
 
-  // Fixed location of our util service compose file
-  var utilDir = path.join(lando.config.userConfRoot, 'util');
-  var utilFile = path.join(utilDir, 'util.yml');
+  // Collect the methods
+  var methods = [];
 
-  // Registry of init methods
-  var registry = {};
-
-  /*
-   * Get an init method
-   */
-  var get = function(name) {
-    if (name) {
-      return registry[name];
+  // Create the starting set of options/questions
+  var options = {
+    recipe: {
+      describe: 'The recipe to use',
+      choices: lando.recipes.get(),
+      alias: ['r'],
+      string: true,
+      interactive: {
+        type: 'list',
+        message: 'What recipe do you want to use?',
+        default: 'custom',
+        choices: _.map(lando.recipes.get(), function(recipe) {
+          return {name: recipe, value: recipe};
+        }),
+        weight: 500
+      }
     }
-    return _.keys(registry);
   };
 
-  /*
-   * Add an init method to the registry
-   */
-  var add = function(name, module) {
-    registry[name] = module;
-  };
+  // Merge in or alter other options provided by method plugins
+  _.forEach(lando.init.get(), function(method) {
+    methods.push(method);
+    options = _.merge(options, lando.init.get(method).options);
+  });
 
-  /*
-   * Helper to start util service
-   */
-  var utilService = function(name, app) {
-
-    // Let's get a service container
-    var util = {
-      image: 'devwithlando/util:stable',
-      environment: {
-        LANDO: 'ON',
-        LANDO_HOST_OS: lando.config.os.platform,
-        LANDO_HOST_UID: lando.config.engineId,
-        LANDO_HOST_GID: lando.config.engineGid,
-        LANDO_HOST_IP: lando.config.env.LANDO_ENGINE_REMOTE_IP,
-        LANDO_WEBROOT_USER: 'www-data',
-        LANDO_WEBROOT_GROUP: 'www-data',
-        LANDO_WEBROOT_UID: '33',
-        LANDO_WEBROOT_GID: '33',
-        LANDO_MOUNT: '/app',
-        COLUMNS: 256,
-        TERM: 'xterm'
-      },
-      command: ['tail', '-f', '/dev/null'],
-      entrypoint: '/lando-entrypoint.sh',
-      labels: {
-        'io.lando.container': 'TRUE',
-        'io.lando.service-container': 'TRUE'
-      },
-      volumes: [
-        '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
-      ]
-    };
-
-    // Set up our scripts
-    // @todo: get volumes above into this
-    var scripts = ['lando-entrypoint.sh', 'user-perms.sh', 'load-keys.sh'];
-    _.forEach(scripts, function(script) {
-      fs.chmodSync(path.join(lando.config.engineScriptsDir, script), '755');
-    });
-
-    // Add important ref points
-    var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
-    util.volumes.push(app + ':/app' + shareMode);
-    util.volumes.push('$LANDO_ENGINE_HOME:/user' + shareMode);
-
-    // Build and export compose
-    var service = {
-      version: '3.2',
-      services: {
-        util: util
+  // Specify more auxopts
+  var auxOpts = {
+    destination: {
+      describe: 'Specify where to init the app',
+      alias: ['dest', 'd'],
+      string: true,
+      default: process.cwd()
+    },
+    webroot: {
+      describe: 'Specify the webroot relative to destination',
+      string: true,
+      interactive: {
+        type: 'input',
+        message: 'Where is your webroot relative to the init destination?',
+        default: '.',
+        when: function(answers) {
+          var recipe = answers.recipe || lando.tasks.argv().recipe;
+          return lando.recipes.webroot(recipe);
+        },
+        weight: 900,
       }
-    };
-
-    // Log
-    lando.log.debug('Run util service %j', service);
-    lando.utils.compose(utilFile, service);
-
-    // Name the project
-    var project = 'landoinit' + name;
-
-    // Try to start the util
-    return {
-      project: project,
-      compose: [utilFile],
-      container: [lando.utils.dockerComposify(project), 'util', '1'].join('_'),
-      opts: {
-        services: ['util']
+    },
+    name: {
+      describe: 'The name of the app',
+      string: true,
+      interactive: {
+        type: 'input',
+        message: 'What do you want to call this app?',
+        default: 'My Lando App',
+        filter: function(value) {
+          if (value) {
+            return _.kebabCase(value);
+          }
+        },
+        when: function(answers) {
+          var recipe = answers.recipe || lando.tasks.argv().recipe;
+          return lando.recipes.name(recipe);
+        },
+        weight: 1000,
       }
-    };
-
-  };
-
-  /*
-   * Helper to return a create key command
-   */
-  var createKey = function(key) {
-
-    // Ensure that cache directory exists
-    var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.mkdirpSync(path.join(keysDir));
-
-    // Construct a helpful and box-specific comment
-    var comment = 'lando@' + os.hostname();
-
-    // Key cmd
-    return [
-      'ssh-keygen',
-      '-t rsa -N "" -C "' + comment + '" -f "/user/.lando/keys/' + key + '"'
-    ].join(' ');
-  };
-
-  /*
-   * Run a command during the init process
-   */
-  var run = function(name, app, cmd, user) {
-
-    // Get the service
-    var service = utilService(name, app);
-
-    // Build out our run
-    var run = {
-      id: service.container,
-      compose: service.compose,
-      project: service.project,
-      cmd: cmd,
-      opts: {
-        mode: 'attach',
-        user: user || 'www-data',
-        services: service.opts.services || ['util']
-      }
-    };
-
-    // Start the container
-    return lando.engine.start(service)
-
-    // On linux lets provide a little delay to make sure our user is set up
-    .then(function() {
-      if (process.platform === 'linux') {
-        return lando.Promise.delay(1000);
-      }
-    })
-
-    // Exec
-    .then(function() {
-      return lando.engine.run(run);
-    });
-
-  };
-
-  /*
-   * Helper to kill any running util processes
-   */
-  var kill = function(name, app) {
-
-    // Get the service
-    var service = utilService(name, app);
-
-    // Check if we have a container
-    return lando.engine.exists(service)
-
-    // Killing in the name of
-    .then(function(exists) {
-      if (exists) {
-        return lando.engine.stop(service)
-        .then(function() {
-          return lando.engine.destroy(service);
-        });
-      }
-    });
-
-  };
-
-  /**
-   * The core init method
-   */
-  var build = function(name, method, options) {
-
-    // Check to verify whether the method exists in the registry
-    if (!registry[method]) {
-      return {};
+    },
+    yes: {
+      describe: 'Auto answer yes to prompts',
+      alias: ['y'],
+      default: false,
+      boolean: true
     }
-
-    // Log
-    lando.log.verbose('Building %s with %s method', name, method);
-    lando.log.debug('Building %s with config', name, options);
-
-    // Run the build function
-    return registry[method].build(name, options);
-
   };
 
-  /*
-   * Helper to spit out a .lando.yml file
-   */
-  var yaml = function(recipe, config, options) {
-
-    // Check to verify whether the recipe exists in the registry
-    if (!registry[recipe]) {
-      return config;
-    }
-
-    // Log
-    lando.log.verbose('Getting more config for %s app %s', recipe, config.name);
-    lando.log.debug('Getting more for %s using %j', config.name, options);
-
-    // Return the .lando.yml
-    return registry[recipe].yaml(config, options);
-
-  };
-
+  // The task object
   return {
-    add: add,
-    build: build,
-    createKey: createKey,
-    get: get,
-    kill: kill,
-    run: run,
-    yaml: yaml
+    command: 'init [method]',
+    describe: 'Initialize a lando app, optional methods: ' + methods.join(', '),
+    options: _.merge(options, auxOpts),
+    run: function(options) {
+
+      // Get absolute path of destination
+      options.destination = path.resolve(options.destination);
+
+      // Create directory if needed
+      if (!fs.existsSync(options.destination)) {
+        fs.ensureDirSync(options.destination);
+      }
+
+      // Set node working directory to the destination
+      process.chdir(options.destination);
+
+      // Set the basics
+      var config = {
+        name: options.name,
+        recipe: options.recipe,
+      };
+
+      // If we have a webroot let's set it
+      if (!_.isEmpty(options.webroot)) {
+        _.set(config, 'config.webroot', options.webroot);
+      }
+
+      // Method specific build steps if applicable
+      return Promise.try(function() {
+        return lando.init.build(config.name, options.method, options);
+      })
+
+      // Kill any build containers if needed
+      .then(function() {
+        return lando.init.kill(config.name, options.destination);
+      })
+
+      // Check to see if our recipe provides additional yaml augment
+      .then(function() {
+        return lando.init.yaml(options.recipe, config, options);
+      })
+
+      // Create the lando yml
+      .then(function(config) {
+
+        // Where are we going?
+        var dest = path.join(options.destination, '.lando.yml');
+
+        // Rebase on top of any existing yaml
+        if (fs.existsSync(dest)) {
+          var pec = lando.yaml.load(dest);
+          config = _.mergeWith(pec, config, lando.utils.merger);
+        }
+
+        // Dump it
+        lando.yaml.dump(dest, config);
+
+      })
+
+      // Tell the user things
+      .then(function() {
+
+        // Header it
+        console.log(lando.cli.initHeader());
+
+        // Grab a new cli table
+        var table = new lando.cli.Table();
+
+        // Get docs link
+        var docBase = 'https://docs.devwithlando.io/tutorials/';
+        var docUrl = docBase + config.recipe + '.html';
+
+        // Add data
+        table.add('NAME', config.name);
+        table.add('LOCATION', options.destination);
+        table.add('RECIPE', options.recipe);
+        table.add('DOCS', docUrl);
+
+        // Add some other things if needed
+        if (!_.isEmpty(options.method)) {
+          table.add('METHOD', options.method);
+        }
+
+        // Print the table
+        console.log(table.toString());
+
+        // Space it
+        console.log('');
+
+      });
+
+    }
   };
 
 };

@@ -1,10 +1,10 @@
 plugins:
-  # - lando-core
+  - lando-core
   # - lando-events
   # - lando-proxy
   # - lando-recipes
   # - lando-services
-  - lando-test
+  # - lando-test
   # - lando-tooling
 stats:
   - report: true
