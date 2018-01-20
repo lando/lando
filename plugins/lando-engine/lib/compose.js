@@ -7,82 +7,9 @@
 'use strict';
 
 // Modules
-var _ = require('./node')._;
-var config = require('./config');
-var fs = require('./node').fs;
-var path = require('path');
-var shell = require('./shell');
-var yaml = require('./yaml');
-
-// Get some composer things
-var COMPOSE_EXECUTABLE = config.composeBin;
-
-/*
- * Run a provider command in a shell.
- */
-var shCompose = function(cmd, opts) {
-  return shell.sh([COMPOSE_EXECUTABLE].concat(cmd), opts);
-};
-
-/*
- * Figure out what to do with the compose data we have
- * and then return a files array
- */
-var parseComposeData = function(compose, project) {
-
-  // Start up a collector of files
-  var files = [];
-
-  // Export our compose stuff and add to commands
-  // @todo: this whole thing might be deprecated at this point?
-  _.forEach(compose, function(unit) {
-
-    // Create files where we need to otherwise use the ones provided
-    if (typeof unit === 'object') {
-
-      // Create temp stuff
-      var tmpDir = path.join(config.userConfRoot, 'tmp', project);
-      fs.mkdirpSync(tmpDir);
-
-      // Generate a new compose file and add to our thing
-      var fileName = [project, _.uniqueId()].join('-') + '.yml';
-      var newComposeFile = path.join(tmpDir, fileName);
-      yaml.dump(newComposeFile, unit);
-      unit = newComposeFile;
-
-    }
-
-    // Add in our unit
-    files.push('--file');
-    files.push(unit);
-
-  });
-
-  // Return all the files
-  return files;
-
-};
-
-/*
- * Expand dirs/files to an array of compose files options
- */
-var parseComposeOptions = function(compose, project, opts) {
-
-  // A project is required
-  if (!project) {
-    throw new Error('Need to give this composition a project name!');
-  }
-
-  // Kick off options
-  var options = ['--project-name', project];
-
-  // Get our array of compose files
-  var files = parseComposeData(compose, project, opts);
-
-  // Return our compose option
-  return options.concat(files);
-
-};
+var _ = require('lodash');
+var esc = require('shell-escape');
+var utils = require('./utils');
 
 /*
  * Parse general docker options
@@ -153,7 +80,7 @@ var parseOptions = function(opts) {
   if (opts.entrypoint) {
     flags.push('--entrypoint');
     if (_.isArray(opts.entrypoint)) {
-      flags.push(shell.escSpaces(opts.entrypoint.join(' ')));
+      flags.push(utils.escSpaces(opts.entrypoint.join(' ')));
     }
     else {
       flags.push(opts.entrypoint);
@@ -189,8 +116,22 @@ var parseOptions = function(opts) {
  */
 var buildCmd = function(compose, project, run, opts) {
 
+  // A project is required
+  if (!project) {
+    throw new Error('Need to give this composition a project name!');
+  }
+
+  // Kick off options
+  var cmd = ['--project-name', project];
+
+  // Export our compose stuff and add to commands
+  _.forEach(compose, function(unit) {
+    cmd.push('--file');
+    cmd.push(unit);
+  });
+
   // Get our compose files and build the pre opts
-  var cmd = parseComposeOptions(compose, project, opts).concat([run]);
+  cmd = cmd.concat([run]);
 
   // Get options
   cmd = cmd.concat(parseOptions(opts));
@@ -208,7 +149,7 @@ var buildCmd = function(compose, project, run, opts) {
       opts.cmd = [opts.cmd];
     }
     if (_.isArray(opts.entrypoint)) {
-      cmd.push(shell.escSpaces(opts.cmd.join(' ')));
+      cmd.push(utils.escSpaces(opts.cmd.join(' ')));
     }
     else {
       cmd = _.flatten(cmd.concat(opts.cmd));
@@ -235,11 +176,10 @@ exports.start = function(compose, project, opts) {
   var options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Up us
-  var cmd = buildCmd(compose, project, 'up', options);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'collect'
-  });
+  return {
+    cmd: buildCmd(compose, project, 'up', options),
+    opts: {app: opts.app, mode: 'collect'}
+  };
 
 };
 
@@ -256,12 +196,12 @@ exports.getId = function(compose, project, opts) {
   // Get opts
   var options = (opts) ? _.merge(defaults, opts) : defaults;
 
-  return shCompose(
-    buildCmd(compose, project, 'ps', options),
-    {
-      app: opts.app
-    }
-  );
+  // Return
+  return {
+    cmd: buildCmd(compose, project, 'ps', options),
+    opts: {app: opts.app}
+  };
+
 };
 
 /*
@@ -278,12 +218,11 @@ exports.build = function(compose, project, opts) {
   // Get opts
   var options = (opts) ? _.merge(defaults, opts) : defaults;
 
-  // Build and run
-  var cmd = buildCmd(compose, project, 'build', options);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'collect'
-  });
+  // Return
+  return {
+    cmd: buildCmd(compose, project, 'build', options),
+    opts: {app: opts.app, mode: 'collect'}
+  };
 
 };
 
@@ -291,25 +230,20 @@ exports.build = function(compose, project, opts) {
  * Run docker compose pull
  */
 exports.pull = function(compose, project, opts) {
-
-  // Build and run
-  var cmd = buildCmd(compose, project, 'pull', opts);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'collect'
-  });
-
+  return {
+    cmd: buildCmd(compose, project, 'pull', opts),
+    opts: {app: opts.app, mode: 'collect'}
+  };
 };
 
 /*
  * Run docker compose stop
  */
 exports.stop = function(compose, project, opts) {
-  var cmd = buildCmd(compose, project, 'stop', opts);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'collect'
-  });
+  return {
+    cmd: buildCmd(compose, project, 'stop', opts),
+    opts: {app: opts.app, mode: 'collect'}
+  };
 };
 
 /*
@@ -324,7 +258,7 @@ exports.run = function(compose, project, opts) {
 
   // Make cmd is an array lets desconstruct and escape
   if (_.isArray(opts.cmd)) {
-    opts.cmd = shell.escSpaces(shell.esc(opts.cmd), 'linux');
+    opts.cmd = utils.escSpaces(esc(opts.cmd), 'linux');
   }
 
   // Add in any prefix commands
@@ -339,11 +273,11 @@ exports.run = function(compose, project, opts) {
   var options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Build the command
-  var cmd = buildCmd(compose, project, 'exec', options);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'attach'
-  });
+  return {
+    cmd: buildCmd(compose, project, 'exec', options),
+    opts: {app: opts.app, mode: 'attach'}
+  };
+
 };
 
 /*
@@ -361,11 +295,11 @@ exports.logs = function(compose, project, opts) {
   var options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Build the command
-  var cmd = buildCmd(compose, project, 'logs', options);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'attach'
-  });
+  return {
+    cmd: buildCmd(compose, project, 'logs', options),
+    opts: {app: opts.app, mode: 'attach'}
+  };
+
 };
 /*
  * Run docker compose remove
@@ -392,10 +326,9 @@ exports.remove = function(compose, project, opts) {
   var subCmd = (opts.purge) ? 'down' : 'rm';
 
   // Build the command and run it
-  var cmd = buildCmd(compose, project, subCmd, options);
-  return shCompose(cmd, {
-    app: opts.app,
-    mode: 'collect'
-  });
+  return {
+    cmd: buildCmd(compose, project, subCmd, options),
+    opts: {app: opts.app, mode: 'collect'}
+  };
 
 };

@@ -9,7 +9,7 @@
 module.exports = function(lando) {
 
   // Add core commands to lando
-  lando.events.on('post-bootstrap', 1, function(lando) {
+  lando.events.on('post-bootstrap', function(lando) {
 
     // Log
     lando.log.info('Initializing core plugin');
