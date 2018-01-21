@@ -17,6 +17,7 @@ return lando.networks.get()
 
 * [networks](#module_networks)
     * [.get([opts])](#module_networks.get) ⇒ <code>Promise</code>
+    * [.create(name, [opts])](#module_networks.create) ⇒ <code>Promise</code>
     * [.prune([opts])](#module_networks.prune) ⇒ <code>Promise</code>
 
 <a name="module_networks.get"></a>
@@ -56,6 +57,26 @@ Gets the docker networks.
  .map(function(network) {
    return network.Name;
  });
+```
+<a name="module_networks.create"></a>
+
+### networks.create(name, [opts]) ⇒ <code>Promise</code>
+Creates a Docker network
+
+**Kind**: static method of [<code>networks</code>](#module_networks)  
+**Returns**: <code>Promise</code> - A Promise with inspect data.  
+**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.  
+**Since**: 3.0.0.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | The name of the networks |
+| [opts] | <code>Object</code> | See API network docs above |
+
+**Example**  
+```js
+// Get the networks
+ return lando.networks.inspect('mynetwork')
 ```
 <a name="module_networks.prune"></a>
 
