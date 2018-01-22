@@ -18,6 +18,7 @@ module.exports = function(lando) {
   var proxyDir = path.join(lando.config.userConfRoot, 'proxy');
   var proxyFile = path.join(proxyDir, 'proxy' + '.yml');
   var projectName = 'landoproxyhyperion5000gandalfedition';
+  var networkName = [projectName, 'edge'].join('_');
 
   /*
    * Helper to extract ports from inspect data
@@ -280,7 +281,28 @@ module.exports = function(lando) {
 
     // Try to start the proxy
     .then(function() {
-      return lando.engine.start(getProxy(proxyFile));
+
+      // Retry this a few times so we can cover situations like
+      // https://github.com/lando/lando/issues/632
+      // This is important because if the proxy fails it sort of botches the whole thing
+      return Promise.retry(function() {
+
+        // Start the proxy
+        return lando.engine.start(getProxy(proxyFile))
+
+        // If there is an error let's destroy and try to recreate
+        .catch(function(error) {
+          lando.log.warn('Something is wrong with the proxy! %j', error);
+          lando.log.warn('Trying to take corrective action...');
+          var id = [projectName, 'proxy', '1'].join('_');
+          return lando.engine.destroy({id: id, opts: {force: true}})
+          .then(function() {
+            return Promise.reject();
+          });
+        });
+
+      });
+
     });
 
   };
@@ -294,11 +316,9 @@ module.exports = function(lando) {
     var config = [];
     var secures = [];
 
-    // Get 443z
+    // Mock add "secure" urls to all our proxy domains
     _.forEach(data, function(datum) {
-      if (_.get(datum.split(':'), '[1]', '80') === '80') {
-        secures.push([datum.split(':')[0], '443'].join(':'));
-      }
+      secures.push([datum.split(':')[0], '443'].join(':'));
     });
 
     // Map to array of port/host objects
@@ -594,7 +614,7 @@ module.exports = function(lando) {
 
       // Add relevant URLS
       app.events.on('post-start', function() {
-        return addUrls(app, ['80/tcp', '443/tcp']);
+        return addUrls(app);
       });
 
       // Add proxy URLS to our app info
@@ -626,13 +646,7 @@ module.exports = function(lando) {
         // Kick off the proxy compose file
         var compose = {
           version: lando.config.composeVersion,
-          networks: {
-            'lando_proxyedge': {
-              external: {
-                name: projectName + '_edge'
-              }
-            }
-          },
+          networks: {'lando_proxyedge': {external: {name: networkName}}},
           services: {}
         };
 
@@ -665,52 +679,37 @@ module.exports = function(lando) {
 
           // Add in relevant labels if we have hosts
           if (!_.isEmpty(hosts)) {
+
+            // Get preexisting things and parse hosts
             var labels = _.get(app.services[service.name], 'labels', {});
-            labels['traefik.docker.network'] = projectName + '_edge';
-            labels['traefik.frontend.rule'] = 'Host:' + hosts.join(',');
+            var preNets = _.get(app.services[name], 'networks', {});
+            var hRegex = new RegExp('\\*', 'g');
+            var hReplace = '{wildcard:[a-z0-9-]+}';
+            var parsedHosts = hosts.join(',').replace(hRegex, hReplace);
+
+            // Set our traefik labels
+            labels['traefik.docker.network'] = networkName;
+            labels['traefik.frontend.rule'] = 'HostRegexp:' + parsedHosts;
             labels['traefik.port'] = _.toString(port);
 
             // Get any networks that might already exist
             var defaultNets = {'lando_proxyedge': {}, 'default': {}};
-            var preNets = _.get(app.services[name], 'networks', {});
 
             // Start building the augment
             compose.services[name] = {
               networks: _.mergeWith(defaultNets, preNets, lando.utils.merger),
               labels: labels,
             };
+
           }
+
+          // Remove hosts with wildcards
+          hosts = _.filter(hosts, function(host) {
+            return host.indexOf('*') < 0;
+          });
 
           // Send hosts down the pipe
           return hosts;
-
-        })
-
-        // Add extra hosts to all the service
-        .then(function(hosts) {
-
-          // Compute extra hosts
-          var hostList = _.map(_.flatten(hosts), function(host) {
-            return [host, lando.config.env.LANDO_ENGINE_REMOTE_IP].join(':');
-          });
-
-          // And add them if applicable
-          if (!_.isEmpty(hostList)) {
-            _.forEach(_.keys(app.services), function(name) {
-
-              // Look for preexisting extra_hosts
-              var peeh = [];
-              if (!_.isEmpty(_.get(app.services[name], 'extra_hosts', []))) {
-                peeh = _.get(app.services[name], 'extra_hosts', []);
-              }
-
-              // Merge the whole shebang
-              compose.services[name] = _.merge(compose.services[name], {
-                'extra_hosts': _.flatten(hostList.concat(peeh))
-              });
-
-            });
-          }
 
         })
 

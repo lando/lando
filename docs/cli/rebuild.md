@@ -7,7 +7,6 @@ Rebuilds the containers and tooling for your app. This command is great for deve
 >
 > Most app services allow data to persist between rebuilds but there are some services where a rebuild will result in a loss of data.
 
-
 Usage
 -----
 
@@ -25,6 +24,7 @@ lando rebuild --yes
 lando rebuild appname -- -v
 
 # Rebuild only the appserver and cache services
+# NOTE: This will also trigger build steps for ONLY the specified services
 lando rebuild -s cache -s appserver
 ```
 

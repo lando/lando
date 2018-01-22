@@ -2,6 +2,7 @@
 * text=auto
 
 # Declare files that will always have LF line endings on checkout.
+*.js text eol=lf
 *.sh text eol=lf
 *.conf text eol=lf
 *.cnf text eol=lf

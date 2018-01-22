@@ -110,7 +110,11 @@ module.exports = function(lando) {
 
       // Extract the cli service and add here
       var cliCompose = lando.services.build('cli', 'node:' + version, cliConf);
-      services[name + '_cli'] = cliCompose.services.cli;
+      var cliName = name + '_cli';
+      services[cliName] = cliCompose.services.cli;
+
+      // Add a flag so we know this is built behind the the scenes
+      config._hiddenServices = [cliName];
 
     }
 

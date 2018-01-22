@@ -364,6 +364,14 @@ module.exports = function(lando) {
       volumes = _.mergeWith(volumes, config.overrides.volumes, merger);
       networks = _.mergeWith(networks, config.overrides.networks, merger);
 
+      // If we need to provide overrides for other things, eg behind the scenes
+      // cli services let's do that here
+      if (_.has(config, '_hiddenServices')) {
+        _.forEach(config._hiddenServices, function(o) {
+          services[o] = mergeOver(services[o], config.overrides.services);
+        });
+      }
+
     }
 
     // Return the built compose file

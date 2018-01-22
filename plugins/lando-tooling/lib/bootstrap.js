@@ -42,16 +42,20 @@ module.exports = function(lando) {
         // Loop through each tool
         _.forEach(app.config.tooling, function(task, name) {
 
-          // Log
-          lando.log.verbose('Adding app cli task %s', name);
+          if (_.isObject(task)) {
 
-          // Build our config
-          var config = task;
-          task.app = app;
-          task.name = name;
+            // Log
+            lando.log.verbose('Adding app cli task %s', name);
 
-          // Build and add the task
-          lando.tasks.add(name, lando.tooling.build(config));
+            // Build our config
+            var config = task;
+            task.app = app;
+            task.name = name;
+
+            // Build and add the task
+            lando.tasks.add(name, lando.tooling.build(config));
+
+          }
 
         });
 

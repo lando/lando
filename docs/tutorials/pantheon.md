@@ -27,7 +27,7 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
 
  # Commit the .lando.yml to your git repo (Optional but recommended)
  git add -A
- git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+ git commit -m "This will be easy, my friend."
  git push
  ```
 
@@ -149,7 +149,7 @@ lando push -m "Updated the widget to do awesome thing x"
 # Push only the database and code
 lando push --files=none
 
-# Pull only the files and code
+# Push only the files and code
 lando push --database=none
 ```
 

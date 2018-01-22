@@ -13,7 +13,6 @@ module.exports = function(lando) {
   var path = require('path');
 
   var addConfig = lando.services.addConfig;
-  //var addScript = lando.services.addScript;
   var buildVolume = lando.services.buildVolume;
 
   /**
@@ -71,6 +70,9 @@ module.exports = function(lando) {
     // Start up the solr config collector
     var solrConfig = {};
 
+    // Normalize our extras
+    config.extras = config.extras || [];
+
     // Figure out which config base to use
     if (_.includes(['3.6', '4.10'], config.version)) {
       solrConfig = versionConfig[config.version];
@@ -109,6 +111,14 @@ module.exports = function(lando) {
 
     }
 
+    // Add some permission helpers for non custom versions
+    // This is conditional for things like the pantheon recipe that need to
+    // use a custom image that may or may not have the solr user
+    if (config.version !== 'custom') {
+      var dataDir = solrConfig.dataDir;
+      config.extras.unshift(['chown', '-R', 'solr:solr', dataDir].join(' '));
+    }
+
     // Handle custom config dir
     if (_.has(config, 'config.conf')) {
 
@@ -121,18 +131,17 @@ module.exports = function(lando) {
       solr.volumes = addConfig(globalConfig, solr.volumes);
 
       // If this is a recent version of solr we need to add to the config as an arg
-      // and also map to the core
-      if (!_.includes(['3.6', 4.10], config.version)) {
+      if (!_.includes(['3.6', '4.10'], config.version)) {
 
         // Augment the start up command
         var command = solr.command.split(' ');
         command.push('/solrconf');
         solr.command = command.join(' ');
 
-        // Share the config to the core as well
+        // Symlink the core config to the system config
         var coreConf = path.join(solrConfig.dataDir, core, 'conf');
-        var coreConfig = buildVolume(local, coreConf, '$LANDO_APP_ROOT_BIND');
-        solr.volumes = addConfig(coreConfig, solr.volumes);
+        config.extras.unshift(['ln', '-sf', confDir, coreConf].join(' '));
+        config.extras.unshift(['rm', '-rf', coreConf].join(' '));
 
       }
 

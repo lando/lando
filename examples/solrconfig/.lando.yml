@@ -1,0 +1,11 @@
+# solrconfig server example
+name: solrconfig
+proxy:
+  index:
+    - solrconfig.lndo.site:8983
+services:
+  index:
+    type: solr:6.6
+    core: drupal
+    config:
+      conf: solr-conf

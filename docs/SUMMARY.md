@@ -124,15 +124,21 @@
     *   [redis](services/redis.md)
     *   [ruby](services/ruby.md)
     *   [solr](services/solr.md)
+    *   [tomcat](services/tomcat.md)
     *   [varnish](services/varnish.md)
 *   [Tooling](config/tooling.md)
 *   [config.yml](config/config.md)
 *   [Environment](config/env.md)
+*   [Networking](config/networking.md)
 *   [SSH Keys](config/ssh.md)
 *   [Shared Files](config/files.md)
 *   [Build Steps](config/build.md)
 *   [Scripting](config/scripting.md)
 *   [Advanced](config/advanced.md)
+
+## Community
+
+*   [Slidedecks](https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC)
 
 ## Development
 
@@ -168,4 +174,5 @@
 
 ## Changelog
 
+*   [2018](changelog/2018.md)
 *   [2017](changelog/2017.md)

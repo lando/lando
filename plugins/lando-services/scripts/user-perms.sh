@@ -47,9 +47,18 @@ if [ $(id -u) = 0 ]; then
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/lib &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/share &>/dev/null &
 
-  # Move over .gitconfig if it exists
+  # Symlink the gitconfig
   if [ -f "/user/.gitconfig" ]; then
-    cp -rf /user/.gitconfig /var/www/.gitconfig
+    rm -f /var/www/.gitconfig
+    ln -sf /user/.gitconfig /var/www/.gitconfig
+  fi
+
+  # Symlink the known_hosts
+  if [ -f "/user/.ssh/known_hosts" ]; then
+    mkdir -p /var/www/.ssh
+    nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /var/www/.ssh &>/dev/null &
+    rm -f /var/www/.ssh/known_hosts
+    ln -sf /user/.ssh/known_hosts /var/www/.ssh/known_hosts
   fi
 
 fi
