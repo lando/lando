@@ -1,12 +1,66 @@
 'use strict';
 const common = require('../../tasks/common');
-const fsTasks = require('../../tasks/fs')(common);
 const shellTask = require('../../tasks/shell')(common);
 const copy = require('copy');
 const fs = require('fs-extra');
 const path = require('path');
 const util = require('../util');
 
+// Define cli pkg name
+const cliPkgName = 'lando-' + common.lando.pkgSuffix;
+
+const files = {
+  // All js files
+  build: [
+    path.join('bin', '**', '*.js'),
+    path.join('lib', '**', '*.js'),
+    path.join('plugins', '**', '*.js'),
+    path.join('package.json'),
+    path.join('yarn.lock')
+  ],
+  clean: {
+    cli: {
+      build: [path.join('build', 'cli', path.sep)],
+      dist: [path.join('dist', 'cli', path.sep)]
+    },
+    installer: {
+      build: [path.join('build', 'installer', path.sep)],
+      dist: [path.join('dist', path.sep)]
+    }
+  },
+  // Our copy tasks
+  copy: {
+    cli: {
+      dist: {
+        src: path.join('build', 'cli', cliPkgName),
+        dest: path.join('dist', 'cli', cliPkgName),
+        options: {
+          mode: true
+        }
+      }
+    },
+    installer: {
+      build: {
+        cwd: path.join('installer', common.system.platform, path.sep),
+        src: ['**'],
+        dest: path.join('build', 'installer', path.sep),
+        expand: true,
+        options: {
+          mode: true
+        }
+      },
+      dist: {
+        cwd: path.join('build', 'installer', 'dist', path.sep),
+        src: ['**'],
+        dest: path.join('dist', path.sep),
+        expand: true,
+        options: {
+          mode: true
+        }
+      }
+    }
+  },
+};
 
 module.exports = {
 
@@ -23,24 +77,16 @@ module.exports = {
     });
   },
 
-  copyOp: function(src = [], dest = '') {
-    return src.map(function(reference) {
-      copy(reference, dest, {srcBase: '.'}, function(err, files) {
-        if (err) throw err;
-      });
-    });
-  },
-
   /**
    * Package the CLI.
    *
    * @return {Promise} Chain of the packager followed by copy.
    */
   pkgCli: function() {
-    this.clean([fsTasks.clean.cli.build, fsTasks.clean.cli.dist]);
-    copy(common.files.build, 'build/cli/', {srcBase: '.'}, (err, files) => { if (err) { throw err; } });
+    this.clean([files.clean.cli.build, files.clean.cli.dist]);
+    copy(files.build, path.join('build', 'cli'), {srcBase: '.'}, (err, files) => { if (err) { throw err; } });
     const pkgCmd = this.cliPkgTask();
-    return util.shellExec(pkgCmd).then((result) => fs.copy(fsTasks.copy.cli.dist.src, fsTasks.copy.cli.dist.dest, (err) => {
+    return util.shellExec(pkgCmd).then((result) => fs.copy(files.copy.cli.dist.src, files.copy.cli.dist.dest, (err) => {
       if (err) { throw  err; }
     }));
   },
@@ -52,28 +98,38 @@ module.exports = {
    */
   pkgInstaller: function(platform) {
     const extension = (platform === 'win32') ? 'ps1' : 'sh';
-    return util.shellExec(
-      shellTask.scriptTask(
-        'scripts/build-' + platform + '.' + extension
-      )
-    );
+    const script = path.join('scripts', `build-${platform}.${extension}`);
+
+    const task = function(extension) {
+      if (extension === 'ps1') {
+        return shellTask.psTask(script);
+      } else {
+        return shellTask.scriptTask(script);
+      }
+    };
+
+    return util.shellExec(task(extension));
   },
 
   /**
    * Run the full packager
    */
   pkgFull: function() {
-    this.clean([fsTasks.clean.installer.build, fsTasks.clean.installer.dist]);
-    copy('installer/' + common.system.platform + '/**', 'build/installer', {mode: true, srcBase: 'installer/' + common.system.platform}, (err, files) => { if (err) throw err; });
+    this.clean([files.clean.installer.build, files.clean.installer.dist]);
+    copy(
+      path.join('installer', common.system.platform, '**'),
+      path.join('build', 'installer', path.sep),
+      {mode: true, srcBase: path.join('installer', common.system.platform, path.sep)},
+      (err, files) => { if (err) throw err; }
+    );
     this.pkgCli().then((result) => {
-      this.pkgInstaller(common.system.platform).then((result) => {
-      copy('build/installer/dist/**', 'dist/', {mode: true, srcBase: 'build/installer/dist/'}, (err, files) => {
-      if (err) throw err;
+      this.pkgInstaller(common.system.platform).then((result) => copy(
+          path.join('build', 'installer', 'dist', '**'),
+          path.join('dist'),
+          {mode: true, srcBase: path.join('build', 'installer', 'dist', path.sep)},
+          (err, files) => { if (err) throw err; }
+        ));
     });
-  }, function (result) {
-      return console.log('Done!');
-    });
-  });
   },
 
   /*
@@ -112,7 +168,6 @@ module.exports = {
         stdinRawMode: false,
         preferLocal: true,
         maxBuffer: 20 * 1024 * 1024,
-        cwd: 'build/cli'
       }
     };
 
@@ -128,7 +183,8 @@ module.exports = {
 
     // Start to build the command
     var cmd = [];
-    cmd.push('cd build/cli');
+    var cliBuild = path.join('build', 'cli', path.sep);
+    cmd.push('cd ' + cliBuild);
     cmd.push('yarn --production');
     cmd.push(pkgCmd.join(' '));
 

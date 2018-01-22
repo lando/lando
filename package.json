@@ -79,14 +79,14 @@
   "scripts": {
     "docs": "gitbook install && gitbook build && ./scripts/docs.js",
     "lint": "eslint bin/**/*.js lib/**/*.js plugins/**/*.js test/**/*.js scripts/**/**/*.js",
-    "release:major": "./scripts/bump.js --stage=major",
-    "pkg:cli": "./scripts/pkg.js --stage=cli",
-    "pkg:full": "./scripts/pkg.js --stage=full",
-    "release:minor": "./scripts/bump.js --stage=minor",
-    "release:patch": "./scripts/bump.js --stage=patch",
-    "release:pre": "./scripts/bump.js --stage=prerelease",
+    "release:major": "node ./scripts/bump.js --stage=major",
+    "pkg:cli": "node ./scripts/pkg.js --stage=cli",
+    "pkg:full": "node ./scripts/pkg.js --stage=full",
+    "release:minor": "node ./scripts/bump.js --stage=minor",
+    "release:patch": "node ./scripts/bump.js --stage=patch",
+    "release:pre": "node ./scripts/bump.js --stage=prerelease",
     "serve": "gitbook install && ./scripts/docs.js && gitbook serve",
     "test:spec": "mocha",
-    "test": "npm run lint && npm run test:spec"
+    "test": "yarn lint && yarn test:spec"
   }
 }
