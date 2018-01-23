@@ -3,12 +3,16 @@ Installing
 
 macOS
 -----
-
+#### Install DMG via direct download 
 1.  Download the latest `.dmg` package from [GitHub](https://github.com/lando/lando/releases)
 2.  Mount the DMG by double-clicking it
 3.  Double-click on the `LandoInstaller.pkg`
 4.  Go through the setup workflow
 5.  Enter your username and password when prompted
+
+#### Install using [HomeBrew](https://brew.sh/)
+1. Ensure homebrew is installed and up-to-date.
+2. Add the lando cask: `brew cask install lando`
 
 Windows
 -------
