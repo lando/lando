@@ -10,6 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var dotenv = require('dotenv');
+  var fs = lando.node.fs;
   var merger = lando.utils.config.merge;
   var path = require('path');
   var utils = require('./lib/utils');
@@ -66,6 +68,46 @@ module.exports = function(lando) {
   // Merge compose files specified in landofile to services/networks/volumes
   lando.events.on('post-instantiate-app', 1, function(app) {
 
+    // Add in some common process envvars we might want
+    app.processEnv.LANDO_APP_NAME = app.name;
+    app.processEnv.LANDO_APP_ROOT = app.root;
+    app.processEnv.LANDO_APP_ROOT_BIND = app.rootBind;
+
+    // Add in some global container envvars
+    app.env.LANDO = 'ON';
+    app.env.LANDO_HOST_OS = lando.config.os.platform;
+    app.env.LANDO_HOST_UID = lando.config.engineId;
+    app.env.LANDO_HOST_GID = lando.config.engineGid;
+    app.env.LANDO_HOST_IP = lando.config.env.LANDO_ENGINE_REMOTE_IP;
+    app.env.LANDO_APP_ROOT = app.rootBind;
+    app.env.LANDO_APP_NAME = app.name;
+    app.env.LANDO_WEBROOT_USER = 'www-data';
+    app.env.LANDO_WEBROOT_GROUP = 'www-data';
+    app.env.LANDO_WEBROOT_UID = '33';
+    app.env.LANDO_WEBROOT_GID = '33';
+    app.env.COLUMNS = 256;
+
+    // Inject values from an .env file if it exists
+    if (fs.existsSync(path.join(app.root, '.env'))) {
+
+      // Log
+      lando.log.debug('.env file found for %s, loading its config', app.name);
+
+      // Load .env file
+      var result = dotenv.config();
+
+      // warn if needed
+      if (result.error) {
+        lando.log.warn('Trouble parsing .env file with %s', result.error);
+      }
+
+      // Merge in values to app.env
+      if (!_.isEmpty(result.parsed)) {
+        app.env = merger(app.env, result.parsed);
+      }
+
+    }
+
     // Check to see if we have config.compose and merge
     if (_.has(app, 'config.compose')) {
 
@@ -98,9 +140,29 @@ module.exports = function(lando) {
   // Do things all the way at the end
   lando.events.on('post-instantiate-app', 9, function(app) {
 
-    // Add a copy of the app to opts for passthru considerations
+    // Add in some globals
     app.events.on('app-ready', 8, function() {
+
+      // Add in some globas
+      _.forEach(app.services, function(service, name) {
+
+        // Get existing ENV and LABELS
+        var env = service.environment || {};
+        var labels = service.labels || {};
+
+        // Merge in globals
+        service.environment = merger(app.env, env);
+        service.labels  = merger(app.labels, labels);
+
+        // Log
+        lando.log.verbose('Service %s has env %j', name, service.environment);
+        lando.log.verbose('Service %s has labels %j', name, service.labels);
+
+      });
+
+      // Add a copy of the app to opts for passthru considerations
       app.opts = {app: _.cloneDeep(app)};
+
     });
 
     // Parse whatever docker thigns we might have into docker compose files

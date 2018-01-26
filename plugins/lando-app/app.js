@@ -241,6 +241,8 @@ module.exports = function(lando) {
       app.compose = [];
       // Config
       app.config = config || {};
+      // Envvars that get added to every container
+      app.env = _.merge(lando.config.containerGlobalEnv, {});
       // Asynchronous event emitter.
       app.events = new AsyncEvents(lando.log);
       // Adds an object to collect helpful info about the app
@@ -249,10 +251,14 @@ module.exports = function(lando) {
       app.root = dir;
       // Root bind.
       app.rootBind = app.root;
+      // Labels that get added to every container
+      app.labels = {'io.lando.container': 'TRUE'};
       // Docker compose networks
       app.networks = {};
       // App mount
       app.mount = '/app';
+      // Envvars that get injected into the current process
+      app.processEnv = {};
       // The docker compose project
       app.project = app.name;
       // Docker compose services
