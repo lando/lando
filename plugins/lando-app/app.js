@@ -237,8 +237,8 @@ module.exports = function(lando) {
       app.name = config.name || name;
       // Name translated to what docker wants.
       app.dockerName = lando.utils.engine.dockerComposify(app.name);
-      // Compose files
-      app.compose = config.compose || [];
+      // Docker compose files
+      app.compose = [];
       // Config
       app.config = config || {};
       // Asynchronous event emitter.
@@ -249,10 +249,14 @@ module.exports = function(lando) {
       app.root = dir;
       // Root bind.
       app.rootBind = app.root;
+      // Docker compose networks
+      app.networks = {};
       // App mount
       app.mount = '/app';
-      // This is for docker compose
+      // The docker compose project
       app.project = app.name;
+      // Docker compose services
+      app.services = {};
       // App specific tasks
       app.tasks = lando.tasks.tasks || {};
       // Webroot
@@ -275,6 +279,10 @@ module.exports = function(lando) {
           app.status('Pulling image %s.', images[1]);
         }
       };
+      // Docker compose version
+      app.version = lando.config.composeVersion || '3.2';
+      // Docker compose volumes
+      app.volumes = {};
 
       // Return our app
       return app;
@@ -315,7 +323,7 @@ module.exports = function(lando) {
     // Load plugins.
     .tap(function(app) {
       _.forEach(app.config.plugins, function(plugin) {
-        return lando.plugins.load(plugin, app.root);
+        return lando.plugins.load(plugin, app.root, lando);
       });
     })
 
