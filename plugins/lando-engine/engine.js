@@ -23,7 +23,7 @@
  */
 'use strict';
 
-// We make this module into a function so we can pass in a logger
+// We make this module into a function so we can pass in lando
 module.exports = function(lando) {
 
   // Lando Modules
@@ -104,8 +104,11 @@ module.exports = function(lando) {
    */
   var isUp = function() {
 
+    // Cache key
+    var key = 'engineup';
+
     // Check out cache for upness first
-    if (lando.cache.get('engineUp') === true) {
+    if (lando.cache.get(key) === true) {
       return Promise.resolve(true);
     }
 
@@ -115,7 +118,7 @@ module.exports = function(lando) {
     // Return true if we get a zero response and cache the result
     .then(function() {
       lando.log.debug('Engine is up.');
-      lando.cache.set('engineup', true, {ttl: 5});
+      lando.cache.set(key, true, {ttl: 5});
       return Promise.resolve(true);
     })
 
@@ -500,13 +503,13 @@ module.exports = function(lando) {
    * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
    * @param {Array} data.compose - An Array of paths to Docker compose files
    * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} data.opts - Options on what service to inspect
-   * @param {Array} data.opts.services - An Array of services to inspect.
+   * @param {Object} data.opts - Options on what service to scan
+   * @param {Array} data.opts.services - An Array of services to scan.
    * @returns {Promise} A Promise with an Object of service metadata.
    * @example
    *
-   * // Log inspect data using an id
-   * return lando.engine.inspect({id: '146d321f212d'})
+   * // Log scan data using an id
+   * return lando.engine.scan({id: '146d321f212d'})
    * .then(function(data) {
    *   lando.log.info('Container data is %j', data);
    * });
@@ -520,10 +523,10 @@ module.exports = function(lando) {
    *   services: ['web']
    * };
    *
-   * // Inspect the service
-   * return lando.engine.inspect(compose);
+   * // scan the service
+   * return lando.engine.scan(compose);
    */
-  var inspect = function(data) {
+  var scan = function(data) {
 
     // Verify provider is ready.
     return verifyDaemonIsReady()
@@ -1079,7 +1082,7 @@ module.exports = function(lando) {
     isRunning: isRunning,
     list: list,
     exists: exists,
-    inspect: inspect,
+    scan: scan,
     start: start,
     run: run,
     stop: stop,

@@ -13,7 +13,7 @@ module.exports = function(config) {
   var _ = require('lodash');
   var Dockerode = require('dockerode');
   var esc = require('shell-escape');
-  var Promise = require('./../../../promise');
+  var Promise = require('./../../../lib/promise');
   var utils = require('./utils');
 
   // Spin up the docker instance
@@ -58,7 +58,9 @@ module.exports = function(config) {
   var list = function(appName) {
 
     // Query docker for list of containers.
-    return dockerInstance.listContainers({all: 1})
+    return Promise.fromNode(function(cb) {
+      dockerInstance.listContainers({all: 1}, cb);
+    })
 
     // Make sure we have a timeout.
     .timeout(30 * 1000)

@@ -21,12 +21,6 @@ module.exports = function(lando) {
   // and compose files
   lando.events.on('post-instantiate-app', 1, function(app) {
 
-    // Add a project name to the app
-    app.project = app.name;
-
-    // Add an array to ultimately hold compose files
-    app.compose = [];
-
     // Add an object to hold docker compose services, volumes and networks
     // for now we mostly care about services
     app.services = app.services || {};
@@ -58,11 +52,6 @@ module.exports = function(lando) {
         }
       });
     }
-
-    // Add the app object itself into the options
-    app.events.on('app-ready', 9, function() {
-      app.opts = {app: _.cloneDeep(app)};
-    });
 
     // Parse whatever services we might have into docker compose files
     app.events.on('app-ready', 9, function() {

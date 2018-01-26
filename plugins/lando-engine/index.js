@@ -1,7 +1,7 @@
 /**
- * Our core plugin
+ * Our engine plugin
  *
- * @name index
+ * @name engine
  */
 
 'use strict';
@@ -24,8 +24,8 @@ module.exports = function(lando) {
       composeBin: env.getComposeExecutable(),
       composeVersion: '3.2',
       containerGlobalEnv: {},
-      dockerBin: env.getDockerBinPath(),
-      dockerBinDir: env.getDockerExecutable(),
+      dockerBin: env.getDockerExecutable(),
+      dockerBinDir: env.getDockerBinPath(),
       engineConfig: env.getEngineConfig(),
       engineHost: env.getEngineConfig().host,
       engineId: lando.user.getUid(),
@@ -54,7 +54,7 @@ module.exports = function(lando) {
     lando.config.env.LANDO_ENGINE_REMOTE_IP = ip.address();
 
     // Log it
-    lando.log.verbose('Engine configured with %j', lando.config);
+    lando.log.verbose('Engine plugin configured with %j', lando.config);
 
     // Add utilities
     lando.utils.engine = require('./lib/utils');
@@ -71,6 +71,5 @@ module.exports = function(lando) {
     lando.engine = require('./engine')(lando);
 
   });
-
 
 };

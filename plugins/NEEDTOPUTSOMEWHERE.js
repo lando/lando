@@ -3,38 +3,7 @@ var APP_ROOT_DIRNAME = process.env.LANDO_CORE_APP_ROOT_DIRNAME || 'Lando';
 var LANDOFILE_NAME = process.env.LANDO_CORE_LANDOFILE_NAME || '.lando.yml';
 var user = require('./user');
 
-  // App identifier
-  var appId = [
-    _.get(opts, 'app.name', 'unknown'),
-    _.get(opts, 'app.root', 'someplace')
-  ];
-
-  // Metadata to report.
-  var obj = {
-    action: action,
-    app: hash(appId),
-    type: _.get(opts, 'app.config.recipe', 'none')
-  };
-
-  // Build an array of services to send as well
-  if (_.has(opts, 'app.config.services')) {
-    obj.services = _.map(_.get(opts, 'app.config.services'), function(service) {
-      return service.type;
-    });
-  }
-
-  // Get the email
-  var data = cache.get('site:meta:' + config.name);
-  if (_.has(data, 'email')) {
-    obj.email = _.get(data, 'email');
-  }
-
-//appConfigFilename: LANDOFILE_NAME,
-//appsRoot: path.join(env.home, APP_ROOT_DIRNAME),
-//appRegistry: path.join(env.userConfRoot, 'appRegistry.json'),
-//cache: true,
 //loadPassphraseProtectedKeys: false,
-
 
 /*
 
@@ -201,18 +170,6 @@ module.exports = function(lando) {
     // Add init to lando
     lando.init = require('./init')(lando);
 
-    // Load our tasks
-    lando.tasks.add('destroy', require('./tasks/destroy')(lando));
-    lando.tasks.add('info', require('./tasks/info')(lando));
-    lando.tasks.add('list', require('./tasks/list')(lando));
-    lando.tasks.add('logs', require('./tasks/logs')(lando));
-    lando.tasks.add('poweroff', require('./tasks/poweroff')(lando));
-    lando.tasks.add('rebuild', require('./tasks/rebuild')(lando));
-    lando.tasks.add('restart', require('./tasks/restart')(lando));
-    lando.tasks.add('share', require('./tasks/share')(lando));
-    lando.tasks.add('start', require('./tasks/start')(lando));
-    lando.tasks.add('stop', require('./tasks/stop')(lando));
-
   });
 
   // Add github init method
@@ -229,129 +186,6 @@ module.exports = function(lando) {
     // Log
     _.forEach(lando.init.get(), function(method) {
       lando.log.verbose('Init method %s loaded', method);
-    });
-
-  });
-
-};
-*/
-
-/**
- * This adds basic app env parsing
- *
- * Specifically, it handles a "compose" option in the app config which is an
- * array of files. It is also responsible for parsing
- *
- * @name env
- */
-/*
-'use strict';
-
-module.exports = function(lando) {
-
-  // Modules
-  var _ = lando.node._;
-  var dotenv = require('dotenv');
-  var fs = lando.node.fs;
-  var path = require('path');
-
-  // Add in some high level config so our app can handle
-  lando.events.on('post-instantiate-app', 1, function(app) {
-
-    // Add a process env object, this is to inject ENV into the process
-    // running the app task so we cna use $ENVARS in our docker compose
-    // files
-    app.processEnv = {};
-
-    // Add a env object, these are envvars that get added to every container
-    // Mix in containerGlobalEnv
-    app.env = _.merge(lando.config.containerGlobalEnv, {});
-
-    // Add a label object, these are labels that get added to every container
-    app.labels = {};
-
-    // Add in some common process envvars we might want
-    app.processEnv.LANDO_APP_NAME = app.name;
-    app.processEnv.LANDO_APP_ROOT = app.root;
-    app.processEnv.LANDO_APP_ROOT_BIND = app.rootBind;
-
-    // Add in some global container envvars
-    app.env.LANDO = 'ON';
-    app.env.LANDO_HOST_OS = lando.config.os.platform;
-    app.env.LANDO_HOST_UID = lando.config.engineId;
-    app.env.LANDO_HOST_GID = lando.config.engineGid;
-    app.env.LANDO_HOST_IP = lando.config.env.LANDO_ENGINE_REMOTE_IP;
-    app.env.LANDO_APP_ROOT = app.rootBind;
-    app.env.LANDO_APP_NAME = app.name;
-    app.env.LANDO_WEBROOT_USER = 'www-data';
-    app.env.LANDO_WEBROOT_GROUP = 'www-data';
-    app.env.LANDO_WEBROOT_UID = '33';
-    app.env.LANDO_WEBROOT_GID = '33';
-    var ppk = lando.config.loadPassphraseProtectedKeys;
-    app.env.LANDO_LOAD_PP_KEYS = _.toString(ppk);
-    app.env.COLUMNS = 256;
-
-    // Inject values from an .env file if it exists
-    // Look for a .env file and inject its vars into the service as well
-    if (fs.existsSync(path.join(app.root, '.env'))) {
-
-      // Log
-      lando.log.debug('.env file found for %s, loading its config', app.name);
-
-      // Load .env file
-      var result = dotenv.config();
-
-      // warn if needed
-      if (result.error) {
-        lando.log.warn('Trouble parsing .env file with %s', result.error);
-      }
-
-      // Merge in values to app.env
-      if (!_.isEmpty(result.parsed)) {
-        app.env = _.merge(app.env, result.parsed);
-      }
-
-    }
-
-    // Add in some global labels
-    var labels = app.labels || {};
-    app.labels = _.merge(labels, {'io.lando.container': 'TRUE'});
-
-    // Add the global env object to all our services
-    app.events.on('app-ready', function() {
-
-      // Log
-      lando.log.verbose('App %s has global env.', app.name, app.env);
-      lando.log.verbose('App %s has global labels.', app.name, app.labels);
-      lando.log.verbose('App %s adds process env.', app.name, app.processEnv);
-
-      // If we have some services lets add in our global envs and labels
-      if (!_.isEmpty(app.services)) {
-        _.forEach(app.services, function(service, name) {
-
-          // Get existing ENV and LABELS
-          var env = service.environment || {};
-          var labels = service.labels || {};
-
-          // Add our env globals
-          _.forEach(app.env, function(value, key) {
-            env[key] = value;
-          });
-          service.environment = env;
-
-          // Add our global labels
-          _.forEach(app.labels, function(value, key) {
-            labels[key] = value;
-          });
-          service.labels = labels;
-
-          // Reset the app conatiner
-          app.services[name] = _.cloneDeep(service);
-
-        });
-
-      }
-
     });
 
   });

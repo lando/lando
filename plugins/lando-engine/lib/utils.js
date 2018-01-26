@@ -2,11 +2,7 @@
  * Helpers to build the the engine config.
  *
  * @since 3.0.0
- * @module env
- * @example
- *
- * // Get the config helpers
- * var dockerBinPath = env.getDockerBinPath();
+ * @module utils
  */
 
 'use strict';
