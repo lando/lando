@@ -36,6 +36,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var AsyncEvents = require('./../../lib/events');
   var fs = lando.node.fs;
+  var merger = lando.utils.config.merge;
   var path = require('path');
   var registry = lando.config.appRegistry;
   var serializer = new require('./../../lib/serializer')();
@@ -550,7 +551,7 @@ module.exports = function(lando) {
 
         // Filter out autostart containers since those will always report TRUE
         .filter(function(container) {
-          return lando.engine.inspect(container)
+          return lando.engine.scan(container)
           .then(function(data) {
             return data.HostConfig.RestartPolicy.Name !== 'always';
           });
@@ -626,6 +627,7 @@ module.exports = function(lando) {
    *
    * @since 3.0.0
    * @fires pre-info
+   * @fires post-info
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise with an object of information about the app keyed by its services
    * @example
@@ -659,11 +661,47 @@ module.exports = function(lando) {
      */
     return app.events.emit('pre-info')
 
-    // Return all the app info
+    // Merge in defaults
     .then(function() {
-      if (app && app.info) {
-        return app.info;
-      }
+
+      // Merge in defualt services
+      app.info = merger(app.info, utils.getInfoDefaults(app));
+
+      // Get list of containers
+      return lando.engine.list(app.name)
+
+      // Return running containers
+      .filter(function(container) {
+        return lando.engine.isRunning(container.id);
+      })
+
+      // Inspect each and add new URLS
+      .each(function(container) {
+        return lando.engine.scan(container)
+        .then(function(data) {
+          var info = app.info[container.service];
+          info.urls = merger(info.urls, utils.getUrls(data));
+        });
+      });
+
+    })
+
+    /**
+     * Event that allows other things to add useful metadata to the apps services.
+     *
+     * Its helpful to use this event to add in information for the end user such as
+     * how to access their services, where their code exsts or relevant credential info.
+     *
+     * @since 3.0.0
+     * @event module:app.event:post-info
+     */
+    .then(function() {
+      return app.events.emit('post-info');
+    })
+
+    // Return app info
+    .then(function() {
+      return app.info;
     });
 
   };

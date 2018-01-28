@@ -16,7 +16,7 @@
  * return lando.engine.run(data);
  *
  * // Inspect the details of a container
- * return lando.engine.inspect(data);
+ * return lando.engine.scan(data);
  *
  * // Destroys a container(s)
  * return lando.engine.destroy(data);

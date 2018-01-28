@@ -33,7 +33,7 @@ module.exports = function(lando) {
           if (options.deep) {
             return lando.engine.list(app.name)
             .each(function(container) {
-              return lando.engine.inspect(container)
+              return lando.engine.scan(container)
               .then(function(data) {
                 console.log(JSON.stringify(data, null, 2));
               });

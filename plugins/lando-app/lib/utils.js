@@ -9,8 +9,10 @@
 
 // Modules
 var _ = require('lodash');
+var chalk = require('yargonaut').chalk();
 var fs = require('fs-extra');
 var path = require('path');
+var url = require('url');
 
 /**
  * Checks if there is already an app with the same name in an app _registry
@@ -66,4 +68,100 @@ exports.compose = function(version, services, volumes, networks) {
     volumes: volumes,
     networks: networks
   };
+};
+
+/**
+ * Returns a CLI table with app start metadata info
+ *
+ * @since 3.0.0
+ */
+exports.startTable = function(app) {
+
+  // Spin up collectors
+  var data = {};
+  var urls = {};
+
+  // Add generic data
+  data.name = app.name;
+  data.location = app.root;
+  data.services = _.keys(app.services);
+
+  // Categorize and colorize URLS if and as appropriate
+  _.forEach(app.info, function(info, service) {
+    if (_.has(info, 'urls') && !_.isEmpty(info.urls))  {
+      urls[service] = _.filter(app.urls, function(item) {
+        item.theme = chalk[item.color](item.url);
+        return _.includes(info.urls, item.url);
+      });
+    }
+  });
+
+  // Add service URLS
+  _.forEach(urls, function(items, service) {
+    data[service + ' urls'] = _.map(items, 'theme');
+  });
+
+  // Return data
+  return data;
+
+};
+
+/**
+ * Takes inspect data and extracts all the exposed ports
+ *
+ * @since 3.0.0
+ */
+exports.getUrls = function(data) {
+
+  // Start a URL collector
+  var urls = [];
+
+  // Get the exposed ports
+  var exposedPorts = _.get(data, 'Config.ExposedPorts', []);
+
+  // Go through the exposed ports and find host port info
+  _.forEach(exposedPorts, function(value, key) {
+
+    // Get the host port data path
+    var netPath = 'NetworkSettings.Ports.' + key;
+
+    // Filter out only ports that are exposed to 0.0.0.0
+    var onHost = _.filter(_.get(data, netPath, []), function(item) {
+      return item.HostIp === '0.0.0.0';
+    });
+
+    // Map only the exposed ports and grab the first one
+    _.forEach(_.map(onHost, 'HostPort'), function(port) {
+      urls.push(url.format({
+        protocol: (port === '443') ? 'https:' : 'http:',
+        hostname: 'localhost',
+        port: (port !== '80') ? port : ''
+      }));
+    });
+
+  });
+
+  // Return
+  return urls;
+
+};
+
+/**
+ * Returns a default info object
+ *
+ * @since 3.0.0
+ */
+exports.getInfoDefaults = function(app) {
+
+  // Collect defaults
+  var defaults = {};
+
+  // Add a basic info object for each service
+  _.forEach(_.keys(app.services), function(service) {
+    defaults[service] = {urls: []};
+  });
+
+  // Return
+  return defaults;
+
 };

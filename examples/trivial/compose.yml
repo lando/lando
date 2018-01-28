@@ -4,3 +4,8 @@ services:
     image: nginx
     ports:
       - "8080:80"
+      - "888:80"
+  web2:
+    image: nginx
+    ports:
+      - "80"

@@ -133,7 +133,7 @@ module.exports = function(lando) {
     else {
 
       // Inspect current proxy to make sure we dont incorrectly rebuild
-      return lando.engine.inspect(getProxy(proxyFile))
+      return lando.engine.scan(getProxy(proxyFile))
 
       // Look at the proxy data
       .then(function(data) {
@@ -547,7 +547,7 @@ module.exports = function(lando) {
   var getProxyData = function(app) {
 
     // Inspect
-    return lando.engine.inspect(getProxy(proxyFile))
+    return lando.engine.scan(getProxy(proxyFile))
 
     // Grab the ports we are using and then parse the services if our app
     .then(function(data) {

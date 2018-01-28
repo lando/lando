@@ -10,7 +10,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var chalk = lando.node.chalk;
+  var table = new lando.cli.Table();
+  var utils = lando.utils.app;
 
   // Task object
   return {
@@ -34,38 +35,10 @@ module.exports = function(lando) {
             // Header it
             console.log(lando.cli.startHeader());
 
-            // Spin up a url collector
-            var urls = {};
-
-            // Grab a new cli table
-            var table = new lando.cli.Table();
-
-            // Categorize and colorize URLS if and as appropriate
-            _.forEach(app.info, function(info, service) {
-              if (_.has(info, 'urls') && !_.isEmpty(info.urls))  {
-                urls[service] = _.filter(app.urls, function(item) {
-                  item.theme = chalk[item.color](item.url);
-                  return _.includes(info.urls, item.url);
-                });
-              }
-            });
-
-            // Add generic data
-            table.add('NAME', app.name);
-            table.add('LOCATION', app.root);
-            table.add('SERVICES', _.keys(app.services));
-
-            // Add service URLS
-            _.forEach(urls, function(items, service) {
-
-              // Build table data
-              var header = _.upperCase(service) + ' URLS';
-              var data = _.map(items, 'theme');
-
-              // And add to table
-              table.add('', '');
-              table.add(header, data, {arrayJoiner: '\n'});
-
+            // Inject start table into the table
+            _.forEach(utils.startTable(app), function(value, key) {
+              var opts = (_.includes(key, 'url')) ? {arrayJoiner: '\n'} : {};
+              table.add(_.toUpper(key), value, opts);
             });
 
             // Print the table
