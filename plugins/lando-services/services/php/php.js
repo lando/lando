@@ -272,8 +272,8 @@ module.exports = function(lando) {
     // Add a depends on
     _.set(nginx, 'depends_on', [name]);
 
-    // Make sure we add a hidden service
-    lando.events.on('post-instantiate-app', 2, function(app) {
+    // Make sure we add hidden config, but all the way at the end
+    lando.events.on('post-instantiate-app', 9, function(app) {
       app.config.services.nginx = appConfig;
     });
 

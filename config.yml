@@ -7,7 +7,7 @@ plugins:
   - lando-proxy
   # - lando-recipes
   - lando-services
-  # - lando-tooling
+  - lando-tooling
 stats:
   - report: true
     url: https://metrics.devwithlando.io
