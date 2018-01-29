@@ -2,7 +2,7 @@ plugins:
   - lando-app
   - lando-core
   - lando-engine
-  # - lando-events
+  - lando-events
   # - lando-init
   - lando-proxy
   # - lando-recipes
