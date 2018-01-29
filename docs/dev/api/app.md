@@ -29,360 +29,39 @@ return lando.app.list()
 ```
 
 * [app](#module_app)
-    * [.list([opts])](#module_app.list) ⇒ <code>Promise</code>
-    * [.get([appName])](#module_app.get) ⇒ <code>Promise</code>
-    * [.isRunning(app, checkall)](#module_app.isRunning) ⇒ <code>Promise</code>
-    * [.exists(appName)](#module_app.exists) ⇒ <code>Promise</code>
-    * [.info(app)](#module_app.info) ⇒ <code>Promise</code>
-    * [.uninstall(app)](#module_app.uninstall) ⇒ <code>Promise</code>
-    * [.cleanup(app)](#module_app.cleanup) ⇒ <code>Promise</code>
-    * [.start(app)](#module_app.start) ⇒ <code>Promise</code>
-    * [.stop(app)](#module_app.stop) ⇒ <code>Promise</code>
-    * [.restart(app)](#module_app.restart) ⇒ <code>Promise</code>
-    * [.destroy(app)](#module_app.destroy) ⇒ <code>Promise</code>
-    * [.rebuild(app)](#module_app.rebuild) ⇒ <code>Promise</code>
-    * ["event:pre-instantiate-app"](#module_app.event_pre-instantiate-app)
-    * ["event:post-instantiate-app"](#module_app.event_post-instantiate-app)
-    * ["event:app-ready"](#module_app.event_app-ready)
-    * ["event:pre-info"](#module_app.event_pre-info)
-    * ["event:pre-uninstall"](#module_app.event_pre-uninstall)
-    * ["event:post-uninstall"](#module_app.event_post-uninstall)
-    * ["event:pre-start"](#module_app.event_pre-start)
-    * ["event:post-start"](#module_app.event_post-start)
-    * ["event:pre-stop"](#module_app.event_pre-stop)
-    * ["event:post-stop"](#module_app.event_post-stop)
-    * ["event:pre-destroy"](#module_app.event_pre-destroy)
-    * ["event:post-destroy"](#module_app.event_post-destroy)
-    * ["event:pre-rebuild"](#module_app.event_pre-rebuild)
-    * ["event:post-rebuild"](#module_app.event_post-rebuild)
+    * _static_
+        * ["event:pre-instantiate-app"](#module_app.event_pre-instantiate-app)
+        * ["event:post-instantiate-app"](#module_app.event_post-instantiate-app)
+        * ["event:app-ready"](#module_app.event_app-ready)
+        * ["event:pre-info"](#module_app.event_pre-info)
+        * ["event:post-info"](#module_app.event_post-info)
+        * ["event:pre-uninstall"](#module_app.event_pre-uninstall)
+        * ["event:post-uninstall"](#module_app.event_post-uninstall)
+        * ["event:pre-start"](#module_app.event_pre-start)
+        * ["event:post-start"](#module_app.event_post-start)
+        * ["event:pre-stop"](#module_app.event_pre-stop)
+        * ["event:post-stop"](#module_app.event_post-stop)
+        * ["event:pre-destroy"](#module_app.event_pre-destroy)
+        * ["event:post-destroy"](#module_app.event_post-destroy)
+        * ["event:pre-rebuild"](#module_app.event_pre-rebuild)
+        * ["event:post-rebuild"](#module_app.event_post-rebuild)
+    * _inner_
+        * [~metricsParse()](#module_app..metricsParse)
+        * [~register(app)](#module_app..register) ⇒ <code>Promise</code>
+        * [~unregister(app)](#module_app..unregister) ⇒ <code>Promise</code>
+        * [~list()](#module_app..list) ⇒ <code>Promise</code>
+        * [~get([appName])](#module_app..get) ⇒ <code>Promise</code>
+        * [~isRunning(app, checkall)](#module_app..isRunning) ⇒ <code>Promise</code>
+        * [~exists(appName)](#module_app..exists) ⇒ <code>Promise</code>
+        * [~info(app)](#module_app..info) ⇒ <code>Promise</code>
+        * [~uninstall(app)](#module_app..uninstall) ⇒ <code>Promise</code>
+        * [~cleanup(app)](#module_app..cleanup) ⇒ <code>Promise</code>
+        * [~start(app)](#module_app..start) ⇒ <code>Promise</code>
+        * [~stop(app)](#module_app..stop) ⇒ <code>Promise</code>
+        * [~restart(app)](#module_app..restart) ⇒ <code>Promise</code>
+        * [~destroy(app)](#module_app..destroy) ⇒ <code>Promise</code>
+        * [~rebuild(app)](#module_app..rebuild) ⇒ <code>Promise</code>
 
-<a name="module_app.list"></a>
-
-### app.list([opts]) ⇒ <code>Promise</code>
-Lists all the Lando apps from the app registry.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - Returns a Promise with an array of apps from the registry  
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [opts] | <code>Object</code> |  | Options to determine how list is run |
-| [opts.useCache] | <code>Boolean</code> | <code>true</code> | Use the app cache |
-
-**Example**  
-```js
-// List all the apps
-return lando.app.list()
-
-// Pretty print each app to the console.
-.map(function(app) {
-  console.log(JSON.stringify(app, null, 2));
-});
-```
-<a name="module_app.get"></a>
-
-### app.get([appName]) ⇒ <code>Promise</code>
-Gets a fully instantiated app object.
-
-If you do not pass in an `appName` Lando will attempt to find an app in your
-current working directory.
-
-Lando will also scan parent directories if no app is found.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - Returns a Pronise with an instantiated app object or nothing.  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [appName] | <code>String</code> | The name of the app to get. |
-
-**Example**  
-```js
-// Get an app named myapp and start it
-return lando.app.get('myapp')
-
-// Start the app
-.then(function(app) {
-  lando.app.start(app);
-});
-```
-<a name="module_app.isRunning"></a>
-
-### app.isRunning(app, checkall) ⇒ <code>Promise</code>
-Determines whether an app is running or not. By defualt it only requires
-that a single service for that be running to return true but see opts below.
-
-You can pass in an entire app object here but it really just needs an object
-with the app name eg {name: 'myapp'}
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - Returns a Promise with a boolean of whether the app is running or not.  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | An app object. |
-| app.name | <code>String</code> | The name of the app |
-| checkall | <code>Boolean</code> | Make sure ALL the apps containers are running |
-
-**Example**  
-```js
-// Let's check to see if the app has been started
-return lando.app.isRunning(app)
-
-// Start the app if its not running already
-.then(function(isRunning) {
-  if (!isRunning) {
-    return lando.app.start(app);
-  }
-});
-```
-<a name="module_app.exists"></a>
-
-### app.exists(appName) ⇒ <code>Promise</code>
-Checks to see if the app exists or not.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A promise with a boolean of whether the app exists or not.  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| appName | <code>String</code> | The name of the app to get. |
-
-**Example**  
-```js
-// Get an app named myapp and start it
-return lando.app.exists('myapp')
-
-// Theorize if app exists
-.then(function(exists) {
-  if (exists) {
-    console.log('I think, therefore I am.')
-  }
-});
-```
-<a name="module_app.info"></a>
-
-### app.info(app) ⇒ <code>Promise</code>
-Prints useful information about the app's services.
-
-This should return information about the services the app is running,
-URLs the app can be accessed at, relevant connection information like database
-credentials and any other information that is added by other plugins.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise with an object of information about the app keyed by its services  
-**Emits**: <code>event:pre-info</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Return the app info
-return lando.app.info(app)
-
-// And print out any services with urls
-.each(function(service) {
-  if (_.has(service, 'urls')) {
-    console.log(service.urls);
-  }
-});
-```
-<a name="module_app.uninstall"></a>
-
-### app.uninstall(app) ⇒ <code>Promise</code>
-Soft removes the apps services but maintains persistent data like app volumes.
-
-This differs from `destroy` in that destroy will hard remove all app services,
-volumes, networks, etc as well as remove the app from the appRegistry.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Uninstall the app
-return lando.app.uninstall(app)
-
-// Catch any errors
-catch(function(err) {
-  lando.log.error(err);
-});
-```
-<a name="module_app.cleanup"></a>
-
-### app.cleanup(app) ⇒ <code>Promise</code>
-Does some helpful cleanup before running an app operation.
-
-This command helps clean up apps in an inconsistent state and any orphaned
-containers they may have.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Since**: 3.0.0  
-**Todo**
-
-- [ ] Should this be an internal method? Or can we deprecate at some point?
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Do the app cleanup
-return lando.app.cleanup(app)
-```
-<a name="module_app.start"></a>
-
-### app.start(app) ⇒ <code>Promise</code>
-Starts an app.
-
-This will start up all services/containers that have been defined for this app.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: <code>event:pre-start</code>, <code>event:post-start</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Start the app
-return lando.app.start(app)
-
-// Catch any errors
-catch(function(err) {
-  lando.log.error(err);
-});
-```
-<a name="module_app.stop"></a>
-
-### app.stop(app) ⇒ <code>Promise</code>
-Stops an app.
-
-This will stop all services/containers that have been defined for this app.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: <code>event:pre-stop</code>, <code>event:post-stop</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Stop the app
-return lando.app.stop(app)
-
-// Catch any errors
-catch(function(err) {
-  lando.log.error(err);
-});
-```
-<a name="module_app.restart"></a>
-
-### app.restart(app) ⇒ <code>Promise</code>
-Stops and then starts an app.
-
-This just runs `app.stop` and `app.start` in succession.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: <code>event:pre-stop</code>, <code>event:stop-stop</code>, <code>event:pre-start</code>, <code>event:post-start</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Restart the app
-return lando.app.restart(app)
-
-// Catch any errors
-catch(function(err) {
-  lando.log.error(err);
-});
-```
-<a name="module_app.destroy"></a>
-
-### app.destroy(app) ⇒ <code>Promise</code>
-Hard removes all app services, olumes, networks, etc as well as removes the
-app from the appRegistry.
-
-This differs from `uninstall` in that uninstall will only soft remove all app
-services, while maintaining things like volumes, networks, etc as well as an
-entry in the appRegistry.
-
-That said this DOES call both `stop` and `uninstall`.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: <code>event:pre-destroy</code>, <code>event:pre-stop</code>, <code>event:post-stop</code>, <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>, <code>event:post-destroy</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Destroy the app
-return lando.app.destroy(app)
-
-// Catch any errors
-catch(function(err) {
-  lando.log.error(err);
-});
-```
-<a name="module_app.rebuild"></a>
-
-### app.rebuild(app) ⇒ <code>Promise</code>
-Rebuilds an app.
-
-This will stop an app, soft remove its services, rebuild those services and
-then, finally, start the app back up again. This is useful for developers who
-might want to tweak Dockerfiles or compose yamls.
-
-**Kind**: static method of [<code>app</code>](#module_app)  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: <code>event:pre-stop</code>, <code>event:post-stop</code>, <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>, <code>event:pre-start</code>, <code>event:post-start</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
-**Example**  
-```js
-// Destroy the app
-return lando.app.destroy(app)
-
-// Catch any errors
-catch(function(err) {
-  lando.log.error(err);
-});
-```
 <a name="module_app.event_pre-instantiate-app"></a>
 
 ### "event:pre-instantiate-app"
@@ -485,6 +164,16 @@ app.events.on('pre-info', function() {
   return getUrls(app);
 });
 ```
+<a name="module_app.event_post-info"></a>
+
+### "event:post-info"
+Event that allows other things to add useful metadata to the apps services.
+
+Its helpful to use this event to add in information for the end user such as
+how to access their services, where their code exsts or relevant credential info.
+
+**Kind**: event emitted by [<code>app</code>](#module_app)  
+**Since**: 3.0.0  
 <a name="module_app.event_pre-uninstall"></a>
 
 ### "event:pre-uninstall"
@@ -693,5 +382,388 @@ Event that runs after an app is rebuilt.
 // Do something
 app.events.on('post-rebuild', function() {
   // Do something
+});
+```
+<a name="module_app..metricsParse"></a>
+
+### app~metricsParse()
+Helper to parse metrics data
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+<a name="module_app..register"></a>
+
+### app~register(app) ⇒ <code>Promise</code>
+Adds an app to the app registry.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | The app to add |
+| app.name | <code>String</code> | The name of the app. |
+| app.dir | <code>String</code> | The absolute path to this app's lando.yml file. |
+| [app.data] | <code>Object</code> | Optional metadata |
+
+**Example**  
+```js
+// Define an app with some additional and optional metadata
+var app = {
+  name: 'starfleet.mil',
+  dir: '/Users/picard/Desktop/lando/starfleet',
+  data: {
+    warpfactor: 9
+  }
+};
+
+// Register the app
+return lando.registry.register(app);
+```
+<a name="module_app..unregister"></a>
+
+### app~unregister(app) ⇒ <code>Promise</code>
+Removes an app from the app registry.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | The app to remove |
+| app.name | <code>String</code> | The name of the app. |
+| app.dir | <code>String</code> | The absolute path to this app's lando.yml file. |
+
+**Example**  
+```js
+// Define an app with some additional and optional metadata
+var app = {
+  name: 'starfleet.mil',
+  dir: '/Users/picard/Desktop/lando/starfleet'
+};
+
+// Remove the app
+return lando.unregister(app);
+```
+<a name="module_app..list"></a>
+
+### app~list() ⇒ <code>Promise</code>
+Lists all the Lando apps from the app registry.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - Returns a Promise with an array of apps from the registry  
+**Since**: 3.0.0  
+**Example**  
+```js
+// List all the apps
+return lando.app.list()
+
+// Pretty print each app to the console.
+.map(function(app) {
+  console.log(JSON.stringify(app, null, 2));
+});
+```
+<a name="module_app..get"></a>
+
+### app~get([appName]) ⇒ <code>Promise</code>
+Gets a fully instantiated app object.
+
+If you do not pass in an `appName` Lando will attempt to find an app in your
+current working directory.
+
+Lando will also scan parent directories if no app is found.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - Returns a Pronise with an instantiated app object or nothing.  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [appName] | <code>String</code> | The name of the app to get. |
+
+**Example**  
+```js
+// Get an app named myapp and start it
+return lando.app.get('myapp')
+
+// Start the app
+.then(function(app) {
+  lando.app.start(app);
+});
+```
+<a name="module_app..isRunning"></a>
+
+### app~isRunning(app, checkall) ⇒ <code>Promise</code>
+Determines whether an app is running or not. By defualt it only requires
+that a single service for that be running to return true but see opts below.
+
+You can pass in an entire app object here but it really just needs an object
+with the app name eg {name: 'myapp'}
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - Returns a Promise with a boolean of whether the app is running or not.  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | An app object. |
+| app.name | <code>String</code> | The name of the app |
+| checkall | <code>Boolean</code> | Make sure ALL the apps containers are running |
+
+**Example**  
+```js
+// Let's check to see if the app has been started
+return lando.app.isRunning(app)
+
+// Start the app if its not running already
+.then(function(isRunning) {
+  if (!isRunning) {
+    return lando.app.start(app);
+  }
+});
+```
+<a name="module_app..exists"></a>
+
+### app~exists(appName) ⇒ <code>Promise</code>
+Checks to see if the app exists or not.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A promise with a boolean of whether the app exists or not.  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| appName | <code>String</code> | The name of the app to get. |
+
+**Example**  
+```js
+// Get an app named myapp and start it
+return lando.app.exists('myapp')
+
+// Theorize if app exists
+.then(function(exists) {
+  if (exists) {
+    console.log('I think, therefore I am.')
+  }
+});
+```
+<a name="module_app..info"></a>
+
+### app~info(app) ⇒ <code>Promise</code>
+Prints useful information about the app's services.
+
+This should return information about the services the app is running,
+URLs the app can be accessed at, relevant connection information like database
+credentials and any other information that is added by other plugins.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise with an object of information about the app keyed by its services  
+**Emits**: <code>event:pre-info</code>, <code>event:post-info</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Return the app info
+return lando.app.info(app)
+
+// And print out any services with urls
+.each(function(service) {
+  if (_.has(service, 'urls')) {
+    console.log(service.urls);
+  }
+});
+```
+<a name="module_app..uninstall"></a>
+
+### app~uninstall(app) ⇒ <code>Promise</code>
+Soft removes the apps services but maintains persistent data like app volumes.
+
+This differs from `destroy` in that destroy will hard remove all app services,
+volumes, networks, etc as well as remove the app from the appRegistry.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Uninstall the app
+return lando.app.uninstall(app)
+
+// Catch any errors
+catch(function(err) {
+  lando.log.error(err);
+});
+```
+<a name="module_app..cleanup"></a>
+
+### app~cleanup(app) ⇒ <code>Promise</code>
+Does some helpful cleanup before running an app operation.
+
+This command helps clean up apps in an inconsistent state and any orphaned
+containers they may have.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Since**: 3.0.0  
+**Todo**
+
+- [ ] Should this be an internal method? Or can we deprecate at some point?
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Do the app cleanup
+return lando.app.cleanup(app)
+```
+<a name="module_app..start"></a>
+
+### app~start(app) ⇒ <code>Promise</code>
+Starts an app.
+
+This will start up all services/containers that have been defined for this app.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-start</code>, <code>event:post-start</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Start the app
+return lando.app.start(app)
+
+// Catch any errors
+catch(function(err) {
+  lando.log.error(err);
+});
+```
+<a name="module_app..stop"></a>
+
+### app~stop(app) ⇒ <code>Promise</code>
+Stops an app.
+
+This will stop all services/containers that have been defined for this app.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-stop</code>, <code>event:post-stop</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Stop the app
+return lando.app.stop(app)
+
+// Catch any errors
+catch(function(err) {
+  lando.log.error(err);
+});
+```
+<a name="module_app..restart"></a>
+
+### app~restart(app) ⇒ <code>Promise</code>
+Stops and then starts an app.
+
+This just runs `app.stop` and `app.start` in succession.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-stop</code>, <code>event:stop-stop</code>, <code>event:pre-start</code>, <code>event:post-start</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Restart the app
+return lando.app.restart(app)
+
+// Catch any errors
+catch(function(err) {
+  lando.log.error(err);
+});
+```
+<a name="module_app..destroy"></a>
+
+### app~destroy(app) ⇒ <code>Promise</code>
+Hard removes all app services, olumes, networks, etc as well as removes the
+app from the appRegistry.
+
+This differs from `uninstall` in that uninstall will only soft remove all app
+services, while maintaining things like volumes, networks, etc as well as an
+entry in the appRegistry.
+
+That said this DOES call both `stop` and `uninstall`.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-destroy</code>, <code>event:pre-stop</code>, <code>event:post-stop</code>, <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>, <code>event:post-destroy</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Destroy the app
+return lando.app.destroy(app)
+
+// Catch any errors
+catch(function(err) {
+  lando.log.error(err);
+});
+```
+<a name="module_app..rebuild"></a>
+
+### app~rebuild(app) ⇒ <code>Promise</code>
+Rebuilds an app.
+
+This will stop an app, soft remove its services, rebuild those services and
+then, finally, start the app back up again. This is useful for developers who
+might want to tweak Dockerfiles or compose yamls.
+
+**Kind**: inner method of [<code>app</code>](#module_app)  
+**Returns**: <code>Promise</code> - A Promise.  
+**Emits**: <code>event:pre-stop</code>, <code>event:post-stop</code>, <code>event:pre-uninstall</code>, <code>event:post-uninstall</code>, <code>event:pre-start</code>, <code>event:post-start</code>  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>Object</code> | A fully instantiated app object |
+
+**Example**  
+```js
+// Destroy the app
+return lando.app.destroy(app)
+
+// Catch any errors
+catch(function(err) {
+  lando.log.error(err);
 });
 ```

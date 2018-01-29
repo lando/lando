@@ -187,7 +187,7 @@ module.exports = function(lando) {
     // Go through all the services and add in the lando bridgenet
     _.forEach(services, function(service, name) {
       var data = {app: config._dockerName, name: name};
-      service.networks = merger(service.networks, utils.connectNet(data));
+      service.networks = merger(utils.connectNet(data), service.networks);
     });
 
     // Return the built compose file

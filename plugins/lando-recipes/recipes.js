@@ -10,6 +10,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var path = require('path');
 
   // Registry of recipes
   var registry = {
@@ -55,7 +56,8 @@ module.exports = function(lando) {
     // NOTE: we need to do this because on macOS and Windows not all host files
     // are shared into the docker vm
     if (_.has(registry[recipe], 'configDir')) {
-      lando.services.moveConfig(recipe, registry[recipe].configDir);
+      var to = path.join(lando.config.servicesConfigDir, recipe);
+      lando.utils.engine.moveConfig(registry[recipe].configDir, to);
     }
 
     // Return the built config file

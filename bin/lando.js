@@ -13,8 +13,8 @@
 var _ = require('lodash');
 var bootstrap = require('./../lib/bootstrap.js');
 var cli = require('./../lib/cli');
-var Log = require('./../lib/logger');
-var Metrics = require('./../lib/metrics');
+var log;
+var metrics;
 var os = require('os');
 var path = require('path');
 var Promise = require('./../lib/promise');
@@ -45,6 +45,11 @@ bootstrap(options)
 
 // Initialize the CLI
 .then(function(lando) {
+
+  // Bind to outside scope
+  // @TODO: do this better
+  metrics = lando.metrics;
+  log = lando.log;
 
   // Log
   lando.log.info('Initializing cli');
@@ -150,34 +155,10 @@ bootstrap(options)
 
 })
 
-// Handle uncaught errors
-// @TODO: Replace the error.js to include some (all?) of the below
+// Handle all other errors
+// @TODO: We need something better
 .catch(function(error) {
-
-  // Log and report our errors
-  var log = new Log({logDir: path.join(USERCONFROOT, 'logs')});
-  var metrics = new Metrics({
-    log: log,
-    idDir: USERCONFROOT,
-    endpoints: [{
-      report: true,
-      url: 'https://metrics.devwithlando.io',
-    }],
-    data: {
-      //mode: 'cli',
-      //devMode: false,
-      version: 'refactoring',
-      //os: {
-      //  type: os.type(),
-      //  platform: os.platform(),
-      //  release: os.release(),
-      //  arch: os.arch()
-      //},
-      //nodeVersion: process.version
-    },
-  });
-
   log.error(error);
-  metrics.report('error', {message: 'hello', stack: 'wedwd'});
-
+  metrics.report('error', {message: error.message, stack: error.stack});
+  process.exit(1);
 });

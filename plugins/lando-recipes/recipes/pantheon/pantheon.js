@@ -19,8 +19,8 @@ module.exports = function(lando) {
 
   // Lando things
   var api = require('./client')(lando);
-  var addConfig = lando.services.addConfig;
-  var buildVolume = lando.services.buildVolume;
+  var addConfig = lando.utils.services.addConfig;
+  var buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
   var configDir = path.join(lando.config.servicesConfigDir, 'pantheon');
@@ -42,12 +42,12 @@ module.exports = function(lando) {
 
     // Set new terminus key into the cache
     app.events.on('pre-terminus', function() {
-      if (_.get(lando.tasks.argv()._, '[1]') === 'auth:login') {
-        if (_.has(lando.tasks.argv(), 'machineToken')) {
+      if (_.get(lando.cli.argv()._, '[1]') === 'auth:login') {
+        if (_.has(lando.cli.argv(), 'machineToken')) {
 
           // Build the cache
           // @TODO: what do do about email?
-          var token = _.get(lando.tasks.argv(), 'machineToken');
+          var token = _.get(lando.cli.argv(), 'machineToken');
           var data = {token: token};
 
           // Mix in any existing cache data
@@ -479,7 +479,6 @@ module.exports = function(lando) {
 
       // Add the file
       volumes = addConfig(buildVolume(local, remote), volumes);
-
     });
 
     // Add a volume for terminus and drupal console cache

@@ -151,8 +151,8 @@ module.exports = function(lando) {
         var labels = service.labels || {};
 
         // Merge in globals
-        service.environment = merger(app.env, env);
-        service.labels  = merger(app.labels, labels);
+        service.environment = merger(env, app.env);
+        service.labels  = merger(labels, app.labels);
 
         // Log
         lando.log.verbose('Service %s has env %j', name, service.environment);

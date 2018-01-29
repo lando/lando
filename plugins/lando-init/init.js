@@ -96,7 +96,7 @@ module.exports = function(lando) {
 
     // Log
     lando.log.debug('Run util service %j', service);
-    lando.utils.compose(utilFile, service);
+    lando.yaml.dump(utilFile, service);
 
     // Name the project
     var project = 'landoinit' + name;

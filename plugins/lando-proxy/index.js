@@ -255,7 +255,7 @@ module.exports = function(lando) {
             return {
               name: service.name,
               service: {
-                networks: {'lando_proxyedge': {}, 'default': {}},
+                networks: {'lando_proxyedge': {}},
                 labels: {
                   'traefik.docker.network': networkName,
                   'traefik.frontend.rule': 'HostRegexp:' + parsedHosts,

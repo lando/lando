@@ -58,7 +58,7 @@ module.exports = function(lando) {
         message: 'Where is your webroot relative to the init destination?',
         default: '.',
         when: function(answers) {
-          var recipe = answers.recipe || lando.tasks.argv().recipe;
+          var recipe = answers.recipe || lando.cli.argv().recipe;
           return lando.recipes.webroot(recipe);
         },
         weight: 900,
@@ -77,7 +77,7 @@ module.exports = function(lando) {
           }
         },
         when: function(answers) {
-          var recipe = answers.recipe || lando.tasks.argv().recipe;
+          var recipe = answers.recipe || lando.cli.argv().recipe;
           return lando.recipes.name(recipe);
         },
         weight: 1000,

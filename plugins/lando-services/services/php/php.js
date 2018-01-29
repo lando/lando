@@ -128,7 +128,7 @@ module.exports = function(lando) {
   var php = function(config) {
 
     // Path
-    var path = [
+    var pathEnv = [
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
@@ -152,7 +152,7 @@ module.exports = function(lando) {
       environment: {
         TERM: 'xterm',
         COMPOSER_ALLOW_SUPERUSER: 1,
-        PATH: path.join(':'),
+        PATH: pathEnv.join(':'),
         LANDO_WEBROOT: webroot
       },
       ports: ['80'],
@@ -263,7 +263,6 @@ module.exports = function(lando) {
 
     // Set the nginx config
     appConfig.config = _.merge(nginxConfigDefaults, appConfig.config);
-    appConfig._hiddenServices = ['appserver'];
 
     // Generate a config object to build the service with
     var name = appConfig.name;
@@ -271,11 +270,6 @@ module.exports = function(lando) {
 
     // Add a depends on
     _.set(nginx, 'depends_on', [name]);
-
-    // Make sure we add hidden config, but all the way at the end
-    lando.events.on('post-instantiate-app', 9, function(app) {
-      app.config.services.nginx = appConfig;
-    });
 
     // Return the object
     return nginx;

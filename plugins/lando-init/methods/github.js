@@ -61,7 +61,7 @@ module.exports = function(lando) {
   var askQuestions = function(answers) {
 
     // Get our things
-    var method = lando.tasks.argv()._[1];
+    var method = lando.cli.argv()._[1];
     var recipe = answers.recipe;
 
     // return
@@ -132,7 +132,7 @@ module.exports = function(lando) {
 
           // Spin things up
           var tpath = 'github-auth';
-          var token = _.get(lando.tasks.argv(), tpath, answers[tpath]);
+          var token = _.get(lando.cli.argv(), tpath, answers[tpath]);
           var options = {affliation: 'owner,collaborator', 'per_page': 100};
           var done = this.async();
 

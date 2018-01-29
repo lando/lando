@@ -24,7 +24,8 @@ exports.connectNet = function(data) {
   return {
     'lando_bridge': {
       aliases: aliases
-    }
+    },
+    'default': {}
   };
 
 };

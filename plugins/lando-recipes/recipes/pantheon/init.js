@@ -57,8 +57,8 @@ module.exports = function(lando) {
   var askQuestions = function(answers) {
 
     // Get our things
-    var method = lando.tasks.argv()._[1];
-    var recipe = answers.recipe || lando.tasks.argv().recipe;
+    var method = lando.cli.argv()._[1];
+    var recipe = answers.recipe || lando.cli.argv().recipe;
 
     // return
     return (method === 'pantheon') || (recipe === 'pantheon');
@@ -145,7 +145,7 @@ module.exports = function(lando) {
           var done = this.async();
 
           // Get the pantheon sites using the token
-          api.getSites(_.get(lando.tasks.argv(), tpath, answers[tpath]))
+          api.getSites(_.get(lando.cli.argv(), tpath, answers[tpath]))
 
           // Parse the sites into choices
           .map(function(site) {

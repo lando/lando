@@ -153,6 +153,7 @@ module.exports = function(lando) {
         app.networks = merger(app.networks, newCompose.networks, merger);
 
       });
+
     }
 
   });

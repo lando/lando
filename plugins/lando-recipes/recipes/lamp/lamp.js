@@ -71,7 +71,7 @@ module.exports = function(lando) {
   var resetConfig = function(name, config) {
 
     // Get the config path
-    var configPath = path.join(lando.config.engineConfigDir, name);
+    var configPath = path.join(lando.config.servicesConfigDir, name);
 
     // Get the database
     var database = _.get(config, 'database', 'mysql');
