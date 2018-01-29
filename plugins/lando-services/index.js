@@ -45,15 +45,19 @@ module.exports = function(lando) {
     // Log
     lando.log.info('Configuring services plugin');
 
-    // Setup our config directory
+    // Get some dirs
     var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
-    lando.config.servicesConfigDir = confDir;
-    lando.config.env.LANDO_SERVICES_CONFIG_DIR = confDir;
-
-    // Setup our helpers directory
     var helpDir = path.join(lando.config.userConfRoot, 'services', 'helpers');
-    lando.config.servicesHelpersDir = helpDir;
-    lando.config.env.LANDO_SERVICES_HELPERS_DIR = helpDir;
+
+    // Proxy defaults
+    var defaultServiceConfig = {
+      servicesConfigDir: confDir,
+      servicesHelpersDir: helpDir,
+      loadPassphraseProtectedKeys: false
+    };
+
+    // Merge config over defaults
+    lando.config = lando.utils.config.merge(defaultServiceConfig, lando.config);
 
     // Add utilities
     lando.utils.services = require('./lib/utils');

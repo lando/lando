@@ -5,7 +5,7 @@ plugins:
   - lando-events
   # - lando-init
   - lando-proxy
-  # - lando-recipes
+  - lando-recipes
   - lando-services
   - lando-tooling
 stats:

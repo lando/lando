@@ -104,8 +104,8 @@ lib/registry.js
 
 * Figure out **exactly** how we want to move the above into `lando-core` with an eye to 4.
 
-Plugin Standarization
----------------------
+~~Plugin Standarization~~
+-------------------------
 
 We want to make provide a conventional plugin structure standard to maximize testability and minimize WTFIT.
 

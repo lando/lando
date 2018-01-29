@@ -9,7 +9,7 @@
 module.exports = function(lando) {
 
   // Load in our init method
-  lando.init.add('pantheon', require('./init')(lando));
+  //lando.init.add('pantheon', require('./init')(lando));
 
   // Modules
   var _ = lando.node._;
@@ -23,7 +23,7 @@ module.exports = function(lando) {
   var buildVolume = lando.services.buildVolume;
 
   // "Constants"
-  var configDir = path.join(lando.config.engineConfigDir, 'pantheon');
+  var configDir = path.join(lando.config.servicesConfigDir, 'pantheon');
 
   /*
    * Hash helper
