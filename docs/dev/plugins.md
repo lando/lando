@@ -14,7 +14,7 @@ Plugin Basics
 
 Plugins give you access to the [Lando API](./api/lando.md) so that you can modify and/or extend Lando. Here is the part of the proxy plugin that adds some proxy config options to the Lando global config.
 
-{% codesnippet "./../plugins/lando-proxy/lib/bootstrap.js" %}{% endcodesnippet %}
+{% codesnippet "./../plugins/lando-recipes/index.js" %}{% endcodesnippet %}
 
 Running your own plugins
 ------------------------
