@@ -78,8 +78,8 @@ First pass on proposed changes!
 
 * We probably just want to break this up and put its pieces elsewhere
 
-Pluginification
----------------
+~~Pluginification~~
+-------------------
 
 A bunch of stuff currently in `lib` is probably better placed as plugins. This would
 
@@ -131,5 +131,6 @@ Other Misc Tasks
 ----------------
 
 * Error handling in bin/lando.js and uncaught/promises, needs to send to logs and metrics
-* Env handling in shell.js
-* Provide some reporting parsing for apps (particularly for email data!)
+* ~~Env handling in shell.js~~
+* ~~Provide some reporting parsing for apps (particularly for email data!)~~
+* Update docs

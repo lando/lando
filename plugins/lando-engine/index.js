@@ -20,6 +20,9 @@ module.exports = function(lando) {
     // Log
     lando.log.info('Configuring engine plugin');
 
+    // Engine script directory
+    var esd = path.join(lando.config.userConfRoot, 'engine', 'scripts');
+
     // Build the default config object
     var defaultEngineConfig = {
       composeBin: env.getComposeExecutable(),
@@ -31,7 +34,7 @@ module.exports = function(lando) {
       engineHost: env.getEngineConfig().host,
       engineId: lando.user.getUid(),
       engineGid: lando.user.getGid(),
-      engineScriptsDir: path.join(__dirname, 'scripts')
+      engineScriptsDir: esd
     };
 
     // Merge defaults over the config, this allows users to set their own things
@@ -63,8 +66,8 @@ module.exports = function(lando) {
     lando.utils.engine = require('./lib/utils');
 
     // Move our scripts over and set useful ENV we can use
-    var scriptFrom = lando.config.engineScriptsDir;
-    var scriptTo = path.join(lando.config.userConfRoot, 'engine', 'scripts');
+    var scriptFrom = path.join(__dirname, 'scripts');
+    var scriptTo = lando.config.engineScriptsDir;
     lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
     lando.utils.engine.moveConfig(scriptFrom, scriptTo);
 

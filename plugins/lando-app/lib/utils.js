@@ -122,22 +122,28 @@ exports.getUrls = function(data) {
   // Go through the exposed ports and find host port info
   _.forEach(exposedPorts, function(value, key) {
 
-    // Get the host port data path
-    var netPath = 'NetworkSettings.Ports.' + key;
+    // Only look at ports that are reliably HTTP/HTTPS addresses
+    // @TODO: We do this so we aren't accidently pinging things like mysql
+    if (key === '443/tcp' || key === '80/tcp') {
 
-    // Filter out only ports that are exposed to 0.0.0.0
-    var onHost = _.filter(_.get(data, netPath, []), function(item) {
-      return item.HostIp === '0.0.0.0';
-    });
+      // Get the host port data path
+      var netPath = 'NetworkSettings.Ports.' + key;
 
-    // Map only the exposed ports and grab the first one
-    _.forEach(_.map(onHost, 'HostPort'), function(port) {
-      urls.push(url.format({
-        protocol: (port === '443') ? 'https:' : 'http:',
-        hostname: 'localhost',
-        port: (port !== '80') ? port : ''
-      }));
-    });
+      // Filter out only ports that are exposed to 0.0.0.0
+      var onHost = _.filter(_.get(data, netPath, []), function(item) {
+        return item.HostIp === '0.0.0.0';
+      });
+
+      // Map only the exposed ports and grab the first one
+      _.forEach(_.map(onHost, 'HostPort'), function(port) {
+        urls.push(url.format({
+          protocol: (key === '443/tcp') ? 'https:' : 'http:',
+          hostname: 'localhost',
+          port: (port !== '80') ? port : ''
+        }));
+      });
+
+    }
 
   });
 

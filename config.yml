@@ -6,8 +6,7 @@ plugins:
   # - lando-init
   - lando-proxy
   # - lando-recipes
-  # - lando-services
-  # - lando-test
+  - lando-services
   # - lando-tooling
 stats:
   - report: true
