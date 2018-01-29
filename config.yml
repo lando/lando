@@ -3,7 +3,7 @@ plugins:
   - lando-core
   - lando-engine
   - lando-events
-  # - lando-init
+  - lando-init
   - lando-proxy
   - lando-recipes
   - lando-services

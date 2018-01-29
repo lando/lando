@@ -1,14 +1,8 @@
-/*
-//,
-
-/*
-
 /**
- * This bootstraps the init framework
+ * Recipes plugin
  *
- * @name bootstrap
+ * @name recipes
  */
- /*
 
 'use strict';
 
@@ -17,8 +11,8 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
 
-  // Add services modules to lando
-  lando.events.on('post-bootstrap', 1, function(lando) {
+  // Add init modules to lando
+  lando.events.on('post-bootstrap', 2, function(lando) {
 
     // Log
     lando.log.info('Initializing init framework');
@@ -30,7 +24,7 @@ module.exports = function(lando) {
 
   // Add github init method
   lando.events.on('post-bootstrap', function(lando) {
-    lando.init.add('github', require('./github')(lando));
+    lando.init.add('github', require('./methods/github')(lando));
   });
 
   // Go through our init methods and log them
@@ -47,4 +41,3 @@ module.exports = function(lando) {
   });
 
 };
-*/
