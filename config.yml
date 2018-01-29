@@ -4,7 +4,7 @@ plugins:
   - lando-engine
   # - lando-events
   # - lando-init
-  # - lando-proxy
+  - lando-proxy
   # - lando-recipes
   # - lando-services
   # - lando-test

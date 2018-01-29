@@ -9,6 +9,8 @@
 
 // Modules
 var _ = require('lodash');
+var fs = require('fs-extra');
+var path = require('path');
 
 /**
  * Translate a name for use by docker-compose eg strip `-` and `.` and
@@ -63,3 +65,51 @@ exports.normalizer = function(data) {
   }
   return data;
 };
+
+/*
+ * Helper to move config from lando to a mountable directory
+ */
+exports.moveConfig = function(from, to) {
+
+   // Copy opts and filter out all js files
+   // We dont want to give the false impression that you can edit the JS
+   var copyOpts = {
+     overwrite: true,
+     filter: function(file) {
+       return (path.extname(file) !== '.js');
+     }
+   };
+
+   // Ensure to exists
+   fs.mkdirpSync(to);
+
+   // Try to copy the assets over
+   try {
+     fs.copySync(from, to, copyOpts);
+   }
+
+   // If we have an EPERM, try to remove the file/directory and then retry
+   catch (error) {
+
+     // Parse the error for dataz
+     var code = _.get(error, 'code');
+     var syscall = _.get(error, 'syscall');
+     var f = _.get(error, 'path');
+
+     // Catch this so we can try to repair
+     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.ensureDirSync(f)) {
+       throw new Error(error);
+     }
+
+     // Try to take corrective action
+     fs.removeSync(f);
+
+     // Try to move again
+     fs.copySync(from, to, copyOpts);
+
+   }
+
+   // Return the new scripts directory
+   return to;
+
+ };

@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Modules
   var ip = lando.node.ip;
   var env = require('./lib/env.js');
+  var path = require('path');
   var url = require('url');
 
   // Add some config for the engine
@@ -29,7 +30,8 @@ module.exports = function(lando) {
       engineConfig: env.getEngineConfig(),
       engineHost: env.getEngineConfig().host,
       engineId: lando.user.getUid(),
-      engineGid: lando.user.getGid()
+      engineGid: lando.user.getGid(),
+      engineScriptsDir: path.join(__dirname, 'scripts')
     };
 
     // Merge defaults over the config, this allows users to set their own things
@@ -52,12 +54,19 @@ module.exports = function(lando) {
     lando.config.env.LANDO_ENGINE_HOME = lando.config.home;
     lando.config.env.LANDO_ENGINE_IP = dockerHost;
     lando.config.env.LANDO_ENGINE_REMOTE_IP = ip.address();
+    lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = lando.config.engineScriptsDir;
 
     // Log it
     lando.log.verbose('Engine plugin configured with %j', lando.config);
 
     // Add utilities
     lando.utils.engine = require('./lib/utils');
+
+    // Move our scripts over and set useful ENV we can use
+    var scriptFrom = lando.config.engineScriptsDir;
+    var scriptTo = path.join(lando.config.userConfRoot, 'engine', 'scripts');
+    lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
+    lando.utils.engine.moveConfig(scriptFrom, scriptTo);
 
   });
 
