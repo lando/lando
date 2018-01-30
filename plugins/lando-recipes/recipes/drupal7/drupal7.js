@@ -15,7 +15,7 @@ module.exports = function(lando) {
   // "Constants"
   var DRUSH8 = '8.1.15';
   var DRUSH7 = '7.4.0';
-  var DRUSHLAUNCHER = '0.4.3';
+  var DRUSHLAUNCHER = '0.5.1';
 
   /**
    * Helper to get DRUSH 8 or DRUSH LAUNCHER phar
