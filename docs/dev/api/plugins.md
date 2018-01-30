@@ -14,23 +14,23 @@ return lando.config.plugins
   return lando.plugins.load(plugin);
 });
 ```
-<a name="module_plugins.load"></a>
+<a name="module_plugins..load"></a>
 
-### plugins.load(plugin, [dirs]) ⇒ <code>Promise</code>
+### plugins~load(plugin, dirs, [inject]) ⇒ <code>Promise</code>
 Loads a plugin.
 
-See below for the default directories that are scanned. For each directory
-scanned plugins can live in either the `plugins` or `node_modules`
-subdirectories
+For each directory scanned plugins can live in either the `plugins` or
+`node_modules` subdirectories
 
-**Kind**: static method of [<code>plugins</code>](#module_plugins)  
+**Kind**: inner method of [<code>plugins</code>](#module_plugins)  
 **Returns**: <code>Promise</code> - A Promise.  
 **Since**: 3.0.0  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| plugin | <code>String</code> |  | The name of the plugin |
-| [dirs] | <code>Array</code> | <code>[config.srcRoot, config.sysConfRoot, config.userConfRoot]</code> | Additional directories to scan for the plugin. |
+| Param | Type | Description |
+| --- | --- | --- |
+| plugin | <code>String</code> | The name of the plugin |
+| dirs | <code>Array</code> | The directories to scan for plugins. |
+| [inject] | <code>Object</code> | An object to inject into the plugin. |
 
 **Example**  
 ```js

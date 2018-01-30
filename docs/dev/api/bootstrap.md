@@ -8,13 +8,21 @@ Contains the main bootstrap function.
 ```js
 // Get the bootstrap function
 var bootstrap = require('./../lib/bootstrap.js');
+var options = {
+  logLevelConsole: LOGLEVELCONSOLE,
+  userConfRoot: USERCONFROOT,
+  envPrefix: ENVPREFIX,
+  configSources: configSources,
+  pluginDirs: [USERCONFROOT],
+  mode: 'cli'
+};
 
-// Initialize Lando in CLI mode
-bootstrap({mode: 'cli'})
+// Initialize Lando with some options
+bootstrap(options)
 
-// Initialize CLI
+// Initialize some other thing
 .tap(function(lando) {
-  return lando.cli.init(lando);
+  return cli.init(lando);
 })
 ```
 
@@ -34,6 +42,11 @@ This will:
   2. Emit bootstrap events
   3. Initialize plugins
 
+The intiialization config below is not required but recommended. You can
+pass in any additional properties to override subsequently set/default values.
+
+Check out bin/lando.js for an example
+
 **Kind**: static property of [<code>bootstrap</code>](#module_bootstrap)  
 **Returns**: <code>Object</code> - An initialized Lando object  
 **Emits**: <code>event:pre-bootstrap</code>, <code>event:post-bootstrap</code>  
@@ -41,16 +54,22 @@ This will:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| opts | <code>Object</code> | Options to tweak the bootstrap |
-| opts.mode | <code>String</code> | The mode to run the bootstrap with |
+| [options] | <code>Object</code> | Options to initialize the bootstrap |
 
 **Example**  
 ```js
 // Get the bootstrap function
 var bootstrap = require('./../lib/bootstrap.js');
 
-// Initialize Lando in CLI mode
-bootstrap({mode: 'cli'})
+// Initialize Lando with some start up config
+bootstrap({
+  logLevelConsole: LOGLEVELCONSOLE,
+  userConfRoot: USERCONFROOT,
+  envPrefix: ENVPREFIX,
+  configSources: configSources,
+  pluginDirs: [USERCONFROOT],
+  mode: 'cli'
+})
 
 // Initialize CLI
 .tap(function(lando) {
