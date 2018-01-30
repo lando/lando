@@ -11,7 +11,7 @@ var expect = chai.expect;
 chai.should();
 
 // Get caching module to test
-var Cache = require('./../../lib/cache');
+var Cache = require('./../lib/cache');
 var cache = new Cache();
 
 // This is the file we are testing
