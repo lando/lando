@@ -20,6 +20,7 @@ var path = require('path');
 var Promise = require('./../lib/promise');
 var sudoBlock = require('sudo-block');
 var userConfRoot = path.join(os.homedir(), '.lando');
+var version = require(path.join(__dirname, '..', 'package.json')).version;
 
 // Allow envvars to override a few core things
 var ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO_';
@@ -37,7 +38,8 @@ var options = {
   logDir: path.join(USERCONFROOT, 'logs'),
   mode: 'cli',
   pluginDirs: [USERCONFROOT],
-  userConfRoot: USERCONFROOT
+  userConfRoot: USERCONFROOT,
+  version: version
 };
 
 // Kick off our bootstrap
@@ -50,6 +52,20 @@ bootstrap(options)
   // @TODO: do this better
   metrics = lando.metrics;
   log = lando.log;
+
+  // Handle busted promises
+  process.on('unhandledRejection', function(error) {
+    lando.log.error(error);
+    lando.metrics.report('error', {message: error.message, stack: error.stack});
+    process.exit(1);
+  });
+
+  // And other uncaught things
+  process.on('uncaughtException', function(error) {
+    lando.log.error(error);
+    lando.metrics.report('error', {message: error.message, stack: error.stack});
+    process.exit(1);
+  });
 
   // Log
   lando.log.info('Initializing cli');
