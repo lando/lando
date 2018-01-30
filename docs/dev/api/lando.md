@@ -13,12 +13,6 @@ var lando = require('./lando')(globalConfig);
 // Add an item to the cache
 lando.cache.set('mykey', data);
 
-// Start an app
-return lando.app.start(app);
-
-// Check to see if a docker container is running
-return lando.engine.isRunning({id: 'myapps_httpd_1'});
-
 // Log an error
 lando.log.error('Ive got a baaaad feeling about this');
 
@@ -40,9 +34,6 @@ return lando.Promise.retry(lando.engine.start(container)));
 // Load a plugin
 return lando.plugins.load('hyperdrive');
 
-// Remove an app from the registry
-return lando.registry.remove({app: name, dir: dir});
-
 // Execute a command
 return lando.shell.sh(['docker', 'info']);
 
@@ -51,47 +42,22 @@ lando.tasks.add('fireeverything', task);
 ```
 
 * [lando](#lando) : <code>object</code>
-    * [.app](#lando.app)
-    * [.bootstrap](#lando.bootstrap)
     * [.cache](#lando.cache)
     * [.cli](#lando.cli)
     * [.config](#lando.config)
-    * [.engine](#lando.engine)
-    * [.error](#lando.error)
     * [.events](#lando.events)
     * [.log](#lando.log)
-    * [.networks](#lando.networks)
     * [.node](#lando.node)
     * [.plugins](#lando.plugins)
     * [.Promise](#lando.Promise)
-    * [.registry](#lando.registry)
+    * [.scanUrls](#lando.scanUrls)
     * [.shell](#lando.shell)
     * [.tasks](#lando.tasks)
-    * [.update](#lando.update)
+    * [.updates](#lando.updates)
     * [.user](#lando.user)
     * [.utils](#lando.utils)
     * [.yaml](#lando.yaml)
 
-<a name="lando.app"></a>
-
-### lando.app
-The app module.
-
-Contains helpful methods to manipulate Lando apps.
-
-**Kind**: static property of [<code>lando</code>](#lando)  
-**See**: [app.md](app.md)  
-**Since**: 3.0.0  
-<a name="lando.bootstrap"></a>
-
-### lando.bootstrap
-The bootstrap module.
-
-Contains helpful methods to bootstrap Lando.
-
-**Kind**: static property of [<code>lando</code>](#lando)  
-**See**: [bootstrap.md](bootstrap.md)  
-**Since**: 3.0.0  
 <a name="lando.cache"></a>
 
 ### lando.cache
@@ -120,27 +86,6 @@ The global config object
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [config.md](config.md)  
 **Since**: 3.0.0  
-<a name="lando.engine"></a>
-
-### lando.engine
-The engine module.
-
-Contains helpful methods to manipulate the docker daemon, engine, its containers,
-volumes and networks.
-
-**Kind**: static property of [<code>lando</code>](#lando)  
-**See**: [engine.md](engine.md)  
-**Since**: 3.0.0  
-<a name="lando.error"></a>
-
-### lando.error
-The error module.
-
-Contains helpful error handling methods.
-
-**Kind**: static property of [<code>lando</code>](#lando)  
-**See**: [error.md](error.md)  
-**Since**: 3.0.0  
 <a name="lando.events"></a>
 
 ### lando.events
@@ -160,16 +105,6 @@ Contains logging methods.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [log.md](log.md)  
-**Since**: 3.0.0  
-<a name="lando.networks"></a>
-
-### lando.networks
-The networks module.
-
-Contains ways to interact with docker networks.
-
-**Kind**: static property of [<code>lando</code>](#lando)  
-**See**: [networks.md](networks.md)  
 **Since**: 3.0.0  
 <a name="lando.node"></a>
 
@@ -202,15 +137,15 @@ An extended `bluebird` Promise object.
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [promise.md](promise.md)  
 **Since**: 3.0.0  
-<a name="lando.registry"></a>
+<a name="lando.scanUrls"></a>
 
-### lando.registry
-The registry module.
+### lando.scanUrls
+The scan module.
 
-Contains helpful methods to interact with the appRegistry.
+Contains a URL scanner
 
 **Kind**: static property of [<code>lando</code>](#lando)  
-**See**: [registry.md](registry.md)  
+**See**: [shell.md](shell.md)  
 **Since**: 3.0.0  
 <a name="lando.shell"></a>
 
@@ -232,9 +167,9 @@ Contains helpful methods to define and parse Lando tasks.
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [tasks.md](tasks.md)  
 **Since**: 3.0.0  
-<a name="lando.update"></a>
+<a name="lando.updates"></a>
 
-### lando.update
+### lando.updates
 The update module.
 
 Contains warnings and help if update is needed

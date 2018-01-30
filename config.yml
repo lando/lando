@@ -1,9 +1,13 @@
 plugins:
+  - lando-app
   - lando-core
+  - lando-engine
   - lando-events
+  - lando-init
   - lando-proxy
   - lando-recipes
   - lando-services
   - lando-tooling
-logLevelConsole: warn
-logLevel: debug
+stats:
+  - report: true
+    url: https://metrics.devwithlando.io

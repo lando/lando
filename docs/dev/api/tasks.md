@@ -1,7 +1,7 @@
 <a name="module_tasks"></a>
 
 ## tasks
-Contains some helpers to add and parse Lando tasks.
+Contains some helpers to add and manage Lando tasks.
 
 Lando tasks are a high level abstraction that should contain the neded
 information for both a GUI or CLI to present relevant UX to the user.
@@ -11,9 +11,6 @@ information for both a GUI or CLI to present relevant UX to the user.
 ```js
 // Gets all the tasks that have been loaded
 var task = lando.tasks.tasks;
-
-// Gets all the global options that have been specified.
-var largv = lando.tasks.largv;
 
 // Load in two tasks during bootstrap
 lando.events.on('post-bootstrap', 1, function(lando) {
@@ -25,20 +22,11 @@ lando.events.on('post-bootstrap', 1, function(lando) {
   lando.tasks.add('config', task);
 
 });
-
-// Add a task so it shows up as a command in the CLI
-yargs.command(lando.tasks.parseToYargs(task));
 ```
 
 * [tasks](#module_tasks)
     * [.tasks](#module_tasks.tasks)
-    * [.largv](#module_tasks.largv)
-    * [.parseGlobals()](#module_tasks.parseGlobals)
-    * [.argv()](#module_tasks.argv)
-    * [.parseToYargs(task)](#module_tasks.parseToYargs) ⇒ <code>Object</code>
     * [.add(name, task)](#module_tasks.add)
-    * ["event:task-CMD-answers"](#module_tasks.event_task-CMD-answers)
-    * ["event:task-CMD-run"](#module_tasks.event_task-CMD-run)
 
 <a name="module_tasks.tasks"></a>
 
@@ -51,77 +39,6 @@ A singleton array that contains all the tasks that have been added.
 ```js
 // Gets all the tasks that have been loaded
 var task = lando.tasks.tasks;
-```
-<a name="module_tasks.largv"></a>
-
-### tasks.largv
-A singleton object that contains the Lando global options.
-
-This means all the options passed in after the `--` flag.
-
-**Kind**: static property of [<code>tasks</code>](#module_tasks)  
-**Since**: 3.0.0  
-**Example**  
-```js
-// Gets all the global options that have been specified.
-var largv = lando.tasks.largv;
-```
-<a name="module_tasks.parseGlobals"></a>
-
-### tasks.parseGlobals()
-Helper function to parse global opts
-
-**Kind**: static method of [<code>tasks</code>](#module_tasks)  
-**See**: https://github.com/lando/lando/issues/351  
-**Since**: 3.0.0  
-**Example**  
-```js
-// Gets all the tasks that have been loaded
-var largv = lando.tasks.parseGlobals();
-```
-<a name="module_tasks.argv"></a>
-
-### tasks.argv()
-Returns the lando options
-
-This means all the options passed in before the `--` flag.
-
-**Kind**: static method of [<code>tasks</code>](#module_tasks)  
-**Since**: 3.0.0  
-**Example**  
-```js
-// Gets all the global options that have been specified.
-var argv = lando.tasks.argv;
-```
-<a name="module_tasks.parseToYargs"></a>
-
-### tasks.parseToYargs(task) ⇒ <code>Object</code>
-Parses a lando task object into something that can be used by the [yargs](http://yargs.js.org/docs/) CLI.
-
-A lando task object is an abstraction on top of yargs that also contains some
-metadata about how to interactively ask questions on both the CLI and GUI. While this
-method is useful, any task added to Lando via `lando.tasks.add` will automatically
-be parsed with this method.
-
-The interactivity metadata is light wrapper around [inquirer](https://github.com/sboudrias/Inquirer.js)
-
-**Kind**: static method of [<code>tasks</code>](#module_tasks)  
-**Returns**: <code>Object</code> - A yargs command object  
-**See**
-
-- [yargs docs](http://yargs.js.org/docs/)
-- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| task | <code>Object</code> | A Lando task object (@see add for definition) |
-
-**Example**  
-```js
-// Add that task to the CLI
-yargs.command(lando.tasks.parseToYargs(task));
 ```
 <a name="module_tasks.add"></a>
 
@@ -175,30 +92,3 @@ var task = {
 // Add the task to Lando
 lando.tasks.add('destroy', task);
 ```
-<a name="module_tasks.event_task-CMD-answers"></a>
-
-### "event:task-CMD-answers"
-Event that allows altering of argv or inquirer before interactive prompts
-are run
-
-**Kind**: event emitted by [<code>tasks</code>](#module_tasks)  
-**Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| answers | <code>Object</code> | argv and inquirer questions |
-
-<a name="module_tasks.event_task-CMD-run"></a>
-
-### "event:task-CMD-run"
-Event that allows final altering of answers
-
-**Kind**: event emitted by [<code>tasks</code>](#module_tasks)  
-**Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| answers | <code>Object</code> | object |
-

@@ -1,11 +1,11 @@
 <a name="module_log"></a>
 
 ## log
-Contains logging functions built from global config options.
+Contains logging functions built from passed in config.
 
 Logged entries are printed to the console and to `lando.log` and `error.log`
-in `$HOME/.lando/logs`. The verbosity of these logs is determined by the
-lando global config.
+in specified directory. The verbosity of these logs is determined by the
+lando global config or passed in global CLI option
 
 **Since**: 3.0.0  
 **Example**  
