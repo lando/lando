@@ -14,12 +14,12 @@ var groupId = lando.user.getEngineUserGid();
 ```
 
 * [user](#module_user)
-    * [.getEngineUserId()](#module_user.getEngineUserId) ⇒ <code>String</code>
-    * [.getEngineUserGid()](#module_user.getEngineUserGid) ⇒ <code>String</code>
+    * [.getUid()](#module_user.getUid) ⇒ <code>String</code>
+    * [.getGid()](#module_user.getGid) ⇒ <code>String</code>
 
-<a name="module_user.getEngineUserId"></a>
+<a name="module_user.getUid"></a>
 
-### user.getEngineUserId() ⇒ <code>String</code>
+### user.getUid() ⇒ <code>String</code>
 Returns the id of the user.
 
 Note that on Windows this value is more or less worthless.
@@ -32,9 +32,9 @@ Note that on Windows this value is more or less worthless.
 // Get the id of the user.
 var userId = lando.user.getEngineUserId();
 ```
-<a name="module_user.getEngineUserGid"></a>
+<a name="module_user.getGid"></a>
 
-### user.getEngineUserGid() ⇒ <code>String</code>
+### user.getGid() ⇒ <code>String</code>
 Returns the group id of the user.
 
 Note that on Windows this value is more or less worthless.

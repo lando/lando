@@ -12,15 +12,15 @@ var thing = lando.yaml.load('/tmp/myfile.yml');
 ```
 
 * [yaml](#module_yaml)
-    * [.load(file)](#module_yaml.load) ⇒ <code>Object</code>
-    * [.dump(file, data)](#module_yaml.dump)
+    * [~load(file)](#module_yaml..load) ⇒ <code>Object</code>
+    * [~dump(file, data)](#module_yaml..dump) ⇒
 
-<a name="module_yaml.load"></a>
+<a name="module_yaml..load"></a>
 
-### yaml.load(file) ⇒ <code>Object</code>
+### yaml~load(file) ⇒ <code>Object</code>
 Loads a yaml object from a file
 
-**Kind**: static method of [<code>yaml</code>](#module_yaml)  
+**Kind**: inner method of [<code>yaml</code>](#module_yaml)  
 **Returns**: <code>Object</code> - The loaded object  
 **Since**: 3.0.0  
 
@@ -33,12 +33,13 @@ Loads a yaml object from a file
 // Add a string to the cache
 var thing = lando.yaml.load('/tmp/myfile.yml');
 ```
-<a name="module_yaml.dump"></a>
+<a name="module_yaml..dump"></a>
 
-### yaml.dump(file, data)
+### yaml~dump(file, data) ⇒
 Dumps an object to a YAML file
 
-**Kind**: static method of [<code>yaml</code>](#module_yaml)  
+**Kind**: inner method of [<code>yaml</code>](#module_yaml)  
+**Returns**: - Flename  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
