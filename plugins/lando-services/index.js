@@ -49,7 +49,7 @@ module.exports = function(lando) {
     var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
     var helpDir = path.join(lando.config.userConfRoot, 'services', 'helpers');
 
-    // Proxy defaults
+    // Service defaults
     var defaultServiceConfig = {
       servicesConfigDir: confDir,
       servicesHelpersDir: helpDir,

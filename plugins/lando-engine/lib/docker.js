@@ -31,6 +31,7 @@ module.exports = function(config) {
     var run = dockerContainer.Labels['com.docker.compose.oneoff'];
     var lando = dockerContainer.Labels['io.lando.container'] || false;
     var special = dockerContainer.Labels['io.lando.service-container'] || false;
+    var id = dockerContainer.Labels['io.lando.id'] || 'unknown';
 
     // Add 'run' the service if this is a oneoff container
     if (run === 'True') {
@@ -47,7 +48,8 @@ module.exports = function(config) {
       name: [app, service, num].join('_'),
       app: (!isSpecial) ? app : undefined,
       kind: (!isSpecial) ? 'app' : 'service',
-      lando: (lando === 'TRUE') ? true : false
+      lando: (lando === 'TRUE') ? true : false,
+      instance: id
     };
 
   };
@@ -242,15 +244,14 @@ module.exports = function(config) {
     // Discover the mode
     var mode = (opts && opts.mode) ? opts.mode : 'collect';
 
+    // Force collect mode if we are not in a node context
+    if (process.lando !== 'node') { mode = 'collect'; }
+
     // Make cmd is an array lets desconstruct and escape
-    if (_.isArray(cmd)) {
-      cmd = utils.escSpaces(esc(cmd), 'linux');
-    }
+    if (_.isArray(cmd)) { cmd = utils.escSpaces(esc(cmd), 'linux'); }
 
     // Add in any prefix commands
-    if (_.has(opts, 'pre')) {
-      cmd = [opts.pre, cmd].join('&&');
-    }
+    if (_.has(opts, 'pre')) { cmd = [opts.pre, cmd].join('&&'); }
 
     // Build the exec opts
     var execOpts = {

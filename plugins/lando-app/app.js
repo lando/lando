@@ -250,16 +250,12 @@ module.exports = function(lando) {
       app.info = {};
       // Root.
       app.root = dir;
-      // Root bind.
-      app.rootBind = app.root;
       // Labels that get added to every container
-      app.labels = {'io.lando.container': 'TRUE'};
+      app.labels = {};
       // Docker compose networks
       app.networks = {};
       // App mount
       app.mount = '/app';
-      // Envvars that get injected into the current process
-      app.processEnv = {};
       // The docker compose project
       app.project = app.name;
       // Docker compose services
@@ -268,23 +264,22 @@ module.exports = function(lando) {
       app.tasks = lando.tasks.tasks || {};
       // Webroot
       app.webRoot = config.webroot || '.';
-      // Update app status which will fire a status event.
-      app.status = function() {
-        var args = _.toArray(arguments);
-        var msg = util.format.apply(null, args);
-        return app.events.emit('status', msg)
+      // Trigger core messaging emit with app specific message.
+      app.message = function(message) {
+
+        // Message
+        return lando.message({
+          app: app.name,
+          context: 'app',
+          message: util.format(message),
+          type: 'info'
+        })
+
         // Make sure app status messages make it to global status.
         .then(function() {
-          lando.log.info(msg);
+          lando.log.info(message);
         });
-      };
-      // Troll through stdout messages for app status messages.
-      app.trollForStatus = function(msg) {
-        // Update status when pulling an image.
-        var images = msg.match(/Pulling from (.*)/);
-        if (images) {
-          app.status('Pulling image %s.', images[1]);
-        }
+
       };
       // Docker compose version
       app.version = lando.config.composeVersion || '3.2';
@@ -731,7 +726,7 @@ module.exports = function(lando) {
   var uninstall = function(app) {
 
     // Cleaning up
-    app.status('Uninstalling %s', app.name);
+    app.message('Uninstalling %s', app.name);
 
     // Report to metrics.
     return lando.metrics.report('uninstall', metricsParse(app))
@@ -801,9 +796,9 @@ module.exports = function(lando) {
   var cleanup = function(app) {
 
     // Cleaning up
-    app.status('Cleaning up app registry and containers');
+    app.message('Cleaning up app registry and containers');
 
-    // Get all our containers
+    // Get all our apps
     return list()
 
     // We need to use the dockername
@@ -811,11 +806,16 @@ module.exports = function(lando) {
       return lando.utils.engine.dockerComposify(app.name);
     })
 
-    // Filter out non-app containers
+    // Filter out non-app containers or orphaned containers (eg from deleted apps)
     .then(function(apps) {
       return lando.Promise.filter(lando.engine.list(), function(container) {
         return container.kind === 'app' && !_.includes(apps, container.app);
       });
+    })
+
+    // Filter out any other containers that dont match this lando instance
+    .filter(function(container) {
+      return container.instance === lando.config.id;
     })
 
     // Stop containers if needed
@@ -854,7 +854,7 @@ module.exports = function(lando) {
   var start = function(app) {
 
     // Start it up
-    app.status('Starting app name %s', app.name);
+    app.message('Starting app name %s', app.name);
 
     // Report to metrics.
     return lando.metrics.report('start', metricsParse(app))
@@ -988,7 +988,7 @@ module.exports = function(lando) {
   var stop = function(app) {
 
     // Stop it!
-    app.status('Stopping %s', app.name);
+    app.message('Stopping %s', app.name);
 
     // Report to metrics.
     return lando.metrics.report('stop', metricsParse(app))
@@ -1063,7 +1063,7 @@ module.exports = function(lando) {
   var restart = function(app) {
 
     // Start it off
-    app.status('Restarting %s', app.name);
+    app.message('Restarting %s', app.name);
 
     // Stop app.
     return stop(app)
@@ -1108,7 +1108,7 @@ module.exports = function(lando) {
   var destroy = function(app) {
 
     // Start it off
-    app.status('Destroying %s', app.name);
+    app.message('Destroying %s', app.name);
 
     /**
      * Event that runs before an app is destroyed.
@@ -1189,7 +1189,7 @@ module.exports = function(lando) {
   var rebuild = function(app) {
 
     // Start it off
-    app.status('Rebuilding %s', app.name);
+    app.message('Rebuilding %s', app.name);
 
     // Stop app.
     return stop(app)
