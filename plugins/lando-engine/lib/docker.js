@@ -243,12 +243,12 @@ module.exports = function(config) {
 
     // Discover the mode
     var mode = (opts && opts.mode) ? opts.mode : 'collect';
-    var startTty = true;
+    var defaultTty = true;
 
     // Force some things things if we are in a non node context
     if (process.lando !== 'node') {
       mode = 'collect';
-      startTty = false;
+      defaultTty = false;
     }
 
     // Make cmd is an array lets desconstruct and escape
@@ -265,7 +265,7 @@ module.exports = function(config) {
       Cmd: ['/bin/sh', '-c', cmd],
       Env: opts.env || [],
       DetachKeys: opts.detachKeys || 'ctrl-p,ctrl-q',
-      Tty: opts.tty || true,
+      Tty: opts.tty || defaultTty,
       User: opts.user || 'root'
     };
 
@@ -292,7 +292,7 @@ module.exports = function(config) {
         hijack: opts.hijack || false,
         stdin: execOpts.AttachStdin,
         Detach: false,
-        Tty: startTty
+        Tty: defaultTty
       };
 
       // Start it up
