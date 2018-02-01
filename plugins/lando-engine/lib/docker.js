@@ -243,9 +243,13 @@ module.exports = function(config) {
 
     // Discover the mode
     var mode = (opts && opts.mode) ? opts.mode : 'collect';
+    var startTty = true;
 
-    // Force collect mode if we are not in a node context
-    if (process.lando !== 'node') { mode = 'collect'; }
+    // Force some things things if we are in a non node context
+    if (process.lando !== 'node') {
+      mode = 'collect';
+      startTty = false;
+    }
 
     // Make cmd is an array lets desconstruct and escape
     if (_.isArray(cmd)) { cmd = utils.escSpaces(esc(cmd), 'linux'); }
@@ -288,7 +292,7 @@ module.exports = function(config) {
         hijack: opts.hijack || false,
         stdin: execOpts.AttachStdin,
         Detach: false,
-        Tty: true
+        Tty: startTty
       };
 
       // Start it up
