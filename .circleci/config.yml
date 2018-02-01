@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/lando
+    docker:
+      - image: circleci/node:8.9.4
+    steps:
+      - checkout
+      - run:
+          name: Install deps
+          command: yarn install
+      - setup_remote_docker
+      - run:
+          name: Unit Tests
+          command: yarn test
+      - run:
+          name: Functional Tests
+          command: yarn test:functional
