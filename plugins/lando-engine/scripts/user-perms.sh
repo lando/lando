@@ -41,7 +41,7 @@ if [ $(id -u) = 0 ]; then
   # Make sure we chown the $LANDO_WEBROOT_USER home directory
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $(getent passwd $LANDO_WEBROOT_USER | cut -d : -f 6) &>/dev/null &
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.ssh &>/dev/null &
-  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /user/.lando &>/dev/null &
+  nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /lando &>/dev/null &
 
   # Lets also make some /usr/locals chowned
   nohup chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /usr/local/lib &>/dev/null &

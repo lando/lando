@@ -3,7 +3,7 @@
 set -e
 
 # Set up some things
-CERT_DIR="/user/.lando/keys/pantheon/${LANDO_APP_NAME}"
+CERT_DIR="/lando/keys/pantheon/${LANDO_APP_NAME}"
 INDEX_CERT="$CERT_DIR/index.crt"
 INDEX_PEM="$CERT_DIR/index.pem"
 
