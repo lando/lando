@@ -49,6 +49,7 @@ module.exports = function(lando) {
       image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
+        LANDO_CONFIG_DIR: lando.config.userConfRoot,
         LANDO_HOST_OS: lando.config.os.platform,
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,
@@ -65,7 +66,8 @@ module.exports = function(lando) {
       entrypoint: '/lando-entrypoint.sh',
       labels: {
         'io.lando.container': 'TRUE',
-        'io.lando.service-container': 'TRUE'
+        'io.lando.service-container': 'TRUE',
+        'io.lando.id': lando.config.id
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
@@ -85,6 +87,7 @@ module.exports = function(lando) {
     var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
     util.volumes.push(app + ':/app' + shareMode);
     util.volumes.push('$LANDO_ENGINE_HOME:/user' + shareMode);
+    util.volumes.push('$LANDO_ENGINE_CONF:/lando' + shareMode);
 
     // Build and export compose
     var service = {
@@ -122,14 +125,13 @@ module.exports = function(lando) {
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
     fs.mkdirpSync(path.join(keysDir));
 
-    // Construct a helpful and box-specific comment
-    var comment = 'lando@' + os.hostname();
+    // Construct a helpful and instance-specific comment
+    var comment = lando.config.id + '.lando@' + os.hostname();
+    var keyPath = '/lando/keys/' + key;
 
     // Key cmd
-    return [
-      'ssh-keygen',
-      '-t rsa -N "" -C "' + comment + '" -f "/user/.lando/keys/' + key + '"'
-    ].join(' ');
+    return 'ssh-keygen -t rsa -N "" -C "' + comment + '" -f "' + keyPath + '"';
+
   };
 
   /*
