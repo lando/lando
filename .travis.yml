@@ -3,21 +3,18 @@ matrix:
   include:
   - os: linux
     env: LANDO_PKG_TYPE=rpm LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
   - os: linux
     env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
   - os: osx
     env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
 services:
   - docker
 sudo: required
 
 before_install:
-
-  # Install some node deps
-  - npm install -g grunt-cli
 
   # Import our keys on OSX
   - |
@@ -42,10 +39,10 @@ before_install:
 
     fi
 
-install:
-
-  # Override the normal npm install with npm -E install
-  - npm -E install
+cache:
+  yarn: true
+  directories:
+    - node_modules
 
 before_script:
 
@@ -57,24 +54,20 @@ before_script:
 
   # Sanity checks
   - node --version
-  - npm --version
-  - grunt --version
+  - yarn --version
   - node bin/lando.js version
 
 script:
 
   # Run code and styling
-  - grunt test:code
-
-  # Run unit tests
-  - grunt test:unit
+  - yarn test
 
   # Make sure we can build the docs
-  - grunt docs
+  - yarn docs
 
   # Run the build
   - mkdir -p release
-  - grunt pkg
+  - yarn pkg:full
 
   # Run a few tests on the installer
   # - if [ $LANDO_PKG_TYPE == "deb" ]; then grunt test:bats; fi
