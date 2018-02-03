@@ -16,8 +16,8 @@ if [ ! -f "/certs/index.pem" ]; then
   cat /certs/index.crt /certs/index.key > /certs/index.pem
 
   # Move them into a shared folder so we can whitelist them in the appserver
-  mkdir -p /user/.lando/keys/pantheon/${LANDO_APP_NAME}
-  cp -rf /certs/* /user/.lando/keys/pantheon/${LANDO_APP_NAME}/
+  mkdir -p /lando/keys/pantheon/${LANDO_APP_NAME}
+  cp -rf /certs/* /lando/keys/pantheon/${LANDO_APP_NAME}/
 
 fi
 

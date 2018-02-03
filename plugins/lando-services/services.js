@@ -132,6 +132,7 @@ module.exports = function(lando) {
     services[name] = merger(services[name], {volumes: [
       '$LANDO_APP_ROOT_BIND:/app' + shareMode,
       '$LANDO_ENGINE_HOME:/user' + shareMode,
+      '$LANDO_ENGINE_CONF:/lando' + shareMode,
       '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh'
     ]});
 

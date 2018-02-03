@@ -15,7 +15,7 @@ FILES=${TERMINUS_ENV:-dev}
 RSYNC=false
 
 # Set helpers
-SSH_KEY="/user/.lando/keys/pantheon.lando.id_rsa"
+SSH_KEY="/lando/keys/pantheon.lando.id_rsa"
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
