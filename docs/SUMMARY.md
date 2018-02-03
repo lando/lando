@@ -140,13 +140,20 @@
 
 *   [Slidedecks](https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC)
 
-## Development
+## Contributing
 
 *   [Contributing](dev/contributing.md)
 *   [Repo Structure](dev/structure.md)
 *   [Plugins](dev/plugins.md)
 *   [Services](dev/services.md)
 *   [Recipes](dev/recipes.md)
+*   [Testing](dev/testing.md)
+*   [Building](dev/building.md)
+*   [Shipping](dev/shipping.md)
+*   [Documentation](dev/docs.md)
+
+## API
+
 *   [API](dev/api/lando.md)
     *   [app](dev/api/app.md)
     *   [bootstrap](dev/api/bootstrap.md)
@@ -163,10 +170,6 @@
     *   [tasks](dev/api/tasks.md)
     *   [user](dev/api/user.md)
     *   [yaml](dev/api/yaml.md)
-*   [Testing](dev/testing.md)
-*   [Building](dev/building.md)
-*   [Shipping](dev/shipping.md)
-*   [Documentation](dev/docs.md)
 
 ## Changelog
 
