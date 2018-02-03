@@ -4,7 +4,7 @@ set -e
 
 # Set up our things
 SSH_CONF="/etc/ssh"
-SSH_DIRS=( "/user/.ssh" "/user/.lando/keys" )
+SSH_DIRS=( "/user/.ssh" "/lando/keys" )
 SSH_CANDIDATES=()
 SSH_KEYS=()
 SSH_IDENTITIES=()

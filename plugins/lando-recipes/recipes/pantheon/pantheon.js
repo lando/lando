@@ -439,7 +439,7 @@ module.exports = function(lando) {
       port: 449,
       overrides: {
         services: {
-          image: 'devwithlando/pantheon-index:3.6',
+          image: 'devwithlando/pantheon-index:3.6-2',
           ports: ['449'],
           command: '/bin/bash /start.sh'
         }

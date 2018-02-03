@@ -52,6 +52,7 @@ module.exports = function(lando) {
     });
 
     // Set the ENV
+    lando.config.env.LANDO_ENGINE_CONF = lando.config.userConfRoot;
     lando.config.env.LANDO_ENGINE_ID = lando.config.engineId;
     lando.config.env.LANDO_ENGINE_GID = lando.config.engineGid;
     lando.config.env.LANDO_ENGINE_HOME = lando.config.home;

@@ -179,7 +179,7 @@ module.exports = function(lando) {
 
       // Automatically return true if we are in the GUI and on linux because
       // this requires SUDO and because the daemon should always be running on nix
-      if (lando.config.mode === 'gui' && process.platform === 'linux') {
+      if (lando.config.process !== 'node' && process.platform === 'linux') {
         return Promise.resolve(true);
       }
 
@@ -260,7 +260,7 @@ module.exports = function(lando) {
 
       // Automatically return true if we are in the GUI and on linux because
       // this requires SUDO and because the daemon should always be running on nix
-      if (lando.config.mode === 'gui' && process.platform === 'linux') {
+      if (lando.config.process !== 'node' && process.platform === 'linux') {
         return Promise.resolve(true);
       }
 
