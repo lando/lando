@@ -154,7 +154,7 @@
 
 ## API
 
-*   [API](dev/api/lando.md)
+*   [lando](dev/api/lando.md)
     *   [app](dev/api/app.md)
     *   [bootstrap](dev/api/bootstrap.md)
     *   [cache](dev/api/cache.md)
