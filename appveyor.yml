@@ -79,8 +79,3 @@ deploy:
     artifact: weezer
     on:
       branch: master
-notifications:
-  - provider: Email
-    to:
-      - mike@thinktandem.io
-    on_build_failure: true
