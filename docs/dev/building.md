@@ -1,7 +1,7 @@
 Building
 ========
 
-You can easily build Lando from source with our helpful `grunt` tasks.
+You can easily build Lando from source with our helpful `yarn` scripts.
 
 > #### Info::Cross compiling is not currently supported
 >
@@ -9,10 +9,11 @@ You can easily build Lando from source with our helpful `grunt` tasks.
 
 ```bash
 # Build the Lando CLI binary
-grunt pkg:cli
+yarn run pkg:cli
 cd dist/cli
 
-# Build the Lando installer
-grunt pkg
+# Build the Lando installer.
+# This will build the installer for your current platform.
+yarn run pkg:full
 cd dist
 ```

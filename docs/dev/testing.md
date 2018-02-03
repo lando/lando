@@ -13,30 +13,25 @@ Code linting and standards
 Lando implements some basic linting and code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
 
 ```bash
-grunt test:code
+yarn test
 ```
 
-Unit tests
+Spec tests
 ----------
 
 The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/).
 
 ```bash
-grunt test:unit
+yarn test:spec
 ```
 
 Functional tests
 ----------------
 
-The installer tests use the [BATS framework](https://github.com/sstephenson/bats).
-
-> #### Danger::USE EXTREME CAUTION
->
-> If you run these tests on a machine that already has Lando installed it is most likely going to wipe away your currently installed version of Lando. For that reason please **BE CAREFUL USING THIS!!!**
-
-```bash
-grunt test:bats
-```
+Lando has a test suite written using the [BATS
+framework](https://github.com/sstephenson/bats) that is currently
+non-functional. Functional testing is slated for big improvements in the near
+future.
 
 Writing Tests
 -------------
