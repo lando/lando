@@ -19,7 +19,7 @@ module.exports = function(lando) {
       yes: {
         describe: 'Auto answer yes to prompts',
         alias: ['y'],
-        default: false,
+        default: 'n',
         boolean: true,
         interactive: {
           type: 'confirm',
