@@ -13,7 +13,7 @@ services:
   html:
 
     # Use the latest version of apache.
-    type: apache:latest
+    type: apache:2.2
 
     # Set this to true if you want to configure apache to also run over https
     ssl: true

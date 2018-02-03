@@ -1,23 +1,104 @@
 <a name="module_cli"></a>
 
 ## cli
-Contains methods to help initialize and display the CLI
+Contains some CLI artwork and helpers
 
 **Since**: 3.0.0  
 **Example**  
 ```js
-// Initialize CLI
-return lando.cli.init(lando);
+// Gets all the global options that have been specified.
+var largv = lando.tasks.largv;
+
+// Get the start header
+return lando.cli.startHeader();
+
+// Add a task so it shows up as a command in the CLI
+yargs.command(lando.tasks.parseToYargs(task));
 ```
 
 * [cli](#module_cli)
+    * [.largv](#module_cli.largv)
+    * [.argv()](#module_cli.argv)
+    * [.parseGlobals()](#module_cli.parseGlobals)
+    * [.parseToYargs(task)](#module_cli.parseToYargs) ⇒ <code>Object</code>
     * [.startHeader()](#module_cli.startHeader) ⇒ <code>String</code>
     * [.initHeader()](#module_cli.initHeader) ⇒ <code>String</code>
     * [.tunnelHeader()](#module_cli.tunnelHeader) ⇒ <code>String</code>
+    * [.updateMessage(url)](#module_cli.updateMessage) ⇒ <code>String</code>
     * [.Table([opts])](#module_cli.Table) ⇒ <code>Object</code>
-    * [.init(lando)](#module_cli.init)
-    * ["event:pre-cli-load"](#module_cli.event_pre-cli-load)
 
+<a name="module_cli.largv"></a>
+
+### cli.largv
+A singleton object that contains the Lando global options.
+
+This means all the options passed in after the `--` flag.
+
+**Kind**: static property of [<code>cli</code>](#module_cli)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the global options that have been specified.
+var largv = lando.tasks.largv;
+```
+<a name="module_cli.argv"></a>
+
+### cli.argv()
+Returns the lando options
+
+This means all the options passed in before the `--` flag.
+
+**Kind**: static method of [<code>cli</code>](#module_cli)  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the global options that have been specified.
+var argv = lando.tasks.argv;
+```
+<a name="module_cli.parseGlobals"></a>
+
+### cli.parseGlobals()
+Helper function to parse global opts
+
+**Kind**: static method of [<code>cli</code>](#module_cli)  
+**See**: https://github.com/lando/lando/issues/351  
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the tasks that have been loaded
+var largv = lando.tasks.parseGlobals();
+```
+<a name="module_cli.parseToYargs"></a>
+
+### cli.parseToYargs(task) ⇒ <code>Object</code>
+Parses a lando task object into something that can be used by the [yargs](http://yargs.js.org/docs/) CLI.
+
+A lando task object is an abstraction on top of yargs that also contains some
+metadata about how to interactively ask questions on both the CLI and GUI. While this
+method is useful, any task added to Lando via `lando.tasks.add` will automatically
+be parsed with this method.
+
+The interactivity metadata is light wrapper around [inquirer](https://github.com/sboudrias/Inquirer.js)
+
+**Kind**: static method of [<code>cli</code>](#module_cli)  
+**Returns**: <code>Object</code> - A yargs command object  
+**Todo:**: Injecting the events here seems not the way we want to go?  
+**See**
+
+- [yargs docs](http://yargs.js.org/docs/)
+- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| task | <code>Object</code> | A Lando task object (@see add for definition) |
+
+**Example**  
+```js
+// Add that task to the CLI
+yargs.command(lando.tasks.parseToYargs(task));
+```
 <a name="module_cli.startHeader"></a>
 
 ### cli.startHeader() ⇒ <code>String</code>
@@ -57,6 +138,24 @@ Returns a cheeky header that can be used after an app is shared
 // Print the header to the console
 console.log(lando.cli.tunnelHeader());
 ```
+<a name="module_cli.updateMessage"></a>
+
+### cli.updateMessage(url) ⇒ <code>String</code>
+Returns a mesage indicating the availability of an update
+
+**Kind**: static method of [<code>cli</code>](#module_cli)  
+**Returns**: <code>String</code> - An update message we can print to the CLI  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>String</code> | The URL with the link to the update |
+
+**Example**  
+```js
+// Print the header to the console
+console.log(lando.cli.tunnelHeader());
+```
 <a name="module_cli.Table"></a>
 
 ### cli.Table([opts]) ⇒ <code>Object</code>
@@ -84,45 +183,4 @@ table.add('URLS', urls, {arrayJoiner: '\n'});
 
 // Print the table
 console.log(table.toString());
-```
-<a name="module_cli.init"></a>
-
-### cli.init(lando)
-Initializes the CLI.
-
-This will either print the CLI usage to the console or route the command and
-options given by the user to the correct place.
-
-**Kind**: static method of [<code>cli</code>](#module_cli)  
-**Emits**: <code>event:pre-cli-load</code>  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| lando | <code>Object</code> | An initialized lando object. |
-
-**Example**  
-```js
-// Initialize the CLI
-return lando.cli.init(lando);
-```
-<a name="module_cli.event_pre-cli-load"></a>
-
-### "event:pre-cli-load"
-Event that allows other things to alter the tasks being loaded to the CLI.
-
-**Kind**: event emitted by [<code>cli</code>](#module_cli)  
-**Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| tasks | <code>Object</code> | An object of Lando tasks |
-
-**Example**  
-```js
-// As a joke remove all tasks and give us a blank CLI
-lando.events.on('pre-cli-load', function(tasks) {
-  tasks = {};
-});
 ```
