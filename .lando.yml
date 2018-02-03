@@ -26,3 +26,5 @@ tooling:
     service: lando
     description: I heard you like Lando? Have some Lando in your Lando.
     cmd: /app/bin/lando.js
+  yarn:
+    service: lando

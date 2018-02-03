@@ -5,14 +5,14 @@ If you are an administrator of the Lando repo you can kick off an official relea
 
 ```bash
 # Do a prerelease ie bump 0.0.0-beta.x
-grunt prerelease --dry-run
-grunt prerelease
+yarn release:pre --dry-run
+yarn release:pre
 
 # Do a patch release ie bump 0.0.x
-grunt release --dry-run
-grunt release
+yarn release:patch --dry-run
+yarn release:patch
 
 # Do a minor release ie bump 0.x.0
-grunt bigrelease --dry-run
-grunt bigrelease
+yarn release:minor --dry-run
+yarn release:minor
 ```

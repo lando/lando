@@ -2,7 +2,10 @@
     "env": {
         "node": true
     },
-    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
+    "extends": "google",
     "rules": {
         "accessor-pairs": "error",
         "no-console": 0,
