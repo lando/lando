@@ -88,8 +88,7 @@ or [spawn](https://nodejs.org/api/child_process.html#child_process_child_process
 | --- | --- | --- |
 | cmd | <code>Array</code> | The command to run as elements in an array or a string. |
 | [opts] | <code>Object</code> | Options to help determine how the exec is run. |
-| [opts.mode] | <code>String</code> | The mode, typically `collect` or `attach`; |
-| [opts.detached] | <code>Boolean</code> | Whether we are running in detached mode or not |
+| [opts.detached] | <code>Boolean</code> | Whether we are running in detached mode or not (deprecated) |
 
 **Example**  
 ```js

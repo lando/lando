@@ -154,22 +154,22 @@
 
 ## API
 
-*   [lando](dev/api/lando.md)
-    *   [app](dev/api/app.md)
-    *   [bootstrap](dev/api/bootstrap.md)
-    *   [cache](dev/api/cache.md)
-    *   [cli](dev/api/cli.md)
-    *   [config](dev/api/config.md)
-    *   [engine](dev/api/engine.md)
-    *   [events](dev/api/events.md)
-    *   [log](dev/api/log.md)
-    *   [node](dev/api/node.md)
-    *   [plugins](dev/api/plugins.md)
-    *   [Promise](dev/api/promise.md)
-    *   [shell](dev/api/shell.md)
-    *   [tasks](dev/api/tasks.md)
-    *   [user](dev/api/user.md)
-    *   [yaml](dev/api/yaml.md)
+*   [bootstrap](api/bootstrap.md)
+*   [lando](api/lando.md)
+    *   [app](api/app.md)
+    *   [cache](api/cache.md)
+    *   [cli](api/cli.md)
+    *   [config](api/config.md)
+    *   [engine](api/engine.md)
+    *   [events](api/events.md)
+    *   [log](api/log.md)
+    *   [node](api/node.md)
+    *   [plugins](api/plugins.md)
+    *   [Promise](api/promise.md)
+    *   [shell](api/shell.md)
+    *   [tasks](api/tasks.md)
+    *   [user](api/user.md)
+    *   [yaml](api/yaml.md)
 
 ## Changelog
 

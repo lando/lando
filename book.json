@@ -1,7 +1,7 @@
 {
   "title": "Lando Documentation",
   "root": "docs",
-  "gitbook": ">=3.2",
+  "gitbook": "3.2.2",
   "language": "en",
   "lunr": {
     "maxIndexSize": 1000000000

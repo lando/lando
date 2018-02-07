@@ -47,6 +47,7 @@ lando.tasks.add('fireeverything', task);
     * [.config](#lando.config)
     * [.events](#lando.events)
     * [.log](#lando.log)
+    * [.message](#lando.message)
     * [.node](#lando.node)
     * [.plugins](#lando.plugins)
     * [.Promise](#lando.Promise)
@@ -105,6 +106,15 @@ Contains logging methods.
 
 **Kind**: static property of [<code>lando</code>](#lando)  
 **See**: [log.md](log.md)  
+**Since**: 3.0.0  
+<a name="lando.message"></a>
+
+### lando.message
+The messaging module.
+
+This is useful for internal message listening esp in a GUI context.
+
+**Kind**: static property of [<code>lando</code>](#lando)  
 **Since**: 3.0.0  
 <a name="lando.node"></a>
 

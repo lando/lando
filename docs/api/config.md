@@ -20,6 +20,7 @@ var config = require('./config');
         * [.stripEnv(prefix)](#module_config.stripEnv) ⇒ <code>Object</code>
     * _inner_
         * [~getSysConfRoot()](#module_config..getSysConfRoot)
+        * [~processType()](#module_config..processType)
 
 <a name="module_config.merge"></a>
 
@@ -76,3 +77,15 @@ process.env = config.stripEnv('LANDO_');
 Document
 
 **Kind**: inner method of [<code>config</code>](#module_config)  
+<a name="module_config..processType"></a>
+
+### config~processType()
+Determine whether we are in a browser or cli
+
+While setting the config.mode is helpful this is a deeper check so that we
+know how to handle the process object in things shell attaching, stream piping
+stdin reading, etc
+
+**Kind**: inner method of [<code>config</code>](#module_config)  
+**Todo:**: We might want to either expand the version checks or maybe do a lower
+level check of the process file descriptors  
