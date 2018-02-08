@@ -154,22 +154,8 @@
 
 ## API
 
-*   [bootstrap](api/bootstrap.md)
-*   [lando](api/lando.md)
-    *   [app](api/app.md)
-    *   [cache](api/cache.md)
-    *   [cli](api/cli.md)
-    *   [config](api/config.md)
-    *   [engine](api/engine.md)
-    *   [events](api/events.md)
-    *   [log](api/log.md)
-    *   [node](api/node.md)
-    *   [plugins](api/plugins.md)
-    *   [Promise](api/promise.md)
-    *   [shell](api/shell.md)
-    *   [tasks](api/tasks.md)
-    *   [user](api/user.md)
-    *   [yaml](api/yaml.md)
+*   [lando](api/api.md#lando)
+    *   [test](api/api.md#landoyamldump)
 
 ## Changelog
 

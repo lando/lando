@@ -70,7 +70,7 @@ module.exports = function(lando) {
     // Get the email if there is one
     var meta = lando.cache.get('site:meta:' + app.name);
     if (_.has(meta, 'email')) {
-      data.email = _.get(data, 'email');
+      data.email = _.get(meta, 'email');
     }
 
     // Return
@@ -285,7 +285,6 @@ module.exports = function(lando) {
       app.version = lando.config.composeVersion || '3.2';
       // Docker compose volumes
       app.volumes = {};
-
       // Return our app
       return app;
 

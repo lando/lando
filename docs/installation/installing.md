@@ -3,7 +3,7 @@ Installing
 
 macOS
 -----
-#### Install DMG via direct download 
+#### Install DMG via direct download
 1.  Download the latest `.dmg` package from [GitHub](https://github.com/lando/lando/releases)
 2.  Mount the DMG by double-clicking it
 3.  Double-click on the `LandoInstaller.pkg`
@@ -74,11 +74,7 @@ You can also easily verify that the release you downloaded matches the latest co
 
 ### From Source
 
-To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults. You will also need the LTS release (6.x) of [node](https://nodejs.org/en/download/).
-
-> #### Warning::DO NOT USE THE LATEST RELEASE OF node
->
-> The [latest release of node](https://nodejs.org/en/download/current/) which includes npm is not compatible with Lando at this time.
+To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults. You will also need [node](https://nodejs.org/en/download/) and ideally [yarn](https://yarnpkg.com/lang/en/docs/install/).
 
 On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`.
 
@@ -89,7 +85,7 @@ Then do the following:
 git clone https://github.com/lando/lando.git
 
 # Install its dependencies
-cd lando && npm install
+cd lando && yarn
 
 # Optionally set up a symlink
 sudo mkdir -p /usr/local/bin

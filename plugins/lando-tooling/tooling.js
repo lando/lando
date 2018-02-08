@@ -154,6 +154,7 @@ module.exports = function(lando) {
 
     // Return our tasks
     return {
+      name: _.first(config.name.split(' ')),
       command: config.name,
       describe: config.description || format('Run %s commands', config.name),
       run: run,

@@ -25,8 +25,8 @@ module.exports = function(lando) {
 
   });
 
-  // Try to detect additional commands if we have app context
-  lando.events.on('post-bootstrap', function(lando) {
+  // Try to detect additional commands if we are in the CLI and have app context
+  lando.events.on('pre-cli-load', function(tasks) {
 
     // Try to determine app context so we can load in any tooling commands that
     // are defined there
@@ -52,7 +52,7 @@ module.exports = function(lando) {
             task.name = name;
 
             // Build and add the task
-            lando.tasks.add(name, lando.tooling.build(config));
+            tasks.push(lando.tooling.build(config));
 
           }
         });
@@ -63,6 +63,28 @@ module.exports = function(lando) {
       }
     });
 
+  });
+
+  // Add tooling tasks to the app object as well
+  lando.events.on('post-instantiate-app', function(app) {
+    if (app && app.config.tooling && !_.isEmpty(app.config.tooling)) {
+
+      // Loop through each tool
+      _.forEach(app.config.tooling, function(task, name) {
+        if (_.isObject(task)) {
+
+          // Build our config
+          var config = task;
+          task.app = app;
+          task.name = name;
+
+          // Build and add the task if its not already there
+          app.tasks.push(lando.tooling.build(config));
+
+        }
+      });
+
+    }
   });
 
 };
