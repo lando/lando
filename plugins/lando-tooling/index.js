@@ -65,26 +65,4 @@ module.exports = function(lando) {
 
   });
 
-  // Add tooling tasks to the app object as well
-  lando.events.on('post-instantiate-app', function(app) {
-    if (app && app.config.tooling && !_.isEmpty(app.config.tooling)) {
-
-      // Loop through each tool
-      _.forEach(app.config.tooling, function(task, name) {
-        if (_.isObject(task)) {
-
-          // Build our config
-          var config = task;
-          task.app = app;
-          task.name = name;
-
-          // Build and add the task if its not already there
-          app.tasks.push(lando.tooling.build(config));
-
-        }
-      });
-
-    }
-  });
-
 };

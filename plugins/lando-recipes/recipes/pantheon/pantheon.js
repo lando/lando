@@ -250,7 +250,8 @@ module.exports = function(lando) {
         user: 'root'
       },
       terminus: {
-        service: 'appserver'
+        service: 'appserver',
+        needs: ['database']
       }
     };
 
@@ -258,6 +259,7 @@ module.exports = function(lando) {
     tools.pull = {
       service: 'appserver',
       description: 'Pull code, database and/or files from Pantheon',
+      needs: ['database'],
       cmd: '/helpers/pull.sh',
       options: {
         code: {
@@ -315,6 +317,7 @@ module.exports = function(lando) {
       service: 'appserver',
       description: 'Push code, database and/or files to Pantheon',
       cmd: '/helpers/push.sh',
+      needs: ['database'],
       options: {
         message: {
           description: 'A message describing your change',
@@ -362,6 +365,7 @@ module.exports = function(lando) {
     tools['switch <env>'] = {
       service: 'appserver',
       description: 'Switch to a different multidev environment',
+      needs: ['database'],
       cmd: '/helpers/switch.sh',
       options: {
         'no-db': {

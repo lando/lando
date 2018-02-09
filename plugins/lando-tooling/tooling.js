@@ -87,8 +87,18 @@ module.exports = function(lando) {
       // Run the command
       .then(function() {
 
-        // Build the command
-        var cmd = utils.largs(config);
+        // Arrayify the command if needed
+        if (_.has(config, 'cmd') && typeof config.cmd === 'string') {
+          config.cmd = config.cmd.split(' ');
+        }
+
+        // Start with the entrypoint
+        var cmd = config.cmd || [config.name];
+
+        // Add in args if we expect them
+        if (lando.config.process === 'node') {
+          cmd = cmd.concat(utils.largs(config));
+        }
 
         // Break up our app root and cwd so we can get a diff
         var appRoot = config.app.root.split(path.sep);
@@ -120,11 +130,12 @@ module.exports = function(lando) {
           }
         };
 
-        // If this is a specal "passthrough" command lets augment the cmd
-        _.forEach(config.options, function(option) {
-          if (option.passthrough && _.get(option, 'interactive.name')) {
-            cmd.push('--' + _.get(option, 'interactive.name'));
-            cmd.push(answers[_.get(option, 'interactive.name')]);
+        // If this is a specal "passthrough" command lets make sure we are
+        // appending options
+        _.forEach(config.options, function(option, key) {
+          if (option.passthrough && key) {
+            cmd.push('--' + key);
+            cmd.push(answers[key]);
           }
         });
 
