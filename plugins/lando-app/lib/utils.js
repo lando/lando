@@ -180,15 +180,9 @@ exports.getInfoDefaults = function(app) {
  */
 exports.metricsParse = function(app) {
 
-  // App identifier
-  var appId = [
-    _.get(app, 'name', 'unknown'),
-    _.get(app, 'root', 'someplace')
-  ];
-
   // Metadata to report.
   var data = {
-    app: lando.node.hasher(appId),
+    app: _.get(app, 'id', 'unknown'),
     type: _.get(app, 'config.recipe', 'none')
   };
 

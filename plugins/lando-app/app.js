@@ -219,6 +219,11 @@ module.exports = function(lando) {
       app.version = lando.config.composeVersion || '3.2';
       // Docker compose volumes
       app.volumes = {};
+      // Set a unique id
+      app.id = lando.node.hasher([
+        _.get(app, 'name', 'unknown'),
+        _.get(app, 'root', 'someplace')
+      ]);
       // Mix in any cached metadata
       app = _.merge(app, lando.cache.get('site:meta:' + app.name));
 
