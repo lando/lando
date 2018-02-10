@@ -1,9 +1,3 @@
-/**
- * Proxy plugin
- *
- * @name proxy
- */
-
 'use strict';
 
 module.exports = function(lando) {

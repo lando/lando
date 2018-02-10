@@ -1,9 +1,3 @@
-/**
- * Lando redis service builder
- *
- * @name redis
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -13,7 +7,7 @@ module.exports = function(lando) {
   var addConfig = lando.utils.services.addConfig;
   var buildVolume = lando.utils.services.buildVolume;
 
-  /**
+  /*
    * Supported versions for redis
    */
   var versions = [
@@ -25,14 +19,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out redis
    */
   var services = function(name, config) {
@@ -91,14 +85,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {
     return {data: {}};
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

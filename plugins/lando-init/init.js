@@ -1,9 +1,3 @@
-/**
- * This provides a way to load new init methods
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {

@@ -1,9 +1,3 @@
-/**
- * Poweroff all lando containers
- *
- * @name poweroff
- */
-
 'use strict';
 
 module.exports = function(lando) {

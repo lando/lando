@@ -1,9 +1,3 @@
-/**
- * Command to print info about an app
- *
- * @name info
- */
-
 'use strict';
 
 module.exports = function(lando) {

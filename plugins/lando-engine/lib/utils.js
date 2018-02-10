@@ -1,10 +1,3 @@
-/**
- * Helpers to build the the engine config.
- *
- * @since 3.0.0
- * @module utils
- */
-
 'use strict';
 
 // Modules
@@ -22,7 +15,7 @@ exports.dockerComposify = function(data) {
   return data.replace(/-/g, '').replace(/\./g, '');
 };
 
-/**
+/*
  * Escapes any spaces in a command.
  *
  * @since 3.0.0
@@ -48,14 +41,14 @@ exports.escSpaces = function(s, platform) {
   }
 };
 
-/*
+/**
  * Helper to return a valid id from app data
  */
 exports.getId = function(c) {
   return c.cid || c.id || c.containerName || c.containerID || c.name;
 };
 
-/*
+/**
  * We might have datum but we need to wrap in array so Promise.each knows
  * what to do
  */
@@ -66,7 +59,7 @@ exports.normalizer = function(data) {
   return data;
 };
 
-/*
+/**
  * Helper to move config from lando to a mountable directory
  */
 exports.moveConfig = function(from, to) {

@@ -1,32 +1,3 @@
-/**
- * Contains methods and events related to app actions.
- *
- * @since 3.0.0
- * @module app
- * @example
- *
- * // Start an app
- * return lando.app.start(app);
- *
- * // Stop an app
- * return lando.app.stop(app);
- *
- * // Destroy an app
- * return lando.app.destroy(app);
- *
- * // Get the app called myapp
- * return lando.app.get('myapp')
- * .then(function(app) {
- *   console.log(app);
- * });
- *
- * // Get a list of all the apps
- * return lando.app.list()
- * .then(function(apps) {
- *   console.log(apps);
- * });
- */
-
 'use strict';
 
 // We make this module into a function so we can pass in lando
@@ -43,7 +14,7 @@ module.exports = function(lando) {
   var util = require('util');
   var utils = require('./lib/utils');
 
-  /**
+  /*
    * Helper to parse metrics data
    */
   var metricsParse = function(app) {

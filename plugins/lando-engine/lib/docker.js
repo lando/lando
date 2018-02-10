@@ -1,9 +1,3 @@
-/**
- * Module to wrap and abstract access to dockerode.
- *
- * @module docker
- */
-
 'use strict';
 
 // Get the docker config
@@ -54,7 +48,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Query docker for a list of containers.
    */
   var list = function(appName) {
@@ -122,7 +116,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Find a docker container.
    */
   var findContainer = function(cid) {
@@ -163,7 +157,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Inspect a container.
    */
   var inspect = function(cid) {
@@ -180,7 +174,7 @@ module.exports = function(config) {
     });
   };
 
-  /**
+  /*
    * Return true if the container is running otherwise false.
    */
   var isRunning = function(cid) {
@@ -211,7 +205,7 @@ module.exports = function(config) {
     });
   };
 
-  /**
+  /*
    * Stop a container.
    */
   var stop = function(cid) {
@@ -236,7 +230,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Do a docker exec
    */
   var run = function(id, cmd, opts) {
@@ -392,7 +386,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Remove a container.
    */
   var remove = function(cid, opts) {
@@ -442,7 +436,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Prune the networks
    */
   var createNetwork = function(name, opts) {
@@ -463,7 +457,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Get the networks
    */
   var getNetworks = function(opts) {
@@ -481,7 +475,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Prune the networks
    */
   var pruneNetworks = function(opts) {

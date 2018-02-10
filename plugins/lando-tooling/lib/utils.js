@@ -1,15 +1,9 @@
-/**
- * Helpers to make tooling easier
- *
- * @name utils
- */
-
 'use strict';
 
 // Modules
 var _ = require('lodash');
 
-/*
+/**
  * Helper to process args
  */
 exports.largs = function(config) {

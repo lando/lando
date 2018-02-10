@@ -1,9 +1,3 @@
-/**
- * This does the tooling
- *
- * @name tooling
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -15,7 +9,7 @@ module.exports = function(lando) {
   var format = require('util').format;
   var utils = require('./lib/utils');
 
-  /*
+  /**
    * The task builder
    */
   var build = function(config) {

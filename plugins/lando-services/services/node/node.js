@@ -1,9 +1,3 @@
-/**
- * Lando node service builder
- *
- * @name node
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -15,7 +9,7 @@ module.exports = function(lando) {
   // "Constants"
   var esd = lando.config.engineScriptsDir;
 
-  /**
+  /*
    * Supported versions for node
    */
   var versions = [
@@ -37,14 +31,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out node
    */
   var services = function(name, config) {
@@ -167,14 +161,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function() {
     return {};
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {

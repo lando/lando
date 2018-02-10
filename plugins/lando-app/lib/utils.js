@@ -1,10 +1,3 @@
-/**
- * Helpers for app things.
- *
- * @since 3.0.0
- * @module utils
- */
-
 'use strict';
 
 // Modules

@@ -1,9 +1,3 @@
-/**
- * Pantheon client helpers
- *
- * @name client
- */
-
 'use strict';
 
 module.exports = function(lando) {

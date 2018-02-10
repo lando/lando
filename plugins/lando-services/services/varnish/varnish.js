@@ -1,9 +1,3 @@
-/**
- * Lando varnish service builder
- *
- * @name varnish
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -17,7 +11,7 @@ module.exports = function(lando) {
   // "Constants"
   var scd = lando.config.servicesConfigDir;
 
-  /**
+  /*
    * Supported versions for varnish
    */
   var versions = [
@@ -26,7 +20,7 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
@@ -72,7 +66,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out varnish
    */
   var services = function(name, config) {
@@ -152,14 +146,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {
     return {data: {}};
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

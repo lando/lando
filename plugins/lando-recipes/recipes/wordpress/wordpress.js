@@ -1,9 +1,3 @@
-/**
- * WordPress recipe builder
- *
- * @name wordpress
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -12,7 +6,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var helpers = require('./../lamp/lamp')(lando);
 
-  /**
+  /*
    * Helper to get WPCLI URL
    */
   var wpCliUrl = function() {
@@ -25,7 +19,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out WordPress
    */
   var build = function(name, config) {

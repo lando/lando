@@ -1,9 +1,3 @@
-/**
- * Pantheon recipe builder
- *
- * @name pantheon
- */
-
 'use strict';
 
 module.exports = function(lando) {

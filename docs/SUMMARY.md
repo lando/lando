@@ -203,10 +203,14 @@
 *   [lando.util.config.loadFiles](api/api.md#landoutilsconfigloadfiles)
 *   [lando.util.config.loadEnvs](api/api.md#landoutilsconfigloadenvs)
 *   [lando.util.config.merge](api/api.md#landoutilsconfigmerge)
-*   [lando.util.config.stripEnv](api/api.md#landoutilsconfigstripenvs)
+*   [lando.util.config.stripEnv](api/api.md#landoutilsconfigstripenv)
 *   [lando.util.config.updatePath](api/api.md#landoutilsconfigupdatepath)
 *   [lando.yaml.dump](api/api.md#landoyamldump)
 *   [lando.yaml.load](api/api.md#landoyamlload)
+*   [events.pre-bootstrap](api/api.md#event_pre_bootstrap)
+*   [events.post-bootstrap](api/api.md#event_post_bootstrap)
+*   [events.task-CMD-answers](api/api.md#event_task_cmd_answers)
+*   [events.task-CMD-run](api/api.md#event_task_cmd_run)
 
 ## Changelog
 

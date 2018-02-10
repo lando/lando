@@ -1,45 +1,3 @@
-<a id="landoshellesc"></a>
-
-<h2 id="landoshellesc" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.shell.esc ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Escapes special characters in a command to make it more exec friendly.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cmd | <code>Array</code> | A command as elements of an Array or a String. |
-
-**Returns**: <code>String</code> - The escaped cmd.  
-**Example**  
-```js
-// Escape the cmd
-var escapedCmd = lando.shell.esc(['git', 'commit', '-m', 'my message']);
-```
-<div class="api-body-footer"></div>
-<a id="landoshellwhich"></a>
-
-<h2 id="landoshellwhich" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.shell.which ⇒ <code>String</code> \| <code>undefined</code></h2>
-<div class="api-body-header"></div>
-
-Returns the path of a specific command or binary.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cmd | <code>String</code> | A command to search for. |
-
-**Returns**: <code>String</code> \| <code>undefined</code> - The path to the command or `undefined`.  
-**Example**  
-```js
-// Determine the location of the 'docker' command
-var which = lando.shell.which(DOCKER_EXECUTABLE);
-```
-<div class="api-body-footer"></div>
 <a id="lando"></a>
 
 <h2 id="lando" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -59,7 +17,7 @@ pass in any additional properties to override subsequently set/default values.
 Check out `./bin/lando.js` in this repository for an example of bootstraping
 `lando` for usage in a CLI.
 
-**Emits**: <code>event:pre-bootstrap</code>, <code>event:post-bootstrap</code>  
+**Emits**: [<code>pre_bootstrap</code>](#event_pre_bootstrap), [<code>post_bootstrap</code>](#event_post_bootstrap)  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -942,6 +900,48 @@ Escapes any spaces in a command.
 var escapedCmd = lando.shell.escSpaces(['git', 'commit', '-m', 'my message']);
 ```
 <div class="api-body-footer"></div>
+<a id="landoshellesc"></a>
+
+<h2 id="landoshellesc" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.shell.esc(cmd) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Escapes special characters in a command to make it more exec friendly.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cmd | <code>Array</code> | A command as elements of an Array or a String. |
+
+**Returns**: <code>String</code> - The escaped cmd.  
+**Example**  
+```js
+// Escape the cmd
+var escapedCmd = lando.shell.esc(['git', 'commit', '-m', 'my message']);
+```
+<div class="api-body-footer"></div>
+<a id="landoshellwhich"></a>
+
+<h2 id="landoshellwhich" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.shell.which(cmd) ⇒ <code>String</code> \| <code>undefined</code></h2>
+<div class="api-body-header"></div>
+
+Returns the path of a specific command or binary.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cmd | <code>String</code> | A command to search for. |
+
+**Returns**: <code>String</code> \| <code>undefined</code> - The path to the command or `undefined`.  
+**Example**  
+```js
+// Determine the location of the 'docker' command
+var which = lando.shell.which(DOCKER_EXECUTABLE);
+```
+<div class="api-body-footer"></div>
 <a id="landotasksadd"></a>
 
 <h2 id="landotasksadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -1112,4 +1112,158 @@ Dumps an object to a YAML file
 | data | <code>Object</code> | The object to dump |
 
 **Returns**: - Flename  
+<div class="api-body-footer"></div>
+<a id="appnameexists"></a>
+
+<h2 id="appnameexists" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  appNameExists()</h2>
+<div class="api-body-header"></div>
+
+Checks if there is already an app with the same name in an app _registry
+object
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="validatefiles"></a>
+
+<h2 id="validatefiles" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  validateFiles()</h2>
+<div class="api-body-header"></div>
+
+Validates compose files returns legit ones
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="compose"></a>
+
+<h2 id="compose" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  compose()</h2>
+<div class="api-body-header"></div>
+
+Takes data and spits out a compose object
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="starttable"></a>
+
+<h2 id="starttable" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  startTable()</h2>
+<div class="api-body-header"></div>
+
+Returns a CLI table with app start metadata info
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="geturls"></a>
+
+<h2 id="geturls" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  getUrls()</h2>
+<div class="api-body-header"></div>
+
+Takes inspect data and extracts all the exposed ports
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="getinfodefaults"></a>
+
+<h2 id="getinfodefaults" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  getInfoDefaults()</h2>
+<div class="api-body-header"></div>
+
+Returns a default info object
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="event_pre_bootstrap"></a>
+
+<h2 id="event_pre_bootstrap" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_bootstrap"</h2>
+<div class="api-body-header"></div>
+
+Event that allows other things to augment the lando global config.
+
+This is useful so plugins can add additional config settings to the global
+config.
+
+NOTE: This might only be available in core plugins
+
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| config | <code>Object</code> | The global Lando config |
+
+**Example**  
+```js
+// Add engine settings to the config
+lando.events.on('pre-bootstrap', function(config) {
+
+  // Get the docker config
+  var engineConfig = daemon.getEngineConfig();
+
+  // Add engine host to the config
+  config.engineHost = engineConfig.host;
+
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_bootstrap"></a>
+
+<h2 id="event_post_bootstrap" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_bootstrap"</h2>
+<div class="api-body-header"></div>
+
+Event that allows other things to augment the lando object.
+
+This is useful so plugins can add additional modules to lando before
+the bootstrap is completed.
+
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| lando | <code>Object</code> | The Lando object |
+
+**Example**  
+```js
+// Add the services module to lando
+lando.events.on('post-bootstrap', function(lando) {
+  lando.services = require('./services')(lando);
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_task_cmd_answers"></a>
+
+<h2 id="event_task_cmd_answers" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "task_CMD_answers"</h2>
+<div class="api-body-header"></div>
+
+Event that allows altering of argv or inquirer before interactive prompts
+are run
+
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| answers | <code>Object</code> | argv and inquirer questions |
+
+<div class="api-body-footer"></div>
+<a id="event_task_cmd_run"></a>
+
+<h2 id="event_task_cmd_run" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "task_CMD_run"</h2>
+<div class="api-body-header"></div>
+
+Event that allows final altering of answers
+
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| answers | <code>Object</code> | object |
+
 <div class="api-body-footer"></div>

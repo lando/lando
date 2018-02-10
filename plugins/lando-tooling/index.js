@@ -1,9 +1,3 @@
-/**
- * Tooling plugin
- *
- * @name tooling
- */
-
 'use strict';
 
 module.exports = function(lando) {

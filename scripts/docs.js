@@ -23,7 +23,9 @@ const fileMap = [
   './lib/tasks.js',
   './lib/updates.js',
   './lib/user.js',
-  './lib/yaml.js'
+  './lib/yaml.js',
+  './plugins/lando-app/*.js',
+  './plugins/lando-app/**/*.js'
 ];
 
 const helpers = [

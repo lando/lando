@@ -1,9 +1,3 @@
-/**
- * This does the proxying
- *
- * @name proxy
- */
-
 'use strict';
 
 // Modules

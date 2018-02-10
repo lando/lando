@@ -1,9 +1,3 @@
-/**
- * Helpers to make composing easier
- *
- * @name utils
- */
-
 'use strict';
 
 // Modules
@@ -11,7 +5,7 @@ var _ = require('lodash');
 var fs = require('fs-extra');
 var path = require('path');
 
-/*
+/**
  * Default networking
  */
 exports.connectNet = function(data) {
@@ -30,7 +24,7 @@ exports.connectNet = function(data) {
 
 };
 
-/*
+/**
  * Default bridge network
  */
 exports.connectBridge = function(netName) {
@@ -43,7 +37,7 @@ exports.connectBridge = function(netName) {
   };
 };
 
-/*
+/**
  * Return an object of build steps
  */
 exports.filterBuildSteps = function(services) {
@@ -87,7 +81,7 @@ exports.filterBuildSteps = function(services) {
 
 };
 
-/*
+/**
  * Set the entrypoint with a local script
  */
 exports.setEntrypoint = function(entrypoint) {
@@ -107,7 +101,7 @@ exports.setEntrypoint = function(entrypoint) {
 
 };
 
-/*
+/**
  * Helper to build a volumes
  * @NOTE: This seems weird, maybe written before we have more generic compose merging?
  */

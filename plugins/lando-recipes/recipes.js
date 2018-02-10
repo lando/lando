@@ -1,9 +1,3 @@
-/**
- * This provides a way to load recipes
- *
- * @name recipes
- */
-
 'use strict';
 
 module.exports = function(lando) {

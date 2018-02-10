@@ -1,26 +1,3 @@
-/**
- * Contains methods and events related to running docker things.
- *
- * @since 3.0.0
- * @fires pre-bootstrap
- * @module engine
- * @example
- *
- * // Start the docker engine
- * return lando.engine.up();
- *
- * // List all lando containers
- * return lando.engine.list(data);
- *
- * // Run a command(s) on a container(s)
- * return lando.engine.run(data);
- *
- * // Inspect the details of a container
- * return lando.engine.scan(data);
- *
- * // Destroys a container(s)
- * return lando.engine.destroy(data);
- */
 'use strict';
 
 // We make this module into a function so we can pass in lando
