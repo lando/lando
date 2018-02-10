@@ -3,7 +3,7 @@ const copy = require('copy');
 const fs = require('fs-extra');
 const pkg = require('./../../package.json');
 const path = require('path');
-const util = require('../util');
+const util = require('./../util');
 const version = pkg.version;
 
 // Lando info
