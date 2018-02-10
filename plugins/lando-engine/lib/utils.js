@@ -10,6 +10,7 @@ var path = require('path');
  * @TODO: possibly more than that
  *
  * @since 3.0.0
+ * @alias 'lando.utils.engine.dockerComposify'
  */
 exports.dockerComposify = function(data) {
   return data.replace(/-/g, '').replace(/\./g, '');
@@ -43,6 +44,9 @@ exports.escSpaces = function(s, platform) {
 
 /**
  * Helper to return a valid id from app data
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.engine.getId'
  */
 exports.getId = function(c) {
   return c.cid || c.id || c.containerName || c.containerID || c.name;
@@ -51,6 +55,9 @@ exports.getId = function(c) {
 /**
  * We might have datum but we need to wrap in array so Promise.each knows
  * what to do
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.engine.normalizer'
  */
 exports.normalizer = function(data) {
   if (!Array.isArray(data)) {
@@ -61,6 +68,9 @@ exports.normalizer = function(data) {
 
 /**
  * Helper to move config from lando to a mountable directory
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.engine.moveConfig'
  */
 exports.moveConfig = function(from, to) {
 

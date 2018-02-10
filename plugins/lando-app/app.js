@@ -130,12 +130,8 @@ module.exports = function(lando) {
 
   };
 
-  /**
-   * Instantiate
-   * @fires pre_app_instantiate
-   * @fires post_instantiate_app
-   * @fires app_ready
-   * @private
+  /*
+   * Instantiate helper
    */
   var instantiate = function(name, dir, config) {
 
@@ -362,6 +358,9 @@ module.exports = function(lando) {
    *
    * @since 3.0.0
    * @alias 'lando.app.get'
+   * @fires pre_instantiate_app
+   * @fires post_instantiate_app
+   * @fires app_ready
    * @param {String} [appName] - The name of the app to get.
    * @returns {Promise} Returns a Pronise with an instantiated app object or nothing.
    * @example
