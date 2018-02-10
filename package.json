@@ -21,9 +21,9 @@
   "scripts": {
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
     "lint": "eslint bin/**/*.js lib/**/*.js plugins/**/*.js test/**/*.js scripts/**/**/*.js",
-    "release:major": "node ./scripts/bump.js --stage=major",
     "pkg:cli": "node ./scripts/pkg.js --stage=cli",
     "pkg:full": "node ./scripts/pkg.js --stage=full",
+    "release:major": "node ./scripts/bump.js --stage=major",
     "release:minor": "node ./scripts/bump.js --stage=minor",
     "release:patch": "node ./scripts/bump.js --stage=patch",
     "release:pre": "node ./scripts/bump.js --stage=prerelease",

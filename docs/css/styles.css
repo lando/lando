@@ -2,6 +2,10 @@ body {
   padding-top: 78px;
 }
 
+.api-body-footer {
+    padding-bottom: 100%;
+}
+
 .book-body {
   font-family: "Montserrat", "Trebuchet", sans-serif;
   font-weight: 400;
