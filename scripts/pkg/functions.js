@@ -1,4 +1,5 @@
 'use strict';
+
 const copy = require('copy');
 const fs = require('fs-extra');
 const pkg = require('./../../package.json');
