@@ -7,6 +7,9 @@ var path = require('path');
 
 /**
  * Default networking
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.connectNet'
  */
 exports.connectNet = function(data) {
 
@@ -26,6 +29,9 @@ exports.connectNet = function(data) {
 
 /**
  * Default bridge network
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.connectBridge'
  */
 exports.connectBridge = function(netName) {
   return {
@@ -39,6 +45,9 @@ exports.connectBridge = function(netName) {
 
 /**
  * Return an object of build steps
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.filterBuildSteps'
  */
 exports.filterBuildSteps = function(services) {
 
@@ -83,6 +92,9 @@ exports.filterBuildSteps = function(services) {
 
 /**
  * Set the entrypoint with a local script
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.setEntrypoint'
  */
 exports.setEntrypoint = function(entrypoint) {
 
@@ -104,6 +116,9 @@ exports.setEntrypoint = function(entrypoint) {
 /**
  * Helper to build a volumes
  * @NOTE: This seems weird, maybe written before we have more generic compose merging?
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.buildVolume'
  */
 exports.buildVolume = function(local, remote, base) {
 
@@ -125,6 +140,9 @@ exports.buildVolume = function(local, remote, base) {
 
 /**
  * Helper function to inject config
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.addConfig'
  */
 exports.addConfig = function(mount, volumes) {
 
@@ -143,6 +161,9 @@ exports.addConfig = function(mount, volumes) {
 
 /**
  * Helper function to inject utility scripts
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.addScript'
  */
 exports.addScript = function(script, volumes, here, there) {
 

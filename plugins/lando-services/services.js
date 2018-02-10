@@ -21,13 +21,19 @@ module.exports = function(lando) {
 
   /*
    * Get all services
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.get'
    */
   var get = function() {
     return _.keys(registry);
   };
 
-  /*
+  /**
    * Add a service to the registry
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.add'
    */
   var add = function(name, module) {
     registry[name] = module;
@@ -35,6 +41,9 @@ module.exports = function(lando) {
 
   /**
    * Delegator to gather info about a service for display to the user
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.info'
    */
   var info = function(name, type, config) {
 
@@ -70,6 +79,9 @@ module.exports = function(lando) {
 
   /**
    * The core service builder
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.build'
    */
   var build = function(name, type, config) {
 

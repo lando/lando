@@ -3,7 +3,7 @@
 // Modules
 var _ = require('lodash');
 
-/**
+/*
  * Helper to process args
  */
 exports.largs = function(config) {

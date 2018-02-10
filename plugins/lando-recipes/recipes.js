@@ -13,8 +13,11 @@ module.exports = function(lando) {
     }
   };
 
-  /*
+  /**
    * Get a recipe
+   *
+   * @since 3.0.0
+   * @alias 'lando.recipes.get'
    */
   var get = function(name) {
     if (name) {
@@ -23,8 +26,11 @@ module.exports = function(lando) {
     return _.keys(registry);
   };
 
-  /*
+  /**
    * Add a recipe to the registry
+   *
+   * @since 3.0.0
+   * @alias 'lando.recipes.add'
    */
   var add = function(name, module) {
     registry[name] = module;
@@ -32,6 +38,9 @@ module.exports = function(lando) {
 
   /**
    * The core recipe builder
+   *
+   * @since 3.0.0
+   * @alias 'lando.recipes.build'
    */
   var build = function(name, recipe, config) {
 
@@ -61,6 +70,9 @@ module.exports = function(lando) {
 
   /**
    * Helper to let us know whether this app requires a webroot question or not
+   *
+   * @since 3.0.0
+   * @alias 'lando.recipes.webroot'
    */
   var webroot = function(recipe) {
 
@@ -77,6 +89,9 @@ module.exports = function(lando) {
 
   /**
    * Helper to let us know whether this app requires a name question or not
+   *
+   * @since 3.0.0
+   * @alias 'lando.recipes.name'
    */
   var name = function(recipe) {
 

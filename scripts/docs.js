@@ -27,7 +27,15 @@ const fileMap = [
   './plugins/lando-app/*.js',
   './plugins/lando-app/**/*.js',
   './plugins/lando-engine/*.js',
-  './plugins/lando-engine/**/*.js'
+  './plugins/lando-engine/**/*.js',
+  './plugins/lando-init/*.js',
+  './plugins/lando-init/**/*.js',
+  './plugins/lando-recipes/*.js',
+  './plugins/lando-recipes/**/*.js',
+  './plugins/lando-services/*.js',
+  './plugins/lando-services/**/*.js',
+  './plugins/lando-tooling/*.js',
+  './plugins/lando-tooling/**/*.js'
 ];
 
 const helpers = [

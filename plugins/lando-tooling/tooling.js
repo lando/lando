@@ -10,7 +10,10 @@ module.exports = function(lando) {
   var utils = require('./lib/utils');
 
   /**
-   * The task builder
+   * The tooling command builder
+   *
+   * @since 3.0.0
+   * @alias 'lando.tooling.build'
    */
   var build = function(config) {
 

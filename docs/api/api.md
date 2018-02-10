@@ -2231,6 +2231,237 @@ Helper to move config from lando to a mountable directory
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
+<a id="landoinitget"></a>
+
+<h2 id="landoinitget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.get()</h2>
+<div class="api-body-header"></div>
+
+Get an init method
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinitadd"></a>
+
+<h2 id="landoinitadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.add()</h2>
+<div class="api-body-header"></div>
+
+Add an init method to the registry
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinitcreatekey"></a>
+
+<h2 id="landoinitcreatekey" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.createKey()</h2>
+<div class="api-body-header"></div>
+
+Helper to return a create key command
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinitrun"></a>
+
+<h2 id="landoinitrun" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.run()</h2>
+<div class="api-body-header"></div>
+
+Run a command during the init process
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinitkill"></a>
+
+<h2 id="landoinitkill" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.kill()</h2>
+<div class="api-body-header"></div>
+
+Helper to kill any running util processes
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinitbuild"></a>
+
+<h2 id="landoinitbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.build()</h2>
+<div class="api-body-header"></div>
+
+The core init method
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinityaml"></a>
+
+<h2 id="landoinityaml" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.yaml()</h2>
+<div class="api-body-header"></div>
+
+Helper to spit out a .lando.yml file
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landorecipesget"></a>
+
+<h2 id="landorecipesget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.recipes.get()</h2>
+<div class="api-body-header"></div>
+
+Get a recipe
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landorecipesadd"></a>
+
+<h2 id="landorecipesadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.recipes.add()</h2>
+<div class="api-body-header"></div>
+
+Add a recipe to the registry
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landorecipesbuild"></a>
+
+<h2 id="landorecipesbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.recipes.build()</h2>
+<div class="api-body-header"></div>
+
+The core recipe builder
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landorecipeswebroot"></a>
+
+<h2 id="landorecipeswebroot" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.recipes.webroot()</h2>
+<div class="api-body-header"></div>
+
+Helper to let us know whether this app requires a webroot question or not
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landorecipesname"></a>
+
+<h2 id="landorecipesname" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.recipes.name()</h2>
+<div class="api-body-header"></div>
+
+Helper to let us know whether this app requires a name question or not
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoservicesadd"></a>
+
+<h2 id="landoservicesadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.services.add()</h2>
+<div class="api-body-header"></div>
+
+Add a service to the registry
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoservicesinfo"></a>
+
+<h2 id="landoservicesinfo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.services.info()</h2>
+<div class="api-body-header"></div>
+
+Delegator to gather info about a service for display to the user
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoservicesbuild"></a>
+
+<h2 id="landoservicesbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.services.build()</h2>
+<div class="api-body-header"></div>
+
+The core service builder
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesconnectnet"></a>
+
+<h2 id="landoutilsservicesconnectnet" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.connectNet()</h2>
+<div class="api-body-header"></div>
+
+Default networking
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesconnectbridge"></a>
+
+<h2 id="landoutilsservicesconnectbridge" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.connectBridge()</h2>
+<div class="api-body-header"></div>
+
+Default bridge network
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesfilterbuildsteps"></a>
+
+<h2 id="landoutilsservicesfilterbuildsteps" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.filterBuildSteps()</h2>
+<div class="api-body-header"></div>
+
+Return an object of build steps
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicessetentrypoint"></a>
+
+<h2 id="landoutilsservicessetentrypoint" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.setEntrypoint()</h2>
+<div class="api-body-header"></div>
+
+Set the entrypoint with a local script
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesbuildvolume"></a>
+
+<h2 id="landoutilsservicesbuildvolume" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.buildVolume()</h2>
+<div class="api-body-header"></div>
+
+Helper to build a volumes
+
+**Note:**: This seems weird, maybe written before we have more generic compose merging?  
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesaddconfig"></a>
+
+<h2 id="landoutilsservicesaddconfig" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.addConfig()</h2>
+<div class="api-body-header"></div>
+
+Helper function to inject config
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesaddscript"></a>
+
+<h2 id="landoutilsservicesaddscript" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.addScript()</h2>
+<div class="api-body-header"></div>
+
+Helper function to inject utility scripts
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landotoolingbuild"></a>
+
+<h2 id="landotoolingbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.tooling.build()</h2>
+<div class="api-body-header"></div>
+
+The tooling command builder
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
 <a id="event_pre_bootstrap"></a>
 
 <h2 id="event_pre_bootstrap" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
