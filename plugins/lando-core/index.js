@@ -16,6 +16,7 @@ module.exports = function(lando) {
 
     // Add the tasks command
     lando.tasks.add('config', require('./tasks/config')(lando));
+    lando.tasks.add('selfupdate', require('./tasks/selfupdate')(lando));
     lando.tasks.add('version', require('./tasks/version')(lando));
 
   });
