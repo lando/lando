@@ -35,6 +35,8 @@ Then try out one of our preconfigured recipe start states
 *   [LAMP](http://docs.devwithlando.io/tutorials/lamp.html)
 *   [LEMP](http://docs.devwithlando.io/tutorials/lemp.html)
 *   [Pantheon](http://docs.devwithlando.io/tutorials/pantheon.html)
+*   [Symfony 3.4](http://docs.devwithlando.io/tutorials/symfony34.html)
+*   [Symfony 4.0](http://docs.devwithlando.io/tutorials/symfony40.html)
 *   [WordPress](http://docs.devwithlando.io/tutorials/wordpress.html)
 *   [Custom](http://docs.devwithlando.io/tutorials/custom.html)
 

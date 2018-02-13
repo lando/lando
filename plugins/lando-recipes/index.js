@@ -24,7 +24,9 @@ module.exports = function(lando) {
     'lemp',
     'mean',
     'pantheon',
-    'wordpress'
+    'symfony34',
+    'symfony40',
+    'wordpress',
   ];
 
   // Add recipe modules to lando

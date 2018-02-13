@@ -1,0 +1,75 @@
+# Symfony 3.4recipe
+name: symfony
+
+# Start with the default Symfony 3.4 recipe
+recipe: symfony34
+
+# Configure the Symfony 3.4 recipe
+config:
+
+  # See: https://symfony.com/doc/3.4/reference/requirements.html
+
+  # Optionally specify the php version to use.
+  #
+  # If ommitted this will default to the latest php version supported by Symfony 3.4.
+  # Consult the `php` service to see what versions are available. Note that all
+  # such versions may not be supported in Symfony 3.4 so YMMV.
+  #
+  # See: https://symfony.com/doc/3.4/reference/requirements.html#checking-requirements-for-the-web-server
+  #
+  # NOTE: that this needs to be wrapped in quotes so that it is a string
+  #
+  php: '7.0'
+
+  # Optionally specify whether you want to serve symfony via nginx or apache
+  #
+  # If ommitted this will default to the latest apache
+  #
+  # See: https://symfony.com/doc/3.4/reference/requirements.html#checking-requirements-for-the-web-server
+  #
+  via: nginx
+
+  # Optionally specify the database type, this can be one of:
+  #
+  #   - `mysql`
+  #   - `mariadb`
+  #   - `postgres`
+  #
+  # If ommitted this will default to the latest mysql. You can additionally provide
+  # a version with `type:version` but you will need to consult the documentation
+  # for the correct DB service to see what versions are available
+  #
+  # see: https://symfony.com/doc/current/doctrine.html#configuring-the-database
+  #
+  # database: mariadb:10.1
+
+  # Optionally activate xdebug
+  #
+  # If you are having trouble getting xdebug to work please see:
+  # https://docs.devwithlando.io/services/php.html#using-xdebug
+  xdebug: true
+
+  # Optionally mix in your own config files
+  #
+  # If ommitted this will use "sane defaults" for your recipe type
+  # conf:
+
+    # For more information on setting these files check out the documentation
+    # and examples
+    #
+    # Docs: https://docs.devwithlando.io/services/php.html
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
+    # server: config/symfony34.conf
+    # php: config/php.ini
+
+    # For more information on setting these files check out the documentation
+    # and examples for the relevant services:
+    #
+    # MySQL: https://docs.devwithlando.io/services/mysql.html
+    # MariaDB: https://docs.devwithlando.io/services/mariadb.html
+    # PostGres: https://docs.devwithlando.io/services/postgres.html
+    #
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
+    # database: config/mysql
