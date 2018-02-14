@@ -1,9 +1,3 @@
-/**
- * This provides a way to load new init methods
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -22,8 +16,11 @@ module.exports = function(lando) {
   // Registry of init methods
   var registry = {};
 
-  /*
+  /**
    * Get an init method
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.get'
    */
   var get = function(name) {
     if (name) {
@@ -32,8 +29,11 @@ module.exports = function(lando) {
     return _.keys(registry);
   };
 
-  /*
+  /**
    * Add an init method to the registry
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.add'
    */
   var add = function(name, module) {
     registry[name] = module;
@@ -116,8 +116,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to return a create key command
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.createKey'
    */
   var createKey = function(key) {
 
@@ -134,8 +137,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Run a command during the init process
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.run'
    */
   var run = function(name, app, cmd, user) {
 
@@ -172,8 +178,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to kill any running util processes
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.kill'
    */
   var kill = function(name, app) {
 
@@ -197,6 +206,9 @@ module.exports = function(lando) {
 
   /**
    * The core init method
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.build'
    */
   var build = function(name, method, options) {
 
@@ -214,8 +226,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to spit out a .lando.yml file
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.yaml'
    */
   var yaml = function(recipe, config, options) {
 

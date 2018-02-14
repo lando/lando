@@ -1,9 +1,3 @@
-/**
- * Command to get an apps logs
- *
- * @name logs
- */
-
 'use strict';
 
 module.exports = function(lando) {

@@ -1,9 +1,3 @@
-/**
- * Our core plugin
- *
- * @name index
- */
-
 'use strict';
 
 module.exports = function(lando) {

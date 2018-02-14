@@ -15,21 +15,52 @@ You can also configure how Lando itself works with a `config.yml`. This config s
 config.yml
 ----------
 
-This file specifies the core configuration options for Lando. If you wanted to fork Lando and use your own plugins or alter plugin config like proxy ports, this is the file you would want to change. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. The order of the overrides is below:
+This file specifies the core configuration options for Lando. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config.
 
-1.  The default `config.yml`. If you've installed Lando from source this will be in the source root.
-2.  The `config.yml` inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.
-3.  The `config.yml` inside of the `userConfRoot`. For examples `~/.lando/` on macOS.
-
-> #### Hint::Where are `sysConfRoot` and `userConfRoot`?
+> #### Hint::What directories are scanned?
 >
-> Run `lando config` to find the location of these directories as they can be different.
+> Run `lando config` and look at the `configSources` key to find what directories are scanned for config.
+
+Note that overrides will be merged in with the last value in `configSources` taking priority. Also note that there are some configuration options **THAT MUST** be set during the bootstrap of the `lando` object. For more information about how to bootstrap your own custom `lando` object please consult the [API docs](./../api/api.html#lando).
 
 Examples
 --------
 
+These examples assume you have a config source at `~/.lando/config.yml`
+
 ### Turning the proxy off
 
 ```bash
+# Edit the config
 echo "proxy: 'OFF'" >> ~/.lando/config.yml
+
+# Poweroff lando
+lando poweroff
+
+# Reboot an app
+lando start SOMEAPP
+```
+
+### Set some custom default activity
+
+Place this `yaml` file in at `~/.lando/config.yml`
+
+```yaml
+# Add some envvars the get injected into every lando app container
+containerGlobalEnv:
+  GETTINGBACKTOGETHER: NEVER
+
+# Use a different docker daemon
+# NOTE: This is not official supported
+engineConfig:
+  host: 127.0.0.1
+  port: 4333
+  socketPath: null
+
+# Make console log very silly
+logLevelConsole: silly
+
+# Load additional custom plugins
+plugins:
+  - lando-my-plugin
 ```

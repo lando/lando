@@ -1,9 +1,13 @@
 Advanced Service Configuration
 ==============================
 
-Our services layer is an abstraction on top of the [Docker compose v3 file format](https://docs.docker.com/compose/compose-file/). Specifically, Lando will translate the configuration you specify for each service into relevant docker compose files and execute them at runtime. This gives you a lot of power to hypertune your services at the docker compose level. You can pass docker compose config into each service using the `overrides` key.
+Our recipes and services layers are two levels of abstraction on top of the [Docker compose v3 file format](https://docs.docker.com/compose/compose-file/).
 
-Here is an example of an overriden apache service that uses a custom image and injects some additional environment variables.
+Lando will translate the configuration you specify for each recipe and/or service into relevant Docker Compose files and execute them at runtime. This gives you a lot of power to hypertune your services at the Docker Compose level.
+
+You can pass Docker Compose config into each service using the `overrides` key.
+
+Here is an example of an overriden `apache` service that uses a custom image and injects some additional environment variables.
 
 ```yml
 services:

@@ -1,9 +1,3 @@
-/**
- * Command to share an app via localtunnel.me
- *
- * @name share
- */
-
 'use strict';
 
 module.exports = function(lando) {

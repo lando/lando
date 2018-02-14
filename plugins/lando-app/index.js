@@ -1,9 +1,3 @@
-/**
- * Our app plugin
- *
- * @name app
- */
-
 'use strict';
 
 module.exports = function(lando) {

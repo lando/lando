@@ -1,9 +1,3 @@
-/**
- * Pantheon init method
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -166,7 +160,7 @@ module.exports = function(lando) {
     }
   };
 
-  /**
+  /*
    * Build out pantheon recipe
    */
   var build = function(name, options) {

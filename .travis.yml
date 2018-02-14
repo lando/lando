@@ -13,6 +13,11 @@ matrix:
 services:
   - docker
 sudo: required
+cache:
+  yarn: true
+  directories:
+    - node_modules
+    - ~/.gitbook
 
 before_install:
 
@@ -38,11 +43,6 @@ before_install:
       security find-identity -v macos-build.keychain | grep FY8GAUX282 | grep "Developer ID Application"
 
     fi
-
-cache:
-  yarn: true
-  directories:
-    - node_modules
 
 before_script:
 

@@ -14,7 +14,6 @@ An executable (eg `chmod +x`) `bash` script located in `scripts/my-script.sh` in
 echo "Hey this script is actually running!"
 
 ```
-
 A `.lando.yml` that injects the script into the `appserver`'s `/scripts` directory.
 
 ```yml

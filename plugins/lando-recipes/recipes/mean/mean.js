@@ -1,9 +1,3 @@
-/**
- * MEAN recipe builder
- *
- * @name mean
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -103,7 +97,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out MEAN
    */
   var build = function(name, config) {

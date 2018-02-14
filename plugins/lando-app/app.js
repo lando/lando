@@ -1,32 +1,3 @@
-/**
- * Contains methods and events related to app actions.
- *
- * @since 3.0.0
- * @module app
- * @example
- *
- * // Start an app
- * return lando.app.start(app);
- *
- * // Stop an app
- * return lando.app.stop(app);
- *
- * // Destroy an app
- * return lando.app.destroy(app);
- *
- * // Get the app called myapp
- * return lando.app.get('myapp')
- * .then(function(app) {
- *   console.log(app);
- * });
- *
- * // Get a list of all the apps
- * return lando.app.list()
- * .then(function(apps) {
- *   console.log(apps);
- * });
- */
-
 'use strict';
 
 // We make this module into a function so we can pass in lando
@@ -42,41 +13,6 @@ module.exports = function(lando) {
   var serializer = new require('./../../lib/serializer')(); // eslint-disable-line new-cap
   var util = require('util');
   var utils = require('./lib/utils');
-
-  /**
-   * Helper to parse metrics data
-   */
-  var metricsParse = function(app) {
-
-    // App identifier
-    var appId = [
-      _.get(app, 'name', 'unknown'),
-      _.get(app, 'root', 'someplace')
-    ];
-
-    // Metadata to report.
-    var data = {
-      app: lando.node.hasher(appId),
-      type: _.get(app, 'config.recipe', 'none')
-    };
-
-    // Build an array of services to send as well
-    if (_.has(app, 'config.services')) {
-      data.services = _.map(_.get(app, 'config.services'), function(service) {
-        return service.type;
-      });
-    }
-
-    // Get the email if there is one
-    var meta = lando.cache.get('site:meta:' + app.name);
-    if (_.has(meta, 'email')) {
-      data.email = _.get(data, 'email');
-    }
-
-    // Return
-    return data;
-
-  };
 
   /*
    * Helper to get registry
@@ -110,6 +46,7 @@ module.exports = function(lando) {
    * Adds an app to the app registry.
    *
    * @since 3.0.0
+   * @alias 'lando.app.register'
    * @param {Object} app - The app to add
    * @param {String} app.name - The name of the app.
    * @param {String} app.dir - The absolute path to this app's lando.yml file.
@@ -155,6 +92,7 @@ module.exports = function(lando) {
    * Removes an app from the app registry.
    *
    * @since 3.0.0
+   * @alias 'lando.app.unregister'
    * @param {Object} app - The app to remove
    * @param {String} app.name - The name of the app.
    * @param {String} app.dir - The absolute path to this app's lando.yml file.
@@ -192,12 +130,8 @@ module.exports = function(lando) {
 
   };
 
-  /**
-   * Instantiate
-   * @fires pre-app-instantiate
-   * @fires post-instantiate-app
-   * @fires app-ready
-   * @private
+  /*
+   * Instantiate helper
    */
   var instantiate = function(name, dir, config) {
 
@@ -213,7 +147,7 @@ module.exports = function(lando) {
      * not `app.events.on` See example below:
      *
      * @since 3.0.0
-     * @event module:app.event:pre-instantiate-app
+     * @event pre_instantiate_app
      * @property {Object} config The config from the app's .lando.yml
      * @example
      * // Add in some extra default config to our app, set it to run first
@@ -285,6 +219,13 @@ module.exports = function(lando) {
       app.version = lando.config.composeVersion || '3.2';
       // Docker compose volumes
       app.volumes = {};
+      // Set a unique id
+      app.id = lando.node.hasher([
+        _.get(app, 'name', 'unknown'),
+        _.get(app, 'root', 'someplace')
+      ]);
+      // Mix in any cached metadata
+      app = _.merge(app, lando.cache.get('site:meta:' + app.name));
 
       // Return our app
       return app;
@@ -299,7 +240,7 @@ module.exports = function(lando) {
      * not `app.events.on` See example below:
      *
      * @since 3.0.0
-     * @event module:app.event:post-instantiate-app
+     * @event post_instantiate_app
      * @property {object} config The user's app config.
      * @example
      * // Add some extra app properties to all apps
@@ -343,7 +284,7 @@ module.exports = function(lando) {
        * on an app to app basis.
        *
        * @since 3.0.0
-       * @event module:app.event:app-ready
+       * @event app_ready
        * @example
        * // Add logging to report on our apps properties after its full dialed
        * app.events.on('app-ready', function() {
@@ -370,6 +311,7 @@ module.exports = function(lando) {
    * Lists all the Lando apps from the app registry.
    *
    * @since 3.0.0
+   * @alias 'lando.app.list'
    * @returns {Promise} Returns a Promise with an array of apps from the registry
    * @example
    *
@@ -420,6 +362,10 @@ module.exports = function(lando) {
    * Lando will also scan parent directories if no app is found.
    *
    * @since 3.0.0
+   * @alias 'lando.app.get'
+   * @fires pre_instantiate_app
+   * @fires post_instantiate_app
+   * @fires app_ready
    * @param {String} [appName] - The name of the app to get.
    * @returns {Promise} Returns a Pronise with an instantiated app object or nothing.
    * @example
@@ -507,6 +453,7 @@ module.exports = function(lando) {
    * with the app name eg {name: 'myapp'}
    *
    * @since 3.0.0
+   * @alias 'lando.app.isRunning'
    * @param {Object} app - An app object.
    * @param {String} app.name - The name of the app
    * @param {Boolean} checkall - Make sure ALL the apps containers are running
@@ -577,6 +524,7 @@ module.exports = function(lando) {
    * Checks to see if the app exists or not.
    *
    * @since 3.0.0
+   * @alias 'lando.app.exists'
    * @param {String} appName - The name of the app to get.
    * @returns {Promise} A promise with a boolean of whether the app exists or not.
    * @example
@@ -621,8 +569,9 @@ module.exports = function(lando) {
    * credentials and any other information that is added by other plugins.
    *
    * @since 3.0.0
-   * @fires pre-info
-   * @fires post-info
+   * @alias 'lando.app.info'
+   * @fires pre_info
+   * @fires post_info
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise with an object of information about the app keyed by its services
    * @example
@@ -646,7 +595,7 @@ module.exports = function(lando) {
      * how to access their services, where their code exsts or relevant credential info.
      *
      * @since 3.0.0
-     * @event module:app.event:pre-info
+     * @event pre_info
      * @example
      *
      * // Add urls to the app
@@ -688,7 +637,7 @@ module.exports = function(lando) {
      * how to access their services, where their code exsts or relevant credential info.
      *
      * @since 3.0.0
-     * @event module:app.event:post-info
+     * @event post_info
      */
     .then(function() {
       return app.events.emit('post-info');
@@ -708,8 +657,9 @@ module.exports = function(lando) {
    * volumes, networks, etc as well as remove the app from the appRegistry.
    *
    * @since 3.0.0
-   * @fires pre-uninstall
-   * @fires post-uninstall
+   * @alias 'lando.app.uninstall'
+   * @fires pre_uninstall
+   * @fires post_uninstall
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
@@ -729,7 +679,7 @@ module.exports = function(lando) {
     app.message('Uninstalling %s', app.name);
 
     // Report to metrics.
-    return lando.metrics.report('uninstall', metricsParse(app))
+    return lando.metrics.report('uninstall', utils.metricsParse(app))
 
     /**
      * Event that runs before an app is uninstalled.
@@ -739,7 +689,7 @@ module.exports = function(lando) {
      * want to replace in a rebuild and that cannot persist easily with a volume.
      *
      * @since 3.0.0
-     * @event module:app.event:pre-uninstall
+     * @event pre_uninstall
      * @example
      *
      * // Do not uninstall the solr service
@@ -763,7 +713,7 @@ module.exports = function(lando) {
      * app is uninstalled such as invalidating any cached data.
      *
      * @since 3.0.0
-     * @event module:app.event:post-uninstall
+     * @event post_uninstall
      * @example
      *
      * // Make sure we remove our build cache
@@ -785,6 +735,7 @@ module.exports = function(lando) {
    *
    * @todo Should this be an internal method? Or can we deprecate at some point?
    * @since 3.0.0
+   * @alias 'lando.app.cleanup'
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
@@ -836,8 +787,9 @@ module.exports = function(lando) {
    * This will start up all services/containers that have been defined for this app.
    *
    * @since 3.0.0
-   * @fires pre-start
-   * @fires post-start
+   * @alias 'lando.app.start'
+   * @fires pre_start
+   * @fires post_start
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
@@ -857,7 +809,7 @@ module.exports = function(lando) {
     app.message('Starting app name %s', app.name);
 
     // Report to metrics.
-    return lando.metrics.report('start', metricsParse(app))
+    return lando.metrics.report('start', utils.metricsParse(app))
 
     // Make sure we are in a clean place before we get dirty
     .then(function() {
@@ -871,7 +823,7 @@ module.exports = function(lando) {
      * stars.
      *
      * @since 3.0.0
-     * @event module:app.event:pre-start
+     * @event pre_start
      * @example
      *
      * // Start up a DNS server before our app starts
@@ -895,7 +847,7 @@ module.exports = function(lando) {
      * starts such as running additional build commands.
      *
      * @since 3.0.0
-     * @event module:app.event:post-start
+     * @event post_start
      * @example
      *
      * // Go through each service and run additional build commands as needed
@@ -970,8 +922,9 @@ module.exports = function(lando) {
    * This will stop all services/containers that have been defined for this app.
    *
    * @since 3.0.0
-   * @fires pre-stop
-   * @fires post-stop
+   * @alias 'lando.app.stop'
+   * @fires pre_stop
+   * @fires post_stop
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
@@ -991,7 +944,7 @@ module.exports = function(lando) {
     app.message('Stopping %s', app.name);
 
     // Report to metrics.
-    return lando.metrics.report('stop', metricsParse(app))
+    return lando.metrics.report('stop', utils.metricsParse(app))
 
     // Make sure we are in a clean place before we get dirty
     .then(function() {
@@ -1002,7 +955,7 @@ module.exports = function(lando) {
      * Event that runs before an app stops.
      *
      * @since 3.0.0
-     * @event module:app.event:pre-stop
+     * @event pre_stop
      * @example
      *
      * // Stop a DNS server before our app stops.
@@ -1023,7 +976,7 @@ module.exports = function(lando) {
      * Event that runs after an app stop.
      *
      * @since 3.0.0
-     * @event module:app.event:post-stop
+     * @event post_stop
      * @example
      *
      * // Stop a DNS server after our app stops.
@@ -1043,10 +996,11 @@ module.exports = function(lando) {
    * This just runs `app.stop` and `app.start` in succession.
    *
    * @since 3.0.0
-   * @fires pre-stop
-   * @fires stop-stop
-   * @fires pre-start
-   * @fires post-start
+   * @alias 'lando.app.restart'
+   * @fires pre_stop
+   * @fires post_stop
+   * @fires pre_start
+   * @fires post_start
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
@@ -1086,12 +1040,13 @@ module.exports = function(lando) {
    * That said this DOES call both `stop` and `uninstall`.
    *
    * @since 3.0.0
-   * @fires pre-destroy
-   * @fires pre-stop
-   * @fires post-stop
-   * @fires pre-uninstall
-   * @fires post-uninstall
-   * @fires post-destroy
+   * @alias 'lando.app.destroy'
+   * @fires pre_destroy
+   * @fires pre_stop
+   * @fires post_stop
+   * @fires pre_uninstall
+   * @fires post_uninstall
+   * @fires post_destroy
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
@@ -1114,7 +1069,7 @@ module.exports = function(lando) {
      * Event that runs before an app is destroyed.
      *
      * @since 3.0.0
-     * @event module:app.event:pre-destroy
+     * @event pre_destroy
      * @example
      *
      * // Make sure the proxy is down before we destroy
@@ -1145,7 +1100,7 @@ module.exports = function(lando) {
      * Event that runs after an app is destroyed.
      *
      * @since 3.0.0
-     * @event module:app.event:post-destroy
+     * @event post_destroy
      * @example
      *
      * // Make sure the proxy is up brought back up after we destroy
@@ -1167,18 +1122,19 @@ module.exports = function(lando) {
    * might want to tweak Dockerfiles or compose yamls.
    *
    * @since 3.0.0
-   * @fires pre-stop
-   * @fires post-stop
-   * @fires pre-uninstall
-   * @fires post-uninstall
-   * @fires pre-start
-   * @fires post-start
+   * @alias 'lando.app.rebuild'
+   * @fires pre_stop
+   * @fires post_stop
+   * @fires pre_uninstall
+   * @fires post_uninstall
+   * @fires pre_start
+   * @fires post_start
    * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
    *
-   * // Destroy the app
-   * return lando.app.destroy(app)
+   * // Rebuild the app
+   * return lando.app.rebuild(app)
    *
    * // Catch any errors
    * catch(function(err) {
@@ -1198,7 +1154,7 @@ module.exports = function(lando) {
      * Event that runs before an app is rebuilt.
      *
      * @since 3.0.0
-     * @event module:app.event:pre-rebuild
+     * @event pre_rebuild
      * @example
      *
      * // Do something
@@ -1224,7 +1180,7 @@ module.exports = function(lando) {
      * Event that runs after an app is rebuilt.
      *
      * @since 3.0.0
-     * @event module:app.event:post-rebuild
+     * @event post_rebuild
      * @example
      *
      * // Do something

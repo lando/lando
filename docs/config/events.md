@@ -3,8 +3,6 @@ Events
 
 Events allow you to fine-tune your Lando experience by running commands on specific services before or after parts of the Lando runtime. This is super helpful if you want to clear caches after a database import, or compile `sass` after an app is started.
 
-**THIS SHOULD BE CONSIDERED AN ADVANCED FEATURE ERGO USE WITH CAUTION.**
-
 Specifically, you need to hook into an event where the service you are running the command against exists and is running.
 
 Usage
