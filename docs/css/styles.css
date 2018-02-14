@@ -75,6 +75,15 @@ body {
   color: #ED3F7A;
 }
 
+.markdown-section blockquote {
+  margin: 0;
+  margin-bottom: 1.85em;
+  margin-top: 1.85em;
+  padding: 15px 15px;
+  color: #664b9d;
+  border-left: 11px solid #664b9d;
+}
+
 .book-summary ul.summary li.active>a {
   color: #664b9d;
 }

@@ -28,8 +28,8 @@
     "release:patch": "node ./scripts/bump.js --stage=patch",
     "release:pre": "node ./scripts/bump.js --stage=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
-    "test:spec": "mocha",
-    "test": "yarn lint && yarn test:spec"
+    "test:unit": "mocha",
+    "test": "yarn lint && yarn test:unit"
   },
   "pkg": {
     "scripts": [

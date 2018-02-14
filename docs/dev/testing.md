@@ -4,8 +4,9 @@ Testing
 You should be able to use this guide to...
 
 1.  Check code styling and linting
-2.  Run tests
-3.  Learn how to write tests
+2.  Run unit tests
+3.  Run functional tests
+4.  Learn how to write tests
 
 Code linting and standards
 --------------------------
@@ -13,25 +14,22 @@ Code linting and standards
 Lando implements some basic linting and code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
 
 ```bash
-yarn test
+yarn lint
 ```
 
-Spec tests
+Unit tests
 ----------
 
 The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/).
 
 ```bash
-yarn test:spec
+yarn test:unit
 ```
 
 Functional tests
 ----------------
 
-Lando has a test suite written using the [BATS
-framework](https://github.com/sstephenson/bats) that is currently
-non-functional. Functional testing is slated for big improvements in the near
-future.
+@TODO
 
 Writing Tests
 -------------
@@ -43,5 +41,3 @@ Looking at existing tests will give you a good idea of how to write your own, bu
 *   [Mocha documentation](http://mochajs.org/)
 *   [Chai documentation](http://chaijs.com/)
 *   [Chai-As-Promised documentation](http://chaijs.com/plugins/chai-as-promised/)
-*   [BATS wiki](https://github.com/sstephenson/bats)
-*   [BATS tutorial](https://blog.engineyard.com/2014/bats-test-command-line-tools)

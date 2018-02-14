@@ -134,7 +134,16 @@
 
 ## Contributing
 
-*   [Contributing](dev/contributing.md)
+*   [Overview](contrib/contributing.md)
+*   [Project Vision](contrib/vision.md)
+*   [How to Contribute](contrib/how.md)
+*   [Governance](contrib/gov.md)
+*   [Roles and Responsibilities](contrib/roles.md)
+*   [Resources](contrib/resources.md)
+
+## Developing
+
+*   [Getting Started](dev/started.md)
 *   [Repo Structure](dev/structure.md)
 *   [Plugins](dev/plugins.md)
 *   [Services](dev/services.md)
