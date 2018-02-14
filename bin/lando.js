@@ -138,7 +138,7 @@ bootstrap(options)
   .then(function() {
 
     // Loop through the tasks and add them to the CLI
-    _.forEach(tasks, function(task) {
+    _.forEach(_.sortBy(tasks, 'command'), function(task) {
       lando.log.verbose('Loading cli task %s', task.name);
       yargs.command(lando.cli.parseToYargs(task, lando.events));
     });

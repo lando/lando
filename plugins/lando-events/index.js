@@ -1,9 +1,3 @@
-/**
- * Events plugin
- *
- * @name events
- */
-
 'use strict';
 
 module.exports = function(lando) {

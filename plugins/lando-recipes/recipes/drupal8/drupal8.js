@@ -1,9 +1,3 @@
-/**
- * Drupal 8 recipe builder
- *
- * @name drupal8
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -12,7 +6,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var helpers = require('./../lamp/lamp')(lando);
 
-  /**
+  /*
    * Build out Drupal8
    */
   var build = function(name, config) {

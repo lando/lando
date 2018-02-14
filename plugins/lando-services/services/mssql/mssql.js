@@ -1,14 +1,8 @@
-/**
- * Lando mssql service builder
- *
- * @name mssql
- */
-
 'use strict';
 
 module.exports = function() {
 
-  /**
+  /*
    * Supported versions for mssql
    */
   var versions = [
@@ -16,14 +10,14 @@ module.exports = function() {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out mssql
    */
   var services = function(name, config) {
@@ -80,14 +74,14 @@ module.exports = function() {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
   */
   var volumes = function() {
     return {data: {}};
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

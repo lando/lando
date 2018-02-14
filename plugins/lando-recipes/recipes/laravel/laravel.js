@@ -1,9 +1,3 @@
-/**
- * laravel recipe builder
- *
- * @name laravel
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -12,7 +6,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var helpers = require('./../lamp/lamp')(lando);
 
-  /**
+  /*
    * Helper to get cache
    */
   var cache = function(cache) {
@@ -36,7 +30,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out laravel
    */
   var build = function(name, config) {

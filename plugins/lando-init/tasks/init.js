@@ -1,9 +1,3 @@
-/**
- * Command to init a lando app
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {

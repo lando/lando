@@ -1,9 +1,3 @@
-/**
- * Command to show the version
- *
- * @name version
- */
-
 'use strict';
 
 module.exports = function(lando) {

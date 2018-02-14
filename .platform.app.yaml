@@ -33,11 +33,11 @@ disk: 2048
 # Build time dependencies.
 dependencies:
   nodejs:
-    grunt-cli: "*"
+    yarn: "*"
 
 # The hooks that will be performed when the package is deployed.
 hooks:
   build: |
-    npm install
-    grunt docs
+    yarn
+    yarn docs
     cp docs/images/favicon.ico _book/gitbook/images/favicon.ico

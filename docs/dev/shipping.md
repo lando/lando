@@ -1,7 +1,7 @@
 Shipping
 ========
 
-If you are an administrator of the Lando repo you can kick off an official release using our handy `grunt` tasks.
+If you are a maintainer of Lando you can kick off an official release using our handy `grunt` tasks.
 
 ```bash
 # Do a prerelease ie bump 0.0.0-beta.x

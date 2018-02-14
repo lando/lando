@@ -1,9 +1,3 @@
-/**
- * Command to destroy a lando app
- *
- * @name destroy
- */
-
 'use strict';
 
 module.exports = function(lando) {

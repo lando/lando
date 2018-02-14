@@ -18,6 +18,19 @@
   "directories": {
     "lib": "./lib"
   },
+  "scripts": {
+    "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
+    "lint": "eslint bin/**/*.js lib/**/*.js plugins/**/*.js test/**/*.js scripts/**/**/*.js",
+    "pkg:cli": "node ./scripts/pkg.js --stage=cli",
+    "pkg:full": "node ./scripts/pkg.js --stage=full",
+    "release:major": "node ./scripts/bump.js --stage=major",
+    "release:minor": "node ./scripts/bump.js --stage=minor",
+    "release:patch": "node ./scripts/bump.js --stage=patch",
+    "release:pre": "node ./scripts/bump.js --stage=prerelease",
+    "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
+    "test:unit": "mocha",
+    "test": "yarn lint && yarn test:unit"
+  },
   "pkg": {
     "scripts": [
       "bin/*.js",
@@ -74,21 +87,9 @@
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
     "gitbook-cli": "^2.3.0",
+    "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^4.1.0",
     "pkg": "^4.3.0-beta.5"
-  },
-  "scripts": {
-    "docs": "gitbook install && gitbook build && ./scripts/docs.js",
-    "lint": "eslint bin/**/*.js lib/**/*.js plugins/**/*.js test/**/*.js scripts/**/**/*.js",
-    "release:major": "node ./scripts/bump.js --stage=major",
-    "pkg:cli": "node ./scripts/pkg.js --stage=cli",
-    "pkg:full": "node ./scripts/pkg.js --stage=full",
-    "release:minor": "node ./scripts/bump.js --stage=minor",
-    "release:patch": "node ./scripts/bump.js --stage=patch",
-    "release:pre": "node ./scripts/bump.js --stage=prerelease",
-    "serve": "gitbook install && ./scripts/docs.js && gitbook serve",
-    "test:spec": "mocha",
-    "test": "yarn lint && yarn test:spec"
   }
 }

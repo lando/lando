@@ -1,9 +1,3 @@
-/**
- * Tooling plugin
- *
- * @name tooling
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -25,8 +19,8 @@ module.exports = function(lando) {
 
   });
 
-  // Try to detect additional commands if we have app context
-  lando.events.on('post-bootstrap', function(lando) {
+  // Try to detect additional commands if we are in the CLI and have app context
+  lando.events.on('pre-cli-load', function(tasks) {
 
     // Try to determine app context so we can load in any tooling commands that
     // are defined there
@@ -52,7 +46,7 @@ module.exports = function(lando) {
             task.name = name;
 
             // Build and add the task
-            lando.tasks.add(name, lando.tooling.build(config));
+            tasks.push(lando.tooling.build(config));
 
           }
         });
