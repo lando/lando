@@ -42,6 +42,22 @@ var options = {
   version: version
 };
 
+// Error handler
+var handleError = function(error, log, metrics) {
+
+  // Log error or not
+  if (!error.hide) {
+    log.error(error.message);
+  }
+
+  // Report error
+  metrics.report('error', {message: error.message, stack: error.stack});
+
+  // Exit this process
+  process.exit(error.code || 1);
+
+};
+
 // Kick off our bootstrap
 bootstrap(options)
 
@@ -55,16 +71,12 @@ bootstrap(options)
 
   // Handle busted promises
   process.on('unhandledRejection', function(error) {
-    lando.log.error(error);
-    lando.metrics.report('error', {message: error.message, stack: error.stack});
-    process.exit(1);
+    handleError(error, lando.log, lando.metrics);
   });
 
   // And other uncaught things
   process.on('uncaughtException', function(error) {
-    lando.log.error(error);
-    lando.metrics.report('error', {message: error.message, stack: error.stack});
-    process.exit(1);
+    handleError(error, lando.log, lando.metrics);
   });
 
   // Log
@@ -174,7 +186,5 @@ bootstrap(options)
 // Handle all other errors
 // @TODO: We need something better
 .catch(function(error) {
-  log.error(error);
-  metrics.report('error', {message: error.message, stack: error.stack});
-  process.exit(1);
+  handleError(error, log, metrics);
 });

@@ -199,17 +199,14 @@ module.exports = function(lando) {
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
         lando.log.error('Looks like you dont have a machine token!');
-        lando.log.error('Run lando terminus auth:login --machine-token=TOKEN');
-        process.exit(1);
+        throw new Error('Run lando terminus auth:login --machine-token=TOKEN');
       }
 
       // Validate we have a token and siteid
       _.forEach([token, config.id], function(prop) {
         if (_.isEmpty(prop)) {
           lando.log.error('Error getting token or siteid.', prop);
-          lando.log.error('Make sure you run:');
-          lando.log.error('lando init %s pantheon', config._app);
-          process.exit(1);
+          throw new Error('Make sure you run: lando init pantheon');
         }
       });
 

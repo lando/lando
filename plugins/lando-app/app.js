@@ -736,18 +736,17 @@ module.exports = function(lando) {
    * @todo Should this be an internal method? Or can we deprecate at some point?
    * @since 3.0.0
    * @alias 'lando.app.cleanup'
-   * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
    *
    * // Do the app cleanup
-   * return lando.app.cleanup(app)
+   * return lando.app.cleanup()
    *
    */
-  var cleanup = function(app) {
+  var cleanup = function() {
 
     // Cleaning up
-    app.message('Cleaning up app registry and containers');
+    lando.message({message: 'Attempting apps cleanup...'});
 
     // Get all our apps
     return list()
@@ -813,7 +812,7 @@ module.exports = function(lando) {
 
     // Make sure we are in a clean place before we get dirty
     .then(function() {
-      return cleanup(app);
+      return cleanup();
     })
 
     /**
@@ -948,7 +947,7 @@ module.exports = function(lando) {
 
     // Make sure we are in a clean place before we get dirty
     .then(function() {
-      return cleanup(app);
+      return cleanup();
     })
 
     /**
