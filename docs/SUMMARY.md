@@ -66,6 +66,7 @@
 *   [poweroff](cli/poweroff.md)
 *   [rebuild](cli/rebuild.md)
 *   [restart](cli/restart.md)
+*   [selfupdate](cli/selfupdate.md)
 *   [share](cli/share.md)
 *   [ssh](cli/ssh.md)
 *   [start](cli/start.md)

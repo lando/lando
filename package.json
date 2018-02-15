@@ -54,6 +54,7 @@
   "dependencies": {
     "bluebird": "^3.4.1",
     "cli-table": "^0.3.1",
+    "deasync": "^0.1.12",
     "dockerode": "^2.4.2",
     "dotenv": "^4.0.0",
     "fs-extra": "^0.18.2",
@@ -63,6 +64,7 @@
     "js-yaml": "^3.4.6",
     "jsonfile": "^2.4.0",
     "kalabox-stats-client": "^0.2.1",
+    "linus": "git+https://github.com/tomas/linus.git#v0.0.5",
     "localtunnel": "^1.8.3",
     "lodash": "^4.15.0",
     "node-cache": "^4.1.1",
