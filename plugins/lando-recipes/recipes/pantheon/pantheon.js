@@ -469,7 +469,7 @@ module.exports = function(lando) {
     // Loop
     _.forEach(mounts, function(mount) {
 
-      // BReak up the mount
+      // Break up the mount
       var container = mount.split(':')[0];
       var file = mount.split(':')[1];
 
