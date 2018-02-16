@@ -43,7 +43,7 @@ exports.validateFiles = function(files, root) {
     }
 
     // Check existence
-    if (fs.existsSync(file)) {
+    if (fs.pathExistsSync(file)) {
       return file;
     }
 
