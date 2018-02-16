@@ -96,7 +96,7 @@ module.exports = function(lando) {
       options.destination = path.resolve(options.destination);
 
       // Create directory if needed
-      if (!fs.existsSync(options.destination)) {
+      if (!fs.pathExistsSync(options.destination)) {
         fs.ensureDirSync(options.destination);
       }
 
@@ -136,7 +136,7 @@ module.exports = function(lando) {
         var dest = path.join(options.destination, '.lando.yml');
 
         // Rebase on top of any existing yaml
-        if (fs.existsSync(dest)) {
+        if (fs.pathExistsSync(dest)) {
           var pec = lando.yaml.load(dest);
           config = _.mergeWith(pec, config, lando.utils.merger);
         }

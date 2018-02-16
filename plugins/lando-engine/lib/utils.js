@@ -84,7 +84,7 @@ exports.moveConfig = function(from, to) {
    };
 
    // Ensure to exists
-   fs.mkdirpSync(to);
+   fs.ensureDirSync(to);
 
    // Try to copy the assets over
    try {
