@@ -57,7 +57,7 @@
     "deasync": "^0.1.12",
     "dockerode": "^2.4.2",
     "dotenv": "^4.0.0",
-    "fs-extra": "^0.18.2",
+    "fs-extra": "^5.0.0",
     "github": "^9.2.0",
     "inquirer": "^3.1.1",
     "ip": "^1.1.5",

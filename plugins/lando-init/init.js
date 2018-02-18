@@ -11,7 +11,6 @@ module.exports = function(lando) {
 
   // Fixed location of our util service compose file
   var utilDir = path.join(lando.config.userConfRoot, 'util');
-  var utilFile = path.join(utilDir, 'util.yml');
 
   // Registry of init methods
   var registry = {};
@@ -43,6 +42,10 @@ module.exports = function(lando) {
    * Helper to start util service
    */
   var utilService = function(name, app) {
+
+    // Build util file
+    var filename = ['util', name, _.uniqueId()].join('-') + '.yml';
+    var utilFile = path.join(utilDir, filename);
 
     // Let's get a service container
     var util = {
@@ -126,7 +129,7 @@ module.exports = function(lando) {
 
     // Ensure that cache directory exists
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.mkdirpSync(path.join(keysDir));
+    fs.ensureDirSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     var comment = lando.config.id + '.lando@' + os.hostname();
@@ -160,6 +163,9 @@ module.exports = function(lando) {
         services: service.opts.services || ['util']
       }
     };
+
+    // Log
+    lando.log.verbose('Running %s on %s', run.cmd, run.id);
 
     // Start the container
     return lando.engine.start(service)
