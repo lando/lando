@@ -1,9 +1,3 @@
-/**
- * Lando mysql service builder
- *
- * @name mysql
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -13,7 +7,7 @@ module.exports = function(lando) {
   var addConfig = lando.utils.services.addConfig;
   var buildVolume = lando.utils.services.buildVolume;
 
-  /**
+  /*
    * Supported versions for mysql
    */
   var versions = [
@@ -25,14 +19,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out mysql
    */
   var services = function(name, config) {
@@ -95,7 +89,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function(name) {
@@ -104,7 +98,7 @@ module.exports = function(lando) {
     return vols;
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

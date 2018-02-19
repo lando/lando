@@ -1,9 +1,3 @@
-/**
- * This provides a way to load new init methods
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -17,13 +11,15 @@ module.exports = function(lando) {
 
   // Fixed location of our util service compose file
   var utilDir = path.join(lando.config.userConfRoot, 'util');
-  var utilFile = path.join(utilDir, 'util.yml');
 
   // Registry of init methods
   var registry = {};
 
-  /*
+  /**
    * Get an init method
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.get'
    */
   var get = function(name) {
     if (name) {
@@ -32,8 +28,11 @@ module.exports = function(lando) {
     return _.keys(registry);
   };
 
-  /*
+  /**
    * Add an init method to the registry
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.add'
    */
   var add = function(name, module) {
     registry[name] = module;
@@ -43,6 +42,10 @@ module.exports = function(lando) {
    * Helper to start util service
    */
   var utilService = function(name, app) {
+
+    // Build util file
+    var filename = ['util', name, _.uniqueId()].join('-') + '.yml';
+    var utilFile = path.join(utilDir, filename);
 
     // Let's get a service container
     var util = {
@@ -116,14 +119,17 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to return a create key command
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.createKey'
    */
   var createKey = function(key) {
 
     // Ensure that cache directory exists
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.mkdirpSync(path.join(keysDir));
+    fs.ensureDirSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     var comment = lando.config.id + '.lando@' + os.hostname();
@@ -134,8 +140,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Run a command during the init process
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.run'
    */
   var run = function(name, app, cmd, user) {
 
@@ -155,6 +164,9 @@ module.exports = function(lando) {
       }
     };
 
+    // Log
+    lando.log.verbose('Running %s on %s', run.cmd, run.id);
+
     // Start the container
     return lando.engine.start(service)
 
@@ -172,8 +184,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to kill any running util processes
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.kill'
    */
   var kill = function(name, app) {
 
@@ -197,6 +212,9 @@ module.exports = function(lando) {
 
   /**
    * The core init method
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.build'
    */
   var build = function(name, method, options) {
 
@@ -214,8 +232,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to spit out a .lando.yml file
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.yaml'
    */
   var yaml = function(recipe, config, options) {
 

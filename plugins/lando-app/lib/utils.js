@@ -1,10 +1,3 @@
-/**
- * Helpers for app things.
- *
- * @since 3.0.0
- * @module utils
- */
-
 'use strict';
 
 // Modules
@@ -19,6 +12,7 @@ var url = require('url');
  * object
  *
  * @since 3.0.0
+ * @alias 'lando.utils.app.appNameExists'
  */
 exports.appNameExists = function(apps, app) {
   return _.some(apps, function(a) {
@@ -30,6 +24,7 @@ exports.appNameExists = function(apps, app) {
  * Validates compose files returns legit ones
  *
  * @since 3.0.0
+ * @alias 'lando.utils.app.validateFiles'
  */
 exports.validateFiles = function(files, root) {
 
@@ -48,7 +43,7 @@ exports.validateFiles = function(files, root) {
     }
 
     // Check existence
-    if (fs.existsSync(file)) {
+    if (fs.pathExistsSync(file)) {
       return file;
     }
 
@@ -60,6 +55,7 @@ exports.validateFiles = function(files, root) {
  * Takes data and spits out a compose object
  *
  * @since 3.0.0
+ * @alias 'lando.utils.app.compose'
  */
 exports.compose = function(version, services, volumes, networks) {
   return {
@@ -74,6 +70,7 @@ exports.compose = function(version, services, volumes, networks) {
  * Returns a CLI table with app start metadata info
  *
  * @since 3.0.0
+ * @alias 'lando.utils.app.startTable'
  */
 exports.startTable = function(app) {
 
@@ -110,6 +107,7 @@ exports.startTable = function(app) {
  * Takes inspect data and extracts all the exposed ports
  *
  * @since 3.0.0
+ * @alias 'lando.utils.app.getUrls'
  */
 exports.getUrls = function(data) {
 
@@ -156,6 +154,7 @@ exports.getUrls = function(data) {
  * Returns a default info object
  *
  * @since 3.0.0
+ * @alias 'lando.utils.app.getInfoDefaults'
  */
 exports.getInfoDefaults = function(app) {
 
@@ -169,5 +168,37 @@ exports.getInfoDefaults = function(app) {
 
   // Return
   return defaults;
+
+};
+
+
+/**
+ * Helper to parse metrics data
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.app.metricsParse'
+ */
+exports.metricsParse = function(app) {
+
+  // Metadata to report.
+  var data = {
+    app: _.get(app, 'id', 'unknown'),
+    type: _.get(app, 'config.recipe', 'none')
+  };
+
+  // Build an array of services to send as well
+  if (_.has(app, 'config.services')) {
+    data.services = _.map(_.get(app, 'config.services'), function(service) {
+      return service.type;
+    });
+  }
+
+  // Get the email if there is one
+  if (_.has(app, 'email')) {
+    data.email = _.get(app, 'email');
+  }
+
+  // Return
+  return data;
 
 };

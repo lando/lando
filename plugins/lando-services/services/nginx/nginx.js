@@ -1,9 +1,3 @@
-/**
- * Lando nginx service builder
- *
- * @name nginx
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -18,7 +12,7 @@ module.exports = function(lando) {
   var esd = lando.config.engineScriptsDir;
   var scd = lando.config.servicesConfigDir;
 
-  /**
+  /*
    * Supported versions for nginx
    */
   var versions = [
@@ -34,14 +28,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out nginx services
    */
   var services = function(name, config) {
@@ -128,7 +122,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {
@@ -149,7 +143,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {

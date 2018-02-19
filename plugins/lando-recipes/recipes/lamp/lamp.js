@@ -1,9 +1,3 @@
-/**
- * LAMP recipe builder
- *
- * @name lamp
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -64,7 +58,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Helper to reset with default config for a new recipe
    * Because we are "extending" this we want to provide this for children
    */
@@ -323,7 +317,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out LAMP
    */
   var build = function(name, config) {

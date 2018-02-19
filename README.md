@@ -97,8 +97,8 @@ And then dive deep into reference materials
 *   [Services](http://docs.devwithlando.io/config/services.html)
 *   [Tooling](http://docs.devwithlando.io/config/tooling.html)
 *   [CLI](http://docs.devwithlando.io/cli/usage.html)
-*   [Contributing](http://docs.devwithlando.io/dev/contributing.html)
-*   [API](http://docs.devwithlando.io/dev/api/lando.html)
+*   [Contributing](http://docs.devwithlando.io/contrib/contributing.html)
+*   [API](http://docs.devwithlando.io/dev/api/api.html)
 *   [Troubleshooting and Support](http://docs.devwithlando.io/troubleshooting/logs.html)
 *   [Examples](https://github.com/lando/lando/tree/master/examples)
 
@@ -199,4 +199,4 @@ tooling:
 Other Resources
 ---------------
 
-*   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q)
+*   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q) 

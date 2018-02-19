@@ -1,9 +1,3 @@
-/**
- * Command to list all lando apps
- *
- * @name list
- */
-
 'use strict';
 
 module.exports = function(lando) {

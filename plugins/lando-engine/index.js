@@ -1,9 +1,3 @@
-/**
- * Our engine plugin
- *
- * @name engine
- */
-
 'use strict';
 
 module.exports = function(lando) {

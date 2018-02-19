@@ -1,9 +1,3 @@
-/**
- * Backdrop recipe builder
- *
- * @name backdrop
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -11,7 +5,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
 
-  /**
+  /*
    * Helper to return backdrop settings
    */
   var backdropSettings = function(config) {
@@ -76,7 +70,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out Backdrop
    */
   var build = function(name, config) {

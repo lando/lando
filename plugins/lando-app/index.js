@@ -1,9 +1,3 @@
-/**
- * Our app plugin
- *
- * @name app
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -104,7 +98,7 @@ module.exports = function(lando) {
     app.labels = merger(app.labels, labels);
 
     // Inject values from an .env file if it exists
-    if (fs.existsSync(path.join(app.root, '.env'))) {
+    if (fs.pathExistsSync(path.join(app.root, '.env'))) {
 
       // Log
       lando.log.debug('.env file found for %s, loading its config', app.name);

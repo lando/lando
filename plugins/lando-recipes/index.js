@@ -1,9 +1,3 @@
-/**
- * Recipes plugin
- *
- * @name recipes
- */
-
 'use strict';
 
 module.exports = function(lando) {

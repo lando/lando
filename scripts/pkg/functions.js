@@ -1,13 +1,19 @@
 'use strict';
-const common = require('../../tasks/common');
-const shellTask = require('../../tasks/shell')(common);
+
 const copy = require('copy');
 const fs = require('fs-extra');
+const pkg = require('./../../package.json');
 const path = require('path');
-const util = require('../util');
+const util = require('./../util');
+const version = pkg.version;
+
+// Lando info
+const pkgType = [util.platform, 'x64', 'v' + version].join('-');
+const pkgExt = (util.platform === 'win32') ? '.exe' : '';
+const pkgSuffix = pkgType + pkgExt;
 
 // Define cli pkg name
-const cliPkgName = 'lando-' + common.lando.pkgSuffix;
+const cliPkgName = 'lando-' + pkgSuffix;
 
 const files = {
   // All js files
@@ -41,7 +47,7 @@ const files = {
     },
     installer: {
       build: {
-        cwd: path.join('installer', common.system.platform, path.sep),
+        cwd: path.join('installer', util.platform, path.sep),
         src: ['**'],
         dest: path.join('build', 'installer', path.sep),
         expand: true,
@@ -102,9 +108,9 @@ module.exports = {
 
     const task = function(extension) {
       if (extension === 'ps1') {
-        return shellTask.psTask(script);
+        return util.psTask(script);
       } else {
-        return shellTask.scriptTask(script);
+        return util.scriptTask(script);
       }
     };
 
@@ -117,13 +123,13 @@ module.exports = {
   pkgFull: function() {
     this.clean([files.clean.installer.build, files.clean.installer.dist]);
     copy(
-      path.join('installer', common.system.platform, '**'),
+      path.join('installer', util.platform, '**'),
       path.join('build', 'installer', path.sep),
-      {mode: true, srcBase: path.join('installer', common.system.platform, path.sep)},
+      {mode: true, srcBase: path.join('installer', util.platform, path.sep)},
       (err, files) => { if (err) throw err; }
     );
     this.pkgCli().then((result) => {
-      this.pkgInstaller(common.system.platform).then((result) => copy(
+      this.pkgInstaller(util.platform).then((result) => copy(
           path.join('build', 'installer', 'dist', '**'),
           path.join('dist'),
           {mode: true, srcBase: path.join('build', 'installer', 'dist', path.sep)},
@@ -155,7 +161,7 @@ module.exports = {
     }
 
     // Exec options
-    var pkgName = 'lando-' + common.lando.pkgSuffix;
+    var pkgName = cliPkgName;
     var configFile = path.join('package.json');
     var entrypoint = path.join('bin', 'lando.js');
     var target = [node, os, arch].join('-');
