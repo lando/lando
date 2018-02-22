@@ -3,7 +3,7 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
 
-Lando is for developers who want to quickly specify and painlessly spin up the services and tools needed to develop their projects.
+Lando is for developers who want to quickly specify and painlessly spin up the services and tools needed to develop their projects. 
 
 It's a free, open source, cross-platform, local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them. Think of it as your local development's dependency management tool. It can even be installed right beside an old Kalabox installation with no interference, or used as a complete upgrade-replacement.
 
@@ -198,3 +198,6 @@ Other Resources
 ---------------
 
 *   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q) 
+
+
+
