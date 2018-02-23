@@ -197,4 +197,4 @@ tooling:
 Other Resources
 ---------------
 
-*   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q) 
+*   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q)
