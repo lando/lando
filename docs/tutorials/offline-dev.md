@@ -27,13 +27,19 @@ sudo nano /etc/resolver/localhost
 nameserver 127.0.0.1
 ```
 8. Reboot OS X to enable the new resolver.
-9. Open your `~/.lando/config.yml` file and add the following line:
+9. Flush your DNS, just to be sure that your browsers use the new dns
+directives.
+```
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+```
+10. Open your `~/.lando/config.yml` file and add the following line:
 ```yaml
 proxyDomain: localhost
 ```
 Again, allow your creativity to flourish and use whatever TLD makes you smile.
-10. Power Lando down with `lando poweroff`
-11. Start up your favorite Lando app to test it out with `lando start` from within your app's root directory. You should see something like:
+11. Power Lando down with `lando poweroff`
+12. Start up your favorite Lando app to test it out with `lando start` from within your app's root directory. You should see something like:
 
 ```bash
 BOOMSHAKALAKA!!!
@@ -50,6 +56,6 @@ Here are some vitals:
                 http://bestappever.localhost
                 https://bestappever.localhost
 ```
-9. Load it up in the browser and confirm everything is happy and working.
+13. Load it up in the browser and confirm everything is happy and working.
 
 Enjoy your signature top level domain while you hack away in complete wifi-less splendor.

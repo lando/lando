@@ -3,6 +3,9 @@ init:
 platform: x64
 environment:
   nodejs_version: "8"
+cache:
+  - node_modules
+  - '%USERPROFILE%\.gitbook'
 install:
 
   # Get the latest stable version of Node.js or io.js
@@ -31,7 +34,6 @@ install:
   # Iscc has no version option and returns exit code 1 by default
   # This can never fail but at least we can check the output to verify
   - iscc | echo
-
 
   # Run tests
   - yarn test

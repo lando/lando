@@ -1,7 +1,7 @@
 'use strict';
 
-const child = require('child_process'),
-  semver = require('semver');
+const child = require('child_process');
+const semver = require('semver');
 
 module.exports = {
 
@@ -14,6 +14,28 @@ module.exports = {
   execGitCmd: function(args, customMsg) {
     console.log(customMsg);
     return child.spawnSync('git', args, {stdio: [0, 'pipe', 'pipe'], encoding: 'utf8'}).stdout;
+  },
+
+  /**
+   * The platform normalize for pkg
+   */
+  platform: (process.platform !== 'darwin') ? process.platform : 'osx',
+
+  /*
+   * Run a ps script
+   */
+  psTask: function(cmd) {
+
+    // "Constants"
+    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
+    var entrypoint = 'PowerShell -NoProfile -ExecutionPolicy Bypass -Command';
+
+    // Return our ps task
+    return {
+      options: shellOpts,
+      command: [entrypoint, cmd, '&& EXIT /B %errorlevel%'].join(' ')
+    };
+
   },
 
   /**
@@ -37,6 +59,22 @@ module.exports = {
       default:
         return semver.inc(current, stage);
     }
+  },
+
+  /*
+   * Run a default bash/sh/cmd script
+   */
+  scriptTask: function(cmd) {
+
+    // "Constants"
+    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
+
+    // Return our shell task
+    return {
+      options: shellOpts,
+      command: cmd
+    };
+
   },
 
   shellExec: function(data) {

@@ -1,9 +1,3 @@
-/**
- * Services plugin
- *
- * @name services
- */
-
 'use strict';
 
 module.exports = function(lando) {

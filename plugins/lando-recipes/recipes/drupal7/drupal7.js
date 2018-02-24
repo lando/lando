@@ -1,9 +1,3 @@
-/**
- * Drupal7 recipe builder
- *
- * @name drupal7
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -17,7 +11,7 @@ module.exports = function(lando) {
   var DRUSH7 = '7.4.0';
   var DRUSHLAUNCHER = '0.5.1';
 
-  /**
+  /*
    * Helper to get DRUSH 8 or DRUSH LAUNCHER phar
    */
   var drushUrl = function(thing, version) {
@@ -30,14 +24,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Helper to get the phar build command
    */
   var pharOut = function(url, status) {
     return helpers.getPhar(url, 'drush.phar', '/usr/local/bin/drush', status);
   };
 
-  /**
+  /*
    * Helper to figure out how to handle drush
    */
   var drush = function(build, config) {
@@ -102,7 +96,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out Drupal7
    */
   var build = function(name, config) {

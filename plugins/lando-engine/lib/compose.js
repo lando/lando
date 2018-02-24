@@ -1,9 +1,3 @@
-/**
- * Module to wrap and abstract access to docker compose.
- *
- * @module compose
- */
-
 'use strict';
 
 // Modules
@@ -301,6 +295,7 @@ exports.logs = function(compose, project, opts) {
   };
 
 };
+
 /*
  * Run docker compose remove
  */

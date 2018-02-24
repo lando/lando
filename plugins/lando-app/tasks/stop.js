@@ -1,9 +1,3 @@
-/**
- * Command to stop a lando app
- *
- * @name stop
- */
-
 'use strict';
 
 module.exports = function(lando) {

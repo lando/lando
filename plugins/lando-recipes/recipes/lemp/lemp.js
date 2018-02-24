@@ -1,9 +1,3 @@
-/**
- * LEMP recipe builder
- *
- * @name lemp
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -22,7 +16,7 @@ module.exports = function(lando) {
     };
   };
 
-  /**
+  /*
    * Build out LEMP
    */
   var build = function(name, config) {

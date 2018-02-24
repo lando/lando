@@ -71,7 +71,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
   $_SERVER['HTTP_X_SSL'] = 'ON';
 }
 
-/**
+/*
  * These $_SERVER variables are often used for redirects in code that is read
  * directly (e.g. settings.php) so we can't have them visible to the CLI lest
  * CLI processes might hit a redirect (e.g. header() and exit()) and die.
@@ -88,7 +88,7 @@ else {
   unset($_SERVER['PANTHEON_SITE']);
 }
 
-/**
+/*
  * We need to set this on Drupal 8 to make sure we are getting
  * properly redirected to install.php in the event that the
  * user does not have the needed core tables.
@@ -115,7 +115,7 @@ if (
     echo 'Connection failed: ' . $e->getMessage();
   }
 
-  /**
+  /*
    * Check to see if the `users` table exists and if it does not set
    * PANTHEON_DATABASE_STATE to `empty` to allow for correct redirect to
    * install.php. This is for users who create sites on Pantheon but

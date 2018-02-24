@@ -1,9 +1,3 @@
-/**
- * Events plugin
- *
- * @name events
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -44,8 +38,7 @@ module.exports = function(lando) {
 
             // Validate the service
             if (!_.includes(_.keys(app.services), service)) {
-              lando.log.error('This app has no service called %s', service);
-              process.exit(1);
+              throw new Error('This app has no service called %s', service);
             }
 
             // Build the container

@@ -1,9 +1,3 @@
-/**
- * This does the tooling
- *
- * @name tooling
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -15,8 +9,11 @@ module.exports = function(lando) {
   var format = require('util').format;
   var utils = require('./lib/utils');
 
-  /*
-   * The task builder
+  /**
+   * The tooling command builder
+   *
+   * @since 3.0.0
+   * @alias 'lando.tooling.build'
    */
   var build = function(config) {
 
@@ -87,8 +84,18 @@ module.exports = function(lando) {
       // Run the command
       .then(function() {
 
-        // Build the command
-        var cmd = utils.largs(config);
+        // Arrayify the command if needed
+        if (_.has(config, 'cmd') && typeof config.cmd === 'string') {
+          config.cmd = config.cmd.split(' ');
+        }
+
+        // Start with the entrypoint
+        var cmd = config.cmd || [config.name];
+
+        // Add in args if we expect them
+        if (lando.config.process === 'node') {
+          cmd = cmd.concat(utils.largs(config));
+        }
 
         // Break up our app root and cwd so we can get a diff
         var appRoot = config.app.root.split(path.sep);
@@ -120,11 +127,12 @@ module.exports = function(lando) {
           }
         };
 
-        // If this is a specal "passthrough" command lets augment the cmd
-        _.forEach(config.options, function(option) {
-          if (option.passthrough && _.get(option, 'interactive.name')) {
-            cmd.push('--' + _.get(option, 'interactive.name'));
-            cmd.push(answers[_.get(option, 'interactive.name')]);
+        // If this is a specal "passthrough" command lets make sure we are
+        // appending options
+        _.forEach(config.options, function(option, key) {
+          if (option.passthrough && key) {
+            cmd.push('--' + key);
+            cmd.push(answers[key]);
           }
         });
 
@@ -140,7 +148,8 @@ module.exports = function(lando) {
         // the correct error code is bubbling up and should help provide similar
         // experience when running these commands in something like travis
         .catch(function(error) {
-          process.exit(error.code);
+          error.hide = true;
+          throw error;
         })
 
         // Post event
@@ -154,6 +163,7 @@ module.exports = function(lando) {
 
     // Return our tasks
     return {
+      name: _.first(config.name.split(' ')),
       command: config.name,
       describe: config.description || format('Run %s commands', config.name),
       run: run,

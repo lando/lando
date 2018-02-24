@@ -1,9 +1,3 @@
-/**
- * This handles route parsing
- *
- * @name routes
- */
-
 'use strict';
 
 // Modules

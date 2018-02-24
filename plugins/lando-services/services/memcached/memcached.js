@@ -1,14 +1,8 @@
-/**
- * Lando memcached service builder
- *
- * @name memcached
- */
-
 'use strict';
 
 module.exports = function() {
 
-  /**
+  /*
    * Supported versions for memcached
    */
   var versions = [
@@ -18,14 +12,14 @@ module.exports = function() {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out memcached
    */
   var services = function(name, config) {
@@ -68,14 +62,14 @@ module.exports = function() {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {
     return {data: {}};
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

@@ -1,9 +1,3 @@
-/**
- * Lando mailhog service builder
- *
- * @name mailhog
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -16,7 +10,7 @@ module.exports = function(lando) {
   // "Constants"
   var scd = lando.config.scd;
 
-  /**
+  /*
    * Supported versions for mailhog
    */
   var versions = [
@@ -25,14 +19,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out mailhog
    */
   var services = function(name, config) {
@@ -124,14 +118,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {
     return {data: {}};
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

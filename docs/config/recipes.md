@@ -25,17 +25,22 @@ Supported Recipes
 
 The following recipes are currently offered. Please check out each one to learn how to use them.
 
-*   ####[Backdrop](./../recipes/backdrop.md)
-*   ####[Drupal 6](./../recipes/drupal6.md)
-*   ####[Drupal 7](./../recipes/drupal7.md)
-*   ####[Drupal 8](./../recipes/drupal8.md)
-*   ####[Joomla](./../recipes/joomla.md)
-*   ####[Larvel](./../recipes/laravel.md)
-*   ####[LAMP](./../recipes/lamp.md)
-*   ####[LEMP](./../recipes/lemp.md)
-*   ####[MEAN](./../recipes/mean.md)
-*   ####[Pantheon](./../recipes/pantheon.md)
-*   ####[WordPress](./../recipes/wordpress.md)
+*   ####[Backdrop](./../tutorials/backdrop.md)
+*   ####[Dotnet](./../services/dotnet.md)
+*   ####[Drupal 6](./../tutorials/drupal6.md)
+*   ####[Drupal 7](./../tutorials/drupal7.md)
+*   ####[Drupal 8](./../tutorials/drupal8.md)
+*   ####[Go](./../services/go.md)
+*   ####[Joomla](./../tutorials/joomla.md)
+*   ####[Laravel](./../tutorials/laravel.md)
+*   ####[LAMP](./../tutorials/lamp.md)
+*   ####[LEMP](./../tutorials/lemp.md)
+*   ####[MEAN](./../tutorials/mean.md)
+*   ####[Pantheon](./../tutorials/pantheon.md)
+*   ####[Python](./../services/python.md)
+*   ####[Ruby](./../services/ruby.md)
+*   ####[WordPress](./../tutorials/wordpress.md)
+*   ####[Custom](./../tutorials/custom.md)
 
 Extending and Overriding Recipes
 --------------------------------
