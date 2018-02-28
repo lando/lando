@@ -132,7 +132,7 @@ lando init pantheon | lando init github
 lando start
 ```
 
-You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipe.html)
+You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipes.html)
 
 ```yml
 name: myproject
