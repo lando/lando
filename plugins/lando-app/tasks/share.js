@@ -28,9 +28,7 @@ module.exports = function(lando) {
       // Validate URL
       var hnf = _.isEmpty(url.hostname) || url.hostname !== 'localhost';
       if (hnf || url.protocol !== 'http:') {
-        lando.log.error('Need a url of the form http://localhost:port!');
-        lando.log.error('Run "lando info" for help finding the correct url!');
-        process.exit(153);
+        throw new Error('Need a url of the form http://localhost:port!');
       }
 
       // Try to get the app
@@ -49,8 +47,7 @@ module.exports = function(lando) {
           })
 
           .then(function(app) {
-            // Report lando share use to metrics
-            return lando.metrics.reportAction('share', {app: app});
+            return lando.metrics.report('share', {});
           })
 
           // Get the URLS
@@ -100,6 +97,7 @@ module.exports = function(lando) {
               console.log(chalk.yellow('Press any key to close the tunnel.'));
 
               // Set stdin to the correct mode
+              // @todo: We will need to change this for better localdev gui usage
               process.stdin.resume();
               process.stdin.setEncoding('utf8');
               process.stdin.setRawMode(true);
@@ -114,7 +112,7 @@ module.exports = function(lando) {
             tunnel.on('close', function() {
               console.log('');
               console.log(chalk.green('Tunnel closed!'));
-              process.exit(0);
+              process.stdin.pause();
             });
 
           });

@@ -148,7 +148,8 @@ module.exports = function(lando) {
         // the correct error code is bubbling up and should help provide similar
         // experience when running these commands in something like travis
         .catch(function(error) {
-          process.exit(error.code);
+          error.hide = true;
+          throw error;
         })
 
         // Post event

@@ -29,7 +29,7 @@ module.exports = function(lando) {
       var landofile = path.join(app.dir, lando.config.appConfigFilename);
 
       // If file doesnt exist then we are done
-      if (!fs.existsSync(landofile)) {
+      if (!fs.pathExistsSync(landofile)) {
         return false;
       }
 
@@ -425,7 +425,7 @@ module.exports = function(lando) {
       // Find the first directory that has a lando.yml
       var configFile = _.find(files, function(file) {
         lando.log.verbose('Checking for app config at %s', file);
-        return fs.existsSync(file);
+        return fs.pathExistsSync(file);
       });
 
       // If we have a config file let's load up the app
@@ -736,18 +736,17 @@ module.exports = function(lando) {
    * @todo Should this be an internal method? Or can we deprecate at some point?
    * @since 3.0.0
    * @alias 'lando.app.cleanup'
-   * @param {Object} app - A fully instantiated app object
    * @returns {Promise} A Promise.
    * @example
    *
    * // Do the app cleanup
-   * return lando.app.cleanup(app)
+   * return lando.app.cleanup()
    *
    */
-  var cleanup = function(app) {
+  var cleanup = function() {
 
     // Cleaning up
-    app.message('Cleaning up app registry and containers');
+    lando.message({message: 'Attempting apps cleanup...'});
 
     // Get all our apps
     return list()
@@ -813,7 +812,7 @@ module.exports = function(lando) {
 
     // Make sure we are in a clean place before we get dirty
     .then(function() {
-      return cleanup(app);
+      return cleanup();
     })
 
     /**
@@ -948,7 +947,7 @@ module.exports = function(lando) {
 
     // Make sure we are in a clean place before we get dirty
     .then(function() {
-      return cleanup(app);
+      return cleanup();
     })
 
     /**
@@ -1074,7 +1073,7 @@ module.exports = function(lando) {
      *
      * // Make sure the proxy is down before we destroy
      * app.events.on('pre-destroy', function() {
-     *   if (fs.existsSync(proxyFile)) {
+     *   if (fs.pathExistsSync(proxyFile)) {
      *     return lando.engine.stop(getProxy(proxyFile));
      *   }
      * });

@@ -56,6 +56,7 @@ function InstallExe($file)
 # Download helper
 function Download($url, $destination)
 {
+  [Net.ServicePointManager]::SecurityProtocol = 'Ssl3, Tls, Tls11, Tls12'
   $webclient = New-Object System.Net.WebClient
   Write-Output "Downloading $url to $destination..."
   $webclient.DownloadFile($url, $destination)

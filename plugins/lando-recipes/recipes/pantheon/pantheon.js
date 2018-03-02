@@ -199,17 +199,14 @@ module.exports = function(lando) {
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
         lando.log.error('Looks like you dont have a machine token!');
-        lando.log.error('Run lando terminus auth:login --machine-token=TOKEN');
-        process.exit(1);
+        throw new Error('Run lando terminus auth:login --machine-token=TOKEN');
       }
 
       // Validate we have a token and siteid
       _.forEach([token, config.id], function(prop) {
         if (_.isEmpty(prop)) {
           lando.log.error('Error getting token or siteid.', prop);
-          lando.log.error('Make sure you run:');
-          lando.log.error('lando init %s pantheon', config._app);
-          process.exit(1);
+          throw new Error('Make sure you run: lando init pantheon');
         }
       });
 
@@ -497,7 +494,7 @@ module.exports = function(lando) {
     var config = {};
 
     // Check pantheon.yml settings if needed
-    if (fs.existsSync(configFile)) {
+    if (fs.pathExistsSync(configFile)) {
 
       // Get the pantheon config
       var pconfig = lando.yaml.load(configFile);
@@ -669,7 +666,7 @@ module.exports = function(lando) {
     // Check if the user specified the compserSwitch key to false
     var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
     var composerJson = path.join(config._root, 'composer.json');
-    var runComposer = fs.existsSync(composerJson) && !disableComposer;
+    var runComposer = fs.pathExistsSync(composerJson) && !disableComposer;
 
     // Run composer install if we have the file and it isnt explicitly disabled in config
     if (runComposer) {
