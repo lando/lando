@@ -4,24 +4,32 @@
 var path = require('path');
 
 /*
- * Helper to get default engine config
+ * Helper to get engine config
  */
 exports.getEngineConfig = function() {
 
   // Create the default options
-  var config = {
+  const defaultConfig = {
     host: '127.0.0.1',
     socketPath: '/var/run/docker.sock'
   };
 
   // Slight deviation on Windows due to npipe://
   if (process.platform === 'win32') {
-    config.socketPath = '//./pipe/docker_engine';
+    defaultConfig.socketPath = '//./pipe/docker_engine';
   }
 
-  // Return the config
-  return config;
+  let finalConfig = defaultConfig;
 
+  // Allow mixin of environment variables
+  if (process.env.engineConfig && JSON.parse(process.env.engineConfig)) {
+    finalConfig = Object.assign(
+      defaultConfig,
+      JSON.parse(process.env.engineConfig)
+    );
+  }
+
+  return finalConfig;
 };
 
 /*
