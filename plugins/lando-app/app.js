@@ -431,8 +431,11 @@ module.exports = function(lando) {
       // If we have a config file let's load up the app
       if (!_.isEmpty(configFile)) {
 
-        // TRy to load the config
+        // Try to load the config
         var appConfig = lando.yaml.load(configFile);
+
+        // Find any variables in the lando config file and replace them.
+        appConfig = lando.yaml.replace(appConfig);
 
         // If we have appConfig then load the app
         if (!_.isEmpty(appConfig)) {
