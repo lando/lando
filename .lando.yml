@@ -1,13 +1,30 @@
-name: docs.lando
+name: lando.dev
 proxy:
   appserver:
-    - port: 80/tcp
-      default: true
-    - port: 443/tcp
-      default: true
-      secure: true
+    - docs.lndo.site
 services:
   appserver:
     type: nginx
     ssl: true
     webroot: _book
+  lando:
+    type: node:8.9
+    globals:
+      grunt-cli: "latest"
+    overrides:
+      services:
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+tooling:
+  npm:
+    service: lando
+  node:
+    service: lando
+  grunt:
+    service: lando
+  lando:
+    service: lando
+    description: I heard you like Lando? Have some Lando in your Lando.
+    cmd: /app/bin/lando.js
+  yarn:
+    service: lando

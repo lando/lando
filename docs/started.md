@@ -107,6 +107,6 @@ touch .lando.yml
 vi .lando.yml
 ```
 
-Here is a good example of a generic LENO stack `.lando.yml`
+Here is a good example of a generic LEMP stack `.lando.yml`
 
 {% codesnippet "./../examples/lemp2/.lando.yml" %}{% endcodesnippet %}

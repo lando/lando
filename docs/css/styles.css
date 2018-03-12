@@ -2,6 +2,10 @@ body {
   padding-top: 78px;
 }
 
+.api-body-footer {
+    padding-bottom: 100%;
+}
+
 .book-body {
   font-family: "Montserrat", "Trebuchet", sans-serif;
   font-weight: 400;
@@ -69,6 +73,15 @@ body {
 
 .markdown-section a {
   color: #ED3F7A;
+}
+
+.markdown-section blockquote {
+  margin: 0;
+  margin-bottom: 1.85em;
+  margin-top: 1.85em;
+  padding: 15px 15px;
+  color: #664b9d;
+  border-left: 11px solid #664b9d;
 }
 
 .book-summary ul.summary li.active>a {

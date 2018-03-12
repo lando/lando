@@ -45,6 +45,17 @@ proxyHttpsFallbacks:
 
 You will need to do a `lando poweroff` to apply these changes. **You also should not change the `proxyDomain` unless you know what you are doing!**
 
+You can find what process is bound to the default ports of 80 and 443 and try to kill those processes to have lando automatically create URLs like `trivial-proxy.lndo.site` instead of `trivial-proxy.lndo.site:444`.
+
+```bash
+# Find out if any service listens on those ports.
+sudo lsof -n -i :80 | grep LISTEN
+sudo lsof -n -i :443 | grep LISTEN
+
+# If any services are listed, you can try killing them or stop them a different way.
+sudo kill -9 $PID
+```
+
 Working Offline or Using Custom Domains
 ---------------------------------------
 
@@ -61,6 +72,17 @@ Here is an example:
 # Get my custom domain to work
 127.0.0.1 billy.dee.williams
 ```
+
+Using Wildcards in Custom Domains
+---------------------------------
+
+If a service should be be able to listen to multiple domain names following a common pattern you can use the `*` wildcard character to match any amount of alphanumeric characters and hyphens/dashes (`-`).
+
+To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example use `*.myapp.lndo.site` or `*.*.lndo.site`.
+
+> #### Info::Wildcard domains need to be encapsulated in quotations
+>
+> If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
 
 Checking Proxy Routes
 ---------------------

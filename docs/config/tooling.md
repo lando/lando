@@ -27,7 +27,7 @@ Commands:
   info [appname]           Prints info about app in current directory or [appname]
   init <appname> [method]  Initializes a lando app called <appname> with optional [method]
   list                     List all lando apps
-  logs [appname]           Get logs for app in current directory or [appname]
+  logs [appname]           Get logs for in current directory or [appname]
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
@@ -44,6 +44,29 @@ Global Options:
   --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
 
 You need at least one command before moving on
+```
+
+Overriding
+----------
+
+You can override tooling provided by Lando by redefining the tooling options in your `.lando.yml` file. For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory you could do the below.
+
+```yml
+tooling:
+  drush:
+    cmd:
+      - "drush"
+      - "--root=/app/web"
+```
+
+Disabling
+---------
+
+You can also disable built in tooling by setting the command to a non-object value in your `.lando.yml` file. While any value will do it's convention to use `disabled` as in the below.
+
+```yml
+tooling:
+  push: disabled
 ```
 
 Directory Mapping

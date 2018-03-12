@@ -2,7 +2,10 @@ init:
   - git config --global core.autocrlf true
 platform: x64
 environment:
-  nodejs_version: "6"
+  nodejs_version: "8"
+cache:
+  - node_modules
+  - '%USERPROFILE%\.gitbook'
 install:
 
   # Get the latest stable version of Node.js or io.js
@@ -12,11 +15,8 @@ install:
   - choco install -y InnoSetup
   - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
 
-  # install relevant things
-  - npm install -g grunt-cli
-
   # Build the things
-  - npm -E install
+  - yarn
 
   # Edit the package.json if this isn't an official release
   - IF NOT DEFINED APPVEYOR_REPO_TAG_NAME (node .\scripts\dev-version.js)
@@ -29,26 +29,22 @@ install:
 
   # Sanity checks
   - node --version
-  - npm --version
-  - grunt --version
+  - yarn --version
   - node bin\lando.js version
   # Iscc has no version option and returns exit code 1 by default
   # This can never fail but at least we can check the output to verify
   - iscc | echo
 
-  # Run basic code style tests
-  - grunt test:code
-
-  # Run unit tests
-  - grunt test:unit
+  # Run tests
+  - yarn test
 
   # Make sure we can build the docs
-  - grunt docs
+  - yarn docs
 
 build_script:
 
   # Build dev releases
-  - grunt pkg
+  - yarn pkg:full
   - mkdir release
   - copy "dist\lando.exe" "release\lando-%APPVEYOR_REPO_TAG_NAME%.exe"
 
@@ -79,8 +75,3 @@ deploy:
     artifact: weezer
     on:
       branch: master
-notifications:
-  - provider: Email
-    to:
-      - mike@thinktandem.io
-    on_build_failure: true

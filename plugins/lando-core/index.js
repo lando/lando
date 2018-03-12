@@ -1,26 +1,17 @@
-/**
- * Our core plugin
- *
- * @name index
- */
-
 'use strict';
 
 module.exports = function(lando) {
 
-  // Bootstrap init framework
-  require('./lib/bootstrap')(lando);
+  // Add core commands to lando
+  lando.events.on('post-bootstrap', function(lando) {
 
-  // Basic environment handling
-  require('./lib/env')(lando);
+    // Log
+    lando.log.info('Initializing core plugin');
 
-  // Add a function to the app object so it can scan its URLs
-  require('./lib/scan')(lando);
+    // Add the tasks command
+    lando.tasks.add('config', require('./tasks/config')(lando));
+    lando.tasks.add('version', require('./tasks/version')(lando));
 
-  // Basic app services handling
-  require('./lib/services')(lando);
-
-  // App url handling and discovery
-  require('./lib/urls')(lando);
+  });
 
 };

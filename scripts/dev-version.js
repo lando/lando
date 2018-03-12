@@ -7,19 +7,17 @@
 
 // Grab needed modules
 var _ = require('lodash');
-var bump = require('./../tasks/util.js')();
 var fs = require('fs-extra');
 var path = require('path');
 var Promise = require('bluebird');
 var shell = require('shelljs');
 
 // Get the location of the files we need to edit
-var files = bump.bump.options.files;
-var describeOptions = bump.bump.options.gitDescribeOptions;
+var files = ['package.json'];
 
 // Start our sacred promise
 return new Promise(function(resolve, reject) {
-  shell.exec(['git describe ' + describeOptions], {silent: true}, function(code, stdout, stderr) {
+  shell.exec(['git describe --tags --always --abbrev=1'], {silent: true}, function(code, stdout, stderr) {
     if (code !== 0) {
       reject(new Error('code: ' + code + 'err:' + stderr));
     }
