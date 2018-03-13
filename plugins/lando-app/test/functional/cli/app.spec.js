@@ -17,8 +17,18 @@ describe('App Commands', function() {
   this.timeout(50000);
   // Setup a temp dir to play in and tell Mocha where our SUT is.
   before(function() {
+    let dockerConfig = {
+      host: '127.0.0.1',
+      socketPath: process.platform === 'win32' ? '//./pipe/docker_engine' : '/var/run/docker.sock'
+    };
+    if (process.env.CIRCLECI === true) {
+      dockerConfig = {
+        host: process.env.DOCKER_HOST,
+        port: process.env.DOCKER_PORT
+      };
+    }
     // We sometimes need to inspect Docker environment directly
-    this.docker = new Docker();
+    this.docker = new Docker(dockerConfig);
     // We want a clean playground
     this.appFolder = fs.mkdtempSync(
       path.join(os.tmpdir(), 'lando-test-'),
