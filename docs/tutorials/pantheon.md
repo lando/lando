@@ -13,23 +13,16 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
  Before you get started with this recipe we assume that you have:
 
  1. [Installed Lando](./../installation/system-requirements.md)
- 2. [Read up on how to get a `.lando.yml`](./../started.md)
-
- If after reading #2 above you are still unclear how to get started then try this
+ 2. [Install Terminus from Pantheon](https://pantheon.io/docs/terminus/install/) including logging in with machine token.
 
  ```bash
- # Go into a local folder with your site or app codebase
- # You can get this via git clone or from an archive
- cd /path/to/my/codebase
+ # Create an empty folder for your Pantheon site.
+ cd /path/to/my/folder
 
  # Initialize a basic .lando.yml file for my recipe with sane defaults
- lando init
-
- # Commit the .lando.yml to your git repo (Optional but recommended)
- git add -A
- git commit -m "This will be easy, my friend."
- git push
+ lando init pantheon
  ```
+ Follow the prompts to login with your token and choose the site you want to install.
 
  For more info on how `lando init` works check out [this](./../cli/init.md).
 
@@ -58,6 +51,15 @@ Once you've started up your Pantheon site you will need to pull in your database
 ### 1. Using `lando pull`
 
 Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
+
+
+Before you pull, you'll want add a machine token for your Lando instance. We'll need a separate token since the site will run inside of a container.
+
+```bash
+lando terminus auth:login --machine-token=xxxx
+```
+
+Now you can pull the site database and files.
 
 On a database pull Lando will attempt to clear the cache of the remote environment (unless it is the live environment) to minimize the size of the import.
 
