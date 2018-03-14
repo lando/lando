@@ -23,7 +23,7 @@ var userConfRoot = path.join(os.homedir(), '.lando');
 var version = require(path.join(__dirname, '..', 'package.json')).version;
 
 // Allow envvars to override a few core things
-var ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO_';
+var ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
 var LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
 var USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
 
