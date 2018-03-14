@@ -668,6 +668,10 @@ command-line-args@^5.0.0:
     lodash.camelcase "^4.3.0"
     typical "^2.6.1"
 
+command-line-test@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/command-line-test/-/command-line-test-1.0.10.tgz#7897c68076a9cfb6a53e78af069c316b5185ee7d"
+
 command-line-tool@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/command-line-tool/-/command-line-tool-0.8.0.tgz#b00290ef1dfc11cc731dd1f43a92cfa5f21e715b"
