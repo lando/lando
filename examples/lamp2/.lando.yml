@@ -15,10 +15,6 @@ config:
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   php: '5.6'
 
-  # Serve php by either apache or nginx. You can put in any `service:version`
-  # string that is supported by Lando's nginx and apache services.
-  via: nginx
-
   # Optionally specify the location of the webroot relative to your approot.
   #
   # If ommitted this will be your approot itself.
