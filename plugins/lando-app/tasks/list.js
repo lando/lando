@@ -31,10 +31,9 @@ module.exports = function(lando) {
 
       // Map each app to a summary and print results
       .map(function(app) {
-        return appSummary(app)
-        .then(function(summary) {
+        return appSummary(app);
+      }).then(function(summary) {
           console.log(JSON.stringify(summary, null, 2));
-        });
       });
 
     }

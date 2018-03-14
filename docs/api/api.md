@@ -1356,7 +1356,7 @@ catch(function(err) {
 <a id="landoappcleanup"></a>
 
 <h2 id="landoappcleanup" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.app.cleanup(app) ⇒ <code>Promise</code></h2>
+  lando.app.cleanup() ⇒ <code>Promise</code></h2>
 <div class="api-body-header"></div>
 
 Does some helpful cleanup before running an app operation.
@@ -1369,16 +1369,11 @@ containers they may have.
 
 - [ ] Should this be an internal method? Or can we deprecate at some point?
 
-
-| Param | Type | Description |
-| --- | --- | --- |
-| app | <code>Object</code> | A fully instantiated app object |
-
 **Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
 // Do the app cleanup
-return lando.app.cleanup(app)
+return lando.app.cleanup()
 ```
 <div class="api-body-footer"></div>
 <a id="landoappstart"></a>

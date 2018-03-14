@@ -20,7 +20,6 @@ cache:
     - ~/.gitbook
 
 before_install:
-
   # Import our keys on OSX
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [ ! -z "$APPLE_CERTS_DATA" ] && [ ! -z "$APPLE_CERTS_PASSWORD" ]; then
@@ -68,12 +67,6 @@ script:
   # Run the build
   - mkdir -p release
   - yarn pkg:full
-
-  # Run a few tests on the installer
-  # - if [ $LANDO_PKG_TYPE == "deb" ]; then grunt test:bats; fi
-  # @TODO: Looks like installing Docker.app is still a problem which prevents us
-  # from testing
-  # - if [ $LANDO_PKG_TYPE == "dmg" ]; then grunt test:bats; fi
 
   # Name the release depending on whether it is an official release or not
   - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi
