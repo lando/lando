@@ -10,7 +10,7 @@ const expect = chai.expect;
 chai.should();
 
 // Get caching module to test
-const config = require('./../lib/config');
+const config = require('./../../lib/config');
 
 // This is the file we are testing
 describe('config', function() {
@@ -80,7 +80,7 @@ describe('config', function() {
 
   describe('#stripEnvs', function() {
 
-    it('returns process.env object stripped of all keys that start with prefix', function() {
+    it('returns process.env stripped of all keys that start with prefix', function() {
 
       // Add mock data to process.env
       process.env.DANCE_NOW = 'everybody';
@@ -89,6 +89,7 @@ describe('config', function() {
 
       expect(result).to.be.an('object');
       expect(result).to.not.have.key('DANCE_NOW');
+      expect(process.env).to.not.have.key('DANCE_NOW');
 
     });
 
