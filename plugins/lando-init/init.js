@@ -153,7 +153,7 @@ module.exports = function(lando) {
 
     // Ensure that cache directory exists
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.ensureDirSync(path.join(keysDir));
+    fs.mkdirpSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     var comment = lando.config.id + '.lando@' + os.hostname();

@@ -109,7 +109,7 @@ module.exports = function(lando) {
         return lando.Promise.try(function() {
 
           // If there is no proxy file then lets scan the ports
-          if (!fs.pathExistsSync(proxyFile)) {
+          if (!fs.existsSync(proxyFile)) {
             return scanPorts(lando.config);
           }
 
@@ -144,7 +144,7 @@ module.exports = function(lando) {
           var data = proxy.build(domain, proxyDash, ports.http, ports.https);
 
           // If we are building the proxy for the first time
-          if (!fs.pathExistsSync(proxyFile)) {
+          if (!fs.existsSync(proxyFile)) {
             lando.log.verbose('Starting proxy for the first time');
             lando.yaml.dump(proxyFile, data);
           }

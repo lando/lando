@@ -77,7 +77,7 @@ module.exports = function(lando) {
     });
 
     // Mixin preexisting tokenss
-    if (fs.pathExistsSync(tokenDir)) {
+    if (fs.existsSync(tokenDir)) {
       _.forEach(fs.readdirSync(tokenDir), function(token) {
         var dataPath = path.join(tokenDir, token);
         var data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
@@ -176,7 +176,7 @@ module.exports = function(lando) {
 
     // Check if ssh key exists and create if not
     return Promise.try(function() {
-      if (!fs.pathExistsSync(path.join(lando.config.userConfRoot, 'keys', key))) {
+      if (!fs.existsSync(path.join(lando.config.userConfRoot, 'keys', key))) {
         lando.log.verbose('Creating key %s for Pantheon', key);
         return lando.init.run(name, dest, lando.init.createKey(key));
       }
