@@ -138,12 +138,12 @@ module.exports = function(lando) {
     services[name] = merger(services[name], {volumes: [
       '$LANDO_APP_ROOT_BIND:/app' + shareMode,
       '$LANDO_ENGINE_HOME:/user' + shareMode,
-      '$LANDO_ENGINE_CONF:/lando' + shareMode,
-      '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh'
+      '$LANDO_ENGINE_CONF:/lando' + shareMode
     ]});
 
     // Data about some common helpers
     var scripts = [
+      {script: 'user-perms.sh', local: esd, remote: 'helpers'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
       {script: 'mysql-export.sh', local: shd, remote: 'helpers'},

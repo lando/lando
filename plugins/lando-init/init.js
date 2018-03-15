@@ -74,7 +74,7 @@ module.exports = function(lando) {
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/helpers/user-perms.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
       ]
     };
