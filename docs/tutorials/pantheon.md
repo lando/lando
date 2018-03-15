@@ -42,8 +42,6 @@ Once you've completed the above you should be able to start your Pantheon site.
 
 You can read below on how to do that with our helper `pull` command or via a manual import.
 
-If your Pantheon site has a `composer.json` Lando will attempt to run `composer install` on it automatically.
-
 ```bash
 lando start
 ```
