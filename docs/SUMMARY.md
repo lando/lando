@@ -204,6 +204,7 @@
 *   [lando.events.__on](api/api.md#landoevents__on)
 *   [lando.init.add](api/api.md#landoinitadd)
 *   [lando.init.build](api/api.md#landoinitbuild)
+*   [lando.init.cloneRepo](api/api.md#landoinitclonerepo)
 *   [lando.init.createKey](api/api.md#landoinitcreatekey)
 *   [lando.init.kill](api/api.md#landoinitkill)
 *   [lando.init.run](api/api.md#landoinitrun)
