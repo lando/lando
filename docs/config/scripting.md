@@ -20,7 +20,7 @@ A `.lando.yml` that injects the script into the `appserver`'s `/scripts` directo
 services:
   appserver:
     scripts:
-      - scripts/run-this.sh
+      - scripts/my-script.sh
 ```
 
 Expected behavior
