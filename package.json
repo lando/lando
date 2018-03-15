@@ -39,6 +39,7 @@
       "plugins/**/*.js"
     ],
     "assets": [
+      "config.yml",
       "package.json",
       "**/fastcgi_params",
       "**/*.cnf",
@@ -57,7 +58,7 @@
     "cli-table": "^0.3.1",
     "dockerode": "^2.4.2",
     "dotenv": "^4.0.0",
-    "fs-extra": "^4.0.3",
+    "fs-extra": "^0.18.2",
     "github": "^9.2.0",
     "inquirer": "^3.1.1",
     "ip": "^1.1.5",
@@ -82,8 +83,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "copy": "^0.3.1",
     "command-line-test": "^1.0.10",
+    "copy": "^0.3.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
     "gitbook-cli": "^2.3.0",

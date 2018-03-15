@@ -84,7 +84,7 @@ exports.moveConfig = function(from, to) {
    };
 
    // Ensure to exists
-   fs.ensureDirSync(to);
+   fs.mkdirpSync(to);
 
    // Try to copy the assets over
    try {
@@ -100,12 +100,12 @@ exports.moveConfig = function(from, to) {
      var f = _.get(error, 'path');
 
      // Catch this so we can try to repair
-     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.ensureDirSync(f)) {
+     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.mkdirpSync(f)) {
        throw new Error(error);
      }
 
      // Try to take corrective action
-     fs.removeSync(f);
+     fs.unlinkSync(f);
 
      // Try to move again
      fs.copySync(from, to, copyOpts);

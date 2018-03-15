@@ -494,7 +494,7 @@ module.exports = function(lando) {
     var config = {};
 
     // Check pantheon.yml settings if needed
-    if (fs.pathExistsSync(configFile)) {
+    if (fs.existsSync(configFile)) {
 
       // Get the pantheon config
       var pconfig = lando.yaml.load(configFile);
@@ -666,7 +666,7 @@ module.exports = function(lando) {
     // Check if the user specified the compserSwitch key to false
     var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
     var composerJson = path.join(config._root, 'composer.json');
-    var runComposer = fs.pathExistsSync(composerJson) && !disableComposer;
+    var runComposer = fs.existsSync(composerJson) && !disableComposer;
 
     // Run composer install if we have the file and it isnt explicitly disabled in config
     if (runComposer) {

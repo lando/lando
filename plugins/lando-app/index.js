@@ -98,7 +98,7 @@ module.exports = function(lando) {
     app.labels = merger(app.labels, labels);
 
     // Inject values from an .env file if it exists
-    if (fs.pathExistsSync(path.join(app.root, '.env'))) {
+    if (fs.existsSync(path.join(app.root, '.env'))) {
 
       // Log
       lando.log.debug('.env file found for %s, loading its config', app.name);

@@ -74,7 +74,7 @@ module.exports = function(lando) {
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/helpers/user-perms.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
       ]
     };
@@ -153,7 +153,7 @@ module.exports = function(lando) {
 
     // Ensure that cache directory exists
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.ensureDirSync(path.join(keysDir));
+    fs.mkdirpSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     var comment = lando.config.id + '.lando@' + os.hostname();
