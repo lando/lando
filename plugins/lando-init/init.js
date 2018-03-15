@@ -120,6 +120,30 @@ module.exports = function(lando) {
   };
 
   /**
+   * Helper to return a performant git clone command
+   *
+   * This clones to /tmp and then moves to /app to avoid file sharing performance
+   * hits
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.cloneRepo'
+   */
+  var cloneRepo = function(repo) {
+
+    // Get a unique clone folder
+    var tmpFolder = '/tmp/' + _.uniqueId('app-');
+
+    // Commands
+    var mkTmpFolder = 'mkdir -p ' + tmpFolder;
+    var cloneRepo = 'git -C ' + tmpFolder + ' clone ' + repo + ' ./';
+    var cpHome = 'cp -rfT ' + tmpFolder + ' /app';
+
+    // Clone cmd
+    return [mkTmpFolder, cloneRepo, cpHome].join(' && ');
+
+  };
+
+  /**
    * Helper to return a create key command
    *
    * @since 3.0.0
@@ -257,6 +281,7 @@ module.exports = function(lando) {
   return {
     add: add,
     build: build,
+    cloneRepo: cloneRepo,
     createKey: createKey,
     get: get,
     kill: kill,

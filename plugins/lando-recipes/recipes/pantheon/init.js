@@ -227,14 +227,11 @@ module.exports = function(lando) {
           pathname: '/~/repository.git'
         };
 
-        // Clone cmd
-        var cmd = [
-          'cd $LANDO_MOUNT',
-          'git clone ' + url.format(gitUrl) + ' ./'
-        ].join(' && ');
+        // Repo
+        var repo = url.format(gitUrl);
 
         // Clone
-        return lando.init.run(name, dest, cmd);
+        return lando.init.run(name, dest, lando.init.cloneRepo(repo));
 
       });
 
