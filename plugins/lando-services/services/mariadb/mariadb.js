@@ -55,6 +55,12 @@ module.exports = function(lando) {
         TERM: 'xterm'
       },
       volumes: ['data_' + name + ':' + configFiles.dataDir],
+      healthcheck: {
+        test: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
+        interval: '2s',
+        timeout: '10s',
+        retries: '25'
+      },
       command: 'docker-entrypoint.sh mysqld'
     };
 
