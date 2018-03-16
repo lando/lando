@@ -64,7 +64,8 @@ describe('yaml', function() {
     });
 });
 
+// Remove the temporary test config file.
 fs.unlink(testLandoPath, (err) => {
     if (err) throw err;
-console.log('path/file.txt was deleted');
+console.log(testLandoPath + ' was deleted');
 });
