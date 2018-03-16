@@ -193,12 +193,18 @@ module.exports = function(lando) {
 
       // Analyze and warn if needed
       .then(function(data) {
+
+        // Per service warnings
         _.each(data, function(datum) {
           if (datum.health === 'unhealthy') {
             lando.log.warn('Service %s is unhealthy', datum.service);
             lando.log.warn('Run "lando logs -s %s"', datum.service);
           }
         });
+
+        // Log the whole thing
+        lando.log.verbose('Healthcheck for %s = %j', app.name, data);
+
       });
 
     });
