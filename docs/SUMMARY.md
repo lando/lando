@@ -235,6 +235,7 @@
 *   [lando.services.add](api/api.md#landoservicesadd)
 *   [lando.services.build](api/api.md#landoservicesbuild)
 *   [lando.services.get](api/api.md#landoservicesget)
+*   [lando.services.healthcheck](api/api.md#landoserviceshealthcheck)
 *   [lando.services.info](api/api.md#landoservicesinfo)
 *   [lando.shell.esc](api/api.md#landoshellesc)
 *   [lando.shell.escSpaces](api/api.md#landoshellescspaces)

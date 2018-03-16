@@ -59,6 +59,12 @@ module.exports = function(lando) {
         POSTGRES_DB: creds.database || 'database',
         TERM: 'xterm'
       },
+      healthcheck: {
+        test: 'psql -U postgres -c "\\\l"',
+        interval: '2s',
+        timeout: '10s',
+        retries: '25'
+      },
       // @todo: Persistance of postgres data volume is an issue
       // see: https://github.com/docker-library/postgres/issues/213
       //volumes: ['data:' + configFiles.dataDir],

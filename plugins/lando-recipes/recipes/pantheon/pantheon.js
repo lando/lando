@@ -663,17 +663,6 @@ module.exports = function(lando) {
 
     }
 
-    // Check if the user specified the compserSwitch key to false
-    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
-    var composerJson = path.join(config._root, 'composer.json');
-    var runComposer = fs.existsSync(composerJson) && !disableComposer;
-
-    // Run composer install if we have the file and it isnt explicitly disabled in config
-    if (runComposer) {
-      var composerInstall = 'cd $LANDO_MOUNT && composer install';
-      build.services[cliService].build.push(composerInstall);
-    }
-
     // Login with terminus if we have a token
     var cache = lando.cache.get('site:meta:' + config._app);
     if (_.has(cache, 'token')) {
