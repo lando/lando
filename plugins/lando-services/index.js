@@ -180,6 +180,29 @@ module.exports = function(lando) {
       lando.cache.remove(app.name + ':last_build');
     });
 
+    // Add some logic that extends start until healthchecked containers report as healthy
+    app.events.on('post-start', 1, function() {
+
+      // Get this apps containers
+      return lando.engine.list(app.name)
+
+      // Wait until containers are ready
+      .map(function(container) {
+        return lando.services.healthcheck(container);
+      })
+
+      // Analyze and warn if needed
+      .then(function(data) {
+        _.each(data, function(datum) {
+          if (datum.health === 'unhealthy') {
+            lando.log.warn('Service %s is unhealthy', datum.service);
+            lando.log.warn('Run "lando logs -s %s"', datum.service);
+          }
+        });
+      });
+
+    });
+
     // Handle build steps
     // Go through each service and run additional build commands as needed
     app.events.on('post-start', function() {
