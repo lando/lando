@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libxml2-dev \
     mysql-client \
+    postgresql-client \
     libicu-dev \
     pv \
     ssh \
