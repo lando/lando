@@ -35,9 +35,7 @@ Variables allow users to dynamically replace configuration values in .lando.yml 
 
 This enables users to set common project naming conventions from one place increasing consistency and reducing the chances of typos.
 
-Variables must be set at the top level of the .lando.yml file.
-
-{% codesnippet "./../test/.lando.yml" %}{% endcodesnippet %}
+Variables must be set at the top level nested beneath 'custom_variables' key of the .lando.yml file.
 
 
 
