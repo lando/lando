@@ -90,7 +90,8 @@ module.exports = function(lando) {
         }
 
         // Start with the entrypoint
-        var cmd = config.cmd || [config.name];
+        //  Check if cmd is an array and wrap in array literal if not so we can concat with other commands.
+        var cmd = Array.isArray(config.cmd) ? config.cmd : [config.cmd] || [config.name];
 
         // Add in args if we expect them
         if (lando.config.process === 'node') {
