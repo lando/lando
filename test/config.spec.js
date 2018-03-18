@@ -26,7 +26,7 @@ describe('config', function() {
         });
 
         supportedOSs.forEach((os) => {
-            it('returns the sysConfRoot based on path for os ' + os, function() {
+            it('returns the sysConfRoot based on path for os – ' + os, function() {
                 Object.defineProperty(process, 'platform', {value: os});
                 if (os === 'win32') {
                     // Mock extra windows stuff.
@@ -55,7 +55,7 @@ describe('config', function() {
                         break;
                     default:
                         // Fail if os is unknown.
-                        expect(false).to.equal(true);
+                        expect.fail(os, 'unknown', 'OS supplied to getSysConfRoot from process.platform is unknown');
                 }
 
                 if (os === 'win32') {
@@ -76,6 +76,62 @@ describe('config', function() {
     });
 
     // processType
+    describe('processType', function() {
+        const supportedprocessTypes = [null, 'electron', 'chrome', 'atom-shell', 'node'];
+
+        before(function() {
+            // Store the platform for restoring later.
+            this.originalVersions = process.versions;
+        });
+
+        beforeEach(function() {
+            // Store the platform for restoring later.
+            const copyVersions = Object.assign({}, this.originalVersions);
+            delete copyVersions.node;
+            Object.defineProperty(process, 'versions', {
+                value: copyVersions,
+                writable: false
+            });
+        });
+
+        supportedprocessTypes.forEach((processType) => {
+            it('returns a string reflecting the process type – ' + processType, function() {
+
+                if (processType !== null) {
+                    // Add placeholder version number.
+                    process.versions[processType] = '1.0.0';
+                }
+
+                const theDefaults = config.defaults();
+                const processData = theDefaults.process;
+
+                // First make sure we're receiving an object.
+                expect(processData).to.be.a('string');
+
+                // Check the returned string matches the correct output for the os.
+                switch (processType) {
+                    case 'electron':
+                    case 'chrome':
+                    case 'atom-shell':
+                        expect(processData).to.equal('browser');
+                        break;
+                    case 'node':
+                    case null:
+                        expect(processData).to.equal('node');
+                        break;
+                    default:
+                        // Fail if os is unknown.
+                        expect.fail(processType, 'unknown', 'Process type supplied to processType from process.versions is unknown');
+                }
+
+            });
+        });
+
+        after(function() {
+            // Restore the platform setting.
+            Object.defineProperty(process, 'versions', {value: this.originalVersions});
+        });
+    });
 
     // merge
 
@@ -90,5 +146,5 @@ describe('config', function() {
     // loadEnvs
 
     // This is the method we are testing
-    
+
 });
