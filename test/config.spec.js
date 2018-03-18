@@ -4,6 +4,7 @@
  */
 
 'use strict';
+const _ = require('lodash');
 
 // Setup chai.
 const chai = require('chai');
@@ -160,7 +161,7 @@ describe('config', function() {
         const envToStrip = ['npm_'];
 
         before(function() {
-            // Store the platform for restoring later.
+            // Store the environment object for restoring later.
             this.originalEnvVars = process.env;
         });
 
@@ -178,12 +179,36 @@ describe('config', function() {
         });
 
         after(function() {
-            // Store the platform for restoring later.
+            // Restore the environment object.
              process.env = this.originalEnvVars;
         });
     });
 
     // defaults
+    describe('defaults', function() {
+        const theDefaults = config.defaults();
+
+        it('returns a correctly structured object defaults object', function() {
+            expect(_.hasIn(theDefaults, 'configFilename')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'configSources')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'env')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'home')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'logLevel')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'logLevelConsole')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'node')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'os')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'os.type')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'os.platform')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'os.release')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'os.arch')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'pluginDirs')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'product')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'process')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'srcRoot')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'sysConfRoot')).to.equal(true);
+            expect(_.hasIn(theDefaults, 'userConfRoot')).to.equal(true);
+        });
+    });
 
     // loadFiles
 
