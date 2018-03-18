@@ -29,7 +29,7 @@ module.exports = function(lando) {
       var landofile = path.join(app.dir, lando.config.appConfigFilename);
 
       // If file doesnt exist then we are done
-      if (!fs.pathExistsSync(landofile)) {
+      if (!fs.existsSync(landofile)) {
         return false;
       }
 
@@ -199,7 +199,11 @@ module.exports = function(lando) {
       // Webroot
       app.webRoot = config.webroot || '.';
       // Trigger core messaging emit with app specific message.
-      app.message = function(message) {
+      app.message = function() {
+
+        // Parse and format
+        var args = _.toArray(arguments);
+        var message = util.format.apply(null, args);
 
         // Message
         return lando.message({
@@ -425,7 +429,7 @@ module.exports = function(lando) {
       // Find the first directory that has a lando.yml
       var configFile = _.find(files, function(file) {
         lando.log.verbose('Checking for app config at %s', file);
-        return fs.pathExistsSync(file);
+        return fs.existsSync(file);
       });
 
       // If we have a config file let's load up the app
@@ -1073,7 +1077,7 @@ module.exports = function(lando) {
      *
      * // Make sure the proxy is down before we destroy
      * app.events.on('pre-destroy', function() {
-     *   if (fs.pathExistsSync(proxyFile)) {
+     *   if (fs.existsSync(proxyFile)) {
      *     return lando.engine.stop(getProxy(proxyFile));
      *   }
      * });

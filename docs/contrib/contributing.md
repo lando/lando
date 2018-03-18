@@ -1,7 +1,7 @@
 Overview
 ========
 
-Lando is led by a [benevolent dictator](./roles.md#benevolent-dictator) and committee of [maintainers](./roles.md#benevolent-dictator) and managed by the community.
+Lando is led by a [benevolent dictator](./roles.md#benevolent-dictator) and committee of [maintainers](./roles.md#maintainers) and managed by the community.
 
 That is, the community actively contributes to the day-to-day maintenance of the project, but the general strategic line is drawn by the maintainers. In case of disagreement, the benevolent dictator has the last word. It is the benevolent dictator’s job to resolve disputes within the community and to ensure that the project is able to progress in a coordinated way.
 

@@ -23,10 +23,17 @@ This file specifies the core configuration options for Lando. Lando will scan a 
 
 Note that overrides will be merged in with the last value in `configSources` taking priority. Also note that there are some configuration options **THAT MUST** be set during the bootstrap of the `lando` object. For more information about how to bootstrap your own custom `lando` object please consult the [API docs](./../api/api.html#lando).
 
+Environment Variables
+---------------------
+
+You can also override any global config value using environment variables of the form `envPrefix_config_value`. So to change the `mode` you'd set `LANDO_MODE=mymode`. For more complex config (eg an object or array) you can set the envvar to a `JSON` string. Also note that Lando keys that are camelCase will be separated as envvars with `_`. For example `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
+
+> #### Hint::What is my `envPrefix`
+>
+> BY default this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
+
 Examples
 --------
-
-These examples assume you have a config source at `~/.lando/config.yml`
 
 ### Turning the proxy off
 
@@ -63,4 +70,42 @@ logLevelConsole: silly
 # Load additional custom plugins
 plugins:
   - lando-my-plugin
+```
+
+### Set a config value through an ENVVAR
+
+This assumes you are using `LANDO` as the `envPrefix`.
+
+```bash
+# Check the current config value for mode
+lando config | grep mode
+// "mode": "cli",
+
+// Override with an envvar
+export LANDO_MODE=mymode
+
+# Check the new value
+lando config | grep mode
+// "mode": "mymode",
+```
+
+### Set complicated config through an ENVVAR
+
+```bash
+# Check the current engine config
+lando config
+// "engineConfig": {
+//   "host": "127.0.0.1",
+//   "socketPath": "/var/run/docker.sock"
+// },
+
+// Override with an envvar
+export LANDO_ENGINE_CONFIG='{"host": "localhost"}'
+
+# Check the new value
+lando config
+// "engineConfig": {
+//   "host": "localhost",
+//   "socketPath": "/var/run/docker.sock"
+// },
 ```

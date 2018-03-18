@@ -8,7 +8,7 @@ module.exports = function(lando) {
   var buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var scd = lando.config.scd;
+  var scd = lando.config.servicesConfigDir;
 
   /*
    * Supported versions for mailhog

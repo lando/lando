@@ -17,10 +17,13 @@ const cliPkgName = 'lando-' + pkgSuffix;
 
 const files = {
   // All js files
+  // @todo: dustin, should be just get this list of files from package.json?
+  // having to maintain two separate lists of files seems like a recipe for disaster
   build: [
     path.join('bin', '**', '*.js'),
-    path.join('lib', '**', '*.js'),
-    path.join('plugins', '**', '*.js'),
+    path.join('lib', '**'),
+    path.join('plugins', '**'),
+    path.join('config.yml'),
     path.join('package.json'),
     path.join('yarn.lock')
   ],

@@ -464,7 +464,7 @@ module.exports = function(lando) {
     // Loop
     _.forEach(mounts, function(mount) {
 
-      // BReak up the mount
+      // Break up the mount
       var container = mount.split(':')[0];
       var file = mount.split(':')[1];
 
@@ -494,7 +494,7 @@ module.exports = function(lando) {
     var config = {};
 
     // Check pantheon.yml settings if needed
-    if (fs.pathExistsSync(configFile)) {
+    if (fs.existsSync(configFile)) {
 
       // Get the pantheon config
       var pconfig = lando.yaml.load(configFile);
@@ -661,17 +661,6 @@ module.exports = function(lando) {
       build.tooling.pull.service = cliService;
       build.tooling.push.service = cliService;
 
-    }
-
-    // Check if the user specified the compserSwitch key to false
-    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
-    var composerJson = path.join(config._root, 'composer.json');
-    var runComposer = fs.pathExistsSync(composerJson) && !disableComposer;
-
-    // Run composer install if we have the file and it isnt explicitly disabled in config
-    if (runComposer) {
-      var composerInstall = 'cd $LANDO_MOUNT && composer install';
-      build.services[cliService].build.push(composerInstall);
     }
 
     // Login with terminus if we have a token

@@ -273,7 +273,7 @@ module.exports = function(lando) {
       composer: {
         service: 'appserver',
         description: 'Run composer commands',
-        cmd: ['composer', '--ansi']
+        cmd: ['php', '-d', 'memory_limit=-1', '/usr/local/bin/composer', '--ansi']
       },
       php: {
         service: 'appserver',

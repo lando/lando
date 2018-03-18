@@ -19,7 +19,7 @@ services:
 Steps Run As Root
 ----------------
 
-If you do not want to use your own custom image or Dockerfile via [Advanced Service Configuration](./overrides.md), we let you do some extra service construction steps after each service is started.
+If you do not want to use your own custom image or Dockerfile via [Advanced Service Configuration](./advanced.md), we let you do some extra service construction steps after each service is started.
 
 **Please note** that these steps must make sense within the context of the container you are running them in. For example, you will not be able to run `dnf` inside of a `debian` flavored container.
 
