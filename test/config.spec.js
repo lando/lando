@@ -134,10 +134,54 @@ describe('config', function() {
     });
 
     // merge
+    describe('merge', function() {
+        const mergeExamples = [
+            // Set 1
+            [
+                // Example 1
+                {'a': [{'b': 2}, {'d': 4}]},
+                // Example 2
+                {'a':[{'c':3}, {'e':5}]},
+                // Answer
+                {'a':[{'b':2}, {'d':4}, {'c':3}, {'e': 5}]}
+            ]
+        ];
+        mergeExamples.forEach(function (item, key) {
+            it('returns the correct object after merging – Set ' + (key + 1), function() {
+                expect(config.merge(item[0], item[1])).to.deep.equal(item[2]);
+            });
+        });
+    });
 
     // updatePath
 
     // stripEnv
+    describe('stripEnv', function() {
+        const envToStrip = ['npm_'];
+
+        before(function() {
+            // Store the platform for restoring later.
+            this.originalEnvVars = process.env;
+        });
+
+        envToStrip.forEach(function (item) {
+            it('returns the environment varibles with ' + item + ' stripped out', function() {
+                process.env = config.stripEnv(item);
+                let matches = 0;
+
+                Object.keys(process.env).forEach(function (key) {
+                    matches = key.indexOf(item) > -1 ? matches + 1 : matches;
+                });
+
+                expect(matches).to.equal(0);
+            });
+        });
+
+        after(function() {
+            // Store the platform for restoring later.
+             process.env = this.originalEnvVars;
+        });
+    });
 
     // defaults
 
