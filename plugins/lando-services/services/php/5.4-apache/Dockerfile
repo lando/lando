@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y \
   && pecl install memcached-2.2.0 \
   && pecl install oauth-1.2.3 \
   && pecl install redis-2.2.8 \
-  && pecl install xdebug-2.2.7 \
+  && pecl install xdebug-2.4.1 \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
