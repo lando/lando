@@ -68,7 +68,7 @@ module.exports = function(lando) {
         test: 'psql -U postgres -c "\\\l"',
         interval: '2s',
         timeout: '10s',
-        retries: '25'
+        retries: 25
       },
       volumes: ['data_' + name + ':' + configFiles.dataDir],
       command: [
