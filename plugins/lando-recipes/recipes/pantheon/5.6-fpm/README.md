@@ -24,12 +24,10 @@ RUN apt-get update && apt-get install -y \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
   && mkdir -p /var/www/.composer \
+  && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
   && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
   && php installer.phar install --install-version=$TERMINUS_VERSION \
-  && curl "https://drupalconsole.com/installer" -L -o drupal.phar \
-  && chmod +x drupal.phar \
-  && mv drupal.phar /usr/local/bin/drupal \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \
   && tar xJfv "wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" && cp -rf /tmp/wkhtmltox/bin/* /srv/bin \
   && cd /srv/bin \

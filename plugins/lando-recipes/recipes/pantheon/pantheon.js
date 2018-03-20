@@ -476,9 +476,8 @@ module.exports = function(lando) {
       volumes = addConfig(buildVolume(local, remote), volumes);
     });
 
-    // Add a volume for terminus and drupal console cache
+    // Add a volume for terminus cache
     volumes.push('/var/www/.terminus');
-    volumes.push('/var/www/.drupal');
 
     // Return the new volumes
     return volumes;
