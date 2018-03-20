@@ -1,6 +1,6 @@
 # Pantheon php 7.1 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:7.1-fpm .
+# docker build -t devwithlando/pantheon-appserver:7.1 .
 
 FROM devwithlando/php:7.1-fpm
 

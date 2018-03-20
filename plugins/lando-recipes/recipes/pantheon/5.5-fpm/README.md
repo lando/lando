@@ -6,7 +6,7 @@ A container that approximates the appserver used on Pantheon.
 ```
 # Pantheon php 5.5 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:5.5-fpm .
+# docker build -t devwithlando/pantheon-appserver:5.5 .
 
 FROM devwithlando/php:5.5-fpm
 

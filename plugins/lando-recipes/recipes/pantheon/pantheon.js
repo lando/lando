@@ -612,7 +612,7 @@ module.exports = function(lando) {
 
     // Overide our default php images with special pantheon ones
     var imagePath = 'services.appserver.overrides.services.image';
-    var image = 'devwithlando/pantheon-appserver:' + config.php + '-fpm';
+    var image = 'devwithlando/pantheon-appserver:' + config.php;
     _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
