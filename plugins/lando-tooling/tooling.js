@@ -84,9 +84,14 @@ module.exports = function(lando) {
       // Run the command
       .then(function() {
 
-        // Arrayify the command if needed
-        if (_.has(config, 'cmd') && typeof config.cmd === 'string') {
-          config.cmd = config.cmd.split(' ');
+        // Standardize and arrayify
+        if (_.has(config, 'cmd')) {
+          if (!_.includes(['string', 'Array', 'Object'], typeof config.cmd)) {
+            config.cmd = _.toString(config.cmd);
+          }
+          if (_.has(config, 'cmd') && typeof config.cmd === 'string') {
+            config.cmd = config.cmd.split(' ');
+          }
         }
 
         // Start with the entrypoint
