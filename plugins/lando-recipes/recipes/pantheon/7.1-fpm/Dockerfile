@@ -11,10 +11,9 @@ ENV TERMINUS_VERSION 1.7.1
 ENV MAVEN_VERSION 3.5.2
 
 # Install the additional things that make the pantheon
-RUN mkdir -p /usr/share/man/man1 \
-  && apt-get update && apt-get install -y \
-    openjdk-8-jre-headless \
-    openjdk-8-jdk \
+RUN apt-get update && apt-get install -y \
+    openjdk-7-jre-headless \
+    openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \

@@ -18,8 +18,8 @@ ENV MAVEN_VERSION 3.5.2
 
 # Install the additional things that make the pantheon
 RUN apt-get update && apt-get install -y \
-    openjdk-8-jre-headless \
-    openjdk-8-jdk \
+    openjdk-7-jre-headless \
+    openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
