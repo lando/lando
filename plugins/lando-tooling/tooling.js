@@ -86,10 +86,10 @@ module.exports = function(lando) {
 
         // Standardize and arrayify
         if (_.has(config, 'cmd')) {
-          if (!_.includes(['string', 'Array', 'Object'], typeof config.cmd)) {
+          if (!_.isString(config.cmd) && !_.isObjectLike(config.cmd)) {
             config.cmd = _.toString(config.cmd);
           }
-          if (_.has(config, 'cmd') && typeof config.cmd === 'string') {
+          if (_.has(config, 'cmd') && _.isString(config.cmd)) {
             config.cmd = config.cmd.split(' ');
           }
         }
