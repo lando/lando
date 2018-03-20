@@ -7,9 +7,9 @@ module.exports = function(lando) {
   var helpers = require('./../lamp/lamp')(lando);
 
   // "Constants"
-  var DRUSH8 = '8.1.15';
+  var DRUSH8 = '8.1.16';
   var DRUSH7 = '7.4.0';
-  var DRUSHLAUNCHER = '0.5.1';
+  var DRUSHLAUNCHER = '0.6.0';
 
   /*
    * Helper to get DRUSH 8 or DRUSH LAUNCHER phar
