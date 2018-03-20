@@ -160,8 +160,7 @@ module.exports = function(lando) {
 
       // Set custom DB conf
       if (_.has(config, 'conf.database')) {
-        var confKey = (_.includes(database, 'postgres')) ? 'postgres' : 'confd';
-        services.database.config[confKey] = config.conf.database;
+        services.database.config.confd = config.conf.database;
       }
     }
 
@@ -273,11 +272,12 @@ module.exports = function(lando) {
       composer: {
         service: 'appserver',
         description: 'Run composer commands',
-        cmd: ['php', '-d', 'memory_limit=-1', '/usr/local/bin/composer', '--ansi']
+        cmd: ['/usr/local/bin/composer', '--ansi']
       },
       php: {
         service: 'appserver',
-        description: 'Run php commands'
+        description: 'Run php commands',
+        cmd: ['php']
       }
     };
 
@@ -298,7 +298,7 @@ module.exports = function(lando) {
     else if (_.includes(database, 'postgres')) {
       tooling.psql = {
         service: 'database',
-        description: 'Drop into a pgsql shell',
+        description: 'Drop into a psql shell',
         cmd: [
           'psql',
           '-h',

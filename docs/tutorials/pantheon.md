@@ -237,7 +237,7 @@ config:
   id: someid
 services:
   appserver:
-    build:
+    run:
       - mkdir -p ~/.terminus/plugins
       - composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1
 ```

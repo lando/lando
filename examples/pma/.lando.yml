@@ -14,7 +14,7 @@ services:
 
   # Override the appsever to add some environment variables and install an extra VIM package
   appserver:
-    extras:
+    run_as_root:
       - apt-get update -y
       - apt-get install vim -y
     overrides:

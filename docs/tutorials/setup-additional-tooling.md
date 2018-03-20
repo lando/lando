@@ -76,7 +76,7 @@ Alternatively, you could add `phpunit` to your app's `composer.json` and tell `l
 ```yml
 services:
   appserver:
-    build:
+    run:
       - "cd $LANDO_MOUNT && composer install"
 ```
 
@@ -107,7 +107,7 @@ Open the `.lando.yml` file for your app add an `extras` key to the `appserver` i
 ```yml
 services:
   appserver:
-    extras:
+    run_as_root:
       - "apt-get update -y"
       - "apt-get install build-essential chrpath libssl-dev libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 -y"
       - "wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2"

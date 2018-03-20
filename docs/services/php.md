@@ -92,7 +92,7 @@ You can install your own extensions using the [`extras`](./../config/services.md
 ```bash
 services:
   appserver:
-    extras:
+    run_as_root:
       - "apt-get update"
       - "apt-get install libmemcached-dev -y"
       - "pecl install memcached"

@@ -57,10 +57,22 @@ exports.filterBuildSteps = function(services) {
   // Go through each service
   _.forEach(services, function(service, name) {
 
-    // Loop through both extras and build
-    _.forEach(['extras', 'build'], function(section) {
+    // Build steps
+    var rootSteps = [
+      'run_as_root_internal',
+      'run_as_root',
+      'extras',
+    ];
+    var buildSteps = [
+      'run_internal',
+      'run',
+      'build'
+    ];
 
-      // If the service has extras let's loop through and run some commands
+    // Loop through all internal, legacy and user steps
+    _.forEach(rootSteps.concat(buildSteps), function(section) {
+
+      // If the service has build sections let's loop through and run some commands
       if (!_.isEmpty(service[section])) {
 
         // Normalize data for loopage
@@ -75,7 +87,7 @@ exports.filterBuildSteps = function(services) {
             name: name,
             container: container,
             cmd: cmd,
-            section: section
+            type: (_.includes(rootSteps, section)) ? 'root' : 'user'
           });
         });
 

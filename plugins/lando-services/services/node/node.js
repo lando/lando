@@ -126,12 +126,12 @@ module.exports = function(lando) {
 
     }
 
-    // Add our npm things to build extra
+    // Add our npm things to run step
     if (!_.isEmpty(config.globals)) {
       _.forEach(config.globals, function(version, pkg) {
 
         // Ensure globals is arrayed
-        config.build = config.build || [];
+        config.run_internal = config.run_internal || [];
 
         // Queue up our global composer command
         var nig = ['npm', 'install', '-g'];
@@ -148,7 +148,7 @@ module.exports = function(lando) {
         nig.push(dep.join('@'));
 
         // Add before our other builds
-        config.build.unshift(nig.join(' '));
+        config.run_internal.unshift(nig.join(' '));
 
       });
     }

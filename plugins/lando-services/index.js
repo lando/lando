@@ -240,7 +240,7 @@ module.exports = function(lando) {
           opts: {
             app: app,
             mode: 'attach',
-            user: (step.section === 'extras') ? 'root' : user,
+            user: (step.type === 'root') ? 'root' : user,
             services: [step.container.split('_')[1]]
           }
         };
@@ -251,12 +251,27 @@ module.exports = function(lando) {
       if (!_.isEmpty(build)) {
 
         // Compute the build hash
-        var newHash = lando.node.hasher(app.config.services);
+        var newHash = lando.node.hasher(app.config);
 
         // If our new hash is different then lets build
         if (lando.cache.get(app.name + ':last_build') !== newHash) {
-          lando.cache.set(app.name + ':last_build', newHash, {persist:true});
-          return lando.engine.run(build);
+
+          // Run the stuff
+          return lando.engine.run(build)
+
+          // Save the new hash if everything works out ok
+          .then(function() {
+            lando.cache.set(app.name + ':last_build', newHash, {persist:true});
+          })
+
+          // Make sure we don't save a hash if our build fails
+          .catch(function(error) {
+            lando.log.error('Looks like one of your build steps failed...');
+            lando.log.warn('This **MAY** prevent your app from working');
+            lando.log.warn('Check for errors above, fix them, and try again');
+            lando.log.verbose('Error %j', error);
+          });
+
         }
 
       }

@@ -29,11 +29,11 @@ module.exports = function(lando) {
       var drupalInstall = helpers.getPhar(pharUrl, src, dest);
 
       // Set builders and volumes if needed
-      var builderKey = 'services.appserver.build';
-      build.services.appserver.build = _.get(build, builderKey, []);
+      var builderKey = 'services.appserver.run_internal';
+      build.services.appserver.run_internal = _.get(build, builderKey, []);
 
       // Add our drupal cmds and volumes
-      build.services.appserver.build.push(drupalInstall);
+      build.services.appserver.run_internal.push(drupalInstall);
 
       // Volume mount the drupal console cache
       var volumesKey = 'services.appserver.overrides.services.volumes';

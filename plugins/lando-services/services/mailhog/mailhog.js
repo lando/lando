@@ -100,11 +100,12 @@ module.exports = function(lando) {
         volumes = addConfig(iniMount, volumes);
         _.set(app.services[hog], 'volumes', volumes);
 
-        // Add in mhsendmail build extra
-        var extras = _.get(app.config.services[hog], 'extras', []);
-        extras.push(downloadCmd);
-        extras.push(chmodCmd);
-        _.set(app.config.services[hog], 'extras', extras);
+        // Add in mhsendmail run as root interal steps
+        var rootKey = 'run_as_root_internal';
+        var rootSteps = _.get(app.config.services[hog], rootKey, []);
+        rootSteps.push(downloadCmd);
+        rootSteps.push(chmodCmd);
+        _.set(app.config.services[hog], rootKey, rootSteps);
 
       });
 

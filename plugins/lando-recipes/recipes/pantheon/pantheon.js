@@ -622,7 +622,7 @@ module.exports = function(lando) {
     // Add in our pantheon script
     // NOTE: We do this here instead of in /scripts because we need to gaurantee
     // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.extras = ['/helpers/pantheon.sh'];
+    build.services.appserver.run_as_root_internal = ['/helpers/pantheon.sh'];
 
     // Reset our build steps
     build.services.appserver.build = buildSteps(config);

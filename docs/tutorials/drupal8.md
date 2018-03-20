@@ -183,7 +183,7 @@ and by adding the following example to your .lando.yml file:
 ```
 services:
   appserver:
-    build:
+    run:
       - "mkdir -p ~/.drush/site-aliases"
       - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
  ```

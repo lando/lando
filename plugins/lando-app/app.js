@@ -862,16 +862,16 @@ module.exports = function(lando) {
      *   // Go through each service
      *   _.forEach(app.config.services, function(service, name) {
      *
-     *     // If the service has extras let's loop through and run some commands
-     *     if (!_.isEmpty(service.extras)) {
+     *     // If the service has run steps let's loop through and run some commands
+     *     if (!_.isEmpty(service.run)) {
      *
      *       // Normalize data for loopage
-     *       if (!_.isArray(service.extras)) {
-     *         service.extras = [service.extras];
+     *       if (!_.isArray(service.run)) {
+     *         service.run = [service.run];
      *       }
      *
      *       // Run each command
-     *       _.forEach(service.extras, function(cmd) {
+     *       _.forEach(service.run, function(cmd) {
      *
      *         // Build out the compose object
      *         var compose = {

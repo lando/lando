@@ -81,7 +81,7 @@ module.exports = function(lando) {
       }
 
       // Set the command
-      build.services.appserver.build.push(cmd);
+      build.services.appserver.run_internal.push(cmd);
 
     }
 
@@ -120,8 +120,8 @@ module.exports = function(lando) {
     var drushConfig = _.get(config, 'drush', 'global:' + defaultDrush);
 
     // Handle drush
-    var buildersKey = 'services.appserver.build';
-    build.services.appserver.build = _.get(build, buildersKey, []);
+    var buildersKey = 'services.appserver.run_internal';
+    build.services.appserver.run_internal = _.get(build, buildersKey, []);
     build = drush(build, drushConfig);
 
     // Return the things

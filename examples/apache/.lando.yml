@@ -36,4 +36,4 @@ services:
         ports: ['8081:80']
         # Uncomment below to use a custom image or Dockerfile build location
         # image: pirog/myapache:2
-        # build: .
+        # run: .

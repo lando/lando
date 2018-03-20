@@ -336,12 +336,12 @@ module.exports = function(lando) {
       }
     });
 
-    // Add our composer things to build extra
+    // Add our composer things to run_internal
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, function(version, pkg) {
 
-        // Ensure build is arrayed
-        config.build = config.build || [];
+        // Ensure run_internal is arrayed
+        config.run_internal = config.run_internal || [];
 
         // Queue up our global composer command
         var cgr = ['composer', 'global', 'require'];
@@ -358,7 +358,7 @@ module.exports = function(lando) {
         cgr.push(dep.join(':'));
 
         // Unshift in our composer deps
-        config.build.unshift(cgr.join(' '));
+        config.run_internal.unshift(cgr.join(' '));
 
       });
     }
