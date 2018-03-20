@@ -175,6 +175,58 @@ module.exports = function(lando) {
       });
     });
 
+    // Get port data for portforward: true
+    app.events.on('post-info', function() {
+
+      // Get our app cotnainers
+      return lando.engine.list(app.name)
+
+      // Filter our services with portforward: true set
+      .filter(function(container) {
+        if (!_.has(app.config.services[container.service], 'portforward')) {
+          return false;
+        }
+        else {
+          return app.config.services[container.service].portforward === true;
+        }
+      })
+
+      // Return running containers
+      .filter(function(container) {
+        return lando.engine.isRunning(container.id);
+      })
+
+      // Inspect each and add new URLS
+      .each(function(container) {
+        return lando.engine.scan(container)
+        .then(function(data) {
+
+          // Get the internal port so we can discover the forwarded one
+          var internalKey = 'internal_connection.port';
+          var externalKey = 'external_connection.port';
+          var port = _.get(app.info[container.service], internalKey);
+
+          // If we actaully have a port lets continue
+          if (port) {
+
+            // Get the netpath
+            var netPath = 'NetworkSettings.Ports.' + port + '/tcp';
+
+            // Filter out only ports that are exposed to 0.0.0.0
+            var onHost = _.filter(_.get(data, netPath, []), function(item) {
+              return item.HostIp === '0.0.0.0';
+            });
+
+            // Set the external port
+            _.set(app.info[container.service], externalKey, onHost[0].HostPort);
+
+          }
+
+        });
+      });
+
+    });
+
     // Remove build cache on an uninstall
     app.events.on('post-uninstall', function() {
       lando.cache.remove(app.name + ':last_build');
