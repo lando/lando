@@ -47,7 +47,7 @@ var handleError = function(error, log, metrics) {
 
   // Log error or not
   if (!error.hide) {
-    log.error(error.message);
+    log.error(error.message + error.stack);
   }
 
   // Report error

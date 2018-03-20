@@ -269,7 +269,7 @@ module.exports = function(lando) {
           var compose = routes.compose(networkName);
 
           // Loop and add in
-          _.forEach(services, function(service) {
+          _.forEach(_.compact(services), function(service) {
             compose.services[service.name] = service.service;
           });
 
