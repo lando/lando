@@ -296,7 +296,7 @@ module.exports = function(lando) {
     }
     // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {
-      tooling.pgsql = {
+      tooling.psql = {
         service: 'database',
         description: 'Drop into a pgsql shell',
         cmd: [
