@@ -77,9 +77,9 @@ module.exports = function(lando) {
 
       // Stuff we needs
       var smtp = 'sendmailhog:1025';
+      var defaultConf = '/usr/local/etc/php/conf.d';
+      var defaultFile = 'zzzz-lando-mailhog.ini';
       var mailHogConf = ['mailhog', 'mailhog.ini'];
-      var container = '/usr/local/etc/php/conf.d/lando-mailhog.ini';
-      var iniMount = buildVolume(mailHogConf, container, scd);
       var mhsendmail = '/usr/local/bin/mhsendmail';
       var github = 'https://github.com/mailhog/mhsendmail/releases/download/';
       var sendmail = 'v0.2.0/mhsendmail_linux_amd64';
@@ -96,6 +96,10 @@ module.exports = function(lando) {
         _.set(app.services[hog], 'environment', env);
 
         // Add our default mailhog ini
+        var hogConf = _.get(app.config.services, hog, {});
+        var phpConfiDir = _.get(hogConf, 'phpConfDir', defaultConf);
+        var remote = phpConfiDir + '/' + defaultFile;
+        var iniMount = buildVolume(mailHogConf, remote, scd);
         var volumes = _.get(app.services[hog], 'volumes', {});
         volumes = addConfig(iniMount, volumes);
         _.set(app.services[hog], 'volumes', volumes);
