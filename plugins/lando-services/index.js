@@ -176,6 +176,7 @@ module.exports = function(lando) {
     });
 
     // Get port data for portforward: true
+    // @todo: this logic should probably be a testable and exportable unit
     app.events.on('post-info', function() {
 
       // Get our app cotnainers
@@ -183,11 +184,16 @@ module.exports = function(lando) {
 
       // Filter our services with portforward: true set
       .filter(function(container) {
-        if (!_.has(app.config.services[container.service], 'portforward')) {
-          return false;
+        if (_.has(app, 'config.services')) {
+          if (!_.has(app.config.services[container.service], 'portforward')) {
+            return false;
+          }
+          else {
+            return app.config.services[container.service].portforward === true;
+          }
         }
         else {
-          return app.config.services[container.service].portforward === true;
+          return false;
         }
       })
 
