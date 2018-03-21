@@ -205,7 +205,8 @@ module.exports = function(lando) {
 
               // Map each route into an object of ports and urls
               var rs = _.map(data, function(r) {
-                return routes.getLegacyRouteUrls(r, app.name, ports);
+                var domain = lando.config.proxyDomain;
+                return routes.getLegacyRouteUrls(r, app.name, ports, domain);
               });
 
               // Return the service
@@ -234,7 +235,7 @@ module.exports = function(lando) {
         // Go through those services one by one
         .map(function(service) {
 
-          // Get name  port and hosts
+          // Get name port and hosts
           var port = _.get(service, 'routes[0].port', '80');
           var hosts = routes.stripPorts(service);
           if (port === 443) { port = 80; }
