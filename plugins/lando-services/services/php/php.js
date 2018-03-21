@@ -1,9 +1,3 @@
-/**
- * Lando php service builder
- *
- * @name php
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -19,7 +13,7 @@ module.exports = function(lando) {
   var esd = lando.config.engineScriptsDir;
   var scd = lando.config.servicesConfigDir;
 
-  /**
+  /*
    * Supported versions for php
    */
   var versions = [
@@ -35,7 +29,7 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
@@ -298,7 +292,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out php
    */
   var services = function(name, config) {
@@ -342,12 +336,12 @@ module.exports = function(lando) {
       }
     });
 
-    // Add our composer things to build extra
+    // Add our composer things to run_internal
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, function(version, pkg) {
 
-        // Ensure build is arrayed
-        config.build = config.build || [];
+        // Ensure run_internal is arrayed
+        config.run_internal = config.run_internal || [];
 
         // Queue up our global composer command
         var cgr = ['composer', 'global', 'require'];
@@ -364,7 +358,7 @@ module.exports = function(lando) {
         cgr.push(dep.join(':'));
 
         // Unshift in our composer deps
-        config.build.unshift(cgr.join(' '));
+        config.run_internal.unshift(cgr.join(' '));
 
       });
     }
@@ -374,7 +368,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {
@@ -396,7 +390,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function(name) {

@@ -1,9 +1,3 @@
-/**
- * Services plugin
- *
- * @name services
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -49,7 +43,7 @@ module.exports = function(lando) {
     var confDir = path.join(lando.config.userConfRoot, 'services', 'config');
     var helpDir = path.join(lando.config.userConfRoot, 'services', 'helpers');
 
-    // Proxy defaults
+    // Service defaults
     var defaultServiceConfig = {
       servicesConfigDir: confDir,
       servicesHelpersDir: helpDir,
@@ -181,9 +175,96 @@ module.exports = function(lando) {
       });
     });
 
+    // Get port data for portforward: true
+    // @todo: this logic should probably be a testable and exportable unit
+    app.events.on('post-info', function() {
+
+      // Get our app cotnainers
+      return lando.engine.list(app.name)
+
+      // Filter our services with portforward: true set
+      .filter(function(container) {
+        if (_.has(app, 'config.services')) {
+          if (!_.has(app.config.services[container.service], 'portforward')) {
+            return false;
+          }
+          else {
+            return app.config.services[container.service].portforward === true;
+          }
+        }
+        else {
+          return false;
+        }
+      })
+
+      // Return running containers
+      .filter(function(container) {
+        return lando.engine.isRunning(container.id);
+      })
+
+      // Inspect each and add new URLS
+      .each(function(container) {
+        return lando.engine.scan(container)
+        .then(function(data) {
+
+          // Get the internal port so we can discover the forwarded one
+          var internalKey = 'internal_connection.port';
+          var externalKey = 'external_connection.port';
+          var port = _.get(app.info[container.service], internalKey);
+
+          // If we actaully have a port lets continue
+          if (port) {
+
+            // Get the netpath
+            var netPath = 'NetworkSettings.Ports.' + port + '/tcp';
+
+            // Filter out only ports that are exposed to 0.0.0.0
+            var onHost = _.filter(_.get(data, netPath, []), function(item) {
+              return item.HostIp === '0.0.0.0';
+            });
+
+            // Set the external port
+            _.set(app.info[container.service], externalKey, onHost[0].HostPort);
+
+          }
+
+        });
+      });
+
+    });
+
     // Remove build cache on an uninstall
     app.events.on('post-uninstall', function() {
       lando.cache.remove(app.name + ':last_build');
+    });
+
+    // Add some logic that extends start until healthchecked containers report as healthy
+    app.events.on('post-start', 1, function() {
+
+      // Get this apps containers
+      return lando.engine.list(app.name)
+
+      // Wait until containers are ready
+      .map(function(container) {
+        return lando.services.healthcheck(container);
+      })
+
+      // Analyze and warn if needed
+      .then(function(data) {
+
+        // Per service warnings
+        _.each(data, function(datum) {
+          if (datum.health === 'unhealthy') {
+            lando.log.warn('Service %s is unhealthy', datum.service);
+            lando.log.warn('Run "lando logs -s %s"', datum.service);
+          }
+        });
+
+        // Log the whole thing
+        lando.log.verbose('Healthcheck for %s = %j', app.name, data);
+
+      });
+
     });
 
     // Handle build steps
@@ -217,7 +298,7 @@ module.exports = function(lando) {
           opts: {
             app: app,
             mode: 'attach',
-            user: (step.section === 'extras') ? 'root' : user,
+            user: (step.type === 'root') ? 'root' : user,
             services: [step.container.split('_')[1]]
           }
         };
@@ -228,12 +309,27 @@ module.exports = function(lando) {
       if (!_.isEmpty(build)) {
 
         // Compute the build hash
-        var newHash = lando.node.hasher(app.config.services);
+        var newHash = lando.node.hasher(app.config);
 
         // If our new hash is different then lets build
         if (lando.cache.get(app.name + ':last_build') !== newHash) {
-          lando.cache.set(app.name + ':last_build', newHash, {persist:true});
-          return lando.engine.run(build);
+
+          // Run the stuff
+          return lando.engine.run(build)
+
+          // Save the new hash if everything works out ok
+          .then(function() {
+            lando.cache.set(app.name + ':last_build', newHash, {persist:true});
+          })
+
+          // Make sure we don't save a hash if our build fails
+          .catch(function(error) {
+            lando.log.error('Looks like one of your build steps failed...');
+            lando.log.warn('This **MAY** prevent your app from working');
+            lando.log.warn('Check for errors above, fix them, and try again');
+            lando.log.verbose('Error %j', error);
+          });
+
         }
 
       }

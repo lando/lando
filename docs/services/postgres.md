@@ -6,12 +6,14 @@ PostgreSQL
 Supported versions
 ------------------
 
-*   [10-beta3](https://hub.docker.com/r/_/postgres/)
+*   [10.3](https://hub.docker.com/r/_/postgres/)
+*   [10.2](https://hub.docker.com/r/_/postgres/)
+*   [10.1](https://hub.docker.com/r/_/postgres/)
+*   [10](https://hub.docker.com/r/_/postgres/)
 *   [9.6](https://hub.docker.com/r/_/postgres/)
 *   [9.5](https://hub.docker.com/r/_/postgres/)
 *   [9.4](https://hub.docker.com/r/_/postgres/)
 *   [9.3](https://hub.docker.com/r/_/postgres/)
-*   [9.2](https://hub.docker.com/r/_/postgres/)
 *   [latest](https://hub.docker.com/r/_/postgres/)
 *   custom
 

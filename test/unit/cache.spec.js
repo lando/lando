@@ -1,16 +1,13 @@
 /**
- * Basic test to just confirm our framework works
- * @file test.js
+ * Tests for cache system.
+ * @file cache.spec.js
  */
-
-/*jshint expr:true */
 
 'use strict';
 
 // Setup chai.
 var chai = require('chai');
 var expect = chai.expect;
-chai.should();
 
 // Get caching module to test
 var Cache = require('./../../lib/cache');

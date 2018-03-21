@@ -1,9 +1,3 @@
-/**
- * Pantheon init method
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -166,7 +160,7 @@ module.exports = function(lando) {
     }
   };
 
-  /**
+  /*
    * Build out pantheon recipe
    */
   var build = function(name, options) {
@@ -177,8 +171,7 @@ module.exports = function(lando) {
 
     // Check if directory is non-empty
     if (!_.isEmpty(fs.readdirSync(dest))) {
-      lando.log.error('Directory %s must be empty to Pantheon init.', dest);
-      process.exit(1);
+      throw new Error('Directory must be empty to Pantheon init.');
     }
 
     // Check if ssh key exists and create if not
@@ -218,9 +211,7 @@ module.exports = function(lando) {
 
         // Error if no site was found, this is mostly for non-interactive things
         if (_.isEmpty(site)) {
-          var badSite = _.get(options, 'pantheon-site');
-          lando.log.error('%s does not appear to be a valid site!', badSite);
-          process.exit(1222);
+          throw new Error('This does not appear to be a valid site!');
         }
 
         // Build the clone url
@@ -236,14 +227,11 @@ module.exports = function(lando) {
           pathname: '/~/repository.git'
         };
 
-        // Clone cmd
-        var cmd = [
-          'cd $LANDO_MOUNT',
-          'git clone ' + url.format(gitUrl) + ' ./'
-        ].join(' && ');
+        // Repo
+        var repo = url.format(gitUrl);
 
         // Clone
-        return lando.init.run(name, dest, cmd);
+        return lando.init.run(name, dest, lando.init.cloneRepo(repo));
 
       });
 

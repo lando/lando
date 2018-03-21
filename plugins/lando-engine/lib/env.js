@@ -1,14 +1,3 @@
-/**
- * Helpers to build the the engine config.
- *
- * @since 3.0.0
- * @module env
- * @example
- *
- * // Get the config helpers
- * var dockerBinPath = env.getDockerBinPath();
- */
-
 'use strict';
 
 // Modules
@@ -20,7 +9,7 @@ var path = require('path');
 exports.getEngineConfig = function() {
 
   // Create the default options
-  var config = {
+  const config = {
     host: '127.0.0.1',
     socketPath: '/var/run/docker.sock'
   };
@@ -30,7 +19,6 @@ exports.getEngineConfig = function() {
     config.socketPath = '//./pipe/docker_engine';
   }
 
-  // Return the config
   return config;
 
 };

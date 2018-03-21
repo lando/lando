@@ -1,9 +1,3 @@
-/**
- * This provides a way to load services
- *
- * @name services
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -27,13 +21,19 @@ module.exports = function(lando) {
 
   /*
    * Get all services
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.get'
    */
   var get = function() {
     return _.keys(registry);
   };
 
-  /*
+  /**
    * Add a service to the registry
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.add'
    */
   var add = function(name, module) {
     registry[name] = module;
@@ -41,6 +41,9 @@ module.exports = function(lando) {
 
   /**
    * Delegator to gather info about a service for display to the user
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.info'
    */
   var info = function(name, type, config) {
 
@@ -76,6 +79,9 @@ module.exports = function(lando) {
 
   /**
    * The core service builder
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.build'
    */
   var build = function(name, type, config) {
 
@@ -132,11 +138,12 @@ module.exports = function(lando) {
     services[name] = merger(services[name], {volumes: [
       '$LANDO_APP_ROOT_BIND:/app' + shareMode,
       '$LANDO_ENGINE_HOME:/user' + shareMode,
-      '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh'
+      '$LANDO_ENGINE_CONF:/lando' + shareMode
     ]});
 
     // Data about some common helpers
     var scripts = [
+      {script: 'user-perms.sh', local: esd, remote: 'helpers'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
       {script: 'mysql-export.sh', local: shd, remote: 'helpers'},
@@ -199,10 +206,52 @@ module.exports = function(lando) {
 
   };
 
+  /**
+   * Does a healthcheck on a service
+   *
+   * @since 3.0.0
+   * @alias 'lando.services.healthcheck'
+   */
+  var healthcheck = function(container) {
+
+    // Check to see if a service is ready
+    // @NOTE: This does sane retries on a service if has a healthcheck to make
+    // sure it is ready before we start e.g. mysql is ready to take connections
+    return lando.Promise.retry(function() {
+
+      // Log
+      console.log('Waiting until %s service is ready...', container.service);
+      lando.log.info('Waiting until %s service is ready...', container.service);
+
+      // Docker inspect the container
+      return lando.engine.scan({id: container.id})
+
+      // Determine the health
+      .then(function(data) {
+        if (!_.has(data, 'State.Health')) {
+          return {service: container.service, health: 'healthy'};
+        }
+        if (_.get(data, 'State.Health.Status', 'unhealthy') === 'healthy') {
+          return {service: container.service, health: 'healthy'};
+        }
+        else {
+          return lando.Promise.reject();
+        }
+      });
+    }, {max: 25})
+
+    // If healthcheck fails, catch and return data
+    .catch(function(error) {
+      return {service: container.service, health: 'unhealthy'};
+    });
+
+  };
+
   return {
     add: add,
     build: build,
     get: get,
+    healthcheck: healthcheck,
     info: info,
     bridge: landoBridgeNet
   };

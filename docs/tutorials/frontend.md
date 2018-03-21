@@ -20,7 +20,7 @@ recipe: lamp
 services:
   node:
     type: node:6.10
-    build:
+    run:
       - "cd $LANDO_MOUNT && npm install"
 ```
 
@@ -36,7 +36,7 @@ While we're now able to install Node packages for our project, we still need to 
 services:
   node:
     type: node:6.10
-    build:
+    run:
       - "cd $LANDO_MOUNT && npm install"
       - "cd $LANDO_MOUNT && gulp"
     globals:

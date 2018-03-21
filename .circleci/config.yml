@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/lando
+    docker:
+      - image: circleci/node:8.9.4
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install deps
+          command: yarn install
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run:
+          name: Unit Tests
+          command: yarn test
+      - run:
+          name: Functional Tests
+          command: yarn test:functional

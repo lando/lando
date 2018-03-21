@@ -1,9 +1,3 @@
-/**
- * Github init method
- *
- * @name github
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -186,8 +180,8 @@ module.exports = function(lando) {
     }
   };
 
-  /**
-   * Build out pantheon recipe
+  /*
+   * Build out github method
    */
   var build = function(name, options) {
 
@@ -208,8 +202,7 @@ module.exports = function(lando) {
 
     // Check if directory is non-empty
     if (!_.isEmpty(fs.readdirSync(dest))) {
-      lando.log.error('Directory %s must be empty to GitHub init.', dest);
-      process.exit(1);
+      throw new Error('Directory must be empty to GitHub init.');
     }
 
     // Check if ssh key exists and create if not
@@ -284,8 +277,7 @@ module.exports = function(lando) {
 
     // Git clone the project
     .then(function() {
-      var cmd = 'cd $LANDO_MOUNT && git clone ' + repo + ' ./';
-      return lando.init.run(name, dest, cmd);
+      return lando.init.run(name, dest, lando.init.cloneRepo(repo));
     });
 
   };

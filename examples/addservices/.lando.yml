@@ -22,7 +22,10 @@ services:
   appserver:
     composer:
       phpunit/phpunit: '*'
-    build:
+    run_as_root:
+      - apt-get update -y
+      - apt-get install vim -y
+    run:
       # Uncomment this when you have a composer.json in the root directory
       # - cd $LANDO_MOUNT && composer install
     config:

@@ -38,12 +38,12 @@ services:
     command: cd /app & dotnet run
 
     # Install some extra server packages
-    # extras:
+    # run_as_root:
     #  - "apt-get update -y"
     #  - "apt-get install vim -y"
 
     # Print a message just to demonstrate this
-    # build:
+    # run:
     # - "cd $LANDO_MOUNT & echo 'Holla!'"
 
 # Add some nice command routing

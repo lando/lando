@@ -1,26 +1,3 @@
-/**
- * Contains methods and events related to running docker things.
- *
- * @since 3.0.0
- * @fires pre-bootstrap
- * @module engine
- * @example
- *
- * // Start the docker engine
- * return lando.engine.up();
- *
- * // List all lando containers
- * return lando.engine.list(data);
- *
- * // Run a command(s) on a container(s)
- * return lando.engine.run(data);
- *
- * // Inspect the details of a container
- * return lando.engine.scan(data);
- *
- * // Destroys a container(s)
- * return lando.engine.destroy(data);
- */
 'use strict';
 
 // We make this module into a function so we can pass in lando
@@ -52,6 +29,7 @@ module.exports = function(lando) {
    * Determines whether the docker engine is installed or not
    *
    * @since 3.0.0
+   * @alias 'lando.engine.isInstalled'
    * @returns {Promise} A Promise with a boolean containing the installed status.
    */
   var isInstalled = function() {
@@ -88,7 +66,9 @@ module.exports = function(lando) {
    * Determines whether the docker engine is up or not.
    *
    * @todo Does this need to be publically exposed still?
+   *
    * @since 3.0.0
+   * @alias 'lando.engine.isUp'
    * @returns {Promise} A Promise with a boolean containing the engine up status.
    * @example
    *
@@ -141,9 +121,11 @@ module.exports = function(lando) {
    * call this anyway.
    *
    * @todo Does this need to be publically exposed still?
+   *
    * @since 3.0.0
-   * @fires pre-engine-up
-   * @fires post-engine-up
+   * @alias 'lando.engine.up'
+   * @fires pre_engine_up
+   * @fires post_engine_up
    * @returns {Promise} A Promise.
    * @example
    *
@@ -168,7 +150,7 @@ module.exports = function(lando) {
      * up.
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-up
+     * @event pre_engine_up
      */
     .then(function() {
       return lando.events.emit('pre-engine-up');
@@ -179,7 +161,7 @@ module.exports = function(lando) {
 
       // Automatically return true if we are in the GUI and on linux because
       // this requires SUDO and because the daemon should always be running on nix
-      if (lando.config.mode === 'gui' && process.platform === 'linux') {
+      if (lando.config.process !== 'node' && process.platform === 'linux') {
         return Promise.resolve(true);
       }
 
@@ -219,7 +201,7 @@ module.exports = function(lando) {
      * up.
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-up
+     * @event post_engine_up
      */
     .then(function() {
       return lando.events.emit('post-engine-up');
@@ -234,9 +216,11 @@ module.exports = function(lando) {
    * call this anyway.
    *
    * @todo Does this need to be publically exposed still?
+   *
    * @since 3.0.0
-   * @fires pre-engine-down
-   * @fires post-engine-down
+   * @alias 'lando.engine.down'
+   * @fires pre_engine_down
+   * @fires post_engine_down
    * @returns {Promise} A Promise.
    */
   var down = function() {
@@ -249,7 +233,7 @@ module.exports = function(lando) {
      * up.
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-down
+     * @event pre_engine_down
      */
     .then(function() {
       return lando.events.emit('pre-engine-down');
@@ -260,7 +244,7 @@ module.exports = function(lando) {
 
       // Automatically return true if we are in the GUI and on linux because
       // this requires SUDO and because the daemon should always be running on nix
-      if (lando.config.mode === 'gui' && process.platform === 'linux') {
+      if (lando.config.process !== 'node' && process.platform === 'linux') {
         return Promise.resolve(true);
       }
 
@@ -299,7 +283,7 @@ module.exports = function(lando) {
      * up.
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-down
+     * @event post_engine_down
      */
     .then(function() {
       return lando.events.emit('post-engine-down');
@@ -340,6 +324,7 @@ module.exports = function(lando) {
    * Determines whether a container is running or not
    *
    * @since 3.0.0
+   * @alias 'lando.engine.isRunning'
    * @param {String} data - An ID that docker can recognize such as the container id or name.
    * @returns {Promise} A Promise with a boolean of whether the container is running or not
    * @example
@@ -367,6 +352,7 @@ module.exports = function(lando) {
    * Lists all the Lando containers. Optionally filter by app name.
    *
    * @since 3.0.0
+   * @alias 'lando.engine.list'
    * @param {String} [data] - An appname to filter the containers by.
    * @returns {Promise} A Promise with an Array of container Objects.
    * @example
@@ -419,6 +405,7 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
+   * @alias 'lando.engine.exists'
    * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
    * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
    * @param {Array} data.compose - An Array of paths to Docker compose files
@@ -499,6 +486,7 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
+   * @alias 'lando.engine.scan'
    * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
    * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
    * @param {Array} data.compose - An Array of paths to Docker compose files
@@ -560,8 +548,9 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
-   * @fires pre-engine-start
-   * @fires post-engine-start
+   * @alias 'lando.engine.start'
+   * @fires pre_engine_start
+   * @fires post_engine_start
    * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to start more than one set of services.
    * @param {Array} data.compose - An Array of paths to Docker compose files
    * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
@@ -594,7 +583,7 @@ module.exports = function(lando) {
      * started
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-start
+     * @event pre_engine_start
      */
     .then(function() {
       return lando.events.emit('pre-engine-start', data);
@@ -627,7 +616,7 @@ module.exports = function(lando) {
      * started
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-start
+     * @event post_engine_start
      */
     .then(function() {
       return lando.events.emit('post-engine-start', data);
@@ -643,8 +632,9 @@ module.exports = function(lando) {
    * documentation for what a compose object looks like.
    *
    * @since 3.0.0
-   * @fires pre-engine-run
-   * @fires post-engine-run
+   * @alias 'lando.engine.run'
+   * @fires pre_engine_run
+   * @fires post_engine_run
    * @param {Object} data - A run Object or an Array of run Objects if you want to run more tha one command.
    * @param {String} data.id - The container to run the command on. Must be an id that docker can recognize such as a container hash or name.
    * @param {String} data.cmd - A String of a command or an Array whose elements are the parts of the command.
@@ -685,7 +675,7 @@ module.exports = function(lando) {
      * container.
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-run
+     * @event pre_engine_run
      */
     .then(function() {
       return lando.events.emit('pre-engine-run', data);
@@ -724,7 +714,7 @@ module.exports = function(lando) {
      * container.
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-run
+     * @event post_engine_run
      */
     .tap(function() {
       return lando.events.emit('post-engine-run', data);
@@ -750,8 +740,9 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
-   * @fires pre-engine-stop
-   * @fires post-engine-stop
+   * @alias 'lando.engine.stop'
+   * @fires pre_engine_stop
+   * @fires post_engine_stop
    * @param {Object} data - Stop criteria, Need eithers an ID or a service within a compose context
    * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
    * @param {Array} data.compose - An Array of paths to Docker compose files
@@ -788,7 +779,7 @@ module.exports = function(lando) {
      * Event that allows you to do some things before some containers are stopped.
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-stop
+     * @event pre_engine_stop
      */
     .then(function() {
       return lando.events.emit('pre-engine-stop', data);
@@ -812,7 +803,7 @@ module.exports = function(lando) {
      * Event that allows you to do some things after some containers are stopped.
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-stop
+     * @event post_engine_stop
      */
     .then(function() {
       return lando.events.emit('post-engine-stop', data);
@@ -833,8 +824,9 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
-   * @fires pre-engine-destroy
-   * @fires post-engine-destroy
+   * @alias 'lando.engine.destroy'
+   * @fires pre_engine_destroy
+   * @fires post_engine_destroy
    * @param {Object} data - Remove criteria, Need eithers an ID or a service within a compose context
    * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
    * @param {Array} data.compose - An Array of paths to Docker compose files
@@ -876,7 +868,7 @@ module.exports = function(lando) {
      * Event that allows you to do some things before some containers are destroyed.
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-destroy
+     * @event pre_engine_destroy
      */
     .then(function() {
       return lando.events.emit('pre-engine-destroy', data);
@@ -900,7 +892,7 @@ module.exports = function(lando) {
      * Event that allows you to do some things after some containers are destroyed.
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-destroy
+     * @event post_engine_destroy
      */
     .then(function() {
       return lando.events.emit('post-engine-destroy', data);
@@ -914,6 +906,7 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
+   * @alias 'lando.engine.logs'
    * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to get logs for more than one set of services.
    * @param {Array} data.compose - An Array of paths to Docker compose files
    * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
@@ -949,8 +942,9 @@ module.exports = function(lando) {
    * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
    *
    * @since 3.0.0
-   * @fires pre-engine-build
-   * @fires post-engine-build
+   * @alias 'lando.engine.build'
+   * @fires pre_engine_build
+   * @fires post_engine_build
    * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to build more than one set of services.
    * @param {Array} data.compose - An Array of paths to Docker compose files
    * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
@@ -974,7 +968,7 @@ module.exports = function(lando) {
      * started
      *
      * @since 3.0.0
-     * @event module:engine.event:pre-engine-build
+     * @event pre_engine_build
      */
     .then(function() {
       return lando.events.emit('pre-engine-build', data);
@@ -1001,7 +995,7 @@ module.exports = function(lando) {
      * started
      *
      * @since 3.0.0
-     * @event module:engine.event:post-engine-build
+     * @event post_engine_build
      */
     .then(function() {
       return lando.events.emit('post-engine-build', data);
@@ -1013,6 +1007,8 @@ module.exports = function(lando) {
    * Gets the docker networks.
    *
    * @since 3.0.0
+   * @function
+   * @alias 'lando.engine.getNetworks'
    * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.
    * @param {Object} [opts] - Options to pass into the docker networks call
    * @param {Object} [opts.filters] - Filters options
@@ -1046,6 +1042,8 @@ module.exports = function(lando) {
    * Creates a Docker network
    *
    * @since 3.0.0.
+   * @function
+   * @alias 'lando.engine.createNetwork'
    * @see [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.
    * @param {String} name - The name of the networks
    * @param {Object} [opts] - See API network docs above
@@ -1061,6 +1059,8 @@ module.exports = function(lando) {
    * Prunes the docker networks.
    *
    * @since 3.0.0
+   * @function
+   * @alias 'lando.engine.pruneNetworks'
    * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkPrune) for info on filters option.
    * @param {Object} [opts] - Options to pass into the docker networks call
    * @param {Object} [opts.filters] - Filters options

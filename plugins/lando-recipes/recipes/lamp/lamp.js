@@ -1,9 +1,3 @@
-/**
- * LAMP recipe builder
- *
- * @name lamp
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -64,7 +58,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Helper to reset with default config for a new recipe
    * Because we are "extending" this we want to provide this for children
    */
@@ -166,8 +160,7 @@ module.exports = function(lando) {
 
       // Set custom DB conf
       if (_.has(config, 'conf.database')) {
-        var confKey = (_.includes(database, 'postgres')) ? 'postgres' : 'confd';
-        services.database.config[confKey] = config.conf.database;
+        services.database.config.confd = config.conf.database;
       }
     }
 
@@ -283,7 +276,8 @@ module.exports = function(lando) {
       },
       php: {
         service: 'appserver',
-        description: 'Run php commands'
+        description: 'Run php commands',
+        cmd: ['php']
       }
     };
 
@@ -302,9 +296,9 @@ module.exports = function(lando) {
     }
     // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {
-      tooling.pgsql = {
+      tooling.psql = {
         service: 'database',
-        description: 'Drop into a pgsql shell',
+        description: 'Drop into a psql shell',
         cmd: [
           'psql',
           '-h',
@@ -323,7 +317,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out LAMP
    */
   var build = function(name, config) {

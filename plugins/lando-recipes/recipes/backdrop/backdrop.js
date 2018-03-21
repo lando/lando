@@ -1,9 +1,3 @@
-/**
- * Backdrop recipe builder
- *
- * @name backdrop
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -11,7 +5,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
 
-  /**
+  /*
    * Helper to return backdrop settings
    */
   var backdropSettings = function(config) {
@@ -76,7 +70,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out Backdrop
    */
   var build = function(name, config) {
@@ -118,7 +112,7 @@ module.exports = function(lando) {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.build;
+      delete build.services.appserver.run_internal;
 
       // Override some tooling things
       build.tooling.drush.service = cliService;
@@ -126,7 +120,7 @@ module.exports = function(lando) {
     }
 
     // Get appserver build
-    var buildersKey = 'services.' + cliService + '.build';
+    var buildersKey = 'services.' + cliService + '.run_internal';
     var builders = _.get(build, buildersKey, []);
 
     // Add the backdrop install command

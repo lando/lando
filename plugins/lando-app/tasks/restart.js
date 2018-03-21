@@ -1,9 +1,3 @@
-/**
- * Command to restop a lando app
- *
- * @name restart
- */
-
 'use strict';
 
 module.exports = function(lando) {

@@ -12,27 +12,29 @@ Lando has an advanced plugin system that allows developers to add and extend Lan
 Plugin Basics
 -------------
 
-Plugins give you access to the [Lando API](./api/lando.md) so that you can modify and/or extend Lando. Here is the part of the proxy plugin that adds some proxy config options to the Lando global config.
+Plugins give you access to the [Lando API](./../api/api.md) so that you can modify and/or extend Lando. Here is the main entrypoint of the engine plugin that adds the `lando.engine` module and handles engine config.
 
-{% codesnippet "./../plugins/lando-recipes/index.js" %}{% endcodesnippet %}
+{% codesnippet "./../plugins/lando-engine/index.js" %}{% endcodesnippet %}
 
 Running your own plugins
 ------------------------
 
-To get your plugin working with Lando do two things:
+You can add plugins either globally or in individual apps by adding your plugin to the global `config.yml` or an individual app's `.lando.yml`.
 
-1.  Add your plugin to the list in `config.yml`.
-2.  Place your plugin into the correct location.
+```yaml
+plugins:
+  - my-plugin
+```
 
-Lando looks for plugins in either the `node_modules` or `plugins` folder in three separate locations. If there are multiple instances of the same plugin, Lando will load the one found furthest down this list:
+In the above example Lando will looks for a plugin in a folder called `my-plugin` in either the `node_modules` or `plugins` folders. For app plugins these locations will be relative to the app root directory. For global plugins the locations specified in `pluginDirs` in `lando config` will be scanned.
 
-1.  The source directory.
-2.  Inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.
-3.  Inside of the `userConfRoot`. For example `~/.lando/` on macOS.
+If there are multiple occurences of the same-named plugin, Lando will use the one "closest to your app". This means that `lando` will priortize in-app plugins and then priortize the locations in `pluginDirs` from last to first.
 
-> #### Hint::Where are `sysConfRoot` and `userConfRoot`?
+**A powerful corollary to this is that indiviual apps can implement plugins that override global plugin behavior.**
+
+> #### Hint::Where is `config.yml`?
 >
-> Run `lando config` to find the location of these directories as they can be different.
+> Check out the [global config docs](./../config/config.md) if you are unclear where to change this file.
 
 Plugin Examples
 ---------------

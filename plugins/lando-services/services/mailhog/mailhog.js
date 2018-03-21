@@ -1,9 +1,3 @@
-/**
- * Lando mailhog service builder
- *
- * @name mailhog
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -14,9 +8,9 @@ module.exports = function(lando) {
   var buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var scd = lando.config.scd;
+  var scd = lando.config.servicesConfigDir;
 
-  /**
+  /*
    * Supported versions for mailhog
    */
   var versions = [
@@ -25,14 +19,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out mailhog
    */
   var services = function(name, config) {
@@ -83,9 +77,9 @@ module.exports = function(lando) {
 
       // Stuff we needs
       var smtp = 'sendmailhog:1025';
+      var defaultConf = '/usr/local/etc/php/conf.d';
+      var defaultFile = 'zzzz-lando-mailhog.ini';
       var mailHogConf = ['mailhog', 'mailhog.ini'];
-      var container = '/usr/local/etc/php/conf.d/lando-mailhog.ini';
-      var iniMount = buildVolume(mailHogConf, container, scd);
       var mhsendmail = '/usr/local/bin/mhsendmail';
       var github = 'https://github.com/mailhog/mhsendmail/releases/download/';
       var sendmail = 'v0.2.0/mhsendmail_linux_amd64';
@@ -102,15 +96,20 @@ module.exports = function(lando) {
         _.set(app.services[hog], 'environment', env);
 
         // Add our default mailhog ini
+        var hogConf = _.get(app.config.services, hog, {});
+        var phpConfiDir = _.get(hogConf, 'phpConfDir', defaultConf);
+        var remote = phpConfiDir + '/' + defaultFile;
+        var iniMount = buildVolume(mailHogConf, remote, scd);
         var volumes = _.get(app.services[hog], 'volumes', {});
         volumes = addConfig(iniMount, volumes);
         _.set(app.services[hog], 'volumes', volumes);
 
-        // Add in mhsendmail build extra
-        var extras = _.get(app.config.services[hog], 'extras', []);
-        extras.push(downloadCmd);
-        extras.push(chmodCmd);
-        _.set(app.config.services[hog], 'extras', extras);
+        // Add in mhsendmail run as root interal steps
+        var rootKey = 'run_as_root_internal';
+        var rootSteps = _.get(app.config.services[hog], rootKey, []);
+        rootSteps.push(downloadCmd);
+        rootSteps.push(chmodCmd);
+        _.set(app.config.services[hog], rootKey, rootSteps);
 
       });
 
@@ -124,14 +123,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {
     return {data: {}};
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function(name, config) {

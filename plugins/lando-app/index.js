@@ -1,9 +1,3 @@
-/**
- * Our app plugin
- *
- * @name app
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -68,24 +62,40 @@ module.exports = function(lando) {
   // Merge compose files specified in landofile to services/networks/volumes
   lando.events.on('post-instantiate-app', 1, function(app) {
 
-    // Add in some common process envvars we might want
-    app.processEnv.LANDO_APP_NAME = app.name;
-    app.processEnv.LANDO_APP_ROOT = app.root;
-    app.processEnv.LANDO_APP_ROOT_BIND = app.rootBind;
+    // Define helpful global envars
+    var env = {
+      LANDO: 'ON',
+      LANDO_CONFIG_DIR: lando.config.userConfRoot,
+      LANDO_APP_NAME: app.name,
+      LANDO_APP_ROOT: app.root,
+      LANDO_APP_ROOT_BIND: app.root,
+      LANDO_HOST_OS: lando.config.os.platform,
+      LANDO_HOST_UID: lando.config.engineId,
+      LANDO_HOST_GID: lando.config.engineGid,
+      LANDO_HOST_IP: lando.config.env.LANDO_ENGINE_REMOTE_IP,
+      LANDO_WEBROOT_USER: 'www-data',
+      LANDO_WEBROOT_GROUP: 'www-data',
+      LANDO_WEBROOT_UID: '33',
+      LANDO_WEBROOT_GID: '33',
+    };
 
-    // Add in some global container envvars
-    app.env.LANDO = 'ON';
-    app.env.LANDO_HOST_OS = lando.config.os.platform;
-    app.env.LANDO_HOST_UID = lando.config.engineId;
-    app.env.LANDO_HOST_GID = lando.config.engineGid;
-    app.env.LANDO_HOST_IP = lando.config.env.LANDO_ENGINE_REMOTE_IP;
-    app.env.LANDO_APP_ROOT = app.rootBind;
-    app.env.LANDO_APP_NAME = app.name;
-    app.env.LANDO_WEBROOT_USER = 'www-data';
-    app.env.LANDO_WEBROOT_GROUP = 'www-data';
-    app.env.LANDO_WEBROOT_UID = '33';
-    app.env.LANDO_WEBROOT_GID = '33';
+    // Define helpful global labels
+    var labels = {
+      'io.lando.container': 'TRUE',
+      'io.lando.id': lando.config.id
+    };
+
+    // Add things just meant for the container env
     app.env.COLUMNS = 256;
+
+    // Add env to both the process and container environment
+    _.forEach(env, function(value, key) {
+      lando.config.env[key] = value;
+      app.env[key] = value;
+    });
+
+    // Mix in labels
+    app.labels = merger(app.labels, labels);
 
     // Inject values from an .env file if it exists
     if (fs.existsSync(path.join(app.root, '.env'))) {

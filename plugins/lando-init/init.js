@@ -1,9 +1,3 @@
-/**
- * This provides a way to load new init methods
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -17,13 +11,15 @@ module.exports = function(lando) {
 
   // Fixed location of our util service compose file
   var utilDir = path.join(lando.config.userConfRoot, 'util');
-  var utilFile = path.join(utilDir, 'util.yml');
 
   // Registry of init methods
   var registry = {};
 
-  /*
+  /**
    * Get an init method
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.get'
    */
   var get = function(name) {
     if (name) {
@@ -32,8 +28,11 @@ module.exports = function(lando) {
     return _.keys(registry);
   };
 
-  /*
+  /**
    * Add an init method to the registry
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.add'
    */
   var add = function(name, module) {
     registry[name] = module;
@@ -44,11 +43,16 @@ module.exports = function(lando) {
    */
   var utilService = function(name, app) {
 
+    // Build util file
+    var filename = ['util', name, _.uniqueId()].join('-') + '.yml';
+    var utilFile = path.join(utilDir, filename);
+
     // Let's get a service container
     var util = {
       image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
+        LANDO_CONFIG_DIR: lando.config.userConfRoot,
         LANDO_HOST_OS: lando.config.os.platform,
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,
@@ -65,11 +69,12 @@ module.exports = function(lando) {
       entrypoint: '/lando-entrypoint.sh',
       labels: {
         'io.lando.container': 'TRUE',
-        'io.lando.service-container': 'TRUE'
+        'io.lando.service-container': 'TRUE',
+        'io.lando.id': lando.config.id
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/helpers/user-perms.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
       ]
     };
@@ -85,6 +90,7 @@ module.exports = function(lando) {
     var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
     util.volumes.push(app + ':/app' + shareMode);
     util.volumes.push('$LANDO_ENGINE_HOME:/user' + shareMode);
+    util.volumes.push('$LANDO_ENGINE_CONF:/lando' + shareMode);
 
     // Build and export compose
     var service = {
@@ -113,8 +119,35 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
+   * Helper to return a performant git clone command
+   *
+   * This clones to /tmp and then moves to /app to avoid file sharing performance
+   * hits
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.cloneRepo'
+   */
+  var cloneRepo = function(repo) {
+
+    // Get a unique clone folder
+    var tmpFolder = '/tmp/' + _.uniqueId('app-');
+
+    // Commands
+    var mkTmpFolder = 'mkdir -p ' + tmpFolder;
+    var cloneRepo = 'git -C ' + tmpFolder + ' clone ' + repo + ' ./';
+    var cpHome = 'cp -rfT ' + tmpFolder + ' /app';
+
+    // Clone cmd
+    return [mkTmpFolder, cloneRepo, cpHome].join(' && ');
+
+  };
+
+  /**
    * Helper to return a create key command
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.createKey'
    */
   var createKey = function(key) {
 
@@ -122,18 +155,20 @@ module.exports = function(lando) {
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
     fs.mkdirpSync(path.join(keysDir));
 
-    // Construct a helpful and box-specific comment
-    var comment = 'lando@' + os.hostname();
+    // Construct a helpful and instance-specific comment
+    var comment = lando.config.id + '.lando@' + os.hostname();
+    var keyPath = '/lando/keys/' + key;
 
     // Key cmd
-    return [
-      'ssh-keygen',
-      '-t rsa -N "" -C "' + comment + '" -f "/user/.lando/keys/' + key + '"'
-    ].join(' ');
+    return 'ssh-keygen -t rsa -N "" -C "' + comment + '" -f "' + keyPath + '"';
+
   };
 
-  /*
+  /**
    * Run a command during the init process
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.run'
    */
   var run = function(name, app, cmd, user) {
 
@@ -153,6 +188,9 @@ module.exports = function(lando) {
       }
     };
 
+    // Log
+    lando.log.verbose('Running %s on %s', run.cmd, run.id);
+
     // Start the container
     return lando.engine.start(service)
 
@@ -170,8 +208,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to kill any running util processes
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.kill'
    */
   var kill = function(name, app) {
 
@@ -195,6 +236,9 @@ module.exports = function(lando) {
 
   /**
    * The core init method
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.build'
    */
   var build = function(name, method, options) {
 
@@ -212,8 +256,11 @@ module.exports = function(lando) {
 
   };
 
-  /*
+  /**
    * Helper to spit out a .lando.yml file
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.yaml'
    */
   var yaml = function(recipe, config, options) {
 
@@ -234,6 +281,7 @@ module.exports = function(lando) {
   return {
     add: add,
     build: build,
+    cloneRepo: cloneRepo,
     createKey: createKey,
     get: get,
     kill: kill,

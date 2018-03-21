@@ -15,15 +15,22 @@ You can also configure how Lando itself works with a `config.yml`. This config s
 config.yml
 ----------
 
-This file specifies the core configuration options for Lando. If you wanted to fork Lando and use your own plugins or alter plugin config like proxy ports, this is the file you would want to change. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. The order of the overrides is below:
+This file specifies the core configuration options for Lando. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config.
 
-1.  The default `config.yml`. If you've installed Lando from source this will be in the source root.
-2.  The `config.yml` inside of the `sysConfRoot`. For example `/usr/share/lando` on Linux.
-3.  The `config.yml` inside of the `userConfRoot`. For examples `~/.lando/` on macOS.
-
-> #### Hint::Where are `sysConfRoot` and `userConfRoot`?
+> #### Hint::What directories are scanned?
 >
-> Run `lando config` to find the location of these directories as they can be different.
+> Run `lando config` and look at the `configSources` key to find what directories are scanned for config.
+
+Note that overrides will be merged in with the last value in `configSources` taking priority. Also note that there are some configuration options **THAT MUST** be set during the bootstrap of the `lando` object. For more information about how to bootstrap your own custom `lando` object please consult the [API docs](./../api/api.html#lando).
+
+Environment Variables
+---------------------
+
+You can also override any global config value using environment variables of the form `envPrefix_config_value`. So to change the `mode` you'd set `LANDO_MODE=mymode`. For more complex config (eg an object or array) you can set the envvar to a `JSON` string. Also note that Lando keys that are camelCase will be separated as envvars with `_`. For example `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
+
+> #### Hint::What is my `envPrefix`
+>
+> BY default this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
 
 Examples
 --------
@@ -31,5 +38,74 @@ Examples
 ### Turning the proxy off
 
 ```bash
+# Edit the config
 echo "proxy: 'OFF'" >> ~/.lando/config.yml
+
+# Poweroff lando
+lando poweroff
+
+# Reboot an app
+lando start SOMEAPP
+```
+
+### Set some custom default activity
+
+Place this `yaml` file in at `~/.lando/config.yml`
+
+```yaml
+# Add some envvars the get injected into every lando app container
+containerGlobalEnv:
+  GETTINGBACKTOGETHER: NEVER
+
+# Use a different docker daemon
+# NOTE: This is not official supported
+engineConfig:
+  host: 127.0.0.1
+  port: 4333
+  socketPath: null
+
+# Make console log very silly
+logLevelConsole: silly
+
+# Load additional custom plugins
+plugins:
+  - lando-my-plugin
+```
+
+### Set a config value through an ENVVAR
+
+This assumes you are using `LANDO` as the `envPrefix`.
+
+```bash
+# Check the current config value for mode
+lando config | grep mode
+// "mode": "cli",
+
+// Override with an envvar
+export LANDO_MODE=mymode
+
+# Check the new value
+lando config | grep mode
+// "mode": "mymode",
+```
+
+### Set complicated config through an ENVVAR
+
+```bash
+# Check the current engine config
+lando config
+// "engineConfig": {
+//   "host": "127.0.0.1",
+//   "socketPath": "/var/run/docker.sock"
+// },
+
+// Override with an envvar
+export LANDO_ENGINE_CONFIG='{"host": "localhost"}'
+
+# Check the new value
+lando config
+// "engineConfig": {
+//   "host": "localhost",
+//   "socketPath": "/var/run/docker.sock"
+// },
 ```

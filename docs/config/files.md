@@ -7,3 +7,6 @@ While you can also share in additional files and directories via docker volumes 
 | -- | -- |
 | `/path/to/my/app` | `/app` |
 | `$HOME` | `/user` |
+| `lando.config.userConfRoot` | `/lando` |
+
+**NOTE:** Unless you've configured a custom `lando` bootstrap `lando.config.userConfRoot` should resolve to `$HOME/.lando`.

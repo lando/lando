@@ -3,22 +3,23 @@ matrix:
   include:
   - os: linux
     env: LANDO_PKG_TYPE=rpm LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
   - os: linux
     env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
   - os: osx
     env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
-    node_js: '6'
+    node_js: '8'
 services:
   - docker
 sudo: required
+cache:
+  yarn: true
+  directories:
+    - node_modules
+    - ~/.gitbook
 
 before_install:
-
-  # Install some node deps
-  - npm install -g grunt-cli
-
   # Import our keys on OSX
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [ ! -z "$APPLE_CERTS_DATA" ] && [ ! -z "$APPLE_CERTS_PASSWORD" ]; then
@@ -42,11 +43,6 @@ before_install:
 
     fi
 
-install:
-
-  # Override the normal npm install with npm -E install
-  - npm -E install
-
 before_script:
 
   # Edit the package.json if this isn't an official release
@@ -57,30 +53,20 @@ before_script:
 
   # Sanity checks
   - node --version
-  - npm --version
-  - grunt --version
+  - yarn --version
   - node bin/lando.js version
 
 script:
 
   # Run code and styling
-  - grunt test:code
-
-  # Run unit tests
-  - grunt test:unit
+  - yarn test
 
   # Make sure we can build the docs
-  - grunt docs
+  - yarn docs
 
   # Run the build
   - mkdir -p release
-  - grunt pkg
-
-  # Run a few tests on the installer
-  # - if [ $LANDO_PKG_TYPE == "deb" ]; then grunt test:bats; fi
-  # @TODO: Looks like installing Docker.app is still a problem which prevents us
-  # from testing
-  # - if [ $LANDO_PKG_TYPE == "dmg" ]; then grunt test:bats; fi
+  - yarn pkg:full
 
   # Name the release depending on whether it is an official release or not
   - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi

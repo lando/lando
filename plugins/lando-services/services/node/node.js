@@ -1,9 +1,3 @@
-/**
- * Lando node service builder
- *
- * @name node
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -15,7 +9,7 @@ module.exports = function(lando) {
   // "Constants"
   var esd = lando.config.engineScriptsDir;
 
-  /**
+  /*
    * Supported versions for node
    */
   var versions = [
@@ -37,14 +31,14 @@ module.exports = function(lando) {
     'custom'
   ];
 
-  /**
+  /*
    * Return the networks needed
    */
   var networks = function() {
     return {};
   };
 
-  /**
+  /*
    * Build out node
    */
   var services = function(name, config) {
@@ -132,12 +126,12 @@ module.exports = function(lando) {
 
     }
 
-    // Add our npm things to build extra
+    // Add our npm things to run step
     if (!_.isEmpty(config.globals)) {
       _.forEach(config.globals, function(version, pkg) {
 
         // Ensure globals is arrayed
-        config.build = config.build || [];
+        config.run_internal = config.run_internal || [];
 
         // Queue up our global composer command
         var nig = ['npm', 'install', '-g'];
@@ -154,7 +148,7 @@ module.exports = function(lando) {
         nig.push(dep.join('@'));
 
         // Add before our other builds
-        config.build.unshift(nig.join(' '));
+        config.run_internal.unshift(nig.join(' '));
 
       });
     }
@@ -167,14 +161,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Metadata about our service
    */
   var info = function() {
     return {};
   };
 
-  /**
+  /*
    * Return the volumes needed
    */
   var volumes = function() {

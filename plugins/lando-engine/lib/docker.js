@@ -1,9 +1,3 @@
-/**
- * Module to wrap and abstract access to dockerode.
- *
- * @module docker
- */
-
 'use strict';
 
 // Get the docker config
@@ -31,6 +25,7 @@ module.exports = function(config) {
     var run = dockerContainer.Labels['com.docker.compose.oneoff'];
     var lando = dockerContainer.Labels['io.lando.container'] || false;
     var special = dockerContainer.Labels['io.lando.service-container'] || false;
+    var id = dockerContainer.Labels['io.lando.id'] || 'unknown';
 
     // Add 'run' the service if this is a oneoff container
     if (run === 'True') {
@@ -47,12 +42,13 @@ module.exports = function(config) {
       name: [app, service, num].join('_'),
       app: (!isSpecial) ? app : undefined,
       kind: (!isSpecial) ? 'app' : 'service',
-      lando: (lando === 'TRUE') ? true : false
+      lando: (lando === 'TRUE') ? true : false,
+      instance: id
     };
 
   };
 
-  /**
+  /*
    * Query docker for a list of containers.
    */
   var list = function(appName) {
@@ -120,7 +116,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Find a docker container.
    */
   var findContainer = function(cid) {
@@ -161,7 +157,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Inspect a container.
    */
   var inspect = function(cid) {
@@ -178,7 +174,7 @@ module.exports = function(config) {
     });
   };
 
-  /**
+  /*
    * Return true if the container is running otherwise false.
    */
   var isRunning = function(cid) {
@@ -209,7 +205,7 @@ module.exports = function(config) {
     });
   };
 
-  /**
+  /*
    * Stop a container.
    */
   var stop = function(cid) {
@@ -234,23 +230,26 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Do a docker exec
    */
   var run = function(id, cmd, opts) {
 
     // Discover the mode
     var mode = (opts && opts.mode) ? opts.mode : 'collect';
+    var defaultTty = true;
+
+    // Force some things things if we are in a non node context
+    if (process.lando !== 'node') {
+      mode = 'collect';
+      defaultTty = false;
+    }
 
     // Make cmd is an array lets desconstruct and escape
-    if (_.isArray(cmd)) {
-      cmd = utils.escSpaces(esc(cmd), 'linux');
-    }
+    if (_.isArray(cmd)) { cmd = utils.escSpaces(esc(cmd), 'linux'); }
 
     // Add in any prefix commands
-    if (_.has(opts, 'pre')) {
-      cmd = [opts.pre, cmd].join('&&');
-    }
+    if (_.has(opts, 'pre')) { cmd = [opts.pre, cmd].join('&&'); }
 
     // Build the exec opts
     var execOpts = {
@@ -260,7 +259,7 @@ module.exports = function(config) {
       Cmd: ['/bin/sh', '-c', cmd],
       Env: opts.env || [],
       DetachKeys: opts.detachKeys || 'ctrl-p,ctrl-q',
-      Tty: opts.tty || true,
+      Tty: opts.tty || defaultTty,
       User: opts.user || 'root'
     };
 
@@ -287,7 +286,7 @@ module.exports = function(config) {
         hijack: opts.hijack || false,
         stdin: execOpts.AttachStdin,
         Detach: false,
-        Tty: true
+        Tty: defaultTty
       };
 
       // Start it up
@@ -387,7 +386,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Remove a container.
    */
   var remove = function(cid, opts) {
@@ -437,7 +436,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Prune the networks
    */
   var createNetwork = function(name, opts) {
@@ -458,7 +457,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Get the networks
    */
   var getNetworks = function(opts) {
@@ -476,7 +475,7 @@ module.exports = function(config) {
 
   };
 
-  /**
+  /*
    * Prune the networks
    */
   var pruneNetworks = function(opts) {

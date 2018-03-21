@@ -15,7 +15,7 @@ FILES=${TERMINUS_ENV:-dev}
 RSYNC=false
 
 # Set helpers
-SSH_KEY="/user/.lando/keys/pantheon.lando.id_rsa"
+SSH_KEY="/lando/keys/pantheon.lando.id_rsa"
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
@@ -169,7 +169,7 @@ if [ "$DATABASE" != "none" ]; then
   # Do some post DB things on WP
   if [ "$FRAMEWORK" == "wordpress" ]; then
     echo "Doing the ole post-migration search-replace on WordPress..."
-    wp search-replace "http://$ENV-$SITE.pantheonsite.io" "http://$LANDO_APP_NAME.lndo.site"
+    wp search-replace --path="$LANDO_WEBROOT" "http://$ENV-$SITE.pantheonsite.io" "http://$LANDO_APP_NAME.lndo.site"
   fi
 
 fi

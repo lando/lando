@@ -1,9 +1,3 @@
-/**
- * Command to init a lando app
- *
- * @name init
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -103,7 +97,7 @@ module.exports = function(lando) {
 
       // Create directory if needed
       if (!fs.existsSync(options.destination)) {
-        fs.ensureDirSync(options.destination);
+        fs.mkdirpSync(options.destination);
       }
 
       // Set node working directory to the destination

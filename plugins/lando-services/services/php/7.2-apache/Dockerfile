@@ -5,7 +5,8 @@
 FROM php:7.2-apache
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \
@@ -22,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libicu-dev \
     mysql-client \
+    postgresql-client-9.6 \
     pv \
     ssh \
     unzip \

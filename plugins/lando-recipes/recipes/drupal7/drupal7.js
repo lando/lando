@@ -1,9 +1,3 @@
-/**
- * Drupal7 recipe builder
- *
- * @name drupal7
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -13,11 +7,11 @@ module.exports = function(lando) {
   var helpers = require('./../lamp/lamp')(lando);
 
   // "Constants"
-  var DRUSH8 = '8.1.15';
+  var DRUSH8 = '8.1.16';
   var DRUSH7 = '7.4.0';
-  var DRUSHLAUNCHER = '0.4.3';
+  var DRUSHLAUNCHER = '0.6.0';
 
-  /**
+  /*
    * Helper to get DRUSH 8 or DRUSH LAUNCHER phar
    */
   var drushUrl = function(thing, version) {
@@ -30,14 +24,14 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Helper to get the phar build command
    */
   var pharOut = function(url, status) {
     return helpers.getPhar(url, 'drush.phar', '/usr/local/bin/drush', status);
   };
 
-  /**
+  /*
    * Helper to figure out how to handle drush
    */
   var drush = function(build, config) {
@@ -87,7 +81,7 @@ module.exports = function(lando) {
       }
 
       // Set the command
-      build.services.appserver.build.push(cmd);
+      build.services.appserver.run_internal.push(cmd);
 
     }
 
@@ -102,7 +96,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out Drupal7
    */
   var build = function(name, config) {
@@ -126,8 +120,8 @@ module.exports = function(lando) {
     var drushConfig = _.get(config, 'drush', 'global:' + defaultDrush);
 
     // Handle drush
-    var buildersKey = 'services.appserver.build';
-    build.services.appserver.build = _.get(build, buildersKey, []);
+    var buildersKey = 'services.appserver.run_internal';
+    build.services.appserver.run_internal = _.get(build, buildersKey, []);
     build = drush(build, drushConfig);
 
     // Return the things

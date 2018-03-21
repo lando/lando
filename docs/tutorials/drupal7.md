@@ -25,7 +25,7 @@ lando init
 
 # Commit the .lando.yml to your git repo (Optional but recommended)
 git add -A
-git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+git commit -m "Adding Lando configuration file for easy and fun local development!"
 git push
 ```
 
@@ -181,7 +181,7 @@ and by adding the following example to your .lando.yml file:
 ```
 services:
   appserver:
-    build:
+    run:
       - "mkdir -p ~/.drush/site-aliases"
       - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
  ```

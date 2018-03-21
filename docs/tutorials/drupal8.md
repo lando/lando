@@ -25,7 +25,7 @@ lando init
 
 # Commit the .lando.yml to your git repo (Optional but recommended)
 git add -A
-git commit -m "MAKE LOCAL DEV GREAT AGAIN"
+git commit -m "Adding Lando configuration file for easy and fun local development!"
 git push
 ```
 
@@ -183,7 +183,7 @@ and by adding the following example to your .lando.yml file:
 ```
 services:
   appserver:
-    build:
+    run:
       - "mkdir -p ~/.drush/site-aliases"
       - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
  ```
@@ -217,3 +217,48 @@ Read More
 *   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
+
+### Setting up PHPStorm for running tests
+We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm instead by Commandline so we can debug our 
+tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter 
+and make out Test Framework us it.
+
+* *Currently we have issues running functional test through PHPStorm. The reason this doesn't work yet is
+ that PHPStorm spins up a container and *
+
+#### MacOS
+
+##### 1. Docker integration.
+Go to "Preferences" >> "Build, Execution, Deployment" >> "Docker". Click on the "+" and simply select "Docker for Mac".
+
+##### 2. Remote CLI interpreter.
+Go to "Preferences" >> "Languages and Framework" >> "PHP". Click on the "..." for the CLI interpreter and in the 
+pop-up window add a new interpreter by clicking on the "+". Select "From Docker, Vagrant, VM, Remote..". In the next 
+window select "Docker". This should automatically fill with the FPM container from lando. See for example:
+
+![Add remote interpreter for docker](https://raw.githubusercontent.com/lando/lando/master/docs/images/add-remote-interpreter-docker.png)
+
+##### 3. Test Frameworks
+Go to "Preferences" >> "Languages and Framework" >> "PHP" >> "Test Frameworks". Click on the "+" and select 
+"PHPUnit by Remote interpreter". Select the CLI interpreter from Step 2. All we need to do is target the "autoload.php"
+within our container and the "Default configuration / bootstrap" file:
+
+![Add remote interpreter for docker](https://raw.githubusercontent.com/lando/lando/master/docs/images/test-frameworks-remote-interperter)
+
+#### Setup phpunit.xml variables
+Note that for SIMPLETEST_DB we target the "tmp" directory this is done because we spin up a container and we need write
+ permissions to create the sqlite file.
+```xml
+<php>
+    <!-- Set error reporting to E_ALL. -->
+    <ini name="error_reporting" value="32767"/>
+    <!-- Do not limit the amount of memory tests take to run. -->
+    <ini name="memory_limit" value="-1"/>
+    <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
+    <env name="SIMPLETEST_BASE_URL" value="http://domainname.localhost/"/>
+    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
+    <env name="SIMPLETEST_DB" value="sqlite://tmp/test.sqlite"/>
+    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/opt/project/web/sites/default/files/browser_output"/>
+  </php>
+``` 

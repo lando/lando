@@ -1,9 +1,3 @@
-/**
- * Command to destroy a lando app
- *
- * @name destroy
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -23,6 +17,7 @@ module.exports = function(lando) {
         boolean: true,
         interactive: {
           type: 'confirm',
+          default: false,
           message: 'Are you sure you want to DESTROY?'
         }
       }

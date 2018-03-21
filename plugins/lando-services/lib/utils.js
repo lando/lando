@@ -1,9 +1,3 @@
-/**
- * Helpers to make composing easier
- *
- * @name utils
- */
-
 'use strict';
 
 // Modules
@@ -11,8 +5,11 @@ var _ = require('lodash');
 var fs = require('fs-extra');
 var path = require('path');
 
-/*
+/**
  * Default networking
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.connectNet'
  */
 exports.connectNet = function(data) {
 
@@ -30,8 +27,11 @@ exports.connectNet = function(data) {
 
 };
 
-/*
+/**
  * Default bridge network
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.connectBridge'
  */
 exports.connectBridge = function(netName) {
   return {
@@ -43,8 +43,11 @@ exports.connectBridge = function(netName) {
   };
 };
 
-/*
+/**
  * Return an object of build steps
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.filterBuildSteps'
  */
 exports.filterBuildSteps = function(services) {
 
@@ -54,10 +57,22 @@ exports.filterBuildSteps = function(services) {
   // Go through each service
   _.forEach(services, function(service, name) {
 
-    // Loop through both extras and build
-    _.forEach(['extras', 'build'], function(section) {
+    // Build steps
+    var rootSteps = [
+      'run_as_root_internal',
+      'run_as_root',
+      'extras',
+    ];
+    var buildSteps = [
+      'run_internal',
+      'run',
+      'build'
+    ];
 
-      // If the service has extras let's loop through and run some commands
+    // Loop through all internal, legacy and user steps
+    _.forEach(rootSteps.concat(buildSteps), function(section) {
+
+      // If the service has build sections let's loop through and run some commands
       if (!_.isEmpty(service[section])) {
 
         // Normalize data for loopage
@@ -72,7 +87,7 @@ exports.filterBuildSteps = function(services) {
             name: name,
             container: container,
             cmd: cmd,
-            section: section
+            type: (_.includes(rootSteps, section)) ? 'root' : 'user'
           });
         });
 
@@ -87,8 +102,11 @@ exports.filterBuildSteps = function(services) {
 
 };
 
-/*
+/**
  * Set the entrypoint with a local script
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.setEntrypoint'
  */
 exports.setEntrypoint = function(entrypoint) {
 
@@ -107,9 +125,12 @@ exports.setEntrypoint = function(entrypoint) {
 
 };
 
-/*
+/**
  * Helper to build a volumes
  * @NOTE: This seems weird, maybe written before we have more generic compose merging?
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.buildVolume'
  */
 exports.buildVolume = function(local, remote, base) {
 
@@ -131,6 +152,9 @@ exports.buildVolume = function(local, remote, base) {
 
 /**
  * Helper function to inject config
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.addConfig'
  */
 exports.addConfig = function(mount, volumes) {
 
@@ -149,6 +173,9 @@ exports.addConfig = function(mount, volumes) {
 
 /**
  * Helper function to inject utility scripts
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.addScript'
  */
 exports.addScript = function(script, volumes, here, there) {
 

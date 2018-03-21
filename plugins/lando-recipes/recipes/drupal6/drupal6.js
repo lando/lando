@@ -1,9 +1,3 @@
-/**
- * Drupal 6 recipe builder
- *
- * @name drupal6
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -11,7 +5,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
 
-  /**
+  /*
    * Build out Drupal 6
    */
   var build = function(name, config) {

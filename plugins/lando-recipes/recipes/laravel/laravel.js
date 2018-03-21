@@ -1,9 +1,3 @@
-/**
- * laravel recipe builder
- *
- * @name laravel
- */
-
 'use strict';
 
 module.exports = function(lando) {
@@ -12,7 +6,7 @@ module.exports = function(lando) {
   var _ = lando.node._;
   var helpers = require('./../lamp/lamp')(lando);
 
-  /**
+  /*
    * Helper to get cache
    */
   var cache = function(cache) {
@@ -36,7 +30,7 @@ module.exports = function(lando) {
 
   };
 
-  /**
+  /*
    * Build out laravel
    */
   var build = function(name, config) {
@@ -81,11 +75,11 @@ module.exports = function(lando) {
     var cgrInstall = helpers.getCgr('laravel/installer', '*');
 
     // Set builders if needed
-    var buildersKey = 'services.appserver.build';
-    build.services.appserver.build = _.get(build, buildersKey, []);
+    var buildersKey = 'services.appserver.run_internal';
+    build.services.appserver.run_internal = _.get(build, buildersKey, []);
 
     // Add our cgr cmds
-    build.services.appserver.build.push(cgrInstall);
+    build.services.appserver.run_internal.push(cgrInstall);
 
     // Add artisan command
     build.tooling.artisan = {
