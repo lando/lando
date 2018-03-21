@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(lando) {
+module.exports = (lando) => {
 
   // Load in our init method
   lando.init.add('pantheon', require('./init')(lando));
@@ -22,20 +22,18 @@ module.exports = function(lando) {
   /*
    * Hash helper
    */
-  const getHash = function(u) {
-    return crypto.createHash('sha256').update(u).digest('hex');
-  };
+  const getHash = (u) => crypto.createHash('sha256').update(u).digest('hex');
 
   /*
    * Event based logix
    */
-  lando.events.on('post-instantiate-app', function(app) {
+  lando.events.on('post-instantiate-app', (app) => {
 
     // Cache key helpers
     const siteMetaDataKey = 'site:meta:';
 
     // Set new terminus key into the cache
-    app.events.on('pre-terminus', function() {
+    app.events.on('pre-terminus', () => {
       if (_.get(lando.cli.argv()._, '[1]') === 'auth:login') {
         if (_.has(lando.cli.argv(), 'machineToken')) {
 
@@ -57,7 +55,7 @@ module.exports = function(lando) {
     });
 
     // Destroy the cached site data
-    app.events.on('post-destroy', function() {
+    app.events.on('post-destroy', () => {
       lando.cache.remove(siteMetaDataKey + app.name);
     });
 
@@ -66,7 +64,7 @@ module.exports = function(lando) {
   /*
    * Set various pantheon environmental variables
    */
-  const env = function(config) {
+  const env = (config) => {
 
     // Framework specific stuff
     const frameworkSpec = {
@@ -185,10 +183,10 @@ module.exports = function(lando) {
   /*
    * Helper to mix in the correct tooling
    */
-  const tooling = function(config) {
+  const tooling = (config) => {
 
     // Helper func to get envs
-    const getEnvs = function(done, nopes) {
+    const getEnvs = (done, nopes) => {
 
       // Envs to remove
       const restricted = nopes || [];
@@ -203,7 +201,7 @@ module.exports = function(lando) {
       }
 
       // Validate we have a token and siteid
-      _.forEach([token, config.id], function(prop) {
+      _.forEach([token, config.id], (prop) => {
         if (_.isEmpty(prop)) {
           lando.log.error('Error getting token or siteid.', prop);
           throw new Error('Make sure you run: lando init pantheon');
@@ -214,17 +212,16 @@ module.exports = function(lando) {
       api.getEnvs(token, config.id)
 
       // Parse the evns into choices
-      .map(function(env) {
-        return {name: env.id, value: env.id};
-      })
+      .map((env) => ({
+        name: env.id,
+        value: env.id
+      }))
 
       // Filter out any restricted envs
-      .filter(function(env) {
-        return (!_.includes(restricted, env.value));
-      })
+      .filter((env) => !_.includes(restricted, env.value))
 
       // Done
-      .then(function(envs) {
+      .then((envs) => {
         envs.push({name: 'none', value: 'none'});
         done(null, envs);
       });
@@ -380,18 +377,16 @@ module.exports = function(lando) {
   /*
    * Helper to return proxy config
    */
-  const proxy = function(name) {
-    return {
-      edge: [
-        [name, lando.config.proxyDomain].join('.')
-      ]
-    };
-  };
+  const proxy = (name) => ({
+    edge: [
+      [name, lando.config.proxyDomain].join('.')
+    ]
+  });
 
   /*
    * Add in redis
    */
-  const redis = function(version) {
+  const redis = (version) => {
 
     // The redis config
     const config = {
@@ -408,7 +403,7 @@ module.exports = function(lando) {
   /*
    * Add in varnish
    */
-  const varnish = function(version) {
+  const varnish = (version) => {
 
     // The varnish config
     const config = {
@@ -426,7 +421,7 @@ module.exports = function(lando) {
   /*
    * Add in solr
    */
-  const solr = function(version) {
+  const solr = (version) => {
 
     // The solr config
     const config = {
@@ -449,7 +444,7 @@ module.exports = function(lando) {
   /*
    * Mixin other needed pantheon volume based config like prepend.php
    */
-  const pVols = function(volumes) {
+  const pVols = (volumes) => {
 
     // The where and what to mount
     const mounts = [
@@ -462,7 +457,7 @@ module.exports = function(lando) {
     ];
 
     // Loop
-    _.forEach(mounts, function(mount) {
+    _.forEach(mounts, (mount) => {
 
       // Break up the mount
       const container = mount.split(':')[0];
@@ -487,7 +482,7 @@ module.exports = function(lando) {
   /*
    * Mixin settings from pantheon.ymls
    */
-  const mergePyaml = function(configFile) {
+  const mergePyaml = (configFile) => {
 
     // Start with a config collector
     const config = {};
@@ -518,7 +513,7 @@ module.exports = function(lando) {
   /*
    * Helper to set default php version based on framework
    */
-  const phpVersion = function(framework) {
+  const phpVersion = (framework) => {
     switch (framework) {
       case 'backdrop': return '5.6';
       case 'drupal': return '5.6';
@@ -531,7 +526,7 @@ module.exports = function(lando) {
   /*
    * Build out Pantheon
    */
-  const build = function(name, config) {
+  const build = (name, config) => {
 
     // Set versions to match pantheon
     config.via = 'nginx:1.8';
@@ -557,7 +552,7 @@ module.exports = function(lando) {
     ];
 
     // Mixin pyamls if applicable
-    _.forEach(pyamls, function(pyaml) {
+    _.forEach(pyamls, (pyaml) => {
       config = _.merge(config, mergePyaml(pyaml, config));
     });
 
