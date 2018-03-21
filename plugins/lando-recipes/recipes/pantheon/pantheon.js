@@ -529,31 +529,6 @@ module.exports = function(lando) {
   };
 
   /*
-   * Helper for build steps
-   */
-  var buildSteps = function(config) {
-
-    // But add some extra steps if we are on backdrop
-    // Need to cp backdrush command files into ~/.drush
-    if (config.framework === 'backdrop') {
-      return [
-        'mkdir -p /var/www/.drush/backdrush',
-        'cp -rf /var/www/.backdrush/* /var/www/.drush/backdrush/',
-        'drush cc drush'
-      ];
-    }
-
-    // Make sure we clean up if we switch to something else
-    else {
-      return [
-        'rm -rf /var/www/.drush/backdrush/',
-        'drush cc drush'
-      ];
-    }
-
-  };
-
-  /*
    * Build out Pantheon
    */
   var build = function(name, config) {
@@ -624,9 +599,6 @@ module.exports = function(lando) {
     // it runs before the other build steps so it can reset our CA correctly
     build.services.appserver.run_as_root_internal = ['/helpers/pantheon.sh'];
 
-    // Reset our build steps
-    build.services.appserver.build = buildSteps(config);
-
     // Mix in our additional services
     build.services.cache = redis(config.cache);
     build.services.edge = varnish(config.edge);
@@ -653,7 +625,7 @@ module.exports = function(lando) {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.build;
+      delete build.services.appserver.run_internal;
 
       // Override some tooling things
       build.tooling.terminus.service = cliService;
@@ -667,7 +639,7 @@ module.exports = function(lando) {
     if (_.has(cache, 'token')) {
       var token = _.get(cache, 'token');
       var terminusLogin = 'terminus auth:login --machine-token=' + token;
-      build.services[cliService].build.push(terminusLogin);
+      build.services[cliService].run_internal.push(terminusLogin);
     }
 
     // Return the things
