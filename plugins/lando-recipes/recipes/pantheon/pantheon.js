@@ -192,7 +192,7 @@ module.exports = (lando) => {
       const restricted = nopes || [];
 
       // Get token
-      const token = _.get(lando.cache.get('site:meta:' + config._app), 'token');
+      const token = _.get(lando.cache.get(`site:meta:${config._app}`), 'token');
 
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
@@ -538,7 +538,7 @@ module.exports = (lando) => {
 
     // Update with new config defaults
     config.conf = config.cong || {};
-    config.conf.server = path.join(configDir, config.framework + '.conf');
+    config.conf.server = path.join(configDir, `${config.framework}.conf`);
     config.conf.php = path.join(configDir, 'php.ini');
     config.conf.database = path.join(configDir, 'mysql');
 
@@ -582,7 +582,7 @@ module.exports = (lando) => {
 
     // Overide our default php images with special pantheon ones
     const imagePath = 'services.appserver.overrides.services.image';
-    const image = 'devwithlando/pantheon-appserver:' + config.php;
+    const image = `devwithlando/pantheon-appserver:${config.php}`;
     _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
@@ -630,10 +630,10 @@ module.exports = (lando) => {
     }
 
     // Login with terminus if we have a token
-    const cache = lando.cache.get('site:meta:' + config._app);
+    const cache = lando.cache.get(`site:meta:${config._app}`);
     if (_.has(cache, 'token')) {
       const token = _.get(cache, 'token');
-      const terminusLogin = 'terminus auth:login --machine-token=' + token;
+      const terminusLogin = `terminus auth:login --machine-token=${token}`;
       build.services[cliService].run_internal.push(terminusLogin);
     }
 
