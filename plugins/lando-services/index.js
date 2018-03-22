@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Meta
   var services = [
     'apache',
+    'blackfire',
     'compose',
     'dotnet',
     'elasticsearch',

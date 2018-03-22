@@ -38,12 +38,10 @@ module.exports = function(lando) {
     // Default blackfire service
     services[name] = {
       image: 'blackfire/blackfire:' + config.version,
-      environment: {
-        BLACKFIRE_SERVER_ID: process.env.BLACKFIRE_SERVER_ID,
-        BLACKFIRE_SERVER_TOKEN: process.env.BLACKFIRE_SERVER_TOKEN
-      },
-      command: 'blackfire-agent'
+      command: 'blackfire-agent',
+      networks: {default: {aliases: ['blackfire']}}
     };
+
 
     // Return our service
     return services;
