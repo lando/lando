@@ -6,15 +6,12 @@
 
 'use strict';
 
-module.exports = function(lando) {
-
-  // Modules
-  var _ = lando.node._;
+module.exports = lando => {
 
   /**
    * Supported versions for blackfire
    */
-  var versions = [
+  const versions = [
     '1.15.0',
     'latest',
     'custom'
@@ -23,17 +20,15 @@ module.exports = function(lando) {
   /**
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /**
    * Build out blackfire
    */
-  var services = function(name, config) {
+  const services = (name, config) => {
 
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Default blackfire service
     services[name] = {
@@ -50,16 +45,12 @@ module.exports = function(lando) {
   /**
    * Return the volumes needed
    */
-  var volumes = function() {
-    return {};
-  };
+  const volumes = () => ({});
 
   /**
    * Metadata about our service
    */
-  var info = function(name, config) {
-    return {};
-  };
+  const info = (name, config) => ({});
 
   return {
     info: info,
