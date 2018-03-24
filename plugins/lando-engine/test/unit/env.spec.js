@@ -9,7 +9,6 @@
 const chai = require('chai');
 const expect = chai.expect;
 const filesystem = require('mock-fs');
-const os = require('os');
 chai.should();
 
 // Save the original process.platform
@@ -95,18 +94,6 @@ describe('lando-engine.env', function() {
     });
 
     it('should return systemctl command if possible', function() {
-
-      // Our version of shelljs does not use process.platform under the hood which
-      // makes this not work as expected on windows.
-      // This is fixed in shelljs 0.7.8+ but we are on 0.6.0, seems like a risky
-      // upgrade without more tests first so let's just skip this for now and
-      // plan on removing it once we have enough tests to feel confident in upgrading
-      // shelljs
-      //
-      // Determine os differently since we've already hijacked process.platform
-      if (os.type().match(/^Win/) ? 'win' : 'unix' === 'win') {
-        this.skip();
-      }
 
       // Mock out both process.env.PATH and an FS
       process.env.PATH = '/bin';

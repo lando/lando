@@ -72,7 +72,7 @@
     "restler": "^3.4.0",
     "semver": "^5.4.1",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
-    "shelljs": "^0.6.0",
+    "shelljs": "0.7.8",
     "sudo-block": "^2.0.0",
     "sync-exec": "^0.6.2",
     "uuid": "^3.2.1",
