@@ -183,8 +183,7 @@ module.exports = function(lando) {
   };
 
   /*
-   * Helper to return import tooling route
-   * @TODO: Add pgsql cmd at some point
+   * Helper to return db-import mysql/mariadb tooling route
    */
   var dbImport = function() {
     return {
@@ -213,6 +212,44 @@ module.exports = function(lando) {
         port: {
           description: 'The database port',
           default: 3306,
+          alias: ['P']
+        },
+        'no-wipe': {
+          description: 'Do not destroy the existing database before an import'
+        }
+      }
+    };
+  };
+
+  /*
+   * Helper to return db-import postgres tooling route
+   */
+  var dbImportPsql = function() {
+    return {
+      service: 'appserver',
+      needs: ['database'],
+      description: 'Import into database.',
+      cmd: '/helpers/postgres-import.sh',
+      options: {
+        host: {
+          description: 'The database host',
+          alias: ['h']
+        },
+        user: {
+          description: 'The database user',
+          default: 'root',
+          alias: ['u']
+        },
+        database: {
+          description: 'The database name',
+          alias: ['d']
+        },
+        password: {
+          description: 'The database password',
+        },
+        port: {
+          description: 'The database port',
+          default: 5432,
           alias: ['P']
         },
         'no-wipe': {
@@ -294,7 +331,6 @@ module.exports = function(lando) {
       tooling['db-import [file]'] = dbImport();
       tooling['db-export [file]'] = dbExport();
     }
-    // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {
       tooling.psql = {
         service: 'database',
@@ -310,6 +346,8 @@ module.exports = function(lando) {
         ],
         user: 'root'
       };
+      tooling['db-import [file]'] = dbImportPsql();
+//      tooling['db-export [file]'] = dbExportPsql();
     }
 
     // Return the toolz

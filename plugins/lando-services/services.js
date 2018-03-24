@@ -147,6 +147,7 @@ module.exports = function(lando) {
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
       {script: 'mysql-export.sh', local: shd, remote: 'helpers'},
+      {script: 'postgres-import.sh', local: shd, remote: 'helpers'},
     ];
 
     // Add in helpers and scripts
