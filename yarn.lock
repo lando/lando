@@ -2553,6 +2553,10 @@ mocha@^4.1.0:
     mkdirp "0.5.1"
     supports-color "4.4.0"
 
+mock-fs@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.4.2.tgz#09dec5313f97095a450be6aa2ad8ab6738d63d6b"
+
 move-concurrently@^1.0.1, move-concurrently@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
