@@ -1,7 +1,7 @@
 /**
-* Tests for event system.
-* @file events.spec.js
-*/
+ * Tests for event system.
+ * @file events.spec.js
+ */
 
 'use strict';
 
