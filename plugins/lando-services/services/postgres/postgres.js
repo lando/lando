@@ -8,7 +8,7 @@ module.exports = function(lando) {
   var buildVolume = lando.utils.services.buildVolume;
 
   /*
-   * Supported versions for mysql
+   * Supported versions for postgres
    */
   var versions = [
     '10.3',

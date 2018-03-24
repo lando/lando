@@ -237,7 +237,7 @@ module.exports = function(lando) {
         },
         user: {
           description: 'The database user',
-          default: 'root',
+          default: 'postgres',
           alias: ['u']
         },
         database: {
@@ -260,8 +260,7 @@ module.exports = function(lando) {
   };
 
   /*
-   * Helper to return db-export tooling route
-   * @TODO: Add pgsql version of the cmd at some point
+   * Helper to return mysql/mariadb db-export tooling route
    */
   var dbExport = function() {
     return {
@@ -290,6 +289,44 @@ module.exports = function(lando) {
         port: {
           description: 'The database port',
           default: 3306,
+          alias: ['P']
+        },
+        stdout: {
+          description: 'Dump database to stdout'
+        }
+      }
+    };
+  };
+
+  /*
+   * Helper to return postgres db-export tooling route
+   */
+  var dbExportPsql = function() {
+    return {
+      service: 'appserver',
+      needs: ['database'],
+      description: 'Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz',
+      cmd: '/helpers/postgres-export.sh',
+      options: {
+        host: {
+          description: 'The database host',
+          alias: ['h']
+        },
+        user: {
+          description: 'The database user',
+          default: 'postgres',
+          alias: ['u']
+        },
+        database: {
+          description: 'The database name',
+          alias: ['d']
+        },
+        password: {
+          description: 'The database password',
+        },
+        port: {
+          description: 'The database port',
+          default: 5432,
           alias: ['P']
         },
         stdout: {
@@ -347,7 +384,7 @@ module.exports = function(lando) {
         user: 'root'
       };
       tooling['db-import [file]'] = dbImportPsql();
-//      tooling['db-export [file]'] = dbExportPsql();
+      tooling['db-export [file]'] = dbExportPsql();
     }
 
     // Return the toolz
