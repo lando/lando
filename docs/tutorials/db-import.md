@@ -7,10 +7,6 @@ You can also import databases into other hosts and databases. It will currently 
 
 **This command will wipe out the target database before it runs the import unless you use the `--no-wipe` flag!**
 
-> #### Warning::Postgres import not yet supported
->
-> Lando will only handle `mysql` or `mariadb` compatible files at this time.
-
 Usage
 -----
 

@@ -3,10 +3,6 @@ Exporting Databases
 
 Lando ships with a helper `db-export` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should export a database dump `DATABASE.TIMESTAMP.gz` into the `/app` directory.
 
-> #### Warning::Postgres export not yet supported
->
-> Lando will only handle `mysql` or `mariadb` exports at this time.
-
 Usage
 -----
 
