@@ -62,21 +62,9 @@ describe('config', function() {
 
   });
 
-  describe('#loadEnvs', function() {
-
-    it('returns an object built from all keys from process.env that start with a given prefix', function() {
-
-      // Add mock data to process.env
-      process.env.DANCE_NOW = 'everybody';
-
-      const result = config.loadEnvs('DANCE');
-
-      expect(result).to.be.an('object');
-      expect(result).to.have.key('now');
-      expect(result.now).to.equal(process.env.DANCE_NOW);
-
-    });
-
+  describe('#merge', function() {
+    it('merge like lodash merge without array data');
+    it('concat array data');
   });
 
   describe('#stripEnvs', function() {
@@ -91,6 +79,31 @@ describe('config', function() {
       expect(result).to.be.an('object');
       expect(result).to.not.have.key('DANCE_NOW');
       expect(process.env).to.not.have.key('DANCE_NOW');
+
+    });
+
+  });
+
+  describe('#defaults', function() {
+    it('defaults');
+  });
+
+  describe('#loadFiles', function() {
+    it('loadfiles');
+  });
+
+  describe('#loadEnvs', function() {
+
+    it('returns an object built from all keys from process.env that start with a given prefix', function() {
+
+      // Add mock data to process.env
+      process.env.DANCE_NOW = 'everybody';
+
+      const result = config.loadEnvs('DANCE');
+
+      expect(result).to.be.an('object');
+      expect(result).to.have.key('now');
+      expect(result.now).to.equal(process.env.DANCE_NOW);
 
     });
 
