@@ -54,7 +54,7 @@ services:
 
     # Optionally run the following build steps
     # run:
-    #  - "cd $$LANDO_MOUNT && composer install"
+    #  - "cd $LANDO_MOUNT && composer install"
 
     # Optionally install additional server software
     # run_as_root:
