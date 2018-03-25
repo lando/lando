@@ -138,7 +138,6 @@ module.exports = function(lando) {
         // Rebase on top of any existing yaml
         if (fs.existsSync(dest)) {
           var pec = lando.yaml.load(dest);
-          console.log(lando.utils.merger);
           config = _.mergeWith(pec, config, lando.utils.merger);
         }
 
