@@ -248,6 +248,15 @@ A singleton array that contains all the tasks that have been added.
 var task = lando.tasks.tasks;
 ```
 <div class="api-body-footer"></div>
+<a id="blackfire"></a>
+
+<h2 id="blackfire" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  blackfire</h2>
+<div class="api-body-header"></div>
+
+Lando blackfire service builder
+
+<div class="api-body-footer"></div>
 <a id="landocacheset"></a>
 
 <h2 id="landocacheset" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -362,7 +371,9 @@ var config.path = config.updatePath(path);
   lando.utils.config.stripEnv(prefix) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Strips process.env of all envvars with PREFIX
+Strips process.env of all envvars with PREFIX and returns process.env
+
+NOTE: this actually returns process.env not a NEW object cloned from process.env
 
 **Since**: 3.0.0  
 
@@ -373,8 +384,8 @@ Strips process.env of all envvars with PREFIX
 **Returns**: <code>Object</code> - Updated process.env  
 **Example**  
 ```js
-// Reset the process.env without any LANDO_ prefixed envvars
-process.env = config.stripEnv('LANDO_');
+// Reset the process.env without any DOCKER_ prefixed envvars
+process.env = config.stripEnv('DOCKER_');
 ```
 <div class="api-body-footer"></div>
 <a id="landoutilsconfigdefaults"></a>
@@ -400,12 +411,18 @@ Merge in config file if it exists
 <a id="landoutilsconfigloadenvs"></a>
 
 <h2 id="landoutilsconfigloadenvs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.loadEnvs()</h2>
+  lando.utils.config.loadEnvs(prefix) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Grab envvars and map to config
+Filter process.env by a given prefix
 
 **Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| prefix | <code>String</code> | The prefix by which to filter. Should be without the trailing `_` eg `LANDO` not `LANDO_` |
+
+**Returns**: <code>Object</code> - Object of things with camelCased keys  
 <div class="api-body-footer"></div>
 <a id="landocliargv"></a>
 
@@ -2246,6 +2263,19 @@ Add an init method to the registry
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
+<a id="landoinitclonerepo"></a>
+
+<h2 id="landoinitclonerepo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.cloneRepo()</h2>
+<div class="api-body-header"></div>
+
+Helper to return a performant git clone command
+
+This clones to /tmp and then moves to /app to avoid file sharing performance
+hits
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
 <a id="landoinitcreatekey"></a>
 
 <h2 id="landoinitcreatekey" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -2373,6 +2403,16 @@ Delegator to gather info about a service for display to the user
 <div class="api-body-header"></div>
 
 The core service builder
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoserviceshealthcheck"></a>
+
+<h2 id="landoserviceshealthcheck" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.services.healthcheck()</h2>
+<div class="api-body-header"></div>
+
+Does a healthcheck on a service
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
@@ -2765,16 +2805,16 @@ app.events.on('post-start', function() {
   // Go through each service
   _.forEach(app.config.services, function(service, name) {
 
-    // If the service has extras let's loop through and run some commands
-    if (!_.isEmpty(service.extras)) {
+    // If the service has run steps let's loop through and run some commands
+    if (!_.isEmpty(service.run)) {
 
       // Normalize data for loopage
-      if (!_.isArray(service.extras)) {
-        service.extras = [service.extras];
+      if (!_.isArray(service.run)) {
+        service.run = [service.run];
       }
 
       // Run each command
-      _.forEach(service.extras, function(cmd) {
+      _.forEach(service.run, function(cmd) {
 
         // Build out the compose object
         var compose = {
