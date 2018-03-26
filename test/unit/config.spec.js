@@ -1,7 +1,8 @@
 /**
-* Tests for config system.
-* @file config.spec.js
-*/
+ * Tests for config system.
+ * @file config.spec.js
+ */
+
 'use strict';
 
 // Setup chai.

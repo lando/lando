@@ -17,7 +17,7 @@ services:
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
-  db:
+  database:
 
     # Use the latest version of mysql
     type: mysql
