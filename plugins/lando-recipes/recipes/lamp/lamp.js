@@ -226,8 +226,8 @@ module.exports = function(lando) {
    */
   var dbImportPsql = function() {
     return {
-      service: 'appserver',
-      needs: ['database'],
+      service: 'database',
+      //needs: ['database'],
       description: 'Import into database.',
       cmd: '/helpers/postgres-import.sh',
       options: {
@@ -303,8 +303,8 @@ module.exports = function(lando) {
    */
   var dbExportPsql = function() {
     return {
-      service: 'appserver',
-      needs: ['database'],
+      service: 'database',
+      //needs: ['database'],
       description: 'Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz',
       cmd: '/helpers/postgres-export.sh',
       options: {
