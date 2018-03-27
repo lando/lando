@@ -192,14 +192,19 @@ describe('config', function() {
 
     });
 
-    it('config.process is set to "node" or "browser"', function() {
+    it('config.process returns "browser" if in a browser', function() {
+      process.versions.chrome = 'test';
       const processType = config.defaults().process;
-      expect(_.includes(['node', 'browser'], processType)).to.equal(true);
+      expect(processType).to.equal('browser');
+      delete process.versions.chrome;
     });
 
-    it('sets process.lando to config.process', function() {
+    it('config.process returns "node" if not in a browser', function() {
+      delete process.versions.chrome;
+      delete process.versions.electron;
+      delete process.versions['atom-shell'];
       const processType = config.defaults().process;
-      expect(process.lando).to.equal(processType);
+      expect(processType).to.equal('node');
     });
 
   });
