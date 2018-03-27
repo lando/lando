@@ -261,7 +261,7 @@
 *   [lando.util.config.loadEnvs](api/api.md#landoutilsconfigloadenvs)
 *   [lando.util.config.merge](api/api.md#landoutilsconfigmerge)
 *   [lando.util.config.stripEnv](api/api.md#landoutilsconfigstripenv)
-*   [lando.util.config.updatePath](api/api.md#landoutilsconfigupdatepath)
+*   [lando.util.config.tryConvertJson](api/api.md#landoutilsconfigtryconfigjson)
 *   [lando.util.engine.dockerComposify](api/api.md#landoutilsenginedockercomposify)
 *   [lando.util.engine.moveConfig](api/api.md#landoutilsenginemoveconfig)
 *   [lando.util.engine.normalizer](api/api.md#landoutilsenginenormalizer)
