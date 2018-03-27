@@ -6,8 +6,11 @@
 'use strict';
 
 // Setup chai.
+const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
+const filesystem = require('mock-fs');
+const hasher = require('object-hash');
 chai.should();
 
 // Get caching module to test
@@ -63,8 +66,59 @@ describe('config', function() {
   });
 
   describe('#merge', function() {
-    it('merge like lodash merge without array data');
-    it('concat array data');
+
+    it('returns the same as _.merge for objects', function() {
+
+      // Setup data
+      const bands1 = {
+        best: 'nickelback',
+        worst: 'beck',
+      };
+      const bands2 = {
+        best: 'nickelback',
+        worst: 'miley',
+        supreme: 'taylor'
+      };
+
+      // Call the merge
+      const landoMerge = hasher(config.merge(bands1, bands2));
+      const lodashMerge = hasher(_.merge(bands1, bands2));
+
+      // Assert the things
+      expect(landoMerge).to.equal(lodashMerge);
+
+    });
+
+    it('concatenates keys that are arrays', function() {
+
+      // Setup data
+      const theworst = {favs: ['nickelback', 'abba']};
+      const thebest = {favs: ['britney']};
+
+      // Call the merge
+      const bands = config.merge(theworst, thebest);
+
+      // Assert the things
+      expect(bands.favs).to.have.length(3);
+      expect(hasher(bands.favs)).to.equal(hasher(['nickelback', 'abba', 'britney']));
+
+    });
+
+    it('removes duplicates from cacatenated arrays', function() {
+
+      // Setup data
+      const myfavs = {favs: ['nickelback', 'abba']};
+      const yourfavs = {favs: ['britney', 'nickelback']};
+
+      // Call the merge
+      const ourfavs = config.merge(myfavs, yourfavs);
+
+      // Assert the things
+      expect(ourfavs.favs).to.have.length(3);
+      expect(hasher(ourfavs.favs)).to.equal(hasher(['nickelback', 'abba', 'britney']));
+
+    });
+
   });
 
   describe('#stripEnvs', function() {
@@ -85,11 +139,113 @@ describe('config', function() {
   });
 
   describe('#defaults', function() {
-    it('defaults');
+
+    it('returns a properly structured default config object', function() {
+
+      // GEt teh config
+      const defaults = config.defaults();
+
+      // Assert the things
+      expect(_.hasIn(defaults, 'configFilename')).to.equal(true);
+      expect(_.hasIn(defaults, 'configSources')).to.equal(true);
+      expect(_.hasIn(defaults, 'env')).to.equal(true);
+      expect(_.hasIn(defaults, 'home')).to.equal(true);
+      expect(_.hasIn(defaults, 'logLevel')).to.equal(true);
+      expect(_.hasIn(defaults, 'logLevelConsole')).to.equal(true);
+      expect(_.hasIn(defaults, 'node')).to.equal(true);
+      expect(_.hasIn(defaults, 'os')).to.equal(true);
+      expect(_.hasIn(defaults, 'os.type')).to.equal(true);
+      expect(_.hasIn(defaults, 'os.platform')).to.equal(true);
+      expect(_.hasIn(defaults, 'os.release')).to.equal(true);
+      expect(_.hasIn(defaults, 'os.arch')).to.equal(true);
+      expect(_.hasIn(defaults, 'pluginDirs')).to.equal(true);
+      expect(_.hasIn(defaults, 'product')).to.equal(true);
+      expect(_.hasIn(defaults, 'process')).to.equal(true);
+      expect(_.hasIn(defaults, 'srcRoot')).to.equal(true);
+      expect(_.hasIn(defaults, 'userConfRoot')).to.equal(true);
+
+    });
+
+    it('config.env mirrors process.env', function() {
+
+      // GEt the env config
+      const env = config.defaults().env;
+
+      // Compare config.env and process.env
+      expect(hasher(env)).to.equal(hasher(process.env));
+
+      // Add a property to process.env and recompare
+      process.env.NEW = 'things';
+      expect(hasher(env)).to.equal(hasher(process.env));
+
+      // Remove a property from process.env and recompare
+      delete process.env.NEW;
+      expect(hasher(env)).to.equal(hasher(process.env));
+
+      // Add a property to process.env and recompare
+      env.NEW2 = 'morethings';
+      expect(hasher(env)).to.equal(hasher(process.env));
+
+      // Remove a property from process.env and recompare
+      delete env.NEW2;
+      expect(hasher(env)).to.equal(hasher(process.env));
+
+    });
+
+    it('config.process is set to "node" or "browser"', function() {
+      const processType = config.defaults().process;
+      expect(_.includes(['node', 'browser'], processType)).to.equal(true);
+    });
+
+    it('sets process.lando to config.process', function() {
+      const processType = config.defaults().process;
+      expect(process.lando).to.equal(processType);
+    });
+
   });
 
   describe('#loadFiles', function() {
-    it('loadfiles');
+
+    it('returns an empty object if no files are specified', function() {
+      const fileConfig = config.loadFiles();
+      expect(fileConfig).to.be.empty;
+    });
+
+    it('returns data only from files that exist', function() {
+
+      // Spoof some filezz
+      filesystem({'/tmp/config1.yml': 'obiwan: kenobi'});
+
+      // Build the file config
+      const fileConfig = config.loadFiles(['/tmp/config1.yml', '/tmp/doesnotexist.yml']);
+
+      // Assert
+      expect(hasher(fileConfig)).to.equal(hasher({obiwan: 'kenobi'}));
+
+      // Restore the filesystem
+      filesystem.restore();
+
+    });
+
+    it('gives priority to the last file loaded', function() {
+
+      // Spoof some filezz
+      filesystem({
+        '/tmp/config1.yml': 'scoundrel: lando',
+        '/tmp/config2.yml': 'scoundrel: solo'
+      });
+
+      // Build the file config
+      const fileConfig = config.loadFiles(['/tmp/config1.yml', '/tmp/config2.yml']);
+
+      // Assert
+      expect(hasher(fileConfig)).to.equal(hasher({scoundrel: 'solo'}));
+
+      // Restore the filesystem
+      filesystem.restore();
+
+    });
+
   });
 
   describe('#loadEnvs', function() {
