@@ -33,7 +33,7 @@ config:
   #
   # If ommitted this will be your approot itself.
   #
-  # webroot: web
+  webroot: web
 
   # Optionally specify how you want Lando to handle Drush. There are a few options
   #

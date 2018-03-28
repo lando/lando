@@ -103,6 +103,14 @@ module.exports = function(lando) {
       // Add in an add cert task
       nginx.volumes = addScript('add-cert.sh', nginx.volumes, esd);
 
+      // Add a healthcheck so we wait until open-ssl gets installed
+      nginx.healthcheck = {
+        test: 'dpkg -s openssl',
+        interval: '2s',
+        timeout: '10s',
+        retries: 25
+      };
+
     }
 
     // Handle custom config files
