@@ -64,9 +64,10 @@ module.exports = function(lando) {
       },
       nginx: {
         web: 'nginx',
-        command: ['php-fpm'],
+        command: (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'],
         image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.template'
+        serverConf: '/etc/nginx/conf.d/default.template',
+        poolConf: '/usr/local/etc/php-fpm.d/zz-lando.conf'
       }
     };
 
@@ -216,6 +217,13 @@ module.exports = function(lando) {
 
       // Set ports to empty
       php.ports = [];
+
+      // If on windows set the pool to run as root
+      if (process.platform === 'win32') {
+        var poolConf = ['php', 'zz-lando.conf'];
+        var poolMount = buildVolume(poolConf, config.poolConf, scd);
+        php.volumes = addConfig(poolMount, php.volumes);
+      }
 
     }
 
