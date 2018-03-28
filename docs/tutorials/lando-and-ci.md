@@ -59,6 +59,11 @@ Here is a `.travis.yml` file that accomplishes the above for our current example
 
 {% codesnippet "./../examples/lando-and-ci/.travis.yml" %}{% endcodesnippet %}
 
+> #### Warning::This Lando download is bleeding edge
+>
+> If you need a stable Lando release, it's best to peg your version to an
+> [official release](https://github.com/lando/lando/releases).
+
 That's great! More importantly though now each time we file a PR against the GitHub repo it will:
 
 *   Spin up a Travis CI environment

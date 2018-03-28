@@ -59,7 +59,7 @@ module.exports = function(lando) {
         test: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
         interval: '2s',
         timeout: '10s',
-        retries: '25'
+        retries: 25
       },
       command: 'docker-entrypoint.sh mysqld'
     };

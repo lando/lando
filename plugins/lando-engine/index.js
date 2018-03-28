@@ -54,6 +54,11 @@ module.exports = function(lando) {
     lando.config.env.LANDO_ENGINE_REMOTE_IP = ip.address();
     lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = lando.config.engineScriptsDir;
 
+    // Add some docker compose protection on windows
+    if (process.platform === 'win32') {
+      lando.config.env.COMPOSE_CONVERT_WINDOWS_PATHS = 1;
+    }
+
     // Log it
     lando.log.verbose('Engine plugin configured with %j', lando.config);
 

@@ -49,7 +49,7 @@ module.exports = {
     const current = pkgJson.version;
     switch (stage) {
       case 'prerelease':
-        return semver.inc(current, 'prerelease');
+        return semver.inc(current, 'prerelease', 'beta');
       case 'patch':
         return semver.inc(current, 'patch');
       case 'minor':

@@ -75,7 +75,7 @@
 ## Known Issues
 
 *   [DNS Rebinding Protection](issues/dns-rebind.md)
-*   [Drupal File Uploads](issues/drupal-win-upload.md)
+*   [File Uploads on Windows](issues/win-file-upload.md)
 *   [File Syncing Stalled](issues/file-sync.md)
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
@@ -261,7 +261,7 @@
 *   [lando.util.config.loadEnvs](api/api.md#landoutilsconfigloadenvs)
 *   [lando.util.config.merge](api/api.md#landoutilsconfigmerge)
 *   [lando.util.config.stripEnv](api/api.md#landoutilsconfigstripenv)
-*   [lando.util.config.updatePath](api/api.md#landoutilsconfigupdatepath)
+*   [lando.util.config.tryConvertJson](api/api.md#landoutilsconfigtryconfigjson)
 *   [lando.util.engine.dockerComposify](api/api.md#landoutilsenginedockercomposify)
 *   [lando.util.engine.moveConfig](api/api.md#landoutilsenginemoveconfig)
 *   [lando.util.engine.normalizer](api/api.md#landoutilsenginenormalizer)

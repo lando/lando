@@ -36,7 +36,7 @@ A services module (eg the file loaded with `lando.services.add`) needs to be mad
 *   `info` - A function that augments the info object to add additional metadata about your service.
 *   `configDir` - A path to a directory with any config files your service might require.
 
-A trivial `service` that is syntaxically correct but doesn't do anything would take this form:
+A trivial `service` that is syntactically correct but doesn't do anything would take this form:
 
 ```js
 'use strict';

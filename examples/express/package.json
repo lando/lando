@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "./node_modules/.bin/nodemon src/app.js --watch src --ignore *.test.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
   }
 }
