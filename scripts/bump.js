@@ -4,9 +4,9 @@
 /**
  * Constants
  */
-const argv = require('yargs').argv,
-  fs = require('fs'),
-  util = require('./util');
+const argv = require('yargs').argv;
+const fs = require('fs');
+const util = require('./util');
 const currentBranch = util.execGitCmd(
   ['rev-parse', '--abbrev-ref', 'HEAD'],
   'Getting current branch'

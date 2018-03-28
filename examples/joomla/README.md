@@ -12,8 +12,9 @@ You should be able to run the following steps to get up and running with this ex
 
 ```bash
 # Download a Joomla release into the web directory
-# At this time we cannot offer a lando-y way to do this
-curl -L https://downloads.joomla.org/cms/joomla3/3-8-2/Joomla_3-8-2-Stable-Full_Package.tar.gz | tar zxv -C web
+# NOTE: Probably want to replace with the latest release
+# See: https://downloads.joomla.org/us/cms/joomla3
+curl -L https://downloads.joomla.org/cms/joomla3/3-8-6/Joomla_3-8-6-Stable-Full_Package.tar.gz | tar zxv -C web
 
 # Spin up a new laravel site
 lando start
