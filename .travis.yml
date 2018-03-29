@@ -7,6 +7,9 @@ matrix:
   - os: linux
     env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
     node_js: '8'
+  - os: linux
+    env: LANDO_PKG_TYPE=pacman LANDO_SUDO_PASSWORD=
+    node_js: '8'
   - os: osx
     env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
     node_js: '8'
