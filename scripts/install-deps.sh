@@ -44,10 +44,10 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 
 # Do stuff on each distro
 case $FLAVOR in
-  arch)
-    pacman -Syu bsdtar ruby
-    gem install rdoc fpm
-    ;;
+  #arch)
+  #  pacman -Syu ruby
+  #  gem install rdoc fpm
+  #  ;;
   debian)
     apt-get update && apt-get -y --force-yes install \
       build-essential \
@@ -55,7 +55,7 @@ case $FLAVOR in
       file \
       rpm \
       ruby
-    gem install rdoc fpm
+      gem install rdoc fpm
     ;;
   fedora)
   redhat)
