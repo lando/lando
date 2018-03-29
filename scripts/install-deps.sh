@@ -44,15 +44,23 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 
 # Do stuff on each distro
 case $FLAVOR in
+  arch)
+    pacman -Syu ruby
+    gem install rdoc fpm
+    ;;
   debian)
     apt-get update && apt-get -y --force-yes install \
       build-essential \
       curl \
       file \
-      rpm
+      rpm \
+      ruby
+    gem install rdoc fpm
     ;;
   fedora)
-    echo "Not implemented yet!"
+  redhat)
+    yum install ruby
+    gem install rdoc fpm
     ;;
   osx)
     echo "Not implemented yet!"
