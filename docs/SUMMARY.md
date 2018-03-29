@@ -185,6 +185,7 @@
 *   [lando.engine.destroy](api/api.md#landoenginedestroy)
 *   [lando.engine.down](api/api.md#landoenginedown)
 *   [lando.engine.exists](api/api.md#landoengineexists)
+*   [lando.engine.getNetwork](api/api.md#landoenginegetnetwork)
 *   [lando.engine.getNetworks](api/api.md#landoenginegetnetworks)
 *   [lando.engine.isInstalled](api/api.md#landoengineisinstalled)
 *   [lando.engine.isRunning](api/api.md#landoengineisrunning)
