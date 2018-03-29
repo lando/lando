@@ -11,8 +11,8 @@ module.exports = function(lando) {
   var url = require('url');
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:pantheon:tokens';
-  var siteMetaDataKey = 'site:meta:';
+  var tokenCacheKey = 'init.auth.pantheon.tokens';
+  var siteMetaDataKey = 'site.meta.';
 
   /*
    * Modify init pre-prompt things

@@ -13,7 +13,7 @@ module.exports = function(lando) {
   var github = new GitHubApi({Promise: Promise});
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:github:tokens';
+  var tokenCacheKey = 'init.auth.github.tokens';
   var siteMetaDataKey = 'site:meta:';
 
   /*
