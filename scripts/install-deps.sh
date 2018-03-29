@@ -45,7 +45,7 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 # Do stuff on each distro
 case $FLAVOR in
   arch)
-    pacman -Syu ruby
+    pacman -Syu bsdtar ruby
     gem install rdoc fpm
     ;;
   debian)
