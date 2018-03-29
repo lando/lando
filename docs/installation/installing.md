@@ -35,13 +35,13 @@ Linux
 -----
 
 1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script.**(17.06.1-ce or higher)**
-2.  Download the latest `.deb` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
+2.  Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
 3.  Double-click on the package to launch Software Center
 4.  Click the "Install" button and enter your password when prompted
 
 > #### Hint::Install from source for other Linux distros
 >
-> If your Linux distro does not support our `.deb` or `.rpm` packages you can [install from source](#from-source)
+> If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](#from-source)
 
 ### Caveats
 
@@ -53,9 +53,11 @@ Because each Linux distribution handles things differently, these considerations
   sudo usermod -aG docker $USER
   ```
 
-  You will need to log out for this change to take effect.
+  You will need to log out for this change to take effect.  Sometimes a reboot is necessary.  See https://docs.docker.com/install/linux/linux-postinstall/ for more details.
 
 * If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
+
+* If you are using Manjaro, you will need to enable the [AUR repository](https://aur.archlinux.org/packages/) for dependencies.
 
 Bleeding Edge
 -------------
@@ -67,6 +69,7 @@ If you want to roll like a ninja you can install from our development builds or 
 We produce development releases for every commit merged into our `master` branch. **These releases are not officially supported** but we have made them available to intrepid users who want to try the bleeding edge or are interested in trying out a recent bug fix before an official release is rolled.
 
 *   **Windows** - [http://installer.kalabox.io/lando-latest-dev.exe](http://installer.kalabox.io/lando-latest-dev.exe)
+*   **Arch** - [http://installer.kalabox.io/lando-latest-dev.pacman](http://installer.kalabox.io/lando-latest-dev.pacman)
 *   **Debian** - [http://installer.kalabox.io/lando-latest-dev.deb](http://installer.kalabox.io/lando-latest-dev.deb)
 *   **Fedora** - [http://installer.kalabox.io/lando-latest-dev.rpm](http://installer.kalabox.io/lando-latest-dev.rpm)
 *   **macOS** - [http://installer.kalabox.io/lando-latest-dev.dmg](http://installer.kalabox.io/lando-latest-dev.dmg)
