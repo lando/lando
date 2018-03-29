@@ -16,7 +16,7 @@ const path = require('path');
 chai.should();
 
 // Get yaml module to test
-const yaml = require('./../../lib/yaml')({error: () => {}});
+const yaml = require('./../../lib/yaml')({error: () => { throw Error(); }});
 
 // This is the file we are testing
 describe('yaml', () => {
@@ -41,13 +41,13 @@ describe('yaml', () => {
 
     });
 
-    it('returns undefined when file does not exist', () => {
+    it('errors when file does not exist', () => {
 
-      // Load the file
-      const data = yaml.load('/tmp/thisalmostcertainlydoesnotexist-3285-2385.yml');
+      // Bogus file
+      const bogusville = '/tmp/thisalmostcertainlydoesnotexist-3285-2385.yml';
 
       // Assert the things
-      expect(data).to.be.an('undefined');
+      expect(() => yaml.load(bogusville)).to.throw(Error);
 
     });
 
