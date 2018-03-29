@@ -6,44 +6,6 @@ var fs = require('fs-extra');
 var path = require('path');
 
 /**
- * Default networking
- *
- * @since 3.0.0
- * @alias 'lando.utils.services.connectNet'
- */
-exports.connectNet = function(data) {
-
-  // build aliases
-  var defaultAlias = [data.name, data.app, 'internal'].join('.');
-  var aliases = [defaultAlias];
-
-  // Merge
-  return {
-    'lando_bridge': {
-      aliases: aliases
-    },
-    'default': {}
-  };
-
-};
-
-/**
- * Default bridge network
- *
- * @since 3.0.0
- * @alias 'lando.utils.services.connectBridge'
- */
-exports.connectBridge = function(netName) {
-  return {
-    'lando_bridge': {
-      external: {
-        name: netName
-      }
-    }
-  };
-};
-
-/**
  * Return an object of build steps
  *
  * @since 3.0.0
