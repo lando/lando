@@ -48,7 +48,7 @@ module.exports = function(lando) {
       .each(function(container) {
 
         // Set useful things
-        var alias = [container.service, container.app, 'interal'].join('.');
+        var alias = [container.service, container.app, 'internal'].join('.');
         var opts = {Container: container.id, EndpointConfig: {Aliases: [alias]}};
 
         // Sometimes you need to disconnect before you reconnect
