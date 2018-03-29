@@ -80,15 +80,12 @@ describe('user', () => {
     });
 
     it('throws an error for a bogus user on POSIX', () => {
-
-      // Skip on Windows
       if (process.platform === 'win32') {
-        this.skip();
+        expect(() => user.getUid('gandalflandokenobi5000')).to.not.throw(Error);
       }
-
-      // Assert things
-      expect(() => user.getUid('gandalflandokenobi5000')).throw(Error);
-
+      else {
+        expect(() => user.getUid('gandalflandokenobi5000')).to.throw(Error);
+      }
     });
 
   });
@@ -146,15 +143,12 @@ describe('user', () => {
     });
 
     it('throws an error for a bogus user on POSIX', () => {
-
-      // Skip on Windows
       if (process.platform === 'win32') {
-        this.skip();
+        expect(() => user.getGid('gandalflandokenobi5000')).to.not.throw(Error);
       }
-
-      // Assert things
-      expect(() => user.getGid('gandalflandokenobi5000')).throw(Error);
-
+      else {
+        expect(() => user.getGid('gandalflandokenobi5000')).to.throw(Error);
+      }
     });
 
 
