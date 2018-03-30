@@ -47,9 +47,17 @@ module.exports = function(lando) {
       // Go through each container
       .each(function(container) {
 
-        // Set useful things
-        var alias = [container.service, container.app, 'internal'].join('.');
-        var opts = {Container: container.id, EndpointConfig: {Aliases: [alias]}};
+        // Set useful defaults
+        var service = container.service;
+        var aliases = [[service, container.app, 'internal'].join('.')];
+
+        // Add in any additional aliases if we have proxy settings
+        if (_.has(app, 'config.proxy.' + service)) {
+          aliases = _.compact(aliases.concat(_.get(app, 'config.proxy.' + service)));
+        }
+
+        // Build out our options
+        var opts = {Container: container.id, EndpointConfig: {Aliases: aliases}};
 
         // Sometimes you need to disconnect before you reconnect
         return landonet.disconnect(opts)
