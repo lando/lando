@@ -59,6 +59,7 @@ case $FLAVOR in
       gem install rdoc fpm
     ;;
   fedora)
+    ;&
   redhat)
     yum install ruby
     gem install rdoc fpm
