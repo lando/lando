@@ -53,7 +53,10 @@ module.exports = function(lando) {
 
         // Add in any additional aliases if we have proxy settings
         if (_.has(app, 'config.proxy.' + service)) {
-          aliases = _.compact(aliases.concat(_.get(app, 'config.proxy.' + service)));
+          var proxies = _.get(app, 'config.proxy.' + service);
+          if (!_.isNil(proxies) && _.isString(proxies[0])) {
+            aliases = _.compact(aliases.concat(proxies));
+          }
         }
 
         // Build out our options
