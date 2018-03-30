@@ -476,6 +476,13 @@ module.exports = function(config) {
   };
 
   /*
+   * Get a network
+   */
+  var getNetwork = function(id) {
+    return dockerInstance.getNetwork(id);
+  };
+
+  /*
    * Prune the networks
    */
   var pruneNetworks = function(opts) {
@@ -502,6 +509,7 @@ module.exports = function(config) {
     run: run,
     remove: remove,
     createNetwork: createNetwork,
+    getNetwork: getNetwork,
     getNetworks: getNetworks,
     pruneNetworks: pruneNetworks,
   };

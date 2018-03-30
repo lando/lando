@@ -22,10 +22,10 @@ const version = require(path.join(__dirname, '..', 'package.json')).version;
 
 let log;
 let metrics;
+let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
 
 // Allow envvars to override a few core things
 const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
-const LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
 const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
 
 // If we have CLI verbosity args let's use those instead

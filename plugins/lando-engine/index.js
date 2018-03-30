@@ -3,8 +3,8 @@
 module.exports = function(lando) {
 
   // Modules
-  var ip = lando.node.ip;
   var env = require('./lib/env.js');
+  var ip = require('ip');
   var path = require('path');
   var url = require('url');
 
@@ -16,6 +16,7 @@ module.exports = function(lando) {
 
     // Engine script directory
     var esd = path.join(lando.config.userConfRoot, 'engine', 'scripts');
+    var host = (process.platform === 'linux') ? ip.address() : 'host.docker.internal';
 
     // Build the default config object
     var defaultEngineConfig = {
@@ -51,7 +52,7 @@ module.exports = function(lando) {
     lando.config.env.LANDO_ENGINE_GID = lando.config.engineGid;
     lando.config.env.LANDO_ENGINE_HOME = lando.config.home;
     lando.config.env.LANDO_ENGINE_IP = dockerHost;
-    lando.config.env.LANDO_ENGINE_REMOTE_IP = ip.address();
+    lando.config.env.LANDO_ENGINE_REMOTE_IP = host;
     lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = lando.config.engineScriptsDir;
 
     // Add some docker compose protection on windows

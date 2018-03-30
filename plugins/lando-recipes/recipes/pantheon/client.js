@@ -11,10 +11,10 @@ module.exports = function(lando) {
   var urls = require('url');
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:pantheon:tokens';
-  var sessionCacheKey = 'init:auth:pantheon:session:';
-  var sitesCacheKey = 'init:auth:pantheon:sites:';
-  var envCacheKey = 'init:auth:pantheon:site:envs:';
+  var tokenCacheKey = 'init.auth.pantheon.tokens';
+  var sessionCacheKey = 'init.auth.pantheon.session.';
+  var sitesCacheKey = 'init.auth.pantheon.sites.';
+  var envCacheKey = 'init.auth.pantheon.site.envs.';
 
   /*
    * Return auth headers we need for session protected endpoints

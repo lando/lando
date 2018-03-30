@@ -188,13 +188,9 @@ module.exports = function(lando) {
 
     }
 
-    // Add in default network stuff
-    networks = merger(networks, utils.connectBridge(landoBridgeNet));
-
     // Go through all the services and add in the lando bridgenet
     _.forEach(services, function(service, name) {
-      var data = {app: config._dockerName, name: name};
-      service.networks = merger(utils.connectNet(data), service.networks);
+      service.networks = merger({default: {}}, service.networks);
     });
 
     // Return the built compose file

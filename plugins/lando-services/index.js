@@ -312,14 +312,14 @@ module.exports = function(lando) {
         var newHash = lando.node.hasher(app.config);
 
         // If our new hash is different then lets build
-        if (lando.cache.get(app.name + ':last_build') !== newHash) {
+        if (lando.cache.get(app.name + '.last_build') !== newHash) {
 
           // Run the stuff
           return lando.engine.run(build)
 
           // Save the new hash if everything works out ok
           .then(function() {
-            lando.cache.set(app.name + ':last_build', newHash, {persist:true});
+            lando.cache.set(app.name + '.last_build', newHash, {persist:true});
           })
 
           // Make sure we don't save a hash if our build fails
