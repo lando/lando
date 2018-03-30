@@ -229,7 +229,7 @@ module.exports = function(lando) {
         _.get(app, 'root', 'someplace')
       ]);
       // Mix in any cached metadata
-      app = _.merge(app, lando.cache.get('site:meta:' + app.name));
+      app = _.merge(app, lando.cache.get('site.meta.' + app.name));
 
       // Return our app
       return app;
