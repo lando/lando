@@ -722,7 +722,7 @@ module.exports = function(lando) {
      *
      * // Make sure we remove our build cache
      * app.events.on('post-uninstall', function() {
-     *   lando.cache.remove(app.name + ':last_build');
+     *   lando.cache.remove(app.name + '.last_build');
      * });
      */
     .then(function() {

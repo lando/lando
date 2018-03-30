@@ -235,7 +235,7 @@ module.exports = function(lando) {
 
     // Remove build cache on an uninstall
     app.events.on('post-uninstall', function() {
-      lando.cache.remove(app.name + ':last_build');
+      lando.cache.remove(app.name + '.last_build');
     });
 
     // Add some logic that extends start until healthchecked containers report as healthy
