@@ -4,6 +4,7 @@ module.exports = function(lando) {
 
   // Modules
   var env = require('./lib/env.js');
+  var ip = require('ip');
   var path = require('path');
   var url = require('url');
 
@@ -15,7 +16,7 @@ module.exports = function(lando) {
 
     // Engine script directory
     var esd = path.join(lando.config.userConfRoot, 'engine', 'scripts');
-    var host = (process.platform === 'linux') ? 'localhost' : 'host.docker.internal';
+    var host = (process.platform === 'linux') ? ip.address() : 'host.docker.internal';
 
     // Build the default config object
     var defaultEngineConfig = {
