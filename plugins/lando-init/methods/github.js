@@ -14,7 +14,7 @@ module.exports = function(lando) {
 
   // "Constants"
   var tokenCacheKey = 'init.auth.github.tokens';
-  var siteMetaDataKey = 'site:meta:';
+  var siteMetaDataKey = 'site.meta.';
 
   /*
    * Modify init pre-prompt things

@@ -32,7 +32,7 @@ module.exports = function(lando) {
   lando.events.on('post-instantiate-app', function(app) {
 
     // Cache key helpers
-    var siteMetaDataKey = 'site:meta:';
+    var siteMetaDataKey = 'site.meta.';
 
     // Set new terminus key into the cache
     app.events.on('pre-terminus', function() {
