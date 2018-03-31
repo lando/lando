@@ -1,7 +1,7 @@
 Working with Pantheon
 =====================
 
-Lando offers a [configurable recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 

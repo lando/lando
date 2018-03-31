@@ -1,7 +1,7 @@
 Working with Drupal 7
 =====================
 
-Lando offers a [configurable recipe](./../recipes/drupal7.md) for spinning up [Drupal 7](https://drupal.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Drupal 7](https://drupal.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 

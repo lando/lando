@@ -1,7 +1,7 @@
 Working with Backdrop
 =====================
 
-Lando offers a [configurable recipe](./../recipes/backdrop.md) for spinning up [Backdrop CMS](https://backdropcms.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Backdrop CMS](https://backdropcms.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 

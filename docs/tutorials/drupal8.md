@@ -1,7 +1,7 @@
 Working with Drupal 8
 =====================
 
-Lando offers a [configurable recipe](./../recipes/drupal8.md) for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 
@@ -219,8 +219,8 @@ Read More
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
 
 ### Setting up PHPStorm for running tests
-We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm instead by Commandline so we can debug our 
-tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter 
+We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm instead by Commandline so we can debug our
+tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter
 and make out Test Framework us it.
 
 * *Currently we have issues running functional test through PHPStorm. The reason this doesn't work yet is
@@ -232,14 +232,14 @@ and make out Test Framework us it.
 Go to "Preferences" >> "Build, Execution, Deployment" >> "Docker". Click on the "+" and simply select "Docker for Mac".
 
 ##### 2. Remote CLI interpreter.
-Go to "Preferences" >> "Languages and Framework" >> "PHP". Click on the "..." for the CLI interpreter and in the 
-pop-up window add a new interpreter by clicking on the "+". Select "From Docker, Vagrant, VM, Remote..". In the next 
+Go to "Preferences" >> "Languages and Framework" >> "PHP". Click on the "..." for the CLI interpreter and in the
+pop-up window add a new interpreter by clicking on the "+". Select "From Docker, Vagrant, VM, Remote..". In the next
 window select "Docker". This should automatically fill with the FPM container from lando. See for example:
 
 ![Add remote interpreter for docker](https://raw.githubusercontent.com/lando/lando/master/docs/images/add-remote-interpreter-docker.png)
 
 ##### 3. Test Frameworks
-Go to "Preferences" >> "Languages and Framework" >> "PHP" >> "Test Frameworks". Click on the "+" and select 
+Go to "Preferences" >> "Languages and Framework" >> "PHP" >> "Test Frameworks". Click on the "+" and select
 "PHPUnit by Remote interpreter". Select the CLI interpreter from Step 2. All we need to do is target the "autoload.php"
 within our container and the "Default configuration / bootstrap" file:
 
@@ -261,4 +261,4 @@ Note that for SIMPLETEST_DB we target the "tmp" directory this is done because w
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/opt/project/web/sites/default/files/browser_output"/>
   </php>
-``` 
+```
