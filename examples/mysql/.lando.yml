@@ -26,7 +26,7 @@ services:
     # This port will change every time you restart this app
     #
     # You can also set this to a static port you want to use `portforward:3311`.
-    # You will need to make sure the port is open and avialable
+    # You will need to make sure the port is open and available
     portforward: true
 
     # Optionally change the default db credentials
