@@ -21,14 +21,19 @@ PKG_SCRIPTS="\
 --before-remove $PKG_SCRIPTS_DIR/$PKG_TYPE/prerm"
 
 # Set our dependencies
-DEPS=( iptables git-core procps docker-ce )
+DEPS=( iptables procps )
 
 # Add OS specific deps
-if [ "$1" == "rpm" ]; then
-  DEPS+=('libcgroup')
-elif [ "$1" == "deb" ]; then
-  DEPS+=('cgroup-bin')
-fi
+case "$1" in
+  rpm)
+    DEPS+=( libcgroup git-core docker-ce )
+    ;;
+  deb)
+    DEPS+=( cgroup-bin git-core docker-ce )
+    ;;
+  pacman)
+    DEPS+=( libcgroup git docker )
+esac
 
 # Loop through to build our PKG_DEPS
 for i in "${DEPS[@]}"

@@ -40,7 +40,8 @@ cp -rf ../../../LICENSE.md docs/LICENSE.md
 # Back out to install root
 cd .. && mkdir -p dist
 
-# Build our two packages
+# Build our three packages
 cd ../..
 ./scripts/build-pkg.sh deb $LANDO_VERSION
 ./scripts/build-pkg.sh rpm $LANDO_VERSION
+./scripts/build-pkg.sh pacman $LANDO_VERSION
