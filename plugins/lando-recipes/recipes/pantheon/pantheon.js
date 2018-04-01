@@ -194,7 +194,7 @@ module.exports = function(lando) {
       var restricted = nopes || [];
 
       // Get token
-      var token = _.get(lando.cache.get('site:meta:' + config._app), 'token');
+      var token = _.get(lando.cache.get('site.meta.' + config._app), 'token');
 
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
@@ -635,7 +635,7 @@ module.exports = function(lando) {
     }
 
     // Login with terminus if we have a token
-    var cache = lando.cache.get('site:meta:' + config._app);
+    var cache = lando.cache.get('site.meta.' + config._app);
     if (_.has(cache, 'token')) {
       var token = _.get(cache, 'token');
       var terminusLogin = 'terminus auth:login --machine-token=' + token;

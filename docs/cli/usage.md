@@ -20,6 +20,7 @@ Commands:
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
+  selfupdate [version]     Update the lando version
   share [appname]          Get a publicly available url
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   start [appname]          Start app in current directory or [appname]
@@ -60,6 +61,12 @@ lando stop myapp
 # Get help on init
 lando init -- --help
 
+# Update to the latest lando release
+lando selfupdate
+
+# Downgrade to a specific lando release
+lando selfupdate v3.0.0-beta.31
+
 # Non-interactively destroy an app called myapp with max verbosity
 lando destroy myapp -y -- -vvvv
 
@@ -93,6 +100,7 @@ Commands:
   poweroff                 Spin down all lando related containers
   rebuild [appname]        Rebuilds app in current directory or [appname]
   restart [appname]        Restarts app in current directory or [appname]
+  selfupdate [version]     Update the lando version
   share [appname]          Get a publicly available url
   ssh [appname] [service]  SSH into [service] in current app directory or [appname]
   start [appname]          Start app in current directory or [appname]

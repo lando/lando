@@ -1,7 +1,7 @@
 Working with Laravel
 ====================
 
-Lando offers a [configurable recipe](./../recipes/laravel.md) for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 
