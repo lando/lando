@@ -25,14 +25,14 @@ if [ -f /etc/os-release ]; then
   : ${FLAVOR:=$ID}
 elif [ -f /etc/arch-release ]; then
   FLAVOR="arch"
-elif [ -f /etc/gentoo-release ]; then
-  FLAVOR="gentoo"
-elif [ -f /etc/fedora-release ]; then
-  FLAVOR="fedora"
-elif [ -f /etc/redhat-release ]; then
-  FLAVOR="redhat"
 elif [ -f /etc/debian_version ]; then
   FLAVOR="debian"
+elif [ -f /etc/fedora-release ]; then
+  FLAVOR="fedora"
+elif [ -f /etc/gentoo-release ]; then
+  FLAVOR="gentoo"
+elif [ -f /etc/redhat-release ]; then
+  FLAVOR="redhat"
 elif [[ $(uname) == 'Darwin' ]]; then
   FLAVOR="osx"
 else
@@ -44,14 +44,26 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 
 # Do stuff on each distro
 case $FLAVOR in
+  arch)
+    pacman -Syu ruby
+    ;;
   debian)
     apt-get update && apt-get -y --force-yes install \
+      bsdtar \
       build-essential \
       curl \
       file \
-      rpm
+      rpm \
+      ruby \
+      ruby-dev
     ;;
   fedora)
+    echo "Not implemented yet!"
+    ;;
+  gentoo)
+    echo "Not implemented yet!"
+    ;;
+  redhat)
     echo "Not implemented yet!"
     ;;
   osx)
