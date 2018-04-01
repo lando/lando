@@ -1,6 +1,8 @@
 Legacy Proxy Format Example
 ===========================
 
+**PENDING DEPRECATION!!! DO NOT USE!!!**
+
 This example uses an `apache` and `nginx` webserver to demonstrate the legacy proxy routing format.
 
 See the `.lando.yml` in this directory for legacyy proxy configuration options.

@@ -28,7 +28,7 @@ events:
 
   # Run some commands after `lando test`
   post-test:
-    - echo "runs after test"
+    - echo "Tests complete!"
 
   # Run some commands after `lando start`
   post-start:

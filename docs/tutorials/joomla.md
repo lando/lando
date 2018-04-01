@@ -1,7 +1,7 @@
 Working with Joomla
 ===================
 
-Lando offers a [configurable recipe](./../recipes/joomla.md) for spinning up [Joomla](https://joomla.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Joomla](https://joomla.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 

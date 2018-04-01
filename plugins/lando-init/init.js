@@ -74,7 +74,7 @@ module.exports = function(lando) {
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/helpers/user-perms.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
       ]
     };
@@ -120,6 +120,30 @@ module.exports = function(lando) {
   };
 
   /**
+   * Helper to return a performant git clone command
+   *
+   * This clones to /tmp and then moves to /app to avoid file sharing performance
+   * hits
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.cloneRepo'
+   */
+  var cloneRepo = function(repo) {
+
+    // Get a unique clone folder
+    var tmpFolder = '/tmp/' + _.uniqueId('app-');
+
+    // Commands
+    var mkTmpFolder = 'mkdir -p ' + tmpFolder;
+    var cloneRepo = 'git -C ' + tmpFolder + ' clone ' + repo + ' ./';
+    var cpHome = 'cp -rfT ' + tmpFolder + ' /app';
+
+    // Clone cmd
+    return [mkTmpFolder, cloneRepo, cpHome].join(' && ');
+
+  };
+
+  /**
    * Helper to return a create key command
    *
    * @since 3.0.0
@@ -129,7 +153,7 @@ module.exports = function(lando) {
 
     // Ensure that cache directory exists
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.ensureDirSync(path.join(keysDir));
+    fs.mkdirpSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     var comment = lando.config.id + '.lando@' + os.hostname();
@@ -257,6 +281,7 @@ module.exports = function(lando) {
   return {
     add: add,
     build: build,
+    cloneRepo: cloneRepo,
     createKey: createKey,
     get: get,
     kill: kill,

@@ -64,8 +64,8 @@ module.exports = function(lando) {
     // Start up the solr config collector
     var solrConfig = {};
 
-    // Normalize our extras
-    config.extras = config.extras || [];
+    // Normalize our run_as_root_internal
+    config.run_as_root_internal = config.run_as_root_internal || [];
 
     // Figure out which config base to use
     if (_.includes(['3.6', '4.10'], config.version)) {
@@ -110,7 +110,8 @@ module.exports = function(lando) {
     // use a custom image that may or may not have the solr user
     if (config.version !== 'custom') {
       var dataDir = solrConfig.dataDir;
-      config.extras.unshift(['chown', '-R', 'solr:solr', dataDir].join(' '));
+      var dataDirCmd = ['chown', '-R', 'solr:solr', dataDir].join(' ');
+      config.run_as_root_internal.unshift(dataDirCmd);
     }
 
     // Handle custom config dir
@@ -134,8 +135,10 @@ module.exports = function(lando) {
 
         // Symlink the core config to the system config
         var coreConf = path.join(solrConfig.dataDir, core, 'conf');
-        config.extras.unshift(['ln', '-sf', confDir, coreConf].join(' '));
-        config.extras.unshift(['rm', '-rf', coreConf].join(' '));
+        var coreConfSymCmd = ['ln', '-sf', confDir, coreConf].join(' ');
+        var coreRmCmd = ['rm', '-rf', coreConf].join(' ');
+        config.run_as_root_internal.unshift(coreConfSymCmd);
+        config.run_as_root_internal.unshift(coreRmCmd);
 
       }
 

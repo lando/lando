@@ -79,6 +79,14 @@ module.exports = function(lando) {
       // Add in an add cert task
       apache.volumes = addScript('add-cert.sh', apache.volumes, esd);
 
+      // Add a healthcheck so we wait until open-ssl gets installed
+      apache.healthcheck = {
+        test: 'dpkg -s openssl',
+        interval: '2s',
+        timeout: '10s',
+        retries: 25
+      };
+
     }
 
     // Handle custom config files

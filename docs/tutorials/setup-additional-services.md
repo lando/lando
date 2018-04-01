@@ -27,7 +27,7 @@ services:
   appserver:
     composer:
       phpunit/phpunit: '*'
-    build:
+    run:
       # Uncomment this when you have a composer.json in the root directory
       # - cd $LANDO_MOUNT && composer install
     config:
@@ -41,7 +41,7 @@ services:
   appserver:
     composer:
       phpunit/phpunit: '*'
-    build:
+    run:
       # Uncomment this when you have a composer.json in the root directory
       # - cd $LANDO_MOUNT && composer install
     config:
@@ -65,7 +65,7 @@ services:
   appserver:
     composer:
       phpunit/phpunit: '*'
-    build:
+    run:
       # Uncomment this when you have a composer.json in the root directory
       # - cd $LANDO_MOUNT && composer install
     config:

@@ -1,7 +1,7 @@
 Working with LAMP
 =================
 
-Lando offers a [configurable recipe](./../recipes/lamp.md) for spinning up apps that use the [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack, a common infrastructure designed to run PHP applications.
+Lando offers a configurable recipe for spinning up apps that use the [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack, a common infrastructure designed to run PHP applications.
 
 Note that you'll only want to use this recipe if you have a custom PHP application not supported by one of Lando's other recipes. Let's go over some basic usage.
 

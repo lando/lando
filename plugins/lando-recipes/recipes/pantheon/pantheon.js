@@ -32,7 +32,7 @@ module.exports = function(lando) {
   lando.events.on('post-instantiate-app', function(app) {
 
     // Cache key helpers
-    var siteMetaDataKey = 'site:meta:';
+    var siteMetaDataKey = 'site.meta.';
 
     // Set new terminus key into the cache
     app.events.on('pre-terminus', function() {
@@ -194,7 +194,7 @@ module.exports = function(lando) {
       var restricted = nopes || [];
 
       // Get token
-      var token = _.get(lando.cache.get('site:meta:' + config._app), 'token');
+      var token = _.get(lando.cache.get('site.meta.' + config._app), 'token');
 
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
@@ -464,7 +464,7 @@ module.exports = function(lando) {
     // Loop
     _.forEach(mounts, function(mount) {
 
-      // BReak up the mount
+      // Break up the mount
       var container = mount.split(':')[0];
       var file = mount.split(':')[1];
 
@@ -476,9 +476,8 @@ module.exports = function(lando) {
       volumes = addConfig(buildVolume(local, remote), volumes);
     });
 
-    // Add a volume for terminus and drupal console cache
+    // Add a volume for terminus cache
     volumes.push('/var/www/.terminus');
-    volumes.push('/var/www/.drupal');
 
     // Return the new volumes
     return volumes;
@@ -494,7 +493,7 @@ module.exports = function(lando) {
     var config = {};
 
     // Check pantheon.yml settings if needed
-    if (fs.pathExistsSync(configFile)) {
+    if (fs.existsSync(configFile)) {
 
       // Get the pantheon config
       var pconfig = lando.yaml.load(configFile);
@@ -527,31 +526,6 @@ module.exports = function(lando) {
       case 'wordpress': return '7.2';
       default: return '5.6';
     }
-  };
-
-  /*
-   * Helper for build steps
-   */
-  var buildSteps = function(config) {
-
-    // But add some extra steps if we are on backdrop
-    // Need to cp backdrush command files into ~/.drush
-    if (config.framework === 'backdrop') {
-      return [
-        'mkdir -p /var/www/.drush/backdrush',
-        'cp -rf /var/www/.backdrush/* /var/www/.drush/backdrush/',
-        'drush cc drush'
-      ];
-    }
-
-    // Make sure we clean up if we switch to something else
-    else {
-      return [
-        'rm -rf /var/www/.drush/backdrush/',
-        'drush cc drush'
-      ];
-    }
-
   };
 
   /*
@@ -613,7 +587,7 @@ module.exports = function(lando) {
 
     // Overide our default php images with special pantheon ones
     var imagePath = 'services.appserver.overrides.services.image';
-    var image = 'devwithlando/pantheon-appserver:' + config.php + '-fpm';
+    var image = 'devwithlando/pantheon-appserver:' + config.php;
     _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
@@ -623,10 +597,7 @@ module.exports = function(lando) {
     // Add in our pantheon script
     // NOTE: We do this here instead of in /scripts because we need to gaurantee
     // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.extras = ['/helpers/pantheon.sh'];
-
-    // Reset our build steps
-    build.services.appserver.build = buildSteps(config);
+    build.services.appserver.run_as_root_internal = ['/helpers/pantheon.sh'];
 
     // Mix in our additional services
     build.services.cache = redis(config.cache);
@@ -654,7 +625,7 @@ module.exports = function(lando) {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.build;
+      delete build.services.appserver.run_internal;
 
       // Override some tooling things
       build.tooling.terminus.service = cliService;
@@ -663,23 +634,12 @@ module.exports = function(lando) {
 
     }
 
-    // Check if the user specified the compserSwitch key to false
-    var disableComposer = _.get(config, 'disableAutoComposerInstall', false);
-    var composerJson = path.join(config._root, 'composer.json');
-    var runComposer = fs.pathExistsSync(composerJson) && !disableComposer;
-
-    // Run composer install if we have the file and it isnt explicitly disabled in config
-    if (runComposer) {
-      var composerInstall = 'cd $LANDO_MOUNT && composer install';
-      build.services[cliService].build.push(composerInstall);
-    }
-
     // Login with terminus if we have a token
-    var cache = lando.cache.get('site:meta:' + config._app);
+    var cache = lando.cache.get('site.meta.' + config._app);
     if (_.has(cache, 'token')) {
       var token = _.get(cache, 'token');
       var terminusLogin = 'terminus auth:login --machine-token=' + token;
-      build.services[cliService].build.push(terminusLogin);
+      build.services[cliService].run_internal.push(terminusLogin);
     }
 
     // Return the things

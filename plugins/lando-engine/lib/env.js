@@ -1,7 +1,9 @@
 'use strict';
 
 // Modules
+var _ = require('lodash');
 var path = require('path');
+var shell = require('shelljs');
 
 /*
  * Helper to get default engine config
@@ -9,7 +11,7 @@ var path = require('path');
 exports.getEngineConfig = function() {
 
   // Create the default options
-  var config = {
+  const config = {
     host: '127.0.0.1',
     socketPath: '/var/run/docker.sock'
   };
@@ -19,7 +21,6 @@ exports.getEngineConfig = function() {
     config.socketPath = '//./pipe/docker_engine';
   }
 
-  // Return the config
   return config;
 
 };
@@ -85,9 +86,14 @@ exports.buildDockerCmd = function(cmd) {
     case 'darwin':
       return ['open', '/Applications/Docker.app'];
     case 'linux':
-      return ['sudo', 'service', 'docker'].concat(cmd);
+      if (_.includes(shell.which('systemctl'), 'systemctl')) {
+        return ['sudo', 'systemctl', cmd, 'docker'];
+      }
+      else {
+        return ['sudo', 'service', 'docker'].concat(cmd);
+      }
     case 'win32':
-      var base = process.env.ProgramW6432;
+      var base = process.env.ProgramW6432 || process.env.ProgramFiles;
       var dockerBin = base + '\\Docker\\Docker\\Docker for Windows.exe';
       return ['cmd', '/C', dockerBin];
   }

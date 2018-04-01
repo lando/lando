@@ -13,6 +13,7 @@ You should be able to run the following steps to get up and running with this ex
 ```bash
 # Install Drupal 8 with composer
 lando composer install
+lando composer drupal-scaffold
 
 # Start up the example
 lando start

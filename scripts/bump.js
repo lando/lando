@@ -4,9 +4,9 @@
 /**
  * Constants
  */
-const argv = require('yargs').argv,
-  fs = require('fs'),
-  util = require('./util');
+const argv = require('yargs').argv;
+const fs = require('fs');
+const util = require('./util');
 const currentBranch = util.execGitCmd(
   ['rev-parse', '--abbrev-ref', 'HEAD'],
   'Getting current branch'
@@ -57,23 +57,19 @@ if (argv.dryRun) {
   });
 }
 else {
+
   // Bump the version in package.json
   console.log('Bumping Lando to version ' + pkgJson.version);
-  fs.writeFile(
-    './package.json',
-    JSON.stringify(pkgJson, null, 2),
-    'utf8',
-    function (err) {
-      if (err) {
-        throw err;
-      }
+  fs.writeFile('./package.json', JSON.stringify(pkgJson, null, 2), 'utf8', function (err) {
+    if (err) {
+      throw err;
     }
-  );
-  // Commit, Tag, Push!
-  [commitCmd, tagCmd, pushBranchCmd, pushTagCmd].map(function (cmd) {
-    return util.execGitCmd(
-      cmd,
-      'running ' + expandGitCmd(cmd)
-    );
+
+    // Commit, Tag, Push!
+    [commitCmd, tagCmd, pushBranchCmd, pushTagCmd].map(function (cmd) {
+      return util.execGitCmd(cmd, 'running ' + expandGitCmd(cmd));
+    });
+
   });
+
 }

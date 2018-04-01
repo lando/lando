@@ -73,7 +73,7 @@ Open your `.lando.yml` file and add the following `services` section:
 services:
   appserver:
     # Add a Build Step to your App.
-    build:
+    run:
       - "cd $LANDO_MOUNT && composer install"
 ```
 

@@ -19,7 +19,7 @@ config:
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.0'
+  php: '7.1'
 
   # Optionally specify whether you want to serve drupal via nginx or apache
   #

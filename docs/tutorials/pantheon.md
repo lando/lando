@@ -1,7 +1,7 @@
 Working with Pantheon
 =====================
 
-Lando offers a [configurable recipe](./../recipes/pantheon.md) for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up apps that closely mimic the [Pantheon](http://pantheon.io) environment. Let's go over some basic usage.
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
@@ -41,8 +41,6 @@ Once you've completed the above you should be able to start your Pantheon site.
 **AT THIS TIME WE WILL NOT AUTOMATICALLY PULL YOUR DATABASE AND FILES**
 
 You can read below on how to do that with our helper `pull` command or via a manual import.
-
-If your Pantheon site has a `composer.json` Lando will attempt to run `composer install` on it automatically.
 
 ```bash
 lando start
@@ -239,7 +237,7 @@ config:
   id: someid
 services:
   appserver:
-    build:
+    run:
       - mkdir -p ~/.terminus/plugins
       - composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1
 ```

@@ -28,12 +28,18 @@ module.exports = function(lando) {
       var dest = '/usr/local/bin/drupal';
       var drupalInstall = helpers.getPhar(pharUrl, src, dest);
 
-      // Set builders if needed
-      var key = 'services.appserver.build';
-      build.services.appserver.build = _.get(build, key, []);
+      // Set builders and volumes if needed
+      var builderKey = 'services.appserver.run_internal';
+      build.services.appserver.run_internal = _.get(build, builderKey, []);
 
-      // Add our drupal cmds
-      build.services.appserver.build.push(drupalInstall);
+      // Add our drupal cmds and volumes
+      build.services.appserver.run_internal.push(drupalInstall);
+
+      // Volume mount the drupal console cache
+      var volumesKey = 'services.appserver.overrides.services.volumes';
+      var vols = _.get(build, volumesKey, []);
+      vols.push('/var/www/.drupal');
+      _.set(build, volumesKey, vols);
 
       // Set tooling
       // Add drupal to the tooling

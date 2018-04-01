@@ -5,7 +5,7 @@ recipe: lemp
 # Automatically run composer install on builds
 services:
   appserver:
-    build:
+    run:
       - cd $LANDO_MOUNT && composer install
 
 # Lets make a high level wrapper that runs various test commands
