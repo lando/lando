@@ -64,7 +64,7 @@ module.exports = function(lando) {
     info.type = service;
     info.version = version;
     info.hostnames = [name];
-    info.hostnames.push([name, config._dockerName, 'internal'].join('.'));
+    info.hostnames.push([name, config._app, 'internal'].join('.'));
 
     // Get additional information
     info = merger(info, registry[service].info(name, config));

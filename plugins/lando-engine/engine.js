@@ -377,10 +377,6 @@ module.exports = function(lando) {
         if (data && typeof data !== 'string') {
           throw new TypeError('Invalid data: ' + data);
         }
-
-        if (typeof data === 'string') {
-          data = utils.dockerComposify(data);
-        }
       })
 
       .then(function() {
