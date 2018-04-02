@@ -7,12 +7,6 @@
 # machine
 #
 
-# Make sure we are root
-if [ "${USER}" != "root" ]; then
-  echo "$0 must be run as root!"
-  exit 2
-fi
-
 #
 # Gather information about the system and state
 
@@ -44,11 +38,21 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 
 # Do stuff on each distro
 case $FLAVOR in
-  arch)
-    pacman -Syu ruby
+  manjaro|arch)
+
+    # Get our base deps
+    sudo pacman -Syu --noconfirm && sudo pacman -S --noconfirm \
+      base-devel \
+      curl \
+      ruby \
+      yaourt
+
+    # Get RPM build tools
+    yaourt -S --noconfirm rpmdevtools
+
     ;;
   debian)
-    apt-get update && apt-get -y --force-yes install \
+    sudo apt-get update && sudo apt-get -y --force-yes install \
       bsdtar \
       build-essential \
       curl \
