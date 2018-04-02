@@ -131,23 +131,22 @@ module.exports = function(lando) {
   lando.events.on('post-instantiate-app', function(app) {
 
     // Add in our app info
-    app.events.on('post-info', function() {
-      _.forEach(app.config.services, function(service, name) {
+    _.forEach(app.config.services, function(service, name) {
 
-        // Load the main service
-        var config = merger(app.services[name], service);
-        var newInfo = lando.services.info(name, service.type, config);
-        app.info[name] = merger(app.info[name], newInfo);
+      // Load the main service
+      var newService = _.cloneDeep(app.services[name]);
+      var config = merger(newService, service);
+      var newInfo = lando.services.info(name, service.type, config);
+      app.info[name] = merger(app.info[name], newInfo);
 
-        // If this service has hidden info lets add that as well
-        if (!_.isEmpty(service._hiddenInfo)) {
-          _.forEach(service._hiddenInfo, function(hider) {
-            var newInfo = lando.services.info(hider, hider, config);
-            app.info[hider] = merger(app.info[hider], newInfo);
-          });
-        }
+      // If this service has hidden info lets add that as well
+      if (!_.isEmpty(service._hiddenInfo)) {
+        _.forEach(service._hiddenInfo, function(hider) {
+          var newInfo = lando.services.info(hider, hider, config);
+          app.info[hider] = merger(app.info[hider], newInfo);
+        });
+      }
 
-      });
     });
 
     // Get port data for portforward: true
@@ -311,6 +310,15 @@ module.exports = function(lando) {
 
     });
 
+  });
+
+  // Collect info so we can inject LANDO_INFO
+  //
+  // @TODO: this is not currently the full lando info because a lot of it requires
+  // the app to be on
+  lando.events.on('post-instantiate-app', 8, function(app) {
+    var data = Buffer.from(JSON.stringify(app.info));
+    app.env.LANDO_INFO = data.toString('base64');
   });
 
 };
