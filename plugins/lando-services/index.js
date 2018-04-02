@@ -133,10 +133,9 @@ module.exports = function(lando) {
       _.forEach(app.config.services, function(service, name) {
 
         // Add some internal properties
-        service._app = app.config.name;
+        service._app = app.name;
         service._root = app.root;
         service._mount = app.mount;
-        service._dockerName = app.dockerName;
 
         // Get our new containers
         var newCompose = lando.services.build(name, service.type, service);

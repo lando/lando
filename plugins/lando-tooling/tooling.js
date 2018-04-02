@@ -42,7 +42,7 @@ module.exports = function(lando) {
 
       // Build our checkers
       _.forEach(ids, function(id) {
-        var container = [config.app.dockerName, id, '1'].join('_');
+        var container = [config.app.name, id, '1'].join('_');
         existsCheck.push(lando.engine.exists({id: container}));
         runCheck.push(lando.engine.isRunning(container));
       });
@@ -118,7 +118,7 @@ module.exports = function(lando) {
 
         // Build out our options
         var options = {
-          id: [config.app.dockerName, config.service, '1'].join('_'),
+          id: [config.app.name, config.service, '1'].join('_'),
           compose: config.app.compose,
           project: config.app.name,
           cmd: cmd,
