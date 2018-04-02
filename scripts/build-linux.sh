@@ -10,9 +10,11 @@ if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
   ./scripts/install-deps.sh
 fi
 
-# Make sure ruby is in the path
-export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
-export GEM_HOME=$HOME/.gem
+# Make sure ruby is in the path (we dont need this on CI)
+if [ ! -z "$CI" ]; then
+  export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
+  export GEM_HOME=$HOME/.gem
+fi
 
 # Making sure we have FPM
 if [ ! $(type -p fpm) ]; then
