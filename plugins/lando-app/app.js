@@ -35,7 +35,7 @@ module.exports = function(lando) {
 
       // Otherwise make sure the name is accurate
       else {
-        return _.get(lando.yaml.load(landofile), 'name', '') === app.name;
+        return _.get(lando.yaml.load(landofile), 'name') === app.name;
       }
 
     });
@@ -169,9 +169,7 @@ module.exports = function(lando) {
       var app = {};
 
       // Name.
-      app.name = config.name || name;
-      // Name translated to what docker wants.
-      app.dockerName = lando.utils.engine.dockerComposify(app.name);
+      app.name = lando.utils.engine.dockerComposify(name);
       // Docker compose files
       app.compose = [];
       // Config
@@ -192,6 +190,8 @@ module.exports = function(lando) {
       app.mount = '/app';
       // The docker compose project
       app.project = app.name;
+      // Keep the unparsed name for reconciliation with registry
+      app.registry = name;
       // Docker compose services
       app.services = {};
       // App specific tasks
@@ -264,7 +264,7 @@ module.exports = function(lando) {
 
     // Register app.
     .tap(function(app) {
-      return register({name: app.name, dir: app.root});
+      return register({name: app.registry, lando: app.name, dir: app.root});
     })
 
     // Load plugins.
@@ -390,7 +390,7 @@ module.exports = function(lando) {
         return list()
         .then(function(apps) {
           return _.find(apps, function(app) {
-            return app.name === appName || app.dockerName === appName;
+            return app.name === appName;
           });
         });
       }
@@ -755,9 +755,9 @@ module.exports = function(lando) {
     // Get all our apps
     return list()
 
-    // We need to use the dockername
+    // Get list of just app names
     .map(function(app) {
-      return lando.utils.engine.dockerComposify(app.name);
+      return app.lando;
     })
 
     // Filter out non-app containers or orphaned containers (eg from deleted apps)
@@ -875,7 +875,7 @@ module.exports = function(lando) {
      *
      *         // Build out the compose object
      *         var compose = {
-     *           id: [app.dockerName, name, '1'].join('_'),
+     *           id: [service, name, '1'].join('_'),
      *             cmd: cmd,
      *             opts: {
      *             mode: 'attach'
@@ -1096,7 +1096,7 @@ module.exports = function(lando) {
 
     // Remove from appRegistry
     .then(function() {
-      return unregister({name: app.name});
+      return unregister({name: app.registry});
     })
 
     /**

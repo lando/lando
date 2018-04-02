@@ -4,7 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var dockerComposify = lando.utils.engine.dockerComposify;
   var fs = lando.node.fs;
   var os = require('os');
   var path = require('path');
@@ -105,13 +104,13 @@ module.exports = function(lando) {
     lando.yaml.dump(utilFile, service);
 
     // Name the project
-    var project = 'landoinit' + name;
+    var project = 'landoinit' + lando.utils.engine.dockerComposify(name);
 
     // Try to start the util
     return {
       project: project,
       compose: [utilFile],
-      container: [dockerComposify(project), 'util', '1'].join('_'),
+      container: [project, 'util', '1'].join('_'),
       opts: {
         services: ['util']
       }

@@ -44,7 +44,7 @@ exports.filterBuildSteps = function(services) {
 
         // Run each command
         _.forEach(service[section], function(cmd) {
-          var container = [service._dockerName, name, '1'].join('_');
+          var container = [service._app, name, '1'].join('_');
           build.push({
             name: name,
             container: container,
