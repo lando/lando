@@ -4,7 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var merger = lando.utils.config.merge;
   var path = require('path');
 
   /*
@@ -164,17 +163,6 @@ module.exports = function(lando) {
         services.database.config.confd = config.conf.database;
       }
     }
-
-    // If a user already defined some parts of a service in the .lando.yml file
-    // we should take it into account and merge those values in.
-    Object.keys(services).forEach(function (service) {
-      if (_.has(config._services, service)) {
-        services[service] = merger(
-          services[service],
-          config._services[service]
-        );
-      }
-    });
 
     // Add db credentials into the ENV
     services.appserver.overrides = {

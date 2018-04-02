@@ -64,7 +64,6 @@ module.exports = function(lando) {
       config._root = app.root;
       config._mount = app.mount;
       config._recipe = recipe;
-      config._services = app.config.services || {};
 
       // Get our new config
       var newConfig = lando.recipes.build(name, recipe, config);
