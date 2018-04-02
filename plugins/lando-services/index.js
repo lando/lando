@@ -93,30 +93,6 @@ module.exports = function(lando) {
     });
   });
 
-  // Make sure we have a lando bridge network
-  // We do this here so we can take advantage of docker up assurancs in engine.js
-  // and to make sure it covers all non-app services
-  lando.events.on('pre-engine-start', function() {
-
-    // Let's get a list of network
-    return lando.engine.getNetworks()
-
-    // Try to find our net
-    .then(function(networks) {
-      return _.some(networks, function(network) {
-        return network.Name === lando.services.bridge;
-      });
-    })
-
-    // Create if needed
-    .then(function(exists) {
-      if (!exists) {
-        return lando.engine.createNetwork(lando.services.bridge);
-      }
-    });
-
-  });
-
   // Let's also add in some config that we can pass down the stream
   lando.events.on('task-rebuild-run', function(options) {
     lando.events.on('post-instantiate-app', 9, function(app) {
