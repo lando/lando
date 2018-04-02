@@ -6,7 +6,7 @@ set -e
 
 # Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="17.09.0-ce-mac35"
+DOCKER_VERSION="18.03.0-ce-mac60"
 TEAM_ID="FY8GAUX282"
 PKG_SIGN=false
 DMG_SIGN=false
@@ -42,6 +42,7 @@ curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/Docker.dmg" && 
 
 # lando.pkg
 cd mpkg/lando.pkg && \
+  chmod +x Scripts/* && \
   cd Scripts && find . | cpio -o --format odc | gzip -c > ../Scripts.bin && cd .. && \
   rm -r Scripts && mv Scripts.bin Scripts && \
   mkdir ./rootfs && \
@@ -65,6 +66,7 @@ cd mpkg/lando.pkg && \
 
 # docker.pkg
 cd mpkg/docker.pkg && \
+  chmod +x Scripts/* && \
   cd Scripts && find . | cpio -o --format odc | gzip -c > ../Scripts.bin && cd .. && \
   rm -r Scripts && mv Scripts.bin Scripts && \
   mkdir ./rootfs && \
@@ -112,6 +114,7 @@ fi
 
 # Copy in other DMG  asssets
 cd .. && \
+chmod +x uninstall.sh && \
 mv -f uninstall.sh dmg/uninstall.command && \
 mv -f lando.icns dmg/.VolumeIcon.icns && \
 cp -rf ../../README.md dmg/README.md && \

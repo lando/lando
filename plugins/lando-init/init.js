@@ -4,7 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var dockerComposify = lando.utils.engine.dockerComposify;
   var fs = lando.node.fs;
   var os = require('os');
   var path = require('path');
@@ -74,7 +73,7 @@ module.exports = function(lando) {
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/user-perms.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/helpers/user-perms.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
       ]
     };
@@ -105,17 +104,41 @@ module.exports = function(lando) {
     lando.yaml.dump(utilFile, service);
 
     // Name the project
-    var project = 'landoinit' + name;
+    var project = 'landoinit' + lando.utils.engine.dockerComposify(name);
 
     // Try to start the util
     return {
       project: project,
       compose: [utilFile],
-      container: [dockerComposify(project), 'util', '1'].join('_'),
+      container: [project, 'util', '1'].join('_'),
       opts: {
         services: ['util']
       }
     };
+
+  };
+
+  /**
+   * Helper to return a performant git clone command
+   *
+   * This clones to /tmp and then moves to /app to avoid file sharing performance
+   * hits
+   *
+   * @since 3.0.0
+   * @alias 'lando.init.cloneRepo'
+   */
+  var cloneRepo = function(repo) {
+
+    // Get a unique clone folder
+    var tmpFolder = '/tmp/' + _.uniqueId('app-');
+
+    // Commands
+    var mkTmpFolder = 'mkdir -p ' + tmpFolder;
+    var cloneRepo = 'git -C ' + tmpFolder + ' clone ' + repo + ' ./';
+    var cpHome = 'cp -rfT ' + tmpFolder + ' /app';
+
+    // Clone cmd
+    return [mkTmpFolder, cloneRepo, cpHome].join(' && ');
 
   };
 
@@ -129,7 +152,7 @@ module.exports = function(lando) {
 
     // Ensure that cache directory exists
     var keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.ensureDirSync(path.join(keysDir));
+    fs.mkdirpSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     var comment = lando.config.id + '.lando@' + os.hostname();
@@ -257,6 +280,7 @@ module.exports = function(lando) {
   return {
     add: add,
     build: build,
+    cloneRepo: cloneRepo,
     createKey: createKey,
     get: get,
     kill: kill,

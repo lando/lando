@@ -7,13 +7,14 @@ var path = require('path');
 
 /**
  * Translate a name for use by docker-compose eg strip `-` and `.` and
- * @TODO: possibly more than that
+ * @TODO: Eventually we want to get rid of this since it should only happen once
+ * on the appName itself
  *
  * @since 3.0.0
  * @alias 'lando.utils.engine.dockerComposify'
  */
 exports.dockerComposify = function(data) {
-  return data.replace(/-/g, '').replace(/\./g, '');
+  return _.toLower(data).replace(/_|-|\.+/g, '');
 };
 
 /*
@@ -84,7 +85,7 @@ exports.moveConfig = function(from, to) {
    };
 
    // Ensure to exists
-   fs.ensureDirSync(to);
+   fs.mkdirpSync(to);
 
    // Try to copy the assets over
    try {
@@ -100,12 +101,12 @@ exports.moveConfig = function(from, to) {
      var f = _.get(error, 'path');
 
      // Catch this so we can try to repair
-     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.ensureDirSync(f)) {
+     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.mkdirpSync(f)) {
        throw new Error(error);
      }
 
      // Try to take corrective action
-     fs.removeSync(f);
+     fs.unlinkSync(f);
 
      // Try to move again
      fs.copySync(from, to, copyOpts);

@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-beta.36",
+  "version": "3.0.0-beta.39",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "lint": "eslint bin/**/*.js lib/**/*.js plugins/**/*.js test/**/*.js scripts/**/**/*.js",
+    "lint": "eslint bin lib plugins test scripts",
     "pkg:cli": "node ./scripts/pkg.js --stage=cli",
     "pkg:full": "node ./scripts/pkg.js --stage=full",
     "release:major": "node ./scripts/bump.js --stage=major",
@@ -28,7 +28,8 @@
     "release:patch": "node ./scripts/bump.js --stage=patch",
     "release:pre": "node ./scripts/bump.js --stage=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
-    "test:unit": "mocha",
+    "test:unit": "mocha test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
+    "test:functional": "mocha test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
     "test": "yarn lint && yarn test:unit"
   },
   "pkg": {
@@ -38,6 +39,7 @@
       "plugins/**/*.js"
     ],
     "assets": [
+      "config.yml",
       "package.json",
       "**/fastcgi_params",
       "**/*.cnf",
@@ -56,7 +58,7 @@
     "cli-table": "^0.3.1",
     "dockerode": "^2.4.2",
     "dotenv": "^4.0.0",
-    "fs-extra": "^4.0.3",
+    "fs-extra": "^0.18.2",
     "github": "^9.2.0",
     "inquirer": "^3.1.1",
     "ip": "^1.1.5",
@@ -70,7 +72,7 @@
     "restler": "^3.4.0",
     "semver": "^5.4.1",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
-    "shelljs": "^0.6.0",
+    "shelljs": "0.7.8",
     "sudo-block": "^2.0.0",
     "sync-exec": "^0.6.2",
     "uuid": "^3.2.1",
@@ -81,6 +83,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "command-line-test": "^1.0.10",
     "copy": "^0.3.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
@@ -88,6 +91,7 @@
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^4.1.0",
+    "mock-fs": "^4.4.2",
     "pkg": "^4.3.0-beta.5",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0"

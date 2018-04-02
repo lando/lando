@@ -167,10 +167,10 @@ services:
     type: node:6.10
     globals:
       grunt-cli: "latest"
-    build:
+    run:
       - cd /app && npm install --production
   appserver:
-    build:
+    run:
       - cd /app && composer install
   mailhog:
     type: mailhog

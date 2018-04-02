@@ -36,7 +36,7 @@ A services module (eg the file loaded with `lando.services.add`) needs to be mad
 *   `info` - A function that augments the info object to add additional metadata about your service.
 *   `configDir` - A path to a directory with any config files your service might require.
 
-A trivial `service` that is syntaxically correct but doesn't do anything would take this form:
+A trivial `service` that is syntactically correct but doesn't do anything would take this form:
 
 ```js
 'use strict';
@@ -90,7 +90,7 @@ module.exports = function(lando) {
 
 ### versions
 
-The versions array is a list of the docker tags for the docker image you've chosen to use as the basis of your service. It is a common convention to add in two special tags `latest` and `custom`.  `latest` will need to be a valid docker tag (it usually exists by default). `custom` will tell Lando that the image is provided downstream in the [advanced service configuration](./../config/overrides.md).
+The versions array is a list of the docker tags for the docker image you've chosen to use as the basis of your service. It is a common convention to add in two special tags `latest` and `custom`.  `latest` will need to be a valid docker tag (it usually exists by default). `custom` will tell Lando that the image is provided downstream in the [advanced service configuration](./../config/advanced.md).
 
 ```js
 /*

@@ -75,8 +75,7 @@ exports.build = function(domain, proxyDash, http, https) {
       '/dev/null:/traefik.toml',
       '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
       '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh'
-    ],
-    restart: 'on-failure'
+    ]
   };
 
   // Get the new proxy service

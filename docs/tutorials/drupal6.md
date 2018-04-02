@@ -1,7 +1,7 @@
 Working with Drupal 6
 =====================
 
-Lando offers a [configurable recipe](./../recipes/drupal6.md) for spinning up [Drupal 6](https://drupal.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Drupal 6](https://drupal.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 

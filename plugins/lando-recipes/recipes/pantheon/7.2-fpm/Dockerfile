@@ -1,14 +1,13 @@
 # Pantheon php 7.2 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:7.2-fpm .
+# docker build -t devwithlando/pantheon-appserver:7.2 .
 
 FROM devwithlando/php:7.2-fpm
 
 # Version information
-ENV BACKDRUSH_VERSION 0.0.6
 ENV WKHTMLTOPDF_VERSION 0.12.3
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.7.0
+ENV TERMINUS_VERSION 1.8.0
 ENV MAVEN_VERSION 3.5.2
 
 # Install the additional things that make the pantheon
@@ -17,24 +16,13 @@ RUN mkdir -p /usr/share/man/man1 \
     openjdk-8-jre-headless \
     openjdk-8-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
-  && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-  && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/local/bin/wp \
-  && wget http://files.drush.org/drush.phar \
-  && php drush.phar core-status \
-  && chmod +x drush.phar \
-  && mv drush.phar /usr/local/bin/drush \
-  && mkdir -p /var/www/.composer \
-  && cd /var/www/.composer \
-  && curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar \
-  && php installer.phar install --install-version=$TERMINUS_VERSION \
-  && curl https://drupalconsole.com/installer -L -o drupal.phar \
-  && chmod +x drupal.phar \
-  && mv drupal.phar /usr/local/bin/drupal \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
+  && mkdir -p /var/www/.composer \
+  && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
-  && curl -fsSL "https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz" | tar -xz --strip-components=1 -C /var/www/.backdrush \
+  && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
+  && php installer.phar install --install-version=$TERMINUS_VERSION \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \
   && tar xJfv "wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" && cp -rf /tmp/wkhtmltox/bin/* /srv/bin \
   && cd /srv/bin \
