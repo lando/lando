@@ -1,4 +1,0 @@
-This file is for testing purposes only.
-
-It is used to test the functionality of backdrop_get_filename().  See
-BootstrapGetFilenameTestCase::testBackdropGetFilename() for more information.

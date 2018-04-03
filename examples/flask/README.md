@@ -12,7 +12,7 @@ You should be able to run the following steps to get up and running with this ex
 
 ```bash
 # Install python deps
-lando pip install -r requirements.txts
+lando pip install -r requirements.txt
 
 # Start the example
 lando start

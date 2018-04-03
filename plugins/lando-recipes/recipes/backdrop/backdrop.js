@@ -112,7 +112,7 @@ module.exports = function(lando) {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.build;
+      delete build.services.appserver.run_internal;
 
       // Override some tooling things
       build.tooling.drush.service = cliService;
@@ -120,7 +120,7 @@ module.exports = function(lando) {
     }
 
     // Get appserver build
-    var buildersKey = 'services.' + cliService + '.build';
+    var buildersKey = 'services.' + cliService + '.run_internal';
     var builders = _.get(build, buildersKey, []);
 
     // Add the backdrop install command

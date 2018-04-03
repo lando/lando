@@ -41,7 +41,7 @@ services:
   appserver:
     type: node:6.10
     command: npm start
-    # build:
+    # run:
     #  - "cd $LANDO_MOUNT & npm install"
 
 # Add some nice command routing

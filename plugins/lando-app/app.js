@@ -29,13 +29,13 @@ module.exports = function(lando) {
       var landofile = path.join(app.dir, lando.config.appConfigFilename);
 
       // If file doesnt exist then we are done
-      if (!fs.pathExistsSync(landofile)) {
+      if (!fs.existsSync(landofile)) {
         return false;
       }
 
       // Otherwise make sure the name is accurate
       else {
-        return _.get(lando.yaml.load(landofile), 'name', '') === app.name;
+        return _.get(lando.yaml.load(landofile), 'name') === app.name;
       }
 
     });
@@ -169,9 +169,7 @@ module.exports = function(lando) {
       var app = {};
 
       // Name.
-      app.name = config.name || name;
-      // Name translated to what docker wants.
-      app.dockerName = lando.utils.engine.dockerComposify(app.name);
+      app.name = lando.utils.engine.dockerComposify(name);
       // Docker compose files
       app.compose = [];
       // Config
@@ -192,6 +190,8 @@ module.exports = function(lando) {
       app.mount = '/app';
       // The docker compose project
       app.project = app.name;
+      // Keep the unparsed name for reconciliation with registry
+      app.registry = name;
       // Docker compose services
       app.services = {};
       // App specific tasks
@@ -199,7 +199,11 @@ module.exports = function(lando) {
       // Webroot
       app.webRoot = config.webroot || '.';
       // Trigger core messaging emit with app specific message.
-      app.message = function(message) {
+      app.message = function() {
+
+        // Parse and format
+        var args = _.toArray(arguments);
+        var message = util.format.apply(null, args);
 
         // Message
         return lando.message({
@@ -225,7 +229,7 @@ module.exports = function(lando) {
         _.get(app, 'root', 'someplace')
       ]);
       // Mix in any cached metadata
-      app = _.merge(app, lando.cache.get('site:meta:' + app.name));
+      app = _.merge(app, lando.cache.get('site.meta.' + app.name));
 
       // Return our app
       return app;
@@ -260,7 +264,7 @@ module.exports = function(lando) {
 
     // Register app.
     .tap(function(app) {
-      return register({name: app.name, dir: app.root});
+      return register({name: app.registry, lando: app.name, dir: app.root});
     })
 
     // Load plugins.
@@ -386,7 +390,7 @@ module.exports = function(lando) {
         return list()
         .then(function(apps) {
           return _.find(apps, function(app) {
-            return app.name === appName || app.dockerName === appName;
+            return app.name === appName;
           });
         });
       }
@@ -425,7 +429,7 @@ module.exports = function(lando) {
       // Find the first directory that has a lando.yml
       var configFile = _.find(files, function(file) {
         lando.log.verbose('Checking for app config at %s', file);
-        return fs.pathExistsSync(file);
+        return fs.existsSync(file);
       });
 
       // If we have a config file let's load up the app
@@ -718,7 +722,7 @@ module.exports = function(lando) {
      *
      * // Make sure we remove our build cache
      * app.events.on('post-uninstall', function() {
-     *   lando.cache.remove(app.name + ':last_build');
+     *   lando.cache.remove(app.name + '.last_build');
      * });
      */
     .then(function() {
@@ -751,9 +755,9 @@ module.exports = function(lando) {
     // Get all our apps
     return list()
 
-    // We need to use the dockername
+    // Get list of just app names
     .map(function(app) {
-      return lando.utils.engine.dockerComposify(app.name);
+      return app.lando;
     })
 
     // Filter out non-app containers or orphaned containers (eg from deleted apps)
@@ -858,20 +862,20 @@ module.exports = function(lando) {
      *   // Go through each service
      *   _.forEach(app.config.services, function(service, name) {
      *
-     *     // If the service has extras let's loop through and run some commands
-     *     if (!_.isEmpty(service.extras)) {
+     *     // If the service has run steps let's loop through and run some commands
+     *     if (!_.isEmpty(service.run)) {
      *
      *       // Normalize data for loopage
-     *       if (!_.isArray(service.extras)) {
-     *         service.extras = [service.extras];
+     *       if (!_.isArray(service.run)) {
+     *         service.run = [service.run];
      *       }
      *
      *       // Run each command
-     *       _.forEach(service.extras, function(cmd) {
+     *       _.forEach(service.run, function(cmd) {
      *
      *         // Build out the compose object
      *         var compose = {
-     *           id: [app.dockerName, name, '1'].join('_'),
+     *           id: [service, name, '1'].join('_'),
      *             cmd: cmd,
      *             opts: {
      *             mode: 'attach'
@@ -1073,7 +1077,7 @@ module.exports = function(lando) {
      *
      * // Make sure the proxy is down before we destroy
      * app.events.on('pre-destroy', function() {
-     *   if (fs.pathExistsSync(proxyFile)) {
+     *   if (fs.existsSync(proxyFile)) {
      *     return lando.engine.stop(getProxy(proxyFile));
      *   }
      * });
@@ -1092,7 +1096,7 @@ module.exports = function(lando) {
 
     // Remove from appRegistry
     .then(function() {
-      return unregister({name: app.name});
+      return unregister({name: app.registry});
     })
 
     /**

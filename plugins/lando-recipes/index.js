@@ -57,7 +57,7 @@ module.exports = function(lando) {
     if (!_.isEmpty(app.config.recipe)) {
 
       // Get some things
-      var name = app.config.name;
+      var name = app.name;
       var recipe = app.config.recipe;
       var config = app.config.config || {};
 

@@ -13,8 +13,8 @@ module.exports = function(lando) {
   var github = new GitHubApi({Promise: Promise});
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:github:tokens';
-  var siteMetaDataKey = 'site:meta:';
+  var tokenCacheKey = 'init.auth.github.tokens';
+  var siteMetaDataKey = 'site.meta.';
 
   /*
    * Modify init pre-prompt things
@@ -181,7 +181,7 @@ module.exports = function(lando) {
   };
 
   /*
-   * Build out pantheon recipe
+   * Build out github method
    */
   var build = function(name, options) {
 
@@ -268,7 +268,8 @@ module.exports = function(lando) {
 
         // Cache the site things
         var data = {email: email};
-        var siteKey = siteMetaDataKey + options.appname;
+        var name = lando.utils.engine.dockerComposify(options.appname);
+        var siteKey = siteMetaDataKey + name;
         lando.cache.set(siteKey, data, {persist: true});
 
       });
@@ -277,8 +278,7 @@ module.exports = function(lando) {
 
     // Git clone the project
     .then(function() {
-      var cmd = 'cd $LANDO_MOUNT && git clone ' + repo + ' ./';
-      return lando.init.run(name, dest, cmd);
+      return lando.init.run(name, dest, lando.init.cloneRepo(repo));
     });
 
   };

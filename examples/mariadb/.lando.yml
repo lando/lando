@@ -38,5 +38,6 @@ services:
 
     # Optionally load in all the mariadb config files in the config directory
     # This is relative to the app root
+    # NOTE: these files need to end in .cnf
     config:
       confd: config

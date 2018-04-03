@@ -6,7 +6,7 @@ A container that approximates the appserver used on Pantheon.
 ```
 # Pantheon php 5.3 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:5.3-fpm .
+# docker build -t devwithlando/pantheon-appserver:5.3 .
 
 FROM devwithlando/php:5.3-fpm
 
@@ -20,15 +20,10 @@ RUN apt-get update && apt-get install -y \
     openjdk-7-jre-headless \
     openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
-  && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-  && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/local/bin/wp \
-  && mkdir -p /var/www/.composer \
-  && cd /var/www/.composer \
-  && composer require drush/drush:7.* \
+  && mkdir -p /srv/bin \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
   && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
-  && mkdir -p /srv/bin && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \
+  && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \
   && cd /srv/bin \
   && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v${PHANTOMJS_VERSION}/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2" | tar -xjv \
   && mv phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \

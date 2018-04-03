@@ -35,6 +35,8 @@ services:
       password: trouble
       database: trouble
 
-    # Optionally specify a postgres config file relative to the app root directory
+    # Optionally load in all the postgres config files into the config directory
+    # This is relative to the app root
+    # NOTE: these files need to end in .conf
     config:
-      postgres: config/postgresql.conf
+      confd: confd

@@ -377,10 +377,6 @@ module.exports = function(lando) {
         if (data && typeof data !== 'string') {
           throw new TypeError('Invalid data: ' + data);
         }
-
-        if (typeof data === 'string') {
-          data = utils.dockerComposify(data);
-        }
       })
 
       .then(function() {
@@ -1024,7 +1020,7 @@ module.exports = function(lando) {
    *  };
    *
    *  // Get the networks
-   *  return lando.networks.get(opts)
+   *  return lando.engine.getNetworks(opts)
    *
    *  // Filter out lando_default
    *  .filter(function(network) {
@@ -1038,6 +1034,21 @@ module.exports = function(lando) {
    */
    var getNetworks = docker.getNetworks;
 
+   /**
+    * Gets a Docker network
+    *
+    * @since 3.0.0.
+    * @function
+    * @alias 'lando.engine.getNetwork'
+    * @param {String} id - The id of the network
+    * @returns {Object} A Dockerode Network object .
+    * @example
+    *
+    *  // Get the network
+    *  return lando.engine.getNetwork('mynetwork')
+    */
+    var getNetwork = docker.getNetwork;
+
   /**
    * Creates a Docker network
    *
@@ -1050,8 +1061,8 @@ module.exports = function(lando) {
    * @returns {Promise} A Promise with inspect data.
    * @example
    *
-   *  // Get the networks
-   *  return lando.networks.inspect('mynetwork')
+   *  // Create the network
+   *  return ando.engine.createNetwork('mynetwork')
    */
    var createNetwork = docker.createNetwork;
 
@@ -1068,7 +1079,7 @@ module.exports = function(lando) {
    * @example
    *
    *  // Prune the networks
-   *  return lando.networks.prune()
+   *  return lando.engine.pruneNetworks();
    *
    */
   var pruneNetworks = docker.pruneNetworks;
@@ -1089,6 +1100,7 @@ module.exports = function(lando) {
     destroy: destroy,
     logs: logs,
     build: build,
+    getNetwork: getNetwork,
     getNetworks: getNetworks,
     createNetwork: createNetwork,
     pruneNetworks: pruneNetworks

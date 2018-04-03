@@ -17,7 +17,7 @@ services:
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
-  db:
+  database:
 
     # Use the latest version of mysql
     type: mysql
@@ -26,7 +26,7 @@ services:
     # This port will change every time you restart this app
     #
     # You can also set this to a static port you want to use `portforward:3311`.
-    # You will need to make sure the port is open and avialable
+    # You will need to make sure the port is open and available
     portforward: true
 
     # Optionally change the default db credentials
@@ -37,5 +37,6 @@ services:
 
     # Optionally load in all the mysql config files in the config directory
     # This is relative to the app root
+    # NOTE: these files need to end in .cnf
     # config:
     #  confd: config

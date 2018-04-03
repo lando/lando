@@ -22,7 +22,7 @@ services:
 
     # Optionally run the following commands after the service is started
     # Runs composer install but dont fail on an error
-    # build:
+    # run:
     #  - "cd $LANDO_MOUNT && composer install || true"
 
     # Optionally activate xdebug

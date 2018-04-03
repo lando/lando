@@ -13,7 +13,7 @@ services:
     via: nginx
     webroot: www
     # Run composer install after we start our app
-    build:
+    run:
       - "cd $LANDO_MOUNT && composer install"
     # Add in a helper script to showcase some magic below
     overrides:

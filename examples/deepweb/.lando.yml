@@ -10,8 +10,6 @@ services:
   database:
     type: mariadb
 tooling:
-  phplint:
-    service: appserver
   composer:
     service: appserver
     description: Run composer commands

@@ -11,13 +11,13 @@ module.exports = function(lando) {
    * Supported versions for mysql
    */
   var versions = [
-    '10',
+    '10.3',
+    '10.2',
     '10.1',
     '9.6',
     '9.5',
     '9.4',
     '9.3',
-    '9.2',
     'latest',
     'custom'
   ];
@@ -37,14 +37,18 @@ module.exports = function(lando) {
     // Start a services collector
     var services = {};
 
-    // Get data dir
+    // Some basic things
     var ddd = '/var/lib/postgresql/data';
     var dataDir = _.get(config, 'overrides.services.environment.PGDATA', ddd);
+    var defaultConfFile = '/usr/share/postgresql/postgresql.conf.sample';
+    var customConfDir = '/etc/postgresql';
+    var customPostgresFile = customConfDir + '/zzz-lando-custom-conf.conf';
 
     // Define config mappings
     var configFiles = {
-      postgres: dataDir + '/postgresql.conf',
-      dataDir: dataDir
+      postgres: customPostgresFile,
+      confd: customConfDir,
+      dataDir: dataDir,
     };
 
     // GEt creds
@@ -54,15 +58,28 @@ module.exports = function(lando) {
     var postgres = {
       image: 'postgres:' + config.version,
       environment: {
+        PGDATA: configFiles.dataDir,
         POSTGRES_USER: creds.user || 'postgres',
         POSTGRES_PASSWORD: creds.password || 'password',
         POSTGRES_DB: creds.database || 'database',
         TERM: 'xterm'
       },
-      // @todo: Persistance of postgres data volume is an issue
-      // see: https://github.com/docker-library/postgres/issues/213
-      //volumes: ['data:' + configFiles.dataDir],
-      command: 'docker-entrypoint.sh postgres',
+      healthcheck: {
+        test: 'psql -U postgres -c "\\\l"',
+        interval: '2s',
+        timeout: '10s',
+        retries: 25
+      },
+      volumes: ['data_' + name + ':' + configFiles.dataDir],
+      command: [
+        '/bin/bash -c "',
+        'sed -i "s/#include_dir/include_dir/g" ' + defaultConfFile,
+        '&&',
+        'sed -i \'s|conf.d|' + configFiles.confd + '|g\' ' + defaultConfFile,
+        '&&',
+        'docker-entrypoint.sh postgres',
+        '"'
+      ].join(' ')
     };
 
     // Handle port forwarding

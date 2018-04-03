@@ -134,7 +134,7 @@ lando init pantheon | lando init github
 lando start
 ```
 
-You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipe.html)
+You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipes.html)
 
 ```yml
 name: myproject
@@ -199,4 +199,4 @@ tooling:
 Other Resources
 ---------------
 
-*   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q) 
+*   [Mountain climbing advice](https://www.youtube.com/watch?v=tkBVDh7my9Q)

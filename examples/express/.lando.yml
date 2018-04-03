@@ -1,11 +1,6 @@
 # Express server example
 name: express
 
-#
-# You need to run `lando npm install` before you run `lando start` for this
-# example to work
-#
-
 # Give me http://express.lndo.site and https://express.lndo.site
 proxy:
   appserver:
@@ -51,12 +46,12 @@ services:
     command: npm start
 
     # Install some extra server packages
-    # extras:
+    # run_as_root:
     #  - "apt-get update -y"
     #  - "apt-get install vim -y"
 
     # Print a message just to demonstrate this
-    # build:
+    # run:
     # - "cd $LANDO_MOUNT & echo 'Holla!'"
 
 # Add some nice command routing

@@ -53,11 +53,11 @@ services:
     #   drush/drush: "~8"
 
     # Optionally run the following build steps
-    # build:
-    #  - "cd $$LANDO_MOUNT && composer install"
+    # run:
+    #  - "cd $LANDO_MOUNT && composer install"
 
     # Optionally install additional server software
-    # extras:
+    # run_as_root:
     #  - "apt-get update -y"
     #  - "apt-get install netcat -y"
 

@@ -1,3 +1,4 @@
 vendor
-web
+web/*
 config/sync
+!web/.gitkeep
