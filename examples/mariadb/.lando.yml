@@ -31,6 +31,10 @@ services:
     portforward: 3307
 
     # Optionally set the default db credentials
+    #
+    # Note: You will need to `lando destroy && lando start` to change these if you've
+    # already started your app
+    # See: https://docs.devwithlando.io/tutorials/lando-info.html
     creds:
       user: mariadb
       password: mariadb

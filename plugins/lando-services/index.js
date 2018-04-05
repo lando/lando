@@ -317,8 +317,7 @@ module.exports = function(lando) {
   // @TODO: this is not currently the full lando info because a lot of it requires
   // the app to be on
   lando.events.on('post-instantiate-app', 8, function(app) {
-    var data = Buffer.from(JSON.stringify(app.info));
-    app.env.LANDO_INFO = data.toString('base64');
+    app.env.LANDO_INFO = JSON.stringify(app.info);
   });
 
 };
