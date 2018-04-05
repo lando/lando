@@ -41,7 +41,7 @@ LANDO_WEBROOT_GID=33
 
 ### Environment File
 
-If you drop a `.env` file into the root directory of your app Lando will automatically inject the variables into all of your services. This is particularly useful if you want
+If you drop a file named `.env` into the root directory of your app Lando will automatically inject the variables into all of your services. This is particularly useful if you want
 
 1. To inject sensitive credentials into the environment (a la the 12-factor app model)
 2. Store credentials in a `.gitignored` file that is not committed to the repo
