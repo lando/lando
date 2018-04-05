@@ -1,12 +1,11 @@
 #!/bin/bash
 
 # Set the things
-FILE=${DB_NAME}.`date +"%Y%m%d%s"`
-HOST=${DB_HOST:-localhost}
-USER=${DB_USER:-${MYSQL_USER:-root}}
-PASSWORD=${DB_PASSWORD:-${MYSQL_PASSWORD:-}}
-DATABASE=${DB_NAME:-${MYSQL_DATABASE:-database}}
-PORT=${DB_PORT:-3306}
+FILE=${MYSQL_DATABASE}.`date +"%Y%m%d%s"`
+HOST=localhost
+USER=root
+DATABASE=${MYSQL_DATABASE:-database}
+PORT=3306
 STDOUT=false
 
 # colors
@@ -18,48 +17,12 @@ DEFAULT_COLOR='\033[0;0m'
 # TODO: compress the mostly duplicate code below?
 while (( "$#" )); do
   case "$1" in
+    # This doesnt do anything anymore
+    # we just keep it around for option validation
     -h|--host|--host=*)
-      if [ "${1##--host=}" != "$1" ]; then
-        HOST="${1##--host=}"
-        shift
-      else
-        HOST=$2
-        shift 2
-      fi
-      ;;
-    -u|--user|--user=*)
-      if [ "${1##--user=}" != "$1" ]; then
-        USER="${1##--user=}"
-        shift
-      else
-        USER=$2
-        shift 2
-      fi
-      ;;
-    -p|--password|--password=*)
-      if [ "${1##--password=}" != "$1" ]; then
-        PASSWORD="${1##--password=}"
-        shift
-      else
-        PASSWORD=$2
-        shift 2
-      fi
-      ;;
-    -d|--database|--database=*)
       if [ "${1##--database=}" != "$1" ]; then
-        DATABASE="${1##--database=}"
         shift
       else
-        DATABASE=$2
-        shift 2
-      fi
-      ;;
-    -P|--port|--port=*)
-      if [ "${1##--port=}" != "$1" ]; then
-        PORT="${1##--port=}"
-        shift
-      else
-        PORT=$2
         shift 2
       fi
       ;;
@@ -83,14 +46,7 @@ while (( "$#" )); do
 done
 
 # Start the dump
-DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT}"
-
-# Get the pdub in there if needed
-if [ ! -z "$PASSWORD" ]; then
-  DUMPER="${DUMPER} --password=${PASSWORD} ${DATABASE}"
-else
-  DUMPER="${DUMPER} ${DATABASE}"
-fi
+DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
 
 # Do the dump to stdout
 if [ "$STDOUT" == "true" ]; then

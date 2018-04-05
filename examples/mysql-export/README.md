@@ -27,19 +27,19 @@ Here is a non-exhaustive list of commands that are relevant to this example.
 # Get DB connection info
 lando info
 
-# Import the test db
+# Import the test db to both databases
 lando db-import test.sql
+lando db-import -h database2 test.sql
 
 # See export options
 lando db-export -- --help
 
-# Drop into a mysql shell on the target DB
-lando mysql
-
-# Verify that we have a 'users' table
+# Verify that we have a 'users' table on both databases
 # NOTE: This will only work if the auto-import on Lando start was successful
-lando mysql -e "show tables;"
+lando mysql data1 -e "show tables;"
+lando mysql -h database2 database -e "show tables;"
 
-# Export the contents of the db
+# Export the contents of the dbs
 lando db-export
+lando db-export -h database2
 ```
