@@ -14,7 +14,10 @@ Here are some examples of code on how to parse `$LANDO_INFO`.
 Using PHP
 ---------
 
-{% codesnippet "./../examples/landoinfo/index.php" %}{% endcodesnippet %}
+```php
+$info = json_decode(getenv('LANDO_INFO'), TRUE);
+print_r($info);
+```
 
 Using Javascript/NodeJS
 -----------------------
