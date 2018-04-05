@@ -62,7 +62,7 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 
 # Import the database
 # NOTE: db-import can handle uncompressed, gzipped or zipped files
-lando db-import database.sql.gz --database=lemp
+lando db-import database.sql.gz
 ```
 
 You can learn more about the `db-import` command [over here](./db-import.md).
