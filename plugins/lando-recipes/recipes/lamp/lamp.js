@@ -210,32 +210,14 @@ module.exports = function(lando) {
    */
   var dbExport = function() {
     return {
-      service: 'appserver',
-      needs: ['database'],
-      description: 'Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz',
+      service: ':host',
+      description: 'Export database from a service',
       cmd: '/helpers/mysql-export.sh',
       options: {
         host: {
-          description: 'The database host',
+          description: 'The database service to use',
+          default: 'database',
           alias: ['h']
-        },
-        user: {
-          description: 'The database user',
-          default: 'root',
-          alias: ['u']
-        },
-        database: {
-          description: 'The database name',
-          alias: ['d']
-        },
-        password: {
-          description: 'The database password',
-          alias: ['p']
-        },
-        port: {
-          description: 'The database port',
-          default: 3306,
-          alias: ['P']
         },
         stdout: {
           description: 'Dump database to stdout'

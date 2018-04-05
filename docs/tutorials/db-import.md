@@ -44,8 +44,8 @@ cat dump.sql | lando db-import
 
 ```bash
 Options:
-  --host, -h  The database service to use                  [default: "database"]
-  --no-wipe   Do not destroy the existing database before an import
+  --host, -h      The database service to use                  [default: "database"]
+  --no-wipe       Do not destroy the existing database before an import
 ```
 
 Adding the `db-import` command
