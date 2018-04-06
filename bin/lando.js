@@ -63,7 +63,7 @@ const handleError = ({hide, message, stack, code}, log, metrics) => {
 bootstrap(options)
 
 // Initialize the CLI
-.then((lando) => {
+.then(lando => {
 
   // Bind to outside scope
   // @TODO: do this better
@@ -71,12 +71,12 @@ bootstrap(options)
   log = lando.log;
 
   // Handle busted promises
-  process.on('unhandledRejection', (error) => {
+  process.on('unhandledRejection', error => {
     handleError(error, lando.log, lando.metrics);
   });
 
   // And other uncaught things
-  process.on('uncaughtException', (error) => {
+  process.on('uncaughtException', error => {
     handleError(error, lando.log, lando.metrics);
   });
 
@@ -125,11 +125,11 @@ bootstrap(options)
   .then(() => Promise.resolve(lando.updates.fetch(lando.cache.get('updates')))
 
   // Fetch and cache if needed
-  .then((fetch) => {
+  .then(fetch => {
     if (fetch) {
       lando.log.verbose('Checking for updates...');
       return lando.updates.refresh(lando.config.version)
-      .then((latest) => {
+      .then(latest => {
         lando.cache.set('updates', latest, {persist: true});
       });
     }
@@ -148,7 +148,7 @@ bootstrap(options)
   .then(() => {
 
     // Loop through the tasks and add them to the CLI
-    _.forEach(_.sortBy(tasks, 'command'), (task) => {
+    _.forEach(_.sortBy(tasks, 'command'), task => {
       lando.log.verbose('Loading cli task %s', task.name);
       yargs.command(lando.cli.parseToYargs(task, lando.events));
     });
@@ -183,6 +183,6 @@ bootstrap(options)
 
 // Handle all other errors
 // @TODO: We need something better
-.catch((error) => {
+.catch(error => {
   handleError(error, log, metrics);
 });
