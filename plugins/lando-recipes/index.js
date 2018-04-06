@@ -18,7 +18,8 @@ module.exports = function(lando) {
     'lemp',
     'mean',
     'pantheon',
-    'wordpress'
+    'wordpress',
+    'fcl'
   ];
 
   // Add recipe modules to lando
