@@ -27,16 +27,24 @@ Here is a non-exhaustive list of commands that are relevant to this example.
 # Get DB connection info
 lando info
 
-# See import options
+# See mysql import options
+lando mysql -- --help
 lando db-import -- --help
 
-# Import the test mysql file
-lando db-import test.sql
-
-# Drop into a mysql shell on the target DB
+# Drop into a mysql shell on the default db
 lando mysql
 
-# Verify that we have a 'users' table
-# NOTE: This will only work if you've `lando db-import test.sql` first
-lando mysql -e "show tables;"
+# Drop into a mysql shell on the secondary database
+lando mysql -h database2
+
+# Import the test mysql file against the default database
+lando db-import test.sql
+
+# Import the test mysql file to the secondary database
+lando db-import -h databse2 test.sql
+
+# Verify that we have a 'users' table on both databases
+# NOTE: This will only work if you've `lando db-import test.sql`
+lando mysql data1 -e "show tables;"
+lando mysql -h database2 database -e "show tables;"
 ```

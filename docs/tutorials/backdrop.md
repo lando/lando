@@ -104,12 +104,17 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 `BACKDROP_SETTINGS` should allow for Backdrop to automatically connect to your database.
 
 ```bash
+LANDO_INFO=JSON_STRING_OF_LANDO_INFO
 BACKDROP_SETTINGS=JSON_STRING_OF_BACKDROP_SETTINGS
+
+# Pending deprecation!!!
+# These will soon be removed.
+# We recommend you switch to using LANDO_INFO.
 DB_HOST=database
 DB_USER=backdrop
 DB_PASSWORD=backdrop
@@ -117,7 +122,8 @@ DB_NAME=backdrop
 DB_PORT=3306
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 

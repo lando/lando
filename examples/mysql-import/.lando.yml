@@ -16,20 +16,9 @@ services:
     ssl: true
     webroot: www
 
-    # These environmental variables will set the default host/user/port/name/password options for
-    # db-import
-    overrides:
-      services:
-        environment:
-          DB_HOST: db
-          DB_USER: mysql
-          DB_PASSWORD: mysql
-          DB_NAME: data1
-          DB_PORT: 3306
-
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
-  db:
+  database:
 
     # Use the latest version of mysql
     type: mysql
@@ -52,39 +41,30 @@ services:
     # config:
     #  confd: config
 
+  # Spin up a secondary database just to test things out
+  database2:
+    type: mysql
+
 tooling:
   mysql:
-    service: appserver
-    description: Drop into a mysql shell for the import target
-    needs:
-      - db
-    cmd: mysql -h db -u mysql -pmysql data1
+    service: :host
+    description: Drop into a mysql shell on a database service
+    cmd: mysql -u root
+    options:
+      host:
+        description: The database service to use
+        default: database
+        alias:
+          - h
   'db-import <file>':
-    service: appserver
-    needs:
-      - db
+    service: :host
     description: Import <file> into database
     cmd: /helpers/mysql-import.sh
     options:
       host:
-        description: The database host
+        description: The database service to use
+        default: database
         alias:
           - h
-      user:
-        description: The database user
-        default: root
-        alias:
-          - u
-      database:
-        description: The database name
-        alias:
-          - d
-      password:
-        description: The database password
-        alias:
-          - p
-      port:
-        description: The database port
-        default: 3306
-        alias:
-          - P
+      no-wipe:
+        description: Do not destroy the existing database before an import

@@ -1,0 +1,8 @@
+name: landoinfo
+recipe: lemp
+services:
+  cli:
+    type: node
+tooling:
+  node:
+    service: cli

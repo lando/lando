@@ -83,4 +83,13 @@ module.exports = function(lando) {
     });
   });
 
+  // Add the hostname to the info
+  lando.events.on('post-instantiate-app', function(app) {
+    app.events.on('post-info', function() {
+      _.forEach(app.info, function(data, name) {
+        data.hostnames.push([name, app.name, 'internal'].join('.'));
+      });
+    });
+  });
+
 };

@@ -104,6 +104,7 @@
 *   [Setting up Additional Routes](config/proxy.md)
 *   [Setting up Additional Events](config/events.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
+*   [Using $LANDO_INFO](tutorials/lando-info.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Accessing Lando from Other Devices](tutorials/access-by-other-devices.md)
 *   [Importing Databases](tutorials/db-import.md)

@@ -91,14 +91,23 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
 
 ```bash
+LANDO_INFO=JSON_STRING_OF_LANDO_INFO
+
+# Pending deprecation!!!
+# These will soon be removed.
+# We recommend you switch to using LANDO_INFO.
 DB_HOST=database
-DB_PORT=27017
+DB_USER=lemp
+DB_PASSWORD=lemp
+DB_NAME=lemp
+DB_PORT=3306
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 

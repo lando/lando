@@ -48,7 +48,7 @@ const handleError = ({hide, message, stack, code}, log, metrics) => {
 
   // Log error or not
   if (!hide) {
-    log.error(message + stack);
+    log.error(message);
   }
 
   // Report error

@@ -22,6 +22,12 @@ module.exports = function(lando) {
      */
     var run = function(answers) {
 
+      // Handle dynamic services right off the bat
+      if (_.startsWith(_.get(config, 'service'), ':')) {
+        var serviceOption = config.service.split(':')[1];
+        config.service = answers[serviceOption];
+      }
+
       // Kick off some collectors
       var ids = [config.service];
       var existsCheck = [];
@@ -36,7 +42,7 @@ module.exports = function(lando) {
         }
 
         // And add
-        ids = _.flatten(ids.concat(config.needs));
+        ids = _.uniq(_.flatten(ids.concat(config.needs)));
 
       }
 
