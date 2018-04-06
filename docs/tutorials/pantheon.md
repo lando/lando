@@ -13,9 +13,10 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
  Before you get started with this recipe we assume that you have:
 
  1. [Installed Lando](./../installation/system-requirements.md)
- 2. [Read up on how to get a `.lando.yml`](./../started.md)
+ 2. Your code is already cloned into the desired folder (`git clone ...`)
+ 3. [Read up on how to get a `.lando.yml`](./../started.md)
 
- If after reading #2 above you are still unclear how to get started then try this
+ If after reading #3 above you are still unclear how to get started then try this
 
  ```bash
  # Go into a local folder with your site or app codebase
@@ -55,7 +56,7 @@ Once you've started up your Pantheon site you will need to pull in your database
 
 ### 1. Using `lando pull`
 
-Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
+Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.** Please note, `lando pull` **does not** clone repos, it does a `git pull` (merge) for convenience (see #2 above).
 
 On a database pull Lando will attempt to clear the cache of the remote environment (unless it is the live environment) to minimize the size of the import.
 
