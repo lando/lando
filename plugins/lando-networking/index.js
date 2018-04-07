@@ -87,6 +87,7 @@ module.exports = function(lando) {
   lando.events.on('post-instantiate-app', function(app) {
     app.events.on('post-info', function() {
       _.forEach(app.info, function(data, name) {
+        data.hostnames = _.get(data, 'hostnames', []);
         data.hostnames.push([name, app.name, 'internal'].join('.'));
       });
     });
