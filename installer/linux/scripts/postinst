@@ -25,22 +25,16 @@ do
 done
 
 # Generate a Root CA
-mkdir -p $LANDO_ROOT/certs
+mkdir -p $HOME/.lando/certs
 
-docker run -d --rm \
-  -e COUNTY="BE" \
-  -e STATE="Bespin" \
-  -e LOCATION="Cloud City" \
-  -e ORGANISATION="Tibanna Mining Corp" \
-  -e ISSUER_CN="Lando" \
-  -e PUBLIC_CN="devwithlando.io" \
-  -e ISSUER_NAME="Calrissian" \
-  -e PUBLIC_NAME="Lando" \
-  -v $LANDO_ROOT/certs:/etc/ssl/certs \
-  pgarrett/openssl-alpine
+docker run --rm \
+  -e COMMON_NAME="Lando Local CA" \
+  -e KEY_NAME="LandoRoot" \
+  -v $HOME/.lando/certs:/certs \
+  centurylink/openssl
 
 # Well I don't trust him either, and he's my friend...
-cp $LANDO_ROOT/certs/root.crt /usr/local/share/ca-certificates/root.crt
+cp $HOME/.lando/certs/LandoRoot.crt /usr/local/share/ca-certificates/LandoRoot.crt
 update-ca-certificates
 
 # @TODO: Wait for GUI
