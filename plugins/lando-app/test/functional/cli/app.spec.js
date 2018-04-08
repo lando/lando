@@ -56,7 +56,7 @@ describe('App Commands', function() {
       `${this.appFolder}${path.sep}.lando.yml`,
       jsYaml.dump(app),
       'utf8',
-      (err) => { if (err) { throw err; } }
+      err => { if (err) { throw err; } }
     );
 
     // Use the entry-point in the app, not the globally installed Lando.
@@ -77,7 +77,7 @@ describe('App Commands', function() {
   describe('#start', function() {
     it('Starts all containers on an app', function() {
       return this.cliTest.execFile(this.executable, ['start'], {cwd: this.appFolder})
-      .then((res) => {
+      .then(res => {
         const nodeContainer = this.docker.getContainer('landotest_node_1');
         nodeContainer.inspect(function(err, data) {
           if (err) { throw err; }
@@ -99,7 +99,7 @@ describe('App Commands', function() {
    */
   describe('#stop', function() {
     it('Stops all containers on an app', function() {
-      return this.cliTest.execFile(this.executable, ['stop'], {cwd: this.appFolder}).then((res) => {
+      return this.cliTest.execFile(this.executable, ['stop'], {cwd: this.appFolder}).then(res => {
         const nodeContainer = this.docker.getContainer('landotest_node_1');
         nodeContainer.inspect(function(err, data) {
           if (err) { throw err; }
@@ -120,11 +120,11 @@ describe('App Commands', function() {
   describe('#destroy', function() {
     it('Removes all containers', function() {
       return this.cliTest.execFile(this.executable, ['destroy', '-y'], {cwd: this.appFolder})
-      .then((res) => this.docker.listContainers((err, data) => {
+      .then(res => this.docker.listContainers((err, data) => {
           if (err) { throw err; }
           let ourCotainers = [];
           ourCotainers = data.filter(
-            (container) => container.Names.includes('/landotest_node_1') ||
+            container => container.Names.includes('/landotest_node_1') ||
             container.Names.includes('/landotest_redis_1')
           );
           expect(ourCotainers).to.be.an('array').that.is.empty;
@@ -142,7 +142,7 @@ describe('App Commands', function() {
     });
 
     it('returns json', function() {
-      return this.cmd.then((res) => {
+      return this.cmd.then(res => {
         // This could get risky as the output could have
         // non-standard JSON we need to trim.
         const getJson = function() {
@@ -195,7 +195,7 @@ describe('App Commands', function() {
         `${this.secondAppFolder}${path.sep}.lando.yml`,
         jsYaml.dump(secondApp),
         'utf8',
-        (err) => { if (err) { throw err; } }
+        err => { if (err) { throw err; } }
       );
 
       // Start first app
@@ -207,7 +207,7 @@ describe('App Commands', function() {
     });
 
     it('returns json', function() {
-      return this.cmd.then((res) => {
+      return this.cmd.then(res => {
         // This could get risky as the output could have
         // non-standard JSON we need to trim.
         const getJson = function() {
@@ -218,11 +218,11 @@ describe('App Commands', function() {
     });
 
     it('lists all running apps', function() {
-      return this.cmd.then((res) => {
+      return this.cmd.then(res => {
         const data = JSON.parse(res.stdout);
         // Dev could have other apps running,
         // we just want to ensure the apps that are part of the test suite are listed
-        const ourApps = data.filter((app) => app.name === 'lando-test' || app.name === 'second-lando-test');
+        const ourApps = data.filter(app => app.name === 'lando-test' || app.name === 'second-lando-test');
         ourApps.should.have.lengthOf(2);
       });
     });
