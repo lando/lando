@@ -47,4 +47,27 @@ until ${docker} info >/dev/null || [ $NEXT_WAIT_TIME -eq 10 ]; do
   sleep $(( NEXT_WAIT_TIME++ ))
 done
 
+LANDO_ROOT=/Users/${console_user}/.lando
+# Generate a Root CA
+sudo -u ${console_user} mkdir -p $LANDO_ROOT/certs
+
+sudo -u ${console_user} ${docker} run --rm \
+  -e ROOT_NAME="LandoRoot" \
+  -e ROOT_CN="Lando Local CA" \
+  -e COUNTY="US" \
+  -e STATE="California" \
+  -e LOCATION="San Francisco" \
+  -e ORGANISATION="Lando" \
+  -e ISSUER_CN="LandoIssuer" \
+  -e PUBLIC_CN="devwithlando.io" \
+  -e ISSUER_NAME="LandoIssuer" \
+  -e PUBLIC_NAME="Lando" \
+  -e DAYS="8675" \
+  -v $LANDO_ROOT/certs:/etc/ssl/certs \
+  pgarrett/openssl-alpine
+
+# Well I don't trust him either, and he's my friend...
+security add-trusted-cert -d -r trustRoot \
+  -k /Library/Keychains/System.keychain \
+  $LANDO_ROOT/certs/LandoRoot.crt
 # Fin
