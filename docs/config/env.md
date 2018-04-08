@@ -35,6 +35,7 @@ LANDO_APP_ROOT=/Users/pirog/Desktop/work/lando/examples/lemp2
 LANDO_WEBROOT_USER=www-data
 LANDO_WEBROOT_GROUP=www-data
 LANDO_APP_NAME=lemp2
+LANDO_DOMAIN=lndo.site
 LANDO_HOST_OS=darwin
 LANDO_WEBROOT_GID=33
 LANDO_INFO=a JSON string representation of the lando info command

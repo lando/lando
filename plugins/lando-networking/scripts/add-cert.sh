@@ -2,8 +2,38 @@
 
 set -e
 
-# Make sure our cert directory exists
-mkdir -p /certs
+# TODO: We need to actually inject LANDO_CA_CERT, this is currently an assumed value
+: ${LANDO_CA_CERT:="lando.pem"}
+: ${LANDO_CA_KEY:="lando.key"}
+: ${LANDO_DOMAIN:="lndo.site"}
+: ${CA_CERT_HOST:="/lando/certs/$LANDO_CA_CERT"}
+: ${CA_CERT_KEY:="/lando/certs/$LANDO_CA_KEY"}
+: ${CA_DIR:="/usr/local/share/ca-certificates"}
+: ${CA_CERT_CONTAINER:="$CA_DIR/$LANDO_CA_CERT"}
+
+# Cert add heating up
+echo "Cert creation kicking off"
+echo "LANDO_CA_CERT: $LANDO_CA_CERT"
+echo "LANDO_CA_KEY: $LANDO_CA_KEY"
+echo "CA_CERT_HOST: $CA_CERT_HOST"
+echo "CA_DIR: $CA_DIR"
+echo "CA_CERT_CONTAINER: $CA_CERT_CONTAINER"
+
+# Make sure our cert directories exists
+mkdir -p /certs $CA_DIR
+
+# Setup cert SANz
+cat > /certs/cert.ext <<EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = *.${LANDO_DOMAIN}
+DNS.2 = ${LANDO_SERVICE_TYPE}
+DNS.3 = *.${LANDO_APP_NAME}.internal
+DNS.4 = localhost
+EOF
 
 # Enable SSL if we need to
 if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
@@ -11,17 +41,48 @@ if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
   cp -rf /etc/apache2/mods-available/socache_shmcb* /etc/apache2/mods-enabled || true
 fi
 
-# Set up a certs for this service
+# Check if update-ca-certificates is installed, if not install it
+if ! [ -x "$(command -v update-ca-certificates)" ]; then
+  echo "Installing update-ca-certificates..."
+  apt-get update -y && apt-get install ca-certificates -y || apk add --no-cache ca-certificates
+fi
+
+# Check if openssl is installed, if not install it
+if ! [ -x "$(command -v openssl)" ]; then
+  echo "Installing openssl..."
+  apt-get update -y && apt-get install openssl -y || apk add --no-cache openssl
+fi
+
+# Trust our root CA
+if [ ! -f "$CA_CERT_CONTAINER" ]; then
+  echo "$CA_CERT_CONTAINER not found... copying $CA_CERT_HOST over"
+  cp -f $CA_CERT_HOST $CA_CERT_CONTAINER
+  update-ca-certificates
+fi
+
+# Validate the certs against the root CA
+if [ -f "/certs/cert.pem" ] && ! command openssl verify -verbose -CAfile $CA_CERT_HOST /certs/cert.pem; then
+  echo "Certs are not valid! Lets remove them."
+  rm -f /certs/cert.key
+  rm -f /certs/cert.csr
+  rm -f /certs/cert.crt
+  rm -f /certs/cert.pem
+fi
+
+# Set up a certs for this service issued by root ca
 if [ ! -f "/certs/cert.pem" ]; then
-
-  # Check if openssl is installed, it not install it
-  if ! [ -x "$(command -v openssl)" ]; then
-    apt-get update -y && apt-get install openssl -y || apk add --no-cache openssl
-  fi
-
-  # Generate the cert
-  openssl genrsa -out /certs/cert.key 2048 && \
-  openssl req -new -x509 -key /certs/cert.key -out /certs/cert.crt -days 365 -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=KB/CN=${LANDO_SERVICE_TYPE}" && \
+  echo "Generating certs..."
+  openssl genrsa -out /certs/cert.key 2048
+  openssl req -new -key /certs/cert.key -out /certs/cert.csr -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=Bespin/CN=*.${LANDO_DOMAIN}"
+  openssl x509 \
+    -req \
+    -in /certs/cert.csr \
+    -CA $CA_CERT_HOST \
+    -CAkey $CA_CERT_KEY \
+    -CAcreateserial \
+    -out /certs/cert.crt \
+    -days 8675 \
+    -sha256 \
+    -extfile /certs/cert.ext
   cat /certs/cert.crt /certs/cert.key > /certs/cert.pem
-
 fi

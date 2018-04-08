@@ -66,6 +66,7 @@ module.exports = function(lando) {
     var env = {
       LANDO: 'ON',
       LANDO_CONFIG_DIR: lando.config.userConfRoot,
+      LANDO_DOMAIN: lando.config.proxyDomain,
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
       LANDO_APP_ROOT_BIND: app.root,
