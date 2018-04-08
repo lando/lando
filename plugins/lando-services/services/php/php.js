@@ -358,6 +358,8 @@ module.exports = function(lando) {
         // Unshift in our composer deps
         config.run_internal.unshift(cgr.join(' '));
 
+        // Install Prestissimo
+        config.run_internal.unshift(['composer', 'global', 'require', 'hirak/prestissimo']);
       });
     }
 
