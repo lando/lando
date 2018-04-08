@@ -64,6 +64,7 @@ exports.build = function(domain, proxyDash, http, https) {
     environment: {
       LANDO_APP_NAME: 'proxy',
       LANDO_SERVICE_TYPE: 'proxy',
+      LANDO_SERVICE_NAME: 'proxy',
       LANDO_UPDATE: '2'
     },
     networks: ['edge'],

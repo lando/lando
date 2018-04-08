@@ -33,8 +33,9 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1 = *.${LANDO_DOMAIN}
 DNS.2 = ${LANDO_SERVICE_TYPE}
-DNS.3 = *.${LANDO_APP_NAME}.internal
-DNS.4 = localhost
+DNS.3 = ${LANDO_SERVICE_NAME}
+DNS.4 = *.${LANDO_APP_NAME}.internal
+DNS.5 = localhost
 EOF
 
 # Enable SSL if we need to
