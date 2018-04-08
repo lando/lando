@@ -143,6 +143,7 @@ module.exports = function(lando) {
     // Data about some common helpers
     var scripts = [
       {script: 'user-perms.sh', local: esd, remote: 'helpers'},
+      {script: 'add-cert.sh', local: esd, remote: 'scripts'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
       {script: 'mysql-export.sh', local: shd, remote: 'helpers'},

@@ -5,7 +5,6 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var addConfig = lando.utils.services.addConfig;
-  var addScript = lando.utils.services.addScript;
   var buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
@@ -98,9 +97,6 @@ module.exports = function(lando) {
       var sslConf = ['tomcat', 'httpd-ssl.conf'];
       var sslVolume = buildVolume(sslConf, configFiles.serverxmlfile, scd);
       tomcat.volumes = addConfig(sslVolume, tomcat.volumes);
-
-      // Add in an add cert task
-      tomcat.volumes = addScript('add-cert.sh', tomcat.volumes);
 
     }
 

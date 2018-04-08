@@ -95,7 +95,7 @@ module.exports = {
     this.clean([files.clean.cli.build, files.clean.cli.dist]);
     copy(files.build, path.join('build', 'cli'), {srcBase: '.'}, (err, files) => { if (err) { throw err; } });
     const pkgCmd = this.cliPkgTask();
-    return util.shellExec(pkgCmd).then((result) => fs.copy(files.copy.cli.dist.src, files.copy.cli.dist.dest, (err) => {
+    return util.shellExec(pkgCmd).then(result => fs.copy(files.copy.cli.dist.src, files.copy.cli.dist.dest, err => {
       if (err) { throw  err; }
     }));
   },
@@ -131,8 +131,8 @@ module.exports = {
       {mode: true, srcBase: path.join('installer', util.platform, path.sep)},
       (err, files) => { if (err) throw err; }
     );
-    this.pkgCli().then((result) => {
-      this.pkgInstaller(util.platform).then((result) => copy(
+    this.pkgCli().then(result => {
+      this.pkgInstaller(util.platform).then(result => copy(
           path.join('build', 'installer', 'dist', '**'),
           path.join('dist'),
           {mode: true, srcBase: path.join('build', 'installer', 'dist', path.sep)},

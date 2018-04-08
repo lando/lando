@@ -4,10 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var addScript = lando.utils.services.addScript;
-
-  // "Constants"
-  var esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for go
@@ -93,13 +89,7 @@ module.exports = function(lando) {
 
     // Generate some certs we can use
     if (config.ssl) {
-
-      // Add the ssl port
       go.ports.push('443');
-
-      // Add in an add cert task
-      go.volumes = addScript('add-cert.sh', go.volumes, esd);
-
     }
 
     // Put it all together

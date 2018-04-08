@@ -54,7 +54,7 @@ exports.build = function(domain, proxyDash, http, https) {
 
   // Proxy service
   var proxy = {
-    image: 'traefik:1.3-alpine',
+    image: 'traefik:1.5.4-alpine',
     entrypoint: '/lando-entrypoint.sh',
     command: cmd,
     labels: {
@@ -62,7 +62,10 @@ exports.build = function(domain, proxyDash, http, https) {
       'io.lando.service-container': 'TRUE'
     },
     environment: {
-      LANDO_SERVICE_TYPE: 'proxy'
+      LANDO_APP_NAME: 'proxy',
+      LANDO_SERVICE_TYPE: 'proxy',
+      LANDO_SERVICE_NAME: 'proxy',
+      LANDO_UPDATE: '2'
     },
     networks: ['edge'],
     ports: [
@@ -74,7 +77,8 @@ exports.build = function(domain, proxyDash, http, https) {
       '/var/run/docker.sock:/var/run/docker.sock',
       '/dev/null:/traefik.toml',
       '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-      '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh'
+      '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh',
+      '$LANDO_CONFIG_DIR:/lando'
     ]
   };
 
