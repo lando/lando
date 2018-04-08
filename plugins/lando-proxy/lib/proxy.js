@@ -37,7 +37,7 @@ exports.compose = function(file, project) {
 /*
  * Create the proxy service object
  */
-exports.build = function(domain, proxyDash, http, https) {
+exports.build = function(domain, proxyDash, http, https, version) {
 
   // Get some stuff for our things
   var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
@@ -62,7 +62,8 @@ exports.build = function(domain, proxyDash, http, https) {
       'io.lando.service-container': 'TRUE'
     },
     environment: {
-      LANDO_SERVICE_TYPE: 'proxy'
+      LANDO_SERVICE_TYPE: 'proxy',
+      LANDO_UPDATE: '2'
     },
     networks: ['edge'],
     ports: [

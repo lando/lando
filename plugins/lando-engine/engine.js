@@ -596,6 +596,7 @@ module.exports = function(lando) {
           // Look to see if we need to prune the networks
           // Sadly we can't do much to determine whether the error is the one
           // we are looking for but we HOPE if this fails its caught downstream
+          // @todo: Move this into the networking plugin?
           .catch(function(err) {
             return docker.pruneNetworks()
             .then(function() {

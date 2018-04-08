@@ -56,6 +56,7 @@ module.exports = function(lando) {
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,
         LANDO_HOST_IP: lando.config.env.LANDO_ENGINE_REMOTE_IP,
+        LANDO_SERVICE_TYPE: 'init',
         LANDO_WEBROOT_USER: 'www-data',
         LANDO_WEBROOT_GROUP: 'www-data',
         LANDO_WEBROOT_UID: '33',

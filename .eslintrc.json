@@ -1,6 +1,7 @@
 {
     "env": {
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "parserOptions": {
         "ecmaVersion": 6
@@ -190,6 +191,7 @@
         "no-ternary": "off",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
+        "no-undef": "error",
         "no-undef-init": "error",
         "no-undefined": "off",
         "no-underscore-dangle": "off",

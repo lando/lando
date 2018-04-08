@@ -13,6 +13,7 @@
 const _ = require('lodash');
 const bootstrap = require('./../lib/bootstrap.js');
 const cli = require('./../lib/cli');
+const Log = require('./../lib/logger');
 const os = require('os');
 const path = require('path');
 const Promise = require('./../lib/promise');
@@ -20,7 +21,7 @@ const sudoBlock = require('sudo-block');
 const userConfRoot = path.join(os.homedir(), '.lando');
 const version = require(path.join(__dirname, '..', 'package.json')).version;
 
-let log;
+let log = new Log();
 let metrics;
 let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
 
@@ -47,12 +48,19 @@ const options = {
 const handleError = ({hide, message, stack, code}, log, metrics) => {
 
   // Log error or not
-  if (!hide) {
-    log.error(message);
+  if (!hide && log) {
+    if (cli.largv.verbose > 0) {
+      log.error(stack);
+    }
+    else {
+      log.error(message);
+    }
   }
 
-  // Report error
-  metrics.report('error', {message: message, stack: stack});
+  // Report error if we can
+  if (metrics) {
+    metrics.report('error', {message: message, stack: stack});
+  }
 
   // Exit this process
   process.exit(code || 1);

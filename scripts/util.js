@@ -1,6 +1,7 @@
 'use strict';
 
 const child = require('child_process');
+const Promise = require('bluebird');
 const semver = require('semver');
 
 module.exports = {
