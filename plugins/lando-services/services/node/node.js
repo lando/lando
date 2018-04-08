@@ -117,13 +117,7 @@ module.exports = function(lando) {
 
     // Generate some certs we can use
     if (config.ssl) {
-
-      // Add the ssl port
       node.ports.push('443');
-
-      // Add in an add cert task
-      node.volumes = addScript('add-cert.sh', node.volumes, esd);
-
     }
 
     // Add our npm things to run step

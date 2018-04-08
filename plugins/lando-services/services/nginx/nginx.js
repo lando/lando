@@ -100,9 +100,6 @@ module.exports = function(lando) {
       var sslVolume = buildVolume(sslConf, configFiles.server, scd);
       nginx.volumes = addConfig(sslVolume, nginx.volumes);
 
-      // Add in an add cert task
-      nginx.volumes = addScript('add-cert.sh', nginx.volumes, esd);
-
       // Add a healthcheck so we wait until open-ssl gets installed
       nginx.healthcheck = {
         test: 'dpkg -s openssl',

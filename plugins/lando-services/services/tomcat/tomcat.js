@@ -99,9 +99,6 @@ module.exports = function(lando) {
       var sslVolume = buildVolume(sslConf, configFiles.serverxmlfile, scd);
       tomcat.volumes = addConfig(sslVolume, tomcat.volumes);
 
-      // Add in an add cert task
-      tomcat.volumes = addScript('add-cert.sh', tomcat.volumes);
-
     }
 
     // Handle custom config files

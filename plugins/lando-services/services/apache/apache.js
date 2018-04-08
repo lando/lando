@@ -76,9 +76,6 @@ module.exports = function(lando) {
       var sslVolume = buildVolume(sslConf, configFiles.server, scd);
       apache.volumes = addConfig(sslVolume, apache.volumes);
 
-      // Add in an add cert task
-      apache.volumes = addScript('add-cert.sh', apache.volumes, esd);
-
       // Add a healthcheck so we wait until open-ssl gets installed
       apache.healthcheck = {
         test: 'dpkg -s openssl',

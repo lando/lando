@@ -185,16 +185,8 @@ module.exports = function(lando) {
 
       // Add ssl specific things if we need them
       if (config.ssl) {
-
-        // Set the correct port
         php.ports.push('443');
-
-        // Add in the add cert script
-        php.volumes = addScript('add-cert.sh', php.volumes, esd);
-
-        // Change the default conf file
         defaultConfFile = 'httpd-ssl.conf';
-
       }
 
       // If php version 5.3 we need to set the logs dir

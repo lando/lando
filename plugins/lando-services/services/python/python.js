@@ -119,13 +119,7 @@ module.exports = function(lando) {
 
     // Generate some certs we can use
     if (config.ssl) {
-
-      // Add the ssl port
       python.ports.push('443');
-
-      // Add in an add cert task
-      python.volumes = addScript('add-cert.sh', python.volumes, esd);
-
     }
 
     // Put it all together

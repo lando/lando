@@ -37,7 +37,7 @@ exports.compose = function(file, project) {
 /*
  * Create the proxy service object
  */
-exports.build = function(domain, proxyDash, http, https, version) {
+exports.build = function(domain, proxyDash, http, https) {
 
   // Get some stuff for our things
   var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
