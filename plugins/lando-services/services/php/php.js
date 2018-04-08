@@ -35,6 +35,30 @@ module.exports = function(lando) {
   };
 
   /*
+   * CGR helper
+   */
+  var cgr = function(pkg, version) {
+
+    // Queue up our global composer command
+    var cgr = ['composer', 'global', 'require'];
+
+    // Get the dep
+    var dep = [pkg];
+
+    // Add a version if we have one
+    if (!_.isEmpty(version)) {
+      dep.push(version);
+    }
+
+    // Build the command
+    cgr.push(dep.join(':'));
+
+    // Return
+    return cgr.join(' ');
+
+  };
+
+  /*
    * Parse our config
    */
   var parseConfig = function(config) {
@@ -334,34 +358,18 @@ module.exports = function(lando) {
       }
     });
 
+    // Ensure run_internal is arrayed
+    config.run_internal = config.run_internal || [];
+
     // Add our composer things to run_internal
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, function(version, pkg) {
-
-        // Ensure run_internal is arrayed
-        config.run_internal = config.run_internal || [];
-
-        // Queue up our global composer command
-        var cgr = ['composer', 'global', 'require'];
-
-        // Get the dep
-        var dep = [pkg];
-
-        // Add a version if we have one
-        if (!_.isEmpty(version)) {
-          dep.push(version);
-        }
-
-        // Build the command
-        cgr.push(dep.join(':'));
-
-        // Unshift in our composer deps
-        config.run_internal.unshift(cgr.join(' '));
-
-        // Install Prestissimo
-        config.run_internal.unshift(['composer', 'global', 'require', 'hirak/prestissimo']);
+        config.run_internal.unshift(cgr(pkg, version));
       });
     }
+
+    // Install Prestissimo
+    config.run_internal.unshift(cgr('hirak/prestissimo'));
 
     // Return our service
     return services;

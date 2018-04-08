@@ -4,6 +4,7 @@ const CliTest = require('command-line-test');
 const fs = require('fs');
 const path = require('path');
 const pathToLando = path.resolve('bin', 'lando.js');
+const Promise = require('bluebird');
 const jsYaml = require('js-yaml');
 const os = require('os');
 
