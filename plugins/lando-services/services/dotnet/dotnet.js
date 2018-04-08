@@ -4,10 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var addScript = lando.utils.services.addScript;
-
-  // "Constants"
-  var esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for dotnet

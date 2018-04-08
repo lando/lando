@@ -5,7 +5,6 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var addConfig = lando.utils.services.addConfig;
-  var addScript = lando.utils.services.addScript;
   var buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
