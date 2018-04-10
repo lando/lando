@@ -434,7 +434,7 @@ module.exports = function(lando) {
       port: 449,
       overrides: {
         services: {
-          image: 'devwithlando/pantheon-index:3.6-3',
+          image: 'devwithlando/pantheon-index:3.6-4',
           ports: ['449'],
           command: '/bin/bash /start.sh'
         }
@@ -455,6 +455,7 @@ module.exports = function(lando) {
     var mounts = [
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
+      '/helpers:lockr.sh',
       '/helpers:pantheon.sh',
       '/helpers:pull.sh',
       '/helpers:push.sh',
@@ -640,6 +641,7 @@ module.exports = function(lando) {
       var token = _.get(cache, 'token');
       var terminusLogin = 'terminus auth:login --machine-token=' + token;
       build.services[cliService].run_internal.push(terminusLogin);
+      build.services[cliService].run_internal.push('/helpers/lockr.sh');
     }
 
     // Return the things
