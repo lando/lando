@@ -92,6 +92,9 @@ module.exports = function(lando) {
     options: _.merge(options, auxOpts),
     run: function(options) {
 
+      // Generate a machine name for the app.
+      options.name = _.kebabCase(options.name);
+
       // Get absolute path of destination
       options.destination = path.resolve(options.destination);
 
