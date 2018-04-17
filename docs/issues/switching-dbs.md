@@ -3,7 +3,7 @@ Switching Database Configuration
 
 If you are currently using a database with Lando and you decide to change its type, version or credentials in your `.lando.yml` file *it's possible* that your database service will not restart correctly or with the expected values once you've made the change.
 
-For a change in credentials it is required that you `lando destrou && lando start` since these are set at container creation and persist through a `lando rebuild`.
+For a change in credentials it is required that you `lando destroy && lando start` since these are set at container creation and persist through a `lando rebuild`.
 
 For a change in type or version this is caused by incompatabilities in the underlying file format that various databases and versions use to store their data. If you are unsure about the aforementioned file format compatibility we recommend you `lando destroy` and recreate the app instead of doing a `lando restart` or `lando rebuild`.
 
