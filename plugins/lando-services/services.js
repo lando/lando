@@ -19,6 +19,17 @@ module.exports = function(lando) {
   // The bridge network
   var landoBridgeNet = 'lando_bridge_network';
 
+  /**
+   * Retrieve the default version of a service.
+   * Some services don't define a default, but all SHOULD.
+   * @param {string} type The type of the service
+   * @return {string} the version to use by default, latest if isn't defined
+   * @todo Make sure all core services implement default version, then deprecate
+   */
+  var getDefaultVersion = function(type) {
+    return registry[type].defaultVersion || 'latest';
+  };
+
   /*
    * Get all services
    *
@@ -47,9 +58,8 @@ module.exports = function(lando) {
    */
   var info = function(name, type, config) {
 
-    // Parse the type and version
     var service = type.split(':')[0];
-    var version = type.split(':')[1] || 'latest';
+    var version = type.split(':')[1] || getDefaultVersion(type);
 
     // Check to verify whether the service exists in the registry
     if (!registry[service]) {
@@ -88,7 +98,7 @@ module.exports = function(lando) {
     var service = type.split(':')[0];
 
     // Add a version from the tag if available
-    config.version = type.split(':')[1] || 'latest';
+    config.version = type.split(':')[1] || getDefaultVersion(type);
 
     // Check to verify whether the service exists in the registry
     if (!registry[service]) {
