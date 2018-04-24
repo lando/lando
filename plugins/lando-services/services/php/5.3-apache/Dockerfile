@@ -69,6 +69,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     intl \
     gettext \
+    pcntl \
   && rm -rf /usr/local/lib/conf.d \
   && ln -s /usr/local/etc/php/conf.d /usr/local/lib/conf.d \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
