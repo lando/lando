@@ -542,7 +542,7 @@ module.exports = function(lando) {
     config.framework = _.get(config, 'framework', 'drupal');
 
     // Update with new config defaults
-    config.conf = config.cong || {};
+    config.conf = config.conf || {};
     config.conf.server = path.join(configDir, config.framework + '.conf');
     config.conf.php = path.join(configDir, 'php.ini');
     config.conf.database = path.join(configDir, 'mysql');
