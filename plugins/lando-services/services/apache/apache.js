@@ -130,6 +130,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '2.4',
     info: info,
     networks: networks,
     services: services,
