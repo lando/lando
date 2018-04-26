@@ -89,7 +89,7 @@ module.exports = function(lando) {
     }
 
     // Add in default mysql config if applicable
-    // @TODO: add a custom/optimzed default postgres cong file
+    // @TODO: add a custom/optimzed default postgres conf file
     if (!_.has(config, 'conf.database') && !_.includes(database, 'postgres')) {
       config.conf.database = path.join(configPath, 'mysql');
     }
