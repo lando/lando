@@ -174,7 +174,7 @@ class StackTest extends TestCase
         $this->assertEquals('foo', array_pop($stack));
         $this->assertEquals(0, count($stack));
 
-        print "\n\n\tGeoff is the best.\n\n";
+        print "\n\n\tJim is the best.\n\n";
     }
 }
 ?>
