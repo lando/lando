@@ -29,6 +29,12 @@ config:
   #
   via: nginx
 
+  # Optionally specify the location of the webroot relative to your approot.
+  #
+  # If ommitted this will be your approot itself.
+  #
+  webroot: web
+
   # Optionally specify the database type, this can be one of:
   #
   #   - `mysql`
