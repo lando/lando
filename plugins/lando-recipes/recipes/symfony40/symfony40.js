@@ -18,7 +18,7 @@ module.exports = function(lando) {
    * Build out Symony 4.0
    */
   var build = function(name, config) {
-    
+
     // Grab the via so we can build from correct base
     var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
 
