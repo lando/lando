@@ -6,11 +6,10 @@ Redis
 Supported versions
 ------------------
 
-*   [4.0](https://hub.docker.com/r/_/redis/)
+*   **[4.0](https://hub.docker.com/r/_/redis/)** **(default)**
 *   [3.2](https://hub.docker.com/r/_/redis/)
 *   [3.0](https://hub.docker.com/r/_/redis/)
 *   [2.8](https://hub.docker.com/r/_/redis/)
-*   [latest](https://hub.docker.com/r/_/redis/)
 *   custom
 
 Example

@@ -6,7 +6,7 @@ PostgreSQL
 Supported versions
 ------------------
 
-*   [10.3](https://hub.docker.com/r/_/postgres/)
+*   **[10.3](https://hub.docker.com/r/_/postgres/)** **(default)**
 *   [10.2](https://hub.docker.com/r/_/postgres/)
 *   [10.1](https://hub.docker.com/r/_/postgres/)
 *   [10](https://hub.docker.com/r/_/postgres/)
@@ -14,7 +14,6 @@ Supported versions
 *   [9.5](https://hub.docker.com/r/_/postgres/)
 *   [9.4](https://hub.docker.com/r/_/postgres/)
 *   [9.3](https://hub.docker.com/r/_/postgres/)
-*   [latest](https://hub.docker.com/r/_/postgres/)
 *   custom
 
 > #### Warning::Be Careful Switching Database type, version or credentials

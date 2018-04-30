@@ -51,7 +51,7 @@ module.exports = function(lando) {
       image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
-        LANDO_CONFIG_DIR: lando.config.userConfRoot,
+        LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
         LANDO_HOST_OS: lando.config.os.platform,
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,

@@ -6,7 +6,7 @@ Recipes are Lando's highest level abstraction and they contain common mixes of r
 To do this, recipes provide a base environment for a common development use case with configurability of its most obvious pieces. In your `.lando.yml`:
 
 ```yml
-# Just give me a basic LAMP stack with recommended latest versions of all the things.
+# Just give me a basic LAMP stack with recommended versions of all the things.
 name: myapp
 recipe: lamp
 ```

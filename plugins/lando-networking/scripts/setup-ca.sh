@@ -8,6 +8,7 @@ CA_CERT="/certs/$LANDO_CA_CERT"
 CA_KEY="/certs/$LANDO_CA_KEY"
 
 # Let's log some helpful things
+echo "Looks like you do not have a Lando CA yet! Let's set one up!"
 echo "Trying to setup root CA with..."
 echo "LANDO_CA_CERT: $LANDO_CA_CERT"
 echo "LANDO_CA_KEY: $LANDO_CA_KEY"
