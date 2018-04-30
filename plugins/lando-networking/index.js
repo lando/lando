@@ -43,7 +43,7 @@ module.exports = function(lando) {
           image: 'devwithlando/util:stable',
           environment: {
             LANDO_CA_CERT: path.basename(lando.config.caCert),
-            LANDO_CONFIG_DIR: '$LANDO_CONFIG_DIR',
+            LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
             LANDO_SERVICE_TYPE: 'ca',
             COLUMNS: 256,
             TERM: 'xterm'
@@ -55,7 +55,7 @@ module.exports = function(lando) {
           },
           volumes: [
             '$LANDO_ENGINE_SCRIPTS_DIR/setup-ca.sh:/setup-ca.sh',
-            '$LANDO_CONFIG_DIR/certs:/certs',
+            '$LANDO_ENGINE_CONF/certs:/certs',
           ]
         }
       }
