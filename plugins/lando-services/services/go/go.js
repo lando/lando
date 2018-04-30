@@ -11,7 +11,6 @@ module.exports = function(lando) {
   var versions = [
     '1.8.4',
     '1.8',
-    'latest',
     'custom'
   ];
 

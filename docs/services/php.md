@@ -10,7 +10,7 @@ You can easily add `php` or `hhvm` to your Lando app by adding an entry to the `
 Supported Versions
 ------------------
 
-*   [7.2](https://hub.docker.com/r/devwithlando/php)
+*   **[7.2](https://hub.docker.com/r/devwithlando/php)** **(default)**
 *   [7.1](https://hub.docker.com/r/devwithlando/php)
 *   [7.0](https://hub.docker.com/r/devwithlando/php)
 *   [5.6](https://hub.docker.com/r/devwithlando/php)
@@ -18,7 +18,6 @@ Supported Versions
 *   [5.4](https://hub.docker.com/r/devwithlando/php)
 *   [5.3](https://hub.docker.com/r/devwithlando/php)
 *   [hhvm](https://hub.docker.com/r/baptistedonaux/hhvm)
-*   [latest](https://hub.docker.com/r/devwithlando/php)
 *   custom
 
 > #### Warning::Using Unsupported PHP Versions

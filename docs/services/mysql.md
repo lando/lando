@@ -7,10 +7,9 @@ Supported versions
 ------------------
 
 *   [8](https://hub.docker.com/r/_/mysql/)
-*   [5.7](https://hub.docker.com/r/_/mysql/)
+*   **[5.7](https://hub.docker.com/r/_/mysql/)** **(default)**
 *   [5.6](https://hub.docker.com/r/_/mysql/)
 *   [5.5](https://hub.docker.com/r/_/mysql/)
-*   [latest](https://hub.docker.com/r/_/mysql/)
 *   custom
 
 > #### Warning::Be Careful Switching Database type, version or credentials

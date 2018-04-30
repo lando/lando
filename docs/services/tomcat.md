@@ -6,9 +6,8 @@ Tomcat
 Supported versions
 ------------------
 
+*   **[8](https://hub.docker.com/_/tomcat/)** **(default)**
 *   [7](https://hub.docker.com/_/tomcat/)
-*   [8](https://hub.docker.com/_/tomcat/)
-*   [latest](https://hub.docker.com/_/tomcat/)
 *   custom
 
 Example
