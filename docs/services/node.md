@@ -6,15 +6,20 @@ node
 Supported versions
 ------------------
 
+*   [9](https://hub.docker.com/r/_/node/)
+*   [carbon](https://hub.docker.com/r/_/node/)
 *   [8](https://hub.docker.com/r/_/node/)
+*   **[8.9](https://hub.docker.com/r/_/node/)** **(default)**
 *   [8.4](https://hub.docker.com/r/_/node/)
-*   [6](https://hub.docker.com/r/_/node/)
-*   [6.11](https://hub.docker.com/r/_/node/)
+*   [8.0](https://hub.docker.com/r/_/node/)
 *   [boron](https://hub.docker.com/r/_/node/)
+*   [6](https://hub.docker.com/r/_/node/)
+*   [6.10](https://hub.docker.com/r/_/node/)
+*   [6.11](https://hub.docker.com/r/_/node/)
+*   [6.12](https://hub.docker.com/r/_/node/)
+*   [argon](https://hub.docker.com/r/_/node/)
 *   [4](https://hub.docker.com/r/_/node/)
 *   [4.8](https://hub.docker.com/r/_/node/)
-*   [argon](https://hub.docker.com/r/_/node/)
-*   [latest](https://hub.docker.com/r/_/node/)
 *   custom
 
 Example

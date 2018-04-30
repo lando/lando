@@ -7,11 +7,10 @@ Supported versions
 ------------------
 
 *   [2](https://hub.docker.com/r/microsoft/dotnet/)
-*   [2.0](https://hub.docker.com/r/microsoft/dotnet/)
+*   **[2.0](https://hub.docker.com/r/microsoft/dotnet/)** **(default)**
 *   [1](https://hub.docker.com/r/microsoft/dotnet/)
 *   [1.1](https://hub.docker.com/r/microsoft/dotnet/)
 *   [1.0](https://hub.docker.com/r/microsoft/dotnet/)
-*   [latest](https://hub.docker.com/r/microsoft/dotnet/)
 *   custom
 
 Example

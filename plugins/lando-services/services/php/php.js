@@ -23,7 +23,6 @@ module.exports = function(lando) {
     '5.4',
     '5.3',
     'hhvm',
-    'latest',
     'custom'
   ];
 
@@ -417,6 +416,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '7.2',
     info: info,
     networks: networks,
     services: services,

@@ -17,7 +17,6 @@ module.exports = function(lando) {
   var versions = [
     '7',
     '8',
-    'latest',
     'custom'
   ];
 
@@ -146,6 +145,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '8',
     info: info,
     networks: networks,
     services: services,

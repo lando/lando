@@ -23,7 +23,6 @@ module.exports = function(lando) {
     '4',
     'argon',
     '4.8',
-    'latest',
     'custom'
   ];
 
@@ -174,6 +173,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '8.9',
     info: info,
     networks: networks,
     services: services,

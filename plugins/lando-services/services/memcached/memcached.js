@@ -8,7 +8,6 @@ module.exports = function() {
   var versions = [
     '1.5',
     '1.4',
-    'latest',
     'custom'
   ];
 
@@ -92,6 +91,7 @@ module.exports = function() {
   };
 
   return {
+    defaultVersion: '1.5',
     info: info,
     networks: networks,
     services: services,

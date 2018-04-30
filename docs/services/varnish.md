@@ -6,8 +6,7 @@ Varnish
 Supported versions
 ------------------
 
-*   [4.1](https://hub.docker.com/r/eeacms/varnish/)
-*   [latest](https://hub.docker.com/r/eeacms/varnish/)
+*   **[4.1](https://hub.docker.com/r/eeacms/varnish/)** **(default)**
 *   custom
 
 Example

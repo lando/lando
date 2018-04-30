@@ -15,8 +15,7 @@ module.exports = function(lando) {
     '5.4',
     '5.3',
     '5.2',
-    '5.1',
-    'latest',
+    '5.1'
   ];
 
   /*
@@ -115,6 +114,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '5.5',
     info: info,
     networks: networks,
     services: services,
