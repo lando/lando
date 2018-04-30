@@ -32,6 +32,10 @@ lando db-import dump.sql
 # with a db called `dataz`
 lando db-import dump.zip --host db2
 
+# Import a file into an auxiliary second database host called 'db2host'
+# with a db called `dbname`, user called `uname`, and password `psword`
+lando db-import dump.zip --host dbhost --database dbname --user uname --password psword
+
 # Import without destroying the target database
 lando db-import dump.zip --no-wipe
 
