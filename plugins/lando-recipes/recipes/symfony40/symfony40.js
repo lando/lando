@@ -35,14 +35,14 @@ module.exports = function(lando) {
       cmd: ['php', '/app/bin/console'],
       description: 'Run Symfony console commands',
     };
-      
+
     // Add Symfony's PHPUnit.
     build.tooling.phpunit = {
       service: 'appserver',
       cmd: ['php', '/app/bin/phpunit'],
       description: 'Run PHPUnit',
     };
-      
+
     // Return the things
     return build;
 
@@ -55,3 +55,4 @@ module.exports = function(lando) {
   };
 
 };
+

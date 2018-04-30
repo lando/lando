@@ -20,7 +20,7 @@ module.exports = function(lando) {
 
     // Grab the base so we know to build from lamp or lemp
     var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
-    
+
     // Start by cheating
     var build = lando.recipes.build(name, base, config);
     config.conf = config.cong || {};
@@ -46,3 +46,4 @@ module.exports = function(lando) {
   };
 
 };
+
