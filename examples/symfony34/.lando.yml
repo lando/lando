@@ -1,5 +1,5 @@
-# Symfony 3.4recipe
-name: symfony
+# Symfony 3.4 recipe
+name: symfony34
 
 # Start with the default Symfony 3.4 recipe
 recipe: symfony34

@@ -1,5 +1,5 @@
 # Symfony 4.0 recipe
-name: symfony
+name: symfony40
 
 # Start with the default Symfony 4.0 recipe
 recipe: symfony40
