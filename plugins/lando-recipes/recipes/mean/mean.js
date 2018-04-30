@@ -23,7 +23,7 @@ module.exports = function(lando) {
 
     // Get some options
     var nodeVersion = _.get(config, 'node', '6.10');
-    var mongoVersion = _.get(config, 'mongo', 'latest');
+    var mongoVersion = _.get(config, 'mongo', '3.5');
 
     // Build our default set of services
     var services = {

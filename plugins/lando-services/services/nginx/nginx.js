@@ -22,6 +22,7 @@ module.exports = function(lando) {
     '1.8',
     'mainline',
     'stable',
+    'latest',
     'custom'
   ];
 

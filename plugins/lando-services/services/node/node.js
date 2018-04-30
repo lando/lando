@@ -23,6 +23,7 @@ module.exports = function(lando) {
     '4',
     'argon',
     '4.8',
+    'latest',
     'custom'
   ];
 

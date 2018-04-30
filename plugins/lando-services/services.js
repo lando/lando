@@ -27,7 +27,7 @@ module.exports = function(lando) {
    * @todo Make sure all core services implement default version, then deprecate
    */
   var getDefaultVersion = function(type) {
-    return registry[type].defaultVersion || 'latest';
+    return _.get(registry[type], 'defaultVersion', 'latest');
   };
 
   /*

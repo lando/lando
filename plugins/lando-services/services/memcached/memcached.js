@@ -8,6 +8,7 @@ module.exports = function() {
   var versions = [
     '1.5',
     '1.4',
+    'latest',
     'custom'
   ];
 
