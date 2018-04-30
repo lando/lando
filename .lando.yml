@@ -2,6 +2,8 @@ name: lando.dev
 proxy:
   appserver:
     - docs.lndo.site
+autoplugin:
+  - test/autoplugin
 services:
   appserver:
     type: nginx
