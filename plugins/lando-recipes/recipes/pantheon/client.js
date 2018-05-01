@@ -206,8 +206,9 @@ module.exports = function(lando) {
     // Map them into something we can merge with org sites better
     .then(function(sites) {
       return _.map(sites, function(site, id) {
-        site.id = id;
-        return site;
+        var data = site.site;
+        data.id = id;
+        return data;
       });
     });
 
