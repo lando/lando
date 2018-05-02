@@ -130,9 +130,9 @@ LANDO_INFO=JSON_STRING_OF_LANDO_INFO
 # These will soon be removed.
 # We recommend you switch to using LANDO_INFO.
 DB_HOST=database
-DB_USER=drupal7
-DB_PASSWORD=drupal7
-DB_NAME=drupal7
+DB_USER=drupal8
+DB_PASSWORD=drupal8
+DB_NAME=drupal8
 DB_PORT=3306
 ```
 
