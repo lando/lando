@@ -22,6 +22,7 @@ module.exports = function(lando) {
     'mssql',
     'mongo',
     'mysql',
+    'passthrough',
     'postgres',
     'php',
     'phpmyadmin',
