@@ -162,11 +162,11 @@ Drush URL Setup
 
 To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
 
-Create or edit `/sites/default/drushrc.php` and add these lines:
+Create or edit `/sites/default/drushrc.php` and add these lines (with the correct port number):
 
 ```
 <?php
-$options['uri'] = "http://mysite.lndo.site";
+$options['uri'] = "http://mysite.lndo.site:PORT";
 ```
 
 ### Aliases
