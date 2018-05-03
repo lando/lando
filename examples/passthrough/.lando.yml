@@ -1,0 +1,22 @@
+# The name of my app
+name: passthrough
+
+# Configure my services
+services:
+
+  # Create a service called "custom"
+  custom:
+
+    # Use passthrough to create a custom service.
+    type: passthrough
+
+    # Pass in docker compose overrides to create the actual service.
+    overrides:
+      services:
+        # Specify what container to run to provide the service.
+        image: swaggerapi/swagger-ui
+        # Required. Look up in the contaienr's Dockerfile and put it here.
+        command: sh /usr/share/nginx/docker-run.sh
+        environment:
+          THING: STUFF
+        ports: ['8888:80']
