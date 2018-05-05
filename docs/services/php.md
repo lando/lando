@@ -86,7 +86,7 @@ Installed Extensions
 Installing Your Own Extensions
 ------------------------------
 
-You can install your own extensions using the [`extras`](./../config/services.md#build-extras) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
+You can install your own extensions using the [`run_as_root`](./../config/build.md#steps-run-as-root) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
 
 ```bash
 services:

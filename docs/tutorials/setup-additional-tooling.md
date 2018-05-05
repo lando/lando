@@ -100,9 +100,9 @@ Happy testing!
 Server Installed Service: Adding `lando phantomjs` Command
 ----------------------------------------------------------
 
-We can add lando routes to server installed commands as well.  Here we will add a `lando phantomjs` command.
+We can add lando routes to server installed commands as well.  Hesre we will add a `lando phantomjs` command.
 
-Open the `.lando.yml` file for your app add an `extras` key to the `appserver` in your `.lando.yml` file and add the commands to get the `phantomjs` dependencies and the `phantomjs` binary:
+Open the `.lando.yml` file for your app add an [`run_as_root`](./../config/build.md#steps-run-as-root) key to the `appserver` in your `.lando.yml` file and add the commands to get the `phantomjs` dependencies and the `phantomjs` binary:
 
 ```yml
 services:
@@ -115,7 +115,7 @@ services:
       - "ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/"
 ```
 
-The `extras` section will issue these commands against the appserver. Note that `extras` will run as `root` while `build` will run as you. You can read more about that [here](https://docs.devwithlando.io/config/services.html#build-steps). After adding the `extras` key you will need to restart your app in order to have it issue these commands against the container.
+The [`run_as_root`](./../config/build.md#steps-run-as-root) section will issue these commands against the appserver. Note that [`run_as_root`](./../config/build.md#steps-run-as-root) will run as `root` while `build` will run as you. You can read more about that [here](https://docs.devwithlando.io/config/services.html#build-steps). After adding the [`run_as_root`](./../config/build.md#steps-run-as-root) key you will need to restart your app in order to have it issue these commands against the container.
 
 ```bash
 lando restart
@@ -152,7 +152,7 @@ services:
     globals:
       gulp-cli: "latest"
  ```
- 
+
 Next you can add your `update` command to the tooling, but it doesn’t actually have to do much of anything. Let’s just have it echo some text:
 
 ```yml
