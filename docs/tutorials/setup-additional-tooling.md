@@ -100,7 +100,7 @@ Happy testing!
 Server Installed Service: Adding `lando phantomjs` Command
 ----------------------------------------------------------
 
-We can add lando routes to server installed commands as well.  Hesre we will add a `lando phantomjs` command.
+We can add lando routes to server installed commands as well.  Here we will add a `lando phantomjs` command.
 
 Open the `.lando.yml` file for your app add an [`run_as_root`](./../config/build.md#steps-run-as-root) key to the `appserver` in your `.lando.yml` file and add the commands to get the `phantomjs` dependencies and the `phantomjs` binary:
 
