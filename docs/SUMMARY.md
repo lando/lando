@@ -142,6 +142,7 @@
 *   [How to Contribute](contrib/how.md)
 *   [Governance](contrib/gov.md)
 *   [Roles and Responsibilities](contrib/roles.md)
+*   [Security](contrib/security.md)
 *   [Resources](contrib/resources.md)
 
 ## Developing

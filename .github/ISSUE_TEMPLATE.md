@@ -1,5 +1,16 @@
 **Before you submit an issue make sure you have [downloaded](https://github.com/lando/lando/releases) the latest version of Lando and checked to see if the latest version resolves your issue!**
 
+Security
+--------
+
+If you have discovered a security issue with Lando, please contact the Lando Security Team directly at
+security@devwithlando.io. We manage security issues separately in a private repository until the issue has been resolved.
+Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or
+tweeting about it.
+
+Feature Requests and Bug Reports
+--------------------------------
+
 Please complete the following steps.
 
 **The more steps you complete the more likely we are to address your issue!**
