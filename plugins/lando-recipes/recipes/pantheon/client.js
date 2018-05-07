@@ -172,9 +172,7 @@ module.exports = function(lando) {
           var orgSites = ['organizations', org.id, 'memberships', 'sites'];
           return pantheonRequest('get', orgSites, options)
           .map(function(site) {
-            var data = site.site;
-            data.id = site.id;
-            return data;
+            return _.merge(site, site.site);
           });
         }
       })
@@ -206,9 +204,7 @@ module.exports = function(lando) {
     // Map them into something we can merge with org sites better
     .then(function(sites) {
       return _.map(sites, function(site, id) {
-        var data = site.site;
-        data.id = id;
-        return data;
+        return _.merge(site, site.site);
       });
     });
 
