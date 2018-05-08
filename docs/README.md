@@ -132,7 +132,7 @@ lando init pantheon | lando init github
 lando start
 ```
 
-You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipe.html)
+You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipes.html)
 
 ```yml
 name: myproject
@@ -193,6 +193,13 @@ tooling:
     service: appserver
     cmd: ps
 ```
+
+Security Issues
+---------------
+
+If you have discovered a security issue with Lando, please contact the Lando Security Team directly at
+[security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or
+tweeting about it.
 
 Other Resources
 ---------------

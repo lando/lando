@@ -167,10 +167,10 @@ services:
     type: node:6.10
     globals:
       grunt-cli: "latest"
-    build:
+    run:
       - cd /app && npm install --production
   appserver:
-    build:
+    run:
       - cd /app && composer install
   mailhog:
     type: mailhog
@@ -193,6 +193,13 @@ tooling:
     service: appserver
     cmd: ps
 ```
+
+Security Issues
+---------------
+
+If you have discovered a security issue with Lando, please contact the Lando Security Team directly at
+[security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or
+tweeting about it.
 
 Other Resources
 ---------------
