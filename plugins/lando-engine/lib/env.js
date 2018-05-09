@@ -51,7 +51,7 @@ exports.getComposeExecutable = function() {
   var composeBin = path.join(composePath, 'docker-compose');
 
   // Use PATH compose executable on linux if ours does not exist
-  if (process.platform === 'linux' && !fs.existSync(composeBin)) {
+  if (process.platform === 'linux' && !fs.existsSync(composeBin)) {
     composeBin = shell.which('docker-compose');
   }
 
@@ -75,7 +75,7 @@ exports.getDockerExecutable = function() {
   var dockerBin = path.join(dockerPath, 'docker');
 
   // Use PATH docker executable on linux if ours does not exist
-  if (process.platform === 'linux' && !fs.existSync(dockerBin)) {
+  if (process.platform === 'linux' && !fs.existsSync(dockerBin)) {
     dockerBin = shell.which('docker');
   }
   // Return exec based on path
