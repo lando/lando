@@ -35,8 +35,9 @@ module.exports = function(lando) {
     // Merge defaults over the config, this allows users to set their own things
     lando.config = lando.utils.config.merge(defaultEngineConfig, lando.config);
 
-    // Strip all DOCKER_ envvars
+    // Strip all DOCKER_ and COMPOSE_ envvars
     lando.config.env = lando.utils.config.stripEnv('DOCKER_');
+    lando.config.env = lando.utils.config.stripEnv('COMPOSE_');
 
     // Parse the docker host url
     var dockerHost = url.format({
@@ -54,6 +55,11 @@ module.exports = function(lando) {
     lando.config.env.LANDO_ENGINE_IP = dockerHost;
     lando.config.env.LANDO_ENGINE_REMOTE_IP = host;
     lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = lando.config.engineScriptsDir;
+    lando.config.env.DOCKER_HOST = lando.config.env.LANDO_ENGINE_IP;
+    // @todo: Conditionalize below, we only want to set these if the user has in their
+    // custom lando engineConfig
+    lando.config.env.DOCKER_CERT_PATH = lando.config.engineConfig.certPath;
+    lando.config.env.DOCKER_TLS_VERIFY = lando.config.engineConfig.tlsVerify;
 
     // Add some docker compose protection on windows
     if (process.platform === 'win32') {

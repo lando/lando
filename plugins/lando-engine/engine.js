@@ -103,8 +103,8 @@ module.exports = function(lando) {
     })
 
     // Return false if we get a non-zero response
-    .catch(function() {
-      lando.log.debug('Engine is down.');
+    .catch(function(error) {
+      lando.log.debug('Engine is down with error %j', error);
       return Promise.resolve(false);
     });
 
