@@ -2,6 +2,7 @@
 
 // Modules
 var _ = require('lodash');
+var fs = require('fs-extra');
 var path = require('path');
 var shell = require('shelljs');
 
@@ -46,8 +47,13 @@ exports.getDockerBinPath = function() {
 exports.getComposeExecutable = function() {
 
   // Get compose bin path
-  var composePath = this.getDockerBinPath();
+  var composePath = exports.getDockerBinPath();
   var composeBin = path.join(composePath, 'docker-compose');
+
+  // Use PATH compose executable on linux if ours does not exist
+  if (process.platform === 'linux' && !fs.existSync(composeBin)) {
+    composeBin = shell.which('docker-compose');
+  }
 
   // Return exec based on path
   switch (process.platform) {
@@ -64,13 +70,18 @@ exports.getComposeExecutable = function() {
 exports.getDockerExecutable = function() {
 
   // Get docker bin path
-  var dockerPath = this.getDockerBinPath();
+  var isLinux = process.platform === 'linux';
+  var dockerPath = (isLinux) ? '/usr/bin' : exports.getDockerBinPath();
   var dockerBin = path.join(dockerPath, 'docker');
 
+  // Use PATH docker executable on linux if ours does not exist
+  if (process.platform === 'linux' && !fs.existSync(dockerBin)) {
+    dockerBin = shell.which('docker');
+  }
   // Return exec based on path
   switch (process.platform) {
     case 'darwin': return dockerBin;
-    case 'linux': return '/usr/bin/docker';
+    case 'linux': return dockerBin;
     case 'win32': return dockerBin + '.exe';
   }
 
