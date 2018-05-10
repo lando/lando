@@ -12,7 +12,7 @@ services:
   # Create a ruby instance
   appserver:
 
-    # Ruby version 6.10
+    # Ruby version 2.4
     type: ruby:2.4
 
     # Optionally create certs in /certs that can be used by your application
