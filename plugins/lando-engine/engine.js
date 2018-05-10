@@ -35,7 +35,7 @@ module.exports = function(lando) {
   var isInstalled = function() {
 
     // Return whether we have the engine executable in the expected location
-    var which = lando.shell.which(DOCKER_EXECUTABLE);
+    var which = lando.shell.which(DOCKER_EXECUTABLE).toString();
     if (which.toUpperCase() === DOCKER_EXECUTABLE.toUpperCase()) {
       return Promise.resolve(true);
     }

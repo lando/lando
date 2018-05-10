@@ -7,26 +7,6 @@ var path = require('path');
 var shell = require('shelljs');
 
 /*
- * Helper to get default engine config
- */
-exports.getEngineConfig = function() {
-
-  // Create the default options
-  const config = {
-    host: '127.0.0.1',
-    socketPath: '/var/run/docker.sock'
-  };
-
-  // Slight deviation on Windows due to npipe://
-  if (process.platform === 'win32') {
-    config.socketPath = '//./pipe/docker_engine';
-  }
-
-  return config;
-
-};
-
-/*
  * Helper to get location of docker bin directory
  */
 exports.getDockerBinPath = function() {
@@ -52,7 +32,7 @@ exports.getComposeExecutable = function() {
 
   // Use PATH compose executable on linux if ours does not exist
   if (process.platform === 'linux' && !fs.existsSync(composeBin)) {
-    composeBin = shell.which('docker-compose');
+    composeBin = shell.which('docker-compose').toString();
   }
 
   // Return exec based on path
@@ -76,7 +56,7 @@ exports.getDockerExecutable = function() {
 
   // Use PATH docker executable on linux if ours does not exist
   if (process.platform === 'linux' && !fs.existsSync(dockerBin)) {
-    dockerBin = shell.which('docker');
+    dockerBin = shell.which('docker').toString();
   }
   // Return exec based on path
   switch (process.platform) {
@@ -97,7 +77,7 @@ exports.buildDockerCmd = function(cmd) {
     case 'darwin':
       return ['open', '/Applications/Docker.app'];
     case 'linux':
-      if (_.includes(shell.which('systemctl'), 'systemctl')) {
+      if (_.includes(shell.which('systemctl'), 'systemctl').toString()) {
         return ['sudo', 'systemctl', cmd, 'docker'];
       }
       else {
