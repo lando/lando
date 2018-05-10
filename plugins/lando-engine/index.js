@@ -5,7 +5,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var env = require('./lib/env.js');
-  var fs = lando.node._;
+  var fs = lando.node.fs;
   var ip = require('ip');
   var path = require('path');
   var url = require('url');
