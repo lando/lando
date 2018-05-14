@@ -2,26 +2,32 @@
 
 // Modules
 var _ = require('lodash');
+var fs = require('fs-extra');
 var path = require('path');
 var shell = require('shelljs');
 
 /*
- * Helper to get default engine config
+ * Helper to get an executable
  */
-exports.getEngineConfig = function() {
+var getDockerBin = function(bin, base) {
 
-  // Create the default options
-  const config = {
-    host: '127.0.0.1',
-    socketPath: '/var/run/docker.sock'
-  };
+  // Use the correct joiner
+  var join = (process.platform === 'win32') ? path.win32.join : path.posix.join;
 
-  // Slight deviation on Windows due to npipe://
-  if (process.platform === 'win32') {
-    config.socketPath = '//./pipe/docker_engine';
+  // Get compose bin path
+  var binPath = join(base, bin);
+
+  // Use PATH compose executable on linux if ours does not exist
+  if (process.platform === 'linux' && !fs.existsSync(binPath)) {
+    binPath = _.toString(shell.which(bin));
   }
 
-  return config;
+  // Return exec based on path
+  switch (process.platform) {
+    case 'darwin': return path.posix.normalize(binPath);
+    case 'linux': return path.posix.normalize(binPath);
+    case 'win32': return path.win32.normalize(binPath + '.exe');
+  }
 
 };
 
@@ -31,12 +37,12 @@ exports.getEngineConfig = function() {
 exports.getDockerBinPath = function() {
   switch (process.platform) {
     case 'darwin':
-      return path.join('/Applications/Docker.app/Contents/Resources', 'bin');
+      return '/Applications/Docker.app/Contents/Resources/bin';
     case 'linux':
-      return path.join('/usr/share/lando', 'bin');
+      return '/usr/share/lando/bin';
     case 'win32':
       var programFiles = process.env.ProgramW6432 || process.env.ProgramFiles;
-      return path.join(programFiles + '\\Docker\\Docker\\resources\\bin');
+      return path.win32.join(programFiles + '\\Docker\\Docker\\resources\\bin');
   }
 };
 
@@ -44,36 +50,16 @@ exports.getDockerBinPath = function() {
  * Get docker compose binary path
  */
 exports.getComposeExecutable = function() {
-
-  // Get compose bin path
-  var composePath = this.getDockerBinPath();
-  var composeBin = path.join(composePath, 'docker-compose');
-
-  // Return exec based on path
-  switch (process.platform) {
-    case 'darwin': return composeBin;
-    case 'linux': return composeBin;
-    case 'win32': return composeBin + '.exe';
-  }
-
+  return getDockerBin('docker-compose', exports.getDockerBinPath());
 };
 
 /*
  * This should only be needed for linux
  */
 exports.getDockerExecutable = function() {
-
-  // Get docker bin path
-  var dockerPath = this.getDockerBinPath();
-  var dockerBin = path.join(dockerPath, 'docker');
-
-  // Return exec based on path
-  switch (process.platform) {
-    case 'darwin': return dockerBin;
-    case 'linux': return '/usr/bin/docker';
-    case 'win32': return dockerBin + '.exe';
-  }
-
+  var isLinux = process.platform === 'linux';
+  var base = (isLinux) ? '/usr/bin' : exports.getDockerBinPath();
+  return getDockerBin('docker', base);
 };
 
 /*
@@ -86,7 +72,7 @@ exports.buildDockerCmd = function(cmd) {
     case 'darwin':
       return ['open', '/Applications/Docker.app'];
     case 'linux':
-      if (_.includes(shell.which('systemctl'), 'systemctl')) {
+      if (_.includes(_.toString(shell.which('systemctl')), 'systemctl')) {
         return ['sudo', 'systemctl', cmd, 'docker'];
       }
       else {
