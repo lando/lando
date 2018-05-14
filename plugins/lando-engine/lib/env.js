@@ -37,9 +37,9 @@ exports.getComposeExecutable = function() {
 
   // Return exec based on path
   switch (process.platform) {
-    case 'darwin': return composeBin;
-    case 'linux': return composeBin;
-    case 'win32': return composeBin + '.exe';
+    case 'darwin': return path.posix.normalize(composeBin);
+    case 'linux': return path.posix.normalize(composeBin);
+    case 'win32': return path.win32.normalize(composeBin + '.exe');
   }
 
 };
@@ -60,9 +60,9 @@ exports.getDockerExecutable = function() {
   }
   // Return exec based on path
   switch (process.platform) {
-    case 'darwin': return dockerBin;
-    case 'linux': return dockerBin;
-    case 'win32': return dockerBin + '.exe';
+    case 'darwin': return path.posix.normalize(dockerBin);
+    case 'linux': return path.posix.normalize(dockerBin);
+    case 'win32': return path.win32.normalize(dockerBin + '.exe');
   }
 
 };
