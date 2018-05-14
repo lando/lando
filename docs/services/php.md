@@ -86,7 +86,7 @@ Installed Extensions
 Installing Your Own Extensions
 ------------------------------
 
-You can install your own extensions using the [`extras`](./../config/services.md#build-extras) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
+You can install your own extensions using the [`run_as_root`](./../config/build.md#steps-run-as-root) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
 
 ```bash
 services:
@@ -124,7 +124,7 @@ Using Xdebug
 
 You can activate `xdebug` for remote debugging by setting `xdebug: true` in the config for your `php` service. This will enable `xdebug` and configure it so you can connect from your host machine. You will need to configure your IDE so that it can connect.
 
-Here are the instructions to [setup XDebug in Visual Studio Code](tutorials/lando-with-vscode.md).
+Here are the instructions to [setup XDebug in Visual Studio Code](/tutorials/lando-with-vscode.html).
 
 Here is some example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin:
 

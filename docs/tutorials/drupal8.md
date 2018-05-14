@@ -130,9 +130,9 @@ LANDO_INFO=JSON_STRING_OF_LANDO_INFO
 # These will soon be removed.
 # We recommend you switch to using LANDO_INFO.
 DB_HOST=database
-DB_USER=drupal7
-DB_PASSWORD=drupal7
-DB_NAME=drupal7
+DB_USER=drupal8
+DB_PASSWORD=drupal8
+DB_NAME=drupal8
 DB_PORT=3306
 ```
 
@@ -162,11 +162,11 @@ Drush URL Setup
 
 To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
 
-Create or edit `/sites/default/drushrc.php` and add these lines:
+Create or edit `/sites/default/drushrc.php` and add these lines (with the correct port number):
 
 ```
 <?php
-$options['uri'] = "http://mysite.lndo.site";
+$options['uri'] = "http://mysite.lndo.site:PORT";
 ```
 
 ### Aliases
