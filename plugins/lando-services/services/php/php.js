@@ -368,9 +368,6 @@ module.exports = function(lando) {
       });
     }
 
-    // Install Prestissimo
-    config.run_internal.unshift(cgr('hirak/prestissimo'));
-
     // Return our service
     return services;
 
