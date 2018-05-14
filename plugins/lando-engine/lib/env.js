@@ -32,7 +32,7 @@ exports.getComposeExecutable = function() {
 
   // Use PATH compose executable on linux if ours does not exist
   if (process.platform === 'linux' && !fs.existsSync(composeBin)) {
-    composeBin = shell.which('docker-compose').toString();
+    composeBin = _.toString(shell.which('docker-compose'));
   }
 
   // Return exec based on path
@@ -56,7 +56,7 @@ exports.getDockerExecutable = function() {
 
   // Use PATH docker executable on linux if ours does not exist
   if (process.platform === 'linux' && !fs.existsSync(dockerBin)) {
-    dockerBin = shell.which('docker').toString();
+    dockerBin = _.toString(shell.which('docker'));
   }
   // Return exec based on path
   switch (process.platform) {
@@ -77,7 +77,7 @@ exports.buildDockerCmd = function(cmd) {
     case 'darwin':
       return ['open', '/Applications/Docker.app'];
     case 'linux':
-      if (_.includes(shell.which('systemctl'), 'systemctl').toString()) {
+      if (_.includes(_.toString(shell.which('systemctl')), 'systemctl')) {
         return ['sudo', 'systemctl', cmd, 'docker'];
       }
       else {

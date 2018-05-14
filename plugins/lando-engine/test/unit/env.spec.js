@@ -119,6 +119,7 @@ describe('lando-engine.env', function() {
 
       // This ensures that shell.which will always be null
       delete process.env.PATH;
+      filesystem({'/bin/systemctl': 'CODEZ'});
 
       // Get the command
       const operation = 'start';
