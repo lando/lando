@@ -6,6 +6,7 @@
 'use strict';
 
 // Setup chai.
+const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
 const filesystem = require('mock-fs');
@@ -170,7 +171,8 @@ describe('lando-engine.env', () => {
       const composeExecutable = env.getComposeExecutable();
 
       // Assert the things
-      expect(composeExecutable).to.equal('/usr/local/bin/docker-compose');
+      expect(_.isString(composeExecutable)).to.equal(true);
+      expect(path.parse(composeExecutable)).to.be.an('Object');
 
       // Restore to real FS
       filesystem.restore();
@@ -251,10 +253,10 @@ describe('lando-engine.env', () => {
       filesystem({'/usr/bin/docker': 'CODEZ'});
 
       // Get the command
-      const composeExecutable = env.getDockerExecutable();
+      const dockerExecutable = env.getDockerExecutable();
 
       // Assert the things
-      expect(composeExecutable).to.equal('/usr/bin/docker');
+      expect(dockerExecutable).to.equal('/usr/bin/docker');
 
       // Restore to real FS
       filesystem.restore();
@@ -268,11 +270,11 @@ describe('lando-engine.env', () => {
       filesystem({'/usr/local/bin/docker': 'CODEZ'});
 
       // Get the command
-      const composeExecutable = env.getDockerExecutable();
+      const dockerExecutable = env.getDockerExecutable();
 
       // Assert the things
-      expect(composeExecutable).to.equal('/usr/local/bin/docker');
-
+      expect(_.isString(dockerExecutable)).to.equal(true);
+      expect(path.parse(dockerExecutable)).to.be.an('Object');
       // Restore to real FS
       filesystem.restore();
 
@@ -296,10 +298,10 @@ describe('lando-engine.env', () => {
     it('should return the correct lando-provided path on darwin', () => {
 
       // Get the command
-      const composeExecutable = env.getDockerExecutable();
+      const dockerExecutable = env.getDockerExecutable();
 
       // Assert the things
-      expect(composeExecutable).to.equal('/Applications/Docker.app/Contents/Resources/bin/docker');
+      expect(dockerExecutable).to.equal('/Applications/Docker.app/Contents/Resources/bin/docker');
 
     });
 
