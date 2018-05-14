@@ -19,7 +19,7 @@ var getDockerBin = function(bin, base) {
 
   // Use PATH compose executable on linux if ours does not exist
   if (process.platform === 'linux' && !fs.existsSync(binPath)) {
-    binPath = _.toString(shell.which(bin));
+    binPath = path.posix.normalize(_.toString(shell.which(bin)));
   }
 
   // Return exec based on path
