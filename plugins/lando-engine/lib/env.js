@@ -12,12 +12,12 @@ var shell = require('shelljs');
 exports.getDockerBinPath = function() {
   switch (process.platform) {
     case 'darwin':
-      return path.join('/Applications/Docker.app/Contents/Resources', 'bin');
+      return '/Applications/Docker.app/Contents/Resources/bin';
     case 'linux':
-      return path.join('/usr/share/lando', 'bin');
+      return '/usr/share/lando/bin';
     case 'win32':
       var programFiles = process.env.ProgramW6432 || process.env.ProgramFiles;
-      return path.join(programFiles + '\\Docker\\Docker\\resources\\bin');
+      return path.win32.join(programFiles + '\\Docker\\Docker\\resources\\bin');
   }
 };
 

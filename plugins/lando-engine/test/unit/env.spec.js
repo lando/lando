@@ -72,8 +72,7 @@ describe('lando-engine.env', () => {
       const dockerBinPath = env.getDockerBinPath();
 
       // Assert the things
-      const value = path.posix.join('/usr/share/lando', 'bin');
-      expect(dockerBinPath).to.equal(value);
+      expect(dockerBinPath).to.equal('/usr/share/lando/bin');
 
     });
 
@@ -98,8 +97,7 @@ describe('lando-engine.env', () => {
       const dockerBinPath = env.getDockerBinPath();
 
       // Assert the things
-      const value = path.posix.join('/Applications/Docker.app/Contents/Resources', 'bin');
-      expect(dockerBinPath).to.equal(value);
+      expect(dockerBinPath).to.equal('/Applications/Docker.app/Contents/Resources/bin');
 
     });
 
