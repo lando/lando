@@ -7,6 +7,31 @@ var path = require('path');
 var shell = require('shelljs');
 
 /*
+ * Helper to get an executable
+ */
+var getDockerBin = function(bin, base) {
+
+  // Use the correct joiner
+  var join = (process.platform === 'win32') ? path.win32.join : path.posix.join;
+
+  // Get compose bin path
+  var binPath = join(base, bin);
+
+  // Use PATH compose executable on linux if ours does not exist
+  if (process.platform === 'linux' && !fs.existsSync(binPath)) {
+    binPath = _.toString(shell.which(bin));
+  }
+
+  // Return exec based on path
+  switch (process.platform) {
+    case 'darwin': return path.posix.normalize(binPath);
+    case 'linux': return path.posix.normalize(binPath);
+    case 'win32': return path.win32.normalize(binPath + '.exe');
+  }
+
+};
+
+/*
  * Helper to get location of docker bin directory
  */
 exports.getDockerBinPath = function() {
@@ -25,46 +50,16 @@ exports.getDockerBinPath = function() {
  * Get docker compose binary path
  */
 exports.getComposeExecutable = function() {
-
-  // Get compose bin path
-  var composePath = exports.getDockerBinPath();
-  var composeBin = path.join(composePath, 'docker-compose');
-
-  // Use PATH compose executable on linux if ours does not exist
-  if (process.platform === 'linux' && !fs.existsSync(composeBin)) {
-    composeBin = _.toString(shell.which('docker-compose'));
-  }
-
-  // Return exec based on path
-  switch (process.platform) {
-    case 'darwin': return path.posix.normalize(composeBin);
-    case 'linux': return path.posix.normalize(composeBin);
-    case 'win32': return path.win32.normalize(composeBin + '.exe');
-  }
-
+  return getDockerBin('docker-compose', exports.getDockerBinPath());
 };
 
 /*
  * This should only be needed for linux
  */
 exports.getDockerExecutable = function() {
-
-  // Get docker bin path
   var isLinux = process.platform === 'linux';
-  var dockerPath = (isLinux) ? '/usr/bin' : exports.getDockerBinPath();
-  var dockerBin = path.join(dockerPath, 'docker');
-
-  // Use PATH docker executable on linux if ours does not exist
-  if (process.platform === 'linux' && !fs.existsSync(dockerBin)) {
-    dockerBin = _.toString(shell.which('docker'));
-  }
-  // Return exec based on path
-  switch (process.platform) {
-    case 'darwin': return path.posix.normalize(dockerBin);
-    case 'linux': return path.posix.normalize(dockerBin);
-    case 'win32': return path.win32.normalize(dockerBin + '.exe');
-  }
-
+  var base = (isLinux) ? '/usr/bin' : exports.getDockerBinPath();
+  return getDockerBin('docker', base);
 };
 
 /*
