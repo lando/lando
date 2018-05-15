@@ -56,16 +56,6 @@ module.exports = function(lando) {
       // Add the cache service
       build.services.cache = cache(config.cache);
 
-      // Add cache credentials into the ENV
-      var cacheCreds = {
-        CACHE_HOST: 'cache',
-        CACHE_PORT: (_.includes(config.cache, 'redis')) ? 6379 : 11211
-      };
-
-      // Merge in cache creds
-      var envKey = 'services.appserver.overrides.services.environment';
-      _.set(build, envKey, _.merge(_.get(build, envKey), cacheCreds));
-
       // Add it as something our tooling needs
       needs.push('cache');
 

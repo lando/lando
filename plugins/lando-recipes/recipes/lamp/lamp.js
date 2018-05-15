@@ -164,19 +164,6 @@ module.exports = function(lando) {
       }
     }
 
-    // Add db credentials into the ENV
-    services.appserver.overrides = {
-      services: {
-        environment: {
-          DB_HOST: 'database',
-          DB_USER: services.database.creds.user,
-          DB_PASSWORD: services.database.creds.password,
-          DB_NAME: services.database.creds.database,
-          DB_PORT: (_.includes(database, 'postgres')) ? 5432 : 3306
-        }
-      }
-    };
-
     // Return that thang
     return services;
 

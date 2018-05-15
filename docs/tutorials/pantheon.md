@@ -275,7 +275,7 @@ To set up your environment so that commands like `lando drush uli` return the pr
 
 Create or edit `/sites/default/settings.local.php` and add these lines:
 
-```
+```php
 // Set the base URL for the Drupal site.
 $base_url = "http://mysite.lndo.site"
 ```
@@ -284,8 +284,7 @@ $base_url = "http://mysite.lndo.site"
 
 Create or edit `/sites/default/drushrc.php` and add these lines:
 
-```
-<?php
+```php
 $options['uri'] = "http://mysite.lndo.site";
 ```
 
@@ -356,9 +355,15 @@ SECURE_AUTH_SALT: Needed for Wordpress. We set this automatically.
 BACKDROP_SETTINGS: JSON object of Backdrop config and settings.
 PRESSFLOW_SETTINGS: JSON object of Drupal config and settings.
 DRUPAL_HASH_SALT: Needed for Drupal8. We set this automatically.
+
+# Special JSON string representation of $LANDO_INFO
+LANDO_INFO={MY APP METADATA}
 ```
 
 These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 

@@ -55,16 +55,6 @@ module.exports = function(lando) {
       services.appserver.globals = config.globals;
     }
 
-    // Add db credentials into the ENV
-    services.appserver.overrides = {
-      services: {
-        environment: {
-          DB_HOST: 'database',
-          DB_PORT: 27017
-        }
-      }
-    };
-
     // Return that thang
     return services;
 

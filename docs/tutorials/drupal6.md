@@ -97,6 +97,24 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Using Drush
+-----------
+
+By default our Drupal 6 recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) unless you are running on `php 5.3` in which case we will install the [latest version of Drush 7](http://docs.drush.org/en/7.x/install/). This means that you should be able to use `lando drush` out of the box. That said, you can [easily change](#configuration) the Drush installation behavior.
+
+If you are using a nested webroot you will need to `cd` into your webroot and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
+
+To get around this you might want to consider overriding the `drush` tooling command in your `.lando.yml` so that Drush can detect your nested Drupal site from your project root. Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.
+
+```yml
+tooling:
+  drush:
+    service: appserver
+    cmd:
+      - "drush"
+      - "--root=/app/PATH/TO/WEBROOT"
+```
+
 Configuration
 -------------
 
@@ -113,16 +131,9 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
-LANDO_INFO=JSON_STRING_OF_LANDO_INFO
-
-# Pending deprecation!!!
-# These will soon be removed.
-# We recommend you switch to using LANDO_INFO.
-DB_HOST=database
-DB_USER=drupal6
-DB_PASSWORD=drupal6
-DB_NAME=drupal6
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"5.6","hostnames":["appserver"],"via":"apache","webroot":"web","config":{"conf":"/Users/pirog/.lando/services/config/drupal6/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"drupal6","password":"drupal6","database":"drupal6"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/drupal6/mysql"}}}
 ```
 
 **NOTE:** These can vary based on the choices you make in your recipe config.
