@@ -564,8 +564,13 @@ module.exports = function(lando) {
     // Normalize because 7.0 gets handled strangely by js-yaml
     if (config.php === 7) { config.php = '7.0'; }
 
-    // If this is Drupal8 let's add in drupal console as well
-    if (config.framework === 'drupal8') { config.drupal = true; }
+    // If this is Drupal8 let's add in drupal console and reset drush so it
+    // globally installs Drush 8 FOR NOW
+    // See: https://github.com/lando/lando/issues/580
+    if (config.framework === 'drupal8') {
+      config.drupal = true;
+      config.drush = 'stable';
+    }
 
     // Get the lando/pantheon base recipe/framework
     var base = _.get(config, 'framework', 'drupal7');

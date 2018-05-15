@@ -205,6 +205,43 @@ lando drush dl webform
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Drush
+-----
+
+By default our Pantheon recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) unless you are running on `php 5.3` in which case we will install the [latest version of Drush 7](http://docs.drush.org/en/7.x/install/). For Backdrop sites we will also install the latest version of [Backdrop Drush](https://github.com/backdrop-contrib/drush). This means that you should be able to use `lando drush` out of the box. That said, you can [easily change](#configuration) the Drush installation behavior if you so desire.
+
+If you decide to list `drush` as a dependency in your project's `composer.json` and use the `composer` Lando Drush installation method instead of the above default you will want to make sure you **DO NOT USE DRUSH 9** as this is not currently supported on Pantheon.
+
+If you are using a nested webroot you will need to `cd` into your webroot and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
+
+To get around this you might want to consider overriding the `drush` tooling command in your `.lando.yml` so that Drush can detect your nested Drupal site from your project root. Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.
+
+```yml
+tooling:
+  drush:
+    service: appserver
+    cmd:
+      - "drush"
+      - "--root=/app/PATH/TO/WEBROOT"
+```
+
+### URL Setup
+
+To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush in your relevant `settings.php` file.
+
+**Drupal 7**
+
+```php
+// Set the base URL for the Drupal site.
+$base_url = "http://mysite.lndo.site"
+```
+
+**Drupal 8**
+
+```php
+$options['uri'] = "http://mysite.lndo.site";
+```
+
 Terminus
 --------
 
@@ -264,28 +301,6 @@ lando switch feature-1 --no-db --no-files
 ```bash
   --no-db     Do not switch the database              [boolean] [default: false]
   --no-files  Do not switch the files                 [boolean] [default: false]
-```
-
-Drush URL Setup
----------------
-
-To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
-
-**Drupal 7**
-
-Create or edit `/sites/default/settings.local.php` and add these lines:
-
-```php
-// Set the base URL for the Drupal site.
-$base_url = "http://mysite.lndo.site"
-```
-
-**Drupal 8**
-
-Create or edit `/sites/default/drushrc.php` and add these lines:
-
-```php
-$options['uri'] = "http://mysite.lndo.site";
 ```
 
 Configuration
