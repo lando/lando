@@ -155,10 +155,8 @@ module.exports = function(lando) {
       {script: 'user-perms.sh', local: esd, remote: 'helpers'},
       {script: 'add-cert.sh', local: esd, remote: 'scripts'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
-      {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
-      {script: 'mysql-export.sh', local: shd, remote: 'helpers'},
-      {script: 'postgres-import.sh', local: shd, remote: 'helpers'},
-      {script: 'postgres-export.sh', local: shd, remote: 'helpers'},
+      {script: 'sql-import.sh', local: shd, remote: 'helpers'},
+      {script: 'sql-export.sh', local: shd, remote: 'helpers'},
     ];
 
     // Add in helpers and scripts

@@ -176,50 +176,12 @@ module.exports = function(lando) {
     return {
       service: ':host',
       description: 'Import <file> into database service',
-      cmd: '/helpers/mysql-import.sh',
+      cmd: '/helpers/sql-import.sh',
       options: {
         host: {
           description: 'The database service to use',
           default: 'database',
           alias: ['h']
-        },
-        'no-wipe': {
-          description: 'Do not destroy the existing database before an import'
-        }
-      }
-    };
-  };
-
-  /*
-   * Helper to return db-import postgres tooling route
-   */
-  var dbImportPsql = function() {
-    return {
-      service: 'database',
-      //needs: ['database'],
-      description: 'Import into database.',
-      cmd: '/helpers/postgres-import.sh',
-      options: {
-        host: {
-          description: 'The database host',
-          alias: ['h']
-        },
-        user: {
-          description: 'The database user',
-          default: 'postgres',
-          alias: ['u']
-        },
-        database: {
-          description: 'The database name',
-          alias: ['d']
-        },
-        password: {
-          description: 'The database password',
-        },
-        port: {
-          description: 'The database port',
-          default: 5432,
-          alias: ['P']
         },
         'no-wipe': {
           description: 'Do not destroy the existing database before an import'
@@ -235,50 +197,12 @@ module.exports = function(lando) {
     return {
       service: ':host',
       description: 'Export database from a service',
-      cmd: '/helpers/mysql-export.sh',
+      cmd: '/helpers/sql-export.sh',
       options: {
         host: {
           description: 'The database service to use',
           default: 'database',
           alias: ['h']
-        },
-        stdout: {
-          description: 'Dump database to stdout'
-        }
-      }
-    };
-  };
-
-  /*
-   * Helper to return postgres db-export tooling route
-   */
-  var dbExportPsql = function() {
-    return {
-      service: 'database',
-      //needs: ['database'],
-      description: 'Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz',
-      cmd: '/helpers/postgres-export.sh',
-      options: {
-        host: {
-          description: 'The database host',
-          alias: ['h']
-        },
-        user: {
-          description: 'The database user',
-          default: 'postgres',
-          alias: ['u']
-        },
-        database: {
-          description: 'The database name',
-          alias: ['d']
-        },
-        password: {
-          description: 'The database password',
-        },
-        port: {
-          description: 'The database port',
-          default: 5432,
-          alias: ['P']
         },
         stdout: {
           description: 'Dump database to stdout'
@@ -323,8 +247,6 @@ module.exports = function(lando) {
           }
         }
       };
-      tooling['db-import [file]'] = dbImport();
-      tooling['db-export [file]'] = dbExport();
     }
     else if (_.includes(database, 'postgres')) {
       tooling.psql = {
@@ -341,9 +263,11 @@ module.exports = function(lando) {
         ],
         user: 'root'
       };
-      tooling['db-import [file]'] = dbImportPsql();
-      tooling['db-export [file]'] = dbExportPsql();
     }
+
+    // Add in the sql import/export tooling
+    tooling['db-import [file]'] = dbImport();
+    tooling['db-export [file]'] = dbExport();
 
     // Return the toolz
     return tooling;
