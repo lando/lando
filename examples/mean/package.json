@@ -22,7 +22,9 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
-    "mongodb": "^2.2.30",
-    "nodemon": "^1.11.0"
+    "mongodb": "^2.2.30"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
   }
 }

@@ -7,13 +7,14 @@ var path = require('path');
 
 /**
  * Translate a name for use by docker-compose eg strip `-` and `.` and
- * @TODO: possibly more than that
+ * @TODO: Eventually we want to get rid of this since it should only happen once
+ * on the appName itself
  *
  * @since 3.0.0
  * @alias 'lando.utils.engine.dockerComposify'
  */
 exports.dockerComposify = function(data) {
-  return data.replace(/-/g, '').replace(/\./g, '');
+  return _.toLower(data).replace(/_|-|\.+/g, '');
 };
 
 /*

@@ -7,8 +7,7 @@ Supported versions
 ------------------
 
 *   [1.8.4](https://hub.docker.com/r/_golang/)
-*   [1.8](https://hub.docker.com/r/_golang/)
-*   [latest](https://hub.docker.com/r/_/_golang/)
+*   **[1.8](https://hub.docker.com/r/_golang/)** **(default)**
 *   custom
 
 Example

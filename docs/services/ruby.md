@@ -6,11 +6,10 @@ Ruby
 Supported versions
 ------------------
 
-*   [2.4](https://hub.docker.com/r/_/ruby/)
+*   **[2.4](https://hub.docker.com/r/_/ruby/)** **(default)**
 *   [2.2](https://hub.docker.com/r/_/ruby/)
 *   [2.1](https://hub.docker.com/r/_/ruby/)
 *   [1.9](https://hub.docker.com/r/_/ruby/)
-*   [latest](https://hub.docker.com/r/_/ruby/)
 *   custom
 
 Example

@@ -1,7 +1,7 @@
 Working with Joomla
 ===================
 
-Lando offers a [configurable recipe](./../recipes/joomla.md) for spinning up [Joomla](https://joomla.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Joomla](https://joomla.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 
@@ -115,17 +115,16 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
-DB_HOST=database
-DB_USER=joomla
-DB_PASSWORD=joomla
-DB_NAME=joomla
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/joomla/joomla.conf","conf":"/Users/pirog/.lando/services/config/joomla/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/joomla/joomla.conf","conf":"/Users/pirog/.lando/services/config/joomla/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"joomla","password":"joomla","database":"joomla"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/joomla/mysql"}}}
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 Advanced Service Usage
 ----------------------

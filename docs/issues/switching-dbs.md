@@ -1,11 +1,13 @@
-Switching Databases
-===================
+Switching Database Configuration
+================================
 
-If you are currently using a database with Lando and you decide to change its type or version in your `.lando.yml` file *it's possible* that your database service will not restart correctly once you've made the change. This is caused by incompatabilities in the underlying file format that various databases and versions use to store their data.
+If you are currently using a database with Lando and you decide to change its type, version or credentials in your `.lando.yml` file *it's possible* that your database service will not restart correctly or with the expected values once you've made the change.
 
-If you are unsure about the aforementioned file format compatibility we recommend you `lando destroy` and recreate the app instead of doing a `lando restart` or `lando rebuild`.
+For a change in credentials it is required that you `lando destroy && lando start` since these are set at container creation and persist through a `lando rebuild`.
 
-If you do not do this and there exists an incompatability it is likely your database will not start up correctly. Luckily, even if you get this point a `lando destroy` and `lando start` should set you back onto the path of righteousness.
+For a change in type or version this is caused by incompatabilities in the underlying file format that various databases and versions use to store their data. If you are unsure about the aforementioned file format compatibility we recommend you `lando destroy` and recreate the app instead of doing a `lando restart` or `lando rebuild`.
+
+If you do not do this and there exists an incompatability it is likely your database will not start up correctly. Newer versions of lando will report this as a warning that your database service is unhealthy. Luckily, even if you get this point a `lando destroy` and `lando start` should set you back onto the path of righteousness.
 
 Listed below are a few tell tale signs that this is the situation you are in.
 

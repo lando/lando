@@ -93,30 +93,6 @@ module.exports = function(lando) {
     });
   });
 
-  // Make sure we have a lando bridge network
-  // We do this here so we can take advantage of docker up assurancs in engine.js
-  // and to make sure it covers all non-app services
-  lando.events.on('pre-engine-start', function() {
-
-    // Let's get a list of network
-    return lando.engine.getNetworks()
-
-    // Try to find our net
-    .then(function(networks) {
-      return _.some(networks, function(network) {
-        return network.Name === lando.services.bridge;
-      });
-    })
-
-    // Create if needed
-    .then(function(exists) {
-      if (!exists) {
-        return lando.engine.createNetwork(lando.services.bridge);
-      }
-    });
-
-  });
-
   // Let's also add in some config that we can pass down the stream
   lando.events.on('task-rebuild-run', function(options) {
     lando.events.on('post-instantiate-app', 9, function(app) {
@@ -133,10 +109,9 @@ module.exports = function(lando) {
       _.forEach(app.config.services, function(service, name) {
 
         // Add some internal properties
-        service._app = app.config.name;
+        service._app = app.name;
         service._root = app.root;
         service._mount = app.mount;
-        service._dockerName = app.dockerName;
 
         // Get our new containers
         var newCompose = lando.services.build(name, service.type, service);
@@ -156,23 +131,22 @@ module.exports = function(lando) {
   lando.events.on('post-instantiate-app', function(app) {
 
     // Add in our app info
-    app.events.on('post-info', function() {
-      _.forEach(app.config.services, function(service, name) {
+    _.forEach(app.config.services, function(service, name) {
 
-        // Load the main service
-        var config = merger(app.services[name], service);
-        var newInfo = lando.services.info(name, service.type, config);
-        app.info[name] = merger(app.info[name], newInfo);
+      // Load the main service
+      var newService = _.cloneDeep(app.services[name]);
+      var config = merger(newService, service);
+      var newInfo = lando.services.info(name, service.type, config);
+      app.info[name] = merger(app.info[name], newInfo);
 
-        // If this service has hidden info lets add that as well
-        if (!_.isEmpty(service._hiddenInfo)) {
-          _.forEach(service._hiddenInfo, function(hider) {
-            var newInfo = lando.services.info(hider, hider, config);
-            app.info[hider] = merger(app.info[hider], newInfo);
-          });
-        }
+      // If this service has hidden info lets add that as well
+      if (!_.isEmpty(service._hiddenInfo)) {
+        _.forEach(service._hiddenInfo, function(hider) {
+          var newInfo = lando.services.info(hider, hider, config);
+          app.info[hider] = merger(app.info[hider], newInfo);
+        });
+      }
 
-      });
     });
 
     // Get port data for portforward: true
@@ -235,7 +209,7 @@ module.exports = function(lando) {
 
     // Remove build cache on an uninstall
     app.events.on('post-uninstall', function() {
-      lando.cache.remove(app.name + ':last_build');
+      lando.cache.remove(app.name + '.last_build');
     });
 
     // Add some logic that extends start until healthchecked containers report as healthy
@@ -312,14 +286,14 @@ module.exports = function(lando) {
         var newHash = lando.node.hasher(app.config);
 
         // If our new hash is different then lets build
-        if (lando.cache.get(app.name + ':last_build') !== newHash) {
+        if (lando.cache.get(app.name + '.last_build') !== newHash) {
 
           // Run the stuff
           return lando.engine.run(build)
 
           // Save the new hash if everything works out ok
           .then(function() {
-            lando.cache.set(app.name + ':last_build', newHash, {persist:true});
+            lando.cache.set(app.name + '.last_build', newHash, {persist:true});
           })
 
           // Make sure we don't save a hash if our build fails
@@ -336,6 +310,14 @@ module.exports = function(lando) {
 
     });
 
+  });
+
+  // Collect info so we can inject LANDO_INFO
+  //
+  // @TODO: this is not currently the full lando info because a lot of it requires
+  // the app to be on
+  lando.events.on('post-instantiate-app', 8, function(app) {
+    app.env.LANDO_INFO = JSON.stringify(app.info);
   });
 
 };

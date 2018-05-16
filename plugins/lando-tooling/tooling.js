@@ -22,6 +22,12 @@ module.exports = function(lando) {
      */
     var run = function(answers) {
 
+      // Handle dynamic services right off the bat
+      if (_.startsWith(_.get(config, 'service'), ':')) {
+        var serviceOption = config.service.split(':')[1];
+        config.service = answers[serviceOption];
+      }
+
       // Kick off some collectors
       var ids = [config.service];
       var existsCheck = [];
@@ -36,13 +42,13 @@ module.exports = function(lando) {
         }
 
         // And add
-        ids = _.flatten(ids.concat(config.needs));
+        ids = _.uniq(_.flatten(ids.concat(config.needs)));
 
       }
 
       // Build our checkers
       _.forEach(ids, function(id) {
-        var container = [config.app.dockerName, id, '1'].join('_');
+        var container = [config.app.name, id, '1'].join('_');
         existsCheck.push(lando.engine.exists({id: container}));
         runCheck.push(lando.engine.isRunning(container));
       });
@@ -118,7 +124,7 @@ module.exports = function(lando) {
 
         // Build out our options
         var options = {
-          id: [config.app.dockerName, config.service, '1'].join('_'),
+          id: [config.app.name, config.service, '1'].join('_'),
           compose: config.app.compose,
           project: config.app.name,
           cmd: cmd,

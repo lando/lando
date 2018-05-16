@@ -32,7 +32,7 @@ module.exports = function(lando) {
   lando.events.on('post-instantiate-app', function(app) {
 
     // Cache key helpers
-    var siteMetaDataKey = 'site:meta:';
+    var siteMetaDataKey = 'site.meta.';
 
     // Set new terminus key into the cache
     app.events.on('pre-terminus', function() {
@@ -194,7 +194,7 @@ module.exports = function(lando) {
       var restricted = nopes || [];
 
       // Get token
-      var token = _.get(lando.cache.get('site:meta:' + config._app), 'token');
+      var token = _.get(lando.cache.get('site.meta.' + config._app), 'token');
 
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
@@ -434,7 +434,7 @@ module.exports = function(lando) {
       port: 449,
       overrides: {
         services: {
-          image: 'devwithlando/pantheon-index:3.6-2',
+          image: 'devwithlando/pantheon-index:3.6-3',
           ports: ['449'],
           command: '/bin/bash /start.sh'
         }
@@ -542,7 +542,7 @@ module.exports = function(lando) {
     config.framework = _.get(config, 'framework', 'drupal');
 
     // Update with new config defaults
-    config.conf = config.cong || {};
+    config.conf = config.conf || {};
     config.conf.server = path.join(configDir, config.framework + '.conf');
     config.conf.php = path.join(configDir, 'php.ini');
     config.conf.database = path.join(configDir, 'mysql');
@@ -564,8 +564,13 @@ module.exports = function(lando) {
     // Normalize because 7.0 gets handled strangely by js-yaml
     if (config.php === 7) { config.php = '7.0'; }
 
-    // If this is Drupal8 let's add in drupal console as well
-    if (config.framework === 'drupal8') { config.drupal = true; }
+    // If this is Drupal8 let's add in drupal console and reset drush so it
+    // globally installs Drush 8 FOR NOW
+    // See: https://github.com/lando/lando/issues/580
+    if (config.framework === 'drupal8') {
+      config.drupal = true;
+      config.drush = 'stable';
+    }
 
     // Get the lando/pantheon base recipe/framework
     var base = _.get(config, 'framework', 'drupal7');
@@ -635,7 +640,7 @@ module.exports = function(lando) {
     }
 
     // Login with terminus if we have a token
-    var cache = lando.cache.get('site:meta:' + config._app);
+    var cache = lando.cache.get('site.meta.' + config._app);
     if (_.has(cache, 'token')) {
       var token = _.get(cache, 'token');
       var terminusLogin = 'terminus auth:login --machine-token=' + token;

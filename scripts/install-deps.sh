@@ -7,12 +7,6 @@
 # machine
 #
 
-# Make sure we are root
-if [ "${USER}" != "root" ]; then
-  echo "$0 must be run as root!"
-  exit 2
-fi
-
 #
 # Gather information about the system and state
 
@@ -25,14 +19,14 @@ if [ -f /etc/os-release ]; then
   : ${FLAVOR:=$ID}
 elif [ -f /etc/arch-release ]; then
   FLAVOR="arch"
-elif [ -f /etc/gentoo-release ]; then
-  FLAVOR="gentoo"
-elif [ -f /etc/fedora-release ]; then
-  FLAVOR="fedora"
-elif [ -f /etc/redhat-release ]; then
-  FLAVOR="redhat"
 elif [ -f /etc/debian_version ]; then
   FLAVOR="debian"
+elif [ -f /etc/fedora-release ]; then
+  FLAVOR="fedora"
+elif [ -f /etc/gentoo-release ]; then
+  FLAVOR="gentoo"
+elif [ -f /etc/redhat-release ]; then
+  FLAVOR="redhat"
 elif [[ $(uname) == 'Darwin' ]]; then
   FLAVOR="osx"
 else
@@ -44,14 +38,36 @@ echo "Mmmmm this ${FLAVOR} flavor is so delcious"
 
 # Do stuff on each distro
 case $FLAVOR in
+  manjaro|arch)
+
+    # Get our base deps
+    sudo pacman -Syu --noconfirm && sudo pacman -S --noconfirm \
+      base-devel \
+      curl \
+      ruby \
+      yaourt
+
+    # Get RPM build tools
+    yaourt -S --noconfirm rpmdevtools
+
+    ;;
   debian)
-    apt-get update && apt-get -y --force-yes install \
+    sudo apt-get update && sudo apt-get -y --force-yes install \
+      bsdtar \
       build-essential \
       curl \
       file \
-      rpm
+      rpm \
+      ruby \
+      ruby-dev
     ;;
   fedora)
+    echo "Not implemented yet!"
+    ;;
+  gentoo)
+    echo "Not implemented yet!"
+    ;;
+  redhat)
     echo "Not implemented yet!"
     ;;
   osx)

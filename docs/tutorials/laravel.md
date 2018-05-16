@@ -1,7 +1,7 @@
 Working with Laravel
 ====================
 
-Lando offers a [configurable recipe](./../recipes/laravel.md) for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 
@@ -114,22 +114,16 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
-# Cache
-CACHE_HOST: index
-CACHE_PORT: 6379
-
-# Database
-DB_HOST=database
-DB_USER=laravel
-DB_PASSWORD=laravel
-DB_NAME=laravel
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web/public","config":{"server":"/Users/pirog/.lando/services/config/laravel/laravel.conf","conf":"/Users/pirog/.lando/services/config/laravel/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web/public","config":{"server":"/Users/pirog/.lando/services/config/laravel/laravel.conf","conf":"/Users/pirog/.lando/services/config/laravel/php.ini"}},"database":{"type":"mariadb","version":"10.1","hostnames":["database"],"creds":{"user":"laravel","password":"laravel","database":"laravel"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/laravel/mysql"}},"cache":{"type":"redis","version":"4.0","hostnames":["cache"],"internal_connection":{"host":"cache","port":6379},"external_connection":{"host":"localhost","port":true}}}
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 

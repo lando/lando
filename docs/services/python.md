@@ -7,13 +7,12 @@ Supported versions
 ------------------
 
 *   [3](https://hub.docker.com/r/_/python/)
-*   [3.6](https://hub.docker.com/r/_/python/)
+*   **[3.6](https://hub.docker.com/r/_/python/)** **(default)**
 *   [3.5](https://hub.docker.com/r/_/python/)
 *   [3.4](https://hub.docker.com/r/_/python/)
 *   [3.3](https://hub.docker.com/r/_/python/)
 *   [2](https://hub.docker.com/r/_/python/)
 *   [2.7](https://hub.docker.com/r/_/python/)
-*   [latest](https://hub.docker.com/r/_/python/)
 *   custom
 
 Example

@@ -5,12 +5,10 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var addConfig = lando.utils.services.addConfig;
-  var addScript = lando.utils.services.addScript;
   var buildVolume = lando.utils.services.buildVolume;
   var path = require('path');
 
   // "Constants"
-  var esd = lando.config.engineScriptsDir;
   var scd = lando.config.servicesConfigDir;
 
   /*
@@ -34,6 +32,30 @@ module.exports = function(lando) {
    */
   var networks = function() {
     return {};
+  };
+
+  /*
+   * CGR helper
+   */
+  var cgr = function(pkg, version) {
+
+    // Queue up our global composer command
+    var cgr = ['composer', 'global', 'require'];
+
+    // Get the dep
+    var dep = [pkg];
+
+    // Add a version if we have one
+    if (!_.isEmpty(version)) {
+      dep.push(version);
+    }
+
+    // Build the command
+    cgr.push(dep.join(':'));
+
+    // Return
+    return cgr.join(' ');
+
   };
 
   /*
@@ -64,9 +86,10 @@ module.exports = function(lando) {
       },
       nginx: {
         web: 'nginx',
-        command: ['php-fpm'],
+        command: (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'],
         image: 'devwithlando/php:' + [version, 'fpm'].join('-'),
-        serverConf: '/etc/nginx/conf.d/default.template'
+        serverConf: '/etc/nginx/conf.d/default.template',
+        poolConf: '/usr/local/etc/php-fpm.d/zz-lando.conf'
       }
     };
 
@@ -184,16 +207,8 @@ module.exports = function(lando) {
 
       // Add ssl specific things if we need them
       if (config.ssl) {
-
-        // Set the correct port
         php.ports.push('443');
-
-        // Add in the add cert script
-        php.volumes = addScript('add-cert.sh', php.volumes, esd);
-
-        // Change the default conf file
         defaultConfFile = 'httpd-ssl.conf';
-
       }
 
       // If php version 5.3 we need to set the logs dir
@@ -216,6 +231,13 @@ module.exports = function(lando) {
 
       // Set ports to empty
       php.ports = [];
+
+      // If on windows set the pool to run as root
+      if (process.platform === 'win32') {
+        var poolConf = ['php', 'zz-lando.conf'];
+        var poolMount = buildVolume(poolConf, config.poolConf, scd);
+        php.volumes = addConfig(poolMount, php.volumes);
+      }
 
     }
 
@@ -336,30 +358,13 @@ module.exports = function(lando) {
       }
     });
 
+    // Ensure run_internal is arrayed
+    config.run_internal = config.run_internal || [];
+
     // Add our composer things to run_internal
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, function(version, pkg) {
-
-        // Ensure run_internal is arrayed
-        config.run_internal = config.run_internal || [];
-
-        // Queue up our global composer command
-        var cgr = ['composer', 'global', 'require'];
-
-        // Get the dep
-        var dep = [pkg];
-
-        // Add a version if we have one
-        if (!_.isEmpty(version)) {
-          dep.push(version);
-        }
-
-        // Build the command
-        cgr.push(dep.join(':'));
-
-        // Unshift in our composer deps
-        config.run_internal.unshift(cgr.join(' '));
-
+        config.run_internal.unshift(cgr(pkg, version));
       });
     }
 
@@ -409,6 +414,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '7.2',
     info: info,
     networks: networks,
     services: services,

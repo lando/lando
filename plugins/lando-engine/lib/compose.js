@@ -231,11 +231,12 @@ exports.pull = function(compose, project, opts) {
 };
 
 /*
- * Run docker compose stop
+ * Run docker compose Kill
+ * @NOTE: we use kill for speeeeeedzzz
  */
 exports.stop = function(compose, project, opts) {
   return {
-    cmd: buildCmd(compose, project, 'stop', opts),
+    cmd: buildCmd(compose, project, 'kill', opts),
     opts: {app: opts.app, mode: 'collect'}
   };
 };

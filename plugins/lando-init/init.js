@@ -4,7 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var dockerComposify = lando.utils.engine.dockerComposify;
   var fs = lando.node.fs;
   var os = require('os');
   var path = require('path');
@@ -52,11 +51,12 @@ module.exports = function(lando) {
       image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
-        LANDO_CONFIG_DIR: lando.config.userConfRoot,
+        LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
         LANDO_HOST_OS: lando.config.os.platform,
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,
         LANDO_HOST_IP: lando.config.env.LANDO_ENGINE_REMOTE_IP,
+        LANDO_SERVICE_TYPE: 'init',
         LANDO_WEBROOT_USER: 'www-data',
         LANDO_WEBROOT_GROUP: 'www-data',
         LANDO_WEBROOT_UID: '33',
@@ -105,13 +105,13 @@ module.exports = function(lando) {
     lando.yaml.dump(utilFile, service);
 
     // Name the project
-    var project = 'landoinit' + name;
+    var project = 'landoinit' + lando.utils.engine.dockerComposify(name);
 
     // Try to start the util
     return {
       project: project,
       compose: [utilFile],
-      container: [dockerComposify(project), 'util', '1'].join('_'),
+      container: [project, 'util', '1'].join('_'),
       opts: {
         services: ['util']
       }

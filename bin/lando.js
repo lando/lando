@@ -7,31 +7,33 @@
  * @name lando
  */
 
-'use strict';
+ 'use strict';
 
 // Modules
-var _ = require('lodash');
-var bootstrap = require('./../lib/bootstrap.js');
-var cli = require('./../lib/cli');
-var log;
-var metrics;
-var os = require('os');
-var path = require('path');
-var Promise = require('./../lib/promise');
-var sudoBlock = require('sudo-block');
-var userConfRoot = path.join(os.homedir(), '.lando');
-var version = require(path.join(__dirname, '..', 'package.json')).version;
+const _ = require('lodash');
+const bootstrap = require('./../lib/bootstrap.js');
+const cli = require('./../lib/cli');
+const Log = require('./../lib/logger');
+const os = require('os');
+const path = require('path');
+const Promise = require('./../lib/promise');
+const sudoBlock = require('sudo-block');
+const userConfRoot = path.join(os.homedir(), '.lando');
+const version = require(path.join(__dirname, '..', 'package.json')).version;
+
+let log = new Log();
+let metrics;
+let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
 
 // Allow envvars to override a few core things
-var ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
-var LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
-var USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
+const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
+const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
 
 // If we have CLI verbosity args let's use those instead
 if (cli.largv.verbose) { LOGLEVELCONSOLE = cli.largv.verbose + 1; }
 
 // Define the start up options
-var options = {
+const options = {
   configSources: [path.join(USERCONFROOT, 'config.yml')],
   envPrefix: ENVPREFIX,
   logLevelConsole: LOGLEVELCONSOLE,
@@ -39,22 +41,29 @@ var options = {
   mode: 'cli',
   pluginDirs: [USERCONFROOT],
   userConfRoot: USERCONFROOT,
-  version: version
+  version
 };
 
 // Error handler
-var handleError = function(error, log, metrics) {
+const handleError = ({hide, message, stack, code}, log, metrics) => {
 
   // Log error or not
-  if (!error.hide) {
-    log.error(error.message + error.stack);
+  if (!hide && log) {
+    if (cli.largv.verbose > 0) {
+      log.error(stack);
+    }
+    else {
+      log.error(message);
+    }
   }
 
-  // Report error
-  metrics.report('error', {message: error.message, stack: error.stack});
+  // Report error if we can
+  if (metrics) {
+    metrics.report('error', {message: message, stack: stack});
+  }
 
   // Exit this process
-  process.exit(error.code || 1);
+  process.exit(code || 1);
 
 };
 
@@ -62,7 +71,7 @@ var handleError = function(error, log, metrics) {
 bootstrap(options)
 
 // Initialize the CLI
-.then(function(lando) {
+.then(lando => {
 
   // Bind to outside scope
   // @TODO: do this better
@@ -70,12 +79,12 @@ bootstrap(options)
   log = lando.log;
 
   // Handle busted promises
-  process.on('unhandledRejection', function(error) {
+  process.on('unhandledRejection', error => {
     handleError(error, lando.log, lando.metrics);
   });
 
   // And other uncaught things
-  process.on('uncaughtException', function(error) {
+  process.on('uncaughtException', error => {
     handleError(error, lando.log, lando.metrics);
   });
 
@@ -83,11 +92,13 @@ bootstrap(options)
   lando.log.info('Initializing cli');
 
   // Get CLI things
-  var cmd = '$0';
-  var tasks = _.sortBy(lando.tasks.tasks, 'name');
-  var yargonaut = require('yargonaut');
+  let cmd = '$0';
+
+  // And other things
+  const tasks = _.sortBy(lando.tasks.tasks, 'name');
+  const yargonaut = require('yargonaut');
   yargonaut.style('green').errorsStyle('red');
-  var yargs = require('yargs');
+  const yargs = require('yargs');
 
   // If we are packaged lets get something else for the cmd path
   if (_.has(process, 'pkg')) {
@@ -95,7 +106,7 @@ bootstrap(options)
   }
 
   // Define our usage syntax
-  var syntax = '<command> [args] [options] [-- global options]';
+  const syntax = '<command> [args] [options] [-- global options]';
   yargs.usage(['Usage:', cmd, syntax].join(' '));
 
   /**
@@ -114,43 +125,38 @@ bootstrap(options)
   return lando.events.emit('pre-cli-load', tasks)
 
   // No sudo!
-  .then(function() {
+  .then(() => {
     sudoBlock(lando.node.chalk.red('Lando should never be run as root!'));
   })
 
   // Check for updates and inform user if we have some
-  .then(function() {
+  .then(() => Promise.resolve(lando.updates.fetch(lando.cache.get('updates')))
 
-    // Determine whether we need to refresh
-    return Promise.resolve(lando.updates.fetch(lando.cache.get('updates')))
-
-    // Fetch and cache if needed
-    .then(function(fetch) {
-      if (fetch) {
-        lando.log.verbose('Checking for updates...');
-        return lando.updates.refresh(lando.config.version)
-        .then(function(latest) {
-          lando.cache.set('updates', latest, {persist: true});
-        });
-      }
-    })
-
-    // Determin whether we should print a message or not
-    .then(function() {
-      var current = lando.config.version;
-      var latest = lando.cache.get('updates');
-      if (lando.updates.updateAvailable(current, latest.version)) {
-        console.log(lando.cli.updateMessage(latest.url));
-      }
-    });
-
+  // Fetch and cache if needed
+  .then(fetch => {
+    if (fetch) {
+      lando.log.verbose('Checking for updates...');
+      return lando.updates.refresh(lando.config.version)
+      .then(latest => {
+        lando.cache.set('updates', latest, {persist: true});
+      });
+    }
   })
 
+  // Determin whether we should print a message or not
+  .then(() => {
+    const current = lando.config.version;
+    const latest = lando.cache.get('updates');
+    if (lando.updates.updateAvailable(current, latest.version)) {
+      console.log(lando.cli.updateMessage(latest.url));
+    }
+  }))
+
   // Print the CLI
-  .then(function() {
+  .then(() => {
 
     // Loop through the tasks and add them to the CLI
-    _.forEach(_.sortBy(tasks, 'command'), function(task) {
+    _.forEach(_.sortBy(tasks, 'command'), task => {
       lando.log.verbose('Loading cli task %s', task.name);
       yargs.command(lando.cli.parseToYargs(task, lando.events));
     });
@@ -162,14 +168,14 @@ bootstrap(options)
     }
 
     // Create epilogue for our global options
-    var epilogue = [
+    const epilogue = [
       lando.node.chalk.green('Global Options:\n'),
       '  --help, -h  Show help\n',
       '  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output'
     ];
 
     // Finish up the yargs
-    var argv = yargs
+    const argv = yargs
       .strict(true)
       .demandCommand(1, 'You need at least one command before moving on')
       .epilog(epilogue.join(''))
@@ -185,6 +191,6 @@ bootstrap(options)
 
 // Handle all other errors
 // @TODO: We need something better
-.catch(function(error) {
+.catch(error => {
   handleError(error, log, metrics);
 });

@@ -11,8 +11,8 @@ module.exports = function(lando) {
   var url = require('url');
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:pantheon:tokens';
-  var siteMetaDataKey = 'site:meta:';
+  var tokenCacheKey = 'init.auth.pantheon.tokens';
+  var siteMetaDataKey = 'site.meta.';
 
   /*
    * Modify init pre-prompt things
@@ -255,6 +255,11 @@ module.exports = function(lando) {
     // Set the config
     .then(function(site) {
 
+      // Error if site doesnt exist
+      if (_.isEmpty(site)) {
+        throw Error('No such pantheon site!');
+      }
+
       // Augment the config
       config.config = {};
       config.config.framework = _.get(site[0], 'framework', 'drupal');
@@ -281,7 +286,8 @@ module.exports = function(lando) {
 
       // Set and cache the TOKENZZZZ
       var data = {email: email, token: token};
-      lando.cache.set(siteMetaDataKey + options.name, data, {persist: true});
+      var name = lando.utils.engine.dockerComposify(options.name);
+      lando.cache.set(siteMetaDataKey + name, data, {persist: true});
 
       // Return it
       return config;

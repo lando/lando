@@ -9,7 +9,7 @@ PKG_PKG="build/installer/dist/lando.$PKG_TYPE"
 PKG_DESCRIPTION="The best local dev in the galaxy."
 PKG_MAINTAINER="Mike Pirog <mike@thinktandem.io>"
 PKG_URL="https://docs.devwithlando.io/"
-PKG_LICENSE="MIT"
+PKG_LICENSE="GPL3"
 PKG_EXTRA_OPTS="--force"
 PKG_SCRIPTS_DIR=build/installer/pkg/scripts
 
@@ -21,14 +21,19 @@ PKG_SCRIPTS="\
 --before-remove $PKG_SCRIPTS_DIR/$PKG_TYPE/prerm"
 
 # Set our dependencies
-DEPS=( iptables git-core procps docker-ce )
+DEPS=( iptables procps )
 
 # Add OS specific deps
-if [ "$1" == "rpm" ]; then
-  DEPS+=('libcgroup')
-elif [ "$1" == "deb" ]; then
-  DEPS+=('cgroup-bin')
-fi
+case "$1" in
+  rpm)
+    DEPS+=( git-core docker-ce )
+    ;;
+  deb)
+    DEPS+=( git-core docker-ce )
+    ;;
+  pacman)
+    DEPS+=( git docker )
+esac
 
 # Loop through to build our PKG_DEPS
 for i in "${DEPS[@]}"

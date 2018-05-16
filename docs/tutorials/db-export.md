@@ -21,8 +21,8 @@ lando db-export
 # Export to a file called dump.sql.gz
 lando db-export dump.sql.gz
 
-# Export a secondary database
-lando db-export --host db2 --database dataz
+# Export from a secondary database
+lando db-export --host db2
 
 # Dump the result to stdout
 lando db-export --stdout
@@ -32,11 +32,7 @@ lando db-export --stdout
 
 ```bash
 Options:
-  --host, -h      The database host
-  --user, -u      The database user                            [default: "root"]
-  --database, -d  The database name
-  --password, -p  The database password
-  --port, -P      The database port                              [default: 3306]
+  --host, -h      The database service to use                  [default: "database"]
   --stdout        Dump database to stdout
 ```
 

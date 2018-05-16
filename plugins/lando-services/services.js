@@ -19,6 +19,17 @@ module.exports = function(lando) {
   // The bridge network
   var landoBridgeNet = 'lando_bridge_network';
 
+  /**
+   * Retrieve the default version of a service.
+   * Some services don't define a default, but all SHOULD.
+   * @param {string} type The type of the service
+   * @return {string} the version to use by default, latest if isn't defined
+   * @todo Make sure all core services implement default version, then deprecate
+   */
+  var getDefaultVersion = function(type) {
+    return _.get(registry[type], 'defaultVersion', 'latest');
+  };
+
   /*
    * Get all services
    *
@@ -47,9 +58,8 @@ module.exports = function(lando) {
    */
   var info = function(name, type, config) {
 
-    // Parse the type and version
     var service = type.split(':')[0];
-    var version = type.split(':')[1] || 'latest';
+    var version = type.split(':')[1] || getDefaultVersion(type);
 
     // Check to verify whether the service exists in the registry
     if (!registry[service]) {
@@ -64,7 +74,6 @@ module.exports = function(lando) {
     info.type = service;
     info.version = version;
     info.hostnames = [name];
-    info.hostnames.push([name, config._dockerName, 'internal'].join('.'));
 
     // Get additional information
     info = merger(info, registry[service].info(name, config));
@@ -89,7 +98,7 @@ module.exports = function(lando) {
     var service = type.split(':')[0];
 
     // Add a version from the tag if available
-    config.version = type.split(':')[1] || 'latest';
+    config.version = type.split(':')[1] || getDefaultVersion(type);
 
     // Check to verify whether the service exists in the registry
     if (!registry[service]) {
@@ -144,6 +153,7 @@ module.exports = function(lando) {
     // Data about some common helpers
     var scripts = [
       {script: 'user-perms.sh', local: esd, remote: 'helpers'},
+      {script: 'add-cert.sh', local: esd, remote: 'scripts'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
       {script: 'mysql-export.sh', local: shd, remote: 'helpers'},
@@ -190,13 +200,9 @@ module.exports = function(lando) {
 
     }
 
-    // Add in default network stuff
-    networks = merger(networks, utils.connectBridge(landoBridgeNet));
-
     // Go through all the services and add in the lando bridgenet
     _.forEach(services, function(service, name) {
-      var data = {app: config._dockerName, name: name};
-      service.networks = merger(utils.connectNet(data), service.networks);
+      service.networks = merger({default: {}}, service.networks);
     });
 
     // Return the built compose file

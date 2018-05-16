@@ -7,7 +7,6 @@
 #define engineSetup "engine.bat"
 #define lando "bundle"
 #define landoIco "lando.ico"
-#define git "Git.exe"
 
 [Setup]
 AppCopyright={#MyAppPublisher}
@@ -61,7 +60,6 @@ Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Com
 Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lando"
 Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; BeforeInstall: CheckHyperV(); AfterInstall: RunInstallDocker(); Components: "Docker"
 Source: "{#engineSetup}"; DestDir: "{app}"; Components: "Docker"; AfterInstall: RunEngineSetup();
-Source: "{#git}"; DestDir: "{app}\installers\git"; DestName: "git.exe"; AfterInstall: RunInstallGit(); Components: "Git"
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;
@@ -137,22 +135,6 @@ begin
   end
   else begin
     MsgBox('Docker for Windows install failure!', mbCriticalError, MB_OK);
-  end
-end;
-
-procedure RunInstallGit();
-var
-  ResultCode: Integer;
-begin
-  WizardForm.FilenameLabel.Caption := 'Installing Git for Windows'
-  if Exec(ExpandConstant('{app}\installers\git\git.exe'), '/sp- /verysilent /norestart', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-  begin
-    // handle success if necessary; ResultCode contains the exit code
-    //MsgBox('git installed OK', mbInformation, MB_OK);
-  end
-  else begin
-    // handle failure if necessary; ResultCode contains the error code
-    MsgBox('git install failure', mbCriticalError, MB_OK);
   end
 end;
 

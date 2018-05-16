@@ -42,7 +42,7 @@ module.exports = function(lando) {
             }
 
             // Build the container
-            var container = [app.dockerName, service, '1'].join('_');
+            var container = [app.name, service, '1'].join('_');
 
             // Add the build command
             build.push({

@@ -7,15 +7,14 @@ Supported versions
 ------------------
 
 *   [8](https://hub.docker.com/r/_/mysql/)
-*   [5.7](https://hub.docker.com/r/_/mysql/)
+*   **[5.7](https://hub.docker.com/r/_/mysql/)** **(default)**
 *   [5.6](https://hub.docker.com/r/_/mysql/)
 *   [5.5](https://hub.docker.com/r/_/mysql/)
-*   [latest](https://hub.docker.com/r/_/mysql/)
 *   custom
 
-> #### Warning::Be Careful Switching Database Type or Version
+> #### Warning::Be Careful Switching Database type, version or credentials
 >
-> You should be careful switching database types or versions as the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!**
+> You should be careful switching database types, versions or credentials. In the case of type and version the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!** In the case of credentials, these are set when the container is **initially created** so in order to change them you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
 >
 > You can read more about this [here](./../issues/switching-dbs.md)
 

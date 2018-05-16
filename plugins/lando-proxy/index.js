@@ -11,11 +11,9 @@ module.exports = function(lando) {
 
   // Fixed location of our proxy service compose file
   var proxyFile = path.join(lando.config.userConfRoot, 'proxy', 'proxy.yml');
+  var portsFile = path.join(lando.config.userConfRoot, 'proxy', 'ports.yml');
   var projectName = 'landoproxyhyperion5000gandalfedition';
   var networkName = [projectName, 'edge'].join('_');
-
-  // Get the compose object
-  var proxyRunner = proxy.compose(proxyFile, projectName);
 
   // Add some config for the proxy
   lando.events.on('post-bootstrap', 1, function(lando) {
@@ -31,7 +29,8 @@ module.exports = function(lando) {
       proxyHttpPort: '80',
       proxyHttpsPort: '443',
       proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
-      proxyHttpsFallbacks: ['444', '4433', '4444', '4443']
+      proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
+      proxyRunner: proxy.compose(proxyFile, portsFile, projectName)
     };
 
     // Merge config over defaults
@@ -43,6 +42,9 @@ module.exports = function(lando) {
     lando.config.proxyHttpPorts = _.flatten(http);
     lando.config.proxyHttpsPorts = _.flatten(https);
 
+    // Dump defaults
+    lando.yaml.dump(proxyFile, proxy.defaults(lando.config.proxyDomain));
+
     // Log it
     lando.log.verbose('Proxy plugin configured with %j', lando.config);
     lando.log.info('Initializing proxy plugin');
@@ -51,8 +53,8 @@ module.exports = function(lando) {
 
   // Turn the proxy off on powerdown if applicable
   lando.events.on('poweroff', function() {
-    if (lando.config.proxy === 'ON' && fs.existsSync(proxyFile)) {
-      return lando.engine.stop(proxyRunner);
+    if (lando.config.proxy === 'ON' && fs.existsSync(portsFile)) {
+      return lando.engine.stop(lando.config.proxyRunner);
     }
   });
 
@@ -93,7 +95,7 @@ module.exports = function(lando) {
       var getPorts = function() {
 
         // Scan the proxy again
-        return lando.engine.scan(proxyRunner)
+        return lando.engine.scan(lando.config.proxyRunner)
 
         // Get its ports
         .then(function(data) {
@@ -109,7 +111,7 @@ module.exports = function(lando) {
         return lando.Promise.try(function() {
 
           // If there is no proxy file then lets scan the ports
-          if (!fs.existsSync(proxyFile)) {
+          if (!fs.existsSync(portsFile)) {
             return scanPorts(lando.config);
           }
 
@@ -117,7 +119,7 @@ module.exports = function(lando) {
           else {
 
             // Inspect current proxy to make sure we dont incorrectly rebuild
-            return lando.engine.scan(proxyRunner)
+            return lando.engine.scan(lando.config.proxyRunner)
 
             // If the proxy is running, lets make sure we hook up the ports that the proxy
             // is already using. If we dont do this the proxy will always show as "changed"
@@ -139,18 +141,17 @@ module.exports = function(lando) {
         // Set and start the proxy
         .then(function(ports) {
 
-          var domain = lando.config.proxyDomain;
           var proxyDash = lando.config.proxyDash;
-          var data = proxy.build(domain, proxyDash, ports.http, ports.https);
+          var data = proxy.build(proxyDash, ports.http, ports.https);
 
           // If we are building the proxy for the first time
-          if (!fs.existsSync(proxyFile)) {
+          if (!fs.existsSync(portsFile)) {
             lando.log.verbose('Starting proxy for the first time');
-            lando.yaml.dump(proxyFile, data);
+            lando.yaml.dump(portsFile, data);
           }
 
           // Get the current proxy
-          var proxyOld = lando.yaml.load(proxyFile);
+          var proxyOld = lando.yaml.load(portsFile);
 
           // If the proxy is different, rebuild with new and stop the old
           if (JSON.stringify(proxyOld) !== JSON.stringify(data)) {
@@ -169,7 +170,7 @@ module.exports = function(lando) {
           return lando.Promise.retry(function() {
 
             // Start the proxy
-            return lando.engine.start(proxyRunner)
+            return lando.engine.start(lando.config.proxyRunner)
 
             // If there is an error let's destroy and try to recreate
             .catch(function(error) {

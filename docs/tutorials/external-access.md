@@ -1,7 +1,7 @@
 Accessing Your Services Externally
 ==================================
 
-It is often desireable to interact with your services on the host machine level. A common example of this is accessing a SQL database through a GUI client like SequelPro.
+It is often desireable to interact with your services on the host machine level. Common examples of this are accessing a SQL database through a GUI client like SequelPro, or running unit tests through an IDE like PhpStorm.
 
 Lando makes this process relatively painless.
 
@@ -110,3 +110,22 @@ lando info
   }
 }
 ```
+
+Mapping to The Lando Network
+----------------------------
+
+Some IDEs, such as PhpStorm, will spin up a separate container to run their appserver for services like built-in unit testing.  This means that it is separate from the Lando network and cannot communicate with Lando's other containers, such as the database.  In order to allow them to communicate, you need to tell your interpreter which network to listen on.
+
+First, find your Lando network name by going to the terminal, and _outside of Lando_ run `$ docker network ls`.  You should find a record matching your Lando project.  For example, if your Lando project is named `d7dev`, then you should see something like:
+
+```
+    NETWORK ID          NAME                                        DRIVER              SCOPE
+    d9526b32d92c        d7dev_default                               bridge              local
+
+```
+
+Next, ensure your framework (PHP) interpreter is configured to use a Docker container matching your project's appserver configuration.  For example, if your running PHP 7.1 on Apache, this would look like `devwithlando/php:7.1-apache`.
+
+Finally, when configuring your framework, edit the Docker Container settings and change the Network Mode to the name of your Lando docker network.
+
+Now your IDE should be able to communicate with Lando.

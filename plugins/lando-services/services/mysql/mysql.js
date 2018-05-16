@@ -137,6 +137,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '5.7',
     info: info,
     networks: networks,
     services: services,
