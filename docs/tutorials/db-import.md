@@ -49,6 +49,6 @@ Adding the `db-import` command
 
 If you are not using one of our `php`-y recipes you can add the `db-import` command and default options to your `.lando.yml` as follows.
 
-{% codesnippet "./../examples/mysql-import/.lando.yml" %}{% endcodesnippet %}
+{% codesnippet "./../examples/sql-import/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mysql-import).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/sql-import).

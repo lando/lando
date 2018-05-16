@@ -61,6 +61,7 @@ module.exports = function(lando) {
         PGDATA: configFiles.dataDir,
         POSTGRES_USER: creds.user || 'postgres',
         POSTGRES_PASSWORD: creds.password || 'password',
+        PGPASSWORD: creds.password || 'password',
         POSTGRES_DB: creds.database || 'database',
         TERM: 'xterm'
       },

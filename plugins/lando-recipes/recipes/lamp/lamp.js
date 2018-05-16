@@ -170,48 +170,6 @@ module.exports = function(lando) {
   };
 
   /*
-   * Helper to return db-import mysql/mariadb tooling route
-   */
-  var dbImport = function() {
-    return {
-      service: ':host',
-      description: 'Import <file> into database service',
-      cmd: '/helpers/sql-import.sh',
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: 'database',
-          alias: ['h']
-        },
-        'no-wipe': {
-          description: 'Do not destroy the existing database before an import'
-        }
-      }
-    };
-  };
-
-  /*
-   * Helper to return mysql/mariadb db-export tooling route
-   */
-  var dbExport = function() {
-    return {
-      service: ':host',
-      description: 'Export database from a service',
-      cmd: '/helpers/sql-export.sh',
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: 'database',
-          alias: ['h']
-        },
-        stdout: {
-          description: 'Dump database to stdout'
-        }
-      }
-    };
-  };
-
-  /*
    * Helper to return tooling config
    */
   var tooling = function(config) {
@@ -223,6 +181,36 @@ module.exports = function(lando) {
         description: 'Run composer commands',
         cmd: ['composer', '--ansi']
       },
+      'db-import [file]': {
+        service: ':host',
+        description: 'Import <file> into database service',
+        cmd: '/helpers/sql-import.sh',
+        options: {
+          host: {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h']
+          },
+          'no-wipe': {
+            description: 'Do not destroy the existing database before an import'
+          }
+        }
+      },
+      'db-export [file]': {
+        service: ':host',
+        description: 'Export database from a service',
+        cmd: '/helpers/sql-export.sh',
+        options: {
+          host: {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h']
+          },
+          stdout: {
+            description: 'Dump database to stdout'
+          }
+        }
+      },
       php: {
         service: 'appserver',
         description: 'Run php commands',
@@ -230,11 +218,16 @@ module.exports = function(lando) {
       }
     };
 
-    // Get the database type
-    var database = _.get(config, 'database', 'mysql');
+    // Assess the service types and add the correct command if needed
+    var services = _.map(config._services, function(service) {
+      return service.type.split(':')[0];
+    });
 
-    // Add in the DB cli based on choice
-    if (_.includes(database, 'mysql') || _.includes(database, 'mariadb')) {
+    // Add the default database type
+    services.push(_.get(config, 'database', 'mysql').split(':')[0]);
+
+    // Add in the mysql command if we have mysql dbs
+    if (_.includes(services, 'mysql') || _.includes(services, 'mariadb')) {
       tooling.mysql = {
         service: ':host',
         description: 'Drop into a MySQL shell on a database service',
@@ -248,26 +241,22 @@ module.exports = function(lando) {
         }
       };
     }
-    else if (_.includes(database, 'postgres')) {
+
+    // Add in the pgsql command if we have mysql dbs
+    if (_.includes(services, 'postgres')) {
       tooling.psql = {
-        service: 'database',
-        description: 'Drop into a psql shell',
-        cmd: [
-          'psql',
-          '-h',
-          'localhost',
-          '-p',
-          '5432',
-          config._recipe,
-          config._recipe
-        ],
-        user: 'root'
+        service: ':host',
+        description: 'Drop into a psql shell on a database service',
+        cmd: 'psql -h localhost -p 5432 -U postgres',
+        options: {
+          host: {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h']
+          }
+        }
       };
     }
-
-    // Add in the sql import/export tooling
-    tooling['db-import [file]'] = dbImport();
-    tooling['db-export [file]'] = dbExport();
 
     // Return the toolz
     return tooling;
