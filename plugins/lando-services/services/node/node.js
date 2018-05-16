@@ -4,10 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var addScript = lando.utils.services.addScript;
-
-  // "Constants"
-  var esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for node
@@ -117,13 +113,7 @@ module.exports = function(lando) {
 
     // Generate some certs we can use
     if (config.ssl) {
-
-      // Add the ssl port
       node.ports.push('443');
-
-      // Add in an add cert task
-      node.volumes = addScript('add-cert.sh', node.volumes, esd);
-
     }
 
     // Add our npm things to run step
@@ -184,6 +174,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '8.9',
     info: info,
     networks: networks,
     services: services,

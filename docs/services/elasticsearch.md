@@ -6,12 +6,11 @@ Elasticsearch
 Supported versions
 ------------------
 
-*   [5.5](https://hub.docker.com/r/itzg/elasticsearch/)
+*   **[5.5](https://hub.docker.com/r/itzg/elasticsearch/)** **(default)**
 *   [5.4](https://hub.docker.com/r/itzg/elasticsearch/)
 *   [5.3](https://hub.docker.com/r/itzg/elasticsearch/)
 *   [5.2](https://hub.docker.com/r/itzg/elasticsearch/)
 *   [5.1](https://hub.docker.com/r/itzg/elasticsearch/)
-*   [latest](https://hub.docker.com/r/itzg/elasticsearch/)
 *   custom
 
 Example

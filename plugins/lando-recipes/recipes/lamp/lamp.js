@@ -89,7 +89,7 @@ module.exports = function(lando) {
     }
 
     // Add in default mysql config if applicable
-    // @TODO: add a custom/optimzed default postgres cong file
+    // @TODO: add a custom/optimzed default postgres conf file
     if (!_.has(config, 'conf.database') && !_.includes(database, 'postgres')) {
       config.conf.database = path.join(configPath, 'mysql');
     }
@@ -171,19 +171,6 @@ module.exports = function(lando) {
       }
     }
 
-    // Add db credentials into the ENV
-    services.appserver.overrides = {
-      services: {
-        environment: {
-          DB_HOST: 'database',
-          DB_USER: services.database.creds.user,
-          DB_PASSWORD: services.database.creds.password,
-          DB_NAME: services.database.creds.database,
-          DB_PORT: (_.includes(database, 'postgres')) ? 5432 : 3306
-        }
-      }
-    };
-
     // Return that thang
     return services;
 
@@ -195,32 +182,14 @@ module.exports = function(lando) {
    */
   var dbImport = function() {
     return {
-      service: 'appserver',
-      needs: ['database'],
-      description: 'Import into database.',
+      service: ':host',
+      description: 'Import <file> into database service',
       cmd: '/helpers/mysql-import.sh',
       options: {
         host: {
-          description: 'The database host',
+          description: 'The database service to use',
+          default: 'database',
           alias: ['h']
-        },
-        user: {
-          description: 'The database user',
-          default: 'root',
-          alias: ['u']
-        },
-        database: {
-          description: 'The database name',
-          alias: ['d']
-        },
-        password: {
-          description: 'The database password',
-          alias: ['p']
-        },
-        port: {
-          description: 'The database port',
-          default: 3306,
-          alias: ['P']
         },
         'no-wipe': {
           description: 'Do not destroy the existing database before an import'
@@ -235,32 +204,14 @@ module.exports = function(lando) {
    */
   var dbExport = function() {
     return {
-      service: 'appserver',
-      needs: ['database'],
-      description: 'Export a database. Resulting file: {DB_NAME}.TIMESTAMP.gz',
+      service: ':host',
+      description: 'Export database from a service',
       cmd: '/helpers/mysql-export.sh',
       options: {
         host: {
-          description: 'The database host',
+          description: 'The database service to use',
+          default: 'database',
           alias: ['h']
-        },
-        user: {
-          description: 'The database user',
-          default: 'root',
-          alias: ['u']
-        },
-        database: {
-          description: 'The database name',
-          alias: ['d']
-        },
-        password: {
-          description: 'The database password',
-          alias: ['p']
-        },
-        port: {
-          description: 'The database port',
-          default: 3306,
-          alias: ['P']
         },
         stdout: {
           description: 'Dump database to stdout'
@@ -294,13 +245,21 @@ module.exports = function(lando) {
     // Add in the DB cli based on choice
     if (_.includes(database, 'mysql') || _.includes(database, 'mariadb')) {
       tooling.mysql = {
-        service: 'database',
-        description: 'Drop into a MySQL shell',
-        user: 'root'
+        service: ':host',
+        description: 'Drop into a MySQL shell on a database service',
+        cmd: 'mysql -u root',
+        options: {
+          host: {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h']
+          }
+        }
       };
       tooling['db-import [file]'] = dbImport();
       tooling['db-export [file]'] = dbExport();
     }
+
     // @todo: also need a pgimport cmd
     else if (_.includes(database, 'postgres')) {
       tooling.psql = {

@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-beta.37",
+  "version": "3.0.0-beta.44",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -83,6 +83,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-as-promised": "^7.1.1",
     "command-line-test": "^1.0.10",
     "copy": "^0.3.1",
     "eslint": "^4.15.0",

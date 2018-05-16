@@ -4,6 +4,11 @@
 PKG_TYPE=$1
 PKG_VERSION=$2
 
+# Translate the version string so its ARCH friendly on pacmanz
+if [ "$PKG_TYPE" == "pacman" ]; then
+  PKG_VERSION=${PKG_VERSION//-/.}
+fi
+
 # Get our build env
 source ./scripts/env.sh
 

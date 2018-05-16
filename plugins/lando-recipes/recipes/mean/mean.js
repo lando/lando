@@ -23,7 +23,7 @@ module.exports = function(lando) {
 
     // Get some options
     var nodeVersion = _.get(config, 'node', '6.10');
-    var mongoVersion = _.get(config, 'mongo', 'latest');
+    var mongoVersion = _.get(config, 'mongo', '3.5');
 
     // Build our default set of services
     var services = {
@@ -54,16 +54,6 @@ module.exports = function(lando) {
     if (_.has(config, 'globals')) {
       services.appserver.globals = config.globals;
     }
-
-    // Add db credentials into the ENV
-    services.appserver.overrides = {
-      services: {
-        environment: {
-          DB_HOST: 'database',
-          DB_PORT: 27017
-        }
-      }
-    };
 
     // Return that thang
     return services;

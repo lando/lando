@@ -75,7 +75,7 @@
 ## Known Issues
 
 *   [DNS Rebinding Protection](issues/dns-rebind.md)
-*   [Drupal File Uploads](issues/drupal-win-upload.md)
+*   [File Uploads on Windows](issues/win-file-upload.md)
 *   [File Syncing Stalled](issues/file-sync.md)
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
@@ -103,7 +103,9 @@
 *   [Setting up Additional Tooling](tutorials/setup-additional-tooling.md)
 *   [Setting up Additional Routes](config/proxy.md)
 *   [Setting up Additional Events](config/events.md)
+*   [Using Lando in Visual Studio Code](tutorials/lando-with-vscode.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
+*   [Using $LANDO_INFO](tutorials/lando-info.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
 *   [Accessing Lando from Other Devices](tutorials/access-by-other-devices.md)
 *   [Importing Databases](tutorials/db-import.md)
@@ -123,6 +125,7 @@
 *   [Environment](config/env.md)
 *   [Networking](config/networking.md)
 *   [SSH Keys](config/ssh.md)
+*   [SSL/TLS](config/security.md)
 *   [Shared Files](config/files.md)
 *   [Build Steps](config/build.md)
 *   [Scripting](config/scripting.md)
@@ -139,6 +142,7 @@
 *   [How to Contribute](contrib/how.md)
 *   [Governance](contrib/gov.md)
 *   [Roles and Responsibilities](contrib/roles.md)
+*   [Security](contrib/security.md)
 *   [Resources](contrib/resources.md)
 
 ## Developing
@@ -185,6 +189,7 @@
 *   [lando.engine.destroy](api/api.md#landoenginedestroy)
 *   [lando.engine.down](api/api.md#landoenginedown)
 *   [lando.engine.exists](api/api.md#landoengineexists)
+*   [lando.engine.getNetwork](api/api.md#landoenginegetnetwork)
 *   [lando.engine.getNetworks](api/api.md#landoenginegetnetworks)
 *   [lando.engine.isInstalled](api/api.md#landoengineisinstalled)
 *   [lando.engine.isRunning](api/api.md#landoengineisrunning)

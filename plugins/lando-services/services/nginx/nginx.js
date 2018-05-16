@@ -5,11 +5,9 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var addConfig = lando.utils.services.addConfig;
-  var addScript = lando.utils.services.addScript;
   var buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var esd = lando.config.engineScriptsDir;
   var scd = lando.config.servicesConfigDir;
 
   /*
@@ -100,8 +98,13 @@ module.exports = function(lando) {
       var sslVolume = buildVolume(sslConf, configFiles.server, scd);
       nginx.volumes = addConfig(sslVolume, nginx.volumes);
 
-      // Add in an add cert task
-      nginx.volumes = addScript('add-cert.sh', nginx.volumes, esd);
+      // Add a healthcheck so we wait until open-ssl gets installed
+      nginx.healthcheck = {
+        test: 'dpkg -s openssl',
+        interval: '2s',
+        timeout: '10s',
+        retries: 25
+      };
 
     }
 
@@ -151,6 +154,7 @@ module.exports = function(lando) {
   };
 
   return {
+    defaultVersion: '1.13',
     info: info,
     networks: networks,
     services: services,

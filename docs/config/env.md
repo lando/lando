@@ -35,13 +35,17 @@ LANDO_APP_ROOT=/Users/pirog/Desktop/work/lando/examples/lemp2
 LANDO_WEBROOT_USER=www-data
 LANDO_WEBROOT_GROUP=www-data
 LANDO_APP_NAME=lemp2
+LANDO_DOMAIN=lndo.site
 LANDO_HOST_OS=darwin
 LANDO_WEBROOT_GID=33
+LANDO_INFO=a JSON string representation of the lando info command
 ```
+
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Environment File
 
-If you drop a `.env` file into the root directory of your app Lando will automatically inject the variables into all of your services. This is particularly useful if you want
+If you drop a file named `.env` into the root directory of your app Lando will automatically inject the variables into all of your services. This is particularly useful if you want
 
 1. To inject sensitive credentials into the environment (a la the 12-factor app model)
 2. Store credentials in a `.gitignored` file that is not committed to the repo

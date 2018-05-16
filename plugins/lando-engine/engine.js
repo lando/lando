@@ -35,7 +35,7 @@ module.exports = function(lando) {
   var isInstalled = function() {
 
     // Return whether we have the engine executable in the expected location
-    var which = lando.shell.which(DOCKER_EXECUTABLE);
+    var which = _.toString(lando.shell.which(DOCKER_EXECUTABLE));
     if (which.toUpperCase() === DOCKER_EXECUTABLE.toUpperCase()) {
       return Promise.resolve(true);
     }
@@ -103,8 +103,8 @@ module.exports = function(lando) {
     })
 
     // Return false if we get a non-zero response
-    .catch(function() {
-      lando.log.debug('Engine is down.');
+    .catch(function(error) {
+      lando.log.debug('Engine is down with error %j', error);
       return Promise.resolve(false);
     });
 
@@ -377,10 +377,6 @@ module.exports = function(lando) {
         if (data && typeof data !== 'string') {
           throw new TypeError('Invalid data: ' + data);
         }
-
-        if (typeof data === 'string') {
-          data = utils.dockerComposify(data);
-        }
       })
 
       .then(function() {
@@ -600,6 +596,7 @@ module.exports = function(lando) {
           // Look to see if we need to prune the networks
           // Sadly we can't do much to determine whether the error is the one
           // we are looking for but we HOPE if this fails its caught downstream
+          // @todo: Move this into the networking plugin?
           .catch(function(err) {
             return docker.pruneNetworks()
             .then(function() {
@@ -1024,7 +1021,7 @@ module.exports = function(lando) {
    *  };
    *
    *  // Get the networks
-   *  return lando.networks.get(opts)
+   *  return lando.engine.getNetworks(opts)
    *
    *  // Filter out lando_default
    *  .filter(function(network) {
@@ -1038,6 +1035,21 @@ module.exports = function(lando) {
    */
    var getNetworks = docker.getNetworks;
 
+   /**
+    * Gets a Docker network
+    *
+    * @since 3.0.0.
+    * @function
+    * @alias 'lando.engine.getNetwork'
+    * @param {String} id - The id of the network
+    * @returns {Object} A Dockerode Network object .
+    * @example
+    *
+    *  // Get the network
+    *  return lando.engine.getNetwork('mynetwork')
+    */
+    var getNetwork = docker.getNetwork;
+
   /**
    * Creates a Docker network
    *
@@ -1050,8 +1062,8 @@ module.exports = function(lando) {
    * @returns {Promise} A Promise with inspect data.
    * @example
    *
-   *  // Get the networks
-   *  return lando.networks.inspect('mynetwork')
+   *  // Create the network
+   *  return ando.engine.createNetwork('mynetwork')
    */
    var createNetwork = docker.createNetwork;
 
@@ -1068,7 +1080,7 @@ module.exports = function(lando) {
    * @example
    *
    *  // Prune the networks
-   *  return lando.networks.prune()
+   *  return lando.engine.pruneNetworks();
    *
    */
   var pruneNetworks = docker.pruneNetworks;
@@ -1089,6 +1101,7 @@ module.exports = function(lando) {
     destroy: destroy,
     logs: logs,
     build: build,
+    getNetwork: getNetwork,
     getNetworks: getNetworks,
     createNetwork: createNetwork,
     pruneNetworks: pruneNetworks

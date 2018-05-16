@@ -11,10 +11,10 @@ module.exports = function(lando) {
   var urls = require('url');
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:pantheon:tokens';
-  var sessionCacheKey = 'init:auth:pantheon:session:';
-  var sitesCacheKey = 'init:auth:pantheon:sites:';
-  var envCacheKey = 'init:auth:pantheon:site:envs:';
+  var tokenCacheKey = 'init.auth.pantheon.tokens';
+  var sessionCacheKey = 'init.auth.pantheon.session.';
+  var sitesCacheKey = 'init.auth.pantheon.sites.';
+  var envCacheKey = 'init.auth.pantheon.site.envs.';
 
   /*
    * Return auth headers we need for session protected endpoints
@@ -172,9 +172,7 @@ module.exports = function(lando) {
           var orgSites = ['organizations', org.id, 'memberships', 'sites'];
           return pantheonRequest('get', orgSites, options)
           .map(function(site) {
-            var data = site.site;
-            data.id = site.id;
-            return data;
+            return _.merge(site, site.site);
           });
         }
       })
@@ -198,17 +196,23 @@ module.exports = function(lando) {
 
     // Get the sites
     .then(function(session) {
-      var getSites = ['users', _.get(session, 'user_id'), 'sites'];
+
+      // Headers options
       var options = {headers: getAuthHeaders(session)};
+
+      // Get org path
+      var userId = _.get(session, 'user_id');
+      var getSites = ['users', userId, 'memberships', 'sites'];
+
+      // Get the sites
       return pantheonRequest('get', getSites, options);
+
     })
 
     // Map them into something we can merge with org sites better
     .then(function(sites) {
       return _.map(sites, function(site, id) {
-        var data = site.information;
-        data.id = id;
-        return data;
+        return _.merge(site, site.site);
       });
     });
 

@@ -17,11 +17,11 @@ chai.should();
 const config = require('./../../lib/config');
 
 // This is the file we are testing
-describe('config', function() {
+describe('config', () => {
 
-  describe('#tryConvertJson', function() {
+  describe('#tryConvertJson', () => {
 
-    it('returns the unaltered input if input is not a parsable JSON string', function() {
+    it('returns the unaltered input if input is not a parsable JSON string', () => {
 
       // Input value
       const input = 'obiwan';
@@ -36,7 +36,7 @@ describe('config', function() {
     });
 
     // NOTE: means the JSON string is enclosed by {}
-    it('returns an object if input is a parsable JSON string representing an object', function() {
+    it('returns an object if input is a parsable JSON string representing an object', () => {
 
       // Input value
       const input = '{}';
@@ -50,7 +50,7 @@ describe('config', function() {
     });
 
     // NOTE: means the JSON string is enclosed by []
-    it('returns an array if input is a parsable JSON string representing an array', function() {
+    it('returns an array if input is a parsable JSON string representing an array', () => {
 
       // Input value
       const input = '[]';
@@ -65,9 +65,9 @@ describe('config', function() {
 
   });
 
-  describe('#merge', function() {
+  describe('#merge', () => {
 
-    it('returns the same as _.merge for objects', function() {
+    it('returns the same as _.merge for objects', () => {
 
       // Setup data
       const bands1 = {
@@ -89,7 +89,7 @@ describe('config', function() {
 
     });
 
-    it('concatenates keys that are arrays', function() {
+    it('concatenates keys that are arrays', () => {
 
       // Setup data
       const theworst = {favs: ['nickelback', 'abba']};
@@ -104,7 +104,7 @@ describe('config', function() {
 
     });
 
-    it('removes duplicates from cacatenated arrays', function() {
+    it('removes duplicates from cacatenated arrays', () => {
 
       // Setup data
       const myfavs = {favs: ['nickelback', 'abba']};
@@ -121,9 +121,9 @@ describe('config', function() {
 
   });
 
-  describe('#stripEnvs', function() {
+  describe('#stripEnvs', () => {
 
-    it('returns process.env stripped of all keys that start with prefix', function() {
+    it('returns process.env stripped of all keys that start with prefix', () => {
 
       // Add mock data to process.env
       process.env.DANCE_NOW = 'everybody';
@@ -138,9 +138,9 @@ describe('config', function() {
 
   });
 
-  describe('#defaults', function() {
+  describe('#defaults', () => {
 
-    it('returns a properly structured default config object', function() {
+    it('returns a properly structured default config object', () => {
 
       // GEt teh config
       const defaults = config.defaults();
@@ -166,7 +166,7 @@ describe('config', function() {
 
     });
 
-    it('config.env mirrors process.env', function() {
+    it('config.env mirrors process.env', () => {
 
       // GEt the env config
       const env = config.defaults().env;
@@ -192,14 +192,14 @@ describe('config', function() {
 
     });
 
-    it('config.process returns "browser" if in a browser', function() {
+    it('config.process returns "browser" if in a browser', () => {
       process.versions.chrome = 'test';
       const processType = config.defaults().process;
       expect(processType).to.equal('browser');
       delete process.versions.chrome;
     });
 
-    it('config.process returns "node" if not in a browser', function() {
+    it('config.process returns "node" if not in a browser', () => {
       delete process.versions.chrome;
       delete process.versions.electron;
       delete process.versions['atom-shell'];
@@ -209,14 +209,14 @@ describe('config', function() {
 
   });
 
-  describe('#loadFiles', function() {
+  describe('#loadFiles', () => {
 
-    it('returns an empty object if no files are specified', function() {
+    it('returns an empty object if no files are specified', () => {
       const fileConfig = config.loadFiles();
       expect(fileConfig).to.be.empty;
     });
 
-    it('returns data only from files that exist', function() {
+    it('returns data only from files that exist', () => {
 
       // Spoof some filezz
       filesystem({'/tmp/config1.yml': 'obiwan: kenobi'});
@@ -232,7 +232,7 @@ describe('config', function() {
 
     });
 
-    it('gives priority to the last file loaded', function() {
+    it('gives priority to the last file loaded', () => {
 
       // Spoof some filezz
       filesystem({
@@ -253,9 +253,9 @@ describe('config', function() {
 
   });
 
-  describe('#loadEnvs', function() {
+  describe('#loadEnvs', () => {
 
-    it('returns an object built from all keys from process.env that start with a given prefix', function() {
+    it('returns an object built from all keys from process.env that start with a given prefix', () => {
 
       // Add mock data to process.env
       process.env.DANCE_NOW = 'everybody';

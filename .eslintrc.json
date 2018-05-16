@@ -1,6 +1,7 @@
 {
     "env": {
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "parserOptions": {
         "ecmaVersion": 6
@@ -19,8 +20,8 @@
         "array-element-newline": "off",
         "arrow-body-style": "error",
         "arrow-parens": [
-          "error",
-          "as-needed"
+            "error",
+            "as-needed"
         ],
         "arrow-spacing": "error",
         "block-scoped-var": "error",
@@ -32,7 +33,7 @@
         "callback-return": "error",
         "camelcase": "error",
         "capitalized-comments": "off",
-        "class-methods-use-this": "error",
+        "class-methods-use-this": "off",
         "comma-dangle": "off",
         "comma-spacing": [
             "error",
@@ -193,12 +194,13 @@
         "no-ternary": "off",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
+        "no-undef": "error",
         "no-undef-init": "error",
         "no-undefined": "off",
         "no-underscore-dangle": "off",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "off",
-        "no-unused-expressions": "error",
+        "no-unused-expressions": "off",
         "no-use-before-define": "error",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",

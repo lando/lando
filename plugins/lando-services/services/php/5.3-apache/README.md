@@ -16,6 +16,7 @@ COPY apache2.conf /etc/apache2/apache2.conf
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
     bzip2 \
+    curl \
     exiftool \
     git-core \
     imagemagick \
@@ -60,6 +61,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     bz2 \
     calendar \
+    curl \
     exif \
     gd \
     imap \
@@ -81,6 +83,8 @@ RUN apt-get update && apt-get install -y \
   && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
   && php -r "unlink('composer-setup.php');" \
+  && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
+  && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \

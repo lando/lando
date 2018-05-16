@@ -13,8 +13,8 @@ module.exports = function(lando) {
   var github = new GitHubApi({Promise: Promise});
 
   // "Constants"
-  var tokenCacheKey = 'init:auth:github:tokens';
-  var siteMetaDataKey = 'site:meta:';
+  var tokenCacheKey = 'init.auth.github.tokens';
+  var siteMetaDataKey = 'site.meta.';
 
   /*
    * Modify init pre-prompt things
@@ -268,7 +268,8 @@ module.exports = function(lando) {
 
         // Cache the site things
         var data = {email: email};
-        var siteKey = siteMetaDataKey + options.appname;
+        var dc = lando.utils.engine.dockerComposify;
+        var siteKey = siteMetaDataKey + dc(name);
         lando.cache.set(siteKey, data, {persist: true});
 
       });

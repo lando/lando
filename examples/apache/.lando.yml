@@ -23,8 +23,8 @@ services:
 
     # Optionally use a custom apache conf file
     # This should live in your app root and is relative to it
-    config:
-      server: config/httpd.conf
+    # config:
+      # server: config/httpd.conf
 
     # These are v3 docker compose file overrides. They allow you to provide very
     # precise fine tuning to your app
@@ -33,7 +33,8 @@ services:
       services:
         environment:
           STUFF: THINGS
-        ports: ['8081:80']
+        ports:
+          - '8081:80'
         # Uncomment below to use a custom image or Dockerfile build location
         # image: pirog/myapache:2
         # run: .

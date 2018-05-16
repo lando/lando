@@ -1,7 +1,7 @@
 Working with LEMP
 =================
 
-Lando offers a [configurable recipe](./../recipes/lemp.md) for spinning up apps that use the [LEMP](https://lemp.io/) stack, a popular [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) variant that replaces the `apache` webserver with `nginx`.
+Lando offers a configurable recipe for spinning up apps that use the [LEMP](https://lemp.io/) stack, a popular [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) variant that replaces the `apache` webserver with `nginx`.
 
 Note that you'll only want to use this recipe if you have a custom PHP application not supported by one of Lando's other recipes. Let's go over some basic usage.
 
@@ -62,7 +62,7 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 
 # Import the database
 # NOTE: db-import can handle uncompressed, gzipped or zipped files
-lando db-import database.sql.gz --database=lemp
+lando db-import database.sql.gz
 ```
 
 You can learn more about the `db-import` command [over here](./db-import.md).
@@ -106,17 +106,17 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+
 
 ```bash
-DB_HOST=database
-DB_USER=lemp
-DB_PASSWORD=lemp
-DB_NAME=lemp
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/lemp/lemp.conf","conf":"/Users/pirog/.lando/services/config/lemp/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/lemp/lemp.conf","conf":"/Users/pirog/.lando/services/config/lemp/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"lemp","password":"lemp","database":"lemp"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/lemp/mysql"}}}
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 

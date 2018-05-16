@@ -1,7 +1,7 @@
 Working with Drupal 8
 =====================
 
-Lando offers a [configurable recipe](./../recipes/drupal8.md) for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
+Lando offers a configurable recipe for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
 
 <!-- toc -->
 
@@ -108,6 +108,66 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Drush
+-----
+
+By default our Drupal 8 recipe will globally install the [latest version of the Drush Launcher](https://github.com/drush-ops/drush-launcher). This means that it is up to the user to [list Drush as a dependency](http://docs.drush.org/en/master/install/#install-a-site-local-drush-and-drush-launcher) in their site's `composer.json` and to `lando composer install`. **If you do not do this then you will get an error from the Drush Launcher indicating you need to install Drush.**
+
+If you are not running your Drupal 8 project with `composer` you can [easily change](#configuration) the Drush installation behavior to install Drush globally like we do in our Drupal 7 recipe.
+
+If you are using a nested webroot you will need to `cd` into your webroot and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
+
+To get around this you might want to consider overriding the `drush` tooling command in your `.lando.yml` so that Drush can detect your nested Drupal site from your project root. Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.
+
+```yml
+tooling:
+  drush:
+    service: appserver
+    cmd:
+      - "drush"
+      - "--root=/app/PATH/TO/WEBROOT"
+```
+
+### URL Setup
+
+To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
+
+Create or edit the relevant `settings.php` file and add these lines. Note that you may need to specify a port depending on your Lando installation. You can run `lando info` to see if your URLs use explicit ports or not.
+
+```php
+// Set the base URL for the Drupal site.
+$options['uri'] = "http://mysite.lndo.site:PORT";
+```
+
+### Aliases
+
+You can also use drush aliases with command like `lando drush @sitealias cc all` by following the instructions below.
+
+Make sure the alias file exists within the drush folder in your app.
+An example could be the files structure below.
+
+```
+/app
+  /drush
+    yoursite.aliases.drushrc.php
+```
+
+For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
+
+and by adding the following example to your .lando.yml file:
+
+```yaml
+services:
+  appserver:
+    run:
+      - "mkdir -p ~/.drush/site-aliases"
+      - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
+ ```
+
+Depending on your file structure and alias name the `.lando.yml` file should change accordingly.
+
+Please refer the [ssh section](./../cli/ssh.html)if you need to set-up keys that require a passphrase.
+
 Configuration
 -------------
 
@@ -121,17 +181,16 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-Lando will add some helpful environment variables into your `appserver` so you can get database credential information. These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
-DB_HOST=database
-DB_USER=drupal8
-DB_PASSWORD=drupal8
-DB_NAME=drupal8
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/drupal8/drupal8.conf","conf":"/Users/pirog/.lando/services/config/drupal8/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/drupal8/drupal8.conf","conf":"/Users/pirog/.lando/services/config/drupal8/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"drupal8","password":"drupal8","database":"drupal8"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/drupal8/mysql"}}}
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 
@@ -150,47 +209,6 @@ events:
     - appserver: cd $LANDO_WEBROOT && php script.php
 
 ```
-
-Drush URL Setup
----------------
-
-To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
-
-Create or edit `/sites/default/drushrc.php` and add these lines:
-
-```
-<?php
-$options['uri'] = "http://mysite.lndo.site";
-```
-
-### Aliases
-
-You can also use drush aliases with command like `lando drush @sitealias cr all` by following the instructions below.
-
-Make sure the alias file exists within the drush folder in your app.
-An example could be the files structure below.
-
-```
-/app
-  /drush
-    yoursite.aliases.drushrc.php
-```
-
-For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
-
-and by adding the following example to your .lando.yml file:
-
-```
-services:
-  appserver:
-    run:
-      - "mkdir -p ~/.drush/site-aliases"
-      - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
- ```
-
-Depending on your file structure and alias name the .lando.yml file should change accordingly.
-
-Please refer the [ssh section](./../cli/ssh.html)if you need to set-up keys that require a passphrase.
 
 Advanced Service Usage
 ----------------------
@@ -219,8 +237,8 @@ Read More
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
 
 ### Setting up PHPStorm for running tests
-We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm instead by Commandline so we can debug our 
-tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter 
+We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm instead by Commandline so we can debug our
+tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter
 and make out Test Framework us it.
 
 * *Currently we have issues running functional test through PHPStorm. The reason this doesn't work yet is
@@ -232,14 +250,14 @@ and make out Test Framework us it.
 Go to "Preferences" >> "Build, Execution, Deployment" >> "Docker". Click on the "+" and simply select "Docker for Mac".
 
 ##### 2. Remote CLI interpreter.
-Go to "Preferences" >> "Languages and Framework" >> "PHP". Click on the "..." for the CLI interpreter and in the 
-pop-up window add a new interpreter by clicking on the "+". Select "From Docker, Vagrant, VM, Remote..". In the next 
+Go to "Preferences" >> "Languages and Framework" >> "PHP". Click on the "..." for the CLI interpreter and in the
+pop-up window add a new interpreter by clicking on the "+". Select "From Docker, Vagrant, VM, Remote..". In the next
 window select "Docker". This should automatically fill with the FPM container from lando. See for example:
 
 ![Add remote interpreter for docker](https://raw.githubusercontent.com/lando/lando/master/docs/images/add-remote-interpreter-docker.png)
 
 ##### 3. Test Frameworks
-Go to "Preferences" >> "Languages and Framework" >> "PHP" >> "Test Frameworks". Click on the "+" and select 
+Go to "Preferences" >> "Languages and Framework" >> "PHP" >> "Test Frameworks". Click on the "+" and select
 "PHPUnit by Remote interpreter". Select the CLI interpreter from Step 2. All we need to do is target the "autoload.php"
 within our container and the "Default configuration / bootstrap" file:
 
@@ -261,4 +279,4 @@ Note that for SIMPLETEST_DB we target the "tmp" directory this is done because w
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/opt/project/web/sites/default/files/browser_output"/>
   </php>
-``` 
+```

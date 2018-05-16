@@ -26,10 +26,14 @@ services:
     # This port will change every time you restart this app
     #
     # You can also set this to a static port you want to use `portforward:3311`.
-    # You will need to make sure the port is open and avialable
+    # You will need to make sure the port is open and available
     portforward: true
 
     # Optionally change the default db credentials
+    #
+    # Note: You will need to `lando destroy && lando start` to change these if you've
+    # already started your app
+    # See: https://docs.devwithlando.io/tutorials/lando-info.html
     # creds:
       # user: mysql
       # password: mysql

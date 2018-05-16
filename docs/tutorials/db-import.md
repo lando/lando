@@ -1,7 +1,7 @@
 Importing Databases
 ===================
 
-Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default.
+Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default but can be used on additional database services as well.
 
 You can also import databases into other hosts and databases. It will currently handle uncompressed, gzipped or zipped dump files.
 
@@ -30,7 +30,7 @@ lando db-import dump.sql
 
 # Import a file into an auxiliary second database called 'db2'
 # with a db called `dataz`
-lando db-import dump.zip --host db2 --database dataz
+lando db-import dump.zip --host db2
 
 # Import without destroying the target database
 lando db-import dump.zip --no-wipe
@@ -44,11 +44,7 @@ cat dump.sql | lando db-import
 
 ```bash
 Options:
-  --host, -h      The database host
-  --user, -u      The database user                            [default: "root"]
-  --database, -d  The database name
-  --password, -p  The database password
-  --port, -P      The database port                              [default: 3306]
+  --host, -h      The database service to use                  [default: "database"]
   --no-wipe       Do not destroy the existing database before an import
 ```
 
