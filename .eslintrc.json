@@ -33,7 +33,7 @@
         "callback-return": "error",
         "camelcase": "error",
         "capitalized-comments": "off",
-        "class-methods-use-this": "error",
+        "class-methods-use-this": "off",
         "comma-dangle": "off",
         "comma-spacing": [
             "error",
@@ -200,7 +200,7 @@
         "no-underscore-dangle": "off",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "off",
-        "no-unused-expressions": "error",
+        "no-unused-expressions": "off",
         "no-use-before-define": "error",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
