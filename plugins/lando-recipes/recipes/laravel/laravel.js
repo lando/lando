@@ -47,6 +47,10 @@ module.exports = function(lando) {
     // Start by cheating
     var build = lando.recipes.build(name, base, config);
 
+    // Set the pantheon environment
+    var envPath = 'services.appserver.overrides.services.environment';
+    _.set(build, envPath, {APP_LOG: 'errorlog'});
+
     // Figure out some tooling needs
     var needs = ['database'];
 
