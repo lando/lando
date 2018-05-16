@@ -41,6 +41,21 @@ describe('shell', () => {
   });
 
   describe('#spawn', function() {
+    it('should collect output if output is piped', function() {
+
+    });
+
+    it('should auto-resolves if not connected', function() {
+
+    });
+
+    it('should default to piped i/o', function() {
+
+    });
+
+    it('should override options', function() {
+
+    });
 
   });
 
