@@ -3,13 +3,13 @@
 module.exports = function(lando) {
 
   // Modules
-  var _ = lando.node._;
-  var helpers = require('./../lamp/lamp')(lando);
+  const _ = lando.node._;
+  const helpers = require('./../lamp/lamp')(lando);
 
   /*
    * Helper to get cache
    */
-  var cache = function(cache) {
+  const cache = cache => {
 
     // Return redis
     if (_.includes(cache, 'redis')) {
@@ -33,10 +33,10 @@ module.exports = function(lando) {
   /*
    * Build out laravel
    */
-  var build = function(name, config) {
+  const build = (name, config) => {
 
     // Get the via so we can grab our builder
-    var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
+    const base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
 
     // Update with new config defaults if needed
     config = helpers.resetConfig(config._recipe, config);
@@ -45,10 +45,14 @@ module.exports = function(lando) {
     config.php = _.get(config, 'php', '7.1');
 
     // Start by cheating
-    var build = lando.recipes.build(name, base, config);
+    const build = lando.recipes.build(name, base, config);
+
+    // Set the environment
+    const envPath = 'services.appserver.overrides.services.environment';
+    _.set(build, envPath, {APP_LOG: 'errorlog'});
 
     // Figure out some tooling needs
-    var needs = ['database'];
+    const needs = ['database'];
 
     // Add in cache func if needed
     if (_.has(config, 'cache')) {
@@ -62,10 +66,10 @@ module.exports = function(lando) {
     }
 
     // Add in installation of laravel tool
-    var cgrInstall = helpers.getCgr('laravel/installer', '*');
+    const cgrInstall = helpers.getCgr('laravel/installer', '*');
 
     // Set builders if needed
-    var buildersKey = 'services.appserver.run_internal';
+    const buildersKey = 'services.appserver.run_internal';
     build.services.appserver.run_internal = _.get(build, buildersKey, []);
 
     // Add our cgr cmds
