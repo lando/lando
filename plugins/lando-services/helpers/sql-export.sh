@@ -1,17 +1,28 @@
 #!/bin/bash
 
-# Set the things
-FILE=${MYSQL_DATABASE}.`date +"%Y%m%d%s"`
+# Set generic things
 HOST=localhost
-USER=root
-DATABASE=${MYSQL_DATABASE:-database}
-PORT=3306
 STDOUT=false
 
 # colors
 GREEN='\033[0;32m'
 RED='\033[31m'
 DEFAULT_COLOR='\033[0;0m'
+
+# Get type-specific config
+if [[ ${POSTGRES_DB} != '' ]]; then
+  DATABASE=${POSTGRES_DB:-database}
+  PASSWORD=${PGPASSWORD:-password}
+  PORT=5432
+  USER=postgres
+else
+  DATABASE=${MYSQL_DATABASE:-database}
+  PORT=3306
+  USER=root
+fi
+
+# Set the default filename
+FILE=${DATABASE}.`date +"%Y%m%d%s"`
 
 # PARSE THE ARGZZ
 # TODO: compress the mostly duplicate code below?
@@ -45,8 +56,12 @@ while (( "$#" )); do
   esac
 done
 
-# Start the dump
-DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
+# Get type-specific dump cpmmand
+if [[ ${POSTGRES_DB} != '' ]]; then
+  DUMPER="pg_dump postgresql://$USER:$PASSWORD@localhost:$PORT/$DATABASE"
+else
+  DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
+fi
 
 # Do the dump to stdout
 if [ "$STDOUT" == "true" ]; then

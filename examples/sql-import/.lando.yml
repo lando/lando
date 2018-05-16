@@ -1,10 +1,10 @@
 # The name of the app
-name: mysql-export
+name: sql-import
 
-# Give me http://mysql-export.lndo.site and https://mysql-export.lndo.site
+# Give me http://mysql-import.lndo.site and https://mysql-import.lndo.site
 proxy:
   nginx:
-    - mysql-export.lndo.site
+    - sql-import.lndo.site
 
 # Set up my services
 services:
@@ -41,23 +41,11 @@ services:
     # config:
     #  confd: config
 
-  # Spin up a secondary database just to test things out
+  # Spin up a secondary database for postgres
   database2:
-    type: mysql
+    type: postgres
 
 tooling:
-  db-export:
-    service: :host
-    description: Export a database from a database service
-    cmd: /helpers/mysql-export.sh
-    options:
-      host:
-        description: The database service to use
-        default: database
-        alias:
-          - h
-      stdout:
-        description: Dump database to stdout
   mysql:
     service: :host
     description: Drop into a mysql shell on a database service
@@ -68,10 +56,20 @@ tooling:
         default: database
         alias:
           - h
+  psql:
+    service: :host
+    description: Drop into a postgres shell on a database service
+    cmd: psql -h localhost -p 5432 -U postgres
+    options:
+      host:
+        description: The database service to use
+        default: database
+        alias:
+          - h
   'db-import <file>':
     service: :host
     description: Import <file> into database
-    cmd: /helpers/mysql-import.sh
+    cmd: /helpers/sql-import.sh
     options:
       host:
         description: The database service to use

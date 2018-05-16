@@ -493,7 +493,7 @@ module.exports = function(lando) {
       if (isUp) {
 
         // Get list of containers
-        return lando.engine.list(app.name)
+        return lando.engine.list(app.lando)
 
         // Filter out autostart containers since those will always report TRUE
         .filter(function(container) {

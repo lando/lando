@@ -1,9 +1,9 @@
-MySQL Import Example
-====================
+SQL Import Example
+==================
 
-This example provides a very basic `mysql-import` example built on Lando php services.
+This example provides a very basic `db-import` example built on Lando php services.
 
-See the `.lando.yml` in this directory for `mysql-import` configuration options.
+See the `.lando.yml` in this directory for `db-import` configuration options.
 
 Getting Started
 ---------------
@@ -34,17 +34,18 @@ lando db-import -- --help
 # Drop into a mysql shell on the default db
 lando mysql
 
-# Drop into a mysql shell on the secondary database
-lando mysql -h database2
+# Drop into a postgres shell on the secondary database
+lando psql -h database2
 
 # Import the test mysql file against the default database
 lando db-import test.sql
 
-# Import the test mysql file to the secondary database
-lando db-import -h databse2 test.sql
+# Import the test postgres file to the secondary database
+lando db-import -h database2 test2.sql
 
 # Verify that we have a 'users' table on both databases
-# NOTE: This will only work if you've `lando db-import test.sql`
+# NOTE: This will only work if you've run `lando db-import test.sql` already
 lando mysql data1 -e "show tables;"
-lando mysql -h database2 database -e "show tables;"
+# NOTE: This will only work if you've run `lando db-import -h database2 test2.sql` already
+lando psql -h database2 database -c "\dt"
 ```
