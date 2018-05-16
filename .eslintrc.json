@@ -1,6 +1,7 @@
 {
     "env": {
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "parserOptions": {
         "ecmaVersion": 6
@@ -199,7 +200,7 @@
         "no-underscore-dangle": "off",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "off",
-        "no-unused-expressions": "error",
+        "no-unused-expressions": "off",
         "no-use-before-define": "error",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
