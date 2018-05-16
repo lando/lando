@@ -5,15 +5,6 @@ GREEN='\033[0;32m'
 RED='\033[31m'
 DEFAULT_COLOR='\033[0;0m'
 
-#if [[  ${MYSQL_DATABASE} != '' ]]; then
-#  let fileExists=1
-#else
-#  let fileExists=0
-#fi
-#
-#echo $fileExists
-#exit
-
 ##
  # Function to export mysql/mariadb database.
 ##
