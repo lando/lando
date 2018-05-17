@@ -2,6 +2,7 @@
 
 // Modules
 var _ = require('lodash');
+var path = require('path');
 
 /*
  * Helper to process args
@@ -19,5 +20,23 @@ exports.largs = function(config) {
 
   // Return
   return _.flatten(argopts);
+
+};
+
+/*
+ * Helper to map the cwd on the host to the one in the container
+ */
+exports.getContainerPath = function(appRoot) {
+
+  // Break up our app root and cwd so we can get a diff
+  var appRoot = appRoot.split(path.sep);
+  var cwd = process.cwd().split(path.sep);
+  var dir = _.drop(cwd, appRoot.length);
+
+  // Add our in-container app root
+  dir.unshift('"$LANDO_MOUNT"');
+
+  // Return the directory
+  return dir.join('/');
 
 };

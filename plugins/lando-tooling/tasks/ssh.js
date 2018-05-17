@@ -4,6 +4,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
+  var utils = require('./../lib/utils');
 
   // The task object
   return {
@@ -38,16 +39,18 @@ module.exports = function(lando) {
 
           // Default to appserver if we have no second arg
           var service = options.service || 'appserver';
+          var ssh = 'if ! type bash > /dev/null; then sh; else bash; fi';
 
           // Build out our run
           var run = {
             id: [app.name, service, '1'].join('_'),
             compose: app.compose,
             project: app.name,
-            cmd: options.command || 'cd $LANDO_MOUNT && bash',
+            cmd: options.command || ssh,
             opts: {
               app: app,
               mode: 'attach',
+              pre: ['cd', utils.getContainerPath(app.root)].join(' '),
               user: options.user || 'www-data',
               services: [service]
             }

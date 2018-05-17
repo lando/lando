@@ -4,7 +4,6 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var path = require('path');
   var Promise = lando.Promise;
   var format = require('util').format;
   var utils = require('./lib/utils');
@@ -108,14 +107,6 @@ module.exports = function(lando) {
           cmd = cmd.concat(utils.largs(config));
         }
 
-        // Break up our app root and cwd so we can get a diff
-        var appRoot = config.app.root.split(path.sep);
-        var cwd = process.cwd().split(path.sep);
-        var dir = _.drop(cwd, appRoot.length);
-
-        // Add our in-container app root
-        dir.unshift('"$LANDO_MOUNT"');
-
         // Get the backup user
         var userPath = 'environment.LANDO_WEBROOT_USER';
         var user = _.get(config.app.services[config.service], userPath, 'root');
@@ -131,7 +122,7 @@ module.exports = function(lando) {
           opts: {
             app: config.app,
             mode: 'attach',
-            pre: ['cd', dir.join('/')].join(' '),
+            pre: ['cd', utils.getContainerPath(config.app.root)].join(' '),
             user: config.user || user,
             services: [config.service],
             hijack: config.hijack || false

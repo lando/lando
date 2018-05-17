@@ -219,9 +219,11 @@ module.exports = function(lando) {
     };
 
     // Assess the service types and add the correct command if needed
-    var services = _.map(config._services, function(service) {
-      return service.type.split(':')[0];
-    });
+    var services = _.compact(_.map(config._services, function(service) {
+      if (_.has(service, 'type')) {
+        return service.type.split(':')[0];
+      }
+    }));
 
     // Add the default database type
     services.push(_.get(config, 'database', 'mysql').split(':')[0]);
