@@ -13,6 +13,11 @@ Supported versions
 >
 > MSSQL currently requires 4GB of RAM to run, which is above the 2GB default set by Docker. To boost your ram please check out: https://github.com/Microsoft/mssql-docker/issues/114
 
+Using patch versions
+--------------------
+
+Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
+
 Example
 -------
 

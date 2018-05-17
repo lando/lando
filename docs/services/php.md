@@ -24,6 +24,11 @@ Supported Versions
 >
 > While you can use [currently EOL](http://php.net/supported-versions.php) `php` versions with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
 
+Using patch versions
+--------------------
+
+Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html). 
+
 Installed Extensions
 --------------------
 

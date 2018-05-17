@@ -17,6 +17,11 @@ Supported versions
 *   [3.6](https://hub.docker.com/r/actency/docker-solr)
 *   custom
 
+Using patch versions
+--------------------
+
+Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
+
 Example
 -------
 
