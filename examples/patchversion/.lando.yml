@@ -18,8 +18,8 @@ services:
     # SSL
     ssl: true
 
-    # Pass in some docker compose overrides so we can map ports and get
-    # more envvars
+    # Override the image with the patch version
+    # Note that this needs to be a correct namespace on the docker hub
     overrides:
       services:
         image: nginx:1.12.1
