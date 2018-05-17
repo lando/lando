@@ -33,6 +33,7 @@
 ## Services
 
 *   [apache](services/apache.md)
+*   [compose](services/compose.md)
 *   [dotnet](services/dotnet.md)
 *   [elasticsearch](services/elasticsearch.md)
 *   [go](services/go.md)

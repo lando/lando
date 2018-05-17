@@ -2,6 +2,12 @@
 
 module.exports = function(lando) {
 
+  // Modules
+  var _ = lando.node._;
+
+  /*
+   * Supported versions for apache
+   */
   var versions = [
     'latest'
   ];
@@ -9,8 +15,8 @@ module.exports = function(lando) {
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
+  var networks = function(name, config) {
+    return _.get(config, 'networks', {});
   };
 
   /*
@@ -22,7 +28,7 @@ module.exports = function(lando) {
     var services = {};
 
     // very basic service defaults.
-    var passthrough = {
+    var compose = {
       environment: {
         TERM: 'xterm'
       },
@@ -33,7 +39,8 @@ module.exports = function(lando) {
     };
 
     // Put it all together
-    services[name] = passthrough;
+    var composed = _.get(config, 'services', {});
+    services[name] = lando.utils.config.merge(compose, composed);
 
     // Return our service
     return services;
@@ -43,15 +50,15 @@ module.exports = function(lando) {
   /*
    * Metadata about our service
    */
-  var info = function() {
-    return {};
+  var info = function(name, config) {
+    return config;
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
-    return {data: {}};
+  var volumes = function(name, config) {
+    return lando.utils.config.merge({data: {}}, _.get(config, 'volumes', {}));
   };
 
   return {

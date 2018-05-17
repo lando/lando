@@ -5,7 +5,7 @@ This example uses our `nginx` service to illustrate how to use an "unsupported" 
 
 [Here](https://hub.docker.com/r/library/nginx/tags/) are all the tags that are available for the `nginx` service.
 
-See the `.lando.yml` in this directory for nginx configuration options.
+See the `.lando.yml` in this directory for configuration options.
 
 Getting Started
 ---------------

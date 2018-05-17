@@ -5,7 +5,7 @@ This example shows how you can extend our `php` Docker images to add in extra ph
 
 This method can be used for any of the other images we use to power our other [services](https://docs.devwithlando.io/config/services.html).
 
-See the `.lando.yml` in this directory for LEMP configuration options.
+See the `.lando.yml` in this directory for configuration options.
 
 Getting Started
 ---------------

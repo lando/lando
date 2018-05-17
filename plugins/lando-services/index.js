@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Meta
   var services = [
     'apache',
+    'compose',
     'dotnet',
     'elasticsearch',
     'go',
@@ -22,7 +23,6 @@ module.exports = function(lando) {
     'mssql',
     'mongo',
     'mysql',
-    'passthrough',
     'postgres',
     'php',
     'phpmyadmin',
