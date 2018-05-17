@@ -973,11 +973,16 @@ module.exports = function(lando) {
 
     // Build image.
     .then(function() {
+
+      // Try to pull the images first
+      // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
       return Promise.each(utils.normalizer(data), function(datum) {
         return Promise.retry(function() {
           return cc(compose.pull(datum.compose, datum.project, datum.opts));
         });
       })
+
+      // Then try to build
       .then(function() {
         return Promise.each(utils.normalizer(data), function(datum) {
           return Promise.retry(function() {
@@ -985,6 +990,7 @@ module.exports = function(lando) {
           });
         });
       });
+
     })
 
     /**

@@ -86,6 +86,8 @@ Installed Extensions
 Installing Your Own Extensions
 ------------------------------
 
+### Using Build Steps
+
 You can install your own extensions using the [`run_as_root`](./../config/build.md#steps-run-as-root) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
 
 ```bash
@@ -97,6 +99,20 @@ services:
       - "pecl install memcached"
       - "docker-php-ext-enable memcached"
 ```
+
+### Using a Dockerfile
+
+Alternatively you can extend our base `php` image by overriding your service to build from a `Dockerfile` that lives somewhere inside your app.
+
+#### Landofile
+
+{% codesnippet "./../examples/dockerfile/.lando.yml" %}{% endcodesnippet %}
+
+#### Dockerfile
+
+{% codesnippet "./../examples/dockerfile/php/Dockerfile" %}{% endcodesnippet %}
+
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/dockerfile).
 
 LAMP Example
 ------------

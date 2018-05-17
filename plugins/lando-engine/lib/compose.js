@@ -205,9 +205,12 @@ exports.build = function(compose, project, opts) {
 
   // Default options
   var defaults = {
-    nocache: true,
+    nocache: false,
     pull: true
   };
+
+  // Let's make sure we are building everything
+  delete opts.services;
 
   // Get opts
   var options = (opts) ? _.merge(defaults, opts) : defaults;
@@ -224,6 +227,12 @@ exports.build = function(compose, project, opts) {
  * Run docker compose pull
  */
 exports.pull = function(compose, project, opts) {
+
+  // Let's get a list of all our services that need to be pulled
+  opts.services = _.filter(_.keys(_.get(opts, 'app.services'), []), function(service) {
+    return !_.has(opts.app.services, service + '.build');
+  });
+
   return {
     cmd: buildCmd(compose, project, 'pull', opts),
     opts: {app: opts.app, mode: 'collect'}

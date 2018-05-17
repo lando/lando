@@ -196,6 +196,11 @@ module.exports = function(lando) {
         });
       }
 
+      // Map any build keys to the correct path
+      if (_.has(services[name], 'build')) {
+        services[name].build = path.resolve(config._root, services[name].build);
+      }
+
     }
 
     // Go through all the services and add in the lando bridgenet

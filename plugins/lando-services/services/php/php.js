@@ -272,10 +272,14 @@ module.exports = function(lando) {
     // resetting the service image
     var appConfig = _.cloneDeep(config);
 
-    // Don't allow us to override the image here
+    // Don't allow us to override the image/build here
     if (_.has(appConfig, 'overrides.services.image')) {
       delete appConfig.overrides.services.image;
     }
+    if (_.has(appConfig, 'overrides.services.build')) {
+      delete appConfig.overrides.services.build;
+    }
+
 
     // Set the nginx config
     appConfig.config = _.merge(nginxConfigDefaults, appConfig.config);
