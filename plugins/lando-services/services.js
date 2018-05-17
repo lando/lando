@@ -155,8 +155,8 @@ module.exports = function(lando) {
       {script: 'user-perms.sh', local: esd, remote: 'helpers'},
       {script: 'add-cert.sh', local: esd, remote: 'scripts'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
-      {script: 'mysql-import.sh', local: shd, remote: 'helpers'},
-      {script: 'mysql-export.sh', local: shd, remote: 'helpers'},
+      {script: 'sql-import.sh', local: shd, remote: 'helpers'},
+      {script: 'sql-export.sh', local: shd, remote: 'helpers'},
     ];
 
     // Add in helpers and scripts
@@ -194,6 +194,11 @@ module.exports = function(lando) {
         _.forEach(config._hiddenServices, function(o) {
           services[o] = merger(services[o], config.overrides.services);
         });
+      }
+
+      // Map any build keys to the correct path
+      if (_.has(services[name], 'build')) {
+        services[name].build = path.resolve(config._root, services[name].build);
       }
 
     }

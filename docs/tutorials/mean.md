@@ -94,16 +94,9 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
 
 ```bash
-LANDO_INFO=JSON_STRING_OF_LANDO_INFO
-
-# Pending deprecation!!!
-# These will soon be removed.
-# We recommend you switch to using LANDO_INFO.
-DB_HOST=database
-DB_USER=lemp
-DB_PASSWORD=lemp
-DB_NAME=lemp
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"node","version":"8.0","hostnames":["appserver"]},"database":{"type":"mongo","version":"3.2","hostnames":["database"],"internal_connection":{"host":"database","port":27017},"external_connection":{"host":"localhost","port":true}}}
 ```
 
 **NOTE:** These can vary based on the choices you make in your recipe config.

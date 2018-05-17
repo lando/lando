@@ -1,9 +1,9 @@
-MySQL Export Example
+SQL Export Example
 ====================
 
-This example provides a very basic `mysql-export` example built on Lando php services.
+This example provides a very basic `db-export` example built on Lando php services.
 
-See the `.lando.yml` in this directory for `mysql-export` configuration options.
+See the `.lando.yml` in this directory for `db-export` configuration options.
 
 Getting Started
 ---------------
@@ -29,15 +29,16 @@ lando info
 
 # Import the test db to both databases
 lando db-import test.sql
-lando db-import -h database2 test.sql
+lando db-import -h database2 test2.sql
 
 # See export options
 lando db-export -- --help
 
 # Verify that we have a 'users' table on both databases
-# NOTE: This will only work if the auto-import on Lando start was successful
+# NOTE: This will only work if you've run `lando db-import test.sql` already
 lando mysql data1 -e "show tables;"
-lando mysql -h database2 database -e "show tables;"
+# NOTE: This will only work if you've run `lando db-import -h database2 test2.sql` already
+lando psql -h database2 database -c "\dt"
 
 # Export the contents of the dbs
 lando db-export

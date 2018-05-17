@@ -1,15 +1,25 @@
 #!/bin/bash
 
-# Set the things
+# Set generic config
 FILE=""
-HOST=localhost
-USER=root
-DATABASE=${MYSQL_DATABASE:-database}
-PORT=3306
 WIPE=true
+HOST=localhost
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 DEFAULT_COLOR='\033[0;0m'
+
+# Get type-specific config
+if [[ ${POSTGRES_DB} != '' ]]; then
+  DATABASE=${POSTGRES_DB:-database}
+  PASSWORD=${PGPASSWORD:-password}
+  PORT=5432
+  USER=postgres
+else
+  DATABASE=${MYSQL_DATABASE:-database}
+  PORT=3306
+  USER=root
+fi
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -60,8 +70,12 @@ if [ ! -z "$FILE" ]; then
 
 else
 
-  # Build connection string
-  CMD="mysql -h $HOST -P $PORT -u $USER"
+  # Build DB specific connection string
+  if [[ ${POSTGRES_DB} != '' ]]; then
+    CMD="psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DATABASE"
+  else
+    CMD="mysql -h $HOST -P $PORT -u $USER"
+  fi
 
   # Read stdin into DB
   $CMD #>/dev/null
@@ -70,25 +84,40 @@ else
 fi
 
 # Inform the user of things
-echo "Preparing to import $FILE into $LANDO_SERVICE_NAME:$DATABASE on $HOST:$PORT as $USER..."
+echo "Preparing to import $FILE into $DATABASE on $HOST:$PORT as $USER..."
 
-# Wipe the database
+# Wipe the database if set
 if [ "$WIPE" == "true" ]; then
 
-  # Build the SQL prefix
-  SQLSTART="mysql -h $HOST -P $PORT -u $USER $DATABASE"
-
-  # Gather and destroy tables
-  TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
   echo "Destroying all current tables in $DATABASE... "
   echo "NOTE: See the --no-wipe flag to avoid this step!"
 
-  # PURGE IT ALL! BURN IT TO THE GROUND!!!
-  for t in $TABLES; do
-    echo "Dropping $t table from $DATABASE database..."
-    $SQLSTART -e "DROP TABLE $t"
-  done
 
+  # DO db specific wiping
+  if [[ ${POSTGRES_DB} != '' ]]; then
+
+    # Drop and recreate database
+    printf "\t\t${GREEN}Dropping database ...\n\n${DEFAULT_COLOR}"
+    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/postgres -c "drop database $DATABASE"
+
+    printf "\t\t${GREEN}Creating database ...\n\n${DEFAULT_COLOR}"
+    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/postgres -c "create database $DATABASE"
+
+  else
+
+    # Build the SQL prefix
+    SQLSTART="mysql -h $HOST -P $PORT -u $USER $DATABASE"
+
+    # Gather and destroy tables
+    TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
+
+    # PURGE IT ALL! BURN IT TO THE GROUND!!!
+    for t in $TABLES; do
+      echo "Dropping $t table from $DATABASE database..."
+      $SQLSTART -e "DROP TABLE $t"
+    done
+
+  fi
 fi
 
 # Check to see if we have any unzipping options or GUI needs
@@ -114,8 +143,12 @@ else
   fi
 fi
 
-# Put the pieces together
-CMD="$CMD | mysql -h $HOST -P $PORT -u $USER $DATABASE"
+# Build DB specific import command
+if [[ ${POSTGRES_DB} != '' ]]; then
+  CMD="$CMD | psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DATABASE"
+else
+  CMD="$CMD | mysql -h $HOST -P $PORT -u $USER $DATABASE"
+fi
 
 # Import
 echo "Importing $FILE..."

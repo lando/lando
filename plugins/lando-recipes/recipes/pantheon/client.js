@@ -196,9 +196,17 @@ module.exports = function(lando) {
 
     // Get the sites
     .then(function(session) {
-      var getSites = ['users', _.get(session, 'user_id'), 'sites'];
+
+      // Headers options
       var options = {headers: getAuthHeaders(session)};
+
+      // Get org path
+      var userId = _.get(session, 'user_id');
+      var getSites = ['users', userId, 'memberships', 'sites'];
+
+      // Get the sites
       return pantheonRequest('get', getSites, options);
+
     })
 
     // Map them into something we can merge with org sites better

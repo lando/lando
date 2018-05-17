@@ -24,6 +24,11 @@ Supported Versions
 >
 > While you can use [currently EOL](http://php.net/supported-versions.php) `php` versions with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
 
+Using patch versions
+--------------------
+
+Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html). 
+
 Installed Extensions
 --------------------
 
@@ -86,7 +91,9 @@ Installed Extensions
 Installing Your Own Extensions
 ------------------------------
 
-You can install your own extensions using the [`extras`](./../config/services.md#build-extras) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
+### Using Build Steps
+
+You can install your own extensions using the [`run_as_root`](./../config/build.md#steps-run-as-root) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
 
 ```bash
 services:
@@ -97,6 +104,20 @@ services:
       - "pecl install memcached"
       - "docker-php-ext-enable memcached"
 ```
+
+### Using a Dockerfile
+
+Alternatively you can extend our base `php` image by overriding your service to build from a `Dockerfile` that lives somewhere inside your app.
+
+#### Landofile
+
+{% codesnippet "./../examples/dockerfile/.lando.yml" %}{% endcodesnippet %}
+
+#### Dockerfile
+
+{% codesnippet "./../examples/dockerfile/php/Dockerfile" %}{% endcodesnippet %}
+
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/dockerfile).
 
 LAMP Example
 ------------
@@ -124,7 +145,7 @@ Using Xdebug
 
 You can activate `xdebug` for remote debugging by setting `xdebug: true` in the config for your `php` service. This will enable `xdebug` and configure it so you can connect from your host machine. You will need to configure your IDE so that it can connect.
 
-Here are the instructions to [setup XDebug in Visual Studio Code](tutorials/lando-with-vscode.md).
+Here are the instructions to [setup XDebug in Visual Studio Code](/tutorials/lando-with-vscode.html).
 
 Here is some example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin:
 

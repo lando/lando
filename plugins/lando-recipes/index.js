@@ -58,12 +58,14 @@ module.exports = function(lando) {
       var name = app.name;
       var recipe = app.config.recipe;
       var config = app.config.config || {};
+      var services = app.config.services || {};
 
       // Add some internal properties to our config
       config._app = name;
       config._root = app.root;
       config._mount = app.mount;
       config._recipe = recipe;
+      config._services = services;
 
       // Get our new config
       var newConfig = lando.recipes.build(name, recipe, config);
