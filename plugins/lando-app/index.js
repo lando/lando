@@ -99,17 +99,21 @@ module.exports = function(lando) {
     app.labels = merger(app.labels, labels);
 
     // Inject values from an .env file if it exists
-    if (fs.existsSync(path.join(app.root, '.env'))) {
+    const envFile = app.config.config.env_file || '.env';
+
+    if (fs.existsSync(path.join(app.root, envFile))) {
 
       // Log
-      lando.log.debug('.env file found for %s, loading its config', app.name);
+      lando.log.debug(envFile + ' file found for %s, loading its config', app.name);
 
       // Load .env file
-      var result = dotenv.config();
+      var result = dotenv.config({
+        path: path.resolve(app.root, envFile)
+      });
 
       // warn if needed
       if (result.error) {
-        lando.log.warn('Trouble parsing .env file with %s', result.error);
+        lando.log.warn('Trouble parsing ' + envFile + ' file with %s', result.error);
       }
 
       // Merge in values to app.env
@@ -120,6 +124,7 @@ module.exports = function(lando) {
     }
 
     // Check to see if we have config.compose and merge
+
     if (_.has(app, 'config.compose')) {
 
       // Get the app root
@@ -133,7 +138,6 @@ module.exports = function(lando) {
 
         // Get our object from file
         var data = lando.yaml.load(file);
-
         // Merge things in
         app.services = merger(app.services, data.services);
         app.volumes = merger(app.volumes, data.volumes);
@@ -163,7 +167,7 @@ module.exports = function(lando) {
 
         // Merge in globals
         service.environment = merger(env, app.env);
-        service.labels  = merger(labels, app.labels);
+        service.labels = merger(labels, app.labels);
 
         // Log
         lando.log.verbose('Service %s has env %j', name, service.environment);

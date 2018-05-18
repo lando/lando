@@ -71,6 +71,15 @@ Fine-grained Configuration
 
 Recipes are simply common development use-cases, composed of different combinations of [`services`](/config/services.html), [`tooling`](/config/tooling.html), [`proxies`](/config/proxiy.html), and [`events`](/config/events.html). Each of these is a first-class citizens in Lando, with its own top-level configuration options. They can run alongside  recipes or raw `compose` setups to extend functionality.
 
+### The `env_file` option
+
+Lando will automatically inject the variables from a `.env` file into all of your services. The name of the file can be customized with the following config setting:
+
+```
+config:
+  env_file: .landoenv
+```
+
 ### Configuring `services`
 
 The `services` block describes any number of single services, such as `php` and `mysql`. It always expects a `type` to specified. Other supported options within a service block depend on the type.

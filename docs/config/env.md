@@ -59,6 +59,13 @@ DB_USER=root
 DB_PASS=s1mpl3
 ```
 
+The name of the file `.env` can be customized if you need to by adding this to your config settings:
+
+```
+config:
+  env_file: .landoenv
+```
+
 ### Global Container Environment Variables
 
 If you want to inject the same environment variables into every container in every app then you need to define the `containerGlobalEnv` in your [`config.yml`](./config.md).
