@@ -99,7 +99,7 @@ module.exports = function(lando) {
     app.labels = merger(app.labels, labels);
 
     // Inject values from an .env file if it exists
-    const envFile = app.config.config.env_file || '.env';
+    const envFile = _.get(app.config, 'config.env_file') || '.env';
 
     if (fs.existsSync(path.join(app.root, envFile))) {
 
