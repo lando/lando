@@ -4,7 +4,6 @@ const CliTest = require('command-line-test');
 const fs = require('fs');
 const path = require('path');
 const pathToLando = path.resolve('bin', 'lando.js');
-const Promise = require('bluebird');
 const jsYaml = require('js-yaml');
 const os = require('os');
 
@@ -16,7 +15,7 @@ class CliHelper {
   /**
    * Execute a Lando Command using the entrypoint in codebase
    * @param {array} args - arguments/options to pass to Lando
-   * @param {object} opts - options to pass to execFile
+   * @param {object} options - options to pass to execFile
    * @return {Promise} - A promise chain containing output of
    *                     command execution
    */
