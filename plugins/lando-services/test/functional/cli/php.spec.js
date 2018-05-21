@@ -38,4 +38,14 @@ describe('php', () => {
         })
             .should.eventually.have.string('hirak/prestissimo');
     });
+
+    it('should have Blackfire extension loaded', function () {
+        this.timeout(50000);
+        return helper.createTestApp(app)
+            .then(appFolder => helper.execCommand(['start'], {cwd: appFolder})
+                .then(res => helper.execCommand(['ssh', 'php', '-c', 'php -m'], {cwd: appFolder})
+                    .then(res => res.stdout)
+                )
+            ).should.eventually.have.string('blackfire');
+    });
 });
