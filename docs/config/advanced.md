@@ -6,7 +6,7 @@ Using Dockerfiles
 
 You can use your own images by overriding any service to build from a `Dockerfile` that lives somewhere inside your app. Here is an example that extends our base `php` image to add another extension.
 
-#### Landofile
+#### Landofile (.lando.yml)
 
 {% codesnippet "./../examples/dockerfile/.lando.yml" %}{% endcodesnippet %}
 
