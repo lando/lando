@@ -156,7 +156,7 @@ module.exports = function(lando) {
           // If the proxy is different, rebuild with new and stop the old
           if (JSON.stringify(proxyOld) !== JSON.stringify(data)) {
             lando.log.verbose('Proxy has changed, rebuilding');
-            lando.yaml.dump(proxyFile, data);
+            lando.yaml.dump(portsFile, data);
           }
 
         })
