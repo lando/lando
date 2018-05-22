@@ -69,8 +69,12 @@ module.exports = function(lando) {
        */
       var scanPorts = function(config) {
 
-        var u = proxy.getUrls(config.proxyHttpPorts, false, config.engineHost);
-        var u2 = proxy.getUrls(config.proxyHttpsPorts, true, config.engineHost);
+        // Get the engine IP
+        var engineIp = _.get(config, 'engineConfig.host', '127.0.0.1');
+
+        // Get the URLs
+        var u = proxy.getUrls(config.proxyHttpPorts, false, engineIp);
+        var u2 = proxy.getUrls(config.proxyHttpsPorts, true, engineIp);
 
         // Determine the ports for our proxy
         return lando.Promise.all([
