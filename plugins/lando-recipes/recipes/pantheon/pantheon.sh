@@ -10,15 +10,22 @@ INDEX_PEM="$CERT_DIR/cert.pem"
 # Kick it off
 echo "Pantheon pre-run scripting"
 
-# Set up some new dirs
-mkdir -p /var/www/certs
-
-# Emulate /srv/bindings
+# Emulate Pantheon HOME structure
 if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
+
+  # Set up some new dirs
+  mkdir -p /var/www/certs
   mkdir -p /srv/bindings
+  chown -R www-data:www-data /var/www/certs /srv/bindings
+
+  # Set up some symlnks
   ln -s /var/www "/srv/bindings/lando" || true
-  # Set the tmp directory
   ln -sf /tmp /srv/bindings/lando/tmp
+  ln -sf /app /var/www/code
+
+  # Do another chown pass
+  find /var/www -type d -exec chown www-data:www-data {} +
+
 fi
 
 # Setting up client key
