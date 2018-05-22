@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
   && mkdir -p /var/www/.composer \
   && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
+  && chown -R www-data:www-data /var/www /srv/bin \
   && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
   && php installer.phar install --install-version=$TERMINUS_VERSION \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \

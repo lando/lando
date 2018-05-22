@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && mkdir -p /srv/bin \
+  && chown -R www-data:www-data /var/www /srv/bin \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
   && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
   && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \
