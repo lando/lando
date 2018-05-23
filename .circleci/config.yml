@@ -1,24 +1,44 @@
+defaults: &defaults
+  environment:
+    TZ: "/usr/share/zoneinfo/America/New_York"
 version: 2
 jobs:
-  build:
-    working_directory: ~/lando
-    docker:
-      - image: circleci/node:8.9.4
+  test:
+    machine:
+      image: circleci/classic:201711-01
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Install deps
-          command: yarn install
-      - run:
-          name: Install Docker Compose
+          name: Setup Node
           command: |
-            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+            nvm install 8.9.4
+            nvm alias default 8.9.4
       - run:
-          name: Unit Tests
+          name: Install Yarn
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update && sudo apt-get --no-install-recommends install yarn
+      - restore_cache:
+          key: yarn-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn
+      - save_cache:
+          key: yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - "node_modules"
+      - run:
+          name: Unit Tests / Linting
           command: yarn test
       - run:
           name: Functional Tests
           command: yarn test:functional
+workflows:
+  version: 2
+  deployment:
+    jobs:
+      - test
