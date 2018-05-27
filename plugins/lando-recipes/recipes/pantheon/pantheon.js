@@ -297,6 +297,7 @@ module.exports = function(lando) {
         },
         rsync: {
           description: 'Rsync the files, good for subsequent pulls',
+          passthrough: true,
           boolean: true,
           default: false
         }

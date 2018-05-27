@@ -104,7 +104,7 @@ if [ "$CODE" != "none" ]; then
   fi
 
   # Checkout and pull
-  echo "Pulling code..."
+  echo "Pulling code from $CODE..."
   git checkout $GIT_BRANCH
   git pull -Xtheirs --no-edit origin $GIT_BRANCH
 
@@ -163,7 +163,7 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
   # Importing database
-  echo "Pulling database..."
+  echo "Pulling database from $DATABASE..."
   eval "$PULL_DB"
 
   # Do some post DB things on WP
@@ -214,7 +214,7 @@ if [ "$FILES" != "none" ]; then
   PULL_FILES="$PULL_FILES $RSYNC_CMD"
 
   # Importing files
-  echo "Pulling files..."
+  echo "Pulling files from $FILES..."
   eval "$PULL_FILES"
 
 fi
