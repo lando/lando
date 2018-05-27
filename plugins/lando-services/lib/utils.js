@@ -88,8 +88,20 @@ exports.setEntrypoint = function(entrypoint) {
 };
 
 /**
+ * Helper to normalize a path
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.normalizePath'
+ */
+exports.normalizePath = function(local, base) {
+  var normalize = !path.isAbsolute(local) && !_.startsWith(local, '$');
+  return normalize ? path.resolve(base, local) : local;
+};
+
+/**
  * Helper to build a volumes
  * @NOTE: This seems weird, maybe written before we have more generic compose merging?
+ * @NOTE: Once we have more testing can we switch this to use normalizePath?
  *
  * @since 3.0.0
  * @alias 'lando.utils.services.buildVolume'

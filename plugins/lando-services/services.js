@@ -196,9 +196,21 @@ module.exports = function(lando) {
         });
       }
 
-      // Map any build keys to the correct path
+      // Map any build or volume keys to the correct path
       if (_.has(services[name], 'build')) {
-        services[name].build = path.resolve(config._root, services[name].build);
+        services[name].build = utils.normalizePath(services[name].build, config._root);
+      }
+      if (_.has(services[name], 'volumes')) {
+        services[name].volumes = _.map(services[name].volumes, function(volume) {
+          if (!_.includes(volume, ':')) {
+            return volume;
+          }
+          else {
+            var parts = volume.split(':');
+            var host = utils.normalizePath(parts[0], config._root);
+            return [host, parts[1]].join(':');
+          }
+        });
       }
 
     }

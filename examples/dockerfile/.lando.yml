@@ -23,3 +23,9 @@ services:
         #   WARNING: Image for service appserver was built because it did not already exist.
         # This is safe to ignore
         image: pirog/php:7.1-fpm-custom
+
+        # This is not needed it only serves to illustrate how you can map internal container things
+        # to your app directory for easy editability
+        volumes:
+          - ./config/custom.ini:/usr/local/etc/php/conf.d/zzzz-custom.ini
+          - ./logs:/var/logs

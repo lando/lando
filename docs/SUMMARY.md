@@ -277,6 +277,7 @@
 *   [lando.util.services.connectBridge](api/api.md#landoutilsservicesconnectbridge)
 *   [lando.util.services.connectNet](api/api.md#landoutilsservicesconnectnridge)
 *   [lando.util.services.filterBuildSteps](api/api.md#landoutilsservicesfilterbuildsteps)
+*   [lando.util.services.normalizePath](api/api.md#landoutilsservicesnormalizepath)
 *   [lando.util.services.setEntrypoint](api/api.md#landoutilsservicessetentrypoint)
 *   [lando.yaml.dump](api/api.md#landoyamldump)
 *   [lando.yaml.load](api/api.md#landoyamlload)
