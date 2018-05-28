@@ -229,9 +229,13 @@ exports.build = function(compose, project, opts) {
 exports.pull = function(compose, project, opts) {
 
   // Let's get a list of all our services that need to be pulled
-  opts.services = _.filter(_.keys(_.get(opts, 'app.services'), []), function(service) {
+  // eg not built from a local dockerfile
+  var images = _.filter(_.keys(_.get(opts, 'app.services'), []), function(service) {
     return !_.has(opts.app.services, service + '.build');
   });
+
+  // If the user has selected something then intersect, if not use all image driven services
+  opts.services = (!_.isEmpty(opts.services)) ? _.intersection(opts.services, images) : images;
 
   return {
     cmd: buildCmd(compose, project, 'pull', opts),
