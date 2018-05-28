@@ -40,7 +40,7 @@ describe('updates', () => {
     });
 
     it('Determines need to update based on current time vs expiration', () => {
-      // Accelerate to 88mph 💥 🚗 🔥🔥🔥🔥
+      // Accelerate to 88mph
       const clock = sinon.useFakeTimers(new Date('October 26, 1985 01:35:00'));
       // Old Man Peabody
       updates.fetch({expires: new Date('November 5, 1955, 06:15:00')})
