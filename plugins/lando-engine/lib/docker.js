@@ -482,24 +482,6 @@ module.exports = function(config) {
     return dockerInstance.getNetwork(id);
   };
 
-  /*
-   * Prune the networks
-   */
-  var pruneNetworks = function(opts) {
-
-    // Get options
-    var options = opts || {};
-
-    // Prune the networks
-    return dockerInstance.pruneNetworks(options)
-
-    // Wrap errors.
-    .catch(function(err) {
-      throw new Error(err, 'Error pruning the networkz.');
-    });
-
-  };
-
   // Return
   return {
     list: list,
@@ -510,8 +492,7 @@ module.exports = function(config) {
     remove: remove,
     createNetwork: createNetwork,
     getNetwork: getNetwork,
-    getNetworks: getNetworks,
-    pruneNetworks: pruneNetworks,
+    getNetworks: getNetworks
   };
 
 };

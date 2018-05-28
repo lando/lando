@@ -13,7 +13,6 @@ module.exports = function(lando) {
   var proxyFile = path.join(lando.config.userConfRoot, 'proxy', 'proxy.yml');
   var portsFile = path.join(lando.config.userConfRoot, 'proxy', 'ports.yml');
   var projectName = 'landoproxyhyperion5000gandalfedition';
-  var networkName = [projectName, 'edge'].join('_');
 
   // Add some config for the proxy
   lando.events.on('post-bootstrap', 1, function(lando) {
@@ -30,6 +29,7 @@ module.exports = function(lando) {
       proxyHttpsPort: '443',
       proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
       proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
+      proxyNet: [projectName, 'edge'].join('_'),
       proxyRunner: proxy.compose(proxyFile, portsFile, projectName)
     };
 
@@ -257,7 +257,7 @@ module.exports = function(lando) {
               service: {
                 networks: {'lando_proxyedge': {}},
                 labels: {
-                  'traefik.docker.network': networkName,
+                  'traefik.docker.network': lando.config.proxyNet,
                   'traefik.frontend.rule': 'HostRegexp:' + parsedHosts,
                   'traefik.port': _.toString(port)
                 }
@@ -272,7 +272,7 @@ module.exports = function(lando) {
         .then(function(services) {
 
           // Get the tl compose object
-          var compose = routes.compose(networkName);
+          var compose = routes.compose(lando.config.proxyNet);
 
           // Loop and add in
           _.forEach(_.compact(services), function(service) {

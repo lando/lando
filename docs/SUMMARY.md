@@ -81,7 +81,7 @@
 *   [Running VB and HyperV](issues/win-also-vb.md)
 *   [Running behind a firewall](issues/firewall.md)
 *   [Running behind a proxy](issues/proxy.md)
-*   [Switching Databases](issues/switching-dbs.md)
+*   [Switching Database Config](issues/switching-dbs.md)
 *   [Overlapping IPv4 Address](issues/overlapping-ip.md)
 
 ## Troubleshooting and Support
@@ -197,7 +197,6 @@
 *   [lando.engine.isUp](api/api.md#landoengineisup)
 *   [lando.engine.list](api/api.md#landoenginelist)
 *   [lando.engine.logs](api/api.md#landoenginelogs)
-*   [lando.engine.pruneNetworks](api/api.md#landoengineprunenetworks)
 *   [lando.engine.run](api/api.md#landoenginerun)
 *   [lando.engine.scan](api/api.md#landoenginescan)
 *   [lando.engine.start](api/api.md#landoenginestart)
