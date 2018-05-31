@@ -16,9 +16,6 @@ module.exports = function(lando) {
   // Registry of services
   var registry = {};
 
-  // The bridge network
-  var landoBridgeNet = 'lando_bridge_network';
-
   /**
    * Retrieve the default version of a service.
    * Some services don't define a default, but all SHOULD.
@@ -180,36 +177,40 @@ module.exports = function(lando) {
     // Process any compose overrides we might have
     if (_.has(config, 'overrides')) {
 
+      // Get our overrides
+      var overrides = config.overrides;
+
       // Log
       lando.log.debug('Overriding %s with', name, config.overrides);
 
-      // Merge
-      services[name] = merger(services[name], config.overrides.services);
-      volumes = merger(volumes, config.overrides.volumes);
-      networks = merger(networks, config.overrides.networks);
-
-      // If we need to provide overrides for other things, eg behind the scenes
-      // cli services let's do that here
-      if (_.has(config, '_hiddenServices')) {
-        _.forEach(config._hiddenServices, function(o) {
-          services[o] = merger(services[o], config.overrides.services);
-        });
-      }
-
       // Map any build or volume keys to the correct path
-      if (_.has(services[name], 'build')) {
-        services[name].build = utils.normalizePath(services[name].build, config._root);
+      if (_.has(overrides, 'services.build')) {
+        overrides.services.build = utils.normalizePath(overrides.services.build, config._root);
       }
-      if (_.has(services[name], 'volumes')) {
-        services[name].volumes = _.map(services[name].volumes, function(volume) {
+      if (_.has(overrides, 'services.volumes')) {
+        overrides.services.volumes = _.map(overrides.services.volumes, function(volume) {
           if (!_.includes(volume, ':')) {
             return volume;
           }
           else {
             var parts = volume.split(':');
-            var host = utils.normalizePath(parts[0], config._root);
+            var excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
+            var host = utils.normalizePath(parts[0], config._root, excludes);
             return [host, parts[1]].join(':');
           }
+        });
+      }
+
+      // Merge
+      services[name] = merger(services[name], overrides.services);
+      volumes = merger(volumes, overrides.volumes);
+      networks = merger(networks, overrides.networks);
+
+      // If we need to provide overrides for other things, eg behind the scenes
+      // cli services let's do that here
+      if (_.has(config, '_hiddenServices')) {
+        _.forEach(config._hiddenServices, function(o) {
+          services[o] = merger(services[o], overrides.services);
         });
       }
 
@@ -275,8 +276,7 @@ module.exports = function(lando) {
     build: build,
     get: get,
     healthcheck: healthcheck,
-    info: info,
-    bridge: landoBridgeNet
+    info: info
   };
 
 };
