@@ -91,7 +91,7 @@ describe('lando-services.utils', () => {
       const normalized = utils.normalizePath(local, base);
 
       // Assert the things
-      expect(normalized).to.equal(path.sep + ['anything', 'thing'].join(path.sep));
+      expect(normalized).to.equal(prefix + ['anything', 'thing'].join(path.sep));
       expect(path.isAbsolute(normalized)).to.equal(true);
 
     });
