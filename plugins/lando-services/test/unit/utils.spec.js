@@ -86,7 +86,8 @@ describe('lando-services.utils', () => {
 
       // Get the command
       const local = ['.', '..', 'thing'].join(path.sep);
-      const base = path.sep + ['anything', 'thing'].join(path.sep);
+      const prefix = (process.platform === 'win32') ? 'C:\\' : '/';
+      const base = prefix + ['anything', 'thing'].join(path.sep);
       const normalized = utils.normalizePath(local, base);
 
       // Assert the things
