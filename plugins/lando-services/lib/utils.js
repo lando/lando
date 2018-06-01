@@ -143,6 +143,17 @@ exports.filterBuildSteps = function(services) {
 
 };
 
+
+/**
+ * Helper method to get the host part of a volume
+ *
+ * @since 3.0.0
+ * @alias 'lando.utils.services.getHostPath'
+ * @param {String} mount The entire mount
+ * @returns {String} The host part of the mount
+ */
+exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
+
 /**
  * Helper method to normalize a path so that Lando overrides can be used as though
  * the docker-compose files were in the app root.
@@ -155,19 +166,14 @@ exports.filterBuildSteps = function(services) {
  * @returns {String} Either local or local prefixed by base
  */
 exports.normalizePath = (local, base, excludes = []) => {
-
   // Return local if it starts with $
   if (_.startsWith(local, '$')) return local;
-
   // Return local if it is one of the excludes
   if (_.includes(excludes, local)) return local;
-
   // Return local if local is an absolute path
   if (path.isAbsolute(local)) return local;
-
   // Otherwise this is a relaive path so return local resolved by base
   return path.resolve(path.join(base, local));
-
 };
 
 /**

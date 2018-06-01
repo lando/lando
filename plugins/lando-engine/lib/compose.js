@@ -137,8 +137,9 @@ var buildCmd = function(compose, project, run, opts) {
     });
   }
 
-  // Add in a command arg if its there
-  if (opts && opts.cmd) {
+  // Add a hacky conditional here because windoze seems to handle this weirdly
+  // @todo: remove the above during unit testing
+  if (opts && opts.cmd && run === 'exec') {
     if (typeof opts.cmd === 'string') {
       opts.cmd = [opts.cmd];
     }
