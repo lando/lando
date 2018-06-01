@@ -46,7 +46,7 @@ services:
 
     # Optionally use custom solr config files eg (schema.xml and solrconfig.xml)
     # This is helpful if frameworks require custom config eg Drupal.
-    # This is relative to the app root.
+    # This is relative to the app root (which may be different from your webroot).
     #config:
     #  conf: solrconf
 
