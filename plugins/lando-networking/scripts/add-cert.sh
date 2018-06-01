@@ -88,10 +88,11 @@ fi
 if ! [ -x "$(command -v update-ca-certificates)" ]; then
   echo "Installing update-ca-certificates..."
   if [ -x "$(command -v apt-get)" ]; then
-    nohup sh -c "apt-get update -y && apt-get install ca-certificates -y && update-ca-certificates" &
+    nohup sh -c "apt-get update -y && apt-get install ca-certificates -y"
   else
-    nohup sh -c "apk add --no-cache ca-certificates && update-ca-certificates" &
+    nohup sh -c "apk add --no-cache ca-certificate"
   fi
 else
-  update-ca-certificates &
-fi
+
+# And then update the certs
+update-ca-certificates

@@ -38,6 +38,20 @@ describe('lando-services.utils', () => {
     it('should have a completed spec!');
   });
 
+  // getHostPath method
+  describe('#getHostPath', () => {
+
+    it('should return the correct host path on posix', () => {
+      const hostPath = utils.getHostPath('/thing:/stuff');
+      expect(hostPath).to.equal('/thing');
+    });
+    it('should return the correct host path on windoze', () => {
+      const hostPath = utils.getHostPath('C:\\thing:/stuff');
+      expect(hostPath).to.equal('C:\\thing');
+    });
+
+  });
+
   // normalizePath method
   describe('#normalizePath', () => {
 
@@ -95,7 +109,6 @@ describe('lando-services.utils', () => {
       expect(path.isAbsolute(normalized)).to.equal(true);
 
     });
-
 
   });
 

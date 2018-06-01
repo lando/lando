@@ -193,10 +193,11 @@ module.exports = function(lando) {
             return volume;
           }
           else {
-            var parts = volume.split(':');
+            var local = utils.getHostPath(volume);
+            var remote = _.last(volume.split(':'));
             var excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
-            var host = utils.normalizePath(parts[0], config._root, excludes);
-            return [host, parts[1]].join(':');
+            var host = utils.normalizePath(local, config._root, excludes);
+            return [host, remote].join(':');
           }
         });
       }
