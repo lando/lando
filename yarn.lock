@@ -2557,6 +2557,12 @@ mock-fs@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.4.2.tgz#09dec5313f97095a450be6aa2ad8ab6738d63d6b"
 
+mock-spawn@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/mock-spawn/-/mock-spawn-0.2.6.tgz#b39c15a1c067504310144151f2c1de344d03937f"
+  dependencies:
+    through "2.3.x"
+
 move-concurrently@^1.0.1, move-concurrently@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -4178,7 +4184,7 @@ through2@^2.0.0, through2@^2.0.1:
     readable-stream "^2.1.5"
     xtend "~4.0.1"
 
-"through@>=2.2.7 <3", through@^2.3.6:
+through@2.3.x, "through@>=2.2.7 <3", through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 

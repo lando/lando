@@ -1,6 +1,6 @@
 /**
- * Tests for updates module.
- * @file updates.spec.js
+ * Tests for shell module.
+ * @file shell.spec.js
  */
 
 'use strict';
@@ -40,28 +40,22 @@ describe('shell', () => {
     });
   });
 
-  describe('#spawn', function() {
-    it('should collect output if output is piped', function() {
-
-    });
-
-    it('should auto-resolves if not connected', function() {
-
-    });
-
-    it('should default to piped i/o', function() {
-
-    });
-
-    it('should override options', function() {
-
-    });
-
-  });
-
-  describe('#sh', function() {
-
-  });
+  // describe('#sh', function() {
+  //   const mockSpawn = require('mock-spawn');
+  //   const mySpawn = mockSpawn();
+  //   require('child_process').spawn = mySpawn;
+  //   mySpawn.setDefault(mySpawn.simple(0, 'hello world'));
+  //
+  //   it('should spawn if mode or detached', function() {
+  //     shell.sh(['ls'], {detached: true}).then(function (ret) {
+  //       return mySpawn.calls.length.should.equal(1);
+  //     });
+  //   });
+  //
+  //   it('should delegate to exec otherwise', function() {
+  //
+  //   });
+  // });
 
   describe('#escSpaces', function() {
 

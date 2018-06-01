@@ -93,6 +93,7 @@
     "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^4.1.0",
     "mock-fs": "^4.4.2",
+    "mock-spawn": "^0.2.6",
     "pkg": "^4.3.0-beta.5",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0"
