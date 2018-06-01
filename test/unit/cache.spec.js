@@ -11,6 +11,7 @@ const sinon = require('sinon');
 const filesystem = require('mock-fs');
 const fs = require('fs');
 const NodeCache = require('node-cache');
+chai.should();
 
 const Cache = require('./../../lib/cache');
 
