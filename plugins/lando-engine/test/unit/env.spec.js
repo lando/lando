@@ -1,5 +1,5 @@
 /*
- * Tests for lando-plugin:env.
+ * Tests for lando-engine:env.
  * @file env.spec.js
  */
 
