@@ -26,9 +26,31 @@ plugins:
   - my-plugin
 ```
 
-In the above example Lando will looks for a plugin in a folder called `my-plugin` in either the `node_modules` or `plugins` folders. For app plugins these locations will be relative to the app root directory. For global plugins the locations specified in `pluginDirs` in `lando config` will be scanned.
+In the above example Lando will look for a plugin in a folder called `my-plugin` in either the `node_modules` or `plugins` folders. For app plugins these locations will be relative to the app root directory. For global plugins the locations specified in `pluginDirs` in `lando config` will be scanned.
 
-If there are multiple occurences of the same-named plugin, Lando will use the one "closest to your app". This means that `lando` will priortize in-app plugins and then priortize the locations in `pluginDirs` from last to first.
+Alternatively, you may wish to autoload plugins. This can be helpful when requiring a Lando plugin via NPM or you need to load plugins from a custom directory.
+
+```yaml
+# Lando will search the current projects root "plugins" and "node_modules" directories for plugins.
+autoplugin: true
+```
+
+In the above example, Lando scans the `plugins` and `node_modules` directory of the current project for Lando plugins.
+
+```yaml
+# Lando will search each of the paths listed for plugins within "plugins" and "node_modules" directories.
+autoplugin:
+  - some/autoload/path
+  - another/autoload/path
+```
+
+In the above example, Lando scans the `plugins` and `node_modules` directory of `[project root]/some/autoload/path` as well as `[project root]/another/autoload/path` for Lando plugins.
+
+> #### Hint::Why aren't my plugins being detected?
+>
+> In order for a plugin to be considered for auto-loading it must be within a directory named "plugins" or "node_modules" and the directory must contain an empty ".lando.config.yml"
+
+If there are multiple occurrences of the same-named plugin, Lando will use the one "closest to your app". This means that `lando` will priortize in-app plugins and then priortize the locations in `pluginDirs` from last to first.
 
 **A powerful corollary to this is that indiviual apps can implement plugins that override global plugin behavior.**
 
