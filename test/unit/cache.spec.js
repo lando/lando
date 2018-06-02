@@ -20,6 +20,7 @@ describe('cache', () => {
   describe('#Cache', () => {
     it('returns a cache instance with correct default options', () => {
       const cache = new Cache();
+      cache.should.be.instanceof(Cache);
       cache.should.be.an('object').with.property('options');
       cache.options.should.have.property('stdTTL', 0);
       cache.options.should.have.property('checkperiod', 600);
@@ -141,9 +142,7 @@ describe('cache', () => {
     });
   });
 
-  // This is the method we are testing
   describe('#get', () => {
-
     it('returns a cached key from memory', () => {
       const cache = new Cache();
       cache.set('best_drummer', 'Neal Peart');
@@ -174,18 +173,14 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    // Retrieving a stale key should result in nothing
     it('returns undefined when grabbing an unset key', () => {
       // Get the result of a key that has not been set
       const cache = new Cache();
-
       // What were you expecting?
       expect(cache.get('BOGUSKEY-I-LOVE-NICK3LBACK-4-LYF')).to.be.undefined;
     });
-
   });
 
-  // This is the method we are testing
   describe('#remove', () => {
     it('removes a cached key from memory', () => {
       const cache = new Cache();

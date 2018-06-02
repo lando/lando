@@ -20,7 +20,6 @@ const updates = new UpdateManager();
 describe('updates', () => {
 
   describe('#updateAvailable', () =>  {
-
     it('checks to see if version 1 is less than version 2', () => {
       updates.updateAvailable('3.0.0', '3.0.1').should.be.true;
       updates.updateAvailable('3.0.1', '3.0.1').should.be.false;
@@ -30,11 +29,9 @@ describe('updates', () => {
       updates.updateAvailable('3.0.0-beta.1', '3.0.0-beta.2').should.be.true;
       updates.updateAvailable('3.0.0-beta.2', '3.0.0-beta.2').should.be.false;
     });
-
   });
 
   describe('#fetch', () => {
-
     it('Returns true if data is undefined', () => {
       updates.fetch().should.be.true;
     });
@@ -51,7 +48,6 @@ describe('updates', () => {
       // Back to the future
       clock.restore();
     });
-
   });
 
   describe('#refresh', function() {
