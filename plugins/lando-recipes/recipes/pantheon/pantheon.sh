@@ -19,7 +19,7 @@ if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
   chown -R www-data:www-data /var/www/certs /srv/bindings
 
   # Set up some symlnks
-  ln -s /var/www "/srv/bindings/lando" || true
+  ln -s /var/www /srv/bindings/lando || true
   ln -sf /tmp /srv/bindings/lando/tmp
   ln -sf /app /var/www/code
 
