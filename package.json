@@ -18,6 +18,18 @@
   "directories": {
     "lib": "./lib"
   },
+  "nyc": {
+    "include": [
+      "lib/**/*.js",
+      "plugins/**/lib/*.js"
+    ],
+    "exclude": [
+      "test/**",
+      "plugins/**/test"
+    ],
+    "cache": true,
+    "all": true
+  },
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
