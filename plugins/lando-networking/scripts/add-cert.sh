@@ -96,5 +96,5 @@ if ! [ -x "$(command -v update-ca-certificates)" ]; then
     nohup sh -c "apk add --no-cache ca-certificates && update-ca-certificates" &
   fi
 else
-  update-ca-certificates
+  update-ca-certificates --verbose &
 fi
