@@ -101,3 +101,5 @@ deploy:
     on:
       repo: lando/lando
       branch: master
+after_success: yarn coverage
+

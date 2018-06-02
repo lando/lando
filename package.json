@@ -19,6 +19,7 @@
     "lib": "./lib"
   },
   "scripts": {
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
     "lint": "eslint bin lib plugins test scripts",
     "pkg:cli": "node ./scripts/pkg.js --stage=cli",
@@ -28,7 +29,7 @@
     "release:patch": "node ./scripts/bump.js --stage=patch",
     "release:pre": "node ./scripts/bump.js --stage=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
-    "test:unit": "mocha test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
+    "test:unit": "nyc --reporter=html --reporter=text mocha test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
     "test:functional": "mocha test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
     "test": "yarn lint && yarn test:unit"
   },
@@ -86,6 +87,7 @@
     "chai-as-promised": "^7.1.1",
     "command-line-test": "^1.0.10",
     "copy": "^0.3.1",
+    "coveralls": "^3.0.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
     "gitbook-cli": "^2.3.0",
@@ -94,6 +96,7 @@
     "mocha": "^4.1.0",
     "mock-fs": "^4.4.2",
     "mock-spawn": "^0.2.6",
+    "nyc": "^12.0.1",
     "pkg": "^4.3.0-beta.5",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0"
