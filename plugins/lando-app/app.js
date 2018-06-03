@@ -10,7 +10,8 @@ module.exports = function(lando) {
   var merger = lando.utils.config.merge;
   var path = require('path');
   var registry = lando.config.appRegistry;
-  var serializer = new require('./../../lib/serializer')(); // eslint-disable-line new-cap
+  var Serializer = require('./../../lib/serializer');
+  var serializer = new Serializer();
   var util = require('util');
   var utils = require('./lib/utils');
 
