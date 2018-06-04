@@ -16,7 +16,6 @@ chai.should();
 const Cache = require('./../../lib/cache');
 
 describe('cache', () => {
-
   describe('#Cache', () => {
     it('returns a cache instance with correct default options', () => {
       const cache = new Cache();
@@ -117,7 +116,7 @@ describe('cache', () => {
 
       const cache = new Cache();
 
-      cache.set('yyz', 'amazing', {ttl:1});
+      cache.set('yyz', 'amazing', {ttl: 1});
       expect(cache.get('yyz')).to.eql('amazing');
 
       clock.tick(1500);
@@ -155,7 +154,7 @@ describe('cache', () => {
 
       const cache = new Cache();
 
-      cache.set('yyz', 'amazing', {ttl:1});
+      cache.set('yyz', 'amazing', {ttl: 1});
       expect(cache.get('yyz')).to.eql('amazing');
 
       clock.tick(1500);

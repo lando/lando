@@ -15,7 +15,6 @@ chai.should();
 const config = require('./../../lib/config');
 
 describe('config', () => {
-
   describe('#tryConvertJson', () => {
     it('returns the unaltered input if input is not a parsable JSON string', () => {
       const input = 'obiwan';
@@ -35,7 +34,6 @@ describe('config', () => {
       const result = config.tryConvertJson(input);
       expect(result).to.be.an('array');
     });
-
   });
 
   describe('#merge', () => {
@@ -47,7 +45,7 @@ describe('config', () => {
       const bands2 = {
         best: 'nickelback',
         worst: 'miley',
-        supreme: 'taylor'
+        supreme: 'taylor',
       };
       const landoMerge = hasher(config.merge(bands1, bands2));
       const lodashMerge = hasher(_.merge(bands1, bands2));
@@ -69,7 +67,6 @@ describe('config', () => {
       expect(ourfavs.favs).to.have.length(3);
       expect(hasher(ourfavs.favs)).to.equal(hasher(['nickelback', 'abba', 'britney']));
     });
-
   });
 
   describe('#stripEnvs', () => {
@@ -149,7 +146,7 @@ describe('config', () => {
     it('gives priority to the last file loaded', () => {
       filesystem({
         '/tmp/config1.yml': 'scoundrel: lando',
-        '/tmp/config2.yml': 'scoundrel: solo'
+        '/tmp/config2.yml': 'scoundrel: solo',
       });
       const fileConfig = config.loadFiles(['/tmp/config1.yml', '/tmp/config2.yml']);
       expect(hasher(fileConfig)).to.equal(hasher({scoundrel: 'solo'}));
@@ -166,5 +163,4 @@ describe('config', () => {
       expect(result.now).to.equal(process.env.DANCE_NOW);
     });
   });
-
 });

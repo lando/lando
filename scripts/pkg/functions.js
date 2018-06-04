@@ -25,17 +25,17 @@ const files = {
     path.join('plugins', '**'),
     path.join('config.yml'),
     path.join('package.json'),
-    path.join('yarn.lock')
+    path.join('yarn.lock'),
   ],
   clean: {
     cli: {
       build: [path.join('build', 'cli', path.sep)],
-      dist: [path.join('dist', 'cli', path.sep)]
+      dist: [path.join('dist', 'cli', path.sep)],
     },
     installer: {
       build: [path.join('build', 'installer', path.sep)],
-      dist: [path.join('dist', path.sep)]
-    }
+      dist: [path.join('dist', path.sep)],
+    },
   },
   // Our copy tasks
   copy: {
@@ -44,9 +44,9 @@ const files = {
         src: path.join('build', 'cli', cliPkgName),
         dest: path.join('dist', 'cli', cliPkgName),
         options: {
-          mode: true
-        }
-      }
+          mode: true,
+        },
+      },
     },
     installer: {
       build: {
@@ -55,8 +55,8 @@ const files = {
         dest: path.join('build', 'installer', path.sep),
         expand: true,
         options: {
-          mode: true
-        }
+          mode: true,
+        },
       },
       dist: {
         cwd: path.join('build', 'installer', 'dist', path.sep),
@@ -64,63 +64,51 @@ const files = {
         dest: path.join('dist', path.sep),
         expand: true,
         options: {
-          mode: true
-        }
-      }
-    }
+          mode: true,
+        },
+      },
+    },
   },
 };
 
 module.exports = {
 
-  /**
+  /*
    * Helper function to clean multiple directories.
-   *
-   * @param {Array} directories
    */
-  clean: function (directories) {
-    return directories.map(function(dir) {
-      dir.map(function(nestedDir) {
+  clean: directories => {
+    return directories.map(dir => {
+      dir.map(nestedDir => {
         return fs.emptyDirSync(nestedDir);
       });
     });
   },
 
-  /**
+  /*
    * Package the CLI.
-   *
-   * @return {Promise} Chain of the packager followed by copy.
    */
   pkgCli: function() {
     this.clean([files.clean.cli.build, files.clean.cli.dist]);
-    copy(files.build, path.join('build', 'cli'), {srcBase: '.'}, (err, files) => { if (err) { throw err; } });
+    copy(files.build, path.join('build', 'cli'), {srcBase: '.'}, (err, files) => {
+      if (err) throw err;
+    });
     const pkgCmd = this.cliPkgTask();
     return util.shellExec(pkgCmd).then(result => fs.copy(files.copy.cli.dist.src, files.copy.cli.dist.dest, err => {
-      if (err) { throw  err; }
+      if (err) throw err;
     }));
   },
 
-  /**
+  /*
    * Build full installer
-   * @param platform
-   * @returns {Promise}
    */
-  pkgInstaller: function(platform) {
+  pkgInstaller: platform => {
     const extension = (platform === 'win32') ? 'ps1' : 'sh';
     const script = path.join('scripts', `build-${platform}.${extension}`);
-
-    const task = function(extension) {
-      if (extension === 'ps1') {
-        return util.psTask(script);
-      } else {
-        return util.scriptTask(script);
-      }
-    };
-
+    const task = extension => (extension === 'ps1') ? util.psTask(script) : util.scriptTask(script);
     return util.shellExec(task(extension));
   },
 
-  /**
+  /*
    * Run the full packager
    */
   pkgFull: function() {
@@ -129,46 +117,48 @@ module.exports = {
       path.join('installer', util.platform, '**'),
       path.join('build', 'installer', path.sep),
       {mode: true, srcBase: path.join('installer', util.platform, path.sep)},
-      (err, files) => { if (err) throw err; }
+      (err, files) => {
+        if (err) throw err;
+      }
     );
     this.pkgCli().then(result => {
       this.pkgInstaller(util.platform).then(result => copy(
-          path.join('build', 'installer', 'dist', '**'),
-          path.join('dist'),
-          {mode: true, srcBase: path.join('build', 'installer', 'dist', path.sep)},
-          (err, files) => { if (err) throw err; }
-        ));
+        path.join('build', 'installer', 'dist', '**'),
+        path.join('dist'),
+        {mode: true, srcBase: path.join('build', 'installer', 'dist', path.sep)},
+        (err, files) => {
+          if (err) throw err;
+        }
+      ));
     });
   },
 
   /*
    * Constructs the CLI PKG task
    */
-  cliPkgTask: function() {
-
+  cliPkgTask: () => {
     // Path to the pkg command
-    var binDir = path.resolve(__dirname, '..', '..', 'node_modules', 'pkg');
-    var pkg = path.join(binDir, 'lib-es5', 'bin.js');
+    const binDir = path.resolve(__dirname, '..', '..', 'node_modules', 'pkg');
+    const pkg = path.join(binDir, 'lib-es5', 'bin.js');
 
     // Get target info
-    var node = 'node8';
-    var os = process.platform;
-    var arch = 'x64';
+    const node = 'node8';
+    const os = process.platform;
+    const arch = 'x64';
 
     // Rename the OS because i guess we want to be different than process.platform?
     if (process.platform === 'darwin') {
       os = 'macos';
-    }
-    else if (process.platform === 'win32') {
+    } else if (process.platform === 'win32') {
       os = 'win';
     }
 
     // Exec options
-    var pkgName = cliPkgName;
-    var configFile = path.join('package.json');
-    var entrypoint = path.join('bin', 'lando.js');
-    var target = [node, os, arch].join('-');
-    var shellOpts = {
+    const pkgName = cliPkgName;
+    const configFile = path.join('package.json');
+    const entrypoint = path.join('bin', 'lando.js');
+    const target = [node, os, arch].join('-');
+    const shellOpts = {
       execOptions: {
         stdout: true,
         stderr: true,
@@ -177,22 +167,22 @@ module.exports = {
         stdinRawMode: false,
         preferLocal: true,
         maxBuffer: 20 * 1024 * 1024,
-      }
+      },
     };
 
     // Package command
-    var pkgCmd = [
+    const pkgCmd = [
       'node',
       pkg,
       '--targets ' + target,
       '--config ' + configFile,
       '--output ' + pkgName,
-      entrypoint
+      entrypoint,
     ];
 
     // Start to build the command
-    var cmd = [];
-    var cliBuild = path.join('build', 'cli', path.sep);
+    const cmd = [];
+    const cliBuild = path.join('build', 'cli', path.sep);
     cmd.push('cd ' + cliBuild);
     cmd.push('yarn --production');
     cmd.push(pkgCmd.join(' '));
@@ -206,10 +196,8 @@ module.exports = {
     // Return the CLI build task
     return {
       options: shellOpts,
-      command: cmd.join(' && ')
+      command: cmd.join(' && '),
     };
-
-  }
-
+  },
 
 };

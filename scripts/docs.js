@@ -35,17 +35,19 @@ const fileMap = [
   './plugins/lando-services/*.js',
   './plugins/lando-services/**/*.js',
   './plugins/lando-tooling/*.js',
-  './plugins/lando-tooling/**/*.js'
+  './plugins/lando-tooling/**/*.js',
 ];
 
 const helpers = [
-  './docs/helpers/helpers.js'
+  './docs/helpers/helpers.js',
 ];
 
 const partials = [
   './docs/partials/header.hbs',
-  './docs/partials/body.hbs'
+  './docs/partials/body.hbs',
 ];
+
+const needsWrapping = s => !_.startsWith(s, '\'') && !_.endsWith(s, '\'') && _.includes(s, 'lando.');
 
 // Collect any errors
 //
@@ -53,30 +55,49 @@ const partials = [
 // of one per CI build
 const errors = [];
 
-// Render the things
-return jsdoc2md.render({
-  files: fileMap,
+// Get the data so we can preprocess it
+return jsdoc2md.getTemplateData({'files': fileMap, 'no-cache': true})
+
+// Fix "aliases" and then render
+.then(data => _.map(data, datum => {
+  // Enclose lando-y aliases in single quotes
+  if (_.has(datum, 'alias') && needsWrapping(datum.alias)) {
+    if (!_.startsWith(datum.alias, '\'lando.') && !_.endsWith(datum.alias, '\'')) {
+      datum.name = datum.alias;
+      datum.kind = 'function';
+      datum.scope = 'global';
+      delete datum.memberof;
+    }
+  }
+  return datum;
+}))
+
+// Do the render
+.then(data => jsdoc2md.render({
+  'data': data,
   'global-index-format': 'none',
-  helper: helpers,
-  partial: partials
-})
+  'helper': helpers,
+  'partial': partials,
+}))
 
 // Report and collect errors
-.catch(function(error) {
+.catch(error => {
   errors.push(error.message);
   console.log(chalk.red('ERROR: ' + error.message));
 })
 
 // Write the file if we have data
-.then(function(data) {
+.then(data => {
   if (data) {
     console.log('writing ' + dest + '...');
-    return fs.outputFile(dest, data, function(error) { if (error) { throw error; } });
+    return fs.outputFile(dest, data, error => {
+      if (error) throw error;
+    });
   }
 })
 
 // Do the final error throw if we can
-.then(function() {
+.then(() => {
   if (!_.isEmpty(errors)) {
     console.log();
     console.log(chalk.red('API doc build failed! See above errors!!!'));

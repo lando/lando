@@ -28,7 +28,7 @@ describe('plugins', function() {
     it('should look for plugins in reverse order of passed dirs', function() {
       plugins.load('test-plugin-one', [
           process.cwd() + '/test/fixtures',
-          process.cwd() + '/test/fixtures/test-app'
+          process.cwd() + '/test/fixtures/test-app',
       ]).then(function() {
          plugins.loadedModules
           .should

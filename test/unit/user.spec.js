@@ -20,7 +20,6 @@ const resetPlatform = function() {
 const user = require('./../../lib/user');
 
 describe('user', () => {
-
   describe('#getUid', () => {
     it('returns user 1000 on Windows', () => {
       setPlatform('win32');
@@ -51,8 +50,7 @@ describe('user', () => {
     it('throws an error for a bogus user on POSIX', () => {
       if (process.platform === 'win32') {
         expect(() => user.getUid('gandalflandokenobi5000')).to.not.throw(Error);
-      }
-      else {
+      } else {
         expect(() => user.getUid('gandalflandokenobi5000')).to.throw(Error);
       }
     });
@@ -88,11 +86,9 @@ describe('user', () => {
     it('throws an error for a bogus user on POSIX', () => {
       if (process.platform === 'win32') {
         expect(() => user.getGid('gandalflandokenobi5000')).to.not.throw(Error);
-      }
-      else {
+      } else {
         expect(() => user.getGid('gandalflandokenobi5000')).to.throw(Error);
       }
     });
   });
-
 });

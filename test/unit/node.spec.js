@@ -14,7 +14,6 @@ chai.should();
 const node = require('./../../lib/node');
 
 describe('node', () => {
-
   describe('#node', () => {
     it('is a non-empty object', () => {
       expect(node).to.be.an('object');
@@ -34,5 +33,4 @@ describe('node', () => {
       });
     });
   });
-
 });

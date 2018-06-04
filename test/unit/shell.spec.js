@@ -23,7 +23,7 @@ describe('shell', () => {
     });
 
     it('should reject on a non-zero exit', function() {
-      const stub = sinon.stub(_shell, 'exec').returns({code:1});
+      const stub = sinon.stub(_shell, 'exec').returns({code: 1});
       shell.exec('nonsense').should.eventually.be.rejectedWith(Error);
       stub.should.be.calledWith('nonsense');
       stub.restore();

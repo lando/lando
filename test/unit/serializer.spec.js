@@ -14,7 +14,6 @@ chai.should();
 const Serializer = require('./../../lib/serializer');
 
 describe('serializer', () => {
-
   describe('#Serializer', () => {
     it('returns a serializer instance with correct default options', () => {
       const serializer = new Serializer();
@@ -53,5 +52,4 @@ describe('serializer', () => {
       });
     });
   });
-
 });

@@ -7,7 +7,7 @@
  * @name lando
  */
 
- 'use strict';
+'use strict';
 
 // Modules
 const _ = require('lodash');
@@ -30,7 +30,7 @@ const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
 const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
 
 // If we have CLI verbosity args let's use those instead
-if (cli.largv.verbose) { LOGLEVELCONSOLE = cli.largv.verbose + 1; }
+if (cli.largv.verbose) LOGLEVELCONSOLE = cli.largv.verbose + 1;
 
 // Define the start up options
 const options = {
@@ -41,18 +41,16 @@ const options = {
   mode: 'cli',
   pluginDirs: [USERCONFROOT],
   userConfRoot: USERCONFROOT,
-  version
+  version,
 };
 
 // Error handler
 const handleError = ({hide, message, stack, code}, log, metrics) => {
-
   // Log error or not
   if (!hide && log) {
     if (cli.largv.verbose > 0) {
       log.error(stack);
-    }
-    else {
+    } else {
       log.error(message);
     }
   }
@@ -64,7 +62,6 @@ const handleError = ({hide, message, stack, code}, log, metrics) => {
 
   // Exit this process
   process.exit(code || 1);
-
 };
 
 // Kick off our bootstrap
@@ -72,7 +69,6 @@ bootstrap(options)
 
 // Initialize the CLI
 .then(lando => {
-
   // Bind to outside scope
   // @TODO: do this better
   metrics = lando.metrics;
@@ -154,7 +150,6 @@ bootstrap(options)
 
   // Print the CLI
   .then(() => {
-
     // Loop through the tasks and add them to the CLI
     _.forEach(_.sortBy(tasks, 'command'), task => {
       lando.log.verbose('Loading cli task %s', task.name);
@@ -171,7 +166,7 @@ bootstrap(options)
     const epilogue = [
       lando.node.chalk.green('Global Options:\n'),
       '  --help, -h  Show help\n',
-      '  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output'
+      '  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output',
     ];
 
     // Finish up the yargs
@@ -184,9 +179,7 @@ bootstrap(options)
 
     // Log the CLI args
     lando.log.debug('CLI args', argv);
-
   });
-
 })
 
 // Handle all other errors

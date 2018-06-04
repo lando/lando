@@ -1,4 +1,6 @@
-/**
+#!/usr/bin/env node
+
+/*
  * This is a nifty cross platform script that will replace relevant versions
  * in json files with a "dev" version generated with `git describe`
  */
@@ -6,37 +8,34 @@
 'use strict';
 
 // Grab needed modules
-var _ = require('lodash');
-var fs = require('fs-extra');
-var path = require('path');
-var Promise = require('bluebird');
-var exec = require('child_process').exec;
+const _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const Promise = require('bluebird');
+const exec = require('child_process').exec;
 
 // Get the location of the files we need to edit
-var files = ['package.json'];
+const files = ['package.json'];
 
 // Start our sacred promise
-return new Promise(function(resolve, reject) {
-  exec('git describe --tags --always --abbrev=1', function(error, stdout, stderr) {
+return new Promise((resolve, reject) => {
+  exec('git describe --tags --always --abbrev=1', (error, stdout, stderr) => {
     if (error) {
       reject(new Error('error: ' + error + 'err:' + stderr));
-    }
-    else {
+    } else {
       resolve(stdout);
     }
   });
 })
 
 // Get the git describe result and parse it
-.then(function(data) {
-  return _.trim(data.slice(1));
-})
+.then(data => _.trim(data.slice(1)))
 
 // Replace the version for our files
-.then(function(newVersion) {
-  _.forEach(files, function(file) {
-    var location = path.join(process.cwd(), file);
-    var data = require(location);
+.then(newVersion => {
+  _.forEach(files, file => {
+    const location = path.join(process.cwd(), file);
+    const data = require(location);
     data.version = newVersion;
     console.log('Updating %s to dev version %s', file, data.version);
     fs.writeFileSync(location, JSON.stringify(data, null, 2));
@@ -44,6 +43,6 @@ return new Promise(function(resolve, reject) {
 })
 
 // Catch errors and do stuff so we can break builds when this fails
-.catch(function(error) {
+.catch(error => {
   process.exit(error.code || 1);
 });

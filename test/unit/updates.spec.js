@@ -18,8 +18,7 @@ const UpdateManager = require('./../../lib/updates');
 const updates = new UpdateManager();
 
 describe('updates', () => {
-
-  describe('#updateAvailable', () =>  {
+  describe('#updateAvailable', () => {
     it('checks to see if version 1 is less than version 2', () => {
       updates.updateAvailable('3.0.0', '3.0.1').should.be.true;
       updates.updateAvailable('3.0.1', '3.0.1').should.be.false;
@@ -50,14 +49,13 @@ describe('updates', () => {
     });
   });
 
-  describe('#refresh', function() {
+  describe('#refresh', () => {
     // We need a Github API Client to stub.
     const github = new Github({Promise: Promise});
     // Use our stubbed Github API so we don't make a real HTTP request.
     updates.githubApi = github;
 
-    it('Does a Barrel Roll if there is an error', function() {
-
+    it('Does a Barrel Roll if there is an error', () => {
       // Throw an error on purpose
       const stub = sinon.stub(updates.githubApi.repos, 'getReleases')
         .rejects('Whoops!');
@@ -70,33 +68,33 @@ describe('updates', () => {
     });
 
     // @Todo: figure out why this passes no matter what value we pass
-    //it('filters out drafts/prereleases', function() {
-      //const stub = sinon.stub(updates.githubApi.repos, 'getReleases')
-        //.returns(
-          //new Promise(() => [
-            //{
-              //'tag_name': 'vbeta.1',
-              //'prerelease': false,
-              //'draft': false
-            //},
-            //{
-              //'tag_name': 'vbeta.2',
-              //'prerelease': true,
-              //'draft': false
-            //},
-            //{
-              //'tag_name': 'vbeta.3',
-              //'prerelease': false,
-              //'draft': true
-            //}
-          //]
-          //)
-        //);
+    // it('filters out drafts/prereleases', function() {
+      // const stub = sinon.stub(updates.githubApi.repos, 'getReleases')
+        // .returns(
+          // new Promise(() => [
+            // {
+              // 'tag_name': 'vbeta.1',
+              // 'prerelease': false,
+              // 'draft': false
+            // },
+            // {
+              // 'tag_name': 'vbeta.2',
+              // 'prerelease': true,
+              // 'draft': false
+            // },
+            // {
+              // 'tag_name': 'vbeta.3',
+              // 'prerelease': false,
+              // 'draft': true
+            // }
+          // ]
+          // )
+        // );
 
-      //updates.refresh('beta.2').should.eventually.be
-        //.an('object').with.property('version', 'beta.1');
+      // updates.refresh('beta.2').should.eventually.be
+        // .an('object').with.property('version', 'beta.1');
 
-      //stub.restore();
-    //});
+      // stub.restore();
+    // });
   });
 });

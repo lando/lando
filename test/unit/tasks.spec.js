@@ -22,18 +22,17 @@ const elScorcho = {
       boolean: true,
       interactive: {
         type: 'confirm',
-        message: 'Are you sure you are jello?'
-      }
-    }
+        message: 'Are you sure you are jello?',
+      },
+    },
   },
   run: function(options) {
     console.log(options);
-  }
+  },
 };
 
 describe('tasks', () => {
-
-  describe('#add', () =>  {
+  describe('#add', () => {
     it('Adds tasks to tasks collection', () => {
       tasks.add('El Scorcho', elScorcho);
       tasks.tasks[0].should.have.property('name', 'El Scorcho');

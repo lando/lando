@@ -14,10 +14,11 @@ const os = require('os');
 const path = require('path');
 chai.should();
 
-const yaml = require('./../../lib/yaml')({error: () => { throw Error(); }});
+const yaml = require('./../../lib/yaml')({error: () => {
+  throw Error();
+}});
 
 describe('yaml', () => {
-
   describe('#load', () => {
     it('returns data from a YAML file as an Object', () => {
       const content = ['obiwan: kenobi', 'qui:', '- gon', '- jinn'].join(os.EOL);
@@ -60,5 +61,4 @@ describe('yaml', () => {
       filesystem.restore();
     });
   });
-
 });

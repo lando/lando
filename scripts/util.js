@@ -6,18 +6,18 @@ const semver = require('semver');
 
 module.exports = {
 
-  /**
+  /*
    * Helper to run Git Comamnds
    * @see https://github.com/pankajladhar/run-git-command/blob/master/index.js
    * @param args
    * @param customMsg
    */
-  execGitCmd: function(args, customMsg) {
+  execGitCmd: (args, customMsg) => {
     console.log(customMsg);
     return child.spawnSync('git', args, {stdio: [0, 'pipe', 'pipe'], encoding: 'utf8'}).stdout;
   },
 
-  /**
+  /*
    * The platform normalize for pkg
    */
   platform: (process.platform !== 'darwin') ? process.platform : 'osx',
@@ -25,28 +25,21 @@ module.exports = {
   /*
    * Run a ps script
    */
-  psTask: function(cmd) {
-
-    // "Constants"
-    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
-    var entrypoint = 'PowerShell -NoProfile -ExecutionPolicy Bypass -Command';
-
-    // Return our ps task
+  psTask: cmd => {
     return {
-      options: shellOpts,
-      command: [entrypoint, cmd, '&& EXIT /B %errorlevel%'].join(' ')
+      options: {execOptions: {maxBuffer: 20 * 1024 * 1024}},
+      command: ['PowerShell -NoProfile -ExecutionPolicy Bypass -Command', cmd, '&& EXIT /B %errorlevel%'].join(' '),
     };
-
   },
 
-  /**
+  /*
    * Bump the Version of a Package.json given a json object and stage.
    *
    * @param {Object} pkgJson Package.json file as a loaded object.
    * @param {String} stage The release stage.
    * @returns {String} New version number.
    */
-  setVersion: function(pkgJson, stage) {
+  setVersion: (pkgJson, stage) => {
     const current = pkgJson.version;
     switch (stage) {
       case 'prerelease':
@@ -65,20 +58,18 @@ module.exports = {
   /*
    * Run a default bash/sh/cmd script
    */
-  scriptTask: function(cmd) {
-
-    // "Constants"
-    var shellOpts = {execOptions: {maxBuffer: 20 * 1024 * 1024}};
-
-    // Return our shell task
+  scriptTask: cmd => {
     return {
-      options: shellOpts,
-      command: cmd
+      options: {execOptions: {maxBuffer: 20 * 1024 * 1024}},
+      command: cmd,
     };
-
   },
 
-  shellExec: function(data) {
+  /*
+   * This does something?
+   * @todo: Dustin?
+   */
+  shellExec: data => {
     const opts = {
       stdout: true,
       stderr: true,
@@ -87,19 +78,17 @@ module.exports = {
       stdinRawMode: false,
       preferLocal: true,
       execOptions: {
-        env: data.options.execOptions.env || process.env
-      }
+        env: data.options.execOptions.env || process.env,
+      },
     };
 
     const cmd = typeof data === 'string' ? data : data.command;
 
-    if (cmd === undefined) {
-      throw new Error('`command` required');
-    }
+    if (cmd === undefined) throw new Error('`command` required');
 
     opts.execOptions = Object.assign(data.options, opts.execOptions);
-    const promiseFromChild = function(child) {
-      return new Promise(function(resolve, reject) {
+    const promiseFromChild = child => {
+      return new Promise((resolve, reject) => {
         child.addListener('error', reject);
         child.addListener('exit', resolve);
       });
@@ -107,18 +96,18 @@ module.exports = {
 
     const cp = child.exec(cmd, opts.execOptions);
 
-    cp.stdout.on('data', function (data) {
+    cp.stdout.on('data', data => {
       console.log('stdout: ' + data);
     });
-    cp.stderr.on('data', function (data) {
+    cp.stderr.on('data', data => {
       console.log('stderr: ' + data);
     });
 
-    return promiseFromChild(cp).then(function (result) {
+    return promiseFromChild(cp)
+    .then(result => {
       console.log('promise complete: ' + result);
-    }, function (err) {
+    }, err => {
       console.log('promise rejected: ' + err);
     });
-
-  }
+  },
 };

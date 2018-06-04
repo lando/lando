@@ -15,7 +15,6 @@ chai.should();
 const AsyncEvents = require('../../lib/events');
 
 describe('events', () => {
-
   describe('#AsyncEvents', () => {
     it('returns an events instance with correct default options', () => {
       const events = new AsyncEvents();

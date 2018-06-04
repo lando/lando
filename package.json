@@ -33,7 +33,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "lint": "eslint bin lib plugins test scripts",
+    "lint": "eslint bin docs lib scripts test && eslint --config .eslintrc.old.json plugins",
     "pkg:cli": "node ./scripts/pkg.js --stage=cli",
     "pkg:full": "node ./scripts/pkg.js --stage=full",
     "release:major": "node ./scripts/bump.js --stage=major",

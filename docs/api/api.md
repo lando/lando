@@ -64,17 +64,6 @@ This means all the options passed in after the `--` flag.
 var largv = lando.tasks.largv;
 ```
 <div class="api-body-footer"></div>
-<a id="landoevents"></a>
-
-<h2 id="landoevents" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events</h2>
-<div class="api-body-header"></div>
-
-This extends the core node event emitter except where otherwise documented
-below
-
-**See**: https://nodejs.org/api/events.html  
-<div class="api-body-footer"></div>
 <a id="landoevents__on"></a>
 
 <h2 id="landoevents__on" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -219,20 +208,6 @@ Get semver
 var semver = lando.node.semver;
 ```
 <div class="api-body-footer"></div>
-<a id="landopromise"></a>
-
-<h2 id="landopromise" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.Promise</h2>
-<div class="api-body-header"></div>
-
-Extends [bluebird](http://bluebirdjs.com/docs/api-reference.html)
-so that our promises have some retry functionality.
-
-All functionality should be the same as bluebird except where indicated
-below
-
-**See**: http://bluebirdjs.com/docs/api-reference.html  
-<div class="api-body-footer"></div>
 <a id="landotaskstasks"></a>
 
 <h2 id="landotaskstasks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -247,6 +222,28 @@ A singleton array that contains all the tasks that have been added.
 // Gets all the tasks that have been loaded
 var task = lando.tasks.tasks;
 ```
+<div class="api-body-footer"></div>
+<a id="landopromise"></a>
+
+<h2 id="landopromise" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.Promise</h2>
+<div class="api-body-header"></div>
+
+Extends [bluebird](http://bluebirdjs.com/docs/api-reference.html)
+so that our promises have some retry functionality.
+
+All functionality should be the same as bluebird except where indicated
+below
+
+Note that bluebird currently wants you to use scoped prototypes to extend
+it rather than the normal extend syntax so that is why this is using the "old"
+way
+
+**See**
+
+- http://bluebirdjs.com/docs/api-reference.html
+- https://github.com/petkaantonov/bluebird/issues/1397
+
 <div class="api-body-footer"></div>
 <a id="landocacheset"></a>
 
@@ -319,41 +316,44 @@ Manually remove an item from the cache.
 lando.cache.remove('mykey');
 ```
 <div class="api-body-footer"></div>
-<a id="landoutilsconfigmerge"></a>
+<a id="landoutilsconfigtryconvertjson"></a>
 
-<h2 id="landoutilsconfigmerge" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.merge()</h2>
+<h2 id="landoutilsconfigtryconvertjson" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.tryConvertJson(value) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Uses _.mergeWith to concat arrays, this helps replicate how Docker
-Compose merges its things
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Take an object and write a docker compose file
-var newObject = _.mergeWith(a, b, lando.utils.merger);
-```
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigupdatepath"></a>
-
-<h2 id="landoutilsconfigupdatepath" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.updatePath(dir) ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Updates the PATH with dir. This adds dir to the beginning of PATH.
+Attempt to parse a JSON string to an objects
 
 **Since**: 3.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dir | <code>String</code> | The dir to add |
+| value | <code>String</code> | The string to convert |
 
-**Returns**: <code>String</code> - Updated PATH string  
+**Returns**: <code>Object</code> - A parsed object or the inputted value  
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigmerge"></a>
+
+<h2 id="landoutilsconfigmerge" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.merge(old, fresh) ⇒ <code>Object</code> \| <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Uses _.mergeWith to concat arrays, this helps replicate how Docker Compose
+merges its things
+
+**See**: https://lodash.com/docs#mergeWith  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| old | <code>Object</code> | object to be merged |
+| fresh | <code>Object</code> | object to be merged |
+
+**Returns**: <code>Object</code> - The new object<code>Object</code> - Merged object or arrays  
 **Example**  
 ```js
-// Update the path
-var config.path = config.updatePath(path);
+// Take an object and write a docker compose file
+var newObject = _.mergeWith(a, b, lando.utils.merger);
 ```
 <div class="api-body-footer"></div>
 <a id="landoutilsconfigstripenv"></a>
@@ -362,7 +362,9 @@ var config.path = config.updatePath(path);
   lando.utils.config.stripEnv(prefix) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Strips process.env of all envvars with PREFIX
+Strips process.env of all envvars with PREFIX and returns process.env
+
+NOTE: this actually returns process.env not a NEW object cloned from process.env
 
 **Since**: 3.0.0  
 
@@ -373,39 +375,52 @@ Strips process.env of all envvars with PREFIX
 **Returns**: <code>Object</code> - Updated process.env  
 **Example**  
 ```js
-// Reset the process.env without any LANDO_ prefixed envvars
-process.env = config.stripEnv('LANDO_');
+// Reset the process.env without any DOCKER_ prefixed envvars
+process.env = config.stripEnv('DOCKER_');
 ```
 <div class="api-body-footer"></div>
 <a id="landoutilsconfigdefaults"></a>
 
 <h2 id="landoutilsconfigdefaults" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.defaults()</h2>
+  lando.utils.config.defaults() ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
 Define default config
 
 **Since**: 3.0.0  
+**Returns**: <code>Object</code> - The default config object.  
 <div class="api-body-footer"></div>
 <a id="landoutilsconfigloadfiles"></a>
 
 <h2 id="landoutilsconfigloadfiles" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.loadFiles()</h2>
+  lando.utils.config.loadFiles(files) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
 Merge in config file if it exists
 
 **Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| files | <code>Array</code> | An array of files to try loading |
+
+**Returns**: <code>Object</code> - An object of config merged from file sources  
 <div class="api-body-footer"></div>
 <a id="landoutilsconfigloadenvs"></a>
 
 <h2 id="landoutilsconfigloadenvs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.loadEnvs()</h2>
+  lando.utils.config.loadEnvs(prefix) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Grab envvars and map to config
+Filter process.env by a given prefix
 
 **Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| prefix | <code>String</code> | The prefix by which to filter. Should be without the trailing `_` eg `LANDO` not `LANDO_` |
+
+**Returns**: <code>Object</code> - Object of things with camelCased keys  
 <div class="api-body-footer"></div>
 <a id="landocliargv"></a>
 
@@ -752,7 +767,7 @@ lando.log.warning('Something is up with app %s in directory %s', appName, dir);
 <a id="landopluginsload"></a>
 
 <h2 id="landopluginsload" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.plugins.load(plugin, dirs, [inject]) ⇒ <code>Promise</code></h2>
+  lando.plugins.load(plugin, dirs, [injected]) ⇒ <code>Promise</code></h2>
 <div class="api-body-header"></div>
 
 Loads a plugin.
@@ -766,7 +781,7 @@ For each directory scanned plugins can live in either the `plugins` or
 | --- | --- | --- |
 | plugin | <code>String</code> | The name of the plugin |
 | dirs | <code>Array</code> | The directories to scan for plugins. |
-| [inject] | <code>Object</code> | An object to inject into the plugin. |
+| [injected] | <code>Object</code> | An object to inject into the plugin. |
 
 **Returns**: <code>Promise</code> - A Promise.  
 **Example**  
@@ -1042,37 +1057,49 @@ Get latest version info from github
 <a id="landousergetuid"></a>
 
 <h2 id="landousergetuid" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.user.getUid() ⇒ <code>String</code></h2>
+  lando.user.getUid([username]) ⇒ <code>String</code></h2>
 <div class="api-body-header"></div>
 
-Returns the id of the user.
+Returns the id of the current user or username.
 
-Note that on Windows this value is more or less worthless.
+Note that on Windows this value is more or less worthless and `username` has
+has no effect
 
 **Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [username] | <code>String</code> | <code>&#x27;$(whoami)&#x27;</code> | The username to get the ID for |
+
 **Returns**: <code>String</code> - The user ID.  
 **Example**  
 ```js
 // Get the id of the user.
-var userId = lando.user.getEngineUserId();
+var userId = lando.user.getUid();
 ```
 <div class="api-body-footer"></div>
 <a id="landousergetgid"></a>
 
 <h2 id="landousergetgid" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.user.getGid() ⇒ <code>String</code></h2>
+  lando.user.getGid([username]) ⇒ <code>String</code></h2>
 <div class="api-body-header"></div>
 
-Returns the group id of the user.
+Returns the id of the current user or username.
 
-Note that on Windows this value is more or less worthless.
+Note that on Windows this value is more or less worthless and `username` has
+has no effect
 
 **Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [username] | <code>String</code> | <code>&#x27;$(whoami)&#x27;</code> | The username to get the ID for |
+
 **Returns**: <code>String</code> - The group ID.  
 **Example**  
 ```js
 // Get the id of the user.
-var groupId = lando.user.getEngineUserGid();
+var groupId = lando.user.getGid();
 ```
 <div class="api-body-footer"></div>
 <a id="landoyamlload"></a>
@@ -1081,7 +1108,7 @@ var groupId = lando.user.getEngineUserGid();
   lando.yaml.load(file) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Loads a yaml object from a file
+Loads a yaml object from a file.
 
 **Since**: 3.0.0  
 
@@ -1093,25 +1120,8 @@ Loads a yaml object from a file
 **Example**  
 ```js
 // Add a string to the cache
-var thing = lando.yaml.load('/tmp/myfile.yml');
+const thing = lando.yaml.load('/tmp/myfile.yml');
 ```
-<div class="api-body-footer"></div>
-<a id="landoyamldump"></a>
-
-<h2 id="landoyamldump" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.yaml.dump(file, data) ⇒</h2>
-<div class="api-body-header"></div>
-
-Dumps an object to a YAML file
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| file | <code>String</code> | The path to the file to be loaded |
-| data | <code>Object</code> | The object to dump |
-
-**Returns**: - Flename  
 <div class="api-body-footer"></div>
 <a id="landoappregister"></a>
 
@@ -2125,7 +2135,7 @@ Gets the docker networks.
  };
 
  // Get the networks
- return lando.networks.get(opts)
+ return lando.engine.getNetworks(opts)
 
  // Filter out lando_default
  .filter(function(network) {
@@ -2136,6 +2146,27 @@ Gets the docker networks.
  .map(function(network) {
    return network.Name;
  });
+```
+<div class="api-body-footer"></div>
+<a id="landoenginegetnetwork"></a>
+
+<h2 id="landoenginegetnetwork" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.engine.getNetwork(id) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Gets a Docker network
+
+**Since**: 3.0.0.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>String</code> | The id of the network |
+
+**Returns**: <code>Object</code> - A Dockerode Network object .  
+**Example**  
+```js
+// Get the network
+ return lando.engine.getNetwork('mynetwork')
 ```
 <div class="api-body-footer"></div>
 <a id="landoenginecreatenetwork"></a>
@@ -2157,31 +2188,8 @@ Creates a Docker network
 **Returns**: <code>Promise</code> - A Promise with inspect data.  
 **Example**  
 ```js
-// Get the networks
- return lando.networks.inspect('mynetwork')
-```
-<div class="api-body-footer"></div>
-<a id="landoengineprunenetworks"></a>
-
-<h2 id="landoengineprunenetworks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.pruneNetworks([opts]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
-Prunes the docker networks.
-
-**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkPrune) for info on filters option.  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [opts] | <code>Object</code> | Options to pass into the docker networks call |
-| [opts.filters] | <code>Object</code> | Filters options |
-
-**Returns**: <code>Promise</code> - A Promise with teh status  
-**Example**  
-```js
-// Prune the networks
- return lando.networks.prune()
+// Create the network
+ return ando.engine.createNetwork('mynetwork')
 ```
 <div class="api-body-footer"></div>
 <a id="landoutilsenginedockercomposify"></a>
@@ -2192,7 +2200,8 @@ Prunes the docker networks.
 
 Translate a name for use by docker-compose eg strip `-` and `.` and
 
-**Todo:**: possibly more than that  
+**Todo:**: Eventually we want to get rid of this since it should only happen once
+on the appName itself  
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
 <a id="landoutilsenginegetid"></a>
@@ -2243,6 +2252,19 @@ Get an init method
 <div class="api-body-header"></div>
 
 Add an init method to the registry
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoinitclonerepo"></a>
+
+<h2 id="landoinitclonerepo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.init.cloneRepo()</h2>
+<div class="api-body-header"></div>
+
+Helper to return a performant git clone command
+
+This clones to /tmp and then moves to /app to avoid file sharing performance
+hits
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
@@ -2376,55 +2398,14 @@ The core service builder
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
-<a id="landoutilsservicesconnectnet"></a>
+<a id="landoserviceshealthcheck"></a>
 
-<h2 id="landoutilsservicesconnectnet" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.services.connectNet()</h2>
+<h2 id="landoserviceshealthcheck" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.services.healthcheck()</h2>
 <div class="api-body-header"></div>
 
-Default networking
+Does a healthcheck on a service
 
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoutilsservicesconnectbridge"></a>
-
-<h2 id="landoutilsservicesconnectbridge" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.services.connectBridge()</h2>
-<div class="api-body-header"></div>
-
-Default bridge network
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoutilsservicesfilterbuildsteps"></a>
-
-<h2 id="landoutilsservicesfilterbuildsteps" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.services.filterBuildSteps()</h2>
-<div class="api-body-header"></div>
-
-Return an object of build steps
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoutilsservicessetentrypoint"></a>
-
-<h2 id="landoutilsservicessetentrypoint" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.services.setEntrypoint()</h2>
-<div class="api-body-header"></div>
-
-Set the entrypoint with a local script
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoutilsservicesbuildvolume"></a>
-
-<h2 id="landoutilsservicesbuildvolume" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.services.buildVolume()</h2>
-<div class="api-body-header"></div>
-
-Helper to build a volumes
-
-**Note:**: This seems weird, maybe written before we have more generic compose merging?  
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
 <a id="landoutilsservicesaddconfig"></a>
@@ -2444,6 +2425,73 @@ Helper function to inject config
 <div class="api-body-header"></div>
 
 Helper function to inject utility scripts
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesbuildvolume"></a>
+
+<h2 id="landoutilsservicesbuildvolume" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.buildVolume()</h2>
+<div class="api-body-header"></div>
+
+Helper to build a volumes
+
+**Note:**: This seems weird, maybe written before we have more generic compose merging?  
+**Note:**: Once we have more testing can we switch this to use normalizePath?  
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesfilterbuildsteps"></a>
+
+<h2 id="landoutilsservicesfilterbuildsteps" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.filterBuildSteps()</h2>
+<div class="api-body-header"></div>
+
+Return an object of build steps
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesgethostpath"></a>
+
+<h2 id="landoutilsservicesgethostpath" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.getHostPath(mount) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Helper method to get the host part of a volume
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| mount | <code>String</code> | The entire mount |
+
+**Returns**: <code>String</code> - The host part of the mount  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicesnormalizepath"></a>
+
+<h2 id="landoutilsservicesnormalizepath" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.normalizePath(local, base, excludes) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Helper method to normalize a path so that Lando overrides can be used as though
+the docker-compose files were in the app root.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| local | <code>String</code> | The first part of the volume mount |
+| base | <code>String</code> | The path that should be prefixed to any local deemed to be a relative path |
+| excludes | <code>Array</code> | An array of locals to exclude, this is primarily for named volumes |
+
+**Returns**: <code>String</code> - Either local or local prefixed by base  
+<div class="api-body-footer"></div>
+<a id="landoutilsservicessetentrypoint"></a>
+
+<h2 id="landoutilsservicessetentrypoint" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.services.setEntrypoint()</h2>
+<div class="api-body-header"></div>
+
+Set the entrypoint with a local script
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
@@ -2718,7 +2766,7 @@ app is uninstalled such as invalidating any cached data.
 ```js
 // Make sure we remove our build cache
 app.events.on('post-uninstall', function() {
-  lando.cache.remove(app.name + ':last_build');
+  lando.cache.remove(app.name + '.last_build');
 });
 ```
 <div class="api-body-footer"></div>
@@ -2765,20 +2813,20 @@ app.events.on('post-start', function() {
   // Go through each service
   _.forEach(app.config.services, function(service, name) {
 
-    // If the service has extras let's loop through and run some commands
-    if (!_.isEmpty(service.extras)) {
+    // If the service has run steps let's loop through and run some commands
+    if (!_.isEmpty(service.run)) {
 
       // Normalize data for loopage
-      if (!_.isArray(service.extras)) {
-        service.extras = [service.extras];
+      if (!_.isArray(service.run)) {
+        service.run = [service.run];
       }
 
       // Run each command
-      _.forEach(service.extras, function(cmd) {
+      _.forEach(service.run, function(cmd) {
 
         // Build out the compose object
         var compose = {
-          id: [app.dockerName, name, '1'].join('_'),
+          id: [service, name, '1'].join('_'),
             cmd: cmd,
             opts: {
             mode: 'attach'
@@ -3070,4 +3118,21 @@ Event that allows you to do some things before a `compose` Objects containers ar
 started
 
 **Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoyamldump"></a>
+
+<h2 id="landoyamldump" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.yaml.dump(file, data) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Dumps an object to a YAML file
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| file | <code>String</code> | The path to the file to be loaded |
+| data | <code>Object</code> | The object to dump |
+
+**Returns**: <code>String</code> - Flename  
 <div class="api-body-footer"></div>
