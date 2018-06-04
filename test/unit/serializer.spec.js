@@ -5,6 +5,7 @@
 
 'use strict';
 
+const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
 const Promise = require('bluebird');
@@ -36,8 +37,21 @@ describe('serializer', () => {
       func.should.be.instanceof(Promise);
       func.should.have.property('then');
     });
-    // @todo;
-    it('runs enqueued events in order recieved');
+
+    it('runs functions in order queued', () => {
+      const serializer = new Serializer();
+      const runs = 42;
+      const log = [];
+      const allThePromises = _.map(_.range(runs), i => serializer.enqueue(() => Promise.delay(_.random(0, 5))
+        .then(() => log.push(i))));
+      return Promise.all(allThePromises)
+      .then(results => {
+        results.length.should.equal(runs);
+        _.forEach(results, (result, index) => {
+          result.should.equal(index + 1);
+        });
+      });
+    });
   });
 
 });
