@@ -143,7 +143,7 @@ module.exports = {
 
     // Get target info
     const node = 'node8';
-    const os = process.platform;
+    let os = process.platform;
     const arch = 'x64';
 
     // Rename the OS because i guess we want to be different than process.platform?
