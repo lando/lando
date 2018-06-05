@@ -1,6 +1,6 @@
 Lando
 =====
-
+[![Build Status](https://travis-ci.org/lando/lando.svg?branch=master)](https://travis-ci.org/lando/lando) [![CircleCI](https://circleci.com/gh/lando/lando.svg?style=svg)](https://circleci.com/gh/lando/lando) [![Maintainability](https://api.codeclimate.com/v1/badges/eab8551b79be382bd0ed/maintainability)](https://codeclimate.com/github/lando/lando/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/eab8551b79be382bd0ed/test_coverage)](https://codeclimate.com/github/lando/lando/test_coverage)
 ![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
 
 Lando is for developers who want to quickly specify and painlessly spin up the services and tools needed to develop their projects.
