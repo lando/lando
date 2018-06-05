@@ -28,8 +28,8 @@ Check out `./bin/lando.js` in this repository for an example of bootstraping
 **Example**  
 ```js
 // Get the bootstrap function
-var bootstrap = require('lando/lib/bootstrap');
-var options = {
+const bootstrap = require('./lib/bootstrap');
+const options = {
   logLevelConsole: LOGLEVELCONSOLE,
   userConfRoot: USERCONFROOT,
   envPrefix: ENVPREFIX,
@@ -39,12 +39,7 @@ var options = {
 };
 
 // Initialize Lando with some options
-bootstrap(options)
-
-// Initialize some other things
-.then(function(lando) {
-  return cli.init(lando);
-})
+bootstrap(options).then(lando => cli.init(lando));
 ```
 <div class="api-body-footer"></div>
 <a id="landoclilargv"></a>
@@ -61,599 +56,7 @@ This means all the options passed in after the `--` flag.
 **Example**  
 ```js
 // Gets all the global options that have been specified.
-var largv = lando.tasks.largv;
-```
-<div class="api-body-footer"></div>
-<a id="landoevents__on"></a>
-
-<h2 id="landoevents__on" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.__on</h2>
-<div class="api-body-header"></div>
-
-Stores the original event on method.
-
-I don't think you want to ever really use this. Mentioned only for transparency.
-
-**See**: https://nodejs.org/api/events.html  
-<div class="api-body-footer"></div>
-<a id="landoevents__emit"></a>
-
-<h2 id="landoevents__emit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.__emit</h2>
-<div class="api-body-header"></div>
-
-Stores the original event emit method.
-
-I don't think you want to ever really use this. Mentioned only for transparency.
-
-**See**: https://nodejs.org/api/events.html  
-<div class="api-body-footer"></div>
-<a id="landonode_"></a>
-
-<h2 id="landonode_" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node._</h2>
-<div class="api-body-header"></div>
-
-Get lodash
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the lodash module
-var _ = lando.node._;
-```
-<div class="api-body-footer"></div>
-<a id="landonodechalk"></a>
-
-<h2 id="landonodechalk" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.chalk</h2>
-<div class="api-body-header"></div>
-
-Get chalk
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the chalk module
-var chalk = lando.node.chalk;
-```
-<div class="api-body-footer"></div>
-<a id="landonodefs"></a>
-
-<h2 id="landonodefs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.fs</h2>
-<div class="api-body-header"></div>
-
-Get fs-extra
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the fs-extra module
-var fs = lando.node.fs;
-```
-<div class="api-body-footer"></div>
-<a id="landonodehasher"></a>
-
-<h2 id="landonodehasher" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.hasher</h2>
-<div class="api-body-header"></div>
-
-Get object-hash
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the object-hash module
-var hasher = lando.node.hasher;
-```
-<div class="api-body-footer"></div>
-<a id="landonodeip"></a>
-
-<h2 id="landonodeip" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.ip</h2>
-<div class="api-body-header"></div>
-
-Get ip utils
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the ip module
-var ip = lando.node.ip;
-```
-<div class="api-body-footer"></div>
-<a id="landonodejsonfile"></a>
-
-<h2 id="landonodejsonfile" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.jsonfile</h2>
-<div class="api-body-header"></div>
-
-Get jsonfile
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the jsonfile module
-var jsonfile = lando.node.jsonfile;
-```
-<div class="api-body-footer"></div>
-<a id="landonoderest"></a>
-
-<h2 id="landonoderest" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.rest</h2>
-<div class="api-body-header"></div>
-
-Get restler
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the restler module
-var rest = lando.node.rest;
-```
-<div class="api-body-footer"></div>
-<a id="landonodesemver"></a>
-
-<h2 id="landonodesemver" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.semver</h2>
-<div class="api-body-header"></div>
-
-Get semver
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Get the semver module
-var semver = lando.node.semver;
-```
-<div class="api-body-footer"></div>
-<a id="landotaskstasks"></a>
-
-<h2 id="landotaskstasks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.tasks.tasks</h2>
-<div class="api-body-header"></div>
-
-A singleton array that contains all the tasks that have been added.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Gets all the tasks that have been loaded
-var task = lando.tasks.tasks;
-```
-<div class="api-body-footer"></div>
-<a id="landopromise"></a>
-
-<h2 id="landopromise" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.Promise</h2>
-<div class="api-body-header"></div>
-
-Extends [bluebird](http://bluebirdjs.com/docs/api-reference.html)
-so that our promises have some retry functionality.
-
-All functionality should be the same as bluebird except where indicated
-below
-
-Note that bluebird currently wants you to use scoped prototypes to extend
-it rather than the normal extend syntax so that is why this is using the "old"
-way
-
-**See**
-
-- http://bluebirdjs.com/docs/api-reference.html
-- https://github.com/petkaantonov/bluebird/issues/1397
-
-<div class="api-body-footer"></div>
-<a id="landocacheset"></a>
-
-<h2 id="landocacheset" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cache.set(key, data, [opts])</h2>
-<div class="api-body-header"></div>
-
-Sets an item in the cache
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| key | <code>String</code> |  | The name of the key to store the data with. |
-| data | <code>Any</code> |  | The data to store in the cache. |
-| [opts] | <code>Object</code> |  | Options to pass into the cache |
-| [opts.persist] | <code>Boolean</code> | <code>false</code> | Whether this cache data should persist between processes. Eg in a file instead of memory |
-| [opts.ttl] | <code>Integer</code> | <code>0</code> | Seconds the cache should live. 0 mean forever. |
-
-**Example**  
-```js
-// Add a string to the cache
-lando.cache.set('mykey', 'mystring');
-
-// Add an object to persist in the file cache
-lando.cache.set('mykey', data, {persist: true});
-
-// Add an object to the cache for five seconds
-lando.cache.set('mykey', data, {ttl: 5});
-```
-<div class="api-body-footer"></div>
-<a id="landocacheget"></a>
-
-<h2 id="landocacheget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cache.get(key) ⇒ <code>Any</code></h2>
-<div class="api-body-header"></div>
-
-Gets an item in the cache
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| key | <code>String</code> | The name of the key to retrieve the data. |
-
-**Returns**: <code>Any</code> - The data stored in the cache if applicable.  
-**Example**  
-```js
-// Get the data stored with key mykey
-var data = lando.cache.get('mykey');
-```
-<div class="api-body-footer"></div>
-<a id="landocacheremove"></a>
-
-<h2 id="landocacheremove" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cache.remove(key)</h2>
-<div class="api-body-header"></div>
-
-Manually remove an item from the cache.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| key | <code>String</code> | The name of the key to remove the data. |
-
-**Example**  
-```js
-// Remove the data stored with key mykey
-lando.cache.remove('mykey');
-```
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigtryconvertjson"></a>
-
-<h2 id="landoutilsconfigtryconvertjson" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.tryConvertJson(value) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Attempt to parse a JSON string to an objects
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>String</code> | The string to convert |
-
-**Returns**: <code>Object</code> - A parsed object or the inputted value  
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigmerge"></a>
-
-<h2 id="landoutilsconfigmerge" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.merge(old, fresh) ⇒ <code>Object</code> \| <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Uses _.mergeWith to concat arrays, this helps replicate how Docker Compose
-merges its things
-
-**See**: https://lodash.com/docs#mergeWith  
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| old | <code>Object</code> | object to be merged |
-| fresh | <code>Object</code> | object to be merged |
-
-**Returns**: <code>Object</code> - The new object<code>Object</code> - Merged object or arrays  
-**Example**  
-```js
-// Take an object and write a docker compose file
-var newObject = _.mergeWith(a, b, lando.utils.merger);
-```
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigstripenv"></a>
-
-<h2 id="landoutilsconfigstripenv" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.stripEnv(prefix) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Strips process.env of all envvars with PREFIX and returns process.env
-
-NOTE: this actually returns process.env not a NEW object cloned from process.env
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| prefix | <code>String</code> | The prefix to strip |
-
-**Returns**: <code>Object</code> - Updated process.env  
-**Example**  
-```js
-// Reset the process.env without any DOCKER_ prefixed envvars
-process.env = config.stripEnv('DOCKER_');
-```
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigdefaults"></a>
-
-<h2 id="landoutilsconfigdefaults" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.defaults() ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Define default config
-
-**Since**: 3.0.0  
-**Returns**: <code>Object</code> - The default config object.  
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigloadfiles"></a>
-
-<h2 id="landoutilsconfigloadfiles" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.loadFiles(files) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Merge in config file if it exists
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| files | <code>Array</code> | An array of files to try loading |
-
-**Returns**: <code>Object</code> - An object of config merged from file sources  
-<div class="api-body-footer"></div>
-<a id="landoutilsconfigloadenvs"></a>
-
-<h2 id="landoutilsconfigloadenvs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.utils.config.loadEnvs(prefix) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Filter process.env by a given prefix
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| prefix | <code>String</code> | The prefix by which to filter. Should be without the trailing `_` eg `LANDO` not `LANDO_` |
-
-**Returns**: <code>Object</code> - Object of things with camelCased keys  
-<div class="api-body-footer"></div>
-<a id="landocliargv"></a>
-
-<h2 id="landocliargv" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.argv()</h2>
-<div class="api-body-header"></div>
-
-Returns the lando options
-
-This means all the options passed in before the `--` flag.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Gets all the global options that have been specified.
-var argv = lando.tasks.argv();
-```
-<div class="api-body-footer"></div>
-<a id="landocliparsetoyargs"></a>
-
-<h2 id="landocliparsetoyargs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.parseToYargs(task, events) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Parses a lando task object into something that can be used by the [yargs](http://yargs.js.org/docs/) CLI.
-
-A lando task object is an abstraction on top of yargs that also contains some
-metadata about how to interactively ask questions on both a CLI and GUI.
-
-The interactivity metadata is a superset of [inquirer](https://github.com/sboudrias/Inquirer.js) data.
-
-**See**
-
-- [yargs docs](http://yargs.js.org/docs/)
-- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
-
-**Since**: 3.0.0  
-**Todo**
-
-- [ ] Injecting the events here seems not the way we want to go?
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| task | <code>Object</code> | A Lando task object (@see add for definition) |
-| events | <code>Object</code> | The Lando events engine |
-
-**Returns**: <code>Object</code> - A yargs command object  
-**Example**  
-```js
-// Add a task to the yargs CLI
-yargs.command(lando.tasks.parseToYargs(task));
-```
-<div class="api-body-footer"></div>
-<a id="landoclistartheader"></a>
-
-<h2 id="landoclistartheader" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.startHeader() ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Returns a cheeky header that can be used after an app is started.
-
-**Since**: 3.0.0  
-**Returns**: <code>String</code> - A header string we can print to the CLI  
-**Example**  
-```js
-// Print the header to the console
-console.log(lando.cli.startHeader());
-```
-<div class="api-body-footer"></div>
-<a id="landocliinitheader"></a>
-
-<h2 id="landocliinitheader" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.initHeader() ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Returns a cheeky header that can be used after an app is init.
-
-**Since**: 3.0.0  
-**Returns**: <code>String</code> - A header string we can print to the CLI  
-**Example**  
-```js
-// Print the header to the console
-console.log(lando.cli.initHeader());
-```
-<div class="api-body-footer"></div>
-<a id="landoclitunnelheader"></a>
-
-<h2 id="landoclitunnelheader" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.tunnelHeader() ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Returns a cheeky header that can be used after an app is shared
-
-**Since**: 3.0.0  
-**Returns**: <code>String</code> - A header string we can print to the CLI  
-**Example**  
-```js
-// Print the header to the console
-console.log(lando.cli.tunnelHeader());
-```
-<div class="api-body-footer"></div>
-<a id="landocliupdatemessage"></a>
-
-<h2 id="landocliupdatemessage" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.updateMessage(url) ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Returns a mesage indicating the availability of an update
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| url | <code>String</code> | The URL with the link to the update |
-
-**Returns**: <code>String</code> - An update message we can print to the CLI  
-**Example**  
-```js
-// Print the header to the console
-console.log(lando.cli.updateMessage());
-```
-<div class="api-body-footer"></div>
-<a id="landoclitable"></a>
-
-<h2 id="landoclitable" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.Table([opts]) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Utility function to help construct CLI displayable tables
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [opts] | <code>Object</code> |  | Options for how the table should be built |
-| [opts.arrayJoiner] | <code>String</code> | <code>&#x27;, &#x27;</code> | A delimiter to be used when joining array data |
-
-**Returns**: <code>Object</code> - Table metadata that can be printed with toString()  
-**Example**  
-```js
-// Grab a new cli table
-var table = new lando.cli.Table();
-
-// Add data
-table.add('NAME', app.name);
-table.add('LOCATION', app.root);
-table.add('SERVICES', _.keys(app.services));
-table.add('URLS', urls, {arrayJoiner: '\n'});
-
-// Print the table
-console.log(table.toString());
-```
-<div class="api-body-footer"></div>
-<a id="landoeventson"></a>
-
-<h2 id="landoeventson" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.on(name, [priority], fn) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
-Our overriden event on method.
-
-This optionally allows a priority to be specified. Lower priorities run first.
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| name | <code>String</code> |  | The name of the event |
-| [priority] | <code>Integer</code> | <code>5</code> | The priority the event should run in. |
-| fn | <code>function</code> |  | The function to call. Should get the args specified in the corresponding `emit` declaration. |
-
-**Returns**: <code>Promise</code> - A Promise  
-**Example**  
-```js
-// Print out all our apps as they get instantiated and do it before other `post-instantiate-app` events
-lando.events.on('post-instantiate-app', 1, function(app) {
-  console.log(app);
-});
-
-// Log a helpful message after an app is started, don't worry about whether it runs before or
-// after other `post-start` events
-return app.events.on('post-start', function() {
-  lando.log.info('App %s started', app.name);
-});
-```
-<div class="api-body-footer"></div>
-<a id="landoeventsemit"></a>
-
-<h2 id="landoeventsemit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.emit(name, [...args]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
-Reimplements event emit method.
-
-This makes events blocking and promisified.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>String</code> | The name of the event |
-| [...args] | <code>Any</code> | Options args to pass. |
-
-**Returns**: <code>Promise</code> - A Promise  
-**Example**  
-```js
-// Emits a global event with a config arg
-return lando.events.emit('wolf359', config);
-
-// Emits an app event with a config arg
-return app.events.emit('sector001', config);
-```
-<div class="api-body-footer"></div>
-<a id="landologdebug"></a>
-
-<h2 id="landologdebug" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.log.debug(msg, [...values])</h2>
-<div class="api-body-header"></div>
-
-Logs a debug message.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
-| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
-
-**Example**  
-```js
-// Log a debug message
-lando.log.debug('All details about docker inspect %j', massiveObject);
+const largv = lando.tasks.largv;
 ```
 <div class="api-body-footer"></div>
 <a id="landologerror"></a>
@@ -788,36 +191,6 @@ For each directory scanned plugins can live in either the `plugins` or
 ```js
 // Load the plugin called 'shield-generator' and additionally scan `/tmp` for the plugin
 return lando.plugins.load('shield-generator', ['/tmp']);
-```
-<div class="api-body-footer"></div>
-<a id="landopromiseretry"></a>
-
-<h2 id="landopromiseretry" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.Promise.retry(fn, [opts]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
-Adds a retry method to all Promise instances.
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| fn | <code>function</code> |  | The function to retry. |
-| [opts] | <code>Opts</code> |  | Options to specify how retry works. |
-| [opts.max] | <code>Integer</code> | <code>5</code> | The amount of times to retry. |
-| [opts.backoff] | <code>Integer</code> | <code>500</code> | The amount to wait between retries. In miliseconds and cumulative. |
-
-**Returns**: <code>Promise</code> - A Promise  
-**Example**  
-```js
-// Start the deamon
-return serviceCmd(['start'], opts)
-
-// And then retry 25 times until we've connected, increase delay between retries by 1 second
-.retry(function() {
-  log.verbose('Trying to connect to daemon.');
-  return shell.sh([DOCKER_EXECUTABLE, 'info'], {mode: 'collect'});
-}, {max: 25, backoff: 1000});
 ```
 <div class="api-body-footer"></div>
 <a id="landoscanurls"></a>
@@ -955,172 +328,6 @@ Returns the path of a specific command or binary.
 ```js
 // Determine the location of the 'docker' command
 var which = lando.shell.which(DOCKER_EXECUTABLE);
-```
-<div class="api-body-footer"></div>
-<a id="landotasksadd"></a>
-
-<h2 id="landotasksadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.tasks.add(name, task)</h2>
-<div class="api-body-header"></div>
-
-Adds a Lando task to the global `lando.tasks.task` object.
-
-A lando task object is an abstraction on top of [yargs](http://yargs.js.org/docs/)
-and [inquirer](https://github.com/sboudrias/Inquirer.js) with a little extra special sauce.
-
-**See**
-
-- [yargs docs](http://yargs.js.org/docs/)
-- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>String</code> | The name of the task. |
-| task | <code>Object</code> | A Lando task object |
-| task.command | <code>String</code> | A [yargs formatted command](http://yargs.js.org/docs/#methods-commandmodule-positional-arguments) |
-| task.description | <code>String</code> | A short description of the command |
-| task.options | <code>Object</code> | A [yargs builder object](http://yargs.js.org/docs/#methods-commandmodule). Each builder also has an 'interactive' key which is an [inquirier question object](https://github.com/sboudrias/Inquirer.js#objects) |
-| task.run | <code>function</code> | The function to run when the task is invoked. |
-| task.run.options | <code>Object</code> | The options selected by the user, available to the run function. |
-
-**Example**  
-```js
-// Define a task
-var task = {
-  command: 'destroy [appname]',
-  describe: 'Destroy app in current directory or [appname]',
-  options: {
-    yes: {
-      describe: 'Auto answer yes to prompts',
-      alias: ['y'],
-      default: false,
-      boolean: true,
-      interactive: {
-        type: 'confirm',
-        message: 'Are you sure you want to DESTROY?'
-      }
-    }
-  },
-  run: function(options) {
-    console.log(options);
-  }
-};
-
-// Add the task to Lando
-lando.tasks.add('destroy', task);
-```
-<div class="api-body-footer"></div>
-<a id="landoupdatesupdateavailable"></a>
-
-<h2 id="landoupdatesupdateavailable" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.updates.updateAvailable(version1, version2) ⇒ <code>Boolean</code></h2>
-<div class="api-body-header"></div>
-
-Compares two versions and determines if an update is available or not
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| version1 | <code>String</code> | The current version. |
-| version2 | <code>String</code> | The potential update version |
-
-**Returns**: <code>Boolean</code> - Whether an update is avaiable.  
-**Example**  
-```js
-// Does our current version need to be updated?
-var updateAvailable = lando.updates.updateAvailable('1.0.0', '1.0.1');
-```
-<div class="api-body-footer"></div>
-<a id="landoupdatesfetch"></a>
-
-<h2 id="landoupdatesfetch" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.updates.fetch()</h2>
-<div class="api-body-header"></div>
-
-Determines whether we need to fetch updatest or not
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoupdatesrefresh"></a>
-
-<h2 id="landoupdatesrefresh" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.updates.refresh()</h2>
-<div class="api-body-header"></div>
-
-Get latest version info from github
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landousergetuid"></a>
-
-<h2 id="landousergetuid" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.user.getUid([username]) ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Returns the id of the current user or username.
-
-Note that on Windows this value is more or less worthless and `username` has
-has no effect
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [username] | <code>String</code> | <code>&#x27;$(whoami)&#x27;</code> | The username to get the ID for |
-
-**Returns**: <code>String</code> - The user ID.  
-**Example**  
-```js
-// Get the id of the user.
-var userId = lando.user.getUid();
-```
-<div class="api-body-footer"></div>
-<a id="landousergetgid"></a>
-
-<h2 id="landousergetgid" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.user.getGid([username]) ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Returns the id of the current user or username.
-
-Note that on Windows this value is more or less worthless and `username` has
-has no effect
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [username] | <code>String</code> | <code>&#x27;$(whoami)&#x27;</code> | The username to get the ID for |
-
-**Returns**: <code>String</code> - The group ID.  
-**Example**  
-```js
-// Get the id of the user.
-var groupId = lando.user.getGid();
-```
-<div class="api-body-footer"></div>
-<a id="landoyamlload"></a>
-
-<h2 id="landoyamlload" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.yaml.load(file) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
-Loads a yaml object from a file.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| file | <code>String</code> | The path to the file to be loaded |
-
-**Returns**: <code>Object</code> - The loaded object  
-**Example**  
-```js
-// Add a string to the cache
-const thing = lando.yaml.load('/tmp/myfile.yml');
 ```
 <div class="api-body-footer"></div>
 <a id="landoappregister"></a>
@@ -2528,14 +1735,9 @@ NOTE: This might only be available in core plugins
 **Example**  
 ```js
 // Add engine settings to the config
-lando.events.on('pre-bootstrap', function(config) {
-
-  // Get the docker config
+lando.events.on('pre-bootstrap', config => {
   var engineConfig = daemon.getEngineConfig();
-
-  // Add engine host to the config
   config.engineHost = engineConfig.host;
-
 });
 ```
 <div class="api-body-footer"></div>
@@ -2560,7 +1762,7 @@ the bootstrap is completed.
 **Example**  
 ```js
 // Add the services module to lando
-lando.events.on('post-bootstrap', function(lando) {
+lando.events.on('post-bootstrap', lando => {
   lando.services = require('./services')(lando);
 });
 ```
@@ -3118,6 +2320,825 @@ Event that allows you to do some things before a `compose` Objects containers ar
 started
 
 **Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="landoclitable"></a>
+
+<h2 id="landoclitable" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.Table()</h2>
+<div class="api-body-header"></div>
+
+Utility function to help construct CLI displayable tables
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="new_landoclitable_new"></a>
+
+<h2 id="new_landoclitable_new" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  new exports.Table([opts])</h2>
+<div class="api-body-header"></div>
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [opts] | <code>Object</code> |  | Options for how the table should be built |
+| [opts.arrayJoiner] | <code>String</code> | <code>&#x27;, &#x27;</code> | A delimiter to be used when joining array data |
+
+**Returns**: <code>Object</code> - Table metadata that can be printed with toString()  
+**Example**  
+```js
+// Grab a new cli table
+const table = new lando.cli.Table();
+
+// Add data
+table.add('NAME', app.name);
+table.add('LOCATION', app.root);
+table.add('SERVICES', _.keys(app.services));
+table.add('URLS', urls, {arrayJoiner: '\n'});
+
+// Print the table
+console.log(table.toString());
+```
+<div class="api-body-footer"></div>
+<a id="landoevents__on"></a>
+
+<h2 id="landoevents__on" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.events.__on()</h2>
+<div class="api-body-header"></div>
+
+Stores the original event on method.
+
+I don't think you want to ever really use this. Mentioned only for transparency.
+
+**See**: https://nodejs.org/api/events.html  
+<div class="api-body-footer"></div>
+<a id="landoevents__emit"></a>
+
+<h2 id="landoevents__emit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.events.__emit()</h2>
+<div class="api-body-header"></div>
+
+Stores the original event emit method.
+
+I don't think you want to ever really use this. Mentioned only for transparency.
+
+**See**: https://nodejs.org/api/events.html  
+<div class="api-body-footer"></div>
+<a id="landonode_"></a>
+
+<h2 id="landonode_" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node._()</h2>
+<div class="api-body-header"></div>
+
+Get lodash
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the lodash module
+const _ = lando.node._;
+```
+<div class="api-body-footer"></div>
+<a id="landonodechalk"></a>
+
+<h2 id="landonodechalk" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.chalk()</h2>
+<div class="api-body-header"></div>
+
+Get chalk
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the chalk module
+const chalk = lando.node.chalk;
+```
+<div class="api-body-footer"></div>
+<a id="landonodefs"></a>
+
+<h2 id="landonodefs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.fs()</h2>
+<div class="api-body-header"></div>
+
+Get fs-extra
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the fs-extra module
+const fs = lando.node.fs;
+```
+<div class="api-body-footer"></div>
+<a id="landonodehasher"></a>
+
+<h2 id="landonodehasher" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.hasher()</h2>
+<div class="api-body-header"></div>
+
+Get object-hash
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the object-hash module
+const hasher = lando.node.hasher;
+```
+<div class="api-body-footer"></div>
+<a id="landonodeip"></a>
+
+<h2 id="landonodeip" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.ip()</h2>
+<div class="api-body-header"></div>
+
+Get ip utils
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the ip module
+const ip = lando.node.ip;
+```
+<div class="api-body-footer"></div>
+<a id="landonodejsonfile"></a>
+
+<h2 id="landonodejsonfile" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.jsonfile()</h2>
+<div class="api-body-header"></div>
+
+Get jsonfile
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the jsonfile module
+const jsonfile = lando.node.jsonfile;
+```
+<div class="api-body-footer"></div>
+<a id="landonoderest"></a>
+
+<h2 id="landonoderest" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.rest()</h2>
+<div class="api-body-header"></div>
+
+Get restler
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the restler module
+const rest = lando.node.rest;
+```
+<div class="api-body-footer"></div>
+<a id="landonodesemver"></a>
+
+<h2 id="landonodesemver" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.semver()</h2>
+<div class="api-body-header"></div>
+
+Get semver
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Get the semver module
+const semver = lando.node.semver;
+```
+<div class="api-body-footer"></div>
+<a id="landotaskstasks"></a>
+
+<h2 id="landotaskstasks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.tasks.tasks()</h2>
+<div class="api-body-header"></div>
+
+A singleton array that contains all the tasks that have been added.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Gets all the tasks that have been loaded
+const task = lando.tasks.tasks;
+```
+<div class="api-body-footer"></div>
+<a id="landopromise"></a>
+
+<h2 id="landopromise" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.Promise()</h2>
+<div class="api-body-header"></div>
+
+Extends [bluebird](http://bluebirdjs.com/docs/api-reference.html)
+so that our promises have some retry functionality.
+
+All functionality should be the same as bluebird except where indicated
+below
+
+Note that bluebird currently wants you to use scoped prototypes to extend
+it rather than the normal extend syntax so that is why this is using the "old"
+way
+
+**See**
+
+- http://bluebirdjs.com/docs/api-reference.html
+- https://github.com/petkaantonov/bluebird/issues/1397
+
+<div class="api-body-footer"></div>
+<a id="landocacheset"></a>
+
+<h2 id="landocacheset" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cache.set(key, data, [opts])</h2>
+<div class="api-body-header"></div>
+
+Sets an item in the cache
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| key | <code>String</code> |  | The name of the key to store the data with. |
+| data | <code>Any</code> |  | The data to store in the cache. |
+| [opts] | <code>Object</code> |  | Options to pass into the cache |
+| [opts.persist] | <code>Boolean</code> | <code>false</code> | Whether this cache data should persist between processes. Eg in a file instead of memory |
+| [opts.ttl] | <code>Integer</code> | <code>0</code> | Seconds the cache should live. 0 mean forever. |
+
+**Example**  
+```js
+// Add a string to the cache
+lando.cache.set('mykey', 'mystring');
+
+// Add an object to persist in the file cache
+lando.cache.set('mykey', data, {persist: true});
+
+// Add an object to the cache for five seconds
+lando.cache.set('mykey', data, {ttl: 5});
+```
+<div class="api-body-footer"></div>
+<a id="landocacheget"></a>
+
+<h2 id="landocacheget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cache.get(key) ⇒ <code>Any</code></h2>
+<div class="api-body-header"></div>
+
+Gets an item in the cache
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>String</code> | The name of the key to retrieve the data. |
+
+**Returns**: <code>Any</code> - The data stored in the cache if applicable.  
+**Example**  
+```js
+// Get the data stored with key mykey
+const data = lando.cache.get('mykey');
+```
+<div class="api-body-footer"></div>
+<a id="landocacheremove"></a>
+
+<h2 id="landocacheremove" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cache.remove(key)</h2>
+<div class="api-body-header"></div>
+
+Manually remove an item from the cache.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>String</code> | The name of the key to remove the data. |
+
+**Example**  
+```js
+// Remove the data stored with key mykey
+lando.cache.remove('mykey');
+```
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigtryconvertjson"></a>
+
+<h2 id="landoutilsconfigtryconvertjson" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.tryConvertJson(value) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Attempt to parse a JSON string to an objects
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>String</code> | The string to convert |
+
+**Returns**: <code>Object</code> - A parsed object or the inputted value  
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigmerge"></a>
+
+<h2 id="landoutilsconfigmerge" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.merge(old, fresh) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Uses _.mergeWith to concat arrays, this helps replicate how Docker Compose
+merges its things
+
+**See**: https://lodash.com/docs#mergeWith  
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| old | <code>Object</code> | object to be merged |
+| fresh | <code>Object</code> | object to be merged |
+
+**Returns**: <code>Object</code> - The new object  
+**Example**  
+```js
+// Take an object and write a docker compose file
+const newObject = _.mergeWith(a, b, lando.utils.merger);
+```
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigstripenv"></a>
+
+<h2 id="landoutilsconfigstripenv" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.stripEnv(prefix) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Strips process.env of all envvars with PREFIX and returns process.env
+
+NOTE: this actually returns process.env not a NEW object cloned from process.env
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| prefix | <code>String</code> | The prefix to strip |
+
+**Returns**: <code>Object</code> - Updated process.env  
+**Example**  
+```js
+// Reset the process.env without any DOCKER_ prefixed envvars
+process.env = config.stripEnv('DOCKER_');
+```
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigdefaults"></a>
+
+<h2 id="landoutilsconfigdefaults" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.defaults() ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Define default config
+
+**Since**: 3.0.0  
+**Returns**: <code>Object</code> - The default config object.  
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigloadfiles"></a>
+
+<h2 id="landoutilsconfigloadfiles" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.loadFiles(files) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Merge in config file if it exists
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| files | <code>Array</code> | An array of files to try loading |
+
+**Returns**: <code>Object</code> - An object of config merged from file sources  
+<div class="api-body-footer"></div>
+<a id="landoutilsconfigloadenvs"></a>
+
+<h2 id="landoutilsconfigloadenvs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.utils.config.loadEnvs(prefix) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Filter process.env by a given prefix
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| prefix | <code>String</code> | The prefix by which to filter. Should be without the trailing `_` eg `LANDO` not `LANDO_` |
+
+**Returns**: <code>Object</code> - Object of things with camelCased keys  
+<div class="api-body-footer"></div>
+<a id="landocliargv"></a>
+
+<h2 id="landocliargv" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.argv() ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Returns the lando options
+
+This means all the options passed in before the `--` flag.
+
+**Since**: 3.0.0  
+**Returns**: <code>Object</code> - Yarg parsed options  
+**Example**  
+```js
+// Gets all the pre-global options that have been specified.
+const argv = lando.tasks.argv();
+```
+<div class="api-body-footer"></div>
+<a id="landocliparsetoyargs"></a>
+
+<h2 id="landocliparsetoyargs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.parseToYargs(task, events) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Parses a lando task object into something that can be used by the [yargs](http://yargs.js.org/docs/) CLI.
+
+A lando task object is an abstraction on top of yargs that also contains some
+metadata about how to interactively ask questions on both a CLI and GUI.
+
+The interactivity metadata is a superset of [inquirer](https://github.com/sboudrias/Inquirer.js) data.
+
+**See**
+
+- [yargs docs](http://yargs.js.org/docs/)
+- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
+
+**Since**: 3.0.0  
+**Todo**
+
+- [ ] Injecting the events here seems not the way we want to go?
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| task | <code>Object</code> | A Lando task object (@see add for definition) |
+| events | <code>Object</code> | The Lando events engine |
+
+**Returns**: <code>Object</code> - A yargs command object  
+**Example**  
+```js
+// Add a task to the yargs CLI
+yargs.command(lando.tasks.parseToYargs(task));
+```
+<div class="api-body-footer"></div>
+<a id="landocliinitheader"></a>
+
+<h2 id="landocliinitheader" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.initHeader([lines]) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Returns a cheeky header that can be used after an app is init.
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [lines] | <code>Array</code> | <code>[]</code> | url The URL with the link to the update |
+
+**Returns**: <code>String</code> - A header string we can print to the CLI  
+**Example**  
+```js
+// Print the header to the console
+console.log(lando.cli.initHeader());
+```
+<div class="api-body-footer"></div>
+<a id="landoclistartheader"></a>
+
+<h2 id="landoclistartheader" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.startHeader([lines]) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Returns a cheeky header that can be used after an app is started.
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [lines] | <code>Array</code> | <code>[]</code> | url The URL with the link to the update |
+
+**Returns**: <code>String</code> - A header string we can print to the CLI  
+**Example**  
+```js
+// Print the header to the console
+console.log(lando.cli.startHeader());
+```
+<div class="api-body-footer"></div>
+<a id="landoclitunnelheader"></a>
+
+<h2 id="landoclitunnelheader" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.tunnelHeader([lines]) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Returns a cheeky header that can be used after an app is shared
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [lines] | <code>Array</code> | <code>[]</code> | url The URL with the link to the update |
+
+**Returns**: <code>String</code> - A header string we can print to the CLI  
+**Example**  
+```js
+// Print the header to the console
+console.log(lando.cli.tunnelHeader());
+```
+<div class="api-body-footer"></div>
+<a id="landocliupdatemessage"></a>
+
+<h2 id="landocliupdatemessage" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.cli.updateMessage(url, [lines]) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Returns a mesage indicating the availability of an update
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| url | <code>String</code> |  | The URL with the link to the update |
+| [lines] | <code>Array</code> | <code>[]</code> | url The URL with the link to the update |
+
+**Returns**: <code>String</code> - An update message we can print to the CLI  
+**Example**  
+```js
+// Print the header to the console
+console.log(lando.cli.updateMessage());
+```
+<div class="api-body-footer"></div>
+<a id="landoeventson"></a>
+
+<h2 id="landoeventson" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.events.on(name, [priority], fn) ⇒ <code>Promise</code></h2>
+<div class="api-body-header"></div>
+
+Our overriden event on method.
+
+This optionally allows a priority to be specified. Lower priorities run first.
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>String</code> |  | The name of the event |
+| [priority] | <code>Integer</code> | <code>5</code> | The priority the event should run in. |
+| fn | <code>function</code> |  | The function to call. Should get the args specified in the corresponding `emit` declaration. |
+
+**Returns**: <code>Promise</code> - A Promise  
+**Example**  
+```js
+// Print out all our apps as they get instantiated and do it before other `post-instantiate-app` events
+lando.events.on('post-instantiate-app', 1, app => {
+  console.log(app);
+});
+
+// Log a helpful message after an app is started, don't worry about whether it runs before or
+// after other `post-start` events
+return app.events.on('post-start', () => {
+  lando.log.info('App %s started', app.name);
+});
+```
+<div class="api-body-footer"></div>
+<a id="landoeventsemit"></a>
+
+<h2 id="landoeventsemit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.events.emit(name, [...args]) ⇒ <code>Promise</code></h2>
+<div class="api-body-header"></div>
+
+Reimplements event emit method.
+
+This makes events blocking and promisified.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | The name of the event |
+| [...args] | <code>Any</code> | Options args to pass. |
+
+**Returns**: <code>Promise</code> - A Promise  
+**Example**  
+```js
+// Emits a global event with a config arg
+return lando.events.emit('wolf359', config);
+
+// Emits an app event with a config arg
+return app.events.emit('sector001', config);
+```
+<div class="api-body-footer"></div>
+<a id="landologdebug"></a>
+
+<h2 id="landologdebug" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.log.debug(msg, [...values])</h2>
+<div class="api-body-header"></div>
+
+Logs a debug message.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
+| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
+
+**Example**  
+```js
+// Log a debug message
+lando.log.debug('All details about docker inspect %j', massiveObject);
+```
+<div class="api-body-footer"></div>
+<a id="landopromiseretry"></a>
+
+<h2 id="landopromiseretry" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.Promise.retry(fn, [opts]) ⇒ <code>Promise</code></h2>
+<div class="api-body-header"></div>
+
+Adds a retry method to all Promise instances.
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fn | <code>function</code> |  | The function to retry. |
+| [opts] | <code>Opts</code> |  | Options to specify how retry works. |
+| [opts.max] | <code>Integer</code> | <code>5</code> | The amount of times to retry. |
+| [opts.backoff] | <code>Integer</code> | <code>500</code> | The amount to wait between retries. In miliseconds and cumulative. |
+
+**Returns**: <code>Promise</code> - A Promise  
+**Example**  
+```js
+// And then retry 25 times until we've connected, increase delay between retries by 1 second
+Promise.retry(someFunction, {max: 25, backoff: 1000});
+```
+<div class="api-body-footer"></div>
+<a id="landotasksadd"></a>
+
+<h2 id="landotasksadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.tasks.add(name, task) ⇒ <code>Array</code></h2>
+<div class="api-body-header"></div>
+
+Adds a Lando task to the global `lando.tasks.task` object.
+
+A lando task object is an abstraction on top of [yargs](http://yargs.js.org/docs/)
+and [inquirer](https://github.com/sboudrias/Inquirer.js) with a little extra special sauce.
+
+**See**
+
+- [yargs docs](http://yargs.js.org/docs/)
+- [inquirer docs](https://github.com/sboudrias/Inquirer.js)
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>String</code> | The name of the task. |
+| task | <code>Object</code> | A Lando task object |
+| task.command | <code>String</code> | A [yargs formatted command](http://yargs.js.org/docs/#methods-commandmodule-positional-arguments) |
+| task.description | <code>String</code> | A short description of the command |
+| task.options | <code>Object</code> | A [yargs builder object](http://yargs.js.org/docs/#methods-commandmodule). Each builder also has an 'interactive' key which is an [inquirier question object](https://github.com/sboudrias/Inquirer.js#objects) |
+| task.run | <code>function</code> | The function to run when the task is invoked. |
+| task.run.options | <code>Object</code> | The options selected by the user, available to the run function. |
+
+**Returns**: <code>Array</code> - The task object  
+**Example**  
+```js
+// Define a task
+const task = {
+  command: 'destroy [appname]',
+  describe: 'Destroy app in current directory or [appname]',
+  options: {
+    yes: {
+      describe: 'Auto answer yes to prompts',
+      alias: ['y'],
+      default: false,
+      boolean: true,
+      interactive: {
+        type: 'confirm',
+        message: 'Are you sure you want to DESTROY?',
+      },
+    },
+  },
+  run: options => {
+    console.log(options);
+  }
+};
+
+// Add the task to Lando
+lando.tasks.add('destroy', task);
+```
+<div class="api-body-footer"></div>
+<a id="landoupdatesupdateavailable"></a>
+
+<h2 id="landoupdatesupdateavailable" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.updates.updateAvailable(version1, version2) ⇒ <code>Boolean</code></h2>
+<div class="api-body-header"></div>
+
+Compares two versions and determines if an update is available or not
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| version1 | <code>String</code> | The current version. |
+| version2 | <code>String</code> | The potential update version |
+
+**Returns**: <code>Boolean</code> - Whether an update is avaiable.  
+**Example**  
+```js
+// Does our current version need to be updated?
+const updateAvailable = lando.updates.updateAvailable('1.0.0', '1.0.1');
+```
+<div class="api-body-footer"></div>
+<a id="landoupdatesfetch"></a>
+
+<h2 id="landoupdatesfetch" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.updates.fetch(data) ⇒ <code>Boolean</code></h2>
+<div class="api-body-header"></div>
+
+Determines whether we need to fetch updatest or not
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Object</code> | Cached update data |
+
+**Returns**: <code>Boolean</code> - Whether we need to ping GitHub for new data or not  
+<div class="api-body-footer"></div>
+<a id="landoupdatesrefresh"></a>
+
+<h2 id="landoupdatesrefresh" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.updates.refresh(version) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Get latest version info from github
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| version | <code>String</code> | Lando version to use as a fallback |
+
+**Returns**: <code>Object</code> - Update data  
+<div class="api-body-footer"></div>
+<a id="landousergetuid"></a>
+
+<h2 id="landousergetuid" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.user.getUid([username]) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Returns the id of the current user or username.
+
+Note that on Windows this value is more or less worthless and `username` has
+has no effect
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [username] | <code>String</code> | <code>&#x27;$(whoami)&#x27;</code> | The username to get the ID for |
+
+**Returns**: <code>String</code> - The user ID.  
+**Example**  
+```js
+// Get the id of the user.
+const userId = lando.user.getUid();
+```
+<div class="api-body-footer"></div>
+<a id="landousergetgid"></a>
+
+<h2 id="landousergetgid" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.user.getGid([username]) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Returns the id of the current user or username.
+
+Note that on Windows this value is more or less worthless and `username` has
+has no effect
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [username] | <code>String</code> | <code>&#x27;$(whoami)&#x27;</code> | The username to get the ID for |
+
+**Returns**: <code>String</code> - The group ID.  
+**Example**  
+```js
+// Get the id of the user.
+const groupId = lando.user.getGid();
+```
+<div class="api-body-footer"></div>
+<a id="landoyamlload"></a>
+
+<h2 id="landoyamlload" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.yaml.load(file) ⇒ <code>Object</code></h2>
+<div class="api-body-header"></div>
+
+Loads a yaml object from a file.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| file | <code>String</code> | The path to the file to be loaded |
+
+**Returns**: <code>Object</code> - The loaded object  
+**Example**  
+```js
+// Add a string to the cache
+const thing = lando.yaml.load('/tmp/myfile.yml');
+```
 <div class="api-body-footer"></div>
 <a id="landoyamldump"></a>
 

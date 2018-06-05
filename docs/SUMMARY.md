@@ -202,7 +202,6 @@
 *   [lando.engine.start](api/api.md#landoenginestart)
 *   [lando.engine.stop](api/api.md#landoenginestop)
 *   [lando.engine.up](api/api.md#landoengineup)
-*   [lando.events](api/api.md#landoevents)
 *   [lando.events.emit](api/api.md#landoeventsemit)
 *   [lando.events.on](api/api.md#landoeventson)
 *   [lando.events.__emit](api/api.md#landoevents__emit)
