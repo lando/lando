@@ -9,6 +9,7 @@ const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
 const Promise = require('bluebird');
+chai.use(require('chai-as-promised'));
 chai.should();
 
 const Serializer = require('./../../lib/serializer');
@@ -36,6 +37,8 @@ describe('serializer', () => {
       func.should.be.instanceof(Promise);
       func.should.have.property('then');
     });
+
+    it('throws an error when one promise is rejected');
 
     it('runs functions in order queued', () => {
       const serializer = new Serializer();

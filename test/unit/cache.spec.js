@@ -5,6 +5,7 @@
 
 'use strict';
 
+const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
@@ -110,6 +111,15 @@ describe('cache', () => {
       filesystem.restore();
     });
 
+    it('logs a failure when key cannot be cached in memory', () => {
+      const cache = new Cache({log: {debug: sinon.spy()}});
+      sinon.stub(cache, '__set').returns(false);
+      cache.set('test', 'thing');
+      const call = cache.log.debug.getCall(0);
+      expect(_.includes(call.args[0], 'Failed')).to.equal(true);
+      cache.log.debug.callCount.should.equal(1);
+    });
+
     it('destroys a cached key in memory after ttl has expired', () => {
       filesystem();
       const clock = sinon.useFakeTimers();
@@ -203,6 +213,15 @@ describe('cache', () => {
 
       fs.existsSync('/tmp/cache/subdivisions').should.be.false;
       filesystem.restore();
+    });
+
+    it('logs a failure when key cannot be removed from memory', () => {
+      const cache = new Cache({log: {debug: sinon.spy()}});
+      sinon.stub(cache, '__del').returns(false);
+      cache.remove('test');
+      const call = cache.log.debug.getCall(0);
+      expect(_.includes(call.args[0], 'Failed')).to.equal(true);
+      cache.log.debug.callCount.should.equal(2);
     });
   });
 });

@@ -46,7 +46,7 @@ describe('events', () => {
       priorityFiveEvents.should.equal(2);
     });
 
-    it('runs events in priority from lowest to highest', function() {
+    it('runs events in priority from lowest to highest', () => {
       const events = new AsyncEvents();
       const before = sinon.spy();
       const middle = sinon.spy();
@@ -62,11 +62,20 @@ describe('events', () => {
     });
   });
 
-  describe('#emit', function() {
-    it('returns a promise', function() {
+  describe('#emit', () => {
+    it('returns a promise', () => {
       const events = new AsyncEvents();
-      // @todo: is this a legit way to test for a promise?
       events.emit('testEvent').should.have.property('then');
+    });
+
+    it('passes data from emit into on', () => {
+      const data = {maneuver: 'little'};
+      const events = new AsyncEvents();
+      events.on('battle-of-tanaab', data => {
+        data.maneuver.should.equal('little');
+        data.should.not.be.empty;
+      });
+      events.emit('battle-of-tanaab', data);
     });
   });
 });
