@@ -136,8 +136,7 @@ describe('cache', () => {
 
     it('throw an error for unsafe cache keys', () => {
       const cache = new Cache();
-      expect(() => cache.set('yyz:amazing', 'alltime'))
-        .to.throw('Invalid cache key');
+      expect(() => cache.set('yyz:amazing', 'alltime')).to.throw('Invalid cache key');
     });
   });
 

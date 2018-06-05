@@ -16,13 +16,11 @@ const plugins = new Plugins();
 describe('plugins', function() {
   describe('#load', function() {
     it('should handle a string for paths to search', function() {
-      return plugins.load('test-plugin-one', process.cwd() + '/test/fixtures')
-          .should.eventually.resolve;
+      return plugins.load('test-plugin-one', process.cwd() + '/test/fixtures').should.eventually.resolve;
       });
     });
     it('should handle an array for paths to search', function() {
-      return plugins.load('test-plugin-one', [process.cwd() + '/test/fixtures'])
-          .should.eventually.resolve;
+      return plugins.load('test-plugin-one', [process.cwd() + '/test/fixtures']).should.eventually.resolve;
     });
 
     it('should look for plugins in reverse order of passed dirs', function() {
