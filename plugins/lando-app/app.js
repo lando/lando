@@ -770,7 +770,7 @@ module.exports = function(lando) {
 
     // Filter out any other containers that dont match this lando instance
     .filter(function(container) {
-      return container.instance === lando.config.id;
+      return container.instance === lando.config.instance;
     })
 
     // Stop containers if needed
