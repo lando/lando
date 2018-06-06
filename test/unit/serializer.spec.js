@@ -38,7 +38,16 @@ describe('serializer', () => {
       func.should.have.property('then');
     });
 
-    it('throws an error when one promise is rejected');
+    // @todo: might be better to log the failure instead of throwing it?
+    it('throws an error when one promise is rejected', () => {
+      const serializer = new Serializer();
+      const allThePromises = [
+        serializer.enqueue(() => Promise.resolve('your love')),
+        serializer.enqueue(() => Promise.reject(new Error('bad medicine'))),
+        serializer.enqueue(() => Promise.resolve('what i need')),
+      ];
+      return Promise.all(allThePromises).should.eventually.be.rejected;
+    });
 
     it('runs functions in order queued', () => {
       const serializer = new Serializer();
