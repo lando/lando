@@ -4,7 +4,7 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var table = new lando.cli.Table();
+  var table = lando.cli.makeTable();
   var utils = lando.utils.app;
 
   // Restart the app

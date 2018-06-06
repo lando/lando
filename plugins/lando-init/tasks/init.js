@@ -156,7 +156,7 @@ module.exports = function(lando) {
         console.log(lando.cli.initHeader());
 
         // Grab a new cli table
-        var table = new lando.cli.Table();
+        var table = lando.cli.makeTable();
 
         // Get docs link
         var docBase = 'https://docs.devwithlando.io/tutorials/';

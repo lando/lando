@@ -5,7 +5,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var chalk = lando.node.chalk;
-  var table = new lando.cli.Table();
+  var table = lando.cli.makeTable();
   var utils = lando.utils.app;
 
   // The task object

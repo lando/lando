@@ -9,7 +9,7 @@
 const chai = require('chai');
 chai.use(require('chai-as-promised'));
 chai.should();
-const Cli = require('../../lib/Cli/Cli');
+const Cli = require('../../lib/cli');
 const cli = new Cli();
 
 // This is the file we are testing
