@@ -65,11 +65,11 @@ describe('metrics', () => {
         },
       }));
       return metrics.report('escape', {inspecter: 'javier'})
-      .should.be.fulfilled
-      .then(() => {
-        counter.should.equal(reportable);
-      })
-      .then(() => axios.create.restore());
+        .should.be.fulfilled
+        .then(() => {
+          counter.should.equal(reportable);
+        })
+        .then(() => axios.create.restore());
     });
 
     it('should log a failed report but not throw an error', () => {
@@ -84,11 +84,29 @@ describe('metrics', () => {
       sinon.stub(axios, 'create').callsFake(() => ({
         post: () => Promise.reject(),
       }));
-      return metrics.report().then(() => {
-        metrics.log.debug.callCount.should.equal(reportable + 1);
-      })
-      .should.be.fulfilled
-      .then(() => axios.create.restore());
+      return metrics.report()
+        .then(() => {
+          metrics.log.debug.callCount.should.equal(reportable + 1);
+        })
+        .should.be.fulfilled
+        .then(() => axios.create.restore());
+    });
+
+    it('should properly reset the data from previous reports', () => {
+      const endpoints = [{url: 'https://place.for.the.things/metrics', report: true}];
+      const metrics = new Metrics({endpoints, data: {inspector: 'javier'}});
+      const axios = require('axios');
+      sinon.stub(axios, 'create').callsFake(() => ({
+        post: (path, data) => {
+          if (data.action === 'escape') data.should.have.property('freedman', 'valjean');
+          if (data.action === 'apprehended') data.should.not.have.property('freedman');
+          return Promise.resolve();
+        },
+      }));
+      return metrics.report('escape', {freedman: 'valjean'})
+        .delay(5)
+        .then(() => metrics.report('apprehended', {prisoner: 'valjean'}))
+        .then(() => axios.create.restore());
     });
   });
 });
