@@ -7,8 +7,7 @@ module.exports = function(lando) {
   var fs = lando.node.fs;
   var path = require('path');
   var Promise = lando.Promise;
-  var rest = lando.node.rest;
-  var urls = require('url');
+  var axios = lando.node.axios;
 
   // "Constants"
   var tokenCacheKey = 'init.auth.pantheon.tokens';
@@ -21,60 +20,40 @@ module.exports = function(lando) {
    */
   var getAuthHeaders = function(session) {
     return {
-      'Content-Type': 'application/json',
       'Cookie': 'X-Pantheon-Session=' + session.session,
-      'User-Agent': 'Terminus/Lando'
     };
   };
 
   /*
    * Helper to make requests to pantheon api
    */
-  var pantheonRequest = function(verb, pathname, data, options) {
-
-    // Target
-    var target = {
-      protocol: 'https',
-      hostname: 'terminus.pantheon.io',
-      port: '443'
-    };
-
-    // Prepend the pathname
-    pathname.unshift('api');
+  const pantheonRequest = (verb, pathname, data = {}, options = {}) => {
+    // Build our request client
+    const request = axios.create({
+      baseURL: 'https://terminus.pantheon.io/api/',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Terminus/Lando',
+      },
+    });
 
     // Log the actual request we are about to make
     lando.log.info('Making %s request to %s', verb, pathname);
     lando.log.debug('Request data: %j', data);
     lando.log.debug('Request options: %j.', options);
 
-    // Build the request
-    var request = _.merge(target, {pathname: pathname.join('/')});
+    // Create the config option
+    const config = _.merge(options, data);
 
     // Attempt the request and retry a few times
-    return Promise.retry(function() {
-
-      // Send REST request.
-      return new Promise(function(fulfill, reject) {
-
-        // Make the actual request
-        rest[verb](urls.format(request), data, options)
-
-        // Log result and fulfil promise
-        .on('success', function(data) {
-          lando.log.debug('Response recieved: %j.', data);
-          fulfill(data);
-        })
-
-        // Throw an error on fail/error
-        .on('fail', function(data) {
-          var err = new Error(data);
-          reject(err);
-        }).on('error', reject);
-
+    return Promise.retry(() => request[verb](pathname.join('/'), config))
+      .then(response => {
+        lando.log.debug('Response recieved: %j.', response.data);
+        return response.data;
+      })
+      .catch(function(err) {
+        return Promise.reject(err);
       });
-
-    });
-
   };
 
   /*
@@ -97,15 +76,9 @@ module.exports = function(lando) {
     // Request deets
     var endpoint = ['authorize', 'machine-token'];
     var data = {'machine_token': token, client: 'terminus'};
-    var options = {
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Terminus/Lando'
-      }
-    };
 
     // Send REST request.
-    return pantheonRequest('postJson', endpoint, data, options)
+    return pantheonRequest('post', endpoint, data)
 
     // Use the session to get information about the user
     .then(function(session) {
@@ -233,7 +206,7 @@ module.exports = function(lando) {
       var keyPath = path.join(lando.config.userConfRoot, 'keys', keyFile);
       var data = _.trim(fs.readFileSync(keyPath, 'utf8'));
       var options = {headers: getAuthHeaders(session)};
-      return pantheonRequest('postJson', postKey, data, options);
+      return pantheonRequest('post', postKey, data, options);
     });
 
   };

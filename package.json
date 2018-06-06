@@ -67,6 +67,7 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bluebird": "^3.4.1",
     "cli-table": "^0.3.1",
     "dockerode": "^2.4.2",
@@ -82,7 +83,6 @@
     "lodash": "^4.15.0",
     "node-cache": "^4.1.1",
     "object-hash": "^1.1.8",
-    "restler": "^3.4.0",
     "semver": "^5.4.1",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
     "shelljs": "0.7.8",
