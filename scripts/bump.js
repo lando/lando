@@ -6,9 +6,9 @@
 const _ = require('lodash');
 const argv = require('yargs').argv;
 const fs = require('fs-extra');
-const Log = require('./../lib/logger.js');
+const Log = require('./../lib/logger.');
 const log = new Log({logLevelConsole: 'debug'});
-const shell = require('./../lib/shell.js')(log);
+const shell = require('./../lib/shell')(log);
 const util = require('./util');
 const packageJson = require('./../package.json');
 const currentVersion = packageJson.version;

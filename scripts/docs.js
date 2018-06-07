@@ -5,10 +5,10 @@
 const _ = require('lodash');
 const fs = require('fs-extra');
 const jsdoc2md = require('jsdoc-to-markdown');
-const Log = require('./../lib/logger.js');
+const Log = require('./../lib/logger');
 const log = new Log({logLevelConsole: 'debug'});
 const errors = [];
-const util = require('./util.js');
+const util = require('./util');
 
 // Files
 const docs = {

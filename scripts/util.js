@@ -7,10 +7,10 @@ const path = require('path');
 /*
  * Bumps a version by release type
  */
-exports.bumpVersion = (version, type = 'patch') => {
+exports.bumpVersion = (version, type = 'patch', prerelease = 'beta') => {
   switch (type) {
     case 'prerelease':
-      return semver.inc(version, 'prerelease', 'beta');
+      return semver.inc(version, 'prerelease', prerelease);
     case 'patch':
       return semver.inc(version, 'patch');
     case 'minor':
@@ -73,7 +73,7 @@ exports.cliPkgTask = output => {
 exports.fixAlias = datum => {
   const needsWrapping = s => !_.startsWith(s, '\'') && !_.endsWith(s, '\'') && _.includes(s, 'lando.');
   if (_.has(datum, 'alias') && needsWrapping(datum.alias)) {
-    if (!_.startsWith(datum.alias, '\'lando.') && !_.endsWith(datum.alias, '\'')) {
+    if (_.startsWith(datum.alias, 'lando.')) {
       datum.name = datum.alias;
       datum.kind = 'function';
       datum.scope = 'global';
