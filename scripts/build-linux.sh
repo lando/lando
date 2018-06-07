@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Uncomment to debug
-set -x
-set -e
-
 # Checking to see that we have the correct core build dependencies
 if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
   echo "You do not have the correct dependencies installed to build Lando! Trying to install them..."

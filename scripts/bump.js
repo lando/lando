@@ -2,58 +2,55 @@
 
 'use strict';
 
-/*
- * Constants
- */
+// Modules and stuffs
+const _ = require('lodash');
 const argv = require('yargs').argv;
-const fs = require('fs');
+const fs = require('fs-extra');
+const Log = require('./../lib/logger.js');
+const log = new Log({logLevelConsole: 'debug'});
+const shell = require('./../lib/shell.js')(log);
 const util = require('./util');
-const currentBranch = util.execGitCmd(
-  ['rev-parse', '--abbrev-ref', 'HEAD'],
-  'Getting current branch'
-).trim();
+const packageJson = require('./../package.json');
+const currentVersion = packageJson.version;
+const Promise = require('bluebird');
+const newVersion = util.bumpVersion(currentVersion, argv.type);
 
-/*
- * Bump the package.json version number and write it back to the file.
- */
-const bumpPkgJson = (pkgJson, stage) => {
-  pkgJson.version = util.setVersion(pkgJson, stage);
-  return pkgJson;
+const deploy = {
+  commit: ['git', 'commit', 'package.json', '-m', 'Release v' + newVersion],
+  tag: ['git', 'tag', '-a', 'v' + newVersion, '-m', 'Version v' + newVersion],
+  pushTag: ['git', 'push', 'origin', 'v' + newVersion],
 };
 
-/*
- * Converts an Git command from an array to a string.
- */
-const expandGitCmd = (cmd = []) => {
- return 'git ' + cmd.join(' ');
-};
+// Kick if off
+log.info('Trying to get current branch');
+return shell.sh(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], {mode: 'collect'})
 
-const pkgJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-const newJson = bumpPkgJson(pkgJson, argv.stage);
-const commitCmd = ['commit', 'package.json', '-m', 'Release v' + newJson.version];
-const pushBranchCmd = ['push', 'origin', currentBranch];
-const pushTagCmd = ['push', 'origin', 'v' + newJson.version];
-const tagCmd = ['tag', '-a', 'v' + pkgJson.version, '-m', 'Version v' + newJson.version];
+// Determine the current branch
+.then(output => {
+  deploy.pushBranch = ['git', 'push', 'origin', _.trim(output)];
+  log.info('Current branch is %s', _.last(deploy.pushBranch));
+})
 
-/*
- * Do the stuff.
- */
-if (argv.dryRun) {
-  console.log('Dry-Run: Would have bumped version in package.json to: v' + newJson.version);
-  return [commitCmd, tagCmd, pushBranchCmd, pushTagCmd].map(cmd => {
-    return console.log('Dry-Run: Would have run: ' + expandGitCmd(cmd));
-  });
-} else {
-  // Bump the version in package.json
-  console.log('Bumping Lando to version ' + pkgJson.version);
-  fs.writeFile('./package.json', JSON.stringify(pkgJson, null, 2), 'utf8', err => {
-    if (err) {
-      throw err;
-    }
-
-    // Commit, Tag, Push!
-    [commitCmd, tagCmd, pushBranchCmd, pushTagCmd].map(cmd => {
-      return util.execGitCmd(cmd, 'running ' + expandGitCmd(cmd));
+// The meat of things
+.then(() => {
+  if (argv.dryRun) {
+    log.info('Dry-Run: Would have bumped version in package.json to: v%s', newVersion);
+    _.forEach(deploy, cmd => {
+      log.info('Dry-Run: Would have run: %s', cmd.join(' '));
     });
-  });
-}
+  } else {
+    log.info('Bumping Lando to version ' + packageJson.version);
+    // Build new package.json
+    const newPackageJson = _.merge({}, packageJson, {version: newVersion});
+    // Write the new version
+    fs.writeFileSync('./package.json', JSON.stringify(newPackageJson, null, 2));
+    // Run all the git commands
+    return Promise.resolve(_.values(deploy)).each(cmd => shell.sh(cmd, {mode: 'collect'}));
+  }
+})
+
+// Catch errors and exit
+.catch(err => {
+  log.error(err);
+  process.exit(4);
+});

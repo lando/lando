@@ -21,7 +21,8 @@
   "nyc": {
     "include": [
       "lib/**/*.js",
-      "plugins/**/lib/*.js"
+      "plugins/**/lib/*.js",
+      "scripts/util.js"
     ],
     "exclude": [
       "test/**",
@@ -34,12 +35,12 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
     "lint": "eslint bin docs lib scripts test && eslint --config .eslintrc.old.json plugins",
-    "pkg:cli": "node ./scripts/pkg.js --stage=cli",
-    "pkg:full": "node ./scripts/pkg.js --stage=full",
-    "release:major": "node ./scripts/bump.js --stage=major",
-    "release:minor": "node ./scripts/bump.js --stage=minor",
-    "release:patch": "node ./scripts/bump.js --stage=patch",
-    "release:pre": "node ./scripts/bump.js --stage=prerelease",
+    "pkg:cli": "node ./scripts/pkg.js",
+    "pkg:full": "node ./scripts/pkg.js --installer",
+    "release:major": "node ./scripts/bump.js --type=major",
+    "release:minor": "node ./scripts/bump.js --type=minor",
+    "release:patch": "node ./scripts/bump.js --type=patch",
+    "release:pre": "node ./scripts/bump.js --type=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
     "test:unit": "nyc --reporter=html --reporter=text mocha test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
     "test:functional": "mocha test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
@@ -97,7 +98,6 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
     "command-line-test": "^1.0.10",
-    "copy": "^0.3.1",
     "coveralls": "^3.0.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",

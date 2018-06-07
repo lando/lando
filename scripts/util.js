@@ -1,113 +1,105 @@
 'use strict';
 
-const child = require('child_process');
-const Promise = require('bluebird');
+const _ = require('lodash');
 const semver = require('semver');
+const path = require('path');
 
-module.exports = {
+/*
+ * Bumps a version by release type
+ */
+exports.bumpVersion = (version, type = 'patch') => {
+  switch (type) {
+    case 'prerelease':
+      return semver.inc(version, 'prerelease', 'beta');
+    case 'patch':
+      return semver.inc(version, 'patch');
+    case 'minor':
+      return semver.inc(version, 'minor');
+    case 'major':
+      return semver.inc(version, 'major');
+    default:
+      return semver.inc(version, 'patch');
+  }
+};
 
-  /*
-   * Helper to run Git Comamnds
-   * @see https://github.com/pankajladhar/run-git-command/blob/master/index.js
-   * @param args
-   * @param customMsg
-   */
-  execGitCmd: (args, customMsg) => {
-    console.log(customMsg);
-    return child.spawnSync('git', args, {stdio: [0, 'pipe', 'pipe'], encoding: 'utf8'}).stdout;
-  },
+/*
+ * Returns the target OS
+ */
+exports.cliTargetOs = () => {
+  switch (process.platform) {
+    case 'darwin':
+      return 'macos';
+    case 'linux':
+      return 'linux';
+    case 'win32':
+      return 'win';
+    default:
+      return 'linux';
+  }
+};
 
-  /*
-   * The platform normalize for pkg
-   */
-  platform: (process.platform !== 'darwin') ? process.platform : 'osx',
+/*
+ * Constructs the CLI PKG task
+ */
+exports.cliPkgTask = output => {
+  // Package command
+  const pkgCmd = [
+    'node',
+    path.resolve(__dirname, '..', 'node_modules', '.bin', 'pkg'),
+    '--targets ' + ['node8', exports.cliTargetOs(), 'x64'].join('-'),
+    '--config ' + path.join('package.json'),
+    '--output ' + output,
+    path.join('bin', 'lando.js'),
+  ];
 
-  /*
-   * Run a ps script
-   */
-  psTask: cmd => {
-    return {
-      options: {execOptions: {maxBuffer: 20 * 1024 * 1024}},
-      command: ['PowerShell -NoProfile -ExecutionPolicy Bypass -Command', cmd, '&& EXIT /B %errorlevel%'].join(' '),
-    };
-  },
+  // Start to build the command
+  const cmd = [];
+  cmd.push('yarn --production');
+  cmd.push(pkgCmd.join(' '));
 
-  /*
-   * Bump the Version of a Package.json given a json object and stage.
-   *
-   * @param {Object} pkgJson Package.json file as a loaded object.
-   * @param {String} stage The release stage.
-   * @returns {String} New version number.
-   */
-  setVersion: (pkgJson, stage) => {
-    const current = pkgJson.version;
-    switch (stage) {
-      case 'prerelease':
-        return semver.inc(current, 'prerelease', 'beta');
-      case 'patch':
-        return semver.inc(current, 'patch');
-      case 'minor':
-        return semver.inc(current, 'minor');
-      case 'major':
-        return semver.inc(current, 'major');
-      default:
-        return semver.inc(current, stage);
+  // Add executable perms on POSIX
+  if (process.platform !== 'win32') {
+    cmd.push('chmod +x ' + output);
+    cmd.push('sleep 2');
+  }
+
+  // Return the CLI build task
+  return cmd;
+};
+
+/*
+ * Fixes a jsdoc2md alias
+ */
+exports.fixAlias = datum => {
+  const needsWrapping = s => !_.startsWith(s, '\'') && !_.endsWith(s, '\'') && _.includes(s, 'lando.');
+  if (_.has(datum, 'alias') && needsWrapping(datum.alias)) {
+    if (!_.startsWith(datum.alias, '\'lando.') && !_.endsWith(datum.alias, '\'')) {
+      datum.name = datum.alias;
+      datum.kind = 'function';
+      datum.scope = 'global';
+      delete datum.memberof;
     }
-  },
+  }
+  return datum;
+};
 
-  /*
-   * Run a default bash/sh/cmd script
-   */
-  scriptTask: cmd => {
-    return {
-      options: {execOptions: {maxBuffer: 20 * 1024 * 1024}},
-      command: cmd,
-    };
-  },
+/*
+ * Fixes a jsdoc2md alias
+ */
+exports.parseCommand = (cmd, cwd = path.resolve(__dirname, '..')) => {
+  return {run: cmd.split(' '), opts: {mode: 'collect', cwd}};
+};
 
-  /*
-   * This does something?
-   * @todo: Dustin?
-   */
-  shellExec: data => {
-    const opts = {
-      stdout: true,
-      stderr: true,
-      stdin: true,
-      failOnError: true,
-      stdinRawMode: false,
-      preferLocal: true,
-      execOptions: {
-        env: data.options.execOptions.env || process.env,
-      },
-    };
+/*
+ * Run a ps script
+ */
+exports.psTask = cmd => (['PowerShell -NoProfile -ExecutionPolicy Bypass -Command', cmd, '&& EXIT /B %errorlevel%']);
 
-    const cmd = typeof data === 'string' ? data : data.command;
-
-    if (cmd === undefined) throw new Error('`command` required');
-
-    opts.execOptions = Object.assign(data.options, opts.execOptions);
-    const promiseFromChild = child => {
-      return new Promise((resolve, reject) => {
-        child.addListener('error', reject);
-        child.addListener('exit', resolve);
-      });
-    };
-
-    const cp = child.exec(cmd, opts.execOptions);
-
-    cp.stdout.on('data', data => {
-      console.log('stdout: ' + data);
-    });
-    cp.stderr.on('data', data => {
-      console.log('stderr: ' + data);
-    });
-
-    return promiseFromChild(cp)
-    .then(result => {
-      console.log('promise complete: ' + result);
-    }, err => {
-      console.log('promise rejected: ' + err);
-    });
-  },
+/*
+ * Installer pacakge task
+ */
+exports.installerPkgTask = () => {
+  const extension = (process.platform === 'win32') ? 'ps1' : 'sh';
+  const script = path.join('scripts', `build-${process.platform}.${extension}`);
+  return (extension === 'ps1') ? exports.psTask(script) : script;
 };

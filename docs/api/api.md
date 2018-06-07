@@ -59,277 +59,6 @@ This means all the options passed in after the `--` flag.
 const largv = lando.tasks.largv;
 ```
 <div class="api-body-footer"></div>
-<a id="landologerror"></a>
-
-<h2 id="landologerror" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.log.error(msg, [...values])</h2>
-<div class="api-body-header"></div>
-
-Logs an error message.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
-| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
-
-**Example**  
-```js
-// Log an error message
-lando.log.error('This is an err with details %j', err);
-```
-<div class="api-body-footer"></div>
-<a id="landologinfo"></a>
-
-<h2 id="landologinfo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.log.info(msg, [...values])</h2>
-<div class="api-body-header"></div>
-
-Logs an info message.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
-| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
-
-**Example**  
-```js
-// Log an info message
-lando.log.info('It is happening!');
-```
-<div class="api-body-footer"></div>
-<a id="landologsilly"></a>
-
-<h2 id="landologsilly" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.log.silly(msg, [...values])</h2>
-<div class="api-body-header"></div>
-
-Logs a silly message.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
-| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
-
-**Example**  
-```js
-// Log a silly message
-lando.log.silly('All details about all the things', unreasonablySizedObject);
-
-// Log a silly message
-lando.log.silly('If you are seeing this you have delved too greedily and too deep and likely have awoken something.');
-```
-<div class="api-body-footer"></div>
-<a id="landologverbose"></a>
-
-<h2 id="landologverbose" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.log.verbose(msg, [...values])</h2>
-<div class="api-body-header"></div>
-
-Logs a verbose message.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
-| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
-
-**Example**  
-```js
-// Log a verbose message
-lando.log.verbose('Config file %j loaded from %d', config, directory);
-```
-<div class="api-body-footer"></div>
-<a id="landologwarn"></a>
-
-<h2 id="landologwarn" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.log.warn(msg, [...values])</h2>
-<div class="api-body-header"></div>
-
-Logs a warning message.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
-| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
-
-**Example**  
-```js
-// Log a warning message
-lando.log.warning('Something is up with app %s in directory %s', appName, dir);
-```
-<div class="api-body-footer"></div>
-<a id="landopluginsload"></a>
-
-<h2 id="landopluginsload" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.plugins.load(plugin, dirs, [injected]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
-Loads a plugin.
-
-For each directory scanned plugins can live in either the `plugins` or
-`node_modules` subdirectories
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| plugin | <code>String</code> | The name of the plugin |
-| dirs | <code>Array</code> | The directories to scan for plugins. |
-| [injected] | <code>Object</code> | An object to inject into the plugin. |
-
-**Returns**: <code>Promise</code> - A Promise.  
-**Example**  
-```js
-// Load the plugin called 'shield-generator' and additionally scan `/tmp` for the plugin
-return lando.plugins.load('shield-generator', ['/tmp']);
-```
-<div class="api-body-footer"></div>
-<a id="landoscanurls"></a>
-
-<h2 id="landoscanurls" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.scanUrls(urls, [opts]) ⇒ <code>Array</code></h2>
-<div class="api-body-header"></div>
-
-Scans URLs to determine if they are up or down.
-
-**Since**: 3.0.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| urls | <code>Array</code> |  | An array of urls like `https://mysite.lndo.site` or `https://localhost:34223` |
-| [opts] | <code>Object</code> |  | Options to configure the scan. |
-| [opts.max] | <code>Integer</code> | <code>7</code> | The amount of times to retry accessing each URL. |
-| [opts.waitCode] | <code>Array</code> | <code>[400, 502</code> | The HTTP codes to prompt a retry. |
-
-**Returns**: <code>Array</code> - An array of objects of the form {url: url, status: true|false}  
-**Example**  
-```js
-// Scan URLs and print results
-return lando.utils.scanUrls(['http://localhost', 'https://localhost'])
-.then(function(results) {
-  console.log(results);
-});
-```
-<div class="api-body-footer"></div>
-<a id="landoshellsh"></a>
-
-<h2 id="landoshellsh" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.shell.sh(cmd, [opts]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
-Runs a command.
-
-This is an abstraction method that:
-
- 1. Delegates to either node's native `spawn` or `exec` methods.
- 2. Promisifies the calling of these function
- 3. Handles `stdout`, `stdin` and `stderr`
-
-Beyond the options specified below you should be able to pass in known [exec](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
-or [spawn](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options) options depending on whether we have a mode or not.
-
-**See**
-
-- [extra exec options](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
-- [extra spawn options](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options)
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cmd | <code>Array</code> | The command to run as elements in an array or a string. |
-| [opts] | <code>Object</code> | Options to help determine how the exec is run. |
-| [opts.detached] | <code>Boolean</code> | Whether we are running in detached mode or not (deprecated) |
-
-**Returns**: <code>Promise</code> - A promise with collected results if applicable.  
-**Example**  
-```js
-// Run a command in collect mode
-return lando.shell.sh(['ls', '-lsa', '/'], {mode: 'collect'})
-
-// Catch and log any errors
-.catch(function(err) {
-  lando.log.error(err);
-})
-
-// Print the collected results of the command
-.then(function(results) {
-  console.log(results);
-});
-```
-<div class="api-body-footer"></div>
-<a id="landoshellescspaces"></a>
-
-<h2 id="landoshellescspaces" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.shell.escSpaces(s) ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Escapes any spaces in a command.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| s | <code>Array</code> | A command as elements of an Array or a String. |
-
-**Returns**: <code>String</code> - The space escaped cmd.  
-**Example**  
-```js
-// Escape the spaces in the cmd
-var escapedCmd = lando.shell.escSpaces(['git', 'commit', '-m', 'my message']);
-```
-<div class="api-body-footer"></div>
-<a id="landoshellesc"></a>
-
-<h2 id="landoshellesc" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.shell.esc(cmd) ⇒ <code>String</code></h2>
-<div class="api-body-header"></div>
-
-Escapes special characters in a command to make it more exec friendly.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cmd | <code>Array</code> | A command as elements of an Array or a String. |
-
-**Returns**: <code>String</code> - The escaped cmd.  
-**Example**  
-```js
-// Escape the cmd
-var escapedCmd = lando.shell.esc(['git', 'commit', '-m', 'my message']);
-```
-<div class="api-body-footer"></div>
-<a id="landoshellwhich"></a>
-
-<h2 id="landoshellwhich" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.shell.which(cmd) ⇒ <code>String</code> \| <code>undefined</code></h2>
-<div class="api-body-header"></div>
-
-Returns the path of a specific command or binary.
-
-**Since**: 3.0.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cmd | <code>String</code> | A command to search for. |
-
-**Returns**: <code>String</code> \| <code>undefined</code> - The path to the command or `undefined`.  
-**Example**  
-```js
-// Determine the location of the 'docker' command
-var which = lando.shell.which(DOCKER_EXECUTABLE);
-```
-<div class="api-body-footer"></div>
 <a id="landoappregister"></a>
 
 <h2 id="landoappregister" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -2473,19 +2202,22 @@ Get jsonfile
 const jsonfile = lando.node.jsonfile;
 ```
 <div class="api-body-footer"></div>
-<a id="landonoderest"></a>
+<a id="landonodeaxios"></a>
 
-<h2 id="landonoderest" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.node.rest()</h2>
+<h2 id="landonodeaxios" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.node.axios()</h2>
 <div class="api-body-header"></div>
 
-Get restler
+Get axios
 
 **Since**: 3.0.0  
 **Example**  
 ```js
-// Get the restler module
-const rest = lando.node.rest;
+// Get the axios module
+const rest = lando.node.axios;
+
+// Get it via the legacy hostname
+const rest = lando.node.rest
 ```
 <div class="api-body-footer"></div>
 <a id="landonodesemver"></a>
@@ -2501,6 +2233,30 @@ Get semver
 ```js
 // Get the semver module
 const semver = lando.node.semver;
+```
+<div class="api-body-footer"></div>
+<a id="landopromiseretry"></a>
+
+<h2 id="landopromiseretry" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.Promise.retry(fn, [opts]) ⇒ <code>Promise</code></h2>
+<div class="api-body-header"></div>
+
+Adds a retry method to all Promise instances.
+
+**Since**: 3.0.0  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| fn | <code>function</code> |  | The function to retry. |
+| [opts] | <code>Opts</code> |  | Options to specify how retry works. |
+| [opts.max] | <code>Integer</code> | <code>5</code> | The amount of times to retry. |
+| [opts.backoff] | <code>Integer</code> | <code>500</code> | The amount to wait between retries. In miliseconds and cumulative. |
+
+**Returns**: <code>Promise</code> - A Promise  
+**Example**  
+```js
+// And then retry 25 times until we've connected, increase delay between retries by 1 second
+Promise.retry(someFunction, {max: 25, backoff: 1000});
 ```
 <div class="api-body-footer"></div>
 <a id="landotaskstasks"></a>
@@ -2937,28 +2693,276 @@ Logs a debug message.
 lando.log.debug('All details about docker inspect %j', massiveObject);
 ```
 <div class="api-body-footer"></div>
-<a id="landopromiseretry"></a>
+<a id="landologerror"></a>
 
-<h2 id="landopromiseretry" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.Promise.retry(fn, [opts]) ⇒ <code>Promise</code></h2>
+<h2 id="landologerror" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.log.error(msg, [...values])</h2>
 <div class="api-body-header"></div>
 
-Adds a retry method to all Promise instances.
+Logs an error message.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
+| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
+
+**Example**  
+```js
+// Log an error message
+lando.log.error('This is an err with details %j', err);
+```
+<div class="api-body-footer"></div>
+<a id="landologinfo"></a>
+
+<h2 id="landologinfo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.log.info(msg, [...values])</h2>
+<div class="api-body-header"></div>
+
+Logs an info message.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
+| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
+
+**Example**  
+```js
+// Log an info message
+lando.log.info('It is happening!');
+```
+<div class="api-body-footer"></div>
+<a id="landologsilly"></a>
+
+<h2 id="landologsilly" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.log.silly(msg, [...values])</h2>
+<div class="api-body-header"></div>
+
+Logs a silly message.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
+| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
+
+**Example**  
+```js
+// Log a silly message
+lando.log.silly('All details about all the things', unreasonablySizedObject);
+
+// Log a silly message
+lando.log.silly('If you are seeing this you have delved too greedily and too deep and likely have awoken something.');
+```
+<div class="api-body-footer"></div>
+<a id="landologverbose"></a>
+
+<h2 id="landologverbose" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.log.verbose(msg, [...values])</h2>
+<div class="api-body-header"></div>
+
+Logs a verbose message.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
+| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
+
+**Example**  
+```js
+// Log a verbose message
+lando.log.verbose('Config file %j loaded from %d', config, directory);
+```
+<div class="api-body-footer"></div>
+<a id="landologwarn"></a>
+
+<h2 id="landologwarn" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.log.warn(msg, [...values])</h2>
+<div class="api-body-header"></div>
+
+Logs a warning message.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| msg | <code>String</code> | A string that will be passed into nodes core `utils.format()` |
+| [...values] | <code>Any</code> | Values to be passed `utils.format()` |
+
+**Example**  
+```js
+// Log a warning message
+lando.log.warning('Something is up with app %s in directory %s', appName, dir);
+```
+<div class="api-body-footer"></div>
+<a id="landopluginsload"></a>
+
+<h2 id="landopluginsload" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.plugins.load(plugin, dirs, [injected]) ⇒ <code>Promise</code></h2>
+<div class="api-body-header"></div>
+
+Loads a plugin.
+
+For each directory scanned plugins can live in either the `plugins` or
+`node_modules` subdirectories
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| plugin | <code>String</code> | The name of the plugin |
+| dirs | <code>Array</code> | The directories to scan for plugins. |
+| [injected] | <code>Object</code> | An object to inject into the plugin. |
+
+**Returns**: <code>Promise</code> - A Promise.  
+**Example**  
+```js
+// Load the plugin called 'shield-generator' and additionally scan `/tmp` for the plugin
+return lando.plugins.load('shield-generator', ['/tmp']);
+```
+<div class="api-body-footer"></div>
+<a id="landoscanurls"></a>
+
+<h2 id="landoscanurls" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.scanUrls(urls, [opts]) ⇒ <code>Array</code></h2>
+<div class="api-body-header"></div>
+
+Scans URLs to determine if they are up or down.
 
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| fn | <code>function</code> |  | The function to retry. |
-| [opts] | <code>Opts</code> |  | Options to specify how retry works. |
-| [opts.max] | <code>Integer</code> | <code>5</code> | The amount of times to retry. |
-| [opts.backoff] | <code>Integer</code> | <code>500</code> | The amount to wait between retries. In miliseconds and cumulative. |
+| urls | <code>Array</code> |  | An array of urls like `https://mysite.lndo.site` or `https://localhost:34223` |
+| [opts] | <code>Object</code> |  | Options to configure the scan. |
+| [opts.max] | <code>Integer</code> | <code>7</code> | The amount of times to retry accessing each URL. |
+| [opts.waitCode] | <code>Array</code> | <code>[400, 502]</code> | The HTTP codes to prompt a retry. |
 
-**Returns**: <code>Promise</code> - A Promise  
+**Returns**: <code>Array</code> - An array of objects of the form {url: url, status: true|false}  
 **Example**  
 ```js
-// And then retry 25 times until we've connected, increase delay between retries by 1 second
-Promise.retry(someFunction, {max: 25, backoff: 1000});
+// Scan URLs and print results
+return lando.utils.scanUrls(['http://localhost', 'https://localhost'])
+.then(function(results) {
+  console.log(results);
+});
+```
+<div class="api-body-footer"></div>
+<a id="landoshellsh"></a>
+
+<h2 id="landoshellsh" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.shell.sh(cmd, [opts]) ⇒ <code>Promise</code></h2>
+<div class="api-body-header"></div>
+
+Runs a command.
+
+This is an abstraction method that:
+
+ 1. Delegates to either node's native `spawn` or `exec` methods.
+ 2. Promisifies the calling of these function
+ 3. Handles `stdout`, `stdin` and `stderr`
+
+Beyond the options specified below you should be able to pass in known [exec](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
+or [spawn](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options) options depending on whether we have a mode or not.
+
+**See**
+
+- [extra exec options](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
+- [extra spawn options](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options)
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cmd | <code>Array</code> | The command to run as elements in an array or a string. |
+| [opts] | <code>Object</code> | Options to help determine how the exec is run. |
+| [opts.detached] | <code>Boolean</code> | Whether we are running in detached mode or not (deprecated) |
+
+**Returns**: <code>Promise</code> - A promise with collected results if applicable.  
+**Example**  
+```js
+// Run a command in collect mode
+return lando.shell.sh(['ls', '-lsa', '/'], {mode: 'collect'})
+
+// Catch and log any errors
+.catch(err => {
+  lando.log.error(err);
+})
+
+// Print the collected results of the command
+.then(results => {
+  console.log(results);
+});
+```
+<div class="api-body-footer"></div>
+<a id="landoshellescspaces"></a>
+
+<h2 id="landoshellescspaces" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.shell.escSpaces(s, platform) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Escapes any spaces in a command.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| s | <code>Array</code> | A command as elements of an Array or a String. |
+| platform | <code>String</code> | Specify a platform to escape with |
+
+**Returns**: <code>String</code> - The space escaped cmd.  
+**Example**  
+```js
+// Escape the spaces in the cmd
+const escapedCmd = lando.shell.escSpaces(['git', 'commit', '-m', 'my message']);
+```
+<div class="api-body-footer"></div>
+<a id="landoshellesc"></a>
+
+<h2 id="landoshellesc" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.shell.esc(cmd) ⇒ <code>String</code></h2>
+<div class="api-body-header"></div>
+
+Escapes special characters in a command to make it more exec friendly.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cmd | <code>Array</code> | A command as elements of an Array or a String. |
+
+**Returns**: <code>String</code> - The escaped cmd.  
+**Example**  
+```js
+// Escape the cmd
+const escapedCmd = lando.shell.esc(['git', 'commit', '-m', 'my message']);
+```
+<div class="api-body-footer"></div>
+<a id="landoshellwhich"></a>
+
+<h2 id="landoshellwhich" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  lando.shell.which(cmd) ⇒ <code>String</code> \| <code>undefined</code></h2>
+<div class="api-body-header"></div>
+
+Returns the path of a specific command or binary.
+
+**Since**: 3.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cmd | <code>String</code> | A command to search for. |
+
+**Returns**: <code>String</code> \| <code>undefined</code> - The path to the command or `undefined`.  
+**Example**  
+```js
+// Determine the location of the 'docker' command
+const which = lando.shell.which(DOCKER_EXECUTABLE);
 ```
 <div class="api-body-footer"></div>
 <a id="landotasksadd"></a>
