@@ -12,12 +12,21 @@ const fs = require('fs-extra');
 const hasher = require('object-hash');
 const os = require('os');
 const path = require('path');
+const Yaml = require('./../../lib/yaml');
 chai.should();
 
 describe('yaml', () => {
+  describe('#Yaml', () => {
+    it('should return a Yaml instance with correct default options', () => {
+      const yaml = new Yaml();
+      yaml.should.be.instanceof(Object);
+      yaml.should.have.property('log');
+    });
+  });
+
   describe('#load', () => {
     it('should return data from a YAML file as an Object', () => {
-      const yaml = require('./../../lib/yaml')();
+      const yaml = new Yaml();
       const content = ['obiwan: kenobi', 'qui:', '- gon', '- jinn'].join(os.EOL);
       filesystem({'/tmp/config1.yml': content});
       const data = yaml.load('/tmp/config1.yml');
@@ -27,7 +36,7 @@ describe('yaml', () => {
     });
 
     it('should throw an error when file does not exist', () => {
-      const yaml = require('./../../lib/yaml')({error: () => {
+      const yaml = new Yaml({error: () => {
         throw Error();
       }});
       const bogusville = '/tmp/thisalmostcertainlydoesnotexist-3285-2385.yml';
@@ -41,13 +50,13 @@ describe('yaml', () => {
     });
 
     it('should create the directory for the file if it does not exist', () => {
-      const yaml = require('./../../lib/yaml')();
+      const yaml = new Yaml();
       yaml.dump('/tmp/test/file.yml');
       expect(fs.existsSync(path.dirname('/tmp/test/file.yml'))).to.equal(true);
     });
 
     it('should write a valid YAML file to disk for the object', () => {
-      const yaml = require('./../../lib/yaml')();
+      const yaml = new Yaml();
       const data = {obiwan: 'kenobi', qui: ['gon', 'jinn']};
       yaml.dump('/tmp/test/file.yml', data);
       expect(fs.existsSync('/tmp/test/file.yml')).to.equal(true);
@@ -55,7 +64,7 @@ describe('yaml', () => {
     });
 
     it('should return the name of the file', () => {
-      const yaml = require('./../../lib/yaml')();
+      const yaml = new Yaml();
       const file = yaml.dump('/tmp/test/file.yml', {});
       expect(file).to.equal('/tmp/test/file.yml');
     });
