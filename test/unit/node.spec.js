@@ -15,18 +15,18 @@ const node = require('./../../lib/node');
 
 describe('node', () => {
   describe('#node', () => {
-    it('is a non-empty object', () => {
+    it('should return a non-empty object', () => {
       expect(node).to.be.an('object');
       expect(node).to.not.be.empty;
     });
 
-    it('has non-empty properties', () => {
+    it('should have non-empty properties', () => {
       _.forEach(node, value => {
         expect(value).to.not.be.empty;
       });
     });
 
-    it('has properties that themselves contain at least one function', () => {
+    it('should have properties that themselves contain at least one function', () => {
       _.forEach(node, value => {
         const types = _.map(value, prop => typeof prop);
         expect(types).to.include('function');

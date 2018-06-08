@@ -18,7 +18,7 @@ const Cache = require('./../../lib/cache');
 
 describe('cache', () => {
   describe('#Cache', () => {
-    it('returns a cache instance with correct default options', () => {
+    it('should return a cache instance with correct default options', () => {
       const cache = new Cache();
       cache.should.be.instanceof(Cache);
       cache.should.be.an('object').with.property('options');
@@ -29,13 +29,13 @@ describe('cache', () => {
       cache.options.should.have.property('deleteOnExpire', true);
     });
 
-    it('returns a cache instance with custom log option', () => {
+    it('should return a cache instance with custom log option', () => {
       const log = sinon.spy();
       const cache = new Cache({log: log});
       cache.should.have.deep.property('log', log);
     });
 
-    it('returns a cache instance with custom cachedir option', () => {
+    it('should return a cache instance with custom cachedir option', () => {
       filesystem();
 
       const cache = new Cache({cacheDir: '/tmp/cache'});
@@ -44,7 +44,7 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('sets up the cache directory', () => {
+    it('should create the cache directory', () => {
       filesystem();
 
       const cache = new Cache({cacheDir: '/tmp/cache'});
@@ -56,7 +56,7 @@ describe('cache', () => {
   });
 
   describe('#__get', () => {
-    it('is the same as new NodeCache().get', () => {
+    it('should be the same as new NodeCache().get', () => {
       filesystem();
 
       const cache = new Cache();
@@ -72,7 +72,7 @@ describe('cache', () => {
   });
 
   describe('#__set', () => {
-    it('is the same as new NodeCache().set', () => {
+    it('should be the same as new NodeCache().set', () => {
       filesystem();
 
       const cache = new Cache();
@@ -84,7 +84,7 @@ describe('cache', () => {
   });
 
   describe('#__del', () => {
-    it('is the same as new NodeCache().del', () => {
+    it('should be the same as new NodeCache().del', () => {
       filesystem();
 
       const cache = new Cache();
@@ -101,7 +101,7 @@ describe('cache', () => {
   });
 
   describe('#set', () => {
-    it('sets a cached key in memory', () => {
+    it('should set a cached key in memory', () => {
       filesystem();
 
       const cache = new Cache({cacheDir: '/tmp/cache'});
@@ -111,7 +111,7 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('logs a failure when key cannot be cached in memory', () => {
+    it('should log a failure when key cannot be cached in memory', () => {
       const cache = new Cache({log: {debug: sinon.spy()}});
       sinon.stub(cache, '__set').returns(false);
       cache.set('test', 'thing');
@@ -120,7 +120,7 @@ describe('cache', () => {
       cache.log.debug.callCount.should.equal(1);
     });
 
-    it('destroys a cached key in memory after ttl has expired', () => {
+    it('should remove a cached key in memory after ttl has expired', () => {
       filesystem();
       const clock = sinon.useFakeTimers();
 
@@ -136,7 +136,7 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('sets a cached key in a file if persist is set', () => {
+    it('should set a cached key in a file if persist is set', () => {
       filesystem();
       const cache = new Cache({cacheDir: '/tmp/cache'});
       cache.set('yyz', 'amazing', {persist: true});
@@ -144,20 +144,20 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('throw an error for unsafe cache keys', () => {
+    it('should throw an error for unsafe cache keys', () => {
       const cache = new Cache();
       expect(() => cache.set('yyz:amazing', 'alltime')).to.throw('Invalid cache key');
     });
   });
 
   describe('#get', () => {
-    it('returns a cached key from memory', () => {
+    it('should return a cached key from memory', () => {
       const cache = new Cache();
       cache.set('best_drummer', 'Neal Peart');
       cache.get('best_drummer').should.eql('Neal Peart');
     });
 
-    it('fails to return a cached key from memory if ttl is expired', () => {
+    it('should fail to return a cached key from memory if ttl is expired', () => {
       filesystem();
       const clock = sinon.useFakeTimers();
 
@@ -173,7 +173,7 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('returns a cached key from file if persists is set', () => {
+    it('should return a cached key from file if persists is set', () => {
       filesystem();
       const cache = new Cache({cacheDir: '/tmp/cache'});
       cache.set('yyz', 'amazing', {persist: true});
@@ -181,7 +181,7 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('returns undefined when grabbing an unset key', () => {
+    it('should return undefined when grabbing an unset key', () => {
       // Get the result of a key that has not been set
       const cache = new Cache();
       // What were you expecting?
@@ -190,7 +190,7 @@ describe('cache', () => {
   });
 
   describe('#remove', () => {
-    it('removes a cached key from memory', () => {
+    it('should remove a cached key from memory', () => {
       const cache = new Cache();
       cache.set('limelight', 'universal dream');
       cache.get('limelight').should.eql('universal dream');
@@ -199,7 +199,7 @@ describe('cache', () => {
       expect(cache.get('limelight')).to.be.undefined;
     });
 
-    it('removes a cached key from file', () => {
+    it('should remove file for cached key if it was persistent', () => {
       filesystem();
       const cache = new Cache({cacheDir: '/tmp/cache/'});
       cache.set(
@@ -215,7 +215,7 @@ describe('cache', () => {
       filesystem.restore();
     });
 
-    it('logs a failure when key cannot be removed from memory', () => {
+    it('should log a failure when key cannot be removed from memory', () => {
       const cache = new Cache({log: {debug: sinon.spy()}});
       sinon.stub(cache, '__del').returns(false);
       cache.remove('test');

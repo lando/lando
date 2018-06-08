@@ -16,20 +16,20 @@ const config = require('./../../lib/config');
 
 describe('config', () => {
   describe('#tryConvertJson', () => {
-    it('returns the unaltered input if input is not a parsable JSON string', () => {
+    it('should return the unaltered input if input is not a parsable JSON string', () => {
       const input = 'obiwan';
       const result = config.tryConvertJson(input);
       expect(result).to.be.a('string');
       expect(result).to.equal(input);
     });
 
-    it('returns an object if input is a parsable JSON string representing an object', () => {
+    it('should return an object if input is a parsable JSON string representing an object', () => {
       const input = '{}';
       const result = config.tryConvertJson(input);
       expect(result).to.be.an('object');
     });
 
-    it('returns an array if input is a parsable JSON string representing an array', () => {
+    it('should return an array if input is a parsable JSON string representing an array', () => {
       const input = '[]';
       const result = config.tryConvertJson(input);
       expect(result).to.be.an('array');
@@ -37,7 +37,7 @@ describe('config', () => {
   });
 
   describe('#merge', () => {
-    it('returns the same as _.merge for objects', () => {
+    it('should return the same as _.merge for objects', () => {
       const bands1 = {
         best: 'nickelback',
         worst: 'beck',
@@ -52,7 +52,7 @@ describe('config', () => {
       expect(landoMerge).to.equal(lodashMerge);
     });
 
-    it('concatenates keys that are arrays', () => {
+    it('should concatenates keys that are arrays', () => {
       const theworst = {favs: ['nickelback', 'abba']};
       const thebest = {favs: ['britney']};
       const bands = config.merge(theworst, thebest);
@@ -60,7 +60,7 @@ describe('config', () => {
       expect(hasher(bands.favs)).to.equal(hasher(['nickelback', 'abba', 'britney']));
     });
 
-    it('removes duplicates from cacatenated arrays', () => {
+    it('should removes duplicates from cacatenated arrays', () => {
       const myfavs = {favs: ['nickelback', 'abba']};
       const yourfavs = {favs: ['britney', 'nickelback']};
       const ourfavs = config.merge(myfavs, yourfavs);
@@ -70,7 +70,7 @@ describe('config', () => {
   });
 
   describe('#stripEnvs', () => {
-    it('returns process.env stripped of all keys that start with prefix', () => {
+    it('should return process.env stripped of all keys that start with prefix', () => {
       process.env.DANCE_NOW = 'everybody';
       const result = config.stripEnv('DANCE');
       expect(result).to.be.an('object');
@@ -80,7 +80,7 @@ describe('config', () => {
   });
 
   describe('#defaults', () => {
-    it('returns a properly structured default config object', () => {
+    it('should return a properly structured default config object', () => {
       const defaults = config.defaults();
       expect(_.hasIn(defaults, 'configFilename')).to.equal(true);
       expect(_.hasIn(defaults, 'configSources')).to.equal(true);
@@ -101,7 +101,7 @@ describe('config', () => {
       expect(_.hasIn(defaults, 'userConfRoot')).to.equal(true);
     });
 
-    it('config.env mirrors process.env', () => {
+    it('should mirror process.env', () => {
       const env = config.defaults().env;
       expect(hasher(env)).to.equal(hasher(process.env));
       process.env.NEW = 'things';
@@ -114,14 +114,14 @@ describe('config', () => {
       expect(hasher(env)).to.equal(hasher(process.env));
     });
 
-    it('config.process returns "browser" if in a browser', () => {
+    it('config.process should return "browser" if in a browser', () => {
       process.versions.chrome = 'test';
       const processType = config.defaults().process;
       expect(processType).to.equal('browser');
       delete process.versions.chrome;
     });
 
-    it('config.process returns "node" if not in a browser', () => {
+    it('config.process should return "node" if not in a browser', () => {
       delete process.versions.chrome;
       delete process.versions.electron;
       delete process.versions['atom-shell'];
@@ -131,19 +131,19 @@ describe('config', () => {
   });
 
   describe('#loadFiles', () => {
-    it('returns an empty object if no files are specified', () => {
+    it('should return an empty object if no files are specified', () => {
       const fileConfig = config.loadFiles();
       expect(fileConfig).to.be.empty;
     });
 
-    it('returns data only from files that exist', () => {
+    it('should return data only from files that exist', () => {
       filesystem({'/tmp/config1.yml': 'obiwan: kenobi'});
       const fileConfig = config.loadFiles(['/tmp/config1.yml', '/tmp/doesnotexist.yml']);
       expect(hasher(fileConfig)).to.equal(hasher({obiwan: 'kenobi'}));
       filesystem.restore();
     });
 
-    it('gives priority to the last file loaded', () => {
+    it('should give priority to the last file loaded', () => {
       filesystem({
         '/tmp/config1.yml': 'scoundrel: lando',
         '/tmp/config2.yml': 'scoundrel: solo',
@@ -155,7 +155,7 @@ describe('config', () => {
   });
 
   describe('#loadEnvs', () => {
-    it('returns an object built from all keys from process.env that start with a given prefix', () => {
+    it('should return an object built from all keys from process.env that start with a given prefix', () => {
       process.env.DANCE_NOW = 'everybody';
       const result = config.loadEnvs('DANCE');
       expect(result).to.be.an('object');

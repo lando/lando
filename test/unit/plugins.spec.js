@@ -69,7 +69,7 @@ describe('plugins', () => {
         .should.eventually.resolve;
     });
 
-    it('should error if dynamic require fails', () => {
+    it('should throw an error if dynamic require fails', () => {
       const plugins = new Plugins();
       filesystem();
       sinon.stub(plugins, 'findPlugin').usingPromise(Promise).resolves('/aint/here/index.js');

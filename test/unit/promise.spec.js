@@ -15,18 +15,21 @@ const Promise = require('../../lib/promise');
 
 describe('promise', () => {
   describe('#Promise', () => {
+    it('should have our retry method', () => {
+      Promise.retry.should.be.a('function');
+    });
+
     it('should return a promise instance', () => {
       const promise = new Promise(sinon.spy());
       promise.should.be.instanceof(Promise);
     });
-    it('should have our retry method', () => {
-      Promise.retry.should.be.a('function');
-    });
-    it('instances should have longStackTraces enabled', () => {
+
+    it('should have longStackTraces enabled on instances', () => {
       const promise = new Promise(sinon.spy());
       promise.should.have.property('_trace');
     });
-    it('instances should have our retry method', () => {
+
+    it('should have our retry method on instances', () => {
       const promise = new Promise(sinon.spy());
       Object.getPrototypeOf(promise).retry.should.be.a('function');
     });
@@ -41,7 +44,8 @@ describe('promise', () => {
       };
       Promise.retry(func).should.eventually.equal(1).and.should.be.fulfilled;
     });
-    it('should retry a rejected promise max times with backoff and then error', () => {
+
+    it('should retry a rejected promise max times with backoff and then throw error', () => {
       const opts = {max: _.random(1, 7), backoff: _.random(1, 25)};
       const fail = () => {
         counter = counter + 1;

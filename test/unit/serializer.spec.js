@@ -16,7 +16,7 @@ const Serializer = require('./../../lib/serializer');
 
 describe('serializer', () => {
   describe('#Serializer', () => {
-    it('returns a serializer instance with correct default options', () => {
+    it('should return a serializer instance with correct default options', () => {
       const serializer = new Serializer();
       serializer.should.be.instanceof(Serializer);
       serializer.should.be.an('object').with.property('opts');
@@ -24,14 +24,14 @@ describe('serializer', () => {
       serializer.should.have.property('last');
     });
 
-    it('returns a serializer instance with custom opts', () => {
+    it('should return a serializer instance with custom opts', () => {
       const serializer = new Serializer({thing: 'stuff'});
       serializer.opts.should.not.be.empty;
     });
   });
 
   describe('#enqueue', () => {
-    it('returns a promise', () => {
+    it('should return a promise', () => {
       const serializer = new Serializer();
       const func = serializer.enqueue(sinon.spy());
       func.should.be.instanceof(Promise);
@@ -39,7 +39,7 @@ describe('serializer', () => {
     });
 
     // @todo: might be better to log the failure instead of throwing it?
-    it('throws an error when one promise is rejected', () => {
+    it('should throw an error when one promise is rejected', () => {
       const serializer = new Serializer();
       const allThePromises = [
         serializer.enqueue(() => Promise.resolve('your love')),
@@ -49,7 +49,7 @@ describe('serializer', () => {
       return Promise.all(allThePromises).should.eventually.be.rejected;
     });
 
-    it('runs functions in order queued', () => {
+    it('should run functions in order queued', () => {
       const serializer = new Serializer();
       const runs = 42;
       const log = [];

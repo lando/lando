@@ -21,55 +21,55 @@ const util = require('./../../scripts/util');
 
 describe('scripts', () => {
   describe('#bumpVersion', () => {
-    it('should bump patch version by default', () => {
+    it('should return version with bumped patch version by default', () => {
       util.bumpVersion('1.0.0').should.equal('1.0.1');
     });
 
-    it('should bump prerelease version with beta by default', () => {
+    it('should return version with bumped beta as prerelease type default', () => {
       util.bumpVersion('1.0.0-beta.1', 'prerelease').should.equal('1.0.0-beta.2');
     });
 
-    it('should bump prerelease version with something else when specified', () => {
+    it('should return version with bumped specified prerelease when it is specified for prerelease type', () => {
       util.bumpVersion('1.0.0-whatevs.5', 'prerelease', 'whatevs').should.equal('1.0.0-whatevs.6');
     });
 
-    it('should bump patch version when specified', () => {
+    it('should return version with bumped patch when patch is the type', () => {
       util.bumpVersion('1.0.0', 'patch').should.equal('1.0.1');
     });
 
-    it('should bump minor version when specified', () => {
+    it('should return version with bumped minor when minor is the type', () => {
       util.bumpVersion('1.0.0', 'minor').should.equal('1.1.0');
     });
 
-    it('should bump major version when specified', () => {
+    it('should return version with bumped major when patch is the major', () => {
       util.bumpVersion('1.0.0', 'major').should.equal('2.0.0');
     });
 
-    it('should bump patch version when using unspecified bump type', () => {
+    it('should return version with bumped patch when type is something else', () => {
       util.bumpVersion('1.0.0', 'jacksonbrowne').should.equal('1.0.1');
     });
   });
 
   describe('#cliTargetOs', () => {
-    it('should be macos on darwin', () => {
+    it('should return macos on darwin', () => {
       setPlatform('darwin');
       util.cliTargetOs().should.equal('macos');
       resetPlatform();
     });
 
-    it('should be win on windoze', () => {
+    it('should return win on windoze', () => {
       setPlatform('win32');
       util.cliTargetOs().should.equal('win');
       resetPlatform();
     });
 
-    it('should be linux on linux', () => {
+    it('should return linux on linux', () => {
       setPlatform('linux');
       util.cliTargetOs().should.equal('linux');
       resetPlatform();
     });
 
-    it('should be linux on everything else', () => {
+    it('should return linux on everything else', () => {
       setPlatform('wefwef');
       util.cliTargetOs().should.equal('linux');
       resetPlatform();
@@ -77,25 +77,25 @@ describe('scripts', () => {
   });
 
   describe('#cliPkgTask', () => {
-    it('should have yarn --production as first command', () => {
+    it('should return yarn --production as first command', () => {
       const command = util.cliPkgTask('thing');
       command[0].should.equal('yarn --production');
     });
 
-    it('should use output arg as output file', () => {
+    it('should return output arg as output file', () => {
       const command = util.cliPkgTask('thing');
       const parts = command[1].split(' ');
       parts[7].should.equal('thing');
     });
 
-    it('should use os target from clitTargetOS', () => {
+    it('should return os target from clitTargetOS', () => {
       const target = util.cliTargetOs();
       const command = util.cliPkgTask('thing');
       const os = command[1].split(' ')[3].split('-')[1];
       os.should.equal(target);
     });
 
-    it('should chmod+x and sleep on posix', () => {
+    it('should return chmod+x and sleep as final commands on posix', () => {
       setPlatform('darwin');
       const c1 = util.cliPkgTask('thing');
       c1[2].should.equal('chmod +x thing');
@@ -108,7 +108,7 @@ describe('scripts', () => {
       resetPlatform();
     });
 
-    it('should not chmod+x and sleep on windoze', () => {
+    it('should not return chmod+x and sleep commands on windoze', () => {
       setPlatform('win32');
       const command = util.cliPkgTask('thing');
       command.should.be.length(2);
@@ -146,7 +146,7 @@ describe('scripts', () => {
   });
 
   describe('#psTask', () => {
-    it('should be a powershell command', () => {
+    it('should return a powershell command that wraps arg', () => {
       const command = util.psTask('thing');
       command[0].should.equal('PowerShell -NoProfile -ExecutionPolicy Bypass -Command');
       command[1].should.equal('thing');
@@ -155,7 +155,7 @@ describe('scripts', () => {
   });
 
   describe('#parseCommand', () => {
-    it('should be an object with run and opts keys', () => {
+    it('should return an object with run and opts keys', () => {
       const command = util.parseCommand('thing stuff');
       command.run[0].should.equal('thing');
       command.run[1].should.equal('stuff');
@@ -165,21 +165,21 @@ describe('scripts', () => {
   });
 
   describe('#installerPkgTask', () => {
-    it('should be scripts/build-darwin.sh on darwin', () => {
+    it('should return scripts/build-darwin.sh on darwin', () => {
       setPlatform('darwin');
       const command = util.installerPkgTask();
       command.should.equal('scripts/build-darwin.sh');
       resetPlatform();
     });
 
-    it('should be scripts/build-linux.sh on linux', () => {
+    it('should return scripts/build-linux.sh on linux', () => {
       setPlatform('linux');
       const command = util.installerPkgTask();
       command.should.equal('scripts/build-linux.sh');
       resetPlatform();
     });
 
-    it('should be a PS command that runs scripts/build-win32.ps1 on windoze', () => {
+    it('should return a PS command that runs scripts/build-win32.ps1 on windoze', () => {
       setPlatform('win32');
       const command = util.installerPkgTask();
       command[0].should.equal('PowerShell -NoProfile -ExecutionPolicy Bypass -Command');

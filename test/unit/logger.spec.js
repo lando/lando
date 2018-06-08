@@ -17,7 +17,7 @@ const Log = require('./../../lib/logger');
 
 describe('logger', () => {
   describe('#Log', () => {
-    it('returns a Log instance with correct default options', () => {
+    it('should return a Log instance with correct default options', () => {
       const log = new Log();
       log.should.be.instanceof(EventEmitter);
       log.should.have.property('exitOnError', true);
@@ -29,12 +29,12 @@ describe('logger', () => {
       });
     });
 
-    it('returns a Log instance with custom logLevelConsole', () => {
+    it('should return a Log instance with custom logLevelConsole', () => {
       const log = new Log({logLevelConsole: 'info'});
       log.transports.console.should.have.property('level', 'info');
     });
 
-    it('returns a Log instance with custom integer logLevelConsole', () => {
+    it('should return a Log instance with custom integer logLevelConsole', () => {
       const logLevels = {
         '0': 'error',
         '1': 'warn',
@@ -49,7 +49,7 @@ describe('logger', () => {
       });
     });
 
-    it('sets up a log directory and file transports if logDir specified', () => {
+    it('should create a log directory and file transports if logDir specified', () => {
       // Need to preemptively load in the winston File transports because mock-fs handles
       // lazy requires on the mock filesystem and CANT FIND SHIT
       // @see: https://github.com/tschaub/mock-fs/issues/213

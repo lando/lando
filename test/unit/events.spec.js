@@ -16,7 +16,7 @@ const AsyncEvents = require('../../lib/events');
 
 describe('events', () => {
   describe('#AsyncEvents', () => {
-    it('returns an events instance with correct default options', () => {
+    it('should return an events instance with correct default options', () => {
       const events = new AsyncEvents();
       events.should.be.instanceof(AsyncEvents);
       events.should.be.an('object').with.property('log');
@@ -25,7 +25,7 @@ describe('events', () => {
       events.should.have.property('_eventsCount', 0);
     });
 
-    it('returns an events instance with custom log option', () => {
+    it('should return an events instance with custom log option', () => {
       const log = sinon.spy();
       const events = new AsyncEvents(log);
       events.should.have.property('log', log);
@@ -33,7 +33,7 @@ describe('events', () => {
   });
 
   describe('#on', () => {
-    it('runs events without priority at priority 5', () => {
+    it('should run events without priority at priority 5', () => {
       const events = new AsyncEvents();
       const same1 = sinon.spy();
       const same2 = sinon.spy();
@@ -46,7 +46,7 @@ describe('events', () => {
       priorityFiveEvents.should.equal(2);
     });
 
-    it('runs events in priority from lowest to highest', () => {
+    it('should run events in priority from lowest to highest', () => {
       const events = new AsyncEvents();
       const before = sinon.spy();
       const middle = sinon.spy();
@@ -63,12 +63,12 @@ describe('events', () => {
   });
 
   describe('#emit', () => {
-    it('returns a promise', () => {
+    it('should return a promise', () => {
       const events = new AsyncEvents();
       events.emit('testEvent').should.have.property('then');
     });
 
-    it('passes data from emit into on', () => {
+    it('should pass optional data from emit into on', () => {
       const data = {maneuver: 'little'};
       const events = new AsyncEvents();
       events.on('battle-of-tanaab', data => {

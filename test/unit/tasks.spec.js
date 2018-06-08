@@ -33,12 +33,12 @@ const elScorcho = {
 
 describe('tasks', () => {
   describe('#add', () => {
-    it('Adds tasks to tasks collection', () => {
+    it('should add a task to tasks collection', () => {
       tasks.add('El Scorcho', elScorcho);
       tasks.tasks[0].should.have.property('name', 'El Scorcho');
     });
 
-    it('Rejects tasks that lack the minimum defined keys', () => {
+    it('should throw an error on tasks that lack the minimum defined keys', () => {
       const badTask = () => {
         tasks.add('How You Remind Me', {describe: 'Terrible'});
       };

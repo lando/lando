@@ -19,23 +19,23 @@ const updates = new UpdateManager();
 
 describe('updates', () => {
   describe('#updateAvailable', () => {
-    it('checks to see if version 1 is less than version 2', () => {
+    it('should return true if version 1 is less than version 2', () => {
       updates.updateAvailable('3.0.0', '3.0.1').should.be.true;
       updates.updateAvailable('3.0.1', '3.0.1').should.be.false;
     });
 
-    it('handles non-numeric versions', () => {
+    it('should handle non-numeric eg "beta" versions', () => {
       updates.updateAvailable('3.0.0-beta.1', '3.0.0-beta.2').should.be.true;
       updates.updateAvailable('3.0.0-beta.2', '3.0.0-beta.2').should.be.false;
     });
   });
 
   describe('#fetch', () => {
-    it('Returns true if data is undefined', () => {
+    it('should return true if data is undefined', () => {
       updates.fetch().should.be.true;
     });
 
-    it('Determines need to update based on current time vs expiration', () => {
+    it('should return whether we need to check for updates again', () => {
       // Accelerate to 88mph 💥 🚗 🔥🔥🔥🔥
       const clock = sinon.useFakeTimers(new Date('October 26, 1985 01:35:00'));
       // Old Man Peabody
@@ -53,7 +53,7 @@ describe('updates', () => {
     // Use our stubbed Github API so we don't make a real HTTP request.
     updates.githubApi = github;
 
-    it('Does a Barrel Roll if there is an error', () => {
+    it('should use current or specified version of there is an error getting updated data', () => {
       // Throw an error on purpose
       const stub = sinon.stub(updates.githubApi.repos, 'getReleases').rejects('Whoops!');
       // If something goes wrong with the Github API, handle it gracefully.
@@ -62,7 +62,7 @@ describe('updates', () => {
         .then(() => stub.restore());
     });
 
-    it('finds the first non draft or prerelease data', () => {
+    it('should return the first non draft or prerelease release data', () => {
       const mockReleaseData = {data: [
         {
           tag_name: 'v1',

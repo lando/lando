@@ -16,7 +16,7 @@ chai.should();
 
 describe('yaml', () => {
   describe('#load', () => {
-    it('returns data from a YAML file as an Object', () => {
+    it('should return data from a YAML file as an Object', () => {
       const yaml = require('./../../lib/yaml')();
       const content = ['obiwan: kenobi', 'qui:', '- gon', '- jinn'].join(os.EOL);
       filesystem({'/tmp/config1.yml': content});
@@ -26,7 +26,7 @@ describe('yaml', () => {
       filesystem.restore();
     });
 
-    it('errors when file does not exist', () => {
+    it('should throw an error when file does not exist', () => {
       const yaml = require('./../../lib/yaml')({error: () => {
         throw Error();
       }});
@@ -40,13 +40,13 @@ describe('yaml', () => {
       filesystem();
     });
 
-    it('creates the directory for the file if it does not exist', () => {
+    it('should create the directory for the file if it does not exist', () => {
       const yaml = require('./../../lib/yaml')();
       yaml.dump('/tmp/test/file.yml');
       expect(fs.existsSync(path.dirname('/tmp/test/file.yml'))).to.equal(true);
     });
 
-    it('writes a valid YAML file to disk for the object', () => {
+    it('should write a valid YAML file to disk for the object', () => {
       const yaml = require('./../../lib/yaml')();
       const data = {obiwan: 'kenobi', qui: ['gon', 'jinn']};
       yaml.dump('/tmp/test/file.yml', data);
@@ -54,7 +54,7 @@ describe('yaml', () => {
       expect(hasher(yaml.load('/tmp/test/file.yml'))).to.equal(hasher(data));
     });
 
-    it('returns the name of the file', () => {
+    it('should return the name of the file', () => {
       const yaml = require('./../../lib/yaml')();
       const file = yaml.dump('/tmp/test/file.yml', {});
       expect(file).to.equal('/tmp/test/file.yml');

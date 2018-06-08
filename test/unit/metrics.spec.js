@@ -18,7 +18,7 @@ const Metrics = require('./../../lib/metrics');
 
 describe('metrics', () => {
   describe('#Metrics', () => {
-    it('returns a Metrics instance with correct default options', () => {
+    it('should return a Metrics instance with correct default options', () => {
       const metrics = new Metrics();
       metrics.should.be.instanceof(Metrics);
       metrics.should.have.property('id', 'unknown');
@@ -29,7 +29,7 @@ describe('metrics', () => {
       metrics.log.should.be.instanceof(EventEmitter);
     });
 
-    it('returns a Metrics instance with user options', () => {
+    it('should return a Metrics instance with user options', () => {
       const metrics = new Metrics({id: '24601', endpoints: [1, 2], data: {prisoner: 'valjean'}});
       metrics.should.be.instanceof(Metrics);
       metrics.should.have.property('id', '24601');
