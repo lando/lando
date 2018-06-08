@@ -5,38 +5,26 @@
 
 'use strict';
 
+const _ = require('lodash');
+const _esc = require('shell-escape');
+const _shell = require('shelljs');
+const filesystem = require('mock-fs');
 const chai = require('chai');
-const sinon = require('sinon');
+const expect = chai.expect;
+const os = require('os');
+const path = require('path');
+// const sinon = require('sinon');
+const Shell = require('./../../lib/shell');
 chai.use(require('sinon-chai'));
 chai.use(require('chai-as-promised'));
 chai.should();
 
-const shell = require('../../lib/shell')();
-const _shell = require('shelljs');
 describe('shell', () => {
-  describe('#exec', function() {
-    it('should be silent by default', function() {
-      const stub = sinon.stub(_shell, 'exec');
-      shell.exec('foo', {});
-      stub.should.be.calledWith('foo', {silent: true});
-      stub.restore();
-    });
-
-    it('should reject on a non-zero exit', function() {
-      const stub = sinon.stub(_shell, 'exec').returns({code: 1});
-      shell.exec('nonsense').should.eventually.be.rejectedWith(Error);
-      stub.should.be.calledWith('nonsense');
-      stub.restore();
-    });
-
-    it('should resolve on a zero exit', function() {
-      const stub = sinon.stub(_shell, 'exec')
-        .returns({code: 0, stdout: 'Excellent!'});
-
-      shell.exec('billandted').should.eventually.equal('Excellent!');
-
-      stub.should.be.calledWith('billandted');
-      stub.restore();
+  describe('#Shell', () => {
+    it('should return a Shell instance with correct default options', () => {
+      const shell = new Shell();
+      shell.should.be.instanceof(Object);
+      shell.should.have.property('log');
     });
   });
 
@@ -56,8 +44,61 @@ describe('shell', () => {
   //
   //   });
   // });
+  describe('#escSpaces', () => {
+    it('should return \\\ escaped spaces string on posix', () => {
+      const shell = new Shell();
+      const thunderRoad = 'doors open but the ride aint free';
+      const result = shell.escSpaces(thunderRoad, 'darwin');
+      result.should.equal.thunderRoad;
+    });
 
-  describe('#escSpaces', function() {
+    it('should return ^ escaped string spaces on windoze', () => {
+      const shell = new Shell();
+      const rosalita = ['come', 'out', 'tonight'];
+      const result = shell.escSpaces(rosalita, 'win32');
+      result.split('^').should.be.length(3);
+    });
+  });
 
+  describe('#esc', () => {
+    it('should return the same as shell-escape', () => {
+      const shell = new Shell();
+      const escapee1 = ['git', 'commit', '-m', 'maximum overdrive'];
+      const escapee2 = 'git commit -m "all the codez"';
+      _.forEach([escapee1, escapee2], escapee => {
+        const escape1 = shell.esc(escapee);
+        const escape2 = _esc(escapee);
+        escape1.should.equal(escape2);
+      });
+    });
+  });
+
+  describe('#which', () => {
+    const savePath = process.env.PATH;
+    beforeEach(() => {
+      process.env.PATH = os.tmpdir();
+      const bin = {};
+      const content = 'Gorillaz on buildings throwing explosive bananas at each other with mathematical precision';
+      bin[path.join(os.tmpdir(), 'GORILLA.BAS')] = content;
+      filesystem(bin);
+    });
+
+    it('should return the same as shelljs.which', () => {
+      const shell = new Shell();
+      const which1 = shell.which('GORILLA.BAS');
+      const which2 = _shell.which('GORILLA.BAS');
+      _.toString(which1).should.equal(_.toString(which2));
+    });
+
+    it('should return null if command is not found', () => {
+      const shell = new Shell();
+      const wolfenstein = shell.which('WOLFENSTEIN2D.exe');
+      expect(wolfenstein).to.be.null;
+    });
+
+    afterEach(() => {
+      filesystem.restore();
+      process.env.PATH = savePath;
+    });
   });
 });
