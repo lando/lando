@@ -43,7 +43,7 @@ module.exports = function(lando) {
         .then(function(apps) {
           // Loop through each app
           for (var app of apps) {
-            console.log(chalk.red('Destroying ' + app.name))
+            console.log(chalk.red('Destroying ' + app.name));
             // Retrieve the active app.
             lando.app.get(app.name)
             .then(function(app) {
@@ -51,15 +51,15 @@ module.exports = function(lando) {
               if (app) {
                 return lando.app.destroy(app)
                 .then(function() {
-                  console.log(chalk.red('App destroyed!'))
-                })
+                  console.log(chalk.red('App destroyed!'));
+                });
               }
               else {
-                lando.log.warn('Could not find the app')
+                lando.log.warn('Could not find the app');
               }
-            })            
+            });
           }
-        })
+        });
       }
 
       // Try to get the app if we can
