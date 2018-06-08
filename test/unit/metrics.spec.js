@@ -1,11 +1,12 @@
 /**
- * Tests for logging system.
- * @file logger.spec.js
+ * Tests for metrics system.
+ * @file metrics.spec.js
  */
 
 'use strict';
 
 const _ = require('lodash');
+const axios = require('axios');
 const chai = require('chai');
 const sinon = require('sinon');
 const EventEmitter = require('events').EventEmitter;
@@ -51,7 +52,6 @@ describe('metrics', () => {
       const id = '24601';
       const reportable = _.size(_.filter(endpoints, endpoint => endpoint.report));
       const metrics = new Metrics({id, endpoints, data: {prisoner: 'valjean'}});
-      const axios = require('axios');
       sinon.stub(axios, 'create').callsFake(({baseURL = 'localhost'} = {}) => ({
         post: (path, data) => {
           baseURL.should.equal(endpoints[counter].url);
@@ -80,7 +80,6 @@ describe('metrics', () => {
       ];
       const reportable = _.size(_.filter(endpoints, endpoint => endpoint.report));
       const metrics = new Metrics({endpoints, log: {debug: sinon.spy()}});
-      const axios = require('axios');
       sinon.stub(axios, 'create').callsFake(() => ({
         post: () => Promise.reject(),
       }));
@@ -95,7 +94,6 @@ describe('metrics', () => {
     it('should properly reset the data from previous reports', () => {
       const endpoints = [{url: 'https://place.for.the.things/metrics', report: true}];
       const metrics = new Metrics({endpoints, data: {inspector: 'javier'}});
-      const axios = require('axios');
       sinon.stub(axios, 'create').callsFake(() => ({
         post: (path, data) => {
           if (data.action === 'escape') data.should.have.property('freedman', 'valjean');
