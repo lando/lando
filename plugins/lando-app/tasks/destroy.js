@@ -20,6 +20,12 @@ module.exports = function(lando) {
           default: false,
           message: 'Are you sure you want to DESTROY?'
         }
+      },
+      all: {
+        describe: 'Destroy all applications',
+        alias: ['a'],
+        default: false,
+        boolean: true
       }
     },
     run: function(options) {
@@ -28,6 +34,32 @@ module.exports = function(lando) {
       if (!options.yes) {
         console.log(chalk.yellow('DESTRUCTION AVERTED!'));
         return;
+      }
+
+      // Destroy all the apps
+      if (options.all) {
+        // Get the list of all the apps
+        return lando.app.list()
+        .then(function(apps) {
+          // Loop through each app
+          for (var app of apps) {
+            console.log(chalk.red('Destroying ' + app.name))
+            // Retrieve the active app.
+            lando.app.get(app.name)
+            .then(function(app) {
+              // Request its destruction, if it's actually a thing.
+              if (app) {
+                return lando.app.destroy(app)
+                .then(function() {
+                  console.log(chalk.red('App destroyed!'))
+                })
+              }
+              else {
+                lando.log.warn('Could not find the app')
+              }
+            })            
+          }
+        })
       }
 
       // Try to get the app if we can
