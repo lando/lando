@@ -21,7 +21,7 @@ describe('cli', function() {
   });
   describe('#parseGlobals', () => {
     it('should check for the presence of global options', function() {
-      return cli.parseGlobals(['node', 'lando', 'thing', '-v', 'help'])
+      return cli.largv(['node', 'lando', 'thing', '-v', 'help'])
         .should.be.an('object').with.property('v', 0);
     });
   });

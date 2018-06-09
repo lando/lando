@@ -153,7 +153,7 @@ module.exports = function(lando) {
       .then(function() {
 
         // Header it
-        console.log(lando.cli.initHeader());
+        console.log(lando.cli.art().initHeader());
 
         // Grab a new cli table
         var table = lando.cli.makeTable();

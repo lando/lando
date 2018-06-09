@@ -12,100 +12,58 @@
 // Modules
 const _ = require('lodash');
 const bootstrap = require('./../lib/bootstrap.js');
-const Cli = require('../lib/cli');
-const Log = require('./../lib/logger');
-const os = require('os');
+const Cli = require('./../lib/cli');
 const path = require('path');
 const Promise = require('./../lib/promise');
-const sudoBlock = require('sudo-block');
-const userConfRoot = path.join(os.homedir(), '.lando');
-const version = require(path.join(__dirname, '..', 'package.json')).version;
-
-let log = new Log();
-let cli = new Cli();
-let largv = cli.parseGlobals();
-let metrics;
-let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
+const yargonaut = require('yargonaut');
+yargonaut.style('green').errorsStyle('red');
+const yargs = require('yargs');
 
 // Allow envvars to override a few core things
-const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
-const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
+let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE;
+const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX;
+const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT;
 
 // If we have CLI verbosity args let's use those instead
-if (largv.verbose) LOGLEVELCONSOLE = largv.verbose + 1;
+const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
 
-// Define the start up options
-const options = {
-  configSources: [path.join(USERCONFROOT, 'config.yml')],
-  envPrefix: ENVPREFIX,
-  logLevelConsole: LOGLEVELCONSOLE,
-  logDir: path.join(USERCONFROOT, 'logs'),
-  mode: 'cli',
-  pluginDirs: [USERCONFROOT],
-  userConfRoot: USERCONFROOT,
-  version,
-};
-
-// Error handler
-const handleError = ({hide, message, stack, code}, log, metrics) => {
-  // Log error or not
-  if (!hide && log) {
-    if (largv.verbose > 0) {
-      log.error(stack);
-    } else {
-      log.error(message);
-    }
-  }
-
-  // Report error if we can
-  if (metrics) {
-    metrics.report('error', {message: message, stack: stack});
-  }
-
-  // Exit this process
-  process.exit(code || 1);
+// Handle error
+let landoErrorHandler;
+const handleError = (error, handler) => {
+  error.verbose = cli.largv().verbose;
+  process.exit(handler.handle(error));
 };
 
 // Kick off our bootstrap
-bootstrap(options)
+bootstrap(cli.defaultConfig())
 
 // Initialize the CLI
 .then(lando => {
-  // Bind to outside scope
+  // Bind to outside scope so we can use this in the catch
   // @TODO: do this better
-  metrics = lando.metrics;
-  log = lando.log;
+  landoErrorHandler = lando.error;
 
-  // Handle busted promises
-  process.on('unhandledRejection', error => {
-    handleError(error, lando.log, lando.metrics);
+  // Handle uncaught things
+  _.forEach(['unhandledRejection', 'uncaughtException'], exception => {
+    process.on(exception, error => handleError(error, lando.error));
   });
 
-  // And other uncaught things
-  process.on('uncaughtException', error => {
-    handleError(error, lando.log, lando.metrics);
-  });
+  // Get update info
+  const currentVersion = lando.config.version;
+  const latestUpdate = lando.cache.get('updates');
+  const refreshData = lando.updates.fetch(latestUpdate);
 
-  // Log
-  lando.log.info('Initializing cli');
+  // Check our perms to start things off
+  return Promise.try(cli.checkPerms)
 
-  // Get CLI things
-  let cmd = '$0';
-
-  // And other things
-  const tasks = _.sortBy(lando.tasks.tasks, 'name');
-  const yargonaut = require('yargonaut');
-  yargonaut.style('green').errorsStyle('red');
-  const yargs = require('yargs');
-
-  // If we are packaged lets get something else for the cmd path
-  if (_.has(process, 'pkg')) {
-    cmd = path.basename(_.get(process, 'execPath', 'lando'));
-  }
-
-  // Define our usage syntax
-  const syntax = '<command> [args] [options] [-- global options]';
-  yargs.usage(['Usage:', cmd, syntax].join(' '));
+  // Check for updates and inform user if we have some
+  .then(() => {
+    if (refreshData) {
+      lando.log.verbose('Checking for updates...');
+      return lando.updates.refresh(currentVersion)
+      .then(latest => lando.cache.set('updates', latest, {persist: true}));
+    }
+  })
 
   /**
    * Event that allows other things to alter the tasks being loaded to the CLI.
@@ -120,46 +78,29 @@ bootstrap(options)
    *   tasks = {};
    * });
    */
-  return lando.events.emit('pre-cli-load', tasks)
-
-  // No sudo!
-  .then(() => {
-    sudoBlock(lando.node.chalk.red('Lando should never be run as root!'));
-  })
-
-  // Check for updates and inform user if we have some
-  .then(() => Promise.resolve(lando.updates.fetch(lando.cache.get('updates')))
-
-  // Fetch and cache if needed
-  .then(fetch => {
-    if (fetch) {
-      lando.log.verbose('Checking for updates...');
-      return lando.updates.refresh(lando.config.version)
-      .then(latest => {
-        lando.cache.set('updates', latest, {persist: true});
-      });
-    }
-  })
-
-  // Determin whether we should print a message or not
-  .then(() => {
-    const current = lando.config.version;
-    const latest = lando.cache.get('updates');
-    if (lando.updates.updateAvailable(current, latest.version)) {
-      console.log(lando.cli.updateMessage(latest.url));
-    }
-  }))
+  .then(lando.events.emit('pre-cli-load', _.sortBy(lando.tasks.tasks, 'name')))
 
   // Print the CLI
   .then(() => {
+    lando.log.info('Initializing cli');
+
+    // Update warning
+    if (lando.updates.updateAvailable(currentVersion, lando.cache.get('updates').version)) {
+      console.log(lando.cli.art().updateMessage(lando.cache.get('updates').url));
+    }
+
+    // Start up the CLI
+    const cmd = !_.has(process, 'pkg') ? '$0' : path.basename(_.get(process, 'execPath', 'lando'));
+    yargs.usage(['Usage:', cmd, '<command> [args] [options] [-- global options]'].join(' '));
+
     // Loop through the tasks and add them to the CLI
-    _.forEach(_.sortBy(tasks, 'command'), task => {
+    _.forEach(_.sortBy(lando.tasks.tasks, 'command'), task => {
       lando.log.verbose('Loading cli task %s', task.name);
       yargs.command(lando.cli.parseToYargs(task, lando.events));
     });
 
     // Invoke help if global option is specified
-    if (largv.help) {
+    if (cli.largv().help) {
       yargs.showHelp();
       process.exit(0);
     }
@@ -185,7 +126,4 @@ bootstrap(options)
 })
 
 // Handle all other errors
-// @TODO: We need something better
-.catch(error => {
-  handleError(error, log, metrics);
-});
+.catch(error => handleError(error, landoErrorHandler));
