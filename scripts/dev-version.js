@@ -12,7 +12,8 @@ const _ = require('lodash');
 const fs = require('fs-extra');
 const Log = require('./../lib/logger');
 const log = new Log({logLevelConsole: 'debug'});
-const shell = require('./../lib/shell')(log);
+const Shell = require('./../lib/shell');
+const shell = new Shell(log);
 
 // Start our sacred promise
 return shell.sh(['git', 'describe', '--tags', '--always', '--abbrev=1'], {mode: 'collect'})

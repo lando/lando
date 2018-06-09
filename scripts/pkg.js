@@ -9,7 +9,8 @@ const Log = require('./../lib/logger');
 const log = new Log({logLevelConsole: 'debug'});
 const path = require('path');
 const Promise = require('bluebird');
-const shell = require('./../lib/shell')(log);
+const Shell = require('./../lib/shell');
+const shell = new Shell(log);
 const util = require('./util');
 
 // Lando info
