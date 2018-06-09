@@ -42,23 +42,6 @@ const options = {
 bootstrap(options).then(lando => cli.init(lando));
 ```
 <div class="api-body-footer"></div>
-<a id="landoclilargv"></a>
-
-<h2 id="landoclilargv" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.largv</h2>
-<div class="api-body-header"></div>
-
-A singleton object that contains the Lando global options.
-
-This means all the options passed in after the `--` flag.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Gets all the global options that have been specified.
-const largv = lando.tasks.largv;
-```
-<div class="api-body-footer"></div>
 <a id="landoappregister"></a>
 
 <h2 id="landoappregister" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -2050,44 +2033,6 @@ started
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
-<a id="landoclitable"></a>
-
-<h2 id="landoclitable" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.Table()</h2>
-<div class="api-body-header"></div>
-
-Utility function to help construct CLI displayable tables
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="new_landoclitable_new"></a>
-
-<h2 id="new_landoclitable_new" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  new exports.Table([opts])</h2>
-<div class="api-body-header"></div>
-
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [opts] | <code>Object</code> |  | Options for how the table should be built |
-| [opts.arrayJoiner] | <code>String</code> | <code>&#x27;, &#x27;</code> | A delimiter to be used when joining array data |
-
-**Returns**: <code>Object</code> - Table metadata that can be printed with toString()  
-**Example**  
-```js
-// Grab a new cli table
-const table = new lando.cli.Table();
-
-// Add data
-table.add('NAME', app.name);
-table.add('LOCATION', app.root);
-table.add('SERVICES', _.keys(app.services));
-table.add('URLS', urls, {arrayJoiner: '\n'});
-
-// Print the table
-console.log(table.toString());
-```
-<div class="api-body-footer"></div>
 <a id="landoevents__on"></a>
 
 <h2 id="landoevents__on" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -2484,6 +2429,10 @@ Returns the lando options
 This means all the options passed in before the `--` flag.
 
 **Since**: 3.0.0  
+**Todo**
+
+- [ ] make this static and then fix all call sites
+
 **Returns**: <code>Object</code> - Yarg parsed options  
 **Example**  
 ```js

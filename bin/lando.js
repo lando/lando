@@ -12,7 +12,7 @@
 // Modules
 const _ = require('lodash');
 const bootstrap = require('./../lib/bootstrap.js');
-const cli = require('./../lib/cli');
+const Cli = require('../lib/cli');
 const Log = require('./../lib/logger');
 const os = require('os');
 const path = require('path');
@@ -22,6 +22,8 @@ const userConfRoot = path.join(os.homedir(), '.lando');
 const version = require(path.join(__dirname, '..', 'package.json')).version;
 
 let log = new Log();
+let cli = new Cli();
+let largv = cli.parseGlobals();
 let metrics;
 let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE || 'warn';
 
@@ -30,7 +32,7 @@ const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX || 'LANDO';
 const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT || userConfRoot;
 
 // If we have CLI verbosity args let's use those instead
-if (cli.largv.verbose) LOGLEVELCONSOLE = cli.largv.verbose + 1;
+if (largv.verbose) LOGLEVELCONSOLE = largv.verbose + 1;
 
 // Define the start up options
 const options = {
@@ -48,7 +50,7 @@ const options = {
 const handleError = ({hide, message, stack, code}, log, metrics) => {
   // Log error or not
   if (!hide && log) {
-    if (cli.largv.verbose > 0) {
+    if (largv.verbose > 0) {
       log.error(stack);
     } else {
       log.error(message);
@@ -157,7 +159,7 @@ bootstrap(options)
     });
 
     // Invoke help if global option is specified
-    if (lando.cli.largv.help) {
+    if (largv.help) {
       yargs.showHelp();
       process.exit(0);
     }
