@@ -8,7 +8,7 @@ var utils = require('./utils');
 /*
  * Parse general docker options
  */
-var parseOptions = function(opts) {
+var parseOptions = opts => {
 
   // Start flag collector
   var flags = [];
@@ -88,7 +88,7 @@ var parseOptions = function(opts) {
 
   // Add additional ENVs
   if (opts.environment) {
-    _.forEach(opts.environment, function(envVar) {
+    _.forEach(opts.environment, envVar => {
       flags.push('-e');
       flags.push(envVar);
     });
@@ -108,7 +108,7 @@ var parseOptions = function(opts) {
 /*
  * Helper to standardize construction of docker commands
  */
-var buildCmd = function(compose, project, run, opts) {
+var buildCmd = (compose, project, run, opts) => {
 
   // A project is required
   if (!project) {
@@ -119,7 +119,7 @@ var buildCmd = function(compose, project, run, opts) {
   var cmd = ['--project-name', project];
 
   // Export our compose stuff and add to commands
-  _.forEach(compose, function(unit) {
+  _.forEach(compose, unit => {
     cmd.push('--file');
     cmd.push(unit);
   });
@@ -132,7 +132,7 @@ var buildCmd = function(compose, project, run, opts) {
 
   // Add in a services arg if its there
   if (opts && opts.services) {
-    _.forEach(opts.services, function(service) {
+    _.forEach(opts.services, service => {
       cmd.push(service);
     });
   }
@@ -158,7 +158,7 @@ var buildCmd = function(compose, project, run, opts) {
 /*
  * You can do a create, rebuild and start with variants of this
  */
-exports.start = function(compose, project, opts) {
+exports.start = (compose, project, opts) => {
 
   // Default options
   var defaults = {
@@ -181,7 +181,7 @@ exports.start = function(compose, project, opts) {
 /*
  * Run docker compose pull
  */
-exports.getId = function(compose, project, opts) {
+exports.getId = (compose, project, opts) => {
 
   // Default options
   var defaults = {
@@ -202,7 +202,7 @@ exports.getId = function(compose, project, opts) {
 /*
  * Run docker compose build
  */
-exports.build = function(compose, project, opts) {
+exports.build = (compose, project, opts) => {
 
   // Default options
   var defaults = {
@@ -227,15 +227,15 @@ exports.build = function(compose, project, opts) {
 /*
  * Run docker compose pull
  */
-exports.pull = function(compose, project, opts) {
+exports.pull = (compose, project, opts) => {
 
   // Let's get a list of all our services that need to be pulled
   // eg not built from a local dockerfile
-  var images = _.filter(_.keys(_.get(opts, 'app.services'), []), function(service) {
-    return !_.has(opts.app.services, service + '.build');
+  var images = _.filter(_.keys(_.get(opts, 'app.services'), []), service => {
+    !_.has(opts.app.services, service + '.build');
   });
 
-  // If the user has selected something then intersect, if not use all image driven services
+  // If the user has selected something then intersept, if not use all image driven services
   opts.services = (!_.isEmpty(opts.services)) ? _.intersection(opts.services, images) : images;
 
   return {
@@ -248,17 +248,15 @@ exports.pull = function(compose, project, opts) {
  * Run docker compose Kill
  * @NOTE: we use kill for speeeeeedzzz
  */
-exports.stop = function(compose, project, opts) {
-  return {
+exports.stop = (compose, project, opts) => ({
     cmd: buildCmd(compose, project, 'kill', opts),
     opts: {app: opts.app, mode: 'collect'}
-  };
-};
+});
 
 /*
  * Run docker compose run
  */
-exports.run = function(compose, project, opts) {
+exports.run = (compose, project, opts) => {
 
   // Default options
   var defaults = {
@@ -292,7 +290,7 @@ exports.run = function(compose, project, opts) {
 /*
  * Run docker compose logs
  */
-exports.logs = function(compose, project, opts) {
+exports.logs = (compose, project, opts) => {
 
   // Default options
   var defaults = {
@@ -314,7 +312,7 @@ exports.logs = function(compose, project, opts) {
 /*
  * Run docker compose remove
  */
-exports.remove = function(compose, project, opts) {
+exports.remove = (compose, project, opts) => {
 
   // Default down options
   var defaultDowns = {
