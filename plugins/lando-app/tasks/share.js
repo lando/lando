@@ -88,7 +88,7 @@ module.exports = function(lando) {
               }
 
               // Header it
-              console.log(lando.cli.art().tunnelHeader());
+              console.log(lando.cli.makeArt('tunnel'));
 
               // the assigned public url for your tunnel
               // i.e. https://abcdefgjhij.localtunnel.me

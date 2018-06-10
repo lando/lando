@@ -12,6 +12,7 @@
 // Modules
 const _ = require('lodash');
 const bootstrap = require('./../lib/bootstrap.js');
+const chalk = require('chalk');
 const Cli = require('./../lib/cli');
 const path = require('path');
 const Promise = require('./../lib/promise');
@@ -86,7 +87,9 @@ bootstrap(cli.defaultConfig())
 
     // Update warning
     if (lando.updates.updateAvailable(currentVersion, lando.cache.get('updates').version)) {
-      console.log(lando.cli.art().updateMessage(lando.cache.get('updates').url));
+      console.log(lando.cli.makeArt('update', {paddingBottom: 0}));
+      console.log(chalk.green(lando.cache.get('updates').url));
+      console.log(' ');
     }
 
     // Start up the CLI

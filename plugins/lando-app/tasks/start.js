@@ -27,7 +27,7 @@ module.exports = function(lando) {
           .then(function() {
 
             // Header it
-            console.log(lando.cli.art().startHeader());
+            console.log(lando.cli.makeArt());
 
             // Inject start table into the table
             _.forEach(utils.startTable(app), function(value, key) {
