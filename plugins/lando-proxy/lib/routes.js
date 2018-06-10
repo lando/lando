@@ -70,8 +70,8 @@ exports.parseHosts = function(hosts) {
 /*
  * Strip array of hosts of ports
  */
-exports.stripPorts = function(service) {
-  return _.map(_.get(service, 'routes[0].urls', []), function(u) {
+exports.stripPorts = function(urls) {
+  return _.map(urls, function(u) {
     var hasProtocol = !_.isEmpty(u.split('://')[1]);
     var f = (hasProtocol) ? (u.split('://')[1]) : (u.split('://')[0]);
     return f.split(':')[0];
@@ -120,7 +120,7 @@ exports.map2Legacy = function(data, name, proxyDomain) {
     var subdomains = [];
     var custom = [];
 
-    // Go through each host and try to build the legacy confg
+    // Go through each host and try to build the legacy config
     _.forEach(service.hosts, function(host) {
 
       // Handle proxyDomain hosts

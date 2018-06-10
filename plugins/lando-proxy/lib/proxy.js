@@ -54,7 +54,7 @@ exports.defaults = function(domain) {
 
     // Proxy service
     var proxy = {
-      image: 'traefik:1.5.4-alpine',
+      image: 'traefik:1.6.3-alpine',
       entrypoint: '/lando-entrypoint.sh',
       command: cmd,
       labels: {
