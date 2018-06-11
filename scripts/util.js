@@ -45,7 +45,7 @@ exports.cliPkgTask = output => {
   // Package command
   const pkgCmd = [
     'node',
-    path.resolve(__dirname, '..', 'node_modules', '.bin', 'pkg'),
+    path.resolve(__dirname, '..', 'node_modules', 'pkg', 'lib-es5', 'bin.js'),
     '--targets ' + ['node8', exports.cliTargetOs(), 'x64'].join('-'),
     '--config ' + path.join('package.json'),
     '--output ' + output,
@@ -54,7 +54,7 @@ exports.cliPkgTask = output => {
 
   // Start to build the command
   const cmd = [];
-  cmd.push('yarn --production');
+  cmd.push('yarn install --production');
   cmd.push(pkgCmd.join(' '));
 
   // Add executable perms on POSIX
@@ -87,7 +87,8 @@ exports.fixAlias = datum => {
  * Fixes a jsdoc2md alias
  */
 exports.parseCommand = (cmd, cwd = path.resolve(__dirname, '..')) => {
-  return {run: cmd.split(' '), opts: {mode: 'collect', cwd}};
+  const mode = (process.platform === 'win32') ? {} : {mode: 'collect'};
+  return {run: cmd.split(' '), opts: _.merge({}, {cwd}, mode)};
 };
 
 /*

@@ -80,7 +80,7 @@ describe('scripts', () => {
   describe('#cliPkgTask', () => {
     it('should return yarn --production as first command', () => {
       const command = util.cliPkgTask('thing');
-      command[0].should.equal('yarn --production');
+      command[0].should.equal('yarn install --production');
     });
 
     it('should return output arg as output file', () => {
@@ -160,8 +160,21 @@ describe('scripts', () => {
       const command = util.parseCommand('thing stuff');
       command.run[0].should.equal('thing');
       command.run[1].should.equal('stuff');
-      command.opts.mode.should.equal('collect');
       command.opts.cwd.should.equal(path.resolve('.'));
+    });
+
+    it('should have collect mode on posix', () => {
+      setPlatform('linux');
+      const command = util.parseCommand('thing stuff');
+      command.opts.mode.should.equal('collect');
+      resetPlatform();
+    });
+
+    it('should have no mode on win32', () => {
+      setPlatform('win32');
+      const command = util.parseCommand('thing stuff');
+      command.should.not.have.property('mode');
+      resetPlatform();
     });
   });
 
