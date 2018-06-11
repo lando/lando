@@ -22,7 +22,7 @@ describe('table', () => {
   });
 
   describe('#add', () => {
-    it('should add a cyan key and value row to a table', () => {
+    it('should add a key and value row to a table', () => {
       const table = new Table();
       const data = {
         taylor: 'swift',
@@ -32,7 +32,7 @@ describe('table', () => {
       let counter = 0;
       _.forEach(data, (value, key) => {
         table.add(key, value);
-        table[counter][0].should.equal(chalk.cyan(key));
+        _.includes(table[counter][0], key).should.be.true;
         table[counter][1].should.equal(value);
         counter = counter + 1;
       });
@@ -42,7 +42,6 @@ describe('table', () => {
       const table = new Table();
       const data = ['crosby', 'stills', 'nash', 'young'];
       table.add('csny', data);
-      table[0][0].should.equal(chalk.cyan('csny'));
       table[0][1].should.equal('crosby, stills, nash, young');
     });
 
@@ -50,7 +49,6 @@ describe('table', () => {
       const table = new Table();
       const data = ['crosby', 'stills', 'nash', 'young'];
       table.add('csny', data, {arrayJoiner: '='});
-      table[0][0].should.equal(chalk.cyan('csny'));
       table[0][1].should.equal('crosby=stills=nash=young');
     });
   });
