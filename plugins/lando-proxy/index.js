@@ -242,7 +242,7 @@ module.exports = function(lando) {
 
           // Set the docker network name.
           var labels = {
-            ['traefik.docker.network']: lando.config.proxyNet,
+            'traefik.docker.network': lando.config.proxyNet,
           };
 
           // Go through all routes of the service.
