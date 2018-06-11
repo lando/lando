@@ -31,7 +31,7 @@ mkdir -p build/installer/lando/docs
 cd build/installer/lando
 
 # Get our Lando dependencies
-cp -rf ../../../dist/build/lando-linux-x64-v${LANDO_VERSION} bin/lando
+cp -rf ../../../build/cli/lando-linux-x64-v${LANDO_VERSION} bin/lando
 chmod +x bin/lando
 
 # Get our Docker dependencies
