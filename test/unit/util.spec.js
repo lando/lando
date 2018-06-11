@@ -179,11 +179,11 @@ describe('scripts', () => {
       resetPlatform();
     });
 
-    it('should return a PS command that runs scripts/build-win32.ps1 on windoze', () => {
+    it('should return a PS command that runs scripts\\build-win32.ps1 on windoze', () => {
       setPlatform('win32');
       const command = util.installerPkgTask();
       command[0].should.equal('PowerShell -NoProfile -ExecutionPolicy Bypass -Command');
-      command[1].should.equal('scripts/build-win32.ps1');
+      command[1].should.equal('scripts\\build-win32.ps1');
       command[2].should.equal('&& EXIT /B %errorlevel%');
       resetPlatform();
     });

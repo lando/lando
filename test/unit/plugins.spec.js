@@ -13,15 +13,20 @@ const fs = require('fs');
 const filesystem = require('mock-fs');
 chai.use(require('chai-as-promised'));
 chai.should();
+const os = require('os');
 const path = require('path');
 const Plugins = require('./../../lib/plugins');
 const Promise = require('./../../lib/promise');
 
 const testPlugin = fs.readFileSync(path.resolve('test', 'fixtures', 'plugins', 'test-plugin', 'index.js'));
-const searchDirs = ['/tmp/dir1', '/tmp/dir2', process.cwd() + '/test/fixtures'];
+const searchDirs = [
+  path.join(os.tmpdir(), 'dir1'),
+  path.join(os.tmpdir(), 'dir2'),
+  path.join(process.cwd(), 'test', 'fixtures'),
+];
 const fsConfig = {};
 _.forEach(searchDirs, dir => {
-  fsConfig[dir + '/plugins/test-plugin/index.js'] = testPlugin;
+  fsConfig[path.join(dir, 'plugins', 'test-plugin', 'index.js')] = testPlugin;
 });
 
 // This is the file we are testing

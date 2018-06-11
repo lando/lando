@@ -100,6 +100,7 @@ exports.psTask = cmd => (['PowerShell -NoProfile -ExecutionPolicy Bypass -Comman
  */
 exports.installerPkgTask = () => {
   const extension = (process.platform === 'win32') ? 'ps1' : 'sh';
-  const script = path.join('scripts', `build-${process.platform}.${extension}`);
+  const join = (extension === 'sh') ? path.posix.join : path.win32.join;
+  const script = join('scripts', `build-${process.platform}.${extension}`);
   return (extension === 'ps1') ? exports.psTask(script) : script;
 };

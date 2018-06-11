@@ -19,6 +19,7 @@ const resetPlatform = function() {
 
 const user = require('./../../lib/user');
 
+// @todo: we need to actually stub out shell-exec because this relies on OS specific things like `id`
 describe('user', () => {
   describe('#getUid', () => {
     it('should return user 1000 on Windows', () => {
