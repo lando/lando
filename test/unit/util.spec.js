@@ -5,6 +5,7 @@
 
 'use strict';
 
+const _ = require('lodash');
 const chai = require('chai');
 const originalPlatform = process.platform;
 const path = require('path');
@@ -175,6 +176,7 @@ describe('scripts', () => {
     it('should return scripts/build-linux.sh on linux', () => {
       setPlatform('linux');
       const command = util.installerPkgTask();
+      command.should.be.a('string');
       command.should.equal('scripts/build-linux.sh');
       resetPlatform();
     });
@@ -182,9 +184,8 @@ describe('scripts', () => {
     it('should return a PS command that runs scripts\\build-win32.ps1 on windoze', () => {
       setPlatform('win32');
       const command = util.installerPkgTask();
-      command[0].should.equal('PowerShell -NoProfile -ExecutionPolicy Bypass -Command');
-      command[1].should.equal('scripts\\build-win32.ps1');
-      command[2].should.equal('&& EXIT /B %errorlevel%');
+      command.should.be.a('string');
+      _.includes(command, 'scripts\\build-win32.ps1').should.be.true;
       resetPlatform();
     });
   });
