@@ -42,11 +42,8 @@ module.exports = function(lando) {
     lando.log.debug('Request data: %j', data);
     lando.log.debug('Request options: %j.', options);
 
-    // Create the config option
-    const config = _.merge(options, data);
-
     // Attempt the request and retry a few times
-    return Promise.retry(() => request[verb](pathname.join('/'), config))
+    return Promise.retry(() => request[verb](pathname.join('/'), data, options))
       .then(response => {
         lando.log.debug('Response recieved: %j.', response.data);
         return response.data;
@@ -202,13 +199,10 @@ module.exports = function(lando) {
     // Get the sites
     .then(function(session) {
       var postKey = ['users', _.get(session, 'user_id'), 'keys'];
-      var keyFile = 'pantheon.lando.id_rsa.pub';
-      var keyPath = path.join(lando.config.userConfRoot, 'keys', keyFile);
+      var keyPath = path.join(lando.config.userConfRoot, 'keys', 'pantheon.lando.id_rsa.pub');
       var data = _.trim(fs.readFileSync(keyPath, 'utf8'));
-      var options = {headers: getAuthHeaders(session)};
-      return pantheonRequest('post', postKey, data, options);
+      return pantheonRequest('post', postKey, JSON.stringify(data), {headers: getAuthHeaders(session)});
     });
-
   };
 
   /*

@@ -286,7 +286,7 @@ module.exports = function(lando) {
 
       // Set and cache the TOKENZZZZ
       var data = {email: email, token: token};
-      var name = lando.utils.engine.dockerComposify(options.name);
+      var name = lando.utils.engine.dockerComposify(config.config.site);
       lando.cache.set(siteMetaDataKey + name, data, {persist: true});
 
       // Return it
