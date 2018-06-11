@@ -6,7 +6,6 @@
 'use strict';
 
 const _ = require('lodash');
-const chalk = require('chalk');
 const chai = require('chai');
 const Table = require('./../../lib/table');
 chai.should();
