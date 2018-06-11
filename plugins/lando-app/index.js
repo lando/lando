@@ -83,7 +83,7 @@ module.exports = function(lando) {
     // Define helpful global labels
     var labels = {
       'io.lando.container': 'TRUE',
-      'io.lando.id': lando.config.id
+      'io.lando.id': lando.config.instance
     };
 
     // Add things just meant for the container env
