@@ -5,43 +5,77 @@
 
 'use strict';
 
+const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 chai.should();
 
-const Events = require('../../lib/events');
-describe('events', function () {
-  var events = new Events();
+const AsyncEvents = require('../../lib/events');
 
-  describe('#on', function() {
-    it('allows overriding priorities', function() {
-      const spy1 = sinon.spy();
-      const spy2 = sinon.spy();
+describe('events', () => {
+  describe('#AsyncEvents', () => {
+    it('should return an events instance with correct default options', () => {
+      const events = new AsyncEvents();
+      events.should.be.instanceof(AsyncEvents);
+      events.should.be.an('object').with.property('log');
+      events.should.have.property('_maxListeners', 20);
+      events._listeners.should.be.an('array').and.be.empty;
+      events.should.have.property('_eventsCount', 0);
+    });
 
-      events.on('eventOne', 1, spy1);
-      events.on('eventOne', 2, spy2);
-      events.emit('eventOne').then(function() {
-        spy1.should.have.been.calledBefore(spy2);
-      }).then(function() {
-        events.on('eventTwo', 2, spy1);
-        events.on('eventTwo', 1, spy2);
-        events.emit('eventTwo').then(function() {
-          spy2.should.be.calledBefore(spy1);
-        });
-      });
-
+    it('should return an events instance with custom log option', () => {
+      const log = sinon.spy();
+      const events = new AsyncEvents(log);
+      events.should.have.property('log', log);
     });
   });
 
-  describe('#emit', function() {
-    it('blocks for callback completion');
+  describe('#on', () => {
+    it('should run events without priority at priority 5', () => {
+      const events = new AsyncEvents();
+      const same1 = sinon.spy();
+      const same2 = sinon.spy();
+      events.on('event', same1);
+      events.on('event', same2);
+      const priorityFiveEvents = _(events._listeners)
+        .filter(event => event.name === 'event')
+        .filter(event => event.priority === 5)
+        .size();
+      priorityFiveEvents.should.equal(2);
+    });
 
-    it('returns a promise', function() {
-      // @todo: is this a legit way to test for a promise?
+    it('should run events in priority from lowest to highest', () => {
+      const events = new AsyncEvents();
+      const before = sinon.spy();
+      const middle = sinon.spy();
+      const after = sinon.spy();
+      events.on('event', 4, before);
+      events.on('event', middle);
+      events.on('event', 6, after);
+      events.emit('event').then(() => {
+        before.should.be.calledBefore(middle);
+        middle.should.be.calledBefore(after);
+        after.should.be.calledAfter(middle);
+      });
+    });
+  });
+
+  describe('#emit', () => {
+    it('should return a promise', () => {
+      const events = new AsyncEvents();
       events.emit('testEvent').should.have.property('then');
     });
 
+    it('should pass optional data from emit into on', () => {
+      const data = {maneuver: 'little'};
+      const events = new AsyncEvents();
+      events.on('battle-of-tanaab', data => {
+        data.maneuver.should.equal('little');
+        data.should.not.be.empty;
+      });
+      events.emit('battle-of-tanaab', data);
+    });
   });
 });

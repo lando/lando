@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Uncomment to debug
-set -x
-set -e
-
 # Checking to see that we have the correct core build dependencies
 if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
   echo "You do not have the correct dependencies installed to build Lando! Trying to install them..."
@@ -35,7 +31,7 @@ mkdir -p build/installer/lando/docs
 cd build/installer/lando
 
 # Get our Lando dependencies
-cp -rf ../../../dist/cli/lando-linux-x64-v${LANDO_VERSION} bin/lando
+cp -rf ../../../build/cli/lando-linux-x64-v${LANDO_VERSION} bin/lando
 chmod +x bin/lando
 
 # Get our Docker dependencies

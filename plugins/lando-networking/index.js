@@ -22,7 +22,7 @@ module.exports = function(lando) {
       caCertDir: path.join(usr, caDir),
       caCert: path.join(usr, caDir, 'lando.pem'),
       caService: path.join(usr, caDir, 'ca-setup.yml'),
-      caProject: 'landocasetupkenobi38ahsoka' + lando.config.id,
+      caProject: 'landocasetupkenobi38ahsoka' + lando.config.instance,
       networkBridge: 'lando_bridge_network'
     };
 

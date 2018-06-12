@@ -73,7 +73,7 @@ New-Item -type directory -force -path $bundle_dir, $docs_dir, $bin_dir, $plugins
 Write-Output "Grabbing the files we need..."
 
 # Lando things
-Copy-Item "dist\cli\lando-win32-x64-v$lando_version.exe" "$bin_dir\lando.exe" -force
+Copy-Item "build\cli\lando-win32-x64-v$lando_version.exe" "$bin_dir\lando.exe" -force
 
 # Docker for Windows
 Download -Url "https://download.docker.com/win/stable/$docker_version/Docker%20for%20Windows%20Installer.exe" -Destination "$base_dir\Docker.exe"
