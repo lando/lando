@@ -17,11 +17,10 @@ module.exports = function(lando) {
 
   /*
    * Return auth headers we need for session protected endpoints
+   * If Lando is running in a browser we expect it will be set upstream
    */
   var getAuthHeaders = function(session) {
-    return {
-      'Cookie': 'X-Pantheon-Session=' + session.session,
-    };
+    return (lando.config.process === 'node') ? {'Cookie': 'X-Pantheon-Session=' + session.session} : {};
   };
 
   /*
@@ -31,10 +30,7 @@ module.exports = function(lando) {
     // Build our request client
     const request = axios.create({
       baseURL: 'https://terminus.pantheon.io/api/',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Terminus/Lando',
-      },
+      headers: {'Content-Type': 'application/json'},
     });
 
     // Log the actual request we are about to make
@@ -73,9 +69,11 @@ module.exports = function(lando) {
     // Request deets
     var endpoint = ['authorize', 'machine-token'];
     var data = {'machine_token': token, client: 'terminus'};
+    // Eventually set this to lando.config.userAgent;
+    var options = (lando.config.process === 'node') ? {headers: {'User-Agent': 'Terminus/Lando'}} : {};
 
     // Send REST request.
-    return pantheonRequest('post', endpoint, data)
+    return pantheonRequest('post', endpoint, data, options)
 
     // Use the session to get information about the user
     .then(function(session) {
@@ -277,6 +275,7 @@ module.exports = function(lando) {
 
   // Return the things
   return {
+    getSession: pantheonAuth,
     getSites: pantheonSites,
     getEnvs: pantheonSiteEnvs,
     postKey: pantheonPostKey
