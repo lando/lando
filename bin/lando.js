@@ -79,7 +79,7 @@ bootstrap(cli.defaultConfig())
    *   tasks = {};
    * });
    */
-  .then(lando.events.emit('pre-cli-load', _.sortBy(lando.tasks.tasks, 'name')))
+  .then(() => lando.events.emit('pre-cli-load', lando.tasks.tasks))
 
   // Print the CLI
   .then(() => {
