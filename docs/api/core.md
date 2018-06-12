@@ -10,7 +10,7 @@ Contains the main bootstrap function, which will:
   2. Emit bootstrap events
   3. Initialize plugins
 
-You will want to use this to grab `lando` instead of using `require('lando')(config)`.
+You will want to use this to grab `lando` instead of using `new Lando(config)`.
 The intiialization config in the example below is not required but recommended. You can
 pass in any additional properties to override subsequently set/default values.
 
@@ -66,7 +66,7 @@ NOTE: This might only be available in core plugins
 ```js
 // Add engine settings to the config
 lando.events.on('pre-bootstrap', config => {
-  var engineConfig = daemon.getEngineConfig();
+  const engineConfig = daemon.getEngineConfig();
   config.engineHost = engineConfig.host;
 });
 ```
@@ -106,7 +106,7 @@ lando.events.on('post-bootstrap', lando => {
 Event that allows altering of argv or inquirer before interactive prompts
 are run
 
-task-CMD-answers
+You will want to replace CMD with the actual task name eg `task-start-answers`.
 
 **Since**: 3.0.0  
 **Properties**
@@ -122,7 +122,7 @@ task-CMD-answers
   "task_CMD_run"</h2>
 <div class="api-body-header"></div>
 
-Event that allows final altering of answers.
+Event that allows final altering of answers before the task runs
 
 You will want to replace CMD with the actual task name eg `task-start-run`.
 
@@ -133,30 +133,6 @@ You will want to replace CMD with the actual task name eg `task-start-run`.
 | --- | --- | --- |
 | answers | <code>Object</code> | object |
 
-<div class="api-body-footer"></div>
-<a id="landoevents__on"></a>
-
-<h2 id="landoevents__on" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.__on()</h2>
-<div class="api-body-header"></div>
-
-Stores the original event on method.
-
-I don't think you want to ever really use this. Mentioned only for transparency.
-
-**See**: https://nodejs.org/api/events.html  
-<div class="api-body-footer"></div>
-<a id="landoevents__emit"></a>
-
-<h2 id="landoevents__emit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.__emit()</h2>
-<div class="api-body-header"></div>
-
-Stores the original event emit method.
-
-I don't think you want to ever really use this. Mentioned only for transparency.
-
-**See**: https://nodejs.org/api/events.html  
 <div class="api-body-footer"></div>
 <a id="landonode_"></a>
 
@@ -419,9 +395,7 @@ lando.cache.remove('mykey');
   lando.cli.argv() ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Returns the lando options
-
-This means all the options passed in before the `--` flag.
+Returns a parsed array of CLI arguments and options
 
 **Since**: 3.0.0  
 **Todo**
@@ -431,8 +405,7 @@ This means all the options passed in before the `--` flag.
 **Returns**: <code>Object</code> - Yarg parsed options  
 **Example**  
 ```js
-// Gets all the pre-global options that have been specified.
-const argv = lando.tasks.argv();
+const argv = lando.cli.argv();
 ```
 <div class="api-body-footer"></div>
 <a id="landoclicheckperms"></a>
@@ -441,19 +414,13 @@ const argv = lando.tasks.argv();
   lando.cli.checkPerms()</h2>
 <div class="api-body-header"></div>
 
-Returns the lando options
-
-This means all the options passed in before the `--` flag.
+Checks to see if lando is running with sudo. If it is it
+will exit the process with a stern warning
 
 **Since**: 3.0.0  
-**Todo**
-
-- [ ] make this static and then fix all call sites
-
 **Example**  
 ```js
-// Gets all the pre-global options that have been specified.
-const argv = lando.tasks.argv();
+lando.cli.checkPerms()
 ```
 <div class="api-body-footer"></div>
 <a id="landoclilargv"></a>
@@ -462,7 +429,7 @@ const argv = lando.tasks.argv();
   lando.cli.largv([args]) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-A singleton object that contains the Lando global options.
+Returns a parsed object of all global options.
 
 This means all the options passed in after the `--` flag.
 
@@ -470,13 +437,12 @@ This means all the options passed in after the `--` flag.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [args] | <code>Object</code> | <code>process.argv.slive(2)</code> | Options |
+| [args] | <code>Object</code> | <code>process.argv.slice(2)</code> | Options |
 
-**Returns**: <code>Object</code> - Just the global options  
+**Returns**: <code>Object</code> - Yarg parsed options  
 **Example**  
 ```js
-// Gets all the global options that have been specified.
-var largv = lando.tasks.largv;
+const largv = lando.cli.largv();
 ```
 <div class="api-body-footer"></div>
 <a id="landoclidefaultconfig"></a>
@@ -485,48 +451,39 @@ var largv = lando.tasks.largv;
   lando.cli.defaultConfig() ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Returns the lando options
-
-This means all the options passed in before the `--` flag.
+Returns a config object with some good default settings for bootstrapping
+lando as a command line interface
 
 **Since**: 3.0.0  
-**Todo**
-
-- [ ] make this static and then fix all call sites
-
-**Returns**: <code>Object</code> - default cli bootstrap options  
+**Returns**: <code>Object</code> - Config that can be used in a Lando CLI bootstrap  
 **Example**  
 ```js
-// Gets all the pre-global options that have been specified.
-const argv = lando.tasks.argv();
+const config = lando.cli.defaultConfig();
+// Kick off our bootstrap
+bootstrap(config).then(lando => console.log(lando));
 ```
 <div class="api-body-footer"></div>
 <a id="landoclimakeart"></a>
 
 <h2 id="landoclimakeart" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cli.makeArt(header, opts) ⇒ <code>Object</code></h2>
+  lando.cli.makeArt([header], [opts]) ⇒ <code>Object</code></h2>
 <div class="api-body-header"></div>
 
-Returns some cli art
-
-This means all the options passed in before the `--` flag.
+Returns some cli "art"
 
 **Since**: 3.0.0  
-**Todo**
 
-- [ ] make this static and then fix all call sites
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| header | <code>String</code> | parsed options |
-| opts | <code>Object</code> | parsed options |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [header] | <code>String</code> | <code>&#x27;start&#x27;</code> | The type of header you want to get |
+| [opts] | <code>Object</code> |  | Padding options |
+| [opts.paddingTop] | <code>Object</code> | <code>1</code> | Lines to pad on top of the art |
+| [opts.paddingBottom] | <code>Object</code> | <code>1</code> | Lines to pad below the art |
 
 **Returns**: <code>Object</code> - Yarg parsed options  
 **Example**  
 ```js
-// Gets all the pre-global options that have been specified.
-const argv = lando.tasks.argv();
+console.log(lando.cli.makeArt('init', {paddingTop: 100});
 ```
 <div class="api-body-footer"></div>
 <a id="landoclimaketable"></a>
@@ -571,18 +528,12 @@ Parses a lando task object into something that can be used by the [yargs](http:/
 A lando task object is an abstraction on top of yargs that also contains some
 metadata about how to interactively ask questions on both a CLI and GUI.
 
-The interactivity metadata is a superset of [inquirer](https://github.com/sboudrias/Inquirer.js) data.
-
 **See**
 
 - [yargs docs](http://yargs.js.org/docs/)
 - [inquirer docs](https://github.com/sboudrias/Inquirer.js)
 
 **Since**: 3.0.0  
-**Todo**
-
-- [ ] Injecting the events here seems not the way we want to go?
-
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -935,7 +886,7 @@ For each directory scanned plugins can live in either the `plugins` or
 **Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
-// Load the plugin called 'shield-generator' and additionally scan `/tmp` for the plugin
+// Load the plugin called 'shield-generator' and scan `/tmp` for the plugin
 return lando.plugins.load('shield-generator', ['/tmp']);
 ```
 <div class="api-body-footer"></div>
@@ -954,7 +905,7 @@ Scans URLs to determine if they are up or down.
 | urls | <code>Array</code> |  | An array of urls like `https://mysite.lndo.site` or `https://localhost:34223` |
 | [opts] | <code>Object</code> |  | Options to configure the scan. |
 | [opts.max] | <code>Integer</code> | <code>7</code> | The amount of times to retry accessing each URL. |
-| [opts.waitCode] | <code>Array</code> | <code>[400, 502]</code> | The HTTP codes to prompt a retry. |
+| [opts.waitCode] | <code>Array</code> | <code>[400, 502, 404]</code> | The HTTP codes to prompt a retry. |
 
 **Returns**: <code>Array</code> - An array of objects of the form {url: url, status: true|false}  
 **Example**  
@@ -980,9 +931,6 @@ This is an abstraction method that:
  2. Promisifies the calling of these function
  3. Handles `stdout`, `stdin` and `stderr`
 
-Beyond the options specified below you should be able to pass in known [exec](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
-or [spawn](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options) options depending on whether we have a mode or not.
-
 **See**
 
 - [extra exec options](https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
@@ -992,10 +940,12 @@ or [spawn](https://nodejs.org/api/child_process.html#child_process_child_process
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| cmd | <code>Array</code> |  | The command to run as elements in an array or a string. |
+| cmd | <code>Array</code> |  | The command to run as elements in an array. |
 | [opts] | <code>Object</code> |  | Options to help determine how the exec is run. |
 | [opts.mode] | <code>Boolean</code> | <code>&#x27;exec&#x27;</code> | The mode to run in |
 | [opts.detached] | <code>Boolean</code> | <code>false</code> | Whether we are running in detached mode or not (deprecated) |
+| [opts.app] | <code>Boolean</code> | <code>{}</code> | A Lando app object |
+| [opts.cwd] | <code>Boolean</code> | <code>process.cwd()</code> | The directory to run the command from |
 
 **Returns**: <code>Promise</code> - A promise with collected results if applicable.  
 **Example**  
@@ -1027,7 +977,7 @@ Escapes any spaces in a command.
 | Param | Type | Description |
 | --- | --- | --- |
 | s | <code>Array</code> \| <code>String</code> | A command as elements of an Array or a String. |
-| platform | <code>String</code> | Specify a platform to escape with |
+| platform | <code>String</code> | Specify a platform to escape for |
 
 **Returns**: <code>String</code> - The space escaped cmd.  
 **Example**  
@@ -1048,7 +998,7 @@ Escapes special characters in a command to make it more exec friendly.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cmd | <code>Array</code> \| <code>String</code> | A command as elements of an Array or a String. |
+| cmd | <code>Array</code> | A command as elements of an Array. |
 
 **Returns**: <code>String</code> - The escaped cmd.  
 **Example**  
