@@ -13,7 +13,7 @@ FROM devwithlando/php:5.6-fpm
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.8.0
+ENV TERMINUS_VERSION 1.8.1
 ENV MAVEN_VERSION 3.5.3
 
 # Install the additional things that make the pantheon
