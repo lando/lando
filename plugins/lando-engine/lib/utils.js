@@ -13,9 +13,7 @@ var path = require('path');
  * @since 3.0.0
  * @alias 'lando.utils.engine.dockerComposify'
  */
-exports.dockerComposify = function(data) {
-  return _.toLower(data).replace(/_|-|\.+/g, '');
-};
+exports.dockerComposify = data => _.toLower(data).replace(/_|-|\.+/g, '');
 
 /*
  * Escapes any spaces in a command.
@@ -28,7 +26,7 @@ exports.dockerComposify = function(data) {
  * // Escape the spaces in the cmd
  * var escapedCmd = lando.shell.escSpaces(['git', 'commit', '-m', 'my message']);
  */
-exports.escSpaces = function(s, platform) {
+exports.escSpaces = (s, platform) => {
 
   var p = platform || process.platform;
 
@@ -49,9 +47,7 @@ exports.escSpaces = function(s, platform) {
  * @since 3.0.0
  * @alias 'lando.utils.engine.getId'
  */
-exports.getId = function(c) {
-  return c.cid || c.id || c.containerName || c.containerID || c.name;
-};
+exports.getId = c => c.cid || c.id || c.containerName || c.containerID || c.name;
 
 /**
  * We might have datum but we need to wrap in array so Promise.each knows
@@ -60,7 +56,7 @@ exports.getId = function(c) {
  * @since 3.0.0
  * @alias 'lando.utils.engine.normalizer'
  */
-exports.normalizer = function(data) {
+exports.normalizer = data => {
   if (!Array.isArray(data)) {
     data = [data];
   }
@@ -73,15 +69,13 @@ exports.normalizer = function(data) {
  * @since 3.0.0
  * @alias 'lando.utils.engine.moveConfig'
  */
-exports.moveConfig = function(from, to) {
+exports.moveConfig = (from, to) => {
 
    // Copy opts and filter out all js files
    // We dont want to give the false impression that you can edit the JS
    var copyOpts = {
      overwrite: true,
-     filter: function(file) {
-       return (path.extname(file) !== '.js');
-     }
+     filter: file => (path.extname(file) !== '.js')
    };
 
    // Ensure to exists
