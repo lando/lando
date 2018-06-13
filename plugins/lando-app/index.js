@@ -57,6 +57,7 @@ module.exports = function(lando) {
     lando.tasks.add('share', require('./tasks/share')(lando));
     lando.tasks.add('start', require('./tasks/start')(lando));
     lando.tasks.add('stop', require('./tasks/stop')(lando));
+    lando.tasks.add('export', require('./tasks/export')(lando));
   });
 
   // Merge compose files specified in landofile to services/networks/volumes
