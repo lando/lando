@@ -38,9 +38,8 @@ module.exports = function(lando) {
           var compose = utils.compose(version, services, volumes, networks);
 
           // Write the services
-          lando.yaml.dump(filePath, compose)
+          lando.yaml.dump(filePath, compose);
           console.log(chalk.green('Docker Compose file exported!'));
-          return;
         }
         // Warn user we couldn't find an app
         else {
