@@ -21,7 +21,7 @@ module.exports = class Landerode extends Dockerode {
   createNet(name, opts = {}) {
     return this.createNetwork(_.merge({}, opts, {Name: name}))
     // Wrap errors.
-    .catch(function(err) {
+    .catch(err => {
       throw new Error(err, 'Error creating network.');
     });
   };
@@ -77,7 +77,7 @@ module.exports = class Landerode extends Dockerode {
   remove(cid, opts = {v: true, force: false}) {
     return this.getContainer(cid).remove(opts)
     // Wrap errors.
-    .catch(function(err) {
+    .catch(err => {
       throw new Error(err, 'Error removing container %s.', cid);
     });
   };
