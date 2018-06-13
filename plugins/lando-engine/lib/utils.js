@@ -18,10 +18,7 @@ exports.dockerComposify = data => _.toLower(data).replace(/_|-|\.+/g, '');
 /*
  * Escapes any spaces in a command.
  */
-exports.escSpaces = (s, platform = process.platform) => {
-  if (_.isArray(s)) s = s.join(' ');
-  return (platform === 'win32') ? s.replace(/ /g, '^ ') : s.replace(/ /g, '\ ');
-};
+exports.escSpaces = shell.escSpaces;
 
 /*
  * Helper to return a valid id from app data
