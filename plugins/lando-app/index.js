@@ -118,7 +118,7 @@ module.exports = lando => {
       const root = app.root;
 
       // Validate files
-      const files = utils.validateFiles(_.get(app, 'config.compose', [], root));
+      const files = utils.validateFiles(_.get(app, 'config.compose', []), root);
 
       // And merge them in
       _.forEach(files, file => {
