@@ -50,10 +50,9 @@ module.exports = function(lando) {
   };
 
   /*
-   * Auth with pantheon directly
+   * Auth with pantheon and get a session
    */
-  var pantheonAuth = function(token) {
-
+  var pantheonSession = function(token) {
     // Check to see if token is cached already and use that
     var tokens = lando.cache.get(tokenCacheKey) || {};
     if (_.includes(_.keys(tokens), token)) {
@@ -73,8 +72,27 @@ module.exports = function(lando) {
     var options = (lando.config.process === 'node') ? {headers: {'User-Agent': 'Terminus/Lando'}} : {};
 
     // Send REST request.
-    return pantheonRequest('post', endpoint, data, options)
+    return pantheonRequest('post', endpoint, data, options);
+  };
 
+  /*
+   * Auth with pantheon and get user data
+   */
+  var pantheonAuth = function(token) {
+
+    // Check to see if token is cached already and use that
+    var tokens = lando.cache.get(tokenCacheKey) || {};
+    if (_.includes(_.keys(tokens), token)) {
+      token = tokens[token];
+    }
+
+    // If we have a process cached token lets use that
+    var sessionKey = sessionCacheKey + token;
+    if (lando.cache.get(sessionKey)) {
+      return Promise.resolve(lando.cache.get(sessionKey));
+    }
+
+    return pantheonSession(token)
     // Use the session to get information about the user
     .then(function(session) {
 
@@ -275,7 +293,7 @@ module.exports = function(lando) {
 
   // Return the things
   return {
-    getSession: pantheonAuth,
+    getSession: pantheonSession,
     getSites: pantheonSites,
     getEnvs: pantheonSiteEnvs,
     postKey: pantheonPostKey
