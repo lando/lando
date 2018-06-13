@@ -1,17 +1,18 @@
 'use strict';
 
+// Plugin modules
+const compose = require('./lib/compose');
+const env = require('./lib/env');
+const Landerode = require('./lib/docker');
+const utils = require('./lib/utils');
+
 // We make this module into a function so we can pass in lando
 module.exports = lando => {
   // Lando Modules
   const _ = lando.node._;
   const log = lando.log;
   const Promise = lando.Promise;
-
-  // Plugin modules
-  const compose = require('./lib/compose');
-  const docker = require('./lib/docker')(lando.config.engineConfig);
-  const env = require('./lib/env');
-  const utils = require('./lib/utils');
+  const docker = new Landerode(lando.config.engineConfig, lando.Promise);
 
   // The path to the docker executable
   const DOCKER_EXECUTABLE = lando.config.dockerBin;
@@ -88,7 +89,7 @@ module.exports = lando => {
 
     // Return false if we get a non-zero response
     .catch(error => {
-      lando.log.debug('Engine is down with error %j', error);
+      lando.log.debug('Engine is down with error %s', error);
       return Promise.resolve(false);
     });
   };
@@ -412,7 +413,6 @@ module.exports = lando => {
    * return lando.engine.scan(compose);
    */
   const scan = data => verifyDaemonIsReady()
-
     // Inspect the container.
     .then(() => Promise.retry(() => {
       if (data.compose) {
@@ -534,22 +534,17 @@ module.exports = lando => {
      */
     .then(() => lando.events.emit('pre-engine-run', data))
 
-    // Run.
-    .then(() => Promise.each(utils.normalizer(data), datum => {
-      // Get the opts
-      const opts = datum.opts || {};
-
-      // There is weirdness starting up an exec via the Docker Remote API when
-      // accessing the daemon through a named pipe on Windows. Until that is
-      // resolved we currently shell the exec out to docker-compose
-      //
-      // See: https://github.com/apocas/docker-modem/issues/83
-      //
+    // There is weirdness starting up an exec via the Docker Remote API when
+    // accessing the daemon through a named pipe on Windows. Until that is
+    // resolved we currently shell the exec out to docker-compose
+    //
+    // See: https://github.com/apocas/docker-modem/issues/83
+    //
+    .then(() => Promise.each(utils.normalizer(data), ({id, cmd, compose, project, opts = {}} = {}) => {
       if (process.platform === 'win32') {
-        opts.cmd = datum.cmd;
-        return cc(compose.run(datum.compose, datum.project, opts));
+        return cc(compose.run(compose, project, _.merge({}, opts, {cmd})));
       } else {
-        return docker.run(datum.id, datum.cmd, opts);
+        return docker.run(id, cmd, opts);
       }
     }))
 
@@ -802,7 +797,7 @@ module.exports = lando => {
    *    return network.Name;
    *  });
    */
-  const getNetworks = docker.getNetworks;
+  const getNetworks = opts => docker.listNetworks(opts);
 
   /**
    * Gets a Docker network
@@ -817,7 +812,7 @@ module.exports = lando => {
    *  // Get the network
    *  return lando.engine.getNetwork('mynetwork')
    */
-  const getNetwork = docker.getNetwork;
+  const getNetwork = id => docker.getNetwork(id);
 
   /**
    * Creates a Docker network
@@ -827,14 +822,13 @@ module.exports = lando => {
    * @alias lando.engine.createNetwork
    * @see [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.
    * @param {String} name - The name of the networks
-   * @param {Object} [opts] - See API network docs above
    * @return {Promise} A Promise with inspect data.
    * @example
    *
    *  // Create the network
    *  return ando.engine.createNetwork('mynetwork')
    */
-  const createNetwork = docker.createNetwork;
+  const createNetwork = name => docker.createNet(name);
 
   // Return
   return {

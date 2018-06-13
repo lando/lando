@@ -178,7 +178,8 @@ module.exports = function(lando) {
 
             // If there is an error let's destroy and try to recreate
             .catch(function(error) {
-              lando.log.warn('Something is wrong with the proxy! %j', error);
+              lando.log.warn('Something is wrong with the proxy! %s', error);
+              lando.log.debug('Proxy error! %s', error.stack);
               lando.log.warn('Trying to take corrective action...');
               var id = [projectName, 'proxy', '1'].join('_');
               return lando.engine.destroy({id: id, opts: {force: true}})

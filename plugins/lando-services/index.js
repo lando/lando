@@ -299,10 +299,10 @@ module.exports = function(lando) {
 
           // Make sure we don't save a hash if our build fails
           .catch(function(error) {
-            lando.log.error('Looks like one of your build steps failed...');
+            lando.log.error('Looks like one of your build steps failed with %s', error);
             lando.log.warn('This **MAY** prevent your app from working');
             lando.log.warn('Check for errors above, fix them, and try again');
-            lando.log.verbose('Error %j', error);
+            lando.log.debug('Build error %s', error.stack);
           });
 
         }
