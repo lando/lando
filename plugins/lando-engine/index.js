@@ -1,27 +1,25 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var env = require('./lib/env.js');
-  var fs = lando.node.fs;
-  var ip = require('ip');
-  var path = require('path');
-  var url = require('url');
+  const _ = lando.node._;
+  const env = require('./lib/env.js');
+  const fs = lando.node.fs;
+  const ip = require('ip');
+  const path = require('path');
+  const url = require('url');
 
   // Add some config for the engine
-  lando.events.on('post-bootstrap', 1, function(lando) {
-
+  lando.events.on('post-bootstrap', 1, lando => {
     // Log
     lando.log.info('Configuring engine plugin');
 
     // Engine script directory
-    var esd = path.join(lando.config.userConfRoot, 'engine', 'scripts');
-    var host = (process.platform === 'linux') ? ip.address() : 'host.docker.internal';
+    const esd = path.join(lando.config.userConfRoot, 'engine', 'scripts');
+    const host = (process.platform === 'linux') ? ip.address() : 'host.docker.internal';
 
     // Build the default config object
-    var defaultEngineConfig = {
+    const defaultEngineConfig = {
       composeBin: env.getComposeExecutable(),
       composeVersion: '3.2',
       containerGlobalEnv: {},
@@ -29,7 +27,7 @@ module.exports = function(lando) {
       dockerBinDir: env.getDockerBinPath(),
       engineId: lando.user.getUid(),
       engineGid: lando.user.getGid(),
-      engineScriptsDir: esd
+      engineScriptsDir: esd,
     };
 
     // Merge defaults over the config, this allows users to set their own things
@@ -41,19 +39,17 @@ module.exports = function(lando) {
 
     // Set up the default engine config if needed
     if (!_.has(lando.config, 'engineConfig')) {
-
       // Set the defaults
       lando.config.engineConfig = {
         socketPath: '/var/run/docker.sock',
         host: '127.0.0.1',
-        port: 2376
+        port: 2376,
       };
 
       // Slight deviation on Windows due to npipe://
       if (process.platform === 'win32') {
         lando.config.engineConfig.socketPath = '//./pipe/docker_engine';
       }
-
     }
 
     // Set the docker host if its non-standard
@@ -62,13 +58,13 @@ module.exports = function(lando) {
         protocol: 'tcp',
         slashes: true,
         hostname: lando.config.engineConfig.host,
-        port: lando.config.engineConfig.port || 2376
+        port: lando.config.engineConfig.port || 2376,
       });
     }
 
     // Set the TLS/cert things if needed
     if (_.has(lando.config.engineConfig, 'certPath')) {
-      var certPath = lando.config.engineConfig.certPath;
+      const certPath = lando.config.engineConfig.certPath;
       lando.config.env.DOCKER_CERT_PATH = certPath;
       lando.config.env.DOCKER_TLS_VERIFY = 1;
       lando.config.engineConfig.ca = fs.readFileSync(path.join(certPath, 'ca.pem'));
@@ -85,11 +81,8 @@ module.exports = function(lando) {
     lando.config.env.LANDO_ENGINE_REMOTE_IP = host;
     lando.config.env.LANDO_ENGINE_SCRIPTS_DIR = lando.config.engineScriptsDir;
 
-
     // Add some docker compose protection on windows
-    if (process.platform === 'win32') {
-      lando.config.env.COMPOSE_CONVERT_WINDOWS_PATHS = 1;
-    }
+    if (process.platform === 'win32') lando.config.env.COMPOSE_CONVERT_WINDOWS_PATHS = 1;
 
     // Log it
     lando.log.verbose('Engine plugin configured with %j', lando.config);
@@ -98,22 +91,15 @@ module.exports = function(lando) {
     lando.utils.engine = require('./lib/utils');
 
     // Move our scripts over and set useful ENV we can use
-    var scriptFrom = path.join(__dirname, 'scripts');
-    var scriptTo = lando.config.engineScriptsDir;
-    lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
-    lando.utils.engine.moveConfig(scriptFrom, scriptTo);
-
+    const scriptSrc = path.join(__dirname, 'scripts');
+    const scriptDest = lando.config.engineScriptsDir;
+    lando.log.verbose('Copying config from %s to %s', scriptSrc, scriptDest);
+    lando.utils.engine.moveConfig(scriptSrc, scriptDest);
   });
 
   // Add some config for the engine
-  lando.events.on('post-bootstrap', 2, function(lando) {
-
-    // Log
+  lando.events.on('post-bootstrap', 2, lando => {
     lando.log.info('Initializing engine plugin');
-
-    // Add the engine
     lando.engine = require('./engine')(lando);
-
   });
-
 };

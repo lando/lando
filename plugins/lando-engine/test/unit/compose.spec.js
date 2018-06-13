@@ -16,15 +16,15 @@ const compose = require('./../../lib/compose');
 const myOpts = {
   'pull': true,
   'services': {
-    'appserver': {}
+    'appserver': {},
   },
   'app': {
-    'services': 'someappthathasnohopeofexisting'
+    'services': 'someappthathasnohopeofexisting',
   },
   'build': {},
   'cmd': [
     'drush',
-    'b'
+    'b',
   ],
   'entrypoint': [],
   'pre': 'drush',
@@ -33,12 +33,11 @@ const myOpts = {
   'noDeps': true,
   'timestamps': true,
   'follow': true,
-  'nocache': true
+  'nocache': true,
 };
 
 // This is the file we are testing
 describe('lando-engine.compose', () => {
-
   describe('#start', () => {
     it('#start should return an object.', () => {
       const startResult = compose.start(
@@ -168,5 +167,4 @@ describe('lando-engine.compose', () => {
       expect(removeResult).to.be.an('object');
     });
   });
-
 });

@@ -34,7 +34,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "lint": "eslint bin docs lib scripts test && eslint --config .eslintrc.old.json plugins",
+    "lint": "eslint bin docs lib plugins/lando-engine scripts test && eslint --config .eslintrc.old.json plugins/lando-app plugins/lando-core plugins/lando-events plugins/lando-init plugins/lando-networking plugins/lando-proxy plugins/lando-recipes plugins/lando-services plugins/lando-test plugins/lando-tooling",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release:major": "node ./scripts/bump.js --type=major",

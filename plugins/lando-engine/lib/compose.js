@@ -1,89 +1,43 @@
 'use strict';
 
 // Modules
-var _ = require('lodash');
-var esc = require('shell-escape');
-var utils = require('./utils');
+const _ = require('lodash');
+const esc = require('shell-escape');
+const utils = require('./utils');
 
 /*
  * Parse general docker options
  */
-var parseOptions = opts => {
-
+const parseOptions = (opts = {}) => {
   // Start flag collector
-  var flags = [];
+  const flags = [];
 
   // Return empty if we have no opts
-  if (!opts) {
-    return flags;
-  }
+  if (!opts) return flags;
 
-  // Inspect opts
-  if (opts.q) {
-    flags.push('-q');
-  }
-
-  // Daemon opts
-  if (opts.background) {
-    flags.push('-d');
-  }
-
-  // Recreate opts
-  if (opts.recreate) {
-    flags.push('--force-recreate');
-  }
-
-  // Remove orphans
-  if (opts.removeOrphans) {
-    flags.push('--remove-orphans');
-  }
-
-  // Cache opts
-  if (opts.nocache) {
-    flags.push('--no-cache');
-  }
-
-  // Pull opts
-  if (opts.pull) {
-    flags.push('--pull');
-  }
-
-  // Removal opts
-  if (opts.force) {
-    flags.push('--force');
-  }
-  if (opts.volumes) {
-    flags.push('-v');
-  }
-
-  // Log opts
-  if (opts.follow) {
-    flags.push('--follow');
-  }
-  if (opts.timestamps) {
-    flags.push('--timestamps');
-  }
-
-  // Run options
-  // Do not start linked containers
-  if (opts.noDeps) {
-    flags.push('--no-deps');
-  }
+  // Boolean opts
+  // @todo: probably just define a mapping object for this
+  if (opts.q) flags.push('-q');
+  if (opts.background) flags.push('-d');
+  if (opts.recreate) flags.push('--force-recreate');
+  if (opts.removeOrphans) flags.push('--remove-orphans');
+  if (opts.nocache) flags.push('--no-cache');
+  if (opts.pull) flags.push('--pull');
+  if (opts.force)flags.push('--force');
+  if (opts.volumes) flags.push('-v');
+  if (opts.follow) flags.push('--follow');
+  if (opts.timestamps) flags.push('--timestamps');
+  if (opts.noDeps) flags.push('--no-deps');
+  if (opts.rm) flags.push('--rm');
 
   // Change the entrypoint
   if (opts.entrypoint) {
     flags.push('--entrypoint');
     if (_.isArray(opts.entrypoint)) {
       flags.push(utils.escSpaces(opts.entrypoint.join(' ')));
-    }
-    else {
+    } else {
       flags.push(opts.entrypoint);
     }
-  }
-
-  // Remove the container after the run is done
-  if (opts.rm) {
-    flags.push('--rm');
   }
 
   // Add additional ENVs
@@ -102,21 +56,19 @@ var parseOptions = opts => {
 
   // Return any and all flags
   return flags;
-
 };
 
 /*
  * Helper to standardize construction of docker commands
  */
-var buildCmd = (compose, project, run, opts) => {
-
+const buildCmd = (compose, project, run, opts) => {
   // A project is required
   if (!project) {
     throw new Error('Need to give this composition a project name!');
   }
 
   // Kick off options
-  var cmd = ['--project-name', project];
+  let cmd = ['--project-name', project];
 
   // Export our compose stuff and add to commands
   _.forEach(compose, unit => {
@@ -145,93 +97,69 @@ var buildCmd = (compose, project, run, opts) => {
     }
     if (_.isArray(opts.entrypoint)) {
       cmd.push(utils.escSpaces(opts.cmd.join(' ')));
-    }
-    else {
+    } else {
       cmd = _.flatten(cmd.concat(opts.cmd));
     }
   }
 
   return cmd;
-
 };
 
 /*
  * You can do a create, rebuild and start with variants of this
  */
-exports.start = (compose, project, opts) => {
-
+exports.start = (compose, project, opts = {}) => {
   // Default options
-  var defaults = {
+  const defaults = {
     background: true,
     recreate: false,
-    removeOrphans: true
+    removeOrphans: true,
   };
-
-  // Get opts
-  var options = (opts) ? _.merge(defaults, opts) : defaults;
-
   // Up us
   return {
-    cmd: buildCmd(compose, project, 'up', options),
-    opts: {app: opts.app, mode: 'collect'}
+    cmd: buildCmd(compose, project, 'up', _.merge({}, defaults, opts)),
+    opts: {app: opts.app, mode: 'collect'},
   };
-
 };
 
 /*
  * Run docker compose pull
  */
-exports.getId = (compose, project, opts) => {
-
-  // Default options
-  var defaults = {
-    q: true
-  };
-
-  // Get opts
-  var options = (opts) ? _.merge(defaults, opts) : defaults;
-
-  // Return
-  return {
-    cmd: buildCmd(compose, project, 'ps', options),
-    opts: {app: opts.app}
-  };
-
-};
+exports.getId = (compose, project, opts = {}) => ({
+  cmd: buildCmd(compose, project, 'ps', _.merge({}, {q: true}, opts)),
+  opts: {app: opts.app},
+});
 
 /*
  * Run docker compose build
  */
 exports.build = (compose, project, opts) => {
-
   // Default options
-  var defaults = {
+  const defaults = {
     nocache: false,
-    pull: true
+    pull: true,
   };
 
   // Let's make sure we are building everything
   delete opts.services;
 
   // Get opts
-  var options = (opts) ? _.merge(defaults, opts) : defaults;
+  const options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Return
   return {
     cmd: buildCmd(compose, project, 'build', options),
-    opts: {app: opts.app, mode: 'collect'}
+    opts: {app: opts.app, mode: 'collect'},
   };
-
 };
 
 /*
  * Run docker compose pull
  */
 exports.pull = (compose, project, opts) => {
-
   // Let's get a list of all our services that need to be pulled
   // eg not built from a local dockerfile
-  var images = _.filter(_.keys(_.get(opts, 'app.services'), []), service => {
+  const images = _.filter(_.keys(_.get(opts, 'app.services'), []), service => {
     !_.has(opts.app.services, service + '.build');
   });
 
@@ -240,7 +168,7 @@ exports.pull = (compose, project, opts) => {
 
   return {
     cmd: buildCmd(compose, project, 'pull', opts),
-    opts: {app: opts.app, mode: 'collect'}
+    opts: {app: opts.app, mode: 'collect'},
   };
 };
 
@@ -249,18 +177,17 @@ exports.pull = (compose, project, opts) => {
  * @NOTE: we use kill for speeeeeedzzz
  */
 exports.stop = (compose, project, opts) => ({
-    cmd: buildCmd(compose, project, 'kill', opts),
-    opts: {app: opts.app, mode: 'collect'}
+  cmd: buildCmd(compose, project, 'kill', opts),
+  opts: {app: opts.app, mode: 'collect'},
 });
 
 /*
  * Run docker compose run
  */
 exports.run = (compose, project, opts) => {
-
   // Default options
-  var defaults = {
-    user: 'root'
+  const defaults = {
+    user: 'root',
   };
 
   // Make cmd is an array lets desconstruct and escape
@@ -277,66 +204,61 @@ exports.run = (compose, project, opts) => {
   opts.cmd = ['/bin/sh', '-c', opts.cmd];
 
   // Get opts
-  var options = (opts) ? _.merge(defaults, opts) : defaults;
+  const options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Build the command
   return {
     cmd: buildCmd(compose, project, 'exec', options),
-    opts: {app: opts.app, mode: 'attach'}
+    opts: {app: opts.app, mode: 'attach'},
   };
-
 };
 
 /*
  * Run docker compose logs
  */
 exports.logs = (compose, project, opts) => {
-
   // Default options
-  var defaults = {
+  const defaults = {
     follow: false,
-    timestamps: false
+    timestamps: false,
   };
 
   // Get opts
-  var options = (opts) ? _.merge(defaults, opts) : defaults;
+  const options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Build the command
   return {
     cmd: buildCmd(compose, project, 'logs', options),
-    opts: {app: opts.app, mode: 'attach'}
+    opts: {app: opts.app, mode: 'attach'},
   };
-
 };
 
 /*
  * Run docker compose remove
  */
-exports.remove = (compose, project, opts) => {
-
+exports.remove = (compose, project, opts = {}) => {
   // Default down options
-  var defaultDowns = {
+  const defaultDowns = {
     removeOrphans: true,
-    volumes: true
+    volumes: true,
   };
 
   // Default rm options
-  var defaultRms = {
+  const defaultRms = {
     force: true,
-    volumes: true
+    volumes: true,
   };
 
   // Get opts
-  var defaults = (opts.purge) ? defaultDowns : defaultRms;
-  var options = (opts) ? _.merge(defaults, opts) : defaults;
+  const defaults = (opts.purge) ? defaultDowns : defaultRms;
+  const options = (opts) ? _.merge(defaults, opts) : defaults;
 
   // Get subcommand
-  var subCmd = (opts.purge) ? 'down' : 'rm';
+  const subCmd = (opts.purge) ? 'down' : 'rm';
 
   // Build the command and run it
   return {
-    cmd: buildCmd(compose, project, subCmd, options),
-    opts: {app: opts.app, mode: 'collect'}
+    cmd: buildCmd(compose, project, subCmd, _.merge({}, options)),
+    opts: {app: opts.app, mode: 'collect'},
   };
-
 };
