@@ -277,6 +277,7 @@ module.exports = function(lando) {
     build.proxy = proxy(name);
     build.services = services(config);
     build.tooling = tooling(config);
+    build.volumes = ['vendor'];
 
     // Return the things
     return build;

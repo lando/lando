@@ -175,7 +175,11 @@ module.exports = function(lando) {
       ports: ['80'],
       volumes: [
         '/var/www/.composer',
-        '/usr/local/bin'
+        '/usr/local/bin',
+        'vendor:/app/vendor',
+        'drupal_core:/app/web/core',
+        'drupal_modules:/app/web/modules/contrib',
+        'drupal_themes:/app/web/themes/contrib',
       ],
       command: config.command.join(' '),
     };

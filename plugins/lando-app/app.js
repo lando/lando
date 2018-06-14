@@ -223,7 +223,13 @@ module.exports = function(lando) {
       // Docker compose version
       app.version = lando.config.composeVersion || '3.2';
       // Docker compose volumes
-      app.volumes = {};
+      app.volumes = {
+        'vendor': {},
+        'node_modules': {},
+        'drupal_core': {},
+        'drupal_modules': {},
+        'drupal_themes': {},
+      };
       // Set a unique id
       app.id = lando.node.hasher([
         _.get(app, 'name', 'unknown'),

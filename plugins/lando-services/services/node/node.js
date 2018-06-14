@@ -56,7 +56,8 @@ module.exports = function(lando) {
     var vols = [
       '/usr/local/bin',
       '/usr/local/share',
-      '/usr/local/lib/node_modules'
+      '/usr/local/lib/node_modules',
+        'node_modules:/app/node_modules',
     ];
 
     // Basic config
