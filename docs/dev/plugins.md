@@ -26,7 +26,7 @@ plugins:
   - my-plugin
 ```
 
-In the above example Lando will looks for a plugin in a folder called `my-plugin` in either the `node_modules` or `plugins` folders. For app plugins these locations will be relative to the app root directory. For global plugins the locations specified in `pluginDirs` in `lando config` will be scanned.
+In the above example Lando looks for a plugin in a folder called `my-plugin` in either the `node_modules` or `plugins` folders. For app plugins these locations will be relative to the app root directory. For global plugins the locations specified in `pluginDirs` in `lando config` will be scanned.
 
 If there are multiple occurences of the same-named plugin, Lando will use the one "closest to your app". This means that `lando` will priortize in-app plugins and then priortize the locations in `pluginDirs` from last to first.
 
