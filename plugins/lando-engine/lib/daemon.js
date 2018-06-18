@@ -12,6 +12,9 @@ const shell = new Shell();
  * Helper to determine up and down
  */
 const isUp = (log, cache, docker) => {
+  if (_.toString(shell.which(docker)).toUpperCase() !== docker.toUpperCase()) {
+    throw Error('Lando thinks you might need some help with your droid');
+  }
   // Auto return if cached and true
   if (cache.get('engineup') === true) return Promise.resolve(true);
   // Return true if we get a zero response and cache the result
@@ -37,9 +40,6 @@ module.exports = class LandoDaemon {
     this.events = events;
     this.log = log;
     this.context = context;
-    if (_.toString(shell.which(this.docker)).toUpperCase() !== this.docker.toUpperCase()) {
-      throw Error('Lando thinks you might need some help with your droid');
-    }
   };
 
   /*

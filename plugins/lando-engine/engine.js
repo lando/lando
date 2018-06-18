@@ -5,11 +5,22 @@ const _ = require('lodash');
 const compose = require('./lib/compose');
 const LandoDaemon = require('./lib/daemon');
 const Landerode = require('./lib/docker');
+const Promise = require('./../../lib/promise');
 const utils = require('./lib/utils');
+
+// Helper to run engine event commands
+// @todo: eventually merge this with eventCmd
+const engineEventCmd = (name, daemon, events, data, run) => daemon.up()
+  .then(() => events.emit(`pre-engine-${name}`, data))
+  .then(() => run(data))
+  .tap(() => events.emit(`post-engine-${name}`, data));
+
+// Helper to run engine commands
+const engineCmd = (daemon, data, run) => daemon.up()
+  .then(() => Promise.retry(() => run(data)));
 
 // We make this module into a function so we can pass in lando
 module.exports = lando => {
-  const Promise = lando.Promise;
   const docker = new Landerode(lando.config.engineConfig, lando.Promise);
   const daemon = new LandoDaemon(lando.cache, lando.events, lando.config.dockerBin, lando.log, lando.config.process);
 
@@ -36,7 +47,9 @@ module.exports = lando => {
    *   lando.log.info('Container %s is running: %s', 'myapp_web_1', isRunning);
    * });
    */
-  const isRunning = data => daemon.up().then(() => Promise.retry(() => docker.isRunning(data)));
+  const isRunning = data => engineCmd(daemon, data, data => {
+    return docker.isRunning(data);
+  });
 
   /**
    * Lists all the Lando containers. Optionally filter by app name.
@@ -55,7 +68,9 @@ module.exports = lando => {
    *   lando.log.info(container);
    * });
    */
-  const list = data => daemon.up().then(() => Promise.retry(() => docker.list(data)));
+  const list = data => engineCmd(daemon, data, data => {
+    return docker.list(data);
+  });
 
   /**
    * Checks whether a specific service exists or not.
@@ -100,26 +115,24 @@ module.exports = lando => {
    * // Check existence
    * return lando.engine.exists(compose);
    */
-  const exists = data => daemon.up()
-    // Exists
-    .then(() => Promise.retry(() => {
-      if (data.compose) {
-        return cc(compose.getId(data.compose, data.project, data.opts)).then(id => !_.isEmpty(id));
-      } else if (utils.getId(data)) {
-        // Get list of containers.
-        return list().then(containers => {
-          // Start an ID collector
-          let ids = [];
-          // Add all relevant ids
-          _.forEach(containers, container => {
-            ids.push(container.id);
-            ids.push(container.name);
-          });
-          // Search set of valid containers for data.
-          return _.includes(ids, utils.getId(data));
+  const exists = data => engineCmd(daemon, data, data => {
+    if (data.compose) {
+      return cc(compose.getId(data.compose, data.project, data.opts)).then(id => !_.isEmpty(id));
+    } else if (utils.getId(data)) {
+      // Get list of containers.
+      return list().then(containers => {
+        // Start an ID collector
+        let ids = [];
+        // Add all relevant ids
+        _.forEach(containers, container => {
+          ids.push(container.id);
+          ids.push(container.name);
         });
-      }
-    }));
+        // Search set of valid containers for data.
+        return _.includes(ids, utils.getId(data));
+      });
+    }
+  });
 
   /**
    * Returns comprehensive service metadata. This is a wrapper around `docker inspect`.
@@ -162,23 +175,21 @@ module.exports = lando => {
    * // scan the service
    * return lando.engine.scan(compose);
    */
-  const scan = data => daemon.up()
-    // Inspect the container.
-    .then(() => Promise.retry(() => {
-      if (data.compose) {
-        return cc(compose.getId(data.compose, data.project, data.opts)).then(id => {
-          if (!_.isEmpty(id)) {
-            // @todo: this assumes that the container we want
-            // is probably the first id returned. What happens if that is
-            // not true or we need other ids for this service?
-            const ids = id.split('\n');
-            return docker.inspect(_.trim(ids.shift()));
-          }
-        });
-      } else if (utils.getId(data)) {
-        return docker.inspect(utils.getId(data));
-      }
-    }));
+  const scan = data => engineCmd(daemon, data, data => {
+    if (data.compose) {
+      return cc(compose.getId(data.compose, data.project, data.opts)).then(id => {
+        if (!_.isEmpty(id)) {
+          // @todo: this assumes that the container we want
+          // is probably the first id returned. What happens if that is
+          // not true or we need other ids for this service?
+          const ids = id.split('\n');
+          return docker.inspect(_.trim(ids.shift()));
+        }
+      });
+    } else if (utils.getId(data)) {
+      return docker.inspect(utils.getId(data));
+    }
+  });
 
   /**
    * Starts the containers/services for the specified `compose` object.
@@ -211,7 +222,7 @@ module.exports = lando => {
    *
    * return lando.engine.start(app);
    */
-  const start = data => daemon.up()
+  const start = data => engineEventCmd('start', daemon, lando.events, data, data => {
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -219,19 +230,17 @@ module.exports = lando => {
      * @since 3.0.0
      * @event pre_engine_start
      */
-    .then(() => lando.events.emit('pre-engine-start', data))
-    // Start
-    .then(() => utils.normalizer(data)).each(d => Promise.retry(() => {
-      return cc(compose.start(d.compose, d.project, d.opts));
-    }))
-    /**
-     * Event that allows you to do some things after a `compose` Objects containers are
-     * started
-     *
-     * @since 3.0.0
-     * @event post_engine_start
-     */
-    .then(() => lando.events.emit('post-engine-start', data));
+     /**
+      * Event that allows you to do some things after a `compose` Objects containers are
+      * started
+      *
+      * @since 3.0.0
+      * @event post_engine_start
+      */
+    return Promise.each(utils.normalizer(data), datum => Promise.retry(() => {
+      return cc(compose.start(datum.compose, datum.project, datum.opts));
+    }));
+  });
 
   /**
    * Runs a command on a given service/container. This is a wrapper around `docker exec`.
@@ -274,7 +283,7 @@ module.exports = lando => {
    *
    * return lando.engine.run(bashRun);
    */
-  const run = data => daemon.up()
+  const run = data => engineEventCmd('run', daemon, lando.events, data, data => {
     /**
      * Event that allows you to do some things before a command is run on a particular
      * container.
@@ -282,22 +291,6 @@ module.exports = lando => {
      * @since 3.0.0
      * @event pre_engine_run
      */
-    .then(() => lando.events.emit('pre-engine-run', data))
-
-    // There is weirdness starting up an exec via the Docker Remote API when
-    // accessing the daemon through a named pipe on Windows. Until that is
-    // resolved we currently shell the exec out to docker-compose
-    //
-    // See: https://github.com/apocas/docker-modem/issues/83
-    //
-    .then(() => Promise.each(utils.normalizer(data), ({id, cmd, compose, project, opts = {}} = {}) => {
-      if (process.platform === 'win32') {
-        return cc(compose.run(compose, project, _.merge({}, opts, {cmd})));
-      } else {
-        return docker.run(id, cmd, opts);
-      }
-    }))
-
     /**
      * Event that allows you to do some things after a command is run on a particular
      * container.
@@ -305,10 +298,20 @@ module.exports = lando => {
      * @since 3.0.0
      * @event post_engine_run
      */
-    .tap(() => lando.events.emit('post-engine-run', data))
-
-    // Return our response
-    .tap(response => response);
+    return Promise.each(utils.normalizer(data), ({id, cmd, compose, project, opts = {}} = {}) => {
+      // There is weirdness starting up an exec via the Docker Remote API when
+      // accessing the daemon through a named pipe on Windows. Until that is
+      // resolved we currently shell the exec out to docker-compose
+      //
+      // See: https://github.com/apocas/docker-modem/issues/83
+      //
+      if (process.platform === 'win32') {
+        return cc(compose.run(compose, project, _.merge({}, opts, {cmd})));
+      } else {
+        return docker.run(id, cmd, opts);
+      }
+    });
+  });
 
   /**
    * Stops containers for a `compose` object or a particular container.
@@ -353,25 +356,23 @@ module.exports = lando => {
    * return lando.engine.stop(app);
    *
    */
-  const stop = data => daemon.up()
+  const stop = data => engineEventCmd('stop', daemon, lando.events, data, data => {
     /**
      * Event that allows you to do some things before some containers are stopped.
      *
      * @since 3.0.0
      * @event pre_engine_stop
      */
-    .then(() => lando.events.emit('pre-engine-stop', data))
-    // Iterate data
-    .then(() => utils.normalizer(data)).each(d => Promise.retry(() => {
-      return (d.compose) ? cc(compose.stop(d.compose, d.project, d.opts)) : docker.stop(utils.getId(d));
-    }))
     /**
      * Event that allows you to do some things after some containers are stopped.
      *
      * @since 3.0.0
      * @event post_engine_stop
      */
-    .then(() => lando.events.emit('post-engine-stop', data));
+    return Promise.each(utils.normalizer(data), d => {
+      return (d.compose) ? cc(compose.stop(d.compose, d.project, d.opts)) : docker.stop(utils.getId(d));
+    });
+  });
 
   /**
    * Removes containers for a `compose` object or a particular container.
@@ -421,25 +422,23 @@ module.exports = lando => {
    * return lando.engine.destroy(app);
    *
    */
-  const destroy = data => daemon.up()
+  const destroy = data => engineEventCmd('destroy', daemon, lando.events, data, data => {
     /**
      * Event that allows you to do some things before some containers are destroyed.
      *
      * @since 3.0.0
      * @event pre_engine_destroy
      */
-    .then(() => lando.events.emit('pre-engine-destroy', data))
-    // Iterate data
-    .then(() => utils.normalizer(data)).each(d => Promise.retry(() => {
-      return (d.compose) ? cc(compose.remove(d.compose, d.project, d.opts)) : docker.remove(utils.getId(d), d.opts);
-    }))
     /**
      * Event that allows you to do some things after some containers are destroyed.
      *
      * @since 3.0.0
      * @event post_engine_destroy
      */
-    .then(() => lando.events.emit('post-engine-destroy', data));
+     return Promise.each(utils.normalizer(data), d => {
+       return (d.compose) ? cc(compose.remove(d.compose, d.project, d.opts)) : docker.remove(utils.getId(d), d.opts);
+     });
+  });
 
   /**
    * Returns logs for a given `compose` object
@@ -460,9 +459,11 @@ module.exports = lando => {
    * // Get logs for an app
    * return lando.engine.logs(app);
    */
-  const logs = data => daemon.up()
-    // Iterate data
-    .then(() => utils.normalizer(data)).each(d => Promise.retry(() => cc(compose.logs(d.compose, d.project, d.opts))));
+  const logs = data => engineCmd(daemon, data, data => {
+    return Promise.each(utils.normalizer(data), datum => {
+      return cc(compose.logs(datum.compose, datum.project, datum.opts));
+    });
+  });
 
   /**
    * Tries to pull the services for a `compose` object, and then tries to build them if they are found
@@ -487,7 +488,7 @@ module.exports = lando => {
    * // Build the containers for an `app` object
    * return lando.engine.build(app);
    */
-  const build = data => daemon.up()
+  const build = data => engineEventCmd('destroy', daemon, lando.events, data, data => {
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -495,16 +496,6 @@ module.exports = lando => {
      * @since 3.0.0
      * @event pre_engine_build
      */
-    .then(() => lando.events.emit('pre-engine-build', data))
-    // Try to pull the images first
-    // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
-    .then(() => utils.normalizer(data)).each(datum => Promise.retry(() => {
-      return cc(compose.pull(datum.compose, datum.project, datum.opts));
-    }))
-    // Then try to build
-    .then(() => utils.normalizer(data)).each(datum => Promise.retry(() => {
-      return cc(compose.build(datum.compose, datum.project, datum.opts));
-    }))
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -512,7 +503,15 @@ module.exports = lando => {
      * @since 3.0.0
      * @event post_engine_build
      */
-    .then(() => lando.events.emit('post-engine-build', data));
+    // Try to pull the images first
+    // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
+    return Promise.each(utils.normalizer(data), datum => {
+      return cc(compose.pull(datum.compose, datum.project, datum.opts));
+    })
+    .then(() => Promise.each(utils.normalizer(data), datum => {
+      return cc(compose.build(datum.compose, datum.project, datum.opts));
+    }));
+  });
 
   // Return
   return {
