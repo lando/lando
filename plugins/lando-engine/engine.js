@@ -19,58 +19,20 @@ const engineEventCmd = (name, daemon, events, data, run) => daemon.up()
 const engineCmd = (daemon, data, run) => daemon.up()
   .then(() => Promise.retry(() => run(data)));
 
+// Helper to retry each
+const retryEach = (data, run) => Promise.each(utils.normalizer(data), datum => Promise.retry(() => run(datum)));
+
+// Helper for compose commands
+const dc = (shell, bin, cmd, datum) => {
+  const run = compose[cmd](datum.compose, datum.project, datum.opts);
+  return shell.sh([bin].concat(run.command), run.opts);
+};
+
 // We make this module into a function so we can pass in lando
 module.exports = lando => {
   const docker = new Landerode(lando.config.engineConfig, lando.Promise);
   const daemon = new LandoDaemon(lando.cache, lando.events, lando.config.dockerBin, lando.log, lando.config.process);
-
-  // The path to the docker executable
-  const COMPOSE_EXECUTABLE = lando.config.composeBin;
-
-  // Helpers
-  const cc = run => lando.shell.sh([COMPOSE_EXECUTABLE].concat(run.cmd), run.opts);
-
-  /**
-   * Determines whether a container is running or not
-   *
-   * @since 3.0.0
-   * @alias lando.engine.isRunning
-   * @param {String} data - An ID that docker can recognize such as the container id or name.
-   * @return {Promise} A Promise with a boolean of whether the container is running or not
-   * @example
-   *
-   * // Check to see if our app's web service is running
-   * return lando.engine.isRunning('myapp_web_1')
-   *
-   * // Log the running status of the container
-   * .then(isRunning) {
-   *   lando.log.info('Container %s is running: %s', 'myapp_web_1', isRunning);
-   * });
-   */
-  const isRunning = data => engineCmd(daemon, data, data => {
-    return docker.isRunning(data);
-  });
-
-  /**
-   * Lists all the Lando containers. Optionally filter by app name.
-   *
-   * @since 3.0.0
-   * @alias lando.engine.list
-   * @param {String} [data] - An appname to filter the containers by.
-   * @return {Promise} A Promise with an Array of container Objects.
-   * @example
-   *
-   * // List all the lando containers
-   * return lando.engine.list()
-   *
-   * // Log each container
-   * .each(function(container) {
-   *   lando.log.info(container);
-   * });
-   */
-  const list = data => engineCmd(daemon, data, data => {
-    return docker.list(data);
-  });
+  const cc = (cmd, datum) => dc(lando.shell.sh, lando.config.composeBin, cmd, datum);
 
   /**
    * Checks whether a specific service exists or not.
@@ -117,7 +79,7 @@ module.exports = lando => {
    */
   const exists = data => engineCmd(daemon, data, data => {
     if (data.compose) {
-      return cc(compose.getId(data.compose, data.project, data.opts)).then(id => !_.isEmpty(id));
+      return cc('getId', datum).then(id => !_.isEmpty(id));
     } else if (utils.getId(data)) {
       // Get list of containers.
       return list().then(containers => {
@@ -177,7 +139,7 @@ module.exports = lando => {
    */
   const scan = data => engineCmd(daemon, data, data => {
     if (data.compose) {
-      return cc(compose.getId(data.compose, data.project, data.opts)).then(id => {
+      return cc(getId, data).then(id => {
         if (!_.isEmpty(id)) {
           // @todo: this assumes that the container we want
           // is probably the first id returned. What happens if that is
@@ -237,9 +199,7 @@ module.exports = lando => {
       * @since 3.0.0
       * @event post_engine_start
       */
-    return Promise.each(utils.normalizer(data), datum => Promise.retry(() => {
-      return cc(compose.start(datum.compose, datum.project, datum.opts));
-    }));
+    return retryEach(data, datum => cc('start', datum));
   });
 
   /**
@@ -306,7 +266,7 @@ module.exports = lando => {
       // See: https://github.com/apocas/docker-modem/issues/83
       //
       if (process.platform === 'win32') {
-        return cc(compose.run(compose, project, _.merge({}, opts, {cmd})));
+        return cc('run', {compose, project, opts: _.merge({}, opts, {cmd})});
       } else {
         return docker.run(id, cmd, opts);
       }
@@ -369,9 +329,7 @@ module.exports = lando => {
      * @since 3.0.0
      * @event post_engine_stop
      */
-    return Promise.each(utils.normalizer(data), d => {
-      return (d.compose) ? cc(compose.stop(d.compose, d.project, d.opts)) : docker.stop(utils.getId(d));
-    });
+    return retryEach(data, d => (d.compose) ? cc('stop', d) : docker.stop(utils.getId(d)));
   });
 
   /**
@@ -435,34 +393,7 @@ module.exports = lando => {
      * @since 3.0.0
      * @event post_engine_destroy
      */
-     return Promise.each(utils.normalizer(data), d => {
-       return (d.compose) ? cc(compose.remove(d.compose, d.project, d.opts)) : docker.remove(utils.getId(d), d.opts);
-     });
-  });
-
-  /**
-   * Returns logs for a given `compose` object
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.logs
-   * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to get logs for more than one set of services.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} [data.opts] - Options on how to build the `compose` objects containers.
-   * @param {Boolean} [data.opts.follow=false] - Whether to follow the log. Works like `tail -f`.
-   * @param {Boolean} [data.opts.timestamps=true] - Show timestamps in log.
-   * @return {Promise} A Promise.
-   * @example
-   *
-   * // Get logs for an app
-   * return lando.engine.logs(app);
-   */
-  const logs = data => engineCmd(daemon, data, data => {
-    return Promise.each(utils.normalizer(data), datum => {
-      return cc(compose.logs(datum.compose, datum.project, datum.opts));
-    });
+     return retryEach(data, d => (d.compose) ? cc('remove', d) : docker.remove(utils.getId(d), d.opts));
   });
 
   /**
@@ -505,10 +436,10 @@ module.exports = lando => {
      */
     // Try to pull the images first
     // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
-    return Promise.each(utils.normalizer(data), datum => {
+    return retryEach(data, datum => {
       return cc(compose.pull(datum.compose, datum.project, datum.opts));
     })
-    .then(() => Promise.each(utils.normalizer(data), datum => {
+    .then(() => retryEach(data, datum => {
       return cc(compose.build(datum.compose, datum.project, datum.opts));
     }));
   });
@@ -583,9 +514,65 @@ module.exports = lando => {
      *  });
      */
     getNetworks: opts => docker.listNetworks(opts),
-    isRunning: isRunning,
-    list: list,
-    logs: logs,
+
+    /**
+     * Determines whether a container is running or not
+     *
+     * @since 3.0.0
+     * @alias lando.engine.isRunning
+     * @param {String} data - An ID that docker can recognize such as the container id or name.
+     * @return {Promise} A Promise with a boolean of whether the container is running or not
+     * @example
+     *
+     * // Check to see if our app's web service is running
+     * return lando.engine.isRunning('myapp_web_1')
+     *
+     * // Log the running status of the container
+     * .then(isRunning) {
+     *   lando.log.info('Container %s is running: %s', 'myapp_web_1', isRunning);
+     * });
+     */
+    isRunning: data => engineCmd(daemon, data, data => docker.isRunning(data)),
+
+    /**
+     * Lists all the Lando containers. Optionally filter by app name.
+     *
+     * @since 3.0.0
+     * @alias lando.engine.list
+     * @param {String} [data] - An appname to filter the containers by.
+     * @return {Promise} A Promise with an Array of container Objects.
+     * @example
+     *
+     * // List all the lando containers
+     * return lando.engine.list()
+     *
+     * // Log each container
+     * .each(function(container) {
+     *   lando.log.info(container);
+     * });
+     */
+    list: data => engineCmd(daemon, data, data => docker.list(data)),
+
+    /**
+     * Returns logs for a given `compose` object
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.logs
+     * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to get logs for more than one set of services.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] - Options on how to build the `compose` objects containers.
+     * @param {Boolean} [data.opts.follow=false] - Whether to follow the log. Works like `tail -f`.
+     * @param {Boolean} [data.opts.timestamps=true] - Show timestamps in log.
+     * @return {Promise} A Promise.
+     * @example
+     *
+     * // Get logs for an app
+     * return lando.engine.logs(app);
+     */
+    logs: data => engineCmd(daemon, data, data => retryEach(data, datum => cc('logs', datum))),
     run: run,
     scan: scan,
     start: start,
