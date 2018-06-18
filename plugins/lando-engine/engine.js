@@ -2,7 +2,7 @@
 
 // Plugin modules
 const compose = require('./lib/compose');
-const env = require('./lib/env');
+const daemon = require('./lib/daemon');
 const Landerode = require('./lib/docker');
 const utils = require('./lib/utils');
 
@@ -10,7 +10,6 @@ const utils = require('./lib/utils');
 module.exports = lando => {
   // Lando Modules
   const _ = lando.node._;
-  const log = lando.log;
   const Promise = lando.Promise;
   const docker = new Landerode(lando.config.engineConfig, lando.Promise);
 
@@ -18,9 +17,7 @@ module.exports = lando => {
   const DOCKER_EXECUTABLE = lando.config.dockerBin;
   const COMPOSE_EXECUTABLE = lando.config.composeBin;
 
-  /*
-   * Take compose command and opts and run it
-   */
+  // Runs a docker compose command with options
   const cc = run => lando.shell.sh([COMPOSE_EXECUTABLE].concat(run.cmd), run.opts);
 
   /**
@@ -30,22 +27,7 @@ module.exports = lando => {
    * @alias lando.engine.isInstalled
    * @return {Promise} A Promise with a boolean containing the installed status.
    */
-  const isInstalled = () => {
-    // Return whether we have the engine executable in the expected location
-    const which = _.toString(lando.shell.which(DOCKER_EXECUTABLE));
-    if (which.toUpperCase() === DOCKER_EXECUTABLE.toUpperCase()) {
-      return Promise.resolve(true);
-    }
-
-    // We are not installed
-    return Promise.resolve(false);
-  };
-
-  /*
-   * Throws an error if the provider is not installed.
-   */
-  const verifyDaemonInstalled = () => isInstalled()
-    // Throw error if daemon isn't installed.
+  const isInstalled = () => daemon.isInstalled(DOCKER_EXECUTABLE)
     .then(isInstalled => {
       if (!isInstalled) throw Error('Lando thinks you might need some help with your droid');
     });
@@ -70,30 +52,7 @@ module.exports = lando => {
    *   }
    * });
    */
-  const isUp = () => {
-    // Cache key
-    const key = 'engineup';
-
-    // Check out cache for upness first
-    if (lando.cache.get(key) === true) return Promise.resolve(true);
-
-    // Whitelist this in windows for now
-    return lando.shell.sh([DOCKER_EXECUTABLE, 'info'])
-
-    // Return true if we get a zero response and cache the result
-    .then(() => {
-      lando.log.debug('Engine is up.');
-      lando.cache.set(key, true, {ttl: 5});
-      return Promise.resolve(true);
-    })
-
-    // Return false if we get a non-zero response
-    .catch(error => {
-      lando.log.debug('Engine is down with error %s', error);
-      return Promise.resolve(false);
-    });
-  };
-
+  const isUp = () => daemon.isUp(lando, DOCKER_EXECUTABLE);
 
   /**
    * Tries to activate the docker engine/daemon.
@@ -124,7 +83,7 @@ module.exports = lando => {
    *  });
    * });
    */
-  const up = () => verifyDaemonInstalled()
+  const up = () => isInstalled()
     /**
      * Event that allows you to do some things before the docker engine is booted
      * up.
@@ -133,46 +92,7 @@ module.exports = lando => {
      * @event pre_engine_up
      */
     .then(() => lando.events.emit('pre-engine-up'))
-
-    // Bring the provider up.
-    .then(() => {
-      // Automatically return true if we are in the GUI and on linux because
-      // this requires SUDO and because the daemon should always be running on nix
-      if (lando.config.process !== 'node' && process.platform === 'linux') {
-        return Promise.resolve(true);
-      }
-
-      // Get status
-      return isUp()
-
-      // Only start if we aren't already
-      .then(isUp => {
-        if (!isUp) {
-          log.warn('Whoops! Lando has detected that Docker is not turned on!');
-          log.warn('Give us a few moments while we try to start it up for you');
-          const opts = (process.platform === 'win32') ? {detached: true} : {};
-          return lando.shell.sh(env.buildDockerCmd('start'), opts);
-        }
-      })
-
-      // Wait for the daemon to respond
-      .retry(() => {
-        log.warn('Docker has started but we are waiting for a connection');
-        log.warn('You should be good to go momentarily!');
-        return lando.shell.sh([DOCKER_EXECUTABLE, 'info'], {mode: 'collect'});
-      }, {max: 25, backoff: 1000})
-
-      // Engine is good!
-      .then(() => {
-        log.info('Engine activated.');
-      })
-
-      // Wrap errors.
-      .catch(err => {
-        throw new Error(err, 'Error bringing daemon up.');
-      });
-    })
-
+    .then(() => daemon.up(lando, DOCKER_EXECUTABLE))
     /**
      * Event that allows you to do some things after the docker engine is booted
      * up.
@@ -196,7 +116,7 @@ module.exports = lando => {
    * @fires post_engine_down
    * @return {Promise} A Promise.
    */
-  const down = () => verifyDaemonInstalled()
+  const down = () => isInstalled()
     /**
      * Event that allows you to do some things after the docker engine is booted
      * up.
@@ -205,44 +125,7 @@ module.exports = lando => {
      * @event pre_engine_down
      */
     .then(() => lando.events.emit('pre-engine-down'))
-
-    // Bring the provider down.
-    .then(() => {
-      // Automatically return true if we are in the GUI and on linux because
-      // this requires SUDO and because the daemon should always be running on nix
-      if (lando.config.process !== 'node' && process.platform === 'linux') {
-        return Promise.resolve(true);
-      }
-
-      // Automatically return if we are on Windows or Darwin because we don't
-      // ever want to automatically turn the VM off since users might be using
-      // D4M/W for other things.
-      //
-      // For now we will be shutting down any services via relevant event hooks
-      // that bind to critical/common ports on 127.0.0.1/localhost e.g. 80/443/53
-      //
-      // @todo: When/if we can run our own isolated docker daemon we can change
-      // this back.
-      if (process.platform === 'win32' || process.platform === 'darwin') {
-        return Promise.resolve(true);
-      }
-
-      // Get provider status.
-      return exports.isUp()
-
-      // Shut provider down if its status is running.
-      .then(isUp => {
-        if (isUp) {
-          return lando.shell.sh(env.buildDockerCmd('stop'), {mode: 'collect'});
-        }
-      })
-
-      // Wrap errors.
-      .catch(err => {
-        throw new Error(err, 'Error while shutting down.');
-      });
-    })
-
+    .then(() => daemon.down(lando, DOCKER_EXECUTABLE))
     /**
      * Event that allows you to do some things after the docker engine is booted
      * up.
@@ -252,22 +135,17 @@ module.exports = lando => {
      */
     .then(() => lando.events.emit('post-engine-down'));
 
-  /*
-   * Starts daemon if not up.
+  /**
+   * Determines whether the docker engine is ready or not
+   *
+   * @since 3.0.0
+   * @alias lando.engine.isReady
+   * @return {Promise} A Promise with a boolean containing the installed status.
    */
-  const verifyDaemonUp = () => isUp()
-    // Turn on provider if needed
-    .then(isUp => {
+  const isReady = () => isInstalled()
+    .then(() => isUp()).then(isUp => {
       if (!isUp) return up();
     });
-
-
-  /*
-   * Verify that the daemon is ready.
-   */
-  const verifyDaemonIsReady = () => verifyDaemonInstalled()
-    // Verify provider is up.
-    .then(verifyDaemonUp);
 
   /**
    * Determines whether a container is running or not
@@ -286,7 +164,7 @@ module.exports = lando => {
    *   lando.log.info('Container %s is running: %s', 'myapp_web_1', isRunning);
    * });
    */
-  const isRunning = data => verifyDaemonIsReady().then(() => Promise.retry(() => docker.isRunning(data)));
+  const isRunning = data => isReady().then(() => Promise.retry(() => docker.isRunning(data)));
 
   /**
    * Lists all the Lando containers. Optionally filter by app name.
@@ -305,7 +183,7 @@ module.exports = lando => {
    *   lando.log.info(container);
    * });
    */
-  const list = data => verifyDaemonIsReady().then(() => Promise.retry(() => docker.list(data)));
+  const list = data => isReady().then(() => Promise.retry(() => docker.list(data)));
 
   /**
    * Checks whether a specific service exists or not.
@@ -350,7 +228,7 @@ module.exports = lando => {
    * // Check existence
    * return lando.engine.exists(compose);
    */
-  const exists = data => verifyDaemonIsReady()
+  const exists = data => isReady()
     // Exists
     .then(() => Promise.retry(() => {
       if (data.compose) {
@@ -412,7 +290,7 @@ module.exports = lando => {
    * // scan the service
    * return lando.engine.scan(compose);
    */
-  const scan = data => verifyDaemonIsReady()
+  const scan = data => isReady()
     // Inspect the container.
     .then(() => Promise.retry(() => {
       if (data.compose) {
@@ -461,7 +339,7 @@ module.exports = lando => {
    *
    * return lando.engine.start(app);
    */
-  const start = data => verifyDaemonIsReady()
+  const start = data => isReady()
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -524,7 +402,7 @@ module.exports = lando => {
    *
    * return lando.engine.run(bashRun);
    */
-  const run = data => verifyDaemonIsReady()
+  const run = data => isReady()
     /**
      * Event that allows you to do some things before a command is run on a particular
      * container.
@@ -603,7 +481,7 @@ module.exports = lando => {
    * return lando.engine.stop(app);
    *
    */
-  const stop = data => verifyDaemonIsReady()
+  const stop = data => isReady()
     /**
      * Event that allows you to do some things before some containers are stopped.
      *
@@ -671,7 +549,7 @@ module.exports = lando => {
    * return lando.engine.destroy(app);
    *
    */
-  const destroy = data => verifyDaemonIsReady()
+  const destroy = data => isReady()
     /**
      * Event that allows you to do some things before some containers are destroyed.
      *
@@ -710,7 +588,7 @@ module.exports = lando => {
    * // Get logs for an app
    * return lando.engine.logs(app);
    */
-  const logs = data => verifyDaemonIsReady()
+  const logs = data => isReady()
     // Iterate data
     .then(() => utils.normalizer(data)).each(d => Promise.retry(() => cc(compose.logs(d.compose, d.project, d.opts))));
 
@@ -737,7 +615,7 @@ module.exports = lando => {
    * // Build the containers for an `app` object
    * return lando.engine.build(app);
    */
-  const build = data => verifyDaemonIsReady()
+  const build = data => isReady()
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -834,6 +712,7 @@ module.exports = lando => {
   return {
     up: up,
     isInstalled: isInstalled,
+    isReady: isReady,
     isUp: isUp,
     down: down,
     isRunning: isRunning,
