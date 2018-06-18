@@ -98,47 +98,46 @@ exports.moveConfig = (src, dest) => {
 
 /*
  * Helper to handle docker run config
- * @todo: this needs to be better
  */
-exports.runConfig = (cmd, opts = {}, mode = 'collect') => {
+exports.runConfig = (cmd, {pre, env = [], user = 'root', detach = false} = {}, mode = 'collect') => {
   // Force some things things if we are in a non node context
   if (process.lando !== 'node') mode = 'collect';
   // Make cmd is an array lets desconstruct and escape
   if (_.isArray(cmd)) cmd = shell.escSpaces(shell.esc(cmd), 'linux');
   // Add in any prefix commands
-  if (_.has(opts, 'pre')) cmd = [opts.pre, cmd].join('&&');
+  if (!_.isEmpty(pre)) cmd = [pre, cmd].join('&&');
 
   // Build the exec opts
   const execOpts = {
-    AttachStdin: opts.attachStdin || mode === 'attach',
-    AttachStdout: opts.attachStdout || true,
-    AttachStderr: opts.attachStderr || true,
+    AttachStdin: mode === 'attach',
+    AttachStdout: true,
+    AttachStderr: true,
     Cmd: ['/bin/sh', '-c', cmd],
-    Env: opts.env || [],
-    DetachKeys: opts.detachKeys || 'ctrl-p,ctrl-q',
-    Tty: opts.tty || process.lando !== 'node',
-    User: opts.user || 'root',
+    Env: env,
+    DetachKeys: 'ctrl-p,ctrl-q',
+    Tty: process.lando === 'node',
+    User: user,
   };
   // Start opts
   const startOpts = {
-    hijack: opts.hijack || false,
+    hijack: false,
     stdin: execOpts.AttachStdin,
-    Detach: false,
+    Detach: detach,
     Tty: execOpts.Tty,
   };
 
-  return {execOpts, startOpts};
+  return {execOpts, startOpts, attached: execOpts.AttachStdin};
 };
 
 /*
  * Helper to handle docker run stream
  */
-exports.runStream = (stream, mode = 'collect') => {
+exports.runStream = (stream, attached = false) => {
   // Pipe stream to nodes process
   stream.pipe(process.stdout);
 
   // Attaching mode handling
-  if (mode === 'attach') {
+  if (attached) {
     // Set a more realistic max listeners considering what we are doing here
     process.stdin._maxListeners = 15;
     // Restart stdin with correct encoding
@@ -165,7 +164,7 @@ exports.runStream = (stream, mode = 'collect') => {
     // Close the stream
     stream.on('end', () => {
       // If we were attached to our processes stdin then close that down
-      if (mode === 'attach') {
+      if (attached) {
         if (process.stdin.setRawMode) process.stdin.setRawMode(false);
         process.stdin.pause();
       }
