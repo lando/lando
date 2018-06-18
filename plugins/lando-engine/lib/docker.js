@@ -87,7 +87,7 @@ module.exports = class Landerode extends Dockerode {
    */
   run(id, cmd, opts = {}) {
     // Get our options;
-    const {execOpts, startOpts, mode} = utils.runConfig(cmd, opts);
+    const {execOpts, startOpts, mode} = utils.runConfig(cmd, opts, opts.mode);
     // Setup and start the exec
     return this.getContainer(id).exec(execOpts).then(exec => exec.start(startOpts)
     // Cross the streams

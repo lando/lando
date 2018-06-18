@@ -56,6 +56,8 @@ module.exports = function(lando) {
             }
           };
 
+          console.log(run);
+
           // Let's check to see if the app has been started
           return lando.app.isRunning(app)
 

@@ -28,31 +28,27 @@ exports.getId = c => c.cid || c.id || c.containerName || c.containerID || c.name
 /*
  * Extracts some docker inspect data and translates it into useful lando things
  */
-exports.toLandoContainer = dockerContainer => {
+exports.toLandoContainer = ({Labels, Id}) => {
   // Get name of docker container.
-  const app = dockerContainer.Labels['com.docker.compose.project'];
-  const service = dockerContainer.Labels['com.docker.compose.service'];
-  const num = dockerContainer.Labels['com.docker.compose.container-number'];
-  const run = dockerContainer.Labels['com.docker.compose.oneoff'];
-  const lando = dockerContainer.Labels['io.lando.container'] || false;
-  const special = dockerContainer.Labels['io.lando.service-container'] || false;
-  const id = dockerContainer.Labels['io.lando.id'] || 'unknown';
+  const app = Labels['com.docker.compose.project'];
+  const service = Labels['com.docker.compose.service'];
+  const num = Labels['com.docker.compose.container-number'];
+  const run = Labels['com.docker.compose.oneoff'];
+  const lando = Labels['io.lando.container'];
+  const special = Labels['io.lando.service-container'];
 
   // Add 'run' the service if this is a oneoff container
   if (run === 'True') service = [service, 'run'].join('_');
 
-  // Make sure we have a boolean
-  const isSpecial = (special === 'TRUE') ? true : false;
-
   // Build generic container.
   return {
-    id: dockerContainer.Id,
+    id: Id,
     service: service,
     name: [app, service, num].join('_'),
-    app: (!isSpecial) ? app : undefined,
-    kind: (!isSpecial) ? 'app' : 'service',
+    app: (special !== 'TRUE') ? app : undefined,
+    kind: (special !== 'TRUE') ? 'app' : 'service',
     lando: (lando === 'TRUE') ? true : false,
-    instance: id,
+    instance: Labels['io.lando.id'] || 'unknown',
   };
 };
 
@@ -104,16 +100,9 @@ exports.moveConfig = (src, dest) => {
  * Helper to handle docker run config
  * @todo: this needs to be better
  */
-exports.runConfig = (cmd, opts = {}) => {
-  // Discover the mode
-  const mode = (opts.mode) ? opts.mode : 'collect';
-  const defaultTty = true;
+exports.runConfig = (cmd, opts = {}, mode = 'collect') => {
   // Force some things things if we are in a non node context
-  if (process.lando !== 'node') {
-    mode = 'collect';
-    defaultTty = false;
-  }
-
+  if (process.lando !== 'node') mode = 'collect';
   // Make cmd is an array lets desconstruct and escape
   if (_.isArray(cmd)) cmd = shell.escSpaces(shell.esc(cmd), 'linux');
   // Add in any prefix commands
@@ -121,33 +110,28 @@ exports.runConfig = (cmd, opts = {}) => {
 
   // Build the exec opts
   const execOpts = {
-    AttachStdin: opts.attachStdin || false,
+    AttachStdin: opts.attachStdin || mode === 'attach',
     AttachStdout: opts.attachStdout || true,
     AttachStderr: opts.attachStderr || true,
     Cmd: ['/bin/sh', '-c', cmd],
     Env: opts.env || [],
     DetachKeys: opts.detachKeys || 'ctrl-p,ctrl-q',
-    Tty: opts.tty || defaultTty,
+    Tty: opts.tty || process.lando !== 'node',
     User: opts.user || 'root',
   };
-
   // Start opts
   const startOpts = {
     hijack: opts.hijack || false,
     stdin: execOpts.AttachStdin,
     Detach: false,
-    Tty: defaultTty,
+    Tty: execOpts.Tty,
   };
-
-  // Force attach stdin if we are in attach mode
-  if (mode === 'attach') execOpts.AttachStdin = true;
 
   return {execOpts, startOpts};
 };
 
 /*
  * Helper to handle docker run stream
- * @todo: this needs to be better
  */
 exports.runStream = (stream, mode = 'collect') => {
   // Pipe stream to nodes process
@@ -161,9 +145,7 @@ exports.runStream = (stream, mode = 'collect') => {
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
     // Make sure rawMode matches up
-    if (process.stdin.setRawMode) {
-      process.stdin.setRawMode(true);
-    }
+    if (process.stdin.setRawMode) process.stdin.setRawMode(true);
     // Send our processes stdin into the container
     process.stdin.pipe(stream);
   }
