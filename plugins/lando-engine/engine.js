@@ -2,7 +2,7 @@
 
 // Modules
 const _ = require('lodash');
-const compose = require('./lib/compose');
+const dockerCompose = require('./lib/compose');
 const LandoDaemon = require('./lib/daemon');
 const Landerode = require('./lib/docker');
 const Promise = require('./../../lib/promise');
@@ -19,434 +19,101 @@ const engineEventCmd = (name, daemon, events, data, run) => daemon.up()
 const engineCmd = (daemon, data, run) => daemon.up()
   .then(() => Promise.retry(() => run(data)));
 
+// Helper to check existence
+const exists = (data, cc, docker) => {
+  if (data.compose) {
+    return cc('getId', datum).then(id => !_.isEmpty(id));
+  } else if (utils.getId(data)) {
+    // Get list of containers.
+    return docker.list().then(containers => {
+      // Start an ID collector
+      let ids = [];
+      // Add all relevant ids
+      _.forEach(containers, container => {
+        ids.push(container.id);
+        ids.push(container.name);
+      });
+      // Search set of valid containers for data.
+      return _.includes(ids, utils.getId(data));
+    });
+  }
+};
+
+// Helper to check scanning
+const scan = (data, cc, docker) => {
+  if (data.compose) {
+    return cc('getId', data).then(id => {
+      if (!_.isEmpty(id)) {
+        // @todo: this assumes that the container we want
+        // is probably the first id returned. What happens if that is
+        // not true or we need other ids for this service?
+        const ids = id.split('\n');
+        return docker.inspect(_.trim(ids.shift()));
+      }
+    });
+  } else if (utils.getId(data)) {
+    return docker.inspect(utils.getId(data));
+  }
+};
+
 // Helper to retry each
 const retryEach = (data, run) => Promise.each(utils.normalizer(data), datum => Promise.retry(() => run(datum)));
 
 // Helper for compose commands
-const dc = (shell, bin, cmd, datum) => {
-  const run = compose[cmd](datum.compose, datum.project, datum.opts);
-  return shell.sh([bin].concat(run.command), run.opts);
+const dc = (shell, bin, cmd, {compose, project, opts = {}}) => {
+  const run = dockerCompose[cmd](compose, project, opts);
+  return shell.sh([bin].concat(run.cmd), run.opts);
 };
 
 // We make this module into a function so we can pass in lando
 module.exports = lando => {
   const docker = new Landerode(lando.config.engineConfig, lando.Promise);
   const daemon = new LandoDaemon(lando.cache, lando.events, lando.config.dockerBin, lando.log, lando.config.process);
-  const cc = (cmd, datum) => dc(lando.shell.sh, lando.config.composeBin, cmd, datum);
-
-  /**
-   * Checks whether a specific service exists or not.
-   *
-   * There are two ways to check whether a container exists:
-   *
-   *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
-   *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
-   *
-   * These are detailed more below.
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.exists
-   * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
-   * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} data.opts - Options on what service to check
-   * @param {Array} data.opts.services - An Array of services to check
-   * @return {Promise} A Promise with a Boolean of whether the service exists or not.
-   * @example
-   *
-   * // Check whether a service exists by container id
-   * return lando.engine.exists({name: 'myapp_web_1'})
-   *
-   * // Log whether it exists
-   * .then(function(exists) {
-   *   lando.log.info('Container exists: %s', exists);
-   * });
-   *
-   * // Check whether a service exists by compose/app object
-   * // Assume we have an `app` object called `app` already.
-   *
-   * // Add the services options
-   * var compose = app;
-   * compose.opts = {
-   *   services: ['web']
-   * };
-   *
-   * // Check existence
-   * return lando.engine.exists(compose);
-   */
-  const exists = data => engineCmd(daemon, data, data => {
-    if (data.compose) {
-      return cc('getId', datum).then(id => !_.isEmpty(id));
-    } else if (utils.getId(data)) {
-      // Get list of containers.
-      return list().then(containers => {
-        // Start an ID collector
-        let ids = [];
-        // Add all relevant ids
-        _.forEach(containers, container => {
-          ids.push(container.id);
-          ids.push(container.name);
-        });
-        // Search set of valid containers for data.
-        return _.includes(ids, utils.getId(data));
-      });
-    }
-  });
-
-  /**
-   * Returns comprehensive service metadata. This is a wrapper around `docker inspect`.
-   *
-   * There are two ways to get container metadata:
-   *
-   *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
-   *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
-   *
-   * These are detailed more below.
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.scan
-   * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
-   * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} data.opts - Options on what service to scan
-   * @param {Array} data.opts.services - An Array of services to scan.
-   * @return {Promise} A Promise with an Object of service metadata.
-   * @example
-   *
-   * // Log scan data using an id
-   * return lando.engine.scan({id: '146d321f212d'})
-   * .then(function(data) {
-   *   lando.log.info('Container data is %j', data);
-   * });
-   *
-   * // Log service data by compose/app object
-   * // Assume we have an `app` object called `app` already.
-   *
-   * // Add the services options
-   * var compose = app;
-   * compose.opts = {
-   *   services: ['web']
-   * };
-   *
-   * // scan the service
-   * return lando.engine.scan(compose);
-   */
-  const scan = data => engineCmd(daemon, data, data => {
-    if (data.compose) {
-      return cc(getId, data).then(id => {
-        if (!_.isEmpty(id)) {
-          // @todo: this assumes that the container we want
-          // is probably the first id returned. What happens if that is
-          // not true or we need other ids for this service?
-          const ids = id.split('\n');
-          return docker.inspect(_.trim(ids.shift()));
-        }
-      });
-    } else if (utils.getId(data)) {
-      return docker.inspect(utils.getId(data));
-    }
-  });
-
-  /**
-   * Starts the containers/services for the specified `compose` object.
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.start
-   * @fires pre_engine_start
-   * @fires post_engine_start
-   * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to start more than one set of services.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} [data.opts] - Options on how to start the `compose` Objects containers.
-   * @param {Array} [data.opts.services='all services'] - The services to start.
-   * @param {Boolean} [data.opts.background=true] - Start the services in the background.
-   * @param {Boolean} [data.opts.recreate=false] - Recreate the services.
-   * @param {Boolean} [data.opts.removeOrphans=true] - Remove orphaned containers.
-   * @return {Promise} A Promise.
-   * @example
-   *
-   * // Start up all the containers for given app object `app`
-   * return lando.engine.start(app);
-   *
-   * // Start and recreate specific services for an `app`
-   * app.opts = {
-   *   recreate: true,
-   *   services: ['web', 'database']
-   * };
-   *
-   * return lando.engine.start(app);
-   */
-  const start = data => engineEventCmd('start', daemon, lando.events, data, data => {
-    /**
-     * Event that allows you to do some things before a `compose` Objects containers are
-     * started
-     *
-     * @since 3.0.0
-     * @event pre_engine_start
-     */
-     /**
-      * Event that allows you to do some things after a `compose` Objects containers are
-      * started
-      *
-      * @since 3.0.0
-      * @event post_engine_start
-      */
-    return retryEach(data, datum => cc('start', datum));
-  });
-
-  /**
-   * Runs a command on a given service/container. This is a wrapper around `docker exec`.
-   *
-   * UNTIL the resolution of https://github.com/apocas/docker-modem/issues/83 data needs to also be or be an
-   * array of compose objects for this to work correctly on Windows as well. See some of the other engine
-   * documentation for what a compose object looks like.
-   *
-   * @since 3.0.0
-   * @alias lando.engine.run
-   * @fires pre_engine_run
-   * @fires post_engine_run
-   * @param {Object} data - A run Object or an Array of run Objects if you want to run more tha one command.
-   * @param {String} data.id - The container to run the command on. Must be an id that docker can recognize such as a container hash or name.
-   * @param {String} data.cmd - A String of a command or an Array whose elements are the parts of the command.
-   * @param {Object} [data.opts] - Options on how to run the command.
-   * @param {String} [data.opts.mode='collect'] - Either `collect` or `attach`. Attach will connect to the run `stdin`.
-   * @param {String} [data.opts.pre] - A String or Array of additional arguments or options to append to the `cmd` before the user specified args and options are added.
-   * @param {Boolean} [data.opts.attachStdin=false] - Attach to the run's `stdin`. Helpful if you think there will be interactive options or prompts.
-   * @param {Boolean} [data.opts.attachStdout=true] - Attach to the run's `stdout`. Helpful to determine what the command is doing.
-   * @param {Boolean} [data.opts.attachStderr=true] - Attach to the run's `stderr`. Helpful to determine any errors.
-   * @param {Array} [data.opts.env=[]] - Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`.
-   * @param {String} [data.opts.detachKeys='ctrl-p,ctrl-q'] - Keystrokes that will detach the process.
-   * @param {Boolean} [data.opts.tty=true] - Allocate a pseudo `tty`.
-   * @param {String} [data.opts.user='root'] - The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`.
-   * @return {Promise} A Promise with a string containing the command's output.
-   * @example
-   *
-   * // Run composer install on the appserver container for an app called myapp
-   * return lando.engine.run({id: 'myapp_appserver_1', cmd: ['composer', 'install']});
-   *
-   * // Drop into an interactive bash shell on the database continer for an app called myapp
-   * var bashRun = {
-   *   id: 'myapp_database_1',
-   *   cmd: ['bash'],
-   *   opts: {
-   *     mode: 'attach'
-   *   }
-   * };
-   *
-   * return lando.engine.run(bashRun);
-   */
-  const run = data => engineEventCmd('run', daemon, lando.events, data, data => {
-    /**
-     * Event that allows you to do some things before a command is run on a particular
-     * container.
-     *
-     * @since 3.0.0
-     * @event pre_engine_run
-     */
-    /**
-     * Event that allows you to do some things after a command is run on a particular
-     * container.
-     *
-     * @since 3.0.0
-     * @event post_engine_run
-     */
-    return Promise.each(utils.normalizer(data), ({id, cmd, compose, project, opts = {}} = {}) => {
-      // There is weirdness starting up an exec via the Docker Remote API when
-      // accessing the daemon through a named pipe on Windows. Until that is
-      // resolved we currently shell the exec out to docker-compose
-      //
-      // See: https://github.com/apocas/docker-modem/issues/83
-      //
-      if (process.platform === 'win32') {
-        return cc('run', {compose, project, opts: _.merge({}, opts, {cmd})});
-      } else {
-        return docker.run(id, cmd, opts);
-      }
-    });
-  });
-
-  /**
-   * Stops containers for a `compose` object or a particular container.
-   *
-   * There are two ways to stop containers:
-   *
-   *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
-   *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
-   *
-   * These are detailed more below.
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.stop
-   * @fires pre_engine_stop
-   * @fires post_engine_stop
-   * @param {Object} data - Stop criteria, Need eithers an ID or a service within a compose context
-   * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} [data.opts] - Options on what services to setop
-   * @param {Array} [data.opts.services='all services'] - An Array of services to stop.
-   * @return {Promise} A Promise.
-   * @example
-   *
-   * // Stop a specific container by id
-   * return lando.engine.stop({name: 'myapp_service_1'})
-   * .then(function() {
-   *   lando.log.info('Container has stopped.');
-   * });
-   *
-   * // Assume we have an `app` object called `app` already.
-   *
-   * // Stop all the containers for a particular app.
-   * return lando.engine.stop(app);
-   *
-   * // Stop a certain subset of an app's services.
-   * app.opts = {
-   *   services: ['index', 'appserver', 'db', 'db2']
-   * };
-   * return lando.engine.stop(app);
-   *
-   */
-  const stop = data => engineEventCmd('stop', daemon, lando.events, data, data => {
-    /**
-     * Event that allows you to do some things before some containers are stopped.
-     *
-     * @since 3.0.0
-     * @event pre_engine_stop
-     */
-    /**
-     * Event that allows you to do some things after some containers are stopped.
-     *
-     * @since 3.0.0
-     * @event post_engine_stop
-     */
-    return retryEach(data, d => (d.compose) ? cc('stop', d) : docker.stop(utils.getId(d)));
-  });
-
-  /**
-   * Removes containers for a `compose` object or a particular container.
-   *
-   * There are two ways to remove containers:
-   *
-   *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
-   *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
-   *
-   * These are detailed more below.
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.destroy
-   * @fires pre_engine_destroy
-   * @fires post_engine_destroy
-   * @param {Object} data - Remove criteria, Need eithers an ID or a service within a compose context
-   * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} [data.opts] - Options on what services to remove.
-   * @param {Array} [data.opts.services='all services'] - An Array of services to remove.
-   * @param {Boolean} [data.opts.volumes=true] - Also remove volumes associated with the container(s).
-   * @param {Boolean} [data.opts.force=false] - Force remove the containers.
-   * @param {Boolean} [data.opts.purge=false] - Implies `volumes` and `force`.
-   * @return {Promise} A Promise.
-   * @example
-   *
-   * // Remove a specific container by id
-   * return lando.engine.destroy({name: 'myapp_service_1'})
-   * .then(function() {
-   *   lando.log.info('Container has been destroyed.');
-   * });
-   *
-   * // Assume we have an `app` object called `app` already.
-   *
-   * // Destroy all the containers for a particular app.
-   * return lando.engine.destroy(app);
-   *
-   * // Force remove a certain subset of an app's services and their volumes
-   * app.opts = {
-   *   services: ['index', 'appserver', 'db', 'db2'],
-   *   v: true,
-   *   force: true
-   * };
-   * return lando.engine.destroy(app);
-   *
-   */
-  const destroy = data => engineEventCmd('destroy', daemon, lando.events, data, data => {
-    /**
-     * Event that allows you to do some things before some containers are destroyed.
-     *
-     * @since 3.0.0
-     * @event pre_engine_destroy
-     */
-    /**
-     * Event that allows you to do some things after some containers are destroyed.
-     *
-     * @since 3.0.0
-     * @event post_engine_destroy
-     */
-     return retryEach(data, d => (d.compose) ? cc('remove', d) : docker.remove(utils.getId(d), d.opts));
-  });
-
-  /**
-   * Tries to pull the services for a `compose` object, and then tries to build them if they are found
-   * locally. This is a wrapper around `docker pull` and `docker build`.
-   *
-   * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
-   *
-   * @since 3.0.0
-   * @alias lando.engine.build
-   * @fires pre_engine_build
-   * @fires post_engine_build
-   * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to build more than one set of services.
-   * @param {Array} data.compose - An Array of paths to Docker compose files
-   * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-   * @param {Object} [data.opts] - Options on how to build the `compose` objects containers.
-   * @param {Array} [data.opts.services='all services'] - The services to build.
-   * @param {Boolean} [data.opts.nocache=true] - Ignore the build cache.
-   * @param {Boolean} [data.opts.pull=true] - Try to pull first.
-   * @return {Promise} A Promise.
-   * @example
-   *
-   * // Build the containers for an `app` object
-   * return lando.engine.build(app);
-   */
-  const build = data => engineEventCmd('destroy', daemon, lando.events, data, data => {
-    /**
-     * Event that allows you to do some things before a `compose` Objects containers are
-     * started
-     *
-     * @since 3.0.0
-     * @event pre_engine_build
-     */
-    /**
-     * Event that allows you to do some things before a `compose` Objects containers are
-     * started
-     *
-     * @since 3.0.0
-     * @event post_engine_build
-     */
-    // Try to pull the images first
-    // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
-    return retryEach(data, datum => {
-      return cc(compose.pull(datum.compose, datum.project, datum.opts));
-    })
-    .then(() => retryEach(data, datum => {
-      return cc(compose.build(datum.compose, datum.project, datum.opts));
-    }));
-  });
-
-  // Return
+  const cc = (cmd, datum) => dc(lando.shell, lando.config.composeBin, cmd, datum);
   return {
-    build: build,
+    /**
+     * Tries to pull the services for a `compose` object, and then tries to build them if they are found
+     * locally. This is a wrapper around `docker pull` and `docker build`.
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.build
+     * @fires pre_engine_build
+     * @fires post_engine_build
+     * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to build more than one set of services.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] - Options on how to build the `compose` objects containers.
+     * @param {Array} [data.opts.services='all services'] - The services to build.
+     * @param {Boolean} [data.opts.nocache=true] - Ignore the build cache.
+     * @param {Boolean} [data.opts.pull=true] - Try to pull first.
+     * @return {Promise} A Promise.
+     * @example
+     *
+     * // Build the containers for an `app` object
+     * return lando.engine.build(app);
+     */
+    build: data => engineEventCmd('destroy', daemon, lando.events, data, data => {
+      /**
+       * Event that allows you to do some things before a `compose` Objects containers are
+       * started
+       *
+       * @since 3.0.0
+       * @event pre_engine_build
+       */
+      /**
+       * Event that allows you to do some things before a `compose` Objects containers are
+       * started
+       *
+       * @since 3.0.0
+       * @event post_engine_build
+       */
+      // Try to pull the images first
+      // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
+      return retryEach(data, datum => cc('pull', datum)).then(() => retryEach(data, datum => cc('build', datum)));
+    }),
+
     /**
      * Creates a Docker network
      *
@@ -462,8 +129,115 @@ module.exports = lando => {
      *  return ando.engine.createNetwork('mynetwork')
      */
     createNetwork: name => docker.createNet(name),
-    destroy: destroy,
-    exists: exists,
+
+    /**
+     * Removes containers for a `compose` object or a particular container.
+     *
+     * There are two ways to remove containers:
+     *
+     *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
+     *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
+     *
+     * These are detailed more below.
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.destroy
+     * @fires pre_engine_destroy
+     * @fires post_engine_destroy
+     * @param {Object} data - Remove criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] - Options on what services to remove.
+     * @param {Array} [data.opts.services='all services'] - An Array of services to remove.
+     * @param {Boolean} [data.opts.volumes=true] - Also remove volumes associated with the container(s).
+     * @param {Boolean} [data.opts.force=false] - Force remove the containers.
+     * @param {Boolean} [data.opts.purge=false] - Implies `volumes` and `force`.
+     * @return {Promise} A Promise.
+     * @example
+     *
+     * // Remove a specific container by id
+     * return lando.engine.destroy({name: 'myapp_service_1'})
+     * .then(function() {
+     *   lando.log.info('Container has been destroyed.');
+     * });
+     *
+     * // Assume we have an `app` object called `app` already.
+     *
+     * // Destroy all the containers for a particular app.
+     * return lando.engine.destroy(app);
+     *
+     * // Force remove a certain subset of an app's services and their volumes
+     * app.opts = {
+     *   services: ['index', 'appserver', 'db', 'db2'],
+     *   v: true,
+     *   force: true
+     * };
+     * return lando.engine.destroy(app);
+     *
+     */
+    destroy: data => engineEventCmd('destroy', daemon, lando.events, data, data => {
+      /**
+       * Event that allows you to do some things before some containers are destroyed.
+       *
+       * @since 3.0.0
+       * @event pre_engine_destroy
+       */
+      /**
+       * Event that allows you to do some things after some containers are destroyed.
+       *
+       * @since 3.0.0
+       * @event post_engine_destroy
+       */
+       return retryEach(data, d => (d.compose) ? cc('remove', d) : docker.remove(utils.getId(d), d.opts));
+    }),
+
+    /**
+     * Checks whether a specific service exists or not.
+     *
+     * There are two ways to check whether a container exists:
+     *
+     *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
+     *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
+     *
+     * These are detailed more below.
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.exists
+     * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} data.opts - Options on what service to check
+     * @param {Array} data.opts.services - An Array of services to check
+     * @return {Promise} A Promise with a Boolean of whether the service exists or not.
+     * @example
+     *
+     * // Check whether a service exists by container id
+     * return lando.engine.exists({name: 'myapp_web_1'})
+     *
+     * // Log whether it exists
+     * .then(function(exists) {
+     *   lando.log.info('Container exists: %s', exists);
+     * });
+     *
+     * // Check whether a service exists by compose/app object
+     * // Assume we have an `app` object called `app` already.
+     *
+     * // Add the services options
+     * var compose = app;
+     * compose.opts = {
+     *   services: ['web']
+     * };
+     *
+     * // Check existence
+     * return lando.engine.exists(compose);
+     */
+    exists: data => engineCmd(daemon, data, data => exists(data, cc, docker)),
 
     /**
      * Gets a Docker network
@@ -573,9 +347,227 @@ module.exports = lando => {
      * return lando.engine.logs(app);
      */
     logs: data => engineCmd(daemon, data, data => retryEach(data, datum => cc('logs', datum))),
-    run: run,
-    scan: scan,
-    start: start,
-    stop: stop,
+
+    /**
+     * Runs a command on a given service/container. This is a wrapper around `docker exec`.
+     *
+     * UNTIL the resolution of https://github.com/apocas/docker-modem/issues/83 data needs to also be or be an
+     * array of compose objects for this to work correctly on Windows as well. See some of the other engine
+     * documentation for what a compose object looks like.
+     *
+     * @since 3.0.0
+     * @alias lando.engine.run
+     * @fires pre_engine_run
+     * @fires post_engine_run
+     * @param {Object} data - A run Object or an Array of run Objects if you want to run more tha one command.
+     * @param {String} data.id - The container to run the command on. Must be an id that docker can recognize such as a container hash or name.
+     * @param {String} data.cmd - A String of a command or an Array whose elements are the parts of the command.
+     * @param {Object} [data.opts] - Options on how to run the command.
+     * @param {String} [data.opts.mode='collect'] - Either `collect` or `attach`. Attach will connect to the run `stdin`.
+     * @param {String} [data.opts.pre] - A String or Array of additional arguments or options to append to the `cmd` before the user specified args and options are added.
+     * @param {Boolean} [data.opts.attachStdin=false] - Attach to the run's `stdin`. Helpful if you think there will be interactive options or prompts.
+     * @param {Boolean} [data.opts.attachStdout=true] - Attach to the run's `stdout`. Helpful to determine what the command is doing.
+     * @param {Boolean} [data.opts.attachStderr=true] - Attach to the run's `stderr`. Helpful to determine any errors.
+     * @param {Array} [data.opts.env=[]] - Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`.
+     * @param {String} [data.opts.detachKeys='ctrl-p,ctrl-q'] - Keystrokes that will detach the process.
+     * @param {Boolean} [data.opts.tty=true] - Allocate a pseudo `tty`.
+     * @param {String} [data.opts.user='root'] - The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`.
+     * @return {Promise} A Promise with a string containing the command's output.
+     * @example
+     *
+     * // Run composer install on the appserver container for an app called myapp
+     * return lando.engine.run({id: 'myapp_appserver_1', cmd: ['composer', 'install']});
+     *
+     * // Drop into an interactive bash shell on the database continer for an app called myapp
+     * var bashRun = {
+     *   id: 'myapp_database_1',
+     *   cmd: ['bash'],
+     *   opts: {
+     *     mode: 'attach'
+     *   }
+     * };
+     *
+     * return lando.engine.run(bashRun);
+     */
+    run: data => engineEventCmd('run', daemon, lando.events, data, data => {
+      /**
+       * Event that allows you to do some things before a command is run on a particular
+       * container.
+       *
+       * @since 3.0.0
+       * @event pre_engine_run
+       */
+      /**
+       * Event that allows you to do some things after a command is run on a particular
+       * container.
+       *
+       * @since 3.0.0
+       * @event post_engine_run
+       */
+      return Promise.each(utils.normalizer(data), ({id, cmd, compose, project, opts = {}} = {}) => {
+        // There is weirdness starting up an exec via the Docker Remote API when
+        // accessing the daemon through a named pipe on Windows. Until that is
+        // resolved we currently shell the exec out to docker-compose
+        //
+        // See: https://github.com/apocas/docker-modem/issues/83
+        //
+        if (process.platform === 'win32') {
+          return cc('run', {compose, project, opts: _.merge({}, opts, {cmd})});
+        } else {
+          return docker.run(id, cmd, opts);
+        }
+      });
+    }),
+
+    /**
+     * Returns comprehensive service metadata. This is a wrapper around `docker inspect`.
+     *
+     * There are two ways to get container metadata:
+     *
+     *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
+     *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
+     *
+     * These are detailed more below.
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.scan
+     * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} data.opts - Options on what service to scan
+     * @param {Array} data.opts.services - An Array of services to scan.
+     * @return {Promise} A Promise with an Object of service metadata.
+     * @example
+     *
+     * // Log scan data using an id
+     * return lando.engine.scan({id: '146d321f212d'})
+     * .then(function(data) {
+     *   lando.log.info('Container data is %j', data);
+     * });
+     *
+     * // Log service data by compose/app object
+     * // Assume we have an `app` object called `app` already.
+     *
+     * // Add the services options
+     * var compose = app;
+     * compose.opts = {
+     *   services: ['web']
+     * };
+     *
+     * // scan the service
+     * return lando.engine.scan(compose);
+     */
+    scan: data => engineCmd(daemon, data, data => scan(data, cc, docker)),
+
+    /**
+     * Starts the containers/services for the specified `compose` object.
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.start
+     * @fires pre_engine_start
+     * @fires post_engine_start
+     * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to start more than one set of services.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] - Options on how to start the `compose` Objects containers.
+     * @param {Array} [data.opts.services='all services'] - The services to start.
+     * @param {Boolean} [data.opts.background=true] - Start the services in the background.
+     * @param {Boolean} [data.opts.recreate=false] - Recreate the services.
+     * @param {Boolean} [data.opts.removeOrphans=true] - Remove orphaned containers.
+     * @return {Promise} A Promise.
+     * @example
+     *
+     * // Start up all the containers for given app object `app`
+     * return lando.engine.start(app);
+     *
+     * // Start and recreate specific services for an `app`
+     * app.opts = {
+     *   recreate: true,
+     *   services: ['web', 'database']
+     * };
+     *
+     * return lando.engine.start(app);
+     */
+    start: data => engineEventCmd('start', daemon, lando.events, data, data => {
+      /**
+       * Event that allows you to do some things before a `compose` Objects containers are
+       * started
+       *
+       * @since 3.0.0
+       * @event pre_engine_start
+       */
+       /**
+        * Event that allows you to do some things after a `compose` Objects containers are
+        * started
+        *
+        * @since 3.0.0
+        * @event post_engine_start
+        */
+      return retryEach(data, datum => cc('start', datum));
+    }),
+
+    /**
+     * Stops containers for a `compose` object or a particular container.
+     *
+     * There are two ways to stop containers:
+     *
+     *  1. Using an object with `{id: id}` where `id` is a docker recognizable id
+     *  2. Using a `compose` object with `{compose: compose, project: project, opts: opts}`
+     *
+     * These are detailed more below.
+     *
+     * **NOTE:** Generally an instantiated `app` object is a valid `compose` object
+     *
+     * @since 3.0.0
+     * @alias lando.engine.stop
+     * @fires pre_engine_stop
+     * @fires post_engine_stop
+     * @param {Object} data - Stop criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose - An Array of paths to Docker compose files
+     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] - Options on what services to setop
+     * @param {Array} [data.opts.services='all services'] - An Array of services to stop.
+     * @return {Promise} A Promise.
+     * @example
+     *
+     * // Stop a specific container by id
+     * return lando.engine.stop({name: 'myapp_service_1'})
+     * .then(function() {
+     *   lando.log.info('Container has stopped.');
+     * });
+     *
+     * // Assume we have an `app` object called `app` already.
+     *
+     * // Stop all the containers for a particular app.
+     * return lando.engine.stop(app);
+     *
+     * // Stop a certain subset of an app's services.
+     * app.opts = {
+     *   services: ['index', 'appserver', 'db', 'db2']
+     * };
+     * return lando.engine.stop(app);
+     *
+     */
+    stop: data => engineEventCmd('stop', daemon, lando.events, data, data => {
+      /**
+       * Event that allows you to do some things before some containers are stopped.
+       *
+       * @since 3.0.0
+       * @event pre_engine_stop
+       */
+      /**
+       * Event that allows you to do some things after some containers are stopped.
+       *
+       * @since 3.0.0
+       * @event post_engine_stop
+       */
+      return retryEach(data, d => (d.compose) ? cc('stop', d) : docker.stop(utils.getId(d)));
+    }),
   };
 };
