@@ -1,151 +1,23 @@
 'use strict';
 
-// Plugin modules
+// Modules
+const _ = require('lodash');
 const compose = require('./lib/compose');
-const daemon = require('./lib/daemon');
+const LandoDaemon = require('./lib/daemon');
 const Landerode = require('./lib/docker');
 const utils = require('./lib/utils');
 
 // We make this module into a function so we can pass in lando
 module.exports = lando => {
-  // Lando Modules
-  const _ = lando.node._;
   const Promise = lando.Promise;
   const docker = new Landerode(lando.config.engineConfig, lando.Promise);
+  const daemon = new LandoDaemon(lando.cache, lando.events, lando.config.dockerBin, lando.log, lando.config.process);
 
   // The path to the docker executable
-  const DOCKER_EXECUTABLE = lando.config.dockerBin;
   const COMPOSE_EXECUTABLE = lando.config.composeBin;
 
-  // Runs a docker compose command with options
+  // Helpers
   const cc = run => lando.shell.sh([COMPOSE_EXECUTABLE].concat(run.cmd), run.opts);
-
-  /**
-   * Determines whether the docker engine is installed or not
-   *
-   * @since 3.0.0
-   * @alias lando.engine.isInstalled
-   * @return {Promise} A Promise with a boolean containing the installed status.
-   */
-  const isInstalled = () => daemon.isInstalled(DOCKER_EXECUTABLE)
-    .then(isInstalled => {
-      if (!isInstalled) throw Error('Lando thinks you might need some help with your droid');
-    });
-
-  /**
-   * Determines whether the docker engine is up or not.
-   *
-   * @todo Does this need to be publically exposed still?
-   *
-   * @since 3.0.0
-   * @alias lando.engine.isUp
-   * @return {Promise} A Promise with a boolean containing the engine up status.
-   * @example
-   *
-   * // Start the engine if it is not up
-   * return lando.engine.isUp()
-   *
-   * // Check if we need to start
-   * .then(function(isUp) {
-   *   if (!isUp) {
-   *     return lando.engine.up();
-   *   }
-   * });
-   */
-  const isUp = () => daemon.isUp(lando, DOCKER_EXECUTABLE);
-
-  /**
-   * Tries to activate the docker engine/daemon.
-   *
-   * Generally the engine will be up and active, but if it isn't for whatever reason
-   * Lando will try to start it.
-   *
-   * NOTE: Most commands that require the docker engine to be up will automatically
-   * call this anyway.
-   *
-   * @todo Does this need to be publically exposed still?
-   *
-   * @since 3.0.0
-   * @alias lando.engine.up
-   * @fires pre_engine_up
-   * @fires post_engine_up
-   * @return {Promise} A Promise.
-   * @example
-   *
-   * // List all the apps
-   * return lando.app.list()
-   *
-   * // Map each app to a summary and print results
-   * .map(function(app) {
-   *  return appSummary(app)
-   *   .then(function(summary) {
-   *    console.log(JSON.stringify(summary, null, 2));
-   *  });
-   * });
-   */
-  const up = () => isInstalled()
-    /**
-     * Event that allows you to do some things before the docker engine is booted
-     * up.
-     *
-     * @since 3.0.0
-     * @event pre_engine_up
-     */
-    .then(() => lando.events.emit('pre-engine-up'))
-    .then(() => daemon.up(lando, DOCKER_EXECUTABLE))
-    /**
-     * Event that allows you to do some things after the docker engine is booted
-     * up.
-     *
-     * @since 3.0.0
-     * @event post_engine_up
-     */
-    .then(() => lando.events.emit('post-engine-up'));
-
-  /**
-   * Tries to deactivate the docker engine/daemon.
-   *
-   * NOTE: Most commands that require the docker engine to be up will automatically
-   * call this anyway.
-   *
-   * @todo Does this need to be publically exposed still?
-   *
-   * @since 3.0.0
-   * @alias lando.engine.down
-   * @fires pre_engine_down
-   * @fires post_engine_down
-   * @return {Promise} A Promise.
-   */
-  const down = () => isInstalled()
-    /**
-     * Event that allows you to do some things after the docker engine is booted
-     * up.
-     *
-     * @since 3.0.0
-     * @event pre_engine_down
-     */
-    .then(() => lando.events.emit('pre-engine-down'))
-    .then(() => daemon.down(lando, DOCKER_EXECUTABLE))
-    /**
-     * Event that allows you to do some things after the docker engine is booted
-     * up.
-     *
-     * @since 3.0.0
-     * @event post_engine_down
-     */
-    .then(() => lando.events.emit('post-engine-down'));
-
-  /**
-   * Determines whether the docker engine is ready or not
-   *
-   * @since 3.0.0
-   * @alias lando.engine.isReady
-   * @return {Promise} A Promise with a boolean containing the installed status.
-   */
-  const isReady = () => isInstalled()
-    .then(() => isUp()).then(isUp => {
-      if (!isUp) return up();
-    });
 
   /**
    * Determines whether a container is running or not
@@ -164,7 +36,7 @@ module.exports = lando => {
    *   lando.log.info('Container %s is running: %s', 'myapp_web_1', isRunning);
    * });
    */
-  const isRunning = data => isReady().then(() => Promise.retry(() => docker.isRunning(data)));
+  const isRunning = data => daemon.up().then(() => Promise.retry(() => docker.isRunning(data)));
 
   /**
    * Lists all the Lando containers. Optionally filter by app name.
@@ -183,7 +55,7 @@ module.exports = lando => {
    *   lando.log.info(container);
    * });
    */
-  const list = data => isReady().then(() => Promise.retry(() => docker.list(data)));
+  const list = data => daemon.up().then(() => Promise.retry(() => docker.list(data)));
 
   /**
    * Checks whether a specific service exists or not.
@@ -228,7 +100,7 @@ module.exports = lando => {
    * // Check existence
    * return lando.engine.exists(compose);
    */
-  const exists = data => isReady()
+  const exists = data => daemon.up()
     // Exists
     .then(() => Promise.retry(() => {
       if (data.compose) {
@@ -290,7 +162,7 @@ module.exports = lando => {
    * // scan the service
    * return lando.engine.scan(compose);
    */
-  const scan = data => isReady()
+  const scan = data => daemon.up()
     // Inspect the container.
     .then(() => Promise.retry(() => {
       if (data.compose) {
@@ -339,7 +211,7 @@ module.exports = lando => {
    *
    * return lando.engine.start(app);
    */
-  const start = data => isReady()
+  const start = data => daemon.up()
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -402,7 +274,7 @@ module.exports = lando => {
    *
    * return lando.engine.run(bashRun);
    */
-  const run = data => isReady()
+  const run = data => daemon.up()
     /**
      * Event that allows you to do some things before a command is run on a particular
      * container.
@@ -481,7 +353,7 @@ module.exports = lando => {
    * return lando.engine.stop(app);
    *
    */
-  const stop = data => isReady()
+  const stop = data => daemon.up()
     /**
      * Event that allows you to do some things before some containers are stopped.
      *
@@ -549,7 +421,7 @@ module.exports = lando => {
    * return lando.engine.destroy(app);
    *
    */
-  const destroy = data => isReady()
+  const destroy = data => daemon.up()
     /**
      * Event that allows you to do some things before some containers are destroyed.
      *
@@ -588,7 +460,7 @@ module.exports = lando => {
    * // Get logs for an app
    * return lando.engine.logs(app);
    */
-  const logs = data => isReady()
+  const logs = data => daemon.up()
     // Iterate data
     .then(() => utils.normalizer(data)).each(d => Promise.retry(() => cc(compose.logs(d.compose, d.project, d.opts))));
 
@@ -615,7 +487,7 @@ module.exports = lando => {
    * // Build the containers for an `app` object
    * return lando.engine.build(app);
    */
-  const build = data => isReady()
+  const build = data => daemon.up()
     /**
      * Event that allows you to do some things before a `compose` Objects containers are
      * started
@@ -642,91 +514,82 @@ module.exports = lando => {
      */
     .then(() => lando.events.emit('post-engine-build', data));
 
-  /**
-   * Gets the docker networks.
-   *
-   * @since 3.0.0
-   * @function
-   * @alias lando.engine.getNetworks
-   * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.
-   * @param {Object} [opts] - Options to pass into the docker networks call
-   * @param {Object} [opts.filters] - Filters options
-   * @return {Promise} A Promise with an array of network objects.
-   * @example
-   *
-   *  // Options to filter the networks
-   *  var opts = {
-   *    filters: {
-   *      driver: {bridge: true},
-   *      name: {_default: true}
-   *    }
-   *  };
-   *
-   *  // Get the networks
-   *  return lando.engine.getNetworks(opts)
-   *
-   *  // Filter out lando_default
-   *  .filter(function(network) {
-   *    return network.Name !== 'lando_default';
-   *  })
-   *
-   *  // Map to list of network names
-   *  .map(function(network) {
-   *    return network.Name;
-   *  });
-   */
-  const getNetworks = opts => docker.listNetworks(opts);
-
-  /**
-   * Gets a Docker network
-   *
-   * @since 3.0.0.
-   * @function
-   * @alias lando.engine.getNetwork
-   * @param {String} id - The id of the network
-   * @return {Object} A Dockerode Network object .
-   * @example
-   *
-   *  // Get the network
-   *  return lando.engine.getNetwork('mynetwork')
-   */
-  const getNetwork = id => docker.getNetwork(id);
-
-  /**
-   * Creates a Docker network
-   *
-   * @since 3.0.0.
-   * @function
-   * @alias lando.engine.createNetwork
-   * @see [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.
-   * @param {String} name - The name of the networks
-   * @return {Promise} A Promise with inspect data.
-   * @example
-   *
-   *  // Create the network
-   *  return ando.engine.createNetwork('mynetwork')
-   */
-  const createNetwork = name => docker.createNet(name);
-
   // Return
   return {
-    up: up,
-    isInstalled: isInstalled,
-    isReady: isReady,
-    isUp: isUp,
-    down: down,
+    build: build,
+    /**
+     * Creates a Docker network
+     *
+     * @since 3.0.0.
+     * @function
+     * @alias lando.engine.createNetwork
+     * @see [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.
+     * @param {String} name - The name of the networks
+     * @return {Promise} A Promise with inspect data.
+     * @example
+     *
+     *  // Create the network
+     *  return ando.engine.createNetwork('mynetwork')
+     */
+    createNetwork: name => docker.createNet(name),
+    destroy: destroy,
+    exists: exists,
+
+    /**
+     * Gets a Docker network
+     *
+     * @since 3.0.0.
+     * @function
+     * @alias lando.engine.getNetwork
+     * @param {String} id - The id of the network
+     * @return {Object} A Dockerode Network object .
+     * @example
+     *
+     *  // Get the network
+     *  return lando.engine.getNetwork('mynetwork')
+     */
+    getNetwork: id => docker.getNetwork(id),
+
+    /**
+     * Gets the docker networks.
+     *
+     * @since 3.0.0
+     * @function
+     * @alias lando.engine.getNetworks
+     * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.
+     * @param {Object} [opts] - Options to pass into the docker networks call
+     * @param {Object} [opts.filters] - Filters options
+     * @return {Promise} A Promise with an array of network objects.
+     * @example
+     *
+     *  // Options to filter the networks
+     *  var opts = {
+     *    filters: {
+     *      driver: {bridge: true},
+     *      name: {_default: true}
+     *    }
+     *  };
+     *
+     *  // Get the networks
+     *  return lando.engine.getNetworks(opts)
+     *
+     *  // Filter out lando_default
+     *  .filter(function(network) {
+     *    return network.Name !== 'lando_default';
+     *  })
+     *
+     *  // Map to list of network names
+     *  .map(function(network) {
+     *    return network.Name;
+     *  });
+     */
+    getNetworks: opts => docker.listNetworks(opts),
     isRunning: isRunning,
     list: list,
-    exists: exists,
+    logs: logs,
+    run: run,
     scan: scan,
     start: start,
-    run: run,
     stop: stop,
-    destroy: destroy,
-    logs: logs,
-    build: build,
-    getNetwork: getNetwork,
-    getNetworks: getNetworks,
-    createNetwork: createNetwork,
   };
 };

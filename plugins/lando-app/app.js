@@ -475,54 +475,31 @@ module.exports = function(lando) {
    *   }
    * });
    */
-  var isRunning = function(app, checkall) {
+  var isRunning = function(app, checkall = false) {
 
     // Log
     lando.log.verbose('Checking if %s is running', app.name);
 
-    // Clarify the checkall
-    checkall = checkall || false;
+    // Get list of container
+    return lando.engine.list(app.lando)
 
-    // Check if our engine is up
-    return lando.engine.isUp()
+    // Filter out autostart containers since those will always report TRUE
+    .filter(function(container) {
+      return lando.engine.scan(container)
+      .then(function(data) {
+        return data.HostConfig.RestartPolicy.Name !== 'always';
+      });
+    })
 
-    // If we are up check for containers running for an app
-    // otherwise return false
-    .then(function(isUp) {
-
-      // Engine is up so lets check if the app has running containers
-      if (isUp) {
-
-        // Get list of containers
-        return lando.engine.list(app.lando)
-
-        // Filter out autostart containers since those will always report TRUE
-        .filter(function(container) {
-          return lando.engine.scan(container)
-          .then(function(data) {
-            return data.HostConfig.RestartPolicy.Name !== 'always';
-          });
-        })
-
-        // Reduce containers to a true false running value
-        .reduce(function(isRunning, container) {
-          if (checkall) {
-            return isRunning && lando.engine.isRunning(container.id);
-          }
-          else {
-            return (isRunning) ? true : lando.engine.isRunning(container.id);
-          }
-        }, checkall);
-
+    // Reduce containers to a true false running value
+    .reduce(function(isRunning, container) {
+      if (checkall) {
+        return isRunning && lando.engine.isRunning(container.id);
       }
-
-      // Engine is down so nothing can be running
       else {
-        return false;
+        return (isRunning) ? true : lando.engine.isRunning(container.id);
       }
-
-    });
-
+    }, checkall);
   };
 
   /**
