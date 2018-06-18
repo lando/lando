@@ -55,3 +55,18 @@ sudo update-ca-certificates
 sudo rm -f /usr/local/share/ca-certificates/lando.pem
 sudo update-ca-certificates --fresh
 ```
+
+Importing the Cert into Browser
+-------------------------------
+### Chrome
+Currently works for: Version 67.0.3396.79 (Official Build) (64-bit)
+
+1. Navigate to Settings (the 3 dots in the upper right hand corner).
+2. Use the search bar to search for `SSL`.
+3. Click `Manage Certificates`.
+4. Click on `Authorities`.
+5. Click `Import`.
+6. Navigate to your `~/.lando/lando.pem` key, and import it.
+7. Check all settings that apply.
+8. Flush browser cache and naviate to your Lando website.
+9. Ensure that you have `SSL` set up through your `lando.yml` file.
