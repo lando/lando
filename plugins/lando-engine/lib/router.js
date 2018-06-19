@@ -11,7 +11,7 @@ const retryEach = (data, run) => Promise.each(utils.normalizer(data), datum => P
 // Helper to run engine event commands
 exports.engineCmd = (name, daemon, events, data, run) => daemon.up()
   .then(() => events.emit(`pre-engine-${name}`, data))
-  .then(() => Promise.retry(() => run(data)))
+  .then(() => run(data))
   .tap(() => events.emit(`post-engine-${name}`, data));
 
 /*
@@ -60,7 +60,11 @@ exports.run = (data, compose, docker) => Promise.each(utils.normalizer(data), da
   //
   // See: https://github.com/apocas/docker-modem/issues/83
   //
-  return (process.platform === 'win32') ? compose('run', datum) : docker.run(datum.id, datum.cmd, datum.opts);
+  if (process.platform !== 'win32') {
+    return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
+  } else {
+    return docker.run(datum.id, datum.cmd, datum.opts);
+  }
 });
 
 /*

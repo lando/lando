@@ -19,6 +19,6 @@ jobs:
       - run:
           name: Unit Tests
           command: yarn test
-      - run:
-          name: Functional Tests
-          command: yarn test:functional
+      #- run:
+      #    name: Functional Tests
+      #    command: yarn test:functional
