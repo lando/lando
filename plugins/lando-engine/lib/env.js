@@ -5,6 +5,7 @@ const _ = require('lodash');
 const fs = require('fs-extra');
 const path = require('path');
 const shell = require('shelljs');
+const url = require('url');
 
 /*
  * Helper to get an executable
@@ -24,6 +25,14 @@ const getDockerBin = (bin, base) => {
     case 'win32': return path.win32.normalize(binPath + '.exe');
   }
 };
+
+// Helper setting docker host
+const setDockerHost = (hostname, port = 2376) => url.format({
+  protocol: 'tcp',
+  slashes: true,
+  hostname,
+  port,
+});
 
 /*
  * Helper to get location of docker bin directory
@@ -51,6 +60,30 @@ exports.getComposeExecutable = () => getDockerBin('docker-compose', exports.getD
 exports.getDockerExecutable = () => {
   const base = (process.platform === 'linux') ? '/usr/bin' : exports.getDockerBinPath();
   return getDockerBin('docker', base);
+};
+
+// Helper for engine config
+exports.getEngineConfig = ({engineConfig = {}, env}) => {
+  // Set defaults if we have to
+  if (_.isEmpty(engineConfig)) {
+    engineConfig = {
+      socketPath: (process.platform === 'win32') ? '//./pipe/docker_engine' : '/var/run/docker.sock',
+      host: '127.0.0.1',
+      port: 2376,
+    };
+  }
+  // Set the docker host if its non-standard
+  if (engineConfig.host !== '127.0.0.1') env.DOCKER_HOST = setDockerHost(engineConfig.host, engineConfig.port);
+  // Set the TLS/cert things if needed
+  if (_.has(engineConfig, 'certPath')) {
+    env.DOCKER_CERT_PATH = engineConfig.certPath;
+    env.DOCKER_TLS_VERIFY = 1;
+    engineConfig.ca = fs.readFileSync(path.join(env.DOCKER_CERT_PATH, 'ca.pem'));
+    engineConfig.cert = fs.readFileSync(path.join(env.DOCKER_CERT_PATH, 'cert.pem'));
+    engineConfig.key = fs.readFileSync(path.join(env.DOCKER_CERT_PATH, 'key.pem'));
+  }
+  // Return
+  return engineConfig;
 };
 
 /*

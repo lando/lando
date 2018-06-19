@@ -2,10 +2,8 @@
 
 const _ = require('lodash');
 const env = require('./lib/env.js');
-const fs = require('fs-extra');
 const ip = require('ip');
 const path = require('path');
-const url = require('url');
 
 // Helper for default config
 const getDefaultConf = (env, lando) => ({
@@ -19,23 +17,8 @@ const getDefaultConf = (env, lando) => ({
   engineScriptsDir: path.join(lando.config.userConfRoot, 'engine', 'scripts'),
 });
 
-// Helper for engine config
-const getDefaultEngineConfig = () => ({
-  socketPath: (process.platform === 'win32') ? '//./pipe/docker_engine' : '/var/run/docker.sock',
-  host: '127.0.0.1',
-  port: 2376,
-});
-
-// Helper setting docker host
-const setDockerHost = (hostname, port = 2376) => url.format({
-  protocol: 'tcp',
-  slashes: true,
-  hostname,
-  port,
-});
-
-// Helper to get env
-const getEnv = config => ({
+// Helper to get default env
+const getDefaultEnv = config => ({
   LANDO_ENGINE_CONF: config.userConfRoot,
   LANDO_ENGINE_ID: config.engineId,
   LANDO_ENGINE_GID: config.engineGid,
@@ -58,24 +41,10 @@ module.exports = lando => {
     lando.config.env = lando.utils.config.stripEnv('COMPOSE_');
 
     // Set up the default engine config if needed
-    if (!_.has(lando.config, 'engineConfig')) lando.config.engineConfig = getDefaultEngineConfig();
-
-    // Set the docker host if its non-standard
-    if (lando.config.engineConfig.host !== '127.0.0.1') {
-      lando.config.env.DOCKER_HOST = setDockerHost(lando.config.engineConfig.host, lando.config.engineConfig.port);
-    }
-
-    // Set the TLS/cert things if needed
-    if (_.has(lando.config.engineConfig, 'certPath')) {
-      lando.config.env.DOCKER_CERT_PATH = lando.config.engineConfig.certPath;
-      lando.config.env.DOCKER_TLS_VERIFY = 1;
-      lando.config.engineConfig.ca = fs.readFileSync(path.join(lando.config.env.DOCKER_CERT_PATH, 'ca.pem'));
-      lando.config.engineConfig.cert = fs.readFileSync(path.join(lando.config.env.DOCKER_CERT_PATH, 'cert.pem'));
-      lando.config.engineConfig.key = fs.readFileSync(path.join(lando.config.env.DOCKER_CERT_PATH, 'key.pem'));
-    }
+    lando.config.engineConfig = env.getEngineConfig(lando.config);
 
     // Set the ENV
-    _.forEach(getEnv(lando.config), (value, key) => {
+    _.forEach(getDefaultEnv(lando.config), (value, key) => {
       lando.config.env[key] = value;
     });
 
