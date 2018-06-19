@@ -60,7 +60,7 @@ exports.run = (data, compose, docker) => Promise.each(utils.normalizer(data), da
   //
   // See: https://github.com/apocas/docker-modem/issues/83
   //
-  if (process.platform !== 'win32') {
+  if (process.platform === 'win32') {
     return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
   } else {
     return docker.run(datum.id, datum.cmd, datum.opts);
