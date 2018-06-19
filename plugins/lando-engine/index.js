@@ -32,31 +32,23 @@ module.exports = lando => {
   // Add some config for the engine
   lando.events.on('post-bootstrap', 1, lando => {
     lando.log.info('Configuring engine plugin');
-
     // Merge user opts over the defaults, this allows users to set their own things
     lando.config = lando.utils.config.merge(getDefaultConf(env, lando), lando.config);
-
     // Strip all DOCKER_ and COMPOSE_ envvars
     lando.config.env = lando.utils.config.stripEnv('DOCKER_');
     lando.config.env = lando.utils.config.stripEnv('COMPOSE_');
-
     // Set up the default engine config if needed
     lando.config.engineConfig = env.getEngineConfig(lando.config);
-
     // Set the ENV
     _.forEach(getDefaultEnv(lando.config), (value, key) => {
       lando.config.env[key] = value;
     });
-
     // Add some docker compose protection on windows
     if (process.platform === 'win32') lando.config.env.COMPOSE_CONVERT_WINDOWS_PATHS = 1;
-
     // Log it
     lando.log.verbose('Engine plugin configured with %j', lando.config);
-
     // Add utilities
     lando.utils.engine = require('./lib/utils');
-
     // Move our scripts over and set useful ENV we can use
     lando.log.verbose('Copying config from %s to %s', path.join(__dirname, 'scripts'), lando.config.engineScriptsDir);
     lando.utils.engine.moveConfig(path.join(__dirname, 'scripts'), lando.config.engineScriptsDir);

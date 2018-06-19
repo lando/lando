@@ -63,7 +63,7 @@ exports.getDockerExecutable = () => {
 };
 
 // Helper for engine config
-exports.getEngineConfig = ({engineConfig = {}, env}) => {
+exports.getEngineConfig = ({engineConfig = {}, env = {}}) => {
   // Set defaults if we have to
   if (_.isEmpty(engineConfig)) {
     engineConfig = {

@@ -20,14 +20,14 @@ module.exports = lando => {
   const engineCmd = (name, data, run) => router.engineCmd(name, daemon, lando.events, data, run);
   return {
     /**
-     * Event that allows you to do some things before a `compose` Objects containers are
+     * Event that allows you to do some things before a `compose` object's containers are
      * started
      *
      * @since 3.0.0
      * @event pre_engine_build
      */
     /**
-     * Event that allows you to do some things before a `compose` Objects containers are
+     * Event that allows you to do some things before a `compose` object's containers are
      * started
      *
      * @since 3.0.0
@@ -52,7 +52,6 @@ module.exports = lando => {
      * @param {Boolean} [data.opts.pull=true] - Try to pull first.
      * @return {Promise} A Promise.
      * @example
-     *
      * // Build the containers for an `app` object
      * return lando.engine.build(app);
      */
@@ -68,9 +67,8 @@ module.exports = lando => {
      * @param {String} name - The name of the networks
      * @return {Promise} A Promise with inspect data.
      * @example
-     *
-     *  // Create the network
-     *  return ando.engine.createNetwork('mynetwork')
+     * // Create the network
+     * return ando.engine.createNetwork('mynetwork')
      */
     createNetwork: name => docker.createNet(name),
 

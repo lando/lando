@@ -11,6 +11,7 @@ const log = new Log({logLevelConsole: 'debug'});
 const path = require('path');
 const Promise = require('./../lib/promise');
 const util = require('./util');
+const dest = path.resolve('docs', 'api');
 
 // Files
 const docs = {
@@ -37,10 +38,10 @@ const docs = {
       './lib/user.js',
       './lib/yaml.js',
     ],
-    plugins: [
+    engine: ['./plugins/lando-engine/engine.js'],
+    otherPlugins: [
       './plugins/lando-app/*.js',
       './plugins/lando-core/*.js',
-      './plugins/lando-engine/*.js',
       './plugins/lando-events/*.js',
       './plugins/lando-init/*.js',
       './plugins/lando-networking/*.js',
@@ -58,6 +59,10 @@ const docs = {
     './docs/partials/body.hbs',
   ],
 };
+
+// Clean up
+log.info('Going to clean %j', dest);
+fs.emptyDirSync(dest);
 
 // Cycle through the docs
 return Promise.resolve(_.keys(docs.sections))
@@ -86,7 +91,7 @@ return Promise.resolve(_.keys(docs.sections))
   // Write the file if we have data
   .then(data => {
     if (data) {
-      const output = path.resolve('docs', 'api', section + '.md');
+      const output = path.join(dest, section + '.md');
       log.info('writing ' + output+ '...');
       return fs.outputFile(output, data, error => {
         if (error) throw error;
