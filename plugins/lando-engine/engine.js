@@ -43,13 +43,13 @@ module.exports = lando => {
      * @alias lando.engine.build
      * @fires pre_engine_build
      * @fires post_engine_build
-     * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to build more than one set of services.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} [data.opts] - Options on how to build the `compose` objects containers.
-     * @param {Array} [data.opts.services='all services'] - The services to build.
-     * @param {Boolean} [data.opts.nocache=true] - Ignore the build cache.
-     * @param {Boolean} [data.opts.pull=true] - Try to pull first.
+     * @param {Object} data A `compose` Object or an Array of `compose` Objects if you want to build more than one set of services.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] Options on how to build the `compose` objects containers.
+     * @param {Array} [data.opts.services='all services'] The services to build.
+     * @param {Boolean} [data.opts.nocache=true] Ignore the build cache.
+     * @param {Boolean} [data.opts.pull=true] Try to pull first.
      * @return {Promise} A Promise.
      * @example
      * // Build the containers for an `app` object
@@ -64,7 +64,7 @@ module.exports = lando => {
      * @function
      * @alias lando.engine.createNetwork
      * @see [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.
-     * @param {String} name - The name of the networks
+     * @param {String} name The name of the networks
      * @return {Promise} A Promise with inspect data.
      * @example
      * // Create the network
@@ -100,15 +100,15 @@ module.exports = lando => {
      * @alias lando.engine.destroy
      * @fires pre_engine_destroy
      * @fires post_engine_destroy
-     * @param {Object} data - Remove criteria, Need eithers an ID or a service within a compose context
-     * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} [data.opts] - Options on what services to remove.
-     * @param {Array} [data.opts.services='all services'] - An Array of services to remove.
-     * @param {Boolean} [data.opts.volumes=true] - Also remove volumes associated with the container(s).
-     * @param {Boolean} [data.opts.force=false] - Force remove the containers.
-     * @param {Boolean} [data.opts.purge=false] - Implies `volumes` and `force`.
+     * @param {Object} data Remove criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] Options on what services to remove.
+     * @param {Array} [data.opts.services='all services'] An Array of services to remove.
+     * @param {Boolean} [data.opts.volumes=true] Also remove volumes associated with the container(s).
+     * @param {Boolean} [data.opts.force=false] Force remove the containers.
+     * @param {Boolean} [data.opts.purge=false] Implies `volumes` and `force`.
      * @return {Promise} A Promise.
      * @example
      *
@@ -148,12 +148,12 @@ module.exports = lando => {
      *
      * @since 3.0.0
      * @alias lando.engine.exists
-     * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
-     * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} data.opts - Options on what service to check
-     * @param {Array} data.opts.services - An Array of services to check
+     * @param {Object} data Search criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} data.opts Options on what service to check
+     * @param {Array} data.opts.services An Array of services to check
      * @return {Promise} A Promise with a Boolean of whether the service exists or not.
      * @example
      *
@@ -185,7 +185,7 @@ module.exports = lando => {
      * @since 3.0.0.
      * @function
      * @alias lando.engine.getNetwork
-     * @param {String} id - The id of the network
+     * @param {String} id The id of the network
      * @return {Object} A Dockerode Network object .
      * @example
      *
@@ -201,8 +201,8 @@ module.exports = lando => {
      * @function
      * @alias lando.engine.getNetworks
      * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.
-     * @param {Object} [opts] - Options to pass into the docker networks call
-     * @param {Object} [opts.filters] - Filters options
+     * @param {Object} [opts] Options to pass into the docker networks call
+     * @param {Object} [opts.filters] Filters options
      * @return {Promise} A Promise with an array of network objects.
      * @example
      *
@@ -234,7 +234,7 @@ module.exports = lando => {
      *
      * @since 3.0.0
      * @alias lando.engine.isRunning
-     * @param {String} data - An ID that docker can recognize such as the container id or name.
+     * @param {String} data An ID that docker can recognize such as the container id or name.
      * @return {Promise} A Promise with a boolean of whether the container is running or not
      * @example
      *
@@ -253,7 +253,7 @@ module.exports = lando => {
      *
      * @since 3.0.0
      * @alias lando.engine.list
-     * @param {String} [data] - An appname to filter the containers by.
+     * @param {String} [data] An appname to filter the containers by.
      * @return {Promise} A Promise with an Array of container Objects.
      * @example
      *
@@ -274,12 +274,12 @@ module.exports = lando => {
      *
      * @since 3.0.0
      * @alias lando.engine.logs
-     * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to get logs for more than one set of services.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} [data.opts] - Options on how to build the `compose` objects containers.
-     * @param {Boolean} [data.opts.follow=false] - Whether to follow the log. Works like `tail -f`.
-     * @param {Boolean} [data.opts.timestamps=true] - Show timestamps in log.
+     * @param {Object} data A `compose` Object or an Array of `compose` Objects if you want to get logs for more than one set of services.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] Options on how to build the `compose` objects containers.
+     * @param {Boolean} [data.opts.follow=false] Whether to follow the log. Works like `tail -f`.
+     * @param {Boolean} [data.opts.timestamps=true] Show timestamps in log.
      * @return {Promise} A Promise.
      * @example
      *
@@ -313,19 +313,17 @@ module.exports = lando => {
      * @alias lando.engine.run
      * @fires pre_engine_run
      * @fires post_engine_run
-     * @param {Object} data - A run Object or an Array of run Objects if you want to run more tha one command.
-     * @param {String} data.id - The container to run the command on. Must be an id that docker can recognize such as a container hash or name.
-     * @param {String} data.cmd - A String of a command or an Array whose elements are the parts of the command.
-     * @param {Object} [data.opts] - Options on how to run the command.
-     * @param {String} [data.opts.mode='collect'] - Either `collect` or `attach`. Attach will connect to the run `stdin`.
-     * @param {String} [data.opts.pre] - A String or Array of additional arguments or options to append to the `cmd` before the user specified args and options are added.
-     * @param {Boolean} [data.opts.attachStdin=false] - Attach to the run's `stdin`. Helpful if you think there will be interactive options or prompts.
-     * @param {Boolean} [data.opts.attachStdout=true] - Attach to the run's `stdout`. Helpful to determine what the command is doing.
-     * @param {Boolean} [data.opts.attachStderr=true] - Attach to the run's `stderr`. Helpful to determine any errors.
-     * @param {Array} [data.opts.env=[]] - Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`.
-     * @param {String} [data.opts.detachKeys='ctrl-p,ctrl-q'] - Keystrokes that will detach the process.
-     * @param {Boolean} [data.opts.tty=true] - Allocate a pseudo `tty`.
-     * @param {String} [data.opts.user='root'] - The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`.
+     * @param {Object} data A run Object or an Array of run Objects if you want to run more tha one command.
+     * @param {String} data.id The container to run the command on. Must be an id that docker can recognize such as a container hash or name.
+     * @param {String} data.cmd A String of a command or an Array whose elements are the parts of the command.
+     * @param {Object} [data.opts] Options on how to run the command.
+     * @param {String} [data.opts.mode='collect'] Either `collect` or `attach`. Attach will connect to the run `stdin`.
+     * @param {String} [data.opts.pre] A String or Array of additional arguments or options to append to the `cmd` before the user specified args and options are added.
+     * @param {Array} [data.opts.env=[]] Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`.
+     * @param {String} [data.opts.user='root'] The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`.
+     * @param {String} [data.opts.detach=false] Run the process in the background
+     * @param {String} [data.opts.autoStart=false] Automatically starts the container
+     * @param {String} [data.opts.autoStop=false] Automatically stops the container
      * @return {Promise} A Promise with a string containing the command's output.
      * @example
      *
@@ -359,12 +357,12 @@ module.exports = lando => {
      *
      * @since 3.0.0
      * @alias lando.engine.scan
-     * @param {Object} data - Search criteria, Need eithers an ID or a service within a compose context
-     * @param {String} data.id - An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} data.opts - Options on what service to scan
-     * @param {Array} data.opts.services - An Array of services to scan.
+     * @param {Object} data Search criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} data.opts Options on what service to scan
+     * @param {Array} data.opts.services An Array of services to scan.
      * @return {Promise} A Promise with an Object of service metadata.
      * @example
      *
@@ -411,14 +409,14 @@ module.exports = lando => {
      * @alias lando.engine.start
      * @fires pre_engine_start
      * @fires post_engine_start
-     * @param {Object} data - A `compose` Object or an Array of `compose` Objects if you want to start more than one set of services.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} [data.opts] - Options on how to start the `compose` Objects containers.
-     * @param {Array} [data.opts.services='all services'] - The services to start.
-     * @param {Boolean} [data.opts.background=true] - Start the services in the background.
-     * @param {Boolean} [data.opts.recreate=false] - Recreate the services.
-     * @param {Boolean} [data.opts.removeOrphans=true] - Remove orphaned containers.
+     * @param {Object} data A `compose` Object or an Array of `compose` Objects if you want to start more than one set of services.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] Options on how to start the `compose` Objects containers.
+     * @param {Array} [data.opts.services='all services'] The services to start.
+     * @param {Boolean} [data.opts.background=true] Start the services in the background.
+     * @param {Boolean} [data.opts.recreate=false] Recreate the services.
+     * @param {Boolean} [data.opts.removeOrphans=true] Remove orphaned containers.
      * @return {Promise} A Promise.
      * @example
      *
@@ -463,12 +461,12 @@ module.exports = lando => {
      * @alias lando.engine.stop
      * @fires pre_engine_stop
      * @fires post_engine_stop
-     * @param {Object} data - Stop criteria, Need eithers an ID or a service within a compose context
-     * @param {String} data.id - An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
-     * @param {Array} data.compose - An Array of paths to Docker compose files
-     * @param {String} data.project - A String of the project name (Usually this is the same as the app name)
-     * @param {Object} [data.opts] - Options on what services to setop
-     * @param {Array} [data.opts.services='all services'] - An Array of services to stop.
+     * @param {Object} data Stop criteria, Need eithers an ID or a service within a compose context
+     * @param {String} data.id An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`.
+     * @param {Array} data.compose An Array of paths to Docker compose files
+     * @param {String} data.project A String of the project name (Usually this is the same as the app name)
+     * @param {Object} [data.opts] Options on what services to setop
+     * @param {Array} [data.opts.services='all services'] An Array of services to stop.
      * @return {Promise} A Promise.
      * @example
      *
