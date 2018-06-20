@@ -322,8 +322,7 @@ module.exports = lando => {
      * @param {Array} [data.opts.env=[]] Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`.
      * @param {String} [data.opts.user='root'] The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`.
      * @param {String} [data.opts.detach=false] Run the process in the background
-     * @param {String} [data.opts.autoStart=false] Automatically starts the container
-     * @param {String} [data.opts.autoStop=false] Automatically stops the container
+     * @param {String} [data.opts.autoRemove=false] Automatically removes the container
      * @return {Promise} A Promise with a string containing the command's output.
      * @example
      *

@@ -48,7 +48,7 @@ module.exports = class Landerode extends Dockerode {
     // This will prevent a race condition from happening.
     // Wrap errors.
     .catch(err => {
-      if (_.endsWith(err.message, 'The container "\'' + cid + '\'" does not exist!')) return false;
+      if (_.includes(err.message, `No such container: ${cid}`)) return false;
       else throw new Error(err, 'Error querying isRunning: "%s".', cid);
     });
   };

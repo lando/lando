@@ -17,10 +17,7 @@ exports.engineCmd = (name, daemon, events, data, run) => daemon.up()
 /*
  * Helper to route to build command
  */
-exports.build = (data, compose) => Promise.resolve()
-  // Pull
-  .then(() => retryEach(data, datum => compose('pull', datum)))
-  // Build
+exports.build = (data, compose) => retryEach(data, datum => compose('pull', datum))
   .then(() => retryEach(data, datum => compose('build', datum)));
 
 /*
@@ -53,18 +50,32 @@ exports.logs = (data, compose) => retryEach(data, datum => compose('logs', datum
 /*
  * Helper to route to run command
  */
-exports.run = (data, compose, docker) => Promise.each(utils.normalizer(data), datum => {
+exports.run = (data, compose, docker, started = true) => Promise.each(utils.normalizer(data), datum => {
+  return docker.isRunning(utils.getId(datum)).then(isRunning => {
+    started = isRunning;
+    if (!isRunning) return exports.start(datum, compose);
+  })
   // There is weirdness starting up an exec via the Docker Remote API when
   // accessing the daemon through a named pipe on Windows. Until that is
   // resolved we currently shell the exec out to docker-compose
   //
   // See: https://github.com/apocas/docker-modem/issues/83
   //
-  if (process.platform === 'win32') {
-    return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
-  } else {
-    return docker.run(datum.id, datum.cmd, datum.opts);
-  }
+  .then(() => {
+    if (process.platform === 'win32') {
+      return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
+    } else {
+      return docker.run(datum.id, datum.cmd, datum.opts);
+    }
+  })
+  // Stop if we have to
+  .tap(() => {
+    if (!started) return exports.stop(datum, compose, docker);
+  })
+  // Destroy if we have to
+  .tap(() => {
+    if (_.get(datum, 'opts.autoRemove', false)) return exports.destroy(datum, compose, docker);
+  });
 });
 
 /*
