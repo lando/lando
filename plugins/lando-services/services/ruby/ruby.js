@@ -82,28 +82,6 @@ module.exports = function(lando) {
       ruby.ports = [];
     }
 
-    // And if not we need to add in an additional cli container so that we can
-    // run things like lando bundler install before our app starts up
-    else {
-
-      // Spoof the config and add some internal properties
-      var cliConf = {
-        type: 'ruby:' + version,
-        _app: config._app,
-        _root: config._root,
-        _mount: config._mount
-      };
-
-      // Extract the cli service and add here
-      var cliCompose = lando.services.build('cli', 'ruby:' + version, cliConf);
-      var cliName = name + '_cli';
-      services[cliName] = cliCompose.services.cli;
-
-      // Add a flag so we know this is built behind the the scenes
-      config._hiddenServices = [cliName];
-
-    }
-
     // Generate some certs we can use
     if (config.ssl) {
       ruby.ports.push('443');

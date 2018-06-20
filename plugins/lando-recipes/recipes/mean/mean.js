@@ -68,13 +68,13 @@ module.exports = function(lando) {
     // Get our default tooling opts
     var tooling = {
       node: {
-        service: 'appserver_cli'
+        service: 'appserver'
       },
       npm: {
-        service: 'appserver_cli'
+        service: 'appserver'
       },
       yarn: {
-        service: 'appserver_cli'
+        service: 'appserver'
       },
       mongo: {
         service: 'database',

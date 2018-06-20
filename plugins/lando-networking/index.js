@@ -195,41 +195,20 @@ module.exports = function(lando) {
         cmd: '/setup-ca.sh',
         opts: {
           mode: 'attach',
-          services: ['ca']
+          services: ['ca'],
+          autoRemove: true,
         }
       };
 
-      // Check if ca setup is already running
+      // Check if ca setup is already happening
       return lando.engine.list()
 
       // Filter it out
-      .filter(function(container) {
-        return container.name === ca.id;
-      })
+      .filter(container => container.name === ca.id)
 
       // Setup the CA
       .then(function(containers) {
-        if (_.isEmpty(containers)) {
-
-          // Start
-          return lando.engine.start(ca)
-
-          // Run CA setup
-          .then(function() {
-            return lando.engine.run(ca);
-          })
-
-          // Stop
-          .then(function() {
-            return lando.engine.stop(ca);
-          })
-
-          // Kill
-          .then(function() {
-            return lando.engine.destroy(ca);
-          });
-
-        }
+        if (_.isEmpty(containers)) return lando.engine.run(ca);
       });
 
     }
