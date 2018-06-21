@@ -173,7 +173,7 @@ module.exports = lando => {
       .each(container => {
         // Set useful defaults
         const service = container.service;
-        const aliases = [[service, container.app, 'internal'].join('.')];
+        let aliases = [[service, container.app, 'internal'].join('.')];
 
         // Add in any additional aliases if we have proxy settings
         if (_.has(app, 'config.proxy.' + service)) {
