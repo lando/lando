@@ -235,6 +235,10 @@
   *   [events.post-engine-start](api/engine.md#event_post_engine_start)
   *   [events.pre-engine-stop](api/engine.md#event_pre_engine_stop)
   *   [events.post-engine-stop](api/engine.md#event_post_engine_stop)
+*   [Tooling](api/tooling.md#landotoolingbuild)
+  *   [lando.tooling.build](api/tooling.md#landotoolingbuild)
+  *   [events.pre-COMMAND](api/tooling.md#event_pre_command)
+  *   [events.post-COMMAND](api/tooling.md#event_post_command)
 
 ## Changelog
 

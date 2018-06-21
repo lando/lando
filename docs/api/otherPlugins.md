@@ -586,16 +586,6 @@ Does a healthcheck on a service
 
 **Since**: 3.0.0  
 <div class="api-body-footer"></div>
-<a id="landotoolingbuild"></a>
-
-<h2 id="landotoolingbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.tooling.build()</h2>
-<div class="api-body-header"></div>
-
-The tooling command builder
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
 <a id="event_pre_instantiate_app"></a>
 
 <h2 id="event_pre_instantiate_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">

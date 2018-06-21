@@ -5,11 +5,24 @@ const utils = require('./lib/utils');
 
 module.exports = lando => ({
   /**
+   * Event that allows you to do some things before a tooling command is run
+   *
+   * @since 3.0.0
+   * @event pre_COMMAND
+   */
+  /**
+   * Event that allows you to do some things after a tooling command is run
+   * @since 3.0.0
+   * @event post_COMMAND
+   */
+  /**
    * The tooling command builder
    * @todo: this definitely needs work!
    *
    * @since 3.0.0
    * @alias lando.tooling.build
+   * @fires pre_COMMAND
+   * @fires post_COMMAND
    * @param {Object} config The build config
    * @return {Object} The build object
    */

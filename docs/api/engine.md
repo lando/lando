@@ -4,7 +4,7 @@
   "pre_engine_build"</h2>
 <div class="api-body-header"></div>
 
-Event that allows you to do some things before a `compose` Objects containers are
+Event that allows you to do some things before a `compose` object's containers are
 started
 
 **Since**: 3.0.0  
@@ -15,7 +15,7 @@ started
   "post_engine_build"</h2>
 <div class="api-body-header"></div>
 
-Event that allows you to do some things before a `compose` Objects containers are
+Event that allows you to do some things before a `compose` object's containers are
 started
 
 **Since**: 3.0.0  
@@ -154,7 +154,7 @@ Creates a Docker network
 **Example**  
 ```js
 // Create the network
- return ando.engine.createNetwork('mynetwork')
+return ando.engine.createNetwork('mynetwork')
 ```
 <div class="api-body-footer"></div>
 <a id="landoenginedestroy"></a>
@@ -429,13 +429,10 @@ documentation for what a compose object looks like.
 | [data.opts] | <code>Object</code> |  | Options on how to run the command. |
 | [data.opts.mode] | <code>String</code> | <code>&#x27;collect&#x27;</code> | Either `collect` or `attach`. Attach will connect to the run `stdin`. |
 | [data.opts.pre] | <code>String</code> |  | A String or Array of additional arguments or options to append to the `cmd` before the user specified args and options are added. |
-| [data.opts.attachStdin] | <code>Boolean</code> | <code>false</code> | Attach to the run's `stdin`. Helpful if you think there will be interactive options or prompts. |
-| [data.opts.attachStdout] | <code>Boolean</code> | <code>true</code> | Attach to the run's `stdout`. Helpful to determine what the command is doing. |
-| [data.opts.attachStderr] | <code>Boolean</code> | <code>true</code> | Attach to the run's `stderr`. Helpful to determine any errors. |
 | [data.opts.env] | <code>Array</code> | <code>[]</code> | Additional environmental variables to set for the cmd. Must be in the form `KEY=VALUE`. |
-| [data.opts.detachKeys] | <code>String</code> | <code>&#x27;ctrl-p,ctrl-q&#x27;</code> | Keystrokes that will detach the process. |
-| [data.opts.tty] | <code>Boolean</code> | <code>true</code> | Allocate a pseudo `tty`. |
 | [data.opts.user] | <code>String</code> | <code>&#x27;root&#x27;</code> | The user to run the command as. Can also be `user:group` or `uid` or `uid:gid`. |
+| [data.opts.detach] | <code>String</code> | <code>false</code> | Run the process in the background |
+| [data.opts.autoRemove] | <code>String</code> | <code>false</code> | Automatically removes the container |
 
 **Returns**: <code>Promise</code> - A Promise with a string containing the command's output.  
 **Example**  

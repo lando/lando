@@ -39,6 +39,7 @@ const docs = {
       './lib/yaml.js',
     ],
     engine: ['./plugins/lando-engine/engine.js'],
+    tooling: ['./plugins/lando-tooling/tooling.js'],
     otherPlugins: [
       './plugins/lando-app/*.js',
       './plugins/lando-core/*.js',
@@ -48,7 +49,6 @@ const docs = {
       './plugins/lando-proxy/*.js',
       './plugins/lando-recipes/*.js',
       './plugins/lando-services/*.js',
-      './plugins/lando-tooling/*.js',
     ],
   },
   helpers: [
