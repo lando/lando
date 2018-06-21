@@ -93,7 +93,7 @@ module.exports = lando => {
 
         // Add in args if we expect them
         if (lando.config.process === 'node') {
-          cmd = cmd.concat(utils.largs(config));
+          cmd = cmd.concat(utils.stripGlobalOpts());
         }
 
         // Get the backup user

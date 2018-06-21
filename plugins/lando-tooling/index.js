@@ -1,16 +1,13 @@
 'use strict';
 
-module.exports = lando => {
-  // Modules
-  const _ = lando.node._;
+// Modules
+const _ = require('lodash');
 
+module.exports = lando => {
   // Add tooling module to lando
   lando.events.on('post-bootstrap', 2, lando => {
-    // Log
     lando.log.info('Initializing tooling plugin');
-    // Add the SSH command
     lando.tasks.add('ssh', require('./tasks/ssh')(lando));
-    // Add services to lando
     lando.tooling = require('./tooling')(lando);
   });
 
@@ -21,22 +18,19 @@ module.exports = lando => {
     return lando.app.get()
 
     // If we have an app with a tooling section let's do this
-    .then(app => {
-      if (app && app.config.tooling && !_.isEmpty(app.config.tooling)) {
-        // Log
+    .then((app = {}) => {
+      if (!_.isEmpty(_.get(app, 'config.tooling', {}))) {
         lando.log.verbose('Additional tooling detected for app %s', app.name);
-        // Loop through each tool
-        _.forEach(app.config.tooling, (task, name) => {
-          if (_.isObject(task)) {
-            // Log
-            lando.log.verbose('Adding app cli task %s', name);
-            // Build our config
-            const config = task;
-            task.app = app;
-            task.name = name;
-            // Build and add the task
-            tasks.push(lando.tooling.build(config));
-          }
+        // Map into tasks
+        const toolingTasks = _(app.config.tooling)
+          .map((task, name) => _.merge({}, task, {app, name}))
+          .filter(task => _.isObject(task))
+          .value();
+
+        // Add the tasks
+        _.forEach(toolingTasks, task => {
+          lando.log.verbose('Adding app cli task %s', task.name);
+          tasks.push(lando.tooling.build(task));
         });
 
         // Log.
