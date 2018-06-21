@@ -43,6 +43,11 @@ exports.buildCommand = (app, command, needs, service, user) => ({
 });
 
 /*
+ * Helper to grab dynamic container if needed
+ */
+exports.getContainer = (service, answer) => (_.startsWith(service, ':')) ? answers[service.split(':')[1]] : service;
+
+/*
  * Helper to map the cwd on the host to the one in the container
  */
 exports.getContainerPath = appRoot => {
@@ -109,12 +114,12 @@ exports.toolingDefaults = ({
   service = '',
   user = _.get(app, `services[${service}].environment.LANDO_WEBROOT_USER`, 'root')} = {}) =>
   ({
-    name,
-    app,
-    cmd,
-    description,
-    needs,
-    options,
-    service,
-    user,
+    name: name,
+    app: app,
+    cmd: cmd,
+    description: description,
+    needs: needs,
+    options: options,
+    service: service,
+    user: user,
   });

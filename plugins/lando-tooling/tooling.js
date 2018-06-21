@@ -18,7 +18,7 @@ module.exports = lando => ({
     // Get the run handler
     const run = answers => {
       // Handle dynamic services right away
-      const container = (_.startsWith(service, ':')) ? answers[service.split(':')[1]] : service;
+      const container = utils.getContainer(service, answers);
       // Normalize any needs we have
       const auxServices = (_.isString(needs)) ? [needs] : needs;
       // Get passthrough options
