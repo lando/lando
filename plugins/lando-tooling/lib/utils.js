@@ -108,4 +108,13 @@ exports.toolingDefaults = ({
   options = {},
   service = '',
   user = _.get(app, `services[${service}].environment.LANDO_WEBROOT_USER`, 'root')} = {}) =>
-  ({name, app, cmd, description, needs, options, service, user});
+  ({
+    name,
+    app,
+    cmd,
+    description,
+    needs,
+    options,
+    service,
+    user,
+  });
