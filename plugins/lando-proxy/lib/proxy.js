@@ -29,7 +29,8 @@ exports.compose = function(defaults, ports, project) {
     compose: [defaults, ports],
     project: project,
     opts: {
-      services: ['proxy']
+      services: ['proxy'],
+      noRecreate: false,
     }
   };
 };

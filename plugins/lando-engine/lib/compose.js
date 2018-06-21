@@ -12,6 +12,7 @@ const composeFlags = {
   follow: '--follow',
   force: '--force',
   noCache: '--no-cache',
+  noRecreate: '--no-recreate',
   noDeps: '--no-deps',
   pull: '--pull',
   q: '-q',
@@ -32,7 +33,7 @@ const defaultOptions = {
   ps: {q: true},
   pull: {},
   rm: {force: true, volumes: true},
-  up: {background: true, recreate: false, removeOrphans: true},
+  up: {background: true, noRecreate: true, recreate: false, removeOrphans: true},
 };
 
 /*
