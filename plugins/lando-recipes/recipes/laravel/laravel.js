@@ -79,7 +79,7 @@ module.exports = function(lando) {
     build.tooling.artisan = {
       service: 'appserver',
       needs: needs,
-      cmd: ['php', 'artisan']
+      cmd: 'php artisan',
     };
 
     // Add laravel command

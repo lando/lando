@@ -179,7 +179,7 @@ module.exports = function(lando) {
       composer: {
         service: 'appserver',
         description: 'Run composer commands',
-        cmd: ['composer', '--ansi']
+        cmd: 'composer --ansi',
       },
       'db-import [file]': {
         service: ':host',
@@ -214,7 +214,7 @@ module.exports = function(lando) {
       php: {
         service: 'appserver',
         description: 'Run php commands',
-        cmd: ['php']
+        cmd: 'php'
       }
     };
 

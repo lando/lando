@@ -62,7 +62,7 @@ module.exports = function(lando) {
     build.tooling.wp = {
       service: 'appserver',
       description: 'Run wp-cli commands',
-      cmd: ['wp', '--allow-root']
+      cmd: 'wp --allow-root',
     };
 
     // Return the things
