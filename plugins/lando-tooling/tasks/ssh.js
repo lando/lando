@@ -1,10 +1,10 @@
 'use strict';
 
-module.exports = function(lando) {
+const utils = require('./../lib/utils');
 
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var utils = require('./../lib/utils');
+  const _ = lando.node._;
 
   // The task object
   return {
@@ -13,15 +13,14 @@ module.exports = function(lando) {
     options: {
       command: {
         describe: 'Run a command in the service',
-        alias: ['c']
+        alias: ['c'],
       },
       user: {
         describe: 'Run as a specific user',
-        alias: ['u']
-      }
+        alias: ['u'],
+      },
     },
-    run: function(options) {
-
+    run: options => {
       // Handle our options
       if (!_.has(options, 'service') && _.has(options, 'appname')) {
         options.service = options.appname;
@@ -32,17 +31,15 @@ module.exports = function(lando) {
       return lando.app.get(options.appname)
 
       // Handle app or no app
-      .then(function(app) {
-
+      .then(app => {
         // We have an app so lets try to build a ssh exec
         if (app) {
-
           // Default to appserver if we have no second arg
-          var service = options.service || 'appserver';
-          var ssh = 'if ! type bash > /dev/null; then sh; else bash; fi';
+          const service = options.service || 'appserver';
+          const ssh = 'if ! type bash > /dev/null; then sh; else bash; fi';
 
           // Build out our run
-          var run = {
+          const run = {
             id: [app.name, service, '1'].join('_'),
             compose: app.compose,
             project: app.name,
@@ -52,35 +49,28 @@ module.exports = function(lando) {
               mode: 'attach',
               pre: ['cd', utils.getContainerPath(app.root)].join(' '),
               user: options.user || 'www-data',
-              services: [service]
-            }
+              services: [service],
+            },
           };
 
           // Let's check to see if the app has been started
           return lando.app.isRunning(app)
 
           // If not let's make sure we start it
-          .then(function(isRunning) {
+          .then(isRunning => {
             if (!isRunning) {
               return lando.app.start(app);
             }
           })
 
           // Exec
-          .then(function() {
+          .then(() => {
             return lando.engine.run(run);
           });
-
-        }
-
-        // Warn user we couldn't find an app
-        else {
+        } else {
           lando.log.warn('Could not find app in this dir');
         }
-
       });
-
-    }
+    },
   };
-
 };
