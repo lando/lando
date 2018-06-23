@@ -49,7 +49,7 @@ module.exports = class Landerode extends Dockerode {
     // Wrap errors.
     .catch(err => {
       if (_.includes(err.message, `No such container: ${cid}`)) return false;
-      else throw new Error(err, 'Error querying isRunning: "%s".', cid);
+      else throw err;
     });
   };
 
