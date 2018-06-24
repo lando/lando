@@ -14,6 +14,27 @@ const sinon = require('sinon');
 const Landerode = require('../../lib/docker');
 const landerode = new Landerode();
 const Dockerode = require('dockerode');
+const Promise = require('../../../../lib/promise');
+const _ = require('lodash');
+
+const dummyContainer = (overrides = {}) => {
+  return _.assign(
+      new Dockerode.Container(),
+      {
+        Id: '8675309',
+        app: 'Death Star',
+        Labels: {
+          'com.docker.compose.project': 'Death Star',
+          'com.docker.compose.service': 'Exhaust Port',
+          'com.docker.compose.container-number': 73,
+          'com.docker.compose.oneoff': 'no',
+          'io.lando.container': 'TRUE',
+          'io.lando.service-container': 'no',
+        },
+      },
+      overrides
+  );
+};
 
 describe('lando-engine.docker', () => {
   describe('#Landerode', () => {
@@ -43,7 +64,7 @@ describe('lando-engine.docker', () => {
     it('should throw an error if inspect fails', () => {
       // We need this chain of stubs to send our call down an explicit line that
       // will eventually throw a solid exception.
-      let bogusContainer = new Dockerode.Container();
+      let bogusContainer = dummyContainer();
       const inspectStub = sinon.stub(bogusContainer, 'inspect').throws();
       const stub = sinon.stub(landerode, 'getContainer').returns(bogusContainer);
 
@@ -78,7 +99,7 @@ describe('lando-engine.docker', () => {
     });
 
     it('should return true if State.Running inspect data is true', () => {
-      // Container to return from 'getContainer'
+      // Container to return from 'getContainer';;l
       const bogusContainer = new Dockerode.Container({}, 'YT-1300');
       // Force the state of the container to be running.
       const inspectStub = sinon.stub(bogusContainer, 'inspect').resolves({
@@ -129,31 +150,82 @@ describe('lando-engine.docker', () => {
   });
 
   describe('#list', () => {
-    /*
     it('should filter out any containers that are pending removal', () => {
-      const listStub = sinon.stub(landerode, 'listContainers').resolves({
-        'one': {
-          Status: 'Removal In Progress',
-        },
-        'two': {
-          Status: 'Being Awesome',
-        },
-      });
-      landerode.list('magic').should.be.resolvedWith({
-        'one': {
-          Status: 'Removal In Progress',
-        },
-      })
+      const listStub = sinon.stub(landerode, 'listContainers')
+      .usingPromise(Promise)
+      .resolves([
+          dummyContainer({Status: 'Being Awesome'}),
+          dummyContainer({Status: 'Removal In Progress'}),
+      ]);
+
+      return landerode.list()
+      .should.eventually.be.an('Array').with.a.lengthOf(1)
       .then(() => {
         listStub.restore();
       });
     });
-    */
-    it('should remove any "null" containers');
-    it('should filter out non-lando containers');
-    it('should filter by appName if given');
-    it('should throw an error on all other catches');
-    it('should return an array of lando containers');
+
+    it('should remove any "null" containers', () => {
+      const listStub = sinon.stub(landerode, 'listContainers')
+      .usingPromise(Promise)
+      .resolves([
+        null,
+        dummyContainer({identity: 'Solo'}),
+      ]);
+
+      return landerode.list()
+      .should.eventually.be.an('Array').with.a.lengthOf(1)
+      .then(() => {
+        listStub.restore();
+      });
+    });
+
+    it('should filter out non-lando containers', () => {
+      const listStub = sinon.stub(landerode, 'listContainers')
+      .usingPromise(Promise)
+      .resolves([
+        dummyContainer({Labels: {'io.lando.container': 'FALSE'}}),
+        dummyContainer(),
+      ]);
+
+      return landerode.list()
+      .should.eventually.be.an('Array').with.a.lengthOf(1)
+      .then(() => {
+        listStub.restore();
+      });
+    });
+
+    it('should filter by appName if given', () => {
+      const listStub = sinon.stub(landerode, 'listContainers')
+      .usingPromise(Promise)
+      .resolves([
+        dummyContainer({Labels: {
+            'com.docker.compose.project': 'Alderaan',
+            'com.docker.compose.service': 'Rescue Mission',
+            'com.docker.compose.container-number': 73,
+            'com.docker.compose.oneoff': 'no',
+            'io.lando.container': 'TRUE',
+            'io.lando.service-container': 'no',
+          }}),
+        dummyContainer(),
+      ]);
+
+      return landerode.list('Alderaan')
+      .should.eventually.be.an('Array').with.a.lengthOf(1)
+      .then(() => {
+        listStub.restore();
+      });
+    });
+
+    it('should throw an error on all other catches', () => {
+      let container = dummyContainer();
+      delete container.lando;
+      const listStub = sinon.stub(landerode, 'listContainers').resolves([container]);
+
+      const fail = () => landerode.list();
+      expect(fail).to.throw();
+      return listStub.restore();
+    });
   });
 
   describe('#remove', () => {

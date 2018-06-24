@@ -58,12 +58,12 @@ module.exports = class Landerode extends Dockerode {
    */
   list(appName) {
     return this.listContainers()
+    // Filter out nulls and undefineds.
+    .filter(_.identity)
     // Filter out containers with invalid status
     .filter(data => data.Status !== 'Removal In Progress')
     // Map docker containers to lando containers.
     .map(container => utils.toLandoContainer(container))
-    // Filter out nulls and undefineds.
-    .filter(_.identity)
     // Filter out all non-lando containers
     .filter(data => data.lando === true)
     // Filter by app name if an app name was given.
