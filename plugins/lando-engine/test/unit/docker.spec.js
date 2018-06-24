@@ -130,7 +130,7 @@ describe('lando-engine.docker', () => {
 
   describe('#list', () => {
     it('should filter out any containers that are pending removal', () => {
-      const listStub = sinon.stub(landerode, "listContainers").resolves({
+      const listStub = sinon.stub(landerode, 'listContainers').resolves({
         'one': {
           Status: 'Removal In Progress',
         },
