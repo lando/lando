@@ -16,6 +16,7 @@ const landerode = new Landerode();
 const Dockerode = require('dockerode');
 const Promise = require('../../../../lib/promise');
 const _ = require('lodash');
+const utils = require('../../lib/utils');
 
 const dummyContainer = (overrides = {}) => {
   return _.assign(
@@ -45,18 +46,22 @@ describe('lando-engine.docker', () => {
 
   describe('#createNetwork', () => {
     it('should merge name correctly into opts', () => {
-      const spy = sinon.spy(landerode, 'createNetwork');
-      landerode.createNet('elthree', {}).then(() => {
+      const stub = sinon.stub(landerode, 'createNetwork')
+        .usingPromise(Promise)
+        .resolves();
+      return landerode.createNet('elthree', {}).then(() => {
         // for some reason should/expect doesn't work here...
-        return spy.calledWith({Name: 'elthree'});
+        stub.calledWith({Name: 'elthree'});
+        stub.restore();
       });
-      spy.restore();
     });
     it('should throw an error if cant create network', () => {
-      const stub = sinon.stub(landerode, 'createNetwork').throws('Too Many Capes');
-      const wut = () => landerode.createNet('lando', {});
-      expect(wut).to.throw();
-      stub.restore();
+      const stub = sinon.stub(landerode, 'createNetwork').rejects('Too Many Capes');
+
+      return landerode.createNet('hardtimes').should.be.rejectedWith('Too Many Capes')
+      .then(() => {
+        stub.restore();
+      });
     });
   });
 
@@ -81,7 +86,7 @@ describe('lando-engine.docker', () => {
   describe('#isRunning', () => {
     it('should return false if State.Running inspect data is false', () => {
       // Container to return from 'getContainer'
-      const bogusContainer = new Dockerode.Container({}, 'YT-1300');
+      const bogusContainer = dummyContainer();
       // Force the state of the container to not be running.
       const inspectStub = sinon.stub(bogusContainer, 'inspect').resolves({
         State: {
@@ -229,11 +234,79 @@ describe('lando-engine.docker', () => {
   });
 
   describe('#remove', () => {
-    it('should throw an error if remove fails');
+    it('should throw an error if remove fails', () => {
+      const container = dummyContainer({Id: '1234'});
+
+      const getStub = sinon.stub(landerode, 'getContainer').returns(container);
+      const removeStub = sinon.stub(container, 'remove')
+        .usingPromise(Promise)
+        .rejects('Oh No!');
+
+      landerode.remove('1234').should.be.rejectedWith('Oh No!')
+      .then(() => {
+        getStub.restore();
+        removeStub.restore();
+      });
+    });
   });
 
   describe('#run', () => {
-    it('should resolve with stdout when error code is 0');
-    it('should reject with object containing output and exit code otherwise');
+    it('should resolve with stdout when error code is 0', () => {
+      // This function has a lot of dependencies, so strap in...
+      const container = dummyContainer();
+      const exec = new Dockerode.Exec({Promise: Promise}, '1234');
+      const getStub = sinon.stub(landerode, 'getContainer')
+        .returns(container);
+      const execStub = sinon.stub(container, 'exec')
+        .usingPromise(Promise)
+        .resolves(exec);
+      const runStreamStub = sinon.stub(utils, 'runStream')
+        .usingPromise(Promise)
+        .resolves({stdout: 'Yay!', stderr: null});
+      const inspectStub = sinon.stub(exec, 'inspect')
+        .usingPromise(Promise)
+        .resolves({ExitCode: 0, stdout: 'Yay!'});
+      const startStub = sinon.stub(exec, 'start')
+        .usingPromise(Promise)
+        .resolves({output: ''});
+
+      return landerode.run('1234', 'dostuff').should.be.fulfilled
+      .then(() => {
+        getStub.restore();
+        execStub.restore();
+        runStreamStub.restore();
+        inspectStub.restore();
+        startStub.restore();
+      });
+    });
+    it('should reject with object containing output and exit code otherwise', () => {
+      // This function has a lot of dependencies, so strap in...
+      const container = dummyContainer();
+      const exec = new Dockerode.Exec({Promise: Promise}, '1234');
+      const getStub = sinon.stub(landerode, 'getContainer')
+        .returns(container);
+      const execStub = sinon.stub(container, 'exec')
+        .usingPromise(Promise)
+        .resolves(exec);
+      const runStreamStub = sinon.stub(utils, 'runStream')
+        .usingPromise(Promise)
+        .resolves({stdout: 'Yay!', stderr: null});
+      const inspectStub = sinon.stub(exec, 'inspect')
+        .usingPromise(Promise)
+        .resolves({ExitCode: 1, stderr: 'Oh No!'});
+      const startStub = sinon.stub(exec, 'start')
+        .usingPromise(Promise)
+        .resolves({output: ''});
+
+      return landerode.run('1234', 'dostuff').should.be
+      .rejectedWith({ExitCode: 1, stderr: 'Oh No!'})
+      .then(() => {
+        getStub.restore();
+        execStub.restore();
+        runStreamStub.restore();
+        inspectStub.restore();
+        startStub.restore();
+      });
+    });
   });
 });
