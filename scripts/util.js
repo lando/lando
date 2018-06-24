@@ -46,7 +46,7 @@ exports.cliPkgTask = output => {
   const pkgCmd = [
     'node',
     path.resolve(__dirname, '..', 'node_modules', 'pkg', 'lib-es5', 'bin.js'),
-    '--targets ' + ['node8', exports.cliTargetOs(), 'x64'].join('-'),
+    '--targets ' + ['node10', exports.cliTargetOs(), 'x64'].join('-'),
     '--config ' + path.join('package.json'),
     '--output ' + output,
     path.join('bin', 'lando.js'),
