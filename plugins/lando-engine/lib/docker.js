@@ -42,7 +42,7 @@ module.exports = class Landerode extends Dockerode {
    */
   isRunning(cid) {
     return this.inspect(cid)
-    // Get the runnign state
+    // Get the running state
     .then(data => _.get(data, 'State.Running', false))
     // If the container no longer exists, return false since it isn't running.
     // This will prevent a race condition from happening.
@@ -89,15 +89,19 @@ module.exports = class Landerode extends Dockerode {
     // Get our options;
     const {execOpts, startOpts, attached} = utils.runConfig(cmd, opts, opts.mode);
     // Setup and start the exec
-    return this.getContainer(id).exec(execOpts).then(exec => exec.start(startOpts)
-    // Cross the streams
-    .then(result => utils.runStream(result.output, attached)
-    // Inspect the exec and determine the rejection
-    .then(data => exec.inspect()
-    // Determine whether we can reject or not
-    .then(result => new Promise((resolve, reject) => {
-      if (result.ExitCode === 0) resolve(data.stdout);
-      else reject({message: data.stderr + data.stdout, code: result.ExitCode});
-    })))));
+    return this.getContainer(id).exec(execOpts)
+    .then(exec => exec.start(startOpts)
+      // Cross the streams
+      .then(result => utils.runStream(result.output, attached)
+        // Inspect the exec and determine the rejection
+        .then(data => exec.inspect()
+          // Determine whether we can reject or not
+          .then(result => new Promise((resolve, reject) => {
+            if (result.ExitCode === 0) resolve(data.stdout);
+            else reject({message: data.stderr + data.stdout, code: result.ExitCode});
+          }))
+        )
+      )
+    );
   };
 };
