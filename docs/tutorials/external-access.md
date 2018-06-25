@@ -50,7 +50,7 @@ lando info
 }
 ```
 
-In the example above you can access the `mariadb` database from your host at `localhost:32787`. Note that this port is automatically assigned by Docker itself and will change every time you restart your app.
+In the example above you can access the `mariadb` database from your host at `localhost:32787`, on Linux use `127.0.0.1:32787` so that the port number is used instead of a socket. Note that this port is automatically assigned by Docker itself and will change every time you restart your app.
 
 That said, Lando provides a way to "lock down" these ports so they are more predictable.
 
