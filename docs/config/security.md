@@ -68,5 +68,5 @@ Currently works for: Version 67.0.3396.79 (Official Build) (64-bit)
 5. Click `Import`.
 6. Navigate to your `~/.lando/certs/lando.pem` key, and import it.
 7. Check all settings that apply.
-8. Flush browser cache and naviate to your Lando website.
+8. Flush browser cache and navigate to your Lando website.
 9. Ensure that you have `SSL` set up through your `lando.yml` file.
