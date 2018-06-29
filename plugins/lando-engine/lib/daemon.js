@@ -9,29 +9,7 @@ const Shell = require('./../../../lib/shell');
 const shell = new Shell();
 
 /*
- * Helper to determine up and down
- */
-const isUp = (log, cache, docker) => {
-  if (_.toString(shell.which(docker)).toUpperCase() !== docker.toUpperCase()) {
-    throw Error('Lando thinks you might need some help with your droid');
-  }
-  // Auto return if cached and true
-  if (cache.get('engineup') === true) return Promise.resolve(true);
-  // Return true if we get a zero response and cache the result
-  return shell.sh([docker, 'info'])
-  .then(() => {
-    log.debug('Engine is up.');
-    cache.set('engineup', true, {ttl: 5});
-    return Promise.resolve(true);
-  })
-  .catch(error => {
-    log.debug('Engine is down with error %s', error);
-    return Promise.resolve(false);
-  });
-};
-
-/*
- * Creates a new yaml instance.
+ * Creates a new Daemon instance.
  */
 module.exports = class LandoDaemon {
   constructor(cache, events, docker = env.getDockerExecutable(), log = new Log(), context = 'node') {
@@ -46,8 +24,8 @@ module.exports = class LandoDaemon {
    * Tries to active the docker engine/daemon.
    *
    * @since 3.0.0
-   * @fires pre_engine_down
-   * @fires post_engine_down
+   * @fires pre_engine_up
+   * @fires post_engine_up
    * @return {Promise} A Promise.
    */
   up() {
@@ -65,7 +43,7 @@ module.exports = class LandoDaemon {
       // this requires SUDO and because the daemon should always be running on nix
       if (self.context !== 'node' && process.platform === 'linux') return Promise.resolve(true);
       // Turn it on if we can
-      return isUp(self.log, self.cache, self.docker).then(isUp => {
+      return this.isUp(self.log, self.cache, self.docker).then(isUp => {
         if (!isUp) {
           self.log.warn('Whoops! Lando has detected that Docker is not turned on!');
           self.log.warn('Give us a few moments while we try to start it up for you');
@@ -121,7 +99,7 @@ module.exports = class LandoDaemon {
       // this back.
       if (process.platform === 'win32' || process.platform === 'darwin') return Promise.resolve(true);
       // Shut provider down if its status is running.
-      return isUp(self.log, self.cache, self.docker).then(isUp => {
+      return this.isUp(self.log, self.cache, self.docker).then(isUp => {
         if (isUp) return shell.sh(env.buildDockerCmd('stop'), {mode: 'collect'});
       })
       // Wrap errors.
@@ -138,4 +116,26 @@ module.exports = class LandoDaemon {
      */
     .then(() => self.events.emit('post-engine-down'));
   }
+
+  /*
+   * Helper to determine up and down
+   */
+  isUp(log, cache, docker) {
+    if (_.toString(shell.which(docker)).toUpperCase() !== docker.toUpperCase()) {
+      throw Error('Lando thinks you might need some help with your droid');
+    }
+    // Auto return if cached and true
+    if (cache.get('engineup') === true) return Promise.resolve(true);
+    // Return true if we get a zero response and cache the result
+    return shell.sh([docker, 'info'])
+    .then(() => {
+      log.debug('Engine is up.');
+      cache.set('engineup', true, {ttl: 5});
+      return Promise.resolve(true);
+    })
+    .catch(error => {
+      log.debug('Engine is down with error %s', error);
+      return Promise.resolve(false);
+    });
+  };
 };
