@@ -1,14 +1,13 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
+  const _ = lando.node._;
 
   /*
    * Supported versions for node
    */
-  var versions = [
+  const versions = [
     '9',
     '8',
     'carbon',
@@ -24,26 +23,26 @@ module.exports = function(lando) {
     'argon',
     '4.8',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
+  const networks = function() {
     return {};
   };
 
   /*
    * Build out node
    */
-  var services = function(name, config) {
+  const services = function(name, config) {
 
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Path
-    var path = [
+    const path = [
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
@@ -53,16 +52,16 @@ module.exports = function(lando) {
     ];
 
     // Volumes
-    var vols = [
+    const vols = [
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/lib/node_modules'
     ];
 
     // Basic config
-    var cliCmd = 'tail -f /dev/null';
-    var version = config.version || '6';
-    var command = config.command || cliCmd;
+    const cliCmd = 'tail -f /dev/null';
+    const version = config.version || '6';
+    const command = config.command || cliCmd;
 
     // Arrayify the command if needed
     if (!_.isArray(command)) {
@@ -70,7 +69,7 @@ module.exports = function(lando) {
     }
 
     // Start with the node base
-    var node = {
+    const node = {
       image: 'node:' + version,
       environment: {
         TERM: 'xterm',
@@ -102,10 +101,10 @@ module.exports = function(lando) {
         config.run_internal = config.run_internal || [];
 
         // Queue up our global composer command
-        var nig = ['npm', 'install', '-g'];
+        const nig = ['npm', 'install', '-g'];
 
         // Get the dep
-        var dep = [pkg];
+        const dep = [pkg];
 
         // Add a version if we have one
         if (!_.isEmpty(version)) {
@@ -132,17 +131,17 @@ module.exports = function(lando) {
   /*
    * Metadata about our service
    */
-  var info = function() {
+  const info = function() {
     return {};
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
+  const volumes = function() {
 
     // Construct our volumes
-    var volumes = {
+    const volumes = {
       data: {}
     };
 

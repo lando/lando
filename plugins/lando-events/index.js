@@ -16,7 +16,7 @@ module.exports = lando => {
     // queue them up for running
     if (!_.isEmpty(app.config.events)) {
       _.forEach(app.config.events, (cmds, name) => {
-        app.events.on(name, data => lando.engine.run(utils.events2Runz(cmds, app, data)).catch(err => {
+        app.events.on(name, 100, data => lando.engine.run(utils.events2Runz(cmds, app, data)).catch(err => {
           lando.log.warn('One of your event commands has failed! This may prevent your app from working correctly');
           lando.log.error('Event failed with code %s and message %s', err.code, err.message);
         }));

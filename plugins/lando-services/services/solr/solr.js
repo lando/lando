@@ -1,18 +1,17 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var path = require('path');
+  const _ = lando.node._;
+  const path = require('path');
 
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const addConfig = lando.utils.services.addConfig;
+  const buildVolume = lando.utils.services.buildVolume;
 
   /*
    * Supported versions for nginx
    */
-  var versions = [
+  const versions = [
     '3.6',
     '4.10',
     '5.5',
@@ -23,46 +22,42 @@ module.exports = function(lando) {
     '7.0',
     '7.1',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out nginx services
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
-
+    const services = {};
     // Early config version differences
-    var versionConfig = {
+    const versionConfig = {
       '3.6': {
         image: 'actency/docker-solr:3.6',
         confDir: '/opt/solr/example/solr/conf',
         command: '/bin/bash -c "cd /opt/solr/example;' +
           ' java -Djetty.port=8983 -jar start.jar"',
-        dataDir: '/opt/solr/example/solr/data'
+        dataDir: '/opt/solr/example/solr/data',
       },
       '4.10': {
         image: 'actency/docker-solr:4.10',
         confDir: '/opt/solr-4.10.4/example/solr/collection1/conf/',
         command: '/bin/bash -c "/opt/solr/bin/solr -f -p 8983"',
-        dataDir: '/opt/solr-4.10.4/example/solr/collection1/data/'
-      }
+        dataDir: '/opt/solr-4.10.4/example/solr/collection1/data/',
+      },
     };
 
     // Figure out the name of the core
-    var core = config.core || 'index1';
+    const core = config.core || 'index1';
 
     // Start up the solr config collector
-    var solrConfig = {};
+    const solrConfig = {};
 
     // Normalize our run_as_root_internal
     config.run_as_root_internal = config.run_as_root_internal || [];
@@ -70,78 +65,68 @@ module.exports = function(lando) {
     // Figure out which config base to use
     if (_.includes(['3.6', '4.10'], config.version)) {
       solrConfig = versionConfig[config.version];
-    }
-    else {
+    } else {
       solrConfig = {
         image: 'solr:' + config.version,
         confDir: '/solrconf/conf',
         dataDir: '/opt/solr/server/solr/mycores/',
-        command: ['docker-entrypoint.sh', 'solr-precreate', core].join(' ')
+        command: ['docker-entrypoint.sh', 'solr-precreate', core].join(' '),
       };
     }
 
     // Default solr service
-    var solr = {
+    const solr = {
       image: solrConfig.image,
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
       volumes: ['data_' + name + ':' + solrConfig.dataDir],
-      command: solrConfig.command
+      command: solrConfig.command,
     };
 
     // Handle port forwarding
     if (config.portforward) {
-
       // If true assign a port automatically
       if (config.portforward === true) {
         solr.ports = ['8983'];
-      }
-
-      // Else use the specified port
-      else {
+      } else {
         solr.ports = [config.portforward + ':8983'];
       }
-
     }
 
     // Add some permission helpers for non custom versions
     // This is conditional for things like the pantheon recipe that need to
     // use a custom image that may or may not have the solr user
     if (config.version !== 'custom') {
-      var dataDir = solrConfig.dataDir;
-      var dataDirCmd = ['chown', '-R', 'solr:solr', dataDir].join(' ');
+      const dataDir = solrConfig.dataDir;
+      const dataDirCmd = ['chown', '-R', 'solr:solr', dataDir].join(' ');
       config.run_as_root_internal.unshift(dataDirCmd);
     }
 
     // Handle custom config dir
     if (_.has(config, 'config.conf')) {
-
       // Grab the local file
-      var local = config.config.conf;
-      var confDir = solrConfig.confDir;
+      const local = config.config.conf;
+      const confDir = solrConfig.confDir;
 
       // Share in the custom config to the conf dir spot
-      var globalConfig = buildVolume(local, confDir, '$LANDO_APP_ROOT_BIND');
+      const globalConfig = buildVolume(local, confDir, '$LANDO_APP_ROOT_BIND');
       solr.volumes = addConfig(globalConfig, solr.volumes);
 
       // If this is a recent version of solr we need to add to the config as an arg
       if (!_.includes(['3.6', '4.10'], config.version)) {
-
         // Augment the start up command
-        var command = solr.command.split(' ');
+        const command = solr.command.split(' ');
         command.push('/solrconf');
         solr.command = command.join(' ');
 
         // Symlink the core config to the system config
-        var coreConf = path.join(solrConfig.dataDir, core, 'conf');
-        var coreConfSymCmd = ['ln', '-sf', confDir, coreConf].join(' ');
-        var coreRmCmd = ['rm', '-rf', coreConf].join(' ');
+        const coreConf = path.join(solrConfig.dataDir, core, 'conf');
+        const coreConfSymCmd = ['ln', '-sf', confDir, coreConf].join(' ');
+        const coreRmCmd = ['rm', '-rf', coreConf].join(' ');
         config.run_as_root_internal.unshift(coreConfSymCmd);
         config.run_as_root_internal.unshift(coreRmCmd);
-
       }
-
     }
 
     // Handle ssl option
@@ -153,8 +138,8 @@ module.exports = function(lando) {
       nginx.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
-      var sslConf = ['nginx', 'default-ssl.conf'];
-      var sslVolume = buildVolume(sslConf, configFiles.server, defaultConfDir);
+      const sslConf = ['nginx', 'default-ssl.conf'];
+      const sslVolume = buildVolume(sslConf, configFiles.server, defaultConfDir);
       nginx.volumes = addConfig(sslVolume, nginx.volumes);
 
       // Add in an add cert task
@@ -168,43 +153,40 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Add in generic info
-    var info = {
+    const info = {
       'internal_connection': {
         core: config.core || 'index1',
         host: name,
-        port: config.port || 8983
+        port: config.port || 8983,
       },
       'external_connection': {
         core: config.core || 'index1',
         host: 'localhost',
-        port: config.portforward || 'not forwarded'
-      }
+        port: config.portforward || 'not forwarded',
+      },
     };
 
     // Show the config files being used if they are custom
     if (!_.isEmpty(config.config)) {
-      info.config  = config.config;
+      info.config = config.config;
     }
 
     // Return the collected info
     return info;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function(name) {
-    var vols = {};
+  const volumes = function(name) {
+    const vols = {};
     vols['data_' + name] = {};
     return vols;
   };
@@ -216,7 +198,6 @@ module.exports = function(lando) {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };
