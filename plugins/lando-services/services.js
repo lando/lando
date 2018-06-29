@@ -63,7 +63,7 @@ module.exports = lando => {
     }
 
     // Start an info collector
-    const info = {};
+    let info = {};
 
     // Add basic info about our service
     info.type = service;
@@ -118,9 +118,9 @@ module.exports = lando => {
     }
 
     // Get the networks, services and volumes
-    const networks = registry[service].networks(name, config);
-    const services = registry[service].services(name, config);
-    const volumes = registry[service].volumes(name, config);
+    let networks = registry[service].networks(name, config);
+    let services = registry[service].services(name, config);
+    let volumes = registry[service].volumes(name, config);
 
     // Add in the our global docker entrypoint
     // NOTE: this can be overridden down the stream

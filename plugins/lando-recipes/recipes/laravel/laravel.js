@@ -1,7 +1,6 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
   const _ = lando.node._;
   const helpers = require('./../lamp/lamp')(lando);
@@ -10,31 +9,25 @@ module.exports = function(lando) {
    * Helper to get cache
    */
   const cache = cache => {
-
     // Return redis
     if (_.includes(cache, 'redis')) {
       return {
         type: cache,
         portforward: true,
-        persist: true
+        persist: true,
       };
-    }
-
-    // Or memcached
-    else if (_.includes(cache, 'memcached')) {
+    } else if (_.includes(cache, 'memcached')) {
       return {
         type: cache,
-        portforward: true
+        portforward: true,
       };
     }
-
   };
 
   /*
    * Build out laravel
    */
   const build = (name, config) => {
-
     // Get the via so we can grab our builder
     const base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
 
@@ -56,13 +49,10 @@ module.exports = function(lando) {
 
     // Add in cache func if needed
     if (_.has(config, 'cache')) {
-
       // Add the cache service
       build.services.cache = cache(config.cache);
-
       // Add it as something our tooling needs
       needs.push('cache');
-
     }
 
     // Add in installation of laravel tool
@@ -85,18 +75,16 @@ module.exports = function(lando) {
     // Add laravel command
     build.tooling.laravel = {
       needs: needs,
-      service: 'appserver'
+      service: 'appserver',
     };
 
     // Return the things
     return build;
-
   };
 
   // Return the things
   return {
     build: build,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

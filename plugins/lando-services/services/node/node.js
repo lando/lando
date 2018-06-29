@@ -58,7 +58,7 @@ module.exports = lando => {
     // Basic config
     const cliCmd = 'tail -f /dev/null';
     const version = config.version || '6';
-    const command = config.command || cliCmd;
+    let command = config.command || cliCmd;
 
     // Arrayify the command if needed
     if (!_.isArray(command)) {
