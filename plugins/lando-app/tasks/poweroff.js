@@ -22,7 +22,7 @@ module.exports = function(lando) {
       .map(function(app) {
         return lando.app.get(app.name)
         .then(function(app) {
-          lando.app.stop(app);
+          return lando.app.stop(app);
         });
       })
 
