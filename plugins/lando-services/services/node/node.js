@@ -29,15 +29,12 @@ module.exports = lando => {
   /*
    * Return the networks needed
    */
-  const networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out node
    */
-  const services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
     const services = {};
 
@@ -48,14 +45,14 @@ module.exports = lando => {
       '/usr/sbin',
       '/usr/bin',
       '/sbin',
-      '/bin'
+      '/bin',
     ];
 
     // Volumes
     const vols = [
       '/usr/local/bin',
       '/usr/local/share',
-      '/usr/local/lib/node_modules'
+      '/usr/local/lib/node_modules',
     ];
 
     // Basic config
@@ -73,13 +70,13 @@ module.exports = lando => {
       image: 'node:' + version,
       environment: {
         TERM: 'xterm',
-        PATH: path.join(':')
+        PATH: path.join(':'),
       },
-      'working_dir': config._mount,
+      working_dir: config._mount,
       ports: ['80'],
       expose: ['80'],
       volumes: vols,
-      command: '/bin/sh -c "' + command.join(' && ') + '"'
+      command: '/bin/sh -c "' + command.join(' && ') + '"',
     };
 
     // If we have not specified a command we should assume this service was intended
@@ -95,8 +92,7 @@ module.exports = lando => {
 
     // Add our npm things to run step
     if (!_.isEmpty(config.globals)) {
-      _.forEach(config.globals, function(version, pkg) {
-
+      _.forEach(config.globals, (version, pkg) => {
         // Ensure globals is arrayed
         config.run_internal = config.run_internal || [];
 
@@ -116,7 +112,6 @@ module.exports = lando => {
 
         // Add before our other builds
         config.run_internal.unshift(nig.join(' '));
-
       });
     }
 
@@ -125,29 +120,23 @@ module.exports = lando => {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  const info = function() {
-    return {};
-  };
+  const info = () => ({});
 
   /*
    * Return the volumes needed
    */
   const volumes = function() {
-
     // Construct our volumes
     const volumes = {
-      data: {}
+      data: {},
     };
-
     // Return the volumes
     return volumes;
-
   };
 
   return {
@@ -157,7 +146,6 @@ module.exports = lando => {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };
