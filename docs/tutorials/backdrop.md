@@ -8,6 +8,11 @@ Lando offers a configurable recipe for spinning up [Backdrop CMS](https://backdr
 Getting Started
 ---------------
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=-UvyYvHmLSg&t=3s
+{% endyoutube %}
+
 Before you get started with this recipe we assume that you have:
 
 1. [Installed Lando](./../installation/system-requirements.md)

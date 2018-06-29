@@ -18,7 +18,8 @@
     "highlight",
     "gtm",
     "toc",
-    "-sharing"
+    "-sharing",
+    "youtube"
   ],
   "pluginsConfig": {
     "callouts": {
