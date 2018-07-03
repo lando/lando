@@ -3,6 +3,8 @@
 // Modules
 const _ = require('lodash');
 const env = require('./env');
+const Cache = require('./../../../lib/cache');
+const Events = require('./../../../lib/events');
 const Log = require('./../../../lib/logger');
 const Promise = require('./../../../lib/promise');
 const Shell = require('./../../../lib/shell');
@@ -12,7 +14,13 @@ const shell = new Shell();
  * Creates a new Daemon instance.
  */
 module.exports = class LandoDaemon {
-  constructor(cache, events, docker = env.getDockerExecutable(), log = new Log(), context = 'node') {
+  constructor(
+      cache = new Cache(),
+      events = new Events(),
+      docker = env.getDockerExecutable(),
+      log = new Log(),
+      context = 'node'
+  ) {
     this.cache = cache;
     this.docker = docker;
     this.events = events;

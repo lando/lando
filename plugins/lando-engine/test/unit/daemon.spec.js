@@ -7,12 +7,12 @@
 
 // Setup chai.
 const chai = require('chai');
+chai.use(require('chai-events'));
 chai.should();
-// const sinon = require('sinon');
+const sinon = require('sinon');
 const Daemon = require('../../lib/daemon');
 const env = require('../../lib/env');
 const Log = require('../../../../lib/logger');
-// const Events = require('../../../../lib/events');
 
 describe('lando-engine.daemon', () => {
   describe('#LandoDaemon', () => {
@@ -29,22 +29,17 @@ describe('lando-engine.daemon', () => {
   });
 
   describe('#up', () => {
-    // // Using a sinon stub or spy on core EventEmitter is probably fine here
-    // it('should emit a pre and post engine-up events', () => {
-    //   const spy1 = sinon.spy();
-    //   const spy2 = sinon.spy();
-    //   const events = new Events();
-    //   events.on('pre-engine-up', spy1);
-    //   events.on('pre-engine-down', spy2);
-    //   const daemon = new Daemon(null, events);
-    //   const isUpStub = sinon.stub(daemon, 'isUp').resolves(true);
-    //
-    //   daemon.up();
-    //
-    //   spy1.should.have.been.called;
-    //   spy2.should.have.been.called;
-    //   isUpStub.restore();
-    // });
+    // Using a sinon stub or spy on core EventEmitter is probably fine here
+    it('should emit a pre and post engine-up events', () => {
+      const daemon = new Daemon();
+      const isUpStub = sinon.stub(daemon, 'isUp').resolves(true);
+
+      return daemon.up().then(() => {
+        daemon.events.should.emit('pre-engine-up');
+        daemon.events.should.emit('post-engine-up');
+        isUpStub.restore();
+      });
+    });
 
     // @note: probably worth looking at our other tests for platform spoofing goodness
     // @todo: get ^ goodness in some unit test helper module so we dont keep dedoing it on a per-file basis
