@@ -5,6 +5,11 @@ Lando offers a configurable recipe for spinning up apps that closely mimic the [
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=lgaUqMy5a6A
+{% endyoutube %}
+
  <!-- toc -->
 
  Getting Started
