@@ -3,6 +3,11 @@ Working with WordPress
 
 Lando offers a configurable recipe for spinning up [WordPress](https://wordpress.org/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=QW3io3MFPNg
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
