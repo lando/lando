@@ -8,6 +8,11 @@ Lando offers a configurable recipe for spinning up [Drupal 8](https://drupal.org
 Getting Started
 ---------------
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=JGef7Fx44F4
+{% endyoutube %}
+
 Before you get started with this recipe we assume that you have:
 
 1. [Installed Lando](./../installation/system-requirements.md)
