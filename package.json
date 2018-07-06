@@ -97,6 +97,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
+    "chai-events": "^0.0.1",
     "command-line-test": "^1.0.10",
     "coveralls": "^3.0.1",
     "eslint": "^4.15.0",
