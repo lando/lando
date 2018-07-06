@@ -11,6 +11,10 @@ This is a basic setup to help you in this task.
 Getting Started
 ---------------
 
+Install the PHP Debug extension for VS Code - 
+https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug
+
+
 Enable XDebug by adding some lines to your Lando recipe.
 
 ```yaml
