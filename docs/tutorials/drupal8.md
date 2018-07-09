@@ -241,6 +241,46 @@ Read More
 *   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
 *   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
 
+### Running PHPUnit and Drupal 8.x on PHP 7.1
+
+##### 1. Find the proper version for your version of Drupal.
+You can find this information [here](https://www.drupal.org/docs/8/phpunit). Note, that PHPUnit Version 6.5.9 works with
+Drupal 8.5.x
+
+##### 2. Install PHPUnit
+You can install PHPUnit via composer, you can find this information [here](composer require --dev phpunit/phpunit ^7
+). Remember to get a version that works with your version of Drupal (PHPUnit 6.5.9 in our case.).
+
+##### 3. Add environment variables in Lando
+To use Drupal core's version of phpunit.xml.dist, you'll want to add Environment variables, this way we can always use
+the latest version of core's xml file.
+
+On your appserver service, add the following variables:
+```yaml
+services:
+  appserver:
+     overrides:
+       services:
+         environment:
+           MINK_DRIVER_ARGS: '["chrome", null, "http://chromedriver:4444/wd/hub"]'
+           MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", null, "http://chromedriver:4444/wd/hub"]'
+           MINK_DRIVER_CLASS: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver'
+           SIMPLETEST_DB: 'mysql://drupal8:drupal8@database/drupal8'
+           SIMPLETEST_BASE_URL: 'https://lando.lndo.site/'
+```
+
+You'll want to update the base_url to the output of Lando's input.
+The MINK_DRIVER_ARGS are assuming you have chromedriver set up as a service with 4444 as the port and 
+the base url as /wd/hub.
+
+After adding, make sure you do a `lando rebuild -y`.
+
+This should allow you to run `lando phpunit -c core/phpunit.xml.dist path/to/code`
+
+##### 4. Troubleshooting
+You may need to also install symfony bridge for PHPUnit.
+`lando composer require --dev "symfony/phpunit-bridge:*"` should fix that.
+  
 ### Setting up PHPStorm for running tests
 We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm instead by Commandline so we can debug our
 tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter
