@@ -3,6 +3,11 @@ Working with Laravel
 
 Lando offers a configurable recipe for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=Ibxb2nh19yg
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
