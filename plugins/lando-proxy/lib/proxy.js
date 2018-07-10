@@ -64,7 +64,7 @@ exports.defaults = domain => {
     },
     networks: ['edge'],
     volumes: [
-      '/const/run/docker.sock:/const/run/docker.sock',
+      '/var/run/docker.sock:/var/run/docker.sock',
       '/dev/null:/traefik.toml',
       '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
       '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh',

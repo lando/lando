@@ -211,7 +211,7 @@ module.exports = lando => {
     }
 
     // Go through all the services and add in the lando bridgenet
-    _.forEach(services, service, name => {
+    _.forEach(services, (service, name) => {
       service.networks = merger({default: {}}, service.networks);
     });
 

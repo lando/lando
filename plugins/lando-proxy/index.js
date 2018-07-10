@@ -196,7 +196,7 @@ module.exports = lando => {
         // Go through those services one by one
         .map(service => {
           // Set the docker network name.
-          const labels = {
+          let labels = {
             'traefik.docker.network': lando.config.proxyNet,
           };
 

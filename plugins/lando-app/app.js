@@ -172,9 +172,8 @@ module.exports = lando => {
       // Webroot
       app.webRoot = config.webroot || '.';
       // Trigger core messaging emit with app specific message.
-      app.message = () => {
+      app.message = (...args) => {
         // Parse and format
-        const args = _.toArray(arguments);
         const message = util.format.apply(null, args);
         // Message
         return lando.message({
