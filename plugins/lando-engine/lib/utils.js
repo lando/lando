@@ -59,42 +59,49 @@ exports.toLandoContainer = ({Labels, Id}) => {
 exports.normalizer = data => (!_.isArray(data)) ? [data] : data;
 
 /*
+ * Helper to make a file executable
+ */
+exports.makeExecutable = (files, base = process.cwd()) => {
+  _.forEach(files, file => {
+    fs.chmodSync(path.join(base, file), '755');
+  });
+};
+
+/*
  * Helper to move config from lando to a mountable directory
  */
 exports.moveConfig = (src, dest) => {
-   // Copy opts and filter out all js files
-   // We dont want to give the false impression that you can edit the JS
-   const copyOpts = {
-     overwrite: true,
-     filter: function(file) {
-       return (path.extname(file) !== '.js');
-     },
-   };
+  // Copy opts and filter out all js files
+  // We dont want to give the false impression that you can edit the JS
+  const copyOpts = {
+    overwrite: true,
+    filter: file => (path.extname(file) !== '.js'),
+  };
 
-   // Ensure to exists
-   fs.mkdirpSync(dest);
+  // Ensure to exists
+  fs.mkdirpSync(dest);
 
-   // Try to copy the assets over
-   try {
-     fs.copySync(src, dest, copyOpts);
-   } catch (error) {
-     const code = _.get(error, 'code');
-     const syscall = _.get(error, 'syscall');
-     const f = _.get(error, 'path');
+  // Try to copy the assets over
+  try {
+    fs.copySync(src, dest, copyOpts);
+  } catch (error) {
+    const code = _.get(error, 'code');
+    const syscall = _.get(error, 'syscall');
+    const f = _.get(error, 'path');
 
-     // Catch this so we can try to repair
-     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.mkdirpSync(f)) {
-       throw new Error(error);
-     }
+    // Catch this so we can try to repair
+    if (code !== 'EISDIR' || syscall !== 'open' || !!fs.mkdirpSync(f)) {
+      throw new Error(error);
+    }
 
-     // Try to take corrective action
-     fs.unlinkSync(f);
-     fs.copySync(src, dest, copyOpts);
-   };
+    // Try to take corrective action
+    fs.unlinkSync(f);
+    fs.copySync(src, dest, copyOpts);
+  };
 
-   // Return the new scripts directory
-   return dest;
- };
+  // Return the new scripts directory
+  return dest;
+};
 
 /*
  * Helper to handle docker run config

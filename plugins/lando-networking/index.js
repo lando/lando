@@ -1,29 +1,29 @@
 'use strict';
 
+// Modules
+const _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+
+// Helper for default config
+const getDefaultConf = (caDir, instance) => ({
+  caCertDir: caDir,
+  caCert: path.join(caDir, 'lando.pem'),
+  caService: path.join(caDir, 'ca-setup.yml'),
+  caProject: 'landocasetupkenobi38ahsoka' + instance,
+  networkBridge: 'lando_bridge_network',
+});
+
 module.exports = lando => {
-  // Modules
-  const _ = lando.node._;
-  const fs = lando.node.fs;
-  const path = require('path');
-
   // Define some things
-  const caDir = 'certs';
+  const id = lando.config.instance;
   const usr = lando.config.userConfRoot;
-
   // Add some config for our networking
   lando.events.on('post-bootstrap', lando => {
     // Log
     lando.log.info('Configuring networking plugin');
-    // Build the default config object
-    const defaultNetworkingConfig = {
-      caCertDir: path.join(usr, caDir),
-      caCert: path.join(usr, caDir, 'lando.pem'),
-      caService: path.join(usr, caDir, 'ca-setup.yml'),
-      caProject: 'landocasetupkenobi38ahsoka' + lando.config.instance,
-      networkBridge: 'lando_bridge_network',
-    };
     // Merge defaults over the config, this allows users to set their own things
-    lando.config = lando.utils.config.merge(defaultNetworkingConfig, lando.config);
+    lando.config = lando.utils.config.merge(getDefaultConf(path.join(usr, 'certs'), id), lando.config);
     // Log it
     lando.log.verbose('Networking plugin configured with %j', lando.config);
     // Create the cert directory
@@ -62,10 +62,7 @@ module.exports = lando => {
     lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
     lando.utils.engine.moveConfig(scriptFrom, scriptTo);
     // Ensure scripts are executable
-    const scripts = ['add-cert.sh', 'setup-ca.sh'];
-    _.forEach(scripts, script => {
-      fs.chmodSync(path.join(lando.config.engineScriptsDir, script), '755');
-    });
+    lando.utils.engine.makeExecutable(['add-cert.sh', 'setup-ca.sh'], lando.config.engineScriptsDir);
   });
 
   // Preemptively make sure we have enough networks and if we dont
@@ -197,7 +194,7 @@ module.exports = lando => {
         })
 
         // Connect
-        .then(function() {
+        .then(() => {
           landonet.connect(opts);
           lando.log.info('Connected %s to the landonet', container.name);
         });

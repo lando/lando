@@ -80,9 +80,7 @@ module.exports = lando => {
     // Set up our scripts
     // @todo: get volumes above into this
     const scripts = ['lando-entrypoint.sh', 'user-perms.sh', 'load-keys.sh'];
-    _.forEach(scripts, script => {
-      fs.chmodSync(path.join(lando.config.engineScriptsDir, script), '755');
-    });
+    lando.utils.engine.makeExecutable(scripts, lando.config.engineScriptsDir);
 
     // Add important ref points
     const shareMode = (process.platform === 'darwin') ? ':delegated' : '';
