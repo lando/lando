@@ -127,7 +127,7 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 `BACKDROP_SETTINGS` should allow for Backdrop to automatically connect to your database.
 
