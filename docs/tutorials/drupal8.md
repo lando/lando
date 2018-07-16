@@ -3,15 +3,15 @@ Working with Drupal 8
 
 Lando offers a configurable recipe for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
 
-<!-- toc -->
-
-Getting Started
----------------
-
 Prefer video tutorials?
 {% youtube %}
 https://www.youtube.com/watch?v=JGef7Fx44F4
 {% endyoutube %}
+
+<!-- toc -->
+
+Getting Started
+---------------
 
 Before you get started with this recipe we assume that you have:
 
