@@ -106,6 +106,19 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Environment Config
+-----
+
+By default, Laravel comes with a `.env` configuration file set to use `homestead`. You will want to modify the following `.env` key value pairs:
+
+```
+APP_URL=http://myproject.lndo.site
+DB_HOST=database
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=laravel
+```
+
 Configuration
 -------------
 
