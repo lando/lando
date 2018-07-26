@@ -119,6 +119,8 @@ DB_USERNAME=laravel
 DB_PASSWORD=laravel
 ```
 
+If your app is already running, `lando restart` to ensure the changes are applied.
+
 Configuration
 -------------
 
