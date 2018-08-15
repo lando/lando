@@ -1762,6 +1762,10 @@ gitbook-cli@^2.3.0:
     tmp "0.0.31"
     user-home "2.0.0"
 
+gitbook-plugin-adsense@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/gitbook-plugin-adsense/-/gitbook-plugin-adsense-1.0.3.tgz#3ca1d940f016ad88321f6797e852c9ed837c94e9"
+
 github-url-from-git@~1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/github-url-from-git/-/github-url-from-git-1.4.0.tgz#285e6b520819001bde128674704379e4ff03e0de"
