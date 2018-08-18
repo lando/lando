@@ -1,13 +1,7 @@
 http://docs.lndo.io/:
   type: redirect
   to: http://{default}/
-https://docs.lndo.io/:
-  type: redirect
-  to: https://{default}/
 http://{default}/:
-  type: redirect
-  to: https://{default}/
-https://{default}/:
   type: upstream
   upstream: app:http
   cache:
