@@ -82,6 +82,13 @@ module.exports = function(lando) {
       cmd: ['php', 'artisan']
     };
 
+    // Add tinker command
+    build.tooling.tinker = {
+      service: 'appserver',
+      needs: needs,
+      cmd: ['php', 'artisan', 'tinker']
+    };
+
     // Add laravel command
     build.tooling.laravel = {
       needs: needs,
