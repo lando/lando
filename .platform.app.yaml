@@ -41,3 +41,12 @@ hooks:
     yarn
     yarn docs
     cp docs/images/favicon.ico _book/gitbook/images/favicon.ico
+
+crons:
+  renewcert:
+    # Force a redeploy at 9 am (UTC) on the 14th of every month.
+    spec: '0 9 14 * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        /app/.platformsh/bin/platform redeploy --yes --no-wait
+      fi

@@ -18,7 +18,7 @@ Example
 >
 > If your custom domain does not end in `lndo.site`, then you are going to need to add it to your `hosts` file so that it points to `127.0.0.1`.
 
-You will need to restart your app with `lando restart` to apply the changes. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/trivial-proxy). You can also use our [legacy proxy conig format](https://github.com/lando/lando/tree/master/examples/trivial-proxy-legacy).
+You will need to restart your app with `lando restart` to apply the changes. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/trivial-proxy). You can also use our [legacy proxy config format](https://github.com/lando/lando/tree/master/examples/trivial-proxy-legacy).
 
 Configuration
 -------------
