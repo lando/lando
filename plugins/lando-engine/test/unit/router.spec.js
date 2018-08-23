@@ -6,18 +6,73 @@
 'use strict';
 
 // Setup chai.
-// const chai = require('chai');
-// const expect = chai.expect;
-// chai.should();
+const chai = require('chai');
+chai.use(require('chai-events'));
+chai.should();
+
+const Daemon = require('../../lib/daemon');
+const daemon = new Daemon();
+const Events = require('../../../../lib/events');
+const events = new Events();
+const Promise = require('../../../../lib/promise');
+const router = require('../../lib/router');
+const sinon = require('sinon');
 
 describe('lando-engine.router', () => {
   // @note: we should loop through all the funcs that use retryEach to verify a few things
   it('build, destroy, logs, start and stop can handle data being an object or array of objects');
   describe('#engineCmd', () => {
-    it('should ensure that daemon.up runs first');
-    it('should emit correctly named pre and post events with data');
-    it('should run the run function in between the two events');
-    it('should return a Promise containing the result of the run function');
+    it('should ensure that daemon.up runs first', () => {
+      const upStub = sinon.stub(daemon, 'up')
+        .usingPromise(Promise)
+        .resolves(true);
+
+      const eventStub = sinon.stub(events, 'emit')
+        .usingPromise(Promise)
+        .resolves(true);
+
+      return router.engineCmd(
+        'Solo',
+        daemon,
+        events,
+        '',
+        data => {}
+      )
+      .then(() => {
+        upStub.should.be.calledBefore(eventStub);
+        upStub.restore();
+        return eventStub.restore();
+      });
+    });
+
+    it('should emit correctly named pre and post events with data', () => {
+      return router.engineCmd('Chewie', daemon, events, '', data => {})
+      .then(() => {
+        events.should.emit('pre-engine-Chewie');
+        events.should.emit('post-engine-Chewie');
+      });
+    });
+
+    it('should run the run function in between the two events', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const spy3 = sinon.spy();
+      events.on('pre-engine-elthree', spy2);
+      events.on('post-engine-elthree', spy3);
+      return router.engineCmd('elthree', daemon, events, '', spy1)
+      .then(() => {
+        spy1.should.be.calledAfter(spy2);
+        return spy1.should.be.calledBefore(spy3);
+      });
+    });
+
+    it('should return a Promise containing the result of the run function', () => {
+      const stub = sinon.stub().returns('Human cyborg relations');
+      return router.engineCmd('3PO', daemon, events, '', stub)
+      .then(res => {
+        return res.should.equal('Human cyborg relations');
+      });
+    });
   });
 
   describe('#build', () => {

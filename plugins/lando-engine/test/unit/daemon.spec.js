@@ -9,10 +9,21 @@
 const chai = require('chai');
 chai.use(require('chai-events'));
 chai.should();
+const expect = chai.expect;
 const sinon = require('sinon');
+const filesystem = require('mock-fs');
+
+const Cache = require('../../../../lib/cache');
 const Daemon = require('../../lib/daemon');
+const Events = require('../../../../lib/events');
 const env = require('../../lib/env');
 const Log = require('../../../../lib/logger');
+const Promise = require('../../../../lib/promise');
+const Shell = require('../../../../lib/shell');
+const shell = new Shell();
+
+const Helper = require('../../../../test/helpers/unit/helper');
+const helper = new Helper();
 
 describe('lando-engine.daemon', () => {
   describe('#LandoDaemon', () => {
@@ -43,11 +54,45 @@ describe('lando-engine.daemon', () => {
 
     // @note: probably worth looking at our other tests for platform spoofing goodness
     // @todo: get ^ goodness in some unit test helper module so we dont keep dedoing it on a per-file basis
-    it('should resolve with truth if the context is not node and we are on linux');
+    it('should resolve with truth if the context is not node and we are on linux', () => {
+      // Force process.platform to Linux
+      helper.setPlatform('linux');
 
-    // @note: mock-fs is probably the way to go here
-    it('should throw an error if this.docker is not in the PATH somewhere');
-    it('should attempt to start docker if its not up');
+      // Set up the daemon.
+      const daemon = new Daemon(
+          new Cache(),
+          new Events(),
+          env.getDockerExecutable(),
+          new Log(),
+          'magic-context'
+      );
+
+      return daemon.up().should.eventually.be.true.then(() => {
+        return helper.resetPlatform();
+      });
+    });
+
+    it('should attempt to start docker if its not up', () => {
+      const daemon = new Daemon();
+      const isUpStub = sinon.stub(daemon, 'isUp')
+        .usingPromise(Promise).resolves(false);
+
+      const shellStub = sinon.stub(shell, 'sh').resolves(true);
+      return daemon.up().then(() => {
+        shellStub.should.be.called;
+        isUpStub.restore();
+        shellStub.restore();
+      });
+    });
+
+    it('should invoke the docker daemon', () => {
+      const daemon = new Daemon();
+      const shellStub = sinon.stub(shell, 'sh');
+      return daemon.up().then(() => {
+        shellStub.should.be.calledWith(env.buildDockerCmd('start'));
+        return shellStub.restore();
+      });
+    });
     it('should throw an error if it cannot start docker');
   });
 
@@ -56,5 +101,18 @@ describe('lando-engine.daemon', () => {
     it('should resolve with truth if we are on win32 or darwin');
     it('should try to stop docker if its already up');
     it('should throw an error if it cant shut down docker');
+  });
+
+  describe('#isUp', () => {
+    // @note: mock-fs is probably the way to go here
+    it('should throw an error if this.docker is not in the PATH somewhere', () => {
+      const daemon = new Daemon();
+      filesystem();
+      const ohNo = function() {
+        return daemon.isUp();
+      };
+      expect(ohNo).to.throw();
+      filesystem.restore();
+    });
   });
 });
