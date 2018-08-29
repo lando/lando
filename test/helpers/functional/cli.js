@@ -11,13 +11,8 @@ const os = require('os');
  * Class containing static methods to help with running tests
  */
 class CliHelper {
-
-  /**
+  /*
    * Execute a Lando Command using the entrypoint in codebase
-   * @param {array} args - arguments/options to pass to Lando
-   * @param {object} options - options to pass to execFile
-   * @return {Promise} - A promise chain containing output of
-   *                     command execution
    */
   static execCommand(args, options) {
     const cliTest = new CliTest();
@@ -34,7 +29,7 @@ class CliHelper {
     const appFolder = fs.mkdtempSync(
       path.join(os.tmpdir(), 'lando-php-test-'),
       (err, folder) => {
-        if (err) { throw err; }
+        if (err) throw err;
         return folder;
       }
     );
@@ -44,7 +39,9 @@ class CliHelper {
       `${appFolder}${path.sep}.lando.yml`,
       jsYaml.dump(app),
       'utf8',
-      err => { if (err) { throw err; } }
+      err => {
+        if (err) throw err;
+      }
     );
 
     return new Promise((resolve, reject) => {

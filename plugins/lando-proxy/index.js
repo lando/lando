@@ -13,7 +13,6 @@ module.exports = function(lando) {
   var proxyFile = path.join(lando.config.userConfRoot, 'proxy', 'proxy.yml');
   var portsFile = path.join(lando.config.userConfRoot, 'proxy', 'ports.yml');
   var projectName = 'landoproxyhyperion5000gandalfedition';
-  var networkName = [projectName, 'edge'].join('_');
 
   // Add some config for the proxy
   lando.events.on('post-bootstrap', 1, function(lando) {
@@ -30,6 +29,7 @@ module.exports = function(lando) {
       proxyHttpsPort: '443',
       proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
       proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
+      proxyNet: [projectName, 'edge'].join('_'),
       proxyRunner: proxy.compose(proxyFile, portsFile, projectName)
     };
 
@@ -122,11 +122,11 @@ module.exports = function(lando) {
           // If the proxy has been created already lets see if we can use that
           else {
 
-            // Inspect current proxy to make sure we dont incorrectly rebuild
+            // Inspect current proxy to make sure we don't incorrectly rebuild
             return lando.engine.scan(lando.config.proxyRunner)
 
             // If the proxy is running, lets make sure we hook up the ports that the proxy
-            // is already using. If we dont do this the proxy will always show as "changed"
+            // is already using. If we don't do this the proxy will always show as "changed"
             .then(function(data) {
 
               // Get things
@@ -191,7 +191,7 @@ module.exports = function(lando) {
 
         })
 
-        // Get the data and parerse the services
+        // Get the data and parse the services
         .then(function() {
 
           // At this point we can reliably get ports because we should be started
@@ -240,27 +240,41 @@ module.exports = function(lando) {
         // Go through those services one by one
         .map(function(service) {
 
-          // Get name port and hosts
-          var port = _.get(service, 'routes[0].port', '80');
-          var hosts = routes.stripPorts(service);
-          if (port === 443) { port = 80; }
+          // Set the docker network name.
+          var labels = {
+            'traefik.docker.network': lando.config.proxyNet,
+          };
+
+          // Go through all routes of the service.
+          service.routes.map(function(route) {
+            // Get the port and hosts of the route.
+            var port = _.get(route, 'port', '80');
+            var urls = _.get(route, 'urls', []);
+            var hosts = routes.stripPorts(urls);
+
+            // Add in relevant labels if we have hosts. And skip port 443,
+            // because that is already being take care of by the proxy.
+            if (!_.isEmpty(hosts) && port !== '443/tcp') {
+
+              // Get parse hosts
+              var parsedHosts = routes.parseHosts(hosts);
+
+              // Add the port specific proxy information.
+              labels = lando.utils.config.merge(labels, {
+                ['traefik.' + _.toString(port).replace('/tcp', '') + '.frontend.rule']: 'HostRegexp:' + parsedHosts,
+                ['traefik.' + _.toString(port).replace('/tcp', '') + '.port']: _.toString(port)
+              });
+            }
+          });
 
           // Add in relevant labels if we have hosts
-          if (!_.isEmpty(hosts)) {
-
-            // Get parse hosts
-            var parsedHosts = routes.parseHosts(hosts);
-
+          if (!_.isEmpty(labels)) {
             // Start building the augment
             return {
               name: service.name,
               service: {
                 networks: {'lando_proxyedge': {}},
-                labels: {
-                  'traefik.docker.network': networkName,
-                  'traefik.frontend.rule': 'HostRegexp:' + parsedHosts,
-                  'traefik.port': _.toString(port)
-                }
+                labels: labels,
               }
             };
 
@@ -272,7 +286,7 @@ module.exports = function(lando) {
         .then(function(services) {
 
           // Get the tl compose object
-          var compose = routes.compose(networkName);
+          var compose = routes.compose(lando.config.proxyNet);
 
           // Loop and add in
           _.forEach(_.compact(services), function(service) {
@@ -307,7 +321,7 @@ module.exports = function(lando) {
           .then(function(isRunning) {
             if (isRunning) {
 
-              // SHoul dbe good to get ports
+              // Should be good to get ports
               return getPorts()
 
               // Map the config to a list of info urls

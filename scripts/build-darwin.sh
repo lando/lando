@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Uncomment to debug
-set -x
-set -e
-
 # Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="18.03.0-ce-mac64"
+DOCKER_VERSION="18.03.0-ce-mac65"
+DOCKER_DOWNLOAD="24312"
 TEAM_ID="FY8GAUX282"
 PKG_SIGN=false
 DMG_SIGN=false
@@ -28,12 +25,12 @@ mkdir -p build/installer
 cd build/installer
 
 # Get our Lando dependencies
-cp -rf "../../dist/cli/lando-osx-x64-v${LANDO_VERSION}" lando
+cp -rf "../../build/cli/lando-osx-x64-v${LANDO_VERSION}" lando
 chmod +x lando
 
 # Get Docker for mac
 # @todo: Would be great to pin this version
-curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/Docker.dmg" && \
+curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
   mkdir -p /tmp/lando/docker && \
   hdiutil attach -mountpoint /tmp/lando/docker Docker.dmg && \
   cp -rf /tmp/lando/docker/Docker.app ./Docker.app && \
@@ -97,19 +94,14 @@ mkdir -p dmg && mkdir -p dist && cd mpkg && xar -c --compression=none -f ../dmg/
 
 # Sign the package if applicable
 if [ "$PKG_SIGN" == "true" ]; then
-
   # Move around the pkg
   mv ../dmg/LandoInstaller.pkg ../dmg/UnsignedLandoInstaller.pkg
-
   # Sign
   productsign --sign "$TEAM_ID" ../dmg/UnsignedLandoInstaller.pkg ../dmg/LandoInstaller.pkg
-
   # Verify
   pkgutil --check-signature ../dmg/LandoInstaller.pkg
-
   # Remove unsigned
   rm -f ../dmg/UnsignedLandoInstaller.pkg
-
 fi
 
 # Copy in other DMG  asssets
@@ -129,11 +121,8 @@ done
 
 # Codesign the DMG if applicable
 if [ "$DMG_SIGN" == "true" ]; then
-
   # Sign
   codesign -s "$TEAM_ID" -v dist/lando.dmg
-
   # Verify
   codesign -v dist/lando.dmg
-
 fi

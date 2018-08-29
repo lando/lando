@@ -589,21 +589,7 @@ module.exports = function(lando) {
     .then(function() {
       return Promise.each(utils.normalizer(data), function(datum) {
         return Promise.retry(function() {
-
-          // Start the thing in question
-          return cc(compose.start(datum.compose, datum.project, datum.opts))
-
-          // Look to see if we need to prune the networks
-          // Sadly we can't do much to determine whether the error is the one
-          // we are looking for but we HOPE if this fails its caught downstream
-          // @todo: Move this into the networking plugin?
-          .catch(function(err) {
-            return docker.pruneNetworks()
-            .then(function() {
-              return Promise.reject(err);
-            });
-          });
-
+          return cc(compose.start(datum.compose, datum.project, datum.opts));
         });
       });
     })
@@ -1073,24 +1059,6 @@ module.exports = function(lando) {
    */
    var createNetwork = docker.createNetwork;
 
-  /**
-   * Prunes the docker networks.
-   *
-   * @since 3.0.0
-   * @function
-   * @alias 'lando.engine.pruneNetworks'
-   * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkPrune) for info on filters option.
-   * @param {Object} [opts] - Options to pass into the docker networks call
-   * @param {Object} [opts.filters] - Filters options
-   * @returns {Promise} A Promise with teh status
-   * @example
-   *
-   *  // Prune the networks
-   *  return lando.engine.pruneNetworks();
-   *
-   */
-  var pruneNetworks = docker.pruneNetworks;
-
   // Return
   return {
     up: up,
@@ -1109,8 +1077,7 @@ module.exports = function(lando) {
     build: build,
     getNetwork: getNetwork,
     getNetworks: getNetworks,
-    createNetwork: createNetwork,
-    pruneNetworks: pruneNetworks
+    createNetwork: createNetwork
   };
 
 };

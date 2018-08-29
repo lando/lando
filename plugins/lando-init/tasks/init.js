@@ -153,10 +153,10 @@ module.exports = function(lando) {
       .then(function() {
 
         // Header it
-        console.log(lando.cli.initHeader());
+        console.log(lando.cli.makeArt('init'));
 
         // Grab a new cli table
-        var table = new lando.cli.Table();
+        var table = lando.cli.makeTable();
 
         // Get docs link
         var docBase = 'https://docs.devwithlando.io/tutorials/';

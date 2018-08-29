@@ -5,7 +5,7 @@ module.exports = function(lando) {
   // Modules
   var _ = lando.node._;
   var chalk = lando.node.chalk;
-  var table = new lando.cli.Table();
+  var table = lando.cli.makeTable();
   var utils = lando.utils.app;
 
   // The task object
@@ -54,7 +54,7 @@ module.exports = function(lando) {
           .then(function() {
 
             // Header it
-            console.log(lando.cli.startHeader());
+            console.log(lando.cli.makeArt());
 
             // Inject start table into the table
             _.forEach(utils.startTable(app), function(value, key) {

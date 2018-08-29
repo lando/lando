@@ -4,7 +4,8 @@ module.exports = function(lando) {
 
   // Modules
   var _ = lando.node._;
-  var api = require('./client')(lando);
+  var PantheonApiClient = require('./client');
+  var api = new PantheonApiClient(lando.log);
   var fs = lando.node.fs;
   var path = require('path');
   var Promise = lando.Promise;
@@ -98,7 +99,7 @@ module.exports = function(lando) {
   };
 
   // List of additional options
-  var options = {
+  const options = {
     'pantheon-auth': {
       describe: 'Pantheon machine token or email of previously used token',
       string: true,
@@ -106,23 +107,18 @@ module.exports = function(lando) {
         type: 'list',
         message: 'Choose a Pantheon account',
         choices: pantheonAccounts(),
-        when: function(answers) {
-          return !_.isEmpty(pantheonAccounts()) && askQuestions(answers);
-        },
-        weight: 600
-      }
+        when: answers => !_.isEmpty(pantheonAccounts()) && askQuestions(answers),
+        weight: 600,
+      },
     },
     'pantheon-auth-machine-token': {
       interactive: {
         name: 'pantheon-auth',
         type: 'password',
         message: 'Enter a Pantheon machine token',
-        when: function(answers) {
-          var token = _.get(answers, 'pantheon-auth');
-          return (!token || token === 'more') && askQuestions(answers);
-        },
-        weight: 601
-      }
+        when: answers => (_.get(answers, 'pantheon-auth', '') === 'more') && askQuestions(answers),
+        weight: 601,
+      },
     },
     'pantheon-site': {
       describe: 'Pantheon site machine name',
@@ -131,33 +127,23 @@ module.exports = function(lando) {
         type: 'list',
         message: 'Which site?',
         choices: function(answers) {
-
           // Token path
-          var tpath = 'pantheon-auth';
-
+          const tpath = 'pantheon-auth';
           // Make this async cause we need to hit the terminus
-          var done = this.async();
-
+          const done = this.async();
           // Get the pantheon sites using the token
-          api.getSites(_.get(lando.cli.argv(), tpath, answers[tpath]))
-
+          api.auth(_.get(lando.cli.argv(), tpath, answers[tpath]))
           // Parse the sites into choices
-          .map(function(site) {
-            return {name: site.name, value: site.name};
-          })
-
+          .then(authorizedApi => authorizedApi.getSites())
+          // Parse the sites into choices
+          .map(site => ({name: site.name, value: site.name}))
           // Done
-          .then(function(sites) {
-            done(null, sites);
-          });
-
+          .then(sites => done(null, sites));
         },
-        when: function(answers) {
-          return askQuestions(answers);
-        },
-        weight: 602
-      }
-    }
+        when: answers => askQuestions(answers),
+        weight: 602,
+      },
+    },
   };
 
   /*
@@ -167,7 +153,9 @@ module.exports = function(lando) {
 
     // Set some things up
     var dest = options.destination;
-    var key = 'pantheon.lando.id_rsa';
+    var key = path.join(lando.config.userConfRoot, 'keys', 'pantheon.lando.id_rsa');
+    var pubKey = key + '.pub';
+    var token = _.get(options, 'pantheon-auth');
 
     // Check if directory is non-empty
     if (!_.isEmpty(fs.readdirSync(dest))) {
@@ -176,9 +164,9 @@ module.exports = function(lando) {
 
     // Check if ssh key exists and create if not
     return Promise.try(function() {
-      if (!fs.existsSync(path.join(lando.config.userConfRoot, 'keys', key))) {
+      if (!fs.existsSync(key)) {
         lando.log.verbose('Creating key %s for Pantheon', key);
-        return lando.init.run(name, dest, lando.init.createKey(key));
+        return lando.init.run(name, dest, lando.init.createKey(path.basename(key)));
       }
       else {
         lando.log.verbose('Key %s exists for Pantheon', key);
@@ -191,15 +179,13 @@ module.exports = function(lando) {
     })
 
     // Post SSH key to pantheon
-    .then(function() {
-      return api.postKey(_.get(options, 'pantheon-auth'));
-    })
+    .then(() => api.auth(token).then(authorizedApi => authorizedApi.postKey(pubKey)))
 
     // Git clone the project
     .then(function() {
 
       // Let's get our sites
-      return api.getSites(_.get(options, 'pantheon-auth'))
+      return api.auth(token).then(authorizedApi => authorizedApi.getSites())
 
       // Get our site
       .filter(function(site) {
@@ -244,49 +230,39 @@ module.exports = function(lando) {
    */
   var yaml = function(config, options) {
 
-    // Let's get our sites
-    return api.getSites(_.get(options, 'pantheon-auth'))
-
-    // Filter out our site
-    .filter(function(site) {
-      return site.name === _.get(options, 'pantheon-site');
-    })
+    // Let's get our sites and user data
+    return api.auth(_.get(options, 'pantheon-auth')).then(authorizedApi => Promise.all([
+      authorizedApi.getSites(),
+      authorizedApi.getUser(),
+    ]))
 
     // Set the config
-    .then(function(site) {
+    .then(results => {
+
+      // Get our site and email
+      const site = _.head(_.filter(results[0], site => site.name === _.get(options, 'pantheon-site')));
 
       // Error if site doesnt exist
       if (_.isEmpty(site)) {
         throw Error('No such pantheon site!');
       }
 
+      // Set our tokens
+      var token = _.get(options, 'pantheon-auth');
+      var tokens = lando.cache.get(tokenCacheKey) || {};
+      const email = _.get(results[1], 'email');
+      tokens[email] = token;
+      lando.cache.set(tokenCacheKey, tokens, {persist: true});
+
       // Augment the config
       config.config = {};
-      config.config.framework = _.get(site[0], 'framework', 'drupal');
-      config.config.site = _.get(site[0], 'name', config.name);
-      config.config.id = _.get(site[0], 'id', 'lando');
+      config.config.framework = _.get(site, 'framework', 'drupal');
+      config.config.site = _.get(site, 'name', config.name);
+      config.config.id = _.get(site, 'id', 'lando');
 
-      // Set some cached things as well
-      var token = _.get(options, 'pantheon-auth');
-      var tokens = lando.cache.get(tokenCacheKey);
-      var email = '';
-
-      // Check to see if our "token" is actually an email
-      if (_.includes(_.keys(tokens), token)) {
-        email = token;
-        token = tokens[email];
-      }
-
-      // If not, do it nasty
-      else {
-        email = _.findKey(tokens, function(value) {
-          return value === token;
-        });
-      }
-
-      // Set and cache the TOKENZZZZ
+      // And site meta-data
       var data = {email: email, token: token};
-      var name = lando.utils.engine.dockerComposify(options.name);
+      var name = lando.utils.engine.dockerComposify(config.config.site);
       lando.cache.set(siteMetaDataKey + name, data, {persist: true});
 
       // Return it

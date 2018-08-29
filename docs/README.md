@@ -10,7 +10,7 @@ It's a free, open source, cross-platform, local development environment and DevO
 With Lando you can...
 
 *   Easily mimic your production environment locally.
-*   Standardize your teams dev environments and tooling on OSX, Windows and Linux.
+*   Standardize your team's dev environments and tooling on OSX, Windows and Linux.
 *   Integrate with hosting providers like [Pantheon](https://pantheon.io)
 *   Store all of the above in a version controlled config file called `.lando.yml`
 *   Easily customize or extend tooling, deployment options and basically any other functionality.

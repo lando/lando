@@ -122,7 +122,7 @@ fi
 
 # Check to see if we have any unzipping options or GUI needs
 if command -v gunzip >/dev/null 2>&1 && gunzip -t $FILE >/dev/null 2>&1; then
-  echo "Gunzipped file detected!"
+  echo "Gzipped file detected!"
   if command -v pv >/dev/null 2>&1; then
     CMD="pv $CMD"
   else

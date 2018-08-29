@@ -124,7 +124,7 @@ if [ "$TERMINUS_ENV" != "dev" ]; then
 fi
 
 # Commit the goods
-echo "Pushing code..."
+echo "Pushing code to $CODE..."
 git checkout $GIT_BRANCH
 git add --all
 git commit -m "$MESSAGE" --allow-empty
@@ -144,7 +144,7 @@ if [ "$DATABASE" != "none" ]; then
   terminus env:wake $SITE.$ENV
 
   # And push
-  echo "Pushing DB..."
+  echo "Pushing database to $DATABASE..."
   REMOTE_CONNECTION="$(terminus connection:info $SITE.$ENV --field=mysql_command)"
   PUSH_DB="mysqldump -u pantheon -ppantheon -h database --no-autocommit --single-transaction --opt -Q pantheon | $REMOTE_CONNECTION"
   eval "$PUSH_DB"
@@ -174,7 +174,7 @@ if [ "$FILES" != "none" ]; then
     $FILES.$PANTHEON_SITE@appserver.$FILES.$PANTHEON_SITE.drush.in:files/"
 
   # Pushing files
-  echo "Pushing files..."
+  echo "Pushing files to $FILES..."
   eval "$PUSH_FILES"
 
 fi

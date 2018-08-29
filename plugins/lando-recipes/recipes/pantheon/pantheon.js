@@ -12,7 +12,8 @@ module.exports = function(lando) {
   var path = require('path');
 
   // Lando things
-  var api = require('./client')(lando);
+  var PantheonApiClient = require('./client');
+  var api = new PantheonApiClient(lando.log);
   var addConfig = lando.utils.services.addConfig;
   var buildVolume = lando.utils.services.buildVolume;
 
@@ -211,7 +212,7 @@ module.exports = function(lando) {
       });
 
       // Get the pantheon sites using the token
-      api.getEnvs(token, config.id)
+      api.auth(token).then(authorizedApi => authorizedApi.getSiteEnvs(config.id))
 
       // Parse the evns into choices
       .map(function(env) {
@@ -297,6 +298,7 @@ module.exports = function(lando) {
         },
         rsync: {
           description: 'Rsync the files, good for subsequent pulls',
+          passthrough: true,
           boolean: true,
           default: false
         }
