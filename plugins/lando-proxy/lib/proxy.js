@@ -24,9 +24,9 @@ exports.pp = function(data, preferredHttp, preferredHttps) {
 /*
  * Returns the proxy compose object
  */
-exports.compose = function(file, project) {
+exports.compose = function(defaults, ports, project) {
   return {
-    compose: [file],
+    compose: [defaults, ports],
     project: project,
     opts: {
       services: ['proxy']
@@ -35,50 +35,67 @@ exports.compose = function(file, project) {
 };
 
 /*
+ * Create the default service object
+ */
+exports.defaults = function(domain) {
+
+    // Get some stuff for our things
+    var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
+    var cmd = [
+      '/entrypoint.sh',
+      '--defaultEntryPoints=https,http',
+      '--docker',
+      '--docker.domain=' + domain,
+      '--entryPoints="Name:http Address::80"',
+      '--entrypoints="Name:https Address::443 TLS:' + certs + '"',
+      '--logLevel=DEBUG',
+      '--web',
+    ].join(' ');
+
+    // Proxy service
+    var proxy = {
+      image: 'traefik:1.6.3-alpine',
+      entrypoint: '/lando-entrypoint.sh',
+      command: cmd,
+      labels: {
+        'io.lando.container': 'TRUE',
+        'io.lando.service-container': 'TRUE'
+      },
+      environment: {
+        LANDO_APP_NAME: 'proxy',
+        LANDO_SERVICE_TYPE: 'proxy',
+        LANDO_SERVICE_NAME: 'proxy',
+        LANDO_UPDATE: '3'
+      },
+      networks: ['edge'],
+      volumes: [
+        '/var/run/docker.sock:/var/run/docker.sock',
+        '/dev/null:/traefik.toml',
+        '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
+        '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh',
+        '$LANDO_ENGINE_CONF:/lando'
+      ]
+    };
+
+    // Get the new proxy service
+    return {
+      version: '3.2',
+      services: {proxy: proxy},
+      networks: {edge: {driver: 'bridge'}}
+    };
+};
+
+/*
  * Create the proxy service object
  */
-exports.build = function(domain, proxyDash, http, https) {
-
-  // Get some stuff for our things
-  var certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
-  var cmd = [
-    '/entrypoint.sh',
-    '--defaultEntryPoints=https,http',
-    '--docker',
-    '--docker.domain=' + domain,
-    '--entryPoints="Name:http Address::80"',
-    '--entrypoints="Name:https Address::443 TLS:' + certs + '"',
-    '--logLevel=DEBUG',
-    '--web',
-  ].join(' ');
+exports.build = function(proxyDash, http, https) {
 
   // Proxy service
   var proxy = {
-    image: 'traefik:1.5.4-alpine',
-    entrypoint: '/lando-entrypoint.sh',
-    command: cmd,
-    labels: {
-      'io.lando.container': 'TRUE',
-      'io.lando.service-container': 'TRUE'
-    },
-    environment: {
-      LANDO_APP_NAME: 'proxy',
-      LANDO_SERVICE_TYPE: 'proxy',
-      LANDO_SERVICE_NAME: 'proxy',
-      LANDO_UPDATE: '2'
-    },
-    networks: ['edge'],
     ports: [
       [http, '80'].join(':'),
       [https, '443'].join(':'),
       [proxyDash, 8080].join(':')
-    ],
-    volumes: [
-      '/var/run/docker.sock:/var/run/docker.sock',
-      '/dev/null:/traefik.toml',
-      '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
-      '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh',
-      '$LANDO_CONFIG_DIR:/lando'
     ]
   };
 
@@ -86,7 +103,6 @@ exports.build = function(domain, proxyDash, http, https) {
   return {
     version: '3.2',
     services: {proxy: proxy},
-    networks: {edge: {driver: 'bridge'}}
   };
 
 };

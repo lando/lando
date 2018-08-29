@@ -35,7 +35,7 @@ module.exports = function(lando) {
   var isInstalled = function() {
 
     // Return whether we have the engine executable in the expected location
-    var which = lando.shell.which(DOCKER_EXECUTABLE);
+    var which = _.toString(lando.shell.which(DOCKER_EXECUTABLE));
     if (which.toUpperCase() === DOCKER_EXECUTABLE.toUpperCase()) {
       return Promise.resolve(true);
     }
@@ -103,8 +103,8 @@ module.exports = function(lando) {
     })
 
     // Return false if we get a non-zero response
-    .catch(function() {
-      lando.log.debug('Engine is down.');
+    .catch(function(error) {
+      lando.log.debug('Engine is down with error %j', error);
       return Promise.resolve(false);
     });
 
@@ -589,21 +589,7 @@ module.exports = function(lando) {
     .then(function() {
       return Promise.each(utils.normalizer(data), function(datum) {
         return Promise.retry(function() {
-
-          // Start the thing in question
-          return cc(compose.start(datum.compose, datum.project, datum.opts))
-
-          // Look to see if we need to prune the networks
-          // Sadly we can't do much to determine whether the error is the one
-          // we are looking for but we HOPE if this fails its caught downstream
-          // @todo: Move this into the networking plugin?
-          .catch(function(err) {
-            return docker.pruneNetworks()
-            .then(function() {
-              return Promise.reject(err);
-            });
-          });
-
+          return cc(compose.start(datum.compose, datum.project, datum.opts));
         });
       });
     })
@@ -973,11 +959,16 @@ module.exports = function(lando) {
 
     // Build image.
     .then(function() {
+
+      // Try to pull the images first
+      // THIS WILL IGNORE ANY SERVICES THAT BUILD FROM A LOCAL DOCKERFILE
       return Promise.each(utils.normalizer(data), function(datum) {
         return Promise.retry(function() {
           return cc(compose.pull(datum.compose, datum.project, datum.opts));
         });
       })
+
+      // Then try to build
       .then(function() {
         return Promise.each(utils.normalizer(data), function(datum) {
           return Promise.retry(function() {
@@ -985,6 +976,7 @@ module.exports = function(lando) {
           });
         });
       });
+
     })
 
     /**
@@ -1067,24 +1059,6 @@ module.exports = function(lando) {
    */
    var createNetwork = docker.createNetwork;
 
-  /**
-   * Prunes the docker networks.
-   *
-   * @since 3.0.0
-   * @function
-   * @alias 'lando.engine.pruneNetworks'
-   * @see [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkPrune) for info on filters option.
-   * @param {Object} [opts] - Options to pass into the docker networks call
-   * @param {Object} [opts.filters] - Filters options
-   * @returns {Promise} A Promise with teh status
-   * @example
-   *
-   *  // Prune the networks
-   *  return lando.engine.pruneNetworks();
-   *
-   */
-  var pruneNetworks = docker.pruneNetworks;
-
   // Return
   return {
     up: up,
@@ -1103,8 +1077,7 @@ module.exports = function(lando) {
     build: build,
     getNetwork: getNetwork,
     getNetworks: getNetworks,
-    createNetwork: createNetwork,
-    pruneNetworks: pruneNetworks
+    createNetwork: createNetwork
   };
 
 };

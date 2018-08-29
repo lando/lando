@@ -65,7 +65,7 @@ module.exports = function(lando) {
     // Define helpful global envars
     var env = {
       LANDO: 'ON',
-      LANDO_CONFIG_DIR: lando.config.userConfRoot,
+      LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
       LANDO_DOMAIN: lando.config.proxyDomain,
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
@@ -83,7 +83,7 @@ module.exports = function(lando) {
     // Define helpful global labels
     var labels = {
       'io.lando.container': 'TRUE',
-      'io.lando.id': lando.config.id
+      'io.lando.id': lando.config.instance
     };
 
     // Add things just meant for the container env

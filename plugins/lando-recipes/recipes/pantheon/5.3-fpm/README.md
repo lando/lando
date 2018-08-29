@@ -13,7 +13,7 @@ FROM devwithlando/php:5.3-fpm
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
-ENV MAVEN_VERSION 3.5.2
+ENV MAVEN_VERSION 3.5.3
 
 # Install the additional things that make the pantheon
 RUN apt-get update && apt-get install -y \
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     openjdk-7-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && mkdir -p /srv/bin \
+  && chown -R www-data:www-data /var/www /srv/bin \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
   && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
   && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \

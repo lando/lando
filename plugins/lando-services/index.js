@@ -11,6 +11,7 @@ module.exports = function(lando) {
   // Meta
   var services = [
     'apache',
+    'compose',
     'dotnet',
     'elasticsearch',
     'go',
@@ -119,7 +120,7 @@ module.exports = function(lando) {
         // Merge in the volumes and networks as well
         app.services = merger(app.services, newCompose.services);
         app.volumes = merger(app.volumes, newCompose.volumes);
-        app.networks = merger(app.networks, newCompose.networks, merger);
+        app.networks = merger(app.networks, newCompose.networks);
 
       });
 

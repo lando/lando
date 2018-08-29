@@ -137,8 +137,9 @@ var buildCmd = function(compose, project, run, opts) {
     });
   }
 
-  // Add in a command arg if its there
-  if (opts && opts.cmd) {
+  // Add a hacky conditional here because windoze seems to handle this weirdly
+  // @todo: remove the above during unit testing
+  if (opts && opts.cmd && run === 'exec') {
     if (typeof opts.cmd === 'string') {
       opts.cmd = [opts.cmd];
     }
@@ -205,9 +206,12 @@ exports.build = function(compose, project, opts) {
 
   // Default options
   var defaults = {
-    nocache: true,
+    nocache: false,
     pull: true
   };
+
+  // Let's make sure we are building everything
+  delete opts.services;
 
   // Get opts
   var options = (opts) ? _.merge(defaults, opts) : defaults;
@@ -224,6 +228,16 @@ exports.build = function(compose, project, opts) {
  * Run docker compose pull
  */
 exports.pull = function(compose, project, opts) {
+
+  // Let's get a list of all our services that need to be pulled
+  // eg not built from a local dockerfile
+  var images = _.filter(_.keys(_.get(opts, 'app.services'), []), function(service) {
+    return !_.has(opts.app.services, service + '.build');
+  });
+
+  // If the user has selected something then intersect, if not use all image driven services
+  opts.services = (!_.isEmpty(opts.services)) ? _.intersection(opts.services, images) : images;
+
   return {
     cmd: buildCmd(compose, project, 'pull', opts),
     opts: {app: opts.app, mode: 'collect'}
@@ -231,11 +245,12 @@ exports.pull = function(compose, project, opts) {
 };
 
 /*
- * Run docker compose stop
+ * Run docker compose Kill
+ * @NOTE: we use kill for speeeeeedzzz
  */
 exports.stop = function(compose, project, opts) {
   return {
-    cmd: buildCmd(compose, project, 'stop', opts),
+    cmd: buildCmd(compose, project, 'kill', opts),
     opts: {app: opts.app, mode: 'collect'}
   };
 };

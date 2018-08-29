@@ -51,7 +51,7 @@ module.exports = function(lando) {
       image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
-        LANDO_CONFIG_DIR: lando.config.userConfRoot,
+        LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
         LANDO_HOST_OS: lando.config.os.platform,
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,
@@ -70,7 +70,7 @@ module.exports = function(lando) {
       labels: {
         'io.lando.container': 'TRUE',
         'io.lando.service-container': 'TRUE',
-        'io.lando.id': lando.config.id
+        'io.lando.id': lando.config.instance
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
@@ -156,7 +156,7 @@ module.exports = function(lando) {
     fs.mkdirpSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
-    var comment = lando.config.id + '.lando@' + os.hostname();
+    var comment = lando.config.instance + '.lando@' + os.hostname();
     var keyPath = '/lando/keys/' + key;
 
     // Key cmd

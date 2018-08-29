@@ -6,9 +6,13 @@ MailHog
 Supported versions
 ------------------
 
-*   [v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)
-*   [latest](https://hub.docker.com/r/mailhog/mailhog/)
+*   **[v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)** **(default)**
 *   custom
+
+Using patch versions
+--------------------
+
+Because we use a third-party `mailhog` image specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
 
 Example
 -------

@@ -1,0 +1,30 @@
+# The name of my app
+name: patchversion
+
+# Give me http://patchversion.lndo.site and https://patchversion.lndo.site
+proxy:
+  appserver:
+    - patchversion.lndo.site
+
+# Configure my services
+services:
+
+  # Create an nginx service called "appserver"
+  appserver:
+
+    # Set this to custom so we can override down the stream
+    type: nginx:custom
+
+    # SSL
+    ssl: true
+
+    # Override the image with the patch version
+    # Note that this needs to be a correct namespace on the docker hub
+    overrides:
+      services:
+        image: nginx:1.12.1
+
+# Quick comamnd to check the nginx version
+tooling:
+  nginx:
+    service: appserver

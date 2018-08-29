@@ -3,6 +3,11 @@ Working with Drupal 8
 
 Lando offers a configurable recipe for spinning up [Drupal 8](https://drupal.org/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=JGef7Fx44F4
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
@@ -108,6 +113,66 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Drush
+-----
+
+By default our Drupal 8 recipe will globally install the [latest version of the Drush Launcher](https://github.com/drush-ops/drush-launcher). This means that it is up to the user to [list Drush as a dependency](http://docs.drush.org/en/master/install/#install-a-site-local-drush-and-drush-launcher) in their site's `composer.json` and to `lando composer install`. **If you do not do this then you will get an error from the Drush Launcher indicating you need to install Drush.**
+
+If you are not running your Drupal 8 project with `composer` you can [easily change](#configuration) the Drush installation behavior to install Drush globally like we do in our Drupal 7 recipe.
+
+If you are using a nested webroot you will need to `cd` into your webroot and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
+
+To get around this you might want to consider overriding the `drush` tooling command in your `.lando.yml` so that Drush can detect your nested Drupal site from your project root. Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.
+
+```yml
+tooling:
+  drush:
+    service: appserver
+    cmd:
+      - "drush"
+      - "--root=/app/PATH/TO/WEBROOT"
+```
+
+### URL Setup
+
+To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
+
+Create or edit the relevant `settings.php` file and add these lines. Note that you may need to specify a port depending on your Lando installation. You can run `lando info` to see if your URLs use explicit ports or not.
+
+```php
+// Set the base URL for the Drupal site.
+$options['uri'] = "http://mysite.lndo.site:PORT";
+```
+
+### Aliases
+
+You can also use drush aliases with command like `lando drush @sitealias cc all` by following the instructions below.
+
+Make sure the alias file exists within the drush folder in your app.
+An example could be the files structure below.
+
+```
+/app
+  /drush
+    yoursite.aliases.drushrc.php
+```
+
+For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
+
+and by adding the following example to your .lando.yml file:
+
+```yaml
+services:
+  appserver:
+    run:
+      - "mkdir -p ~/.drush/site-aliases"
+      - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
+ ```
+
+Depending on your file structure and alias name the `.lando.yml` file should change accordingly.
+
+Please refer the [ssh section](./../cli/ssh.html)if you need to set-up keys that require a passphrase.
+
 Configuration
 -------------
 
@@ -119,21 +184,29 @@ You can also manually configure the `.lando.yml` file to switch `php` or `drush`
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/drupal8).
 
+If you set PostgreSQL as your database (with e.g. database:postgres), you will need to change settings in /sites/default/settings.php to configure the correct port, namespace and driver. Here's an example:
+
+```yml
+$databases['default']['default'] = array (
+  'database' => 'drupal8',
+  'username' => 'drupal8',
+  'password' => 'drupal8',
+  'prefix' => '',
+  'host' => 'database',
+  'port' => '5432',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\pgsql',
+  'driver' => 'pgsql', 
+  );
+```
+
 ### Environment Variables
 
 The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
-LANDO_INFO=JSON_STRING_OF_LANDO_INFO
-
-# Pending deprecation!!!
-# These will soon be removed.
-# We recommend you switch to using LANDO_INFO.
-DB_HOST=database
-DB_USER=drupal7
-DB_PASSWORD=drupal7
-DB_NAME=drupal7
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/drupal8/drupal8.conf","conf":"/Users/pirog/.lando/services/config/drupal8/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/drupal8/drupal8.conf","conf":"/Users/pirog/.lando/services/config/drupal8/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"drupal8","password":"drupal8","database":"drupal8"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/drupal8/mysql"}}}
 ```
 
 **NOTE:** These can vary based on the choices you make in your recipe config.
@@ -156,47 +229,6 @@ events:
     - appserver: cd $LANDO_WEBROOT && php script.php
 
 ```
-
-Drush URL Setup
----------------
-
-To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
-
-Create or edit `/sites/default/drushrc.php` and add these lines:
-
-```
-<?php
-$options['uri'] = "http://mysite.lndo.site";
-```
-
-### Aliases
-
-You can also use drush aliases with command like `lando drush @sitealias cr all` by following the instructions below.
-
-Make sure the alias file exists within the drush folder in your app.
-An example could be the files structure below.
-
-```
-/app
-  /drush
-    yoursite.aliases.drushrc.php
-```
-
-For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
-
-and by adding the following example to your .lando.yml file:
-
-```
-services:
-  appserver:
-    run:
-      - "mkdir -p ~/.drush/site-aliases"
-      - "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
- ```
-
-Depending on your file structure and alias name the .lando.yml file should change accordingly.
-
-Please refer the [ssh section](./../cli/ssh.html)if you need to set-up keys that require a passphrase.
 
 Advanced Service Usage
 ----------------------

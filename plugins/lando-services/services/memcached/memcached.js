@@ -92,6 +92,7 @@ module.exports = function() {
   };
 
   return {
+    defaultVersion: '1.5',
     info: info,
     networks: networks,
     services: services,

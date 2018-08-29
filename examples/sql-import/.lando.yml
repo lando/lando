@@ -1,0 +1,80 @@
+# The name of the app
+name: sql-import
+
+# Give me http://mysql-import.lndo.site and https://mysql-import.lndo.site
+proxy:
+  nginx:
+    - sql-import.lndo.site
+
+# Set up my services
+services:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
+  appserver:
+    via: nginx
+    type: php:7.1
+    ssl: true
+    webroot: www
+
+  # Spin up a mariadb container called "database"
+  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
+  database:
+
+    # Use the latest version of mysql
+    type: mysql
+
+    # Optionally forward out our port so we can access it at `localhost:someport`.
+    # This port will change every time you restart this app
+    #
+    # You can also set this to a static port you want to use `portforward:3311`.
+    # You will need to make sure the port is open and avialable
+    portforward: 5309
+
+    # Optionally change the default db credentials
+    creds:
+      user: mysql
+      password: mysql
+      database: data1
+
+    # Optionally load in all the mysql config files in the config directory
+    # This is relative to the app root
+    # config:
+    #  confd: config
+
+  # Spin up a secondary database for postgres
+  database2:
+    type: postgres
+
+tooling:
+  mysql:
+    service: :host
+    description: Drop into a mysql shell on a database service
+    cmd: mysql -u root
+    options:
+      host:
+        description: The database service to use
+        default: database
+        alias:
+          - h
+  psql:
+    service: :host
+    description: Drop into a postgres shell on a database service
+    cmd: psql -h localhost -p 5432 -U postgres
+    options:
+      host:
+        description: The database service to use
+        default: database
+        alias:
+          - h
+  'db-import <file>':
+    service: :host
+    description: Import <file> into database
+    cmd: /helpers/sql-import.sh
+    options:
+      host:
+        description: The database service to use
+        default: database
+        alias:
+          - h
+      no-wipe:
+        description: Do not destroy the existing database before an import

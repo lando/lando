@@ -7,8 +7,8 @@ FROM devwithlando/php:7.2-fpm
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.3
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.8.0
-ENV MAVEN_VERSION 3.5.2
+ENV TERMINUS_VERSION 1.8.1
+ENV MAVEN_VERSION 3.5.3
 
 # Install the additional things that make the pantheon
 RUN mkdir -p /usr/share/man/man1 \
@@ -21,6 +21,7 @@ RUN mkdir -p /usr/share/man/man1 \
   && mkdir -p /var/www/.composer \
   && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
+  && chown -R www-data:www-data /var/www /srv/bin \
   && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
   && php installer.phar install --install-version=$TERMINUS_VERSION \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \

@@ -6,13 +6,25 @@ Elasticsearch
 Supported versions
 ------------------
 
-*   [5.5](https://hub.docker.com/r/itzg/elasticsearch/)
+*   **[5.5](https://hub.docker.com/r/itzg/elasticsearch/)** **(default)**
 *   [5.4](https://hub.docker.com/r/itzg/elasticsearch/)
 *   [5.3](https://hub.docker.com/r/itzg/elasticsearch/)
 *   [5.2](https://hub.docker.com/r/itzg/elasticsearch/)
 *   [5.1](https://hub.docker.com/r/itzg/elasticsearch/)
-*   [latest](https://hub.docker.com/r/itzg/elasticsearch/)
 *   custom
+
+Using patch versions
+--------------------
+
+While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+
+[Here](https://hub.docker.com/r/itzg/elasticsearch/tags/) are all the tags that are available for this service.
+
+Here is an example of overriding the `nginx` service to use a patched version.
+
+{% codesnippet "./../examples/patchversion/.lando.yml" %}{% endcodesnippet %}
+
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/patchversion).
 
 Example
 -------

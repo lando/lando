@@ -1,0 +1,5 @@
+*.sql
+*.gz
+*.zip
+!test.sql
+!test2.sql

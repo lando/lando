@@ -3,6 +3,11 @@ Working with WordPress
 
 Lando offers a configurable recipe for spinning up [WordPress](https://wordpress.org/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=QW3io3MFPNg
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
@@ -120,16 +125,9 @@ The below are in addition to the [default variables](./../config/services.md#env
 
 
 ```bash
-LANDO_INFO=JSON_STRING_OF_LANDO_INFO
-
-# Pending deprecation!!!
-# These will soon be removed.
-# We recommend you switch to using LANDO_INFO.
-DB_HOST=database
-DB_USER=wordpress
-DB_PASSWORD=wordpress
-DB_NAME=wordpress
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/wordpress/wordpress.conf","conf":"/Users/pirog/.lando/services/config/wordpress/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/wordpress/wordpress.conf","conf":"/Users/pirog/.lando/services/config/wordpress/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"wordpress","password":"wordpress","database":"wordpress"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/wordpress/mysql"}}}
 ```
 
 **NOTE:** These can vary based on the choices you make in your recipe config.

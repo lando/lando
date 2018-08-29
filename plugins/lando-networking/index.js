@@ -22,7 +22,7 @@ module.exports = function(lando) {
       caCertDir: path.join(usr, caDir),
       caCert: path.join(usr, caDir, 'lando.pem'),
       caService: path.join(usr, caDir, 'ca-setup.yml'),
-      caProject: 'landocasetupkenobi38ahsoka' + lando.config.id,
+      caProject: 'landocasetupkenobi38ahsoka' + lando.config.instance,
       networkBridge: 'lando_bridge_network'
     };
 
@@ -43,7 +43,7 @@ module.exports = function(lando) {
           image: 'devwithlando/util:stable',
           environment: {
             LANDO_CA_CERT: path.basename(lando.config.caCert),
-            LANDO_CONFIG_DIR: '$LANDO_CONFIG_DIR',
+            LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
             LANDO_SERVICE_TYPE: 'ca',
             COLUMNS: 256,
             TERM: 'xterm'
@@ -55,7 +55,7 @@ module.exports = function(lando) {
           },
           volumes: [
             '$LANDO_ENGINE_SCRIPTS_DIR/setup-ca.sh:/setup-ca.sh',
-            '$LANDO_CONFIG_DIR/certs:/certs',
+            '$LANDO_ENGINE_CONF/certs:/certs',
           ]
         }
       }
@@ -79,10 +79,89 @@ module.exports = function(lando) {
 
   });
 
+  // Preemptively make sure we have enough networks and if we dont
+  // smartly prune some of them
+  lando.events.on('pre-engine-start', 1, function() {
+
+    // Let's get a list of network
+    return lando.engine.getNetworks()
+
+    // If we are at the threshold lets engage some pruning ops
+    .then(function(networks) {
+
+      if (_.size(networks) >= 32) {
+
+        // Warn user about this action
+        lando.log.warn('Lando has detected you are at Docker\'s network limit!');
+        lando.log.warn('Give us a moment as we try to make space by cleaning up old networks...');
+
+        // List of default networks we can assume
+        var landoNets = ['bridge', 'host', 'none', lando.config.networkBridge];
+
+        // Add in proxyNet if we have if
+        if (_.has(lando, 'config.proxyNet')) {
+          landoNets.push(lando.config.proxyNet);
+        }
+
+        // Get list of app default networks
+        return lando.app.list()
+
+        // And add them to our default list
+        .each(function(app) {
+          landoNets.push(app.lando + '_default');
+        })
+
+        // Map some networks
+        .then(function() {
+          return networks;
+        })
+
+        // Filter out any landoy ones
+        .filter(function(network) {
+          return !_.includes(landoNets, network.Name);
+        })
+
+        // Inspect remaining networks to make sure we dont remove any
+        // with attached containers
+        .map(function(network) {
+          return lando.engine.getNetwork(network.Id);
+        })
+        .map(function(network) {
+          return network.inspect();
+        })
+
+        // Filter out any with containers
+        .filter(function(network) {
+          return _.isEmpty(network.Containers);
+        })
+
+        // Return the oldest 5 unused networks
+        // @todo: what is the best assumption here?
+        .then(function(networks) {
+          return _.slice(_.orderBy(networks, 'Created', 'asc'), 0, 5);
+        })
+
+        // Get the Network object
+        .map(function(network) {
+          return lando.engine.getNetwork(network.Id);
+        })
+
+        // and remove it
+        .each(function(net) {
+          lando.log.warn('Removing old network %s', net.id);
+          net.remove();
+        });
+
+      }
+
+    });
+
+  });
+
   // Make sure we have a lando bridge network
   // We do this here so we can take advantage of docker up assurancs in engine.js
   // and to make sure it covers all non-app services
-  lando.events.on('pre-engine-start', 1, function() {
+  lando.events.on('pre-engine-start', 2, function() {
 
     // Let's get a list of network
     return lando.engine.getNetworks()
@@ -105,7 +184,7 @@ module.exports = function(lando) {
 
   // Make sure we have a host-exposed root ca if we dont already
   // Also dont run this on the caProject otherwise infinite loop happens!
-  lando.events.on('pre-engine-start', 1, function(data) {
+  lando.events.on('pre-engine-start', 2, function(data) {
     if (!fs.existsSync(lando.config.caCert) && data.project !== lando.config.caProject) {
 
       // Define the full CA service

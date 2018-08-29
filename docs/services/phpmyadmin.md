@@ -6,10 +6,22 @@ phpMyAdmin
 Supported versions
 ------------------
 
-*   [4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+*   **[4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)** **(default)**
 *   [4.6](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
-*   [latest](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   custom
+
+Using patch versions
+--------------------
+
+While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+
+[Here](https://hub.docker.com/r/phpmyadmin/phpmyadmin/tags/) are all the tags that are available for this service.
+
+Here is an example of overriding the `nginx` service to use a patched version.
+
+{% codesnippet "./../examples/patchversion/.lando.yml" %}{% endcodesnippet %}
+
+You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/patchversion).
 
 Example
 -------

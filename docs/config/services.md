@@ -13,6 +13,7 @@ Supported Services
 The following services are currently supported. Please check out each one to learn how to use them.
 
 *   ####[apache](./../services/apache.md)
+*   ####[compose](./../services/compose.md)
 *   ####[dotnet](./../services/dotnet.md)
 *   ####[elasticsearch](./../services/elasticsearch.md)
 *   ####[go](./../services/go.md)

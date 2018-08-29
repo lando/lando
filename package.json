@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-beta.40",
+  "version": "3.0.0-beta.47",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -18,18 +18,32 @@
   "directories": {
     "lib": "./lib"
   },
+  "nyc": {
+    "include": [
+      "lib/**/*.js",
+      "plugins/**/lib/*.js",
+      "scripts/util.js"
+    ],
+    "exclude": [
+      "test/**",
+      "plugins/**/test"
+    ],
+    "cache": true,
+    "all": true
+  },
   "scripts": {
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "lint": "eslint bin lib plugins test scripts",
-    "pkg:cli": "node ./scripts/pkg.js --stage=cli",
-    "pkg:full": "node ./scripts/pkg.js --stage=full",
-    "release:major": "node ./scripts/bump.js --stage=major",
-    "release:minor": "node ./scripts/bump.js --stage=minor",
-    "release:patch": "node ./scripts/bump.js --stage=patch",
-    "release:pre": "node ./scripts/bump.js --stage=prerelease",
+    "lint": "eslint bin docs lib scripts test && eslint --config .eslintrc.old.json plugins",
+    "pkg:cli": "node ./scripts/pkg.js",
+    "pkg:full": "node ./scripts/pkg.js --installer",
+    "release:major": "node ./scripts/bump.js --type=major",
+    "release:minor": "node ./scripts/bump.js --type=minor",
+    "release:patch": "node ./scripts/bump.js --type=patch",
+    "release:pre": "node ./scripts/bump.js --type=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
-    "test:unit": "mocha test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
-    "test:functional": "mocha test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
+    "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
+    "test:functional": "mocha --timeout 5000 test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
     "test": "yarn lint && yarn test:unit"
   },
   "pkg": {
@@ -54,22 +68,22 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bluebird": "^3.4.1",
     "cli-table": "^0.3.1",
     "dockerode": "^2.4.2",
     "dotenv": "^4.0.0",
     "fs-extra": "^0.18.2",
-    "github": "^9.2.0",
+    "gitbook-plugin-adsense": "^1.0.3",
+    "github": "^12.0.0",
     "inquirer": "^3.1.1",
     "ip": "^1.1.5",
     "js-yaml": "^3.4.6",
     "jsonfile": "^2.4.0",
-    "kalabox-stats-client": "^0.2.1",
     "localtunnel": "^1.8.3",
     "lodash": "^4.15.0",
     "node-cache": "^4.1.1",
     "object-hash": "^1.1.8",
-    "restler": "^3.4.0",
     "semver": "^5.4.1",
     "shell-escape": "https://github.com/thinktandem/node-shell-escape/tarball/master",
     "shelljs": "0.7.8",
@@ -83,8 +97,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-as-promised": "^7.1.1",
     "command-line-test": "^1.0.10",
-    "copy": "^0.3.1",
+    "coveralls": "^3.0.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
     "gitbook-cli": "^2.3.0",
@@ -92,6 +107,7 @@
     "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^4.1.0",
     "mock-fs": "^4.4.2",
+    "nyc": "^12.0.1",
     "pkg": "^4.3.0-beta.5",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0"

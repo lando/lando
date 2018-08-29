@@ -3,7 +3,7 @@ Deepweb Example
 
 This example provides a `LEMP` stack with a deeply nested webroot.
 
-See the `.lando.yml` in this directory for LEMP configuration options.
+See the `.lando.yml` in this directory for configuration options.
 
 Getting Started
 ---------------

@@ -268,8 +268,8 @@ module.exports = function(lando) {
 
         // Cache the site things
         var data = {email: email};
-        var name = lando.utils.engine.dockerComposify(options.appname);
-        var siteKey = siteMetaDataKey + name;
+        var dc = lando.utils.engine.dockerComposify;
+        var siteKey = siteMetaDataKey + dc(name);
         lando.cache.set(siteKey, data, {persist: true});
 
       });

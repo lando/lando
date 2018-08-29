@@ -6,7 +6,7 @@ Solr
 Supported versions
 ------------------
 
-*   [7.1](https://hub.docker.com/r/_/solr/)
+*   **[7.1](https://hub.docker.com/r/_/solr/)** **(default)**
 *   [7.0](https://hub.docker.com/r/_/solr/)
 *   [6.6](https://hub.docker.com/r/_/solr/)
 *   [6.5](https://hub.docker.com/r/_/solr/)
@@ -15,8 +15,12 @@ Supported versions
 *   [5.5](https://hub.docker.com/r/_/solr/)
 *   [4.10](https://hub.docker.com/r/actency/docker-solr)
 *   [3.6](https://hub.docker.com/r/actency/docker-solr)
-*   [latest](https://hub.docker.com/r/_/solr/)
 *   custom
+
+Using patch versions
+--------------------
+
+Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
 
 Example
 -------

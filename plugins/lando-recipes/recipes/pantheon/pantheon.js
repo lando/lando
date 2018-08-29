@@ -12,7 +12,8 @@ module.exports = function(lando) {
   var path = require('path');
 
   // Lando things
-  var api = require('./client')(lando);
+  var PantheonApiClient = require('./client');
+  var api = new PantheonApiClient(lando.log);
   var addConfig = lando.utils.services.addConfig;
   var buildVolume = lando.utils.services.buildVolume;
 
@@ -211,7 +212,7 @@ module.exports = function(lando) {
       });
 
       // Get the pantheon sites using the token
-      api.getEnvs(token, config.id)
+      api.auth(token).then(authorizedApi => authorizedApi.getSiteEnvs(config.id))
 
       // Parse the evns into choices
       .map(function(env) {
@@ -297,6 +298,7 @@ module.exports = function(lando) {
         },
         rsync: {
           description: 'Rsync the files, good for subsequent pulls',
+          passthrough: true,
           boolean: true,
           default: false
         }
@@ -543,7 +545,7 @@ module.exports = function(lando) {
     config.framework = _.get(config, 'framework', 'drupal');
 
     // Update with new config defaults
-    config.conf = config.cong || {};
+    config.conf = config.conf || {};
     config.conf.server = path.join(configDir, config.framework + '.conf');
     config.conf.php = path.join(configDir, 'php.ini');
     config.conf.database = path.join(configDir, 'mysql');
@@ -565,8 +567,13 @@ module.exports = function(lando) {
     // Normalize because 7.0 gets handled strangely by js-yaml
     if (config.php === 7) { config.php = '7.0'; }
 
-    // If this is Drupal8 let's add in drupal console as well
-    if (config.framework === 'drupal8') { config.drupal = true; }
+    // If this is Drupal8 let's add in drupal console and reset drush so it
+    // globally installs Drush 8 FOR NOW
+    // See: https://github.com/lando/lando/issues/580
+    if (config.framework === 'drupal8') {
+      config.drupal = true;
+      config.drush = 'stable';
+    }
 
     // Get the lando/pantheon base recipe/framework
     var base = _.get(config, 'framework', 'drupal7');
