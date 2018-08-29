@@ -27,20 +27,3 @@ if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
   find /var/www -type d -exec chown www-data:www-data {} +
 
 fi
-
-# Setting up client key
-echo "Setting up client key $INDEX_PEM"
-cp -rf $INDEX_PEM /var/www/certs/binding.pem
-
-# LOCKR integration
-# If we don't have our dev cert already let's get it
-# if [ ! -f "/certs/binding.pem" ]; then
-#   $(terminus site connection-info --field=sftp_command):certs/binding.pem /certs/binding.pem
-# fi
-
-# Lets also check to see if we should refresh our cert
-# if openssl x509 -checkend 86400 -noout -in /certs/binding.pem; then
-#  echo "Cert is good!"
-# else
-#   $(terminus site connection-info --field=sftp_command):certs/binding.pem /certs/binding.pem
-# fi
