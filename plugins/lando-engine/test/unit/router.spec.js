@@ -78,8 +78,8 @@ describe('lando-engine.router', () => {
         return res.should.equal('Human cyborg relations');
       });
     });
+    */
   });
-  */
 
   describe('#build', () => {
     it('should run compose.pull and then compose.build on each datum');
