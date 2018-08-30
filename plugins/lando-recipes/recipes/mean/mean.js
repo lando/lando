@@ -1,32 +1,30 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
+  const _ = lando.node._;
 
   /*
    * Helper to return proxy config
    */
-  var proxy = function(name) {
+  const proxy = name => {
     return {
       appserver: [
-        [name, lando.config.proxyDomain].join('.')
-      ]
+        [name, lando.config.proxyDomain].join('.'),
+      ],
     };
   };
 
   /*
    * Helper to return services config
    */
-  var services = function(config) {
-
+  const services = config => {
     // Get some options
-    var nodeVersion = _.get(config, 'node', '6.10');
-    var mongoVersion = _.get(config, 'mongo', '3.5');
+    const nodeVersion = _.get(config, 'node', '6.10');
+    const mongoVersion = _.get(config, 'mongo', '3.5');
 
     // Build our default set of services
-    var services = {
+    const services = {
       appserver: {
         type: 'node:' + nodeVersion,
         command: _.get(config, 'command', 'npm start'),
@@ -34,20 +32,17 @@ module.exports = function(lando) {
       database: {
         type: 'mongo:' + mongoVersion,
         portforward: true,
-      }
+      },
     };
 
     // Mix in any additional config
     if (_.has(config, 'conf')) {
-
       // Start setting config
       services.database.config = {};
-
       // Set custom db conf
       if (_.has(config, 'conf.database')) {
         services.database.config = config.conf.database;
       }
-
     }
 
     // Mix in globals
@@ -57,43 +52,39 @@ module.exports = function(lando) {
 
     // Return that thang
     return services;
-
   };
 
   /*
    * Helper to return tooling config
    */
-  var tooling = function() {
-
+  const tooling = () => {
     // Get our default tooling opts
-    var tooling = {
+    const tooling = {
       node: {
-        service: 'appserver_cli'
+        service: 'appserver',
       },
       npm: {
-        service: 'appserver_cli'
+        service: 'appserver',
       },
       yarn: {
-        service: 'appserver_cli'
+        service: 'appserver',
       },
       mongo: {
         service: 'database',
-        description: 'Drop into the mongo shell'
-      }
+        description: 'Drop into the mongo shell',
+      },
     };
 
     // Return the toolz
     return tooling;
-
   };
 
   /*
    * Build out MEAN
    */
-  var build = function(name, config) {
-
+  const build = (name, config) => {
     // Start up our build
-    var build = {};
+    const build = {};
 
     // Get our things
     build.proxy = proxy(name);
@@ -102,14 +93,12 @@ module.exports = function(lando) {
 
     // Return the things
     return build;
-
   };
 
   // Return things
   return {
     build: build,
     configDir: __dirname,
-    webroot: false
+    webroot: false,
   };
-
 };

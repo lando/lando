@@ -54,8 +54,8 @@ services:
 # Add some nice command routing
 tooling:
   npm:
-    service: appserver_cli
+    service: appserver
   gulp:
     service: appserver
   node:
-    service: appserver_cli
+    service: appserver

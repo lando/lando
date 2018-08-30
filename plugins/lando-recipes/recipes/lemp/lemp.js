@@ -1,38 +1,32 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var lamp = require('./../lamp/lamp')(lando);
+  const lamp = require('./../lamp/lamp')(lando);
 
   /*
    * Helper to return proxy config
    */
-  var proxy = function(name) {
+  const proxy = name => {
     return {
       nginx: [
-        [name, lando.config.proxyDomain].join('.')
-      ]
+        [name, lando.config.proxyDomain].join('.'),
+      ],
     };
   };
 
   /*
    * Build out LEMP
    */
-  var build = function(name, config) {
-
+  const build = (name, config) => {
     // Start by cheating
-    var build = lando.recipes.build(name, 'lamp', config);
-
+    const build = lando.recipes.build(name, 'lamp', config);
     // Replace the proxy
     build.proxy = proxy(name);
-
     // Set via to nginx
     build.services.appserver.via = config.via || 'nginx';
-
     // Return the things
     return build;
-
   };
 
   // Return things
@@ -40,7 +34,6 @@ module.exports = function(lando) {
     build: build,
     resetConfig: lamp.resetConfig,
     getCgr: lamp.getCgr,
-    getPhar: lamp.getPhar
+    getPhar: lamp.getPhar,
   };
-
 };

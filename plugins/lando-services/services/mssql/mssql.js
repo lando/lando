@@ -1,69 +1,60 @@
 'use strict';
 
-module.exports = function() {
-
+module.exports = () => {
   /*
    * Supported versions for mssql
    */
-  var versions = [
+  const versions = [
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out mssql
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Path
-    var path = [
+    const path = [
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
       '/usr/bin',
       '/sbin',
       '/bin',
-      '/opt/mssql-tools/bin'
+      '/opt/mssql-tools/bin',
     ];
 
     // GEt creds
-    var password = config.password || 'he11oTHERE';
+    const password = config.password || 'he11oTHERE';
 
     // Default mssql service
-    var mssql = {
+    const mssql = {
       image: 'microsoft/mssql-server-linux',
       environment: {
         ACCEPT_EULA: 'Y',
         PATH: path.join(':'),
         SA_PASSWORD: password,
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
-      command: '/opt/mssql/bin/sqlservr'
+      command: '/opt/mssql/bin/sqlservr',
     };
 
     // Handle port forwarding
     if (config.portforward) {
-
       // If true assign a port automatically
       if (config.portforward === true) {
         mssql.ports = ['1443'];
-      }
-
-      // Else use the specified port
-      else {
+      } else {
         mssql.ports = [config.portforward + ':1443'];
       }
-
     }
 
     // Put it all together
@@ -71,40 +62,37 @@ module.exports = function() {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Return the volumes needed
   */
-  var volumes = function() {
+  const volumes = () => {
     return {data: {}};
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Add in generic info
-    var info = {
+    const info = {
       creds: {
         user: 'sa',
-        password: config.environment.SA_PASSWORD
+        password: config.environment.SA_PASSWORD,
       },
-      'internal_connection': {
+      internal_connection: {
         host: name,
-        port: config.port || 1443
+        port: config.port || 1443,
       },
-      'external_connection': {
+      external_connection: {
         host: 'localhost',
-        port: config.portforward || 'not forwarded'
-      }
+        port: config.portforward || 'not forwarded',
+      },
     };
 
     // Return the collected info
     return info;
-
   };
 
   return {
@@ -113,7 +101,6 @@ module.exports = function() {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

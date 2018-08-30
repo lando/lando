@@ -1,14 +1,13 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
+  const _ = lando.node._;
 
   /*
    * Supported versions for python
    */
-  var versions = [
+  const versions = [
     '3',
     '3.6',
     '3.5',
@@ -17,100 +16,73 @@ module.exports = function(lando) {
     '2',
     '2.7',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out python
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // pip install path
-    var pythonUserBase = '/var/www/.local';
+    const pythonUserBase = '/const/www/.local';
 
     // Path
     // @todo: need to add global gem locaation?
-    var path = [
+    const path = [
       pythonUserBase + '/bin',
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
       '/usr/bin',
       '/sbin',
-      '/bin'
+      '/bin',
     ];
 
     // Volumes
-    var vols = [
+    const vols = [
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      'python_share:/var/www/.cache/pip',
-      'python_share:' + pythonUserBase
+      'python_share:/const/www/.cache/pip',
+      'python_share:' + pythonUserBase,
     ];
 
     // Basic config
-    var cliCmd = 'tail -f /dev/null';
-    var version = config.version || '2';
-    var command = config.command || cliCmd;
+    const cliCmd = 'tail -f /dev/null';
+    const version = config.version || '2';
+    const command = config.command || cliCmd;
 
     // Arrayify the command if needed
-    if (!_.isArray(command)) {
-      command = [command];
-    }
+    if (!_.isArray(command)) command = [command];
 
     // Start with the python base
-    var python = {
+    const python = {
       image: 'python:' + version + '-jessie',
       environment: {
         TERM: 'xterm',
         PATH: path.join(':'),
         PIP_USER: 'true',
-        PYTHONUSERBASE: pythonUserBase
+        PYTHONUSERBASE: pythonUserBase,
       },
-      'working_dir': config._mount,
+      working_dir: config._mount,
       ports: ['80'],
       expose: ['80'],
       volumes: vols,
-      command: '/bin/sh -c "' + command.join(' && ') + '"'
+      command: '/bin/sh -c "' + command.join(' && ') + '"',
     };
 
     // If we have not specified a command we should assume this service was intended
     // to be run for CLI purposes
     if (!_.has(config, 'command')) {
       python.ports = [];
-    }
-
-    // And if not we need to add in an additional cli container so that we can
-    // run things like lando bundler install before our app starts up
-    else {
-
-      // Spoof the config and add some internal properties
-      var cliConf = {
-        type: 'python:' + version,
-        _app: config._app,
-        _root: config._root,
-        _mount: config._mount
-      };
-
-      // Extract the cli service and add here
-      var cliCompos = lando.services.build('cli', 'python:' + version, cliConf);
-      var cliName = name + '_cli';
-      services[cliName] = cliCompos.services.cli;
-
-      // Add a flag so we know this is built behind the the scenes
-      config._hiddenServices = [cliName];
-
     }
 
     // Generate some certs we can use
@@ -123,24 +95,17 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  var info = function() {
-    return {};
-  };
+  const info = () => ({});
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
-    return {
-      'python_share': {}
-    };
-  };
+  const volumes = () => ({'python_share': {}});
 
   return {
     defaultVersion: '3.6',
@@ -149,7 +114,6 @@ module.exports = function(lando) {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

@@ -1,39 +1,35 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const _ = lando.node._;
+  const addConfig = lando.utils.services.addConfig;
+  const buildVolume = lando.utils.services.buildVolume;
 
   /*
    * Supported versions for pma
    */
-  var versions = [
+  const versions = [
     '4.7',
     '4.6',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out mysql
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Get the hosts
-    var hosts = _.get(config, 'hosts', 'database');
+    const hosts = _.get(config, 'hosts', 'database');
 
     // Arrayify the hosts if needed
     if (!_.isArray(hosts)) {
@@ -41,7 +37,7 @@ module.exports = function(lando) {
     }
 
     // Default pma service
-    var pma = {
+    const pma = {
       image: 'phpmyadmin/phpmyadmin:' + config.version,
       environment: {
         MYSQL_ROOT_PASSWORD: '',
@@ -49,17 +45,17 @@ module.exports = function(lando) {
         PMA_PORT: 3306,
         PMA_USER: 'root',
         PMA_PASSWORD: '',
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
       ports: ['80'],
-      command: '/run.sh phpmyadmin'
+      command: '/run.sh phpmyadmin',
     };
 
     // Handle custom config file
     if (_.has(config, 'config')) {
-      var local = config.config;
-      var remote = '/etc/phpmyadmin/config.user.inc.php';
-      var customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
+      const local = config.config;
+      const remote = '/etc/phpmyadmin/config.user.inc.php';
+      const customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
       pma.volumes = addConfig(customConfig, pma.volumes);
     }
 
@@ -68,22 +64,17 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
-    return {};
-  };
+  const volumes = () => ({});
 
   /*
    * Metadata about our service
    */
-  var info = function() {
-    return {};
-  };
+  const info = () => ({});
 
   return {
     defaultVersion: '4.7',
@@ -92,7 +83,6 @@ module.exports = function(lando) {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };
