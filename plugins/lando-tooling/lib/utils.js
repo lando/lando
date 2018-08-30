@@ -45,7 +45,7 @@ exports.buildCommand = (app, command, needs, service, user) => ({
 /*
  * Helper to grab dynamic container if needed
  */
-exports.getContainer = (service, answer) => (_.startsWith(service, ':')) ? answers[service.split(':')[1]] : service;
+exports.getContainer = (service, answer) => (_.startsWith(service, ':')) ? answer[service.split(':')[1]] : service;
 
 /*
  * Helper to map the cwd on the host to the one in the container
@@ -76,7 +76,7 @@ exports.getOpts = (argopts = process.argv.slice(3)) => {
  */
 exports.getPassthruOpts = (options = {}, answers = {}) => _(options)
   .filter(value => value.passthrough = true)
-  .map(value => `--${value.name} ${answers[value.name]}`)
+  .map(value => `--${value.name}=${answers[value.name]}`)
   .value();
 
 /*

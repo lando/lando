@@ -143,7 +143,7 @@ module.exports = lando => {
     ];
 
     // Build the webroot
-    const webroot = config._mount;
+    let webroot = config._mount;
 
     // Add the webroot if its there
     if (_.has(config, 'webroot')) {

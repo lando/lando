@@ -57,7 +57,7 @@ module.exports = lando => {
       build.tooling.drush.cmd = value;
     } else if (type === 'composer' || (type === 'global' && !_.isEmpty(value))) {
       // Assume a global composer install to start
-      const cmd = helpers.getCgr('drush/drush', value);
+      let cmd = helpers.getCgr('drush/drush', value);
 
       // If composer or drush 8
       if (type === 'composer' || (value && value.split('.')[0] === '8')) {
@@ -97,7 +97,7 @@ module.exports = lando => {
     config.php = _.get(config, 'php', '7.0');
 
     // Start by cheating
-    const build = lando.recipes.build(name, base, config);
+    let build = lando.recipes.build(name, base, config);
 
     // Determine the default drush setup for D7
     const defaultDrush = (config.php === '5.3' ? DRUSH7 : DRUSH8);

@@ -31,7 +31,7 @@ module.exports = lando => {
    */
   const getPhar = (url, src, dest, check) => {
     // Status checker
-    const statusCheck = check || 'true';
+    let statusCheck = check || 'true';
 
     // Arrayify the check if needed
     if (_.isString(statusCheck)) {
@@ -182,6 +182,7 @@ module.exports = lando => {
           },
           'no-wipe': {
             description: 'Do not destroy the existing database before an import',
+            boolean: true,
           },
         },
       },
@@ -238,7 +239,7 @@ module.exports = lando => {
       tooling.psql = {
         service: ':host',
         description: 'Drop into a psql shell on a database service',
-        cmd: 'psql -h localhost -p 5432 -U postgres',
+        cmd: 'psql -h localhost -p 5432',
         options: {
           host: {
             description: 'The database service to use',
