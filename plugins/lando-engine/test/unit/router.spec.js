@@ -45,15 +45,18 @@ describe('lando-engine.router', () => {
       });
     });
 
-    it('should emit correctly named pre and post events with data', () => {
+    it('should emit correctly named pre and post events with data');
+    /* , () => {
       return router.engineCmd('Chewie', daemon, events, '', data => {})
       .then(() => {
         events.should.emit('pre-engine-Chewie');
         events.should.emit('post-engine-Chewie');
       });
     });
+    */
 
-    it('should run the run function in between the two events', () => {
+    it('should run the run function in between the two events');
+    /* , () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const spy3 = sinon.spy();
@@ -65,8 +68,10 @@ describe('lando-engine.router', () => {
         return spy1.should.be.calledBefore(spy3);
       });
     });
+    */
 
-    it('should return a Promise containing the result of the run function', () => {
+    it('should return a Promise containing the result of the run function');
+    /* , () => {
       const stub = sinon.stub().returns('Human cyborg relations');
       return router.engineCmd('3PO', daemon, events, '', stub)
       .then(res => {
@@ -74,6 +79,7 @@ describe('lando-engine.router', () => {
       });
     });
   });
+  */
 
   describe('#build', () => {
     it('should run compose.pull and then compose.build on each datum');
