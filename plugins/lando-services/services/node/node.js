@@ -8,6 +8,7 @@ module.exports = lando => {
    * Supported versions for node
    */
   const versions = [
+    '10',
     '9',
     '8',
     'carbon',
@@ -74,7 +75,6 @@ module.exports = lando => {
       },
       working_dir: config._mount,
       ports: ['80'],
-      expose: ['80'],
       volumes: vols,
       command: '/bin/sh -c "' + command.join(' && ') + '"',
     };

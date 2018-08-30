@@ -39,6 +39,8 @@ exports.buildCommand = (app, command, needs, service, user) => ({
     user: user,
     services: _.compact(_.flatten([service, needs])),
     hijack: false,
+    // @todo: should we have a better system to generate certs vs refreshing things?
+    autoRemove: true,
   },
 });
 

@@ -103,7 +103,7 @@ exports.scan = (data, compose, docker) => {
 exports.start = (data, compose) => retryEach(data, datum => compose('start', datum));
 
 /*
- * Helper to route to start command
+ * Helper to route to stop command
  */
 exports.stop = (data, compose, docker) => retryEach(data, datum => {
   return (datum.compose) ? compose('stop', datum) : docker.stop(utils.getId(datum));
