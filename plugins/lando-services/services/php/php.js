@@ -187,7 +187,7 @@ module.exports = lando => {
     // If this is apache lets set our default config
     if (config.web === 'apache') {
       // Set the default conf file
-      const defaultConfFile = 'httpd.conf';
+      let defaultConfFile = 'httpd.conf';
 
       // Add ssl specific things if we need them
       if (config.ssl) {

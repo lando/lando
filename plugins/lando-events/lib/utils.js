@@ -32,6 +32,7 @@ exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
     project: app.name,
     opts: {
       app: app,
+      pre: 'cd /app',
       mode: 'attach',
       user: 'www-data',
       services: [service],

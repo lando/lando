@@ -121,8 +121,8 @@ module.exports = lando => {
   // Do some other things
   lando.events.on('post-instantiate-app', app => {
     // Build lockfiles
-    const lockfile = app.name + '.build.lock';
-    const legacyLockfile = app.name + '.legacy-build.lock';
+    const preLockfile = app.name + '.build.lock';
+    const postLockfile = app.name + '.post-build.lock';
 
     // Add in our app info
     _.forEach(app.config.services, (service, name) => {
@@ -214,8 +214,8 @@ module.exports = lando => {
 
     // Remove build locks on an uninstall
     app.events.on('post-uninstall', () => {
-      lando.cache.remove(lockfile);
-      lando.cache.remove(legacyLockfile);
+      lando.cache.remove(preLockfile);
+      lando.cache.remove(postLockfile);
     });
 
     // Handle build steps
@@ -231,34 +231,35 @@ module.exports = lando => {
         buildServices = _.pick(buildServices, picker);
       }
 
-      // Legacy Build steps
-      // @DERPECATED pending removal
-      const legacyRootSteps = [
+      // Pre app start build steps
+      const preRootSteps = [
+        'install_dependencies_as_root_internal',
+        'install_dependencies_as_root',
+      ];
+      const preBuildSteps = [
+        'install_dependencies_as_me_internal',
+        'install_dependencies_as_me',
+      ];
+      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps);
+
+      // Post app start build steps
+      const postRootSteps = [
         'run_as_root_internal',
         'run_as_root',
         'extras',
       ];
-      const legacyBuildSteps = [
+      const postBuildSteps = [
         'run_internal',
+        'run_as_me_internal',
         'run',
+        'run_as_me',
         'build',
       ];
-      const legacyBuild = utils.filterBuildSteps(buildServices, app, legacyRootSteps, legacyBuildSteps);
-
-      // New build steps
-      const rootSteps = [
-        'install_dependencies_as_root_internal',
-        'install_dependencies_as_root',
-      ];
-      const buildSteps = [
-        'install_dependencies_as_me_internal',
-        'install_dependencies_as_me',
-      ];
-      const build = utils.filterBuildSteps(buildServices, app, rootSteps, buildSteps);
+      const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
 
       // Queue up both legacy and new build steps
-      app.events.on('pre-start', () => utils.runBuild(lando, build, lockfile));
-      app.events.on('post-start', () => utils.runBuild(lando, legacyBuild, legacyLockfile));
+      app.events.on('pre-start', () => utils.runBuild(lando, preBuild, preLockfile));
+      app.events.on('post-start', () => utils.runBuild(lando, postBuild, postLockfile));
     });
   });
 
