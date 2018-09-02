@@ -74,7 +74,7 @@ exports.run = (data, compose, docker, started = true) => Promise.each(utils.norm
   })
   // Destroy if we have to
   .tap(() => {
-    if (_.get(datum, 'opts.autoRemove', false)) return exports.destroy(datum, compose, docker);
+    if (!started && _.get(datum, 'opts.autoRemove', false)) return exports.destroy(datum, compose, docker);
   });
 });
 

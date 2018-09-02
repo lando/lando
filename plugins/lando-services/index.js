@@ -218,7 +218,6 @@ module.exports = lando => {
     app.events.on('app-ready', () => {
       // Start up a build collector and set target build services
       const buildServices = app.config.services;
-
       // Check to see if we have to filter out build services
       // Currently this only exists so we can ensure lando rebuild's -s option
       // is respected re: build steps
@@ -226,50 +225,38 @@ module.exports = lando => {
         const picker = _.get(app, 'config._rebuildOnly');
         buildServices = _.pick(buildServices, picker);
       }
+      // Lockfile
+      const lockfile = app.name + '.build-lock';
 
-      // Get the constructed build
-      const build = _.map(utils.filterBuildSteps(buildServices), step => {
-        // Discover the user
-        const userPath = 'environment.LANDO_WEBROOT_USER';
-        const user = _.get(app.services[step.name], userPath, 'root');
+      // Legacy Build steps
+      // @DERPECATED pending removal
+      const legacyRootSteps = [
+        'run_as_root_internal',
+        'run_as_root',
+        'extras',
+      ];
+      const legacyBuildSteps = [
+        'run_internal',
+        'run',
+        'build',
+      ];
+      const legacyBuild = utils.filterBuildSteps(buildServices, app, legacyRootSteps, legacyBuildSteps);
 
-        // Map to a compose object
-        return {
-          id: step.container,
-          cmd: step.cmd,
-          compose: app.compose,
-          project: app.name,
-          opts: {
-            pre: 'cd /app',
-            app: app,
-            mode: 'attach',
-            user: (step.type === 'root') ? 'root' : user,
-            services: [step.container.split('_')[1]],
-          },
-        };
-      });
+      // New build steps
+      const rootSteps = [
+        'install_dependencies_as_root_internal',
+        'install_dependencies_as_root',
+      ];
+      const buildSteps = [
+        'install_dependencies_as_me_internal',
+        'install_dependencies_as_me',
+      ];
+      const build = utils.filterBuildSteps(buildServices, app, rootSteps, buildSteps);
 
-      // Run the legacy build steps stuff
-      app.events.on('post-start', () => {
-        // Only proceed if build is non-empty and we aren't locked
-        // console.log(!_.isEmpty(build) && !lando.cache.get(app.name + '.build-lock'))
-        // console.log('RUN BUILD?')
-        // process.exit(1)
-        if (!_.isEmpty(build) && !lando.cache.get(app.name + '.build-lock')) {
-          return lando.engine.run(build)
-          // Save the new hash if everything works out ok
-          .then(() => {
-            lando.cache.set(app.name + '.build-lock', 'YOU SHALL NOT PASS', {persist: true});
-          })
-          // Make sure we don't save a hash if our build fails
-          .catch(error => {
-            lando.log.error('Looks like one of your build steps failed with %s', error);
-            lando.log.warn('This **MAY** prevent your app from working');
-            lando.log.warn('Check for errors above, fix them, and try again');
-            lando.log.debug('Build error %s', error.stack);
-          });
-        }
-      });
+      // Run the
+      console.log(build);
+      // Queue up both legacy and new build steps
+      app.events.on('post-start', () => utils.runBuild(lando, legacyBuild, lockfile));
     });
   });
 
