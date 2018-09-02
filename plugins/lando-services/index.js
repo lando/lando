@@ -120,6 +120,10 @@ module.exports = lando => {
 
   // Do some other things
   lando.events.on('post-instantiate-app', app => {
+    // Build lockfiles
+    const lockfile = app.name + '.build.lock';
+    const legacyLockfile = app.name + '.legacy-build.lock';
+
     // Add in our app info
     _.forEach(app.config.services, (service, name) => {
       // Load the main service
@@ -185,11 +189,6 @@ module.exports = lando => {
       });
     });
 
-    // Remove build lock on an uninstall
-    app.events.on('post-uninstall', () => {
-      lando.cache.remove(app.name + '.build-lock');
-    });
-
     // Add some logic that extends start until healthchecked containers report as healthy
     app.events.on('post-start', 1, () => {
       // Get this apps containers
@@ -213,6 +212,12 @@ module.exports = lando => {
       });
     });
 
+    // Remove build locks on an uninstall
+    app.events.on('post-uninstall', () => {
+      lando.cache.remove(lockfile);
+      lando.cache.remove(legacyLockfile);
+    });
+
     // Handle build steps
     // Go through each service and run additional build commands as needed
     app.events.on('app-ready', () => {
@@ -225,8 +230,6 @@ module.exports = lando => {
         const picker = _.get(app, 'config._rebuildOnly');
         buildServices = _.pick(buildServices, picker);
       }
-      // Lockfile
-      const lockfile = app.name + '.build-lock';
 
       // Legacy Build steps
       // @DERPECATED pending removal
@@ -253,10 +256,9 @@ module.exports = lando => {
       ];
       const build = utils.filterBuildSteps(buildServices, app, rootSteps, buildSteps);
 
-      // Run the
-      console.log(build);
       // Queue up both legacy and new build steps
-      app.events.on('post-start', () => utils.runBuild(lando, legacyBuild, lockfile));
+      app.events.on('pre-start', () => utils.runBuild(lando, build, lockfile));
+      app.events.on('post-start', () => utils.runBuild(lando, legacyBuild, legacyLockfile));
     });
   });
 

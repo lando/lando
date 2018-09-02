@@ -94,7 +94,7 @@ module.exports = lando => {
     if (!_.isEmpty(config.globals)) {
       _.forEach(config.globals, (version, pkg) => {
         // Ensure globals is arrayed
-        config.run_internal = config.run_internal || [];
+        config.install_dependencies_as_me_internal = config.install_dependencies_as_me_internal || [];
 
         // Queue up our global composer command
         const nig = ['npm', 'install', '-g'];
@@ -111,7 +111,7 @@ module.exports = lando => {
         nig.push(dep.join('@'));
 
         // Add before our other builds
-        config.run_internal.unshift(nig.join(' '));
+        config.install_dependencies_as_me_internal.unshift(nig.join(' '));
       });
     }
 

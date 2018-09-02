@@ -570,7 +570,7 @@ module.exports = lando => {
     // Add in our pantheon script
     // NOTE: We do this here instead of in /scripts because we need to gaurantee
     // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.run_as_root_internal = ['/helpers/pantheon.sh'];
+    build.services.appserver.install_dependencies_as_root_internal = ['/helpers/pantheon.sh'];
 
     // Mix in our additional services
     build.services.cache = redis(config.cache);
@@ -597,7 +597,7 @@ module.exports = lando => {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.run_internal;
+      delete build.services.appserver.install_dependencies_as_me_internal;
 
       // Override some tooling things
       build.tooling.terminus.service = cliService;
@@ -610,7 +610,7 @@ module.exports = lando => {
     if (_.has(cache, 'token')) {
       const token = _.get(cache, 'token');
       const terminusLogin = 'terminus auth:login --machine-token=' + token;
-      build.services[cliService].run_internal.push(terminusLogin);
+      build.services[cliService].install_dependencies_as_me_internal.push(terminusLogin);
     }
 
     // Return the things

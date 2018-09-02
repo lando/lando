@@ -107,14 +107,14 @@ module.exports = lando => {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.run_internal;
+      delete build.services.appserver.install_dependencies_as_me_internal;
 
       // Override some tooling things
       build.tooling.drush.service = cliService;
     }
 
     // Get appserver build
-    const buildersKey = 'services.' + cliService + '.run_internal';
+    const buildersKey = 'services.' + cliService + '.install_dependencies_as_me_internal';
     const builders = _.get(build, buildersKey, []);
 
     // Add the backdrop install command

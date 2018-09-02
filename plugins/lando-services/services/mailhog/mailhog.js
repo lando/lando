@@ -94,7 +94,7 @@ module.exports = lando => {
         _.set(app.services[hog], 'volumes', volumes);
 
         // Add in mhsendmail run as root interal steps
-        const rootKey = 'run_as_root_internal';
+        const rootKey = 'install_dependencies_as_root_internal';
         const rootSteps = _.get(app.config.services[hog], rootKey, []);
         rootSteps.push(downloadCmd);
         rootSteps.push(chmodCmd);

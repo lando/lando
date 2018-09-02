@@ -59,8 +59,8 @@ module.exports = lando => {
     // Start up the solr config collector
     const solrConfig = {};
 
-    // Normalize our run_as_root_internal
-    config.run_as_root_internal = config.run_as_root_internal || [];
+    // Normalize our install_dependencies_as_root_internal
+    config.install_dependencies_as_root_internal = config.install_dependencies_as_root_internal || [];
 
     // Figure out which config base to use
     if (_.includes(['3.6', '4.10'], config.version)) {
@@ -100,7 +100,7 @@ module.exports = lando => {
     if (config.version !== 'custom') {
       const dataDir = solrConfig.dataDir;
       const dataDirCmd = ['chown', '-R', 'solr:solr', dataDir].join(' ');
-      config.run_as_root_internal.unshift(dataDirCmd);
+      config.install_dependencies_as_root_internal.unshift(dataDirCmd);
     }
 
     // Handle custom config dir
@@ -124,8 +124,8 @@ module.exports = lando => {
         const coreConf = path.join(solrConfig.dataDir, core, 'conf');
         const coreConfSymCmd = ['ln', '-sf', confDir, coreConf].join(' ');
         const coreRmCmd = ['rm', '-rf', coreConf].join(' ');
-        config.run_as_root_internal.unshift(coreConfSymCmd);
-        config.run_as_root_internal.unshift(coreRmCmd);
+        config.install_dependencies_as_root_internal.unshift(coreConfSymCmd);
+        config.install_dependencies_as_root_internal.unshift(coreRmCmd);
       }
     }
 
