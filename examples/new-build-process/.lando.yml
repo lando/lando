@@ -45,14 +45,42 @@ services:
     #
     command: npm start
 
-    # Install some extra server packages
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install vim -y"
+    # Install server dependencies and packages that your app needs to run
+    # These run BEFORE your app boots up and are things that require root access
+    # Installing extra php extensions is a good example
+    install_dependencies_as_root:
+      - apt-get update -y
+      - apt-get install vim -y
 
-    # Print a message just to demonstrate this
-    # run:
-    # - "cd $LANDO_MOUNT & echo 'Holla!'"
+    # Install app dependencies and packages that your app needs to run
+    # These also run BEFORE your app boots up but are things you don't want to
+    # install as root.
+    # Running `npm install` or `yarn` is a good example
+    install_dependencies_as_me:
+      - yarn
+
+    # We encourage you to use events to automate commands that should run AFTER
+    # your app starts eg a watch task
+
+    # DEPRECATED BUILD STEPS, these will still run as they did pre-RC1 but we
+    # HIGHLY ENCOURAGE you to move to the new build step format above.
+    #
+    # See https://docs.devwithlando.io/config/build.html#build-steps
+    #
+    # Note that *_internal steps should not be invoked like they are here
+    # these channels are meant only for lando to use programmatically
+    run_as_root_internal:
+      - echo "run as root internal $(whoami)"
+    run_as_root:
+      - echo "run as root $(whoami)"
+    extras:
+      - echo "extras $(whoami)"
+    run_internal:
+      - echo "run internal $(whoami)"
+    run_root:
+      - echo "run $(whoami)"
+    build:
+      - echo "build $(whoami)"
 
 # Add some nice command routing
 tooling:

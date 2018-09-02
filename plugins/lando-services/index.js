@@ -185,9 +185,9 @@ module.exports = lando => {
       });
     });
 
-    // Remove build cache on an uninstall
+    // Remove build lock on an uninstall
     app.events.on('post-uninstall', () => {
-      lando.cache.remove(app.name + '.last_build');
+      lando.cache.remove(app.name + '.build-lock');
     });
 
     // Add some logic that extends start until healthchecked containers report as healthy
@@ -215,7 +215,7 @@ module.exports = lando => {
 
     // Handle build steps
     // Go through each service and run additional build commands as needed
-    app.events.on('post-start', () => {
+    app.events.on('app-ready', () => {
       // Start up a build collector and set target build services
       const buildServices = app.config.services;
 
@@ -240,6 +240,7 @@ module.exports = lando => {
           compose: app.compose,
           project: app.name,
           opts: {
+            pre: 'cd /app',
             app: app,
             mode: 'attach',
             user: (step.type === 'root') ? 'root' : user,
@@ -248,21 +249,18 @@ module.exports = lando => {
         };
       });
 
-      // Only proceed if build is non-empty
-      if (!_.isEmpty(build)) {
-        // Compute the build hash
-        const newHash = lando.node.hasher(app.config);
-
-        // If our new hash is different then lets build
-        if (lando.cache.get(app.name + '.last_build') !== newHash) {
-          // Run the stuff
+      // Run the legacy build steps stuff
+      app.events.on('post-start', () => {
+        // Only proceed if build is non-empty and we aren't locked
+        // console.log(!_.isEmpty(build) && !lando.cache.get(app.name + '.build-lock'))
+        // console.log('RUN BUILD?')
+        // process.exit(1)
+        if (!_.isEmpty(build) && !lando.cache.get(app.name + '.build-lock')) {
           return lando.engine.run(build)
-
           // Save the new hash if everything works out ok
           .then(() => {
-            lando.cache.set(app.name + '.last_build', newHash, {persist: true});
+            lando.cache.set(app.name + '.build-lock', 'YOU SHALL NOT PASS', {persist: true});
           })
-
           // Make sure we don't save a hash if our build fails
           .catch(error => {
             lando.log.error('Looks like one of your build steps failed with %s', error);
@@ -271,7 +269,7 @@ module.exports = lando => {
             lando.log.debug('Build error %s', error.stack);
           });
         }
-      }
+      });
     });
   });
 
