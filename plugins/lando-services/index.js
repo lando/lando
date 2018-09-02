@@ -222,7 +222,7 @@ module.exports = lando => {
     // Go through each service and run additional build commands as needed
     app.events.on('app-ready', () => {
       // Start up a build collector and set target build services
-      const buildServices = app.config.services;
+      let buildServices = app.config.services;
       // Check to see if we have to filter out build services
       // Currently this only exists so we can ensure lando rebuild's -s option
       // is respected re: build steps

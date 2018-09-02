@@ -15,6 +15,20 @@ const getDefaultConf = (caDir, instance) => ({
 });
 
 module.exports = lando => {
+  // Helper to root run commands
+  const runRoot = (services, cmd, app) => lando.engine.run(_.map(services, (service, name) => ({
+    id: [service._app, name, '1'].join('_'),
+    cmd: cmd,
+    compose: app.compose,
+    project: app.name,
+    opts: {
+      app: app,
+      mode: 'attach',
+      user: 'root',
+      services: [name],
+    },
+  })));
+
   // Define some things
   const id = lando.config.instance;
   const usr = lando.config.userConfRoot;
@@ -62,7 +76,11 @@ module.exports = lando => {
     lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
     lando.utils.engine.moveConfig(scriptFrom, scriptTo);
     // Ensure scripts are executable
-    lando.utils.engine.makeExecutable(['add-cert.sh', 'setup-ca.sh'], lando.config.engineScriptsDir);
+    lando.utils.engine.makeExecutable([
+      'add-cert.sh',
+      'refresh-certs.sh',
+      'setup-ca.sh',
+    ], lando.config.engineScriptsDir);
   });
 
   // Preemptively make sure we have enough networks and if we dont
@@ -70,7 +88,6 @@ module.exports = lando => {
   lando.events.on('pre-engine-start', 1, () => {
     // Let's get a list of network
     return lando.engine.getNetworks()
-
     // If we are at the threshold lets engage some pruning ops
     .then(networks => {
       if (_.size(networks) >= 32) {
@@ -143,13 +160,10 @@ module.exports = lando => {
           autoRemove: true,
         },
       };
-
       // Check if ca setup is already happening
       return lando.engine.list()
-
       // Filter it out
       .filter(container => container.name === ca.id)
-
       // Setup the CA
       .then(containers => {
         if (_.isEmpty(containers)) return lando.engine.run(ca);
@@ -209,6 +223,21 @@ module.exports = lando => {
         data.hostnames = _.get(data, 'hostnames', []);
         data.hostnames.push([name, app.name, 'internal'].join('.'));
       });
+    });
+
+    // Start up a build collector and set target build services
+    let buildServices = app.config.services;
+    // Check to see if we have to filter out build services
+    // Currently this only exists so we can ensure lando rebuild's -s option
+    // is respected re: build steps
+    if (!_.isEmpty(_.get(app, 'config._rebuildOnly', []))) {
+      const picker = _.get(app, 'config._rebuildOnly');
+      buildServices = _.pick(buildServices, picker);
+    }
+
+    app.events.on('app-ready', 9, () => {
+      app.events.on('pre-start', 4, () => runRoot(buildServices, '/helpers/add-cert.sh', app));
+      app.events.on('post-start', 9999, () => runRoot(buildServices, '/helpers/refresh-certs.sh', app));
     });
   });
 };
