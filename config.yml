@@ -12,4 +12,3 @@ plugins:
 stats:
   - report: true
     url: https://metrics.devwithlando.io
-#proxyDomain: test.lndo.site
