@@ -2,14 +2,13 @@
 
 set -e
 
-# TODO: We need to actually inject LANDO_CA_CERT, this is currently an assumed value
-: ${LANDO_CA_CERT:="lando.pem"}
-: ${LANDO_CA_KEY:="lando.key"}
 : ${LANDO_DOMAIN:="lndo.site"}
-: ${CA_CERT_HOST:="/lando/certs/$LANDO_CA_CERT"}
-: ${CA_CERT_KEY:="/lando/certs/$LANDO_CA_KEY"}
+: ${LANDO_CA_CERT:="/lando/certs/lndo.site.pem"}
+: ${LANDO_CA_KEY:="/lando/certs/lndo.site.key"}
 : ${CA_DIR:="/usr/share/ca-certificates"}
-: ${CA_CERT_CONTAINER:="$CA_DIR/$LANDO_CA_CERT"}
+# need a basename
+: ${CA_CERT_FILENAME:="${LANDO_DOMAIN}.pem"}
+: ${CA_CERT_CONTAINER:="$CA_DIR/$CA_CERT_FILENAME"}
 
 # Make sure our cert directories exists
 mkdir -p /certs $CA_DIR
@@ -42,7 +41,7 @@ if ! [ -x "$(command -v openssl)" ]; then
 fi
 
 # Validate the certs against the root CA
-if [ -f "/certs/cert.pem" ] && ! openssl verify -CAfile $CA_CERT_HOST /certs/cert.pem >/dev/null; then
+if [ -f "/certs/cert.pem" ] && ! openssl verify -CAfile $LANDO_CA_CERT /certs/cert.pem >/dev/null; then
   echo "Certs are not valid! Lets remove them."
   rm -f /certs/cert.key
   rm -f /certs/cert.csr
@@ -56,8 +55,8 @@ if [ ! -f "/certs/cert.pem" ]; then
   echo "Cert creation kicking off"
   echo "LANDO_CA_CERT: $LANDO_CA_CERT"
   echo "LANDO_CA_KEY: $LANDO_CA_KEY"
-  echo "CA_CERT_HOST: $CA_CERT_HOST"
   echo "CA_DIR: $CA_DIR"
+  echo "CA_CERT_FILENAME: $CA_CERT_FILENAME"
   echo "CA_CERT_CONTAINER: $CA_CERT_CONTAINER"
   echo "Generating certs..."
   openssl genrsa -out /certs/cert.key 2048
@@ -65,8 +64,8 @@ if [ ! -f "/certs/cert.pem" ]; then
   openssl x509 \
     -req \
     -in /certs/cert.csr \
-    -CA $CA_CERT_HOST \
-    -CAkey $CA_CERT_KEY \
+    -CA $LANDO_CA_CERT \
+    -CAkey $LANDO_CA_KEY \
     -CAcreateserial \
     -out /certs/cert.crt \
     -days 8675 \
@@ -77,7 +76,7 @@ fi
 
 # Trust our root CA
 if [ ! -f "$CA_CERT_CONTAINER" ]; then
-  echo "$CA_CERT_CONTAINER not found... copying $CA_CERT_HOST over"
-  cp -f $CA_CERT_HOST $CA_CERT_CONTAINER
+  echo "$CA_CERT_CONTAINER not found... copying $LANDO_CA_CERT over"
+  cp -f $LANDO_CA_CERT $CA_CERT_CONTAINER
   echo "$LANDO_CA_CERT" >> /etc/ca-certificates.conf
 fi

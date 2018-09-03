@@ -58,6 +58,8 @@ module.exports = lando => {
     // Define helpful global enconsts
     const env = {
       LANDO: 'ON',
+      LANDO_CA_CERT: '/lando/certs/' + path.basename(lando.config.caCert),
+      LANDO_CA_KEY: '/lando/certs/' + path.basename(lando.config.caKey),
       LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
       LANDO_DOMAIN: lando.config.proxyDomain,
       LANDO_APP_NAME: app.name,

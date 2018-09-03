@@ -5,15 +5,6 @@ const _ = require('lodash');
 const fs = require('fs-extra');
 const path = require('path');
 
-// Helper for default config
-const getDefaultConf = (caDir, instance) => ({
-  caCertDir: caDir,
-  caCert: path.join(caDir, 'lando.pem'),
-  caService: path.join(caDir, 'ca-setup.yml'),
-  caProject: 'landocasetupkenobi38ahsoka' + instance,
-  networkBridge: 'lando_bridge_network',
-});
-
 module.exports = lando => {
   // Helper to root run commands
   const runRoot = (services, cmd, app) => lando.engine.run(_.map(services, (service, name) => ({
@@ -36,12 +27,22 @@ module.exports = lando => {
   lando.events.on('post-bootstrap', lando => {
     // Log
     lando.log.info('Configuring networking plugin');
+    // networkingdefualts defaults
+    const caDir = path.join(usr, 'certs');
+    const defaultNetworkingConfig = {
+      caCert: path.join(caDir, `${lando.config.proxyDomain}.pem`),
+      caDomain: lando.config.proxyDomain,
+      caKey: path.join(caDir, `${lando.config.proxyDomain}.key`),
+      caService: path.join(caDir, 'ca-setup.yml'),
+      caProject: 'landocasetupkenobi38ahsoka' + id,
+      networkBridge: 'lando_bridge_network',
+    };
     // Merge defaults over the config, this allows users to set their own things
-    lando.config = lando.utils.config.merge(getDefaultConf(path.join(usr, 'certs'), id), lando.config);
+    lando.config = lando.utils.config.merge(defaultNetworkingConfig, lando.config);
     // Log it
     lando.log.verbose('Networking plugin configured with %j', lando.config);
     // Create the cert directory
-    fs.mkdirpSync(lando.config.caCertDir);
+    fs.mkdirpSync(caDir);
     // Create a docker compose file to run ca creation
     const caService = {
       version: '3.2',
@@ -49,7 +50,9 @@ module.exports = lando => {
         ca: {
           image: 'devwithlando/util:stable',
           environment: {
-            LANDO_CA_CERT: path.basename(lando.config.caCert),
+            LANDO_CA_CERT: '/certs/' + path.basename(lando.config.caCert),
+            LANDO_CA_KEY: '/certs/' + path.basename(lando.config.caKey),
+            LANDO_DOMAIN: lando.config.caDomain,
             LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
             LANDO_SERVICE_TYPE: 'ca',
             COLUMNS: 256,
