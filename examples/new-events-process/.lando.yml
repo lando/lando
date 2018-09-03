@@ -9,7 +9,7 @@ events:
   # eg that internal build steps have completed first
   pre-start:
     - wp --version
-    - cat /app/TESTFILE && rm /app/TESTFILE
+    - cat /app/TESTFILE && rm /app/TESTFILE || true
   # Verify the install with WP-CLI
   post-start:
     - wp core is-installed --path=/app/web && echo "WE ARE INSTALLED!"
@@ -26,7 +26,7 @@ services:
     # After the app starts lets try to install and setup wordpress
     # Running here *SHOULD* ensure that the database is up
     run_as_me: |
-      if [ ! -d "/app/web/wp-config.php" ]; then
+      if [ ! -f "/app/web/wp-config.php" ]; then
         sleep 10
         wp core config --path=/app/web --dbhost=database --dbname=wordpress --dbuser=wordpress --dbpass=wordpress
         chmod 644 wp-config.php
