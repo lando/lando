@@ -187,7 +187,7 @@ module.exports = lando => {
     // If this is apache lets set our default config
     if (config.web === 'apache') {
       // Set the default conf file
-      const defaultConfFile = 'httpd.conf';
+      let defaultConfFile = 'httpd.conf';
 
       // Add ssl specific things if we need them
       if (config.ssl) {
@@ -336,13 +336,13 @@ module.exports = lando => {
       }
     });
 
-    // Ensure run_internal is arrayed
-    config.run_internal = config.run_internal || [];
+    // Ensure install_dependencies_as_me_internal is arrayed
+    config.install_dependencies_as_me_internal = config.install_dependencies_as_me_internal || [];
 
-    // Add our composer things to run_internal
+    // Add our composer things to install_dependencies_as_me_internal
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, (version, pkg) => {
-        config.run_internal.unshift(cgr(pkg, version));
+        config.install_dependencies_as_me_internal.unshift(cgr(pkg, version));
       });
     }
 

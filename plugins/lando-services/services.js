@@ -147,6 +147,7 @@ module.exports = lando => {
     const scripts = [
       {script: 'user-perms.sh', local: esd, remote: 'helpers'},
       {script: 'add-cert.sh', local: esd, remote: 'scripts'},
+      {script: 'refresh-certs.sh', local: esd, remote: 'helpers'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'sql-import.sh', local: shd, remote: 'helpers'},
       {script: 'sql-export.sh', local: shd, remote: 'helpers'},

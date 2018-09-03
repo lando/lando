@@ -5,16 +5,21 @@ const _ = require('lodash');
 const fs = require('fs-extra');
 const path = require('path');
 
-// Helper for default config
-const getDefaultConf = (caDir, instance) => ({
-  caCertDir: caDir,
-  caCert: path.join(caDir, 'lando.pem'),
-  caService: path.join(caDir, 'ca-setup.yml'),
-  caProject: 'landocasetupkenobi38ahsoka' + instance,
-  networkBridge: 'lando_bridge_network',
-});
-
 module.exports = lando => {
+  // Helper to root run commands
+  const runRoot = (services, cmd, app) => lando.engine.run(_.map(services, (service, name) => ({
+    id: [service._app, name, '1'].join('_'),
+    cmd: cmd,
+    compose: app.compose,
+    project: app.name,
+    opts: {
+      app: app,
+      mode: 'attach',
+      user: 'root',
+      services: [name],
+    },
+  })));
+
   // Define some things
   const id = lando.config.instance;
   const usr = lando.config.userConfRoot;
@@ -22,12 +27,22 @@ module.exports = lando => {
   lando.events.on('post-bootstrap', lando => {
     // Log
     lando.log.info('Configuring networking plugin');
+    // networkingdefualts defaults
+    const caDir = path.join(usr, 'certs');
+    const defaultNetworkingConfig = {
+      caCert: path.join(caDir, `${lando.config.proxyDomain}.pem`),
+      caDomain: lando.config.proxyDomain,
+      caKey: path.join(caDir, `${lando.config.proxyDomain}.key`),
+      caService: path.join(caDir, 'ca-setup.yml'),
+      caProject: 'landocasetupkenobi38ahsoka' + id,
+      networkBridge: 'lando_bridge_network',
+    };
     // Merge defaults over the config, this allows users to set their own things
-    lando.config = lando.utils.config.merge(getDefaultConf(path.join(usr, 'certs'), id), lando.config);
+    lando.config = lando.utils.config.merge(defaultNetworkingConfig, lando.config);
     // Log it
     lando.log.verbose('Networking plugin configured with %j', lando.config);
     // Create the cert directory
-    fs.mkdirpSync(lando.config.caCertDir);
+    fs.mkdirpSync(caDir);
     // Create a docker compose file to run ca creation
     const caService = {
       version: '3.2',
@@ -35,7 +50,9 @@ module.exports = lando => {
         ca: {
           image: 'devwithlando/util:stable',
           environment: {
-            LANDO_CA_CERT: path.basename(lando.config.caCert),
+            LANDO_CA_CERT: '/certs/' + path.basename(lando.config.caCert),
+            LANDO_CA_KEY: '/certs/' + path.basename(lando.config.caKey),
+            LANDO_DOMAIN: lando.config.caDomain,
             LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
             LANDO_SERVICE_TYPE: 'ca',
             COLUMNS: 256,
@@ -62,7 +79,11 @@ module.exports = lando => {
     lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
     lando.utils.engine.moveConfig(scriptFrom, scriptTo);
     // Ensure scripts are executable
-    lando.utils.engine.makeExecutable(['add-cert.sh', 'setup-ca.sh'], lando.config.engineScriptsDir);
+    lando.utils.engine.makeExecutable([
+      'add-cert.sh',
+      'refresh-certs.sh',
+      'setup-ca.sh',
+    ], lando.config.engineScriptsDir);
   });
 
   // Preemptively make sure we have enough networks and if we dont
@@ -70,7 +91,6 @@ module.exports = lando => {
   lando.events.on('pre-engine-start', 1, () => {
     // Let's get a list of network
     return lando.engine.getNetworks()
-
     // If we are at the threshold lets engage some pruning ops
     .then(networks => {
       if (_.size(networks) >= 32) {
@@ -143,13 +163,10 @@ module.exports = lando => {
           autoRemove: true,
         },
       };
-
       // Check if ca setup is already happening
       return lando.engine.list()
-
       // Filter it out
       .filter(container => container.name === ca.id)
-
       // Setup the CA
       .then(containers => {
         if (_.isEmpty(containers)) return lando.engine.run(ca);
@@ -209,6 +226,20 @@ module.exports = lando => {
         data.hostnames = _.get(data, 'hostnames', []);
         data.hostnames.push([name, app.name, 'internal'].join('.'));
       });
+    });
+
+    // Start up a build collector and set target build services
+    let buildServices = app.config.services;
+    // Check to see if we have to filter out build services
+    // Currently this only exists so we can ensure lando rebuild's -s option
+    // is respected re: build steps
+    if (!_.isEmpty(_.get(app, 'config._rebuildOnly', []))) {
+      const picker = _.get(app, 'config._rebuildOnly');
+      buildServices = _.pick(buildServices, picker);
+    }
+
+    app.events.on('app-ready', 9, () => {
+      app.events.on('post-start', 9999, () => runRoot(buildServices, '/helpers/refresh-certs.sh', app));
     });
   });
 };

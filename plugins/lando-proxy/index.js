@@ -14,6 +14,7 @@ module.exports = lando => {
   const projectName = 'landoproxyhyperion5000gandalfedition';
 
   // Add some config for the proxy
+  // Lets so this early to make sure other plugins have proxyConf
   lando.events.on('post-bootstrap', 1, lando => {
     // Log
     lando.log.info('Configuring proxy plugin');
@@ -40,9 +41,6 @@ module.exports = lando => {
     lando.config.proxyHttpPorts = _.flatten(http);
     lando.config.proxyHttpsPorts = _.flatten(https);
 
-    // Dump defaults
-    lando.yaml.dump(proxyFile, proxy.defaults(lando.config.proxyDomain));
-
     // Log it
     lando.log.verbose('Proxy plugin configured with %j', lando.config);
     lando.log.info('Initializing proxy plugin');
@@ -59,6 +57,8 @@ module.exports = lando => {
   lando.events.on('post-instantiate-app', app => {
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
+      // Dump defaults
+      lando.yaml.dump(proxyFile, proxy.defaults(lando.config.proxyDomain));
       const scanPorts = config => {
         // Get the engine IP
         const engineIp = _.get(config, 'engineConfig.host', '127.0.0.1');

@@ -26,5 +26,5 @@ http.createServer(app).listen(80);
 // Basic HTTP response
 app.get('/', (req, res) => {
   res.header('Content-type', 'text/html');
-  return res.end('<h1>I said "Oh my!" What a marvelous tune!!!</h1>');
+  return res.end('<h1>NO MORE FLIPPING BURGERS!</h1>');
 });

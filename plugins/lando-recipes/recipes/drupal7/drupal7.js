@@ -70,7 +70,7 @@ module.exports = lando => {
       }
 
       // Set the command
-      build.services.appserver.run_internal.push(cmd);
+      build.services.appserver.install_dependencies_as_me_internal.push(cmd);
     }
 
     // Volume mount the drush cache
@@ -106,8 +106,8 @@ module.exports = lando => {
     const drushConfig = _.get(config, 'drush', 'global:' + defaultDrush);
 
     // Handle drush
-    const buildersKey = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, buildersKey, []);
+    const buildersKey = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, buildersKey, []);
     build = drush(build, drushConfig);
 
     // Return the things

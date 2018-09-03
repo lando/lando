@@ -47,11 +47,11 @@ module.exports = lando => {
     const wpInstall = helpers.getPhar(pharUrl, src, dest, wpStatusCheck);
 
     // Set builders if needed
-    const key = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, key, []);
+    const key = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, key, []);
 
     // Add our isntall cmds
-    build.services.appserver.run_internal.push(wpInstall);
+    build.services.appserver.install_dependencies_as_me_internal.push(wpInstall);
 
     // Add wp command
     build.tooling.wp = {

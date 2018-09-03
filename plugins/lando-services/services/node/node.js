@@ -8,6 +8,7 @@ module.exports = lando => {
    * Supported versions for node
    */
   const versions = [
+    '10',
     '9',
     '8',
     'carbon',
@@ -74,7 +75,6 @@ module.exports = lando => {
       },
       working_dir: config._mount,
       ports: ['80'],
-      expose: ['80'],
       volumes: vols,
       command: '/bin/sh -c "' + command.join(' && ') + '"',
     };
@@ -94,7 +94,7 @@ module.exports = lando => {
     if (!_.isEmpty(config.globals)) {
       _.forEach(config.globals, (version, pkg) => {
         // Ensure globals is arrayed
-        config.run_internal = config.run_internal || [];
+        config.install_dependencies_as_me_internal = config.install_dependencies_as_me_internal || [];
 
         // Queue up our global composer command
         const nig = ['npm', 'install', '-g'];
@@ -111,7 +111,7 @@ module.exports = lando => {
         nig.push(dep.join('@'));
 
         // Add before our other builds
-        config.run_internal.unshift(nig.join(' '));
+        config.install_dependencies_as_me_internal.unshift(nig.join(' '));
       });
     }
 

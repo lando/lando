@@ -25,11 +25,11 @@ module.exports = lando => {
     const cgrInstall = helpers.getCgr('joomlatools/console', '*');
 
     // Set builders if needed
-    const buildersKey = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, buildersKey, []);
+    const buildersKey = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, buildersKey, []);
 
     // Add our drush cmds
-    build.services.appserver.run_internal.push(cgrInstall);
+    build.services.appserver.install_dependencies_as_me_internal.push(cgrInstall);
 
     // Add drush to the tooling
     build.tooling.joomla = {
