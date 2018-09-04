@@ -8,6 +8,7 @@ const escSpaces = require('./utils').escSpaces;
 // Helper object for flags
 const composeFlags = {
   background: '-d',
+  detach: '-d',
   environment: '-e',
   follow: '--follow',
   force: '--force',
@@ -27,7 +28,7 @@ const composeFlags = {
 const defaultOptions = {
   build: {noCache: false, pull: true},
   down: {removeOrphans: true, volumes: true},
-  exec: {user: 'root'},
+  exec: {detach: false, user: 'root'},
   kill: {},
   logs: {follow: false, timestamps: false},
   ps: {q: true},

@@ -31,7 +31,7 @@ exports.destroy = (data, compose, docker) => retryEach(data, datum => {
  * Helper to route to exist command
  */
 exports.exists = (data, compose, docker, ids = []) => {
-  if (data.compose) return compose('getId', datum).then(id => !_.isEmpty(id));
+  if (data.compose) return compose('getId', data).then(id => !_.isEmpty(id));
   else {
     return docker.list()
     .each(container => {

@@ -57,7 +57,7 @@ module.exports = lando => {
     const core = config.core || 'index1';
 
     // Start up the solr config collector
-    const solrConfig = {};
+    let solrConfig = {};
 
     // Normalize our install_dependencies_as_root_internal
     config.install_dependencies_as_root_internal = config.install_dependencies_as_root_internal || [];

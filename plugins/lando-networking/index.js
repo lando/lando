@@ -14,6 +14,7 @@ module.exports = lando => {
     project: app.name,
     opts: {
       app: app,
+      detach: true,
       mode: 'attach',
       user: 'root',
       services: [name],

@@ -10,6 +10,7 @@ fi
 
 # Set option defaults
 MESSAGE="My Awesome Lando-based commit"
+CODE=${TERMINUS_ENV:-dev}
 DATABASE=${TERMINUS_ENV:-dev}
 FILES=${TERMINUS_ENV:-dev}
 
@@ -27,6 +28,15 @@ DEFAULT_COLOR='\033[0;0m'
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
+    -c|--code|--code=*)
+      if [ "${1##--code=}" != "$1" ]; then
+        CODE="${1##--code=}"
+        shift 2
+      else
+        CODE=$2
+        shift 2
+      fi
+      ;;
     -m|--message|--message=*)
       if [ "${1##--message=}" != "$1" ]; then
         MESSAGE="${1##--message=}"
@@ -69,6 +79,10 @@ while (( "$#" )); do
 done
 
 # Do some basic valdiation on test/live pushing
+if [ "$CODE" == "test" ] || [ "$CODE" == "live" ]; then
+  echo "Cannot push the code to the test or live environments"
+  exit 3
+fi
 if [ "$DATABASE" == "test" ] || [ "$DATABASE" == "live" ]; then
   echo "Cannot push the database to the test or live environments"
   exit 3
@@ -78,12 +92,6 @@ if [ "$FILES" == "test" ] || [ "$FILES" == "live" ]; then
   exit 3
 fi
 
-# Do some basic validation to make sure we are logged in
-echo "Verifying that you are logged in and authenticated by getting info about $SITE..."
-terminus site:info $SITE || exit 1
-echo "Logged in as `terminus auth:whoami`"
-echo "Detected that $SITE is a $FRAMEWORK site"
-
 # Ensuring a viable ssh key
 echo "Checking for $SSH_KEY"
 if [ ! -f "$SSH_KEY" ]; then
@@ -92,48 +100,58 @@ if [ ! -f "$SSH_KEY" ]; then
   /scripts/load-keys.sh
 fi
 
-# Get connection mode
-echo "Checking connection mode"
-CONNECTION_MODE=$(terminus env:info $SITE.$ENV --field=connection_mode)
+# Do some basic validation to make sure we are logged in
+echo "Verifying that you are logged in and authenticated by getting info about $SITE..."
+terminus site:info $SITE || exit 1
+echo "Logged in as `terminus auth:whoami`"
+echo "Detected that $SITE is a $FRAMEWORK site"
 
-# If we are not in git mode lets check for uncommited changes
-if [ "$CONNECTION_MODE" != "git" ]; then
+# Push the codez
+if [ "$CODE" != "none" ]; then
 
-  # Get the code diff
-  CODE_DIFF=$(terminus env:diffstat $SITE.$ENV --format=json)
-  if [ "$CODE_DIFF" != "[]" ]; then
-    echo "Lando has detected you have uncommitted changes on Pantheon."
-    echo "Please login to your Pantheon dashboard, commit those changes and then try lando push again."
-    exit 5
-  else
-    echo "Changing connection mode to git for the pushy push"
-    terminus connection:set $SITE.$ENV git
+  # Get connection mode
+  echo "Checking connection mode"
+  CONNECTION_MODE=$(terminus env:info $SITE.$ENV --field=connection_mode)
+
+  # If we are not in git mode lets check for uncommited changes
+  if [ "$CONNECTION_MODE" != "git" ]; then
+
+    # Get the code diff
+    CODE_DIFF=$(terminus env:diffstat $SITE.$ENV --format=json)
+    if [ "$CODE_DIFF" != "[]" ]; then
+      echo "Lando has detected you have uncommitted changes on Pantheon."
+      echo "Please login to your Pantheon dashboard, commit those changes and then try lando push again."
+      exit 5
+    else
+      echo "Changing connection mode to git for the pushy push"
+      terminus connection:set $SITE.$ENV git
+    fi
+
   fi
 
-fi
+  # Switch to git root
+  cd $LANDO_MOUNT
 
-# Switch to git root
-cd $LANDO_MOUNT
+  # Get the git branch
+  GIT_BRANCH=$CODE
 
-# Get the git branch
-GIT_BRANCH=master
+  # Get on the right branch
+  if [ "$CODE" == "dev" ]; then
+    GIT_BRANCH=master
+  fi
 
-# Get on the right branch
-if [ "$TERMINUS_ENV" != "dev" ]; then
-  GIT_BRANCH=$TERMINUS_ENV
-fi
+  # Commit the goods
+  echo "Pushing code to $CODE..."
+  git checkout $GIT_BRANCH
+  git add --all
+  git commit -m "$MESSAGE" --allow-empty
+  git push origin $GIT_BRANCH
 
-# Commit the goods
-echo "Pushing code to $CODE..."
-git checkout $GIT_BRANCH
-git add --all
-git commit -m "$MESSAGE" --allow-empty
-git push origin $GIT_BRANCH
-
-# Set the mode back to what it was before because we are responsible denizens
-if [ "$CONNECTION_MODE" != "git" ]; then
-  echo "Changing connection mode back to $CONNECTION_MODE"
-  terminus connection:set $SITE.$ENV $CONNECTION_MODE
+  # Set the mode back to what it was before because we are responsible denizens
+  if [ "$CONNECTION_MODE" != "git" ]; then
+    echo "Changing connection mode back to $CONNECTION_MODE"
+    terminus connection:set $SITE.$ENV $CONNECTION_MODE
+  fi
 fi
 
 # Push the database

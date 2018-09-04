@@ -294,6 +294,21 @@ module.exports = lando => {
       cmd: '/helpers/push.sh',
       needs: ['database'],
       options: {
+        code: {
+          description: 'The environment to push the code to or [none]',
+          default: 'dev',
+          passthrough: true,
+          alias: ['c'],
+          interactive: {
+            type: 'list',
+            message: 'Push code to?',
+            choices: function() {
+              getEnvs(this.async(), ['test', 'live']);
+            },
+            default: 'dev',
+            weight: 500,
+          },
+        },
         message: {
           description: 'A message describing your change',
           passthrough: true,
@@ -303,6 +318,9 @@ module.exports = lando => {
             message: 'What did you change?',
             default: 'My awesome Lando-based changes',
             weight: 600,
+            when: function(answers) {
+              return answers.code !== 'none' && lando.cli.argv().code !== 'none';
+            },
           },
         },
         database: {
@@ -394,6 +412,7 @@ module.exports = lando => {
     const config = {
       type: version,
       backends: ['nginx'],
+      skipCheck: true,
       ssl: true,
       vcl: path.join(configDir, 'pantheon.vcl'),
     };
@@ -541,7 +560,7 @@ module.exports = lando => {
     }
 
     // Get the lando/pantheon base recipe/framework
-    const base = _.get(config, 'framework', 'drupal7');
+    let base = _.get(config, 'framework', 'drupal7');
 
     // If the pantheon framework is drupal, then use lando d7 recipe
     if (base === 'drupal') base = 'drupal7';
