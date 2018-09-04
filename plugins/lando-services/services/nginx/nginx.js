@@ -94,12 +94,14 @@ module.exports = lando => {
       nginx.volumes = addConfig(sslVolume, nginx.volumes);
 
       // Add a healthcheck so we wait until open-ssl gets installed
-      nginx.healthcheck = {
-        test: 'dpkg -s openssl',
-        interval: '2s',
-        timeout: '10s',
-        retries: 25,
-      };
+      if (config.skipCheck !== true) {
+        nginx.healthcheck = {
+          test: 'dpkg -s openssl',
+          interval: '2s',
+          timeout: '10s',
+          retries: 25,
+        };
+      }
     }
 
     // Handle custom config files

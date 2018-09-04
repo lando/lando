@@ -97,6 +97,7 @@ module.exports = class Landerode extends Dockerode {
         .then(data => exec.inspect()
           // Determine whether we can reject or not
           .then(result => new Promise((resolve, reject) => {
+            if (opts.detach) resolve();
             if (result.ExitCode === 0) resolve(data.stdout);
             else reject({message: data.stderr + data.stdout, code: result.ExitCode});
           }))

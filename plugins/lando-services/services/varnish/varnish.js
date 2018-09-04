@@ -44,6 +44,7 @@ module.exports = lando => {
     config = _.merge(config, {
       type: 'nginx',
       ssl: true,
+      skipCheck: config.skipCheck || false,
       config: nginxConf,
     });
 

@@ -78,5 +78,5 @@ fi
 if [ ! -f "$CA_CERT_CONTAINER" ]; then
   echo "$CA_CERT_CONTAINER not found... copying $LANDO_CA_CERT over"
   cp -f $LANDO_CA_CERT $CA_CERT_CONTAINER
-  echo "$LANDO_CA_CERT" >> /etc/ca-certificates.conf
+  echo "$CA_CERT_FILENAME" >> /etc/ca-certificates.conf
 fi

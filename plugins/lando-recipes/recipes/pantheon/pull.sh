@@ -56,7 +56,7 @@ while (( "$#" )); do
         shift 2
       fi
       ;;
-    --rsync)
+    --rsync|--rsync=*)
         RSYNC=$1
         shift
       ;;

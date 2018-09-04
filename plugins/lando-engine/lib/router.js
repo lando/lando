@@ -31,7 +31,7 @@ exports.destroy = (data, compose, docker) => retryEach(data, datum => {
  * Helper to route to exist command
  */
 exports.exists = (data, compose, docker, ids = []) => {
-  if (data.compose) return compose('getId', datum).then(id => !_.isEmpty(id));
+  if (data.compose) return compose('getId', data).then(id => !_.isEmpty(id));
   else {
     return docker.list()
     .each(container => {
@@ -62,7 +62,7 @@ exports.run = (data, compose, docker, started = true) => Promise.each(utils.norm
   // See: https://github.com/apocas/docker-modem/issues/83
   //
   .then(() => {
-    if (process.platform === 'win32') {
+    if (process.platform !== 'win32') {
       return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
     } else {
       return docker.run(datum.id, datum.cmd, datum.opts);
