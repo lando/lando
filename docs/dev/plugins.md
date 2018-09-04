@@ -28,9 +28,22 @@ plugins:
 
 In the above example Lando looks for a plugin in a folder called `my-plugin` in either the `node_modules` or `plugins` folders. For app plugins these locations will be relative to the app root directory. For global plugins the locations specified in `pluginDirs` in `lando config` will be scanned.
 
-If there are multiple occurences of the same-named plugin, Lando will use the one "closest to your app". This means that `lando` will priortize in-app plugins and then priortize the locations in `pluginDirs` from last to first.
+If there are multiple occurrences of the same-named plugin, Lando will use the one "closest to your app". This means that `lando` will priortize in-app plugins and then priortize the locations in `pluginDirs` from last to first.
 
-**A powerful corollary to this is that indiviual apps can implement plugins that override global plugin behavior.**
+**A powerful corollary to this is that individual apps can implement plugins that override global plugin behavior.**
+
+> #### Hint::Develop plugin NPM packages locally
+>
+> `yarn add "my-plugin"@file:./path-to-plugin`
+>
+> Now add the following to `.lando.yml` 
+> 
+> ```yaml
+> plugins:
+>   - my-plugin
+> ```
+
+***
 
 > #### Hint::Where is `config.yml`?
 >
