@@ -31,7 +31,7 @@ while (( "$#" )); do
     -c|--code|--code=*)
       if [ "${1##--code=}" != "$1" ]; then
         CODE="${1##--code=}"
-        shift 2
+        shift
       else
         CODE=$2
         shift 2

@@ -105,4 +105,15 @@ module.exports = class Landerode extends Dockerode {
       )
     );
   };
+
+  /*
+   * Do a docker stop
+   */
+  stop(cid, opts = {}) {
+    return this.getContainer(cid).stop(opts)
+    // Wrap errors.
+    .catch(err => {
+      throw new Error(err, 'Error stopping container %s.', cid);
+    });
+  };
 };
