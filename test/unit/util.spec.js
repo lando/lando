@@ -117,6 +117,11 @@ describe('scripts', () => {
     });
   });
 
+  describe('#findReadmes', () => {
+    it('should return a list of absolute paths');
+    it('should return a path only if a README.md exists at DIR/ANOTHERDIR/README.md');
+  });
+
   describe('#fixAlias', () => {
     it('should return itself if no alias property', () => {
       const command = util.fixAlias({thing: 'stuff'});
@@ -176,6 +181,10 @@ describe('scripts', () => {
       command.should.not.have.property('mode');
       resetPlatform();
     });
+  });
+
+  describe('#parseReadmes', () => {
+    it('should return metadata we can use to generate test files');
   });
 
   describe('#installerPkgTask', () => {

@@ -43,7 +43,7 @@
     "release:pre": "node ./scripts/bump.js --type=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
     "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
-    "test:functional": "mocha --timeout 5000 test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
+    "test:functional": "mocha --timeout 900000 test/func/**/*.spec.js",
     "test": "yarn lint && yarn test:unit"
   },
   "pkg": {
@@ -106,6 +106,7 @@
     "gitbook-cli": "^2.3.0",
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
+    "marked": "^0.5.0",
     "mocha": "^4.1.0",
     "mock-fs": "^4.4.2",
     "nyc": "^12.0.1",
