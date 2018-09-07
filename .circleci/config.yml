@@ -16,9 +16,9 @@ jobs:
       - run:
           name: Install node
           command: |
-            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - || curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-            sleep 5
-            sudo apt-get install -y nodejs || sudo apt-get install -y nodejs
+            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash || true -
+            sleep 10
+            sudo apt-get install -y nodejs
       - run:
           name: Install yarn
           command: |
