@@ -37,9 +37,9 @@ jobs:
       - run:
           name: Unit Tests
           command: yarn test:unit
-      #- run:
-      #    name: Functional Tests
-      #    command: yarn test:functional
+      - run:
+          name: Functional Tests
+          command: yarn test:functional
       - save_cache:
           paths:
             - ~/.cache/yarn
