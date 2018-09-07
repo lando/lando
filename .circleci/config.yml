@@ -17,6 +17,7 @@ jobs:
           name: Install node
           command: |
             curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+            sleep 5
             sudo apt-get install -y nodejs
       - run:
           name: Install yarn
@@ -35,9 +36,6 @@ jobs:
             node -v
             yarn -v
             node ~/project/bin/lando.js version
-      - run:
-          name: Unit Tests
-          command: yarn test:unit
       - run:
           name: Functional Tests
           command: yarn test:functional
