@@ -48,6 +48,7 @@ jobs:
       image: circleci/classic:201808-01
     parallelism: 4
     steps:
+      - checkout
       - run:
           name: Run func test
           command: |
