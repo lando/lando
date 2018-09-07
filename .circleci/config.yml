@@ -14,7 +14,16 @@ jobs:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
-      # @todo: We need a reliable install step to get NODE 10.x
+      - run:
+          name: WTF OK
+          command: |
+            sudo apt-get update -y
+            sleep 10
+      - run:
+          name: Install node
+          command: |
+            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash || true -
+            sudo apt-get install -y nodejs
       - run:
           name: Install yarn
           command: |
