@@ -37,29 +37,13 @@ jobs:
             node -v
             yarn -v
             node ~/project/bin/lando.js version
-      #- run:
-      #    name: Functional Tests
-      #    command: yarn test:functional
-      - save_cache:
-          paths:
-            - ~/.cache/yarn
-          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-  test:
-    machine:
-      image: circleci/classic:201808-01
-    parallelism: 4
-    steps:
-      - checkout
       - run:
           name: Run func test
           command: |
             node ~/project/scripts/generate-tests.js
+            echo $(circleci tests split ~/project/test/func/split-file.txt)
             mocha --timeout 900000 $(circleci tests split ~/project/test/func/split-file.txt)
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
