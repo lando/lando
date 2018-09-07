@@ -6,6 +6,7 @@ jobs:
       # @todo: once we have more tests running lets buy the below and
       # set up max parallelism
       # docker_layer_caching: true
+      parallelism: 4
     steps:
       - checkout
       - restore_cache:
@@ -37,8 +38,14 @@ jobs:
             yarn -v
             node ~/project/bin/lando.js version
       - run:
-          name: Functional Tests
-          command: yarn test:functional
+          name: Run func test
+          comand: |
+            TESTFILES=$(circleci tests split ~/project/test/func/split-file.txt)
+            echo ${TESTFILES}
+
+      #- run:
+      #    name: Functional Tests
+      #    command: yarn test:functional
       - save_cache:
           paths:
             - ~/.cache/yarn

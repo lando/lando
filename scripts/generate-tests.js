@@ -29,3 +29,8 @@ _.forEach(tests, test => {
   fs.writeFileSync(dest, render(test));
   log.info('Writing %s test to %s', test.id, dest);
 });
+
+// Generate a split file for CCI
+const splitFile = _.map(tests, test => path.resolve(__dirname, '..', testDir, `${test.id}.spec.js`));
+fs.writeFileSync(path.join(testDir, 'split-file.txt'), splitFile.join(os.EOL));
+log.info('Writing CCI splitfile to %s', path.join(testDir, 'split-file.txt'));
