@@ -1,12 +1,13 @@
 'use strict';
 
 const _ = require('lodash');
+const dot = require('dot');
 const fs = require('fs-extra');
 const lex = require('marked').lexer;
 const semver = require('semver');
 const os = require('os');
 const path = require('path');
-const path2Bin = path.resolve(__dirname, '..', 'bin', 'lando.js');
+const path2Bin = path.join('..', '..', 'bin', 'lando.js');
 const startHeaders = ['Start', 'Boot', 'Spin'];
 const testHeaders = ['Test', 'Validate'];
 const killHeaders = ['Clean', 'Kill', 'Tear'];
@@ -24,7 +25,7 @@ const trimReadmeTypes = datum => (datum.type === 'heading' || datum.type === 'co
 /*
  * Helper parse a test describe
  */
-const parseTestDescribe = describe => _.trim(_.trimStart(describe, '#'));
+const parseTestDescribe = describe => _.lowerCase(_.trim(_.trimStart(describe, '#')));
 
 /*
  * Helper parse a test command
@@ -36,7 +37,7 @@ const parseTestCommand = command => _.replace(command, 'lando', `node ${path2Bin
  */
 const parseCodeBlock = data => _.map(data.text.split(`${os.EOL}${os.EOL}`), test => ({
   describe: _.map(_.filter(test.split(os.EOL), line => _.startsWith(line, '#')), parseTestDescribe),
-  commands: _.map(_.filter(test.split(os.EOL), line => !_.startsWith(line, '#')), parseTestCommand),
+  commands: _.join(_.map(_.filter(test.split(os.EOL), line => !_.startsWith(line, '#')), parseTestCommand), ' && '),
 }));
 
 /*
@@ -52,6 +53,8 @@ const getCodeBlock = (content, starters) => {
  */
 const mapsOfMeaning = (file, content) => ({
   id: _.takeRight(_.dropRight(file.split(path.sep)))[0],
+  file: file,
+  run: path.join('examples', _.takeRight(_.dropRight(file.split(path.sep)))[0]),
   title: _.kebabCase(_.find(content, {type: 'heading', depth: 1}).text),
   start: getCodeBlock(content, startHeaders),
   tests: getCodeBlock(content, testHeaders),
@@ -86,6 +89,24 @@ exports.bumpVersion = (version, type = 'patch', prerelease = 'beta') => {
     default:
       return semver.inc(version, 'patch');
   }
+};
+
+/*
+ * Returns a template building function
+ */
+exports.buildTemplateFunction = (templateFile, defsDir = path.dirname(templateFile), opts = {strip: false}) => {
+  // Get the deffiles
+  const defFiles = _(fs.readdirSync(defsDir))
+    .filter(file => _.endsWith(file, '.def'))
+    .map(file => path.join(defsDir, file))
+    .value();
+  // Build a def object
+  const defs = {};
+  _.forEach(defFiles, file => {
+    defs[path.basename(file, '.def')] = fs.readFileSync(file, 'utf8');
+  });
+  // Return
+  return dot.template(fs.readFileSync(templateFile, 'utf8'), _.merge({}, dot.templateSettings, opts), defs);
 };
 
 /*
@@ -171,9 +192,9 @@ exports.parseCommand = (cmd, cwd = path.resolve(__dirname, '..')) => {
  */
 exports.parseReadmes = files => _.filter(_.map(files, file => {
   const content = _(lex(fs.readFileSync(file, 'utf8'))).filter(trimReadmeTypes).filter(trimHeaders).value();
-  const src = mapsOfMeaning(file, content);
-  return {content, file, src};
-}), test => !_.isEmpty(test.src.start) && !_.isEmpty(test.src.tests) && !_.isEmpty(test.src.clean));
+  const tests = mapsOfMeaning(file, content);
+  return tests;
+}), test => !_.isEmpty(test.start) && !_.isEmpty(test.tests) && !_.isEmpty(test.clean));
 
 /*
  * Run a ps script

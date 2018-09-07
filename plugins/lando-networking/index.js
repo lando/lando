@@ -240,7 +240,7 @@ module.exports = lando => {
     }
 
     app.events.on('app-ready', 9, () => {
-      app.events.on('post-start', 9999, () => runRoot(buildServices, '/helpers/refresh-certs.sh', app));
+      app.events.on('post-start', 9999, () => runRoot(buildServices, '/helpers/refresh-certs.sh > /cert-log.txt', app));
     });
   });
 };

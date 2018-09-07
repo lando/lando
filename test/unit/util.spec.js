@@ -51,6 +51,10 @@ describe('scripts', () => {
     });
   });
 
+  describe('#buildTemplateFunction', () => {
+    it('should return a template rendering function');
+  });
+
   describe('#cliTargetOs', () => {
     it('should return macos on darwin', () => {
       setPlatform('darwin');

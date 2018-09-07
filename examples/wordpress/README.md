@@ -5,7 +5,7 @@ This example provides a Composer powered spin up of a WordPress site.
 
 See the `.lando.yml` in this directory for WordPress configuration options.
 
-Startup
+ONE
 -------
 
 You should be able to run the following steps to get up and running with this example.
@@ -19,7 +19,7 @@ lando composer install
 lando start
 ```
 
-Testing
+TWO
 -------
 
 Here is a non-exhaustive list of commands that are relevant to this example.
@@ -33,7 +33,7 @@ lando wp --version
 true
 ```
 
-Killing
+THREE
 -------
 
 Here is a non-exhaustive list of commands that are relevant to this example.

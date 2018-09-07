@@ -22,7 +22,11 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Test 1
-lando ssh appserver -c "true"
+lando ssh html -c "true"
+
+# Test 2
+sleep 10
+lando ssh html -c "cat /certs.txt"
 ```
 
 Cleanup

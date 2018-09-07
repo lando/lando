@@ -1,0 +1,14 @@
+{{#def.header}}{{#def.deps}}
+describe('{{=it.id}}', () => {{{~ it.start :test}}
+  // These are tests we need to run to get the app into a state to test
+  // @todo: It would be nice to eventually get these into mocha before hooks
+  // so they run before every test
+{{#def.it}}{{~}}
+  // These tests are the main event
+  // @todo: It would be nice to eventually get these into mocha after hooks
+  // so they run after every test{{~ it.tests :test}}
+{{#def.it}}{{~}}{{~ it.clean :test}}
+  // These are tests we need to run to get the app into a state to test
+  // @todo: It would be nice to eventually get these into mocha before hooks
+  // so they run before every test
+{{#def.it}}{{~}}});
