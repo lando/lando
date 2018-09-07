@@ -6,7 +6,7 @@ This example provides a very basic `apache` web server.
 See the `.lando.yml` in this directory for Apache configuration options.
 
 Bootup
---------
+------
 
 Run the following commands to get up and running with this example.
 
