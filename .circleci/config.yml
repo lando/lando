@@ -39,7 +39,7 @@ jobs:
             node ~/project/bin/lando.js version
       - run:
           name: Run func test
-          comand: |
+          command: |
             TESTFILES=$(circleci tests split ~/project/test/func/split-file.txt)
             echo ${TESTFILES}
 
