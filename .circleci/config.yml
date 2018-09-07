@@ -6,6 +6,7 @@ jobs:
       # @todo: once we have more tests running lets buy the below and
       # set up max parallelism
       # docker_layer_caching: true
+    parallelism: 4
     steps:
       - checkout
       - restore_cache:
