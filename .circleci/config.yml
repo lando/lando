@@ -1,24 +1,24 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/lando
-    docker:
-      - image: circleci/node:8.9.4
+    machine:
+      image: circleci/classic:201808-01
+      # docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Install deps
-          command: yarn install
+          command: yarn
       - run:
-          name: Install Docker Compose
+          name: Verify versions of things
           command: |
-            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            docker -v
+            docker-compose -v
+            node -v
+            lando version
       - run:
           name: Unit Tests
-          command: yarn test
+          command: yarn test:unit
       #- run:
       #    name: Functional Tests
       #    command: yarn test:functional
