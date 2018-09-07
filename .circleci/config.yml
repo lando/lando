@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test:
     machine:
       image: circleci/classic:201808-01
       # @todo: once we have more tests running lets buy the below and
