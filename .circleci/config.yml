@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Install node
           command: |
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
             sudo apt-get install -y nodejs
       - run:
           name: Install yarn
@@ -18,16 +18,16 @@ jobs:
             echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
             sudo apt-get update -y && sudo apt-get install yarn -y
       - run:
+          name: Install node modules
+          command: yarn
+      - run:
           name: Verify we have the things we need to start
           command: |
             docker -v
             docker-compose -v
             node -v
             yarn -v
-            lando version
-      - run:
-          name: Install node modules
-          command: yarn
+            node ~/project/bin/lando.js version
       - run:
           name: Unit Tests
           command: yarn test:unit
