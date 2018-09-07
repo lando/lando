@@ -41,8 +41,7 @@ jobs:
           name: Run func test
           command: |
             node ~/project/scripts/generate-tests.js
-            TESTFILES=$(circleci tests split ~/project/test/func/split-file.txt)
-            echo ${TESTFILES}
+            mocha --timeout 900000 $(circleci tests split ~/project/test/func/split-file.txt)
 
       #- run:
       #    name: Functional Tests
