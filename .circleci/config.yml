@@ -25,7 +25,7 @@ jobs:
           command: sudo apt-get update -y
       - run:
           name: Install node
-          command: sudo apt-get install -y nodejs
+          command: sleep 10 && sudo apt-get install -y nodejs
       - run:
           name: Install yarn
           command: sudo apt-get install yarn -y
