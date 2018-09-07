@@ -46,10 +46,18 @@ jobs:
   test:
     machine:
       image: circleci/classic:201808-01
-        parallelism: 4
+    parallelism: 4
     steps:
       - run:
           name: Run func test
           command: |
             node ~/project/scripts/generate-tests.js
             mocha --timeout 900000 $(circleci tests split ~/project/test/func/split-file.txt)
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
