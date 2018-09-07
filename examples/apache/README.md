@@ -25,8 +25,7 @@ Run the following commands to validate things are rolling as they should.
 lando ssh html -c "true"
 
 # Test 2
-sleep 10
-lando ssh html -c "cat /certs.txt"
+lando ssh html -u root -c "cat /cert-log.txt"
 ```
 
 Cleanup
