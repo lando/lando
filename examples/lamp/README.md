@@ -5,20 +5,17 @@ This example provides a very basic `LAMP` application using Lando services inste
 
 See the `.lando.yml` in this directory for PHP configuration options.
 
-Getting Started
----------------
+This is the dawning of the age of LAMPquarius
+---------------------------------------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
-# Start up the example
+# Starts up a LAMP stack using lando services
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
+Helpful commands
 ----------------
 
 Here is a non-exhaustive list of commands that are relevant to this example.
@@ -31,4 +28,25 @@ lando info
 lando php -v
 lando composer
 lando mysql
+```
+
+Sanity checks
+-------------
+
+Run these commands to make sure things are right as rain.
+
+```bash
+# Verifies that true exists in the appserver
+# @todo: replace this with something that makes sense
+lando ssh -c "true"
+```
+
+Nuke the whole god damn thing
+-----------------------------
+
+Run these commands to ensure we clean things up.
+
+```bash
+# Destroys the LAMP stack
+lando destroy -y
 ```

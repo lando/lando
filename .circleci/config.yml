@@ -1,24 +1,53 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/lando
-    docker:
-      - image: circleci/node:8.9.4
+    machine:
+      image: circleci/classic:201808-01
+      # @todo: once we have more tests running lets buy the below and
+      # set up max parallelism
+      # docker_layer_caching: true
+    parallelism: 8
     steps:
       - checkout
-      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
+      - run:
+          name: Get PPAz
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash
+      - run:
+          name: Update deps
+          command: sudo apt-get update -y
       - run:
           name: Install deps
-          command: yarn install
-      - run:
-          name: Install Docker Compose
           command: |
-            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            sudo rm -rf /var/lib/apt/lists/lock
+            sudo rm -rf /var/cache/apt/archives/lock
+            sudo rm -rf /var/lib/dpkg/lock
+            sudo apt-get install -y nodejs yarn
       - run:
-          name: Unit Tests
-          command: yarn test
-      #- run:
-      #    name: Functional Tests
-      #    command: yarn test:functional
+          name: Install node modules
+          command: yarn
+      - run:
+          name: Verify we have the things we need to start
+          command: |
+            docker -v
+            docker-compose -v
+            node -v
+            yarn -v
+            node ~/project/bin/lando.js version
+      - run:
+          name: Run func test
+          command: |
+            node ~/project/scripts/generate-tests.js
+            echo $(circleci tests split ~/project/test/func/split-file.txt)
+            mocha --timeout 900000 $(circleci tests split ~/project/test/func/split-file.txt)
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}

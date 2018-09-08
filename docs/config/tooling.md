@@ -72,7 +72,7 @@ tooling:
 Directory Mapping
 -----------------
 
-Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally.
+Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container.
 
 Tool Discovery
 --------------
