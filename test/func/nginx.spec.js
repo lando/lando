@@ -19,7 +19,7 @@ describe('nginx', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up a nginx server', done => {
+  it('start up an nginx server', done => {
     process.chdir('examples/nginx');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js start').then(res => {
@@ -35,10 +35,10 @@ describe('nginx', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('test 1', done => {
+  it('verify we are using lando certs', done => {
     process.chdir('examples/nginx');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "true"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep ssl_certificate | grep /certs/cert.pem"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,23 @@ describe('nginx', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('test 2', done => {
+  it('verify the webroot is correct', done => {
     process.chdir('examples/nginx');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -u root -c "cat /cert-log.txt"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep root | grep /app/www"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify the custom config is loaded', done => {
+    process.chdir('examples/nginx');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep CUSTOMTHINGGOTLODADED"').then(res => {
       if (res.error === null) {
         done();
       } else {

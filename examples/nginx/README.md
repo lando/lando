@@ -11,7 +11,7 @@ Spin things up
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up a nginx server
+# Start up an nginx server
 lando start
 ```
 
@@ -21,11 +21,14 @@ Testing
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Test 1
-lando ssh appserver -c "true"
+# Verify we are using Lando certs
+lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep ssl_certificate | grep /certs/cert.pem"
 
-# Test 2
-lando ssh appserver -u root -c "cat /cert-log.txt"
+# Verify the webroot is correct
+lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep root | grep /app/www"
+
+# Verify the custom config is loaded
+lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep CUSTOMTHINGGOTLODADED"
 ```
 
 Cleanup
