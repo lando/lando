@@ -96,10 +96,10 @@ describe('1141-freetype-fpm5.3', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('undefined', done => {
+  it('destroys our custom app', done => {
     process.chdir('examples/1141-freetype-fpm5.3');
     const cli = new CliTest();
-    cli.exec('Destroys our custom app && node ../../bin/lando.js destroy -y').then(res => {
+    cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {
         done();
       } else {

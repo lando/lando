@@ -115,6 +115,7 @@ Here are some caveats and general guidelines about when and how to write tests.
 
 1. You can only run functional tests from the lando source root directory.
 2. For test commands to pass they must return a 0 status code eg not have any errors
+3. Additional quotes inside of a `lando ssh -c "STUFF"` are not handled very well right now
 
 #### So when does your code need to include functional tests?
 

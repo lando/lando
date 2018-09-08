@@ -35,10 +35,10 @@ describe('apache', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('test 1', done => {
+  it('verify we actually have the correct version of apache', done => {
     process.chdir('examples/apache');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh html -c "true"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh html -c "apachectl -V | grep Apache/2.2"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,49 @@ describe('apache', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('test 2', done => {
+  it('verify lando webroot is set correctly', done => {
     process.chdir('examples/apache');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh html -u root -c "cat /cert-log.txt"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh html -c "env | grep LANDO_WEBROOT=/app/web"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify that lando certs are being used', done => {
+    process.chdir('examples/apache');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js ssh html -c "cat /usr/local/apache2/conf/httpd.conf | grep SSLCertificateFile | grep /certs/cert.crt"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify that our custom envvar is in there', done => {
+    process.chdir('examples/apache');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js ssh html -c "env | grep STUFF=THINGS"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify that weve exposed port 8081 correctly', done => {
+    process.chdir('examples/apache');
+    const cli = new CliTest();
+    cli.exec('docker inspect apache_html_1 | grep HostPort | grep 8081 && node ../../bin/lando.js info | grep http://localhost:8081').then(res => {
       if (res.error === null) {
         done();
       } else {
