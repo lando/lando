@@ -107,7 +107,8 @@ module.exports = lando => {
         name: 'pantheon-auth',
         type: 'password',
         message: 'Enter a Pantheon machine token',
-        when: answers => (_.get(answers, 'pantheon-auth', '') === 'more') && askQuestions(answers),
+        when: answers => _.isEmpty(pantheonAccounts())
+          || (_.get(answers, 'pantheon-auth', '') === 'more') && askQuestions(answers),
         weight: 601,
       },
     },
