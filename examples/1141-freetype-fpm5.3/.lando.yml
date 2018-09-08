@@ -1,0 +1,9 @@
+name: freetypefpm5.3
+recipe: lemp
+config:
+  php: '5.3'
+services:
+  appserver:
+    overrides:
+      services:
+        image: landotest/php:5.3-fpm

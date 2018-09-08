@@ -30,7 +30,7 @@ const parseTestDescribe = describe => _.lowerCase(_.trim(_.trimStart(describe, '
 /*
  * Helper parse a test command
  */
-const parseTestCommand = command => _.replace(command, 'lando', `node ${path2Bin}`);
+const parseTestCommand = command => _.replace(command, 'lando ', `node ${path2Bin} `);
 
 /*
  * Helper to parse a code block
