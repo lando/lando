@@ -5,10 +5,10 @@ This example uses an `apache` and `nginx` webserver to demonstrate the proxy rou
 
 See the `.lando.yml` in this directory for proxy configuration options.
 
-Getting Started
+Launch the app
 ---------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
 # Start up the example
@@ -24,9 +24,22 @@ You should be able to run the following steps to get up and running with this ex
 # If you have not added these entries then you should expect to see them as "red"
 # after you start this example
 lando start
+```
 
-# Check out other commands you can use with this example
-lando
+Validate it works as expected
+-----------------------------
+
+```bash
+# Test 1
+lando ssh web -c "true"
+```
+
+Blow it up
+----------
+
+```bash
+# Destroy it
+lando destroy -y
 ```
 
 Helpful Commands
