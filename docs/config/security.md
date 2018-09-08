@@ -22,7 +22,9 @@ You can also trust this CA on your host machine to alleviate browser warnings.
 > If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with
 > `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
 
-The Lando CA should be located at `~/.lando/certs/lando.pem`. If you don't see the cert there, try starting up an app. This will generate the CA if its not already there. Once it is you can add or remove it with the relevant commands below.
+The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app. This will generate the CA if its not already there. Also note that if you change the Lando `proxyDomain` you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate.
+
+Once it is you can add or remove it with the relevant commands below.
 
 ### macOS
 

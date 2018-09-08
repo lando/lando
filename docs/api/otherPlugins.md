@@ -1,3 +1,370 @@
+<a id="event_pre_instantiate_app"></a>
+
+<h2 id="event_pre_instantiate_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_instantiate_app"</h2>
+<div class="api-body-header"></div>
+
+Event that allows altering of the config before it is used to
+instantiate an app object.
+
+Note that this is a global event so it is invoked with `lando.events.on`
+not `app.events.on` See example below:
+
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| config | <code>Object</code> | The config from the app's .lando.yml |
+
+**Example**  
+```js
+// Add in some extra default config to our app, set it to run first
+lando.events.on('pre-instantiate-app', 1, function(config) {
+
+  // Add a process env object, this is to inject ENV into the process
+  // running the app task so we cna use $ENVARS in our docker compose
+  // files
+  config.dialedToInfinity = true;
+
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_instantiate_app"></a>
+
+<h2 id="event_post_instantiate_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_instantiate_app"</h2>
+<div class="api-body-header"></div>
+
+Event that allows altering of the app object right after it is
+instantiated.
+
+Note that this is a global event so it is invoked with `lando.events.on`
+not `app.events.on` See example below:
+
+**Since**: 3.0.0  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| config | <code>object</code> | The user's app config. |
+
+**Example**  
+```js
+// Add some extra app properties to all apps
+lando.events.on('post-instantiate-app', 1, function(app) {
+
+  // Add in some global container envconsts
+  app.env.LANDO = 'ON';
+  app.env.LANDO_HOST_OS = lando.config.os.platform;
+  app.env.LANDO_HOST_UID = lando.config.engineId;
+  app.env.LANDO_HOST_GID = lando.config.engineGid;
+
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_app_ready"></a>
+
+<h2 id="event_app_ready" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "app_ready"</h2>
+<div class="api-body-header"></div>
+
+Event that allows altering of the app object right after it has been
+full instantiated and all its plugins have been loaded.
+
+The difference between this event and `post-instantiate-app` is that at
+this point the event has been handed off from the global `lando.events.on`
+context to the `app.events.on` context. This means that `post-instantiate-app` will
+run for ALL apps that need to be instantiated while `app-ready` will run
+on an app to app basis.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Add logging to report on our apps properties after its full dialed
+app.events.on('app-ready', function() {
+
+  // Log
+  lando.log.verbose('App %s has global env.', app.name, app.env);
+  lando.log.verbose('App %s has global labels.', app.name, app.labels);
+  lando.log.verbose('App %s adds process env.', app.name, app.processEnv);
+
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_pre_info"></a>
+
+<h2 id="event_pre_info" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_info"</h2>
+<div class="api-body-header"></div>
+
+Event that allows other things to add useful metadata to the apps services.
+
+Its helpful to use this event to add in information for the end user such as
+how to access their services, where their code exsts or relevant credential info.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Add urls to the app
+app.events.on('pre-info', function() {
+  return getUrls(app);
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_info"></a>
+
+<h2 id="event_post_info" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_info"</h2>
+<div class="api-body-header"></div>
+
+Event that allows other things to add useful metadata to the apps services.
+
+Its helpful to use this event to add in information for the end user such as
+how to access their services, where their code exsts or relevant credential info.
+
+**Since**: 3.0.0  
+<div class="api-body-footer"></div>
+<a id="event_pre_uninstall"></a>
+
+<h2 id="event_pre_uninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_uninstall"</h2>
+<div class="api-body-header"></div>
+
+Event that runs before an app is uninstalled.
+
+This is useful if you want to add or remove parts of the uninstall process.
+For example, it might be nice to persist a container whose data you do not
+want to replace in a rebuild and that cannot persist easily with a volume.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Do not uninstall the solr service
+app.events.on('pre-uninstall', function() {
+  delete app.services.solr;
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_uninstall"></a>
+
+<h2 id="event_post_uninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_uninstall"</h2>
+<div class="api-body-header"></div>
+
+Event that runs after an app is uninstalled.
+
+This is useful if you want to do some additional cleanup steps after an
+app is uninstalled such as invalidating any cached data.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Make sure we remove our build cache
+app.events.on('post-uninstall', function() {
+  lando.cache.remove(app.name + '.last_build');
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_pre_start"></a>
+
+<h2 id="event_pre_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_start"</h2>
+<div class="api-body-header"></div>
+
+Event that runs before an app starts up.
+
+This is useful if you want to start up any support services before an app
+stars.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Start up a DNS server before our app starts
+app.events.on('pre-start', function() {
+  return lando.engine.start(dnsServer);
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_start"></a>
+
+<h2 id="event_post_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_start"</h2>
+<div class="api-body-header"></div>
+
+Event that runs after an app is started.
+
+This is useful if you want to perform additional operations after an app
+starts such as running additional build commands.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Go through each service and run additional build commands as needed
+app.events.on('post-start', function() {
+
+  // Start up a build collector
+  const build = [];
+
+  // Go through each service
+  _.forEach(app.config.services, function(service, name) {
+
+    // If the service has run steps let's loop through and run some commands
+    if (!_.isEmpty(service.run)) {
+
+      // Normalize data for loopage
+      if (!_.isArray(service.run)) {
+        service.run = [service.run];
+      }
+
+      // Run each command
+      _.forEach(service.run, function(cmd) {
+
+        // Build out the compose object
+        const compose = {
+          id: [service, name, '1'].join('_'),
+            cmd: cmd,
+            opts: {
+            mode: 'attach'
+          }
+        };
+
+        // Push to the build
+        build.push(compose);
+
+      });
+
+    }
+
+  });
+
+  // Only proceed if build is non-empty
+  if (!_.isEmpty(build)) {
+
+   // Get the last build cache key
+   const key = app.name + ':last_build';
+
+   // Compute the build hash
+   const newHash = lando.node.hasher(app.config.services);
+
+   // If our new hash is different then lets build
+   if (lando.cache.get(key) !== newHash) {
+
+     // Set the new hash
+     lando.cache.set(key, newHash, {persist:true});
+
+     // Run all our post build steps serially
+     return lando.engine.run(build);
+
+   }
+  }
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_pre_stop"></a>
+
+<h2 id="event_pre_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_stop"</h2>
+<div class="api-body-header"></div>
+
+Event that runs before an app stops.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Stop a DNS server before our app stops.
+app.events.on('pre-stop', function() {
+  return lando.engine.stop(dnsServer);
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_stop"></a>
+
+<h2 id="event_post_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_stop"</h2>
+<div class="api-body-header"></div>
+
+Event that runs after an app stop.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Stop a DNS server after our app stops.
+app.events.on('post-stop', function() {
+  return lando.engine.stop(dnsServer);
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_pre_destroy"></a>
+
+<h2 id="event_pre_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_destroy"</h2>
+<div class="api-body-header"></div>
+
+Event that runs before an app is destroyed.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Make sure the proxy is down before we destroy
+app.events.on('pre-destroy', function() {
+  if (fs.existsSync(proxyFile)) {
+    return lando.engine.stop(getProxy(proxyFile));
+  }
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_destroy"></a>
+
+<h2 id="event_post_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_destroy"</h2>
+<div class="api-body-header"></div>
+
+Event that runs after an app is destroyed.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Make sure the proxy is up brought back up after we destroy
+app.events.on('post-destroy', function() {
+  return startProxy();
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_pre_rebuild"></a>
+
+<h2 id="event_pre_rebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "pre_rebuild"</h2>
+<div class="api-body-header"></div>
+
+Event that runs before an app is rebuilt.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Do something
+app.events.on('post-rebuild', function() {
+  // Do something
+});
+```
+<div class="api-body-footer"></div>
+<a id="event_post_rebuild"></a>
+
+<h2 id="event_post_rebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
+  "post_rebuild"</h2>
+<div class="api-body-header"></div>
+
+Event that runs after an app is rebuilt.
+
+**Since**: 3.0.0  
+**Example**  
+```js
+// Do something
+app.events.on('post-rebuild', function() {
+  // Do something
+});
+```
+<div class="api-body-footer"></div>
 <a id="landoappregister"></a>
 
 <h2 id="landoappregister" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
@@ -19,7 +386,7 @@ Adds an app to the app registry.
 **Example**  
 ```js
 // Define an app with some additional and optional metadata
-var app = {
+const app = {
   name: 'starfleet.mil',
   dir: '/Users/picard/Desktop/lando/starfleet',
   data: {
@@ -51,7 +418,7 @@ Removes an app from the app registry.
 **Example**  
 ```js
 // Define an app with some additional and optional metadata
-var app = {
+const app = {
   name: 'starfleet.mil',
   dir: '/Users/picard/Desktop/lando/starfleet'
 };
@@ -413,543 +780,19 @@ catch(function(err) {
 });
 ```
 <div class="api-body-footer"></div>
-<a id="landoinitget"></a>
-
-<h2 id="landoinitget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.get()</h2>
-<div class="api-body-header"></div>
-
-Get an init method
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinitadd"></a>
-
-<h2 id="landoinitadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.add()</h2>
-<div class="api-body-header"></div>
-
-Add an init method to the registry
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinitclonerepo"></a>
-
-<h2 id="landoinitclonerepo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.cloneRepo()</h2>
-<div class="api-body-header"></div>
-
-Helper to return a performant git clone command
-
-This clones to /tmp and then moves to /app to avoid file sharing performance
-hits
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinitcreatekey"></a>
-
-<h2 id="landoinitcreatekey" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.createKey()</h2>
-<div class="api-body-header"></div>
-
-Helper to return a create key command
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinitrun"></a>
-
-<h2 id="landoinitrun" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.run()</h2>
-<div class="api-body-header"></div>
-
-Run a command during the init process
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinitkill"></a>
-
-<h2 id="landoinitkill" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.kill()</h2>
-<div class="api-body-header"></div>
-
-Helper to kill any running util processes
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinitbuild"></a>
-
-<h2 id="landoinitbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.build()</h2>
-<div class="api-body-header"></div>
-
-The core init method
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoinityaml"></a>
-
-<h2 id="landoinityaml" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.init.yaml()</h2>
-<div class="api-body-header"></div>
-
-Helper to spit out a .lando.yml file
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landorecipesget"></a>
-
-<h2 id="landorecipesget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.recipes.get()</h2>
-<div class="api-body-header"></div>
-
-Get a recipe
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landorecipesadd"></a>
-
-<h2 id="landorecipesadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.recipes.add()</h2>
-<div class="api-body-header"></div>
-
-Add a recipe to the registry
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landorecipesbuild"></a>
-
-<h2 id="landorecipesbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.recipes.build()</h2>
-<div class="api-body-header"></div>
-
-The core recipe builder
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landorecipeswebroot"></a>
-
-<h2 id="landorecipeswebroot" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.recipes.webroot()</h2>
-<div class="api-body-header"></div>
-
-Helper to let us know whether this app requires a webroot question or not
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landorecipesname"></a>
-
-<h2 id="landorecipesname" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.recipes.name()</h2>
-<div class="api-body-header"></div>
-
-Helper to let us know whether this app requires a name question or not
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
 <a id="landoservicesadd"></a>
 
 <h2 id="landoservicesadd" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.services.add()</h2>
+  lando.services.add(name, service)</h2>
 <div class="api-body-header"></div>
 
 Add a service to the registry
 
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoservicesinfo"></a>
 
-<h2 id="landoservicesinfo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.services.info()</h2>
-<div class="api-body-header"></div>
-
-Delegator to gather info about a service for display to the user
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoservicesbuild"></a>
-
-<h2 id="landoservicesbuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.services.build()</h2>
-<div class="api-body-header"></div>
-
-The core service builder
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoserviceshealthcheck"></a>
-
-<h2 id="landoserviceshealthcheck" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.services.healthcheck()</h2>
-<div class="api-body-header"></div>
-
-Does a healthcheck on a service
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_instantiate_app"></a>
-
-<h2 id="event_pre_instantiate_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_instantiate_app"</h2>
-<div class="api-body-header"></div>
-
-Event that allows altering of the config before it is used to
-instantiate an app object.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
-
-**Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
+| Param | Type | Description |
 | --- | --- | --- |
-| config | <code>Object</code> | The config from the app's .lando.yml |
+| name | <code>String</code> | The name of the service |
+| service | <code>Module</code> | The required module |
 
-**Example**  
-```js
-// Add in some extra default config to our app, set it to run first
-lando.events.on('pre-instantiate-app', 1, function(config) {
-
-  // Add a process env object, this is to inject ENV into the process
-  // running the app task so we cna use $ENVARS in our docker compose
-  // files
-  config.dialedToInfinity = true;
-
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_instantiate_app"></a>
-
-<h2 id="event_post_instantiate_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_instantiate_app"</h2>
-<div class="api-body-header"></div>
-
-Event that allows altering of the app object right after it is
-instantiated.
-
-Note that this is a global event so it is invoked with `lando.events.on`
-not `app.events.on` See example below:
-
-**Since**: 3.0.0  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| config | <code>object</code> | The user's app config. |
-
-**Example**  
-```js
-// Add some extra app properties to all apps
-lando.events.on('post-instantiate-app', 1, function(app) {
-
-  // Add in some global container envvars
-  app.env.LANDO = 'ON';
-  app.env.LANDO_HOST_OS = lando.config.os.platform;
-  app.env.LANDO_HOST_UID = lando.config.engineId;
-  app.env.LANDO_HOST_GID = lando.config.engineGid;
-
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_app_ready"></a>
-
-<h2 id="event_app_ready" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "app_ready"</h2>
-<div class="api-body-header"></div>
-
-Event that allows altering of the app object right after it has been
-full instantiated and all its plugins have been loaded.
-
-The difference between this event and `post-instantiate-app` is that at
-this point the event has been handed off from the global `lando.events.on`
-context to the `app.events.on` context. This means that `post-instantiate-app` will
-run for ALL apps that need to be instantiated while `app-ready` will run
-on an app to app basis.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Add logging to report on our apps properties after its full dialed
-app.events.on('app-ready', function() {
-
-  // Log
-  lando.log.verbose('App %s has global env.', app.name, app.env);
-  lando.log.verbose('App %s has global labels.', app.name, app.labels);
-  lando.log.verbose('App %s adds process env.', app.name, app.processEnv);
-
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_pre_info"></a>
-
-<h2 id="event_pre_info" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_info"</h2>
-<div class="api-body-header"></div>
-
-Event that allows other things to add useful metadata to the apps services.
-
-Its helpful to use this event to add in information for the end user such as
-how to access their services, where their code exsts or relevant credential info.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Add urls to the app
-app.events.on('pre-info', function() {
-  return getUrls(app);
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_info"></a>
-
-<h2 id="event_post_info" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_info"</h2>
-<div class="api-body-header"></div>
-
-Event that allows other things to add useful metadata to the apps services.
-
-Its helpful to use this event to add in information for the end user such as
-how to access their services, where their code exsts or relevant credential info.
-
-**Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_uninstall"></a>
-
-<h2 id="event_pre_uninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_uninstall"</h2>
-<div class="api-body-header"></div>
-
-Event that runs before an app is uninstalled.
-
-This is useful if you want to add or remove parts of the uninstall process.
-For example, it might be nice to persist a container whose data you do not
-want to replace in a rebuild and that cannot persist easily with a volume.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Do not uninstall the solr service
-app.events.on('pre-uninstall', function() {
-  delete app.services.solr;
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_uninstall"></a>
-
-<h2 id="event_post_uninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_uninstall"</h2>
-<div class="api-body-header"></div>
-
-Event that runs after an app is uninstalled.
-
-This is useful if you want to do some additional cleanup steps after an
-app is uninstalled such as invalidating any cached data.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Make sure we remove our build cache
-app.events.on('post-uninstall', function() {
-  lando.cache.remove(app.name + '.last_build');
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_pre_start"></a>
-
-<h2 id="event_pre_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_start"</h2>
-<div class="api-body-header"></div>
-
-Event that runs before an app starts up.
-
-This is useful if you want to start up any support services before an app
-stars.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Start up a DNS server before our app starts
-app.events.on('pre-start', function() {
-  return lando.engine.start(dnsServer);
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_start"></a>
-
-<h2 id="event_post_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_start"</h2>
-<div class="api-body-header"></div>
-
-Event that runs after an app is started.
-
-This is useful if you want to perform additional operations after an app
-starts such as running additional build commands.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Go through each service and run additional build commands as needed
-app.events.on('post-start', function() {
-
-  // Start up a build collector
-  var build = [];
-
-  // Go through each service
-  _.forEach(app.config.services, function(service, name) {
-
-    // If the service has run steps let's loop through and run some commands
-    if (!_.isEmpty(service.run)) {
-
-      // Normalize data for loopage
-      if (!_.isArray(service.run)) {
-        service.run = [service.run];
-      }
-
-      // Run each command
-      _.forEach(service.run, function(cmd) {
-
-        // Build out the compose object
-        var compose = {
-          id: [service, name, '1'].join('_'),
-            cmd: cmd,
-            opts: {
-            mode: 'attach'
-          }
-        };
-
-        // Push to the build
-        build.push(compose);
-
-      });
-
-    }
-
-  });
-
-  // Only proceed if build is non-empty
-  if (!_.isEmpty(build)) {
-
-   // Get the last build cache key
-   var key = app.name + ':last_build';
-
-   // Compute the build hash
-   var newHash = lando.node.hasher(app.config.services);
-
-   // If our new hash is different then lets build
-   if (lando.cache.get(key) !== newHash) {
-
-     // Set the new hash
-     lando.cache.set(key, newHash, {persist:true});
-
-     // Run all our post build steps serially
-     return lando.engine.run(build);
-
-   }
-  }
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_pre_stop"></a>
-
-<h2 id="event_pre_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_stop"</h2>
-<div class="api-body-header"></div>
-
-Event that runs before an app stops.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Stop a DNS server before our app stops.
-app.events.on('pre-stop', function() {
-  return lando.engine.stop(dnsServer);
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_stop"></a>
-
-<h2 id="event_post_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_stop"</h2>
-<div class="api-body-header"></div>
-
-Event that runs after an app stop.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Stop a DNS server after our app stops.
-app.events.on('post-stop', function() {
-  return lando.engine.stop(dnsServer);
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_pre_destroy"></a>
-
-<h2 id="event_pre_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_destroy"</h2>
-<div class="api-body-header"></div>
-
-Event that runs before an app is destroyed.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Make sure the proxy is down before we destroy
-app.events.on('pre-destroy', function() {
-  if (fs.existsSync(proxyFile)) {
-    return lando.engine.stop(getProxy(proxyFile));
-  }
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_destroy"></a>
-
-<h2 id="event_post_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_destroy"</h2>
-<div class="api-body-header"></div>
-
-Event that runs after an app is destroyed.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Make sure the proxy is up brought back up after we destroy
-app.events.on('post-destroy', function() {
-  return startProxy();
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_pre_rebuild"></a>
-
-<h2 id="event_pre_rebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_rebuild"</h2>
-<div class="api-body-header"></div>
-
-Event that runs before an app is rebuilt.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Do something
-app.events.on('post-rebuild', function() {
-  // Do something
-});
-```
-<div class="api-body-footer"></div>
-<a id="event_post_rebuild"></a>
-
-<h2 id="event_post_rebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_rebuild"</h2>
-<div class="api-body-header"></div>
-
-Event that runs after an app is rebuilt.
-
-**Since**: 3.0.0  
-**Example**  
-```js
-// Do something
-app.events.on('post-rebuild', function() {
-  // Do something
-});
-```
 <div class="api-body-footer"></div>

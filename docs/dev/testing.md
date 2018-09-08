@@ -1,23 +1,26 @@
-# Testing
+Testing
+=======
 
 You should be able to use this guide to...
 
-1.  Check code style
-2.  Run unit tests
-3.  Run functional tests
+1.  Check code linting and style
+2.  Run and write unit tests
+3.  Run and write functional tests
 4.  Learn how to write tests
 
-## Code linting and standards
+Code linting and standards
+--------------------------
 
-Lando implements some basic linting and code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
+Lando implements some basic linting and a slghtly less annoying version of the `google` `es6` code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
 
 ```bash
 yarn lint
 ```
 
-## Unit tests
+Unit tests
+----------
 
-The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/).
+The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/). In order to familiarize yourself with where tests should live for both core and plugins please consult the [structure guide](./structure.md). Lando's core libraries currently have 100% coverage so you can [scope them out](https://github.com/lando/lando/tree/master/test/unit) for help writing tests.
 
 To run the unit test suite, execute:
 
@@ -25,85 +28,112 @@ To run the unit test suite, execute:
 yarn test:unit
 ```
 
-We *need* to increase unit test coverage, there aren't significant examples to review at the present time. Standard mocha/chai patterns will be the norm here.
+Functional tests
+----------------
 
-## Functional tests
-To run the functional suite, execute:
+Lando uses it's own functional testing framework that combines mocha as the test runner, chai for assertions and [command-line-test](https://github.com/macacajs/command-line-test) to make the process of executing commands simpler. Tests are written as specially structured `markdown` files that live in the `examples` folder and contain code blocks. When the suite runs these are scanned, parsed and outputted as mocha tests.
+
+> #### Warning::Pretty sure these will not run on Windows yet
+>
+> SORRY WINDOZE USERS!
+
+In order for your `markdown` file to be recognized as a functional test it needs to have at least the following
+
+#### 1. A H1 Header
+
+```md
+ISSUE NUMBER - Brief description
+================================
+```
+
+#### 2. Three H2 Headers
+
+Our parser will look for three sections that contain instructions for installing needed test dependencies, the actual tests to run and instructions for how to cleanup after the tests run. These sections **must be begin** with the following words in order to be picked up by our parser and they are **case sensitive**
+
+```md
+Starting
+--------
+
+... instructions
+
+Testing
+-------
+
+... instructions
+
+Cleanup
+-------
+
+... instructions
+```
+
+If you want to have MOARFUN with how you describe these sections, check out the other [starting phrases](https://github.com/lando/lando/blob/master/scripts/util.js#L11) we look for to identify each section.
+
+#### 3. A code block with at least one command and comment
+
+Under each of the above sections you need to have a triple tick [markdown code block](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code) that contains at least one comment and one command. The comment will be the human readable description of what the test does.
+
+Here is a basic code block that runs one test
 
 ```bash
-yarn test:functional
+# Start up my example with lando
+lando start
 ```
 
-The functional test suite also uses mocha as the test runner and chai for assertions. Additionally, all functional tests for cli functionality are using [command-line-test](https://github.com/macacajs/command-line-test) to make the process of executing Lando simpler.
+Here is another block with a more verbose comment
 
-Most functional specs will do something like this:
-
-```js
-describe('Some part of Lando', function() {
-  this.timeout(50000); // Functional tests are slow...
-  // before my specific test suite...but only once, not on _each_ test...
-  before(function() {
-    // We sometimes need to inspect Docker environment directly
-    this.docker = new Docker();
-    // Where is Lando's bin script relative to this file?
-    this.executable = path.resolve(
-      __dirname, '..', 'bin', 'lando.js' // this will change based on file path
-    );
-  });
-
-  // Get a fresh CLI command object before each test.
-  beforeEach(function() {
-    // We'll need this in all tests
-    this.cliTest = new CliTest();
-  });
-
-  describe('#thinginmycode', function() {
-    // Maybe run a before block and store the cmd output to run it once
-    // and assert against it several times...
-    before(function() {
-      //The command runs once and we store a promise so we can assert against it
-      // in each spec
-      this.cmd = this.cliTest.execFile(
-        this.executable, 'rescue Han', {cwd: 'tatooine'}
-      );
-    });
-
-    it('regrets what it did to Han', function() {
-      return this.cmd.then(function(res) {
-        return res.should.not.include('death by sarlacc pit');
-      });
-    });
-  });
-});
+```bash
+# Check to see if our app has the gd php extension installed
+# ADDITIONAL LINES OF COMMENTS ARE PERMITTED BUT ONLY THE FIRST LINE WILL BE
+# USED AS THE TEST DESCRIPTION
+lando php -m | grep gd
 ```
 
-There are a few patterns to note here:
+Here is an example that runs multiple tests. Note that you **MUST** drop a new line between the first and second test for it to read both.
 
-1. We're storing the entrypoint script's path to run in each test.
-2. We're attempting to run each command under test only a single time, and then build multiple specs and assertions off of the return of that command to help minimize the runtime of the suite.
-3. We're using two methods of testing the commands:
-  1. We're checking the stdout/stderr of the CLI commands. This is brittle but helps to ensure consistent output
-  2. Using Dockerode to directly inspect the state of our containers where possible
-4. Tests are organized to live as close to their command definitions as possible. We don't currently have functional tests in the top level test folder, this may change as the suite grows.
+```bash
+# Destroy my lando app
+lando destroy -y
 
-### So when does your code need to include functional tests?
+# Test whether truth really exists
+true
+```
 
-1. When you are fixing a bug, you should first write a test to confirm the bug exists repeatably, then you can fix the bug, and the test should pass.
-2. If you add code that alters the 'contract' with the user, as in altering the available commands and/or options or output. Relevant tests should be created or updated.
+Here is an example that runs a multi line command. Note that these commands are concatenated together with `&&` behind the scenes.
 
-### When shouldn't you bother with a new functional test?
+```bash
+# Do something a little more complicted
+lando db-import test.sql
+lando mysql data1 -e "show tables;" | grep users
+```
+
+Here is a [complete functional test](https://github.com/lando/lando/tree/master/examples/1141-freetype-fpm5.3) we wrote to replicate and then fix [#1141](https://github.com/lando/lando/issues/1141). This test actually runs in production on every code push. A good deal of our [examples](https://github.com/lando/lando/tree/master/examples) are also valid functional tests.
+
+Here are some caveats and general guidelines about when and how to write tests.
+
+#### So what's the catch?
+
+1. You can only run functional tests from the lando source root directory.
+2. For test commands to pass they must return a 0 status code eg not have any errors
+
+#### So when does your code need to include functional tests?
+
+When you are fixing a bug, you should first write a test to confirm the bug exists repeatably, then you can fix the bug, and the test should pass. Because this framework is essentially just running a bunch of Lando and/or Docker commands it should be pretty easy to write out steps to replicate using the framework.
+
+#### When shouldn't you bother with a new functional test?
 
 1. Your PR is docs only
 2. Your PR is outside the critical path (writing tests, altering our build pipeline)
 3. Your code alters Lando in a way that doesn't alter the 'contract' with the user. Internal refactoring should add or alter appropriate unit tests, but if the net affect is not visible to an end user, it doesn't need a functional test.
 
-Writing Tests
--------------
-
-Tests reside in the `/test` folder in the root of the project and there are separate test folders in each plugin directory. The folder patterns in each plugin are identical to the patterns in the root. For examples of unit tests look for `*.spec.js` files in the `unit` sub-folder. For examples of functional tests look for `*.spec.js` files in the `functional/cli` sub-folder.
+References
+----------
 
 In addition to the tips above, looking at existing tests will give you a good idea of how to write your own, but if you're looking for more tips, we recommend:
 
 *   [Mocha documentation](http://mochajs.org/)
 *   [Chai documentation](http://chaijs.com/)
 *   [Chai-As-Promised documentation](http://chaijs.com/plugins/chai-as-promised/)
+*   [Lando core unit tests](https://github.com/lando/lando/tree/master/test/unit)
+*   [Lando engine plugin unit tests](https://github.com/lando/lando/tree/master/plugins/lando-engine/test/unit)
+*   [Functional test for issue #1141](https://github.com/lando/lando/tree/master/examples/1141-freetype-fpm5.3)

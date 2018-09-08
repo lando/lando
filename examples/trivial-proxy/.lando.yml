@@ -10,6 +10,8 @@ proxy:
 
   # Proxy settings for the "web" service defined inside my compose.yml.
   # NOTE: You can specify more than one service.
+  # NOTE: `web` is particular to this app, run `lando info` to see a list of services
+  # for yours
   web:
 
     # By default this will proxy both port 80 and 443 giving you
