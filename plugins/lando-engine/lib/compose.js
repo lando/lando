@@ -124,6 +124,8 @@ exports.run = (compose, project, opts = {}) => {
   if (_.has(opts, 'pre')) opts.cmd = [opts.pre, opts.cmd].join('&&');
   // Remake command
   opts.cmd = ['/bin/sh', '-c', opts.cmd];
+  // Reset services based on the ID
+  opts.services = [opts.id.split('_')[1]];
   // Build the command
   return buildShell('exec', project, compose, opts, opts.app, 'attach');
 };
