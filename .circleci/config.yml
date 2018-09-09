@@ -42,9 +42,11 @@ jobs:
             yarn -v
             node ~/project/bin/lando.js version
       - run:
-          name: Sytem edits needed for lando compat
+          name: Install latest lando
           command: |
-            sudo sysctl -w vm.max_map_count=262144
+            sudo apt-get -y install cgroup-bin curl
+            curl -fsSL -o /tmp/lando.deb http://installer.kalabox.io/lando-latest-dev.deb
+            sudo dpkg -i /tmp/lando.deb
       - run:
           name: Run func test
           command: |
