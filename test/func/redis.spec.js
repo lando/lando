@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: memcached-example
- * src: examples/memcached
+ * title: redis-example
+ * src: examples/redis
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,14 +15,14 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('memcached', () => {
+describe('redis', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up the memcache', done => {
-    process.chdir('examples/memcached');
+  it('start up the redis', done => {
+    process.chdir('examples/redis');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js start').then(res => {
+    cli.exec('true').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -35,10 +35,10 @@ describe('memcached', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify the app booted up correctly and is showing memcache data', done => {
-    process.chdir('examples/memcached');
+  it('verify the app booted up correctly and is showing redis data', done => {
+    process.chdir('examples/redis');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep server | grep cache:11211"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep run_id"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('memcached', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify memcache portforward', done => {
-    process.chdir('examples/memcached');
+  it('verify redis version', done => {
+    process.chdir('examples/redis');
     const cli = new CliTest();
-    cli.exec('docker inspect memcached_cache_1 | grep HostPort | grep 11222 && node ../../bin/lando.js info | grep port | grep 11222').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep redis_version | grep 3.2."').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -61,10 +61,36 @@ describe('memcached', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify memcache version', done => {
-    process.chdir('examples/memcached');
+  it('verify that redis was started in append only mode', done => {
+    process.chdir('examples/redis');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh cache -c "memcached -V | grep 1.4."').then(res => {
+    cli.exec('docker inspect redis_cache_1 | grep appendonly').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify redis portforward', done => {
+    process.chdir('examples/redis');
+    const cli = new CliTest();
+    cli.exec('docker inspect redis_cache_1 | grep HostPort | grep 6380 && node ../../bin/lando.js info | grep port | grep 6380').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify we have the redis cli', done => {
+    process.chdir('examples/redis');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js redis-cli --version | grep 3.2.').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -75,7 +101,7 @@ describe('memcached', () => {
   });
 
   it('verify our custom memory setting was passed in', done => {
-    process.chdir('examples/memcached');
+    process.chdir('examples/redis');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep limit_maxbytes | grep 268435456"').then(res => {
       if (res.error === null) {
@@ -90,10 +116,10 @@ describe('memcached', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('destroy the memcache', done => {
-    process.chdir('examples/memcached');
+  it('destroy the redis', done => {
+    process.chdir('examples/redis');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js destroy -y').then(res => {
+    cli.exec('true').then(res => {
       if (res.error === null) {
         done();
       } else {

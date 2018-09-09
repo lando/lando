@@ -7,26 +7,18 @@
 'use strict';
 
 // Load modules
-var redis = require('thunk-redis');
-var http = require('http');
-var express = require('express');
-var app = express();
+const redis = require('thunk-redis');
+const http = require('http');
+const express = require('express');
+const app = express();
 
 // Create our server
 http.createServer(app).listen(80);
 
-// Get our redis client
-var cache = redis.createClient(6379, 'cache', {database: 1, usePromise: true});
-
 // Try to connect to redis
-app.get('/', function(req, res) {
-
+app.get('/', (req, res) => {
   res.header('Content-type', 'text/html');
-
-  // Print info about server
-  return cache.info('server')
-  .then(function (data) {
-    return res.end('redis server info: ' + JSON.stringify(data, null, 2));
-  });
-
+  // Get our redis client
+  const cache = redis.createClient(6379, 'cache', {database: 1, usePromise: true});
+  return cache.info('server').then(data => res.end('redis server info: ' + JSON.stringify(data, null, 2)));
 });

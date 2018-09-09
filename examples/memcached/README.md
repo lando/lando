@@ -12,8 +12,7 @@ Run the following commands to get up and running with this example.
 
 ```bash
 # Start up the memcache
-# lando start
-true
+lando start
 ```
 
 Validate things are good
@@ -43,6 +42,5 @@ Run the following commands to clean up
 
 ```bash
 # Destroy the memcache
-# lando destroy -y
-true
+lando destroy -y
 ```
