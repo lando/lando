@@ -43,10 +43,6 @@ services:
 
 # Add some nice command routing
 tooling:
-  # This will allow you to run things like `lando pip install` without needing
-  # to `lando start` first. This is particularly needed for python based projects
-  # since you almost always need to run `pip install` before you can boot up your
-  # app successfully.
   pip:
     service: appserver
   python:

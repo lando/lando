@@ -38,6 +38,19 @@ lando info | grep port | grep 6380
 lando redis-cli --version | grep 3.2.
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```bash
+# Get cache connection info
+lando info
+
+# Confirm redis connection and drop into redis-cli
+lando redis-cli
+```
+
 Destroy things
 --------------
 

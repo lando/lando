@@ -28,6 +28,16 @@ lando ssh database -c "mysql -V | grep 5.7."
 lando ssh database -c "mysql -umysql -ppassword database -e\"quit\""
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```
+# Get DB connection info
+lando info
+```
+
 Destruction
 -----------
 

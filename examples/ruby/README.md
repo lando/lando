@@ -40,6 +40,22 @@ lando gem -v
 lando travis version
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```bash
+# Run ruby cli
+lando ruby -v
+
+# Run bundler things
+lando bundler
+
+# Use travis gem
+lando travis
+```
+
 Nuke everything
 ---------------
 

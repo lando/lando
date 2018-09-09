@@ -35,6 +35,16 @@ lando ssh database -c "mysql -umariadb -pmariadb mariadb -e\"quit\""
 lando ssh database -c "mysql -u root -e \'show variables;\' | grep key_buffer_size | grep 4404"
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```
+# Get DB connection info
+lando info
+```
+
 Destruction
 -----------
 

@@ -35,6 +35,16 @@ lando ssh tswift -c "psql -U trouble trouble -c \'\\\dt\'"
 lando ssh tswift -c "psql -U trouble -c \'SHOW MAX_FILES_PER_PROCESS;\' | grep 999"
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```
+# Get DB connection info
+lando info
+```
+
 Destruction
 -----------
 

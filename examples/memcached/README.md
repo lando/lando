@@ -35,6 +35,16 @@ lando ssh cache -c "memcached -V | grep 1.4."
 lando ssh appserver -c "curl localhost | grep limit_maxbytes | grep 268435456"
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```
+# Get DB connection info
+lando info
+```
+
 Destroy things
 --------------
 

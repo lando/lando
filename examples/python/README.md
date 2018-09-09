@@ -43,6 +43,22 @@ lando pyvenv --help
 lando livereload -h
 ```
 
+Helpful Commands
+----------------
+
+Here is a non-exhaustive list of commands that are relevant to this example.
+
+```bash
+# Run python dev tools
+lando python --version
+lando pip
+lando easy_install
+lando pyvenv
+
+# livereload cli
+lando livereload
+```
+
 Kill the python
 ---------------
 

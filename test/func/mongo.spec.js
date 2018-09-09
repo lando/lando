@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: postgres-example
- * src: examples/postgres
+ * title: mongo-example
+ * src: examples/mongo
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,12 +15,12 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('postgres', () => {
+describe('mongo', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up the postgres', done => {
-    process.chdir('examples/postgres');
+  it('start up the mongo', done => {
+    process.chdir('examples/mongo');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js start').then(res => {
       if (res.error === null) {
@@ -35,10 +35,10 @@ describe('postgres', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify postgres portforward', done => {
-    process.chdir('examples/postgres');
+  it('verify mongo portforward', done => {
+    process.chdir('examples/mongo');
     const cli = new CliTest();
-    cli.exec('docker inspect postgres_tswift_1 | grep HostPort | grep 5444 && node ../../bin/lando.js info | grep port | grep 5444').then(res => {
+    cli.exec('docker inspect mongo_database_1 | grep HostPort | grep 27018 && node ../../bin/lando.js info | grep port | grep 27018').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('postgres', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify the correct version is being used', done => {
-    process.chdir('examples/postgres');
+  it('verify the mongo cli is there and we have the correct mongo version', done => {
+    process.chdir('examples/mongo');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh tswift -c "psql -V | grep 10.3"').then(res => {
+    cli.exec('node ../../bin/lando.js mongo --version | grep v3.5.').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -62,9 +62,9 @@ describe('postgres', () => {
   });
 
   it('verify the database was setup correctly', done => {
-    process.chdir('examples/postgres');
+    process.chdir('examples/mongo');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh tswift -c "psql -U trouble trouble -c \'\\\dt\'"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep db | grep test"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -75,9 +75,9 @@ describe('postgres', () => {
   });
 
   it('verify the custom config file was used', done => {
-    process.chdir('examples/postgres');
+    process.chdir('examples/mongo');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh tswift -c "psql -U trouble -c \'SHOW MAX_FILES_PER_PROCESS;\' | grep 999"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh database -c "cat /tmp/mongod.log && cat /config.yml"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -90,8 +90,8 @@ describe('postgres', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('destroy the postgres', done => {
-    process.chdir('examples/postgres');
+  it('destroy the mongo', done => {
+    process.chdir('examples/mongo');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {
