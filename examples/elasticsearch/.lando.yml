@@ -1,11 +1,6 @@
 # elasticsearch example
 name: elasticsearch
 
-#
-# You need to run `lando npm install` before you run `lando start` for this
-# example to work
-#
-
 # Give me http://elasticsearch.lndo.site
 proxy:
   appserver:
@@ -14,7 +9,7 @@ proxy:
 # Spin up a basic nodes server with elasticsearch backend
 services:
 
-  # Spin up a memcache container called "search"
+  # Spin up a elasticsearch container called "search"
   # NOTE: "search" is arbitrary, you could just as well call this "theboss" or "eljefe"
   search:
 
@@ -48,12 +43,14 @@ services:
   appserver:
     type: node:6.10
     command: npm start
+    install_dependencies_as_me:
+      - npm install
 
 # Add some nice command routing
 tooling:
   yarn:
-    service: appserver_cli
+    service: appserver
   npm:
-    service: appserver_cli
+    service: appserver
   node:
-    service: appserver_cli
+    service: appserver

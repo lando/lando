@@ -5,18 +5,47 @@ This example provides Elasticsearch via a basic NodeJS web application.
 
 See the `.lando.yml` in this directory for Elasticsearch configuration options.
 
-Getting Started
----------------
+Launch the app
+--------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
-# Install node dependencies
-lando npm install
-
-# Start up the example
+# Start up the elastic search example
 lando start
+```
 
-# Check out other commands you can use with this example
-lando
+Validate things
+--------------
+
+Run the following steps to get up and running with this example.
+
+```bash
+# Verify the ES version
+lando ssh appserver -c "curl -XGET search:9200 | grep 5.4."
+
+# Verify we can access ES
+lando ssh appserver -c "curl localhost | grep \"All is well\""
+
+# Verify the portforward
+lando info | grep 9999
+
+# Verify we have the node cli at the correct version
+lando node -v | grep v6.10.
+
+# Verify we have npm
+lando npm -v
+
+# Verify we have yarn
+lando yarn --version
+```
+
+Kill it
+-------
+
+Run these to clean up the example
+
+```bash
+# Destroy the app
+lando destroy -y
 ```

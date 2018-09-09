@@ -35,7 +35,7 @@ describe('dotnet', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify we an access our app', done => {
+  it('verify we can access our app', done => {
     process.chdir('examples/dotnet');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js ssh -c "curl localhost | grep Hello"').then(res => {
