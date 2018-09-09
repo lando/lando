@@ -9,7 +9,6 @@ Starting
 ```bash
 # Start the augmented services example
 lando start
-true
 ```
 
 Testing
@@ -54,5 +53,4 @@ Destroying
 ```bash
 # Destroy the app
 lando destroy -y
-true
 ```
