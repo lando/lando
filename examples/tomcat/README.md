@@ -29,7 +29,7 @@ Run the following commands to confirm things
 
 ```bash
 # Verify tomcat is serving something
-lando ssh appserver -c "curl -I tomcat.lndo.site | grep 200 | grep OK"
+lando ssh appserver -c "curl -I tomcat.lndo.site | grep HTTP | grep 200"
 ```
 
 Helpful Commands
