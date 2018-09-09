@@ -5,25 +5,35 @@ This example provides a very basic `mysql` service.
 
 See the `.lando.yml` in this directory for MySQL configuration options.
 
-Getting Started
----------------
+Boot it
+-------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the example
+# Start up the mysql
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Validation Commands
+-------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to confirm things
 
 ```bash
-# Get DB connection info
-lando info
+# Verify the correct version is being used
+lando ssh database -c "mysql -V | grep 5.7."
+
+# Verify the databases was setup correctly
+lando ssh database -c "mysql -umysql -ppassword database -e\"quit\""
+```
+
+Destruction
+-----------
+
+Run the following commands to clean up
+
+```bash
+# Destroy the mysql
+lando destroy -y
 ```
