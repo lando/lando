@@ -22,6 +22,7 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Verify we are using Lando certs
+sleep 10
 lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep ssl_certificate | grep /certs/cert.pem"
 
 # Verify the webroot is correct
