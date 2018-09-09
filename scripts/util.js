@@ -10,7 +10,7 @@ const path = require('path');
 const path2Bin = path.join('..', '..', 'bin', 'lando.js');
 const startHeaders = ['Start', 'Boot', 'Spin', 'Launch', 'This is the dawning'];
 const testHeaders = ['Test', 'Validat', 'Verif', 'Sanity'];
-const killHeaders = ['Clean', 'Kill', 'Tear', 'Destroy', 'Nuke', 'Blow', 'Burn'];
+const killHeaders = ['Clean', 'Kill', 'Tear', 'Destroy', 'Nuke', 'Blow', 'Burn', 'Purge'];
 
 /*
  * Helper to determine whether we can whitelist a header
