@@ -34,12 +34,10 @@ lando npm -v
 lando yarn --version
 
 # Verify the ES version
-sleep 10
-lando ssh appserver -c "curl -XGET search:9200 | grep 5.4."
+lando ssh appserver -c "curl -XGET http://search:9200 | grep 5.4."
 
 # Verify we can access ES
-sleep 10
-lando ssh appserver -c "curl localhost | grep \"All is well\""
+lando ssh appserver -c "curl http://localhost | grep \"All is well\""
 ```
 
 Kill it
