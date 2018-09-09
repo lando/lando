@@ -3,6 +3,8 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
+  const esd = lando.config.engineScriptsDir;
+  const addScript = lando.utils.services.addScript;
 
   /*
    * Supported versions for ruby
@@ -77,7 +79,11 @@ module.exports = lando => {
     if (!_.has(config, 'command')) ruby.ports = [];
 
     // Generate some certs we can use
-    if (config.ssl) ruby.ports.push('443');
+    if (config.ssl) {
+      ruby.ports.push('443');
+      // Inject add-cert so we can get certs before our app starts
+      ruby.volumes = addScript('add-cert.sh', ruby.volumes, esd, 'scripts');
+    }
 
     // Put it all together
     services[name] = ruby;

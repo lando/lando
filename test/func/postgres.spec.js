@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: redis-example
- * src: examples/redis
+ * title: postgres-example
+ * src: examples/postgres
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,14 +15,14 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('redis', () => {
+describe('postgres', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up the redis', done => {
-    process.chdir('examples/redis');
+  it('start up the postgres', done => {
+    process.chdir('examples/postgres');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js start').then(res => {
+    cli.exec('true').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -35,10 +35,10 @@ describe('redis', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify the app booted up correctly and is showing redis data', done => {
-    process.chdir('examples/redis');
+  it('verify postgres portforward', done => {
+    process.chdir('examples/postgres');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep run_id"').then(res => {
+    cli.exec('docker inspect postgres_tswift_1 | grep HostPort | grep 5444 && node ../../bin/lando.js info | grep port | grep 5444').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('redis', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify redis version', done => {
-    process.chdir('examples/redis');
+  it('verify the correct version is being used', done => {
+    process.chdir('examples/postgres');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep redis_version | grep 3.2."').then(res => {
+    cli.exec('node ../../bin/lando.js ssh tswift -c "psql -V | grep 10.3"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -61,10 +61,10 @@ describe('redis', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify that redis was started in append only mode', done => {
-    process.chdir('examples/redis');
+  it('verify the database was setup correctly', done => {
+    process.chdir('examples/postgres');
     const cli = new CliTest();
-    cli.exec('docker inspect redis_cache_1 | grep appendonly').then(res => {
+    cli.exec('node ../../bin/lando.js ssh tswift -c "psql -U trouble trouble -c \'\\\dt\'"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -74,23 +74,10 @@ describe('redis', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify redis portforward', done => {
-    process.chdir('examples/redis');
+  it('verify the custom config file was used', done => {
+    process.chdir('examples/postgres');
     const cli = new CliTest();
-    cli.exec('docker inspect redis_cache_1 | grep HostPort | grep 6380 && node ../../bin/lando.js info | grep port | grep 6380').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify we have the redis cli', done => {
-    process.chdir('examples/redis');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js redis-cli --version | grep 3.2.').then(res => {
+    cli.exec('node ../../bin/lando.js ssh tswift -c "psql -U trouble -c \'SHOW MAX_FILES_PER_PROCESS;\' | grep 999"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -103,10 +90,10 @@ describe('redis', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('destroy the redis', done => {
-    process.chdir('examples/redis');
+  it('destroy the postgres', done => {
+    process.chdir('examples/postgres');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js destroy -y').then(res => {
+    cli.exec('true').then(res => {
       if (res.error === null) {
         done();
       } else {

@@ -3,6 +3,8 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
+  const esd = lando.config.engineScriptsDir;
+  const addScript = lando.utils.services.addScript;
 
   /*
    * Supported versions for dotnet
@@ -81,6 +83,8 @@ module.exports = lando => {
     // Generate some certs we can use
     if (config.ssl) {
       dotnet.ports.push('443');
+      // Inject add-cert so we can get certs before our app starts
+      dotnet.volumes = addScript('add-cert.sh', dotnet.volumes, esd, 'scripts');
     }
 
     // Put it all together
