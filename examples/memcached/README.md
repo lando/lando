@@ -5,28 +5,44 @@ This example provides Memcached via a NodeJS example.
 
 See the `.lando.yml` in this directory for Memcached configuration options.
 
-Getting Started
----------------
+Start me up
+-----------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Install node dependencies
-lando npm install
-
-# Start up the example
-lando start
-
-# Check out other commands you can use with this example
-lando
+# Start up the memcache
+# lando start
+true
 ```
 
-Helpful Commands
-----------------
+Validate things are good
+------------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to confirm things
 
 ```bash
-# Get memcached connection info
-lando info
+# Verify the app booted up correctly and is showing memcache data
+lando ssh appserver -c "curl localhost | grep server | grep cache:11211"
+
+# Verify memcache portforward
+docker inspect memcached_cache_1 | grep HostPort | grep 11222
+lando info | grep port | grep 11222
+
+# Verify memcache version
+lando ssh cache -c "memcached -V | grep 1.4."
+
+# Verify our custom memory setting was passed in
+lando ssh appserver -c "curl localhost | grep limit_maxbytes | grep 268435456"
+```
+
+Destroy things
+--------------
+
+Run the following commands to clean up
+
+```bash
+# Destroy the memcache
+# lando destroy -y
+true
 ```
