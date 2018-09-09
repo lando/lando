@@ -139,7 +139,7 @@ module.exports = lando => {
       '/usr/bin',
       '/sbin',
       '/bin',
-      '/const/www/.composer/vendor/bin',
+      '/var/www/.composer/vendor/bin',
     ];
 
     // Build the webroot
@@ -161,7 +161,7 @@ module.exports = lando => {
       },
       ports: ['80'],
       volumes: [
-        '/const/www/.composer',
+        '/var/www/.composer',
         '/usr/local/bin',
       ],
       command: config.command.join(' '),
@@ -197,7 +197,7 @@ module.exports = lando => {
 
       // If php version 5.3 we need to set the logs dir
       if (config.version === '5.3') {
-        php.environment.APACHE_LOG_DIR = '/const/log';
+        php.environment.APACHE_LOG_DIR = '/var/log';
       }
 
       // Handle our apache config

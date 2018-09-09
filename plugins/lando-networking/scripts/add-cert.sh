@@ -25,6 +25,8 @@ DNS.2 = ${LANDO_SERVICE_TYPE}
 DNS.3 = ${LANDO_SERVICE_NAME}
 DNS.4 = *.${LANDO_APP_NAME}.internal
 DNS.5 = localhost
+DNS.6 = *.*.${LANDO_DOMAIN}
+DNS.7 = *.*.*.${LANDO_DOMAIN}
 EOF
 
 # Enable SSL if we need to

@@ -76,7 +76,7 @@ module.exports = lando => {
     // Volume mount the drush cache
     const volumesKey = 'services.appserver.overrides.services.volumes';
     const vols = _.get(build, volumesKey, []);
-    vols.push('/const/www/.drush');
+    vols.push('/var/www/.drush');
     _.set(build, volumesKey, vols);
 
     // Return

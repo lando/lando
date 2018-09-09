@@ -34,7 +34,7 @@ module.exports = lando => {
     // Add wp-cli to volumes
     const volumesKey = 'services.appserver.overrides.services.volumes';
     const vols = _.get(build, volumesKey, []);
-    vols.push('/const/www/.wp-cli');
+    vols.push('/var/www/.wp-cli');
     _.set(build, volumesKey, vols);
 
     // Build what we need to get the wp-cli install command

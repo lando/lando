@@ -32,7 +32,7 @@ module.exports = lando => {
     const services = {};
 
     // pip install path
-    const pythonUserBase = '/const/www/.local';
+    const pythonUserBase = '/var/www/.local';
 
     // Path
     // @todo: need to add global gem locaation?
@@ -51,7 +51,7 @@ module.exports = lando => {
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      'python_share:/const/www/.cache/pip',
+      'python_share:/var/www/.cache/pip',
       'python_share:' + pythonUserBase,
     ];
 

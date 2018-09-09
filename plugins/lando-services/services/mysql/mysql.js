@@ -33,7 +33,7 @@ module.exports = lando => {
     // Define config mappings
     const configFiles = {
       confd: '/etc/mysql/conf.d',
-      dataDir: '/const/lib/mysql',
+      dataDir: '/var/lib/mysql',
     };
 
     // GEt creds

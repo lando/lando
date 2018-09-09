@@ -34,7 +34,7 @@ module.exports = lando => {
     const services = {};
 
     // Some basic things
-    const ddd = '/const/lib/postgresql/data';
+    const ddd = '/var/lib/postgresql/data';
     const dataDir = _.get(config, 'overrides.services.environment.PGDATA', ddd);
     const defaultConfFile = '/usr/share/postgresql/postgresql.conf.sample';
     const customConfDir = '/etc/postgresql';

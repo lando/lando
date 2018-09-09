@@ -44,7 +44,7 @@ module.exports = lando => {
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      '/const/www/.asp',
+      '/var/www/.asp',
     ];
 
     // Basic config
