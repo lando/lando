@@ -5,20 +5,37 @@ This example provides a NodeJS based SOLR example.
 
 See the `.lando.yml` in this directory for SOLR configuration options.
 
-Getting Started
----------------
+Start me up
+-----------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Install our node dependencies
-lando npm install
-
-# Start up the example
+# Start up the solr
 lando start
+```
 
-# Check out other commands you can use with this example
-lando
+Validate things are good
+------------------------
+
+Run the following commands to confirm things
+
+```bash
+# Verify we can connect to solr
+lando ssh appserver -c "curl solr.lndo.site | grep status | grep OK"
+
+# Verify we have an admin page
+lando ssh appserver -c "curl -I admin.solr.lndo.site | grep 200 | grep OK"
+
+# Verify solr portforward
+docker inspect solr_index_1 | grep HostPort | grep 9999
+lando info | grep port | grep 9999
+
+# Verify solr version
+lando ssh index -c "solr version | grep 5.5."
+
+# Verify that we have the correct core
+lando ssh appserver -c "curl index:8983/solr/admin/cores | grep name | grep freedom"
 ```
 
 Helpful Commands
@@ -35,4 +52,14 @@ curl solr.lndo.site
 
 # Verify the solr admin site is available
 curl admin.solr.lndo.site/solr/#
+```
+
+Destroy things
+--------------
+
+Run the following commands to clean up
+
+```bash
+# Destroy the solr
+lando destroy -y
 ```
