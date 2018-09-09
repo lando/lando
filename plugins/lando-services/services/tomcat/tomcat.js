@@ -63,7 +63,7 @@ module.exports = lando => {
 
     // Set the default server.xml conf file
     const serverXml = ['tomcat', 'server.xml'];
-    const confVol = buildVolume(serverXml, configFiles.serverxmlfile, scd);
+    let confVol = buildVolume(serverXml, configFiles.serverxmlfile, scd);
 
     // Set the default tomcat-users.xml conf file
     const tomcatUsersXml = ['tomcat', 'tomcat-users.xml'];
