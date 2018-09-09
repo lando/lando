@@ -77,7 +77,7 @@ describe('compose', () => {
   it('verify the default mysql creds', done => {
     process.chdir('examples/compose');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh database -c "mysql -u mysql -ppassword database -e\"quit\""').then(res => {
+    cli.exec('sleep 5 && node ../../bin/lando.js ssh database -c "mysql -u mysql -ppassword database -e\"quit\""').then(res => {
       if (res.error === null) {
         done();
       } else {

@@ -36,6 +36,7 @@ docker inspect compose_appserver_1 | grep docker-php-entrypoint
 docker inspect compose_appserver_1 | grep apache2-foreground
 
 # Verify the default mysql creds
+sleep 5
 lando ssh database -c "mysql -u mysql -ppassword database -e\"quit\""
 ```
 
