@@ -11,7 +11,7 @@ Boot it
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the example
+# Start up the mailhog
 lando start
 ```
 
