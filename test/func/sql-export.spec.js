@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: elasticsearch-example
- * src: examples/elasticsearch
+ * title: sql-export-example
+ * src: examples/sql-export
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,12 +15,12 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('elasticsearch', () => {
+describe('sql-export', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up the elastic search example', done => {
-    process.chdir('examples/elasticsearch');
+  it('boot up a sql export example', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js start').then(res => {
       if (res.error === null) {
@@ -35,10 +35,10 @@ describe('elasticsearch', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify the portforward', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify the databases are up and good', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js info | grep 9999').then(res => {
+    cli.exec('node ../../bin/lando.js ssh database -c "mysql -umysql -pmysql data1 -e\"quit\"" && node ../../bin/lando.js ssh database2 -c "psql -U postgres database -c \'\\\dt\'"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the node cli at the correct version', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify our dynamic commands work', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js node -v | grep v6.10.').then(res => {
+    cli.exec('node ../../bin/lando.js psql -h database2 -V && node ../../bin/lando.js mysql -V').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -61,10 +61,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have npm', done => {
-    process.chdir('examples/elasticsearch');
+  it('import the test mysql file against the default database', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js npm -v').then(res => {
+    cli.exec('node ../../bin/lando.js db-import test.sql').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -74,10 +74,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have yarn', done => {
-    process.chdir('examples/elasticsearch');
+  it('import the test postgres file to the secondary database', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js yarn --version').then(res => {
+    cli.exec('node ../../bin/lando.js db-import -h database2 test2.sql').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -87,10 +87,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify the es version', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify that we have a users table on both databases', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -XGET search:9200 | grep 5.4."').then(res => {
+    cli.exec('node ../../bin/lando.js ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users" && node ../../bin/lando.js ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -100,10 +100,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we can access es', done => {
-    process.chdir('examples/elasticsearch');
+  it('export the contents of the dbs', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep \"All is well\""').then(res => {
+    cli.exec('node ../../bin/lando.js db-export && node ../../bin/lando.js db-export -h database2').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -116,8 +116,24 @@ describe('elasticsearch', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('destroy the app', done => {
-    process.chdir('examples/elasticsearch');
+  it('remove the exported d bs', done => {
+    process.chdir('examples/sql-export');
+    const cli = new CliTest();
+    cli.exec('rm -f data1.*.gz && rm -f database.*.gz').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  // These are tests we need to run to get the app into a state to test
+  // @todo: It would be nice to eventually get these into mocha before hooks
+  // so they run before every test
+  it('blow up the sql export example', done => {
+    process.chdir('examples/sql-export');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {

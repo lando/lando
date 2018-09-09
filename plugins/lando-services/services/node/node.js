@@ -3,6 +3,8 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
+  const esd = lando.config.engineScriptsDir;
+  const addScript = lando.utils.services.addScript;
 
   /*
    * Supported versions for node
@@ -88,6 +90,8 @@ module.exports = lando => {
     // Generate some certs we can use
     if (config.ssl) {
       node.ports.push('443');
+      // Inject add-cert so we can get certs before our app starts
+      node.volumes = addScript('add-cert.sh', node.volumes, esd, 'scripts');
     }
 
     // Add our npm things to run step

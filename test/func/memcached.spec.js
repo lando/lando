@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: elasticsearch-example
- * src: examples/elasticsearch
+ * title: memcached-example
+ * src: examples/memcached
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,12 +15,12 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('elasticsearch', () => {
+describe('memcached', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up the elastic search example', done => {
-    process.chdir('examples/elasticsearch');
+  it('start up the memcache', done => {
+    process.chdir('examples/memcached');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js start').then(res => {
       if (res.error === null) {
@@ -35,10 +35,10 @@ describe('elasticsearch', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify the portforward', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify the app booted up correctly and is showing memcache data', done => {
+    process.chdir('examples/memcached');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js info | grep 9999').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep server | grep cache:11211"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the node cli at the correct version', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify memcache portforward', done => {
+    process.chdir('examples/memcached');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js node -v | grep v6.10.').then(res => {
+    cli.exec('docker inspect memcached_cache_1 | grep HostPort | grep 11222 && node ../../bin/lando.js info | grep port | grep 11222').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -61,10 +61,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have npm', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify memcache version', done => {
+    process.chdir('examples/memcached');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js npm -v').then(res => {
+    cli.exec('node ../../bin/lando.js ssh cache -c "memcached -V | grep 1.4."').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -74,36 +74,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have yarn', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify our custom memory setting was passed in', done => {
+    process.chdir('examples/memcached');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js yarn --version').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify the es version', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -XGET search:9200 | grep 5.4."').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify we can access es', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep \"All is well\""').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep limit_maxbytes | grep 268435456"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -116,8 +90,8 @@ describe('elasticsearch', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('destroy the app', done => {
-    process.chdir('examples/elasticsearch');
+  it('destroy the memcache', done => {
+    process.chdir('examples/memcached');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {

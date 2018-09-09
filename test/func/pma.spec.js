@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: elasticsearch-example
- * src: examples/elasticsearch
+ * title: php-my-admin-example
+ * src: examples/pma
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,12 +15,12 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('elasticsearch', () => {
+describe('pma', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up the elastic search example', done => {
-    process.chdir('examples/elasticsearch');
+  it('start up pma', done => {
+    process.chdir('examples/pma');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js start').then(res => {
       if (res.error === null) {
@@ -35,10 +35,10 @@ describe('elasticsearch', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify the portforward', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify the pma site is working', done => {
+    process.chdir('examples/pma');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js info | grep 9999').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -I pma.lemp.lndo.site | grep 200 | grep OK"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the node cli at the correct version', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify the databases are up and good', done => {
+    process.chdir('examples/pma');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js node -v | grep v6.10.').then(res => {
+    cli.exec('node ../../bin/lando.js ssh database -c "mysql -ulemp -plemp lemp -e\"quit\"" && node ../../bin/lando.js ssh database2 -c "mysql -umariadb -ppassword database -e\"quit\""').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -61,49 +61,10 @@ describe('elasticsearch', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have npm', done => {
-    process.chdir('examples/elasticsearch');
+  it('verify our databases are hooked up to pma', done => {
+    process.chdir('examples/pma');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js npm -v').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify we have yarn', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js yarn --version').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify the es version', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -XGET search:9200 | grep 5.4."').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify we can access es', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep \"All is well\""').then(res => {
+    cli.exec('node ../../bin/lando.js ssh pma -c "env | grep PMA_HOSTS=database,database2"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -116,8 +77,8 @@ describe('elasticsearch', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('destroy the app', done => {
-    process.chdir('examples/elasticsearch');
+  it('destroy pma', done => {
+    process.chdir('examples/pma');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {
