@@ -90,7 +90,7 @@ describe('elasticsearch', () => {
   it('verify the es version', done => {
     process.chdir('examples/elasticsearch');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -XGET http://search:9200 | grep 5.4."').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -XGET search:9200 | grep 5.4."').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -103,7 +103,7 @@ describe('elasticsearch', () => {
   it('verify we can access es', done => {
     process.chdir('examples/elasticsearch');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl http://localhost | grep \"All is well\""').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep \"All is well\""').then(res => {
       if (res.error === null) {
         done();
       } else {
