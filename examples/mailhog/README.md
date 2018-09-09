@@ -5,31 +5,40 @@ This example provides a very basic `mailhog` example built on th Lando LEMP reci
 
 See the `.lando.yml` in this directory for `mailhog` configuration options.
 
-Getting Started
----------------
+Boot it
+-------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
 # Start up the example
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Validation Commands
+-------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to confirm things
 
 ```bash
-# Get DB connection info
-lando info
+# Verify mailhog portforward
+docker inspect mailhog_mailhog_1 | grep HostPort | grep 1026
+lando info | grep 1026
 
-# Visit the main web application and click "SENT TEST MAIL" to send a test mail
-http://mailhog.lndo.site
+# Verify the mhsendmail binary was installed
+lando ssh appserver -c "ls -lsa /usr/local/bin | grep mhsendmail"
 
-# Visit the mailhog UI to comfirm the receipt of test mail
-http://mail.lemp.lndo.site
+# Verify we can send and recieve mail
+lando alert
+lando ssh -c "curl mailhog/api/v2/messages | grep leiaorgana@rebellion.mil"
+```
+
+Destruction
+-----------
+
+Run the following commands to clean up
+
+```bash
+# Destroy the mailhog
+lando destroy -y
 ```
