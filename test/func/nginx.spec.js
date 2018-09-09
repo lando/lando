@@ -38,7 +38,7 @@ describe('nginx', () => {
   it('verify we are using lando certs', done => {
     process.chdir('examples/nginx');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep ssl_certificate | grep /certs/cert.pem"').then(res => {
+    cli.exec('sleep 10 && node ../../bin/lando.js ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep ssl_certificate | grep /certs/cert.pem"').then(res => {
       if (res.error === null) {
         done();
       } else {

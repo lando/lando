@@ -40,7 +40,6 @@ lando ssh appserver -c "curl -XGET search:9200 | grep 5.4."
 # Verify we can access ES
 sleep 10
 lando ssh appserver -c "curl localhost | grep \"All is well\""
-
 ```
 
 Kill it

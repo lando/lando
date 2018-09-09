@@ -35,32 +35,6 @@ describe('elasticsearch', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify the es version', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -XGET search:9200 | grep 5.4."').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify we can access es', done => {
-    process.chdir('examples/elasticsearch');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep \"All is well\""').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
   it('verify the portforward', done => {
     process.chdir('examples/elasticsearch');
     const cli = new CliTest();
@@ -104,6 +78,32 @@ describe('elasticsearch', () => {
     process.chdir('examples/elasticsearch');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js yarn --version').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify the es version', done => {
+    process.chdir('examples/elasticsearch');
+    const cli = new CliTest();
+    cli.exec('sleep 10 && node ../../bin/lando.js ssh appserver -c "curl -XGET search:9200 | grep 5.4."').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify we can access es', done => {
+    process.chdir('examples/elasticsearch');
+    const cli = new CliTest();
+    cli.exec('sleep 10 && node ../../bin/lando.js ssh appserver -c "curl localhost | grep \"All is well\""').then(res => {
       if (res.error === null) {
         done();
       } else {
