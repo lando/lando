@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Sytem edits needed for lando compat
           command: |
-            sudo sysctl -w vm.max_map_count=26214
+            sudo sysctl -w vm.max_map_count=262144
       - run:
           name: Run func test
           command: |
