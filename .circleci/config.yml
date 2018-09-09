@@ -49,6 +49,8 @@ jobs:
             sudo rm -rf /var/cache/apt/archives/lock
             sudo rm -rf /var/lib/dpkg/lock
             sudo dpkg -i /tmp/lando.deb
+            cp -f ~/project/.circleci/lando.yml ~/.lando/config.yml
+            node ~/project/bin/lando.js config
       - run:
           name: Run func test
           command: |

@@ -80,7 +80,7 @@ describe('pma', () => {
   it('destroy pma', done => {
     process.chdir('examples/pma');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js start').then(res => {
+    cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {
         done();
       } else {

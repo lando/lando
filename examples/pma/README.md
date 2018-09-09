@@ -50,5 +50,5 @@ Run the following commands to kill this example.
 
 ```bash
 # Destroy PMA
-lando start
+lando destroy -y
 ```
