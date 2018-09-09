@@ -67,8 +67,7 @@ lando ssh -c "mysql -udrupal7 -pdrupal7 -h database -e \'create database if not 
 lando ssh -c "cd web && drush si --db-url=mysql://drupal7:drupal7@database/drupal7 -y"
 
 # Test that we can visit the homepage
-HP="No front page content has been created yet"
-lando ssh -c "curl appserver |grep $HP"
+lando ssh -c "curl nginx |grep \'No front page content has been created yet\'"
 ```
 
 Cleanup
