@@ -4,8 +4,8 @@
  * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
  * information on how all this magic works
  *
- * title: python-example
- * src: examples/python
+ * title: ruby-example
+ * src: examples/ruby
  */
 // We need these deps to run our tezts
 const chai = require('chai');
@@ -15,12 +15,12 @@ chai.should();
 
 // eslint-disable max-len
 
-describe('python', () => {
+describe('ruby', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('start up this python app', done => {
-    process.chdir('examples/python');
+  it('start up this ruby app', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js start').then(res => {
       if (res.error === null) {
@@ -36,9 +36,9 @@ describe('python', () => {
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
   it('verify we are serving the right thing', done => {
-    process.chdir('examples/python');
+    process.chdir('examples/ruby');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep CAUSELOVINGHIMWASRED"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl localhost | grep TROUBLETROUBLETROUBLE"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -48,10 +48,10 @@ describe('python', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the python cli', done => {
-    process.chdir('examples/python');
+  it('verify we have the ruby cli', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js python --version').then(res => {
+    cli.exec('node ../../bin/lando.js ruby -v').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -61,10 +61,10 @@ describe('python', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the right python version', done => {
-    process.chdir('examples/python');
+  it('verify we have the right ruby version', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js python -V | grep 3.6.').then(res => {
+    cli.exec('node ../../bin/lando.js ruby -v | grep 2.4.').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -74,10 +74,10 @@ describe('python', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have pip cli', done => {
-    process.chdir('examples/python');
+  it('verify we have bundler cli', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js pip -V').then(res => {
+    cli.exec('node ../../bin/lando.js bundler -v').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -87,10 +87,10 @@ describe('python', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the easy install cli', done => {
-    process.chdir('examples/python');
+  it('verify we have the gem cli', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js easy_install --version').then(res => {
+    cli.exec('node ../../bin/lando.js gem -v').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -100,23 +100,10 @@ describe('python', () => {
     process.chdir(path.join('..', '..'));
   });
 
-  it('verify we have the pyvenv cli', done => {
-    process.chdir('examples/python');
+  it('verify we have the travis cli', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js pyvenv --help').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
-  it('verify we have the livereload tool', done => {
-    process.chdir('examples/python');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js livereload -h').then(res => {
+    cli.exec('node ../../bin/lando.js travis version').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -129,8 +116,8 @@ describe('python', () => {
   // These are tests we need to run to get the app into a state to test
   // @todo: It would be nice to eventually get these into mocha before hooks
   // so they run before every test
-  it('kill the python', done => {
-    process.chdir('examples/python');
+  it('kill ruby', done => {
+    process.chdir('examples/ruby');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {

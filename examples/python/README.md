@@ -21,6 +21,9 @@ Verifying
 Validate things!
 
 ```bash
+# Verify we are serving the right thing
+lando ssh appserver -c "curl localhost | grep CAUSELOVINGHIMWASRED"
+
 # Verify we have the python cli
 lando python --version
 
