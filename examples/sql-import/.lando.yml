@@ -63,7 +63,7 @@ tooling:
     options:
       host:
         description: The database service to use
-        default: database
+        default: database2
         alias:
           - h
   'db-import <file>':
