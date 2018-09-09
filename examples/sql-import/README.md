@@ -11,9 +11,8 @@ Start the example
 Run the following commands to get up and running with this example.
 
 ```bash
-# Boot up a db-import example
-# lando start
-true
+# Boot up a sql-import example
+lando start
 ```
 
 Testing the example
@@ -63,12 +62,6 @@ lando db-import test.sql
 
 # Import the test postgres file to the secondary database
 lando db-import -h database2 test2.sql
-
-# Verify that we have a 'users' table on both databases
-# NOTE: This will only work if you've run `lando db-import test.sql` already
-lando mysql data1 -e "show tables;"
-# NOTE: This will only work if you've run `lando db-import -h database2 test2.sql` already
-lando psql -h database2 database -c "\dt"
 ```
 
 Destroying the example
@@ -77,7 +70,6 @@ Destroying the example
 Run the following commands to destroy
 
 ```bash
-# Blow up the db-import example
-# lando destroy -y
-true
+# Blow up the sql-import example
+lando destroy -y
 ```
