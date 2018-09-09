@@ -42,6 +42,10 @@ jobs:
             yarn -v
             node ~/project/bin/lando.js version
       - run:
+          name: Sytem edits needed for lando compat
+          command: |
+            sudo sysctl -w vm.max_map_count=26214
+      - run:
           name: Run func test
           command: |
             node ~/project/scripts/generate-tests.js
