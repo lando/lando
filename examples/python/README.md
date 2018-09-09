@@ -5,34 +5,47 @@ This example provides a very basic `python` web server.
 
 See the `.lando.yml` in this directory for Python configuration options.
 
-Getting Started
----------------
+This is the dawning of the basic python app
+-------------------------------------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
-# Start up the example
+# Start up this python app
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Verifying
+---------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Validate things!
 
 ```bash
-# Run python dev tools
+# Verify we have the python cli
 lando python --version
-lando pip
-lando easy_install
-lando pyvenv
 
-# Use pip to install the livereload cli
-# NOTE: We've already defined a travis command for this in our .lando.yml so
-# once its installed it should run
-lando pip install livereload
-lando livereload
+# Verify we have the right python version
+lando python -V | grep 3.6.
+
+# Verify we have pip cli
+lando pip -V
+
+# Verify we have the easy_install cli
+lando easy_install --version
+
+# Verify we have the pyvenv cli
+lando pyvenv --help
+
+# Verify we have the livereload tool
+lando livereload -h
+```
+
+Kill the python
+---------------
+
+Run the following steps to clean things up
+
+```bash
+# Kill the python
+lando destroy -y
 ```

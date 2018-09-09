@@ -37,35 +37,23 @@ services:
     #
     command: python /app/server.py
 
-    # Install some extra server packages
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install vim -y"
-
-    # Print a message just to demonstrate this
-    # run:
-    # - "cd $LANDO_MOUNT & echo 'Holla!'"
+    # Boot up instructions
+    install_dependencies_as_me:
+      - pip install livereload
 
 # Add some nice command routing
 tooling:
-
-  # Any python service with a defined command (aka not running in cli only mode)
-  # Will also spin up a python cli container called `SERVICENAME_cli` (appserver_cli)
-  # in this example.
-  #
   # This will allow you to run things like `lando pip install` without needing
   # to `lando start` first. This is particularly needed for python based projects
   # since you almost always need to run `pip install` before you can boot up your
   # app successfully.
   pip:
-    service: appserver_cli
+    service: appserver
   python:
-    service: appserver_cli
+    service: appserver
   easy_install:
-    service: appserver_cli
+    service: appserver
   pyvenv:
-    service: appserver_cli
-
-  # This will only be available if you run `lando pip install livereload` first
+    service: appserver
   livereload:
-    service: appserver_cli
+    service: appserver
