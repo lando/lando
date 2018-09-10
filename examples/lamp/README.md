@@ -36,9 +36,30 @@ Sanity checks
 Run these commands to make sure things are right as rain.
 
 ```bash
-# Verifies that true exists in the appserver
-# @todo: replace this with something that makes sense
-lando ssh -c "true"
+# Verify that we are being served by apache
+lando ssh appserver -c "curl -Ik https://localhost | grep Server | grep Apache"
+
+# Verify the php cli exists and has the right version
+lando php -v | grep 5.3.
+
+# Verify the webroot is set correctly
+lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
+
+# Verify we have the xdebug extension
+lando php -m | grep Xdebug
+
+# Verify mysql portforward
+docker inspect lamp_database_1 | grep HostPort | grep 3308
+lando info | grep port | grep 3308
+
+# Verify the databases was setup correctly
+lando ssh database -c "mysql -ulamp -plamp lamp -e\"quit\""
+
+# Verify we have the composer tool
+lando composer --version
+
+# Verify we have the mysql cli
+lando mysql -V
 ```
 
 Nuke the whole god damn thing

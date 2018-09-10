@@ -21,9 +21,6 @@ Validate things are good
 Run the following commands to confirm things
 
 ```bash
-# Verify we can connect to solr
-lando ssh appserver -c "curl solr.lndo.site | grep status | grep OK"
-
 # Verify we have an admin page
 lando ssh appserver -c "curl -I admin.solr.lndo.site | grep 200 | grep OK"
 
@@ -36,6 +33,9 @@ lando ssh index -c "solr version | grep 5.5."
 
 # Verify that we have the correct core
 lando ssh appserver -c "curl index:8983/solr/admin/cores | grep name | grep freedom"
+
+# Verify we can connect to solr
+lando ssh appserver -c "curl solr.lndo.site | grep status | grep OK"
 ```
 
 Helpful Commands

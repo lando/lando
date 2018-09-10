@@ -35,10 +35,101 @@ describe('lamp', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verifies that true exists in the appserver', done => {
+  it('verify that we are being served by apache', done => {
     process.chdir('examples/lamp');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh -c "true"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -Ik https://localhost | grep Server | grep Apache"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify the php cli exists and has the right version', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js php -v | grep 5.3.').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify the webroot is set correctly', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify we have the xdebug extension', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js php -m | grep Xdebug').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify mysql portforward', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('docker inspect lamp_database_1 | grep HostPort | grep 3308 && node ../../bin/lando.js info | grep port | grep 3308').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify the databases was setup correctly', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js ssh database -c "mysql -ulamp -plamp lamp -e\"quit\""').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify we have the composer tool', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js composer --version').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify we have the mysql cli', done => {
+    process.chdir('examples/lamp');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js mysql -V').then(res => {
       if (res.error === null) {
         done();
       } else {

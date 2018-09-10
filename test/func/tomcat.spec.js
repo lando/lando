@@ -38,7 +38,7 @@ describe('tomcat', () => {
   it('verify tomcat is serving something', done => {
     process.chdir('examples/tomcat');
     const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -I tomcat.lndo.site | grep 200 | grep OK"').then(res => {
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl -I tomcat.lndo.site | grep HTTP | grep 200"').then(res => {
       if (res.error === null) {
         done();
       } else {
