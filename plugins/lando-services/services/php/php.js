@@ -4,11 +4,13 @@ module.exports = lando => {
   // Modules
   const _ = lando.node._;
   const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
   const buildVolume = lando.utils.services.buildVolume;
   const path = require('path');
 
   // "Constants"
   const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for php
@@ -83,7 +85,7 @@ module.exports = lando => {
     };
 
     // Merge in defaults
-    _.forEach(typeConfig, function(c) {
+    _.forEach(typeConfig, c => {
       _.merge(c, {
         mount: config._mount,
         phpConf: '/usr/local/etc/php/conf.d/xxx-lando-default.ini',
@@ -193,6 +195,8 @@ module.exports = lando => {
       if (config.ssl) {
         php.ports.push('443');
         defaultConfFile = 'httpd-ssl.conf';
+        // Inject add-cert so we can get certs before our app starts
+        php.volumes = addScript('add-cert.sh', php.volumes, esd, 'scripts');
       }
 
       // If php version 5.3 we need to set the logs dir

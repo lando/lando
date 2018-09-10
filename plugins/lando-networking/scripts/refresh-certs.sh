@@ -2,6 +2,8 @@
 
 set -e
 
+/helpers/add-cert.sh
+
 # Check if update-ca-certificates is installed, if not install it and update our trusted certs
 #
 # The logic here is not 100% solid. We are assuming if you dont have update-ca-certificates available

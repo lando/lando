@@ -11,7 +11,7 @@ Start me up!
 Run the following steps to get up and running with this example.
 
 ```bash
-# Starts up a LEMP stack using lando services
+# Starts up a LAMP stack using lando recipes
 lando start
 ```
 
@@ -42,9 +42,32 @@ Verify things are in order
 Run these commands to make sure things are right as rain.
 
 ```bash
-# Verifies that true exists in the appserver
-# @todo: replace this with something that makes sense
-lando ssh -c "true"
+# Verify that we are being served by apache
+lando ssh appserver -c "curl -I localhost | grep Server | grep Apache"
+
+# Verify the php cli exists and has the right version
+lando php -v | grep 5.6.
+
+# Verify the webroot is set correctly
+lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
+
+# Verify we have the xdebug extension
+lando php -m | grep Xdebug
+
+# Verify the databases was setup correctly
+lando ssh database -c "mysql -ulamp -plamp lamp -e\"quit\""
+
+# Verify we have the composer tool
+lando composer --version
+
+# Verify we have the mysql cli
+lando mysql -V
+
+# Verify our custom php settings
+lando php -i | grep memory_limit | grep 513M
+
+# Verify the custom db file was used
+lando ssh database -c "mysql -u root -e \'show variables;\' | grep key_buffer_size | grep 4026"
 ```
 
 Blowup the app
