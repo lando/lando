@@ -1,5 +1,5 @@
 # Backdrop recipe
-name: backdrop
+name: backdropcms
 
 # Start with the default Backdrop recipe
 recipe: backdrop
