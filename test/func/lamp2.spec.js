@@ -22,7 +22,7 @@ describe('lamp2', () => {
   it('starts up a lamp stack using lando recipes', done => {
     process.chdir('examples/lamp2');
     const cli = new CliTest();
-    cli.exec('true').then(res => {
+    cli.exec('node ../../bin/lando.js start').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -158,7 +158,7 @@ describe('lamp2', () => {
   it('destroys the lamp stack', done => {
     process.chdir('examples/lamp2');
     const cli = new CliTest();
-    cli.exec('true').then(res => {
+    cli.exec('node ../../bin/lando.js destroy -y').then(res => {
       if (res.error === null) {
         done();
       } else {

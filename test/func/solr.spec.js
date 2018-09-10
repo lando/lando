@@ -35,19 +35,6 @@ describe('solr', () => {
   // These tests are the main event
   // @todo: It would be nice to eventually get these into mocha after hooks
   // so they run after every test
-  it('verify we can connect to solr', done => {
-    process.chdir('examples/solr');
-    const cli = new CliTest();
-    cli.exec('node ../../bin/lando.js ssh appserver -c "curl solr.lndo.site | grep status | grep OK"').then(res => {
-      if (res.error === null) {
-        done();
-      } else {
-        done(res.error);
-      }
-    });
-    process.chdir(path.join('..', '..'));
-  });
-
   it('verify we have an admin page', done => {
     process.chdir('examples/solr');
     const cli = new CliTest();
@@ -91,6 +78,19 @@ describe('solr', () => {
     process.chdir('examples/solr');
     const cli = new CliTest();
     cli.exec('node ../../bin/lando.js ssh appserver -c "curl index:8983/solr/admin/cores | grep name | grep freedom"').then(res => {
+      if (res.error === null) {
+        done();
+      } else {
+        done(res.error);
+      }
+    });
+    process.chdir(path.join('..', '..'));
+  });
+
+  it('verify we can connect to solr', done => {
+    process.chdir('examples/solr');
+    const cli = new CliTest();
+    cli.exec('node ../../bin/lando.js ssh appserver -c "curl solr.lndo.site | grep status | grep OK"').then(res => {
       if (res.error === null) {
         done();
       } else {
