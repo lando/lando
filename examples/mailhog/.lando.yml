@@ -32,3 +32,13 @@ services:
     # an open port. Unlike specifying an actual port setting this to true will give you
     # a different port every time you restart your app
     portforward: 1026
+
+# Access the mailhog send cli so we can easily tests things
+tooling:
+  sendmail:
+    service: appserver
+    cmd: /usr/local/bin/mhsendmail
+  alert:
+    service: appserver
+    cmd: php /app/mail.php
+    description: Tell Leia something important

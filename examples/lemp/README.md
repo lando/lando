@@ -42,9 +42,42 @@ Verify things are in order
 Run these commands to make sure things are right as rain.
 
 ```bash
-# Verifies that true exists in the appserver
-# @todo: replace this with something that makes sense
-lando ssh -c "true"
+# Verify that we are being served securely by nginx
+lando ssh appserver -c "curl -Ik https://nginx | grep Server | grep nginx"
+
+# Verify the php cli exists and has the right version
+lando php -v | grep 7.1.
+
+# Verify the webroot is set correctly
+lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
+
+# Verify we have the xdebug extension
+lando php -m | grep Xdebug
+
+# Verify the databases was setup correctly
+lando ssh database -c "mysql -umariadb -ppassword database -e\"quit\""
+
+# Verify mysql portforward
+docker inspect lemp_database_1 | grep HostPort | grep 3332
+lando info | grep port | grep 3332
+
+# Verify we have the composer tool
+lando composer --version
+
+# Verify we have the mysql cli and its using mariadb
+lando mysql -V | grep MariaDB
+
+# Verify we have the mysql cli and its the right version
+lando node -v | grep 6.10
+
+# Verify we have the phplint cli
+lando phplint --version
+
+# Verify our custom php settings
+lando php -i | grep memory_limit | grep 499M
+
+# Verify the custom db file was used
+lando ssh database -c "mysql -u root -e \'show variables;\' | grep key_buffer_size | grep 4026"
 ```
 
 Blowup the app
@@ -53,6 +86,6 @@ Blowup the app
 Run these commands to ensure we clean things up.
 
 ```bash
-# Destroys the LAMP stack
+# Destroys the LEMP stack
 lando destroy -y
 ```

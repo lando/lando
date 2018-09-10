@@ -36,7 +36,7 @@ module.exports = lando => {
       environment: {
         TERM: 'xterm',
       },
-      command: 'docker-entrypoint.sh mongod',
+      command: 'docker-entrypoint.sh mongod --bind_ip 0.0.0.0',
     };
 
     // Handle port forwarding

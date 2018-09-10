@@ -30,6 +30,7 @@ DNS.7 = *.*.*.${LANDO_DOMAIN}
 EOF
 
 # Enable SSL if we need to
+# @todo: we should bake this into the apache service
 if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
   echo "Enabling apache ssl modz"
   cp -rf /etc/apache2/mods-available/ssl* /etc/apache2/mods-enabled || true
