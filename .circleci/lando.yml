@@ -1,0 +1,14 @@
+plugins:
+  - lando-app
+  - lando-core
+  - lando-engine
+  - lando-events
+  - lando-init
+  - lando-networking
+  - lando-proxy
+  - lando-recipes
+  - lando-services
+  - lando-tooling
+stats:
+  - report: false
+    url: https://metrics.devwithlando.io

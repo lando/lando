@@ -1,11 +1,6 @@
 # Redis example
 name: redis
 
-#
-# You need to run `lando npm install` before you run `lando start` for this
-# example to work
-#
-
 # Give me http://redis.lndo.site
 proxy:
   appserver:
@@ -41,15 +36,14 @@ services:
   appserver:
     type: node:6.10
     command: npm start
-    # run:
-    #  - "cd $LANDO_MOUNT & npm install"
+    install_dependencies_as_me:
+      - npm install
 
 # Add some nice command routing
 tooling:
-  # Drop the user into a redis shell
   redis-cli:
     service: cache
   npm:
-    service: appserver_cli
+    service: appserver
   node:
-    service: appserver_cli
+    service: appserver

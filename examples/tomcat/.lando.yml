@@ -20,21 +20,8 @@ services:
       tomcatusersfile: ./config/tomcat-users.xml
       contextfragmentspath: ./config/contextFragments
 
-
     # Optionally specify a command/script to run when you start your tomcat service up.
     #
     # This can be either a string or array.
     #
     # command: tomcat /app/server.rb
-
-    # Install some extra server packages
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install vim -y"
-
-    # Print a message just to demonstrate this
-    # run:
-    # - "cd $LANDO_MOUNT & echo 'Holla!'"
-
-# Add some nice command routing
-# tooling:

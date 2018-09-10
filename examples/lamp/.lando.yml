@@ -52,15 +52,6 @@ services:
     # composer:
     #   drush/drush: "~8"
 
-    # Optionally run the following build steps
-    # run:
-    #  - "cd $LANDO_MOUNT && composer install"
-
-    # Optionally install additional server software
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install netcat -y"
-
   # My database service
   database:
     type: mysql
@@ -75,9 +66,7 @@ tooling:
   composer:
     service: appserver
     description: Run composer commands
-    cmd:
-      - composer
-      - --ansi
+    cmd: composer --ansi
   php:
     service: appserver
   mysql:
