@@ -33,6 +33,11 @@ Functional tests
 
 Lando uses it's own functional testing framework that combines mocha as the test runner, chai for assertions and [command-line-test](https://github.com/macacajs/command-line-test) to make the process of executing commands simpler. Tests are written as specially structured `markdown` files that live in the `examples` folder and contain code blocks. When the suite runs these are scanned, parsed and outputted as mocha tests.
 
+To run the functional test suite, execute:
+```bash
+yarn test:functional
+```
+
 > #### Warning::Pretty sure these will not run on Windows yet
 >
 > SORRY WINDOZE USERS!
