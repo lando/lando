@@ -1,11 +1,6 @@
 # Mongo example
 name: mongo
 
-#
-# You need to run `lando npm install` before you run `lando start` for this
-# example to work
-#
-
 # Give me http://mongo.lndo.site
 proxy:
   appserver:
@@ -37,17 +32,15 @@ services:
   appserver:
     type: node:6.10
     command: npm start
-    globals:
-      gulp-cli: "latest"
+    install_dependencies_as_me:
+      - npm install
 
 # Add some nice command routing
 tooling:
   npm:
-    service: appserver_cli
-  gulp:
     service: appserver
   node:
-    service: appserver_cli
+    service: appserver
   # Add a route to the mongo shell
   mongo:
     service: database

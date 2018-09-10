@@ -20,6 +20,7 @@ jobs:
             curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
             echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
             curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash
+            curl -fsSL -o /tmp/lando.deb http://installer.kalabox.io/lando-latest-dev.deb
       - run:
           name: Update deps
           command: sudo apt-get update -y
@@ -29,7 +30,7 @@ jobs:
             sudo rm -rf /var/lib/apt/lists/lock
             sudo rm -rf /var/cache/apt/archives/lock
             sudo rm -rf /var/lib/dpkg/lock
-            sudo apt-get install -y nodejs yarn
+            sudo apt-get install -y nodejs yarn cgroup-bin curl
       - run:
           name: Install node modules
           command: yarn
@@ -42,9 +43,14 @@ jobs:
             yarn -v
             node ~/project/bin/lando.js version
       - run:
-          name: Sytem edits needed for lando compat
+          name: Install latest lando
           command: |
-            sudo sysctl -w vm.max_map_count=262144
+            sudo rm -rf /var/lib/apt/lists/lock
+            sudo rm -rf /var/cache/apt/archives/lock
+            sudo rm -rf /var/lib/dpkg/lock
+            sudo dpkg -i /tmp/lando.deb
+            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
+            node ~/project/bin/lando.js config
       - run:
           name: Run func test
           command: |
