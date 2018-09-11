@@ -26,10 +26,6 @@ describe('scripts', () => {
       util.bumpVersion('1.0.0').should.equal('1.0.1');
     });
 
-    it('should return version with bumped beta as prerelease type default', () => {
-      util.bumpVersion('1.0.0-beta.1', 'prerelease').should.equal('1.0.0-beta.2');
-    });
-
     it('should return version with bumped specified prerelease when it is specified for prerelease type', () => {
       util.bumpVersion('1.0.0-whatevs.5', 'prerelease', 'whatevs').should.equal('1.0.0-whatevs.6');
     });
