@@ -6,7 +6,7 @@
 const _ = require('lodash');
 const argv = require('yargs').argv;
 const fs = require('fs-extra');
-const Log = require('./../lib/logger.');
+const Log = require('./../lib/logger');
 const log = new Log({logLevelConsole: 'debug'});
 const Shell = require('./../lib/shell');
 const shell = new Shell(log);
