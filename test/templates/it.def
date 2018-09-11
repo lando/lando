@@ -1,7 +1,7 @@
   it('{{=test.describe[0]}}', done => {
     process.chdir('{{=it.run}}');
     const cli = new CliTest();
-    cli.exec('{{=test.commands}}').then(res => {
+    cli.exec('sleep 3 && {{=test.commands}}').then(res => {
       if (res.error === null) {
         done();
       } else {
