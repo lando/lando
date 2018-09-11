@@ -1,0 +1,30 @@
+# Pantheon recipe
+name: pantheon
+
+# Start with the default Pantheon recipe
+recipe: pantheon
+
+# Configure the Pantheon recipe
+config:
+
+  # Optionally specify the type of Pantheon site this is. If ommitted this will
+  # default to `drupal`. You can use the following options
+  #
+  #   - `backdrop`
+  #   - `drupal` (for Drupal 6 and Drupal 7 sites)
+  #   - `drupal8`
+  #   - `wordpress`
+  #
+  framework: drupal8
+
+  # Optionally activate xdebug
+  #
+  # If you are having trouble getting xdebug to work please see:
+  # https://docs.devwithlando.io/services/php.html#using-xdebug
+  xdebug: true
+
+  # Optionally specify the site id, name and environment for your Pantheon site
+  #
+  # This is helpful for running terminus commands or performing similar operations
+  id: 7587b3ea-95b6-44ab-b36b-6ebd9c3e9866
+  site: kalabox-drupal7
