@@ -185,15 +185,13 @@ exports.getLegacyRouteUrls = (route, name, ports, domain) => {
   // Return an array of parsed hostnames
   const routes = _.map(hostnames, hostname => {
     // Optional port TBD
-    const port = '';
-
+    let port = '';
     // Determine whether we need to add a port
     if (!route.secure && ports.http !== '80') {
       port = ':' + ports.http;
     } else if (route.secure && ports.https !== '443') {
       port = ':' + ports.https;
     }
-
     // Return the completed URL
     return protocol + hostname + port;
   });
