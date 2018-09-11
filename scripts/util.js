@@ -76,7 +76,7 @@ const trimHeaders = datum => {
 /*
  * Bumps a version by release type
  */
-exports.bumpVersion = (version, type = 'patch', prerelease = 'beta') => {
+exports.bumpVersion = (version, type = 'patch', prerelease = 'rc') => {
   switch (type) {
     case 'prerelease':
       return semver.inc(version, 'prerelease', prerelease);
