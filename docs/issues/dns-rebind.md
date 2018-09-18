@@ -9,3 +9,5 @@ If you can't or don't want to remove this protection, you can alternatively:
 
 1.  Use the steps in [Working Offline](./../config/proxy.html#working-offline-or-using-custom-domains) to bypass.
 2.  [Disable proxying](./../config/proxy.html#configuration) and rely on the Lando produced `localhost` address.
+
+Note: Newer versions of Lando will strip the dashes in your application name to create the url. If you have a project that was built with an old version of Lando and had dashes on the url the issue may be caused by this. For example, if you set the option trusted_hosts_patters on Drupal with the url with dashes you'll have issues when trying to run with lando.
