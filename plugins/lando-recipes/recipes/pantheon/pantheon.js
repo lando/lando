@@ -1,49 +1,44 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Load in our init method
   lando.init.add('pantheon', require('./init')(lando));
 
   // Modules
-  var _ = lando.node._;
-  var crypto = require('crypto');
-  var fs = lando.node.fs;
-  var path = require('path');
+  const _ = lando.node._;
+  const crypto = require('crypto');
+  const fs = lando.node.fs;
+  const path = require('path');
 
   // Lando things
-  var PantheonApiClient = require('./client');
-  var api = new PantheonApiClient(lando.log);
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const PantheonApiClient = require('./client');
+  const api = new PantheonApiClient(lando.log);
+  const addConfig = lando.utils.services.addConfig;
+  const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var configDir = path.join(lando.config.servicesConfigDir, 'pantheon');
+  const configDir = path.join(lando.config.servicesConfigDir, 'pantheon');
 
   /*
    * Hash helper
    */
-  var getHash = function(u) {
-    return crypto.createHash('sha256').update(u).digest('hex');
-  };
+  const getHash = u => crypto.createHash('sha256').update(u).digest('hex');
 
   /*
    * Event based logix
    */
-  lando.events.on('post-instantiate-app', function(app) {
-
+  lando.events.on('post-instantiate-app', app => {
     // Cache key helpers
-    var siteMetaDataKey = 'site.meta.';
+    const siteMetaDataKey = 'site.meta.';
 
     // Set new terminus key into the cache
-    app.events.on('pre-terminus', function() {
+    app.events.on('pre-terminus', () => {
       if (_.get(lando.cli.argv()._, '[1]') === 'auth:login') {
         if (_.has(lando.cli.argv(), 'machineToken')) {
-
           // Build the cache
           // @TODO: what do do about email?
-          var token = _.get(lando.cli.argv(), 'machineToken');
-          var data = {token: token};
+          const token = _.get(lando.cli.argv(), 'machineToken');
+          const data = {token: token};
 
           // Mix in any existing cache data
           if (!_.isEmpty(lando.cache.get(siteMetaDataKey + app.name))) {
@@ -52,41 +47,38 @@ module.exports = function(lando) {
 
           // Reset the cache
           lando.cache.set(siteMetaDataKey + app.name, data, {persist: true});
-
         }
       }
     });
 
     // Destroy the cached site data
-    app.events.on('post-destroy', function() {
+    app.events.on('post-destroy', () => {
       lando.cache.remove(siteMetaDataKey + app.name);
     });
-
   });
 
   /*
-   * Set various pantheon environmental variables
+   * Set constious pantheon environmental constiables
    */
-  var env = function(config) {
-
+  const env = config => {
     // Framework specific stuff
-    var frameworkSpec = {
+    const frameworkSpec = {
       drupal: {
-        filemount: 'sites/default/files'
+        filemount: 'sites/default/files',
       },
       drupal8: {
-        filemount: 'sites/default/files'
+        filemount: 'sites/default/files',
       },
       wordpress: {
-        filemount: 'wp-content/uploads'
+        filemount: 'wp-content/uploads',
       },
       backdrop: {
-        filemount: 'files'
-      }
+        filemount: 'files',
+      },
     };
 
     // Pressflow and backdrop database settings
-    var pantheonDatabases = {
+    const pantheonDatabases = {
       default: {
         default: {
           driver: 'mysql',
@@ -95,16 +87,16 @@ module.exports = function(lando) {
           username: 'pantheon',
           password: 'pantheon',
           host: 'database',
-          port: 3306
-        }
-      }
+          port: 3306,
+        },
+      },
     };
 
     // Construct a hashsalt for Drupal 8
-    var drupalHashSalt = getHash(JSON.stringify(pantheonDatabases));
+    const drupalHashSalt = getHash(JSON.stringify(pantheonDatabases));
 
     // Some Default settings
-    var settings = {
+    const settings = {
       databases: pantheonDatabases,
       conf: {
         'pressflow_smart_start': true,
@@ -124,14 +116,13 @@ module.exports = function(lando) {
         'file_directory_temp': '/tmp',
         'css_gzip_compression': false,
         'js_gzip_compression': false,
-        'page_compression': false
+        'page_compression': false,
       },
-      'drupal_hash_salt': drupalHashSalt,
-      'config_directory_name': 'config'
+      drupal_hash_salt: drupalHashSalt,
+      config_directory_name: 'config',
     };
 
-    var env = {
-
+    const env = {
       // Basics
       FRAMEWORK: config.framework,
       DOCROOT: '/',
@@ -172,30 +163,26 @@ module.exports = function(lando) {
       // Terminus
       // @todo: i am pretty sure these dont do anything yet
       TERMINUS_SITE: _.get(config, 'site', config._app),
-      TERMINUS_ENV: _.get(config, 'env', 'dev')
-      //TERMINUS_ORG: ''
-      //TERMINUS_USER="devuser@pantheon.io"
-
+      TERMINUS_ENV: _.get(config, 'env', 'dev'),
+      // TERMINUS_ORG: ''
+      // TERMINUS_USER="devuser@pantheon.io"
     };
 
     // Return the env
     return env;
-
   };
 
   /*
    * Helper to mix in the correct tooling
    */
-  var tooling = function(config) {
-
+  const tooling = config => {
     // Helper func to get envs
-    var getEnvs = function(done, nopes) {
-
+    const getEnvs = (done, nopes) => {
       // Envs to remove
-      var restricted = nopes || [];
+      const restricted = nopes || [];
 
       // Get token
-      var token = _.get(lando.cache.get('site.meta.' + config._app), 'token');
+      const token = _.get(lando.cache.get('site.meta.' + config._app), 'token');
 
       // If token does not exist prmpt for auth
       if (_.isEmpty(token)) {
@@ -204,7 +191,7 @@ module.exports = function(lando) {
       }
 
       // Validate we have a token and siteid
-      _.forEach([token, config.id], function(prop) {
+      _.forEach([token, config.id], prop => {
         if (_.isEmpty(prop)) {
           lando.log.error('Error getting token or siteid.', prop);
           throw new Error('Make sure you run: lando init pantheon');
@@ -215,36 +202,31 @@ module.exports = function(lando) {
       api.auth(token).then(authorizedApi => authorizedApi.getSiteEnvs(config.id))
 
       // Parse the evns into choices
-      .map(function(env) {
-        return {name: env.id, value: env.id};
-      })
+      .map(env => ({name: env.id, value: env.id}))
 
       // Filter out any restricted envs
-      .filter(function(env) {
-        return (!_.includes(restricted, env.value));
-      })
+      .filter(env => !_.includes(restricted, env.value))
 
       // Done
-      .then(function(envs) {
+      .then(envs => {
         envs.push({name: 'none', value: 'none'});
         done(null, envs);
       });
-
     };
 
     // Add in default pantheon tooling
-    var tools = {
+    const tools = {
       'redis-cli': {
-        service: 'cache'
+        service: 'cache',
       },
-      varnishadm: {
+      'varnishadm': {
         service: 'edge',
-        user: 'root'
+        user: 'root',
       },
-      terminus: {
+      'terminus': {
         service: 'appserver',
-        needs: ['database']
-      }
+        needs: ['database'],
+      },
     };
 
     // Add in the pull command
@@ -265,8 +247,8 @@ module.exports = function(lando) {
               getEnvs(this.async());
             },
             default: config.env || 'dev',
-            weight: 600
-          }
+            weight: 600,
+          },
         },
         database: {
           description: 'The environment to get the db from or [none]',
@@ -279,8 +261,8 @@ module.exports = function(lando) {
               getEnvs(this.async());
             },
             default: config.env || 'dev',
-            weight: 601
-          }
+            weight: 601,
+          },
         },
         files: {
           description: 'The environment to get the files from or [none]',
@@ -293,16 +275,16 @@ module.exports = function(lando) {
               getEnvs(this.async());
             },
             default: config.env || 'dev',
-            weight: 602
-          }
+            weight: 602,
+          },
         },
         rsync: {
           description: 'Rsync the files, good for subsequent pulls',
           passthrough: true,
           boolean: true,
-          default: false
-        }
-      }
+          default: false,
+        },
+      },
     };
 
     // Add in the push command
@@ -312,6 +294,21 @@ module.exports = function(lando) {
       cmd: '/helpers/push.sh',
       needs: ['database'],
       options: {
+        code: {
+          description: 'The environment to push the code to or [none]',
+          default: 'dev',
+          passthrough: true,
+          alias: ['c'],
+          interactive: {
+            type: 'list',
+            message: 'Push code to?',
+            choices: function() {
+              getEnvs(this.async(), ['test', 'live']);
+            },
+            default: 'dev',
+            weight: 500,
+          },
+        },
         message: {
           description: 'A message describing your change',
           passthrough: true,
@@ -320,8 +317,11 @@ module.exports = function(lando) {
             type: 'string',
             message: 'What did you change?',
             default: 'My awesome Lando-based changes',
-            weight: 600
-          }
+            weight: 600,
+            when: function(answers) {
+              return answers.code !== 'none' && lando.cli.argv().code !== 'none';
+            },
+          },
         },
         database: {
           description: 'The environment to push the db to or [none]',
@@ -334,8 +334,8 @@ module.exports = function(lando) {
               getEnvs(this.async(), ['test', 'live']);
             },
             default: 'none',
-            weight: 601
-          }
+            weight: 601,
+          },
         },
         files: {
           description: 'The environment to push the files to or [none]',
@@ -348,10 +348,10 @@ module.exports = function(lando) {
               getEnvs(this.async(), ['test', 'live']);
             },
             default: 'none',
-            weight: 602
-          }
-        }
-      }
+            weight: 602,
+          },
+        },
+      },
     };
 
     // Add in the switch command
@@ -364,116 +364,107 @@ module.exports = function(lando) {
         'no-db': {
           description: 'Do not switch the database',
           boolean: true,
-          default: false
+          default: false,
         },
         'no-files': {
           description: 'Do not switch the files',
           boolean: true,
-          default: false
-        }
-      }
+          default: false,
+        },
+      },
     };
 
     // Return the tools
     return tools;
-
   };
 
   /*
    * Helper to return proxy config
    */
-  var proxy = function(name) {
+  const proxy = name => {
     return {
       edge: [
-        [name, lando.config.proxyDomain].join('.')
-      ]
+        [name, lando.config.proxyDomain].join('.'),
+      ],
     };
   };
 
   /*
    * Add in redis
    */
-  var redis = function(version) {
-
+  const redis = version => {
     // The redis config
-    var config = {
+    const config = {
       type: version,
       persist: true,
-      portforward: true
+      portforward: true,
     };
 
     // Return the redis service
     return config;
-
   };
 
   /*
-   * Add in varnish
+   * Add in constnish
    */
-  var varnish = function(version) {
-
-    // The varnish config
-    var config = {
+  const varnish = version => {
+    // The constnish config
+    const config = {
       type: version,
       backends: ['nginx'],
+      skipCheck: true,
       ssl: true,
-      vcl: path.join(configDir, 'pantheon.vcl')
+      vcl: path.join(configDir, 'pantheon.vcl'),
     };
-
-    // Return the varnish service
+    // Return the constnish service
     return config;
-
   };
 
   /*
    * Add in solr
    */
-  var solr = function(version) {
-
+  const solr = version => {
     // The solr config
-    var config = {
+    const config = {
       type: version,
       port: 449,
       overrides: {
         services: {
           image: 'devwithlando/pantheon-index:3.6-4',
           ports: ['449'],
-          command: '/bin/bash /start.sh'
-        }
-      }
+          command: '/bin/bash /start.sh',
+        },
+      },
     };
 
     // Return the solr service
     return config;
-
   };
 
   /*
    * Mixin other needed pantheon volume based config like prepend.php
    */
-  var pVols = function(volumes) {
-
+  const pVols = volumes => {
     // The where and what to mount
-    var mounts = [
+    const mounts = [
       '/srv/includes:prepend.php',
       '/etc/nginx:nginx.conf',
       '/helpers:lockr.sh',
       '/helpers:pantheon.sh',
       '/helpers:pull.sh',
       '/helpers:push.sh',
-      '/helpers:switch.sh'
+      '/helpers:switch.sh',
     ];
 
     // Loop
-    _.forEach(mounts, function(mount) {
-
+    _.forEach(mounts, mount => {
       // Break up the mount
-      var container = mount.split(':')[0];
-      var file = mount.split(':')[1];
+      const container = mount.split(':')[0];
+      const file = mount.split(':')[1];
 
       // Get the paths
-      var local = path.join(configDir, file);
-      var remote = [container, file].join('/');
+      const local = path.join(configDir, file);
+      const remote = [container, file].join('/');
 
       // Add the file
       volumes = addConfig(buildVolume(local, remote), volumes);
@@ -484,22 +475,19 @@ module.exports = function(lando) {
 
     // Return the new volumes
     return volumes;
-
   };
 
   /*
    * Mixin settings from pantheon.ymls
    */
-  var mergePyaml = function(configFile) {
-
+  const mergePyaml = configFile => {
     // Start with a config collector
-    var config = {};
+    const config = {};
 
     // Check pantheon.yml settings if needed
     if (fs.existsSync(configFile)) {
-
       // Get the pantheon config
-      var pconfig = lando.yaml.load(configFile);
+      const pconfig = lando.yaml.load(configFile);
 
       // Set a php version
       if (_.has(pconfig, 'php_version')) {
@@ -510,18 +498,16 @@ module.exports = function(lando) {
       if (_.has(pconfig, 'web_docroot')) {
         config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
       }
-
     }
 
     // Return settings
     return config;
-
   };
 
   /*
    * Helper to set default php version based on framework
    */
-  var phpVersion = function(framework) {
+  const phpVersion = framework => {
     switch (framework) {
       case 'backdrop': return '5.6';
       case 'drupal': return '5.6';
@@ -534,8 +520,7 @@ module.exports = function(lando) {
   /*
    * Build out Pantheon
    */
-  var build = function(name, config) {
-
+  const build = (name, config) => {
     // Set versions to match pantheon
     config.via = 'nginx:1.8';
     config.database = 'mariadb:10.0';
@@ -554,18 +539,18 @@ module.exports = function(lando) {
     config.php = phpVersion(config.framework);
 
     // Define our possible pantheon.ymls
-    var pyamls = [
+    const pyamls = [
       path.join(config._root, 'pantheon.upstream.yml'),
-      path.join(config._root, 'pantheon.yml')
+      path.join(config._root, 'pantheon.yml'),
     ];
 
     // Mixin pyamls if applicable
-    _.forEach(pyamls, function(pyaml) {
+    _.forEach(pyamls, pyaml => {
       config = _.merge(config, mergePyaml(pyaml, config));
     });
 
     // Normalize because 7.0 gets handled strangely by js-yaml
-    if (config.php === 7) { config.php = '7.0'; }
+    if (config.php === 7) config.php = '7.0';
 
     // If this is Drupal8 let's add in drupal console and reset drush so it
     // globally installs Drush 8 FOR NOW
@@ -576,36 +561,36 @@ module.exports = function(lando) {
     }
 
     // Get the lando/pantheon base recipe/framework
-    var base = _.get(config, 'framework', 'drupal7');
+    let base = _.get(config, 'framework', 'drupal7');
 
     // If the pantheon framework is drupal, then use lando d7 recipe
-    if (base === 'drupal') { base = 'drupal7'; }
+    if (base === 'drupal') base = 'drupal7';
 
     // Delegate and use a recipe
-    var build = lando.recipes.build(name, base, config);
+    const build = lando.recipes.build(name, base, config);
 
     // Set the pantheon environment
-    var envPath = 'services.appserver.overrides.services.environment';
+    const envPath = 'services.appserver.overrides.services.environment';
     _.set(build, envPath, env(config));
 
     // Mount additonal helpers like prepend.php
-    var volPath = 'services.appserver.overrides.services.volumes';
-    var vols = _.get(build, volPath, []);
+    const volPath = 'services.appserver.overrides.services.volumes';
+    const vols = _.get(build, volPath, []);
     _.set(build, volPath, pVols(vols));
 
     // Overide our default php images with special pantheon ones
-    var imagePath = 'services.appserver.overrides.services.image';
-    var image = 'devwithlando/pantheon-appserver:' + config.php;
+    const imagePath = 'services.appserver.overrides.services.image';
+    const image = 'devwithlando/pantheon-appserver:' + config.php;
     _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
-    var dependsPath = 'services.appserver.overrides.services.depends_on';
+    const dependsPath = 'services.appserver.overrides.services.depends_on';
     _.set(build, dependsPath, ['index']);
 
     // Add in our pantheon script
     // NOTE: We do this here instead of in /scripts because we need to gaurantee
     // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.run_as_root_internal = ['/helpers/pantheon.sh'];
+    build.services.appserver.install_dependencies_as_root_internal = ['/helpers/pantheon.sh'];
 
     // Mix in our additional services
     build.services.cache = redis(config.cache);
@@ -619,41 +604,37 @@ module.exports = function(lando) {
     build.tooling = _.merge(build.tooling, tooling(config));
 
     // Determine the service to run cli things on
-    var unsupportedCli = (config.php === '5.3' || config.php === 5.3);
-    var cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
+    const unsupportedCli = (config.php === '5.3' || config.php === 5.3);
+    const cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
 
     // Build an additional cli container if we are running unsupported
     if (unsupportedCli) {
-
       // Build out a CLI container and modify as appropriate
-      var cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
+      const cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
       build.services[cliService] = _.cloneDeep(build.services.appserver);
       build.services[cliService].type = 'php:5.5';
       build.services[cliService].via = 'cli';
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.run_internal;
+      delete build.services.appserver.install_dependencies_as_me_internal;
 
       // Override some tooling things
       build.tooling.terminus.service = cliService;
       build.tooling.pull.service = cliService;
       build.tooling.push.service = cliService;
-
     }
 
     // Login with terminus if we have a token
-    var cache = lando.cache.get('site.meta.' + config._app);
+    const cache = lando.cache.get('site.meta.' + config._app);
     if (_.has(cache, 'token')) {
-      var token = _.get(cache, 'token');
-      var terminusLogin = 'terminus auth:login --machine-token=' + token;
-      build.services[cliService].run_internal.push(terminusLogin);
-      build.services[cliService].run_internal.push('/helpers/lockr.sh');
+      const token = _.get(cache, 'token');
+      const terminusLogin = 'terminus auth:login --machine-token=' + token;
+      build.services[cliService].install_dependencies_as_me_internal.push(terminusLogin);
     }
 
     // Return the things
     return build;
-
   };
 
   // Return the things
@@ -661,7 +642,6 @@ module.exports = function(lando) {
     build: build,
     configDir: __dirname,
     webroot: false,
-    name: false
+    name: false,
   };
-
 };

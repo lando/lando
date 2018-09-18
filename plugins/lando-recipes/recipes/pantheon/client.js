@@ -30,8 +30,10 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
  * Creates a new api client instance.
  * @todo: add some validation around the session eg throw an error if we make a request
  * with a unauthorized client
+ * @todo: we can remove the mode from here and just extend this in other things
  */
 module.exports = class PantheonApiClient {
+  // @todo: remove mode because we extend this in PLD
   constructor(log = new Log(), session = '', mode = 'node') {
     this.log = log;
     this.session = session;

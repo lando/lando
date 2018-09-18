@@ -7,31 +7,30 @@
 'use strict';
 
 // Load modules
-var http = require('http');
-var express = require('express');
-var app = express();
-var Db = require('mongodb').Db;
-var Server = require('mongodb').Server;
-var assert = require('assert');
-var db = new Db('test', new Server('database', 27017));
+const http = require('http');
+const express = require('express');
+const app = express();
+const Db = require('mongodb').Db;
+const Server = require('mongodb').Server;
+const assert = require('assert');
 
 // Create our servers
 http.createServer(app).listen(80);
 
 // Try to connect to memcachef
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.header('Content-type', 'text/html');
 
   // Establish connection to db
-  db.open(function(err, db) {
+  const db = new Db('test', new Server('database', 27017));
+  db.open((err, db) => {
     assert.equal(null, err);
 
-    db.stats(function(err, stats) {
+    db.stats((err, stats) => {
       assert.equal(null, err);
       assert.ok(stats !== null);
       db.close();
       return res.end(JSON.stringify(stats));
     });
   });
-
 });

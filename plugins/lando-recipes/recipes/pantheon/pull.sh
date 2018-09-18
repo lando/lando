@@ -56,7 +56,7 @@ while (( "$#" )); do
         shift 2
       fi
       ;;
-    --rsync)
+    --rsync|--rsync=*)
         RSYNC=$1
         shift
       ;;
@@ -169,7 +169,7 @@ if [ "$DATABASE" != "none" ]; then
   # Do some post DB things on WP
   if [ "$FRAMEWORK" == "wordpress" ]; then
     echo "Doing the ole post-migration search-replace on WordPress..."
-    wp search-replace --path="$LANDO_WEBROOT" "$ENV-$SITE.pantheonsite.io" "$LANDO_APP_NAME.lndo.site"
+    wp search-replace --path="$LANDO_WEBROOT" "$ENV-$SITE.pantheonsite.io" "${LANDO_APP_NAME}.${LANDO_DOMAIN}"
   fi
 
 fi

@@ -11,17 +11,6 @@ proxy:
 
 # Add in phpmyadmin
 services:
-
-  # Override the appsever to add some environment variables and install an extra VIM package
-  appserver:
-    run_as_root:
-      - apt-get update -y
-      - apt-get install vim -y
-    overrides:
-      services:
-        environment:
-          MYCONFIGVAR1: secretpasscode
-
   # Add in another database to help with this example
   database2:
     type: mariadb
@@ -65,8 +54,3 @@ services:
             # PMA_USER: define username to use for config authentication method
             # PMA_PASSWORD: define password to use for config authentication method
             # PMA_ABSOLUTE_URI: define user-facing URI
-
-# Add a lando vim command
-tooling:
-  vim:
-    service: appserver

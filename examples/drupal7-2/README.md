@@ -34,3 +34,48 @@ lando info
 cd web
 lando drush status
 ```
+
+Bootup
+------
+
+Start up the Drupal 7 example app
+
+```bash
+# Start the Drupal 7 example recipe
+lando start
+```
+
+Testing
+-------
+
+Test the Drupal 7 example
+
+```bash
+# Test downloading Drupal 7 code via composer
+lando composer install
+
+# Test that we got a drupal 7 codebase
+lando ssh -c "ls web |grep index.php"
+
+# Test removing a database
+lando ssh -c "mysql -udrupal7 -pdrupal7 -h database -e \'drop database if exists drupal7;\'"
+
+# Test creating a database
+lando ssh -c "mysql -udrupal7 -pdrupal7 -h database -e \'create database if not exists drupal7;\'"
+
+# Test installing Drupal 7 via drush
+lando ssh -c "cd web && drush si --db-url=mysql://drupal7:drupal7@database/drupal7 -y"
+
+# Test that we can visit the homepage
+lando ssh -c "curl nginx |grep \'No front page content has been created yet\'"
+```
+
+Cleanup
+-------
+
+Remove the test app
+
+```bash
+# Destroy the test app
+lando destroy -y
+```

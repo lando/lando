@@ -1,119 +1,182 @@
 'use strict';
 
 // Modules
-var _ = require('lodash');
-var fs = require('fs-extra');
-var path = require('path');
+const _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const Promise = require('./../../../lib/promise');
+const Shell = require('./../../../lib/shell');
+const shell = new Shell();
 
-/**
+/*
  * Translate a name for use by docker-compose eg strip `-` and `.` and
  * @TODO: Eventually we want to get rid of this since it should only happen once
  * on the appName itself
- *
- * @since 3.0.0
- * @alias 'lando.utils.engine.dockerComposify'
  */
-exports.dockerComposify = function(data) {
-  return _.toLower(data).replace(/_|-|\.+/g, '');
-};
+exports.dockerComposify = data => _.toLower(data).replace(/_|-|\.+/g, '');
 
 /*
  * Escapes any spaces in a command.
- *
- * @since 3.0.0
- * @param {Array} s - A command as elements of an Array or a String.
- * @return {String} The space escaped cmd.
- * @example
- *
- * // Escape the spaces in the cmd
- * var escapedCmd = lando.shell.escSpaces(['git', 'commit', '-m', 'my message']);
  */
-exports.escSpaces = function(s, platform) {
+exports.escSpaces = shell.escSpaces;
 
-  var p = platform || process.platform;
-
-  if (_.isArray(s)) {
-    s = s.join(' ');
-  }
-  if (p === 'win32') {
-    return s.replace(/ /g, '^ ');
-  }
-  else {
-    return s.replace(/ /g, '\ ');
-  }
-};
-
-/**
+/*
  * Helper to return a valid id from app data
- *
- * @since 3.0.0
- * @alias 'lando.utils.engine.getId'
  */
-exports.getId = function(c) {
-  return c.cid || c.id || c.containerName || c.containerID || c.name;
+exports.getId = c => c.cid || c.id || c.containerName || c.containerID || c.name;
+
+/*
+ * Extracts some docker inspect data and translates it into useful lando things
+ */
+exports.toLandoContainer = ({Labels, Id}) => {
+  // Get name of docker container.
+  const app = Labels['com.docker.compose.project'];
+  const service = Labels['com.docker.compose.service'];
+  const num = Labels['com.docker.compose.container-number'];
+  const run = Labels['com.docker.compose.oneoff'];
+  const lando = Labels['io.lando.container'];
+  const special = Labels['io.lando.service-container'];
+
+  // Add 'run' the service if this is a oneoff container
+  if (run === 'True') service = [service, 'run'].join('_');
+
+  // Build generic container.
+  return {
+    id: Id,
+    service: service,
+    name: [app, service, num].join('_'),
+    app: (special !== 'TRUE') ? app : undefined,
+    kind: (special !== 'TRUE') ? 'app' : 'service',
+    lando: (lando === 'TRUE') ? true : false,
+    instance: Labels['io.lando.id'] || 'unknown',
+  };
 };
 
-/**
+/*
  * We might have datum but we need to wrap in array so Promise.each knows
  * what to do
- *
- * @since 3.0.0
- * @alias 'lando.utils.engine.normalizer'
  */
-exports.normalizer = function(data) {
-  if (!Array.isArray(data)) {
-    data = [data];
-  }
-  return data;
+exports.normalizer = data => (!_.isArray(data)) ? [data] : data;
+
+/*
+ * Helper to make a file executable
+ */
+exports.makeExecutable = (files, base = process.cwd()) => {
+  _.forEach(files, file => {
+    fs.chmodSync(path.join(base, file), '755');
+  });
 };
 
-/**
+/*
  * Helper to move config from lando to a mountable directory
- *
- * @since 3.0.0
- * @alias 'lando.utils.engine.moveConfig'
  */
-exports.moveConfig = function(from, to) {
+exports.moveConfig = (src, dest) => {
+  // Copy opts and filter out all js files
+  // We dont want to give the false impression that you can edit the JS
+  const copyOpts = {
+    overwrite: true,
+    filter: file => (path.extname(file) !== '.js'),
+  };
 
-   // Copy opts and filter out all js files
-   // We dont want to give the false impression that you can edit the JS
-   var copyOpts = {
-     overwrite: true,
-     filter: function(file) {
-       return (path.extname(file) !== '.js');
-     }
-   };
+  // Ensure to exists
+  fs.mkdirpSync(dest);
 
-   // Ensure to exists
-   fs.mkdirpSync(to);
+  // Try to copy the assets over
+  try {
+    fs.copySync(src, dest, copyOpts);
+  } catch (error) {
+    const code = _.get(error, 'code');
+    const syscall = _.get(error, 'syscall');
+    const f = _.get(error, 'path');
 
-   // Try to copy the assets over
-   try {
-     fs.copySync(from, to, copyOpts);
-   }
+    // Catch this so we can try to repair
+    if (code !== 'EISDIR' || syscall !== 'open' || !!fs.mkdirpSync(f)) {
+      throw new Error(error);
+    }
 
-   // If we have an EPERM, try to remove the file/directory and then retry
-   catch (error) {
+    // Try to take corrective action
+    fs.unlinkSync(f);
+    fs.copySync(src, dest, copyOpts);
+  };
 
-     // Parse the error for dataz
-     var code = _.get(error, 'code');
-     var syscall = _.get(error, 'syscall');
-     var f = _.get(error, 'path');
+  // Return the new scripts directory
+  return dest;
+};
 
-     // Catch this so we can try to repair
-     if (code !== 'EISDIR' || syscall !== 'open' || !!fs.mkdirpSync(f)) {
-       throw new Error(error);
-     }
+/*
+ * Helper to handle docker run config
+ */
+exports.runConfig = (cmd, {pre, env = [], user = 'root', detach = false} = {}, mode = 'collect') => {
+  // Force some things things if we are in a non node context
+  if (process.lando !== 'node') mode = 'collect';
+  // Make cmd is an array lets desconstruct and escape
+  if (_.isArray(cmd)) cmd = shell.escSpaces(shell.esc(cmd), 'linux');
+  // Add in any prefix commands
+  if (!_.isEmpty(pre)) cmd = [pre, cmd].join('&&');
 
-     // Try to take corrective action
-     fs.unlinkSync(f);
+  // Build the exec opts
+  const execOpts = {
+    AttachStdin: mode === 'attach',
+    AttachStdout: true,
+    AttachStderr: true,
+    Cmd: ['/bin/sh', '-c', cmd],
+    Env: env,
+    DetachKeys: 'ctrl-p,ctrl-q',
+    Tty: process.lando === 'node',
+    User: user,
+  };
+  // Start opts
+  const startOpts = {
+    hijack: false,
+    stdin: execOpts.AttachStdin,
+    Detach: detach,
+    Tty: execOpts.Tty,
+  };
 
-     // Try to move again
-     fs.copySync(from, to, copyOpts);
+  return {execOpts, startOpts, attached: execOpts.AttachStdin};
+};
 
-   }
+/*
+ * Helper to handle docker run stream
+ */
+exports.runStream = (stream, attached = false) => {
+  // Pipe stream to nodes process
+  stream.pipe(process.stdout);
 
-   // Return the new scripts directory
-   return to;
+  // Attaching mode handling
+  if (attached) {
+    // Set a more realistic max listeners considering what we are doing here
+    process.stdin._maxListeners = 15;
+    // Restart stdin with correct encoding
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
+    // Make sure rawMode matches up
+    if (process.stdin.setRawMode) process.stdin.setRawMode(true);
+    // Send our processes stdin into the container
+    process.stdin.pipe(stream);
+  }
 
- };
+  // Promise in the stream
+  return new Promise(resolve => {
+    let stdout = '';
+    let stderr = '';
+    // Collect the buffer if in collect mode
+    stream.on('data', buffer => {
+      stdout = stdout + String(buffer);
+    });
+    // Collect the errorz
+    stream.on('error', buffer => {
+      stderr = stderr + String(buffer);
+    });
+    // Close the stream
+    stream.on('end', () => {
+      // If we were attached to our processes stdin then close that down
+      if (attached) {
+        if (process.stdin.setRawMode) process.stdin.setRawMode(false);
+        process.stdin.pause();
+      }
+      // Resolve
+      resolve({stdout, stderr});
+    });
+  });
+};

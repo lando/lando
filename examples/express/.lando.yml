@@ -56,21 +56,12 @@ services:
 
 # Add some nice command routing
 tooling:
-
-  # Any node service with a defined command (aka not running in cli only mode)
-  # Will also spin up a node cli container called `SERVICENAME_cli` (appserver_cli)
-  # in this example.
-  #
-  # This will allow you to run things like `lando npm install` without needing
-  # to `lando start` first. This is particularly needed for node based projects
-  # since you almost always need to run `npm install` before you can boot up your
-  # app successfully.
   npm:
-    service: appserver_cli
+    service: appserver
   node:
-    service: appserver_cli
+    service: appserver
   yarn:
-    service: appserver_cli
+    service: appserver
 
   # This should be available ONLY AFTER you start up the app since it gets installed
   # globally in the `globals` key in the appserver definition above

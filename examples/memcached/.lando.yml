@@ -1,11 +1,6 @@
 # Memcached example
 name: memcached
 
-#
-# You need to run `lando npm install` before you run `lando start` for this
-# example to work
-#
-
 # Give me http://memcache.lndo.site
 proxy:
   appserver:
@@ -22,7 +17,7 @@ services:
     type: memcached:1.4
 
     # Optionally specify the size of the memcached store, defaults to 64
-    mem: 128
+    mem: 256
 
     # Optionally allow access to the cache at localhost:11222
     # You will need to make sure port 11222 is open on your machine
@@ -36,12 +31,5 @@ services:
   appserver:
     type: node:6.10
     command: npm start
-    # run:
-    #  - "cd $LANDO_MOUNT & npm install"
-
-# Add some nice command routing
-tooling:
-  npm:
-    service: appserver_cli
-  node:
-    service: appserver_cli
+    install_dependencies_as_me:
+      - npm install

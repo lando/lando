@@ -24,7 +24,6 @@ return shell.sh(['git', 'describe', '--tags', '--always', '--abbrev=1'], {mode: 
 // Replace the version for our files
 .then(version => {
   let packageJson = require('./../package.json');
-  packageJson.version = version;
   log.info('Updating package.json to dev version %s', packageJson.version);
   fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
 })
