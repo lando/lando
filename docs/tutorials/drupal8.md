@@ -184,6 +184,21 @@ You can also manually configure the `.lando.yml` file to switch `php` or `drush`
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/drupal8).
 
+If you set PostgreSQL as your database (with e.g. database:postgres), you will need to change settings in /sites/default/settings.php to configure the correct port, namespace and driver. Here's an example:
+
+```yml
+$databases['default']['default'] = array (
+  'database' => 'drupal8',
+  'username' => 'drupal8',
+  'password' => 'drupal8',
+  'prefix' => '',
+  'host' => 'database',
+  'port' => '5432',
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\pgsql',
+  'driver' => 'pgsql', 
+  );
+```
+
 ### Environment Variables
 
 The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.

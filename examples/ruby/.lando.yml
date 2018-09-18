@@ -15,6 +15,10 @@ services:
     # Ruby version 2.4
     type: ruby:2.4
 
+    # Install travis gem
+    install_dependencies_as_me:
+      - gem install travis
+
     # Optionally create certs in /certs that can be used by your application
     # to listen over https. Creates the following certs your app can use
     #
@@ -37,33 +41,13 @@ services:
     #
     command: ruby /app/server.rb
 
-    # Install some extra server packages
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install vim -y"
-
-    # Print a message just to demonstrate this
-    # run:
-    # - "cd $LANDO_MOUNT & echo 'Holla!'"
-
 # Add some nice command routing
 tooling:
-
-  # Any ruby service with a defined command (aka not running in cli only mode)
-  # Will also spin up a ruby cli container called `SERVICENAME_cli` (appserver_cli)
-  # in this example.
-  #
-  # This will allow you to run things like `lando gem install` without needing
-  # to `lando start` first. This is particularly needed for ruby based projects
-  # since you almost always need to run `gem/bundler install` before you can boot up your
-  # app successfully.
   gem:
-    service: appserver_cli
+    service: appserver
   ruby:
-    service: appserver_cli
+    service: appserver
   bundler:
-    service: appserver_cli
-
-  # This will only be available if you run `lando gem install travis` first
+    service: appserver
   travis:
-    service: appserver_cli
+    service: appserver

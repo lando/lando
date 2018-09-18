@@ -19,7 +19,8 @@
     "gtm",
     "toc",
     "-sharing",
-    "youtube"
+    "youtube",
+    "adsense"
   ],
   "pluginsConfig": {
     "callouts": {
@@ -32,6 +33,13 @@
     "gtm": {
       "token": "GTM-TKLWK67",
       "virtualPageViews": true
+    },
+    "adsense": {
+      "client": "ca-pub-6140027381143196",
+      "slot": "9580004956",
+      "format": "rectangle",
+      "element": "ul.summary",
+      "position": "top"
     }
   }
 }

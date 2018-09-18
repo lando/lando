@@ -32,28 +32,12 @@ services:
     # If you are just spinning up a dotnet container for usage as a cli tool
     # you can leave this blank and the container will boot up and stay on
     #
-    # You will likely want to run needed build steps eg `lando pip install`
-    # first so needed dependencies are installed before your server starts up.
-    #
-    command: cd /app & dotnet run
-
-    # Install some extra server packages
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install vim -y"
-
-    # Print a message just to demonstrate this
-    # run:
-    # - "cd $LANDO_MOUNT & echo 'Holla!'"
+    command: dotnet run
 
 # Add some nice command routing
 tooling:
 
-  # Any dotnet service with a defined command (aka not running in cli only mode)
-  # Will also spin up a dotnet cli container called `SERVICENAME_cli` (appserver_cli)
-  # in this example.
-  #
   # This will allow you to run things like `lando dotnet publish` without needing
   # to `lando start` first.
   dotnet:
-    service: appserver_cli
+    service: appserver

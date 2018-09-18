@@ -5,6 +5,12 @@ Lando provides a way to easily define nice `lando MYCOMMAND` commands so that us
 
 You can think of tooling configuration as a nice way to alias a superset of commands that would otherwise need to be run as something like `lando ssh -c "composer install"`.
 
+The many ways you can configure tooling are in the example below but here are some of the more powerful use cases:
+
+1. Consolidating multiple commands on multiple services into a singular `lando SOMETHING` command. This is great for complex build steps, testing and deployment.
+2. Easily surface options and arguments that can be passed from Lando into a script running in your container.
+3. Run the same command on different services using a flag of your choosing.
+
 > #### Warning::Make sure to install your dependencies
 >
 > You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./../config/services.md#build-extras) or our [`ssh`](./../cli/ssh.md) command.
@@ -46,6 +52,13 @@ Global Options:
 You need at least one command before moving on
 ```
 
+Caveats
+-------
+
+There are some current caveats with Lando tooling with which you should be familiar
+
+* Using pipes | or carrots < > can be strange because data needs to be streamed across the host-container boundary. In these situations we recommend you use `lando ssh -c "mycommand < myfile"` or set up on explicit tooling command to keep things entirely inside the container.
+
 Overriding
 ----------
 
@@ -72,7 +85,7 @@ tooling:
 Directory Mapping
 -----------------
 
-Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally.
+Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container.
 
 Tool Discovery
 --------------

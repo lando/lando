@@ -774,7 +774,7 @@ Logs an error message.
 **Example**  
 ```js
 // Log an error message
-lando.log.error('This is an err with details %j', err);
+lando.log.error('This is an err with details %s', err);
 ```
 <div class="api-body-footer"></div>
 <a id="landologinfo"></a>
@@ -1054,7 +1054,6 @@ and [inquirer](https://github.com/sboudrias/Inquirer.js) with a little extra spe
 | task.description | <code>String</code> | A short description of the command |
 | task.options | <code>Object</code> | A [yargs builder object](http://yargs.js.org/docs/#methods-commandmodule). Each builder also has an 'interactive' key which is an [inquirier question object](https://github.com/sboudrias/Inquirer.js#objects) |
 | task.run | <code>function</code> | The function to run when the task is invoked. |
-| task.run.options | <code>Object</code> | The options selected by the user, available to the run function. |
 
 **Returns**: <code>Array</code> - The task object  
 **Example**  

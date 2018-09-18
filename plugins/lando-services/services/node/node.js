@@ -1,14 +1,16 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
+  const _ = lando.node._;
+  const esd = lando.config.engineScriptsDir;
+  const addScript = lando.utils.services.addScript;
 
   /*
    * Supported versions for node
    */
-  var versions = [
+  const versions = [
+    '10',
     '9',
     '8',
     'carbon',
@@ -24,45 +26,42 @@ module.exports = function(lando) {
     'argon',
     '4.8',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out node
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Path
-    var path = [
+    const path = [
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
       '/usr/bin',
       '/sbin',
-      '/bin'
+      '/bin',
     ];
 
     // Volumes
-    var vols = [
+    const vols = [
       '/usr/local/bin',
       '/usr/local/share',
-      '/usr/local/lib/node_modules'
+      '/usr/local/lib/node_modules',
     ];
 
     // Basic config
-    var cliCmd = 'tail -f /dev/null';
-    var version = config.version || '6';
-    var command = config.command || cliCmd;
+    const cliCmd = 'tail -f /dev/null';
+    const version = config.version || '6';
+    let command = config.command || cliCmd;
 
     // Arrayify the command if needed
     if (!_.isArray(command)) {
@@ -70,17 +69,16 @@ module.exports = function(lando) {
     }
 
     // Start with the node base
-    var node = {
+    const node = {
       image: 'node:' + version,
       environment: {
         TERM: 'xterm',
-        PATH: path.join(':')
+        PATH: path.join(':'),
       },
-      'working_dir': config._mount,
+      working_dir: config._mount,
       ports: ['80'],
-      expose: ['80'],
       volumes: vols,
-      command: '/bin/sh -c "' + command.join(' && ') + '"'
+      command: '/bin/sh -c "' + command.join(' && ') + '"',
     };
 
     // If we have not specified a command we should assume this service was intended
@@ -89,45 +87,24 @@ module.exports = function(lando) {
       node.ports = [];
     }
 
-    // And if not we need to add in an additional cli container so that we can
-    // run things like lando npm install before our app starts up
-    else {
-
-      // Spoof the config and add some internal properties
-      var cliConf = {
-        type: 'node:' + version,
-        _app: config._app,
-        _root: config._root,
-        _mount: config._mount
-      };
-
-      // Extract the cli service and add here
-      var cliCompose = lando.services.build('cli', 'node:' + version, cliConf);
-      var cliName = name + '_cli';
-      services[cliName] = cliCompose.services.cli;
-
-      // Add a flag so we know this is built behind the the scenes
-      config._hiddenServices = [cliName];
-
-    }
-
     // Generate some certs we can use
     if (config.ssl) {
       node.ports.push('443');
+      // Inject add-cert so we can get certs before our app starts
+      node.volumes = addScript('add-cert.sh', node.volumes, esd, 'scripts');
     }
 
     // Add our npm things to run step
     if (!_.isEmpty(config.globals)) {
-      _.forEach(config.globals, function(version, pkg) {
-
+      _.forEach(config.globals, (version, pkg) => {
         // Ensure globals is arrayed
-        config.run_internal = config.run_internal || [];
+        config.install_dependencies_as_me_internal = config.install_dependencies_as_me_internal || [];
 
         // Queue up our global composer command
-        var nig = ['npm', 'install', '-g'];
+        const nig = ['npm', 'install', '-g'];
 
         // Get the dep
-        var dep = [pkg];
+        const dep = [pkg];
 
         // Add a version if we have one
         if (!_.isEmpty(version)) {
@@ -138,8 +115,7 @@ module.exports = function(lando) {
         nig.push(dep.join('@'));
 
         // Add before our other builds
-        config.run_internal.unshift(nig.join(' '));
-
+        config.install_dependencies_as_me_internal.unshift(nig.join(' '));
       });
     }
 
@@ -148,29 +124,23 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  var info = function() {
-    return {};
-  };
+  const info = () => ({});
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
-
+  const volumes = function() {
     // Construct our volumes
-    var volumes = {
-      data: {}
+    const volumes = {
+      data: {},
     };
-
     // Return the volumes
     return volumes;
-
   };
 
   return {
@@ -180,7 +150,6 @@ module.exports = function(lando) {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

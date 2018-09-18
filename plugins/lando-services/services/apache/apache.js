@@ -1,44 +1,42 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const _ = lando.node._;
+  const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
+  const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var scd = lando.config.servicesConfigDir;
+  const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for apache
    */
-  var versions = [
+  const versions = [
     '2.4',
     '2.2',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out apache
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Define config mappings
-    var configFiles = {
+    const configFiles = {
       server: '/usr/local/apache2/conf/httpd.conf',
-      webroot: config._mount
+      webroot: config._mount,
     };
 
     // Add the webroot if its there
@@ -47,31 +45,33 @@ module.exports = function(lando) {
     }
 
     // Default apache service
-    var apache = {
+    const apache = {
       image: 'httpd:' + config.version,
       ports: ['80'],
       environment: {
         TERM: 'xterm',
-        LANDO_WEBROOT: configFiles.webroot
+        LANDO_WEBROOT: configFiles.webroot,
       },
       volumes: [],
-      command: 'httpd-foreground'
+      command: 'httpd-foreground',
     };
 
     // Set the default HTTPD conf file
-    var httpConf = ['apache', 'httpd.conf'];
-    var confVol = buildVolume(httpConf, configFiles.server, scd);
+    const httpConf = ['apache', 'httpd.conf'];
+    const confVol = buildVolume(httpConf, configFiles.server, scd);
     apache.volumes = addConfig(confVol, apache.volumes);
 
     // Handle ssl option
     if (config.ssl) {
-
       // Add the SSL port
       apache.ports.push('443');
 
+      // Inject add-cert so we can get certs before our app starts
+      apache.volumes = addScript('add-cert.sh', apache.volumes, esd, 'scripts');
+
       // If we don't have a custom default ssl config lets use the default one
-      var sslConf = ['apache', 'httpd-ssl.conf'];
-      var sslVolume = buildVolume(sslConf, configFiles.server, scd);
+      const sslConf = ['apache', 'httpd-ssl.conf'];
+      const sslVolume = buildVolume(sslConf, configFiles.server, scd);
       apache.volumes = addConfig(sslVolume, apache.volumes);
 
       // Add a healthcheck so we wait until open-ssl gets installed
@@ -79,16 +79,15 @@ module.exports = function(lando) {
         test: 'dpkg -s openssl',
         interval: '2s',
         timeout: '10s',
-        retries: 25
+        retries: 25,
       };
-
     }
 
     // Handle custom config files
-    _.forEach(configFiles, function(file, type) {
+    _.forEach(configFiles, (file, type) => {
       if (_.has(config, 'config.' + type)) {
-        var local = config.config[type];
-        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        const local = config.config[type];
+        const customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         apache.volumes = addConfig(customConfig, apache.volumes);
       }
     });
@@ -98,34 +97,31 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Start up an info collector
-    var info = {};
+    const info = {};
 
     // Add the webroot
     info.webroot = _.get(config, 'webroot', '.');
 
     // Show the config files being used if they are custom
     if (!_.isEmpty(config.config)) {
-      info.config  = config.config;
+      info.config = config.config;
     }
 
     // Return the collected info
     return info;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
+  const volumes = function() {
     return {data: {}};
   };
 
@@ -136,7 +132,6 @@ module.exports = function(lando) {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

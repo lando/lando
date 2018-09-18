@@ -5,25 +5,33 @@ This example provides a basic dotnet web application.
 
 See the `.lando.yml` in this directory for dotnet configuration options.
 
-Getting Started
----------------
+Start it
+--------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
-# Start up the example
+# Start up a very basic dotnet app
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
+Validate things
+---------------
 
 ```bash
-# Run dotnet commands
-lando dotnet
+# Verify we can access our app
+lando ssh -c "curl localhost | grep Hello"
+
+# Verify we have the dotnet cli
+lando dotnet --version
+```
+
+Purge
+-----
+
+Clean up
+
+```bash
+# Destroy the dotnet app
+lando destroy -y
 ```

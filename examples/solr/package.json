@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "./node_modules/.bin/nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,9 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3",
-    "solr-node": "^1.0.13"
+    "solr-client": "^0.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
