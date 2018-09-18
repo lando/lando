@@ -30,7 +30,7 @@ Once it is you can add or remove it with the relevant commands below.
 
 ```bash
 # Add the Lando CA
-sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/.lando/certs/lando.pem
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/.lando/certs/lndo.site.pem
 
 # Remove Lando CA
 sudo security delete-certificate -c "Lando Local CA"
@@ -40,7 +40,7 @@ sudo security delete-certificate -c "Lando Local CA"
 
 ```bash
 # Add the Lando CA
-certutil -addstore -f "ROOT" C:\Users\ME\.lando\certs\lando.pem
+certutil -addstore -f "ROOT" C:\Users\ME\.lando\certs\lndo.site.pem
 
 # Remove Lando CA
 certutil -delstore "ROOT" serial-number-hex
@@ -50,10 +50,10 @@ certutil -delstore "ROOT" serial-number-hex
 
 ```bash
 # Add the Lando CA
-sudo cp -r ~/.lando/certs/lando.pem /usr/local/share/ca-certificates/lando.pem
+sudo cp -r ~/.lando/certs/lndo.site.pem /usr/local/share/ca-certificates/lndo.site.pem
 sudo update-ca-certificates
 
 # Remove Lando CA
-sudo rm -f /usr/local/share/ca-certificates/lando.pem
+sudo rm -f /usr/local/share/ca-certificates/lndo.site.pem
 sudo update-ca-certificates --fresh
 ```
