@@ -1,18 +1,17 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _  = lando.node._;
-  var fs = lando.node.fs;
-  var path = require('path');
-  var Promise = lando.Promise;
+  const _ = lando.node._;
+  const fs = lando.node.fs;
+  const path = require('path');
+  const Promise = lando.Promise;
 
   // Collect the methods
-  var methods = [];
+  const methods = [];
 
   // Create the starting set of options/questions
-  var options = {
+  let options = {
     recipe: {
       describe: 'The recipe to use',
       choices: lando.recipes.get(),
@@ -22,27 +21,25 @@ module.exports = function(lando) {
         type: 'list',
         message: 'What recipe do you want to use?',
         default: 'custom',
-        choices: _.map(lando.recipes.get(), function(recipe) {
-          return {name: recipe, value: recipe};
-        }),
-        weight: 500
-      }
-    }
+        choices: _.map(lando.recipes.get(), recipe => ({name: recipe, value: recipe})),
+        weight: 500,
+      },
+    },
   };
 
   // Merge in or alter other options provided by method plugins
-  _.forEach(lando.init.get(), function(method) {
+  _.forEach(lando.init.get(), method => {
     methods.push(method);
     options = _.merge(options, lando.init.get(method).options);
   });
 
   // Specify more auxopts
-  var auxOpts = {
+  const auxOpts = {
     destination: {
       describe: 'Specify where to init the app',
       alias: ['dest', 'd'],
       string: true,
-      default: process.cwd()
+      default: process.cwd(),
     },
     webroot: {
       describe: 'Specify the webroot relative to destination',
@@ -51,12 +48,12 @@ module.exports = function(lando) {
         type: 'input',
         message: 'Where is your webroot relative to the init destination?',
         default: '.',
-        when: function(answers) {
-          var recipe = answers.recipe || lando.cli.argv().recipe;
+        when: answers => {
+          const recipe = answers.recipe || lando.cli.argv().recipe;
           return lando.recipes.webroot(recipe);
         },
         weight: 900,
-      }
+      },
     },
     name: {
       describe: 'The name of the app',
@@ -65,24 +62,24 @@ module.exports = function(lando) {
         type: 'input',
         message: 'What do you want to call this app?',
         default: 'My Lando App',
-        filter: function(value) {
+        filter: value => {
           if (value) {
             return _.kebabCase(value);
           }
         },
-        when: function(answers) {
-          var recipe = answers.recipe || lando.cli.argv().recipe;
+        when: answers => {
+          const recipe = answers.recipe || lando.cli.argv().recipe;
           return lando.recipes.name(recipe);
         },
         weight: 1000,
-      }
+      },
     },
     yes: {
       describe: 'Auto answer yes to prompts',
       alias: ['y'],
       default: false,
-      boolean: true
-    }
+      boolean: true,
+    },
   };
 
   // The task object
@@ -90,8 +87,7 @@ module.exports = function(lando) {
     command: 'init [method]',
     describe: 'Initialize a lando app, optional methods: ' + methods.join(', '),
     options: _.merge(options, auxOpts),
-    run: function(options) {
-
+    run: options => {
       // Generate a machine name for the app.
       options.name = _.kebabCase(options.name);
 
@@ -107,7 +103,7 @@ module.exports = function(lando) {
       process.chdir(options.destination);
 
       // Set the basics
-      var config = {
+      const config = {
         name: options.name,
         recipe: options.recipe,
       };
@@ -118,49 +114,37 @@ module.exports = function(lando) {
       }
 
       // Method specific build steps if applicable
-      return Promise.try(function() {
-        return lando.init.build(config.name, options.method, options);
-      })
-
+      return Promise.try(() => lando.init.build(config.name, options.method, options))
       // Kill any build containers if needed
-      .then(function() {
-        return lando.init.kill(config.name, options.destination);
-      })
-
+      .then(() => lando.init.kill(config.name, options.destination))
       // Check to see if our recipe provides additional yaml augment
-      .then(function() {
-        return lando.init.yaml(options.recipe, config, options);
-      })
-
+      .then(() => lando.init.yaml(options.recipe, config, options))
       // Create the lando yml
-      .then(function(config) {
-
+      .then(config => {
         // Where are we going?
-        var dest = path.join(options.destination, '.lando.yml');
+        const dest = path.join(options.destination, '.lando.yml');
 
         // Rebase on top of any existing yaml
         if (fs.existsSync(dest)) {
-          var pec = lando.yaml.load(dest);
+          const pec = lando.yaml.load(dest);
           config = _.mergeWith(pec, config, lando.utils.merger);
         }
 
         // Dump it
         lando.yaml.dump(dest, config);
-
       })
 
       // Tell the user things
-      .then(function() {
-
+      .then(() => {
         // Header it
         console.log(lando.cli.makeArt('init'));
 
         // Grab a new cli table
-        var table = lando.cli.makeTable();
+        const table = lando.cli.makeTable();
 
         // Get docs link
-        var docBase = 'https://docs.devwithlando.io/tutorials/';
-        var docUrl = docBase + config.recipe + '.html';
+        const docBase = 'https://docs.devwithlando.io/tutorials/';
+        const docUrl = docBase + config.recipe + '.html';
 
         // Add data
         table.add('NAME', config.name);
@@ -178,10 +162,7 @@ module.exports = function(lando) {
 
         // Space it
         console.log('');
-
       });
-
-    }
+    },
   };
-
 };

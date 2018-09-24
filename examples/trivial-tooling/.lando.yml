@@ -49,11 +49,9 @@ tooling:
     # Define a specific command to start with inside the container. If ommited
     # this will default to the name you give the service eg composer.
     #
-    # This can be a string or an array. We recommend using an array if you are
-    # passing in additional options that you might want to enforce.
-    cmd:
-      - composer
-      - --ansi
+    # This can be a string or an array if you want to run multiple commands
+    # See "test" below for a multi-command example
+    cmd: composer --ansi
 
   # Define `lando php` as a command that runs `php @` against the appserver where
   # @ is additional input from the user.
@@ -63,7 +61,7 @@ tooling:
     service: appserver
 
     # Run this command as the www-data inside of the container. If ommitted this
-    # will default to the LANDO_WEBROOT_USER envvar for the service and then root.
+    # will default to the LANDO_WEBROOT_USER envvar for the service and then root
     # if undefiend. You can also pass in user:group.
     #
     # Note that the user needs to already exist inside of the container
@@ -74,12 +72,16 @@ tooling:
   mysql:
     service: database
     description: Drop into a MySQL shell
+    user: root
 
   # Define a tooling command with a stringed command
   test:
+    # Run multiple commands on the same service
     service: appserver
-    cmd: composer test
-    description: Run our tests
+    cmd:
+      - echo "we expect the next command to fail"
+      - composer test
+    description: Run all the tests
 
   # Define `lando word` that passes through to a script that can handle options.
   # The script is mounted into our appserver in the service overrides above
@@ -152,3 +154,17 @@ tooling:
         alias:
           - s
         describe: Run a different service
+
+  # Define `lando install` so that it can run on different services on the command
+  # values
+  #
+  # This is useful for complex build steps that need to run on multiple containers,
+  # note that the usual "service" key will only be used as the fallback value for the
+  # service with the key of the command taken precendent.
+  install:
+
+    # Run our two build steps
+    cmd:
+      - appserver: composer install
+      - cli: yarn install
+    description: Install everything

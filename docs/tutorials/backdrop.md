@@ -3,15 +3,15 @@ Working with Backdrop
 
 Lando offers a configurable recipe for spinning up [Backdrop CMS](https://backdropcms.org/) apps. Let's go over some basic usage.
 
-<!-- toc -->
-
-Getting Started
----------------
-
 Prefer video tutorials?
 {% youtube %}
 https://www.youtube.com/watch?v=-UvyYvHmLSg&t=3s
 {% endyoutube %}
+
+<!-- toc -->
+
+Getting Started
+---------------
 
 Before you get started with this recipe we assume that you have:
 

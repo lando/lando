@@ -1,12 +1,11 @@
 **Before you submit an issue make sure you have [downloaded](https://github.com/lando/lando/releases) the latest version of Lando and checked to see if the latest version resolves your issue!**
 
+If you submit an issue to an older version of Lando then do not expect to get a reply!!!
+
 Security
 --------
 
-If you have discovered a security issue with Lando, please contact the Lando Security Team directly at
-[security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved.
-Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or
-tweeting about it.
+If you have discovered a security issue with Lando, please contact the Lando Security Team directly at [security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or tweeting about it.
 
 Feature Requests and Bug Reports
 --------------------------------
@@ -21,6 +20,10 @@ Please complete the following steps.
 
 Bug Report
 ==========
+
+The **FASTEST** way for us to verify and resolve your bug if for you to [write a functional test that breaks](https://docs.devwithlando.io/dev/testing.html#functional-tests) and submit it as a pull request.
+
+If you are not sure how to do that then please complete as much of the below section as possible
 
 **Tell us about your setup**
 
@@ -65,7 +68,7 @@ lando rebuild -y
 
 **Tell us about the error you got**
 
-Rerun the command that produced your error in `verbose` mode. Paste in the error and the ~100 lines that proceeded it.
+Rerun the command that produced your error in `verbose` mode. Note that `verbose` mode is run like this `lando command -- -vvv`. Paste in the error and the ~100 lines that proceeded it.
 
 *Example:*
 
@@ -91,10 +94,7 @@ Please detail the steps we can take to replicate this bug. Be as detailed as pos
 **Tell us more**
 
 Could better documentation have prevented this issue? if so what should we change?
-
-
 Does this bug prevent you from using lando?
-
 
 Feature Request
 ===============

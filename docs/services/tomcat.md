@@ -13,7 +13,9 @@ Supported versions
 Using patch versions
 --------------------
 
-Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
+While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+
+[Here](https://hub.docker.com/r/library/tomcat/tags/) are all the tags that are available for this service.
 
 Example
 -------

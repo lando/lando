@@ -14,6 +14,7 @@ const _ = require('lodash');
 const bootstrap = require('./../lib/bootstrap.js');
 const chalk = require('chalk');
 const Cli = require('./../lib/cli');
+const ErrorHandler = require('./../lib/error');
 const path = require('path');
 const Promise = require('./../lib/promise');
 const yargonaut = require('yargonaut');
@@ -29,7 +30,6 @@ const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT;
 const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
 
 // Handle error
-let landoErrorHandler;
 const handleError = (error, handler) => {
   error.verbose = cli.largv().verbose;
   process.exit(handler.handle(error));
@@ -40,10 +40,6 @@ bootstrap(cli.defaultConfig())
 
 // Initialize the CLI
 .then(lando => {
-  // Bind to outside scope so we can use this in the catch
-  // @TODO: do this better
-  landoErrorHandler = lando.error;
-
   // Handle uncaught things
   _.forEach(['unhandledRejection', 'uncaughtException'], exception => {
     process.on(exception, error => handleError(error, lando.error));
@@ -128,5 +124,11 @@ bootstrap(cli.defaultConfig())
   });
 })
 
-// Handle all other errors
-.catch(error => handleError(error, landoErrorHandler));
+// Handle all other errors eg likely things that happen pre bootstrap
+// We want to use a different error handling instance here since we might not
+// be able to rely on landos in the event of a failed bootstrap
+.catch(error => {
+  error.verbose = 2;
+  const lastDitchError = new ErrorHandler();
+  process.exit(lastDitchError.handle(error));
+});

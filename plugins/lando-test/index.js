@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = function(lando) {
+module.exports = lando => {
   lando.log.info('OH YAH! THIS PLUGIN WAS TOTALLY LOADED!');
 };

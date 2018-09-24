@@ -20,12 +20,6 @@ While Lando does not "officially" support specifying a patch version of this ser
 
 [Here](https://hub.docker.com/r/itzg/elasticsearch/tags/) are all the tags that are available for this service.
 
-Here is an example of overriding the `nginx` service to use a patched version.
-
-{% codesnippet "./../examples/patchversion/.lando.yml" %}{% endcodesnippet %}
-
-You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/patchversion).
-
 Example
 -------
 

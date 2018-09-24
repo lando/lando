@@ -14,6 +14,11 @@ At the command line execute:
 lando db-export
 ```
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=KH_wZuaPeRc
+{% endyoutube %}
+
 ### Examples
 
 ```bash

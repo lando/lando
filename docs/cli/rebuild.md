@@ -1,11 +1,7 @@
 rebuild
 =======
 
-Rebuilds the containers and tooling for your app. This command is great for developing, tweaking or updating your app but **should be used with caution**.
-
-> #### Warning::Be careful using this command!
->
-> Most app services allow data to persist between rebuilds but there are some services where a rebuild will result in a loss of data.
+If you change your `.lando.yml` you'll want to run `lando rebuild` for the changes to take effect. This is also a great command to run if your app has gotten into a bad state and you want to set things right.
 
 Usage
 -----

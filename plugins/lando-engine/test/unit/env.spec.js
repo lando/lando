@@ -147,6 +147,15 @@ describe('lando-engine.env', () => {
     });
   });
 
+  describe('#getEngineConfig', () => {
+    it('should use default engine config if we dont have any already');
+    it('should default to a named pipe on windows');
+    it('should set env.DOCKER_HOST if we ar using a remote docker daemon');
+    it('should set appropriate DOCKER envvars if we have certs');
+    it('should set engineConfig with cert data if we have certs');
+    it('should return an object that dockerode can use to set config');
+  });
+
   describe('#buildDockerCmd', () => {
     it('should return correct command on win32', () => {
       setPlatform('win32');

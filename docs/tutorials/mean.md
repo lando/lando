@@ -1,7 +1,7 @@
 Working with MEAN
 =================
 
-Lando offers a configurable recipe for spinning up apps that use the [MEAN](https://mean.io) stack, a common set of infrastructure designed to run NodeJS applications.
+Lando offers a configurable recipe for spinning up apps that use the [MEAN](http://mean.io) stack, a common set of infrastructure designed to run NodeJS applications.
 
 Let's go over some basic usage.
 

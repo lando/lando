@@ -1,9 +1,8 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var chalk = lando.node.chalk;
+  const chalk = lando.node.chalk;
 
   // The task object
   return {
@@ -18,12 +17,11 @@ module.exports = function(lando) {
         interactive: {
           type: 'confirm',
           default: false,
-          message: 'Are you sure you want to DESTROY?'
-        }
-      }
+          message: 'Are you sure you want to DESTROY?',
+        },
+      },
     },
-    run: function(options) {
-
+    run: options => {
       // Stop rebuild if user decides its a nogo
       if (!options.yes) {
         console.log(chalk.yellow('DESTRUCTION AVERTED!'));
@@ -40,15 +38,10 @@ module.exports = function(lando) {
           .then(function() {
             console.log(chalk.red('App destroyed!'));
           });
-        }
-
-        // Warn user we couldn't find an app
-        else {
+        } else {
           lando.log.warn('Could not find app in this dir');
         }
       });
-
-    }
+    },
   };
-
 };

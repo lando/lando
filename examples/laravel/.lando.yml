@@ -4,28 +4,28 @@ name: laravel
 # Start with the default laravel recipe
 recipe: laravel
 
-# Configure the laravel recipe
+# Configure the Laravel recipe
 config:
 
-  # See: https://laravel.com/docs/5.4/installation#server-requirements
+  # See: https://laravel.com/docs/5.6/installation#server-requirements
 
   # Optionally specify the php version to use.
   #
-  # If ommitted this will default to the latest php version supported by laravel.
+  # If ommitted this will default to the latest php version supported by Laravel.
   # Consult the `php` service to see what versions are available. Note that all
   # such versions may not be supported in Laravel 7 so YMMV.
   #
-  # See: https://laravel.com/docs/5.4/installation#server-requirements
+  # See: https://laravel.com/docs/5.6/installation#server-requirements
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
   php: '7.1'
 
-  # Optionally specify whether you want to serve drupal via nginx or apache
+  # Optionally specify whether you want to serve Laravel via Nginx or Apache
   #
   # If ommitted this will default to the latest apache
   #
-  # See: https://laravel.com/docs/5.4/installation#web-server-configuration
+  # See: https://laravel.com/docs/5.6/installation#web-server-configuration
   #
   via: nginx
 
@@ -44,7 +44,7 @@ config:
   #
   # If ommitted this will not install a db for you.
   #
-  # see: https://laravel.com/docs/5.4/database#configuration
+  # see: https://laravel.com/docs/5.6/database#configuration
   #
   database: mariadb:10.1
 
@@ -55,7 +55,7 @@ config:
   #
   # If ommitted this will not install a db for you
   #
-  # see: https://laravel.com/docs/5.4/cache#configuration
+  # see: https://laravel.com/docs/5.6/cache#configuration
   cache: redis
 
   # Optionally activate xdebug
