@@ -36,6 +36,11 @@ lando db-import -h database2 test2.sql
 # Verify that we have a 'users' table on both databases
 lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
 lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
+
+# Verify that after a rebuild we still have the data tables
+lando rebuild -y
+lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
+lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
 ```
 
 Helpful Commands
