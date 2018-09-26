@@ -48,8 +48,8 @@ services:
     type: php:7.1
     run:
       - bash /app/scripts/somehelper.sh
-    run_as_root
-      - echo "haxmcgee 127.0.0.1 > /etc/hosts"
+    run_as_root:
+      - echo "10.20.30.40   my.custom.domain" >> /etc/hosts
 ```
 
 Need more power?
