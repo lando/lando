@@ -1,0 +1,81 @@
+# share command tests
+name: share 
+
+# Give me http://lamp.lndo.site and https://lamp.lndo.site
+proxy:
+  appserver:
+    - share.lndo.site
+
+# Spin up services to run a basic LAMP stack
+services:
+
+  # Create a php 5.3 instance served by the latest apache with https turned on
+  appserver:
+
+    # PHP version 5.3
+    type: php:5.3
+
+    # Serve php by either apache or nginx. You can put in any `service:version`
+    # string that is supported by Lando's nginx and apache services.
+    via: apache
+
+    # Optionally serve php over https
+    ssl: true
+
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    webroot: www
+
+    # Optionally customize the configuration for php and its underlying webserver
+    # These paths are both relative to (and must reside within) the app root directory
+    #
+    # For some examples that use this fairly well please check out
+    # https://github.com/lando/lando/tree/master/examples
+    # config:
+      # Use a custom apache config file
+      # server: config/apache/lamp.conf
+
+      # Use a custom php.ini
+      # This **should** load last which means you should be able to override
+      # any previously set php settings.
+      # conf: config/php/php.ini
+
+    # Optionally activate xdebug
+    #
+    # If you are having trouble getting xdebug to work please see:
+    # https://docs.devwithlando.io/services/php.html#using-xdebug
+    xdebug: true
+
+    # Optionally install the following composer dependencies globally
+    # These follow the normal composer.json form
+    # Note that many composer dependencies should not be installed globally but
+    # on a per-project basis
+    # composer:
+    #   drush/drush: "~8"
+
+  appserver:
+    overrides:
+      services:
+        ports:
+          - '8081:80'
+
+  # My database service
+  database:
+    type: mysql
+    portforward: 3308
+    creds:
+      user: lamp
+      password: lamp
+      database: lamp
+
+# Add some nice command routing
+tooling:
+  composer:
+    service: appserver
+    description: Run composer commands
+    cmd: composer --ansi
+  php:
+    service: appserver
+  mysql:
+    user: root
+    service: database
+    description: Drop into a MySQL shell
