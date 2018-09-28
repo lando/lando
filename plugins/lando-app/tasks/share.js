@@ -49,7 +49,7 @@ module.exports = lando => {
           // Get the URLS
           .then(() => {
             // Assume a port to start
-            const port = 80;
+            var port = 80;
 
             // Override port if specified
             if (!_.isEmpty(url.port)) {
