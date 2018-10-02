@@ -3,7 +3,7 @@ Developing offline
 
 Out of the box, Lando uses an external server to route pretty domain names back to your localhost to provide convenient proxying. This method is minimally invasive and doesn't require Lando to alter your machine's DNS routing. This has the downside of requiring an internet connection to access your sites.
 
-You may want the freedom of hacking away on your site while scaling Everest or just to simply route your projects to a different top level domain, like `*.dev`, `*.hanshotfirst` or `*.test`. Although `*.dev` is not recommended because it is a reserverd TLD by Google.
+You may want the freedom of hacking away on your site while scaling Everest or just to simply route your projects to a different top level domain, like `*.dev`, `*.hanshotfirst` or `*.test`. However, `*.dev` is not recommended because it is a Google-owned TLD.
 
 To enable offline custom TLD goodness, we'll use DNSMasq to route traffic to our local system and add a single config line to our global Lando config to direct lando to use that TLD for our sites.
 
