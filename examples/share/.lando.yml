@@ -1,0 +1,16 @@
+# The name of the app
+name: share
+
+# Give me http://share.lndo.site and https://share.lndo.site
+proxy:
+  appserver:
+    - share.lndo.site
+
+# Set up my services
+services:
+
+  # Set up a basic webserver running the latest nginx with ssl turned on
+  appserver:
+    type: nginx:1.12
+    ssl: true
+    webroot: www
