@@ -33,8 +33,8 @@ exports.compose = (defaults, ports, project) => ({
 /*
  * Create the default service object
  */
-exports.defaults = domain => {
-  const certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
+exports.defaults = (domain, cert, key) => {
+  const certs = [cert, key].join(',');
   const cmd = [
     '/entrypoint.sh',
     '--defaultEntryPoints=https,http',

@@ -18,7 +18,9 @@ module.exports = lando => {
     // Proxy defaults
     const defaultProxyConfig = {
       proxy: 'ON',
+      proxyCert: '/certs/cert.crt',
       proxyDomain: 'lndo.site',
+      proxyKey: '/certs/cert.key',
       proxyName: 'landoproxyhyperion5000gandalfedition',
       proxyDash: '58087',
       proxyHttpPort: '80',
@@ -60,7 +62,8 @@ module.exports = lando => {
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
       // Dump defaults
-      lando.yaml.dump(lando.config.proxyProxyFile, proxy.defaults(lando.config.proxyDomain));
+      const proxyDefaults = proxy.defaults(lando.config.proxyDomain, lando.config.proxyCert, lando.config.proxyKey);
+      lando.yaml.dump(lando.config.proxyProxyFile, proxyDefaults);
       const scanPorts = config => {
         // Get the engine IP
         const engineIp = _.get(config, 'engineConfig.host', '127.0.0.1');
