@@ -2,6 +2,8 @@
 
 set -e
 
+/helpers/add-cert.sh
+
 # Check if update-ca-certificates is installed, if not install it and update our trusted certs
 #
 # The logic here is not 100% solid. We are assuming if you dont have update-ca-certificates available
@@ -11,9 +13,9 @@ set -e
 if ! [ -x "$(command -v update-ca-certificates)" ]; then
   echo "Installing update-ca-certificates..."
   if [ -x "$(command -v apt-get)" ]; then
-    nohup sh -c "apt-get update -y && apt-get install ca-certificates -y && update-ca-certificates"
+    nohup sh -c "apt-get update -y && apt-get install ca-certificates -y && update-ca-certificates --verbose > /certs.txt"
   else
-    nohup sh -c "apk add --no-cache ca-certificates && update-ca-certificates"
+    nohup sh -c "apk add --no-cache ca-certificates && update-ca-certificates --verbose > /certs.txt"
   fi
 else
   update-ca-certificates --verbose > /certs.txt

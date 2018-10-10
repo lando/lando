@@ -35,7 +35,7 @@ module.exports = lando => {
       // Volume mount the drupal console cache
       const volumesKey = 'services.appserver.overrides.services.volumes';
       const vols = _.get(build, volumesKey, []);
-      vols.push('/const/www/.drupal');
+      vols.push('/var/www/.drupal');
       _.set(build, volumesKey, vols);
 
       // Set tooling

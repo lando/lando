@@ -13,6 +13,7 @@ chai.should();
 const compose = require('./../../lib/compose');
 
 const myOpts = {
+  'id': 'appname_service_1',
   'pull': true,
   'services': {
     'appserver': {},

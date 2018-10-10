@@ -3,6 +3,11 @@ MailHog
 
 [MailHog](https://github.com/mailhog/MailHog) is an email testing tool for developers. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
+Prefer video tutorials?
+{% youtube %}
+https://youtu.be/C1XfgfzcUJc
+{% endyoutube %}
+
 Supported versions
 ------------------
 

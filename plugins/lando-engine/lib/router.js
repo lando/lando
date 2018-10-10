@@ -63,7 +63,7 @@ exports.run = (data, compose, docker, started = true) => Promise.each(utils.norm
   //
   .then(() => {
     if (process.platform === 'win32') {
-      return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
+      return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd, id: datum.id}}));
     } else {
       return docker.run(datum.id, datum.cmd, datum.opts);
     }

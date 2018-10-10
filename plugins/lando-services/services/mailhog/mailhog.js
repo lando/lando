@@ -89,7 +89,7 @@ module.exports = lando => {
         const phpConfiDir = _.get(hogConf, 'phpConfDir', defaultConf);
         const remote = phpConfiDir + '/' + defaultFile;
         const iniMount = buildVolume(mailHogConf, remote, scd);
-        const volumes = _.get(app.services[hog], 'volumes', {});
+        let volumes = _.get(app.services[hog], 'volumes', {});
         volumes = addConfig(iniMount, volumes);
         _.set(app.services[hog], 'volumes', volumes);
 

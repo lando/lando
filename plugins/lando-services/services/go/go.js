@@ -3,6 +3,8 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
+  const esd = lando.config.engineScriptsDir;
+  const addScript = lando.utils.services.addScript;
 
   /*
    * Supported versions for go
@@ -35,7 +37,7 @@ module.exports = lando => {
     // Basic config
     const cliCmd = 'tail -f /dev/null';
     const version = config.version || '1';
-    const command = config.command || cliCmd;
+    let command = config.command || cliCmd;
 
     // Arrayify the command if needed
     if (!_.isArray(command)) {
@@ -64,6 +66,8 @@ module.exports = lando => {
     // Generate some certs we can use
     if (config.ssl) {
       go.ports.push('443');
+      // Inject add-cert so we can get certs before our app starts
+      go.volumes = addScript('add-cert.sh', go.volumes, esd, 'scripts');
     }
 
     // Put it all together

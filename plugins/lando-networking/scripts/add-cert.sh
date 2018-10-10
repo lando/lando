@@ -25,9 +25,12 @@ DNS.2 = ${LANDO_SERVICE_TYPE}
 DNS.3 = ${LANDO_SERVICE_NAME}
 DNS.4 = *.${LANDO_APP_NAME}.internal
 DNS.5 = localhost
+DNS.6 = *.*.${LANDO_DOMAIN}
+DNS.7 = *.*.*.${LANDO_DOMAIN}
 EOF
 
 # Enable SSL if we need to
+# @todo: we should bake this into the apache service
 if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
   echo "Enabling apache ssl modz"
   cp -rf /etc/apache2/mods-available/ssl* /etc/apache2/mods-enabled || true

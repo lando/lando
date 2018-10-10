@@ -470,7 +470,7 @@ module.exports = lando => {
     });
 
     // Add a volume for terminus cache
-    volumes.push('/const/www/.terminus');
+    volumes.push('/var/www/.terminus');
 
     // Return the new volumes
     return volumes;

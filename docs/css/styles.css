@@ -1,5 +1,5 @@
 body {
-  padding-top: 78px;
+  padding-top: 147px;
 }
 
 .api-body-footer {
@@ -89,13 +89,13 @@ body {
 }
 
 .lando-header {
-  height: 80px;
+  height: 145px;
   min-height: 80px;
-  padding: 20px 40px 20px 20px;
+  padding: 85px 40px 20px 20px;
   box-sizing:border-box;
   box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);
   position: fixed;
-  top: 0;
+  top: 0px;
   left: 0;
   width: 100%;
   z-index: 2;
@@ -197,4 +197,19 @@ body {
     font-size: 13px;
   }
 
+}
+
+.jobs {
+  background: aliceblue;
+  padding: 1px;
+  font-size: 1.5em;
+  text-align: center;
+  z-index: 3;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+}
+
+.jobs a {
+  color: #ED3F7A;
 }

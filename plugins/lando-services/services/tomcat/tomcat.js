@@ -4,10 +4,12 @@ module.exports = lando => {
   // Modules
   const _ = lando.node._;
   const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
   const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
   const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for tomcat (many more available, look at the supported
@@ -61,7 +63,7 @@ module.exports = lando => {
 
     // Set the default server.xml conf file
     const serverXml = ['tomcat', 'server.xml'];
-    const confVol = buildVolume(serverXml, configFiles.serverxmlfile, scd);
+    let confVol = buildVolume(serverXml, configFiles.serverxmlfile, scd);
 
     // Set the default tomcat-users.xml conf file
     const tomcatUsersXml = ['tomcat', 'tomcat-users.xml'];
@@ -92,6 +94,9 @@ module.exports = lando => {
       const sslConf = ['tomcat', 'httpd-ssl.conf'];
       const sslVolume = buildVolume(sslConf, configFiles.serverxmlfile, scd);
       tomcat.volumes = addConfig(sslVolume, tomcat.volumes);
+
+      // Inject add-cert so we can get certs before our app starts
+      tomcat.volumes = addScript('add-cert.sh', tomcat.volumes, esd, 'scripts');
     }
 
     // Handle custom config files

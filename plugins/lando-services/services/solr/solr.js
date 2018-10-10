@@ -5,8 +5,10 @@ module.exports = lando => {
   const _ = lando.node._;
   const path = require('path');
 
+  const addScript = lando.utils.services.addScript;
   const addConfig = lando.utils.services.addConfig;
   const buildVolume = lando.utils.services.buildVolume;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for nginx
@@ -130,6 +132,9 @@ module.exports = lando => {
     }
 
     // Handle ssl option
+    // Inject add-cert so we can get certs before our app starts
+    // @todo: we need legit handling of the below
+    solr.volumes = addScript('add-cert.sh', solr.volumes, esd, 'scripts');
     // @todo: figure out how to handle SSL options
     /*
     if (config.ssl) {
