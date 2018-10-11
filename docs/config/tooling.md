@@ -68,7 +68,7 @@ You can override tooling provided by Lando by redefining the tooling options in 
 tooling:
   drush:
     cmd:
-      - "drush"
+      - "drush --root=/app/web"
       - "--root=/app/web"
 ```
 
