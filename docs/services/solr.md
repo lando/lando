@@ -6,7 +6,11 @@ Solr
 Supported versions
 ------------------
 
-*   **[7.1](https://hub.docker.com/r/_/solr/)** **(default)**
+*   **[7.5](https://hub.docker.com/r/_/solr/)** **(default)**
+*   [7.4](https://hub.docker.com/r/_/solr/)
+*   [7.3](https://hub.docker.com/r/_/solr/)
+*   [7.2](https://hub.docker.com/r/_/solr/)
+*   [7.1](https://hub.docker.com/r/_/solr/)
 *   [7.0](https://hub.docker.com/r/_/solr/)
 *   [6.6](https://hub.docker.com/r/_/solr/)
 *   [6.5](https://hub.docker.com/r/_/solr/)

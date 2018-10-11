@@ -201,7 +201,7 @@ module.exports = lando => {
   };
 
   return {
-    defaultVersion: '7.1',
+    defaultVersion: '7.5',
     info: info,
     networks: networks,
     services: services,
