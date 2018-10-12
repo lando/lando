@@ -35,8 +35,8 @@ module.exports = lando => {
     }
 
     // Otherwise get the config type
-    const type = config.split(':')[0];
-    const value = config.split(':')[1] || type;
+    let type = config.split(':')[0];
+    let value = config.split(':')[1] || type;
 
     // Backwards compatibility for older drush config
     // This assumes versions set in the old format will be installed globally
@@ -70,13 +70,13 @@ module.exports = lando => {
       }
 
       // Set the command
-      build.services.appserver.run_internal.push(cmd);
+      build.services.appserver.install_dependencies_as_me_internal.push(cmd);
     }
 
     // Volume mount the drush cache
     const volumesKey = 'services.appserver.overrides.services.volumes';
     const vols = _.get(build, volumesKey, []);
-    vols.push('/const/www/.drush');
+    vols.push('/var/www/.drush');
     _.set(build, volumesKey, vols);
 
     // Return
@@ -106,8 +106,8 @@ module.exports = lando => {
     const drushConfig = _.get(config, 'drush', 'global:' + defaultDrush);
 
     // Handle drush
-    const buildersKey = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, buildersKey, []);
+    const buildersKey = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, buildersKey, []);
     build = drush(build, drushConfig);
 
     // Return the things

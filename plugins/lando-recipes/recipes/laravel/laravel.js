@@ -59,11 +59,11 @@ module.exports = lando => {
     const cgrInstall = helpers.getCgr('laravel/installer', '*');
 
     // Set builders if needed
-    const buildersKey = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, buildersKey, []);
+    const buildersKey = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, buildersKey, []);
 
     // Add our cgr cmds
-    build.services.appserver.run_internal.push(cgrInstall);
+    build.services.appserver.install_dependencies_as_me_internal.push(cgrInstall);
 
     // Add artisan command
     build.tooling.artisan = {

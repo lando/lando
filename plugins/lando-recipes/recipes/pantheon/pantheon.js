@@ -294,6 +294,21 @@ module.exports = lando => {
       cmd: '/helpers/push.sh',
       needs: ['database'],
       options: {
+        code: {
+          description: 'The environment to push the code to or [none]',
+          default: 'dev',
+          passthrough: true,
+          alias: ['c'],
+          interactive: {
+            type: 'list',
+            message: 'Push code to?',
+            choices: function() {
+              getEnvs(this.async(), ['test', 'live']);
+            },
+            default: 'dev',
+            weight: 500,
+          },
+        },
         message: {
           description: 'A message describing your change',
           passthrough: true,
@@ -303,6 +318,9 @@ module.exports = lando => {
             message: 'What did you change?',
             default: 'My awesome Lando-based changes',
             weight: 600,
+            when: function(answers) {
+              return answers.code !== 'none' && lando.cli.argv().code !== 'none';
+            },
           },
         },
         database: {
@@ -394,6 +412,7 @@ module.exports = lando => {
     const config = {
       type: version,
       backends: ['nginx'],
+      skipCheck: true,
       ssl: true,
       vcl: path.join(configDir, 'pantheon.vcl'),
     };
@@ -451,7 +470,7 @@ module.exports = lando => {
     });
 
     // Add a volume for terminus cache
-    volumes.push('/const/www/.terminus');
+    volumes.push('/var/www/.terminus');
 
     // Return the new volumes
     return volumes;
@@ -541,7 +560,7 @@ module.exports = lando => {
     }
 
     // Get the lando/pantheon base recipe/framework
-    const base = _.get(config, 'framework', 'drupal7');
+    let base = _.get(config, 'framework', 'drupal7');
 
     // If the pantheon framework is drupal, then use lando d7 recipe
     if (base === 'drupal') base = 'drupal7';
@@ -570,7 +589,7 @@ module.exports = lando => {
     // Add in our pantheon script
     // NOTE: We do this here instead of in /scripts because we need to gaurantee
     // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.run_as_root_internal = ['/helpers/pantheon.sh'];
+    build.services.appserver.install_dependencies_as_root_internal = ['/helpers/pantheon.sh'];
 
     // Mix in our additional services
     build.services.cache = redis(config.cache);
@@ -597,7 +616,7 @@ module.exports = lando => {
       build.services[cliService].overrides.services.image = cliImage;
 
       // Remove stuff from appserver
-      delete build.services.appserver.run_internal;
+      delete build.services.appserver.install_dependencies_as_me_internal;
 
       // Override some tooling things
       build.tooling.terminus.service = cliService;
@@ -610,7 +629,7 @@ module.exports = lando => {
     if (_.has(cache, 'token')) {
       const token = _.get(cache, 'token');
       const terminusLogin = 'terminus auth:login --machine-token=' + token;
-      build.services[cliService].run_internal.push(terminusLogin);
+      build.services[cliService].install_dependencies_as_me_internal.push(terminusLogin);
     }
 
     // Return the things

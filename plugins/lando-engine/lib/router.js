@@ -31,7 +31,7 @@ exports.destroy = (data, compose, docker) => retryEach(data, datum => {
  * Helper to route to exist command
  */
 exports.exists = (data, compose, docker, ids = []) => {
-  if (data.compose) return compose('getId', datum).then(id => !_.isEmpty(id));
+  if (data.compose) return compose('getId', data).then(id => !_.isEmpty(id));
   else {
     return docker.list()
     .each(container => {
@@ -63,7 +63,7 @@ exports.run = (data, compose, docker, started = true) => Promise.each(utils.norm
   //
   .then(() => {
     if (process.platform === 'win32') {
-      return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd}}));
+      return compose('run', _.merge({}, datum, {opts: {cmd: datum.cmd, id: datum.id}}));
     } else {
       return docker.run(datum.id, datum.cmd, datum.opts);
     }
@@ -74,7 +74,7 @@ exports.run = (data, compose, docker, started = true) => Promise.each(utils.norm
   })
   // Destroy if we have to
   .tap(() => {
-    if (_.get(datum, 'opts.autoRemove', false)) return exports.destroy(datum, compose, docker);
+    if (!started && _.get(datum, 'opts.autoRemove', false)) return exports.destroy(datum, compose, docker);
   });
 });
 
@@ -103,7 +103,7 @@ exports.scan = (data, compose, docker) => {
 exports.start = (data, compose) => retryEach(data, datum => compose('start', datum));
 
 /*
- * Helper to route to start command
+ * Helper to route to stop command
  */
 exports.stop = (data, compose, docker) => retryEach(data, datum => {
   return (datum.compose) ? compose('stop', datum) : docker.stop(utils.getId(datum));

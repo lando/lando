@@ -5,17 +5,39 @@ This example provides a very basic Ruby web application.
 
 See the `.lando.yml` in this directory for Ruby configuration options.
 
-Getting Started
----------------
+Launch ruby
+-----------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
-# Start up the example
+# Start up this ruby app
 lando start
+```
 
-# Check out other commands you can use with this example
-lando
+Verifying
+---------
+
+Validate things!
+
+```bash
+# Verify we are serving the right thing
+lando ssh appserver -c "curl localhost | grep TROUBLETROUBLETROUBLE"
+
+# Verify we have the ruby cli
+lando ruby -v
+
+# Verify we have the right ruby version
+lando ruby -v | grep 2.4.
+
+# Verify we have bundler cli
+lando bundler -v
+
+# Verify we have the gem cli
+lando gem -v
+
+# Verify we have the travis cli
+lando travis version
 ```
 
 Helpful Commands
@@ -30,9 +52,16 @@ lando ruby -v
 # Run bundler things
 lando bundler
 
-# Use gem to install the travis cli
-# NOTE: We've already defined a travis command in our .lando.yml so this once its
-# installed it should run
-lando gem install travis
+# Use travis gem
 lando travis
+```
+
+Nuke everything
+---------------
+
+Run the following steps to clean things up
+
+```bash
+# Kill ruby
+lando destroy -y
 ```

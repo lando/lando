@@ -7,25 +7,41 @@ This method can be used for any of the other images we use to power our other [s
 
 See the `.lando.yml` in this directory for configuration options.
 
-Getting Started
----------------
+Boot it up
+----------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following steps to get up and running with this example.
 
 ```bash
-# Start up the example
+# Spin up a lemp stack with a custom and locally built Dockerfile
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Sanity checks
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run these commands to verify things spun up correctly
 
 ```bash
+# Verify we are using the correct local custom image
+docker inspect dockerfile_appserver_1 | grep Image | grep pirog/php:7.1-fpm-custom
+
 # Verify the provided via-dockerfile-php extension is loaded
 lando php -i | grep pcntl
+
+# Verify custom volume mounts
+lando php -i | grep memory_limit | grep 513M
+```
+
+Burn it to the ground
+---------------------
+
+Run these commands to verify things have been cleaned up
+
+```bash
+# Destroy the custom docker image
+docker rmi -f pirog/php:7.1-fpm-custom
+
+# Destroy the app
+lando destroy -y
 ```

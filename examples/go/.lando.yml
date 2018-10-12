@@ -34,25 +34,11 @@ services:
     #
     command: go run /app/http1.go
 
-    # Install some extra server packages
-    # run_as_root:
-    #  - "apt-get update -y"
-    #  - "apt-get install vim -y"
-
-    # Print a message just to demonstrate this
-    # run:
-    # - "cd $LANDO_MOUNT & echo 'Holla!'"
-
 # Add some nice command routing
 tooling:
-
-  # Any go service with a defined command (aka not running in cli only mode)
-  # Will also spin up a go cli container called `SERVICENAME_cli` (appserver_cli)
-  # in this example.
-  #
   # This will allow you to run things like `lando npm install` without needing
   # to `lando start` first. This is particularly needed for go based projects
   # since you almost always need to run `npm install` before you can boot up your
   # app successfully.
   go:
-    service: appserver_cli
+    service: appserver

@@ -3,11 +3,14 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
+  const esd = lando.config.engineScriptsDir;
+  const addScript = lando.utils.services.addScript;
 
   /*
    * Supported versions for node
    */
   const versions = [
+    '10',
     '9',
     '8',
     'carbon',
@@ -74,7 +77,6 @@ module.exports = lando => {
       },
       working_dir: config._mount,
       ports: ['80'],
-      expose: ['80'],
       volumes: vols,
       command: '/bin/sh -c "' + command.join(' && ') + '"',
     };
@@ -88,13 +90,15 @@ module.exports = lando => {
     // Generate some certs we can use
     if (config.ssl) {
       node.ports.push('443');
+      // Inject add-cert so we can get certs before our app starts
+      node.volumes = addScript('add-cert.sh', node.volumes, esd, 'scripts');
     }
 
     // Add our npm things to run step
     if (!_.isEmpty(config.globals)) {
       _.forEach(config.globals, (version, pkg) => {
         // Ensure globals is arrayed
-        config.run_internal = config.run_internal || [];
+        config.install_dependencies_as_me_internal = config.install_dependencies_as_me_internal || [];
 
         // Queue up our global composer command
         const nig = ['npm', 'install', '-g'];
@@ -111,7 +115,7 @@ module.exports = lando => {
         nig.push(dep.join('@'));
 
         // Add before our other builds
-        config.run_internal.unshift(nig.join(' '));
+        config.install_dependencies_as_me_internal.unshift(nig.join(' '));
       });
     }
 

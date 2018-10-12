@@ -34,7 +34,7 @@ module.exports = lando => {
     // Add wp-cli to volumes
     const volumesKey = 'services.appserver.overrides.services.volumes';
     const vols = _.get(build, volumesKey, []);
-    vols.push('/const/www/.wp-cli');
+    vols.push('/var/www/.wp-cli');
     _.set(build, volumesKey, vols);
 
     // Build what we need to get the wp-cli install command
@@ -47,11 +47,11 @@ module.exports = lando => {
     const wpInstall = helpers.getPhar(pharUrl, src, dest, wpStatusCheck);
 
     // Set builders if needed
-    const key = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, key, []);
+    const key = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, key, []);
 
     // Add our isntall cmds
-    build.services.appserver.run_internal.push(wpInstall);
+    build.services.appserver.install_dependencies_as_me_internal.push(wpInstall);
 
     // Add wp command
     build.tooling.wp = {

@@ -3,7 +3,7 @@ usage
 
 > #### Warning::Windows users must use CMD.exe or POWERSHELL
 >
-> This is an upstream "restriction" imposed on us by NodeJS. Other shells besides `cmd.exe` and `ps.exe` may work but have > not been tested. If your shell does not work you will likely see an error message like `the input device is not a TTY.`
+> This is an upstream "restriction" imposed on us by NodeJS. Other shells besides `cmd.exe` and `ps.exe` may work but have not been tested. If your shell does not work you will likely see an error message like `the input device is not a TTY.`
 >
 > See https://github.com/nodejs/node/issues/3006.
 

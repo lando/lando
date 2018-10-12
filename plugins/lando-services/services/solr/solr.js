@@ -5,8 +5,10 @@ module.exports = lando => {
   const _ = lando.node._;
   const path = require('path');
 
+  const addScript = lando.utils.services.addScript;
   const addConfig = lando.utils.services.addConfig;
   const buildVolume = lando.utils.services.buildVolume;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for nginx
@@ -57,10 +59,10 @@ module.exports = lando => {
     const core = config.core || 'index1';
 
     // Start up the solr config collector
-    const solrConfig = {};
+    let solrConfig = {};
 
-    // Normalize our run_as_root_internal
-    config.run_as_root_internal = config.run_as_root_internal || [];
+    // Normalize our install_dependencies_as_root_internal
+    config.install_dependencies_as_root_internal = config.install_dependencies_as_root_internal || [];
 
     // Figure out which config base to use
     if (_.includes(['3.6', '4.10'], config.version)) {
@@ -100,7 +102,7 @@ module.exports = lando => {
     if (config.version !== 'custom') {
       const dataDir = solrConfig.dataDir;
       const dataDirCmd = ['chown', '-R', 'solr:solr', dataDir].join(' ');
-      config.run_as_root_internal.unshift(dataDirCmd);
+      config.install_dependencies_as_root_internal.unshift(dataDirCmd);
     }
 
     // Handle custom config dir
@@ -124,12 +126,15 @@ module.exports = lando => {
         const coreConf = path.join(solrConfig.dataDir, core, 'conf');
         const coreConfSymCmd = ['ln', '-sf', confDir, coreConf].join(' ');
         const coreRmCmd = ['rm', '-rf', coreConf].join(' ');
-        config.run_as_root_internal.unshift(coreConfSymCmd);
-        config.run_as_root_internal.unshift(coreRmCmd);
+        config.install_dependencies_as_root_internal.unshift(coreConfSymCmd);
+        config.install_dependencies_as_root_internal.unshift(coreRmCmd);
       }
     }
 
     // Handle ssl option
+    // Inject add-cert so we can get certs before our app starts
+    // @todo: we need legit handling of the below
+    solr.volumes = addScript('add-cert.sh', solr.volumes, esd, 'scripts');
     // @todo: figure out how to handle SSL options
     /*
     if (config.ssl) {

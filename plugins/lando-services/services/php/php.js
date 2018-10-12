@@ -4,11 +4,13 @@ module.exports = lando => {
   // Modules
   const _ = lando.node._;
   const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
   const buildVolume = lando.utils.services.buildVolume;
   const path = require('path');
 
   // "Constants"
   const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for php
@@ -83,7 +85,7 @@ module.exports = lando => {
     };
 
     // Merge in defaults
-    _.forEach(typeConfig, function(c) {
+    _.forEach(typeConfig, c => {
       _.merge(c, {
         mount: config._mount,
         phpConf: '/usr/local/etc/php/conf.d/xxx-lando-default.ini',
@@ -139,7 +141,7 @@ module.exports = lando => {
       '/usr/bin',
       '/sbin',
       '/bin',
-      '/const/www/.composer/vendor/bin',
+      '/var/www/.composer/vendor/bin',
     ];
 
     // Build the webroot
@@ -161,7 +163,7 @@ module.exports = lando => {
       },
       ports: ['80'],
       volumes: [
-        '/const/www/.composer',
+        '/var/www/.composer',
         '/usr/local/bin',
       ],
       command: config.command.join(' '),
@@ -187,17 +189,19 @@ module.exports = lando => {
     // If this is apache lets set our default config
     if (config.web === 'apache') {
       // Set the default conf file
-      const defaultConfFile = 'httpd.conf';
+      let defaultConfFile = 'httpd.conf';
 
       // Add ssl specific things if we need them
       if (config.ssl) {
         php.ports.push('443');
         defaultConfFile = 'httpd-ssl.conf';
+        // Inject add-cert so we can get certs before our app starts
+        php.volumes = addScript('add-cert.sh', php.volumes, esd, 'scripts');
       }
 
       // If php version 5.3 we need to set the logs dir
       if (config.version === '5.3') {
-        php.environment.APACHE_LOG_DIR = '/const/log';
+        php.environment.APACHE_LOG_DIR = '/var/log';
       }
 
       // Handle our apache config
@@ -336,13 +340,13 @@ module.exports = lando => {
       }
     });
 
-    // Ensure run_internal is arrayed
-    config.run_internal = config.run_internal || [];
+    // Ensure install_dependencies_as_me_internal is arrayed
+    config.install_dependencies_as_me_internal = config.install_dependencies_as_me_internal || [];
 
-    // Add our composer things to run_internal
+    // Add our composer things to install_dependencies_as_me_internal
     if (!_.isEmpty(config.composer)) {
       _.forEach(config.composer, (version, pkg) => {
-        config.run_internal.unshift(cgr(pkg, version));
+        config.install_dependencies_as_me_internal.unshift(cgr(pkg, version));
       });
     }
 

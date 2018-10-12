@@ -53,11 +53,6 @@ services:
     composer:
       overtrue/phplint: '*'
 
-    # Optionally run the following commands after the service is started
-    # Runs composer install but dont fail on an error
-    run:
-      - "cd $LANDO_MOUNT && composer install || true"
-
   # Add in the latest mariadb
   database:
     type: mariadb
@@ -76,9 +71,7 @@ tooling:
   composer:
     service: appserver
     description: Run composer commands
-    cmd:
-      - composer
-      - --ansi
+    cmd: composer --ansi
   php:
     service: appserver
   mysql:

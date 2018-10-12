@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const esc = require('shell-escape');
 const path = require('path');
 
 /*
@@ -39,6 +40,8 @@ exports.buildCommand = (app, command, needs, service, user) => ({
     user: user,
     services: _.compact(_.flatten([service, needs])),
     hijack: false,
+    // @todo: should we have a better system to generate certs vs refreshing things?
+    autoRemove: true,
   },
 });
 
@@ -75,8 +78,9 @@ exports.getOpts = (argopts = process.argv.slice(3)) => {
  * Helper to get passthru options
  */
 exports.getPassthruOpts = (options = {}, answers = {}) => _(options)
+  .map((value, key) => _.merge({}, {name: key}, value))
   .filter(value => value.passthrough = true)
-  .map(value => `--${value.name}=${answers[value.name]}`)
+  .map(value => esc(`--${value.name}=${answers[value.name]}`))
   .value();
 
 /*

@@ -29,7 +29,7 @@ module.exports = lando => {
     const services = {};
 
     // Get the hosts
-    const hosts = _.get(config, 'hosts', 'database');
+    let hosts = _.get(config, 'hosts', 'database');
 
     // Arrayify the hosts if needed
     if (!_.isArray(hosts)) {

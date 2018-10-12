@@ -4,10 +4,12 @@ module.exports = lando => {
   // Modules
   const _ = lando.node._;
   const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
   const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
   const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for apache
@@ -63,6 +65,9 @@ module.exports = lando => {
     if (config.ssl) {
       // Add the SSL port
       apache.ports.push('443');
+
+      // Inject add-cert so we can get certs before our app starts
+      apache.volumes = addScript('add-cert.sh', apache.volumes, esd, 'scripts');
 
       // If we don't have a custom default ssl config lets use the default one
       const sslConf = ['apache', 'httpd-ssl.conf'];

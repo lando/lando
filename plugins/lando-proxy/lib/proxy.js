@@ -33,9 +33,8 @@ exports.compose = (defaults, ports, project) => ({
 /*
  * Create the default service object
  */
-exports.defaults = domain => {
-  // Get some stuff for our things
-  const certs = ['/certs/cert.crt', '/certs/cert.key'].join(',');
+exports.defaults = (domain, cert, key) => {
+  const certs = [cert, key].join(',');
   const cmd = [
     '/entrypoint.sh',
     '--defaultEntryPoints=https,http',
@@ -58,9 +57,12 @@ exports.defaults = domain => {
     },
     environment: {
       LANDO_APP_NAME: 'proxy',
+      LANDO_CA_CERT: `/lando/certs/${domain}.pem`,
+      LANDO_CA_KEY: `/lando/certs/${domain}.key`,
+      LANDO_DOMAIN: domain,
       LANDO_SERVICE_TYPE: 'proxy',
       LANDO_SERVICE_NAME: 'proxy',
-      LANDO_UPDATE: '3',
+      LANDO_UPDATE: '4',
     },
     networks: ['edge'],
     volumes: [
@@ -68,6 +70,8 @@ exports.defaults = domain => {
       '/dev/null:/traefik.toml',
       '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
       '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/scripts/add-cert.sh',
+      '$LANDO_ENGINE_SCRIPTS_DIR/add-cert.sh:/helpers/add-cert.sh',
+      '$LANDO_ENGINE_SCRIPTS_DIR/refresh-certs.sh:/scripts/refresh-certs.sh',
       '$LANDO_ENGINE_CONF:/lando',
     ],
   };

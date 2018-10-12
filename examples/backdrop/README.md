@@ -37,3 +37,47 @@ lando info
 cd www
 lando drush status
 ```
+
+Bootup
+------
+
+Bootup the example for testing.
+
+```bash
+# Start the Backdrop example app
+lando start
+```
+
+Testing
+-------
+
+```bash
+# Test getting Backdrop codebase
+if [ -d "www" ]; then rm -Rf www; fi
+git clone https://github.com/backdrop/backdrop.git www
+
+# Verify that there is a backdrop code base
+lando ssh -c "ls www |grep index.php"
+
+# Test removing database
+lando ssh -c "mysql -ubackdrop -pbackdrop -h database -e \'drop database if exists backdrop\'"
+
+# Test adding a database
+lando ssh -c "mysql -ubackdrop -pbackdrop -h database -e \'create database if not exists backdrop\'"
+
+# Test installing Backdrop via drush
+lando ssh -c "cd www && drush si --db-url=mysql://backdrop:backdrop@database/backdrop -y"
+
+# Verify that we can visit the homepage
+lando ssh -c "curl appserver |grep \'This is your first post! You may edit or delete it.\'"
+```
+
+Cleanup
+-------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Destroy the example
+lando destroy -y
+```

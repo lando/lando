@@ -11,6 +11,10 @@ config:
 # Add in some custom event scripting
 events:
 
+  # Run a command before the app starts
+  pre-start:
+    - echo "PARTY IN THE USA!"
+
   # Run some commands after `lando db-import`
   post-db-import:
 

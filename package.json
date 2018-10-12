@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-beta.47",
+  "version": "3.0.0-rc.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -34,7 +34,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "lint": "eslint bin docs lib plugins scripts test",
+    "lint": "eslint bin docs lib plugins scripts test/unit",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release:major": "node ./scripts/bump.js --type=major",
@@ -43,7 +43,7 @@
     "release:pre": "node ./scripts/bump.js --type=prerelease",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
     "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/unit/**/*.spec.js plugins/**/test/unit/**/*.spec.js",
-    "test:functional": "mocha --timeout 5000 test/functional/**/*.spec.js plugins/**/test/functional/**/*.spec.js",
+    "test:functional": "node ./scripts/generate-tests.js && mocha --timeout 900000 test/func/**/*.spec.js",
     "test": "yarn lint && yarn test:unit"
   },
   "pkg": {
@@ -101,11 +101,13 @@
     "chai-events": "^0.0.1",
     "command-line-test": "^1.0.10",
     "coveralls": "^3.0.1",
+    "dot": "^1.1.2",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
     "gitbook-cli": "^2.3.0",
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
+    "marked": "^0.5.0",
     "mocha": "^4.1.0",
     "mock-fs": "^4.4.2",
     "nyc": "^12.0.1",

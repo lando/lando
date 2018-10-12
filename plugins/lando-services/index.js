@@ -120,6 +120,10 @@ module.exports = lando => {
 
   // Do some other things
   lando.events.on('post-instantiate-app', app => {
+    // Build lockfiles
+    const preLockfile = app.name + '.build.lock';
+    const postLockfile = app.name + '.post-build.lock';
+
     // Add in our app info
     _.forEach(app.config.services, (service, name) => {
       // Load the main service
@@ -185,11 +189,6 @@ module.exports = lando => {
       });
     });
 
-    // Remove build cache on an uninstall
-    app.events.on('post-uninstall', () => {
-      lando.cache.remove(app.name + '.last_build');
-    });
-
     // Add some logic that extends start until healthchecked containers report as healthy
     app.events.on('post-start', 1, () => {
       // Get this apps containers
@@ -213,12 +212,17 @@ module.exports = lando => {
       });
     });
 
+    // Remove build locks on an uninstall
+    app.events.on('post-uninstall', () => {
+      lando.cache.remove(preLockfile);
+      lando.cache.remove(postLockfile);
+    });
+
     // Handle build steps
     // Go through each service and run additional build commands as needed
-    app.events.on('post-start', () => {
+    app.events.on('app-ready', () => {
       // Start up a build collector and set target build services
-      const buildServices = app.config.services;
-
+      let buildServices = app.config.services;
       // Check to see if we have to filter out build services
       // Currently this only exists so we can ensure lando rebuild's -s option
       // is respected re: build steps
@@ -227,51 +231,35 @@ module.exports = lando => {
         buildServices = _.pick(buildServices, picker);
       }
 
-      // Get the constructed build
-      const build = _.map(utils.filterBuildSteps(buildServices), step => {
-        // Discover the user
-        const userPath = 'environment.LANDO_WEBROOT_USER';
-        const user = _.get(app.services[step.name], userPath, 'root');
+      // Pre app start build steps
+      const preRootSteps = [
+        'install_dependencies_as_root_internal',
+        'install_dependencies_as_root',
+      ];
+      const preBuildSteps = [
+        'install_dependencies_as_me_internal',
+        'install_dependencies_as_me',
+      ];
+      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps);
 
-        // Map to a compose object
-        return {
-          id: step.container,
-          cmd: step.cmd,
-          compose: app.compose,
-          project: app.name,
-          opts: {
-            app: app,
-            mode: 'attach',
-            user: (step.type === 'root') ? 'root' : user,
-            services: [step.container.split('_')[1]],
-          },
-        };
-      });
+      // Post app start build steps
+      const postRootSteps = [
+        'run_as_root_internal',
+        'run_as_root',
+        'extras',
+      ];
+      const postBuildSteps = [
+        'run_internal',
+        'run_as_me_internal',
+        'run',
+        'run_as_me',
+        'build',
+      ];
+      const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
 
-      // Only proceed if build is non-empty
-      if (!_.isEmpty(build)) {
-        // Compute the build hash
-        const newHash = lando.node.hasher(app.config);
-
-        // If our new hash is different then lets build
-        if (lando.cache.get(app.name + '.last_build') !== newHash) {
-          // Run the stuff
-          return lando.engine.run(build)
-
-          // Save the new hash if everything works out ok
-          .then(() => {
-            lando.cache.set(app.name + '.last_build', newHash, {persist: true});
-          })
-
-          // Make sure we don't save a hash if our build fails
-          .catch(error => {
-            lando.log.error('Looks like one of your build steps failed with %s', error);
-            lando.log.warn('This **MAY** prevent your app from working');
-            lando.log.warn('Check for errors above, fix them, and try again');
-            lando.log.debug('Build error %s', error.stack);
-          });
-        }
-      }
+      // Queue up both legacy and new build steps
+      app.events.on('pre-start', () => utils.runBuild(lando, preBuild, preLockfile));
+      app.events.on('post-start', () => utils.runBuild(lando, postBuild, postLockfile));
     });
   });
 

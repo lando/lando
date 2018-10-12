@@ -97,11 +97,23 @@ module.exports = class Landerode extends Dockerode {
         .then(data => exec.inspect()
           // Determine whether we can reject or not
           .then(result => new Promise((resolve, reject) => {
+            if (opts.detach) resolve();
             if (result.ExitCode === 0) resolve(data.stdout);
             else reject({message: data.stderr + data.stdout, code: result.ExitCode});
           }))
         )
       )
     );
+  };
+
+  /*
+   * Do a docker stop
+   */
+  stop(cid, opts = {}) {
+    return this.getContainer(cid).stop(opts)
+    // Wrap errors.
+    .catch(err => {
+      throw new Error(err, 'Error stopping container %s.', cid);
+    });
   };
 };

@@ -8,6 +8,7 @@ const escSpaces = require('./utils').escSpaces;
 // Helper object for flags
 const composeFlags = {
   background: '-d',
+  detach: '-d',
   environment: '-e',
   follow: '--follow',
   force: '--force',
@@ -27,7 +28,7 @@ const composeFlags = {
 const defaultOptions = {
   build: {noCache: false, pull: true},
   down: {removeOrphans: true, volumes: true},
-  exec: {user: 'root'},
+  exec: {detach: false, user: 'root'},
   kill: {},
   logs: {follow: false, timestamps: false},
   ps: {q: true},
@@ -123,6 +124,8 @@ exports.run = (compose, project, opts = {}) => {
   if (_.has(opts, 'pre')) opts.cmd = [opts.pre, opts.cmd].join('&&');
   // Remake command
   opts.cmd = ['/bin/sh', '-c', opts.cmd];
+  // Reset services based on the ID
+  opts.services = [opts.id.split('_')[1]];
   // Build the command
   return buildShell('exec', project, compose, opts, opts.app, 'attach');
 };

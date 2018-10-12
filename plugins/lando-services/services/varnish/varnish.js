@@ -27,7 +27,7 @@ module.exports = lando => {
   /*
    * Build an nginx ssl-termination endpoint
    */
-  const nginx = function(config) {
+  const nginx = config => {
     // Get the name
     const name = config.name;
 
@@ -44,6 +44,7 @@ module.exports = lando => {
     config = _.merge(config, {
       type: 'nginx',
       ssl: true,
+      skipCheck: config.skipCheck || false,
       config: nginxConf,
     });
 

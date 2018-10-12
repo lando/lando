@@ -7,13 +7,10 @@ module.exports = lando => {
   const path = require('path');
   const proxy = require('./lib/proxy');
   const routes = require('./lib/routes');
-
-  // Fixed location of our proxy service compose file
-  const proxyFile = path.join(lando.config.userConfRoot, 'proxy', 'proxy.yml');
-  const portsFile = path.join(lando.config.userConfRoot, 'proxy', 'ports.yml');
-  const projectName = 'landoproxyhyperion5000gandalfedition';
+  const ucr = lando.config.userConfRoot;
 
   // Add some config for the proxy
+  // Lets so this early to make sure other plugins have proxyConf
   lando.events.on('post-bootstrap', 1, lando => {
     // Log
     lando.log.info('Configuring proxy plugin');
@@ -21,27 +18,32 @@ module.exports = lando => {
     // Proxy defaults
     const defaultProxyConfig = {
       proxy: 'ON',
+      proxyCert: '/certs/cert.crt',
       proxyDomain: 'lndo.site',
-      proxyDash: '58086',
+      proxyKey: '/certs/cert.key',
+      proxyName: 'landoproxyhyperion5000gandalfedition',
+      proxyDash: '58087',
       proxyHttpPort: '80',
       proxyHttpsPort: '443',
       proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
       proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
-      proxyNet: [projectName, 'edge'].join('_'),
-      proxyRunner: proxy.compose(proxyFile, portsFile, projectName),
     };
 
     // Merge config over defaults
     lando.config = lando.utils.config.merge(defaultProxyConfig, lando.config);
+
+    // Set some things that are derived from the proxyName
+    const proxyName = lando.config.proxyName;
+    lando.config.proxyProxyFile = path.join(ucr, 'proxy', `proxy-${proxyName}.yml`);
+    lando.config.proxyPortsFile = path.join(ucr, 'proxy', `ports-${proxyName}.yml`);
+    lando.config.proxyNet = [proxyName, 'edge'].join('_');
+    lando.config.proxyRunner = proxy.compose(lando.config.proxyProxyFile, lando.config.proxyPortsFile, proxyName);
 
     // Construct lists
     const http = [lando.config.proxyHttpPort, lando.config.proxyHttpFallbacks];
     const https = [lando.config.proxyHttpsPort, lando.config.proxyHttpsFallbacks];
     lando.config.proxyHttpPorts = _.flatten(http);
     lando.config.proxyHttpsPorts = _.flatten(https);
-
-    // Dump defaults
-    lando.yaml.dump(proxyFile, proxy.defaults(lando.config.proxyDomain));
 
     // Log it
     lando.log.verbose('Proxy plugin configured with %j', lando.config);
@@ -50,7 +52,7 @@ module.exports = lando => {
 
   // Turn the proxy off on powerdown if applicable
   lando.events.on('poweroff', () => {
-    if (lando.config.proxy === 'ON' && fs.existsSync(portsFile)) {
+    if (lando.config.proxy === 'ON' && fs.existsSync(lando.config.proxyPortsFile)) {
       return lando.engine.stop(lando.config.proxyRunner);
     }
   });
@@ -59,6 +61,9 @@ module.exports = lando => {
   lando.events.on('post-instantiate-app', app => {
     // If the proxy is on and our app has config
     if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
+      // Dump defaults
+      const proxyDefaults = proxy.defaults(lando.config.proxyDomain, lando.config.proxyCert, lando.config.proxyKey);
+      lando.yaml.dump(lando.config.proxyProxyFile, proxyDefaults);
       const scanPorts = config => {
         // Get the engine IP
         const engineIp = _.get(config, 'engineConfig.host', '127.0.0.1');
@@ -94,7 +99,7 @@ module.exports = lando => {
         // Do some port discovery
         return lando.Promise.try(() => {
           // If there is no proxy file then lets scan the ports
-          if (!fs.existsSync(portsFile)) {
+          if (!fs.existsSync(lando.config.proxyPortsFile)) {
             return scanPorts(lando.config);
           } else {
             // Inspect current proxy to make sure we don't incorrectly rebuild
@@ -120,18 +125,18 @@ module.exports = lando => {
           const data = proxy.build(proxyDash, ports.http, ports.https);
 
           // If we are building the proxy for the first time
-          if (!fs.existsSync(portsFile)) {
+          if (!fs.existsSync(lando.config.proxyPortsFile)) {
             lando.log.verbose('Starting proxy for the first time');
-            lando.yaml.dump(portsFile, data);
+            lando.yaml.dump(lando.config.proxyPortsFile, data);
           }
 
           // Get the current proxy
-          const proxyOld = lando.yaml.load(portsFile);
+          const proxyOld = lando.yaml.load(lando.config.proxyPortsFile);
 
           // If the proxy is different, rebuild with new and stop the old
           if (JSON.stringify(proxyOld) !== JSON.stringify(data)) {
             lando.log.verbose('Proxy has changed, rebuilding');
-            lando.yaml.dump(portsFile, data);
+            lando.yaml.dump(lando.config.proxyPortsFile, data);
           }
         })
 
@@ -149,7 +154,7 @@ module.exports = lando => {
               lando.log.warn('Something is wrong with the proxy! %s', error);
               lando.log.debug('Proxy error! %s', error.stack);
               lando.log.warn('Trying to take corrective action...');
-              const id = [projectName, 'proxy', '1'].join('_');
+              const id = [lando.config.proxyName, 'proxy', '1'].join('_');
               return lando.engine.destroy({id: id, opts: {force: true}}).then(() => lando.Promise.reject());
             });
           });
@@ -247,7 +252,7 @@ module.exports = lando => {
           const project = app.project || app.name;
 
           // Write the services
-          const projectDir = path.dirname(proxyFile);
+          const projectDir = path.dirname(lando.config.proxyProxyFile);
           const fileName = [project, 'proxy', _.uniqueId()].join('-');
           const file = path.join(projectDir, fileName + '.yml');
 

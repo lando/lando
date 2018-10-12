@@ -26,10 +26,6 @@ describe('scripts', () => {
       util.bumpVersion('1.0.0').should.equal('1.0.1');
     });
 
-    it('should return version with bumped beta as prerelease type default', () => {
-      util.bumpVersion('1.0.0-beta.1', 'prerelease').should.equal('1.0.0-beta.2');
-    });
-
     it('should return version with bumped specified prerelease when it is specified for prerelease type', () => {
       util.bumpVersion('1.0.0-whatevs.5', 'prerelease', 'whatevs').should.equal('1.0.0-whatevs.6');
     });
@@ -49,6 +45,10 @@ describe('scripts', () => {
     it('should return version with bumped patch when type is something else', () => {
       util.bumpVersion('1.0.0', 'jacksonbrowne').should.equal('1.0.1');
     });
+  });
+
+  describe('#buildTemplateFunction', () => {
+    it('should return a template rendering function');
   });
 
   describe('#cliTargetOs', () => {
@@ -117,6 +117,11 @@ describe('scripts', () => {
     });
   });
 
+  describe('#findReadmes', () => {
+    it('should return a list of absolute paths');
+    it('should return a path only if a README.md exists at DIR/ANOTHERDIR/README.md');
+  });
+
   describe('#fixAlias', () => {
     it('should return itself if no alias property', () => {
       const command = util.fixAlias({thing: 'stuff'});
@@ -176,6 +181,10 @@ describe('scripts', () => {
       command.should.not.have.property('mode');
       resetPlatform();
     });
+  });
+
+  describe('#parseReadmes', () => {
+    it('should return metadata we can use to generate test files');
   });
 
   describe('#installerPkgTask', () => {

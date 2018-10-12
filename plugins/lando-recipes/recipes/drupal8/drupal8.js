@@ -26,16 +26,16 @@ module.exports = lando => {
       const drupalInstall = helpers.getPhar(pharUrl, src, dest);
 
       // Set builders and volumes if needed
-      const builderKey = 'services.appserver.run_internal';
-      build.services.appserver.run_internal = _.get(build, builderKey, []);
+      const builderKey = 'services.appserver.install_dependencies_as_me_internal';
+      build.services.appserver.install_dependencies_as_me_internal = _.get(build, builderKey, []);
 
       // Add our drupal cmds and volumes
-      build.services.appserver.run_internal.push(drupalInstall);
+      build.services.appserver.install_dependencies_as_me_internal.push(drupalInstall);
 
       // Volume mount the drupal console cache
       const volumesKey = 'services.appserver.overrides.services.volumes';
       const vols = _.get(build, volumesKey, []);
-      vols.push('/const/www/.drupal');
+      vols.push('/var/www/.drupal');
       _.set(build, volumesKey, vols);
 
       // Set tooling

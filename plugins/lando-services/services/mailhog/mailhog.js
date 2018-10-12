@@ -89,12 +89,12 @@ module.exports = lando => {
         const phpConfiDir = _.get(hogConf, 'phpConfDir', defaultConf);
         const remote = phpConfiDir + '/' + defaultFile;
         const iniMount = buildVolume(mailHogConf, remote, scd);
-        const volumes = _.get(app.services[hog], 'volumes', {});
+        let volumes = _.get(app.services[hog], 'volumes', {});
         volumes = addConfig(iniMount, volumes);
         _.set(app.services[hog], 'volumes', volumes);
 
         // Add in mhsendmail run as root interal steps
-        const rootKey = 'run_as_root_internal';
+        const rootKey = 'install_dependencies_as_root_internal';
         const rootSteps = _.get(app.config.services[hog], rootKey, []);
         rootSteps.push(downloadCmd);
         rootSteps.push(chmodCmd);
