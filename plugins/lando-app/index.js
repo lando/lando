@@ -93,13 +93,16 @@ module.exports = lando => {
     // Mix in labels
     app.labels = merger(app.labels, labels);
 
+    // Path to project .env file
+    const envPath = path.join(app.root, '.env');
+
     // Inject values from an .env file if it exists
-    if (fs.existsSync(path.join(app.root, '.env'))) {
+    if (fs.existsSync(envPath)) {
       // Log
       lando.log.debug('.env file found for %s, loading its config', app.name);
 
-      // Load .env file
-      const result = dotenv.config();
+      // Load .env file from app.root
+      const result = dotenv.config({path: envPath});
 
       // warn if needed
       if (result.error) {
