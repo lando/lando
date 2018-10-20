@@ -201,7 +201,7 @@ $databases['default']['default'] = array (
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 # The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
