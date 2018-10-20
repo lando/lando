@@ -244,3 +244,7 @@
 
 *   [2018](changelog/2018.md)
 *   [2017](changelog/2017.md)
+
+## Jobs!
+
+*   [Full Stack Drupal Dev](jobs/2018-full-stack-dev.md)

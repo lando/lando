@@ -380,7 +380,7 @@ DRUPAL_HASH_SALT: Needed for Drupal8. We set this automatically.
 LANDO_INFO={MY APP METADATA}
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+These are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
 
 **NOTE:** These can vary based on the choices you make in your recipe config.
 **NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
