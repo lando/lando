@@ -1,34 +1,28 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var merger = lando.utils.config.merge;
-  var path = require('path');
-  var utils = require('./lib/utils');
+  const _ = lando.node._;
+  const merger = lando.utils.config.merge;
+  const path = require('path');
+  const utils = require('./lib/utils');
 
   // Constants
-  var esd = lando.config.engineScriptsDir;
-  var scd = lando.config.servicesConfigDir;
-  var shd = lando.config.servicesHelpersDir;
+  const esd = lando.config.engineScriptsDir;
+  const scd = lando.config.servicesConfigDir;
+  const shd = lando.config.servicesHelpersDir;
 
   // Registry of services
-  var registry = {};
+  const registry = {};
 
-  // The bridge network
-  var landoBridgeNet = 'lando_bridge_network';
-
-  /**
+  /*
    * Retrieve the default version of a service.
    * Some services don't define a default, but all SHOULD.
    * @param {string} type The type of the service
    * @return {string} the version to use by default, latest if isn't defined
    * @todo Make sure all core services implement default version, then deprecate
    */
-  var getDefaultVersion = function(type) {
-    return _.get(registry[type], 'defaultVersion', 'latest');
-  };
+  const getDefaultVersion = type => _.get(registry[type], 'defaultVersion', 'latest');
 
   /*
    * Get all services
@@ -36,7 +30,7 @@ module.exports = function(lando) {
    * @since 3.0.0
    * @alias 'lando.services.get'
    */
-  var get = function() {
+  const get = function() {
     return _.keys(registry);
   };
 
@@ -44,22 +38,23 @@ module.exports = function(lando) {
    * Add a service to the registry
    *
    * @since 3.0.0
-   * @alias 'lando.services.add'
+   * @alias lando.services.add
+   * @param {String} name The name of the service
+   * @param {Module} service The required module
    */
-  var add = function(name, module) {
-    registry[name] = module;
+  const add = (name, service) => {
+    registry[name] = service;
   };
 
-  /**
+  /*
    * Delegator to gather info about a service for display to the user
    *
    * @since 3.0.0
-   * @alias 'lando.services.info'
+   * @alias lando.services.info
    */
-  var info = function(name, type, config) {
-
-    var service = type.split(':')[0];
-    var version = type.split(':')[1] || getDefaultVersion(type);
+  const info = (name, type, config) => {
+    const service = type.split(':')[0];
+    const version = type.split(':')[1] || getDefaultVersion(type);
 
     // Check to verify whether the service exists in the registry
     if (!registry[service]) {
@@ -68,7 +63,7 @@ module.exports = function(lando) {
     }
 
     // Start an info collector
-    var info = {};
+    let info = {};
 
     // Add basic info about our service
     info.type = service;
@@ -83,19 +78,17 @@ module.exports = function(lando) {
 
     // Return info
     return info;
-
   };
 
-  /**
+  /*
    * The core service builder
    *
    * @since 3.0.0
    * @alias 'lando.services.build'
    */
-  var build = function(name, type, config) {
-
+  const build = (name, type, config) => {
     // Parse the type
-    var service = type.split(':')[0];
+    const service = type.split(':')[0];
 
     // Add a version from the tag if available
     config.version = type.split(':')[1] || getDefaultVersion(type);
@@ -120,18 +113,18 @@ module.exports = function(lando) {
     // NOTE: we need to do this because on macOS and Windows not all host files
     // are shared into the docker vm
     if (_.has(registry[service], 'configDir')) {
-      var to = path.join(scd, service);
+      const to = path.join(scd, service);
       lando.utils.engine.moveConfig(registry[service].configDir, to);
     }
 
     // Get the networks, services and volumes
-    var networks = registry[service].networks(name, config);
-    var services = registry[service].services(name, config);
-    var volumes = registry[service].volumes(name, config);
+    let networks = registry[service].networks(name, config);
+    let services = registry[service].services(name, config);
+    let volumes = registry[service].volumes(name, config);
 
     // Add in the our global docker entrypoint
     // NOTE: this can be overridden down the stream
-    var entrypoint = path.join(esd, 'lando-entrypoint.sh');
+    const entrypoint = path.join(esd, 'lando-entrypoint.sh');
     services[name] = merger(services[name], utils.setEntrypoint(entrypoint));
     lando.log.debug('Setting default entrypoint %s for %s', entrypoint, name);
 
@@ -139,72 +132,87 @@ module.exports = function(lando) {
     services[name].environment = merger(services[name].environment, {
       LANDO_SERVICE_NAME: name,
       LANDO_SERVICE_TYPE: service,
-      LANDO_MOUNT: config._mount
+      LANDO_MOUNT: config._mount,
     });
 
     // Add in some helpful volumes
-    var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
+    const shareMode = (process.platform === 'darwin') ? ':delegated' : '';
     services[name] = merger(services[name], {volumes: [
       '$LANDO_APP_ROOT_BIND:/app' + shareMode,
       '$LANDO_ENGINE_HOME:/user' + shareMode,
-      '$LANDO_ENGINE_CONF:/lando' + shareMode
+      '$LANDO_ENGINE_CONF:/lando' + shareMode,
     ]});
 
     // Data about some common helpers
-    var scripts = [
+    const scripts = [
       {script: 'user-perms.sh', local: esd, remote: 'helpers'},
-      {script: 'add-cert.sh', local: esd, remote: 'scripts'},
+      {script: 'add-cert.sh', local: esd, remote: 'helpers'},
+      {script: 'refresh-certs.sh', local: esd, remote: 'helpers'},
       {script: 'load-keys.sh', local: esd, remote: 'scripts'},
       {script: 'sql-import.sh', local: shd, remote: 'helpers'},
       {script: 'sql-export.sh', local: shd, remote: 'helpers'},
     ];
 
     // Add in helpers and scripts
-    _.forEach(scripts, function(script) {
-      var f = script.script;
-      var local = script.local;
-      var remote = script.remote;
-      var vols = services[name].volumes;
+    _.forEach(scripts, script => {
+      const f = script.script;
+      const local = script.local;
+      const remote = script.remote;
+      const vols = services[name].volumes;
       services[name].volumes = utils.addScript(f, vols, local, remote);
     });
 
     // Add in any custom pre-runscripts
     if (!_.isEmpty(config.scripts)) {
-      _.forEach(config.scripts, function(script) {
-        var r = path.join('/scripts', path.basename(script));
-        var mount = utils.buildVolume(script, r, '$LANDO_APP_ROOT_BIND');
+      _.forEach(config.scripts, script => {
+        const r = path.join('/scripts', path.basename(script));
+        const mount = utils.buildVolume(script, r, '$LANDO_APP_ROOT_BIND');
         services[name].volumes = utils.addConfig(mount, services[name].volumes);
       });
     }
 
     // Process any compose overrides we might have
     if (_.has(config, 'overrides')) {
+      // Get our overrides
+      const overrides = config.overrides;
 
       // Log
       lando.log.debug('Overriding %s with', name, config.overrides);
 
+      // Map any build or volume keys to the correct path
+      if (_.has(overrides, 'services.build')) {
+        overrides.services.build = utils.normalizePath(overrides.services.build, config._root);
+      }
+      if (_.has(overrides, 'services.volumes')) {
+        overrides.services.volumes = _.map(overrides.services.volumes, volume => {
+          if (!_.includes(volume, ':')) {
+            return volume;
+          } else {
+            const local = utils.getHostPath(volume);
+            const remote = _.last(volume.split(':'));
+            const excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
+            const host = utils.normalizePath(local, config._root, excludes);
+            return [host, remote].join(':');
+          }
+        });
+      }
+
       // Merge
-      services[name] = merger(services[name], config.overrides.services);
-      volumes = merger(volumes, config.overrides.volumes);
-      networks = merger(networks, config.overrides.networks);
+      services[name] = merger(services[name], overrides.services);
+      volumes = merger(volumes, overrides.volumes);
+      networks = merger(networks, overrides.networks);
 
       // If we need to provide overrides for other things, eg behind the scenes
       // cli services let's do that here
       if (_.has(config, '_hiddenServices')) {
-        _.forEach(config._hiddenServices, function(o) {
-          services[o] = merger(services[o], config.overrides.services);
+        _.forEach(config._hiddenServices, o => {
+          services[o] = merger(services[o], overrides.services);
         });
       }
-
-      // Map any build keys to the correct path
-      if (_.has(services[name], 'build')) {
-        services[name].build = path.resolve(config._root, services[name].build);
-      }
-
     }
 
     // Go through all the services and add in the lando bridgenet
-    _.forEach(services, function(service, name) {
+    _.forEach(services, (service, name) => {
       service.networks = merger({default: {}}, service.networks);
     });
 
@@ -212,24 +220,21 @@ module.exports = function(lando) {
     return {
       networks: networks,
       services: services,
-      volumes: volumes
+      volumes: volumes,
     };
-
   };
 
-  /**
+  /*
    * Does a healthcheck on a service
    *
    * @since 3.0.0
-   * @alias 'lando.services.healthcheck'
+   * @alias lando.services.healthcheck
    */
-  var healthcheck = function(container) {
-
+  const healthcheck = container => {
     // Check to see if a service is ready
     // @NOTE: This does sane retries on a service if has a healthcheck to make
     // sure it is ready before we start e.g. mysql is ready to take connections
-    return lando.Promise.retry(function() {
-
+    return lando.Promise.retry(() => {
       // Log
       console.log('Waiting until %s service is ready...', container.service);
       lando.log.info('Waiting until %s service is ready...', container.service);
@@ -238,24 +243,22 @@ module.exports = function(lando) {
       return lando.engine.scan({id: container.id})
 
       // Determine the health
-      .then(function(data) {
+      .then(data => {
         if (!_.has(data, 'State.Health')) {
           return {service: container.service, health: 'healthy'};
         }
         if (_.get(data, 'State.Health.Status', 'unhealthy') === 'healthy') {
           return {service: container.service, health: 'healthy'};
-        }
-        else {
+        } else {
           return lando.Promise.reject();
         }
       });
     }, {max: 25})
 
     // If healthcheck fails, catch and return data
-    .catch(function(error) {
+    .catch(error => {
       return {service: container.service, health: 'unhealthy'};
     });
-
   };
 
   return {
@@ -264,7 +267,5 @@ module.exports = function(lando) {
     get: get,
     healthcheck: healthcheck,
     info: info,
-    bridge: landoBridgeNet
   };
-
 };

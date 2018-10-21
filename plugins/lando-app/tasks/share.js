@@ -1,12 +1,11 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var chalk = lando.node.chalk;
-  var localtunnel = require('localtunnel');
-  var u = require('url');
+  const _ = lando.node._;
+  const chalk = lando.node.chalk;
+  const localtunnel = require('localtunnel');
+  const u = require('url');
 
   // Task object
   return {
@@ -17,16 +16,15 @@ module.exports = function(lando) {
         describe: 'Url to share. Needs to be in the form ' +
           'http://localhost:port',
         alias: ['u'],
-        required: true
-      }
+        required: true,
+      },
     },
-    run: function(options) {
-
+    run: options => {
       // Do some validation of the url
-      var url = u.parse(options.url);
+      const url = u.parse(options.url);
 
       // Validate URL
-      var hnf = _.isEmpty(url.hostname) || url.hostname !== 'localhost';
+      const hnf = _.isEmpty(url.hostname) || url.hostname !== 'localhost';
       if (hnf || url.protocol !== 'http:') {
         throw new Error('Need a url of the form http://localhost:port!');
       }
@@ -35,26 +33,23 @@ module.exports = function(lando) {
       return lando.app.get(options.appname)
 
       // Get the sharing url
-      .then(function(app) {
+      .then(app => {
         if (app) {
-
           // Start the app if needed
           return lando.app.isRunning(app)
-          .then(function(isRunning) {
+          .then(isRunning => {
             if (!isRunning) {
               return lando.app.start(app);
             }
           })
 
-          .then(function(app) {
-            return lando.metrics.report('share', {});
-          })
+          // Report
+          .then(app => lando.metrics.report('share', {}))
 
           // Get the URLS
-          .then(function() {
-
+          .then(() => {
             // Assume a port to start
-            var port = 80;
+            const port = 80;
 
             // Override port if specified
             if (!_.isEmpty(url.port)) {
@@ -64,7 +59,7 @@ module.exports = function(lando) {
             // Translate the app.name into a localtunnel suitable address
             // eg lowercase/alphanumeric 4-63 chars
             // lowercase and alphanumeric it
-            var tunnelHost = _.lowerCase(app.name).replace(/[^0-9a-z]/g, '');
+            const tunnelHost = _.lowerCase(app.name).replace(/[^0-9a-z]/g, '');
 
             // Make sure we are at least 4 characters
             if (_.size(tunnelHost) <= 4) {
@@ -77,18 +72,17 @@ module.exports = function(lando) {
             }
 
             // Build opts array
-            var opts = {subdomain: tunnelHost};
+            const opts = {subdomain: tunnelHost};
 
             // Set up the localtunnel
-            var tunnel = localtunnel(port, opts, function(err, tunnel) {
-
+            const tunnel = localtunnel(port, opts, (err, tunnel) => {
               // Error if needed
               if (err) {
                 lando.log.error(err);
               }
 
               // Header it
-              console.log(lando.cli.tunnelHeader());
+              console.log(lando.cli.makeArt('tunnel'));
 
               // the assigned public url for your tunnel
               // i.e. https://abcdefgjhij.localtunnel.me
@@ -106,7 +100,6 @@ module.exports = function(lando) {
               process.stdin.on('data', function() {
                 tunnel.close();
               });
-
             });
 
             tunnel.on('close', function() {
@@ -114,18 +107,11 @@ module.exports = function(lando) {
               console.log(chalk.green('Tunnel closed!'));
               process.stdin.pause();
             });
-
           });
-
-        }
-
-        // Warn user we couldn't find an app
-        else {
+        } else {
           lando.log.warn('Could not find app in this dir');
         }
       });
-
-    }
+    },
   };
-
 };

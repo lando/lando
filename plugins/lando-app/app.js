@@ -1,61 +1,53 @@
 'use strict';
 
 // We make this module into a function so we can pass in lando
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Module
-  var _ = lando.node._;
-  var AsyncEvents = require('./../../lib/events');
-  var fs = lando.node.fs;
-  var merger = lando.utils.config.merge;
-  var path = require('path');
-  var registry = lando.config.appRegistry;
-  var serializer = new require('./../../lib/serializer')(); // eslint-disable-line new-cap
-  var util = require('util');
-  var utils = require('./lib/utils');
+  const _ = lando.node._;
+  const AsyncEvents = require('./../../lib/events');
+  const fs = lando.node.fs;
+  const merger = lando.utils.config.merge;
+  const path = require('path');
+  const registry = lando.config.appRegistry;
+  const Serializer = require('./../../lib/serializer');
+  const serializer = new Serializer();
+  const util = require('util');
+  const utils = require('./lib/utils');
 
   /*
    * Helper to get registry
    */
-  var getRegistry = function() {
-
+  const getRegistry = function() {
     // Promisify
     return lando.Promise.resolve(lando.cache.get(registry) || [])
-
     // Validate existing registry, we do this in case someone has moved an app
-    .filter(function(app) {
-
+    .filter(app => {
       // Get landofile location
-      var landofile = path.join(app.dir, lando.config.appConfigFilename);
+      const landofile = path.join(app.dir, lando.config.appConfigFilename);
 
       // If file doesnt exist then we are done
       if (!fs.existsSync(landofile)) {
         return false;
-      }
-
-      // Otherwise make sure the name is accurate
-      else {
+      } else {
         return _.get(lando.yaml.load(landofile), 'name') === app.name;
       }
-
     });
-
   };
 
   /**
    * Adds an app to the app registry.
    *
    * @since 3.0.0
-   * @alias 'lando.app.register'
+   * @alias lando.app.register
    * @param {Object} app - The app to add
    * @param {String} app.name - The name of the app.
    * @param {String} app.dir - The absolute path to this app's lando.yml file.
    * @param {Object} [app.data] - Optional metadata
-   * @returns {Promise} A Promise
+   * @return {Promise} A Promise
    * @example
    *
    * // Define an app with some additional and optional metadata
-   * var app = {
+   * const app = {
    *   name: 'starfleet.mil',
    *   dir: '/Users/picard/Desktop/lando/starfleet',
    *   data: {
@@ -67,40 +59,32 @@ module.exports = function(lando) {
    * return lando.registry.register(app);
    *
    */
-  var register = function(app) {
-
-    // Run through serializer.
-    return serializer.enqueue(function() {
-
-      // Get the registry
-      getRegistry()
-
-      // Check if app already exists and add if it doesnt
-      .then(function(apps) {
-        if (!utils.appNameExists(apps, app)) {
-          apps.push(app);
-          lando.cache.set(registry, apps, {persist: true});
-          lando.log.verbose('Added %s to reg with path %s', app.name, app.dir);
-        }
-      });
-
+  const register = app => serializer.enqueue(() => {
+    // Get the registry
+    getRegistry()
+    // Check if app already exists and add if it doesnt
+    .then(apps => {
+      if (!utils.appNameExists(apps, app)) {
+        apps.push(app);
+        lando.cache.set(registry, apps, {persist: true});
+        lando.log.verbose('Added %s to reg with path %s', app.name, app.dir);
+      }
     });
-
-  };
+  });
 
   /**
    * Removes an app from the app registry.
    *
    * @since 3.0.0
-   * @alias 'lando.app.unregister'
+   * @alias lando.app.unregister
    * @param {Object} app - The app to remove
    * @param {String} app.name - The name of the app.
    * @param {String} app.dir - The absolute path to this app's lando.yml file.
-   * @returns {Promise} A Promise
+   * @return {Promise} A Promise
    * @example
    *
    * // Define an app with some additional and optional metadata
-   * var app = {
+   * const app = {
    *   name: 'starfleet.mil',
    *   dir: '/Users/picard/Desktop/lando/starfleet'
    * };
@@ -109,32 +93,23 @@ module.exports = function(lando) {
    * return lando.unregister(app);
    *
    */
-  var unregister = function(app) {
-
-    // Run through serializer.
-    return serializer.enqueue(function() {
-
-      // Get the registry
-      getRegistry()
-
-      // Remove the app and set the cache
-      .then(function(apps) {
-        if (utils.appNameExists(apps, app)) {
-          apps = _.filter(apps, function(a) { return app.name !== a.name; });
-          lando.cache.set(registry, apps, {persist: true});
-          lando.log.verbose('Removed app %s from registry', app.name);
-        }
-      });
-
+  const unregister = app => serializer.enqueue(() => {
+    // Get the registry
+    getRegistry()
+    // Remove the app and set the cache
+    .then(apps => {
+      if (utils.appNameExists(apps, app)) {
+        apps = _.filter(apps, a => app.name !== a.name);
+        lando.cache.set(registry, apps, {persist: true});
+        lando.log.verbose('Removed app %s from registry', app.name);
+      }
     });
-
-  };
+  });
 
   /*
    * Instantiate helper
    */
-  var instantiate = function(name, dir, config) {
-
+  const instantiate = (name, dir, config) => {
     // Log some things
     lando.log.verbose('Getting app %s from %s', name, dir);
     lando.log.debug('App %s uses config', name, config);
@@ -163,18 +138,16 @@ module.exports = function(lando) {
     return lando.events.emit('pre-instantiate-app', config)
 
     // Create app.
-    .then(function() {
-
+    .then(() => {
       // Init.
-      var app = {};
-
+      let app = {};
       // Name.
       app.name = lando.utils.engine.dockerComposify(name);
       // Docker compose files
       app.compose = [];
       // Config
       app.config = config || {};
-      // Envvars that get added to every container
+      // Envconsts that get added to every container
       app.env = _.merge(lando.config.containerGlobalEnv, {});
       // Asynchronous event emitter.
       app.events = new AsyncEvents(lando.log);
@@ -199,25 +172,20 @@ module.exports = function(lando) {
       // Webroot
       app.webRoot = config.webroot || '.';
       // Trigger core messaging emit with app specific message.
-      app.message = function() {
-
+      app.message = (...args) => {
         // Parse and format
-        var args = _.toArray(arguments);
-        var message = util.format.apply(null, args);
-
+        const message = util.format.apply(null, args);
         // Message
         return lando.message({
           app: app.name,
           context: 'app',
           message: util.format(message),
-          type: 'info'
+          type: 'info',
         })
-
         // Make sure app status messages make it to global status.
-        .then(function() {
+        .then(() => {
           lando.log.info(message);
         });
-
       };
       // Docker compose version
       app.version = lando.config.composeVersion || '3.2';
@@ -226,14 +194,13 @@ module.exports = function(lando) {
       // Set a unique id
       app.id = lando.node.hasher([
         _.get(app, 'name', 'unknown'),
-        _.get(app, 'root', 'someplace')
+        _.get(app, 'root', 'someplace'),
       ]);
       // Mix in any cached metadata
       app = _.merge(app, lando.cache.get('site.meta.' + app.name));
 
       // Return our app
       return app;
-
     })
 
     /**
@@ -250,7 +217,7 @@ module.exports = function(lando) {
      * // Add some extra app properties to all apps
      * lando.events.on('post-instantiate-app', 1, function(app) {
      *
-     *   // Add in some global container envvars
+     *   // Add in some global container envconsts
      *   app.env.LANDO = 'ON';
      *   app.env.LANDO_HOST_OS = lando.config.os.platform;
      *   app.env.LANDO_HOST_UID = lando.config.engineId;
@@ -258,25 +225,21 @@ module.exports = function(lando) {
      *
      * });
      */
-    .tap(function(app) {
-      return lando.events.emit('post-instantiate-app', app);
-    })
+    .tap(app => lando.events.emit('post-instantiate-app', app))
 
     // Register app.
-    .tap(function(app) {
-      return register({name: app.registry, lando: app.name, dir: app.root});
-    })
+    .tap(app => register({name: app.registry, lando: app.name, dir: app.root}))
 
     // Load plugins.
-    .tap(function(app) {
-      _.forEach(app.config.plugins, function(plugin) {
+    // @todo: below looks wonky
+    .tap(app => {
+      _.forEach(app.config.plugins, plugin => {
         return lando.plugins.load(plugin, app.root, lando);
       });
     })
 
     // Emit app ready event.
-    .tap(function(app) {
-
+    .tap(app => {
       /**
        * Event that allows altering of the app object right after it has been
        * full instantiated and all its plugins have been loaded.
@@ -303,20 +266,19 @@ module.exports = function(lando) {
       return app.events.emit('app-ready')
 
       // Log some results
-      .then(function() {
+      .then(() => {
         lando.log.info('App %s is ready!', app.name);
         lando.log.debug('App %s has config', app.name, app.config);
       });
     });
-
   };
 
   /**
    * Lists all the Lando apps from the app registry.
    *
    * @since 3.0.0
-   * @alias 'lando.app.list'
-   * @returns {Promise} Returns a Promise with an array of apps from the registry
+   * @alias lando.app.list
+   * @return {Promise} Returns a Promise with an array of apps from the registry
    * @example
    *
    * // List all the apps
@@ -327,34 +289,22 @@ module.exports = function(lando) {
    *   console.log(JSON.stringify(app, null, 2));
    * });
    */
-  var list = function() {
-
+  const list = () => {
     // Get list of app names.
     return getRegistry()
-
     // Validate list of apps, look for duplicates.
-    .then(function(apps) {
-
+    .then(apps => {
       // Group apps by app names.
-      var groups = _.groupBy(apps, function(app) {
-        return app.name;
-      });
-
+      const groups = _.groupBy(apps, app => app.name);
       // Find a set of duplicates.
-      var duplicates = _.find(groups, function(group) {
-        return group.length !== 1;
-      });
-
+      const duplicates = _.find(groups, group => group.length !== 1);
       // If a set of duplicates were found throw an error.
       if (duplicates) {
         throw new Error('Duplicate app names exist', duplicates);
       }
-
       // Pass the apps on to the each
       return apps;
-
     });
-
   };
 
   /**
@@ -366,12 +316,12 @@ module.exports = function(lando) {
    * Lando will also scan parent directories if no app is found.
    *
    * @since 3.0.0
-   * @alias 'lando.app.get'
+   * @alias lando.app.get
    * @fires pre_instantiate_app
    * @fires post_instantiate_app
    * @fires app_ready
    * @param {String} [appName] - The name of the app to get.
-   * @returns {Promise} Returns a Pronise with an instantiated app object or nothing.
+   * @return {Promise} Returns a Pronise with an instantiated app object or nothing.
    * @example
    *
    * // Get an app named myapp and start it
@@ -382,72 +332,48 @@ module.exports = function(lando) {
    *   lando.app.start(app);
    * });
    */
-  var get = function(appName) {
+  const get = appName => lando.Promise.try(() => {
+    if (appName) {
+      return list().then(apps => _.find(apps, app => app.name === appName));
+    }
+  })
 
-    // If we have an appName lets try to match it with a diretory
-    return lando.Promise.try(function() {
-      if (appName) {
-        return list()
-        .then(function(apps) {
-          return _.find(apps, function(app) {
-            return app.name === appName;
-          });
-        });
-      }
-    })
+  // Try to use a found app first if possible then default to the cwd
+  .then(app => _.get(app, 'dir') || path.join(process.cwd()))
+  // Return an app or warn the user there is no such app
+  .then(dir => {
+    // Split up our dir
+    let pieces = dir.split(path.sep);
+    // Go through all dir pieces
+    return _.map(pieces, () => {
+      // Build the dir
+      const dir = pieces.join(path.sep);
+      // Drop the last path for next iteration
+      pieces = _.dropRight(pieces);
+      // Return the possible location of lando files
+      return path.join(dir, lando.config.appConfigFilename);
+    });
+  })
 
-    // Try to use a found app first if possible then default to the cwd
-    .then(function(app) {
-      return _.get(app, 'dir') || path.join(process.cwd());
-    })
-
-    // Return an app or warn the user there is no such app
-    .then(function(dir) {
-
-      // Split up our dir
-      var pieces = dir.split(path.sep);
-
-      // Go through all dir pieces
-      return _.map(pieces, function() {
-
-        // Build the dir
-        var dir = pieces.join(path.sep);
-
-        // Drop the last path for next iteration
-        pieces = _.dropRight(pieces);
-
-        // Return the possible location of lando files
-        return path.join(dir, lando.config.appConfigFilename);
-
-      });
-
-    })
-
-    // Return the first directory that has an app
-    .then(function(files) {
-
-      // Find the first directory that has a lando.yml
-      var configFile = _.find(files, function(file) {
-        lando.log.verbose('Checking for app config at %s', file);
-        return fs.existsSync(file);
-      });
-
-      // If we have a config file let's load up the app
-      if (!_.isEmpty(configFile)) {
-
-        // TRy to load the config
-        var appConfig = lando.yaml.load(configFile);
-
-        // If we have appConfig then load the app
-        if (!_.isEmpty(appConfig)) {
-          return instantiate(appConfig.name, path.dirname(configFile), appConfig);
-        }
-
-      }
-
+  // Return the first directory that has an app
+  .then(files => {
+    // Find the first directory that has a lando.yml
+    const configFile = _.find(files, file => {
+      lando.log.verbose('Checking for app config at %s', file);
+      return fs.existsSync(file);
     });
 
-  };
+    // If we have a config file let's load up the app
+    if (!_.isEmpty(configFile)) {
+      // TRy to load the config
+      const appConfig = lando.yaml.load(configFile);
+
+      // If we have appConfig then load the app
+      if (!_.isEmpty(appConfig)) {
+        return instantiate(appConfig.name, path.dirname(configFile), appConfig);
+      }
+    }
+  });
 
   /**
    * Determines whether an app is running or not. By defualt it only requires
@@ -457,11 +383,11 @@ module.exports = function(lando) {
    * with the app name eg {name: 'myapp'}
    *
    * @since 3.0.0
-   * @alias 'lando.app.isRunning'
+   * @alias lando.app.isRunning
    * @param {Object} app - An app object.
    * @param {String} app.name - The name of the app
    * @param {Boolean} checkall - Make sure ALL the apps containers are running
-   * @returns {Promise} Returns a Promise with a boolean of whether the app is running or not.
+   * @return {Promise} Returns a Promise with a boolean of whether the app is running or not.
    * @example
    *
    * // Let's check to see if the app has been started
@@ -474,63 +400,30 @@ module.exports = function(lando) {
    *   }
    * });
    */
-  var isRunning = function(app, checkall) {
-
+  const isRunning = (app, checkall = false) => {
     // Log
     lando.log.verbose('Checking if %s is running', app.name);
-
-    // Clarify the checkall
-    checkall = checkall || false;
-
-    // Check if our engine is up
-    return lando.engine.isUp()
-
-    // If we are up check for containers running for an app
-    // otherwise return false
-    .then(function(isUp) {
-
-      // Engine is up so lets check if the app has running containers
-      if (isUp) {
-
-        // Get list of containers
-        return lando.engine.list(app.lando)
-
-        // Filter out autostart containers since those will always report TRUE
-        .filter(function(container) {
-          return lando.engine.scan(container)
-          .then(function(data) {
-            return data.HostConfig.RestartPolicy.Name !== 'always';
-          });
-        })
-
-        // Reduce containers to a true false running value
-        .reduce(function(isRunning, container) {
-          if (checkall) {
-            return isRunning && lando.engine.isRunning(container.id);
-          }
-          else {
-            return (isRunning) ? true : lando.engine.isRunning(container.id);
-          }
-        }, checkall);
-
+    // Get list of container
+    return lando.engine.list(app.lando)
+    // Filter out autostart containers since those will always report TRUE
+    .filter(container => lando.engine.scan(container).then(data => data.HostConfig.RestartPolicy.Name !== 'always'))
+    // Reduce containers to a true false running value
+    .reduce((isRunning, container) => {
+      if (checkall) {
+        return isRunning && lando.engine.isRunning(container.id);
+      } else {
+        return (isRunning) ? true : lando.engine.isRunning(container.id);
       }
-
-      // Engine is down so nothing can be running
-      else {
-        return false;
-      }
-
-    });
-
+    }, checkall);
   };
 
   /**
    * Checks to see if the app exists or not.
    *
    * @since 3.0.0
-   * @alias 'lando.app.exists'
+   * @alias lando.app.exists
    * @param {String} appName - The name of the app to get.
-   * @returns {Promise} A promise with a boolean of whether the app exists or not.
+   * @return {Promise} A promise with a boolean of whether the app exists or not.
    * @example
    *
    * // Get an app named myapp and start it
@@ -543,27 +436,17 @@ module.exports = function(lando) {
    *   }
    * });
    */
-  var exists = function(appName) {
-
-    // Get app.
-    return get(appName)
-
+  const exists = appName => get(appName)
     // Return false if we get an app does not exist error.
-    .catch(function(err) {
+    .catch(err => {
       if (_.contains(err.message, ' does not exist.')) {
         return false;
-      }
-      else {
+      } else {
         throw err;
       }
     })
-
     // Return true if app was returned.
-    .then(function(app) {
-      return !!app;
-    });
-
-  };
+    .then(app => !!app);
 
   /**
    * Prints useful information about the app's services.
@@ -573,11 +456,11 @@ module.exports = function(lando) {
    * credentials and any other information that is added by other plugins.
    *
    * @since 3.0.0
-   * @alias 'lando.app.info'
+   * @alias lando.app.info
    * @fires pre_info
    * @fires post_info
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise with an object of information about the app keyed by its services
+   * @return {Promise} A Promise with an object of information about the app keyed by its services
    * @example
    *
    * // Return the app info
@@ -590,8 +473,7 @@ module.exports = function(lando) {
    *   }
    * });
    */
-  var info = function(app) {
-
+  const info = app => {
     /**
      * Event that allows other things to add useful metadata to the apps services.
      *
@@ -608,30 +490,19 @@ module.exports = function(lando) {
      * });
      */
     return app.events.emit('pre-info')
-
     // Merge in defaults
-    .then(function() {
-
+    .then(() => {
       // Merge in defualt services
       app.info = merger(app.info, utils.getInfoDefaults(app));
-
       // Get list of containers
       return lando.engine.list(app.name)
-
       // Return running containers
-      .filter(function(container) {
-        return lando.engine.isRunning(container.id);
-      })
-
+      .filter(container => lando.engine.isRunning(container.id))
       // Inspect each and add new URLS
-      .each(function(container) {
-        return lando.engine.scan(container)
-        .then(function(data) {
-          var info = app.info[container.service];
-          info.urls = merger(info.urls, utils.getUrls(data));
-        });
-      });
-
+      .each(container => lando.engine.scan(container).then(data => {
+        const info = app.info[container.service];
+        info.urls = merger(info.urls, utils.getUrls(data));
+      }));
     })
 
     /**
@@ -643,15 +514,10 @@ module.exports = function(lando) {
      * @since 3.0.0
      * @event post_info
      */
-    .then(function() {
-      return app.events.emit('post-info');
-    })
+    .then(() => app.events.emit('post-info'))
 
     // Return app info
-    .then(function() {
-      return app.info;
-    });
-
+    .then(() => app.info);
   };
 
   /**
@@ -661,11 +527,11 @@ module.exports = function(lando) {
    * volumes, networks, etc as well as remove the app from the appRegistry.
    *
    * @since 3.0.0
-   * @alias 'lando.app.uninstall'
+   * @alias lando.app.uninstall
    * @fires pre_uninstall
    * @fires post_uninstall
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise.
+   * @return {Promise} A Promise.
    * @example
    *
    * // Uninstall the app
@@ -677,8 +543,7 @@ module.exports = function(lando) {
    * });
    *
    */
-  var uninstall = function(app) {
-
+  const uninstall = app => {
     // Cleaning up
     app.message('Uninstalling %s', app.name);
 
@@ -701,14 +566,10 @@ module.exports = function(lando) {
      *   delete app.services.solr;
      * });
      */
-    .then(function() {
-      return app.events.emit('pre-uninstall');
-    })
+    .then(() => app.events.emit('pre-uninstall'))
 
     // Kill components.
-    .then(function() {
-      return lando.engine.destroy(app);
-    })
+    .then(() => lando.engine.destroy(app))
 
     /**
      * Event that runs after an app is uninstalled.
@@ -725,10 +586,7 @@ module.exports = function(lando) {
      *   lando.cache.remove(app.name + '.last_build');
      * });
      */
-    .then(function() {
-      return app.events.emit('post-uninstall');
-    });
-
+    .then(() => app.events.emit('post-uninstall'));
   };
 
   /**
@@ -739,49 +597,31 @@ module.exports = function(lando) {
    *
    * @todo Should this be an internal method? Or can we deprecate at some point?
    * @since 3.0.0
-   * @alias 'lando.app.cleanup'
-   * @returns {Promise} A Promise.
+   * @alias lando.app.cleanup
+   * @return {Promise} A Promise.
    * @example
    *
    * // Do the app cleanup
    * return lando.app.cleanup()
    *
    */
-  var cleanup = function() {
-
+  const cleanup = () => {
     // Cleaning up
     lando.message({message: 'Attempting apps cleanup...'});
-
     // Get all our apps
     return list()
-
     // Get list of just app names
-    .map(function(app) {
-      return app.lando;
-    })
-
+    .map(app => app.lando)
     // Filter out non-app containers or orphaned containers (eg from deleted apps)
-    .then(function(apps) {
-      return lando.Promise.filter(lando.engine.list(), function(container) {
-        return container.kind === 'app' && !_.includes(apps, container.app);
-      });
-    })
-
+    .then(apps => lando.Promise.filter(lando.engine.list(), container => {
+      return container.kind === 'app' && !_.includes(apps, container.app);
+    }))
     // Filter out any other containers that dont match this lando instance
-    .filter(function(container) {
-      return container.instance === lando.config.id;
-    })
-
+    .filter(container => container.instance === lando.config.instance)
     // Stop containers if needed
-    .tap(function(containers) {
-      return lando.engine.stop(containers);
-    })
-
+    .tap(containers => lando.engine.stop(containers))
     // Kill containers if needed
-    .tap(function(containers) {
-      return lando.engine.destroy(containers);
-    });
-
+    .tap(containers => lando.engine.destroy(containers));
   };
 
   /**
@@ -790,11 +630,11 @@ module.exports = function(lando) {
    * This will start up all services/containers that have been defined for this app.
    *
    * @since 3.0.0
-   * @alias 'lando.app.start'
+   * @alias lando.app.start
    * @fires pre_start
    * @fires post_start
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise.
+   * @return {Promise} A Promise.
    * @example
    *
    * // Start the app
@@ -806,19 +646,13 @@ module.exports = function(lando) {
    * });
    *
    */
-  var start = function(app) {
-
+  const start = app => {
     // Start it up
     app.message('Starting app name %s', app.name);
-
     // Report to metrics.
     return lando.metrics.report('start', utils.metricsParse(app))
-
     // Make sure we are in a clean place before we get dirty
-    .then(function() {
-      return cleanup();
-    })
-
+    .then(() => cleanup())
     /**
      * Event that runs before an app starts up.
      *
@@ -834,15 +668,9 @@ module.exports = function(lando) {
      *   return lando.engine.start(dnsServer);
      * });
      */
-    .then(function() {
-      return app.events.emit('pre-start');
-    })
-
+    .then(() => app.events.emit('pre-start'))
     // Start core containers
-    .then(function() {
-      return lando.engine.start(app);
-    })
-
+    .then(() => lando.engine.start(app))
     /**
      * Event that runs after an app is started.
      *
@@ -857,7 +685,7 @@ module.exports = function(lando) {
      * app.events.on('post-start', function() {
      *
      *   // Start up a build collector
-     *   var build = [];
+     *   const build = [];
      *
      *   // Go through each service
      *   _.forEach(app.config.services, function(service, name) {
@@ -874,7 +702,7 @@ module.exports = function(lando) {
      *       _.forEach(service.run, function(cmd) {
      *
      *         // Build out the compose object
-     *         var compose = {
+     *         const compose = {
      *           id: [service, name, '1'].join('_'),
      *             cmd: cmd,
      *             opts: {
@@ -895,10 +723,10 @@ module.exports = function(lando) {
      *   if (!_.isEmpty(build)) {
      *
      *    // Get the last build cache key
-     *    var key = app.name + ':last_build';
+     *    const key = app.name + ':last_build';
      *
      *    // Compute the build hash
-     *    var newHash = lando.node.hasher(app.config.services);
+     *    const newHash = lando.node.hasher(app.config.services);
      *
      *    // If our new hash is different then lets build
      *    if (lando.cache.get(key) !== newHash) {
@@ -913,10 +741,7 @@ module.exports = function(lando) {
      *   }
      * });
      */
-    .then(function() {
-      return app.events.emit('post-start');
-    });
-
+    .then(() => app.events.emit('post-start'));
   };
 
   /**
@@ -925,11 +750,11 @@ module.exports = function(lando) {
    * This will stop all services/containers that have been defined for this app.
    *
    * @since 3.0.0
-   * @alias 'lando.app.stop'
+   * @alias lando.app.stop
    * @fires pre_stop
    * @fires post_stop
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise.
+   * @return {Promise} A Promise.
    * @example
    *
    * // Stop the app
@@ -941,19 +766,13 @@ module.exports = function(lando) {
    * });
    *
    */
-  var stop = function(app) {
-
+  const stop = app => {
     // Stop it!
     app.message('Stopping %s', app.name);
-
     // Report to metrics.
     return lando.metrics.report('stop', utils.metricsParse(app))
-
     // Make sure we are in a clean place before we get dirty
-    .then(function() {
-      return cleanup();
-    })
-
+    .then(() => cleanup())
     /**
      * Event that runs before an app stops.
      *
@@ -966,15 +785,9 @@ module.exports = function(lando) {
      *   return lando.engine.stop(dnsServer);
      * });
      */
-    .then(function() {
-      return app.events.emit('pre-stop');
-    })
-
+    .then(() => app.events.emit('pre-stop'))
     // Stop components.
-    .then(function() {
-      return lando.engine.stop(app);
-    })
-
+    .then(() => lando.engine.stop(app))
     /**
      * Event that runs after an app stop.
      *
@@ -987,10 +800,7 @@ module.exports = function(lando) {
      *   return lando.engine.stop(dnsServer);
      * });
      */
-    .then(function() {
-      return app.events.emit('post-stop');
-    });
-
+    .then(() => app.events.emit('post-stop'));
   };
 
   /**
@@ -999,13 +809,13 @@ module.exports = function(lando) {
    * This just runs `app.stop` and `app.start` in succession.
    *
    * @since 3.0.0
-   * @alias 'lando.app.restart'
+   * @alias lando.app.restart
    * @fires pre_stop
    * @fires post_stop
    * @fires pre_start
    * @fires post_start
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise.
+   * @return {Promise} A Promise.
    * @example
    *
    * // Restart the app
@@ -1017,19 +827,11 @@ module.exports = function(lando) {
    * });
    *
    */
-  var restart = function(app) {
-
+  const restart = app => {
     // Start it off
     app.message('Restarting %s', app.name);
-
-    // Stop app.
-    return stop(app)
-
-    // Start app.
-    .then(function() {
-      return start(app);
-    });
-
+    // stop/start
+    return stop(app).then(() => start(app));
   };
 
   /**
@@ -1043,7 +845,7 @@ module.exports = function(lando) {
    * That said this DOES call both `stop` and `uninstall`.
    *
    * @since 3.0.0
-   * @alias 'lando.app.destroy'
+   * @alias lando.app.destroy
    * @fires pre_destroy
    * @fires pre_stop
    * @fires post_stop
@@ -1051,7 +853,7 @@ module.exports = function(lando) {
    * @fires post_uninstall
    * @fires post_destroy
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise.
+   * @return {Promise} A Promise.
    * @example
    *
    * // Destroy the app
@@ -1063,11 +865,9 @@ module.exports = function(lando) {
    * });
    *
    */
-  var destroy = function(app) {
-
+  const destroy = app => {
     // Start it off
     app.message('Destroying %s', app.name);
-
     /**
      * Event that runs before an app is destroyed.
      *
@@ -1083,22 +883,12 @@ module.exports = function(lando) {
      * });
      */
     return app.events.emit('pre-destroy')
-
     // Make sure app is stopped.
-    .then(function() {
-      return stop(app);
-    })
-
+    .then(() => stop(app))
     // Uninstall app.
-    .then(function() {
-      return uninstall(_.merge(app, {opts: {purge: true}}));
-    })
-
+    .then(() => uninstall(_.merge(app, {opts: {purge: true}}))
     // Remove from appRegistry
-    .then(function() {
-      return unregister({name: app.registry});
-    })
-
+    .then(() => unregister({name: app.registry})))
     /**
      * Event that runs after an app is destroyed.
      *
@@ -1111,10 +901,7 @@ module.exports = function(lando) {
      *   return startProxy();
      * });
      */
-    .then(function() {
-      return app.events.emit('post-destroy');
-    });
-
+    .then(() => app.events.emit('post-destroy'));
   };
 
   /**
@@ -1125,7 +912,7 @@ module.exports = function(lando) {
    * might want to tweak Dockerfiles or compose yamls.
    *
    * @since 3.0.0
-   * @alias 'lando.app.rebuild'
+   * @alias lando.app.rebuild
    * @fires pre_stop
    * @fires post_stop
    * @fires pre_uninstall
@@ -1133,7 +920,7 @@ module.exports = function(lando) {
    * @fires pre_start
    * @fires post_start
    * @param {Object} app - A fully instantiated app object
-   * @returns {Promise} A Promise.
+   * @return {Promise} A Promise.
    * @example
    *
    * // Rebuild the app
@@ -1145,14 +932,11 @@ module.exports = function(lando) {
    * });
    *
    */
-  var rebuild = function(app) {
-
+  const rebuild = app => {
     // Start it off
     app.message('Rebuilding %s', app.name);
-
     // Stop app.
     return stop(app)
-
     /**
      * Event that runs before an app is rebuilt.
      *
@@ -1165,20 +949,11 @@ module.exports = function(lando) {
      *   // Do something
      * });
      */
-    .then(function() {
-      return app.events.emit('pre-rebuild');
-    })
-
+    .then(() => app.events.emit('pre-rebuild'))
     // Uninstall app
-    .then(function() {
-      return uninstall(app);
-    })
-
+    .then(() => uninstall(app))
     // Repull/build components.
-    .then(function() {
-      return lando.engine.build(app);
-    })
-
+    .then(() => lando.engine.build(app))
     /**
      * Event that runs after an app is rebuilt.
      *
@@ -1191,15 +966,9 @@ module.exports = function(lando) {
      *   // Do something
      * });
      */
-    .then(function() {
-      return app.events.emit('post-rebuild');
-    })
-
+    .then(() => app.events.emit('post-rebuild'))
     // Install app.
-    .then(function() {
-      return start(app);
-    });
-
+    .then(() => start(app));
   };
 
   // Return the things
@@ -1217,7 +986,6 @@ module.exports = function(lando) {
     restart: restart,
     destroy: destroy,
     rebuild: rebuild,
-    unregister: unregister
+    unregister: unregister,
   };
-
 };

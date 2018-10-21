@@ -36,11 +36,6 @@ services:
       password: mysql
       database: data1
 
-    # Optionally load in all the mysql config files in the config directory
-    # This is relative to the app root
-    # config:
-    #  confd: config
-
   # Spin up a secondary database for postgres
   database2:
     type: postgres
@@ -63,7 +58,7 @@ tooling:
     options:
       host:
         description: The database service to use
-        default: database
+        default: database2
         alias:
           - h
   'db-import <file>':

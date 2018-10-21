@@ -39,3 +39,40 @@ lando artisan
 # Run laravel commands
 lando laravel
 ```
+
+Bootup
+------
+
+Start the Laravel recipe.
+
+```bash
+# Start the app
+if [ -d "web" ]; then rm -Rf web; fi
+lando start
+```
+
+Testing
+-------
+
+Test the Laravel recipe.
+
+```bash
+# Test spinning up a new Laravel app
+lando laravel new web
+
+# Test we can use artisan tooling
+lando ssh -c "cd web && php artisan"
+
+# Verify we can visit the homepage
+lando ssh -c "curl nginx |grep Laravel"
+```
+
+Cleanup
+-------
+
+Remove the test app.
+
+```bash
+# Remove the test laravel app.
+lando destroy -y
+```

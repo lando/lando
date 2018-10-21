@@ -16,7 +16,7 @@ Supported versions
 Using patch versions
 --------------------
 
-Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
+Because we use a third-party `mssql` image specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
 
 Example
 -------

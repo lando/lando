@@ -1,7 +1,7 @@
 Working with MEAN
 =================
 
-Lando offers a configurable recipe for spinning up apps that use the [MEAN](https://mean.io) stack, a common set of infrastructure designed to run NodeJS applications.
+Lando offers a configurable recipe for spinning up apps that use the [MEAN](http://mean.io) stack, a common set of infrastructure designed to run NodeJS applications.
 
 Let's go over some basic usage.
 
@@ -91,7 +91,7 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container.
 
 ```bash
 # The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable

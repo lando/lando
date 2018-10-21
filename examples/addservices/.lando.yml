@@ -22,12 +22,13 @@ services:
   appserver:
     composer:
       phpunit/phpunit: '*'
-    run_as_root:
+    install_dependencies_as_root:
       - apt-get update -y
       - apt-get install vim -y
-    run:
-      # Uncomment this when you have a composer.json in the root directory
-      # - cd $LANDO_MOUNT && composer install
+    # Install composer deps from our composer.json file
+    # Step ommitted because we do not have one in this example
+    # install_dependencies_as_me:
+    #  - composer install
     config:
       conf: php.ini
 
@@ -65,7 +66,7 @@ services:
 
   # Add node cli
   # See: https://docs.devwithlando.io/services/node.html
-  node-cli:
+  node:
     type: node:6.10
     globals:
       gulp-cli: "latest"
@@ -73,12 +74,14 @@ services:
 # Add a php unit command and node commands
 # See: https://docs.devwithlando.io/config/tooling.html
 tooling:
+  vim:
+    service: appserver
   phpunit:
     service: appserver
     description: "Run PHP Unit tests: lando phpunit"
   npm:
-    service: node-cli
+    service: node
   node:
-    service: node-cli
+    service: node
   gulp:
-    service: node-cli
+    service: node

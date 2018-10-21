@@ -1,12 +1,16 @@
 Advanced Service Configuration
 ==============================
 
+> #### Warning::Use at your own peril
+>
+> While the below options can be very powerful in the hands of a seasoned pro they are not for the faint of heart. Please be careful and note that YMMV. While we will make a good faith effort to support intrepid users please note that once you go down any of these paths you are more or less on your own!
+
 Using Dockerfiles
 -----------------
 
 You can use your own images by overriding any service to build from a `Dockerfile` that lives somewhere inside your app. Here is an example that extends our base `php` image to add another extension.
 
-#### Landofile
+#### Landofile (.lando.yml)
 
 {% codesnippet "./../examples/dockerfile/.lando.yml" %}{% endcodesnippet %}
 
@@ -39,6 +43,17 @@ services:
         image: pirog/myapache:2
 ```
 
+Here is an example that uses a particular patch version of `nginx`
+
+```yml
+services:
+  appserver:
+    type: nginx:custom
+    overrides:
+      services:
+        image: nginx:1.12.1
+```
+
 Building a Custom Service
 -------------------------
 
@@ -53,5 +68,3 @@ This service is useful if you are:
 {% codesnippet "./../examples/compose/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/compose).
-
-You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/compose).

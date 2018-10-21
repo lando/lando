@@ -1,34 +1,26 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var chalk = lando.node.chalk;
+  const chalk = lando.node.chalk;
 
   // The task object
   return {
     command: 'stop [appname]',
     describe: 'Stops app in current directory or [appname]',
-    run: function(options) {
-
+    run: options => {
       // Try to get the app
       return lando.app.get(options.appname)
-
       // Restart the app
-      .then(function(app) {
+      .then(app => {
         if (app) {
-          return lando.app.stop(app)
-          .then(function() {
+          return lando.app.stop(app).then(() => {
             console.log(chalk.red('App stopped!'));
           });
-        }
-        // Warn user we couldn't find an app
-        else {
+        } else {
           lando.log.warn('Could not find app in this dir');
         }
       });
-
-    }
+    },
   };
-
 };

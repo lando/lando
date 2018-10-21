@@ -1,12 +1,11 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var chalk = lando.node.chalk;
-  var table = new lando.cli.Table();
-  var utils = lando.utils.app;
+  const _ = lando.node._;
+  const chalk = lando.node.chalk;
+  const table = lando.cli.makeTable();
+  const utils = lando.utils.app;
 
   // The task object
   return {
@@ -16,7 +15,7 @@ module.exports = function(lando) {
       services: {
         describe: 'Rebuild only the specified services',
         alias: ['s'],
-        array: true
+        array: true,
       },
       yes: {
         describe: 'Auto answer yes to prompts',
@@ -26,12 +25,11 @@ module.exports = function(lando) {
         interactive: {
           type: 'confirm',
           default: false,
-          message: 'Are you sure you want to rebuild?'
-        }
-      }
+          message: 'Are you sure you want to rebuild?',
+        },
+      },
     },
-    run: function(options) {
-
+    run: options => {
       // Stop rebuild if user decides its a nogo
       if (!options.yes) {
         console.log(chalk.yellow('Rebuild aborted'));
@@ -42,39 +40,32 @@ module.exports = function(lando) {
       return lando.app.get(options.appname)
 
       // Rebuild the app
-      .then(function(app) {
+      .then(app => {
         if (app) {
-
           // Rebuild only particlar services if specified
           if (!_.isEmpty(options.services)) {
             app.opts.services = options.services;
           }
 
           return lando.app.rebuild(app)
-          .then(function() {
-
+          .then(() => {
             // Header it
-            console.log(lando.cli.startHeader());
+            console.log(lando.cli.makeArt());
 
             // Inject start table into the table
-            _.forEach(utils.startTable(app), function(value, key) {
-              var opts = (_.includes(key, 'url')) ? {arrayJoiner: '\n'} : {};
+            _.forEach(utils.startTable(app), (value, key) => {
+              const opts = (_.includes(key, 'url')) ? {arrayJoiner: '\n'} : {};
               table.add(_.toUpper(key), value, opts);
             });
 
             // Print the table
             console.log(table.toString());
             console.log('');
-
           });
-        }
-        // Warn user we couldn't find an app
-        else {
+        } else {
           lando.log.warn('Could not find app in this dir');
         }
       });
-
-    }
+    },
   };
-
 };

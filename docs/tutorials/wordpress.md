@@ -3,6 +3,11 @@ Working with WordPress
 
 Lando offers a configurable recipe for spinning up [WordPress](https://wordpress.org/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=QW3io3MFPNg
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
@@ -116,7 +121,7 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 
 ```bash

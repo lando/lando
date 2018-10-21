@@ -3,83 +3,107 @@
 'use strict';
 
 const _ = require('lodash');
-const chalk = require('yargonaut').chalk();
-const dest = './docs/api/api.md';
+const errors = [];
 const fs = require('fs-extra');
 const jsdoc2md = require('jsdoc-to-markdown');
+const Log = require('./../lib/logger');
+const log = new Log({logLevelConsole: 'debug'});
+const path = require('path');
+const Promise = require('./../lib/promise');
+const util = require('./util');
+const dest = path.resolve('docs', 'api');
 
-const fileMap = [
-  './lib/bootstrap.js',
-  './lib/cache.js',
-  './lib/config.js',
-  './lib/cli.js',
-  './lib/events.js',
-  './lib/logger.js',
-  './lib/node.js',
-  './lib/plugins.js',
-  './lib/promise.js',
-  './lib/scan.js',
-  './lib/shell.js',
-  './lib/tasks.js',
-  './lib/updates.js',
-  './lib/user.js',
-  './lib/yaml.js',
-  './plugins/lando-app/*.js',
-  './plugins/lando-app/**/*.js',
-  './plugins/lando-engine/*.js',
-  './plugins/lando-engine/**/*.js',
-  './plugins/lando-init/*.js',
-  './plugins/lando-init/**/*.js',
-  './plugins/lando-recipes/*.js',
-  './plugins/lando-recipes/**/*.js',
-  './plugins/lando-services/*.js',
-  './plugins/lando-services/**/*.js',
-  './plugins/lando-tooling/*.js',
-  './plugins/lando-tooling/**/*.js'
-];
+// Files
+const docs = {
+  sections: {
+    core: [
+      './lib/art.js',
+      './lib/bootstrap.js',
+      './lib/cache.js',
+      './lib/cli.js',
+      './lib/config.js',
+      './lib/error.js',
+      './lib/events.js',
+      './lib/lando.js',
+      './lib/logger.js',
+      './lib/node.js',
+      './lib/plugins.js',
+      './lib/promise.js',
+      './lib/scan.js',
+      './lib/serializer.js',
+      './lib/shell.js',
+      './lib/table.js',
+      './lib/tasks.js',
+      './lib/updates.js',
+      './lib/user.js',
+      './lib/yaml.js',
+    ],
+    engine: ['./plugins/lando-engine/engine.js'],
+    tooling: ['./plugins/lando-tooling/tooling.js'],
+    otherPlugins: [
+      './plugins/lando-app/*.js',
+      './plugins/lando-core/*.js',
+      './plugins/lando-events/*.js',
+      './plugins/lando-init/*.js',
+      './plugins/lando-networking/*.js',
+      './plugins/lando-proxy/*.js',
+      './plugins/lando-recipes/*.js',
+      './plugins/lando-services/*.js',
+    ],
+  },
+  helpers: [
+    './docs/helpers/helpers.js',
+  ],
+  partials: [
+    './docs/partials/header.hbs',
+    './docs/partials/body.hbs',
+  ],
+};
 
-const helpers = [
-  './docs/helpers/helpers.js'
-];
+// Clean up
+log.info('Going to clean %j', dest);
+fs.emptyDirSync(dest);
 
-const partials = [
-  './docs/partials/header.hbs',
-  './docs/partials/body.hbs'
-];
+// Cycle through the docs
+return Promise.resolve(_.keys(docs.sections))
 
-// Collect any errors
-//
-// @NOTE: this will save time so we can see ALL the errors at once instead
-// of one per CI build
-const errors = [];
+// Go through each section
+.each(section => {
+  return jsdoc2md.getTemplateData({'files': docs.sections[section], 'no-cache': true})
 
-// Render the things
-return jsdoc2md.render({
-  files: fileMap,
-  'global-index-format': 'none',
-  helper: helpers,
-  partial: partials
-})
+  // Fix "aliases" and then render
+  .then(data => _.map(data, datum => util.fixAlias(datum)))
 
-// Report and collect errors
-.catch(function(error) {
-  errors.push(error.message);
-  console.log(chalk.red('ERROR: ' + error.message));
-})
+  // Do the render
+  .then(data => jsdoc2md.render({
+    'data': data,
+    'global-index-format': 'none',
+    'helper': docs.helpers,
+    'partial': docs.partials,
+  }))
 
-// Write the file if we have data
-.then(function(data) {
-  if (data) {
-    console.log('writing ' + dest + '...');
-    return fs.outputFile(dest, data, function(error) { if (error) { throw error; } });
-  }
-})
+  // Report and collect errors
+  .catch(error => {
+    errors.push(error.message);
+    log.error('ERROR: %', error.message);
+  })
 
-// Do the final error throw if we can
-.then(function() {
-  if (!_.isEmpty(errors)) {
-    console.log();
-    console.log(chalk.red('API doc build failed! See above errors!!!'));
-    process.exit(54);
-  }
+  // Write the file if we have data
+  .then(data => {
+    if (data) {
+      const output = path.join(dest, section + '.md');
+      log.info('writing ' + output+ '...');
+      return fs.outputFile(output, data, error => {
+        if (error) throw error;
+      });
+    }
+  })
+
+  // Do the final error throw if we can
+  .then(() => {
+    if (!_.isEmpty(errors)) {
+      log.error('API doc build failed! See above errors!!!');
+      process.exit(54);
+    }
+  });
 });

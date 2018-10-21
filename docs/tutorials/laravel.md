@@ -3,6 +3,11 @@ Working with Laravel
 
 Lando offers a configurable recipe for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=Ibxb2nh19yg
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
@@ -101,6 +106,21 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Environment Config
+-----
+
+By default, Laravel comes with a `.env` configuration file set to use `homestead`. You will want to modify the following `.env` key value pairs:
+
+```
+APP_URL=http://myproject.lndo.site
+DB_HOST=database
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=laravel
+```
+
+If your app is already running, `lando restart` to ensure the changes are applied.
+
 Configuration
 -------------
 
@@ -114,7 +134,7 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
 # The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable

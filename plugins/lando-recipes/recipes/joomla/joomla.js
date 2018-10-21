@@ -1,18 +1,16 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var helpers = require('./../lamp/lamp')(lando);
+  const _ = lando.node._;
+  const helpers = require('./../lamp/lamp')(lando);
 
   /*
    * Build out joomla
    */
-  var build = function(name, config) {
-
+  const build = (name, config) => {
     // Get the via so we can grab our builder
-    var base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
+    const base = (_.get(config, 'via', 'apache') === 'apache') ? 'lamp' : 'lemp';
 
     // Update with new config defaults if needed
     config = helpers.resetConfig(config._recipe, config);
@@ -21,33 +19,31 @@ module.exports = function(lando) {
     config.php = _.get(config, 'php', '7.0');
 
     // Start by cheating
-    var build = lando.recipes.build(name, base, config);
+    const build = lando.recipes.build(name, base, config);
 
     // Get the joomla tools command
-    var cgrInstall = helpers.getCgr('joomlatools/console', '*');
+    const cgrInstall = helpers.getCgr('joomlatools/console', '*');
 
     // Set builders if needed
-    var buildersKey = 'services.appserver.run_internal';
-    build.services.appserver.run_internal = _.get(build, buildersKey, []);
+    const buildersKey = 'services.appserver.install_dependencies_as_me_internal';
+    build.services.appserver.install_dependencies_as_me_internal = _.get(build, buildersKey, []);
 
     // Add our drush cmds
-    build.services.appserver.run_internal.push(cgrInstall);
+    build.services.appserver.install_dependencies_as_me_internal.push(cgrInstall);
 
     // Add drush to the tooling
     build.tooling.joomla = {
       service: 'appserver',
-      needs: ['database']
+      needs: ['database'],
     };
 
     // Return the things
     return build;
-
   };
 
   // Return the things
   return {
     build: build,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };
