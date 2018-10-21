@@ -30,12 +30,19 @@ module.exports = lando => {
     // Start a services collector
     const services = {};
 
+    // Define config mappings
+    const configFiles = {
+      conf: '/config.yml',
+      dataDir: '/data/db',
+    };
+
     // Default memcached service
     const mongo = {
       image: 'mongo:' + config.version,
       environment: {
         TERM: 'xterm',
       },
+      volumes: ['data_' + name + ':' + configFiles.dataDir],
       command: 'docker-entrypoint.sh mongod --bind_ip 0.0.0.0',
     };
 
@@ -49,19 +56,19 @@ module.exports = lando => {
       }
     }
 
-    // Config file option
-    if (_.has(config, 'config')) {
-      // Remote file
-      const remote = '/config.yml';
+    // Handle custom config directory
+    _.forEach(configFiles, (file, type) => {
+      if (_.has(config, 'config.' + type)) {
+        const local = config.config[type];
+        const customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        mongo.volumes = addConfig(customConfig, mongo.volumes);
 
-      // Mount the config file
-      const local = config.config;
-      const customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
-      mongo.volumes = addConfig(customConfig, mongo.volumes);
-
-      // Augment the command
-      mongo.command = mongo.command + ' --config /config.yml';
-    }
+        if (type === 'conf') {
+          // Augment the command
+          mongo.command = mongo.command + ' --config ' + file;
+        }
+      }
+    });
 
     // Put it all together
     services[name] = mongo;
@@ -73,8 +80,10 @@ module.exports = lando => {
   /*
    * Return the volumes needed
    */
-  const volumes = () => {
-    return {data: {}};
+  const volumes = name => {
+    const vols = {};
+    vols['data_' + name] = {};
+    return vols;
   };
 
   /*

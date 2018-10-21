@@ -26,7 +26,8 @@ services:
 
     # Optionally use the following mongo config file
     # This is relative to the app root
-    config: config.yml
+    config:
+      conf: config.yml
 
   # Spin up services to run a basic node server
   appserver:
