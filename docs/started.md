@@ -5,7 +5,7 @@ In order for you to experience all the awesome Lando power a `.lando.yml` needs 
 
 On a high level the `.lando.yml` should contain **ALL** the things you need to both run and develop your project. The ideal workflow here is:
 
-1. The person who sets up your DevOps creates a `.lando.yml` file for your project and ideally checks it into version control
+1. Your DevOps creates a `.lando.yml` file for your project and ideally checks it into version control
 2. Subsequent devs clone down the project, run `lando start` and get equipped with all the things they need for the devs
 
 We **HIGHLY** recommend you read through our documentation to get a sense of the things the `.lando.yml` can do for your team but here is a non-exhaustive list of things it can do:
