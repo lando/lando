@@ -31,10 +31,7 @@ describe('.env', () => {
       `node ${paths.landoFile} list`,
     ];
 
-    return cli.exec(initEnvironmentCmd.join(' && '))
-      .then(res => {
-        return res.stdout.should.not.contain(errorMessage);
-      });
+    return cli.exec(initEnvironmentCmd.join(' && '));
   });
 
   it('should load when working directory is in app.root', done => {
@@ -87,18 +84,15 @@ describe('.env', () => {
 
   // Ensure Lando environment "envfile" is destroyed
   after(function() {
-    // Allow up to ten seconds for environment to be destroyed
+    // Allow time for container to be destroyed
     // eslint-disable-next-line no-invalid-this
-    this.timeout(10000);
+    this.timeout(15000);
 
     const initEnvironmentCmd = [
       `cd ${paths.envAppDir}`,
       `node ${paths.landoFile} destroy envfile -y`,
     ];
 
-    return cli.exec(initEnvironmentCmd.join(' && '))
-      .then(res => {
-        return res.stdout.should.not.contain(errorMessage);
-      }).catch(error => console.log(error));
+    return cli.exec(initEnvironmentCmd.join(' && '));
   });
 });
