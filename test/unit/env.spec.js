@@ -25,10 +25,14 @@ describe('.env', () => {
   const errorMessage = 'Trouble parsing .env';
 
   // Ensure Lando environment "envfile" exists
-  before(() => {
+  before(function() {
+    // Allow time for environment to be created
+    // eslint-disable-next-line no-invalid-this
+    this.timeout(15000);
+
     const initEnvironmentCmd = [
       `cd ${paths.envAppDir}`,
-      `node ${paths.landoFile} list`,
+      `node ${paths.landoFile} info envfile`,
     ];
 
     return cli.exec(initEnvironmentCmd.join(' && '));
@@ -37,7 +41,7 @@ describe('.env', () => {
   it('should load when working directory is in app.root', done => {
     const testCmd = [
       `cd ${paths.envAppDir}`,
-      `node ${paths.landoFile} info`,
+      `node ${paths.landoFile} info envfile`,
     ];
 
     cli.exec(testCmd.join(' && '))
@@ -54,7 +58,7 @@ describe('.env', () => {
 
   it('should load when working directory is outside of app root', done => {
     const testCmd = [
-      `cd ${os.tmpDir}`,
+      `cd ${os.tmpdir()}`,
       `node ${paths.landoFile} info envfile`,
     ];
 
@@ -96,7 +100,7 @@ describe('.env', () => {
 
   // Ensure Lando environment "envfile" is destroyed
   after(function() {
-    // Allow time for container to be destroyed
+    // Allow time for environment to be destroyed
     // eslint-disable-next-line no-invalid-this
     this.timeout(15000);
 
