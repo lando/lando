@@ -1,0 +1,13 @@
+name: blackfire-example
+recipe: lemp
+config:
+  php: '7.2'
+  xdebug: true
+  webroot: www
+services:
+  blackfire:
+    type: blackfire
+tooling:
+  blackfire:
+    service: blackfire
+    user: root
