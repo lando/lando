@@ -42,8 +42,12 @@ describe('.env', () => {
 
     cli.exec(testCmd.join(' && '))
       .then(res => {
-        res.stdout.should.not.contain(errorMessage);
-        done();
+        if (res.stdout !== null) {
+          res.stdout.should.not.contain(errorMessage);
+          done();
+        } else {
+          done(res.stderr);
+        }
       })
       .catch(error => done(error));
   });
@@ -56,8 +60,12 @@ describe('.env', () => {
 
     cli.exec(testCmd.join(' && '))
       .then(res => {
-        res.stdout.should.not.contain(errorMessage);
-        done();
+        if (res.stdout !== null) {
+          res.stdout.should.not.contain(errorMessage);
+          done();
+        } else {
+          done(res.stderr);
+        }
       })
       .catch(error => done(error));
   });
@@ -75,8 +83,12 @@ describe('.env', () => {
     cli.exec(testCmd.join(' && '))
       .then(res => {
         fs.rmdirSync(paths.envAppSubDir);
-        res.stdout.should.not.contain(errorMessage);
-        done();
+        if (res.stdout !== null) {
+          res.stdout.should.not.contain(errorMessage);
+          done();
+        } else {
+          done(res.stderr);
+        }
       })
       .catch(error => done(error));
   });
