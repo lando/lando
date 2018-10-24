@@ -31,7 +31,7 @@ module.exports = lando => {
     'ruby',
     'solr',
     'tomcat',
-    'varnish'
+    'varnish',
   ];
 
   // Add some config for services
@@ -47,7 +47,7 @@ module.exports = lando => {
     const defaultServiceConfig = {
       servicesConfigDir: confDir,
       servicesHelpersDir: helpDir,
-      loadPassphraseProtectedKeys: false
+      loadPassphraseProtectedKeys: false,
     };
 
     // Merge config over defaults
@@ -115,7 +115,6 @@ module.exports = lando => {
         app.services = merger(app.services, newCompose.services);
         app.volumes = merger(app.volumes, newCompose.volumes);
         app.networks = merger(app.networks, newCompose.networks, merger);
-
       });
     }
   });

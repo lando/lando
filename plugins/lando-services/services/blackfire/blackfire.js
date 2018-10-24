@@ -7,26 +7,31 @@
 'use strict';
 
 module.exports = lando => {
-
   /**
    * Supported versions for blackfire
    */
   const versions = [
     '1.15.0',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /**
    * Return the networks needed
+   *
+   * @return {Object}
    */
   const networks = () => ({});
 
   /**
    * Build out blackfire
+   *
+   * @param {String} name
+   * @param {Object} config
+   *
+   * @return {Object}
    */
   const services = (name, config) => {
-
     // Start a services collector
     const services = {};
 
@@ -34,7 +39,7 @@ module.exports = lando => {
     services[name] = {
       image: 'blackfire/blackfire:' + config.version,
       command: 'blackfire-agent',
-      networks: {default: {aliases: ['blackfire']}}
+      networks: {default: {aliases: ['blackfire']}},
     };
 
 
@@ -44,11 +49,18 @@ module.exports = lando => {
 
   /**
    * Return the volumes needed
+   *
+   * @return {Object}
    */
   const volumes = () => ({});
 
   /**
    * Metadata about our service
+   *
+   * @param {String} name
+   * @param {Object} config
+   *
+   * @return {Object}
    */
   const info = (name, config) => ({});
 
@@ -58,7 +70,6 @@ module.exports = lando => {
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };
