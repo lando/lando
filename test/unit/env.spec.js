@@ -24,28 +24,45 @@ describe('.env', () => {
   const cli = new CliTest();
   const errorMessage = 'Trouble parsing .env';
 
-  it('should load when working directory is in app.root', done => {
-    cli.exec(`cd ${paths.envAppDir} && node ${paths.landoFile} ssh -c "env | grep TAYLOR"`)
+  // Ensure Lando environment "envfile" exists
+  before(() => {
+    const initEnvironmentCmd = [
+      `cd ${paths.envAppDir}`,
+      `node ${paths.landoFile} list`,
+    ];
+
+    return cli.exec(initEnvironmentCmd.join(' && '))
       .then(res => {
-        res.stdout.should.not.contain(errorMessage);
-        done();
-      })
-      .catch(error => {
-        done(error);
+        return res.stdout.should.not.contain(errorMessage);
       });
   });
 
-  it('should load when working directory is outside of app root', done => {
-    cli.exec(`cd ${os.tmpDir} && node ${paths.landoFile} ssh appserver envfile `
-      + '-c "env | grep TAYLOR" | grep "Trouble parsing .env"')
+  it('should load when working directory is in app.root', done => {
+    const testCmd = [
+      `cd ${paths.envAppDir}`,
+      `node ${paths.landoFile} info`,
+    ];
+
+    cli.exec(testCmd.join(' && '))
       .then(res => {
         res.stdout.should.not.contain(errorMessage);
         done();
       })
-      .catch(error => {
-        console.log('error', error);
-        done(error);
-      });
+      .catch(error => done(error));
+  });
+
+  it('should load when working directory is outside of app root', done => {
+    const testCmd = [
+      `cd ${os.tmpDir}`,
+      `node ${paths.landoFile} info envfile`,
+    ];
+
+    cli.exec(testCmd.join(' && '))
+      .then(res => {
+        res.stdout.should.not.contain(errorMessage);
+        done();
+      })
+      .catch(error => done(error));
   });
 
   it('should load .env when cwd is a subdirectory of app.root', done => {
@@ -53,16 +70,35 @@ describe('.env', () => {
       fs.mkdirSync(paths.envAppSubDir);
     }
 
-    cli.exec(`cd ${paths.envAppSubDir} && node ${paths.landoFile} ssh appserver envfile `
-      + '-c "env | grep TAYLOR" | grep "Trouble parsing .env"')
+    const testCmd = [
+      `cd ${paths.envAppSubDir}`,
+      `node ${paths.landoFile} info`,
+    ];
+
+    cli.exec(testCmd.join(' && '))
       .then(res => {
         fs.rmdirSync(paths.envAppSubDir);
         res.stdout.should.not.contain(errorMessage);
         done();
       })
-      .catch(error => {
-        console.log('error', error);
-        done(error);
-      });
+      .catch(error => done(error));
+  });
+
+
+  // Ensure Lando environment "envfile" is destroyed
+  after(function() {
+    // Allow up to ten seconds for environment to be destroyed
+    // eslint-disable-next-line no-invalid-this
+    this.timeout(10000);
+
+    const initEnvironmentCmd = [
+      `cd ${paths.envAppDir}`,
+      `node ${paths.landoFile} destroy envfile -y`,
+    ];
+
+    return cli.exec(initEnvironmentCmd.join(' && '))
+      .then(res => {
+        return res.stdout.should.not.contain(errorMessage);
+      }).catch(error => console.log(error));
   });
 });
