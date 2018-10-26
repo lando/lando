@@ -195,7 +195,7 @@ $databases['default']['default'] = array (
   'host' => 'database',
   'port' => '5432',
   'namespace' => 'Drupal\\Core\\Database\\Driver\\pgsql',
-  'driver' => 'pgsql', 
+  'driver' => 'pgsql',
   );
 ```
 
@@ -261,8 +261,7 @@ We want to be able to run PHPUnit, Kernel and Functional Test with PHPStorm inst
 tests. We want to be able to do this by the FPM from our lando app. To do this we need to setup a Remote interpreter
 and make out Test Framework us it.
 
-* *Currently we have issues running functional test through PHPStorm. The reason this doesn't work yet is
- that PHPStorm spins up a container and *
+* *Currently we have issues running functional test through PHPStorm.*
 
 #### MacOS
 
@@ -281,7 +280,7 @@ Go to "Preferences" >> "Languages and Framework" >> "PHP" >> "Test Frameworks". 
 "PHPUnit by Remote interpreter". Select the CLI interpreter from Step 2. All we need to do is target the "autoload.php"
 within our container and the "Default configuration / bootstrap" file:
 
-![Add remote interpreter for docker](https://raw.githubusercontent.com/lando/lando/master/docs/images/test-frameworks-remote-interperter)
+![Add remote interpreter for docker](https://raw.githubusercontent.com/lando/lando/master/docs/images/test-frameworks-remote-interpreter.png)
 
 #### Setup phpunit.xml variables
 Note that for SIMPLETEST_DB we target the "tmp" directory this is done because we spin up a container and we need write
