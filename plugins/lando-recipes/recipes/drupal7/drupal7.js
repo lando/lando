@@ -83,6 +83,17 @@ module.exports = lando => {
     return build;
   };
 
+  const env = config => {
+    let site = 'https://' + [_.get(config, 'site', config._app), lando.config.proxyDomain].join('.');
+    const env = {
+      SIMPLETEST_BASE_URL: site,
+      SIMPLETEST_DB: 'mysql://' + config._recipe + ':' + config._recipe + '@database/' + config._recipe,
+    };
+
+    // Return the env
+    return env;
+  };
+
   /*
    * Build out Drupal7
    */
@@ -98,6 +109,10 @@ module.exports = lando => {
 
     // Start by cheating
     let build = lando.recipes.build(name, base, config);
+
+    // Set the helper environment variables.
+    const envPath = 'services.appserver.overrides.services.environment';
+    _.set(build, envPath, env(config));
 
     // Determine the default drush setup for D7
     const defaultDrush = (config.php === '5.3' ? DRUSH7 : DRUSH8);
