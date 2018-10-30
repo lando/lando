@@ -130,7 +130,7 @@ tooling:
     description: "Run phantomjs commands"
 ```
 
-Now you can run `phantomjs` commands trough lando! To test the installation issue this command at the command line:
+Now you can run `phantomjs` commands through lando! To test the installation issue this command at the command line:
 
 ```bash
 lando phantomjs --version
