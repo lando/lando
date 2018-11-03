@@ -1,0 +1,13 @@
+name: pantheon-networking
+recipe: pantheon
+config:
+  framework: wordpress
+  site: networking-bug
+  # this issue is reproducible on real Pantheon projects too...
+  id: fake-site-id
+
+tooling:
+  talk_to_appserver:
+    service: database
+    cmd: curl appserver
+    description: send a simple curl request to appserver
