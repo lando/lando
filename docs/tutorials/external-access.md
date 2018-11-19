@@ -72,8 +72,8 @@ services:
 ```
 
 ```bash
-# Restart the app
-lando restart
+# rebuild from app directory
+lando rebuild --yes
 
 # Check to see the locked down port
 lando info
