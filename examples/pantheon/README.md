@@ -26,6 +26,9 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # Run a lando pull
 cd web && node ../../../bin/lando.js pull --code=dev --database=dev --files=dev
+
+# Check terminus is installed
+cd web && node ../../../bin/lando.js terminus self:info | grep "terminus_version"
 ```
 
 Cleanup
