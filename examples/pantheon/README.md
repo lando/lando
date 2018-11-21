@@ -28,7 +28,7 @@ Run the following commands to validate things are rolling as they should.
 cd web && node ../../../bin/lando.js pull --code=dev --database=dev --files=dev
 
 # Check terminus is installed
-cd web && node ../../../bin/lando.js terminus self:info | grep "terminus_version"
+cd web && node ../../../bin/lando.js terminus --version | grep 'Terminus' | grep -q '1.9.0'
 ```
 
 Cleanup
