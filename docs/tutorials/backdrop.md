@@ -3,6 +3,11 @@ Working with Backdrop
 
 Lando offers a configurable recipe for spinning up [Backdrop CMS](https://backdropcms.org/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=-UvyYvHmLSg&t=3s
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
@@ -91,6 +96,24 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Drush
+-----
+
+By default our Backdrop recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) as well as the latest version of [Backdrop Drush](https://github.com/backdrop-contrib/drush). This means that you should be able to use `lando drush` out of the box.
+
+If you are using a nested webroot you will need to `cd` into your webroot and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Backdrop site.
+
+To get around this you might want to consider overriding the `drush` tooling command in your `.lando.yml` so that Drush can detect your nested Backdrop site from your project root. Note that hardcoding the `root` like this may have unforseen and bad consequences for some `drush` commands such as `drush scr`.
+
+```yml
+tooling:
+  drush:
+    service: appserver
+    cmd:
+      - "drush"
+      - "--root=/app/PATH/TO/WEBROOT"
+```
+
 Configuration
 -------------
 
@@ -104,22 +127,15 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 `BACKDROP_SETTINGS` should allow for Backdrop to automatically connect to your database.
 
 ```bash
-LANDO_INFO=JSON_STRING_OF_LANDO_INFO
-BACKDROP_SETTINGS=JSON_STRING_OF_BACKDROP_SETTINGS
-
-# Pending deprecation!!!
-# These will soon be removed.
-# We recommend you switch to using LANDO_INFO.
-DB_HOST=database
-DB_USER=backdrop
-DB_PASSWORD=backdrop
-DB_NAME=backdrop
-DB_PORT=3306
+# The below are specific examples to ILLUSTRATE the KINDS of things provided by these variables
+# The content of your variables may differ
+BACKDROP_SETTINGS={"databases":{"default":{"default":{"driver":"mysql","database":"backdrop","username":"backdrop","password":"backdrop","host":"database","port":3306}}}}
+LANDO_INFO={"appserver":{"type":"php","version":"7.0","hostnames":["appserver"],"via":"apache","webroot":"www","config":{"conf":"/Users/pirog/.lando/services/config/backdrop/php.ini"}},"database":{"type":"mariadb","version":"10.3","hostnames":["database"],"creds":{"user":"backdrop","password":"backdrop","database":"backdrop"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/backdrop/mysql"}}}
 ```
 
 **NOTE:** These can vary based on the choices you make in your recipe config.

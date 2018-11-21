@@ -3,12 +3,21 @@ MailHog
 
 [MailHog](https://github.com/mailhog/MailHog) is an email testing tool for developers. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
+Prefer video tutorials?
+{% youtube %}
+https://youtu.be/C1XfgfzcUJc
+{% endyoutube %}
+
 Supported versions
 ------------------
 
-*   [v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)
-*   [latest](https://hub.docker.com/r/mailhog/mailhog/)
+*   **[v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)** **(default)**
 *   custom
+
+Using patch versions
+--------------------
+
+Because we use a third-party `mailhog` image specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
 
 Example
 -------

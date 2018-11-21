@@ -1,19 +1,20 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const _ = lando.node._;
+  const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
+  const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var scd = lando.config.servicesConfigDir;
+  const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for nginx
    */
-  var versions = [
+  const versions = [
     '1.13',
     '1.12',
     '1.11',
@@ -23,30 +24,27 @@ module.exports = function(lando) {
     'mainline',
     'stable',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out nginx services
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Define config mappings
-    var configFiles = {
+    const configFiles = {
       http: '/etc/nginx/nginx.conf',
       server: '/etc/nginx/conf.d/default.template',
       params: '/etc/nginx/fastcgi_params',
-      webroot: config._mount
+      webroot: config._mount,
     };
 
     // Add the webroot if its there
@@ -55,12 +53,12 @@ module.exports = function(lando) {
     }
 
     // Default nginx service
-    var nginx = {
+    const nginx = {
       image: 'nginx:' + config.version,
       ports: ['80'],
       environment: {
         TERM: 'xterm',
-        LANDO_WEBROOT: configFiles.webroot
+        LANDO_WEBROOT: configFiles.webroot,
       },
       volumes: [],
       command: [
@@ -68,51 +66,54 @@ module.exports = function(lando) {
         '"envsubst \'$$LANDO_WEBROOT\'',
         '</etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf',
         '&&',
-        'nginx -g \'daemon off;\'"'
-      ].join(' ')
+        'nginx -g \'daemon off;\'"',
+      ].join(' '),
     };
 
     // Set the default http conf file
-    var httpConf = ['nginx', 'nginx.conf'];
-    var httpVol = buildVolume(httpConf, configFiles.http, scd);
+    const httpConf = ['nginx', 'nginx.conf'];
+    const httpVol = buildVolume(httpConf, configFiles.http, scd);
     nginx.volumes = addConfig(httpVol, nginx.volumes);
 
     // Set the default server conf file
-    var serverConf = ['nginx', 'default.conf'];
-    var serverVol = buildVolume(serverConf, configFiles.server, scd);
+    const serverConf = ['nginx', 'default.conf'];
+    const serverVol = buildVolume(serverConf, configFiles.server, scd);
     nginx.volumes = addConfig(serverVol, nginx.volumes);
 
     // Set the default params conf file
-    var paramConf = ['nginx', 'fastcgi_params'];
-    var paramVol = buildVolume(paramConf, configFiles.params, scd);
+    const paramConf = ['nginx', 'fastcgi_params'];
+    const paramVol = buildVolume(paramConf, configFiles.params, scd);
     nginx.volumes = addConfig(paramVol, nginx.volumes);
 
     // Handle ssl option
     if (config.ssl) {
-
       // Add the SSL port
       nginx.ports.push('443');
 
+      // Inject add-cert so we can get certs before our app starts
+      nginx.volumes = addScript('add-cert.sh', nginx.volumes, esd, 'scripts');
+
       // If we don't have a custom default ssl config lets use the default one
-      var sslConf = ['nginx', 'default-ssl.conf'];
-      var sslVolume = buildVolume(sslConf, configFiles.server, scd);
+      const sslConf = ['nginx', 'default-ssl.conf'];
+      const sslVolume = buildVolume(sslConf, configFiles.server, scd);
       nginx.volumes = addConfig(sslVolume, nginx.volumes);
 
       // Add a healthcheck so we wait until open-ssl gets installed
-      nginx.healthcheck = {
-        test: 'dpkg -s openssl',
-        interval: '2s',
-        timeout: '10s',
-        retries: 25
-      };
-
+      if (config.skipCheck !== true) {
+        nginx.healthcheck = {
+          test: 'dpkg -s openssl',
+          interval: '2s',
+          timeout: '10s',
+          retries: 25,
+        };
+      }
     }
 
     // Handle custom config files
-    _.forEach(configFiles, function(file, type) {
+    _.forEach(configFiles, (file, type) => {
       if (_.has(config, 'config.' + type)) {
-        var local = config.config[type];
-        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        const local = config.config[type];
+        const customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         nginx.volumes = addConfig(customConfig, nginx.volumes);
       }
     });
@@ -122,44 +123,41 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Start up an info collector
-    var info = {};
+    const info = {};
 
     // Add in the webroot
     info.webroot = _.get(config, 'webroot', '.');
 
     // Show the config files being used if they are custom
     if (!_.isEmpty(config.config)) {
-      info.config  = config.config;
+      info.config = config.config;
     }
 
     // Return the collected info
     return info;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
+  const volumes = function() {
     return {data: {}};
   };
 
   return {
+    defaultVersion: '1.13',
     info: info,
     networks: networks,
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

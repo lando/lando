@@ -31,3 +31,10 @@ _book
 # Build dirs
 build
 dist
+
+# coverage reporting
+.nyc_output
+coverage/
+
+# CCI test splitting
+test/func/split-file.txt

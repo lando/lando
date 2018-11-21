@@ -5,6 +5,11 @@ Lando offers a configurable recipe for spinning up apps that closely mimic the [
 
 You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-development/) docs.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=lgaUqMy5a6A
+{% endyoutube %}
+
  <!-- toc -->
 
  Getting Started
@@ -13,10 +18,9 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
  Before you get started with this recipe we assume that you have:
 
  1. [Installed Lando](./../installation/system-requirements.md)
- 2. Your code is already cloned into the desired folder (`git clone ...`)
- 3. [Read up on how to get a `.lando.yml`](./../started.md)
+ 2. [Read up on how to get a `.lando.yml`](./../started.md)
 
- If after reading #3 above you are still unclear how to get started then try this
+ If after reading #2 above you are still unclear how to get started then try this
 
  ```bash
  # Go into a local folder with your site or app codebase
@@ -56,7 +60,7 @@ Once you've started up your Pantheon site you will need to pull in your database
 
 ### 1. Using `lando pull`
 
-Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.** Please note, `lando pull` **does not** clone repos, it does a `git pull` (merge) for convenience (see #2 above).
+Lando provides a command for Pantheon sites called `lando pull` to get your database and files. **If you do not specify `--code`, `--database` or `--files` then `lando` will use the environment associated with your currently checked out `git branch`.**
 
 On a database pull Lando will attempt to clear the cache of the remote environment (unless it is the live environment) to minimize the size of the import.
 
@@ -205,6 +209,43 @@ lando drush dl webform
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Drush
+-----
+
+By default our Pantheon recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) unless you are running on `php 5.3` in which case we will install the [latest version of Drush 7](http://docs.drush.org/en/7.x/install/). For Backdrop sites we will also install the latest version of [Backdrop Drush](https://github.com/backdrop-contrib/drush). This means that you should be able to use `lando drush` out of the box. That said, you can [easily change](#configuration) the Drush installation behavior if you so desire.
+
+If you decide to list `drush` as a dependency in your project's `composer.json` and use the `composer` Lando Drush installation method instead of the above default you will want to make sure you **DO NOT USE DRUSH 9** as this is not currently supported on Pantheon.
+
+If you are using a nested webroot you will need to `cd` into your webroot and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
+
+To get around this you might want to consider overriding the `drush` tooling command in your `.lando.yml` so that Drush can detect your nested Drupal site from your project root. Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.
+
+```yml
+tooling:
+  drush:
+    service: appserver
+    cmd:
+      - "drush"
+      - "--root=/app/PATH/TO/WEBROOT"
+```
+
+### URL Setup
+
+To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush in your relevant `settings.php` file.
+
+**Drupal 7**
+
+```php
+// Set the base URL for the Drupal site.
+$base_url = "http://mysite.lndo.site"
+```
+
+**Drupal 8**
+
+```php
+$options['uri'] = "http://mysite.lndo.site";
+```
+
 Terminus
 --------
 
@@ -264,29 +305,6 @@ lando switch feature-1 --no-db --no-files
 ```bash
   --no-db     Do not switch the database              [boolean] [default: false]
   --no-files  Do not switch the files                 [boolean] [default: false]
-```
-
-Drush URL Setup
----------------
-
-To set up your environment so that commands like `lando drush uli` return the proper URL, you will need to configure Drush.
-
-**Drupal 7**
-
-Create or edit `/sites/default/settings.local.php` and add these lines:
-
-```
-// Set the base URL for the Drupal site.
-$base_url = "http://mysite.lndo.site"
-```
-
-**Drupal 8**
-
-Create or edit `/sites/default/drushrc.php` and add these lines:
-
-```
-<?php
-$options['uri'] = "http://mysite.lndo.site";
 ```
 
 Configuration
@@ -356,9 +374,15 @@ SECURE_AUTH_SALT: Needed for Wordpress. We set this automatically.
 BACKDROP_SETTINGS: JSON object of Backdrop config and settings.
 PRESSFLOW_SETTINGS: JSON object of Drupal config and settings.
 DRUPAL_HASH_SALT: Needed for Drupal8. We set this automatically.
+
+# Special JSON string representation of $LANDO_INFO
+LANDO_INFO={MY APP METADATA}
 ```
 
-These are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+These are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. Note that these can vary based on the choices you make in your recipe config.
+
+**NOTE:** These can vary based on the choices you make in your recipe config.
+**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
 ### Automation
 

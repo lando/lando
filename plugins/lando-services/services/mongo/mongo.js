@@ -1,77 +1,66 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const _ = lando.node._;
+  const addConfig = lando.utils.services.addConfig;
+  const buildVolume = lando.utils.services.buildVolume;
 
   /*
    * Supported versions for mongo
    */
-  var versions = [
+  const versions = [
     '3.5',
     '3.4',
     '3.2',
     '3.0',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out memcached
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Default memcached service
-    var mongo = {
+    const mongo = {
       image: 'mongo:' + config.version,
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
-      command: 'docker-entrypoint.sh mongod',
+      command: 'docker-entrypoint.sh mongod --bind_ip 0.0.0.0',
     };
 
     // Handle port forwarding
     if (config.portforward) {
-
       // If true assign a port automatically
       if (config.portforward === true) {
         mongo.ports = ['27017'];
-      }
-
-      // Else use the specified port
-      else {
+      } else {
         mongo.ports = [config.portforward + ':27017'];
       }
-
     }
 
     // Config file option
     if (_.has(config, 'config')) {
-
       // Remote file
-      var remote = '/config.yml';
+      const remote = '/config.yml';
 
       // Mount the config file
-      var local = config.config;
-      var customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
+      const local = config.config;
+      const customConfig = buildVolume(local, remote, '$LANDO_APP_ROOT_BIND');
       mongo.volumes = addConfig(customConfig, mongo.volumes);
 
       // Augment the command
       mongo.command = mongo.command + ' --config /config.yml';
-
     }
 
     // Put it all together
@@ -79,45 +68,42 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
+  const volumes = () => {
     return {data: {}};
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Add in generic info
-    var info = {
-      'internal_connection': {
+    const info = {
+      internal_connection: {
         host: name,
-        port: config.port || 27017
+        port: config.port || 27017,
       },
-      'external_connection': {
+      external_connection: {
         host: 'localhost',
-        port: config.portforward || 'not forwarded'
-      }
+        port: config.portforward || 'not forwarded',
+      },
     };
 
     // Return the collected info
     return info;
-
   };
 
   return {
+    defaultVersion: '3.5',
     info: info,
     networks: networks,
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

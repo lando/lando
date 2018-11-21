@@ -3,7 +3,7 @@ Developing offline
 
 Out of the box, Lando uses an external server to route pretty domain names back to your localhost to provide convenient proxying. This method is minimally invasive and doesn't require Lando to alter your machine's DNS routing. This has the downside of requiring an internet connection to access your sites.
 
-You may want the freedom of hacking away on your site while scaling Everest or just to simply route your projects to a different top level domain, like `*.dev`, `*.local`, `*.hanshotfirst` or `*.localhost`. Although `*.dev` is not recommended because it is a reserverd TLD by Google.
+You may want the freedom of hacking away on your site while scaling Everest or just to simply route your projects to a different top level domain, like `*.dev`, `*.hanshotfirst` or `*.test`. However, `*.dev` is not recommended because it is a Google-owned TLD.
 
 To enable offline custom TLD goodness, we'll use DNSMasq to route traffic to our local system and add a single config line to our global Lando config to direct lando to use that TLD for our sites.
 
@@ -13,16 +13,16 @@ To enable offline custom TLD goodness, we'll use DNSMasq to route traffic to our
 3. Follow the instructions in the output of `brew info dnsmasq`
 4. Add the following line to your `/usr/local/etc/dnsmasq.conf` file:
 ```
-address=/localhost/127.0.0.1
+address=/test/127.0.0.1
 ```
-Sub in your favorite TLD for 'localhost' here if you want to use something more flashy.
+Sub in your favorite TLD for 'test' here if you want to use something more flashy.
 5. Restart DNSMasq: `brew services restart dnsmasq`
-6. For OS X to resolve requests from *.localhost to localhost we need to add a resolver:
+6. For OS X to resolve requests from *.test to localhost we need to add a resolver:
 ```
 sudo mkdir -p /etc/resolver
-sudo nano /etc/resolver/localhost
+sudo nano /etc/resolver/test
 ```
-7. Add the following line to the localhost file resolver in /etc/resolver/.
+7. Add the following line to the test file resolver in /etc/resolver/.
 ```
 nameserver 127.0.0.1
 ```
@@ -35,7 +35,7 @@ sudo killall -HUP mDNSResponder
 ```
 10. Open your `~/.lando/config.yml` file and add the following line:
 ```yaml
-proxyDomain: localhost
+proxyDomain: test
 ```
 Again, allow your creativity to flourish and use whatever TLD makes you smile.
 11. Power Lando down with `lando poweroff`
@@ -53,8 +53,8 @@ Here are some vitals:
 
  APPSERVER URLS https://localhost:32791
                 http://localhost:32792
-                http://bestappever.localhost
-                https://bestappever.localhost
+                http://bestappever.test
+                https://bestappever.test
 ```
 13. Load it up in the browser and confirm everything is happy and working.
 

@@ -3,6 +3,11 @@ Working with Laravel
 
 Lando offers a configurable recipe for spinning up [Laravel](https://laravel.com/) apps. Let's go over some basic usage.
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=Ibxb2nh19yg
+{% endyoutube %}
+
 <!-- toc -->
 
 Getting Started
@@ -101,6 +106,21 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands.
 
+Environment Config
+-----
+
+By default, Laravel comes with a `.env` configuration file set to use `homestead`. You will want to modify the following `.env` key value pairs:
+
+```
+APP_URL=http://myproject.lndo.site
+DB_HOST=database
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=laravel
+```
+
+If your app is already running, `lando restart` to ensure the changes are applied.
+
 Configuration
 -------------
 
@@ -114,21 +134,12 @@ You will need to rebuild your app with `lando rebuild` to apply the changes to t
 
 ### Environment Variables
 
-The below are in addition to the [default variables](./../config/services.md#environment) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
+The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
 
 ```bash
-LANDO_INFO=JSON_STRING_OF_LANDO_INFO
-
-# Pending deprecation!!!
-# These will soon be removed.
-# We recommend you switch to using LANDO_INFO.
-CACHE_HOST: index
-CACHE_PORT: 6379
-DB_HOST=database
-DB_USER=laravel
-DB_PASSWORD=laravel
-DB_NAME=laravel
-DB_PORT=3306
+# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
+# The content of your variable may differ
+LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web/public","config":{"server":"/Users/pirog/.lando/services/config/laravel/laravel.conf","conf":"/Users/pirog/.lando/services/config/laravel/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web/public","config":{"server":"/Users/pirog/.lando/services/config/laravel/laravel.conf","conf":"/Users/pirog/.lando/services/config/laravel/php.ini"}},"database":{"type":"mariadb","version":"10.1","hostnames":["database"],"creds":{"user":"laravel","password":"laravel","database":"laravel"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/laravel/mysql"}},"cache":{"type":"redis","version":"4.0","hostnames":["cache"],"internal_connection":{"host":"cache","port":6379},"external_connection":{"host":"localhost","port":true}}}
 ```
 
 **NOTE:** These can vary based on the choices you make in your recipe config.

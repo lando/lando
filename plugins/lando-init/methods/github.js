@@ -1,78 +1,64 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var fs = lando.node.fs;
-  var GitHubApi = require('github');
-  var path = require('path');
-  var Promise = lando.Promise;
+  const _ = lando.node._;
+  const fs = lando.node.fs;
+  const GitHubApi = require('github');
+  const path = require('path');
+  const Promise = lando.Promise;
 
   // github
-  var github = new GitHubApi({Promise: Promise});
+  const github = new GitHubApi({Promise: Promise});
 
   // "Constants"
-  var tokenCacheKey = 'init.auth.github.tokens';
-  var siteMetaDataKey = 'site.meta.';
+  const tokenCacheKey = 'init.auth.github.tokens';
+  const siteMetaDataKey = 'site.meta.';
 
   /*
    * Modify init pre-prompt things
    */
-  lando.events.on('task-init-answers', function(answers) {
+  lando.events.on('task-init-answers', answers => {
     if (answers.argv.method === 'github') {
-
-      // Remove the name question
-      _.remove(answers.inquirer, function(question) {
-        return question.name === 'name';
-      });
-
+      _.remove(answers.inquirer, question => question.name === 'name');
     }
   });
 
   /*
    * Modify init pre-run things
    */
-  lando.events.on('task-init-run', function(answers) {
+  lando.events.on('task-init-run', answers => {
     if (answers.method === 'github') {
-
       // Set name if unset at this point, which it should be unless flagged in.
       if (answers.name === undefined) {
-
         // Get and set the name
-        var repoUrl = _.get(answers, 'github-repo', 'l/lando-app.git');
-        var gitUrl = repoUrl.split('/')[1];
+        const repoUrl = _.get(answers, 'github-repo', 'l/lando-app.git');
+        const gitUrl = repoUrl.split('/')[1];
         answers.name = gitUrl.split('.')[0];
-
       }
-
     }
   });
 
   /*
    * Helper to determine whether we should ask the questions or not
    */
-  var askQuestions = function(answers) {
-
+  const askQuestions = answers => {
     // Get our things
-    var method = lando.cli.argv()._[1];
-    var recipe = answers.recipe;
-
+    const method = lando.cli.argv()._[1];
+    const recipe = answers.recipe;
     // return
     return (method === 'github') || (recipe === 'github');
-
   };
 
   /*
    * Helper to get pantheon accounts
    */
-  var gitHubAccounts = function() {
-
+  const gitHubAccounts = () => {
     // Start account collectors
-    var accounts = [];
+    const accounts = [];
 
     // Get our list of tokens
-    _.forEach(lando.cache.get(tokenCacheKey), function(token, name) {
+    _.forEach(lando.cache.get(tokenCacheKey), (token, name) => {
       accounts.push({name: name, value: token});
     });
 
@@ -83,11 +69,10 @@ module.exports = function(lando) {
 
     // Return choices
     return accounts;
-
   };
 
   // List of additional options
-  var options = {
+  const options = {
     'github-auth': {
       describe: 'GitHub token or email of previously used token',
       string: true,
@@ -95,23 +80,21 @@ module.exports = function(lando) {
         type: 'list',
         message: 'Choose a GitHub account',
         choices: gitHubAccounts(),
-        when: function(answers) {
-          return !_.isEmpty(gitHubAccounts()) && askQuestions(answers);
-        },
-        weight: 400
-      }
+        when: answers => !_.isEmpty(gitHubAccounts()) && askQuestions(answers),
+        weight: 400,
+      },
     },
     'github-auth-token': {
       interactive: {
         name: 'github-auth',
         type: 'password',
         message: 'Enter a GitHub token',
-        when: function(answers) {
-          var token = _.get(answers, 'github-auth');
+        when: answers => {
+          const token = _.get(answers, 'github-auth');
           return (!token || token === 'more') && askQuestions(answers);
         },
-        weight: 401
-      }
+        weight: 401,
+      },
     },
     'github-repo': {
       describe: 'GitHub repo URL',
@@ -120,18 +103,17 @@ module.exports = function(lando) {
         type: 'list',
         message: 'Which site?',
         choices: function(answers) {
-
           // Repo collector
-          var repos = [];
+          const repos = [];
 
           // Spin things up
-          var tpath = 'github-auth';
-          var token = _.get(lando.cli.argv(), tpath, answers[tpath]);
-          var options = {affliation: 'owner,collaborator', 'per_page': 100};
-          var done = this.async();
+          const tpath = 'github-auth';
+          const token = _.get(lando.cli.argv(), tpath, answers[tpath]);
+          const options = {affliation: 'owner,collaborator', per_page: 100};
+          const done = this.async();
 
           // Check to see if token is cached already and use that
-          var tokens = lando.cache.get(tokenCacheKey) || {};
+          const tokens = lando.cache.get(tokenCacheKey) || {};
           if (_.includes(_.keys(tokens), token)) {
             token = tokens[token];
           }
@@ -139,8 +121,7 @@ module.exports = function(lando) {
           /*
            * Helper to resursively load all our repos
            */
-          var getAllRepos = function(err, res) {
-
+          const getAllRepos = (err, res) => {
             // Error
             if (err) {
               lando.log.error('Problem getting sites from GitHub');
@@ -152,17 +133,13 @@ module.exports = function(lando) {
             // IF we have more pages lets add them
             if (github.hasNextPage(res)) {
               github.getNextPage(res, getAllRepos);
-            }
-
-            // Otherwise lets send back our result
-            else {
+            } else {
               done(null, _.map(repos, function(site) {
-                var name =  _.get(site, 'full_name');
-                var value =  _.get(site, 'ssh_url');
+                const name = _.get(site, 'full_name');
+                const value = _.get(site, 'ssh_url');
                 return {name: name, value: value};
               }));
             }
-
           };
 
           // Start the github authchain
@@ -170,27 +147,23 @@ module.exports = function(lando) {
 
           // Get all our sites
           github.repos.getAll(options, getAllRepos);
-
         },
-        when: function(answers) {
-          return askQuestions(answers);
-        },
-        weight: 402
-      }
-    }
+        when: answers => askQuestions(answers),
+        weight: 402,
+      },
+    },
   };
 
   /*
    * Build out github method
    */
-  var build = function(name, options) {
-
+  const build = (name, options) => {
     // Set some things up
-    var dest = options.destination;
-    var key = 'github.lando.id_rsa';
-    var token = _.get(options, 'github-auth');
-    var tokens = lando.cache.get(tokenCacheKey) || {};
-    var repo = _.get(options, 'github-repo');
+    const dest = options.destination;
+    const key = 'github.lando.id_rsa';
+    const token = _.get(options, 'github-auth');
+    const tokens = lando.cache.get(tokenCacheKey) || {};
+    const repo = _.get(options, 'github-repo');
 
     // Check to see if token is cached already and use that
     if (_.includes(_.keys(tokens), token)) {
@@ -206,38 +179,35 @@ module.exports = function(lando) {
     }
 
     // Check if ssh key exists and create if not
-    return Promise.try(function() {
+    return Promise.try(() => {
       if (!fs.existsSync(path.join(lando.config.userConfRoot, 'keys', key))) {
         lando.log.verbose('Creating key %s for GitHub', key);
         return lando.init.run(name, dest, lando.init.createKey(key));
-      }
-      else {
+      } else {
         lando.log.verbose('Key %s exists for GitHub', key);
       }
     })
 
     // Refresh keys
-    .then(function() {
+    .then(() => {
       return lando.init.run(name, dest, '/load-keys.sh', 'root');
     })
 
     // Post SSH key to github
-    .then(function() {
-
+    .then(() => {
       // Path to ssh key
-      var keyPath = path.join(lando.config.userConfRoot, 'keys', key + '.pub');
+      const keyPath = path.join(lando.config.userConfRoot, 'keys', key + '.pub');
 
       // Options for posting key
       return github.users.createKey({
         title: 'lando',
-        key: _.trim(fs.readFileSync(keyPath, 'utf8'))
+        key: _.trim(fs.readFileSync(keyPath, 'utf8')),
       })
 
       // Catch key already in use error
-      .catch(function(err) {
-
+      .catch(err => {
         // Parse message
-        var message = JSON.parse(err.message);
+        const message = JSON.parse(err.message);
 
         // Report error for everything else
         if (_.has(message.errors, '[0].message')) {
@@ -245,56 +215,44 @@ module.exports = function(lando) {
             lando.log.error(err);
           }
         }
-
       });
-
     })
 
     // Cache some relevant things
-    .then(function() {
-
+    .then(() => {
       // Get myself
       return github.users.get({})
 
       // Cache
-      .then(function(user) {
-
+      .then(user => {
         // Get email
-        var email = _.get(user, 'data.email');
+        const email = _.get(user, 'data.email');
 
         // Check to see if token is cached already and use that
         tokens[email] = token;
         lando.cache.set(tokenCacheKey, tokens, {persist: true});
 
         // Cache the site things
-        var data = {email: email};
-        var name = lando.utils.engine.dockerComposify(options.appname);
-        var siteKey = siteMetaDataKey + name;
+        const data = {email: email};
+        const dc = lando.utils.engine.dockerComposify;
+        const siteKey = siteMetaDataKey + dc(name);
         lando.cache.set(siteKey, data, {persist: true});
-
       });
-
     })
 
     // Git clone the project
-    .then(function() {
-      return lando.init.run(name, dest, lando.init.cloneRepo(repo));
-    });
-
+    .then(() => lando.init.run(name, dest, lando.init.cloneRepo(repo)));
   };
 
   /*
    * Helper to mix in other github options
    */
-  var yaml = function(config) {
-    return config;
-  };
+  const yaml = config => config;
 
   // Return the things
   return {
     build: build,
     options: options,
-    yaml: yaml
+    yaml: yaml,
   };
-
 };

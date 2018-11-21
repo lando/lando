@@ -6,10 +6,16 @@ Tomcat
 Supported versions
 ------------------
 
+*   **[8](https://hub.docker.com/_/tomcat/)** **(default)**
 *   [7](https://hub.docker.com/_/tomcat/)
-*   [8](https://hub.docker.com/_/tomcat/)
-*   [latest](https://hub.docker.com/_/tomcat/)
 *   custom
+
+Using patch versions
+--------------------
+
+While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+
+[Here](https://hub.docker.com/r/library/tomcat/tags/) are all the tags that are available for this service.
 
 Example
 -------

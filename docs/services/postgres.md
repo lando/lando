@@ -6,7 +6,7 @@ PostgreSQL
 Supported versions
 ------------------
 
-*   [10.3](https://hub.docker.com/r/_/postgres/)
+*   **[10.3](https://hub.docker.com/r/_/postgres/)** **(default)**
 *   [10.2](https://hub.docker.com/r/_/postgres/)
 *   [10.1](https://hub.docker.com/r/_/postgres/)
 *   [10](https://hub.docker.com/r/_/postgres/)
@@ -14,7 +14,6 @@ Supported versions
 *   [9.5](https://hub.docker.com/r/_/postgres/)
 *   [9.4](https://hub.docker.com/r/_/postgres/)
 *   [9.3](https://hub.docker.com/r/_/postgres/)
-*   [latest](https://hub.docker.com/r/_/postgres/)
 *   custom
 
 > #### Warning::Be Careful Switching Database type, version or credentials
@@ -22,6 +21,13 @@ Supported versions
 > You should be careful switching database types, versions or credentials. In the case of type and version the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!** In the case of credentials, these are set when the container is **initially created** so in order to change them you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
 >
 > You can read more about this [here](./../issues/switching-dbs.md)
+
+Using patch versions
+--------------------
+
+While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+
+[Here](https://hub.docker.com/r/library/postgres/tags/) are all the tags that are available for this service.
 
 Example
 -------

@@ -1,57 +1,55 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var fs = lando.node.fs;
-  var os = require('os');
-  var path = require('path');
+  const _ = lando.node._;
+  const fs = lando.node.fs;
+  const os = require('os');
+  const path = require('path');
 
   // Fixed location of our util service compose file
-  var utilDir = path.join(lando.config.userConfRoot, 'util');
+  const utilDir = path.join(lando.config.userConfRoot, 'util');
 
   // Registry of init methods
-  var registry = {};
+  const registry = {};
 
-  /**
+  /*
    * Get an init method
    *
    * @since 3.0.0
    * @alias 'lando.init.get'
    */
-  var get = function(name) {
+  const get = name => {
     if (name) {
       return registry[name];
     }
     return _.keys(registry);
   };
 
-  /**
+  /*
    * Add an init method to the registry
    *
    * @since 3.0.0
    * @alias 'lando.init.add'
    */
-  var add = function(name, module) {
-    registry[name] = module;
+  const add = (name, method) => {
+    registry[name] = method;
   };
 
   /*
    * Helper to start util service
    */
-  var utilService = function(name, app) {
-
+  const utilService = (name, app) => {
     // Build util file
-    var filename = ['util', name, _.uniqueId()].join('-') + '.yml';
-    var utilFile = path.join(utilDir, filename);
+    const filename = ['util', name, _.uniqueId()].join('-') + '.yml';
+    const utilFile = path.join(utilDir, filename);
 
     // Let's get a service container
-    var util = {
+    const util = {
       image: 'devwithlando/util:stable',
       environment: {
         LANDO: 'ON',
-        LANDO_CONFIG_DIR: lando.config.userConfRoot,
+        LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
         LANDO_HOST_OS: lando.config.os.platform,
         LANDO_HOST_UID: lando.config.engineId,
         LANDO_HOST_GID: lando.config.engineGid,
@@ -63,41 +61,39 @@ module.exports = function(lando) {
         LANDO_WEBROOT_GID: '33',
         LANDO_MOUNT: '/app',
         COLUMNS: 256,
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
       command: ['tail', '-f', '/dev/null'],
       entrypoint: '/lando-entrypoint.sh',
       labels: {
         'io.lando.container': 'TRUE',
         'io.lando.service-container': 'TRUE',
-        'io.lando.id': lando.config.id
+        'io.lando.id': lando.config.instance,
       },
       volumes: [
         '$LANDO_ENGINE_SCRIPTS_DIR/lando-entrypoint.sh:/lando-entrypoint.sh',
         '$LANDO_ENGINE_SCRIPTS_DIR/user-perms.sh:/helpers/user-perms.sh',
-        '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh'
-      ]
+        '$LANDO_ENGINE_SCRIPTS_DIR/load-keys.sh:/load-keys.sh',
+      ],
     };
 
     // Set up our scripts
     // @todo: get volumes above into this
-    var scripts = ['lando-entrypoint.sh', 'user-perms.sh', 'load-keys.sh'];
-    _.forEach(scripts, function(script) {
-      fs.chmodSync(path.join(lando.config.engineScriptsDir, script), '755');
-    });
+    const scripts = ['lando-entrypoint.sh', 'user-perms.sh', 'load-keys.sh'];
+    lando.utils.engine.makeExecutable(scripts, lando.config.engineScriptsDir);
 
     // Add important ref points
-    var shareMode = (process.platform === 'darwin') ? ':delegated' : '';
+    const shareMode = (process.platform === 'darwin') ? ':delegated' : '';
     util.volumes.push(app + ':/app' + shareMode);
     util.volumes.push('$LANDO_ENGINE_HOME:/user' + shareMode);
     util.volumes.push('$LANDO_ENGINE_CONF:/lando' + shareMode);
 
     // Build and export compose
-    var service = {
+    const service = {
       version: '3.2',
       services: {
-        util: util
-      }
+        util: util,
+      },
     };
 
     // Log
@@ -105,7 +101,7 @@ module.exports = function(lando) {
     lando.yaml.dump(utilFile, service);
 
     // Name the project
-    var project = 'landoinit' + lando.utils.engine.dockerComposify(name);
+    const project = 'landoinit' + lando.utils.engine.dockerComposify(name);
 
     // Try to start the util
     return {
@@ -113,13 +109,12 @@ module.exports = function(lando) {
       compose: [utilFile],
       container: [project, 'util', '1'].join('_'),
       opts: {
-        services: ['util']
-      }
+        services: ['util'],
+      },
     };
-
   };
 
-  /**
+  /*
    * Helper to return a performant git clone command
    *
    * This clones to /tmp and then moves to /app to avoid file sharing performance
@@ -128,55 +123,50 @@ module.exports = function(lando) {
    * @since 3.0.0
    * @alias 'lando.init.cloneRepo'
    */
-  var cloneRepo = function(repo) {
-
+  const cloneRepo = repo => {
     // Get a unique clone folder
-    var tmpFolder = '/tmp/' + _.uniqueId('app-');
+    const tmpFolder = '/tmp/' + _.uniqueId('app-');
 
     // Commands
-    var mkTmpFolder = 'mkdir -p ' + tmpFolder;
-    var cloneRepo = 'git -C ' + tmpFolder + ' clone ' + repo + ' ./';
-    var cpHome = 'cp -rfT ' + tmpFolder + ' /app';
+    const mkTmpFolder = 'mkdir -p ' + tmpFolder;
+    const cloneRepo = 'git -C ' + tmpFolder + ' clone ' + repo + ' ./';
+    const cpHome = 'cp -rfT ' + tmpFolder + ' /app';
 
     // Clone cmd
     return [mkTmpFolder, cloneRepo, cpHome].join(' && ');
-
   };
 
-  /**
+  /*
    * Helper to return a create key command
    *
    * @since 3.0.0
    * @alias 'lando.init.createKey'
    */
-  var createKey = function(key) {
-
+  const createKey = key => {
     // Ensure that cache directory exists
-    var keysDir = path.join(lando.config.userConfRoot, 'keys');
+    const keysDir = path.join(lando.config.userConfRoot, 'keys');
     fs.mkdirpSync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
-    var comment = lando.config.id + '.lando@' + os.hostname();
-    var keyPath = '/lando/keys/' + key;
+    const comment = lando.config.instance + '.lando@' + os.hostname();
+    const keyPath = '/lando/keys/' + key;
 
     // Key cmd
     return 'ssh-keygen -t rsa -N "" -C "' + comment + '" -f "' + keyPath + '"';
-
   };
 
-  /**
+  /*
    * Run a command during the init process
    *
    * @since 3.0.0
    * @alias 'lando.init.run'
    */
-  var run = function(name, app, cmd, user) {
-
+  const run = (name, app, cmd, user) => {
     // Get the service
-    var service = utilService(name, app);
+    const service = utilService(name, app);
 
     // Build out our run
-    var run = {
+    const run = {
       id: service.container,
       compose: service.compose,
       project: service.project,
@@ -184,8 +174,8 @@ module.exports = function(lando) {
       opts: {
         mode: 'attach',
         user: user || 'www-data',
-        services: service.opts.services || ['util']
-      }
+        services: service.opts.services || ['util'],
+      },
     };
 
     // Log
@@ -195,53 +185,42 @@ module.exports = function(lando) {
     return lando.engine.start(service)
 
     // On linux lets provide a little delay to make sure our user is set up
-    .then(function() {
+    .then(() => {
       if (process.platform === 'linux') {
         return lando.Promise.delay(1000);
       }
     })
 
     // Exec
-    .then(function() {
-      return lando.engine.run(run);
-    });
-
+    .then(() => lando.engine.run(run));
   };
 
-  /**
+  /*
    * Helper to kill any running util processes
    *
    * @since 3.0.0
    * @alias 'lando.init.kill'
    */
-  var kill = function(name, app) {
-
+  const kill = (name, app) => {
     // Get the service
-    var service = utilService(name, app);
-
+    const service = utilService(name, app);
     // Check if we have a container
     return lando.engine.exists(service)
-
     // Killing in the name of
-    .then(function(exists) {
+    .then(exists => {
       if (exists) {
-        return lando.engine.stop(service)
-        .then(function() {
-          return lando.engine.destroy(service);
-        });
+        return lando.engine.stop(service).then(() => lando.engine.destroy(service));
       }
     });
-
   };
 
-  /**
+  /*
    * The core init method
    *
    * @since 3.0.0
    * @alias 'lando.init.build'
    */
-  var build = function(name, method, options) {
-
+  const build = (name, method, options) => {
     // Check to verify whether the method exists in the registry
     if (!registry[method]) {
       return {};
@@ -253,17 +232,15 @@ module.exports = function(lando) {
 
     // Run the build function
     return registry[method].build(name, options);
-
   };
 
-  /**
+  /*
    * Helper to spit out a .lando.yml file
    *
    * @since 3.0.0
    * @alias 'lando.init.yaml'
    */
-  var yaml = function(recipe, config, options) {
-
+  const yaml = (recipe, config, options) => {
     // Check to verify whether the recipe exists in the registry
     if (!registry[recipe]) {
       return config;
@@ -275,7 +252,6 @@ module.exports = function(lando) {
 
     // Return the .lando.yml
     return registry[recipe].yaml(config, options);
-
   };
 
   return {
@@ -286,7 +262,6 @@ module.exports = function(lando) {
     get: get,
     kill: kill,
     run: run,
-    yaml: yaml
+    yaml: yaml,
   };
-
 };

@@ -1,49 +1,47 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const _ = lando.node._;
+  const addConfig = lando.utils.services.addConfig;
+  const addScript = lando.utils.services.addScript;
+  const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
-  var scd = lando.config.servicesConfigDir;
+  const scd = lando.config.servicesConfigDir;
+  const esd = lando.config.engineScriptsDir;
 
   /*
    * Supported versions for tomcat (many more available, look at the supported
    * tags list on Docker Hub: https://hub.docker.com/r/library/tomcat/)
    */
-  var versions = [
+  const versions = [
     '7',
     '8',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out tomcat
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Define config mappings
-    var configFiles = {
+    const configFiles = {
       serverxmlfile: '/usr/local/tomcat/conf/server.xml',
       tomcatusersfile: '/usr/local/tomcat/conf/tomcat-users.xml',
       contextfile: '/usr/local/tomcat/conf/context.xml',
       managercontext: '/usr/local/tomcat/webapps/manager/META-INF/context.xml',
       contextfragspath: '/usr/local/tomcat/conf/Catalina/localhost',
-      webroot: config._mount
+      webroot: config._mount,
     };
 
     // Add the webroot if its there
@@ -52,36 +50,36 @@ module.exports = function(lando) {
     }
 
     // Default tomcat service
-    var tomcat = {
+    const tomcat = {
       image: 'tomcat:' + config.version,
       ports: ['80'],
       environment: {
         TERM: 'xterm',
-        LANDO_WEBROOT: configFiles.webroot
+        LANDO_WEBROOT: configFiles.webroot,
       },
       volumes: [],
-      command: 'catalina.sh run'
+      command: 'catalina.sh run',
     };
 
     // Set the default server.xml conf file
-    var serverXml = ['tomcat', 'server.xml'];
-    var confVol = buildVolume(serverXml, configFiles.serverxmlfile, scd);
+    const serverXml = ['tomcat', 'server.xml'];
+    let confVol = buildVolume(serverXml, configFiles.serverxmlfile, scd);
 
     // Set the default tomcat-users.xml conf file
-    var tomcatUsersXml = ['tomcat', 'tomcat-users.xml'];
+    const tomcatUsersXml = ['tomcat', 'tomcat-users.xml'];
     confVol = buildVolume(tomcatUsersXml, configFiles.tomcatusersfile, scd);
 
     // Set the default context.xml conf file
-    var contextXml = ['tomcat', 'context.xml'];
+    const contextXml = ['tomcat', 'context.xml'];
     confVol = buildVolume(contextXml, configFiles.contextfile, scd);
 
     // Set the default manager context.xml conf file to allow access to the host
-    var managerContextXml = ['tomcat', 'manager-context.xml'];
+    const managerContextXml = ['tomcat', 'manager-context.xml'];
     confVol = buildVolume(managerContextXml, configFiles.managercontext, scd);
 
     // Set the context fragments path to allow defining and controlling new
     // Tomcat webapp contexts
-    var contextFragments = ['tomcat', 'contextFragments'];
+    const contextFragments = ['tomcat', 'contextFragments'];
     confVol = buildVolume(contextFragments, configFiles.contextfragspath, scd);
 
     // write the configs out
@@ -89,22 +87,23 @@ module.exports = function(lando) {
 
     // Handle ssl option
     if (config.ssl) {
-
       // Add the SSL port
       tomcat.ports.push('443');
 
       // If we don't have a custom default ssl config lets use the default one
-      var sslConf = ['tomcat', 'httpd-ssl.conf'];
-      var sslVolume = buildVolume(sslConf, configFiles.serverxmlfile, scd);
+      const sslConf = ['tomcat', 'httpd-ssl.conf'];
+      const sslVolume = buildVolume(sslConf, configFiles.serverxmlfile, scd);
       tomcat.volumes = addConfig(sslVolume, tomcat.volumes);
 
+      // Inject add-cert so we can get certs before our app starts
+      tomcat.volumes = addScript('add-cert.sh', tomcat.volumes, esd, 'scripts');
     }
 
     // Handle custom config files
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        var local = config.config[type];
-        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        const local = config.config[type];
+        const customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         tomcat.volumes = addConfig(customConfig, tomcat.volumes);
       }
     });
@@ -114,44 +113,36 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Start up an info collector
-    var info = {};
-
+    const info = {};
     // Add the webroot
     info.webroot = _.get(config, 'webroot', '.');
-
     // Show the config files being used if they are custom
-    if (!_.isEmpty(config.config)) {
-      info.config  = config.config;
-    }
-
+    if (!_.isEmpty(config.config)) info.config = config.config;
     // Return the collected info
     return info;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
+  const volumes = function() {
     return {data: {}};
   };
 
   return {
+    defaultVersion: '8',
     info: info,
     networks: networks,
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

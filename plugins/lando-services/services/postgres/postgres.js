@@ -1,16 +1,15 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var addConfig = lando.utils.services.addConfig;
-  var buildVolume = lando.utils.services.buildVolume;
+  const _ = lando.node._;
+  const addConfig = lando.utils.services.addConfig;
+  const buildVolume = lando.utils.services.buildVolume;
 
   /*
-   * Supported versions for mysql
+   * Supported versions for postgres
    */
-  var versions = [
+  const versions = [
     '10.3',
     '10.2',
     '10.1',
@@ -19,56 +18,54 @@ module.exports = function(lando) {
     '9.4',
     '9.3',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
-    return {};
-  };
+  const networks = () => ({});
 
   /*
    * Build out mysql
    */
-  var services = function(name, config) {
-
+  const services = (name, config) =>{
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Some basic things
-    var ddd = '/var/lib/postgresql/data';
-    var dataDir = _.get(config, 'overrides.services.environment.PGDATA', ddd);
-    var defaultConfFile = '/usr/share/postgresql/postgresql.conf.sample';
-    var customConfDir = '/etc/postgresql';
-    var customPostgresFile = customConfDir + '/zzz-lando-custom-conf.conf';
+    const ddd = '/var/lib/postgresql/data';
+    const dataDir = _.get(config, 'overrides.services.environment.PGDATA', ddd);
+    const defaultConfFile = '/usr/share/postgresql/postgresql.conf.sample';
+    const customConfDir = '/etc/postgresql';
+    const customPostgresFile = customConfDir + '/zzz-lando-custom-conf.conf';
 
     // Define config mappings
-    var configFiles = {
+    const configFiles = {
       postgres: customPostgresFile,
       confd: customConfDir,
       dataDir: dataDir,
     };
 
     // GEt creds
-    var creds = config.creds || {};
+    const creds = config.creds || {};
 
     // Default postgres service
-    var postgres = {
+    const postgres = {
       image: 'postgres:' + config.version,
       environment: {
         PGDATA: configFiles.dataDir,
         POSTGRES_USER: creds.user || 'postgres',
         POSTGRES_PASSWORD: creds.password || 'password',
+        PGPASSWORD: creds.password || 'password',
         POSTGRES_DB: creds.database || 'database',
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
       healthcheck: {
         test: 'psql -U postgres -c "\\\l"',
         interval: '2s',
         timeout: '10s',
-        retries: 25
+        retries: 25,
       },
       volumes: ['data_' + name + ':' + configFiles.dataDir],
       command: [
@@ -78,30 +75,25 @@ module.exports = function(lando) {
         'sed -i \'s|conf.d|' + configFiles.confd + '|g\' ' + defaultConfFile,
         '&&',
         'docker-entrypoint.sh postgres',
-        '"'
-      ].join(' ')
+        '"',
+      ].join(' '),
     };
 
     // Handle port forwarding
     if (config.portforward) {
-
       // If true assign a port automatically
       if (config.portforward === true) {
         postgres.ports = ['5432'];
-      }
-
-      // Else use the specified port
-      else {
+      } else {
         postgres.ports = [config.portforward + ':5432'];
       }
-
     }
 
     // Handle custom config directory
     _.forEach(configFiles, function(file, type) {
       if (_.has(config, 'config.' + type)) {
-        var local = config.config[type];
-        var customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
+        const local = config.config[type];
+        const customConfig = buildVolume(local, file, '$LANDO_APP_ROOT_BIND');
         postgres.volumes = addConfig(customConfig, postgres.volumes);
       }
     });
@@ -111,14 +103,13 @@ module.exports = function(lando) {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function(name) {
-    var vols = {};
+  const volumes = name => {
+    const vols = {};
     vols['data_' + name] = {};
     return vols;
   };
@@ -126,42 +117,40 @@ module.exports = function(lando) {
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Add in generic info
-    var info = {
+    const info = {
       creds: {
         user: config.environment.POSTGRES_USER,
         password: config.environment.POSTGRES_PASSWORD,
-        database: config.environment.POSTGRES_DB
+        database: config.environment.POSTGRES_DB,
       },
-      'internal_connection': {
+      internal_connection: {
         host: name,
-        port: config.port || 5432
+        port: config.port || 5432,
       },
-      'external_connection': {
+      external_connection: {
         host: 'localhost',
-        port: config.portforward || 'not forwarded'
-      }
+        port: config.portforward || 'not forwarded',
+      },
     };
 
     // Show the config files being used if they are custom
     if (!_.isEmpty(config.config)) {
-      info.config  = config.config;
+      info.config = config.config;
     }
 
     // Return the collected info
     return info;
-
   };
 
   return {
+    defaultVersion: '10.3',
     info: info,
     networks: networks,
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

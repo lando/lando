@@ -1,7 +1,6 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Task object
   return {
     command: 'info [appname]',
@@ -11,46 +10,31 @@ module.exports = function(lando) {
         describe: 'Get ALL the info',
         alias: ['d'],
         default: false,
-        boolean: true
-      }
+        boolean: true,
+      },
     },
-    run: function(options) {
-
+    run: options => {
       // Try to get the app
       return lando.app.get(options.appname)
 
       // GEt the app info
-      .then(function(app) {
+      .then(app => {
         if (app) {
-
           // If this is deep, go deep
           if (options.deep) {
-            return lando.engine.list(app.name)
-            .each(function(container) {
-              return lando.engine.scan(container)
-              .then(function(data) {
-                console.log(JSON.stringify(data, null, 2));
-              });
-            });
-          }
-
-          // Return the basic info
-          else {
+            return lando.engine.list(app.name).each(container => lando.engine.scan(container).then(data => {
+              console.log(JSON.stringify(data, null, 2));
+            }));
+          } else {
             return lando.app.info(app)
             .then(function(info) {
               console.log(JSON.stringify(info, null, 2));
             });
           }
-
-        }
-
-        // Warn user we couldn't find an app
-        else {
+        } else {
           lando.log.warn('Could not find app in this dir');
         }
       });
-
-    }
+    },
   };
-
 };

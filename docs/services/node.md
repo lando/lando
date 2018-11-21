@@ -6,16 +6,28 @@ node
 Supported versions
 ------------------
 
+*   [9](https://hub.docker.com/r/_/node/)
+*   [carbon](https://hub.docker.com/r/_/node/)
 *   [8](https://hub.docker.com/r/_/node/)
+*   **[8.9](https://hub.docker.com/r/_/node/)** **(default)**
 *   [8.4](https://hub.docker.com/r/_/node/)
-*   [6](https://hub.docker.com/r/_/node/)
-*   [6.11](https://hub.docker.com/r/_/node/)
+*   [8.0](https://hub.docker.com/r/_/node/)
 *   [boron](https://hub.docker.com/r/_/node/)
+*   [6](https://hub.docker.com/r/_/node/)
+*   [6.10](https://hub.docker.com/r/_/node/)
+*   [6.11](https://hub.docker.com/r/_/node/)
+*   [6.12](https://hub.docker.com/r/_/node/)
+*   [argon](https://hub.docker.com/r/_/node/)
 *   [4](https://hub.docker.com/r/_/node/)
 *   [4.8](https://hub.docker.com/r/_/node/)
-*   [argon](https://hub.docker.com/r/_/node/)
-*   [latest](https://hub.docker.com/r/_/node/)
 *   custom
+
+Using patch versions
+--------------------
+
+While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+
+[Here](https://hub.docker.com/r/library/node/tags/) are all the tags that are available for this service.
 
 Example
 -------

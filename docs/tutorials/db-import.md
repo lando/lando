@@ -7,16 +7,17 @@ You can also import databases into other hosts and databases. It will currently 
 
 **This command will wipe out the target database before it runs the import unless you use the `--no-wipe` flag!**
 
-> #### Warning::Postgres import not yet supported
->
-> Lando will only handle `mysql` or `mariadb` compatible files at this time.
-
 Usage
 -----
 
 ```bash
 lando db-import somedumpfile.sql.gz
 ```
+
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=KH_wZuaPeRc
+{% endyoutube %}
 
 > #### Warning::DB dump must reside within app directory
 >
@@ -53,6 +54,6 @@ Adding the `db-import` command
 
 If you are not using one of our `php`-y recipes you can add the `db-import` command and default options to your `.lando.yml` as follows.
 
-{% codesnippet "./../examples/mysql-import/.lando.yml" %}{% endcodesnippet %}
+{% codesnippet "./../examples/sql-import/.lando.yml" %}{% endcodesnippet %}
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mysql-import).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/sql-import).

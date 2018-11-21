@@ -1,101 +1,107 @@
 'use strict';
 
 // Modules
-var _ = require('lodash');
-var path = require('path');
-var shell = require('shelljs');
+const _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const shell = require('shelljs');
+const url = require('url');
 
 /*
- * Helper to get default engine config
+ * Helper to get an executable
  */
-exports.getEngineConfig = function() {
+const getDockerBin = (bin, base) => {
+  const join = (process.platform === 'win32') ? path.win32.join : path.posix.join;
+  let binPath = join(base, bin);
 
-  // Create the default options
-  const config = {
-    host: '127.0.0.1',
-    socketPath: '/var/run/docker.sock'
-  };
-
-  // Slight deviation on Windows due to npipe://
-  if (process.platform === 'win32') {
-    config.socketPath = '//./pipe/docker_engine';
+  // Use PATH compose executable on linux if ours does not exist
+  if (process.platform === 'linux' && !fs.existsSync(binPath)) {
+    binPath = _.toString(shell.which(bin));
   }
 
-  return config;
-
+  switch (process.platform) {
+    case 'darwin': return path.posix.normalize(binPath);
+    case 'linux': return path.posix.normalize(binPath);
+    case 'win32': return path.win32.normalize(binPath + '.exe');
+  }
 };
+
+// Helper setting docker host
+const setDockerHost = (hostname, port = 2376) => url.format({
+  protocol: 'tcp',
+  slashes: true,
+  hostname,
+  port,
+});
 
 /*
  * Helper to get location of docker bin directory
  */
-exports.getDockerBinPath = function() {
+exports.getDockerBinPath = () => {
   switch (process.platform) {
     case 'darwin':
-      return path.join('/Applications/Docker.app/Contents/Resources', 'bin');
+      return '/Applications/Docker.app/Contents/Resources/bin';
     case 'linux':
-      return path.join('/usr/share/lando', 'bin');
+      return '/usr/share/lando/bin';
     case 'win32':
-      var programFiles = process.env.ProgramW6432 || process.env.ProgramFiles;
-      return path.join(programFiles + '\\Docker\\Docker\\resources\\bin');
+      const programFiles = process.env.ProgramW6432 || process.env.ProgramFiles;
+      return path.win32.join(programFiles + '\\Docker\\Docker\\resources\\bin');
   }
 };
 
 /*
  * Get docker compose binary path
  */
-exports.getComposeExecutable = function() {
-
-  // Get compose bin path
-  var composePath = this.getDockerBinPath();
-  var composeBin = path.join(composePath, 'docker-compose');
-
-  // Return exec based on path
-  switch (process.platform) {
-    case 'darwin': return composeBin;
-    case 'linux': return composeBin;
-    case 'win32': return composeBin + '.exe';
-  }
-
-};
+exports.getComposeExecutable = () => getDockerBin('docker-compose', exports.getDockerBinPath());
 
 /*
  * This should only be needed for linux
  */
-exports.getDockerExecutable = function() {
+exports.getDockerExecutable = () => {
+  const base = (process.platform === 'linux') ? '/usr/bin' : exports.getDockerBinPath();
+  return getDockerBin('docker', base);
+};
 
-  // Get docker bin path
-  var dockerPath = this.getDockerBinPath();
-  var dockerBin = path.join(dockerPath, 'docker');
-
-  // Return exec based on path
-  switch (process.platform) {
-    case 'darwin': return dockerBin;
-    case 'linux': return '/usr/bin/docker';
-    case 'win32': return dockerBin + '.exe';
+// Helper for engine config
+exports.getEngineConfig = ({engineConfig = {}, env = {}}) => {
+  // Set defaults if we have to
+  if (_.isEmpty(engineConfig)) {
+    engineConfig = {
+      socketPath: (process.platform === 'win32') ? '//./pipe/docker_engine' : '/var/run/docker.sock',
+      host: '127.0.0.1',
+      port: 2376,
+    };
   }
-
+  // Set the docker host if its non-standard
+  if (engineConfig.host !== '127.0.0.1') env.DOCKER_HOST = setDockerHost(engineConfig.host, engineConfig.port);
+  // Set the TLS/cert things if needed
+  if (_.has(engineConfig, 'certPath')) {
+    env.DOCKER_CERT_PATH = engineConfig.certPath;
+    env.DOCKER_TLS_VERIFY = 1;
+    engineConfig.ca = fs.readFileSync(path.join(env.DOCKER_CERT_PATH, 'ca.pem'));
+    engineConfig.cert = fs.readFileSync(path.join(env.DOCKER_CERT_PATH, 'cert.pem'));
+    engineConfig.key = fs.readFileSync(path.join(env.DOCKER_CERT_PATH, 'key.pem'));
+  }
+  // Return
+  return engineConfig;
 };
 
 /*
  * Get services wrapper
  */
-exports.buildDockerCmd = function(cmd) {
-
-  // Return file(s) we need to check for
+exports.buildDockerCmd = cmd => {
   switch (process.platform) {
     case 'darwin':
       return ['open', '/Applications/Docker.app'];
     case 'linux':
-      if (_.includes(shell.which('systemctl'), 'systemctl')) {
+      if (_.includes(_.toString(shell.which('systemctl')), 'systemctl')) {
         return ['sudo', 'systemctl', cmd, 'docker'];
-      }
-      else {
+      } else {
         return ['sudo', 'service', 'docker'].concat(cmd);
       }
     case 'win32':
-      var base = process.env.ProgramW6432 || process.env.ProgramFiles;
-      var dockerBin = base + '\\Docker\\Docker\\Docker for Windows.exe';
+      const base = process.env.ProgramW6432 || process.env.ProgramFiles;
+      const dockerBin = base + '\\Docker\\Docker\\Docker for Windows.exe';
       return ['cmd', '/C', dockerBin];
   }
-
 };

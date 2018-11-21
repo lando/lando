@@ -1,41 +1,37 @@
 'use strict';
 
-module.exports = function(lando) {
-
+module.exports = lando => {
   // Modules
-  var _ = lando.node._;
-  var path = require('path');
+  const _ = lando.node._;
+  const path = require('path');
 
   /*
    * Helper to get a CGR commanc
    */
-  var getCgr = function(pkg, version) {
-
+  const getCgr = (pkg, version) => {
     // Add version if needed
     if (!_.isEmpty(version)) {
       pkg = [pkg, version].join(':');
     }
 
     // Start the collector
-    var cgr = [
+    const cgr = [
       'composer',
       'global',
       'require',
-      pkg
+      pkg,
     ];
 
     // Return the whole shebang
     return cgr.join(' ');
-
   };
 
   /*
    * Helper to download and make a phar executable
    */
-  var getPhar = function(url, src, dest, check) {
-
+  const getPhar = (url, src, dest, check) => {
     // Status checker
-    var statusCheck = check || 'true';
+    let statusCheck = check || 'true';
 
     // Arrayify the check if needed
     if (_.isString(statusCheck)) {
@@ -43,35 +39,33 @@ module.exports = function(lando) {
     }
 
     // Phar install command
-    var pharInstall = [
+    const pharInstall = [
       ['cd', '/tmp'],
       ['curl', url, '-L', '-o', src],
       ['chmod', '+x', src],
       statusCheck,
-      ['mv', src, dest]
+      ['mv', src, dest],
     ];
 
     // Return
-    return _.map(pharInstall, function(cmd) {
+    return _.map(pharInstall, cmd => {
       return cmd.join(' ');
     }).join(' && ');
-
   };
 
   /*
    * Helper to reset with default config for a new recipe
    * Because we are "extending" this we want to provide this for children
    */
-  var resetConfig = function(name, config) {
-
+  const resetConfig = (name, config) => {
     // Get the config path
-    var configPath = path.join(lando.config.servicesConfigDir, name);
+    const configPath = path.join(lando.config.servicesConfigDir, name);
 
     // Get the database
-    var database = _.get(config, 'database', 'mysql');
+    const database = _.get(config, 'database', 'mysql');
 
     // Get the via
-    var via = _.get(config, 'via', 'apache');
+    const via = _.get(config, 'via', 'apache');
 
     // Start an object if we need it
     if (_.isEmpty(config.conf)) {
@@ -89,43 +83,41 @@ module.exports = function(lando) {
     }
 
     // Add in default mysql config if applicable
-    // @TODO: add a custom/optimzed default postgres cong file
+    // @TODO: add a custom/optimzed default postgres conf file
     if (!_.has(config, 'conf.database') && !_.includes(database, 'postgres')) {
       config.conf.database = path.join(configPath, 'mysql');
     }
 
     // Return the mix
     return config;
-
   };
 
   /*
    * Helper to return proxy config
    */
-  var proxy = function(name) {
+  const proxy = name => {
     return {
       appserver: [
-        [name, lando.config.proxyDomain].join('.')
-      ]
+        [name, lando.config.proxyDomain].join('.'),
+      ],
     };
   };
 
   /*
    * Helper to return services config
    */
-  var services = function(config) {
-
+  const services = config => {
     // Get some options
-    var phpVersion = _.get(config, 'php', '7.1');
-    var database = _.get(config, 'database', 'mysql');
+    const phpVersion = _.get(config, 'php', '7.1');
+    const database = _.get(config, 'database', 'mysql');
 
     // Build our default set of services
-    var services = {
+    const services = {
       appserver: {
         type: 'php:' + phpVersion,
         via: 'apache',
         ssl: _.get(config, 'ssl', true),
-        xdebug: _.get(config, 'xdebug', false)
+        xdebug: _.get(config, 'xdebug', false),
       },
       database: {
         type: database,
@@ -133,9 +125,9 @@ module.exports = function(lando) {
         creds: {
           user: config._recipe,
           password: config._recipe,
-          database: config._recipe
-        }
-      }
+          database: config._recipe,
+        },
+      },
     };
 
     // Mix in any additional config
@@ -143,7 +135,6 @@ module.exports = function(lando) {
       services.appserver.webroot = config.webroot;
     }
     if (_.has(config, 'conf')) {
-
       // Start setting config
       services.appserver.config = {};
       services.database.config = {};
@@ -164,92 +155,71 @@ module.exports = function(lando) {
       }
     }
 
-    // Add db credentials into the ENV
-    services.appserver.overrides = {
-      services: {
-        environment: {
-          DB_HOST: 'database',
-          DB_USER: services.database.creds.user,
-          DB_PASSWORD: services.database.creds.password,
-          DB_NAME: services.database.creds.database,
-          DB_PORT: (_.includes(database, 'postgres')) ? 5432 : 3306
-        }
-      }
-    };
-
     // Return that thang
     return services;
-
-  };
-
-  /*
-   * Helper to return import tooling route
-   * @TODO: Add pgsql cmd at some point
-   */
-  var dbImport = function() {
-    return {
-      service: ':host',
-      description: 'Import <file> into database service',
-      cmd: '/helpers/mysql-import.sh',
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: 'database',
-          alias: ['h']
-        },
-        'no-wipe': {
-          description: 'Do not destroy the existing database before an import'
-        }
-      }
-    };
-  };
-
-  /*
-   * Helper to return db-export tooling route
-   * @TODO: Add pgsql version of the cmd at some point
-   */
-  var dbExport = function() {
-    return {
-      service: ':host',
-      description: 'Export database from a service',
-      cmd: '/helpers/mysql-export.sh',
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: 'database',
-          alias: ['h']
-        },
-        stdout: {
-          description: 'Dump database to stdout'
-        }
-      }
-    };
   };
 
   /*
    * Helper to return tooling config
    */
-  var tooling = function(config) {
-
+  const tooling = config => {
     // Get our default tooling opts
-    var tooling = {
-      composer: {
+    const tooling = {
+      'composer': {
         service: 'appserver',
         description: 'Run composer commands',
-        cmd: ['composer', '--ansi']
+        cmd: 'composer --ansi',
       },
-      php: {
+      'db-import [file]': {
+        service: ':host',
+        description: 'Import <file> into database service',
+        cmd: '/helpers/sql-import.sh',
+        options: {
+          'host': {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h'],
+          },
+          'no-wipe': {
+            description: 'Do not destroy the existing database before an import',
+            boolean: true,
+          },
+        },
+      },
+      'db-export [file]': {
+        service: ':host',
+        description: 'Export database from a service',
+        cmd: '/helpers/sql-export.sh',
+        options: {
+          host: {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h'],
+          },
+          stdout: {
+            description: 'Dump database to stdout',
+          },
+        },
+      },
+      'php': {
         service: 'appserver',
         description: 'Run php commands',
-        cmd: ['php']
-      }
+        cmd: 'php',
+      },
     };
 
-    // Get the database type
-    var database = _.get(config, 'database', 'mysql');
+    // Assess the service types and add the correct command if needed
+    const services = _.compact(_.map(config._services, service => {
+      if (_.has(service, 'type')) {
+        return service.type.split(':')[0];
+      }
+    }));
 
-    // Add in the DB cli based on choice
-    if (_.includes(database, 'mysql') || _.includes(database, 'mariadb')) {
+    // Add the default database type
+    services.push(_.get(config, 'database', 'mysql').split(':')[0]);
+
+    // Add in the mysql command if we have mysql dbs
+    if (_.includes(services, 'mysql') || _.includes(services, 'mariadb')) {
       tooling.mysql = {
         service: ':host',
         description: 'Drop into a MySQL shell on a database service',
@@ -258,44 +228,38 @@ module.exports = function(lando) {
           host: {
             description: 'The database service to use',
             default: 'database',
-            alias: ['h']
-          }
-        }
+            alias: ['h'],
+          },
+        },
       };
-      tooling['db-import [file]'] = dbImport();
-      tooling['db-export [file]'] = dbExport();
     }
 
-    // @todo: also need a pgimport cmd
-    else if (_.includes(database, 'postgres')) {
+    // Add in the pgsql command if we have mysql dbs
+    if (_.includes(services, 'postgres')) {
       tooling.psql = {
-        service: 'database',
-        description: 'Drop into a psql shell',
-        cmd: [
-          'psql',
-          '-h',
-          'localhost',
-          '-p',
-          '5432',
-          config._recipe,
-          config._recipe
-        ],
-        user: 'root'
+        service: ':host',
+        description: 'Drop into a psql shell on a database service',
+        cmd: 'psql -h localhost -p 5432',
+        options: {
+          host: {
+            description: 'The database service to use',
+            default: 'database',
+            alias: ['h'],
+          },
+        },
       };
     }
 
     // Return the toolz
     return tooling;
-
   };
 
   /*
    * Build out LAMP
    */
-  var build = function(name, config) {
-
+  const build = (name, config) => {
     // Start up our build
-    var build = {};
+    const build = {};
 
     // Get our things
     build.proxy = proxy(name);
@@ -304,7 +268,6 @@ module.exports = function(lando) {
 
     // Return the things
     return build;
-
   };
 
   // Return things
@@ -312,7 +275,6 @@ module.exports = function(lando) {
     build: build,
     resetConfig: resetConfig,
     getCgr: getCgr,
-    getPhar: getPhar
+    getPhar: getPhar,
   };
-
 };

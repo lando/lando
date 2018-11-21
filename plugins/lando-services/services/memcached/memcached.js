@@ -1,57 +1,50 @@
 'use strict';
 
-module.exports = function() {
-
+module.exports = () => {
   /*
    * Supported versions for memcached
    */
-  var versions = [
+  const versions = [
     '1.5',
     '1.4',
     'latest',
-    'custom'
+    'custom',
   ];
 
   /*
    * Return the networks needed
    */
-  var networks = function() {
+  const networks = function() {
     return {};
   };
 
   /*
    * Build out memcached
    */
-  var services = function(name, config) {
-
+  const services = (name, config) => {
     // Start a services collector
-    var services = {};
+    const services = {};
 
     // Get the memory limit
-    var memlimit = config.mem || 64;
+    const memlimit = config.mem || 64;
 
     // Default memcached service
-    var memcached = {
+    const memcached = {
       image: 'memcached:' + config.version,
       environment: {
-        TERM: 'xterm'
+        TERM: 'xterm',
       },
       command: 'memcached -m ' + memlimit,
     };
 
     // Handle port forwarding
     if (config.portforward) {
-
       // If true assign a port automatically
       if (config.portforward === true) {
         memcached.ports = ['11211'];
-      }
-
-      // Else use the specified port
-      else {
+      } else {
         memcached.ports = [config.portforward + ':11211'];
       }
-
     }
 
     // Put it all together
@@ -59,45 +52,42 @@ module.exports = function() {
 
     // Return our service
     return services;
-
   };
 
   /*
    * Return the volumes needed
    */
-  var volumes = function() {
+  const volumes = () => {
     return {data: {}};
   };
 
   /*
    * Metadata about our service
    */
-  var info = function(name, config) {
-
+  const info = (name, config) => {
     // Add in generic info
-    var info = {
-      'internal_connection': {
+    const info = {
+      internal_connection: {
         host: name,
-        port: config.port || 11211
+        port: config.port || 11211,
       },
-      'external_connection': {
+      external_connection: {
         host: 'localhost',
-        port: config.portforward || 'not forwarded'
-      }
+        port: config.portforward || 'not forwarded',
+      },
     };
 
     // Return the collected info
     return info;
-
   };
 
   return {
+    defaultVersion: '1.5',
     info: info,
     networks: networks,
     services: services,
     versions: versions,
     volumes: volumes,
-    configDir: __dirname
+    configDir: __dirname,
   };
-
 };

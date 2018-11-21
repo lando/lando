@@ -3,18 +3,24 @@ Lando
 
 ![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
 
-Lando is for developers who want to quickly specify and painlessly spin up the services and tools needed to develop their projects.
+Lando is for developers who want to:
 
-It's a free, open source, cross-platform, local development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them. Think of it as your local development's dependency management tool. It can even be installed right beside an old Kalabox installation with no interference, or used as a complete upgrade-replacement.
+1. Quickly specify and painlessly spin up the services and tools needed to develop their projects.
+2. Specify these local development dependencies in a per-project, lives-in-git config file called `.lando.yml`
+3. Automate complex build steps, testing setups, deployments or other repeated-more-than-once workflows
+4. Avoid the built-in-masochism of directly using `docker` or `docker-compose`
 
-With Lando you can...
+It's a free, open source, cross-platform, **local** development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them. Think of it as your local development's dependency management and automation tool. It can even be installed right beside an old Kalabox installation with no interference, or used as a complete upgrade-replacement.
+
+With Lando you can also...
 
 *   Easily mimic your production environment locally.
 *   Standardize your teams dev environments and tooling on OSX, Windows and Linux.
 *   Integrate with hosting providers like [Pantheon](https://pantheon.io)
-*   Store all of the above in a version controlled config file called `.lando.yml`
 *   Easily customize or extend tooling, deployment options and basically any other functionality.
 *   Free yourself from the tyranny of inferior local development products.
+
+For the more technically curious, Lando is actually 2 separate abstraction layers built on top of [Docker Compose](https://docs.docker.com/compose/).
 
 Begin by checking out
 ---------------------
@@ -132,7 +138,7 @@ lando init pantheon | lando init github
 lando start
 ```
 
-You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipe.html)
+You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipes.html)
 
 ```yml
 name: myproject
@@ -193,6 +199,13 @@ tooling:
     service: appserver
     cmd: ps
 ```
+
+Security Issues
+---------------
+
+If you have discovered a security issue with Lando, please contact the Lando Security Team directly at
+[security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or
+tweeting about it.
 
 Other Resources
 ---------------
