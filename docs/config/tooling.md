@@ -67,9 +67,7 @@ You can override tooling provided by Lando by redefining the tooling options in 
 ```yml
 tooling:
   drush:
-    cmd:
-      - "drush"
-      - "--root=/app/web"
+    cmd: "drush --root=/app/web"
 ```
 
 Disabling

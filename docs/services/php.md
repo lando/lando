@@ -63,6 +63,7 @@ Installed Extensions
 * mysqlnd
 * OAuth
 * openssl
+* pcntl
 * pcre
 * PDO
 * pdo_mysql
