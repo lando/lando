@@ -48,6 +48,10 @@ Linux
 >
 > If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](#from-source)
 
+### Arch
+
+Lando is also available on the AUR as [lando-git](https://aur.archlinux.org/packages/lando-git/), meaning it's built directly from source.
+
 ### Caveats
 
 Because each Linux distribution handles things differently, these considerations may or may not apply to you:
