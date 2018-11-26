@@ -83,7 +83,7 @@ code .vscode/launch.json
       //
       // But this has been deprecated and we now use this:
       "pathMappings": {
-        "/app/": "${workspaceRoot}/",
+        "/app/": "${workspaceFolder}/",
       }
     }
   ]
@@ -93,6 +93,62 @@ code .vscode/launch.json
 Done! 
 
 You can now click start debugging (type F5 or click on the icon in the left sidebar).
+
+Debugging PhpUnit
+-----------------
+
+Debugging PhpUnit tests in VS Code requires a little more setup, but Lando helps to make it easier.
+
+First, you need to have VS code listen for debugging on 2 separate ports, because PhpUnit runs in one process and the tests themselves in another, and VS Code's Xdebug extension currently struggles with this. You accomplish this by have a launch.json that looks like this:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Normal",
+      "type": "php",
+      "request": "launch",
+      "port": 9000,
+      "pathMappings": {
+        "/app/": "${workspaceFolder}/",
+      }
+    },
+    {
+      "name": "PhpUnit dummy",
+      "type": "php",
+      "request": "launch",
+      "port": 9001,
+    }
+  ],
+  "compounds": [
+    {
+        "name": "PhpUnit",
+        "configurations": ["Normal", "PhpUnit dummy"]
+    }
+       ]
+}
+```
+
+Next add some custom tooling to your .lando.yml file, that provides a command to run PhpUnit in a way points the main PhpUnit process to the PhpUnit dummy debugger we just added. (The syntax here assumes a project-specific installation of PhpUnit, not a global one).
+
+```yml
+tooling:
+  phpunitdebug:
+    service: appserver
+    cmd:
+      - "php"
+      - "-d"
+      - "xdebug.remote_port=9001"
+      - "vendor/bin/phpunit"
+```
+
+Now to run debug a PhpUnit test, do the following:
+
+1. Select the compound "PhpUnit" as your debugger in VS Code's UI, and start it.
+2. Make sure you untick "Everything" in the breakpoints section of the UI, or it will break everytime PhpUnit throws an exception, even if it's properly caught by PhpUnit.
+3. Add a breakpoint in your code that is being tested.
+4. On your command line run PhpUnit with something like `lando phpunitdebug --filter=testMyTestMethodName` (this example is of running a single test method, actually you can add any phpunit options you like at the end).
 
 
 Read More
