@@ -8,6 +8,12 @@ jobs:
       # docker_layer_caching: true
     parallelism: 8
     steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
       - run:
           name: Prep the hyperdrive
           command: |
@@ -17,12 +23,6 @@ jobs:
             sudo rm -rf /var/cache/apt/archives/lock
             sudo rm -rf /var/lib/dpkg/lock
             sudo apt -y install bc
-      - checkout
-      - restore_cache:
-          keys:
-            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-v1-{{ .Branch }}-
-            - yarn-packages-v1-
       - run:
           name: Take this thing into hyperspace
           environment:
