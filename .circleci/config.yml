@@ -51,8 +51,8 @@ jobs:
             sudo dpkg -i /tmp/lando.deb
             cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             node ~/project/bin/lando.js config
-            sudo rm -rf /usr/local/bin/lando
-            sudo ln -sf /usr/local/bin/lando ~/project/bin/lando.js
+            sudo rm -f /usr/local/bin/lando
+            sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
             which lando
       - run:
           name: Run func test
