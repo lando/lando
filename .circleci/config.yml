@@ -16,6 +16,8 @@ jobs:
             - yarn-packages-v1-
       - run:
           name: Take this thing into hyperspace
+          environment:
+            TERM: xterm
           command: |
             curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
