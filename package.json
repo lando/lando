@@ -40,7 +40,7 @@
     "release": "bump --prompt --tag --all --push",
     "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
     "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js plugins/**/test/**/*.spec.js",
-    "test:functional": "leia \"examples/**/*.md\" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge && mocha --timeout 900000 test/**/*.func.js",
+    "test:functional": "leia \"examples/**/*.md\" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge --split-file && mocha --timeout 900000 test/**/*.func.js",
     "test": "yarn lint && yarn test:unit"
   },
   "pkg": {
