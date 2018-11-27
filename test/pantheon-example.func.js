@@ -39,7 +39,7 @@ describe('pantheon-example', function() {
   it('start up a pantheon app', done => {
     process.chdir(path.resolve(__dirname, '../examples/pantheon'));
     const cli = new CliTest();
-    cli.exec('cd web && node ../../../bin/lando.js start').then(res => {
+    cli.exec('cd web && lando start').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -54,7 +54,7 @@ describe('pantheon-example', function() {
   it('run a lando pull', done => {
     process.chdir(path.resolve(__dirname, '../examples/pantheon'));
     const cli = new CliTest();
-    cli.exec('cd web && node ../../../bin/lando.js pull --code=dev --database=dev --files=dev').then(res => {
+    cli.exec('cd web && lando pull --code=dev --database=dev --files=dev').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -66,7 +66,7 @@ describe('pantheon-example', function() {
   it('check terminus is installed', done => {
     process.chdir(path.resolve(__dirname, '../examples/pantheon'));
     const cli = new CliTest();
-    cli.exec('cd web && node ../../../bin/lando.js terminus self:info | grep "terminus_version"').then(res => {
+    cli.exec('cd web && terminus self:info | grep "terminus_version"').then(res => {
       if (res.error === null) {
         done();
       } else {
@@ -81,7 +81,7 @@ describe('pantheon-example', function() {
   it('destroy the pantheon server and clean things up', done => {
     process.chdir(path.resolve(__dirname, '../examples/pantheon'));
     const cli = new CliTest();
-    cli.exec('cd web && node ../../../bin/lando.js destroy -y').then(res => {
+    cli.exec('cd web && lando destroy -y').then(res => {
       if (res.error === null) {
         done();
       } else {
