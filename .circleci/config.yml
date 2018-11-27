@@ -3,9 +3,6 @@ jobs:
   build:
     machine:
       image: circleci/classic:201710-01
-      # See: https://discuss.circleci.com/t/cannot-install-php-7-1-on-machine-because-of-locked-var-lib-dpkg-lock-file/24639
-      # Once (if) has a better resolution lets switch to the latest
-      # image: circleci/classic:201808-01
       # @TODO:: once we have more tests running lets buy the below and
       # set up max parallelism
       # docker_layer_caching: true
@@ -31,9 +28,6 @@ jobs:
             /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
             # @TODO: anyway hyperdrive can assert dominance here?
             sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
-            docker --version
-            node --version
-            yarn --version
       - run:
           name: Install node modules
           command: yarn
@@ -41,10 +35,8 @@ jobs:
           name: Switch lando over to source
           command: |
             cp -f ~/project/.circleci/lando.yml ~/project/config.yml
-            node ~/project/bin/lando.js config
-            sudo rm -f /usr/local/bin/lando
+            sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
             sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
-            ls -lsaf /usr/local/bin | grep lando
       - run:
           name: Run func test
           command: |
