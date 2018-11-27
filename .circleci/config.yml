@@ -51,12 +51,15 @@ jobs:
             sudo dpkg -i /tmp/lando.deb
             cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             node ~/project/bin/lando.js config
+            rm -rf /usr/local/bin/lando
+            ln -sf /usr/local/bin/lando ~/project/bin/lando.js
+            which lando
       - run:
           name: Run func test
           command: |
-            node ~/project/scripts/generate-tests.js
-            echo $(circleci tests split ~/project/test/func/split-file.txt)
-            mocha --timeout 900000 $(circleci tests split ~/project/test/func/split-file.txt)
+            leia "examples/**/*.md" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge
+            echo $(circleci tests split ~/project/test/split-file.txt)
+            mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
       - save_cache:
           paths:
             - ~/.cache/yarn
