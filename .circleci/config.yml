@@ -8,6 +8,11 @@ jobs:
       # docker_layer_caching: true
     parallelism: 8
     steps:
+      - run:
+          name: Prep the hyperdrive
+          command: |
+            sudo apt -y update
+            sudo apt -y install bc
       - checkout
       - restore_cache:
           keys:
@@ -19,8 +24,6 @@ jobs:
           environment:
             TERM: xterm
           command: |
-            # Hyperdrive needs the below dep
-            sudo apt -y install bc
             # Spoof the public key
             # @TODO: need a better check for ssh-keys, pub and private
             # @TODO: or a way to disable steps?
