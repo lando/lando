@@ -41,6 +41,9 @@ jobs:
             # Verify our hyperdrive is purring like a lothcat
             /tmp/hyperdrive -y
       - run:
+          name: Install node modules
+          command: yarn
+      - run:
           name: Switch lando over to source
           command: |
             cp -f ~/project/.circleci/lando.yml ~/project/config.yml
