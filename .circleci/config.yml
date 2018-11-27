@@ -18,27 +18,22 @@ jobs:
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
       - run:
-          name: Prep the hyperdrive
-          command: |
-            sudo apt -y update
-            sudo apt -y install bc
-      - run:
           name: Take this thing into hyperspace
           environment:
             TERM: xterm
           command: |
             # Spoof the public key
-            # @TODO: need a better check for ssh-keys, pub and private
-            # @TODO: or a way to disable steps?
             ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
             mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
+            # Hyperdrive
             curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
             /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
             # @TODO: anyway hyperdrive can assert dominance here?
             sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
-            # Verify our hyperdrive is purring like a lothcat
-            /tmp/hyperdrive -y
+            docker --version
+            node --version
+            yarn --version
       - run:
           name: Install node modules
           command: yarn
@@ -49,11 +44,15 @@ jobs:
             node ~/project/bin/lando.js config
             sudo rm -f /usr/local/bin/lando
             sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
-            which lando
+            ls -lsaf /usr/local/bin | grep lando
       - run:
           name: Run func test
           command: |
-            yarn leia "examples/**/*.md" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge --split-file
+            yarn leia "examples/**/README.md" test -r 6 \
+              -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' \
+              -t Test -t Validat -t Verif -t Sanity \
+              -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge \
+              --split-file
             echo $(circleci tests split ~/project/test/split-file.txt)
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
       - save_cache:
