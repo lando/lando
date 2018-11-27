@@ -28,7 +28,7 @@ Run the following commands to validate things are rolling as they should.
 cd web && lando pull --code=dev --database=dev --files=dev
 
 # Check terminus is installed
-cd web && terminus self:info | grep "terminus_version"
+cd web && lando terminus --version
 ```
 
 Cleanup
