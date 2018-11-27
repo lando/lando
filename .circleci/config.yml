@@ -2,8 +2,11 @@ version: 2
 jobs:
   build:
     machine:
-      image: circleci/classic:201808-01
-      # @todo: once we have more tests running lets buy the below and
+      image: circleci/classic:201710-01
+      # See: https://discuss.circleci.com/t/cannot-install-php-7-1-on-machine-because-of-locked-var-lib-dpkg-lock-file/24639
+      # Once (if) has a better resolution lets switch to the latest
+      # image: circleci/classic:201808-01
+      # @TODO:: once we have more tests running lets buy the below and
       # set up max parallelism
       # docker_layer_caching: true
     parallelism: 8
@@ -18,10 +21,6 @@ jobs:
           name: Prep the hyperdrive
           command: |
             sudo apt -y update
-            # See https://discuss.circleci.com/t/cannot-install-php-7-1-on-machine-because-of-locked-var-lib-dpkg-lock-file/24639/5
-            sudo rm -rf /var/lib/apt/lists/lock
-            sudo rm -rf /var/cache/apt/archives/lock
-            sudo rm -rf /var/lib/dpkg/lock
             sudo apt -y install bc
       - run:
           name: Take this thing into hyperspace
@@ -36,7 +35,7 @@ jobs:
             curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
             /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
-            # TODO: anyway hyperdrive can assert dominance here?
+            # @TODO: anyway hyperdrive can assert dominance here?
             sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
             # Verify our hyperdrive is purring like a lothcat
             /tmp/hyperdrive -y
