@@ -15,40 +15,14 @@ jobs:
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
       - run:
-          name: Get PPAz
+          name: Take this thing into hyperspace
           command: |
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash
-            curl -fsSL -o /tmp/lando.deb http://installer.kalabox.io/lando-latest-dev.deb
+            curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
+            chmod +x /tmp/hyperdrive
+            /tmp/hyperdrive -y
       - run:
-          name: Update deps
-          command: sudo apt-get update -y
-      - run:
-          name: Install deps
+          name: Switch lando over to source
           command: |
-            sudo rm -rf /var/lib/apt/lists/lock
-            sudo rm -rf /var/cache/apt/archives/lock
-            sudo rm -rf /var/lib/dpkg/lock
-            sudo apt-get install -y nodejs yarn cgroup-bin curl
-      - run:
-          name: Install node modules
-          command: yarn
-      - run:
-          name: Verify we have the things we need to start
-          command: |
-            docker -v
-            docker-compose -v
-            node -v
-            yarn -v
-            node ~/project/bin/lando.js version
-      - run:
-          name: Install latest lando
-          command: |
-            sudo rm -rf /var/lib/apt/lists/lock
-            sudo rm -rf /var/cache/apt/archives/lock
-            sudo rm -rf /var/lib/dpkg/lock
-            sudo dpkg -i /tmp/lando.deb
             cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             node ~/project/bin/lando.js config
             sudo rm -f /usr/local/bin/lando
@@ -57,7 +31,7 @@ jobs:
       - run:
           name: Run func test
           command: |
-            yarn leia "examples/**/README.md" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge --split-file
+            yarn leia "examples/**/*.md" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge --split-file
             echo $(circleci tests split ~/project/test/split-file.txt)
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
       - save_cache:
