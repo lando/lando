@@ -40,12 +40,7 @@ jobs:
       - run:
           name: Run func test
           command: |
-            yarn leia "examples/**/README.md" test -r 6 \
-              -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' \
-              -t Test -t Validat -t Verif -t Sanity \
-              -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge \
-              --split-file
-            echo $(circleci tests split ~/project/test/split-file.txt)
+            yarn generate-tests
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
       - save_cache:
           paths:
