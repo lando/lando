@@ -4,8 +4,9 @@ module.exports = lando => {
   // Modules
   const _ = lando.node._;
   const chalk = lando.node.chalk;
+  const path = require('path');
   const table = lando.cli.makeTable();
-  const utils = lando.utils.app;
+  const utils = require('./../lib/utils');
 
   // The task object
   return {
@@ -36,36 +37,32 @@ module.exports = lando => {
         return;
       }
 
-      // Attempt to grab the app if we can
-      return lando.app.get(options.appname)
+      // Try to get our app
+      // @TODO: handle the appname if passed in?
+      const file = path.resolve(process.cwd(), lando.config.landoFile);
+      const app = lando.getApp(file);
 
       // Rebuild the app
-      .then(app => {
-        if (app) {
-          // Rebuild only particlar services if specified
-          if (!_.isEmpty(options.services)) {
-            app.opts.services = options.services;
-          }
-
-          return lando.app.rebuild(app)
-          .then(() => {
-            // Header it
-            console.log(lando.cli.makeArt());
-
-            // Inject start table into the table
-            _.forEach(utils.startTable(app), (value, key) => {
-              const opts = (_.includes(key, 'url')) ? {arrayJoiner: '\n'} : {};
-              table.add(_.toUpper(key), value, opts);
-            });
-
-            // Print the table
-            console.log(table.toString());
-            console.log('');
-          });
-        } else {
-          lando.log.warn('Could not find app in this dir');
+      if (app) {
+        // Rebuild only particlar services if specified
+        if (!_.isEmpty(options.services)) {
+          app.opts.services = options.services;
         }
-      });
+
+        // Rebuild
+        return app.rebuild().then(() => {
+          // Header it
+          console.log(lando.cli.makeArt());
+          // Inject start table into the table
+          _.forEach(utils.startTable(app), (value, key) => {
+            const opts = (_.includes(key, 'url')) ? {arrayJoiner: '\n'} : {};
+            table.add(_.toUpper(key), value, opts);
+          });
+          // Print the table
+          console.log(table.toString());
+          console.log('');
+        });
+      }
     },
   };
 };

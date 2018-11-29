@@ -3,6 +3,7 @@
 module.exports = lando => {
   // Modules
   const chalk = lando.node.chalk;
+  const path = require('path');
 
   // The task object
   return {
@@ -28,20 +29,17 @@ module.exports = lando => {
         return;
       }
 
-      // Try to get the app if we can
-      return lando.app.get(options.appname)
+      // Try to get our app
+      // @TODO: handle the appname if passed in?
+      const file = path.resolve(process.cwd(), lando.config.landoFile);
+      const app = lando.getApp(file);
 
       // Destroy the app
-      .then(function(app) {
-        if (app) {
-          return lando.app.destroy(app)
-          .then(function() {
-            console.log(chalk.red('App destroyed!'));
-          });
-        } else {
-          lando.log.warn('Could not find app in this dir');
-        }
-      });
+      if (app) {
+        return app.destroy().then(() => {
+          console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!'));
+        });
+      }
     },
   };
 };
