@@ -11,7 +11,7 @@
 
 // Modules
 const _ = require('lodash');
-const bootstrap = require('./../lib/bootstrap.js');
+const Lando = require('./../lib/lando');
 const chalk = require('chalk');
 const Cli = require('./../lib/cli');
 const ErrorHandler = require('./../lib/error');
@@ -35,11 +35,11 @@ const handleError = (error, handler) => {
   process.exit(handler.handle(error));
 };
 
-// Kick off our bootstrap
-bootstrap(cli.defaultConfig())
+// Summon lando
+const lando = new Lando(cli.defaultConfig());
 
-// Initialize the CLI
-.then(lando => {
+// Bootstrap lando and then initialize the CLI
+lando.bootstrap().then(lando => {
   // Handle uncaught things
   _.forEach(['unhandledRejection', 'uncaughtException'], exception => {
     process.on(exception, error => handleError(error, lando.error));
