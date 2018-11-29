@@ -13,7 +13,7 @@ const CliTest = require('command-line-test');
 const path = require('path');
 chai.should();
 
-// eslint-disable max-len
+/* eslint-disable max-len */
 
 describe('pantheon-example', function() {
   this.retries(6);
@@ -66,7 +66,7 @@ describe('pantheon-example', function() {
   it('check terminus is installed', done => {
     process.chdir(path.resolve(__dirname, '../examples/pantheon'));
     const cli = new CliTest();
-    cli.exec('cd web && terminus self:info | grep "terminus_version"').then(res => {
+    cli.exec('cd web && lando terminus --version').then(res => {
       if (res.error === null) {
         done();
       } else {

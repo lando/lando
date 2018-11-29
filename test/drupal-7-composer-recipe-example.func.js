@@ -13,7 +13,7 @@ const CliTest = require('command-line-test');
 const path = require('path');
 chai.should();
 
-// eslint-disable max-len
+/* eslint-disable max-len */
 
 describe('drupal-7-composer-recipe-example', function() {
   this.retries(6);

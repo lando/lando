@@ -2816,10 +2816,10 @@ lcov-parse@^0.0.10:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-0.0.10.tgz#1b0b8ff9ac9c7889250582b70b71315d9da6d9a3"
 
-leia-parser@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/leia-parser/-/leia-parser-0.3.2.tgz#4ae8417e286ebf53070e1e09799c8f6d111fbd3e"
-  integrity sha512-dORb1BxlPd0aeZazZb0cvPYFtJ3ABkByC2me0wznD7si15lMcd+BLh+uA0E3E7Oh6r0njPSos3Bdc0tAfQekPg==
+leia-parser@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/leia-parser/-/leia-parser-0.3.3.tgz#df6795ee03d84176b43192593d4f601802a44b75"
+  integrity sha512-WPfZeSE1IyEFNBtZW9PzQCrTF8A071+qF3FtUsTFS/bm6x7ab64nL3qGoWNh4MET/N4E07rMAJq83t0PljK3gQ==
   dependencies:
     chalk "^2.4.1"
     dot "^1.1.2"
