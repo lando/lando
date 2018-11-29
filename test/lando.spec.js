@@ -54,4 +54,43 @@ describe('lando', () => {
       lando.message({meta: 'data'});
     });
   });
+
+  describe('#bootstrap', () => {
+    it('should return a lando object with the default config', () => {
+      const lando = new Lando();
+      return lando.bootstrap().then(lando => {
+        lando.config.userConfRoot.should.equal(os.tmpdir());
+        lando.config.plugins.should.be.an('array').and.be.empty;
+      });
+    });
+
+    it('should mix envvars into config with set prefix', () => {
+      process.env.JOURNEY_PRODUCT = 'steveperry';
+      process.env.JOURNEY_MODE = 'rocknroll';
+      const lando = new Lando({envPrefix: 'JOURNEY'});
+      return lando.bootstrap().then(lando => {
+        lando.config.userConfRoot.should.equal(os.tmpdir());
+        lando.config.plugins.should.be.an('array').and.be.empty;
+        lando.config.product.should.equal(process.env.JOURNEY_PRODUCT);
+        lando.config.mode.should.equal(process.env.JOURNEY_MODE);
+        delete process.env.JOURNEY_PRODUCT;
+        delete process.env.JOURNEY_MODE;
+      });
+    });
+
+    it('should mix config files into config', () => {
+      const srcRoot = path.resolve(__dirname, '..');
+      // @TODO: the below should be mock-fs instead of the actual FS
+      const lando = new Lando({
+        configSources: [path.resolve(srcRoot, 'config.yml')],
+        pluginDirs: [srcRoot],
+      });
+      return lando.bootstrap().then(lando => {
+        lando.config.plugins.should.be.an('array').and.not.be.empty;
+        lando.config.stats.should.be.an('array').and.not.be.empty;
+        // We need to clear out tasks because it seems to persist from require to require
+        lando.tasks.tasks = [];
+      });
+    });
+  });
 });

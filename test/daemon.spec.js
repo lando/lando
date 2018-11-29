@@ -1,5 +1,5 @@
 /*
- * Tests for lando-engine:daemon.
+ * Tests for daemon.
  * @file daemon.spec.js
  */
 
@@ -17,7 +17,7 @@ const Daemon = require('./../lib/daemon');
 const env = require('./../lib/env');
 const Log = require('./../lib/logger');
 
-describe('lando-engine.daemon', () => {
+describe('daemon', () => {
   describe('#LandoDaemon', () => {
     it('should return an instance with the correct defaults', () => {
       const daemon = new Daemon();

@@ -1,5 +1,5 @@
 /*
- * Tests for lando-engine:router.
+ * Tests for router.
  * @file router.spec.js
  */
 
@@ -18,7 +18,7 @@ const Promise = require('./../lib/promise');
 const router = require('./../lib/router');
 const sinon = require('sinon');
 
-describe('lando-engine.router', () => {
+describe('router', () => {
   // @note: we should loop through all the funcs that use retryEach to verify a few things
   it('build, destroy, logs, start and stop can handle data being an object or array of objects');
   describe('#engineCmd', () => {

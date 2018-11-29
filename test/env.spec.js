@@ -1,5 +1,5 @@
 /*
- * Tests for lando-engine:env.
+ * Tests for env.
  * @file env.spec.js
  */
 
@@ -26,7 +26,7 @@ const resetPlatform = () => {
 
 const env = require('./../lib/env');
 
-describe('lando-engine.env', () => {
+describe('env', () => {
   describe('#getDockerBinPath', () => {
     it('should return the correct lando-provided path on win32', () => {
       setPlatform('win32');
@@ -154,73 +154,5 @@ describe('lando-engine.env', () => {
     it('should set appropriate DOCKER envvars if we have certs');
     it('should set engineConfig with cert data if we have certs');
     it('should return an object that dockerode can use to set config');
-  });
-
-  describe('#buildDockerCmd', () => {
-    it('should return correct command on win32', () => {
-      setPlatform('win32');
-      process.env.ProgramW6432 = 'C:\\Program Files';
-      const cmd = env.buildDockerCmd();
-      expect(cmd).to.have.length(3);
-      expect(cmd[0]).to.equal('cmd');
-      expect(cmd[1]).to.equal('/C');
-      expect(cmd[2]).to.equal(process.env.ProgramW6432 + '\\Docker\\Docker\\Docker for Windows.exe');
-      resetPlatform();
-      delete process.env.ProgramW6432;
-    });
-
-    it('should fallback to ProgramFiles correctly on win32', () => {
-      setPlatform('win32');
-      const holder = process.env.ProgramW6432;
-      process.env.ProgramFiles = 'C:\\Program Files';
-      delete process.env.ProgramW6432;
-      const cmd = env.buildDockerCmd();
-      expect(cmd).to.have.length(3);
-      expect(cmd[0]).to.equal('cmd');
-      expect(cmd[1]).to.equal('/C');
-      expect(cmd[2]).to.equal(process.env.ProgramFiles + '\\Docker\\Docker\\Docker for Windows.exe');
-      resetPlatform();
-      process.env.ProgramW6432 = holder;
-      delete process.env.ProgramFiles;
-    });
-
-    it('should return correct command on darwin', () => {
-      setPlatform('darwin');
-      const cmd = env.buildDockerCmd();
-      expect(cmd).to.have.length(2);
-      expect(cmd[0]).to.equal('open');
-      expect(cmd[1]).to.equal('/Applications/Docker.app');
-      resetPlatform();
-    });
-
-    it('should return systemctl command if possible', () => {
-      setPlatform('linux');
-      process.env.PATH = '/bin';
-      filesystem({'/bin/systemctl': 'CODEZ'});
-      const operation = 'start';
-      const cmd = env.buildDockerCmd(operation);
-      expect(cmd).to.have.length(4);
-      expect(cmd[0]).to.equal('sudo');
-      expect(cmd[1]).to.equal('systemctl');
-      expect(cmd[2]).to.equal(operation);
-      expect(cmd[3]).to.equal('docker');
-      filesystem.restore();
-      resetPlatform();
-    });
-
-    it('should otherwise return services command on linux as fallback', () => {
-      setPlatform('linux');
-      delete process.env.PATH;
-      filesystem({'/bin/systemctl': 'CODEZ'});
-      const operation = 'start';
-      const cmd = env.buildDockerCmd(operation);
-      expect(cmd).to.have.length(4);
-      expect(cmd[0]).to.equal('sudo');
-      expect(cmd[1]).to.equal('service');
-      expect(cmd[2]).to.equal('docker');
-      expect(cmd[3]).to.equal(operation);
-      filesystem.restore();
-      resetPlatform();
-    });
   });
 });

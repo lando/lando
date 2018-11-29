@@ -1,5 +1,5 @@
 /*
- * Tests for lando-engine:utils.
+ * Tests for utils.
  * @file utils.spec.js
  */
 
@@ -10,7 +10,7 @@
 // const expect = chai.expect;
 // chai.should();
 
-describe('lando-engine.utils', () => {
+describe('utils', () => {
   describe('#dockerComposify', () => {
     it('should remove _ and - characters');
     it('should return data in lowercase');

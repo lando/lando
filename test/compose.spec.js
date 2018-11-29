@@ -1,5 +1,5 @@
 /*
- * Tests for lando-engine:compose.
+ * Tests for compose.
  * @file compose.spec.js
  */
 
@@ -36,7 +36,7 @@ const myOpts = {
   'nocache': true,
 };
 
-describe('lando-engine.compose', () => {
+describe('compose', () => {
   // These are some general things we want to check
   // @geoff/dustin i'd recommend looping through all the exports functions and checking the same conditions
   // then we can check only a few easy things for each command

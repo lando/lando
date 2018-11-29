@@ -1,5 +1,5 @@
 /*
- * Tests for lando-engine:docker.
+ * Tests for docker.
  * @file docker.spec.js
  */
 
@@ -37,7 +37,7 @@ const dummyContainer = (overrides = {}) => {
   );
 };
 
-describe('lando-engine.docker', () => {
+describe('docker', () => {
   describe('#Landerode', () => {
     it('should inherit things from Dockerode', () => {
       expect(Landerode.prototype).to.be.an.instanceOf(Dockerode);
