@@ -37,6 +37,7 @@ describe('bootstrap', () => {
 
   it('should mix config files into config', () => {
     const srcRoot = path.resolve(__dirname, '..');
+    // @TODO: the below should be mock-fs instead of the actual FS
     return bootstrap({
       configSources: [path.resolve(srcRoot, 'config.yml')],
       pluginDirs: [srcRoot],

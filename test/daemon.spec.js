@@ -15,7 +15,7 @@ const filesystem = require('mock-fs');
 
 const Daemon = require('./../lib/daemon');
 const env = require('./../lib/env');
-const Log = require('./../../../lib/logger');
+const Log = require('./../lib/logger');
 
 describe('lando-engine.daemon', () => {
   describe('#LandoDaemon', () => {

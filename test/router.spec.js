@@ -12,9 +12,9 @@ chai.should();
 
 const Daemon = require('./../lib/daemon');
 const daemon = new Daemon();
-const Events = require('./../../../lib/events');
+const Events = require('./../lib/events');
 const events = new Events();
-const Promise = require('./../../../lib/promise');
+const Promise = require('./../lib/promise');
 const router = require('./../lib/router');
 const sinon = require('sinon');
 

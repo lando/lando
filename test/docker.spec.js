@@ -14,7 +14,7 @@ const sinon = require('sinon');
 const Landerode = require('./../lib/docker');
 const landerode = new Landerode();
 const Dockerode = require('dockerode');
-const Promise = require('./../../../lib/promise');
+const Promise = require('./../lib/promise');
 const _ = require('lodash');
 const utils = require('./../lib/utils');
 
