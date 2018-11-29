@@ -38,6 +38,8 @@ const handleError = (error, handler) => {
 // Summon lando
 const lando = new Lando(cli.defaultConfig());
 
+lando.message();
+
 // Bootstrap lando and then initialize the CLI
 lando.bootstrap().then(lando => {
   // Handle uncaught things

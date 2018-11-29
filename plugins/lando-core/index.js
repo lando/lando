@@ -1,8 +1,25 @@
 'use strict';
 
+// Modules
+const path = require('path');
+
 module.exports = lando => {
-  // Add core commands to lando
+  // Add some config
   lando.events.on('post-bootstrap', 1, lando => {
+    // Build the default config object
+    const defaultConfig = {
+      landoFile: '.lando.yml',
+      appsRoot: path.join(lando.config.home, 'Lando'),
+      registry: 'registry',
+    };
+    // Merge defaults over the config, this allows users to set their own things
+    lando.config = lando.utils.merge(defaultConfig, lando.config);
+    // Log it
+    lando.log.verbose('Core plugin configured with %j', lando.config);
+  });
+
+  // Add core commands to lando
+  lando.events.on('post-bootstrap', lando => {
     // Log
     lando.log.info('Initializing core plugin');
     // Add the tasks command
@@ -18,6 +35,10 @@ module.exports = lando => {
     lando.tasks.add('share', require('./tasks/share')(lando));
     lando.tasks.add('start', require('./tasks/start')(lando));
     lando.tasks.add('stop', require('./tasks/stop')(lando));
+  });
+
+  // SANDBOXING
+  lando.events.on('pre-instantiate-app', 1, app => {
   });
 };
 
@@ -63,40 +84,6 @@ APP PLUGIN
   const merger = lando.utils.config.merge;
   const path = require('path');
   const utils = require('./lib/utils');
-
-  // Add some config for the engine
-  lando.events.on('post-bootstrap', 1, lando => {
-    // Log
-    lando.log.info('Configuring app plugin');
-
-    // Build the default config object
-    const defaultAppConfig = {
-      appConfigFilename: '.lando.yml',
-      appsRoot: path.join(lando.config.home, 'Lando'),
-      appRegistry: 'registry',
-    };
-
-    // Merge defaults over the config, this allows users to set their own things
-    lando.config = lando.utils.config.merge(defaultAppConfig, lando.config);
-
-    // Log it
-    lando.log.verbose('App plugin configured with %j', lando.config);
-
-    // Add utilities
-    lando.utils.app = require('./lib/utils');
-  });
-
-  // Add some config for the engine
-  lando.events.on('post-bootstrap', 2, lando => {
-    // Log
-    lando.log.info('Initializing app plugin');
-    // Add the app module
-    lando.app = require('./app')(lando);
-  });
-
-  // Add in our app tasks
-  lando.events.on('post-bootstrap', lando => {
-  });
 
   // Merge compose files specified in landofile to services/networks/volumes
   lando.events.on('post-instantiate-app', 1, app => {
@@ -156,29 +143,6 @@ APP PLUGIN
         app.env = merger(app.env, result.parsed);
       }
     }
-
-    // Check to see if we have config.compose and merge
-    if (_.has(app, 'config.compose')) {
-      // Get the app root
-      const root = app.root;
-
-      // Validate files
-      const files = utils.validateFiles(_.get(app, 'config.compose', [], root));
-
-      // And merge them in
-      _.forEach(files, file => {
-        // Get our object from file
-        const data = lando.yaml.load(file);
-
-        // Merge things in
-        app.services = merger(app.services, data.services);
-        app.volumes = merger(app.volumes, data.volumes);
-        app.networks = merger(app.networks, data.networks);
-
-        // Log
-        lando.log.verbose('Added compose file %s to app.', file);
-      });
-    }
   });
 
   // Do things all the way at the end
@@ -202,30 +166,6 @@ APP PLUGIN
 
       // Add a copy of the app to opts for passthru considerations
       app.opts = {app: _.cloneDeep(app)};
-    });
-
-    // Parse whatever docker thigns we might have into docker compose files
-    app.events.on('app-ready', 9, () => {
-      // Get our things
-      const networks = app.networks || {};
-      const project = app.project || app.name;
-      const projectDir = path.join(lando.config.userConfRoot, 'compose', project);
-      const services = app.services || {};
-      const version = app.version;
-      const volumes = app.volumes || {};
-
-      // Get the compose object
-      const compose = utils.compose(version, services, volumes, networks);
-
-      // Write the services
-      const fileName = [project, _.uniqueId()].join('-') + '.yml';
-      const file = lando.yaml.dump(path.join(projectDir, fileName), compose);
-
-      // Add that file to our compose list
-      app.compose.push(file);
-
-      // Log
-      lando.log.verbose('App %s has compose files.', project, file);
     });
 
     // Also gather info on a start

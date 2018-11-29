@@ -3,38 +3,35 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
+  const path = require('path');
   const table = lando.cli.makeTable();
-  const utils = lando.utils.app;
+  const utils = require('./../lib/utils');
+
   // Task object
   return {
     command: 'restart [appname]',
     describe: 'Restarts app in current directory or [appname]',
     run: options => {
-      // Try to get the app
-      return lando.app.get(options.appname)
-      // Resttart the app
-      .then(app => {
-        if (app) {
-          // REstart the app
-          return lando.app.restart(app)
-          // Report the app has started and some extra info
-          .then(() => {
-            // Header it
-            console.log(lando.cli.makeArt());
-            // Inject start table into the table
-            _.forEach(utils.startTable(app), (value, key) => {
-              const opts = (_.includes(key, 'url')) ? {arrayJoiner: '\n'} : {};
-              table.add(_.toUpper(key), value, opts);
-            });
+      // Try to get our app
+      // @TODO: handle the appname if passed in?
+      const file = path.resolve(process.cwd(), lando.config.landoFile);
+      const app = lando.getApp(file);
 
-            // Print the table
-            console.log(table.toString());
-            console.log('');
+      // Restart it if we can!
+      if (app) {
+        return app.restart().then(() => {
+          // Header it
+          console.log(lando.cli.makeArt());
+          // Inject start table into the table
+          _.forEach(utils.startTable(app), (value, key) => {
+            const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
+            table.add(_.toUpper(key), value, opts);
           });
-        } else {
-          lando.log.warn('Could not find app in this dir');
-        }
-      });
+          // Print the table
+          console.log(table.toString());
+          console.log('');
+        });
+      }
     },
   };
 };
