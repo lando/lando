@@ -1,5 +1,4 @@
 plugins:
-#  - lando-app
   - lando-core
 #  - lando-events
 #  - lando-init
