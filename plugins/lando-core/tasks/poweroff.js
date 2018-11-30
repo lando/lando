@@ -7,7 +7,7 @@ module.exports = lando => {
   // @TODO: change this to also grab non app containers
   return {
     command: 'poweroff',
-    describe: 'Spin down all lando related containers',
+    describe: 'Spins down all lando related containers',
     run: () => {
       // Start
       console.log(chalk.yellow('Spinning containers down... Standby.'));
