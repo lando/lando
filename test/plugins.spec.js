@@ -6,6 +6,7 @@
 'use strict';
 
 // Setup chai.
+/*
 const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
@@ -88,3 +89,4 @@ describe('plugins', () => {
     });
   });
 });
+*/

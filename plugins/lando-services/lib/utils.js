@@ -53,46 +53,6 @@ exports.buildVolume = (local, remote, base) => {
 };
 
 /*
- * Return an object of build steps
- */
-exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
-  // Start collecting them
-  const build = [];
-  // Go through each service
-  _.forEach(services, (service, name) => {
-    // Loop through all internal, legacy and user steps
-    _.forEach(rootSteps.concat(buildSteps), section => {
-      // If the service has build sections let's loop through and run some commands
-      if (!_.isEmpty(service[section])) {
-        // Normalize data for loopage
-        if (!_.isArray(service[section])) service[section] = [service[section]];
-        // Run each command
-        _.forEach(service[section], cmd => {
-          const container = [service._app, name, '1'].join('_');
-          const user = _.get(app.services[name], 'environment.LANDO_WEBROOT_USER', 'root');
-          build.push({
-            id: container,
-            cmd: cmd,
-            compose: app.compose,
-            project: app.name,
-            opts: {
-              pre: 'cd /app',
-              app: app,
-              mode: 'attach',
-              user: (_.includes(rootSteps, section)) ? 'root' : user,
-              services: [container.split('_')[1]],
-            },
-          });
-        });
-      }
-    });
-  });
-
-  // Return
-  return build;
-};
-
-/*
  * Run build
  */
 exports.runBuild = (lando, steps, lockfile) => {
