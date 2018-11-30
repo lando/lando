@@ -10,8 +10,8 @@ module.exports = lando => {
 
   // The task object
   return {
-    command: 'rebuild [appname]',
-    describe: 'Rebuilds app in current directory or [appname]',
+    command: 'rebuild',
+    describe: 'Rebuilds your app from scratch, preserving data',
     options: {
       services: {
         describe: 'Rebuild only the specified services',
@@ -36,19 +36,14 @@ module.exports = lando => {
         console.log(chalk.yellow('Rebuild aborted'));
         return;
       }
-
       // Try to get our app
-      // @TODO: handle the appname if passed in?
-      const file = path.resolve(process.cwd(), lando.config.landoFile);
-      const app = lando.getApp(file);
-
+      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
       // Rebuild the app
       if (app) {
         // Rebuild only particlar services if specified
         if (!_.isEmpty(options.services)) {
           app.opts.services = options.services;
         }
-
         // Rebuild
         return app.rebuild().then(() => {
           // Header it

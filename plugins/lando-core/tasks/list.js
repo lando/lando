@@ -1,31 +1,19 @@
 'use strict';
 
 module.exports = lando => {
-  /*
-   * Helper function to build some summary info for our apps
-   */
-  const appSummary = app => {
-    // Chcek if our app is running
-    return lando.app.isRunning(app)
-
-    // Return a nice app summary
-    .then(isRunning => ({
-      name: app.name,
-      location: app.dir,
-      running: isRunning,
-    }));
-  };
-
+  const _ = lando.node._;
   return {
     command: 'list',
-    describe: 'List all lando apps',
+    describe: 'Lists all running lando apps and containers',
     run: () => {
       // List all the apps
-      return lando.app.list()
+      return lando.engine.list()
       // Map each app to a summary and print results
-      .map(app => appSummary(app))
-      .then(summary => {
-        console.log(JSON.stringify(summary, null, 2));
+      .then(containers => {
+        console.log(_(containers)
+          .map(container => _.omit(container, ['lando', 'id', 'instance']))
+          .groupBy('app')
+          .value());
       });
     },
   };

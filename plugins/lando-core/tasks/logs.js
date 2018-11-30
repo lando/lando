@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = lando => ({
-  command: 'logs [appname]',
-  describe: 'Get logs for app in current directory or [appname]',
+  command: 'logs',
+  describe: 'Displays logs for your app',
   options: {
     follow: {
       describe: 'Follow the logs',

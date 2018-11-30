@@ -15,7 +15,7 @@ exports.startTable = app => {
   // Add generic data
   data.name = app.name;
   data.location = app.root;
-  data.services = _.keys(app.services);
+  data.services = app.services;
 
   // Categorize and colorize URLS if and as appropriate
   _.forEach(app.info, (info, service) => {

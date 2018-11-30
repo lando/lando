@@ -7,8 +7,8 @@ module.exports = lando => {
 
   // The task object
   return {
-    command: 'destroy [appname]',
-    describe: 'Destroy app in current directory or [appname]',
+    command: 'destroy',
+    describe: 'Destroys your app',
     options: {
       yes: {
         describe: 'Auto answer yes to prompts',
@@ -28,12 +28,8 @@ module.exports = lando => {
         console.log(chalk.yellow('DESTRUCTION AVERTED!'));
         return;
       }
-
       // Try to get our app
-      // @TODO: handle the appname if passed in?
-      const file = path.resolve(process.cwd(), lando.config.landoFile);
-      const app = lando.getApp(file);
-
+      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
       // Destroy the app
       if (app) {
         return app.destroy().then(() => {

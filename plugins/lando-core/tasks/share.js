@@ -9,8 +9,8 @@ module.exports = lando => {
 
   // Task object
   return {
-    command: 'share [appname]',
-    describe: 'Get a publicly available url',
+    command: 'share',
+    describe: 'Shares your local site publicly',
     options: {
       url: {
         describe: 'Url to share. Needs to be in the form ' +

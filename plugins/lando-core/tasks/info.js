@@ -3,8 +3,8 @@
 module.exports = lando => {
   // Task object
   return {
-    command: 'info [appname]',
-    describe: 'Prints info about app in current directory or [appname]',
+    command: 'info',
+    describe: 'Prints info about your app',
     options: {
       deep: {
         describe: 'Get ALL the info',

@@ -9,14 +9,11 @@ module.exports = lando => {
 
   // Restart the app
   return {
-    command: 'start [appname]',
-    describe: 'Start app in current directory or [appname]',
+    command: 'start',
+    describe: 'Starts your app',
     run: options => {
       // Try to get our app
-      // @TODO: handle the appname if passed in?
-      const file = path.resolve(process.cwd(), lando.config.landoFile);
-      const app = lando.getApp(file);
-
+      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
       // Start it if we can!
       if (app) {
         return app.start().then(() => {
