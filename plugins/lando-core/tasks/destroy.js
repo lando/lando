@@ -1,11 +1,9 @@
 'use strict';
 
-module.exports = lando => {
-  // Modules
-  const chalk = lando.node.chalk;
-  const path = require('path');
+const path = require('path');
 
-  // The task object
+module.exports = lando => {
+  const chalk = lando.node.chalk;
   return {
     command: 'destroy',
     describe: 'Destroys your app',
@@ -30,6 +28,7 @@ module.exports = lando => {
       }
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));
       // Destroy the app
       if (app) {
         return app.destroy().then(() => {

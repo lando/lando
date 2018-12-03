@@ -1,7 +1,8 @@
 'use strict';
 
+const path = require('path');
+
 module.exports = lando => {
-  // Task object
   return {
     command: 'info',
     describe: 'Prints info about your app',
@@ -14,27 +15,23 @@ module.exports = lando => {
       },
     },
     run: options => {
-      // Try to get the app
-      return lando.app.get(options.appname)
-
+      // Try to get our app
+      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
       // GEt the app info
-      .then(app => {
-        if (app) {
-          // If this is deep, go deep
-          if (options.deep) {
-            return lando.engine.list(app.name).each(container => lando.engine.scan(container).then(data => {
+      if (app) {
+        // If this is deep, go deep
+        if (options.deep) {
+          return app.init().then(() => lando.engine.list(app.name)
+            .each(container => lando.engine.scan(container)
+            .then(data => {
               console.log(JSON.stringify(data, null, 2));
-            }));
-          } else {
-            return lando.app.info(app)
-            .then(function(info) {
-              console.log(JSON.stringify(info, null, 2));
-            });
-          }
+            })));
         } else {
-          lando.log.warn('Could not find app in this dir');
+          return lando.app.inspect(app).then(info => {
+            console.log(JSON.stringify(info, null, 2));
+          });
         }
-      });
+      }
     },
   };
 };

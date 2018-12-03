@@ -9,3 +9,5 @@ services:
     image: nginx
     ports:
       - "80"
+  log:
+    image: php:7.1-fpm-alpine

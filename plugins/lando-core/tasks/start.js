@@ -1,19 +1,19 @@
 'use strict';
 
-module.exports = lando => {
-  // Modules
-  const _ = lando.node._;
-  const path = require('path');
-  const table = lando.cli.makeTable();
-  const utils = require('./../lib/utils');
+const path = require('path');
+const utils = require('./../lib/utils');
 
-  // Restart the app
+module.exports = lando => {
+  const _ = lando.node._;
+  const chalk = lando.node.chalk;
+  const table = lando.cli.makeTable();
   return {
     command: 'start',
     describe: 'Starts your app',
     run: options => {
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      console.log(chalk.green('Let\'s get this party started! Starting app..'));
       // Start it if we can!
       if (app) {
         return app.start().then(() => {

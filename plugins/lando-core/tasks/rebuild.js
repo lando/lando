@@ -1,14 +1,12 @@
 'use strict';
 
+const path = require('path');
+const utils = require('./../lib/utils');
+
 module.exports = lando => {
-  // Modules
   const _ = lando.node._;
   const chalk = lando.node.chalk;
-  const path = require('path');
   const table = lando.cli.makeTable();
-  const utils = require('./../lib/utils');
-
-  // The task object
   return {
     command: 'rebuild',
     describe: 'Rebuilds your app from scratch, preserving data',
@@ -38,6 +36,7 @@ module.exports = lando => {
       }
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      console.log(chalk.green('Rising anew like a fire phoenix from the ashes! Rebuilding app...'));
       // Rebuild the app
       if (app) {
         // Rebuild only particlar services if specified

@@ -1,20 +1,17 @@
 'use strict';
 
 module.exports = lando => {
-  // Modules
   const chalk = lando.node.chalk;
-  // The task object
-  // @TODO: change this to also grab non app containers
   return {
     command: 'poweroff',
     describe: 'Spins down all lando related containers',
     run: () => {
-      // Start
-      console.log(chalk.yellow('Spinning containers down... Standby.'));
-      // Get all our apps
-      return lando.app.list()
+      console.log(chalk.green('NO!! SHUT IT ALL DOWN! Spinning Lando containers down...'));
+      // Get all our containers
+      return lando.engine.list()
       // SHUT IT ALL DOWN
-      .map(app => lando.app.get(app.name).then(app => lando.app.stop(app)))
+      .each(container => console.log('Bye bye %s ... ', container.name, chalk.green('done')))
+      .each(container => lando.engine.stop({id: container.id}))
       // Emit poweroff
       .then(() => lando.events.emit('poweroff'))
       // Finish up
