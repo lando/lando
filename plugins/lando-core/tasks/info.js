@@ -16,16 +16,12 @@ module.exports = lando => ({
   run: options => {
     // Try to get our app
     const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
-    // GEt the app info
-    if (app) {
-      // If this is deep, go deep
-      if (options.deep) {
-        return app.init().then(() => lando.engine.list(app.name)
-        .each(container => lando.engine.scan(container)
-        .then(data => console.log(data))));
-      } else {
-        return app.inspect().then(info => console.log(info));
-      }
+    // Go deep if we need to
+    if (app && options.deep) {
+      return app.init().then(() => lando.engine.list(app.name).each(container => lando.engine.scan(container)
+      .then(data => console.log(data))));
+    } else if (app && !options.deep) {
+      return app.inspect().then(info => console.log(info));
     }
   },
 });
