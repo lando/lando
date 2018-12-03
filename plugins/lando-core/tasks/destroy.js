@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const utils = require('./../lib/utils');
 
 module.exports = lando => {
   const chalk = lando.node.chalk;
@@ -8,17 +9,7 @@ module.exports = lando => {
     command: 'destroy',
     describe: 'Destroys your app',
     options: {
-      yes: {
-        describe: 'Auto answer yes to prompts',
-        alias: ['y'],
-        default: false,
-        boolean: true,
-        interactive: {
-          type: 'confirm',
-          default: false,
-          message: 'Are you sure you want to DESTROY?',
-        },
-      },
+      yes: utils.buildConfirm('Are you sure you want to DESTROY?'),
     },
     run: options => {
       // Stop rebuild if user decides its a nogo
@@ -31,9 +22,7 @@ module.exports = lando => {
       console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));
       // Destroy the app
       if (app) {
-        return app.destroy().then(() => {
-          console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!'));
-        });
+        return app.destroy().then(() => console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!')));
       }
     },
   };

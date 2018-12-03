@@ -1,6 +1,21 @@
 'use strict';
 
+const path = require('path');
 const utils = require('./../lib/utils');
-const message = 'Stopping your app... just so we can start it up again ¯\\_(ツ)_/¯';
 
-module.exports = lando => utils.startToggle(lando, 'restart', message);
+module.exports = lando => {
+  const chalk = lando.node.chalk;
+  const table = lando.cli.makeTable();
+  return {
+    command: 'restart',
+    describe: 'Restarts your app',
+    run: options => {
+      // Message
+      console.log(chalk.green('Stopping your app... just so we can start it up again ¯\\_(ツ)_/¯'));
+      // Try to get our app
+      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      // Restart it if we can!
+      if (app) return utils.appToggle(app, 'restart', table, lando.cli.makeArt());
+    },
+  };
+};
