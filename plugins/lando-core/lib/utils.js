@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const chalk = require('yargonaut').chalk();
+const path = require('path');
 
 /*
  * Returns a CLI table with app start metadata info
@@ -35,3 +36,32 @@ exports.startTable = app => {
   // Return data
   return data;
 };
+
+/*
+ * A toggle to either start or restart
+ */
+exports.startToggle = (lando, toggle = 'start', message = 'Let\'s get this party started! Starting app..') => ({
+  command: toggle,
+  describe: 'Restarts your app',
+  run: options => {
+    const table = lando.cli.makeTable();
+    // Try to get our app
+    const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+    console.log(chalk.green(message));
+    // Restart it if we can!
+    if (app) {
+      return app[toggle]().then(() => {
+        // Header it
+        console.log(lando.cli.makeArt());
+        // Inject start table into the table
+        _.forEach(exports.startTable(app), (value, key) => {
+          const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
+          table.add(_.toUpper(key), value, opts);
+        });
+        // Print the table
+        console.log(table.toString());
+        console.log('');
+      });
+    }
+  },
+});
