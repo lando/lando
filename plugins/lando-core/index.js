@@ -1,45 +1,50 @@
 'use strict';
 
+// Default env values
+const defaults = {
+  config: {
+    appEnv: {
+      COLUMNS: 256,
+      LANDO: 'ON',
+      LANDO_WEBROOT_USER: 'www-data',
+      LANDO_WEBROOT_GROUP: 'www-data',
+      LANDO_WEBROOT_UID: '33',
+      LANDO_WEBROOT_GID: '33',
+    },
+    appLabels: {
+      'io.lando.container': 'TRUE',
+    },
+  },
+};
+
 module.exports = lando => {
-  /*
-    LANDO_CA_CERT: '/lando/certs/' + path.basename(lando.config.caCert),
-    LANDO_CA_KEY: '/lando/certs/' + path.basename(lando.config.caKey),
-    LANDO_DOMAIN: lando.config.proxyDomain,
-  */
+  // Get stuffs
+  const _ = lando.node._;
   const uid = lando.user.getUid();
   const gid = lando.user.getGid();
-
-  // Return some config to merge in
-  return {
-    config: {
-      appEnv: {
-        COLUMNS: 256,
-        LANDO: 'ON',
-        LANDO_CONFIG_DIR: lando.config.userConfRoot,
-        LANDO_HOST_HOME: lando.config.home,
-        LANDO_HOST_OS: lando.config.os.platform,
-        LANDO_HOST_UID: uid,
-        LANDO_HOST_GID: gid,
-        LANDO_HOST_IP: (process.platform !== 'linux') ? lando.node.ip.address() : 'host.docker.internal',
-        LANDO_WEBROOT_USER: 'www-data',
-        LANDO_WEBROOT_GROUP: 'www-data',
-        LANDO_WEBROOT_UID: '33',
-        LANDO_WEBROOT_GID: '33',
-      },
-      appLabels: {
-        'io.lando.container': 'TRUE',
-        'io.lando.id': lando.config.instance,
-      },
-      gid,
-      uid,
+  return _.merge({}, defaults, {config: {
+    appEnv: {
+      LANDO_CONFIG_DIR: lando.config.userConfRoot,
+      LANDO_HOST_HOME: lando.config.home,
+      LANDO_HOST_OS: lando.config.os.platform,
+      LANDO_HOST_UID: uid,
+      LANDO_HOST_GID: gid,
+      LANDO_HOST_IP: (process.platform !== 'linux') ? lando.node.ip.address() : 'host.docker.internal',
     },
-  };
+    appLabels: {
+      'io.lando.id': lando.config.instance,
+    },
+    gid,
+    uid,
+  }});
 };
 
 /*
 ENGINE PLUGIN
 
-*/
+LANDO_CA_CERT: '/lando/certs/' + path.basename(lando.config.caCert),
+LANDO_CA_KEY: '/lando/certs/' + path.basename(lando.config.caKey),
+LANDO_DOMAIN: lando.config.proxyDomain,
 
 /*
 APP PLUGIN
