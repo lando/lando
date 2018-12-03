@@ -18,9 +18,9 @@ exports.startTable = app => {
   data.services = app.services;
 
   // Categorize and colorize URLS if and as appropriate
-  _.forEach(app.info, (info, service) => {
+  _.forEach(app.info, info => {
     if (_.has(info, 'urls') && !_.isEmpty(info.urls)) {
-      urls[service] = _.filter(app.urls, item => {
+      urls[info.service] = _.filter(app.urls, item => {
         item.theme = chalk[item.color](item.url);
         return _.includes(info.urls, item.url);
       });

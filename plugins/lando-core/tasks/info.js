@@ -23,13 +23,9 @@ module.exports = lando => {
         if (options.deep) {
           return app.init().then(() => lando.engine.list(app.name)
             .each(container => lando.engine.scan(container)
-            .then(data => {
-              console.log(JSON.stringify(data, null, 2));
-            })));
+            .then(data => console.log(data))));
         } else {
-          return lando.app.inspect(app).then(info => {
-            console.log(JSON.stringify(info, null, 2));
-          });
+          return app.inspect().then(info => console.log(info));
         }
       }
     },

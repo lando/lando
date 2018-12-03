@@ -74,25 +74,6 @@ APP PLUGIN
       // Add a copy of the app to opts for passthru considerations
       app.opts = {app: _.cloneDeep(app)};
     });
-
-    // Also gather info on a start
-    app.events.on('post-start', 1, () => {
-      return lando.app.info(app);
-    });
-
-    // Scan our URLs and add a list of them and their status to the app
-    app.events.on('post-start', 9, () => {
-      // Get app URLs
-      const urls = _.filter(_.flatMap(app.info, 'urls'), _.identity);
-
-      // Scan the urls
-      return lando.scanUrls(urls, {max: 17})
-
-      // Add our URLS to the app
-      .then(urls => {
-        app.urls = urls;
-      });
-    });
   });
 */
 
