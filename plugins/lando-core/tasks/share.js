@@ -7,6 +7,17 @@ const path = require('path');
 const u = require('url');
 
 /*
+ * Helper to define options
+ */
+const getOptions = () => ({
+  url: {
+    describe: 'Url to share. Needs to be in the form http://localhost:port',
+    alias: ['u'],
+    required: true,
+  },
+});
+
+/*
  * Helper to get localtunnel config
  */
 const parseConfig = (port = 80, host = 'localhost') => {
@@ -22,7 +33,9 @@ const parseConfig = (port = 80, host = 'localhost') => {
 /*
  * Helper to manage the tunnel
  */
-const tunnelHandler = tunnel => {
+const tunnelHandler = (tunnel, header = '') => {
+  // Header it
+  console.log(header);
   // the assigned public url for your tunnel
   // i.e. https://abcdefgjhij.localtunnel.me
   console.log(chalk.blue(tunnel.url), '\n');
@@ -48,13 +61,7 @@ module.exports = lando => {
   return {
     command: 'share',
     describe: 'Shares your local site publicly',
-    options: {
-      url: {
-        describe: 'Url to share. Needs to be in the form http://localhost:port',
-        alias: ['u'],
-        required: true,
-      },
-    },
+    options: getOptions(),
     run: options => {
       if (u.parse(options.url).hostname !== 'localhost' || u.parse(options.url).protocol !== 'http:') {
         throw new Error('Need a url of the form http://localhost:port!');
@@ -65,7 +72,7 @@ module.exports = lando => {
       // Get the sharing url
       if (app) {
         // Ensure the app is up and lets share
-        // @TODO: only do below if we need to
+        // @TODO: only start below if we need to
         return app.start().then(app => lando.metrics.report('share', {}))
         // Get the URLS
         .then(() => {
@@ -74,10 +81,8 @@ module.exports = lando => {
           localtunnel(config.port, {subdomain: config.host}, (err, tunnel) => {
             // Error if needed
             if (err) lando.log.error(err);
-            // Header it
-            console.log(lando.cli.makeArt('tunnel'));
             // Handler
-            tunnelHandler(tunnel);
+            tunnelHandler(tunnel, lando.cli.makeArt('tunnel'));
           });
         });
       }
