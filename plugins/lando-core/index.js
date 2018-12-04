@@ -42,8 +42,6 @@ module.exports = lando => {
 /*
 ENGINE PLUGIN
 
-LANDO_CA_CERT: '/lando/certs/' + path.basename(lando.config.caCert),
-LANDO_CA_KEY: '/lando/certs/' + path.basename(lando.config.caKey),
 LANDO_DOMAIN: lando.config.proxyDomain,
 
 /*
