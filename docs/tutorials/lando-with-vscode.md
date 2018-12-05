@@ -1,4 +1,4 @@
-Using Lando with VS Code
+Using Lando with VSCode
 ========================
 
 [Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming. Debugging PHP applications with it can be easy too.
@@ -57,7 +57,7 @@ Rebuild your environment.
 lando rebuild -y
 ```
 
-Finally, add VSCode  need a custom `launch.json` file in VS Code in order to map paths so that XDebug works correctly.
+Finally, add a custom `launch.json` file in VSCode in order to map paths so that XDebug works correctly.
 
 ```bash
 touch .vscode/launch.json
@@ -89,9 +89,9 @@ You can now click start debugging (type F5 or click on the icon in the left side
 Debugging PhpUnit
 -----------------
 
-Debugging PhpUnit tests in VS Code requires a little more setup, but Lando helps to make it easier.
+Debugging PhpUnit tests in VSCode requires a little more setup, but Lando helps to make it easier.
 
-First, you need to have VS code listen for debugging on 2 separate ports, because PhpUnit runs in one process and the tests themselves in another, and VS Code's Xdebug extension currently struggles with this. You accomplish this by have a launch.json that looks like this:
+First, you need to have VSCode listen for debugging on 2 separate ports, because PhpUnit runs in one process and the tests themselves in another, and VSCode's Xdebug extension currently struggles with this. You accomplish this by have a launch.json that looks like this:
 
 ```json
 {
@@ -138,7 +138,7 @@ tooling:
 
 Now to run debug a PhpUnit test, do the following:
 
-1. Select the compound "PhpUnit" as your debugger in VS Code's UI, and start it.
+1. Select the compound "PhpUnit" as your debugger in VSCode's UI, and start it.
 2. Make sure you untick "Everything" in the breakpoints section of the UI, or it will break everytime PhpUnit throws an exception, even if it's properly caught by PhpUnit.
 3. Add a breakpoint in your code that is being tested.
 4. On your command line run PhpUnit with something like `lando phpunitdebug --filter=testMyTestMethodName` (this example is of running a single test method, actually you can add any phpunit options you like at the end).
@@ -172,6 +172,6 @@ This is how you can open a specific port on a Debian/Ubuntu:
 Read More
 ---------
 
-*   [Original Gist with settings for XDebug in VS Code](https://gist.github.com/MatthieuScarset/0c3860def9ff1f0b84e32f618c740655)
-*   [PHP programming in VS code](https://code.visualstudio.com/docs/languages/php)
+*   [Original Gist with settings for XDebug in VSCode](https://gist.github.com/MatthieuScarset/0c3860def9ff1f0b84e32f618c740655)
+*   [PHP programming in VSCode](https://code.visualstudio.com/docs/languages/php)
 
