@@ -2,6 +2,9 @@
 
 set -e
 
+# LANDO DOMAINS
+# FILE FOR  THINGS
+
 : ${LANDO_CA_CERT:='/certs/lndo.site.pem'}
 : ${LANDO_CA_KEY:='/certs/lndo.site.key'}
 

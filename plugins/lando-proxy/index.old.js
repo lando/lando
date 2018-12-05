@@ -7,55 +7,6 @@ module.exports = lando => {
   const path = require('path');
   const proxy = require('./lib/proxy');
   const routes = require('./lib/routes');
-  const ucr = lando.config.userConfRoot;
-
-  // Add some config for the proxy
-  // Lets so this early to make sure other plugins have proxyConf
-  lando.events.on('post-bootstrap', 1, lando => {
-    // Log
-    lando.log.info('Configuring proxy plugin');
-
-    // Proxy defaults
-    const defaultProxyConfig = {
-      proxy: 'ON',
-      proxyCert: '/certs/cert.crt',
-      proxyDomain: 'lndo.site',
-      proxyKey: '/certs/cert.key',
-      proxyName: 'landoproxyhyperion5000gandalfedition',
-      proxyDash: '58087',
-      proxyHttpPort: '80',
-      proxyHttpsPort: '443',
-      proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
-      proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
-    };
-
-    // Merge config over defaults
-    lando.config = lando.utils.config.merge(defaultProxyConfig, lando.config);
-
-    // Set some things that are derived from the proxyName
-    const proxyName = lando.config.proxyName;
-    lando.config.proxyProxyFile = path.join(ucr, 'proxy', `proxy-${proxyName}.yml`);
-    lando.config.proxyPortsFile = path.join(ucr, 'proxy', `ports-${proxyName}.yml`);
-    lando.config.proxyNet = [proxyName, 'edge'].join('_');
-    lando.config.proxyRunner = proxy.compose(lando.config.proxyProxyFile, lando.config.proxyPortsFile, proxyName);
-
-    // Construct lists
-    const http = [lando.config.proxyHttpPort, lando.config.proxyHttpFallbacks];
-    const https = [lando.config.proxyHttpsPort, lando.config.proxyHttpsFallbacks];
-    lando.config.proxyHttpPorts = _.flatten(http);
-    lando.config.proxyHttpsPorts = _.flatten(https);
-
-    // Log it
-    lando.log.verbose('Proxy plugin configured with %j', lando.config);
-    lando.log.info('Initializing proxy plugin');
-  });
-
-  // Turn the proxy off on powerdown if applicable
-  lando.events.on('poweroff', () => {
-    if (lando.config.proxy === 'ON' && fs.existsSync(lando.config.proxyPortsFile)) {
-      return lando.engine.stop(lando.config.proxyRunner);
-    }
-  });
 
   // Turn on the proxy automatically and get info about its urls
   lando.events.on('post-instantiate-app', app => {
