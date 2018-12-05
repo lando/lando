@@ -1,8 +1,7 @@
 Using Lando with VS Code
 ========================
 
-[Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming. 
-It is however not so easy to debug PHP applications - especially when they're run inside Docker containers, like Lando.
+[Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming. Debugging PHP applications with it can be easy too.
 
 This is a basic setup to help you in this task.
 
@@ -11,10 +10,9 @@ This is a basic setup to help you in this task.
 Getting Started
 ---------------
 
-Enable XDebug by adding some lines to your Lando recipe.
+Enable Xdebug by adding some lines to your Lando recipe.
 
 ```yaml
-# Enable XDebug in your .lando.yml
 name: mywebsite
 recipe: drupal8
 config:
@@ -39,28 +37,27 @@ Add your custom XDebug settings.
 ```ini
 [PHP]
 
-;;;;;;;;;;;;;;;
-;IMPORTANT;
-;PLACE THIS FILE UNDER .vscode folder;
-;SO IT DOESNT GET COMMITTED;
-;;;;;;;;;;;;;;;
-
 ; Xdebug
 xdebug.max_nesting_level = 256
 xdebug.show_exception_trace = 0
 xdebug.collect_params = 0
-# Extra custom Xdebug setting for debug to work in VSCode.
-xdebug.remote_enable = 1 
-xdebug.remote_autostart = 1 
+
+; Extra custom Xdebug setting for debug to work in VSCode.
+xdebug.remote_enable = 1
+xdebug.remote_autostart = 1
+xdebug.remote_host = ${LANDO_HOST_IP}
+; xdebug.remote_connect_back = 1
+xdebug.remote_log = /tmp/xdebug.log
+
 ```
 
 Rebuild your environment.
 
 ```bash
-lando rebuild
+lando rebuild -y
 ```
 
-Finally, you need a custom `launch.json` file in VS Code in order to map paths so that XDebug works correctly.
+Finally, add VSCode  need a custom `launch.json` file in VS Code in order to map paths so that XDebug works correctly.
 
 ```bash
 touch .vscode/launch.json
@@ -72,16 +69,11 @@ code .vscode/launch.json
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "XDebug",
+      "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
       "port": 9000,
       "log": true,
-      // We used to do this in previous versions of VS Code:
-      // "localSourceRoot": "${workspaceRoot}/",
-      // "serverSourceRoot": "/app/",
-      //
-      // But this has been deprecated and we now use this:
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
       }
@@ -90,7 +82,7 @@ code .vscode/launch.json
 }
 ```
 
-Done! 
+Done!
 
 You can now click start debugging (type F5 or click on the icon in the left sidebar).
 
@@ -149,6 +141,31 @@ Now to run debug a PhpUnit test, do the following:
 2. Make sure you untick "Everything" in the breakpoints section of the UI, or it will break everytime PhpUnit throws an exception, even if it's properly caught by PhpUnit.
 3. Add a breakpoint in your code that is being tested.
 4. On your command line run PhpUnit with something like `lando phpunitdebug --filter=testMyTestMethodName` (this example is of running a single test method, actually you can add any phpunit options you like at the end).
+
+Known issues
+-----------------
+
+**Xdebug session doesn't start**
+
+If Xdebug session doesn't start, dig into the log file inside the application.
+
+Enter your lando app `lando ssh` and open the debug file (`/tmp/xdebug.log`). Path to the debug file is configured in your custom `php.ini`.
+ 
+Now open your app in a browser and see what's being logged.
+
+```bash
+lando ssh
+tail -f /tmp/xdebug.log
+# Open your browser and refresh the app
+```
+
+**Xdebug says "timeout trying to connect to XX.XX.XX:9000**
+
+Double-check your host machine allow connection on its port 9000.
+
+This is how you can open a specific port on a Debian/Ubuntu:
+
+`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9000 -j ACCEPT`
 
 
 Read More
