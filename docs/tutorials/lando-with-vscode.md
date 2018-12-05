@@ -98,10 +98,11 @@ First, you need to have VS code listen for debugging on 2 separate ports, becaus
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Normal",
+      "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
       "port": 9000,
+      "log": true,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
       }
