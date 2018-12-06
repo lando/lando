@@ -15,6 +15,7 @@ module.exports = lando => {
       // Dump defaults
       const proxyDefaults = proxy.defaults(lando.config.proxyDomain, lando.config.proxyCert, lando.config.proxyKey);
       lando.yaml.dump(lando.config.proxyProxyFile, proxyDefaults);
+
       const scanPorts = config => {
         // Get the engine IP
         const engineIp = _.get(config, 'engineConfig.host', '127.0.0.1');

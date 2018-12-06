@@ -2,55 +2,8 @@
 
 // Modules
 const _ = require('lodash');
-const fs = require('fs-extra');
-const path = require('path');
 
 module.exports = lando => {
-  // Add some config for our networking
-  lando.events.on('post-bootstrap', lando => {
-    // Create a docker compose file to run ca creation
-    const caService = {
-      version: '3.2',
-      services: {
-        ca: {
-          image: 'devwithlando/util:stable',
-          environment: {
-            LANDO_CA_CERT: '/certs/' + path.basename(lando.config.caCert),
-            LANDO_CA_KEY: '/certs/' + path.basename(lando.config.caKey),
-            LANDO_DOMAIN: lando.config.caDomain,
-            LANDO_CONFIG_DIR: '$LANDO_ENGINE_CONF',
-            LANDO_SERVICE_TYPE: 'ca',
-            COLUMNS: 256,
-            TERM: 'xterm',
-          },
-          command: ['tail', '-f', '/dev/null'],
-          labels: {
-            'io.lando.container': 'TRUE',
-            'io.lando.service-container': 'TRUE',
-          },
-          volumes: [
-            '$LANDO_ENGINE_SCRIPTS_DIR/setup-ca.sh:/setup-ca.sh',
-            '$LANDO_ENGINE_CONF/certs:/certs',
-          ],
-        },
-      },
-    };
-    // Log
-    lando.log.debug('Creating ca-setup service %j', caService);
-    lando.yaml.dump(lando.config.caService, caService);
-    // Move our scripts over so we can use them elsewhere
-    const scriptFrom = path.join(__dirname, 'scripts');
-    const scriptTo = lando.config.engineScriptsDir;
-    lando.log.verbose('Copying config from %s to %s', scriptFrom, scriptTo);
-    lando.utils.engine.moveConfig(scriptFrom, scriptTo);
-    // Ensure scripts are executable
-    lando.utils.engine.makeExecutable([
-      'add-cert.sh',
-      'refresh-certs.sh',
-      'setup-ca.sh',
-    ], lando.config.engineScriptsDir);
-  });
-
   // Preemptively make sure we have enough networks and if we dont
   // smartly prune some of them
   lando.events.on('pre-engine-start', 1, () => {
@@ -110,33 +63,6 @@ module.exports = lando => {
         return lando.engine.createNetwork(lando.config.networkBridge);
       }
     });
-  });
-
-  // Make sure we have a host-exposed root ca if we dont already
-  // Also dont run this on the caProject otherwise infinite loop happens!
-  lando.events.on('pre-engine-start', 2, data => {
-    if (!fs.existsSync(lando.config.caCert) && data.project !== lando.config.caProject) {
-      // Define the full CA service
-      const ca = {
-        id: [lando.config.caProject, 'ca', '1'].join('_'),
-        compose: [lando.config.caService],
-        project: lando.config.caProject,
-        cmd: '/setup-ca.sh',
-        opts: {
-          mode: 'attach',
-          services: ['ca'],
-          autoRemove: true,
-        },
-      };
-      // Check if ca setup is already happening
-      return lando.engine.list()
-      // Filter it out
-      .filter(container => container.name === ca.id)
-      // Setup the CA
-      .then(containers => {
-        if (_.isEmpty(containers)) return lando.engine.run(ca);
-      });
-    }
   });
 
   // Add all the apps containers to the lando bridge network after the app starts
