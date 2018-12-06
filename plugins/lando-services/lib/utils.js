@@ -131,19 +131,3 @@ exports.normalizePath = (local, base, excludes = []) => {
   // Otherwise this is a relaive path so return local resolved by base
   return path.resolve(path.join(base, local));
 };
-
-/*
- * Set the entrypoint with a local script
- */
-exports.setEntrypoint = entrypoint => {
-  // Define the entrypoint
-  const file = path.basename(entrypoint);
-  const remote = '/' + file;
-  // Make sure the entrypoint is executable
-  fs.chmodSync(entrypoint, '755');
-  // Return the service fragment to merge in
-  return {
-    entrypoint: remote,
-    volumes: [[entrypoint, remote].join(':')],
-  };
-};

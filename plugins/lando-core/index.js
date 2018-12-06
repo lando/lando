@@ -26,6 +26,7 @@ module.exports = lando => {
   return _.merge({}, defaults, {config: {
     appEnv: {
       LANDO_CONFIG_DIR: lando.config.userConfRoot,
+      LANDO_DOMAIN: lando.config.domain,
       LANDO_HOST_HOME: lando.config.home,
       LANDO_HOST_OS: lando.config.os.platform,
       LANDO_HOST_UID: uid,

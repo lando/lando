@@ -122,16 +122,8 @@ module.exports = lando => {
     let services = registry[service].services(name, config);
     let volumes = registry[service].volumes(name, config);
 
-    // Add in the our global docker entrypoint
-    // NOTE: this can be overridden down the stream
-    const entrypoint = path.join(esd, 'lando-entrypoint.sh');
-    services[name] = merger(services[name], utils.setEntrypoint(entrypoint));
-    lando.log.debug('Setting default entrypoint %s for %s', entrypoint, name);
-
     // Add in some helpful ENVs
     services[name].environment = merger(services[name].environment, {
-      LANDO_SERVICE_NAME: name,
-      LANDO_SERVICE_TYPE: service,
       LANDO_MOUNT: config._mount,
     });
 
@@ -140,7 +132,6 @@ module.exports = lando => {
     services[name] = merger(services[name], {volumes: [
       '$LANDO_APP_ROOT_BIND:/app' + shareMode,
       '$LANDO_ENGINE_HOME:/user' + shareMode,
-      '$LANDO_ENGINE_CONF:/lando' + shareMode,
     ]});
 
     // Data about some common helpers
