@@ -1,11 +1,20 @@
 'use strict';
 
-const bashme = 'if ! type bash > /dev/null; then sh; else bash; fi';
+// Modules
+const path = require('path');
 const utils = require('./../lib/utils');
+
+// Other things
+const bashme = 'if ! type bash > /dev/null; then sh; else bash; fi';
 const task = {
-  command: 'ssh [service] [appname]',
-  describe: 'SSH into [service] in current app directory or [appname]',
+  command: 'ssh',
+  describe: 'SSH into service in the current app directory',
   options: {
+    service: {
+      describe: 'SSH into this service',
+      alias: ['s'],
+      default: 'appserver',
+    },
     command: {
       describe: 'Run a command in the service',
       alias: ['c'],
@@ -19,28 +28,23 @@ const task = {
 
 module.exports = lando => {
   task.run = ({appname = undefined, command = bashme, service = 'appserver', user = 'www-data'} = {}) => {
-    // Try to get the app if we can
-    return lando.app.get(appname)
-    // Run it
-    .then(app => {
-      if (app) {
-        return lando.engine.run({
-          id: [app.name, service, '1'].join('_'),
-          compose: app.compose,
-          project: app.name,
-          cmd: command,
-          opts: {
-            app: app,
-            mode: 'attach',
-            pre: ['cd', utils.getContainerPath(app.root)].join(' '),
-            user: user,
-            services: [service],
-          },
-        });
-      } else {
-        lando.log.warn('Could not find app in this dir');
-      }
-    });
+    // Try to get our app
+    const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile), false);
+    // If we have it then init and DOOOO EEEET
+    if (app) {
+      return app.init().then(() => lando.engine.run({
+        id: `${app.project}_${service}_1`,
+        compose: app.compose,
+        project: app.project,
+        cmd: command,
+        opts: {
+          mode: 'attach',
+          pre: ['cd', utils.getContainerPath(app.root)].join(' '),
+          user: user,
+          services: [service],
+        },
+      }));
+    }
   };
   return task;
 };

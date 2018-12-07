@@ -1,59 +1,86 @@
 # Tooling example
 name: trivial-tooling
-compose:
-  - compose.yml
+
+# Proxy the basics
+proxy:
+  nginx:
+    - trivial-tooling.lndo.site
+
+# Let up a basic LEMP stack
+services:
+  appserver:
+    type: php:7.1
+    via: nginx
+    webroot: www
+    # Run composer install after we start our app
+    run:
+      - "cd $LANDO_MOUNT && composer install"
+    # Add in a helper script to showcase some magic below
+    overrides:
+      services:
+        volumes:
+          - $LANDO_APP_ROOT_BIND/word.sh:/helpers/word.sh
+  cli:
+    type: node:6.10
+  database:
+    type: mariadb
+    portforward: true
 
 # This section defines our tooling routes
 tooling:
 
-  # Define `lando php` as a command that runs `php @` against
+  # Define `lando composer` as a command that runs `composer --ansi @` against
   # the appserver service. Note that @ will be any additional arguments you pass
-  # into `lando php`
+  # into `lando composer`
   #
-  # Example: typing `lando php install` will run `php install`
+  # Example: typing `lando composer install` will run `composer --ansi install`
   # inside the container.
-  php:
+  composer:
 
-    # Run the `lando php` command against the php service from the compose file
-    service: php
+    # Run the `lando composer` command against the appserver from the services
+    # section above
+    service: appserver
 
     # Give a nice description to describe what this does.
     # If ommited this will default to "Run COMMAND commands" where COMMAND is
-    # php in this case
-    description: Run php commands
+    # composer in this case
+    description: Run composer commands
 
     # Define a specific command to start with inside the container. If ommited
-    # this will default to the name you give the service eg php.
+    # this will default to the name you give the service eg composer.
     #
     # This can be a string or an array if you want to run multiple commands
     # See "test" below for a multi-command example
-    cmd: php
+    cmd: composer --ansi
 
-  # Define `lando whoami` as a command that runs `id` against the php service w
-  whoami:
-    service: php
-    cmd: id
+  # Define `lando php` as a command that runs `php @` against the appserver where
+  # @ is additional input from the user.
+  php:
 
-    # Run this command as root inside of the container. If ommitted this
+    # Run this command against the appserver
+    service: appserver
+
+    # Run this command as the www-data inside of the container. If ommitted this
     # will default to the LANDO_WEBROOT_USER envvar for the service and then root
     # if undefiend. You can also pass in user:group.
     #
     # Note that the user needs to already exist inside of the container
-    user: root
+    user: www-data
 
-  true:
-    service: web
+  # Define `lando mysql` as a command that will drop the user into a mysql shell
+  # inside of the database service
+  mysql:
+    service: database
     description: Drop into a MySQL shell
     user: root
-    cmd: echo "this is true"
 
   # Define a tooling command with a stringed command
   test:
     # Run multiple commands on the same service
-    service: php
+    service: appserver
     cmd:
       - echo "we expect the next command to fail"
-      - php test
+      - composer test
     description: Run all the tests
 
   # Define `lando word` that passes through to a script that can handle options.
@@ -73,8 +100,8 @@ tooling:
   # example try running `lando word -w bird --surprise`. `--surprise` is not defined below but
   # has a handler in our word.sh.
   word:
-    service: web
-    cmd: /app/word.sh
+    service: appserver
+    cmd: /helpers/word.sh
     options:
       word:
         # If you are specifying interactive options, as is the case here,
@@ -90,6 +117,20 @@ tooling:
           default: bird
           weight: 600
 
+  # Define `lando npm` so that it also requires the `database` service to be running
+  # in order to work.
+  #
+  # This is useful for complex commands that can act on multiple services eg
+  # a database-import, or drush status check, or pull from a hosting provider
+  # like pantheon
+  npm:
+    service: cli
+
+    # Add a string or array of services that also need to load up for this
+    # command to function properly
+    needs:
+      - database
+
   # Define `lando dynamic` so that it can run on different services based on
   # the `--service` flag instead of a hardcoded option
   #
@@ -99,7 +140,7 @@ tooling:
   dynamic:
 
     # Just print the hostname so we know what service we are on
-    cmd: hostname -f
+    cmd: printenv LANDO_SERVICE_NAME
 
     # The format :NAME will use the service specified by the NAME flag
     # You likely will want to specify the option below and set a reasonable
@@ -109,25 +150,21 @@ tooling:
     # Specify a service option to handle the above
     options:
       service:
-        default: web
+        default: appserver
         alias:
           - s
         describe: Run a different service
 
-  # Define `lando env` so that it can run on different services on the command
+  # Define `lando install` so that it can run on different services on the command
   # values
   #
   # This is useful for complex build steps that need to run on multiple containers,
   # note that the usual "service" key will only be used as the fallback value for the
   # service with the key of the command taken precendent.
-  env:
+  install:
 
     # Run our two build steps
     cmd:
-      - php: echo "HERE IS THE PHP ENVIRONMENT"
-      - php: echo ""
-      - php: env
-      - web: echo "\\nHERE IS THE WEB ENVIRONMENT\\n"
-      - web: env
-
-    description: Print environment variables for a few things
+      - appserver: composer install
+      - cli: yarn install
+    description: Install everything

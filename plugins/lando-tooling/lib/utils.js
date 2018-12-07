@@ -6,6 +6,25 @@ const esc = require('shell-escape');
 const path = require('path');
 
 /*
+ * Helper to build commands
+ */
+exports.buildCommand = (app, command, needs, service, user) => ({
+  id: `${app.project}_${service}_1`,
+  compose: app.compose,
+  project: app.project,
+  cmd: command,
+  opts: {
+    mode: 'attach',
+    pre: ['cd', exports.getContainerPath(app.root)].join(' '),
+    user: user,
+    services: _.compact(_.flatten([service, needs])),
+    hijack: false,
+    // @todo: should we have a better system to generate certs vs refreshing things?
+    autoRemove: true,
+  },
+});
+
+/*
  * Helper to get command
  */
 const getCommand = (cmd, passOpts) => {
@@ -21,31 +40,6 @@ const getCommand = (cmd, passOpts) => {
 };
 
 /*
- * Helper to get service
- */
-const getService = (cmd, service) => (_.isObject(cmd)) ? _.first(_.keys(cmd)) : service;
-
-/*
- * Helper to build commands
- */
-exports.buildCommand = (app, command, needs, service, user) => ({
-  id: [app.name, service, '1'].join('_'),
-  compose: app.compose,
-  project: app.name,
-  cmd: command,
-  opts: {
-    app: app,
-    mode: 'attach',
-    pre: ['cd', exports.getContainerPath(app.root)].join(' '),
-    user: user,
-    services: _.compact(_.flatten([service, needs])),
-    hijack: false,
-    // @todo: should we have a better system to generate certs vs refreshing things?
-    autoRemove: true,
-  },
-});
-
-/*
  * Helper to grab dynamic container if needed
  */
 exports.getContainer = (service, answer) => (_.startsWith(service, ':')) ? answer[service.split(':')[1]] : service;
@@ -58,7 +52,8 @@ exports.getContainerPath = appRoot => {
   const cwd = process.cwd().split(path.sep);
   const dir = _.drop(cwd, appRoot.split(path.sep).length);
   // Add our in-container app root
-  dir.unshift('"$LANDO_MOUNT"');
+  // this will always be /app
+  dir.unshift('/app');
   // Return the directory
   return dir.join('/');
 };
@@ -79,8 +74,21 @@ exports.getOpts = (argopts = process.argv.slice(3)) => {
  */
 exports.getPassthruOpts = (options = {}, answers = {}) => _(options)
   .map((value, key) => _.merge({}, {name: key}, value))
-  .filter(value => value.passthrough = true)
+  .filter(value => value.passthrough === true)
   .map(value => esc(`--${value.name}=${answers[value.name]}`))
+  .value();
+
+/*
+ * Helper to get service
+ */
+const getService = (cmd, service) => (_.isObject(cmd)) ? _.first(_.keys(cmd)) : service;
+
+/*
+ * Helper to get tts
+ */
+exports.getToolingTasks = (config, app) => _(config)
+  .map((task, name) => _.merge({}, task, {app, name}))
+  .filter(task => _.isObject(task))
   .value();
 
 /*
@@ -94,9 +102,9 @@ exports.parseCommand = (cmd, service, passOpts = []) => _.map(!_.isArray(cmd) ? 
 /*
  * Helper to emit events, run commands and catch errors
  */
-exports.runCommands = (name, events, runner, cmds, inject = {}) => events.emit(['pre', name].join('-'), inject)
+exports.runCommands = (name, events, engine, cmds, inject = {}) => events.emit(['pre', name].join('-'), inject)
   // Run commands
-  .then(() => runner(cmds))
+  .then(() => engine.run(cmds))
   // Catch error but hide the stdout
   .catch(error => {
     error.hide = true;

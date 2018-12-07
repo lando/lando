@@ -2,7 +2,6 @@ disablePlugins:
   - lando-init
   - lando-recipes
   - lando-services
-  - lando-tooling
 stats:
   - report: true
     url: https://metrics.devwithlando.io
