@@ -1,0 +1,9 @@
+name: trivial-events
+compose:
+  - compose.yml
+events:
+  pre-start:
+    - web: hostname -A
+    - web2: hostname -A
+  post-start:
+    - web: hostname -A

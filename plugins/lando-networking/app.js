@@ -15,7 +15,7 @@ module.exports = (app, lando) => {
     // List all our app containers
     return lando.engine.list(app.name)
     // Go through each container
-    .each(container => {
+    .map(container => {
       // Grab from the proxy if we have them
       const aliases = _.compact(_.get(app, `config.proxy.${container.service}`, []));
       // And add in our default alias

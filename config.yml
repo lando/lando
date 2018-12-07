@@ -1,5 +1,4 @@
 disablePlugins:
-  - lando-events
   - lando-init
   - lando-recipes
   - lando-services

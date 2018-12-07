@@ -21,18 +21,17 @@ exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
   // Discover the service
   const service = getService(cmd, data);
   // Validate the service
-  if (!_.includes(_.keys(app.services), service)) {
+  if (!_.includes(app.services, service)) {
     throw new Error(`This app has no service called ${service}`);
   }
   // Add the build command
   return {
-    id: [app.name, service, '1'].join('_'),
+    id: `${app.project}_${service}_1`,
     cmd: getCommand(cmd),
     compose: app.compose,
-    project: app.name,
+    project: app.project,
     opts: {
       app: app,
-      pre: 'cd /app',
       mode: 'attach',
       user: 'www-data',
       services: [service],
