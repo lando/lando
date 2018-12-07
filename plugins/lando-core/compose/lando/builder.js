@@ -5,6 +5,41 @@ const _ = require('lodash');
 const path = require('path');
 
 /*
+    FROM NETWORKINGZ, maybe this goes in core?
+    /*
+      // Helper to root run commands
+      const runRoot = (services, cmd, app) => lando.engine.run(_.map(services, (service, name) => ({
+        id: [service._app, name, '1'].join('_'),
+        cmd: cmd,
+        compose: app.compose,
+        project: app.name,
+        opts: {
+          app: app,
+          detach: true,
+          mode: 'attach',
+          user: 'root',
+          services: [name],
+        },
+      })));
+
+      // Define some things
+
+    // Start up a build collector and set target build services
+    let buildServices = app.config.services;
+    // Check to see if we have to filter out build services
+    // Currently this only exists so we can ensure lando rebuild's -s option
+    // is respected re: build steps
+    if (!_.isEmpty(_.get(app, 'config._rebuildOnly', []))) {
+      const picker = _.get(app, 'config._rebuildOnly');
+      buildServices = _.pick(buildServices, picker);
+    }
+
+    app.events.on('app-ready', 9, () => {
+      app.events.on('post-start', 9999, () => runRoot(buildServices, '/helpers/refresh-certs.sh > /cert-log.txt', app));
+    });
+*/
+
+/*
  * The lowest level lando service, this is where a lot of the deep magic lives
  */
 module.exports = {
