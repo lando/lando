@@ -7,3 +7,4 @@ disablePlugins:
 stats:
   - report: true
     url: https://metrics.devwithlando.io
+proxyHttpPort: '8888'

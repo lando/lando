@@ -95,34 +95,3 @@ module.exports = lando => {
     caProject,
   }});
 };
-
-/*
-NETWORKING
-
-/*
-APP PLUGIN
-// Modules
-  // Merge compose files specified in landofile to services/networks/volumes
-  lando.events.on('post-instantiate-app', 1, app => {
-
-    // Inject values from an .env file if it exists
-    if (fs.existsSync(path.join(app.root, '.env'))) {
-      // Log
-      lando.log.debug('.env file found for %s, loading its config', app.name);
-
-      // Load .env file
-      const result = dotenv.config();
-
-      // warn if needed
-      if (result.error) {
-        lando.log.warn('Trouble parsing .env file with %s', result.error);
-      }
-
-      // Merge in values to app.env
-      if (!_.isEmpty(result.parsed)) {
-        app.env = merger(app.env, result.parsed);
-      }
-    }
-  });
-*/
-

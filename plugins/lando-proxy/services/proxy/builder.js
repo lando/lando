@@ -23,7 +23,10 @@ const getProxy = (domain, cert, key) => {
           '--web',
         ].join(' '),
         environment: {
-          LANDO_UPDATE: '5',
+          LANDO_UPDATE: '6',
+        },
+        labels: {
+          'traefik.frontend.rule': `Host:mustachedmanwiththecape`,
         },
         networks: ['edge'],
         volumes: [
@@ -62,11 +65,9 @@ module.exports = {
   name: '_proxy',
   parent: '_landoutil',
   builder: parent => class LandoProxy extends parent {
-    constructor(options = {}) {
+    constructor(http, https, options) {
       const proxy = getProxy(options.proxyDomain, options.proxyCert, options.proxyKey);
-      const ports = getPorts(options.proxyHttpPort, options.proxyHttpsPort, options.proxyDash);
-
-      // @TODO: starting config
+      const ports = getPorts(http, https, options.proxyDash);
       const config = {
         type: 'traefix',
         name: 'proxy',
@@ -77,7 +78,6 @@ module.exports = {
         labels: _.cloneDeep(options.appLabels),
         userConfRoot: options.userConfRoot,
       };
-
       super('proxy', config, proxy, ports);
     };
   },

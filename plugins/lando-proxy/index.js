@@ -2,12 +2,7 @@
 
 // Modules
 const _ = require('lodash');
-
-// Some helpful vars
-const port = '80';
-const securePort = '443';
-const fallbacks = ['8000', '8080', '8888', '8008'];
-const secureFallbacks = ['444', '4433', '4444', '4443'];
+const utils = require('./lib/utils');
 
 // Default config values
 const defaultConfig = {
@@ -16,23 +11,30 @@ const defaultConfig = {
   proxyKey: '/certs/cert.key',
   proxyName: 'landoproxyhyperion5000gandalfedition',
   proxyDash: '58087',
-  proxyHttpPort: port,
-  proxyHttpsPort: securePort,
-  proxyHttpFallbacks: fallbacks,
-  proxyHttpsFallbacks: secureFallbacks,
+  proxyCache: 'proxyCache',
+  proxyHttpPort: '80',
+  proxyHttpsPort: '443',
+  proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
+  proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
 };
 
 module.exports = lando => {
+  // Add in some computed config eg things after our config has been settled
+  lando.events.on('post-bootstrap', ({config}) => {
+    config.proxyNet = `${config.proxyName}_edge`;
+    config.proxyHttpPorts = _.flatten([config.proxyHttpPort, config.proxyHttpFallbacks]);
+    config.proxyHttpsPorts = _.flatten([config.proxyHttpsPort, config.proxyHttpsFallbacks]);
+    config.proxyScanHttp = utils.ports2Urls(config.proxyHttpPorts, false, config.proxyIp);
+    config.proxyScanHttps = utils.ports2Urls(config.proxyHttpsPorts, true, config.proxyIp);
+    config.proxyCurrentPorts = {http: config.proxyHttpPort, https: config.proxyHttpsPort};
+    config.proxyLastPorts = lando.cache.get(lando.config.proxyCache);
+    config.proxyContainer = `${lando.config.proxyName}_proxy_1`;
+  });
+  // Return config defaults to rebase
   return {
     config: _.merge({}, defaultConfig, {
       proxyDomain: lando.config.domain,
-      proxyNet: [defaultConfig.proxyName, 'edge'].join('_'),
-      proxyHttpPorts: _.flatten([port, fallbacks]),
-      proxyHttpsPorts: _.flatten([securePort, secureFallbacks]),
+      proxyIp: _.get(lando.config, 'engineConfig.host', '127.0.0.1'),
     }),
   };
 };
-
-/*
-proxyRunner = proxy.compose(lando.config.proxyProxyFile, lando.config.proxyPortsFile, proxyName);
-*/
