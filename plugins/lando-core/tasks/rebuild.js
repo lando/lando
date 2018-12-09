@@ -31,11 +31,12 @@ module.exports = lando => {
       }
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
-      app.opts = handleOpts(options);
-      // Message
-      console.log(chalk.green('Rising anew like a fire phoenix from the ashes! Rebuilding app...'));
       // Rebuild the app
-      if (app) return utils.appToggle(app, 'rebuild', table, lando.cli.makeArt());
+      if (app) {
+        console.log(chalk.green('Rising anew like a fire phoenix from the ashes! Rebuilding app...'));
+        app.opts = handleOpts(options);
+        return utils.appToggle(app, 'rebuild', table, lando.cli.makeArt());
+      }
     },
   };
 };

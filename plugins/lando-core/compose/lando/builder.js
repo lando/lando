@@ -2,45 +2,16 @@
 
 // Modules
 const _ = require('lodash');
+const chalk = require('chalk');
+const fs = require('fs-extra');
 const path = require('path');
-
-/*
-    FROM NETWORKINGZ, maybe this goes in core?
-    /*
-      // Helper to root run commands
-      const runRoot = (services, cmd, app) => lando.engine.run(_.map(services, (service, name) => ({
-        id: [service._app, name, '1'].join('_'),
-        cmd: cmd,
-        compose: app.compose,
-        project: app.name,
-        opts: {
-          app: app,
-          detach: true,
-          mode: 'attach',
-          user: 'root',
-          services: [name],
-        },
-      })));
-
-      // Define some things
-
-    // Start up a build collector and set target build services
-    let buildServices = app.config.services;
-    // Check to see if we have to filter out build services
-    // Currently this only exists so we can ensure lando rebuild's -s option
-    // is respected re: build steps
-    if (!_.isEmpty(_.get(app, 'config._rebuildOnly', []))) {
-      const picker = _.get(app, 'config._rebuildOnly');
-      buildServices = _.pick(buildServices, picker);
-    }
-
-    app.events.on('app-ready', 9, () => {
-      app.events.on('post-start', 9999, () => runRoot(buildServices, '/helpers/refresh-certs.sh > /cert-log.txt', app));
-    });
-*/
+// @TODO: not the best to reach back this far
+const moveConfig = require('./../../../../lib/utils').moveConfig;
+const utils = require('./../../lib/utils');
 
 /*
  * The lowest level lando service, this is where a lot of the deep magic lives
+ * @TODO
  */
 module.exports = {
   name: '_lando',
@@ -52,30 +23,84 @@ module.exports = {
         name,
         type,
         userConfRoot,
-        manage = [],
-        ssl = false,
+        version,
+        app = '',
+        confDest = '',
+        confSrc = '',
+        config = {},
+        home = '',
+        legacy = [],
+        project = '',
+        overrides = {},
         refreshCerts = false,
+        remoteFiles = {},
+        scripts = [],
+        ssl = false,
+        supported = [],
+        root = '',
+        webroot = '/app',
       } = {},
       ...sources
     ) {
+      // If this version is not supported throw an error
+      if (!_.includes(_.flatten([supported, ['custom']]), version)) {
+        throw Error(`${type} version ${version} is not supported`);
+      }
+      if (_.includes(legacy, version)) {
+        console.log(chalk.yellow(`${type} version ${version} is a legacy version. We recommend upgrading.`));
+      }
+
+      // Move our config into the userconfroot if we have some
+      // NOTE: we need to do this because on macOS and Windows not all host files
+      // are shared into the docker vm
+      if (fs.existsSync(confSrc)) moveConfig(confSrc, confDest);
+
       // Get some basic locations
       const scriptsDir = path.join(userConfRoot, 'scripts');
       const entrypoint = path.join(scriptsDir, 'lando-entrypoint.sh');
       const addCertsScript = path.join(scriptsDir, 'add-cert.sh');
       const refreshCertsScript = path.join(scriptsDir, 'refresh-certs.sh');
+      const loadKeysScript = path.join(scriptsDir, 'load-keys.sh');
 
-      // Handle Volumes
+      // Handle volumes
       const volumes = [
         `${userConfRoot}:/lando:delegated`,
         `${scriptsDir}:/helpers`,
         `${entrypoint}:/lando-entrypoint.sh`,
       ];
 
-      // Handle Scripts
-      // Generate certs if ssl is turned on
-      if (ssl) volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
-      // Refresh certs is indicated
-      // @TODO: this might only be relevant to the proxy
+      // Add in some more dirz if it makes sense
+      if (home) {
+        volumes.push(`${home}:/user:delegated`);
+        volumes.push(`${loadKeysScript}:/scripts/load-keys.sh`);
+      }
+
+      // Add in any custom pre-runscripts
+      _.forEach(scripts, script => {
+        const local = path.resolve(root, script);
+        const remote = path.join('/scripts', path.basename(script));
+        volumes.push(`${local}:${remote}`);
+      });
+
+      // Handle custom config files
+      _.forEach(config, (file, type) => {
+        if (_.has(remoteFiles, type)) {
+          const local = path.resolve(root, config[type]);
+          const remote = remoteFiles[type];
+          volumes.push(`${local}:${remote}`);
+        }
+      });
+
+      // Handle ports
+      const ports = [];
+      // Handle ssl
+      if (ssl) {
+        volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
+        ports.push('443');
+      }
+
+      // Handle cert refresh
+      // @TODO: this might only be relevant to the proxy, if so let's move it there
       if (refreshCerts) volumes.push(`${refreshCertsScript}:/scripts/refresh-certs.sh`);
 
       // Handle Environment
@@ -84,18 +109,49 @@ module.exports = {
         LANDO_SERVICE_TYPE: type,
       };
 
-      // Loop through our managed services and add in the above
-      _.forEach(manage, service => {
-        sources.push({services: _.set({}, service, {
-          entrypoint: '/lando-entrypoint.sh',
-          environment,
-          volumes,
-        })});
-      });
+      // Add stuff into our primary service
+      sources.push({services: _.set({}, name, {
+        entrypoint: '/lando-entrypoint.sh',
+        environment,
+        ports,
+        volumes,
+      })});
 
-      // Handle overrides
-      // THESE MUST COME LAST
+      // Process overrides
+      // @TODO: how do we handle "hidden services eg nginx for php-fpm"?
+      // Map any build or volume keys to the correct path
+      if (_.has(overrides, 'build')) {
+        overrides.build = utils.normalizePath(overrides.build, root);
+      }
+      if (_.has(overrides, 'volumes')) {
+        overrides.volumes = _.map(overrides.volumes, volume => {
+          if (!_.includes(volume, ':')) {
+            return volume;
+          } else {
+            const local = utils.getHostPath(volume);
+            const remote = volume.split(':')[1];
+            // @TODO: i dont think below does anything?
+            const excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
+            const host = utils.normalizePath(local, root, excludes);
+            return [host, remote].join(':');
+          }
+        });
+      }
+      sources.push({services: _.set({}, name, overrides)});
+
+      // Pass it down
       super(id, ...sources);
+    };
+
+    /*
+     * @TODO
+     */
+    info({name, type, config = {}, version = 'default'}, info) {
+      info.type = type;
+      info.version = version;
+      info.hostnames.push(name);
+      info.config = config;
+      return info;
     };
   },
 };

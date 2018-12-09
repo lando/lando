@@ -68,9 +68,9 @@ module.exports = lando => {
       }
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
-      console.log(chalk.green('About to share your app to the world!'));
       // Get the sharing url
       if (app) {
+        console.log(chalk.green('About to share your app to a whole new world!'));
         // Ensure the app is up and lets share
         // @TODO: only start below if we need to
         return app.start().then(app => lando.metrics.report('share', {}))

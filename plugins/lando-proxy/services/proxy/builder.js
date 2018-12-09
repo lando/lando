@@ -64,21 +64,24 @@ const getPorts = (http, https, dash) => ({
 module.exports = {
   name: '_proxy',
   parent: '_landoutil',
-  builder: parent => class LandoProxy extends parent {
+  config: {
+    version: 'custom',
+    type: 'traefix',
+    name: 'proxy',
+    ssl: true,
+    refreshCerts: true,
+  },
+  // @TODO: better use of config above
+  builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
       const proxy = getProxy(options.proxyDomain, options.proxyCert, options.proxyKey);
       const ports = getPorts(http, https, options.proxyDash);
-      const config = {
-        type: 'traefix',
-        name: 'proxy',
-        manage: ['proxy'],
-        ssl: true,
-        refreshCerts: true,
+      const augment = {
         env: _.cloneDeep(options.appEnv),
         labels: _.cloneDeep(options.appLabels),
         userConfRoot: options.userConfRoot,
       };
-      super('proxy', config, proxy, ports);
+      super('proxy', _.merge({}, config, augment), proxy, ports);
     };
   },
 };

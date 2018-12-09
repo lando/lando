@@ -11,11 +11,13 @@ module.exports = lando => {
     describe: 'Restarts your app',
     run: options => {
       // Message
-      console.log(chalk.green('Stopping your app... just so we can start it up again ¯\\_(ツ)_/¯'));
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
       // Restart it if we can!
-      if (app) return utils.appToggle(app, 'restart', table, lando.cli.makeArt());
+      if (app) {
+        console.log(chalk.green('Stopping your app... just so we can start it up again ¯\\_(ツ)_/¯'));
+        return utils.appToggle(app, 'restart', table, lando.cli.makeArt());
+      }
     },
   };
 };

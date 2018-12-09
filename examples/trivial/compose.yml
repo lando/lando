@@ -11,3 +11,8 @@ services:
       - "80"
   log:
     image: php:7.1-fpm-alpine
+    healthcheck:
+      test: 'fuck'
+      interval: '2s'
+      timeout: '10s'
+      retries: 25

@@ -19,9 +19,9 @@ module.exports = lando => {
       }
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
-      console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));
       // Destroy the app
       if (app) {
+        console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));
         return app.destroy().then(() => console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!')));
       }
     },

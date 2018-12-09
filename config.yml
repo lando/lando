@@ -1,8 +1,6 @@
 disablePlugins:
   - lando-init
   - lando-recipes
-  - lando-services
 stats:
   - report: true
     url: https://metrics.devwithlando.io
-proxyHttpPort: '8888'

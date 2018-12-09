@@ -9,9 +9,13 @@ const path = require('path');
 module.exports = {
   name: '_casetup',
   parent: '_landoutil',
+  config: {
+    version: 'custom',
+  },
   builder: parent => class LandoCa extends parent {
     constructor(userConfRoot, env = {}, labels = {}) {
       // Get some shitz
+      // @TODO: better use of config above
       const certsPath = path.join(userConfRoot, 'certs');
       const setupCaScript = path.join(userConfRoot, 'scripts', 'setup-ca.sh');
       // Basic CA service
@@ -27,7 +31,7 @@ module.exports = {
           },
         },
       };
-      super('ca', {type: 'ca', name: 'ca', manage: ['ca'], env, labels, userConfRoot}, caService);
+      super('ca', {type: 'ca', name: 'ca', env, labels, userConfRoot}, caService);
     };
   },
 };

@@ -13,27 +13,30 @@ services:
   html:
 
     # Use the latest version of apache.
-    type: apache:2.2
-
-    # Set this to true if you want to configure apache to also run over https
-    ssl: true
+    type: apache
 
     # Optionally specify a webroot if it is a subdirectory of the appRoot
     webroot: web
 
     # Optionally use a custom apache conf file
     # This should live in your app root and is relative to it
-    # config:
-      # server: config/httpd.conf
+    config:
+      server: config/httpd.conf
+      vhosts: config/custom.conf
+
+    # Scripts
+    scripts:
+      - scripts/printenv.sh
 
     # These are v3 docker compose file overrides. They allow you to provide very
     # precise fine tuning to your app
     # See: https://docs.docker.com/compose/compose-file/
     overrides:
-      services:
-        environment:
-          STUFF: THINGS
-        ports:
-          - '8081:80'
-        # Uncomment below to use a custom image or Dockerfile build location
-        # image: pirog/myapache:2
+      environment:
+        STUFF: THINGS
+      ports:
+        - '8081:80'
+      volumes:
+        - ./web:/fuck
+      # Uncomment below to use a custom image or Dockerfile build location
+      # image: pirog/myapache:2

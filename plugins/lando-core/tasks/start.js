@@ -12,9 +12,11 @@ module.exports = lando => {
     run: options => {
       // Try to get our app
       const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
-      console.log(chalk.green('Let\'s get this party started! Starting app..'));
       // Start it if we can!
-      if (app) return utils.appToggle(app, 'start', table, lando.cli.makeArt());
+      if (app) {
+        console.log(chalk.green('Let\'s get this party started! Starting app..'));
+        return utils.appToggle(app, 'start', table, lando.cli.makeArt());
+      }
     },
   };
 };

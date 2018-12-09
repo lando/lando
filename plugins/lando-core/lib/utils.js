@@ -3,6 +3,23 @@
 // Modules
 const _ = require('lodash');
 const chalk = require('yargonaut').chalk();
+const path = require('path');
+
+/*
+ * A toggle to either start or restart
+ */
+exports.appToggle = (app, toggle = 'start', table, header = '') => app[toggle]().then(() => {
+  // Header it
+  console.log(header);
+  // Inject start table into the table
+  _.forEach(exports.startTable(app), (value, key) => {
+    const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
+    table.add(_.toUpper(key), value, opts);
+  });
+  // Print the table
+  console.log(table.toString());
+  console.log('');
+});
 
 /*
  * Returns a normal default interactive confirm with custom message
@@ -18,6 +35,26 @@ exports.buildConfirm = (message = 'Are you sure?') => ({
     message: message,
   },
 });
+
+/*
+ * Helper method to get the host part of a volume
+ */
+exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
+
+/*
+ * Helper method to normalize a path so that Lando overrides can be used as though
+ * the docker-compose files were in the app root.
+ */
+exports.normalizePath = (local, base, excludes = []) => {
+  // Return local if it starts with $
+  if (_.startsWith(local, '$')) return local;
+  // Return local if it is one of the excludes
+  if (_.includes(excludes, local)) return local;
+  // Return local if local is an absolute path
+  if (path.isAbsolute(local)) return local;
+  // Otherwise this is a relaive path so return local resolved by base
+  return path.resolve(path.join(base, local));
+};
 
 /*
  * Returns a CLI table with app start metadata info
@@ -50,20 +87,3 @@ exports.startTable = app => {
   // Return data
   return data;
 };
-
-/*
- * A toggle to either start or restart
- */
-exports.appToggle = (app, toggle = 'start', table, header = '') => app[toggle]().then(() => {
-  // Header it
-  console.log(header);
-  // Inject start table into the table
-  _.forEach(exports.startTable(app), (value, key) => {
-    const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
-    table.add(_.toUpper(key), value, opts);
-  });
-  // Print the table
-  console.log(table.toString());
-  console.log('');
-});
-

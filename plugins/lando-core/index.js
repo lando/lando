@@ -85,6 +85,7 @@ module.exports = lando => {
       LANDO_HOST_HOME: lando.config.home,
       LANDO_HOST_OS: lando.config.os.platform,
       LANDO_HOST_IP: (process.platform !== 'linux') ? lando.node.ip.address() : 'host.docker.internal',
+      LANDO_MOUNT: '/app',
     },
     appLabels: {
       'io.lando.id': lando.config.instance,
@@ -93,5 +94,6 @@ module.exports = lando => {
     caDomain,
     caKey,
     caProject,
+    loadPassphraseProtectedKeys: false,
   }});
 };

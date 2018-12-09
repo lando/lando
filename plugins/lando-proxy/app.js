@@ -112,8 +112,10 @@ module.exports = (app, lando) => {
       const urls = _(app.config.proxy)
         .map((urls, service) => ({service, urls: utils.parse2Info(urls, ports)}))
         .value();
-      // Merge it in
-      app.info = _.merge(app.info, urls);
+      // Concat the URLS
+      _.forEach(app.info, service => {
+        service.urls = _.uniq(service.urls.concat(_.find(urls, {service: service.service}).urls));
+      });
     });
   }
 };
