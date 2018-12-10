@@ -13,10 +13,7 @@ services:
   appserver:
 
     # Use nginx version 1.12
-    type: nginx:1.12
-
-    # Optionally configure nginx to be able to also serve over https
-    ssl: true
+    type: nginx
 
     # Optionally specify a webroot if your index.html is in a subdirectory
     webroot: www
@@ -30,12 +27,6 @@ services:
 
       # Use custom nginx http config located in config/http.conf relative
       # to our app root
-      # http: config/http.conf
+      vhosts: config/custom.conf
 
-    # Pass in some docker compose overrides so we can map ports and get
-    # more envvars
-    overrides:
-      services:
-        environment:
-          THING: STUFF
-        ports: ['8888:80']
+      params: config/params

@@ -39,8 +39,7 @@ http {
     tcp_nopush     on;
     tcp_nodelay       off;
 
-    #keepalive_timeoutf  0;
-    # we did it
+    #keepalive_timeout  0;
     keepalive_timeout  65;
     gzip on;
     gzip_http_version 1.0;
@@ -61,4 +60,17 @@ http {
     }
 
   include "{{NGINX_CONFDIR}}/vhosts/*.conf";
+
+  # HTTP Server
+  server {
+    # port to listen on. Can also be set to an IP:PORT
+    listen {{NGINX_HTTP_PORT_NUMBER}};
+
+    location /status {
+      stub_status on;
+      access_log   off;
+      allow 127.0.0.1;
+      deny all;
+    }
+  }
 }
