@@ -1,19 +1,9 @@
 # The name of the app
 name: mysql
 
-# Give me http://mysql.lndo.site and https://mysql.lndo.site
-proxy:
-  appserver:
-    - mysql.lndo.site
 
 # Set up my services
 services:
-
-  # Set up a basic webserver running the latest nginx with ssl turned on
-  appserver:
-    type: nginx
-    ssl: true
-    webroot: www
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
@@ -43,4 +33,4 @@ services:
     # This is relative to the app root
     # NOTE: these files need to end in .cnf
     # config:
-    #  confd: config
+    #  config: config/my.cnf
