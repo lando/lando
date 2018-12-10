@@ -10,6 +10,11 @@ const moveConfig = require('./../../../../lib/utils').moveConfig;
 const utils = require('./../../lib/utils');
 
 /*
+ * Helper to strip the patch version
+ */
+const stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
+
+/*
  * The lowest level lando service, this is where a lot of the deep magic lives
  * @TODO
  */
@@ -30,21 +35,27 @@ module.exports = {
         config = {},
         home = '',
         legacy = [],
+        patchesSupported = false,
         project = '',
         overrides = {},
         refreshCerts = false,
         remoteFiles = {},
         scripts = [],
         ssl = false,
-        supported = [],
+        supported = ['custom'],
         root = '',
         webroot = '/app',
       } = {},
       ...sources
     ) {
+      // Add custom to list of supported
+      supported.push('custom');
       // If this version is not supported throw an error
-      if (!_.includes(_.flatten([supported, ['custom']]), version)) {
-        throw Error(`${type} version ${version} is not supported`);
+      // @TODO: get this someplace else for unit tezting
+      if (!_.includes(supported, version)) {
+        if (!patchesSupported || !_.includes(supported, stripPatch(version))) {
+          throw Error(`${type} version ${version} is not supported`);
+        }
       }
       if (_.includes(legacy, version)) {
         console.log(chalk.yellow(`${type} version ${version} is a legacy version. We recommend upgrading.`));

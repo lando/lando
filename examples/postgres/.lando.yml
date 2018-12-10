@@ -1,19 +1,8 @@
 # The name of the app
 name: postgres
 
-# Give me http://postgres.lndo.site and https://postgres.lndo.site
-proxy:
-  html:
-    - postgres.lndo.site
-
 # Service configuration
 services:
-
-  # Set up a basic webserver running the latest nginx with ssl turned on
-  html:
-    webroot: www
-    type: nginx
-    ssl: true
 
   # Spin up a postgres container called "tswift"
   tswift:
@@ -35,12 +24,10 @@ services:
     # already started your app
     # See: https://docs.devwithlando.io/tutorials/lando-info.html
     creds:
-      user: trouble
-      password: trouble
       database: trouble
 
     # Optionally load in all the postgres config files into the config directory
     # This is relative to the app root
     # NOTE: these files need to end in .conf
-    config:
-      confd: confd
+    # config:
+    #   config: config/mythings.conf

@@ -12,8 +12,8 @@ services:
   # Create an nginx service called "appserver"
   appserver:
 
-    # Use nginx version 1.12
-    type: nginx
+    # Use nginx version
+    type: nginx:1.14.1
 
     # Optionally specify a webroot if your index.html is in a subdirectory
     webroot: www

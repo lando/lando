@@ -34,6 +34,7 @@ lando ssh tswift -c "psql -U trouble trouble -c \'\\\dt\'"
 # Verify the custom config file was used
 lando ssh tswift -c "psql -U trouble -c \'SHOW MAX_FILES_PER_PROCESS;\' | grep 999"
 ```
+// psql -U postgres -c 'SHOW MAX_FILES_PER_PROCESS;'
 
 Helpful Commands
 ----------------

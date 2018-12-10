@@ -11,13 +11,14 @@ module.exports = {
   name: 'mysql',
   config: {
     // Versions
-    version: '8.0',
+    version: '5.7',
     supported: ['8.0', '5.7'],
+    patchesSupported: true,
     legacy: [],
     // Config
     confSrc: __dirname,
     creds: {
-      database: 'mysql',
+      database: 'database',
       password: 'mysql',
       user: 'mysql',
     },

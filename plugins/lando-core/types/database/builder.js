@@ -17,7 +17,7 @@ module.exports = {
         if (options.portforward === true) {
           sources.push({services: _.set({}, options.name, {ports: [options.port]})});
         } else {
-          sources.push({services: _.set({}, options.name, {ports: [`${options.port}:${options.portforward}`]})});
+          sources.push({services: _.set({}, options.name, {ports: [`${options.portforward}:${options.port}`]})});
         }
       }
       // Add in a our healthcheck if we have one

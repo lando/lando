@@ -27,6 +27,7 @@ env.yml
 # gitbooks
 _books
 _book
+docs/examples
 
 # Build dirs
 build

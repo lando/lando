@@ -13,6 +13,7 @@ module.exports = {
     // Versions
     version: '2.4',
     supported: ['2.4'],
+    patchesSupported: true,
     legacy: [],
     // Config
     confSrc: __dirname,

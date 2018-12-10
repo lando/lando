@@ -11,13 +11,14 @@ module.exports = {
   name: 'mariadb',
   config: {
     // Versions
-    version: '10.2',
+    version: '10.1',
     supported: ['10.2', '10.1'],
+    patchesSupported: true,
     legacy: [],
     // Config
     confSrc: __dirname,
     creds: {
-      database: 'mariadb',
+      database: 'database',
       password: 'mariadb',
       user: 'mariadb',
     },
