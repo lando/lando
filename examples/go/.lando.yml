@@ -12,8 +12,8 @@ services:
   # Create a go instance
   appserver:
 
-    # go version 1.8
-    type: go:1.8
+    # go version
+    type: go
 
     # Optionally create certs in /certs that can be used by your application
     # to listen over https. Creates the following certs your app can use
@@ -22,7 +22,7 @@ services:
     #   - /certs/cert.crt
     #   - /certs/cert.pem
     #
-    # ssl: true
+    ssl: true
 
     # Optionally specify a command to run when you start your go service up.
     #
@@ -34,11 +34,6 @@ services:
     #
     command: go run /app/http1.go
 
-# Add some nice command routing
-tooling:
-  # This will allow you to run things like `lando npm install` without needing
-  # to `lando start` first. This is particularly needed for go based projects
-  # since you almost always need to run `npm install` before you can boot up your
-  # app successfully.
-  go:
-    service: appserver
+
+  cli:
+    type: go

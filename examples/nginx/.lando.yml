@@ -13,7 +13,7 @@ services:
   appserver:
 
     # Use nginx version
-    type: nginx:1.14.1
+    type: nginx
 
     # Optionally specify a webroot if your index.html is in a subdirectory
     webroot: www

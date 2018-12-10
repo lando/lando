@@ -48,7 +48,7 @@ module.exports = {
   parent: '_appserver',
   builder: (parent, config) => class LandoNode extends parent {
     constructor(id, options = {}) {
-      options = _.merge(config, options);
+      options = _.merge({}, config, options);
       // Make sure our command is an array
       if (!_.isArray(options.command)) options.command = [options.command];
       options.command = options.command.join(' && ');

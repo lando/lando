@@ -9,10 +9,8 @@ proxy:
 # Spin up services to run a basic node server
 services:
 
-  # Create a node instance
+  # Create a node web server
   appserver:
-
-    # Node version
     type: node:8
 
     # Optionally create certs in /certs that can be used by your application
@@ -47,3 +45,8 @@ services:
     # installed before your server starts up.
     #
     command: npm start
+
+  # Create a node cli
+  cli:
+    type: node
+

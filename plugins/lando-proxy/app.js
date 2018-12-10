@@ -110,14 +110,11 @@ module.exports = (app, lando) => {
         // Get last known ports
         const ports = lando.cache.get(lando.config.proxyCache);
         // Map to protocol and add portz
-        const urls = _(app.config.proxy)
-          .map((urls, service) => ({service, urls: utils.parse2Info(urls, ports)}))
+        // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
+        _(app.info)
+          .filter(service => _.has(app, `config.proxy.${service.service}`))
+          .flatMap(s => s.urls = s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports)))
           .value();
-        // Remove any preexisting URLs (we do this because its possible for this event to run more than once)
-        // and for the values to change eg proxy settings change and app is restarted
-        _.forEach(app.info, service => {
-          service.urls = _.uniq(service.urls.concat(_.find(urls, {service: service.service}).urls));
-        });
       });
     });
   }
