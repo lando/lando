@@ -21,6 +21,7 @@ module.exports = {
       password: 'mysql',
       user: 'mysql',
     },
+    healthcheck: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
     port: '3306',
     defaultFiles: {
       config: path.join(__dirname, 'lando.cnf'),
@@ -33,23 +34,15 @@ module.exports = {
   builder: (parent, config) => class LandoMySql extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-
       // Build the default stuff here
       const mysql = {
         image: `bitnami/mysql:${options.version}`,
         command: '/entrypoint.sh /run.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
-          // mysql_EXTRA_FLAGS for things like coallation?
           MYSQL_DATABASE: options.creds.database,
           MYSQL_PASSWORD: options.creds.password,
           MYSQL_USER: options.creds.user,
-        },
-        healthcheck: {
-          test: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
-          interval: '2s',
-          timeout: '10s',
-          retries: 25,
         },
         volumes: [
           `${options.defaultFiles.config}:${options.remoteFiles.config}`,

@@ -12,12 +12,22 @@ module.exports = {
   builder: parent => class LandoDatabase extends parent {
     constructor(id, options = {}, ...sources) {
       // @TODO: add in any envvars for this?
+      // Add in relevant portforward data
       if (options.portforward) {
         if (options.portforward === true) {
           sources.push({services: _.set({}, options.name, {ports: [options.port]})});
         } else {
           sources.push({services: _.set({}, options.name, {ports: [`${options.port}:${options.portforward}`]})});
         }
+      }
+      // Add in a our healthcheck if we have one
+      if (options.healthcheck) {
+        sources.push({services: _.set({}, options.name, {healthcheck: {
+          test: options.healthcheck,
+          interval: '2s',
+          timeout: '10s',
+          retries: 25,
+        }})});
       }
       super(id, options, ...sources);
     };

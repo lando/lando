@@ -21,6 +21,7 @@ module.exports = {
       password: 'mariadb',
       user: 'mariadb',
     },
+    healthcheck: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
     port: '3306',
     defaultFiles: {
       config: path.join(__dirname, 'lando.cnf'),
@@ -33,8 +34,6 @@ module.exports = {
   builder: (parent, config) => class LandoMariaDb extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-
-      // Build the default stuff here
       const mariadb = {
         image: `bitnami/mariadb:${options.version}`,
         command: '/entrypoint.sh /run.sh',
@@ -44,12 +43,6 @@ module.exports = {
           MARIADB_DATABASE: options.creds.database,
           MARIADB_PASSWORD: options.creds.password,
           MARIADB_USER: options.creds.user,
-        },
-        healthcheck: {
-          test: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
-          interval: '2s',
-          timeout: '10s',
-          retries: 25,
         },
         volumes: [
           `${options.defaultFiles.config}:${options.remoteFiles.config}`,
