@@ -62,7 +62,8 @@
       "**/*.sh",
       "**/*.vcl",
       "**/*.json",
-      "**/*.toml"
+      "**/*.toml",
+      "**/*.tpl",
     ]
   },
   "dependencies": {
