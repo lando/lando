@@ -1,26 +1,15 @@
 # The name of the app
 name: mariadb
 
-# Give me http://mariadb.lndo.site and https://mariadb.lndo.site
-proxy:
-  html:
-    - mariadb.lndo.site
-
 # Set up my services
 services:
-
-  # Set up a basic webserver running the latest nginx with ssl turned on
-  html:
-    type: nginx
-    ssl: true
-    webroot: www
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
   database:
 
     # Use mariadb version 10.1
-    type: mariadb:10.1
+    type: mariadb
 
     # Optionally allow access to the database at localhost:3307
     # You will need to make sure port 3307 is open on your machine
@@ -43,5 +32,5 @@ services:
     # Optionally load in all the mariadb config files in the config directory
     # This is relative to the app root
     # NOTE: these files need to end in .cnf
-    config:
-      confd: config
+    # config:
+    #  confd: config

@@ -33,7 +33,7 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       // Build the default stuff here
-      const apache = {
+      const nginx = {
         image: `bitnami/nginx:${options.version}`,
         command: [
           '/bin/bash -c',
@@ -62,7 +62,7 @@ module.exports = {
       // TODO? im not sure why we wouldnt want to at this point?
       options.ssl = true;
       // Send it downstream
-      super(id, options, {services: _.set({}, options.name, apache)});
+      super(id, options, {services: _.set({}, options.name, nginx)});
     };
   },
 };

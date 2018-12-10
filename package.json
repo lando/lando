@@ -63,7 +63,7 @@
       "**/*.vcl",
       "**/*.json",
       "**/*.toml",
-      "**/*.tpl",
+      "**/*.tpl"
     ]
   },
   "dependencies": {
