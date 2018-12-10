@@ -4,9 +4,7 @@
 const _ = require('lodash');
 const path = require('path');
 
-/*
- * Apache for all
- */
+// Builder
 module.exports = {
   name: 'mariadb',
   config: {

@@ -1,12 +1,9 @@
 #!/usr/bin/env python
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import ssl
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-# HTTPRequestHandler class
-class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
-
-  # GET
-  def do_GET(self):
+class myHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
         # Send response status code
         self.send_response(200)
 
@@ -15,19 +12,18 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         # Send message back to client
-        message = "CAUSELOVINGHIMWASRED"
+        message = "OPENTHEPASTANDPRESENT"
         # Write content as utf-8 data
         self.wfile.write(bytes(message, "utf8"))
         return
 
-def run():
-  print('starting server...')
+# http
+httpd = HTTPServer(('0.0.0.0', 80), myHandler)
+print('starting http server...')
+httpd.serve_forever()
 
-  # Server settings
-  server_address = ('0.0.0.0', 80)
-  httpd = HTTPServer(server_address, testHTTPServer_RequestHandler)
-  print('running server...')
-  httpd.serve_forever()
-
-
-run()
+# https
+# httpsd = HTTPServer(('0.0.0.0', 443), myHandler)
+# httpsd.socket = ssl.wrap_socket (httpsd.socket, server_side=True, certfile='/certs/cert.crt', keyfile='/certs/cert.key', ssl_version=ssl.PROTOCOL_TLSv1)
+# print('starting https server...')
+# httpsd.serve_forever()

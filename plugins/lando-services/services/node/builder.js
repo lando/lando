@@ -17,13 +17,10 @@ const getGlobalCommands = deps => _(deps)
   .map(command => command.join(' '))
   .value();
 
-/*
- * Apache for all
- */
+// Builder
 module.exports = {
   name: 'node',
   config: {
-    // Versions
     version: '10',
     supported: ['11', '11.4', '10', '10.14', '8', '8.14', '6', '6.15'],
     patchesSupported: true,
@@ -57,6 +54,7 @@ module.exports = {
         image: `node:${options.version}`,
         environment: {
           PATH: options.path.join(':'),
+          NODE_EXTRA_CA_CERTS: `/lando/certs/${options._app._config.domain}.pem`,
         },
         ports: (options.command !== 'tail -f /dev/null') ? [80] : [],
         volumes: options.volumes,

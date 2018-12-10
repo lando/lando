@@ -3,9 +3,7 @@
 // Modules
 const _ = require('lodash');
 
-/*
- * Apache for all
- */
+// Builder
 module.exports = {
   name: 'go',
   config: {

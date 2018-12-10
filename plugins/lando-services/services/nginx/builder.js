@@ -4,9 +4,7 @@
 const _ = require('lodash');
 const path = require('path');
 
-/*
- * nginx for all
- */
+// Builder
 module.exports = {
   name: 'nginx',
   config: {

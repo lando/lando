@@ -1,19 +1,14 @@
 # Python app
 name: python
 
-# Give me http://python.lndo.site and https://python.lndo.site
-proxy:
-  appserver:
-    - python.lndo.site
-
 # Spin up services to run a basic python server
 services:
 
   # Create a python instance
   appserver:
 
-    # Python version 3.6
-    type: python:3.6
+    # Python version
+    type: python
 
     # Optionally create certs in /certs that can be used by your application
     # to listen over https. Creates the following certs your app can use
@@ -37,19 +32,5 @@ services:
     #
     command: python /app/server.py
 
-    # Boot up instructions
-    install_dependencies_as_me:
-      - pip install livereload
-
-# Add some nice command routing
-tooling:
-  pip:
-    service: appserver
-  python:
-    service: appserver
-  easy_install:
-    service: appserver
-  pyvenv:
-    service: appserver
-  livereload:
-    service: appserver
+  cli:
+    type: python
