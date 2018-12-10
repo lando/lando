@@ -46,9 +46,10 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
 exports.parseConfig = (config, app) => _(config)
   .map((service, name) => _.merge({}, service, {name}))
   .map(service => _.merge({}, service, {
+    _app: app,
     app: app.name,
-    home: app._config.home,
     confDest: path.join(app._config.userConfRoot, 'config', service.type.split(':')[0]),
+    home: app._config.home,
     project: app.project,
     type: service.type.split(':')[0],
     root: app.root,

@@ -38,20 +38,23 @@ module.exports = (app, lando) => {
   const preLockfile = app.name + '.build.lock';
   const postLockfile = app.name + '.post-build.lock';
 
-  // @TODO: need to move this to a post init event so we can get recipes first
-  // @TODO sexier _() implementation?
-  const services = utils.parseConfig(_.get(app, 'config.services', {}), app);
-  _.forEach(services, service => {
-    // Throw a warning if service is not supported
-    if (_.isEmpty(_.find(lando.factory.get(), {name: service.type}))) {
-      lando.log.warn('%s is not a supported service type.', service.type);
-    }
-    // Log da things
-    lando.log.verbose('Building %s %s named %s', service.type, service.version, service.name);
-    lando.log.debug('Building %s with config %j', service.name, service);
-    // Build da things
-    const Service = lando.factory.get(service.type);
-    app.add(new Service(service.name, service, lando.factory));
+  // Init this early on but not before our recipes
+  app.events.on('pre-init', () => {
+    // @TODO sexier _() implementation?
+    const services = utils.parseConfig(_.get(app, 'config.services', {}), app);
+    _.forEach(services, service => {
+      // Throw a warning if service is not supported
+      if (_.isEmpty(_.find(lando.factory.get(), {name: service.type}))) {
+        lando.log.warn('%s is not a supported service type.', service.type);
+      }
+      // Log da things
+      lando.log.verbose('Building %s %s named %s', service.type, service.version, service.name);
+      lando.log.debug('Building %s with config %j', service.name, service);
+      // Build da things
+      // @NOTE: this also gathers app.info and build steps
+      const Service = lando.factory.get(service.type);
+      app.add(new Service(service.name, service, lando.factory));
+    });
   });
 
   // Handle build steps

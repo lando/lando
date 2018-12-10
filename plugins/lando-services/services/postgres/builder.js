@@ -12,7 +12,7 @@ module.exports = {
   config: {
     // Versions
     version: '10.6.0',
-    supported: ['11.1', '11.0', '10.6.0', '9.6'],
+    supported: ['11.1', '11.0', '10.6.0', '10', '9.6'],
     patchesSupported: true,
     legacy: [],
     // Config

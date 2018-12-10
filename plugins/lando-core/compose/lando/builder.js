@@ -11,6 +11,7 @@ const utils = require('./../../lib/utils');
 
 /*
  * Helper to strip the patch version
+ * @TODO: lib for u test?
  */
 const stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
 
@@ -58,7 +59,7 @@ module.exports = {
         }
       }
       if (_.includes(legacy, version)) {
-        console.log(chalk.yellow(`${type} version ${version} is a legacy version. We recommend upgrading.`));
+        console.log(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
       }
 
       // Move our config into the userconfroot if we have some
