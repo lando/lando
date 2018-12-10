@@ -11,35 +11,31 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
   // Start collecting them
   const build = [];
   // Go through each service
-  _.forEach(services, (service, name) => {
+  _.forEach(services, service => {
     // Loop through all internal, legacy and user steps
     _.forEach(rootSteps.concat(buildSteps), section => {
       // If the service has build sections let's loop through and run some commands
-      if (!_.isEmpty(service[section])) {
-        // Normalize data for loopage
-        if (!_.isArray(service[section])) service[section] = [service[section]];
+      if (!_.isEmpty(_.get(app, `config.services.${service}.${section}`, []))) {
+        const data = app.config.services[service][section];
+        if (!_.isArray(data)) data = [data];
         // Run each command
-        _.forEach(service[section], cmd => {
-          const container = [service._app, name, '1'].join('_');
-          const user = _.get(app.services[name], 'environment.LANDO_WEBROOT_USER', 'www-data');
+        _.forEach(data, cmd => {
+          const container = `${app.project}_${service}_1`;
           build.push({
             id: container,
             cmd: cmd,
             compose: app.compose,
-            project: app.name,
+            project: app.project,
             opts: {
-              pre: 'cd /app',
-              app: app,
               mode: 'attach',
-              user: (_.includes(rootSteps, section)) ? 'root' : user,
-              services: [container.split('_')[1]],
+              user: (_.includes(rootSteps, section)) ? 'root' : 'www-data',
+              services: [service],
             },
           });
         });
       }
     });
   });
-
   // Return
   return build;
 };
@@ -73,10 +69,10 @@ exports.runBuild = (lando, steps, lockfile) => {
     })
     // Make sure we don't save a hash if our build fails
     .catch(error => {
-      lando.log.error('Looks like one of your build steps failed with %s', error);
+      lando.log.error('Looks like one of your build steps failed! with %s', error.stack);
       lando.log.warn('This **MAY** prevent your app from working');
       lando.log.warn('Check for errors above, fix them, and try again');
-      lando.log.debug('Build error %s', error.stack);
+      lando.log.debug('Build error %s');
     });
   }
 };

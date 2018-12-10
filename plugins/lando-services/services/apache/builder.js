@@ -53,8 +53,5 @@ module.exports = {
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, apache)});
     };
-    info(options, info) {
-      super.info(_.merge({}, config, options), info);
-    };
   },
 };

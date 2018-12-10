@@ -2,26 +2,25 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./lib/utils');
 
 module.exports = (app, lando) => {
-  // @TODO: im not sure how below is possible in new framework?
-  // Collect info so we can inject LANDO_INFO
-  //
-  // @TODO: this is not currently the full lando info because a lot of it requires
-  // the app to be on
-  /*
-  app.events.on('pre-init', () => {
-    return app.inspect().then(() => {
-      app.env.LANDO_INFO = JSON.stringify(app.info);
-    });
+  // Add localhost info to our containers if they are up
+  _.forEach(['post-init', 'post-start'], event => {
+    app.events.on(event, () => app.engine.list(app.name)
+    // Return running containers
+    .filter(container => app.engine.isRunning(container.id))
+    // Inspect each and add new URLS
+    .map(container => app.engine.scan(container))
+    .map(data => utils.getUrls(data))
+    .map(data => _.merge(_.find(app.info, {service: data.service}), data)));
   });
-  */
 
   // Refresh all our certs
   app.events.on('post-init', () => {
     const buildServices = _.get(app, 'opts.services', app.services);
     app.events.on('post-start', 9999, () => lando.engine.run(_.map(buildServices, service => ({
-      id: `${app.name}_${service}_1`,
+      id: `${app.project}_${service}_1`,
       cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
       compose: app.compose,
       project: app.project,
@@ -33,6 +32,17 @@ module.exports = (app, lando) => {
       },
     }))));
   });
+
+  // Collect info so we can inject LANDO_INFO
+  //
+  // @TODO: this is not currently the full lando info because a lot of it requires
+  // the app to be on
+  app.events.on('post-init', 10, () => {
+    app.env.LANDO_INFO = JSON.stringify(app.info);
+  });
+
+  // Reset app info on a stop, this helps prevent wrong/duplicate information being reported on a restart
+  app.events.on('post-stop', () => app.info = lando.utils.getInfoDefaults(app));
 
   // Add some logic that extends start until healthchecked containers report as healthy
   app.events.on('post-start', 1, () => lando.engine.list(app.name)
@@ -61,6 +71,10 @@ module.exports = (app, lando) => {
       }
       lando.log.verbose('Healthcheck for %s = %j', app.name, status);
     }));
+
+  // Scan urls
+  app.events.on('post-start', 10, () => lando.scanUrls(_.flatMap(app.info, 'urls'), {max: 16})
+    .then(urls => app.urls = urls));
 
   // REturn defualts
   return {

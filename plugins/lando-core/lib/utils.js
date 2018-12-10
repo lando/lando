@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const chalk = require('yargonaut').chalk();
 const path = require('path');
+const url = require('url');
 
 /*
  * A toggle to either start or restart
@@ -40,6 +41,22 @@ exports.buildConfirm = (message = 'Are you sure?') => ({
  * Helper method to get the host part of a volume
  */
 exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
+
+/*
+ * Takes inspect data and extracts all the exposed ports
+ */
+exports.getUrls = data => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
+  .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '80/tcp') ? 'http' : 'https'}))
+  .filter(exposed => !_.includes(['443', '80'], exposed.ports))
+  .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
+  .filter(ports => ports.HostIp === '0.0.0.0')
+  .map(ports => url.format({
+    protocol: ports.protocol,
+    hostname: 'localhost',
+    port: _.includes(['443', '80'], ports.port) ? ports.HostPort : '',
+  }))
+  .thru(urls => ({service: data.Config.Labels['com.docker.compose.service'], urls}))
+  .value();
 
 /*
  * Helper method to normalize a path so that Lando overrides can be used as though

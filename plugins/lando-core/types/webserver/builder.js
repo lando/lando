@@ -16,10 +16,5 @@ module.exports = {
       }})});
       super(id, options, ...sources);
     };
-    info(options, info) {
-      info = super.info(options, info);
-      info.webroot = options.webroot;
-      return info;
-    }
   },
 };

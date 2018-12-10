@@ -35,7 +35,7 @@ module.exports = (app, lando) => {
   });
 
   // Add in the hostname infos
-  app.events.on('post-info', () => {
+  app.events.on('post-init', 1, () => {
     _.forEach(app.info, data => {
       data.hostnames = _.get(data, 'hostnames', []);
       data.hostnames.push([data.service, app.project, 'internal'].join('.'));

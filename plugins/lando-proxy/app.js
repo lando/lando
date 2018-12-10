@@ -101,20 +101,23 @@ module.exports = (app, lando) => {
         const proxyData = new app.ComposeService('proxy', ...result);
         const proxyFiles = lando.utils.dumpComposeData(proxyData, app._dir);
         app.compose = app.compose.concat(proxyFiles);
-        lando.log.verbose('App %s has proxy compose files %s', app.name, proxyFiles);
+        lando.log.verbose('App %s has proxy compose files %j', app.name, proxyFiles);
       }));
 
     // Add proxy URLS to our app info
-    app.events.on('post-info', () => {
-      // Get last known ports
-      const ports = lando.cache.get(lando.config.proxyCache);
-      // Map to protocol and add portz
-      const urls = _(app.config.proxy)
-        .map((urls, service) => ({service, urls: utils.parse2Info(urls, ports)}))
-        .value();
-      // Concat the URLS
-      _.forEach(app.info, service => {
-        service.urls = _.uniq(service.urls.concat(_.find(urls, {service: service.service}).urls));
+    _.forEach(['post-start', 'post-init'], event => {
+      app.events.on(event, () => {
+        // Get last known ports
+        const ports = lando.cache.get(lando.config.proxyCache);
+        // Map to protocol and add portz
+        const urls = _(app.config.proxy)
+          .map((urls, service) => ({service, urls: utils.parse2Info(urls, ports)}))
+          .value();
+        // Remove any preexisting URLs (we do this because its possible for this event to run more than once)
+        // and for the values to change eg proxy settings change and app is restarted
+        _.forEach(app.info, service => {
+          service.urls = _.uniq(service.urls.concat(_.find(urls, {service: service.service}).urls));
+        });
       });
     });
   }

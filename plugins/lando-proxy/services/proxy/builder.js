@@ -71,7 +71,7 @@ module.exports = {
     ssl: true,
     refreshCerts: true,
   },
-  // @TODO: better use of config above
+  // @TODO: ssl=true here currently exposes two ports into 443, should we separate ssl/addcerts?
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
       const proxy = getProxy(options.proxyDomain, options.proxyCert, options.proxyKey);

@@ -8,7 +8,7 @@ const utils = require('./../lib/utils');
 const bashme = 'if ! type bash > /dev/null; then sh; else bash; fi';
 const task = {
   command: 'ssh',
-  describe: 'SSH into service in the current app directory',
+  describe: 'Drops into a shell on a service, runs commands',
   options: {
     service: {
       describe: 'SSH into this service',

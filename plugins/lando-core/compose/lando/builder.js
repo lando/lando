@@ -142,16 +142,5 @@ module.exports = {
       // Pass it down
       super(id, ...sources);
     };
-
-    /*
-     * @TODO
-     */
-    info({name, type, config = {}, version = 'default'}, info) {
-      info.type = type;
-      info.version = version;
-      info.hostnames.push(name);
-      info.config = config;
-      return info;
-    };
   },
 };
