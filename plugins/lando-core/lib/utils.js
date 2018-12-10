@@ -47,7 +47,7 @@ exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
  */
 exports.getUrls = data => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
   .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '80/tcp') ? 'http' : 'https'}))
-  .filter(exposed => !_.includes(['443', '80'], exposed.ports))
+  .filter(exposed => _.includes(['443', '80'], exposed.port))
   .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
   .filter(ports => ports.HostIp === '0.0.0.0')
   .map(ports => url.format({

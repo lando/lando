@@ -16,17 +16,24 @@ module.exports = {
     legacy: [],
     // Config
     confSrc: __dirname,
+    creds: {
+      database: 'mariadb',
+      password: 'mariadb',
+      user: 'mariadb',
+    },
+    port: '3306',
     defaultFiles: {
       config: path.join(__dirname, 'lando.cnf'),
     },
     remoteFiles: {
-      config: '/opt/bitnami/mariadb/conf/lando.cnf',
+      config: '/opt/bitnami/mariadb/conf/my_custom.cnf',
     },
   },
   parent: '_database',
   builder: (parent, config) => class LandoMariaDb extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+
       // Build the default stuff here
       const mariadb = {
         image: `bitnami/mariadb:${options.version}`,
@@ -34,9 +41,9 @@ module.exports = {
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           // MARIADB_EXTRA_FLAGS for things like coallation?
-          MARIADB_DATABASE: 'database',
-          MARIADB_PASSWORD: 'password',
-          MARIADB_USER: 'mariadb',
+          MARIADB_DATABASE: options.creds.database,
+          MARIADB_PASSWORD: options.creds.password,
+          MARIADB_USER: options.creds.user,
         },
         healthcheck: {
           test: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
@@ -57,15 +64,3 @@ module.exports = {
     };
   },
 };
-
-/*
-    // Handle port forwarding
-    if (config.portforward) {
-      // If true assign a port automatically
-      if (config.portforward === true) {
-        mariadb.ports = ['3306'];
-      } else {
-        mariadb.ports = [config.portforward + ':3306'];
-      }
-    }
-    */

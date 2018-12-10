@@ -25,12 +25,12 @@ services:
     # already started your app
     # See: https://docs.devwithlando.io/tutorials/lando-info.html
     creds:
-      user: mariadb
-      password: mariadb
-      database: mariadb
+      user: pirog
+      password: password
+      database: stuff
 
     # Optionally load in all the mariadb config files in the config directory
     # This is relative to the app root
     # NOTE: these files need to end in .cnf
-    # config:
-    #  confd: config
+    config:
+      config: config/my.cnf
