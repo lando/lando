@@ -23,7 +23,7 @@ module.exports = {
     healthcheck: 'psql -U postgres -c "\\\l"',
     port: '5432',
     defaultFiles: {
-      config: path.join(__dirname, 'lando.conf'),
+      config: path.join(__dirname, 'postgresql.conf'),
     },
     remoteFiles: {
       config: '/opt/bitnami/postgresql/conf/postgresql.conf',

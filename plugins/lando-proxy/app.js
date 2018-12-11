@@ -113,7 +113,7 @@ module.exports = (app, lando) => {
         // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
         _(app.info)
           .filter(service => _.has(app, `config.proxy.${service.service}`))
-          .flatMap(s => s.urls = s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports)))
+          .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports))))
           .value();
       });
     });

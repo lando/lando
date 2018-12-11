@@ -1,11 +1,6 @@
 # dotnet app
 name: dotnet
 
-# Give me http://dotnet.lndo.site and https://dotnet.lndo.site
-proxy:
-  appserver:
-    - dotnet.lndo.site
-
 # Spin up services to run a basic dotnet server
 services:
 

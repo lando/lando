@@ -23,7 +23,7 @@ module.exports = {
     healthcheck: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
     port: '3306',
     defaultFiles: {
-      config: path.join(__dirname, 'lando.cnf'),
+      config: path.join(__dirname, 'my_custom.cnf'),
     },
     remoteFiles: {
       config: '/opt/bitnami/mariadb/conf/my_custom.cnf',
