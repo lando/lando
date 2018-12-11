@@ -13,7 +13,7 @@ services:
   appserver:
 
     # dotnet version 2.0
-    type: dotnet:2.0
+    type: dotnet
 
     # Optionally create certs in /certs that can be used by your application
     # to listen over https. Creates the following certs your app can use
@@ -33,11 +33,5 @@ services:
     # you can leave this blank and the container will boot up and stay on
     #
     command: dotnet run
-
-# Add some nice command routing
-tooling:
-
-  # This will allow you to run things like `lando dotnet publish` without needing
-  # to `lando start` first.
-  dotnet:
-    service: appserver
+  cli:
+    type: dotnet
