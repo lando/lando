@@ -24,7 +24,7 @@ module.exports = {
       // Build the goz
       const go = {
         image: `golang:${options.version}`,
-        ports: (options.command !== 'tail -f /dev/null') ? [80] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? ['80'] : [],
         command: `/bin/sh -c "${options.command}"`,
       };
       // Send it downstream

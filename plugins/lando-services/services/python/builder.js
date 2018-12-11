@@ -45,7 +45,7 @@ module.exports = {
           PIP_USER: 'true',
           PYTHONUSERBASE: '/var/www/.local/bin',
         },
-        ports: (options.command !== 'tail -f /dev/null') ? [80] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? ['80'] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };

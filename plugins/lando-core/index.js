@@ -84,7 +84,7 @@ module.exports = lando => {
       LANDO_DOMAIN: lando.config.domain,
       LANDO_HOST_HOME: lando.config.home,
       LANDO_HOST_OS: lando.config.os.platform,
-      LANDO_HOST_IP: (process.platform !== 'linux') ? lando.node.ip.address() : 'host.docker.internal',
+      LANDO_HOST_IP: (process.platform === 'linux') ? lando.node.ip.address() : 'host.docker.internal',
       LANDO_MOUNT: '/app',
     },
     appLabels: {

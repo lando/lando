@@ -1,0 +1,56 @@
+# elasticsearch example
+name: elasticsearch
+
+# Give me http://elasticsearch.lndo.site
+proxy:
+  appserver:
+    - elasticsearch.lndo.site
+
+# Spin up a basic nodes server with elasticsearch backend
+services:
+
+  # Spin up a elasticsearch container called "search"
+  # NOTE: "search" is arbitrary, you could just as well call this "theboss" or "eljefe"
+  search:
+
+    # Use version 5.4 of elasticsearch
+    type: elasticsearch:5.4
+
+    # Optionally allow access to the cache at localhost:9999
+    # You will need to make sure port 9999 is open on your machine
+    #
+    # You can also set `portforward: true` to have Lando dynamically assign
+    # a port. Unlike specifying an actual port setting this to true will give you
+    # a different port every time you restart your app
+    portforward: 9999
+
+    # Optionally load in a custom config file. This is relative to the app root.
+    #
+    # config: customElasticsearch.yml
+
+    # There are various envvars you can specify to further customize how
+    # elasticsearch works.
+    #
+    # See: https://hub.docker.com/r/itzg/elasticsearch/
+    #
+    # overrides:
+      # services:
+        # environment:
+          # ES_JAVA_OPTS: -Xms16g -Xmx16g
+          # PLUGINS: elasticsearch/marvel/latest
+
+  # Spin up services to run a basic node server
+  appserver:
+    type: node:6.10
+    command: npm start
+    install_dependencies_as_me:
+      - yarn
+
+# Add some nice command routing
+tooling:
+  yarn:
+    service: appserver
+  npm:
+    service: appserver
+  node:
+    service: appserver

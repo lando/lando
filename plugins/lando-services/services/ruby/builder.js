@@ -41,7 +41,7 @@ module.exports = {
         environment: {
           PATH: options.path.join(':'),
         },
-        ports: (options.command !== 'tail -f /dev/null') ? [80] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? ['80'] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };

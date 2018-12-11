@@ -1,84 +1,60 @@
-# LEMP stack example
-name: lemp
+# LEMP recipe example
+name: lemp2
 
-# Give me http://lemp.lndo.site and https://lemp.lndo.site
-proxy:
-  nginx:
-    - lemp.lndo.site
+# Start with the default LEMP recipe
+recipe: lemp
 
-# Spin up services to run a basic LEMP stack
-services:
+# Configure the LEMP recipe
+config:
 
-  # Create a php 7.1 instance served by the latest nginx with https turned on and
-  # served from the www subdirectory
-  appserver:
+  # Optionally specify the php version to use.
+  #
+  # If ommitted this will default to the latest php version. Consult the `php`
+  # service to see what version are available
+  #
+  # NOTE: that this needs to be wrapped in quotes so that it is a string
+  php: '7.2'
 
-    # PHP version .1
-    type: php:7.1
+  # Optionally specify the location of the webroot relative to your approot.
+  #
+  # If ommitted this will be your approot itself.
+  # webroot: www
 
-    # Served by the latest nginx
-    via: nginx
+  # Optionally specify the database type, this can be one of:
+  #
+  #   - `mysql`
+  #   - `mariadb`
+  #   - `postgres`
+  #
+  # If ommitted this will default to the latest mysql. You can additionally provide
+  # a version with `type:version` but you will need to consult the documentation
+  # for the correct DB service to see what versions are available
+  database: mysql
 
-    # Optionally serve php over https
-    ssl: true
+  # Optionally activate xdebug
+  xdebug: true
 
-    # Optionally specify a webroot if it is a subdirectory of the appRoot
-    webroot: www
+  # Optionally mix in your own config files
+  #
+  # If ommitted this will use "sane defaults" for your recipe type
+  conf:
 
-    # Optionally activate xdebug
+    # For more information on setting these files check out the documentation
+    # and examples
     #
-    # If you are having trouble getting xdebug to work please see:
-    # https://docs.devwithlando.io/services/php.html#using-xdebug
-    xdebug: true
-
-    # Optionally customize the configuration for php and its underlying webserver
-    # These paths are both relative to (and must reside within) the app root directory
+    # Docs: https://docs.devwithlando.io/services/php.html
+    # Examples: https://github.com/lando/lando/tree/master/examples
     #
-    # For some examples that use this fairly well please check out
-    # https://github.com/lando/lando/tree/master/examples
-    config:
+    server: config/nginx.conf
+    php: config/php.ini
 
-      # Use a custom nginx config file
-      server: config/nginx/default.conf
-
-      # Use a custom php.ini
-      # This **should** load last which means you should be able to override
-      # any previously set php settings.
-      conf: config/php/php.ini
-
-    # Optionally install the following composer dependencies globally
-    # These follow the normal composer.json form
-    # Note that many composer dependencies should not be installed globally but
-    # on a per-project basis
-    composer:
-      overtrue/phplint: '*'
-
-  # Add in the latest mariadb
-  database:
-    type: mariadb
-    portforward: 3332
-    config:
-      confd: config/mysql
-
-  # Add latest node for cli tools
-  node:
-    type: node:6.10
-
-# Add some nice command routing
-tooling:
-  phplint:
-    service: appserver
-  composer:
-    service: appserver
-    description: Run composer commands
-    cmd: composer --ansi
-  php:
-    service: appserver
-  mysql:
-    user: root
-    service: database
-    description: Drop into a MySQL shell
-  npm:
-    service: node
-  node:
-    service: node
+    # For more information on setting these files check out the documentation
+    # and examples for the relevant services:
+    #
+    # MySQL: https://docs.devwithlando.io/services/mysql.html
+    # MariaDB: https://docs.devwithlando.io/services/mariadb.html
+    # PostGres: https://docs.devwithlando.io/services/postgres.html
+    #
+    # Examples: https://github.com/lando/lando/tree/master/examples
+    #
+    # database: config/mysql

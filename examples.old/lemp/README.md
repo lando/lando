@@ -1,9 +1,9 @@
-PHP Nginx Services Example
-==========================
+LEMP Recipe Example
+===================
 
-This example provides a very basic `LEMP` application using Lando services instead of a recipe.
+This example provides a very basic `lemp` recipe example.
 
-See the `.lando.yml` in this directory for PHP configuration options.
+See the `.lando.yml` in this directory for LEMP configuration options.
 
 Start me up!
 ------------
@@ -11,7 +11,7 @@ Start me up!
 Run the following steps to get up and running with this example.
 
 ```bash
-# Starts up a LEMP stack using lando services
+# Starts up a LEMP stack using lando recipes
 lando start
 ```
 
@@ -43,45 +43,35 @@ Run these commands to make sure things are right as rain.
 
 ```bash
 # Verify that we are being served securely by nginx
-lando ssh appserver -c "curl -Ik https://nginx | grep Server | grep nginx"
+# TODO: The above can be wonky because nginx needs to download openssl on the fly
+# and sometimes this straight up hangs, we need to resolve that and then uncomment
+# lando ssh appserver -c "curl -Ik https://nginx | grep Server | grep nginx"
+true
 
 # Verify the php cli exists and has the right version
-lando php -v | grep 7.1.
+lando php -v | grep 7.2.
 
 # Verify the webroot is set correctly
-lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
+lando ssh appserver -c "env | grep LANDO_WEBROOT=/app"
 
 # Verify we have the xdebug extension
 lando php -m | grep Xdebug
 
 # Verify the databases was setup correctly
-lando ssh database -c "mysql -umariadb -ppassword database -e\"quit\""
-
-# Verify mysql portforward
-docker inspect lemp_database_1 | grep HostPort | grep 3332
-lando info | grep port | grep 3332
+lando ssh database -c "mysql -ulemp -plemp lemp -e\"quit\""
 
 # Verify we have the composer tool
 lando composer --version
 
-# Verify we have the mysql cli and its using mariadb
-lando mysql -V | grep MariaDB
-
-# Verify we have the mysql cli and its the right version
-lando node -v | grep 6.10
-
-# Verify we have the phplint cli
-lando phplint --version
+# Verify we have the mysql cli and its using mysql
+lando mysql -V | grep mysql
 
 # Verify our custom php settings
-lando php -i | grep memory_limit | grep 499M
-
-# Verify the custom db file was used
-lando ssh database -c "mysql -u root -e \'show variables;\' | grep key_buffer_size | grep 4026"
+lando php -i | grep memory_limit | grep 1024M
 ```
 
-Blowup the app
---------------
+Destroy the app
+---------------
 
 Run these commands to ensure we clean things up.
 

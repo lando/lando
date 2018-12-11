@@ -1,21 +1,21 @@
-PHP Apache Services Example
-===========================
+LEMP Recipe Example
+===================
 
-This example provides a very basic `LAMP` application using Lando services instead of a recipe.
+This example provides a very basic `lemp` recipe example.
 
-See the `.lando.yml` in this directory for PHP configuration options.
+See the `.lando.yml` in this directory for LEMP configuration options.
 
-This is the dawning of the age of LAMPquarius
----------------------------------------------
+Start me up!
+------------
 
 Run the following steps to get up and running with this example.
 
 ```bash
-# Starts up a LAMP stack using lando services
+# Starts up a LAMP stack using lando recipes
 lando start
 ```
 
-Helpful commands
+Helpful Commands
 ----------------
 
 Here is a non-exhaustive list of commands that are relevant to this example.
@@ -24,33 +24,35 @@ Here is a non-exhaustive list of commands that are relevant to this example.
 # Get DB connection info
 lando info
 
-# Run LAMP dev tools
+# Run LEMP dev tools
 lando php -v
 lando composer
 lando mysql
+# This should fail
+lando phplint
+
+# Run NODE dev tools
+lando node -v
+lando npm -v
 ```
 
-Sanity checks
--------------
+Verify things are in order
+--------------------------
 
 Run these commands to make sure things are right as rain.
 
 ```bash
 # Verify that we are being served by apache
-lando ssh appserver -c "curl -Ik https://localhost | grep Server | grep Apache"
+lando ssh appserver -c "curl -I localhost | grep Server | grep Apache"
 
 # Verify the php cli exists and has the right version
-lando php -v | grep 5.3.
+lando php -v | grep 5.6.
 
 # Verify the webroot is set correctly
 lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
 
 # Verify we have the xdebug extension
 lando php -m | grep Xdebug
-
-# Verify mysql portforward
-docker inspect lamp_database_1 | grep HostPort | grep 3308
-lando info | grep port | grep 3308
 
 # Verify the databases was setup correctly
 lando ssh database -c "mysql -ulamp -plamp lamp -e\"quit\""
@@ -60,10 +62,16 @@ lando composer --version
 
 # Verify we have the mysql cli
 lando mysql -V
+
+# Verify our custom php settings
+lando php -i | grep memory_limit | grep 513M
+
+# Verify the custom db file was used
+lando ssh database -c "mysql -u root -e \'show variables;\' | grep key_buffer_size | grep 4026"
 ```
 
-Nuke the whole god damn thing
------------------------------
+Blowup the app
+--------------
 
 Run these commands to ensure we clean things up.
 
