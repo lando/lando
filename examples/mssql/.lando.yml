@@ -6,21 +6,8 @@ name: mssql
 #
 # See: https://github.com/Microsoft/mssql-docker/issues/114
 
-# Give me http://mssql.lndo.site and https://mssql.lndo.site
-proxy:
-  html:
-    - mssql.lndo.site
-
 # Set up my services
 services:
-
-  # Set up a basic webserver jsut for this example
-  html:
-    type: nginx
-    webroot: www
-
-  # Spin up a mssql container called "database"
-  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
   database:
 
     # Use mssql (no versions available at this point)
@@ -41,12 +28,5 @@ services:
     #  - lowercase letters
     #  - numbers
     #  - non-alphanumeric symbols
-    # password: he11oTHERE
-
-tooling:
-  sqlcmd:
-    service: database
-    user: root
-  bcp:
-    service: database
-    user: root
+    creds:
+      password: he11oTHERE
