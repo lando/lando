@@ -28,6 +28,9 @@ services:
       # You can also try a completely custom command but YMMV
       command: docker-php-entrypoint apache2-foreground
 
-  # Spin up a DB to go with this
-  database:
-    type: mysql
+      # Probably need this
+      ports:
+        - '80'
+
+    volumes:
+      thing:
