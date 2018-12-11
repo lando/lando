@@ -1,4 +1,0 @@
-systemLog:
-   destination: file
-   path: "/tmp/mongod.log"
-   logAppend: true

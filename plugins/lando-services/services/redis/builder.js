@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 
 // Builder
 module.exports = {
@@ -11,12 +10,11 @@ module.exports = {
     version: '5.0',
     supported: ['5', '5.0', '4', '4.0', '2.8'],
     patchesSupported: true,
-    legacy: [],
     confSrc: __dirname,
     persist: false,
     port: '6379',
     defaultFiles: {
-      config: path.join(__dirname, 'redis.conf'),
+      config: 'redis.conf',
     },
     remoteFiles: {
       config: '/usr/local/etc/redis/redis.conf',
@@ -30,7 +28,7 @@ module.exports = {
         image: `redis:${options.version}`,
         command: 'docker-entrypoint.sh redis-server /usr/local/etc/redis/redis.conf',
         volumes: [
-          `${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
         ],
       };
       // Set persistence to true

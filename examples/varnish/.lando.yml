@@ -1,24 +1,8 @@
 # Varnish recipe example
 name: varnish
 
-# Start with the default LEMP recipe
-recipe: lemp
-
-# Override lemp proxy settings because we want varnish to get hit on requests
-# to port 80 and the edge-ssl to get requests from port 443
-proxy:
-
-  # Empty the proxy settings provided by lemp recipe
-  nginx:
-
-  # Replace with our varnish and ssl termination endpoints
-  edge:
-    - varnish.lndo.site
-
 # Set up my services
 services:
-
-  # Lets set up an edge
   edge:
     type: varnish:4.1
 
@@ -29,7 +13,7 @@ services:
     # your app has by running `lando info`
     #
     backends:
-      - nginx
+      - backend
 
     # Optionally spin up another nginx instance so that you can secure your
     # traffic over ssl
@@ -44,7 +28,8 @@ services:
     # You will not need to import the standard library or manage backends in this
     # file. Those are handled automatically.
     #
-    vcl: custom.vcl
+    config:
+      vcl: config/custom.vcl
 
     # There are various envvars you can specify to further customize how your
     # varnish works.
@@ -53,24 +38,14 @@ services:
     # Note: We set BACKENDS_PROBE_ENABLED to false by default
     #
     # overrides:
-      # services:
-        # environment:
-          # BACKENDS_PROBE_ENABLED: false
-          # BACKENDS_PORT: 8080
-          # DNS_ENABLED: true
-          # BACKENDS_PROBE_INTERVAL: 3s
-          # BACKENDS_PROBE_TIMEOUT: 1s
-          # BACKENDS_PROBE_WINDOW: 3
-          # BACKENDS_PROBE_THRESHOLD: 2
-
-# Add in routes to the varnish cli tools
-tooling:
-  varnishadm:
-    service: edge
-    user: root
-  varnishstat:
-    service: edge
-    user: root
-  varnishlog:
-    service: edge
-    user: root
+      # environment:
+        # BACKENDS_PROBE_ENABLED: false
+        # BACKENDS_PORT: 8080
+        # DNS_ENABLED: true
+        # BACKENDS_PROBE_INTERVAL: 3s
+        # BACKENDS_PROBE_TIMEOUT: 1s
+        # BACKENDS_PROBE_WINDOW: 3
+        # BACKENDS_PROBE_THRESHOLD: 2
+   # Backend for varnish to connect to
+  backend:
+    type: nginx

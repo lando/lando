@@ -2,18 +2,14 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 
 // Builder
 module.exports = {
   name: 'mariadb',
   config: {
-    // Versions
     version: '10.1',
     supported: ['10.2', '10.1'],
     patchesSupported: true,
-    legacy: [],
-    // Config
     confSrc: __dirname,
     creds: {
       database: 'database',
@@ -23,7 +19,7 @@ module.exports = {
     healthcheck: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
     port: '3306',
     defaultFiles: {
-      config: path.join(__dirname, 'my_custom.cnf'),
+      config: 'my_custom.cnf',
     },
     remoteFiles: {
       config: '/opt/bitnami/mariadb/conf/my_custom.cnf',
@@ -44,7 +40,7 @@ module.exports = {
           MARIADB_USER: options.creds.user,
         },
         volumes: [
-          `${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
           `data_${options.name}:/bitnami/mariadb`,
         ],
       };

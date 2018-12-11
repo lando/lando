@@ -7,7 +7,6 @@ const _ = require('lodash');
 module.exports = {
   name: 'python',
   config: {
-    // Versions
     version: '3.7',
     supported: ['3', '3.7', '3.6', '3.5', '2.7'],
     patchesSupported: true,

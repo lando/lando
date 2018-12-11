@@ -1,6 +1,6 @@
 vcl 4.0;
 # For debugging, use the following and inspect the output of `varnishlog`:
-# WORKINGONSOMENIGHTMOVES
+#
 
 sub vcl_recv {
 
@@ -29,11 +29,9 @@ sub vcl_recv {
   }
 
   # Do not cache these paths, note that sometimes query strings are appended.
-  if (req.url ~ "^/install\.php" ||
+  if (req.url ~ "^/install.php" ||
       req.url ~ "^/update\.php" ||
-      req.url ~ "^/cron\.php" ||
-      req.url ~ "^/index\.php")
-      {
+      req.url ~ "^/cron\.php") {
         return (pass);
   }
 

@@ -2,22 +2,18 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 
 // Builder
 module.exports = {
   name: 'apache',
   config: {
-    // Versions
     version: '2.4',
     supported: ['2.4'],
     patchesSupported: true,
-    legacy: [],
-    // Config
     confSrc: __dirname,
     defaultFiles: {
-      server: path.join(__dirname, 'httpd.conf'),
-      vhosts: path.join(__dirname, 'default.conf'),
+      server: 'httpd.conf',
+      vhosts: 'default.conf',
     },
     remoteFiles: {
       server: '/bitnami/apache/conf/httpd.conf',
@@ -42,8 +38,8 @@ module.exports = {
         ports: ['80'],
         user: 'root',
         volumes: [
-          `${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
+          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
         ],
       };
       // Enforce ssl

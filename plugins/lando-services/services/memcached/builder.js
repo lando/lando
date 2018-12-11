@@ -10,7 +10,6 @@ module.exports = {
     version: '1',
     supported: ['1', '1.5.12'],
     patchesSupported: true,
-    legacy: [],
     mem: 64,
     port: '11211',
   },

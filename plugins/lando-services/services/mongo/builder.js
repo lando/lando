@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 
 // Builder
 module.exports = {
@@ -11,14 +10,13 @@ module.exports = {
     version: '4.0',
     supported: ['4.1', '4.0', '3.6'],
     patchesSupported: true,
-    legacy: [],
     confSrc: __dirname,
     creds: {
       database: 'database',
     },
     port: '27017',
     defaultFiles: {
-      config: path.join(__dirname, 'mongodb.conf'),
+      config: 'mongodb.conf',
     },
     remoteFiles: {
       config: '/opt/bitnami/mongodb/conf/mongodb.conf',
@@ -37,7 +35,7 @@ module.exports = {
           MONGODB_DATABASE: options.creds.database,
         },
         volumes: [
-          `${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
           `data_${options.name}:/bitnami`,
         ],
       };

@@ -2,23 +2,19 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 
 // Builder
 module.exports = {
   name: 'nginx',
   config: {
-    // Versions
     version: '1.14',
     supported: ['1.14'],
     patchesSupported: true,
-    legacy: [],
-    // Config
     confSrc: __dirname,
     defaultFiles: {
-      params: path.join(__dirname, 'fastcgi_params'),
-      server: path.join(__dirname, 'nginx.conf.tpl'),
-      vhosts: path.join(__dirname, 'default.conf.tpl'),
+      params: 'fastcgi_params',
+      server: 'nginx.conf.tpl',
+      vhosts: 'default.conf.tpl',
     },
     remoteFiles: {
       params: '/opt/bitnami/nginx/conf/fastcgi_params',
@@ -52,9 +48,9 @@ module.exports = {
         ports: ['80'],
         user: 'root',
         volumes: [
-          `${options.defaultFiles.params}:${options.remoteFiles.params}`,
-          `${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
+          `${options.confDest}/${options.defaultFiles.params}:${options.remoteFiles.params}`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
+          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
         ],
       };
       // Enforce ssl

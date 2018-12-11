@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 
 /*
  * Apache for all
@@ -10,12 +9,9 @@ const path = require('path');
 module.exports = {
   name: 'postgres',
   config: {
-    // Versions
     version: '10.6.0',
     supported: ['11.1', '11.0', '10.6.0', '10', '9.6'],
     patchesSupported: true,
-    legacy: [],
-    // Config
     confSrc: __dirname,
     creds: {
       database: 'database',
@@ -23,7 +19,7 @@ module.exports = {
     healthcheck: 'psql -U postgres -c "\\\l"',
     port: '5432',
     defaultFiles: {
-      config: path.join(__dirname, 'postgresql.conf'),
+      config: 'postgresql.conf',
     },
     remoteFiles: {
       config: '/opt/bitnami/postgresql/conf/postgresql.conf',
@@ -40,7 +36,7 @@ module.exports = {
           POSTGRESQL_DATABASE: options.creds.database,
         },
         volumes: [
-          `${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
           `data_${options.name}:/bitnami`,
         ],
       };
