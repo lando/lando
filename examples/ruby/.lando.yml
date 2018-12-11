@@ -1,10 +1,6 @@
 # Ruby server
 name: ruby
 
-# Give me http://ruby.lndo.site and https://ruby.lndo.site
-proxy:
-  appserver:
-    - ruby.lndo.site
 
 # Spin up services to run a basic ruby server
 services:
@@ -12,12 +8,8 @@ services:
   # Create a ruby instance
   appserver:
 
-    # Ruby version 2.4
-    type: ruby:2.4
-
-    # Install travis gem
-    install_dependencies_as_me:
-      - gem install travis
+    # Ruby
+    type: ruby
 
     # Optionally create certs in /certs that can be used by your application
     # to listen over https. Creates the following certs your app can use
@@ -41,13 +33,5 @@ services:
     #
     command: ruby /app/server.rb
 
-# Add some nice command routing
-tooling:
-  gem:
-    service: appserver
-  ruby:
-    service: appserver
-  bundler:
-    service: appserver
-  travis:
-    service: appserver
+  cli:
+    type: ruby
