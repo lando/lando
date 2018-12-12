@@ -19,6 +19,7 @@ module.exports = {
       server: '/bitnami/apache/conf/httpd.conf',
       vhosts: '/bitnami/apache/conf/bitnami/bitnami.conf',
     },
+    ssl: false,
     webroot: '.',
   },
   parent: '_webserver',
@@ -42,9 +43,6 @@ module.exports = {
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
         ],
       };
-      // Enforce ssl
-      // TODO? im not sure why we wouldnt want to at this point?
-      options.ssl = true;
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, apache)});
     };

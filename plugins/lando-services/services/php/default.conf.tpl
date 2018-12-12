@@ -13,10 +13,8 @@ server {
     ssl_ciphers  HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers  on;
 
-    location / {
-        root   "{{LANDO_WEBROOT}}";
-        index index.php index.html index.htm;
-    }
+    root "{{LANDO_WEBROOT}}";
+    index index.php index.html index.htm;
 
     location ~ \.php$ {
         fastcgi_pass fpm:9000;

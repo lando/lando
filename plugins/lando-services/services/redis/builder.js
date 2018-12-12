@@ -32,14 +32,9 @@ module.exports = {
         ],
       };
       // Set persistence to true
-      if (options.persist) {
-        redis.command = `${redis.command} --appendonly yes`;
-      }
+      if (options.persist) redis.command = `${redis.command} --appendonly yes`;
       // Send it downstream
-      super(id, options, {
-        services: _.set({}, options.name, redis),
-        volumes: _.set({}, `data_${options.name}`, {}),
-      });
+      super(id, options, {services: _.set({}, options.name, redis)});
     };
   },
 };

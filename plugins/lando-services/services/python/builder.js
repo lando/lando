@@ -26,8 +26,6 @@ module.exports = {
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      'data:/var/www/.cache/pip',
-      'data:/var/www/.local/bin',
     ],
   },
   parent: '_appserver',
@@ -37,6 +35,11 @@ module.exports = {
       // Make sure our command is an array
       if (!_.isArray(options.command)) options.command = [options.command];
       options.command = options.command.join(' && ');
+      // Add our volumes
+      volumes.push([
+        `data_${options.name}:/var/www/.cache/pip`,
+        `data_${options.name}:/var/www/.local/bin`,
+      ]);
       // Build the nodez
       const python = {
         image: `python:${options.version}`,
@@ -50,10 +53,7 @@ module.exports = {
         command: `/bin/sh -c "${options.command}"`,
       };
       // Send it downstream
-      super(id, options, {
-        services: _.set({}, options.name, python),
-        volumes: _.set({}, 'data', {}),
-      });
+      super(id, options, {services: _.set({}, options.name, python)});
     };
   },
 };

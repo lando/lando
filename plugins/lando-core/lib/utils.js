@@ -74,6 +74,32 @@ exports.normalizePath = (local, base, excludes = []) => {
 };
 
 /*
+ * Helper to normalize overrides
+ */
+exports.normalizeOverrides = (overrides, volumes = []) => {
+  // Normalize any build paths
+  if (_.has(overrides, 'build')) {
+    overrides.build = exports.normalizePath(overrides.build, root);
+  }
+  // Normalize any volumes
+  if (_.has(overrides, 'volumes')) {
+    overrides.volumes = _.map(overrides.volumes, volume => {
+      if (!_.includes(volume, ':')) {
+        return volume;
+      } else {
+        const local = exports.getHostPath(volume);
+        const remote = volume.split(':')[1];
+        // @TODO: i dont think below does anything?
+        const excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
+        const host = exports.normalizePath(local, root, excludes);
+        return [host, remote].join(':');
+      }
+    });
+  }
+  return overrides;
+};
+
+/*
  * Returns a CLI table with app start metadata info
  */
 exports.startTable = app => {
@@ -104,3 +130,9 @@ exports.startTable = app => {
   // Return data
   return data;
 };
+
+/*
+ * Helper to strip the patch version
+ * @TODO: lib for u test?
+ */
+exports.stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');

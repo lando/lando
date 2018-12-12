@@ -11,6 +11,21 @@ const varnishCmd = [
   '/usr/local/bin/chaperone --user root --force --debug"',
 ].join(' ');
 
+// Helper to get varnsh ssl nginx
+const varnishSsl = options => ({
+  command: '/entrypoint.sh /run.sh',
+  image: 'bitnami/nginx:1.14.2',
+  depends_on: [options.name],
+  environment: {
+    NGINX_DAEMON_USER: 'root',
+    NGINX_DAEMON_GROUP: 'root',
+  },
+  user: 'root',
+  volumes: [
+    `${options.confDest}/${options.defaultFiles.ssl}:/opt/bitnami/nginx/conf/vhosts/varnish.conf`,
+  ],
+});
+
 // Builder
 module.exports = {
   name: 'varnish',
@@ -26,7 +41,6 @@ module.exports = {
       vcl: '/etc/varnish/conf.d/lando.vcl',
     },
     sources: [],
-    ssl: false,
   },
   parent: '_lando',
   builder: (parent, config) => class LandoVarnish extends parent {
@@ -51,25 +65,13 @@ module.exports = {
       options.sources.push({services: _.set({}, options.name, varnish)});
       // Spin up an nginx bomb as well
       if (options.ssl) {
-        const nginx = {
-          command: '/entrypoint.sh /run.sh',
-          image: 'bitnami/nginx:1.14.2',
-          depends_on: [options.name],
-          environment: {
-            NGINX_DAEMON_USER: 'root',
-            NGINX_DAEMON_GROUP: 'root',
-          },
-          user: 'root',
-          volumes: [
-            `${options.confDest}/${options.defaultFiles.ssl}:/opt/bitnami/nginx/conf/vhosts/varnish.conf`,
-          ],
-        };
         // Sort of copy our options
         const sslOpts = _.cloneDeep(options);
         sslOpts.name = `${options.name}ssl`;
         // Set another lando service we can pass down the stream
         const LandoService = factory.get('_lando');
-        options.sources.push(new LandoService(sslOpts.name, sslOpts, {services: _.set({}, sslOpts.name, nginx)}).data);
+        const nginx = {services: _.set({}, sslOpts.name, varnishSsl(options))};
+        options.sources.push(new LandoService(sslOpts.name, sslOpts, nginx).data);
       }
       // Set SSL false for downstream because we've already handled it above
       options.ssl = false;

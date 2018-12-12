@@ -41,10 +41,7 @@ module.exports = {
         ],
       };
       // Send it downstream
-      super(id, options, {
-        services: _.set({}, options.name, postgres),
-        volumes: _.set({}, `data_${options.name}`, {}),
-      });
+      super(id, options, {services: _.set({}, options.name, postgres)});
     };
   },
 };

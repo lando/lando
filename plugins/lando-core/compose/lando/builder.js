@@ -10,12 +10,6 @@ const moveConfig = require('./../../../../lib/utils').moveConfig;
 const utils = require('./../../lib/utils');
 
 /*
- * Helper to strip the patch version
- * @TODO: lib for u test?
- */
-const stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
-
-/*
  * The lowest level lando service, this is where a lot of the deep magic lives
  * @TODO
  */
@@ -37,6 +31,7 @@ module.exports = {
         home = '',
         legacy = [],
         patchesSupported = false,
+        ports = [],
         project = '',
         overrides = {},
         refreshCerts = false,
@@ -54,7 +49,7 @@ module.exports = {
       // If this version is not supported throw an error
       // @TODO: get this someplace else for unit tezting
       if (!_.includes(supported, version)) {
-        if (!patchesSupported || !_.includes(supported, stripPatch(version))) {
+        if (!patchesSupported || !_.includes(supported, utils.stripPatch(version))) {
           throw Error(`${type} version ${version} is not supported`);
         }
       }
@@ -103,8 +98,6 @@ module.exports = {
         }
       });
 
-      // Handle ports
-      const ports = [];
       // Handle ssl
       if (ssl) {
         volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
@@ -122,34 +115,13 @@ module.exports = {
       };
 
       // Add stuff into our primary service
-      sources.push({services: _.set({}, name, {
-        entrypoint: '/lando-entrypoint.sh',
-        environment,
-        ports,
-        volumes,
-      })});
+      sources.push({
+        services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, ports, volumes}),
+        volumes: _.set({}, `data_${name}`, {}),
+      });
 
-      // Process overrides
-      // @TODO: how do we handle "hidden services eg nginx for php-fpm"?
-      // Map any build or volume keys to the correct path
-      if (_.has(overrides, 'build')) {
-        overrides.build = utils.normalizePath(overrides.build, root);
-      }
-      if (_.has(overrides, 'volumes')) {
-        overrides.volumes = _.map(overrides.volumes, volume => {
-          if (!_.includes(volume, ':')) {
-            return volume;
-          } else {
-            const local = utils.getHostPath(volume);
-            const remote = volume.split(':')[1];
-            // @TODO: i dont think below does anything?
-            const excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
-            const host = utils.normalizePath(local, root, excludes);
-            return [host, remote].join(':');
-          }
-        });
-      }
-      sources.push({services: _.set({}, name, overrides)});
+      // Add our overrides at the end
+      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});
 
       // Pass it down
       super(id, ...sources);

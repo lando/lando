@@ -3,6 +3,17 @@
 // Modules
 const _ = require('lodash');
 
+// Helper to builder nginx command
+const nginxCommand = vhost => [
+  '/bin/bash -c',
+  '"mkdir -p /opt/bitnami/nginx/conf/vhosts',
+  '&&',
+  'render-template',
+  `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
+  '&&',
+  '/entrypoint.sh /run.sh"',
+].join(' ');
+
 // Builder
 module.exports = {
   name: 'nginx',
@@ -21,6 +32,7 @@ module.exports = {
       server: '/opt/bitnami/extra/nginx/templates/nginx.conf.tpl',
       vhosts: '/opt/bitnami/extra/nginx/templates/default.conf.tpl',
     },
+    ssl: false,
     webroot: '.',
   },
   parent: '_webserver',
@@ -30,15 +42,7 @@ module.exports = {
       // Build the default stuff here
       const nginx = {
         image: `bitnami/nginx:${options.version}`,
-        command: [
-          '/bin/bash -c',
-          '"mkdir -p /opt/bitnami/nginx/conf/vhosts',
-          '&&',
-          'render-template',
-          `\"${options.remoteFiles.vhosts}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
-          '&&',
-          '/entrypoint.sh /run.sh"',
-        ].join(' '),
+        command: nginxCommand(options.remoteFiles.vhosts),
         environment: {
           NGINX_HTTP_PORT_NUMBER: '80',
           // @TODO: switching this to non-root seems problematic
@@ -53,9 +57,6 @@ module.exports = {
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
         ],
       };
-      // Enforce ssl
-      // TODO? im not sure why we wouldnt want to at this point?
-      options.ssl = true;
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, nginx)});
     };

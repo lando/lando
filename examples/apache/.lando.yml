@@ -18,6 +18,9 @@ services:
     # Optionally specify a webroot if it is a subdirectory of the appRoot
     webroot: web
 
+    # Turn on SSL
+    ssl: true
+
     # Optionally use a custom apache conf file
     # This should live in your app root and is relative to it
     config:

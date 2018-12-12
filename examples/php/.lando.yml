@@ -66,14 +66,14 @@ services:
     #
     # If you are having trouble getting xdebug to work please see:
     # https://docs.devwithlando.io/services/php.html#using-xdebug
-    xdebug: true
+    #xdebug: true
 
     # Optionally install the following composer dependencies globally
     # These follow the normal composer.json form
     # Note that many composer dependencies should not be installed globally but
     # on a per-project basis
-    composer:
-      drush/drush: "~8"
+    #composer:
+    #  drush/drush: "~8"
 
   cli:
 

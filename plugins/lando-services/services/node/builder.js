@@ -2,20 +2,12 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./../../lib/utils');
 
 /*
  * Helper to build a package string
  */
-const getPackage = (pkg, version = 'latest') => `${pkg}@${version}`;
-
-/*
- * Helper to get global deps
- * @TODO: this looks pretty testable? should services have libs?
- */
-const getGlobalCommands = deps => _(deps)
-  .map((version, pkg) => ['npm', 'install', '-g', getPackage(pkg, version)])
-  .map(command => command.join(' '))
-  .value();
+const pkger = (pkg, version = 'latest') => `${pkg}@${version}`;
 
 // Builder
 module.exports = {
@@ -63,16 +55,12 @@ module.exports = {
 
       // Add our npm things to run step
       if (!_.isEmpty(options.globals)) {
-        const commands = getGlobalCommands(options.globals);
-        const current = _.get(options._app, `config.services.${options.name}.build_internal`, []);
-        _.set(options._app, `config.services.${options.name}.build_internal`, _.flatten([commands, current]));
+        const commands = utils.getInstallCommands(options.globals, pkger, ['npm', 'install', '-g']);
+        utils.addBuildStep(commands, options._app, options.name);
       }
 
       // Send it downstream
-      super(id, options, {
-        services: _.set({}, options.name, node),
-        volumes: _.set({}, 'data', {}),
-      });
+      super(id, options, {services: _.set({}, options.name, node)});
     };
   },
 };

@@ -15,6 +15,9 @@ services:
     # Use nginx version
     type: nginx
 
+    # Turn on SSL
+    ssl: true
+
     # Optionally specify a webroot if your index.html is in a subdirectory
     webroot: www
 

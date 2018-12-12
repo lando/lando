@@ -28,10 +28,7 @@ module.exports = {
         command: `/bin/sh -c "${options.command}"`,
       };
       // Send it downstream
-      super(id, options, {
-        services: _.set({}, options.name, go),
-        volumes: _.set({}, 'data', {}),
-      });
+      super(id, options, {services: _.set({}, options.name, go)});
     };
   },
 };
