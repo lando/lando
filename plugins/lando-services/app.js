@@ -49,7 +49,6 @@ module.exports = (app, lando) => {
       }
       // Log da things
       lando.log.verbose('Building %s %s named %s', service.type, service.version, service.name);
-      lando.log.debug('Building %s with config %j', service.name, service);
       // Build da things
       // @NOTE: this also gathers app.info and build steps
       const Service = lando.factory.get(service.type);

@@ -10,9 +10,8 @@ services:
       - node ./scripts/docs.js && yarn gitbook install
     command: yarn gitbook serve
     overrides:
-      services:
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
 tooling:
   npm:
     service: docs

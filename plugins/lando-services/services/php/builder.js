@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const path = require('path');
 const semver = require('semver');
 
 /*
@@ -17,6 +18,36 @@ const getComposerCommands = deps => _(deps)
   .map((version, pkg) => ['composer', 'global', 'require', getPackage(pkg, version)])
   .map(command => command.join(' '))
   .value();
+
+/*
+ * Helper to parse php config
+ */
+const parseConfig = options => {
+  // Apache
+  if (options.via === 'apache') {
+    options.volumes.push(`${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`);
+    if (options.version === '5.3') {
+      options.remoteFiles._php = '/usr/local/lib/conf.d/xxx-lando-default.ini';
+      options.remoteFiles.php = '/usr/local/lib/conf.d/zzz-lando-my-custom.ini';
+      options.environment.APACHE_LOG_DIR = '/var/log';
+    }
+  // nginx
+  } else if (options.via === 'nginx') {
+    options.command = (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'];
+    options.image = 'fpm';
+    options.remoteFiles.vhosts = '/opt/bitnami/extra/nginx/templates/default.conf.tpl';
+    options.defaultFiles.vhosts = 'default.conf.tpl';
+    if (process.platform === 'win32') {
+      options.volumes.push(`${options.confDest}/zz-lando.conf:/usr/local/etc/php-fpm.d/zz-lando.conf`);
+    }
+    options.remoteFiles.pool = '/usr/local/etc/php-fpm.d/zz-lando.conf';
+  // cli
+  } else if (options.via === 'cli') {
+    options.command = ['tail -f /dev/null'];
+  }
+  return options;
+};
+
 
 // Builder
 module.exports = {
@@ -51,6 +82,7 @@ module.exports = {
       vhosts: '/etc/apache2/sites-enabled/000-default.conf',
       php: '/usr/local/etc/php/conf.d/zzz-lando-my-custom.ini',
     },
+    sources: [],
     ssl: false,
     via: 'apache',
     volumes: [
@@ -62,29 +94,7 @@ module.exports = {
   parent: '_appserver',
   builder: (parent, config) => class LandoPhp extends parent {
     constructor(id, options = {}, factory) {
-      options = _.merge({}, config, options);
-      // Apache
-      if (options.via === 'apache') {
-        options.volumes.push(`${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`);
-        if (options.version === '5.3') {
-          options.remoteFiles._php = '/usr/local/lib/conf.d/xxx-lando-default.ini';
-          options.remoteFiles.php = '/usr/local/lib/conf.d/zzz-lando-my-custom.ini';
-          options.environment.APACHE_LOG_DIR = '/var/log';
-        }
-      // nginx
-      } else if (config.via === 'nginx') {
-        options.command = (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'];
-        options.image = 'fpm';
-        options.remoteFiles.vhosts = '/opt/bitnami/extra/nginx/templates/default.conf.tpl';
-        options.defaultFiles.vhosts = 'default.conf.tpl';
-        if (process.platform === 'win32') {
-          options.volumes.push(`${options.confDest}/zz-lando.conf:/usr/local/etc/php-fpm.d/zz-lando.conf`);
-        }
-        options.remoteFiles.pool = '/usr/local/etc/php-fpm.d/zz-lando.conf';
-      // cli
-      } else if (config.via === 'cli') {
-        options.command = ['tail -f /dev/null'];
-      }
+      options = parseConfig(_.merge({}, config, options));
 
       // Mount our default php config
       options.volumes.push(`${options.confDest}/${options.defaultFiles._php}:${options.remoteFiles._php}`);
@@ -125,53 +135,29 @@ module.exports = {
         );
       }
 
-      /*
-      const nginx = config => {
-        // Add a version to the type if applicable
-        const type = ['nginx', config.via.split(':')[1]].join(':');
-
-        // Handle our nginx config
-        const defaultConfFile = (config.ssl) ? 'default-ssl.conf' : 'default.conf';
-        const configFile = ['php', defaultConfFile];
-        const mount = buildVolume(configFile, config.serverConf, scd);
-        const nginxConfigDefaults = {
-          server: _.dropRight(mount.split(':')).join(':'),
+      if (options.via === 'nginx') {
+        const nginxOpts = _.cloneDeep(options);
+        nginxOpts.name = `${options.name}nginx`;
+        nginxOpts.version = '1.14';
+        nginxOpts.supported = ['1.14'];
+        nginxOpts.confDest = path.resolve(options.confDest, '..', 'nginx');
+        delete nginxOpts.config;
+        nginxOpts.config = {
+          vhosts: `${options.confDest}/${nginxOpts.defaultFiles.vhosts}`,
         };
+        const LandoNginx = factory.get('nginx');
+        const nginx = new LandoNginx(nginxOpts.name, nginxOpts);
+        nginx.data.push({
+          services: _.set({}, nginxOpts.name, {'depends_on': [options.name]}),
+        });
+        options.sources.push(nginx.data);
+      }
 
-        // Clone the config so we can separate concerns
-        // This is mostly done so we can remove undesireable overrides like
-        // resetting the service image
-        const appConfig = _.cloneDeep(config);
-
-        // Don't allow us to override the image/build here
-        if (_.has(appConfig, 'overrides.services.image')) {
-          delete appConfig.overrides.services.image;
-        }
-        if (_.has(appConfig, 'overrides.services.build')) {
-          delete appConfig.overrides.services.build;
-        }
-
-        // Set the nginx config
-        appConfig.config = _.merge(nginxConfigDefaults, appConfig.config);
-
-        // Generate a config object to build the service with
-        const name = appConfig.name;
-        const nginx = lando.services.build(name, type, appConfig).services[name];
-
-        // Add a depends on
-        _.set(nginx, 'depends_on', [name]);
-
-        // Return the object
-        return nginx;
-      };
-
-      */
-
-      // Send it downstream
-      super(id, options, {
+      options.sources.push({
         services: _.set({}, options.name, php),
         volumes: _.set({}, 'data', {}),
       });
+      super(id, options, ..._.flatten(options.sources));
     };
   },
 };

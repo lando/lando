@@ -66,7 +66,7 @@ module.exports = {
         };
         // Sort of copy our options
         const sslOpts = _.cloneDeep(options);
-        sslOpts.name = `${options.name}_ssl`;
+        sslOpts.name = `${options.name}ssl`;
         // Set another lando service we can pass down the stream
         const LandoService = factory.get('_lando');
         options.sources.push(new LandoService(sslOpts.name, sslOpts, {services: _.set({}, sslOpts.name, nginx)}).data);

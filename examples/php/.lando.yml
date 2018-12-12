@@ -1,6 +1,37 @@
 name: php
 services:
 
+  nginx:
+
+    # PHP version .1
+    type: php
+
+    # Served by the latest nginx
+    via: nginx
+
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    webroot: .
+
+    # Optionally activate xdebug
+    #
+    # If you are having trouble getting xdebug to work please see:
+    # https://docs.devwithlando.io/services/php.html#using-xdebug
+    xdebug: true
+
+    # Optionally customize the configuration for php and its underlying webserver
+    # These paths are both relative to (and must reside within) the app root directory
+    #
+    # For some examples that use this fairly well please check out
+    # https://github.com/lando/lando/tree/master/examples
+    # config:
+      # Use a custom apache config file
+      # vhosts: config/apache.conf
+
+      # Use a custom php.ini
+      # This **should** load last which means you should be able to override
+      # any previously set php settings.
+      # php: config/php.ini
+
   # Create a php 5.3 instance served by the latest apache with https turned on
   apache:
 
@@ -43,44 +74,7 @@ services:
     # on a per-project basis
     composer:
       drush/drush: "~8"
-  # nginx:
 
-    # PHP version .1
-    # type: php
-
-    # Served by the latest nginx
-    # via: nginx
-
-    # Optionally specify a webroot if it is a subdirectory of the appRoot
-    # webroot: www
-
-    # Optionally activate xdebug
-    #
-    # If you are having trouble getting xdebug to work please see:
-    # https://docs.devwithlando.io/services/php.html#using-xdebug
-    # xdebug: true
-
-    # Optionally customize the configuration for php and its underlying webserver
-    # These paths are both relative to (and must reside within) the app root directory
-    #
-    # For some examples that use this fairly well please check out
-    # https://github.com/lando/lando/tree/master/examples
-    # config:
-
-      # Use a custom nginx config file
-      # server: config/nginx/default.conf
-
-      # Use a custom php.ini
-      # This **should** load last which means you should be able to override
-      # any previously set php settings.
-      # conf: config/php/php.ini
-
-    # Optionally install the following composer dependencies globally
-    # These follow the normal composer.json form
-    # Note that many composer dependencies should not be installed globally but
-    # on a per-project basis
-    # composer:
-      # overtrue/phplint: '*'
   cli:
 
     # PHP version 7.1
@@ -94,7 +88,7 @@ services:
     # Note that many composer dependencies should not be installed globally but
     # on a per-project basis
     # composer:
-    #  overtrue/phplint: '*'
+    #   overtrue/phplint: '*'
 
     # Optionally activate xdebug
     #
