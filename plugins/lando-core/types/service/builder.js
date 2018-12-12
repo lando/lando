@@ -7,9 +7,9 @@ const _ = require('lodash');
  * The lowest level lando service
  */
 module.exports = {
-  name: '_database',
+  name: '_service',
   parent: '_lando',
-  builder: parent => class LandoDatabase extends parent {
+  builder: parent => class LandoService extends parent {
     constructor(id, options = {}, ...sources) {
       // @TODO: add in any envvars for this?
       // Add in relevant portforward data

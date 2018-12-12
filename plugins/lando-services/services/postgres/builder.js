@@ -25,7 +25,7 @@ module.exports = {
       config: '/opt/bitnami/postgresql/conf/postgresql.conf',
     },
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoPostgres extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);

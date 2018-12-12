@@ -13,7 +13,7 @@ module.exports = {
     mem: 64,
     port: '11211',
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoMemcached extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);

@@ -36,11 +36,7 @@ const pkger = (pkg, version) => (!_.isEmpty(version)) ? `${pkg}:${version}` : pk
  */
 const parseApache = options => {
   options.volumes.push(`${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`);
-  if (options.version === '5.3') {
-    options.remoteFiles._php = '/usr/local/lib/conf.d/xxx-lando-default.ini';
-    options.remoteFiles.php = '/usr/local/lib/conf.d/zzz-lando-my-custom.ini';
-    options.environment.APACHE_LOG_DIR = '/var/log';
-  }
+  if (options.version === '5.3') options.environment.APACHE_LOG_DIR = '/var/log';
   return options;
 };
 

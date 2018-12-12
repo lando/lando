@@ -25,7 +25,7 @@ module.exports = {
       config: '/opt/bitnami/mariadb/conf/my_custom.cnf',
     },
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoMariaDb extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);

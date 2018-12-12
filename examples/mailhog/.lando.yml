@@ -1,14 +1,6 @@
 # The name of the app
 name: mailhog
 
-# Start with the default LEMP recipe
-recipe: lemp
-
-# Additional mailhog proxy settings so we get a nice URL for the mailhog ui
-proxy:
-  mailhog:
-    - mail.lemp.lndo.site
-
 # Mailhog things
 services:
 
@@ -23,7 +15,7 @@ services:
     # You can run `lando info` to get a list of services that are available
     # Mailhog expects that these services will be php services
     hogfrom:
-      - appserver
+      - php
 
     # Optionally allow access to the smtp service at localhost:1026
     # You will need to make sure port 1026 is open on your machine
@@ -32,13 +24,7 @@ services:
     # an open port. Unlike specifying an actual port setting this to true will give you
     # a different port every time you restart your app
     portforward: 1026
-
-# Access the mailhog send cli so we can easily tests things
-tooling:
-  sendmail:
-    service: appserver
-    cmd: /usr/local/bin/mhsendmail
-  alert:
-    service: appserver
-    cmd: php /app/mail.php
-    description: Tell Leia something important
+  # Add a php to help with this example
+  php:
+    type: php
+    via: apache

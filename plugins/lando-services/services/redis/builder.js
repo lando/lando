@@ -20,7 +20,7 @@ module.exports = {
       config: '/usr/local/etc/redis/redis.conf',
     },
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoRedis extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);

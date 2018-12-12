@@ -3,12 +3,6 @@ name: pma
 
 # Add in phpmyadmin
 services:
-  # Add in some databases to help with this example
-  database:
-    type: mariadb
-  database2:
-    type: mariadb
-
   # Add a phpmyadmin db frontend
   pma:
 
@@ -48,3 +42,8 @@ services:
         # PMA_USER: define username to use for config authentication method
         # PMA_PASSWORD: define password to use for config authentication method
         # PMA_ABSOLUTE_URI: define user-facing URI
+  # Add in some databases to help with this example
+  database:
+    type: mariadb
+  database2:
+    type: mariadb

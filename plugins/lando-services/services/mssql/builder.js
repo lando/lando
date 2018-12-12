@@ -23,7 +23,7 @@ module.exports = {
     ],
     port: '1433',
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoMsSql extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);

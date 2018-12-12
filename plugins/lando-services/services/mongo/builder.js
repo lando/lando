@@ -22,7 +22,7 @@ module.exports = {
       config: '/opt/bitnami/mongodb/conf/mongodb.conf',
     },
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoMongoDb extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);

@@ -15,8 +15,8 @@ module.exports = {
       config: '/etc/phpmyadmin/config.user.inc.php',
     },
   },
-  parent: '_database',
-  builder: (parent, config) => class LandoMySql extends parent {
+  parent: '_service',
+  builder: (parent, config) => class LandoPma extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       // Arrayify the hosts if needed

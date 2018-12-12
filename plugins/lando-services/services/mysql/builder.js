@@ -25,7 +25,7 @@ module.exports = {
       config: '/opt/bitnami/mysql/conf/my_custom.cnf',
     },
   },
-  parent: '_database',
+  parent: '_service',
   builder: (parent, config) => class LandoMySql extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
