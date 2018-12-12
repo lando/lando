@@ -16,7 +16,7 @@ const nginxConfig = options => ({
   },
   confDest: path.resolve(options.confDest, '..', 'nginx'),
   home: options.home,
-  name: `${options.name}nginx`,
+  name: `${options.name}_nginx`,
   project: options.project,
   root: options.root,
   ssl: options.nginxSsl,
@@ -59,7 +59,7 @@ const parseNginx = options => {
   options.command = (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'];
   options.image = 'fpm';
   options.remoteFiles.vhosts = '/opt/bitnami/extra/nginx/templates/default.conf.tpl';
-  options.defaultFiles.vhosts = 'default.conf.tpl';
+  options.defaultFiles.vhosts = (options.ssl) ? 'default-ssl.conf.tpl' : 'default.conf.tpl';
   options.nginxSsl = options.ssl;
   options.ssl = false;
   if (process.platform === 'win32') {

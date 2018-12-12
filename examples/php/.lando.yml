@@ -1,39 +1,8 @@
 name: php
 services:
 
-  nginx:
-
-    # PHP version .1
-    type: php
-
-    # Served by the latest nginx
-    via: nginx
-
-    # Optionally specify a webroot if it is a subdirectory of the appRoot
-    webroot: .
-
-    # Optionally activate xdebug
-    #
-    # If you are having trouble getting xdebug to work please see:
-    # https://docs.devwithlando.io/services/php.html#using-xdebug
-    xdebug: true
-
-    # Optionally customize the configuration for php and its underlying webserver
-    # These paths are both relative to (and must reside within) the app root directory
-    #
-    # For some examples that use this fairly well please check out
-    # https://github.com/lando/lando/tree/master/examples
-    # config:
-      # Use a custom apache config file
-      # vhosts: config/apache.conf
-
-      # Use a custom php.ini
-      # This **should** load last which means you should be able to override
-      # any previously set php settings.
-      # php: config/php.ini
-
   # Create a php 5.3 instance served by the latest apache with https turned on
-  apache:
+  appserver1:
 
     # PHP version 5.3
     type: php
@@ -47,6 +16,9 @@ services:
 
     # Optionally specify a webroot if it is a subdirectory of the appRoot
     webroot: web
+
+    # Use ssl
+    ssl: true
 
     # Optionally customize the configuration for php and its underlying webserver
     # These paths are both relative to (and must reside within) the app root directory
@@ -74,6 +46,40 @@ services:
     # on a per-project basis
     #composer:
     #  drush/drush: "~8"
+
+  appserver2:
+
+    # PHP version .1
+    type: php
+
+    # Served by the latest nginx
+    via: nginx
+
+    # Optionally specify a webroot if it is a subdirectory of the appRoot
+    webroot: .
+
+    # Optionally activate xdebug
+    #
+    # If you are having trouble getting xdebug to work please see:
+    # https://docs.devwithlando.io/services/php.html#using-xdebug
+    xdebug: true
+
+    # Use ssl
+    ssl: true
+
+    # Optionally customize the configuration for php and its underlying webserver
+    # These paths are both relative to (and must reside within) the app root directory
+    #
+    # For some examples that use this fairly well please check out
+    # https://github.com/lando/lando/tree/master/examples
+    # config:
+      # Use a custom apache config file
+      # vhosts: config/apache.conf
+
+      # Use a custom php.ini
+      # This **should** load last which means you should be able to override
+      # any previously set php settings.
+      # php: config/php.ini
 
   cli:
 

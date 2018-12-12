@@ -1,0 +1,50 @@
+# PhpMyAdmin example
+name: pma
+
+# Add in phpmyadmin
+services:
+  # Add in some databases to help with this example
+  database:
+    type: mariadb
+  database2:
+    type: mariadb
+
+  # Add a phpmyadmin db frontend
+  pma:
+
+    # Use the latest version of phpmyadmin
+    type: phpmyadmin
+
+    # The databases you want to look at, this will default to a service called
+    # "database"
+    #
+    # You might want to run `lando info` on your app to see what databases you
+    # have available
+    hosts:
+      - database
+      - database2
+
+    # Optionally load in a custom config file. This is relative to the app root
+    #
+    # You will not need to import the standard library or manage backends in this
+    # file. Those are handled automatically.
+    #
+    # config:
+    #   config: config.user.inc.php
+
+    # There are various envvars you can specify to further customize how your
+    # pma works.
+    #
+    # See: https://hub.docker.com/r/phpmyadmin/phpmyadmin/
+    #
+    # overrides:
+      # environment:
+        # PMA_ARBITRARY: when set to 1 connection to the arbitrary server will be allowed
+        # PMA_HOST: define address/host name of the MySQL server
+        # PMA_VERBOSE: define verbose name of the MySQL server
+        # PMA_PORT: define port of the MySQL server
+        # PMA_HOSTS: define comma separated list of address/host names of the MySQL servers
+        # PMA_VERBOSES: define comma separated list of verbose names of the MySQL servers
+        # PMA_USER: define username to use for config authentication method
+        # PMA_PASSWORD: define password to use for config authentication method
+        # PMA_ABSOLUTE_URI: define user-facing URI
