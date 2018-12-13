@@ -9,17 +9,10 @@
 
 'use strict';
 
-// Modules
-const _ = require('lodash');
-const Lando = require('./../lib/lando');
-const chalk = require('chalk');
-const Cli = require('./../lib/cli');
-const ErrorHandler = require('./../lib/error');
+// Minimal modules we need to get the cli rolling
+const fs = require('fs');
 const path = require('path');
-const Promise = require('./../lib/promise');
-const yargonaut = require('yargonaut');
-yargonaut.style('green').errorsStyle('red');
-const yargs = require('yargs');
+const Cli = require('./../lib/cli');
 
 // Allow envvars to override a few core things
 let LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE;
@@ -28,107 +21,35 @@ const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT;
 
 // If we have CLI verbosity args let's use those instead
 const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
+process.landoTaskCacheName = '_.tasks.cache';
+const cacheTasksFile = path.join(cli.defaultConfig().userConfRoot, 'cache', process.landoTaskCacheName);
 
-// Handle error
-const handleError = (error, handler) => {
-  error.verbose = cli.largv().verbose;
-  process.exit(handler.handle(error));
+/*
+ * Helper to parse tasks
+ * NOTE: if this is being run we assume the existence of cacheTasksFile
+ * @TODO: do we need some validation of the dumped tasks here?
+ */
+const getTasks = () => {
+  return JSON.parse(JSON.parse(fs.readFileSync(cacheTasksFile, {encoding: 'utf-8'})));
 };
 
-// Summon lando
-const lando = new Lando(cli.defaultConfig());
+// Ensure we aren't sudo-ing
+cli.checkPerms();
 
-// Bootstrap lando and then initialize the CLI
-lando.bootstrap().then(lando => {
-  // Handle uncaught things
-  _.forEach(['unhandledRejection', 'uncaughtException'], exception => {
-    process.on(exception, error => handleError(error, lando.error));
+// Print the cli if we've got tasks
+if (fs.existsSync(cacheTasksFile)) {
+  cli.run(getTasks());
+// Min bootstrap lando so we can generate the task cache first
+} else {
+  // NOTE: we require lando down here because it adds .5 seconds if we do it above
+  const Lando = require('./../lib/lando');
+  const lando = new Lando(cli.defaultConfig());
+  // Bootstrap lando
+  // Dump the tasks cache
+  // Parse the tasks
+  // Show the cli
+  lando.bootstrap().then(lando => {
+    lando.cache.set(process.landoTaskCacheName, JSON.stringify(lando.tasks), {persist: true});
+    cli.run(getTasks());
   });
-
-  // Get update info
-  const currentVersion = lando.config.version;
-  const latestUpdate = lando.cache.get('updates');
-  const refreshData = lando.updates.fetch(latestUpdate);
-
-  // Check our perms to start things off
-  return Promise.try(cli.checkPerms)
-
-  // Check for updates and inform user if we have some
-  .then(() => {
-    if (refreshData) {
-      lando.log.verbose('Checking for updates...');
-      return lando.updates.refresh(currentVersion)
-      .then(latest => lando.cache.set('updates', latest, {persist: true}));
-    }
-  })
-
-  /**
-   * Event that allows other things to alter the tasks being loaded to the CLI.
-   *
-   * @since 3.0.0
-   * @event module:cli.event:pre-cli-load
-   * @property {Object} tasks An object of Lando tasks
-   * @example
-   *
-   * // As a joke remove all tasks and give us a blank CLI
-   * lando.events.on('pre-cli-load', function(tasks) {
-   *   tasks = {};
-   * });
-   */
-  .then(() => lando.events.emit('pre-cli-load', lando.tasks.tasks))
-
-  // Print the CLI
-  .then(() => {
-    lando.log.info('Initializing cli');
-
-    // Update warning
-    if (lando.updates.updateAvailable(currentVersion, lando.cache.get('updates').version)) {
-      console.log(lando.cli.makeArt('update', {paddingBottom: 0}));
-      console.log(chalk.green(lando.cache.get('updates').url));
-      console.log(' ');
-    }
-
-    // Start up the CLI
-    const cmd = !_.has(process, 'pkg') ? '$0' : path.basename(_.get(process, 'execPath', 'lando'));
-    yargs.usage(['Usage:', cmd, '<command> [args] [options] [-- global options]'].join(' '));
-
-    // Loop through the tasks and add them to the CLI
-    _.forEach(_.sortBy(lando.tasks.tasks, 'command'), task => {
-      lando.log.verbose('Loading cli task %s', task.name);
-      yargs.command(lando.cli.parseToYargs(task, lando.events));
-    });
-
-    // Invoke help if global option is specified
-    if (cli.largv().help) {
-      yargs.showHelp();
-      process.exit(0);
-    }
-
-    // Create epilogue for our global options
-    const epilogue = [
-      lando.node.chalk.green('Global Options:\n'),
-      '  --help, -h  Show help\n',
-      '  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output',
-    ];
-
-    // Finish up the yargs
-    const argv = yargs
-      .strict(true)
-      .demandCommand(1, 'You need at least one command before moving on')
-      .epilog(epilogue.join(''))
-      .wrap(yargs.terminalWidth() * 0.75)
-      .argv;
-
-    // Log the CLI args
-    lando.log.debug('CLI args', argv);
-  });
-})
-
-// Handle all other errors eg likely things that happen pre bootstrap
-// We want to use a different error handling instance here since we might not
-// be able to rely on landos in the event of a failed bootstrap
-.catch(error => {
-  error.verbose = 2;
-  const lastDitchError = new ErrorHandler();
-  process.exit(lastDitchError.handle(error));
-});
+}
