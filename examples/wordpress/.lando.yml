@@ -21,7 +21,7 @@ config:
   #
   php: '7.0'
 
-  # Optionally specify whether you want to serve drupal via nginx or apache
+  # Optionally specify whether you want to serve WordPress via nginx or apache
   #
   # If ommitted this will default to the latest apache
   #
