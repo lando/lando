@@ -34,3 +34,8 @@ services:
     # NOTE: these files need to end in .cnf
     config:
       config: config/my.cnf
+tooling:
+  mysql:
+    service: database
+  vim:
+    service: database

@@ -96,7 +96,7 @@ module.exports = lando => {
 
       // Create directory if needed
       if (!fs.existsSync(options.destination)) {
-        fs.mkdirpSync(options.destination);
+        mkdirp.sync(options.destination);
       }
 
       // Set node working directory to the destination

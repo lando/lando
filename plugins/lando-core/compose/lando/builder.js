@@ -3,7 +3,7 @@
 // Modules
 const _ = require('lodash');
 const chalk = require('chalk');
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 // @TODO: not the best to reach back this far
 const moveConfig = require('./../../../../lib/utils').moveConfig;

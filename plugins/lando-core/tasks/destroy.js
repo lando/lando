@@ -1,10 +1,10 @@
 'use strict';
 
+const chalk = require('chalk');
 const path = require('path');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
-  const chalk = lando.node.chalk;
   return {
     command: 'destroy',
     describe: 'Destroys your app',

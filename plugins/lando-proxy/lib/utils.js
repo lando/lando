@@ -16,6 +16,7 @@ exports.getFirstOpenPort = (scanner, urls = []) => scanner(urls, {max: 1, waitCo
  * Helper to determine what ports have changed
  */
 exports.needsProtocolScan = (current, last, status = {http: true, https: true}) => {
+  if (!last) return status;
   if (current.http === last.http) status.http = false;
   if (current.https === last.https) status.https = false;
   return status;

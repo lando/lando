@@ -2,7 +2,7 @@
 
 // Modules
 const _ = require('lodash');
-const chalk = require('yargonaut').chalk();
+const chalk = require('chalk');
 const path = require('path');
 const url = require('url');
 

@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const chalk = require('chalk');
 const path = require('path');
 const utils = require('./../lib/utils');
 
@@ -11,7 +12,6 @@ const handleOpts = options => {
 };
 
 module.exports = lando => {
-  const chalk = lando.node.chalk;
   const table = lando.cli.makeTable();
   return {
     command: 'rebuild',

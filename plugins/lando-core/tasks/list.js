@@ -1,10 +1,13 @@
 'use strict';
 
+// Modules
+const _ = require('lodash');
+
 module.exports = lando => {
-  const _ = lando.node._;
   return {
     command: 'list',
     describe: 'Lists all running lando apps and containers',
+    level: 'engine',
     run: () => {
       // List all the apps
       return lando.engine.list()

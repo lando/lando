@@ -3,7 +3,7 @@
 module.exports = lando => {
   // Modules
   const _ = lando.node._;
-  const fs = lando.node.fs;
+  const mkdirp = require('mkdirp');
   const os = require('os');
   const path = require('path');
 
@@ -145,7 +145,7 @@ module.exports = lando => {
   const createKey = key => {
     // Ensure that cache directory exists
     const keysDir = path.join(lando.config.userConfRoot, 'keys');
-    fs.mkdirpSync(path.join(keysDir));
+    mkdirp.sync(path.join(keysDir));
 
     // Construct a helpful and instance-specific comment
     const comment = lando.config.instance + '.lando@' + os.hostname();

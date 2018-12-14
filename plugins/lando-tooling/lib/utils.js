@@ -36,7 +36,7 @@ const getCommand = (cmd, passOpts) => {
   if (process.lando === 'node') command.push(exports.getOpts());
   // Add passOpts
   command.push(passOpts);
-  return _.flatten(command).join(' ');
+  return _.flatten(command);
 };
 
 /*
@@ -129,7 +129,7 @@ exports.toolingDefaults = ({
     name: name,
     app: app,
     cmd: cmd,
-    description: description,
+    describe: description,
     needs: needs,
     options: options,
     service: service,

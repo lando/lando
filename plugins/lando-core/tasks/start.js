@@ -1,10 +1,10 @@
 'use strict';
 
 const path = require('path');
+const chalk = require('chalk');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
-  const chalk = lando.node.chalk;
   const table = lando.cli.makeTable();
   return {
     command: 'start',

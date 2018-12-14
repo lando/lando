@@ -1,9 +1,12 @@
 'use strict';
 
+// Modules
+const chalk = require('chalk');
+
 module.exports = lando => {
-  const chalk = lando.node.chalk;
   return {
     command: 'poweroff',
+    level: 'engine',
     describe: 'Spins down all lando related containers',
     run: () => {
       console.log(chalk.green('NO!! SHUT IT ALL DOWN! Spinning Lando containers down...'));

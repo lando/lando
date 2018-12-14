@@ -20,7 +20,7 @@ const defaultConfig = {
 
 module.exports = lando => {
   // Add in some computed config eg things after our config has been settled
-  lando.events.on('post-bootstrap', ({config}) => {
+  lando.events.on('post-bootstrap-config', ({config}) => {
     config.proxyNet = `${config.proxyName}_edge`;
     config.proxyHttpPorts = _.flatten([config.proxyHttpPort, config.proxyHttpFallbacks]);
     config.proxyHttpsPorts = _.flatten([config.proxyHttpsPort, config.proxyHttpsFallbacks]);

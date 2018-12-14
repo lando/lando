@@ -2,8 +2,10 @@
 
 // Modules
 const _ = require('lodash');
+const ip = require('ip');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
 const path = require('path');
-const fs = require('fs-extra');
 
 // Default env values
 const defaults = {
@@ -60,7 +62,7 @@ module.exports = lando => {
   const caKey = path.join(caDir, `${caDomain}.key`);
   const caProject = `landocasetupkenobi38ahsoka${lando.config.instance}`;
   // @TODO: below might not be needed
-  fs.mkdirpSync(caDir);
+  mkdirp.sync(caDir);
 
   // Make sure we have a host-exposed root ca if we dont already
   // NOTE: we dont run this on the caProject otherwise infinite loop happens!
@@ -84,7 +86,7 @@ module.exports = lando => {
       LANDO_DOMAIN: lando.config.domain,
       LANDO_HOST_HOME: lando.config.home,
       LANDO_HOST_OS: lando.config.os.platform,
-      LANDO_HOST_IP: (process.platform === 'linux') ? lando.node.ip.address() : 'host.docker.internal',
+      LANDO_HOST_IP: (process.platform === 'linux') ? ip.address() : 'host.docker.internal',
       LANDO_MOUNT: '/app',
     },
     appLabels: {

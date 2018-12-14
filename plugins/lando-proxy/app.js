@@ -54,7 +54,6 @@ module.exports = (app, lando) => {
   const LandoProxy = lando.factory.get('_proxy');
   // Determine what ports we need to discover
   const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
-
   // Only do things if the proxy is enabled
   // @TODO: deprecate PROXY=ON in favor of disablePlugins?
   if (lando.config.proxy === 'ON' && !_.isEmpty(app.config.proxy)) {
@@ -111,10 +110,12 @@ module.exports = (app, lando) => {
         const ports = lando.cache.get(lando.config.proxyCache);
         // Map to protocol and add portz
         // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
-        _(app.info)
-          .filter(service => _.has(app, `config.proxy.${service.service}`))
-          .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports))))
-          .value();
+        if (ports) {
+          _(app.info)
+            .filter(service => _.has(app, `config.proxy.${service.service}`))
+            .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports))))
+            .value();
+        }
       });
     });
   }

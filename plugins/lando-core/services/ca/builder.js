@@ -1,6 +1,7 @@
 'use strict';
 
 // Modules
+const _ = require('lodash');
 const path = require('path');
 
 /*
@@ -11,8 +12,10 @@ module.exports = {
   parent: '_landoutil',
   config: {
     version: 'custom',
+    type: 'ca',
+    name: 'ca',
   },
-  builder: parent => class LandoCa extends parent {
+  builder: (parent, config) => class LandoCa extends parent {
     constructor(userConfRoot, env = {}, labels = {}) {
       // Get some shitz
       // @TODO: better use of config above
@@ -31,7 +34,7 @@ module.exports = {
           },
         },
       };
-      super('ca', {type: 'ca', name: 'ca', env, labels, userConfRoot}, caService);
+      super('ca', _.merge({}, config, {env, labels, userConfRoot}), caService);
     };
   },
 };
