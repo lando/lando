@@ -45,7 +45,7 @@ tooling:
     service: web
     description: Drop into a MySQL shell
     user: root
-    cmd: echo "this is true"
+    cmd: echo "this is true" && echo "this is also true" > /tmp/thing
 
   # Define a tooling command with a stringed command
   test:

@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const esc = require('shell-escape');
 const path = require('path');
+// const parse = require('yargs-parser');
 
 /*
  * Helper to build commands
@@ -151,20 +152,6 @@ exports.parseCommand = (cmd, service, passOpts = []) => _.map(!_.isArray(cmd) ? 
 }));
 
 /*
- * Helper to emit events, run commands and catch errors
- */
-exports.runCommands = (name, events, engine, cmds, inject = {}) => events.emit(['pre', name].join('-'), inject)
-  // Run commands
-  .then(() => engine.run(cmds))
-  // Catch error but hide the stdout
-  .catch(error => {
-    error.hide = true;
-    throw error;
-  })
-  // Post event
-  .then(() => events.emit(['post', name].join('-'), inject));
-
-/*
  * Helper to get defaults
  */
 exports.toolingDefaults = ({
@@ -178,7 +165,7 @@ exports.toolingDefaults = ({
   // @TODO: some better toggle here?
   user = 'www-data'} = {}) =>
   ({
-    name: cmd,
+    name,
     app: app,
     cmd: cmd,
     describe: description,

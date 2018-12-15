@@ -38,8 +38,9 @@ const engineRunner = (config, command) => (argv, lando) => {
   // Load only what we need so we dont pay the appinit penalty
   const utils = require('./../plugins/lando-tooling/lib/utils');
   require('./../plugins/lando-events/app')(app, lando);
+  app.config.tooling = utils.getToolingTasks(app.config.tooling, app);
   // Load and run
-  return utils.buildTask(_.merge({}, _.find(config.tooling, (value, key) => key === command), {app}), lando).run(argv);
+  return utils.buildTask(_.find(app.config.tooling, task => task.name === command), lando).run(argv);
 };
 
 /*
