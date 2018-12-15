@@ -4,12 +4,17 @@
 const _ = require('lodash');
 const esc = require('shell-escape');
 const path = require('path');
-// const parse = require('yargs-parser');
+const parse = require('string-argv');
+
+/*
+ * Helper to get service
+ */
+const getService = (cmd, service) => (_.isObject(cmd)) ? _.first(_.keys(cmd)) : service;
 
 /*
  * Helper to build commands
  */
-exports.buildCommand = (app, command, needs, service, user) => ({
+const buildCommand = (app, command, service, user) => ({
   id: `${app.project}_${service}_1`,
   compose: app.compose,
   project: app.project,
@@ -18,68 +23,18 @@ exports.buildCommand = (app, command, needs, service, user) => ({
     mode: 'attach',
     pre: ['cd', exports.getContainerPath(app.root)].join(' '),
     user: user,
-    services: _.compact(_.flatten([service, needs])),
+    services: _.compact([service]),
     hijack: false,
     autoRemove: true,
   },
 });
 
-/*
- * Helper to build docker exec command
- */
-exports.dockerExec = (lando, datum = {}) => lando.shell.sh([
-  lando.config.dockerBin,
-  'exec',
-  '--interactive',
-  '--tty',
-  '--user',
-  datum.opts.user,
-  datum.id,
-].concat(datum.cmd), {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']});
-
-/*
- * Helper to build tasks from metadata
- * // @TOD0
- */
-exports.buildTask = (config, lando) => {
-  const {name, app, cmd, describe, needs, options, service, user} = exports.toolingDefaults(config);
-  // Get the run handler
-  const run = answers => {
-    // Handle dynamic services right away
-    const container = exports.getContainer(service, answers);
-    // Normalize any needs we have
-    const auxServices = (_.isString(needs)) ? [needs] : needs;
-    // Get passthrough options
-    const passOpts = exports.getPassthruOpts(options, answers);
-    // Initilize our app here if needed, this should be needed very rarely
-    return lando.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
-    // Kick off the pre event wrappers
-    .then(() => app.events.emit(`pre-${name}`, config))
-    // Get an interable of our commandz
-    .then(() => _.map(exports.parseCommand(cmd, container, passOpts)))
-    .map(({command, container}) => exports.buildCommand(app, command, auxServices, container, user))
-    // Try to run the task quickly first and then fallback to compose launch
-    .each(runner => exports.dockerExec(lando, runner).catch(() => lando.engine.run(runner)).catch(error => {
-      error.hide = true;
-      throw error;
-    }))
-    // Post event
-    .then(() => app.events.emit(`post-${name}`, config));
-  };
-
-  // Return our tasks
-  return {
-    command: name,
-    describe,
-    run: run,
-    options: options,
-  };
-};
 
 /*
  * Helper to get command
  */
 const getCommand = (cmd, passOpts) => {
+  console.log(cmd)
   // Extract the command if its an object
   if (_.isObject(cmd)) cmd = cmd[_.first(_.keys(cmd))];
   // Build and return
@@ -88,18 +43,19 @@ const getCommand = (cmd, passOpts) => {
   if (process.lando === 'node') command.push(exports.getOpts());
   // Add passOpts
   command.push(passOpts);
+  console.log(command)
   return _.flatten(command);
 };
 
 /*
  * Helper to grab dynamic container if needed
  */
-exports.getContainer = (service, answer) => (_.startsWith(service, ':')) ? answer[service.split(':')[1]] : service;
+const getContainer = (service, answer) => (_.startsWith(service, ':')) ? answer[service.split(':')[1]] : service;
 
 /*
  * Helper to map the cwd on the host to the one in the container
  */
-exports.getContainerPath = appRoot => {
+const getContainerPath = appRoot => {
   // Break up our app root and cwd so we can get a diff
   const cwd = process.cwd().split(path.sep);
   const dir = _.drop(cwd, appRoot.split(path.sep).length);
@@ -130,10 +86,6 @@ exports.getPassthruOpts = (options = {}, answers = {}) => _(options)
   .map(value => esc(`--${value.name}=${answers[value.name]}`))
   .value();
 
-/*
- * Helper to get service
- */
-const getService = (cmd, service) => (_.isObject(cmd)) ? _.first(_.keys(cmd)) : service;
 
 /*
  * Helper to get tts
@@ -159,7 +111,6 @@ exports.toolingDefaults = ({
   app = {},
   cmd = name,
   description = `Run ${name} commands`,
-  needs = [],
   options = {},
   service = '',
   // @TODO: some better toggle here?
@@ -169,8 +120,51 @@ exports.toolingDefaults = ({
     app: app,
     cmd: cmd,
     describe: description,
-    needs: needs,
     options: options,
     service: service,
     user: user,
   });
+
+/*
+ * Helper to build tasks from metadata
+ * // @TOD0
+ */
+exports.buildTask = (config, lando) => {
+  const {name, app, cmd, describe, options, service, user} = exports.toolingDefaults(config);
+  // Get the run handler
+  const run = answers => {
+    console.log(answers);
+    // Handle dynamic services right away
+    // set SERVICE from answers and strip out that noise from the rest of
+    // stuff, check answers/argv for --service or -s, validate and then remove
+    const container = exports.getContainer(service, answers);
+    console.log(container);
+    // Get passthrough options,
+    const passOpts = exports.getPassthruOpts(options, answers);
+    // Initilize our app here if needed, this should be needed very rarely
+    return lando.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
+    // Kick off the pre event wrappers
+    .then(() => app.events.emit(`pre-${name}`, config))
+    // Get an interable of our commandz
+    .then(() => _.map(exports.parseCommand(cmd, container, passOpts)))
+    .map(({command, container}) => exports.buildCommand(app, command, container, user))
+    // Try to run the task quickly first and then fallback to compose launch
+    .each(runner => {
+      console.log(runner)
+      process.exit(1)
+      return exports.dockerExec(lando, runner).catch(() => lando.engine.run(runner)).catch(error => {
+      error.hide = true;
+      throw error;
+    })})
+    // Post event
+    .then(() => app.events.emit(`post-${name}`, config));
+  };
+
+  // Return our tasks
+  return {
+    command: name,
+    describe,
+    run: run,
+    options: options,
+  };
+};

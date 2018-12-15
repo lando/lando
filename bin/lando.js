@@ -16,6 +16,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const traverseUp = require('./../lib/traverse');
 const yaml = require('js-yaml');
 
 /*
@@ -90,14 +91,6 @@ const load = file => {
     throw new Error(`There was a problem with parsing ${file}. Ensure it is valid yaml! ${e}`);
   }
 };
-
-/*
- * Helper to traverse up directories from a start point
- */
-const traverseUp = file => _(_.range(path.dirname(file).split(path.sep).length))
-  .map(end => _.dropRight(path.dirname(file).split(path.sep), end).join(path.sep))
-  .map(dir => path.join(dir, path.basename(file)))
-  .value();
 
 // Allow envvars to override a few core things
 const LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE;
