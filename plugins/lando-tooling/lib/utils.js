@@ -19,10 +19,61 @@ exports.buildCommand = (app, command, needs, service, user) => ({
     user: user,
     services: _.compact(_.flatten([service, needs])),
     hijack: false,
-    // @todo: should we have a better system to generate certs vs refreshing things?
     autoRemove: true,
   },
 });
+
+/*
+ * Helper to build docker exec command
+ */
+exports.buildDockerExec = (docker = 'docker', datum = {}) => {
+  return [docker, 'exec', '--interactive', '--tty', '--user', datum.opts.user, datum.id].concat(datum.cmd);
+};
+
+/*
+ * Helper to build tasks from metadata
+ * // @TOD0
+ */
+exports.buildTask = (config, lando) => {
+  const {name, app, cmd, describe, needs, options, service, user} = exports.toolingDefaults(config);
+  // Get the run handler
+  const run = answers => {
+    // Handle dynamic services right away
+    const container = exports.getContainer(service, answers);
+    // Normalize any needs we have
+    const auxServices = (_.isString(needs)) ? [needs] : needs;
+    // Get passthrough options
+    const passOpts = exports.getPassthruOpts(options, answers);
+    // Initilize our app here if needed, this should be needed very rarely
+    return lando.Promise.try(() => {
+      if (_.isEmpty(app.compose)) return app.init();
+    })
+    // Kick off the pre event wrappers
+    .then(() => app.events.emit(`pre-${name}`, config))
+    // Get an interable of our commandz
+    .then(() => _.map(exports.parseCommand(cmd, container, passOpts)))
+    .map(({command, container}) => exports.buildCommand(app, command, auxServices, container, user))
+    // Try to run the task quickly first and then fallback to compose launch
+    .each(runner => {
+      return lando.shell.sh(exports.buildDockerExec(lando.config.dockerBin, runner), {mode: 'attach'})
+      .catch(() => lando.engine.run(runner))
+      .catch(error => {
+        error.hide = true;
+        throw error;
+      });
+    })
+    // Post event
+    .then(() => app.events.emit(`post-${name}`, config));
+  };
+
+  // Return our tasks
+  return {
+    command: name,
+    describe,
+    run: run,
+    options: options,
+  };
+};
 
 /*
  * Helper to get command
@@ -124,9 +175,10 @@ exports.toolingDefaults = ({
   needs = [],
   options = {},
   service = '',
-  user = _.get(app, `services[${service}].environment.LANDO_WEBROOT_USER`, 'root')} = {}) =>
+  // @TODO: some better toggle here?
+  user = 'www-data'} = {}) =>
   ({
-    name: name,
+    name: cmd,
     app: app,
     cmd: cmd,
     describe: description,

@@ -20,8 +20,9 @@ const getCommand = cmd => typeof cmd === 'object' ? cmd[getFirstKey(cmd)] : cmd;
 exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
   // Discover the service
   const service = getService(cmd, data);
-  // Validate the service
-  if (!_.includes(app.services, service)) {
+  // Validate the service if we can
+  // @NOTE fast engine runs might not have this data yet
+  if (app.services && !_.includes(app.services, service)) {
     throw new Error(`This app has no service called ${service}`);
   }
   // Add the build command

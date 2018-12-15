@@ -3,6 +3,10 @@ name: trivial-tooling
 compose:
   - compose.yml
 
+events:
+  pre-php:
+    - php: env
+
 # This section defines our tooling routes
 tooling:
 
@@ -52,8 +56,8 @@ tooling:
     # Run multiple commands on the same service
     service: php
     cmd:
-      - echo "we expect the next command to fail"
-      - php test
+      - php -v
+      - php test3
     description: Run all the tests
 
   # Define `lando word` that passes through to a script that can handle options.
@@ -99,7 +103,7 @@ tooling:
   dynamic:
 
     # Just print the hostname so we know what service we are on
-    cmd: hostname -f
+    cmd: env
 
     # The format :NAME will use the service specified by the NAME flag
     # You likely will want to specify the option below and set a reasonable
@@ -124,6 +128,7 @@ tooling:
 
     # Run our two build steps
     cmd:
+      - 'things'
       - php: echo "HERE IS THE PHP ENVIRONMENT"
       - php: echo ""
       - php: env
@@ -131,3 +136,6 @@ tooling:
       - web: env
 
     description: Print environment variables for a few things
+
+  vim:
+    service: web2
