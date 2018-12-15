@@ -26,9 +26,15 @@ exports.buildCommand = (app, command, needs, service, user) => ({
 /*
  * Helper to build docker exec command
  */
-exports.buildDockerExec = (docker = 'docker', datum = {}) => {
-  return [docker, 'exec', '--interactive', '--tty', '--user', datum.opts.user, datum.id].concat(datum.cmd);
-};
+exports.dockerExec = (lando, datum = {}) => lando.shell.sh([
+  lando.config.dockerBin,
+  'exec',
+  '--interactive',
+  '--tty',
+  '--user',
+  datum.opts.user,
+  datum.id,
+].concat(datum.cmd), {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']});
 
 /*
  * Helper to build tasks from metadata
@@ -45,23 +51,17 @@ exports.buildTask = (config, lando) => {
     // Get passthrough options
     const passOpts = exports.getPassthruOpts(options, answers);
     // Initilize our app here if needed, this should be needed very rarely
-    return lando.Promise.try(() => {
-      if (_.isEmpty(app.compose)) return app.init();
-    })
+    return lando.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
     // Kick off the pre event wrappers
     .then(() => app.events.emit(`pre-${name}`, config))
     // Get an interable of our commandz
     .then(() => _.map(exports.parseCommand(cmd, container, passOpts)))
     .map(({command, container}) => exports.buildCommand(app, command, auxServices, container, user))
     // Try to run the task quickly first and then fallback to compose launch
-    .each(runner => {
-      return lando.shell.sh(exports.buildDockerExec(lando.config.dockerBin, runner), {mode: 'attach'})
-      .catch(() => lando.engine.run(runner))
-      .catch(error => {
-        error.hide = true;
-        throw error;
-      });
-    })
+    .each(runner => exports.dockerExec(lando, runner).catch(() => lando.engine.run(runner)).catch(error => {
+      error.hide = true;
+      throw error;
+    }))
     // Post event
     .then(() => app.events.emit(`post-${name}`, config));
   };

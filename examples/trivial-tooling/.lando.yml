@@ -3,10 +3,6 @@ name: trivial-tooling
 compose:
   - compose.yml
 
-events:
-  pre-php:
-    - php: env
-
 # This section defines our tooling routes
 tooling:
 
