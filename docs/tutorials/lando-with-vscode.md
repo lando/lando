@@ -18,9 +18,9 @@ recipe: drupal8
 config:
   webroot: docroot
   xdebug: true
-  conf: 
+  conf:
     # Tell Lando to use additional PHP settings.
-    # The location of this file is arbitrary. 
+    # The location of this file is arbitrary.
     # We placed it inside .vscode/ folder simply because we find it convenient.
     php: .vscode/php.ini
 ```
@@ -48,7 +48,6 @@ xdebug.remote_autostart = 1
 xdebug.remote_host = ${LANDO_HOST_IP}
 ; xdebug.remote_connect_back = 1
 xdebug.remote_log = /tmp/xdebug.log
-
 ```
 
 Rebuild your environment.
