@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const buildTask = require('./lib/build');
 const utils = require('./lib/utils');
 
 module.exports = (app, lando) => {
@@ -14,7 +15,7 @@ module.exports = (app, lando) => {
     // Add the tasks after we init the app
     _.forEach(utils.getToolingTasks(app.config.tooling, app), task => {
       lando.log.verbose('Adding app cli task %s', task.name);
-      app.tasks.push(utils.buildTask(task, lando));
+      app.tasks.push(buildTask(task, lando));
     });
   }
 

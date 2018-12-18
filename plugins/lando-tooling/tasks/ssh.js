@@ -5,7 +5,7 @@ const path = require('path');
 const utils = require('./../lib/utils');
 
 // Other things
-const bashme = 'if ! type bash > /dev/null; then sh; else bash; fi';
+const bashme = ['/bin/sh', '-c', 'if ! type bash > /dev/null; then sh; else bash; fi'];
 const task = {
   command: 'ssh',
   describe: 'Drops into a shell on a service, runs commands',
@@ -32,18 +32,10 @@ module.exports = lando => {
     const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile), false);
     // If we have it then init and DOOOO EEEET
     if (app) {
-      return app.init().then(() => lando.engine.run({
-        id: `${app.project}_${service}_1`,
-        compose: app.compose,
-        project: app.project,
-        cmd: command,
-        opts: {
-          mode: 'attach',
-          pre: ['cd', utils.getContainerPath(app.root)].join(' '),
-          user: user,
-          services: [service],
-        },
-      }));
+      return app.init().then(() => lando.engine.run(utils.buildCommand(app, command, service, user))).catch(error => {
+        error.hide = true;
+        throw error;
+      });
     }
   };
   return task;

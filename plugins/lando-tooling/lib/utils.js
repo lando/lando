@@ -2,55 +2,8 @@
 
 // Modules
 const _ = require('lodash');
-const esc = require('shell-escape');
 const path = require('path');
-const parse = require('string-argv');
-
-/*
- * Helper to get service
- */
-const getService = (cmd, service) => (_.isObject(cmd)) ? _.first(_.keys(cmd)) : service;
-
-/*
- * Helper to build commands
- */
-const buildCommand = (app, command, service, user) => ({
-  id: `${app.project}_${service}_1`,
-  compose: app.compose,
-  project: app.project,
-  cmd: command,
-  opts: {
-    mode: 'attach',
-    pre: ['cd', exports.getContainerPath(app.root)].join(' '),
-    user: user,
-    services: _.compact([service]),
-    hijack: false,
-    autoRemove: true,
-  },
-});
-
-
-/*
- * Helper to get command
- */
-const getCommand = (cmd, passOpts) => {
-  console.log(cmd)
-  // Extract the command if its an object
-  if (_.isObject(cmd)) cmd = cmd[_.first(_.keys(cmd))];
-  // Build and return
-  const command = [cmd];
-  // Strip globaltOpts
-  if (process.lando === 'node') command.push(exports.getOpts());
-  // Add passOpts
-  command.push(passOpts);
-  console.log(command)
-  return _.flatten(command);
-};
-
-/*
- * Helper to grab dynamic container if needed
- */
-const getContainer = (service, answer) => (_.startsWith(service, ':')) ? answer[service.split(':')[1]] : service;
+const escape = require('./../../../lib/utils').shellEscape;
 
 /*
  * Helper to map the cwd on the host to the one in the container
@@ -67,25 +20,99 @@ const getContainerPath = appRoot => {
 };
 
 /*
+ * Helper to get dynamic service keys for stripping
+ */
+const getDynamicKeys = (answer, answers = {}) => _(answers)
+  .map((value, key) => ({key, value}))
+  .filter(data => data.value === answer)
+  .map(data => data.key)
+  .map(key => (_.size(key) === 1) ? `-${key}` : `--${key}`)
+  .value();
+
+/*
+ * Helper to handle dynamic services
+ *
+ * Set SERVICE from answers and strip out that noise from the rest of
+ * stuff, check answers/argv for --service or -s, validate and then remove
+ */
+const handleDynamic = (config, options = {}, answers = {}) => {
+  if (_.startsWith(config.service, ':')) {
+    const answer = answers[config.service.split(':')[1]];
+    // Remove dynamic service option from argv
+    _.remove(process.argv, arg => _.includes(getDynamicKeys(answer, answers).concat(answer), arg));
+    // Return updated config
+    return _.merge({}, config, {service: answers[config.service.split(':')[1]]});
+  } else {
+    return config;
+  }
+};
+
+/*
  * Helper to process args
  *
  * We assume pass through commands so let's use argv directly and strip out
  * the first three assuming they are [node, lando.js, options.name]'
  * Check to see if we have global lando opts and remove them if we do
  */
-exports.getOpts = (argopts = process.argv.slice(3)) => {
-  return (_.indexOf(argopts, '--') >= 0) ? _.slice(argopts, 0, _.indexOf(argopts, '--')) : argopts;
+const handleOpts = (config, argopts = process.argv.slice(3)) => {
+  // If this is not a CLI then we can pass right back
+  if (process.lando !== 'node') return config;
+  // Strip out lando global opts
+  // @TODO: what happens for commands like drush that also can use `--`?
+  const opts = (_.indexOf(argopts, '--') >= 0) ? _.slice(argopts, 0, _.findLastIndex(argopts, '--') - 1) : argopts;
+  // Return
+  return _.merge({}, config, {command: config.command.concat(opts)});
 };
 
 /*
  * Helper to get passthru options
  */
-exports.getPassthruOpts = (options = {}, answers = {}) => _(options)
+const handlePassthruOpts = (options = {}, answers = {}) => _(options)
   .map((value, key) => _.merge({}, {name: key}, value))
   .filter(value => value.passthrough === true)
-  .map(value => esc(`--${value.name}=${answers[value.name]}`))
+  .map(value => `--${value.name}=${answers[value.name]}`)
   .value();
 
+/*
+ * Helper to convert a command into config object
+ */
+const parseCommand = (cmd, service) => ({
+  command: (_.isObject(cmd)) ? cmd[_.first(_.keys(cmd))] : cmd,
+  service: (_.isObject(cmd)) ? _.first(_.keys(cmd)) : service,
+});
+
+/*
+ * Helper to build commands
+ */
+exports.buildCommand = (app, command, service, user) => ({
+  id: `${app.project}_${service}_1`,
+  compose: app.compose,
+  project: app.project,
+  cmd: command,
+  opts: {
+    mode: 'attach',
+    workdir: getContainerPath(app.root),
+    user: user,
+    services: _.compact([service]),
+    hijack: false,
+    autoRemove: true,
+  },
+});
+
+/*
+ * Helper to build docker exec command
+ */
+exports.dockerExec = (lando, datum = {}) => lando.shell.sh([
+  lando.config.dockerBin,
+  'exec',
+  '--interactive',
+  '--tty',
+  '--user',
+  datum.opts.user,
+  '--workdir',
+  datum.opts.workdir,
+  datum.id,
+].concat(datum.cmd), {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']});
 
 /*
  * Helper to get tts
@@ -98,10 +125,22 @@ exports.getToolingTasks = (config, app) => _(config)
 /*
  * Helper to parse tooling config options
  */
-exports.parseCommand = (cmd, service, passOpts = []) => _.map(!_.isArray(cmd) ? [cmd] : cmd, command => ({
-  command: getCommand(command, passOpts),
-  container: getService(command, service),
-}));
+exports.parseConfig = (cmd, service, options = {}, answers = {}) => _(cmd)
+  // Put into an object so we can handle "multi-service" tooling
+  .map(cmd => parseCommand(cmd, service))
+  // Handle dynamic services
+  .map(config => handleDynamic(config, options, answers))
+  // Parse the cmds into something more usable for shell.sh
+  .map(config => _.merge({}, config, {command: escape(config.command)}))
+  // Add in any argv extras if they've been passed in
+  .map(config => handleOpts(config))
+  // Append passthru options so that interactive responses are permitted
+  // @TODO: this will double add opts that are already passed in non-interactively, is that a problem?
+  .map(config => _.merge({}, config, {command: config.command.concat(handlePassthruOpts(options, answers))}))
+  // Wrap the command in /bin/sh if that makes sense
+  .map(config => _.merge({}, config, {command: escape(config.command, true)}))
+  // Put into an object
+  .value();
 
 /*
  * Helper to get defaults
@@ -118,53 +157,9 @@ exports.toolingDefaults = ({
   ({
     name,
     app: app,
-    cmd: cmd,
+    cmd: !_.isArray(cmd) ? [cmd] : cmd,
     describe: description,
     options: options,
     service: service,
     user: user,
   });
-
-/*
- * Helper to build tasks from metadata
- * // @TOD0
- */
-exports.buildTask = (config, lando) => {
-  const {name, app, cmd, describe, options, service, user} = exports.toolingDefaults(config);
-  // Get the run handler
-  const run = answers => {
-    console.log(answers);
-    // Handle dynamic services right away
-    // set SERVICE from answers and strip out that noise from the rest of
-    // stuff, check answers/argv for --service or -s, validate and then remove
-    const container = exports.getContainer(service, answers);
-    console.log(container);
-    // Get passthrough options,
-    const passOpts = exports.getPassthruOpts(options, answers);
-    // Initilize our app here if needed, this should be needed very rarely
-    return lando.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
-    // Kick off the pre event wrappers
-    .then(() => app.events.emit(`pre-${name}`, config))
-    // Get an interable of our commandz
-    .then(() => _.map(exports.parseCommand(cmd, container, passOpts)))
-    .map(({command, container}) => exports.buildCommand(app, command, container, user))
-    // Try to run the task quickly first and then fallback to compose launch
-    .each(runner => {
-      console.log(runner)
-      process.exit(1)
-      return exports.dockerExec(lando, runner).catch(() => lando.engine.run(runner)).catch(error => {
-      error.hide = true;
-      throw error;
-    })})
-    // Post event
-    .then(() => app.events.emit(`post-${name}`, config));
-  };
-
-  // Return our tasks
-  return {
-    command: name,
-    describe,
-    run: run,
-    options: options,
-  };
-};

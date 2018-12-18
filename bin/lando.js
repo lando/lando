@@ -19,8 +19,12 @@ const path = require('path');
 const traverseUp = require('./../lib/traverse');
 const yaml = require('js-yaml');
 
+//
+// HELPERS
+//
+
 /*
- * Helper to run the tasks
+ * Helper to run the app task runner
  */
 const appRunner = command => (argv, lando) => {
   const app = lando.getApp(path.resolve(process.cwd(), landoFile));
@@ -28,7 +32,7 @@ const appRunner = command => (argv, lando) => {
 };
 
 /*
- * Helper to return the tooling task runner
+ * Helper to return the engine task runner
  */
 const engineRunner = (config, command) => (argv, lando) => {
   const AsyncEvents = require('./../lib/events');
@@ -38,10 +42,11 @@ const engineRunner = (config, command) => (argv, lando) => {
   app.events = new AsyncEvents(lando.log);
   // Load only what we need so we dont pay the appinit penalty
   const utils = require('./../plugins/lando-tooling/lib/utils');
+  const buildTask = require('./../plugins/lando-tooling/lib/build');
   require('./../plugins/lando-events/app')(app, lando);
   app.config.tooling = utils.getToolingTasks(app.config.tooling, app);
   // Load and run
-  return utils.buildTask(_.find(app.config.tooling, task => task.name === command), lando).run(argv);
+  return buildTask(_.find(app.config.tooling, task => task.name === command), lando).run(argv);
 };
 
 /*
@@ -92,6 +97,10 @@ const load = file => {
   }
 };
 
+//
+// MAIN PROGRAM LOGIX
+//
+
 // Allow envvars to override a few core things
 const LOGLEVELCONSOLE = process.env.LANDO_CORE_LOGLEVELCONSOLE;
 const ENVPREFIX = process.env.LANDO_CORE_ENVPREFIX;
@@ -115,15 +124,13 @@ process.landoTaskCacheFile = path.join(cli.defaultConfig().userConfRoot, 'cache'
 // If the tooling command is being called lets assess whether we can get away with engine bootstrap level
 const toolingLevel = (_.includes(_.keys(tooling), cli.argv()._[0])) ? getBsLevel(config, cli.argv()._[0]) : 'app';
 
-//
-// MAIN PROGRAM LOGIX
-//
+// Check for sudo usage
 cli.checkPerms();
 
-// Print the cli if we've got tasks
+// Print the cli if we've got tasks cached
 if (fs.existsSync(process.landoTaskCacheFile)) {
   cli.run(getTasks(tooling, toolingLevel, config));
-// Min bootstrap lando so we can generate the task cache first
+// Otherwise min bootstrap lando so we can generate the task cache first
 } else {
   // NOTE: we require lando down here because it adds .5 seconds if we do it above
   const Lando = require('./../lib/lando');

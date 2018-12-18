@@ -32,7 +32,7 @@ tooling:
   # Define `lando whoami` as a command that runs `id` against the php service w
   whoami:
     service: php
-    cmd: id
+    cmd: echo "$HOME" && echo 'stugg' > /tmp/thing
 
     # Run this command as root inside of the container. If ommitted this
     # will default to the LANDO_WEBROOT_USER envvar for the service and then root
@@ -45,7 +45,7 @@ tooling:
     service: web
     description: Drop into a MySQL shell
     user: root
-    cmd: echo "this is true" && echo "this is also true" > /tmp/thing
+    cmd: env && echo "$HOME"
 
   # Define a tooling command with a stringed command
   test:
@@ -53,7 +53,7 @@ tooling:
     service: php
     cmd:
       - php -v
-      - php test3
+      - php -m
     description: Run all the tests
 
   # Define `lando word` that passes through to a script that can handle options.
@@ -124,13 +124,8 @@ tooling:
 
     # Run our two build steps
     cmd:
-      - 'things'
-      - php: echo "HERE IS THE PHP ENVIRONMENT"
-      - php: echo ""
       - php: env
-      - web: echo "\\nHERE IS THE WEB ENVIRONMENT\\n"
       - web: env
-
     description: Print environment variables for a few things
 
   vim:

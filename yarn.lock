@@ -5466,10 +5466,6 @@ shebang-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
   integrity sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
 
-"shell-escape@https://github.com/thinktandem/node-shell-escape/tarball/master":
-  version "0.2.1"
-  resolved "https://github.com/thinktandem/node-shell-escape/tarball/master#90957b7639387fea822ff77f8b6f7ceb48d5adfc"
-
 shelljs@0.7.8:
   version "0.7.8"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.7.8.tgz#decbcf874b0d1e5fb72e14b164a9683048e9acb3"
