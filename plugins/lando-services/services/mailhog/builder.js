@@ -42,19 +42,16 @@ module.exports = {
           },
         },
       };
-
+      // Add in hogfrom info
+      options.info = {hogfrom: options.hogfrom};
       // Mailhog needs to do some crazy shit on other services to work
        _.forEach(options.hogfrom, hog => {
         // Add some build tazk
         utils.addBuildStep([downloadCmd, chmodCmd], options._app, hog, 'build_as_root_internal');
         // Set the hogfrom with some extra things
         options.sources.push({services: _.set({}, hog, {
-          environment: {
-            MH_SENDMAIL_SMTP_ADDR: 'sendmailhog:1025',
-          },
-          volumes: [
-            `${options.confDest}/mailhog.ini:/usr/local/etc/php/conf.d/zzzz-lando-mailhog.ini`,
-          ],
+          environment: {MH_SENDMAIL_SMTP_ADDR: 'sendmailhog:1025'},
+          volumes: [`${options.confDest}/mailhog.ini:/usr/local/etc/php/conf.d/zzzz-lando-mailhog.ini`],
         })});
       });
 

@@ -97,7 +97,7 @@ module.exports = (app, lando) => {
       // @NOTE: we cant add this in the normal way since this happens AFTER our app
       // has been initialized
       .then(result => {
-        const proxyData = new app.ComposeService('proxy', ...result);
+        const proxyData = new app.ComposeService('proxy', {}, ...result);
         const proxyFiles = lando.utils.dumpComposeData(proxyData, app._dir);
         app.compose = app.compose.concat(proxyFiles);
         lando.log.verbose('App %s has proxy compose files %j', app.name, proxyFiles);

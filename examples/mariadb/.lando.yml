@@ -17,7 +17,7 @@ services:
     # You can also set `portforward: true` to have Lando dynamically assign
     # a port. Unlike specifying an actual port setting this to true will give you
     # a different port every time you restart your app
-    portforward: 3307
+    portforward: true
 
     # Optionally set the default db credentials
     #
@@ -34,8 +34,3 @@ services:
     # NOTE: these files need to end in .cnf
     config:
       config: config/my.cnf
-tooling:
-  mysql:
-    service: database
-  vim:
-    service: database

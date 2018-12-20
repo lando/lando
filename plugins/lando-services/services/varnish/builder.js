@@ -61,6 +61,8 @@ module.exports = {
         networks: {default: {aliases: ['varnish']}},
         ports: ['80'],
       };
+      // Set some info about our backends
+      options.info = {backends: options.backends};
       // Set the varnish
       options.sources.push({services: _.set({}, options.name, varnish)});
       // Spin up an nginx bomb as well
@@ -72,6 +74,7 @@ module.exports = {
         const LandoService = factory.get('_lando');
         const nginx = {services: _.set({}, sslOpts.name, varnishSsl(options))};
         options.sources.push(new LandoService(sslOpts.name, sslOpts, nginx).data);
+        options.info.ssl_served_by = sslOpts.name;
       }
       // Set SSL false for downstream because we've already handled it above
       options.ssl = false;

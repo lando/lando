@@ -12,13 +12,23 @@ services:
     via: apache
 
     # Optionally serve php over https
-    # ssl: true
+    ssl: true
 
     # Optionally specify a webroot if it is a subdirectory of the appRoot
     webroot: web
 
-    # Use ssl
-    ssl: true
+    # Optionally activate xdebug
+    #
+    # If you are having trouble getting xdebug to work please see:
+    # https://docs.devwithlando.io/services/php.html#using-xdebug
+    xdebug: true
+
+    # Optionally install the following composer dependencies globally
+    # These follow the normal composer.json form
+    # Note that many composer dependencies should not be installed globally but
+    # on a per-project basis
+    composer:
+      drush/drush: "~8"
 
     # Optionally customize the configuration for php and its underlying webserver
     # These paths are both relative to (and must reside within) the app root directory
@@ -33,19 +43,6 @@ services:
       # This **should** load last which means you should be able to override
       # any previously set php settings.
       php: config/php.ini
-
-    # Optionally activate xdebug
-    #
-    # If you are having trouble getting xdebug to work please see:
-    # https://docs.devwithlando.io/services/php.html#using-xdebug
-    #xdebug: true
-
-    # Optionally install the following composer dependencies globally
-    # These follow the normal composer.json form
-    # Note that many composer dependencies should not be installed globally but
-    # on a per-project basis
-    #composer:
-    #  drush/drush: "~8"
 
   appserver2:
 
@@ -72,14 +69,14 @@ services:
     #
     # For some examples that use this fairly well please check out
     # https://github.com/lando/lando/tree/master/examples
-    # config:
-      # Use a custom apache config file
-      # vhosts: config/apache.conf
+    config:
+      # Use a custom vhost config file
+      vhosts: config/nginx.conf
 
       # Use a custom php.ini
       # This **should** load last which means you should be able to override
       # any previously set php settings.
-      # php: config/php.ini
+      php: config/php.ini
 
   cli:
 
@@ -93,19 +90,19 @@ services:
     # These follow the normal composer.json form
     # Note that many composer dependencies should not be installed globally but
     # on a per-project basis
-    # composer:
-    #   overtrue/phplint: '*'
+    composer:
+      overtrue/phplint: '*'
 
     # Optionally activate xdebug
     #
     # If you are having trouble getting xdebug to work please see:
     # https://docs.devwithlando.io/services/php.html#using-xdebug
-    # xdebug: true
+    xdebug: true
 
     # Optionally mix in your own config files
     #
     # If ommitted this will use "sane defaults" for your recipe type
-    # conf:
+    config:
 
       # For more information on setting these files check out the documentation
       # and examples
@@ -113,4 +110,4 @@ services:
       # Docs: https://docs.devwithlando.io/services/php.html
       # Examples: https://github.com/lando/lando/tree/master/examples
       #
-      # php: config/php.ini
+      php: config/php.ini

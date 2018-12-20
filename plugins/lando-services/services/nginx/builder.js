@@ -39,6 +39,10 @@ module.exports = {
   builder: (parent, config) => class LandoNginx extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+      // Use different default for ssl
+      if (options.ssl) {
+        options.defaultFiles.vhosts = 'default-ssl.conf.tpl';
+      }
       // Build the default stuff here
       const nginx = {
         image: `bitnami/nginx:${options.version}`,

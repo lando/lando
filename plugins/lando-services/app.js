@@ -52,7 +52,10 @@ module.exports = (app, lando) => {
       // Build da things
       // @NOTE: this also gathers app.info and build steps
       const Service = lando.factory.get(service.type);
-      app.add(new Service(service.name, service, lando.factory));
+      const data = new Service(service.name, service, lando.factory);
+      app.add(data);
+      // console.log(data.info);
+      app.info.push(data.info);
     });
   });
 
@@ -69,6 +72,23 @@ module.exports = (app, lando) => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
       return utils.runBuild(lando, postBuild, postLockfile);
     });
+  });
+
+  // Discover portforward true info
+  app.events.on('post-init', () => {
+    const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
+    return lando.engine.list(app.project)
+    .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
+    .map(service => ({
+      id: service.id,
+      service: service.service,
+      internal: _.get(_.find(app.info, {service: service.service}), 'internal_connection.port'),
+    }))
+    .map(service => lando.engine.scan(service).then(data => {
+       const key = `NetworkSettings.Ports.${service.internal}/tcp`;
+       const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
+       _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
+    }));
   });
 
   // Remove build locks on an uninstall

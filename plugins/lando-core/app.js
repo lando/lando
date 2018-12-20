@@ -10,10 +10,12 @@ module.exports = (app, lando) => {
     app.events.on(event, () => app.engine.list(app.name)
     // Return running containers
     .filter(container => app.engine.isRunning(container.id))
+    // Make sure they are still a defined service (eg if the user changes their lando yml)
+    .filter(container => _.includes(app.services, container.service))
     // Inspect each and add new URLS
     .map(container => app.engine.scan(container))
     .map(data => utils.getUrls(data))
-    .map(data => _.merge(_.find(app.info, {service: data.service}), data)));
+    .map(data => _.find(app.info, {service: data.service}).urls = data.urls));
   });
 
   // Refresh all our certs
@@ -42,7 +44,7 @@ module.exports = (app, lando) => {
   });
 
   // Reset app info on a stop, this helps prevent wrong/duplicate information being reported on a restart
-  app.events.on('post-stop', () => app.info = lando.utils.getInfoDefaults(app));
+  app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
 
   // Add some logic that extends start until healthchecked containers report as healthy
   app.events.on('post-start', 1, () => lando.engine.list(app.name)

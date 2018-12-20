@@ -15,7 +15,7 @@ module.exports = {
       config: '/etc/phpmyadmin/config.user.inc.php',
     },
   },
-  parent: '_service',
+  parent: '_lando',
   builder: (parent, config) => class LandoPma extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
@@ -35,6 +35,8 @@ module.exports = {
         ports: ['80'],
         command: '/run.sh phpmyadmin',
       };
+      // Add some info
+      options.info = {backends: options.hosts};
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, pma)});
     };

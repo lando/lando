@@ -35,6 +35,7 @@ const pkger = (pkg, version) => (!_.isEmpty(version)) ? `${pkg}:${version}` : pk
  * Helper to parse apache config
  */
 const parseApache = options => {
+  if (options.ssl) options.defaultFiles.vhosts = 'default-ssl.conf';
   options.volumes.push(`${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`);
   if (options.version === '5.3') options.environment.APACHE_LOG_DIR = '/var/log';
   return options;
@@ -123,7 +124,6 @@ module.exports = {
   builder: (parent, config) => class LandoPhp extends parent {
     constructor(id, options = {}, factory) {
       options = parseConfig(_.merge({}, config, options));
-
       // Mount our default php config
       options.volumes.push(`${options.confDest}/${options.defaultFiles._php}:${options.remoteFiles._php}`);
 
@@ -145,14 +145,15 @@ module.exports = {
         volumes: options.volumes,
         command: options.command.join(' '),
       };
+      options.info = {via: options.via};
 
       // Add our composer things to run step
       if (!_.isEmpty(options.composer)) {
         const commands = utils.getInstallCommands(options.composer, pkger, ['composer', 'global', 'require']);
-        utils.addBuildStep(commands, options._app, options.name, 'build_as_root_internal');
+        utils.addBuildStep(commands, options._app, options.name, 'build_internal');
       }
 
-      // Add activate/deactive steps for xdebug
+      // Add activate steps for xdebug
       if (options.xdebug) {
         utils.addBuildStep(['docker-php-ext-enable xdebug'], options._app, options.name, 'build_as_root_internal');
       }
@@ -164,6 +165,7 @@ module.exports = {
         const nginx = new LandoNginx(nginxOpts.name, nginxOpts);
         nginx.data.push({services: _.set({}, nginxOpts.name, {'depends_on': [options.name]})});
         options.sources.push(nginx.data);
+        options.info.served_by = nginxOpts.name;
       }
 
       // Add in the php service and push downstream

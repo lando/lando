@@ -1,11 +1,6 @@
 # The name of my app
 name: nginx
 
-# Give me http://nginx.lndo.site and https://nginx.lndo.site
-proxy:
-  appserver:
-    - nginx.lndo.site
-
 # Configure my services
 services:
 

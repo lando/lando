@@ -29,36 +29,20 @@ module.exports = {
           retries: 25,
         }})});
       }
+      // Add in relevant info
+      options.info = _.merge({}, options.info, {
+        internal_connection: {
+          host: options.name,
+          port: options.port,
+        },
+        external_connection: {
+          host: 'localhost',
+          port: _.get(options, 'portforward', 'not forwarded'),
+        },
+      });
+      // Add in creds if we have them
+      if (options.creds) options.info.creds = options.creds;
       super(id, options, ...sources);
     };
   },
 };
-
-/*
-  const info = (name, config) => {
-    // Add in generic info
-    const info = {
-      creds: {
-        user: config.environment.MYSQL_USER,
-        password: config.environment.MYSQL_PASSWORD,
-        database: config.environment.MYSQL_DATABASE,
-      },
-      internal_connection: {
-        host: name,
-        port: config.port || 3306,
-      },
-      external_connection: {
-        host: 'localhost',
-        port: config.portforward || 'not forwarded',
-      },
-    };
-
-    // Show the config files being used if they are custom
-    if (!_.isEmpty(config.config)) {
-      info.config = config.config;
-    }
-
-    // Return the collected info
-    return info;
-  };
-*/

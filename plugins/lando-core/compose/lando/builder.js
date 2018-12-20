@@ -29,6 +29,7 @@ module.exports = {
         confSrc = '',
         config = {},
         home = '',
+        info = {},
         legacy = [],
         patchesSupported = false,
         ports = [],
@@ -123,8 +124,14 @@ module.exports = {
       // Add our overrides at the end
       sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});
 
+      // Add some info basics
+      info.config = config;
+      info.service = name;
+      info.type = type;
+      info.version = version;
+
       // Pass it down
-      super(id, ...sources);
+      super(id, info, ...sources);
     };
   },
 };

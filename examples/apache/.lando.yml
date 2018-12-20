@@ -1,11 +1,6 @@
 # Name of my app
 name: apache
 
-# Give me http://apache.lndo.site and https://apache.lndo.site
-proxy:
-  html:
-    - apache.lndo.site
-
 # Build me an apache worthy of the internet
 services:
 
