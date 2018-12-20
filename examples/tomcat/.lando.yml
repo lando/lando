@@ -1,0 +1,23 @@
+# Tomcat example server
+name: tomcat
+
+# Spin up services to run a basic tomcat server
+services:
+
+  # Create a tomcat instance
+  appserver:
+
+    # tomcat version 8
+    type: tomcat
+
+    # SSL
+    ssl: true
+
+    # Webroot
+    webroot: .
+
+    # config:
+    #   server: config/web.xml
+    #   web: config/web.xml
+    #   context: config/context.xml
+    #   users: config/tomcat-users.xml

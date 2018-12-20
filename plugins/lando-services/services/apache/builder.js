@@ -27,9 +27,7 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       // Use different default for ssl
-      if (options.ssl) {
-        options.defaultFiles.vhosts = 'default-ssl.conf';
-      }
+      if (options.ssl) options.defaultFiles.vhosts = 'default-ssl.conf';
       // Build the default stuff here
       const apache = {
         image: `bitnami/apache:${options.version}`,

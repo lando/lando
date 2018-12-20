@@ -53,17 +53,18 @@
     "assets": [
       "config.yml",
       "package.json",
-      "**/fastcgi_params",
-      "**/*.cnf",
-      "**/*.conf",
-      "**/*.ini",
-      "**/*.php",
-      "**/*.yml",
-      "**/*.sh",
-      "**/*.vcl",
-      "**/*.json",
-      "**/*.toml",
-      "**/*.tpl"
+      "plugins/**/fastcgi_params",
+      "plugins/**/*.cnf",
+      "plugins/**/*.conf",
+      "plugins/**/*.ini",
+      "plugins/**/*.json",
+      "plugins/**/*.php",
+      "plugins/**/*.sh",
+      "plugins/**/*.toml",
+      "plugins/**/*.tpl",
+      "plugins/**/*.vcl",
+      "plugins/**/*.xml",
+      "plugins/**/*.yml"
     ]
   },
   "dependencies": {
