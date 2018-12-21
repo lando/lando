@@ -1,11 +1,6 @@
 # node server example
 name: node
 
-# Give me http://node.lndo.site and https://node.lndo.site
-proxy:
-  appserver:
-    - node.lndo.site
-
 # Spin up services to run a basic node server
 services:
 

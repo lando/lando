@@ -17,7 +17,7 @@ services:
     # You can also set `portforward: true` to have Lando dynamically assign
     # a port. Unlike specifying an actual port setting this to true will give you
     # a different port every time you restart your app
-    portforward: 9999
+    portforward: true
 
     # Memsize
     mem: 1026m

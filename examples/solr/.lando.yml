@@ -1,7 +1,6 @@
 # solr server example
 name: solr
 
-
 # Spin up services to run a basic node server with solr backend
 services:
 

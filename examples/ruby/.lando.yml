@@ -1,7 +1,6 @@
 # Ruby server
 name: ruby
 
-
 # Spin up services to run a basic ruby server
 services:
 

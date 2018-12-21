@@ -1,7 +1,6 @@
 # The name of the app
 name: mysql
 
-
 # Set up my services
 services:
 

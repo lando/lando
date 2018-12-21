@@ -1,11 +1,6 @@
 # Go server example
 name: go
 
-# Give me http://go.lndo.site and https://go.lndo.site
-proxy:
-  appserver:
-    - go.lndo.site
-
 # Spin up services to run a basic go server
 services:
 
@@ -33,7 +28,6 @@ services:
     # you can leave this blank and the container will boot up and stay on
     #
     command: go run /app/http1.go
-
 
   cli:
     type: go
