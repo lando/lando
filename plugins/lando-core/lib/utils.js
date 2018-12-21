@@ -45,15 +45,15 @@ exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
 /*
  * Takes inspect data and extracts all the exposed ports
  */
-exports.getUrls = data => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
-  .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '80/tcp') ? 'http' : 'https'}))
-  .filter(exposed => _.includes(['443', '80'], exposed.port))
+exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
+  .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '443/tcp') ? 'https' : 'http'}))
+  .filter(exposed => _.includes(scan, exposed.port))
   .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
   .filter(ports => ports.HostIp === '0.0.0.0')
   .map(ports => url.format({
     protocol: ports.protocol,
     hostname: 'localhost',
-    port: _.includes(['443', '80'], ports.port) ? ports.HostPort : '',
+    port: _.includes(scan, ports.port) ? ports.HostPort : '',
   }))
   .thru(urls => ({service: data.Config.Labels['com.docker.compose.service'], urls}))
   .value();

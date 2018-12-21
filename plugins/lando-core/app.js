@@ -14,7 +14,9 @@ module.exports = (app, lando) => {
     .filter(container => _.includes(app.services, container.service))
     // Inspect each and add new URLS
     .map(container => app.engine.scan(container))
-    .map(data => utils.getUrls(data))
+    // @TODO: figure out a good place to store "overrides" for services that should scan for more than
+    // 80/443 so we dont have to hardcode 8983 for SOLR
+    .map(data => utils.getUrls(data, ['80', '443', '8983']))
     .map(data => _.find(app.info, {service: data.service}).urls = data.urls));
   });
 

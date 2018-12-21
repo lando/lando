@@ -77,7 +77,6 @@ const parseConfig = options => {
   };
 };
 
-
 // Builder
 module.exports = {
   name: 'php',

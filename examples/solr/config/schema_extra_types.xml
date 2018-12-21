@@ -1,0 +1,59 @@
+<!--
+  The config generator will add more field types here automatically if
+  required by your drupal setup. Having these field types in a separate file is
+  better than modifying schema.xml.
+-->
+
+<!-- An unstemmed text field - good if one does not know the language of the field -->
+<fieldType name="text_und" class="solr.TextField" positionIncrementGap="100">
+  <analyzer type="index">
+    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+    <filter class="solr.WordDelimiterGraphFilterFactory"
+            protected="protwords.txt"
+            generateWordParts="1"
+            generateNumberParts="1"
+            catenateWords="1"
+            catenateNumbers="1"
+            catenateAll="0"
+            splitOnCaseChange="0"/>
+    <filter class="solr.LengthFilterFactory" min="2" max="100" />
+    <filter class="solr.LowerCaseFilterFactory"/>
+  </analyzer>
+  <analyzer type="query">
+    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+    <filter class="solr.StopFilterFactory"
+            ignoreCase="true"
+            words="stopwords.txt"
+    />
+    <filter class="solr.WordDelimiterGraphFilterFactory"
+            protected="protwords.txt"
+            generateWordParts="1"
+            generateNumberParts="1"
+            catenateWords="0"
+            catenateNumbers="0"
+            catenateAll="0"
+            splitOnCaseChange="0"/>
+    <filter class="solr.LengthFilterFactory" min="2" max="100" />
+    <filter class="solr.LowerCaseFilterFactory"/>
+  </analyzer>
+  <analyzer type="multiterm">
+    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+    <filter class="solr.StopFilterFactory"
+            ignoreCase="true"
+            words="stopwords.txt"
+    />
+    <filter class="solr.WordDelimiterGraphFilterFactory"
+            protected="protwords.txt"
+            generateWordParts="1"
+            generateNumberParts="1"
+            catenateWords="0"
+            catenateNumbers="0"
+            catenateAll="0"
+            splitOnCaseChange="0"/>
+    <filter class="solr.LengthFilterFactory" min="2" max="100" />
+    <filter class="solr.LowerCaseFilterFactory"/>
+  </analyzer>
+</fieldType>
