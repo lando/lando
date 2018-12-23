@@ -4,23 +4,26 @@
 const _ = require('lodash');
 
 /*
- * Build CA service
+ * Build LEMP
  */
 module.exports = {
   name: 'lemp',
-  parent: 'lamp',
+  parent: '_lamp',
   config: {
-    database: 'mysql',
+    composer: {},
     confSrc: __dirname,
     config: {},
+    database: 'mysql',
     php: '7.2',
-    proxy: 'appserver_nginx',
+    services: {},
+    tooling: {},
     via: 'nginx',
     webroot: '.',
     xdebug: false,
   },
-  builder: (parent, config) => class LandoLamp extends parent {
+  builder: (parent, config) => class LandoLemp extends parent {
     constructor(id, options = {}) {
+      options.proxy = {appserver_nginx: [`${options.app}.${options._app._config.domain}`]};
       super(id, _.merge({}, config, options));
     };
   },

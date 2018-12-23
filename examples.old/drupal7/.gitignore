@@ -1,4 +1,0 @@
-files
-node_modules
-www/*
-!www/.gitkeep

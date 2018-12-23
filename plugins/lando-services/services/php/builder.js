@@ -11,9 +11,9 @@ const utils = require('./../../lib/utils');
  */
 const nginxConfig = options => ({
   app: options.app,
-  config: {
+  config: _.merge({}, {
     vhosts: `${options.confDest}/${options.defaultFiles.vhosts}`,
-  },
+  }, options.config),
   confDest: path.resolve(options.confDest, '..', 'nginx'),
   home: options.home,
   name: `${options.name}_nginx`,
