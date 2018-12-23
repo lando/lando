@@ -37,7 +37,7 @@ const appRunner = command => (argv, lando) => {
 const engineRunner = (config, command) => (argv, lando) => {
   const AsyncEvents = require('./../lib/events');
   // Build a minimal app
-  const app = lando.cache.get(path.basename(config.toolingCache));
+  const app = lando.cache.get(path.basename(config.composeCache));
   app.config = config;
   app.events = new AsyncEvents(lando.log);
   // Load only what we need so we dont pay the appinit penalty
@@ -53,11 +53,12 @@ const engineRunner = (config, command) => (argv, lando) => {
  * Helper to load a very basic app
  */
 const getApp = (file, userConfRoot) => {
-  const config = load(file);
+  const config = loadLandoFile(file);
   return _.merge({}, config, {
     configFile: file,
     project: _.toLower(config.name).replace(/_|-|\.+/g, ''),
     root: path.dirname(file),
+    composeCache: path.join(userConfRoot, 'cache', `${config.name}.compose.cache`),
     toolingCache: path.join(userConfRoot, 'cache', `${config.name}.tooling.cache`),
   });
 };
@@ -65,7 +66,7 @@ const getApp = (file, userConfRoot) => {
 /*
  * Helper to determine bootstrap level
  */
-const getBsLevel = (config, command) => (!fs.existsSync(config.toolingCache)) ? 'app' : 'engine';
+const getBsLevel = (config, command) => (!fs.existsSync(config.composeCache)) ? 'app' : 'engine';
 
 /*
  * Helper to parse tasks
@@ -73,8 +74,13 @@ const getBsLevel = (config, command) => (!fs.existsSync(config.toolingCache)) ? 
  * @NOTE: i guess we are not really factoring in whether lando-tooling is disabled or not?
  * @TODO: do we need some validation of the dumped tasks here?
  */
-const getTasks = (tooling = [], level = 'app', config = {}, tasks = []) => {
-  _.forEach(tooling, (task, command) => {
+const getTasks = (config = {}, tasks = []) => {
+  // If we have a recipe lets rebase on that
+  if (_.has(config, 'recipe')) config.tooling = _.merge({}, loadCacheFile(config.toolingCache), config.tooling);
+  // If the tooling command is being called lets assess whether we can get away with engine bootstrap level
+  const level = (_.includes(_.keys(config.tooling), cli.argv()._[0])) ? getBsLevel(config, cli.argv()._[0]) : 'app';
+  // Load all the tasks
+  _.forEach(_.get(config, 'tooling', {}), (task, command) => {
     tasks.push({
       command,
       level,
@@ -83,17 +89,28 @@ const getTasks = (tooling = [], level = 'app', config = {}, tasks = []) => {
       run: (level === 'app') ? appRunner(command) : engineRunner(config, command),
     });
   });
-  return tasks.concat(JSON.parse(JSON.parse(fs.readFileSync(process.landoTaskCacheFile, {encoding: 'utf-8'}))));
+  return tasks.concat(loadCacheFile(process.landoTaskCacheFile));
+};
+
+/*
+ * Helper to load cached file without cache module
+ */
+const loadCacheFile = file => {
+  try {
+    return JSON.parse(JSON.parse(fs.readFileSync(file, {encoding: 'utf-8'})));
+  } catch (e) {
+    throw new Error(`There was a problem with parsing ${file}. Ensure it is valid JSON! ${e}`);
+  }
 };
 
 /*
  * Helper to load landofile
  */
-const load = file => {
+const loadLandoFile = file => {
   try {
     return yaml.safeLoad(fs.readFileSync(file));
   } catch (e) {
-    throw new Error(`There was a problem with parsing ${file}. Ensure it is valid yaml! ${e}`);
+    throw new Error(`There was a problem with parsing ${file}. Ensure it is valid YAML! ${e}`);
   }
 };
 
@@ -114,33 +131,35 @@ const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
 const starter = path.resolve(process.cwd(), cli.defaultConfig().landoFile);
 const landoFile = _.find(traverseUp(starter), file => fs.existsSync(file));
 const config = (landoFile) ? getApp(landoFile, cli.defaultConfig().userConfRoot) : {};
-const tooling = _.get(config, 'tooling', []);
+const bsLevel = (_.has(config, 'recipe')) ? 'APP' : 'TASKS';
 
-// Lando cache
+// Lando cache stuffs
 process.lando = 'node';
 process.landoTaskCacheName = '_.tasks.cache';
 process.landoTaskCacheFile = path.join(cli.defaultConfig().userConfRoot, 'cache', process.landoTaskCacheName);
-
-// If the tooling command is being called lets assess whether we can get away with engine bootstrap level
-const toolingLevel = (_.includes(_.keys(tooling), cli.argv()._[0])) ? getBsLevel(config, cli.argv()._[0]) : 'app';
+process.landoAppTaskCacheFile = !_.isEmpty(config) ? config.toolingCache : undefined;
 
 // Check for sudo usage
 cli.checkPerms();
 
+// Check to see if we have a recipe and if it doesnt have a tooling cache lets enforce a manual cache clear
+if (bsLevel === 'APP' && !fs.existsSync(config.toolingCache)) {
+  if (fs.existsSync(process.landoTaskCacheFile)) fs.unlinkSync(process.landoTaskCacheFile);
+}
+
 // Print the cli if we've got tasks cached
 if (fs.existsSync(process.landoTaskCacheFile)) {
-  cli.run(getTasks(tooling, toolingLevel, config));
+  cli.run(getTasks(config));
 // Otherwise min bootstrap lando so we can generate the task cache first
 } else {
   // NOTE: we require lando down here because it adds .5 seconds if we do it above
   const Lando = require('./../lib/lando');
   const lando = new Lando(cli.defaultConfig());
-  // Bootstrap lando
-  // Dump the tasks cache
-  // Parse the tasks
-  // Show the cli
-  lando.bootstrap('CONFIG').then(lando => {
-    lando.cache.set(process.landoTaskCacheName, JSON.stringify(lando.tasks), {persist: true});
-    cli.run(getTasks(tooling, toolingLevel, config));
+  // Bootstrap lando at the correct level
+  lando.bootstrap(bsLevel).then(lando => {
+    // If bootstrap level is APP then we need to get and init our app to generate the app task cache
+    if (bsLevel === 'APP') lando.getApp(landoFile).init().then(() => cli.run(getTasks(config)));
+    // Otherwise run as yooz
+    else cli.run(getTasks(config));
   });
 }

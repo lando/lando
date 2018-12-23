@@ -30,9 +30,9 @@ module.exports = {
           PMA_PORT: 3306,
           PMA_USER: 'root',
           PMA_PASSWORD: '',
-          TERM: 'xterm',
         },
         ports: ['80'],
+        working_dir: '/tmp',
         command: '/run.sh phpmyadmin',
       };
       // Add some info
