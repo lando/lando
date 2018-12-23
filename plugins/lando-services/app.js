@@ -85,11 +85,11 @@ module.exports = (app, lando) => {
       internal: _.get(_.find(app.info, {service: service.service}), 'internal_connection.port'),
     }))
     .map(service => lando.engine.scan(service).then(data => {
-       const key = `NetworkSettings.Ports.${service.internal}/tcp`;
-       const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
-       if (_.has(port, 'HostPort')) {
+      const key = `NetworkSettings.Ports.${service.internal}/tcp`;
+      const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
+      if (_.has(port[0], 'HostPort')) {
         _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
-       }
+      }
     }));
   });
 

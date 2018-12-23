@@ -110,7 +110,8 @@ const getTooling = options => {
     tooling.psql = {
       service: ':host',
       description: 'Drop into a psql shell on a database service',
-      cmd: 'psql -h localhost -p 5432',
+      cmd: 'psql -Upostgres',
+      user: 'root',
       options: {
         host: {
           description: 'The database service to use',
@@ -135,6 +136,7 @@ module.exports = {
     confSrc: __dirname,
     config: {},
     php: '7.2',
+    proxy: 'appserver',
     via: 'apache',
     webroot: '.',
     xdebug: false,
@@ -143,7 +145,7 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       const app = {
-        proxy: {appserver: [`${options.app}.${options._app._config.domain}`]},
+        proxy: _.set({}, options.proxy, [`${options.app}.${options._app._config.domain}`]),
         services: getServices(options),
         tooling: getTooling(options),
       };

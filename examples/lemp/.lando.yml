@@ -1,24 +1,24 @@
-# LAMP recipe example
-name: lamp2
+# LEMP recipe example
+name: lemp
 
-# Start with the default LAMP recipe
-recipe: lamp
+# Start with the default LEMP recipe
+recipe: lemp
 
-# Configure the LAMP recipe
-config:
+# Configure the LEMP recipe
+# config:
 
   # Optionally specify the php version to use.
   #
-  # If ommitted this will default to  the latest php version. Consult the `php`
+  # If ommitted this will default to the latest php version. Consult the `php`
   # service to see what version are available
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
-  php: '5.6'
+  # php: '7.2'
 
   # Optionally specify the location of the webroot relative to your approot.
   #
   # If ommitted this will be your approot itself.
-  webroot: www
+  # webroot: www
 
   # Optionally specify the database type, this can be one of:
   #
@@ -29,18 +29,15 @@ config:
   # If ommitted this will default to the latest mysql. You can additionally provide
   # a version with `type:version` but you will need to consult the documentation
   # for the correct DB service to see what versions are available
-  database: mysql
+  # database: mysql
 
   # Optionally activate xdebug
-  #
-  # If you are having trouble getting xdebug to work please see:
-  # https://docs.devwithlando.io/services/php.html#using-xdebug
-  xdebug: true
+  # xdebug: true
 
   # Optionally mix in your own config files
   #
   # If ommitted this will use "sane defaults" for your recipe type
-  conf:
+  # conf:
 
     # For more information on setting these files check out the documentation
     # and examples
@@ -48,8 +45,8 @@ config:
     # Docs: https://docs.devwithlando.io/services/php.html
     # Examples: https://github.com/lando/lando/tree/master/examples
     #
-    server: config/lamp.conf
-    php: config/php.ini
+    # server: config/nginx.conf
+    # php: config/php.ini
 
     # For more information on setting these files check out the documentation
     # and examples for the relevant services:
@@ -60,4 +57,4 @@ config:
     #
     # Examples: https://github.com/lando/lando/tree/master/examples
     #
-    database: config/mysql
+    # database: config/mysql
