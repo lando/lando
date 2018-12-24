@@ -14,10 +14,10 @@ module.exports = {
     persist: false,
     port: '6379',
     defaultFiles: {
-      config: 'redis.conf',
+      server: 'redis.conf',
     },
     remoteFiles: {
-      config: '/usr/local/etc/redis/redis.conf',
+      server: '/usr/local/etc/redis/redis.conf',
     },
   },
   parent: '_service',
@@ -28,7 +28,7 @@ module.exports = {
         image: `redis:${options.version}`,
         command: 'docker-entrypoint.sh redis-server /usr/local/etc/redis/redis.conf',
         volumes: [
-          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
         ],
       };
       // Set persistence to true

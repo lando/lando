@@ -30,4 +30,4 @@ services:
     # This is relative to the app root
     # NOTE: these files need to end in .conf
     # config:
-    #   config: config/mythings.conf
+    #   database: config/mythings.conf

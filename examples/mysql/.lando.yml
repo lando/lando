@@ -32,4 +32,4 @@ services:
     # This is relative to the app root
     # NOTE: these files need to end in .cnf
     # config:
-    #  config: config/my.cnf
+    #  database: config/my.cnf

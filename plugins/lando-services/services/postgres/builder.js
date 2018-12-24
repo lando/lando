@@ -19,10 +19,10 @@ module.exports = {
     healthcheck: 'psql -U postgres -c "\\\l"',
     port: '5432',
     defaultFiles: {
-      config: 'postgresql.conf',
+      database: 'postgresql.conf',
     },
     remoteFiles: {
-      config: '/opt/bitnami/postgresql/conf/postgresql.conf',
+      database: '/opt/bitnami/postgresql/conf/postgresql.conf',
     },
   },
   parent: '_service',
@@ -36,7 +36,7 @@ module.exports = {
           POSTGRESQL_DATABASE: options.creds.database,
         },
         volumes: [
-          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `data_${options.name}:/bitnami`,
         ],
       };

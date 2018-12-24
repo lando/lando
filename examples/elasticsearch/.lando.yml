@@ -30,5 +30,5 @@ services:
     # Optionally load in a custom config file. This is relative to the app root.
     #
     config:
-      config: config/custom.yml
+      server: config/custom.yml
 

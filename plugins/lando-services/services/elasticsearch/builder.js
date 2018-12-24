@@ -15,10 +15,10 @@ module.exports = {
     port: '9200',
     mem: '1025m',
     defaultFiles: {
-      config: 'config.yml',
+      server: 'config.yml',
     },
     remoteFiles: {
-      config: '/opt/bitnami/elasticsearch/config/elasticsearch_custom.yml',
+      server: '/opt/bitnami/elasticsearch/config/elasticsearch_custom.yml',
     },
   },
   parent: '_service',
@@ -39,7 +39,7 @@ module.exports = {
         },
         working_dir: '/bitnami/elasticsearch/data',
         volumes: [
-          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
           `data_${options.name}:/bitnami/elasticsearch/data`,
         ],
       };

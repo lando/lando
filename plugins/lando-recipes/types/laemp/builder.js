@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./../../lib/utils');
 
 // Tooling defaults
 const toolingDefaults = {
@@ -51,43 +52,28 @@ const toolingDefaults = {
 /*
  * Helper to get services
  */
-const getServices = options => {
-  const services = {
-    appserver: {
-      composer: options.composer,
-      config: {},
-      type: `php:${options.php}`,
-      via: options.via,
-      ssl: true,
-      xdebug: options.xdebug,
-      webroot: options.webroot,
+const getServices = options => ({
+  appserver: {
+    build_internal: options.build,
+    composer: options.composer,
+    config: utils.getServiceConfig(options),
+    type: `php:${options.php}`,
+    via: options.via,
+    ssl: true,
+    xdebug: options.xdebug,
+    webroot: options.webroot,
+  },
+  database: {
+    config: utils.getServiceConfig(options, ['database']),
+    type: options.database,
+    portforward: true,
+    creds: {
+      user: options.recipe,
+      password: options.recipe,
+      database: options.recipe,
     },
-    database: {
-      config: {},
-      type: options.database,
-      portforward: true,
-      creds: {
-        user: options.recipe,
-        password: options.recipe,
-        database: options.recipe,
-      },
-    },
-  };
-  // Set custom vhosts conf
-  if (_.has(options, 'config.vhosts')) {
-    services.appserver.config.vhosts = options.config.vhosts;
-  }
-  // Set custom php conf
-  if (_.has(options, 'config.php')) {
-    services.appserver.config.php = options.config.php;
-  }
-  // Set custom DB conf
-  if (_.has(options, 'config.database')) {
-    services.database.config.config = options.config.database;
-  }
-  // Return
-  return services;
-};
+  },
+});
 
 /*
  * Helper to get tooling
@@ -133,14 +119,9 @@ module.exports = {
   name: '_lamp',
   parent: '_recipe',
   config: {
-    composer: {},
     confSrc: __dirname,
-    config: {},
     database: 'mysql',
     php: '7.2',
-    proxy: {},
-    services: {},
-    tooling: {},
     via: 'apache',
     webroot: '.',
     xdebug: false,
@@ -150,7 +131,7 @@ module.exports = {
       options = _.merge({}, config, options);
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
-      super(id, _.merge({}, options));
+      super(id, _.merge({}, config, options));
     };
   },
 };

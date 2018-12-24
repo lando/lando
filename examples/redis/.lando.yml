@@ -24,4 +24,4 @@ services:
     # Optionally load in a custom redis.conf this is relative to your app root
     # directory
     config:
-      config: config/redis.conf
+      server: config/redis.conf

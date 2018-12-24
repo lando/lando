@@ -30,4 +30,4 @@ services:
     # Optionally use the following mongo config file
     # This is relative to the app root
     config:
-      config: custom.conf
+      database: custom.conf

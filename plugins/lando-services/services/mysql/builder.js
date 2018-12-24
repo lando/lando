@@ -19,10 +19,10 @@ module.exports = {
     healthcheck: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
     port: '3306',
     defaultFiles: {
-      config: 'my_custom.cnf',
+      database: 'my_custom.cnf',
     },
     remoteFiles: {
-      config: '/opt/bitnami/mysql/conf/my_custom.cnf',
+      database: '/opt/bitnami/mysql/conf/my_custom.cnf',
     },
   },
   parent: '_service',
@@ -40,7 +40,7 @@ module.exports = {
           MYSQL_USER: options.creds.user,
         },
         volumes: [
-          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `data_${options.name}:/bitnami/mysql/data`,
         ],
       };

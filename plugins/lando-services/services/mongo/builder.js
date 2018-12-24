@@ -16,10 +16,10 @@ module.exports = {
     },
     port: '27017',
     defaultFiles: {
-      config: 'mongodb.conf',
+      database: 'mongodb.conf',
     },
     remoteFiles: {
-      config: '/opt/bitnami/mongodb/conf/mongodb.conf',
+      database: '/opt/bitnami/mongodb/conf/mongodb.conf',
     },
   },
   parent: '_service',
@@ -35,7 +35,7 @@ module.exports = {
           MONGODB_DATABASE: options.creds.database,
         },
         volumes: [
-          `${options.confDest}/${options.defaultFiles.config}:${options.remoteFiles.config}`,
+          `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `data_${options.name}:/bitnami`,
         ],
       };

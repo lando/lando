@@ -27,7 +27,7 @@ config:
   #
   # See: https://www.drupal.org/docs/7/system-requirements/web-server
   #
-  # via: nginx
+  via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   #
@@ -42,7 +42,7 @@ config:
   #
   # You can also choose a specific version to install. Note that if you've also installed
   # drush via composer, Lando will use that instead of what you define here
-  drush: '^7'
+  # drush: '^7'
 
   # Optionally specify the database type, this can be one of:
   #

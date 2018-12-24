@@ -42,6 +42,7 @@ exports.getPhar = (url, src, dest, check) => {
 
 /*
  * Helper to get simple lamp/lemp config defaultz
+ * NOTE: is it problem that this and lemp has the same class name?
  */
 exports.getLampDefaults = (name = 'lamp', via = 'apache', proxyService = 'appserver') => ({
   name,
@@ -65,3 +66,18 @@ exports.getLampDefaults = (name = 'lamp', via = 'apache', proxyService = 'appser
     };
   },
 });
+
+/*
+ * Helper to get service config
+ */
+exports.getServiceConfig = (options, types = ['php', 'vhosts']) => {
+  const config = {};
+  _.forEach(types, type => {
+    if (_.has(options, `config.${type}`)) {
+      config[type] = options.config[type];
+    } else if (!_.has(options, `config.${type}`) && _.has(options, `defaultFiles.${type}`)) {
+      config[type] = path.join(options.confDest, options.defaultFiles[type]);
+    }
+  });
+  return config;
+};
