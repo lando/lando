@@ -131,7 +131,7 @@ module.exports = {
       options = _.merge({}, config, options);
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
-      super(id, _.merge({}, config, options));
+      super(id, options);
     };
   },
 };

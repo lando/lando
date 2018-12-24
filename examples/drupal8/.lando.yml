@@ -1,11 +1,11 @@
 # Drupal 8 recipe
-name: d8
+name: drupal8
 
 # Start with the default Drupal 8 recipe
 recipe: drupal8
 
 # Configure the Drupal8 recipe
-config:
+# config:
 
   # See: https://www.drupal.org/docs/7/system-requirements
 
@@ -19,7 +19,7 @@ config:
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.1'
+  # php: '7.1'
 
   # Optionally specify whether you want to serve drupal via nginx or apache
   #
@@ -27,13 +27,13 @@ config:
   #
   # See: https://www.drupal.org/docs/7/system-requirements/web-server
   #
-  via: nginx
+  # via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   #
   # If ommitted this will be your approot itself.
   #
-  webroot: web
+  # webroot: web
 
   # Optionally specify how you want Lando to handle Drush. There are a few options
   #
@@ -69,7 +69,7 @@ config:
   # This will tell Lando to not do anything, e.g. it's up to the user
   # drush: false
   #
-  drush: composer
+  # drush: composer
 
   # Optionally specify whether you want to disable the global install of drupal console.
   #
@@ -97,7 +97,7 @@ config:
   #
   # If you are having trouble getting xdebug to work please see:
   # https://docs.devwithlando.io/services/php.html#using-xdebug
-  xdebug: true
+  # xdebug: true
 
   # Optionally mix in your own config files
   #

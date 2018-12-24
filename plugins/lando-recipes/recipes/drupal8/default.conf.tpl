@@ -2,7 +2,7 @@ server {
   listen 80 default_server;
   listen 443 ssl;
 
-  server_name appserver;
+  server_name localhost;
 
   ssl_certificate           /certs/cert.crt;
   ssl_certificate_key       /certs/cert.key;
