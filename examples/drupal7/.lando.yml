@@ -5,7 +5,7 @@ name: drupal7
 recipe: drupal7
 
 # Configure the Drupal 7 recipe
-config:
+# config:
 
   # See: https://www.drupal.org/docs/7/system-requirements
 
@@ -27,7 +27,7 @@ config:
   #
   # See: https://www.drupal.org/docs/7/system-requirements/web-server
   #
-  via: nginx
+  # via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   #

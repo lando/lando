@@ -1,5 +1,5 @@
 # Drupal 6 recipe
-name: d6
+name: drupal6
 
 # Start with the default Drupa 6 recipe
 recipe: drupal6
@@ -69,7 +69,7 @@ config:
   # This will tell Lando to not do anything, e.g. it's up to the user
   # drush: false
   #
-  drush: stable
+  # drush: stable
 
   # Optionally specify the database type, this can be one of:
   #
