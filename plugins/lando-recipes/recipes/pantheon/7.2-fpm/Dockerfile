@@ -7,8 +7,8 @@ FROM devwithlando/php:7.2-fpm
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.3
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.8.1
-ENV MAVEN_VERSION 3.5.3
+ENV TERMINUS_VERSION 1.9.0
+ENV MAVEN_VERSION 3.5.4
 
 # Install the additional things that make the pantheon
 RUN mkdir -p /usr/share/man/man1 \

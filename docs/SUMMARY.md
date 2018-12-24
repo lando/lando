@@ -105,6 +105,7 @@
 *   [Setting up Additional Routes](config/proxy.md)
 *   [Setting up Additional Events](config/events.md)
 *   [Using Lando in Visual Studio Code](tutorials/lando-with-vscode.md)
+*   [Lando + PhpStorm + Xdebug](tutorials/lando-phpstorm.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Using $LANDO_INFO](tutorials/lando-info.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
