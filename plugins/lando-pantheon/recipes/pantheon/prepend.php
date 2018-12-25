@@ -1,8 +1,5 @@
 <?php
 
-// System paths
-putenv('PATH=' . getenv('PATH') . ':/srv/bin');
-
 // Generic Pantheon site inf0z
 define('PANTHEON_SITE', getenv('PANTHEON_SITE'));
 define('PANTHEON_SITE_NAME', getenv('PANTHEON_SITE_NAME'));
@@ -133,3 +130,7 @@ if (
   $dbh = null;
 
 }
+
+// SORT IT
+ksort($_ENV);
+ksort($_SERVER);

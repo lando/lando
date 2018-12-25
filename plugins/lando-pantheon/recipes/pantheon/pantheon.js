@@ -6,23 +6,14 @@ module.exports = lando => {
 
   // Modules
   const _ = lando.node._;
-  const crypto = require('crypto');
-  const fs = lando.node.fs;
   const path = require('path');
 
   // Lando things
   const PantheonApiClient = require('./client');
   const api = new PantheonApiClient(lando.log);
-  const addConfig = lando.utils.services.addConfig;
-  const buildVolume = lando.utils.services.buildVolume;
 
   // "Constants"
   const configDir = path.join(lando.config.servicesConfigDir, 'pantheon');
-
-  /*
-   * Hash helper
-   */
-  const getHash = u => crypto.createHash('sha256').update(u).digest('hex');
 
   /*
    * Event based logix
@@ -56,121 +47,6 @@ module.exports = lando => {
       lando.cache.remove(siteMetaDataKey + app.name);
     });
   });
-
-  /*
-   * Set constious pantheon environmental constiables
-   */
-  const env = config => {
-    // Framework specific stuff
-    const frameworkSpec = {
-      drupal: {
-        filemount: 'sites/default/files',
-      },
-      drupal8: {
-        filemount: 'sites/default/files',
-      },
-      wordpress: {
-        filemount: 'wp-content/uploads',
-      },
-      backdrop: {
-        filemount: 'files',
-      },
-    };
-
-    // Pressflow and backdrop database settings
-    const pantheonDatabases = {
-      default: {
-        default: {
-          driver: 'mysql',
-          prefix: '',
-          database: 'pantheon',
-          username: 'pantheon',
-          password: 'pantheon',
-          host: 'database',
-          port: 3306,
-        },
-      },
-    };
-
-    // Construct a hashsalt for Drupal 8
-    const drupalHashSalt = getHash(JSON.stringify(pantheonDatabases));
-
-    // Some Default settings
-    const settings = {
-      databases: pantheonDatabases,
-      conf: {
-        'pressflow_smart_start': true,
-        'pantheon_binding': 'lando',
-        'pantheon_site_uuid': _.get(config, 'id', 'lando'),
-        'pantheon_environment': 'lando',
-        'pantheon_tier': 'lando',
-        'pantheon_index_host': 'index',
-        'pantheon_index_port': 449,
-        'redis_client_host': 'cache',
-        'redis_client_port': 6379,
-        'redis_client_password': '',
-        'file_public_path': 'sites/default/files',
-        'file_private_path': 'sites/default/files/private',
-        'file_directory_path': 'sites/default/files',
-        'file_temporary_path': '/tmp',
-        'file_directory_temp': '/tmp',
-        'css_gzip_compression': false,
-        'js_gzip_compression': false,
-        'page_compression': false,
-      },
-      drupal_hash_salt: drupalHashSalt,
-      config_directory_name: 'config',
-    };
-
-    const env = {
-      // Basics
-      FRAMEWORK: config.framework,
-      DOCROOT: '/',
-      FILEMOUNT: frameworkSpec[config.framework].filemount,
-      DRUPAL_HASH_SALT: _.get(settings, 'drupal_hash_salt'),
-      PANTHEON_SITE: _.get(settings, 'conf.pantheon_site_uuid'),
-      PANTHEON_SITE_NAME: _.get(config, 'site', config._app),
-      PANTHEON_ENVIRONMENT: 'lando',
-
-      // DB
-      DB_HOST: 'database',
-      DB_PORT: 3306,
-      DB_USER: 'pantheon',
-      DB_PASSWORD: 'pantheon',
-      DB_NAME: 'pantheon',
-
-      // Cache
-      CACHE_HOST: _.get(settings, 'conf.redis_client_host'),
-      CACHE_PORT: _.get(settings, 'conf.redis_client_port'),
-      CACHE_PASSWORD: _.get(settings, 'conf.redis_client_password'),
-
-      // Index
-      PANTHEON_INDEX_HOST: _.get(settings, 'conf.pantheon_index_host'),
-      PANTHEON_INDEX_PORT: _.get(settings, 'conf.pantheon_index_port'),
-
-      // Framework
-      BACKDROP_SETTINGS: JSON.stringify(settings),
-      PRESSFLOW_SETTINGS: JSON.stringify(settings),
-      AUTH_KEY: drupalHashSalt,
-      SECURE_AUTH_KEY: getHash(config._app),
-      LOGGED_IN_KEY: getHash(config._app),
-      AUTH_SALT: getHash(config._app + config.framework),
-      SECURE_AUTH_SALT: getHash(config._app + config._root),
-      LOGGED_IN_SALT: getHash(config._root + config._app),
-      NONCE_SALT: getHash(config._root + config._root),
-      NONCE_KEY: getHash(config._root + config.framework),
-
-      // Terminus
-      // @todo: i am pretty sure these dont do anything yet
-      TERMINUS_SITE: _.get(config, 'site', config._app),
-      TERMINUS_ENV: _.get(config, 'env', 'dev'),
-      // TERMINUS_ORG: ''
-      // TERMINUS_USER="devuser@pantheon.io"
-    };
-
-    // Return the env
-    return env;
-  };
 
   /*
    * Helper to mix in the correct tooling
@@ -442,68 +318,6 @@ module.exports = lando => {
   };
 
   /*
-   * Mixin other needed pantheon volume based config like prepend.php
-   */
-  const pVols = volumes => {
-    // The where and what to mount
-    const mounts = [
-      '/srv/includes:prepend.php',
-      '/etc/nginx:nginx.conf',
-      '/helpers:pantheon.sh',
-      '/helpers:pull.sh',
-      '/helpers:push.sh',
-      '/helpers:switch.sh',
-    ];
-
-    // Loop
-    _.forEach(mounts, mount => {
-      // Break up the mount
-      const container = mount.split(':')[0];
-      const file = mount.split(':')[1];
-
-      // Get the paths
-      const local = path.join(configDir, file);
-      const remote = [container, file].join('/');
-
-      // Add the file
-      volumes = addConfig(buildVolume(local, remote), volumes);
-    });
-
-    // Add a volume for terminus cache
-    volumes.push('/var/www/.terminus');
-
-    // Return the new volumes
-    return volumes;
-  };
-
-  /*
-   * Mixin settings from pantheon.ymls
-   */
-  const mergePyaml = configFile => {
-    // Start with a config collector
-    const config = {};
-
-    // Check pantheon.yml settings if needed
-    if (fs.existsSync(configFile)) {
-      // Get the pantheon config
-      const pconfig = lando.yaml.load(configFile);
-
-      // Set a php version
-      if (_.has(pconfig, 'php_version')) {
-        config.php = _.get(pconfig, 'php_version');
-      }
-
-      // Set up a webroot
-      if (_.has(pconfig, 'web_docroot')) {
-        config.webroot = (_.get(pconfig, 'web_docroot', false)) ? 'web' : '.';
-      }
-    }
-
-    // Return settings
-    return config;
-  };
-
-  /*
    * Build out Pantheon
    */
   const build = (name, config) => {
@@ -512,23 +326,6 @@ module.exports = lando => {
     config.edge = 'varnish:4.1';
     config.index = 'solr:custom';
 
-    // Set the default php version based on framework
-    config.php = phpVersion(config.framework);
-
-    // Define our possible pantheon.ymls
-    const pyamls = [
-      path.join(config._root, 'pantheon.upstream.yml'),
-      path.join(config._root, 'pantheon.yml'),
-    ];
-
-    // Mixin pyamls if applicable
-    _.forEach(pyamls, pyaml => {
-      config = _.merge(config, mergePyaml(pyaml, config));
-    });
-
-    // Normalize because 7.0 gets handled strangely by js-yaml
-    if (config.php === 7) config.php = '7.0';
-
     // If this is Drupal8 let's add in drupal console and reset drush so it
     // globally installs Drush 8 FOR NOW
     // See: https://github.com/lando/lando/issues/580
@@ -536,29 +333,6 @@ module.exports = lando => {
       config.drupal = true;
       config.drush = 'stable';
     }
-
-    // Get the lando/pantheon base recipe/framework
-    let base = _.get(config, 'framework', 'drupal7');
-
-    // If the pantheon framework is drupal, then use lando d7 recipe
-    if (base === 'drupal') base = 'drupal7';
-
-    // Delegate and use a recipe
-    const build = lando.recipes.build(name, base, config);
-
-    // Set the pantheon environment
-    const envPath = 'services.appserver.overrides.services.environment';
-    _.set(build, envPath, env(config));
-
-    // Mount additonal helpers like prepend.php
-    const volPath = 'services.appserver.overrides.services.volumes';
-    const vols = _.get(build, volPath, []);
-    _.set(build, volPath, pVols(vols));
-
-    // Overide our default php images with special pantheon ones
-    const imagePath = 'services.appserver.overrides.services.image';
-    const image = 'devwithlando/pantheon-appserver:' + config.php;
-    _.set(build, imagePath, image);
 
     // Set the appserver to depend on index start up so we know our certs will be there
     const dependsPath = 'services.appserver.overrides.services.depends_on';
