@@ -12,8 +12,7 @@ You should be able to run the following steps to get up and running with this ex
 
 ```bash
 # Install dependencies with Composer
-# Do some other stuff that doesnt matter
-lando composer install
+curl -L https://wordpress.org/latest.tar.gz | tar zxv --strip 1 -C web
 
 # Start up the example
 lando start

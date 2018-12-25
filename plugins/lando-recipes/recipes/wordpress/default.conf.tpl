@@ -21,7 +21,7 @@ server {
   client_max_body_size 100M;
 
   ## Your only path reference.
-  root ${LANDO_WEBROOT};
+  root "{{LANDO_WEBROOT}}";
 
   ## This should be in your http block and if it is, it's not needed here.
   index index.php;

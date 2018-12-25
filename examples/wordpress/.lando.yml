@@ -19,7 +19,7 @@ config:
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.0'
+  # php: '7.0'
 
   # Optionally specify whether you want to serve drupal via nginx or apache
   #
@@ -27,7 +27,7 @@ config:
   #
   # See: https://wordpress.org/about/requirements/
   #
-  via: nginx
+  # via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   #
@@ -46,7 +46,7 @@ config:
   #
   # see: https://wordpress.org/about/requirements/
   #
-  database: mariadb
+  # database: mariadb
 
   # Optionally activate xdebug
   #
@@ -57,7 +57,7 @@ config:
   # Optionally mix in your own config files
   #
   # If ommitted this will use "sane defaults" for your recipe type
-  conf:
+  # conf:
 
     # For more information on setting these files check out the documentation
     # and examples
@@ -65,7 +65,7 @@ config:
     # Docs: https://docs.devwithlando.io/services/php.html
     # Examples: https://github.com/lando/lando/tree/master/examples
     #
-    server: wordpress2.conf
+    # server: wordpress2.conf
     # php: config/php.ini
 
     # For more information on setting these files check out the documentation
