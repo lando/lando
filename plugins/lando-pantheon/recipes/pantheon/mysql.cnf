@@ -11,8 +11,6 @@ default-character-set=utf8
 # * Basic Settings
 #
 # Data is stored in a volume on the db container /sql
-user = mysql
-datadir = /var/lib/mysql
 default-storage-engine = innodb
 
 #

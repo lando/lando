@@ -108,7 +108,7 @@ exports.getLampDefaults = (name = 'lamp', via = 'apache') => ({
 /*
  * Helper to get service config
  */
-exports.getServiceConfig = (options, types = ['php', 'vhosts']) => {
+exports.getServiceConfig = (options, types = ['php', 'server', 'vhosts']) => {
   const config = {};
   _.forEach(types, type => {
     if (_.has(options, `config.${type}`)) {

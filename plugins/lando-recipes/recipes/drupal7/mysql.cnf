@@ -7,14 +7,8 @@
 # * Basic Settings
 #
 # Data is stored in a volume on the db container /sql
-user = mysql
-datadir = /var/lib/mysql
 default-storage-engine = innodb
 
-#
-# Instead of skip-networking the default is now to listen only on
-# localhost which is more compatible and is not less secure.
-bind-address = 0.0.0.0
 #
 # * Fine Tuning
 #

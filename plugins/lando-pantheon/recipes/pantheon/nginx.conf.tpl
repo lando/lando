@@ -1,15 +1,20 @@
-user nginx;
-worker_processes 2;
-error_log  /var/log/nginx/error.log warn;
-pid        /var/run/nginx.pid;
+
+{{#if NGINX_DAEMON_USER}}{{#if NGINX_DAEMON_GROUP}}
+user {{NGINX_DAEMON_USER}} {{NGINX_DAEMON_GROUP}};
+{{/if}}{{/if}}
+
+worker_processes  auto;
+
+error_log  "{{NGINX_LOGDIR}}/error.log warn";
+pid        "{{NGINX_TMPDIR}}/nginx.pid";
 
 events {
-  worker_connections 128;
+    worker_connections  1024;
 }
 
 http {
 
-  include /etc/nginx/mime.types;
+  include mime.types;
   default_type text/plain;
 
   client_body_temp_path /tmp 1 2;
@@ -22,7 +27,8 @@ http {
                            '"$request" $status $body_bytes_sent '
                            '"$http_referer" "$http_user_agent" $request_time '
                            '"$http_x_forwarded_for"';
-  access_log /var/log/nginx-access.log time_combined buffer=2k;
+
+  access_log  "{{NGINX_LOGDIR}}/access.log time_combined buffer=2k";
 
   server_tokens off;
 
@@ -67,6 +73,6 @@ http {
     https ON;
   }
 
-  include /etc/nginx/conf.d/*.conf;
+  include "{{NGINX_CONFDIR}}/vhosts/*.conf";
 
 }

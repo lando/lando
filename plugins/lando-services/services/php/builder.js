@@ -70,7 +70,7 @@ const parseNginx = options => {
  * Helper to parse php config
  */
 const parseConfig = options => {
-  switch (options.via) {
+  switch (options.via.split(':')[0]) {
     case 'apache': return parseApache(options);
     case 'cli': return parseCli(options);
     case 'nginx': return parseNginx(options);
@@ -139,8 +139,8 @@ module.exports = {
           LANDO_WEBROOT: `/app/${options.webroot}`,
           XDEBUG_CONFIG: `remote_enable=true remote_host=${options._app.env.LANDO_HOST_IP}`,
         }),
-        networks: (options.via === 'nginx') ? {default: {aliases: ['fpm']}} : {default: {}},
-        ports: (options.via === 'apache') ? ['80'] : [],
+        networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
+        ports: (_.startsWith(options.via, 'apache')) ? ['80'] : [],
         volumes: options.volumes,
         command: options.command.join(' '),
       };
@@ -158,7 +158,7 @@ module.exports = {
       }
 
       // Add in nginx if we need to
-      if (options.via === 'nginx') {
+      if (_.startsWith(options.via, 'nginx')) {
         const nginxOpts = nginxConfig(options);
         const LandoNginx = factory.get('nginx');
         const nginx = new LandoNginx(nginxOpts.name, nginxOpts);

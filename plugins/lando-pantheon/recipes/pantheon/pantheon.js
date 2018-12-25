@@ -504,35 +504,13 @@ module.exports = lando => {
   };
 
   /*
-   * Helper to set default php version based on framework
-   */
-  const phpVersion = framework => {
-    switch (framework) {
-      case 'backdrop': return '5.6';
-      case 'drupal': return '5.6';
-      case 'drupal8': return '7.0';
-      case 'wordpress': return '7.2';
-      default: return '5.6';
-    }
-  };
-
-  /*
    * Build out Pantheon
    */
   const build = (name, config) => {
     // Set versions to match pantheon
-    config.via = 'nginx:1.8';
-    config.database = 'mariadb:10.0';
     config.cache = 'redis:2.8';
     config.edge = 'varnish:4.1';
     config.index = 'solr:custom';
-    config.framework = _.get(config, 'framework', 'drupal');
-
-    // Update with new config defaults
-    config.conf = config.conf || {};
-    config.conf.server = path.join(configDir, config.framework + '.conf');
-    config.conf.php = path.join(configDir, 'php.ini');
-    config.conf.database = path.join(configDir, 'mysql');
 
     // Set the default php version based on framework
     config.php = phpVersion(config.framework);

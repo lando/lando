@@ -57,7 +57,6 @@ const getServices = options => ({
     build_internal: options.build,
     composer: options.composer,
     config: utils.getServiceConfig(options),
-    depends_on: ['database'],
     type: `php:${options.php}`,
     via: options.via,
     ssl: true,
@@ -102,7 +101,7 @@ module.exports = {
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
       // Switch the proxy if needed and then set it
-      if (options.via === 'nginx') options.proxyService = 'appserver_nginx';
+      if (_.startsWith(options.via, 'nginx')) options.proxyService = 'appserver_nginx';
       options.proxy = _.set({}, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
       super(id, options);
     };

@@ -10,12 +10,12 @@ map $http_user_agent_https $client_scheme {
 server {
     listen 80 default_server;
     listen 443 ssl;
-    server_name appserver;
+    server_name localhost;
 
     add_header X-Pantheon-Site TBD always;
     add_header X-Pantheon-Environment lando always;
 
-    root ${LANDO_WEBROOT};
+    root "{{LANDO_WEBROOT}}";
     index index.php index.html index.htm;
     port_in_redirect off;
 
@@ -80,7 +80,7 @@ server {
         add_header X-Pantheon-Environment lando always;
         add_header Access-Control-Allow-Origin *;  # Firefox needs this.
 
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ @cleanurl;
 
 
         expires       -1;
@@ -91,7 +91,7 @@ server {
     location ~* \.(svgz)$ {
         auth_basic $auth_basic_realm;
 
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ @cleanurl;
 
         expires       -1;
 
@@ -108,7 +108,7 @@ server {
     location ~ \.(js|JS|css|CSS|png|PNG|igs|IGS|iges|IGES|jpg|JPG|jpeg|JPEG|gif|GIF|ico|ICO|txt|TXT|xml)$ {
         auth_basic $auth_basic_realm;
 
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ @cleanurl;
 
         expires          -1;
         log_not_found    off;
@@ -117,7 +117,7 @@ server {
     location / {
         auth_basic $auth_basic_realm;
         # @drupal is true for d6, d7 and d8. We want to use @cleanurl for d6 and d7.
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ @cleanurl;
         # Catch directory listing errors (i.e. no code)
         error_page 403 =561 /403.html;
         error_page 301 =301 $client_scheme://$host$uri/$is_args$args;
@@ -133,7 +133,7 @@ server {
     # Currently, '\.php$' is the only on that overlaps with '^/vendor/'.
     location ~ ^/vendor/.* {
         # Go straight to @cleanurl without 'try_files' or php execution
-        try_files pantheon_blocked_file.html /index.php?$args;
+        try_files pantheon_blocked_file.html @cleanurl;
     }
 
     # These need to be listed from most specific to most general.
@@ -152,7 +152,7 @@ server {
         include fastcgi_params;
         # Allow SimpleSamlPHP to work by settig PATH_INFO, etc
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
-        fastcgi_param SCRIPT_FILENAME ${LANDO_WEBROOT}$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME "{{LANDO_WEBROOT}}$fastcgi_script_name";
         # Catch php-fpm timeout errors
         error_page 504 /504.html;
     }
@@ -165,7 +165,7 @@ server {
         add_header X-Pantheon-Environment lando always;
         add_header X-Pantheon-Phpreq yes always;
 
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ @cleanurl;
         # Content-Type: text/html; charset=UTF-8
         fastcgi_param PHP_VALUE "default_mimetype=\"text/html\"
   default_charset=\"UTF-8\"";
@@ -175,7 +175,7 @@ server {
         include fastcgi_params;
         # Allow SimpleSamlPHP to work by settig PATH_INFO, etc
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
-        fastcgi_param SCRIPT_FILENAME ${LANDO_WEBROOT}$fastcgi_script_name;
+        fastcgi_param SCRIPT_FILENAME "{{LANDO_WEBROOT}}$fastcgi_script_name";
     }
 
     location ~ /\.ht {
