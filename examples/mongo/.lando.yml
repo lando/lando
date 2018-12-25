@@ -19,14 +19,6 @@ services:
     # a different port every time you restart your app
     portforward: 27018
 
-    # Optionally set the default db credentials
-    #
-    # Note: You will need to `lando destroy && lando start` to change these if you've
-    # already started your app
-    # See: https://docs.devwithlando.io/tutorials/lando-info.html
-    creds:
-      database: mongoose
-
     # Optionally use the following mongo config file
     # This is relative to the app root
     config:

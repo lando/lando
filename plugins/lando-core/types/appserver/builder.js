@@ -17,6 +17,10 @@ module.exports = {
           webroot: options.webroot,
         });
       }
+      // And set the working dir
+      sources.push({services: _.set({}, options.name, {
+        working_dir: '/app',
+      })});
       super(id, options, ...sources);
     };
   },

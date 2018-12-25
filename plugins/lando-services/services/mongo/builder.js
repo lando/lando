@@ -11,9 +11,6 @@ module.exports = {
     supported: ['4.1', '4.0', '3.6'],
     patchesSupported: true,
     confSrc: __dirname,
-    creds: {
-      database: 'database',
-    },
     port: '27017',
     defaultFiles: {
       database: 'mongodb.conf',
@@ -32,7 +29,6 @@ module.exports = {
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           // MONGODB_EXTRA_FLAGS for things like coallation?
-          MONGODB_DATABASE: options.creds.database,
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
