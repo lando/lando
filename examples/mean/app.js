@@ -21,17 +21,13 @@ http.createServer(app).listen(80);
 // Try to connect to memcachef
 app.get('/', (req, res) => {
   res.header('Content-type', 'text/html');
-
-  // Establish connection to db
   db.open((err, db) => {
-    assert.equal(null, err);
-
-    db.stats((err, stats) => {
-      assert.equal(null, err);
-      assert.ok(stats !== null);
-      db.close();
-      return res.end(JSON.stringify(stats));
-    });
+    if (err) return res.end('Waiting on mongo...');
+    else {
+      db.stats((err, stats) => {
+        db.close();
+        return res.end(JSON.stringify(stats));
+      });
+    }
   });
-
 });

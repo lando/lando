@@ -57,6 +57,7 @@ const getServices = options => ({
     build_internal: options.build,
     composer: options.composer,
     config: utils.getServiceConfig(options),
+    depends_on: ['database'],
     type: `php:${options.php}`,
     via: options.via,
     ssl: true,

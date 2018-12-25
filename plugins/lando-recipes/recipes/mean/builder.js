@@ -18,6 +18,7 @@ const getServices = options => ({
   appserver: {
     type: `node:${options.node}`,
     command: options.command,
+    depends_on: ['database'],
     globals: options.globals,
     ssl: options.ssl,
   },
