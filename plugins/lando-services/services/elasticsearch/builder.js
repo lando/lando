@@ -37,7 +37,6 @@ module.exports = {
           ELASTICSEARCH_PLUGINS: options.plugins.join(';'),
           ELASTICSEARCH_HEAP_SIZE: options.mem,
         },
-        working_dir: '/bitnami/elasticsearch/data',
         volumes: [
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
           `data_${options.name}:/bitnami/elasticsearch/data`,

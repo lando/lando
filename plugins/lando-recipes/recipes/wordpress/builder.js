@@ -37,9 +37,9 @@ module.exports = {
       // Add the wp cli install command
       options.build.unshift(utils.getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck));
       // Set the default vhosts if we are nginx
-      if (options.via === 'nginx') config.defaultFiles.vhosts = 'default.conf.tpl';
+      if (options.via === 'nginx') options.defaultFiles.vhosts = 'default.conf.tpl';
       // Set the default mysql if we are there as well
-      if (options.database !== 'postgres') config.defaultFiles.database = 'mysql.cnf';
+      if (options.database !== 'postgres') options.defaultFiles.database = 'mysql.cnf';
       // Send downstream
       super(id, options);
     };

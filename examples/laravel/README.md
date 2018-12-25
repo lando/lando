@@ -11,13 +11,11 @@ Getting Started
 You should be able to run the following steps to get up and running with this example.
 
 ```bash
-# Start up the example
-# NOTE: This will take awhile and ultiamtely show red URLs the first time you
-# do it but we need it to install the laravel-installer package for the next step
-lando start
-
 # Spin up a new laravel site
 lando laravel new web
+
+# Start up the example
+lando start
 
 # Check out other commands you can use with this example
 lando

@@ -19,7 +19,7 @@ config:
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.1'
+  # php: '7.1'
 
   # Optionally specify whether you want to serve Laravel via Nginx or Apache
   #
@@ -27,7 +27,7 @@ config:
   #
   # See: https://laravel.com/docs/5.6/installation#web-server-configuration
   #
-  via: nginx
+  # via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   # For Laravel this is usually 'public'
@@ -46,14 +46,14 @@ config:
   #
   # see: https://laravel.com/docs/5.6/database#configuration
   #
-  database: mariadb:10.1
+  # database: mariadb:10.1
 
   # Optionally specify a primary caching backend, this can be one of:
   #
   #   - `redis`
   #   - `memcached`
   #
-  # If ommitted this will not install a db for you
+  # If ommitted this will not install a cache for you
   #
   # see: https://laravel.com/docs/5.6/cache#configuration
   cache: redis
