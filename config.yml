@@ -1,5 +1,6 @@
 disablePlugins:
   - lando-init
+  - lando-pantheon
 stats:
   - report: true
     url: https://metrics.devwithlando.io

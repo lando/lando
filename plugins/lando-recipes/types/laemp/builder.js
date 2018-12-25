@@ -78,39 +78,7 @@ const getServices = options => ({
 /*
  * Helper to get tooling
  */
-const getTooling = options => {
-  const tooling = toolingDefaults;
-  if (_.includes(['mysql', 'mariadb'], options.database)) {
-    tooling.mysql = {
-      service: ':host',
-      description: 'Drop into a MySQL shell on a database service',
-      cmd: 'mysql -uroot',
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: 'database',
-          alias: ['h'],
-        },
-      },
-    };
-  } else if (options.database === 'postgres') {
-    tooling.psql = {
-      service: ':host',
-      description: 'Drop into a psql shell on a database service',
-      cmd: 'psql -Upostgres',
-      user: 'root',
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: 'database',
-          alias: ['h'],
-        },
-      },
-    };
-  }
-  // Return
-  return tooling;
-};
+const getTooling = options => _.merge({}, toolingDefaults, utils.getDbTooling(options.database));
 
 /*
  * Build L(E)AMP
