@@ -11,16 +11,6 @@ const DRUSH8 = '8.1.18';
 const DRUSH7 = '7.4.0';
 
 /*
- * Helper to get DRUSH 8 or DRUSH LAUNCHER phar
- */
-const drushUrl = version => `https://github.com/drush-ops/drush/releases/download/${version}/drush.phar`;
-
-/*
- * Helper to get the phar build command
- */
-const pharOut = (url, status) => utils.getPhar(url, '/tmp/drush.phar', '/usr/local/bin/drush', status);
-
-/*
  * Build Drupal 7
  */
 module.exports = {
@@ -55,8 +45,8 @@ module.exports = {
       if (!_.has(options, 'drush')) options.drush = (options.php === '5.3') ? DRUSH7 : DRUSH8;
       // Add the drush install command
       if (!_.isNull(semver.valid(options.drush)) && semver.major(options.drush) === 8) {
-        options.build.unshift(pharOut(drushUrl(options.drush), ['/tmp/drush.phar', 'core-status']));
-      } else {
+        options.build.unshift(utils.getDrush(options.drush, ['/tmp/drush.phar', 'core-status']));
+      } else if (options.drush !== false) {
         options.composer['drush/drush'] = options.drush;
       }
       // Set the default vhosts if we are nginx

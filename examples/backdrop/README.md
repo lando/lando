@@ -14,7 +14,7 @@ You should be able to run the following steps to get up and running with this ex
 # Get backdrop
 # NOTE: Probably want to replace with the latest release
 # See: https://github.com/backdrop/backdrop/releases
-curl -fsSL "https://github.com/backdrop/backdrop/archive/1.9.2.tar.gz" | tar -xz --strip 1 -C ./www
+curl -fsSL "https://github.com/backdrop/backdrop/archive/1.11.3.tar.gz" | tar -xz --strip 1 -C ./www
 
 # Start up the example
 lando start

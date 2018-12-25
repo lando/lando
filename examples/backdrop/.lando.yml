@@ -1,5 +1,5 @@
 # Backdrop recipe
-name: backdropcms
+name: backdrop
 
 # Start with the default Backdrop recipe
 recipe: backdrop
@@ -19,7 +19,7 @@ config:
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.0'
+  # php: '5.3'
 
   # Optionally specify whether you want to serve Backdrop via nginx or apache
   #
@@ -43,14 +43,8 @@ config:
   #
   # This will globally install the corresponding version posted over at
   # https://github.com/backdrop-contrib/drush/releases
+  #
   # backdrush: 0.0.6
-  #
-  # 2. Do nothing
-  #
-  # This will tell Lando to not do anything, e.g. it's up to the user
-  # backdrush: false
-  #
-  backdrush: 0.0.6
 
   # Optionally specify the database type, this can be one of:
   #
@@ -63,7 +57,7 @@ config:
   #
   # See: https://backdropcms.org/requirements
   #
-  database: mariadb
+  # database: mariadb
 
   # Optionally activate xdebug
   #
