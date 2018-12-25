@@ -4,11 +4,11 @@ Lando Pantheon appserver
 A container that approximates the appserver used on Pantheon.
 
 ```
-# Pantheon php 7.1 fpm appserver for Lando
+# Pantheon php 7.0 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:7.1 .
+# docker build -t devwithlando/pantheon-appserver:7.0-2 .
 
-FROM devwithlando/php:7.1-fpm
+FROM devwithlando/php:7.0-fpm-2
 
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2
@@ -16,7 +16,6 @@ ENV PHANTOMJS_VERSION 2.1.1
 ENV TERMINUS_VERSION 1.9.0
 ENV MAVEN_VERSION 3.5.4
 
-# Install the additional things that make the pantheon
 RUN apt-get update && apt-get install -y \
     openjdk-7-jre-headless \
     openjdk-7-jdk \

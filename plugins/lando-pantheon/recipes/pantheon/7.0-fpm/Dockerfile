@@ -1,19 +1,13 @@
-Lando Pantheon appserver
-========================
-
-A container that approximates the appserver used on Pantheon.
-
-```
-# Pantheon php 5.6 fpm appserver for Lando
+# Pantheon php 7.0 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:5.6 .
+# docker build -t devwithlando/pantheon-appserver:7.0-2 .
 
-FROM devwithlando/php:5.6-fpm
+FROM devwithlando/php:7.0-fpm-2
 
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
-ENV TERMINUS_VERSION 1.8.1
+ENV TERMINUS_VERSION 1.9.0
 ENV MAVEN_VERSION 3.5.4
 
 # Install the additional things that make the pantheon
@@ -48,4 +42,3 @@ RUN apt-get update && apt-get install -y \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
-```

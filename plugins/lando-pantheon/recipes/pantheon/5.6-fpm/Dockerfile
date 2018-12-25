@@ -1,8 +1,8 @@
 # Pantheon php 5.6 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:5.6 .
+# docker build -t devwithlando/pantheon-appserver:5.6-2 .
 
-FROM devwithlando/php:5.6-fpm
+FROM devwithlando/php:5.6-fpm-2
 
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2
