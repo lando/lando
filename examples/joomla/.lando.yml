@@ -5,7 +5,7 @@ name: joomla
 recipe: joomla
 
 # Configure the joomla recipe
-config:
+# config:
 
   # https://downloads.joomla.org/us/technical-requirements-us
 
@@ -19,7 +19,7 @@ config:
   #
   # NOTE: that this needs to be wrapped in quotes so that it is a string
   #
-  php: '7.0'
+  # php: '7.0'
 
   # Optionally specify whether you want to serve joomla via nginx or apache
   #
@@ -27,13 +27,13 @@ config:
   #
   # See: https://docs.joomla.org/Technical_requirements
   #
-  via: nginx
+  # via: nginx
 
   # Optionally specify the location of the webroot relative to your approot.
   #
   # If ommitted this will be your approot itself.
   #
-  webroot: web
+  # webroot: web
 
   # Optionally specify the database type, this can be one of:
   #
@@ -45,13 +45,13 @@ config:
   # a version with `type:version` but you will need to consult the documentation
   # for the correct DB service to see what versions are available
   #
-  database: mariadb:10.1
+  # database: mariadb:10.1
 
   # Optionally activate xdebug
   #
   # If you are having trouble getting xdebug to work please see:
   # https://docs.devwithlando.io/services/php.html#using-xdebug
-  xdebug: true
+  # xdebug: true
 
   # Optionally mix in your own config files
   #

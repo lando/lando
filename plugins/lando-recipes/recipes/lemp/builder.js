@@ -6,4 +6,4 @@ const utils = require('./../../lib/utils');
 /*
  * Build LEMP
  */
-module.exports = utils.getLampDefaults('lemp', 'nginx', 'appserver_nginx');
+module.exports = utils.getLampDefaults('lemp', 'nginx');

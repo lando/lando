@@ -14,7 +14,7 @@ server {
   ssl_ciphers  HIGH:!aNULL:!MD5;
   ssl_prefer_server_ciphers  on;
 
-  root ${LANDO_WEBROOT};
+  root "{{LANDO_WEBROOT}}";
 
   index index.html index.htm index.php;
 

@@ -17,7 +17,7 @@ server {
   port_in_redirect off;
   client_max_body_size 100M;
 
-  root ${LANDO_WEBROOT};
+  root "{{LANDO_WEBROOT}}";
 
   location = /favicon.ico {
       log_not_found off;

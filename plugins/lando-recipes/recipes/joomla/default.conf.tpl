@@ -11,7 +11,7 @@ server {
   port_in_redirect off;
   client_max_body_size 100M;
 
-  root ${LANDO_WEBROOT};
+  root "{{LANDO_WEBROOT}}";
   index index.php index.html index.htm default.html default.htm;
 
   # Support Clean (aka Search Engine Friendly) URLs

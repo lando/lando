@@ -26,7 +26,6 @@ module.exports = {
       php: 'php.ini',
     },
     php: '7.2',
-    proxyService: 'appserver',
     services: {appserver: {overrides: {
       volumes: ['/var/www/.drush'],
     }}},
@@ -53,9 +52,6 @@ module.exports = {
       if (options.via === 'nginx') config.defaultFiles.vhosts = 'default.conf.tpl';
       // Set the default mysql if we are there as well
       if (options.database !== 'postgres') config.defaultFiles.database = 'mysql.cnf';
-      // Switch the proxy if needed and then set it
-      if (options.via === 'nginx') options.proxyService = 'appserver_nginx';
-      options.proxy = _.set({}, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
       // Send downstream
       super(id, options);
     };

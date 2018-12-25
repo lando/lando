@@ -41,24 +41,19 @@ exports.getPhar = (url, src, dest, check = 'true') => {
  * Helper to get simple lamp/lemp config defaultz
  * NOTE: is it problem that this and lemp has the same class name?
  */
-exports.getLampDefaults = (name = 'lamp', via = 'apache', proxyService = 'appserver') => ({
+exports.getLampDefaults = (name = 'lamp', via = 'apache') => ({
   name,
   parent: '_lamp',
   config: {
-    composer: {},
     confSrc: __dirname,
-    config: {},
     database: 'mysql',
     php: '7.2',
-    services: {},
-    tooling: {},
     via,
     webroot: '.',
     xdebug: false,
   },
   builder: (parent, config) => class LandoLamp extends parent {
     constructor(id, options = {}) {
-      options.proxy = _.set({}, proxyService, [`${options.app}.${options._app._config.domain}`]);
       super(id, _.merge({}, config, options));
     };
   },
