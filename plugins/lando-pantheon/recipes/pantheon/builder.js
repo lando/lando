@@ -2,8 +2,23 @@
 
 // Modules
 const _ = require('lodash');
+const getDrush = require('./../../../lando-recipes/lib/utils').getDrush;
+const getPhar = require('./../../../lando-recipes/lib/utils').getPhar;
 const path = require('path');
 const utils = require('./../../lib/utils');
+
+// Constants
+const drushVersion = '8.1.18';
+const backDrush = '0.0.6';
+
+// Things
+const backdrushUrl = `https://github.com/backdrop-contrib/drush/archive/${backDrush}.tar.gz`;
+const wpCliUrl = 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
+const wpStatusCheck = ['php', '/tmp/wp-cli.phar', '--allow-root', '--info'];
+const backdrushInstall = [
+  'curl', '-fsSL', backdrushUrl, '|', 'tar', '-xz', '--strip-components=1', '-C', '/var/www/.drush', '&&',
+  'drush', 'cc', 'drush',
+].join(' ');
 
 /*
  * Helper to build cache service
@@ -62,6 +77,8 @@ module.exports = {
   name: 'pantheon',
   parent: '_lamp',
   config: {
+    build: [],
+    build_root: [],
     cache: true,
     confSrc: __dirname,
     defaultFiles: {
@@ -98,16 +115,6 @@ module.exports = {
       options.via = 'nginx:1.14';
       options.database = 'mariadb:10.1';
 
-      // Normalize because 7.0 gets handled strangely by js-yaml
-      if (options.php === 7) options.php = '7.0';
-
-      // Add in cache if applicable
-      if (options.cache) options = _.merge({}, options, getCache());
-      // Add in edge if applicable
-      if (options.edge) options = _.merge({}, options, getEdge(options));
-      // Add in index if applicable
-      if (options.index) options = _.merge({}, options, getIndex());
-
       // Set correct things based on framework
       options.defaultFiles.vhosts = `${options.framework}.conf.tpl`;
       // Use our custom pantheon images
@@ -120,7 +127,37 @@ module.exports = {
       // Add in our pantheon script
       // NOTE: We do this here instead of in /scripts because we need to gaurantee
       // it runs before the other build steps so it can reset our CA correctly
-      options.build_root = ['/helpers/pantheon.sh'];
+      options.build_root.push = '/helpers/pantheon.sh';
+
+      // Normalize because 7.0 gets handled strangely by js-yaml
+      if (options.php === 7) options.php = '7.0';
+
+      // Add in cache if applicable
+      if (options.cache) options = _.merge({}, options, getCache());
+      // Add in edge if applicable
+      if (options.edge) options = _.merge({}, options, getEdge(options));
+      // Add in index if applicable
+      if (options.index) options = _.merge({}, options, getIndex());
+
+      // Add in the correct tooling
+      if (options.framework !== 'wordpress') {
+        options.build.unshift(getDrush(drushVersion, ['/tmp/drush.phar', 'core-status']));
+        options.tooling.drush = {service: 'appserver'};
+        if (options.framework === 'drupal8') {
+          options.build.push(getPhar(
+            'https://drupalconsole.com/installer',
+            '/tmp/drupal.phar',
+            '/usr/local/bin/drupal')
+          );
+          options.tooling.drupal = {service: 'appserver', description: 'Run drupal console commands'};
+        }
+        if (options.framework === 'backdrop') {
+          options.build.push(backdrushInstall);
+        }
+      } else {
+        options.build.unshift(getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck));
+        options.tooling.wp = {service: 'appserver'};
+      }
 
       // @TODO: do we still need a depends on for the index for certs shit?
       // Set the appserver to depend on index start up so we know our certs will be there

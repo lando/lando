@@ -31,7 +31,6 @@ module.exports = {
     }}},
     tooling: {drush: {
       service: 'appserver',
-      description: 'Run drush commands',
     }},
     via: 'apache',
     webroot: '.',
