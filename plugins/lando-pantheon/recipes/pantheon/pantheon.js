@@ -86,14 +86,6 @@ module.exports = lando => {
       });
     };
 
-    // Add in default pantheon tooling
-    const tools = {
-      'terminus': {
-        service: 'appserver',
-        needs: ['database'],
-      },
-    };
-
     // Add in the pull command
     tools.pull = {
       service: 'appserver',
@@ -254,18 +246,6 @@ module.exports = lando => {
       config.drupal = true;
       config.drush = 'stable';
     }
-
-    // Set the appserver to depend on index start up so we know our certs will be there
-    const dependsPath = 'services.appserver.overrides.services.depends_on';
-    _.set(build, dependsPath, ['index']);
-
-    // Add in our pantheon script
-    // NOTE: We do this here instead of in /scripts because we need to gaurantee
-    // it runs before the other build steps so it can reset our CA correctly
-    build.services.appserver.install_dependencies_as_root_internal = ['/helpers/pantheon.sh'];
-
-    // Reset the proxy to route through the edge
-    build.proxy = proxy(name);
 
     // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));

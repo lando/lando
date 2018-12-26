@@ -2,13 +2,10 @@
 
 set -e
 
-# Set up some things
-CERT_DIR="/lando/keys/pantheon/${LANDO_APP_NAME}"
-INDEX_CERT="$CERT_DIR/cert.crt"
-INDEX_PEM="$CERT_DIR/cert.pem"
-
 # Kick it off
 echo "Pantheon pre-run scripting"
+
+/helpers/add-cert.sh
 
 # Emulate Pantheon HOME structure
 if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
@@ -22,15 +19,12 @@ if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
   ln -s /var/www /srv/bindings/lando || true
   ln -sf /tmp /srv/bindings/lando/tmp
   ln -sf /app /var/www/code
+  ln -sf /certs/cert.pem /var/www/certs/binding.pem
 
   # Do another chown pass
   find /var/www -type d -exec chown www-data:www-data {} +
 
 fi
-
-# Setting up client key
-echo "Setting up client key $INDEX_PEM"
-cp -rf $INDEX_PEM /var/www/certs/binding.pem
 
 # LOCKR integration
 # If we don't have our dev cert already let's get it
