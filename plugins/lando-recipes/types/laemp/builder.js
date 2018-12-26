@@ -90,7 +90,6 @@ module.exports = {
     confSrc: __dirname,
     database: 'mysql',
     php: '7.2',
-    proxyService: 'appserver',
     via: 'apache',
     webroot: '.',
     xdebug: false,
@@ -100,8 +99,11 @@ module.exports = {
       options = _.merge({}, config, options);
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
-      // Switch the proxy if needed and then set it
-      if (_.startsWith(options.via, 'nginx')) options.proxyService = 'appserver_nginx';
+      // Switch the proxy if needed
+      if (!_.has(options, 'proxyService')) {
+        if (_.startsWith(options.via, 'nginx')) options.proxyService = 'appserver_nginx';
+        else if (_.startsWith(options.via, 'apache')) options.proxyService = 'appserver';
+      }
       options.proxy = _.set({}, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
       super(id, options);
     };

@@ -6,14 +6,10 @@ module.exports = lando => {
 
   // Modules
   const _ = lando.node._;
-  const path = require('path');
 
   // Lando things
   const PantheonApiClient = require('./client');
   const api = new PantheonApiClient(lando.log);
-
-  // "Constants"
-  const configDir = path.join(lando.config.servicesConfigDir, 'pantheon');
 
   /*
    * Event based logix
@@ -92,13 +88,6 @@ module.exports = lando => {
 
     // Add in default pantheon tooling
     const tools = {
-      'redis-cli': {
-        service: 'cache',
-      },
-      'varnishadm': {
-        service: 'edge',
-        user: 'root',
-      },
       'terminus': {
         service: 'appserver',
         needs: ['database'],
@@ -255,77 +244,9 @@ module.exports = lando => {
   };
 
   /*
-   * Helper to return proxy config
-   */
-  const proxy = name => {
-    return {
-      edge: [
-        [name, lando.config.proxyDomain].join('.'),
-      ],
-    };
-  };
-
-  /*
-   * Add in redis
-   */
-  const redis = version => {
-    // The redis config
-    const config = {
-      type: version,
-      persist: true,
-      portforward: true,
-    };
-
-    // Return the redis service
-    return config;
-  };
-
-  /*
-   * Add in constnish
-   */
-  const varnish = version => {
-    // The constnish config
-    const config = {
-      type: version,
-      backends: ['nginx'],
-      skipCheck: true,
-      ssl: true,
-      vcl: path.join(configDir, 'pantheon.vcl'),
-    };
-    // Return the constnish service
-    return config;
-  };
-
-  /*
-   * Add in solr
-   */
-  const solr = version => {
-    // The solr config
-    const config = {
-      type: version,
-      port: 449,
-      overrides: {
-        services: {
-          image: 'devwithlando/pantheon-index:3.6-3',
-          ports: ['449'],
-          command: '/bin/bash /start.sh',
-        },
-      },
-    };
-
-    // Return the solr service
-    return config;
-  };
-
-  /*
    * Build out Pantheon
    */
   const build = (name, config) => {
-    // Set versions to match pantheon
-    config.cache = 'redis:2.8';
-    config.edge = 'varnish:4.1';
-    config.index = 'solr:custom';
-
     // If this is Drupal8 let's add in drupal console and reset drush so it
     // globally installs Drush 8 FOR NOW
     // See: https://github.com/lando/lando/issues/580
@@ -343,38 +264,11 @@ module.exports = lando => {
     // it runs before the other build steps so it can reset our CA correctly
     build.services.appserver.install_dependencies_as_root_internal = ['/helpers/pantheon.sh'];
 
-    // Mix in our additional services
-    build.services.cache = redis(config.cache);
-    build.services.edge = varnish(config.edge);
-    build.services.index = solr(config.index);
-
     // Reset the proxy to route through the edge
     build.proxy = proxy(name);
 
     // Mix in our tooling
     build.tooling = _.merge(build.tooling, tooling(config));
-
-    // Determine the service to run cli things on
-    const unsupportedCli = (config.php === '5.3' || config.php === 5.3);
-    const cliService = (unsupportedCli) ? 'appserver_cli' : 'appserver';
-
-    // Build an additional cli container if we are running unsupported
-    if (unsupportedCli) {
-      // Build out a CLI container and modify as appropriate
-      const cliImage = 'devwithlando/pantheon-appserver:5.5-fpm';
-      build.services[cliService] = _.cloneDeep(build.services.appserver);
-      build.services[cliService].type = 'php:5.5';
-      build.services[cliService].via = 'cli';
-      build.services[cliService].overrides.services.image = cliImage;
-
-      // Remove stuff from appserver
-      delete build.services.appserver.install_dependencies_as_me_internal;
-
-      // Override some tooling things
-      build.tooling.terminus.service = cliService;
-      build.tooling.pull.service = cliService;
-      build.tooling.push.service = cliService;
-    }
 
     // Login with terminus if we have a token
     const cache = lando.cache.get('site.meta.' + config._app);
