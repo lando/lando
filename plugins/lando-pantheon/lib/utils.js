@@ -4,9 +4,14 @@
 const _ = require('lodash');
 const crypto = require('crypto');
 const fs = require('fs');
+const getDrush = require('./../../lando-recipes/lib/utils').getDrush;
+const getPhar = require('./../../lando-recipes/lib/utils').getPhar;
+const path = require('path');
 const yaml = require('js-yaml');
 
 // Constants
+const DRUSH_VERSION = '8.1.18';
+const BACKDRUSH_VERSION = '0.0.6';
 const PANTHEON_CACHE_HOST = 'cache';
 const PANTHEON_CACHE_PORT = '6379';
 const PANTHEON_CACHE_PASSWORD = '';
@@ -23,6 +28,15 @@ const PATH = [
   '/var/www/.composer/vendor/bin',
   '/srv/bin',
 ];
+
+// Things
+const backdrushUrl = `https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz`;
+const wpCliUrl = 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
+const wpStatusCheck = ['php', '/tmp/wp-cli.phar', '--allow-root', '--info'];
+const backdrushInstall = [
+  'curl', '-fsSL', backdrushUrl, '|', 'tar', '-xz', '--strip-components=1', '-C', '/var/www/.drush', '&&',
+  'drush', 'cc', 'drush',
+].join(' ');
 
 // Pressflow and backdrop database settings
 const pantheonDatabases = {
@@ -87,6 +101,43 @@ const getPantheonSettings = options => ({
 });
 
 /*
+ * Helper to get build steps
+ */
+exports.getPantheonBuildSteps = framework => {
+  if (framework === 'wordpress') return getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck);
+  else {
+    const build = getDrush(DRUSH_VERSION, ['/tmp/drush.phar', 'core-status']);
+    if (framework === 'drupal8') {
+      build.push(getPhar(
+        'https://drupalconsole.com/installer',
+        '/tmp/drupal.phar',
+        '/usr/local/bin/drupal')
+      );
+    }
+    if (framework === 'backdrop') {
+      build.push(backdrushInstall);
+    }
+    return build;
+  }
+};
+
+/*
+ * Helper to build cache service
+ */
+exports.getPantheonCache = () => ({
+  services: {
+    cache: {
+      type: 'redis:2.8',
+      persist: true,
+      portforward: true,
+    },
+  },
+  tooling: {
+    'redis-cli': {service: 'cache'},
+  },
+});
+
+/*
  * Helper to merge in pantheon yamls
  */
 exports.getPantheonConfig = (files = ['pantheon.upstream.yml', 'pantheon.yml']) => _(files)
@@ -103,6 +154,24 @@ exports.getPantheonConfig = (files = ['pantheon.upstream.yml', 'pantheon.yml']) 
     return data;
   })
   .value();
+
+/*
+ * Helper to build edge service
+ */
+exports.getPantheonEdge = options => ({
+  proxyService: 'edge',
+  services: {
+    edge: {
+      type: 'varnish:4.1',
+      backends: ['appserver_nginx'],
+      ssl: true,
+      config: {vcl: path.join(options.confDest, 'pantheon.vcl')},
+    },
+  },
+  tooling: {
+    varnishadm: {service: 'edge', user: 'root'},
+  },
+});
 
 /*
  * Helper to get pantheon envvars
@@ -143,3 +212,33 @@ exports.getPantheonEnvironment = options => ({
   SECURE_AUTH_KEY: getHash(options.app),
   SECURE_AUTH_SALT: getHash(options.app + options.root),
 });
+
+/*
+ * Helper to build index service
+ */
+exports.getPantheonIndex = () => ({
+  services: {
+    index: {
+      type: 'solr:custom',
+      overrides: {
+        image: 'devwithlando/pantheon-index:3.6-3',
+        ports: ['449'],
+        command: '/bin/bash /start.sh',
+      },
+    },
+  },
+});
+
+/*
+ * Helper to get tooling
+ */
+exports.getPantheonTooling = framework => {
+  if (framework === 'wordpress') return {wp: {service: 'appserver'}};
+  else {
+    const tooling = {drush: {service: 'appserver'}};
+    if (framework === 'drupal8') {
+      tooling.drupal = {service: 'appserver', description: 'Run drupal console commands'};
+    }
+    return tooling;
+  }
+};
