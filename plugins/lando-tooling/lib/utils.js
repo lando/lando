@@ -57,11 +57,8 @@ const handleDynamic = (config, options = {}, answers = {}) => {
 const handleOpts = (config, argopts = process.argv.slice(3)) => {
   // If this is not a CLI then we can pass right back
   if (process.lando !== 'node') return config;
-  // Strip out lando global opts
-  // @TODO: what happens for commands like drush that also can use `--`?
-  const opts = (_.indexOf(argopts, '--') >= 0) ? _.slice(argopts, 0, _.findLastIndex(argopts, '--') - 1) : argopts;
   // Return
-  return _.merge({}, config, {command: config.command.concat(opts)});
+  return _.merge({}, config, {command: config.command.concat(argopts)});
 };
 
 /*

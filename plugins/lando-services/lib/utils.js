@@ -35,10 +35,8 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
     _.forEach(rootSteps.concat(buildSteps), section => {
       // If the service has build sections let's loop through and run some commands
       if (!_.isEmpty(_.get(app, `config.services.${service}.${section}`, []))) {
-        const data = app.config.services[service][section];
-        if (!_.isArray(data)) data = [data];
         // Run each command
-        _.forEach(data, cmd => {
+        _.forEach(app.config.services[service][section], cmd => {
           const container = `${app.project}_${service}_1`;
           build.push({
             id: container,

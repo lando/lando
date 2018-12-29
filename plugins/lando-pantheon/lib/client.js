@@ -3,8 +3,8 @@
 // Modules
 const _ = require('lodash');
 const fs = require('fs');
-const Log = require('./../../../../lib/logger');
-const Promise = require('./../../../../lib/promise');
+const Log = require('./../../../lib/logger');
+const Promise = require('./../../../lib/promise');
 const axios = require('axios');
 const baseURL = 'https://terminus.pantheon.io/api/';
 
@@ -48,11 +48,10 @@ module.exports = class PantheonApiClient {
    * Auth with pantheon and set the session
    */
   auth(token) {
-    const self = this;
     const data = {machine_token: token, client: 'terminus'};
     const options = (this.mode === 'node') ? {headers: {'User-Agent': 'Terminus/Lando'}} : {};
     return pantheonRequest(axios.create({baseURL}), this.log, 'post', ['authorize', 'machine-token'], data, options)
-    .then(data => new PantheonApiClient(self.log, data, self.mode));
+    .then(data => new PantheonApiClient(this.log, data, this.mode));
   };
 
   /*
@@ -78,10 +77,7 @@ module.exports = class PantheonApiClient {
       .then(sites => _.flatten(sites));
     };
     // Run both requests
-    return Promise.all([
-      pantheonUserSites(),
-      pantheonOrgSites(),
-    ])
+    return Promise.all([pantheonUserSites(), pantheonOrgSites()])
     // Combine, cache and all the things
     .then(sites => _.compact(_.sortBy(_.uniqBy(_.flatten(sites), 'name'), 'name')));
   };

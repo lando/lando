@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const path = require('path');
+const pull = require('./../../lib/pull');
 const utils = require('./../../lib/utils');
 
 /*
@@ -22,6 +23,7 @@ module.exports = {
       server: 'nginx.conf.tpl',
     },
     edge: true,
+    env: 'dev',
     framework: 'drupal',
     index: true,
     services: {appserver: {overrides: {
@@ -56,6 +58,7 @@ module.exports = {
       options.services.appserver.overrides.image = `devwithlando/pantheon-appserver:${options.php}-2`;
       // Add in the prepend.php
       // @TODO: this throws a weird DeprecationWarning: 'root' is deprecated, use 'global' for reasons not immediately clear
+      // So we are doing this a little weirdly to avoid hat until we can track things down better
       options.services.appserver.overrides.volumes.push(`${options.confDest}/prepend.php:/srv/includes/prepend.php`);
       // Add in our environment
       options.services.appserver.overrides.environment = utils.getPantheonEnvironment(options);
@@ -78,6 +81,9 @@ module.exports = {
       options.tooling = _.merge({}, options.tooling, utils.getPantheonTooling(options.framework));
       // Add in the framework-correct build steps
       options.build = utils.getPantheonBuildSteps(options.framework).concat(options.build);
+
+      // Add in push/pull/switch
+      options.tooling.pull = pull.getPantheonPull(options);
 
       // @TODO: do we still need a depends on for the index for certs shit?
       // Set the appserver to depend on index start up so we know our certs will be there

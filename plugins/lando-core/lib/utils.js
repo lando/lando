@@ -62,7 +62,7 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
  * Helper method to normalize a path so that Lando overrides can be used as though
  * the docker-compose files were in the app root.
  */
-exports.normalizePath = (local, base, excludes = []) => {
+exports.normalizePath = (local, base = '.', excludes = []) => {
   // Return local if it starts with $
   if (_.startsWith(local, '$')) return local;
   // Return local if it is one of the excludes
@@ -79,7 +79,7 @@ exports.normalizePath = (local, base, excludes = []) => {
 exports.normalizeOverrides = (overrides, volumes = []) => {
   // Normalize any build paths
   if (_.has(overrides, 'build')) {
-    overrides.build = exports.normalizePath(overrides.build, root);
+    overrides.build = exports.normalizePath(overrides.build, '.');
   }
   // Normalize any volumes
   if (_.has(overrides, 'volumes')) {
@@ -91,7 +91,7 @@ exports.normalizeOverrides = (overrides, volumes = []) => {
         const remote = volume.split(':')[1];
         // @TODO: i dont think below does anything?
         const excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
-        const host = exports.normalizePath(local, root, excludes);
+        const host = exports.normalizePath(local, '.', excludes);
         return [host, remote].join(':');
       }
     });
