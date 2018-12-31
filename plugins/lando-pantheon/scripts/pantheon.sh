@@ -16,15 +16,17 @@ if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
   chown -R www-data:www-data /var/www/certs /srv/bindings
 
   # Set up some symlnks
-  ln -s /var/www /srv/bindings/lando || true
-  ln -sf /tmp /srv/bindings/lando/tmp
-  ln -sf /app /var/www/code
-  ln -sf /certs/cert.pem /var/www/certs/binding.pem
+  ln -sfn /var/www /srv/bindings/lando
+  ln -sfn /tmp /srv/bindings/lando/tmp
+  ln -sfn /app /srv/bindings/lando/code
+  ln -sfn /certs/cert.pem /var/www/certs/binding.pem
 
   # Do another chown pass
   find /var/www -type d -exec chown www-data:www-data {} +
 
 fi
+
+/helpers/auth.sh "$TERMINUS_TOKEN" "$PANTHEON_SITE"
 
 # LOCKR integration
 # If we don't have our dev cert already let's get it

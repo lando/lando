@@ -9,13 +9,14 @@ if [ "$TERMINUS_ENV" == "master" ]; then
 fi
 
 # Set option defaults
+AUTH=${TERMINUS_USER}
 CODE=${TERMINUS_ENV:-dev}
 DATABASE=${TERMINUS_ENV:-dev}
 FILES=${TERMINUS_ENV:-dev}
 RSYNC=false
+NO_AUTH=false
 
 # Set helpers
-SSH_KEY="/lando/keys/pantheon.lando.id_rsa"
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
@@ -29,6 +30,15 @@ DEFAULT_COLOR='\033[0;0m'
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
+    --auth|--auth=*)
+      if [ "${1##--auth=}" != "$1" ]; then
+        AUTH="${1##--auth=}"
+        shift
+      else
+        AUTH=$2
+        shift 2
+      fi
+      ;;
     -c|--code|--code=*)
       if [ "${1##--code=}" != "$1" ]; then
         CODE="${1##--code=}"
@@ -60,13 +70,16 @@ while (( "$#" )); do
         RSYNC=$1
         shift
       ;;
+    --no-auth)
+        NO_AUTH=true
+        shift
+      ;;
     --)
       shift
       break
       ;;
     -*|--*=)
-      echo "Error: Unsupported flag $1" >&2
-      exit 1
+      shift
       ;;
     *)
       shift
@@ -74,18 +87,9 @@ while (( "$#" )); do
   esac
 done
 
-# Do some basic validation to make sure we are logged in
-echo "Verifying that you are logged in and authenticated by getting info about $SITE..."
-terminus site:info $SITE || exit 1
-echo "Logged in as `terminus auth:whoami`"
-echo "Detected that $SITE is a $FRAMEWORK site"
-
-# Ensuring a viable ssh key
-echo "Checking for $SSH_KEY"
-if [ ! -f "$SSH_KEY" ]; then
-  ssh-keygen -t rsa -N "" -C "lando" -f "$SSH_KEY"
-  terminus ssh-key:add "$SSH_KEY.pub"
-  /scripts/load-keys.sh
+# Go through the auth procedure
+if [ "$NO_AUTH" == "false" ]; then
+  /helpers/auth.sh "$AUTH" "$SITE"
 fi
 
 # Get the codez
@@ -108,7 +112,7 @@ if [ "$CODE" != "none" ]; then
   git checkout $GIT_BRANCH
   git pull -Xtheirs --no-edit origin $GIT_BRANCH
 
-fi;
+fi
 
 # Get the database
 if [ "$DATABASE" != "none" ]; then

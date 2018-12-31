@@ -4,6 +4,8 @@
 const _ = require('lodash');
 const path = require('path');
 const pull = require('./../../lib/pull');
+const push = require('./../../lib/push');
+const change = require('./../../lib/switch');
 const utils = require('./../../lib/utils');
 
 /*
@@ -83,7 +85,10 @@ module.exports = {
       options.build = utils.getPantheonBuildSteps(options.framework).concat(options.build);
 
       // Add in push/pull/switch
-      options.tooling.pull = pull.getPantheonPull(options);
+      const tokens = utils.sortTokens(options._app.pantheonTokens, options._app.terminusTokens);
+      options.tooling.pull = pull.getPantheonPull(options, tokens);
+      options.tooling.push = push.getPantheonPush(options, tokens);
+      options.tooling.switch = change.getPantheonSwitch(options, tokens);
 
       // @TODO: do we still need a depends on for the index for certs shit?
       // Set the appserver to depend on index start up so we know our certs will be there

@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const getDrush = require('./../../lando-recipes/lib/utils').getDrush;
 const getPhar = require('./../../lando-recipes/lib/utils').getPhar;
+const PantheonApiClient = require('./client');
 const path = require('path');
 const yaml = require('js-yaml');
 
@@ -208,7 +209,8 @@ exports.getPantheonEnvironment = options => ({
   TERMINUS_ENV: 'dev',
   // TERMINUS_ORG: ''
   TERMINUS_SITE: options.site,
-  TERMINUS_USER: 'devuser@pantheon.io',
+  TERMINUS_TOKEN: _.get(options, '_app.meta.token'),
+  TERMINUS_USER: _.get(options, '_app.meta.email'),
   SECURE_AUTH_KEY: getHash(options.app),
   SECURE_AUTH_SALT: getHash(options.app + options.root),
 });
@@ -230,6 +232,20 @@ exports.getPantheonIndex = () => ({
 });
 
 /*
+ * Helper to build index service
+ */
+exports.getPantheonInquirerEnvs = (token, site, nopes = [], log = console.log) => {
+  const api = new PantheonApiClient(token, log);
+  return api.auth().then(() => api.getSiteEnvs(site)
+  .map(env => ({name: env.id, value: env.id}))
+  .filter(env => !_.includes(nopes, env.value))
+  .then(envs => _.flatten([envs, [{name: 'none', value: 'none'}]])))
+  .catch(err => {
+    throw (_.has(err, 'response.data')) ? new Error(err.response.data) : err;
+  });
+};
+
+/*
  * Helper to get tooling
  */
 exports.getPantheonTooling = framework => {
@@ -242,3 +258,26 @@ exports.getPantheonTooling = framework => {
     return tooling;
   }
 };
+
+/*
+ * Helper to get terminus tokens
+ */
+exports.getTerminusTokens = home => {
+  if (fs.existsSync(path.join(home, '.terminus', 'cache', 'tokens'))) {
+    return _(fs.readdirSync(path.join(home, '.terminus', 'cache', 'tokens')))
+      .map(tokenFile => path.join(home, '.terminus', 'cache', 'tokens', tokenFile))
+      .map(file => JSON.parse(fs.readFileSync(file, 'utf8')))
+      .value();
+  } else {
+    return [];
+  }
+};
+
+/*
+ * Helper to return most recent tokens
+ */
+exports.sortTokens = (...sources) => _(_.flatten([...sources]))
+  .sortBy('date')
+  .groupBy('email')
+  .map(tokens => _.last(tokens))
+  .value();

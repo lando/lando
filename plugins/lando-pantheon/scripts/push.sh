@@ -9,13 +9,13 @@ if [ "$TERMINUS_ENV" == "master" ]; then
 fi
 
 # Set option defaults
+AUTH=${TERMINUS_USER}
 MESSAGE="My Awesome Lando-based commit"
 CODE=${TERMINUS_ENV:-dev}
 DATABASE=${TERMINUS_ENV:-dev}
 FILES=${TERMINUS_ENV:-dev}
 
 # Set helpers
-SSH_KEY="/lando/keys/pantheon.lando.id_rsa"
 FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
@@ -28,6 +28,15 @@ DEFAULT_COLOR='\033[0;0m'
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
+    --auth|--auth=*)
+      if [ "${1##--auth=}" != "$1" ]; then
+        AUTH="${1##--auth=}"
+        shift
+      else
+        AUTH=$2
+        shift 2
+      fi
+      ;;
     -c|--code|--code=*)
       if [ "${1##--code=}" != "$1" ]; then
         CODE="${1##--code=}"
@@ -69,8 +78,7 @@ while (( "$#" )); do
       break
       ;;
     -*|--*=)
-      echo "Error: Unsupported flag $1" >&2
-      exit 1
+      shift
       ;;
     *)
       shift
@@ -92,19 +100,8 @@ if [ "$FILES" == "test" ] || [ "$FILES" == "live" ]; then
   exit 3
 fi
 
-# Ensuring a viable ssh key
-echo "Checking for $SSH_KEY"
-if [ ! -f "$SSH_KEY" ]; then
-  ssh-keygen -t rsa -N "" -C "lando" -f "$SSH_KEY"
-  terminus ssh-key:add "$SSH_KEY.pub"
-  /scripts/load-keys.sh
-fi
-
-# Do some basic validation to make sure we are logged in
-echo "Verifying that you are logged in and authenticated by getting info about $SITE..."
-terminus site:info $SITE || exit 1
-echo "Logged in as `terminus auth:whoami`"
-echo "Detected that $SITE is a $FRAMEWORK site"
+# Go through the auth procedure
+/helpers/auth.sh "$AUTH" "$SITE"
 
 # Push the codez
 if [ "$CODE" != "none" ]; then

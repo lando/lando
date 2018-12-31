@@ -6,7 +6,6 @@ const fs = require('fs');
 const Log = require('./../../../lib/logger');
 const Promise = require('./../../../lib/promise');
 const axios = require('axios');
-const baseURL = 'https://terminus.pantheon.io/api/';
 
 /*
  * Helper to make requests to pantheon api
@@ -18,12 +17,12 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
   log.debug('Request options: %j.', options);
 
   // Attempt the request and retry a few times
-  return Promise.retry(() => request[verb](pathname.join('/'), data, options))
+  return Promise.retry(() => request[verb](pathname.join('/'), data, options)
     .then(response => {
       log.verbose('Response recieved: %j.', response.data);
       return response.data;
     })
-    .catch(err => Promise.reject(err));
+    .catch(err => Promise.reject(err)), {max: 2});
 };
 
 /*
@@ -33,25 +32,30 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
  * @todo: we can remove the mode from here and just extend this in other things
  */
 module.exports = class PantheonApiClient {
-  // @todo: remove mode because we extend this in PLD
-  constructor(log = new Log(), session = '', mode = 'node') {
+  constructor(token = '', log = new Log(), mode = 'node') {
+    this.baseURL = 'https://terminus.pantheon.io/api/';
     this.log = log;
-    this.session = session;
+    this.token = token;
     this.mode = mode;
-    const headers = {'Content-Type': 'application/json'};
-    // Add cookie if we are in node mode, otherwise assume its set upstream in the browser
-    if (mode === 'node') headers.Cookie = 'X-Pantheon-Session=' + this.session.session;
-    this.request = axios.create({baseURL, headers});
   };
 
   /*
    * Auth with pantheon and set the session
    */
-  auth(token) {
+  auth(token = this.token) {
     const data = {machine_token: token, client: 'terminus'};
     const options = (this.mode === 'node') ? {headers: {'User-Agent': 'Terminus/Lando'}} : {};
-    return pantheonRequest(axios.create({baseURL}), this.log, 'post', ['authorize', 'machine-token'], data, options)
-    .then(data => new PantheonApiClient(this.log, data, this.mode));
+    const upath = ['authorize', 'machine-token'];
+    return pantheonRequest(axios.create({baseURL: this.baseURL}), this.log, 'post', upath, data, options)
+    .then(data => {
+      this.token = token;
+      this.session = data;
+      const headers = {'Content-Type': 'application/json'};
+      // Add cookie if we are in node mode, otherwise assume its set upstream in the browser
+      if (this.mode === 'node') headers.Cookie = `X-Pantheon-Session=${data.session}`;
+      this.request = axios.create({baseURL: this.baseURL, headers});
+      return data;
+    });
   };
 
   /*

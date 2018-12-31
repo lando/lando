@@ -2,76 +2,55 @@
 
 // Modules
 const _ = require('lodash');
-const PantheonApiClient = require('./client');
-const api = new PantheonApiClient();
+const auth = require('./auth');
+const utils = require('./utils');
 
-const getEnvs = (id, done, nopes = []) => {
-
-  // Get the pantheon sites using the token
-  api.auth('UyXAwO85FCtifY1pxUEbvxVsNi7iVeunVepY_Dc1n8Twc').then(authorizedApi => authorizedApi.getSiteEnvs(id))
-
-  // Parse the evns into choices
-  .map(env => ({name: env.id, value: env.id}))
-
-  // Filter out any restricted envs
-  .filter(env => !_.includes(nopes, env.value))
-
-  // Done
-  .then(envs => {
-    console.log(envs)
-    envs.push({name: 'none', value: 'none'});
-    done(null, envs);
-  });
-};
-/*
- * Helper to build a pull command
- */
-exports.getPantheonPull = options => ({
+// The non dynamic base of the task
+const task = {
   service: 'appserver',
   description: 'Pull code, database and/or files from Pantheon',
   cmd: '/helpers/pull.sh',
   level: 'app',
   options: {
+    auth: {
+      describe: 'Pantheon machine token',
+      passthrough: true,
+      string: true,
+      interactive: {
+        type: 'list',
+        message: 'Choose a Pantheon account',
+        choices: [],
+        when: () => false,
+        weight: 100,
+      },
+    },
     code: {
-      description: 'The environment to get the code from or [none]',
+      description: 'The environment from which to pull the code',
       passthrough: true,
       alias: ['c'],
       interactive: {
         type: 'list',
         message: 'Pull code from?',
-        choices: function() {
-          console.log('pulling')
-          getEnvs(options.id, this.async());
-        },
-        default: options.env,
         weight: 600,
       },
     },
     database: {
-      description: 'The environment to get the db from or [none]',
+      description: 'The environment from which to pull the database',
       passthrough: true,
       alias: ['d'],
       interactive: {
         type: 'list',
-        message: 'Pull DB from?',
-        choices: function() {
-          getEnvs(this.async());
-        },
-        default: options.env,
+        message: 'Pull database from?',
         weight: 601,
       },
     },
     files: {
-      description: 'The environment to get the files from or [none]',
+      description: 'The environment from which to pull the files',
       passthrough: true,
       alias: ['f'],
       interactive: {
         type: 'list',
         message: 'Pull files from?',
-        choices: function() {
-          getEnvs(this.async());
-        },
-        default: options.env,
         weight: 602,
       },
     },
@@ -82,4 +61,26 @@ exports.getPantheonPull = options => ({
       default: false,
     },
   },
-});
+};
+
+// Helper to populate interactive opts
+const getDefaults = (task, options) => {
+  _.forEach(['code', 'database', 'files'], name => {
+    task.options[name].interactive.choices = answers => {
+      return utils.getPantheonInquirerEnvs(
+      answers.auth,
+      options.id,
+      [],
+      options._app.log);
+    };
+    task.options[name].interactive.default = options.env;
+  });
+  return task;
+};
+
+/*
+ * Helper to build a pull command
+ */
+exports.getPantheonPull = (options, tokens = []) => {
+  return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, tokens)});
+};

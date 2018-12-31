@@ -15,45 +15,6 @@ module.exports = lando => {
   const siteMetaDataKey = 'site.meta.';
 
   /*
-   * Modify init pre-prompt things
-   */
-  lando.events.on('task-init-answers', answers => {
-    if (answers.argv.method === 'pantheon') {
-      // Autoset the recipe
-      answers.argv.recipe = 'pantheon';
-
-      // Remove the webroot and name question
-      _.remove(answers.inquirer, question => {
-        return question.name === 'webroot' || question.name === 'name';
-      });
-    }
-  });
-
-  /*
-   * Modify init pre-run things
-   */
-  lando.events.on('task-init-run', 1, answers => {
-    if (answers.method === 'pantheon' || answers.recipe === 'pantheon') {
-      // Set name if unset at this point, which it should be unless flagged in.
-      if (answers.name === undefined) {
-        answers.name = _.get(answers, 'pantheon-site', 'lando-app');
-      }
-    }
-  });
-
-  /*
-   * Helper to determine whether we should ask the questions or not
-   */
-  const askQuestions = answers => {
-    // Get our things
-    const method = lando.cli.argv()._[1];
-    const recipe = answers.recipe || lando.cli.argv().recipe;
-
-    // return
-    return (method === 'pantheon') || (recipe === 'pantheon');
-  };
-
-  /*
    * Build out pantheon recipe
    */
   const build = (name, options) => {

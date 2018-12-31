@@ -1,86 +1,35 @@
 'use strict';
 
 // Modules
+const _ = require('lodash');
+const PantheonApiClient = require('./lib/client');
+const utils = require('./lib/utils');
 
-module.exports = (app, lando) => {};
-
-/*
-// Load in our init method
-  lando.init.add('pantheon', require('./init')(lando));
-
-  // Modules
-  const _ = lando.node._;
-
-  // Lando things
-  const PantheonApiClient = require('./client');
-  const api = new PantheonApiClient(lando.log);
-
-  lando.events.on('post-instantiate-app', app => {
-    // Cache key helpers
-    const siteMetaDataKey = 'site.meta.';
-
-    // Set new terminus key into the cache
-    app.events.on('pre-terminus', () => {
-      if (_.get(lando.cli.argv()._, '[1]') === 'auth:login') {
-        if (_.has(lando.cli.argv(), 'machineToken')) {
-          // Build the cache
-          // @TODO: what do do about email?
-          const token = _.get(lando.cli.argv(), 'machineToken');
-          const data = {token: token};
-
-          // Mix in any existing cache data
-          if (!_.isEmpty(lando.cache.get(siteMetaDataKey + app.name))) {
-            data = _.merge(lando.cache.get(siteMetaDataKey + app.name), data);
-          }
-
-          // Reset the cache
-          lando.cache.set(siteMetaDataKey + app.name, data, {persist: true});
-        }
-      }
+module.exports = (app, lando) => {
+  // Only do this on pantheon recipes
+  if (_.get(app, 'config.recipe') === 'pantheon') {
+    // Set the app caches, validate tokens and update token cache
+    _.forEach(['pull', 'push', 'switch'], command => {
+      lando.events.on(`cli-${command}-run`, data => {
+        const api = new PantheonApiClient(data.options.auth, app.log);
+        return api.auth().then(() => api.getUser().then(results => {
+          const cache = {token: data.options.auth, email: results.email, date: _.toInteger(_.now() / 1000)};
+          // Reset this apps metacache
+          lando.cache.set(app.metaCache, _.merge({}, app.meta, cache), {persist: true});
+          // Set lando's store of pantheon machine tokens
+          lando.cache.set(app.pantheonTokenCache, utils.sortTokens(app.pantheonTokens, [cache]), {persist: true});
+        }))
+        // Throw some sort of error
+        // NOTE: this provides some error handling when we are completely non-interactive
+        .catch(err => {
+          throw (_.has(err, 'response.data')) ? new Error(err.response.data) : err;
+        });
+      });
     });
 
-    // Destroy the cached site data
-    app.events.on('post-destroy', () => {
-      lando.cache.remove(siteMetaDataKey + app.name);
-    });
-  });
-
-  const getEnvs = (done, nopes) => {
-    // Envs to remove
-    const restricted = nopes || [];
-
-    // Get token
-    const token = _.get(lando.cache.get('site.meta.' + config._app), 'token');
-
-    // If token does not exist prmpt for auth
-    if (_.isEmpty(token)) {
-      lando.log.error('Looks like you dont have a machine token!');
-      throw new Error('Run lando terminus auth:login --machine-token=TOKEN');
-    }
-
-    // Validate we have a token and siteid
-    _.forEach([token, config.id], prop => {
-      if (_.isEmpty(prop)) {
-        lando.log.error('Error getting token or siteid.', prop);
-        throw new Error('Make sure you run: lando init pantheon');
-      }
-    });
-
-    // Get the pantheon sites using the token
-    api.auth(token).then(authorizedApi => authorizedApi.getSiteEnvs(config.id))
-
-    // Parse the evns into choices
-    .map(env => ({name: env.id, value: env.id}))
-
-    // Filter out any restricted envs
-    .filter(env => !_.includes(restricted, env.value))
-
-    // Done
-    .then(envs => {
-      envs.push({name: 'none', value: 'none'});
-      done(null, envs);
-    });
-  };
-
-*/
-
+    // Add tokens and other meta to our app
+    app.pantheonTokenCache = 'pantheon.tokens';
+    app.pantheonTokens = lando.cache.get(app.pantheonTokenCache) || [];
+    app.terminusTokens = utils.getTerminusTokens(lando.config.home);
+  }
+};
