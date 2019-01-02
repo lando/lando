@@ -14,6 +14,7 @@ module.exports = {
       sources.push({services: _.set({}, options.name, {
         environment: {
           LANDO_WEBROOT: `/app/${options.webroot}`,
+          LANDO_SERVICE_TYPE: 'webserver',
         },
         working_dir: '/app',
       })});

@@ -27,6 +27,9 @@ module.exports = {
           ca: {
             command: ['tail', '-f', '/dev/null'],
             image: 'devwithlando/util:stable',
+            environment: {
+              LANDO_SERVICE_TYPE: 'ca',
+            },
             volumes: [
               `${setupCaScript}:/setup-ca.sh`,
               `${certsPath}:/certs`,

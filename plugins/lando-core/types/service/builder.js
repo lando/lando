@@ -11,6 +11,12 @@ module.exports = {
   parent: '_lando',
   builder: parent => class LandoService extends parent {
     constructor(id, options = {}, ...sources) {
+      sources.push({services: _.set({}, options.name, {
+        environment: {
+          LANDO_WEBROOT: `/app/${options.webroot}`,
+          LANDO_SERVICE_TYPE: 'service',
+        },
+      })});
       // @TODO: add in any envvars for this?
       // Add in relevant portforward data
       if (options.portforward) {
