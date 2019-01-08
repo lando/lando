@@ -20,7 +20,9 @@ module.exports = {
       // And set the working dir
       sources.push({services: _.set({}, options.name, {
         working_dir: '/app',
-        LANDO_SERVICE_TYPE: 'webserver',
+        environment: {
+          LANDO_SERVICE_TYPE: 'webserver',
+        },
       })});
       super(id, options, ...sources);
     };

@@ -146,7 +146,7 @@ exports.toolingDefaults = ({
   name,
   app = {},
   cmd = name,
-  description = `Run ${name} commands`,
+  description = `Runs ${name} commands`,
   options = {},
   service = '',
   // @TODO: some better toggle here?

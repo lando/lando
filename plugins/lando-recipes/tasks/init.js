@@ -1,168 +1,191 @@
 'use strict';
 
-module.exports = lando => {
-  // Modules
-  const _ = lando.node._;
-  const fs = lando.node.fs;
-  const path = require('path');
-  const Promise = lando.Promise;
+const _ = require('lodash');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const utils = require('./../../../lib/utils');
 
-  // Collect the methods
-  const methods = [];
-
-  // Create the starting set of options/questions
-  let options = {
-    recipe: {
-      describe: 'The recipe to use',
-      choices: lando.recipes.get(),
-      alias: ['r'],
-      string: true,
-      interactive: {
-        type: 'list',
-        message: 'What recipe do you want to use?',
-        default: 'custom',
-        choices: _.map(lando.recipes.get(), recipe => ({name: recipe, value: recipe})),
-        weight: 500,
-      },
+// Helper to get core options
+const coreOpts = sources => ({
+  source: {
+    describe: 'The location of your apps code',
+    choices: _.map(sources, 'name'),
+    alias: ['src'],
+    conflicts: 'recipe',
+    string: true,
+    interactive: {
+      type: 'list',
+      message: 'From where should we get your app\'s codebase?',
+      default: 'cwd',
+      choices: _.map(sources, source => ({name: source.label, value: source.name})),
+      weight: 100,
     },
-  };
+  },
+});
 
-  // Merge in or alter other options provided by method plugins
-  _.forEach(lando.init.get(), method => {
-    methods.push(method);
-    options = _.merge(options, lando.init.get(method).options);
+// Helper to get default options
+const defaultOpts = {
+  destination: {
+    hidden: true,
+    alias: ['dest', 'd'],
+    string: true,
+    default: process.cwd(),
+  },
+  full: {
+    describe: 'Dump a lower level lando file',
+    default: false,
+    boolean: true,
+  },
+  yes: {
+    describe: 'Auto answer yes to prompts',
+    alias: ['y'],
+    default: false,
+    boolean: true,
+  },
+};
+
+// Helper to select the correct plugin config
+const getConfig = (inits = [], sources = [], answers = {}, isRecipe = false) => {
+  return (isRecipe) ? _.find(sources, {name: answers.source}) : _.find(inits, {name: answers.recipe});
+};
+
+// Name Opts
+const nameOpts = {
+  describe: 'The name of the app',
+  string: true,
+  interactive: {
+    type: 'input',
+    message: () => 'What do you want to call this app?',
+    default: () => 'My Lando App',
+    filter: input => utils.appMachineName(input),
+    when: () => true,
+    weight: 1000,
+    validate: () => true,
+  },
+};
+
+// Recipe Opts
+const recipeOpts = recipes => ({
+  describe: 'The recipe with which to initialize the app',
+  choices: recipes,
+  alias: ['r'],
+  string: true,
+  interactive: {
+    type: 'list',
+    message: () => 'What recipe do you want to use?',
+    default: () => 'lamp',
+    choices: _.map(recipes, recipe => ({name: recipe, value: recipe})),
+    filter: input => input,
+    when: () => true,
+    weight: 500,
+    validate: () => true,
+  },
+});
+
+// Webroot Opts
+const webrootOpts = {
+  describe: 'Specify the webroot relative to destination',
+  string: true,
+  interactive: {
+    type: 'input',
+    message: () => 'Where is your webroot relative to the init destination?',
+    default: () => '.',
+    filter: input => input,
+    when: answers => true,
+    weight: 900,
+    validate: () => true,
+  },
+};
+
+// Determine whether we should override any options (just aux options for now?)
+const overrideOpts = (inits = [], recipes = [], sources = []) => {
+  const opts = auxOpts(recipes);
+  _.forEach(opts, (opt, key) => {
+    // NOTE: when seems like the most relevant override here, should we consider adding more?
+    // are we restricted by access to the answers hash or when these things actually run?
+    _.forEach(['when'], prop => {
+      const overrideFunc = answers => {
+        const config = getConfig(inits, sources, answers, key === 'recipe');
+        if (_.has(config, `overrides.${key}.${prop}`) && _.isFunction(config.overrides[key][prop])) {
+          return config.overrides[key][prop](answers);
+        } else {
+          return opt.interactive[prop](answers);
+        }
+      };
+      opts[key] = _.merge({}, {interactive: _.set({}, prop, overrideFunc)});
+    });
   });
+  return opts;
+};
 
-  // Specify more auxopts
-  const auxOpts = {
-    destination: {
-      describe: 'Specify where to init the app',
-      alias: ['dest', 'd'],
-      string: true,
-      default: process.cwd(),
-    },
-    webroot: {
-      describe: 'Specify the webroot relative to destination',
-      string: true,
-      interactive: {
-        type: 'input',
-        message: 'Where is your webroot relative to the init destination?',
-        default: '.',
-        when: answers => {
-          const recipe = answers.recipe || lando.cli.argv().recipe;
-          return lando.recipes.webroot(recipe);
-        },
-        weight: 900,
-      },
-    },
-    name: {
-      describe: 'The name of the app',
-      string: true,
-      interactive: {
-        type: 'input',
-        message: 'What do you want to call this app?',
-        default: 'My Lando App',
-        filter: value => {
-          if (value) {
-            return _.kebabCase(value);
-          }
-        },
-        when: answers => {
-          const recipe = answers.recipe || lando.cli.argv().recipe;
-          return lando.recipes.name(recipe);
-        },
-        weight: 1000,
-      },
-    },
-    yes: {
-      describe: 'Auto answer yes to prompts',
-      alias: ['y'],
-      default: false,
-      boolean: true,
-    },
-  };
+// Helper to get a base for our dynamic opts, eg things that will change based on source/recipe selection
+const auxOpts = recipes => ({name: nameOpts, recipe: recipeOpts(recipes), webroot: webrootOpts});
 
-  // The task object
+module.exports = lando => {
+  // Stuffz we need
+  const inits = lando.config.inits;
+  const sources = lando.config.sources;
+  const recipes = lando.config.recipes;
+
   return {
-    command: 'init [method]',
-    describe: 'Initialize a lando app, optional methods: ' + methods.join(', '),
-    options: _.merge(options, auxOpts),
+    command: 'init',
+    level: 'app',
+    describe: 'Initializes code for use with lando',
+    options: _.merge(defaultOpts, coreOpts(sources), auxOpts(recipes), overrideOpts(inits, recipes, sources)),
     run: options => {
       // Generate a machine name for the app.
-      options.name = _.kebabCase(options.name);
-
+      options.name = lando.utils.appMachineName(options.name);
       // Get absolute path of destination
       options.destination = path.resolve(options.destination);
-
       // Create directory if needed
-      if (!fs.existsSync(options.destination)) {
-        mkdirp.sync(options.destination);
-      }
-
+      if (!fs.existsSync(options.destination)) mkdirp.sync(options.destination);
       // Set node working directory to the destination
+      // @NOTE: is this still needed?
       process.chdir(options.destination);
+      console.log(options);
+
+      // EXECUTE THE CODE GRABBING STEP
+      //
+      //
 
       // Set the basics
-      const config = {
-        name: options.name,
-        recipe: options.recipe,
-      };
+      const landoConfig = {name: options.name, recipe: options.recipe};
+      if (!_.isEmpty(options.webroot)) _.set(landoConfig, 'config.webroot', options.webroot);
 
-      // If we have a webroot let's set it
-      if (!_.isEmpty(options.webroot)) {
-        _.set(config, 'config.webroot', options.webroot);
+      // Get a lower level config if needed, merge in current recipe config
+      if (options.full) {
+        const Recipe = lando.factory.get(options.recipe);
+        const recipeConfig = _.merge({}, landoConfig, {app: landoConfig.name, _app: {_config: lando.config}});
+        _.merge(landoConfig, new Recipe(landoConfig.name, recipeConfig).config);
+        delete landoConfig.recipe;
+        delete landoConfig.config;
       }
 
-      // Method specific build steps if applicable
-      return Promise.try(() => lando.init.build(config.name, options.method, options))
-      // Kill any build containers if needed
-      .then(() => lando.init.kill(config.name, options.destination))
-      // Check to see if our recipe provides additional yaml augment
-      .then(() => lando.init.yaml(options.recipe, config, options))
-      // Create the lando yml
-      .then(config => {
-        // Where are we going?
-        const dest = path.join(options.destination, '.lando.yml');
+      // Where are we going?
+      const dest = path.join(options.destination, '.lando.yml');
 
-        // Rebase on top of any existing yaml
-        if (fs.existsSync(dest)) {
-          const pec = lando.yaml.load(dest);
-          config = _.mergeWith(pec, config, lando.utils.merger);
-        }
+      // Rebase on top of any existing yaml
+      // @NOTE: need to remember to add support for lando.dist files whenever we have a
+      // a lando yaml config merge option available function available
+      if (fs.existsSync(dest)) _.merge(landoConfig, lando.yaml.load(dest));
 
-        // Dump it
-        lando.yaml.dump(dest, config);
-      })
+      // Dump the config file
+      lando.yaml.dump(dest, landoConfig);
 
-      // Tell the user things
-      .then(() => {
         // Header it
-        console.log(lando.cli.makeArt('init'));
-
-        // Grab a new cli table
-        const table = lando.cli.makeTable();
-
-        // Get docs link
-        const docBase = 'https://docs.devwithlando.io/tutorials/';
-        const docUrl = docBase + config.recipe + '.html';
-
-        // Add data
-        table.add('NAME', config.name);
-        table.add('LOCATION', options.destination);
-        table.add('RECIPE', options.recipe);
-        table.add('DOCS', docUrl);
-
-        // Add some other things if needed
-        if (!_.isEmpty(options.method)) {
-          table.add('METHOD', options.method);
-        }
-
-        // Print the table
-        console.log(table.toString());
-
-        // Space it
-        console.log('');
-      });
+      console.log(lando.cli.makeArt('init'));
+      // Grab a new cli table
+      const table = lando.cli.makeTable();
+      // Add data
+      table.add('NAME', landoConfig.name);
+      table.add('LOCATION', options.destination);
+      table.add('RECIPE', options.recipe);
+      table.add('DOCS', `https://docs.devwithlando.io/tutorials/${landoConfig.recipe}.html`);
+      // Print the table
+      console.log(table.toString());
+      // Space it
+      console.log('');
     },
   };
 };

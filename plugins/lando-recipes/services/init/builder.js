@@ -33,7 +33,6 @@ module.exports = {
           },
         },
       };
-
       super('init', _.merge({}, config, {env, labels, userConfRoot}), initService);
     };
   },
