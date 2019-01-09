@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 // Modules
 const _ = require('lodash');
 const auth = require('./auth');
@@ -78,9 +78,7 @@ const getDefaults = (task, options) => {
   return task;
 };
 
-/*
- * Helper to build a pull command
- */
 exports.getPantheonPull = (options, tokens = []) => {
   return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, tokens)});
 };
+*/
