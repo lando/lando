@@ -6,6 +6,7 @@ FROM debian:jessie
 
 # Install dependencies we need
 RUN apt-get update && apt-get install -y \
+    curl \
     wget \
     unzip \
     ssh \

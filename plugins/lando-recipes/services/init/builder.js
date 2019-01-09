@@ -19,21 +19,19 @@ module.exports = {
       // Basic Init service
       const initService = {
         services: {
-          ca: {
+          init: {
             command: ['tail', '-f', '/dev/null'],
-            image: 'devwithlando/util:stable',
+            image: 'devwithlando/util:2',
               environment: {
               LANDO_SERVICE_TYPE: 'init',
             },
             volumes: [
               `${app}:/app:delegated`,
-              `${userConfRoot}:/lando:delegated`,
-              `${home}:/user:delegated`,
             ],
           },
         },
       };
-      super('init', _.merge({}, config, {env, labels, userConfRoot}), initService);
+      super('init', _.merge({}, config, {env, home, labels, userConfRoot}), initService);
     };
   },
 };

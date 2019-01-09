@@ -4,7 +4,7 @@ set -e
 
 # Set up our things
 SSH_CONF="/etc/ssh"
-SSH_DIRS=( "/user/.ssh" "/lando/keys" )
+SSH_DIRS=( "/user/.ssh" "/lando/keys" "/var/www/.ssh" )
 SSH_CANDIDATES=()
 SSH_KEYS=()
 SSH_IDENTITIES=()
@@ -13,6 +13,9 @@ SSH_IDENTITIES=()
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
 : ${LANDO_LOAD_PP_KEYS:='false'}
+
+# Ensure directory exists
+mkdir -p /var/www/.ssh
 
 # We need to do some different magic on Windows because file sharing on windows
 # does not let you chmod files that are mounted
