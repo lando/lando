@@ -41,6 +41,7 @@ const runBuild = (lando, options = {}, steps = []) => lando.Promise.each(steps, 
   if (_.has(step, 'func')) {
     return step.func(options, lando);
   } else {
+    step.cmd = (_.isFunction(step.cmd)) ? step.cmd(options) : step.cmd;
     return build.run(lando, build.buildRun(_.merge({}, build.runDefaults(lando, options), step)));
   };
 });
@@ -58,30 +59,37 @@ module.exports = lando => {
     describe: 'Initializes code for use with lando',
     options: _.merge(opts.baseOpts(recipes, sources), configOpts, opts.overrideOpts(inits, recipes, sources)),
     run: options => {
-      // Parse options
+      // Parse options abd and configs
       options = opts.parseOptions(options);
       // Get our recipe and source configs
-      // const recipeConfig = opts.getConfig(inits, options.recipe);
+      const recipeConfig = opts.getConfig(inits, options.recipe);
       const sourceConfig = opts.getConfig(sources, options.source);
-      const buildSteps = (!_.isEmpty(sourceConfig.build(options, lando))) ? sourceConfig.build(options, lando) : [];
-      // Pre init event and run build steps
-      return lando.events.emit('pre-init', options, buildSteps).then(() => runBuild(lando, options, buildSteps))
+      // Get our build and config steps
+      const buildSteps = (_.has(sourceConfig, 'build')) ? sourceConfig.build(options, lando) : [];
+      const configStep = (_.has(recipeConfig, 'build')) ? recipeConfig.build : () => {};
 
-      // Compile the yaml
-      .then(() => {
+      // Pre init event and run build steps
+      // @NOTE: source build steps are designed to grab code from somewhere
+      return lando.events.emit('pre-init', options, buildSteps).then(() => runBuild(lando, options, buildSteps))
+      // Run any config steps
+      // @NOTE: config steps are designed to augmnet the landofile with additional metadata
+      .then(() => configStep(options, lando))
+
+      // Compile and dump the yaml
+      .then((config = {}) => {
         // Where are we going?
         const dest = path.join(options.destination, '.lando.yml');
         const landoFile = getYaml(dest, options, lando);
+
         // Get a lower level config if needed, merge in current recipe config
         if (options.full) {
           const Recipe = lando.factory.get(options.recipe);
           const recipeConfig = _.merge({}, landoFile, {app: landoFile.name, _app: {_config: lando.config}});
           _.merge(landoFile, new Recipe(landoFile.name, recipeConfig).config);
-          delete landoFile.recipe;
-          delete landoFile.config;
         }
+
         // Merge and dump the config file
-        lando.yaml.dump(dest, landoFile);
+        lando.yaml.dump(dest, _.merge(landoFile, config));
         // Show it
         showInit(lando, options);
       })

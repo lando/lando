@@ -83,7 +83,9 @@ module.exports = class PantheonApiClient {
     // Run both requests
     return Promise.all([pantheonUserSites(), pantheonOrgSites()])
     // Combine, cache and all the things
-    .then(sites => _.compact(_.sortBy(_.uniqBy(_.flatten(sites), 'name'), 'name')));
+    .then(sites => _.compact(_.sortBy(_.uniqBy(_.flatten(sites), 'name'), 'name')))
+    // Filter out any BAAAAD BIZZZNIZZZ
+    .filter(site => !site.frozen);
   };
 
  /*
