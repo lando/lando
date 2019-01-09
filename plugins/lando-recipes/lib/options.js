@@ -45,10 +45,10 @@ const defaultOpts = {
 };
 
 // Helper to get source option conflicts
-const getConflicts = (name, all) => _(all)
+const getConflicts = (name, all, lando) => _(all)
   .filter(one => _.has(one, 'options'))
-  .flatMap(one => _.keys(one.options))
-  .thru(options => _.difference(options, _.keys(_.find(all, {name}).options)))
+  .flatMap(one => _.keys(one.options(lando)))
+  .thru(options => _.difference(options, _.keys(_.find(all, {name}).options(lando))))
   .value();
 
 // Name Opts
@@ -112,10 +112,10 @@ exports.getConfig = (data = [], name) => _.find(data, {name});
 exports.getConfigOptions = (all, lando, options = {}) => {
   _.forEach(all, one => {
     if (_.has(one, 'options')) {
-      _.forEach(one.options(lando), option => {
-        option.conflicts = getConflicts(one.name, all);
+      _.forEach(one.options(lando), (option, key) => {
+        _.set(options, `${key}.conflicts`, getConflicts(one.name, all, lando));
       });
-      options = _.merge({}, options, one.options(lando));
+      options = _.merge({}, one.options(lando), options);
     }
   });
   return options;
