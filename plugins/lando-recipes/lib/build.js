@@ -17,21 +17,18 @@ const killRun = config => ({
 });
 
 // Helper to get a build array of run thingz
-exports.buildRun = (configs, defaults = {}) => _(configs)
-  .map(config => _.merge({}, defaults, config))
-  .map(config => ({
-    id: config.id,
-    compose: config.compose,
-    project: config.project,
-    cmd: config.cmd,
-    opts: {
-      mode: 'attach',
-      user: config.user,
-      services: ['init'],
-      autoRemove: true,
-    },
-  }))
-  .value();
+exports.buildRun = config => ({
+  id: config.id,
+  compose: config.compose,
+  project: config.project,
+  cmd: config.cmd,
+  opts: {
+    mode: 'attach',
+    user: config.user,
+    services: ['init'],
+    autoRemove: true,
+  },
+});
 
 // Helper to run
 exports.run = (lando, run) => lando.engine.run(run).catch(err => {

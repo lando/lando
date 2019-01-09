@@ -36,6 +36,15 @@ const getYaml = (dest, options, lando) => {
   return _.merge(existingLando, landoConfig);
 };
 
+// Helper to run our build tasks
+const runBuild = (lando, options = {}, steps = []) => lando.Promise.each(steps, step => {
+  if (_.has(step, 'func')) {
+    return step.func(options);
+  } else {
+    return build.run(lando, build.buildRun(_.merge({}, build.runDefaults(lando, options), step)));
+  };
+});
+
 module.exports = lando => {
   // Stuffz we need
   const inits = lando.config.inits;
@@ -51,24 +60,12 @@ module.exports = lando => {
     run: options => {
       // Parse options
       options = opts.parseOptions(options);
-
       // Get our recipe and source configs
       // const recipeConfig = opts.getConfig(inits, options.recipe);
       const sourceConfig = opts.getConfig(sources, options.source);
-
-      // Pre init event
-      return lando.events.emit('pre-init', options)
-      // Pre init build event
-      .then(() => lando.events.emit('pre-init-build', options))
-      // Run any source build commands if we need to
-      .then(() => {
-        if (!_.isEmpty(sourceConfig.build(options))) {
-          const run = build.buildRun(sourceConfig.build(options), build.runDefaults(lando, options));
-          return build.run(lando, run[0]);
-        }
-      })
-      // Post init build event
-      .then(() => lando.events.emit('post-init-build', options))
+      const buildSteps = (!_.isEmpty(sourceConfig.build(options))) ? sourceConfig.build(options) : [];
+      // Pre init event and run build steps
+      return lando.events.emit('pre-init', options, buildSteps).then(() => runBuild(lando, options, buildSteps))
 
       // Compile the yaml
       .then(() => {
@@ -88,6 +85,7 @@ module.exports = lando => {
         // Show it
         showInit(lando, options);
       })
+
       // Post init event
       .then(() => lando.events.emit('post-init', options));
     },

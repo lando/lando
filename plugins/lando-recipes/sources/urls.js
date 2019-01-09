@@ -11,7 +11,6 @@ module.exports = {
     options: {
       'remote-url': {
         describe: 'The URL of your git repo or archive, only works when you set source to remote',
-        alias: ['url'],
         string: true,
         interactive: {
           type: 'input',
@@ -25,9 +24,14 @@ module.exports = {
           weight: 110,
         },
       },
+      'remote-options': {
+        default: '',
+        describe: 'Some options to pass into either the git clone or archive extract command',
+        string: true,
+      },
     },
     build: options => ([
-      {cmd: `/helpers/get-remote-url.sh ${options.remoteUrl}`},
+      {name: 'gitorclone', cmd: `/helpers/get-remote-url.sh ${options.remoteUrl} "${options.remoteOptions}"`},
     ]),
   }],
 };
