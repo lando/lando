@@ -6,9 +6,9 @@ const url = require('valid-url');
 
 module.exports = {
   sources: [{
-    label: 'remote git repo or archive',
     name: 'remote',
-    options: {
+    label: 'remote git repo or archive',
+    options: lando => ({
       'remote-url': {
         describe: 'The URL of your git repo or archive, only works when you set source to remote',
         string: true,
@@ -29,9 +29,9 @@ module.exports = {
         describe: 'Some options to pass into either the git clone or archive extract command',
         string: true,
       },
-    },
+    }),
     build: options => ([
-      {name: 'gitorclone', cmd: `/helpers/get-remote-url.sh ${options.remoteUrl} "${options.remoteOptions}"`},
+      {name: 'get-asset', cmd: `/helpers/get-remote-url.sh ${options.remoteUrl} "${options.remoteOptions}"`},
     ]),
   }],
 };

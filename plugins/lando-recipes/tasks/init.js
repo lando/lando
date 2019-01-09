@@ -39,7 +39,7 @@ const getYaml = (dest, options, lando) => {
 // Helper to run our build tasks
 const runBuild = (lando, options = {}, steps = []) => lando.Promise.each(steps, step => {
   if (_.has(step, 'func')) {
-    return step.func(options);
+    return step.func(options, lando);
   } else {
     return build.run(lando, build.buildRun(_.merge({}, build.runDefaults(lando, options), step)));
   };
@@ -50,7 +50,7 @@ module.exports = lando => {
   const inits = lando.config.inits;
   const sources = lando.config.sources;
   const recipes = lando.config.recipes;
-  const configOpts = opts.getConfigOptions(inits.concat(sources));
+  const configOpts = opts.getConfigOptions(inits.concat(sources), lando);
 
   return {
     command: 'init',
@@ -63,7 +63,7 @@ module.exports = lando => {
       // Get our recipe and source configs
       // const recipeConfig = opts.getConfig(inits, options.recipe);
       const sourceConfig = opts.getConfig(sources, options.source);
-      const buildSteps = (!_.isEmpty(sourceConfig.build(options))) ? sourceConfig.build(options) : [];
+      const buildSteps = (!_.isEmpty(sourceConfig.build(options, lando))) ? sourceConfig.build(options, lando) : [];
       // Pre init event and run build steps
       return lando.events.emit('pre-init', options, buildSteps).then(() => runBuild(lando, options, buildSteps))
 

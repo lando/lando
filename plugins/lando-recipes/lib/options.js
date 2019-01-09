@@ -109,13 +109,13 @@ exports.baseOpts = (recipes = [], sources = []) => _.merge(defaultOpts, coreOpts
 exports.getConfig = (data = [], name) => _.find(data, {name});
 
 // Helper to get config options
-exports.getConfigOptions = (all, options = {}) => {
+exports.getConfigOptions = (all, lando, options = {}) => {
   _.forEach(all, one => {
     if (_.has(one, 'options')) {
-      _.forEach(one.options, option => {
+      _.forEach(one.options(lando), option => {
         option.conflicts = getConflicts(one.name, all);
       });
-      options = _.merge({}, options, one.options);
+      options = _.merge({}, options, one.options(lando));
     }
   });
   return options;

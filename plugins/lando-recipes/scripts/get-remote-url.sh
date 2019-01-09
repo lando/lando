@@ -24,6 +24,11 @@ mkdir -p "$SRC_DIR"
 
 # Either git
 if [ "$TYPE" = "git repo" ]; then
+  if [ -d "/app/.git" ]; then
+    echo "Whoooops! Looks like you've already got a git repo here!"
+    echo "Either delete this repo or try to lando init in a folder without .git in it"
+    exit 666
+  fi
   git -C "$SRC_DIR" clone $OPTIONS "$URL" ./
   echo "Copying git clone over to /app..."
   cp -rfT "$SRC_DIR" /app
