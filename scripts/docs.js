@@ -17,13 +17,13 @@ const dest = path.resolve('docs', 'api');
 const docs = {
   sections: {
     core: [
+      './lib/app.js',
       './lib/art.js',
-      './lib/bootstrap.js',
       './lib/cache.js',
-      './lib/cli.js',
-      './lib/config.js',
+      './lib/engine.js',
       './lib/error.js',
       './lib/events.js',
+      './lib/factory.js',
       './lib/lando.js',
       './lib/logger.js',
       './lib/plugins.js',
@@ -34,15 +34,6 @@ const docs = {
       './lib/updates.js',
       './lib/user.js',
       './lib/yaml.js',
-    ],
-    otherPlugins: [
-      './plugins/lando-core/*.js',
-      './plugins/lando-events/*.js',
-      './plugins/lando-init/*.js',
-      './plugins/lando-networking/*.js',
-      './plugins/lando-proxy/*.js',
-      './plugins/lando-recipes/*.js',
-      './plugins/lando-services/*.js',
     ],
   },
   helpers: [
