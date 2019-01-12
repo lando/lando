@@ -16,17 +16,16 @@ chai.should();
 const os = require('os');
 const path = require('path');
 const Plugins = require('./../lib/plugins');
-const Promise = require('./../lib/promise');
 
-const testPlugin = fs.readFileSync(path.resolve('test', 'fixtures', 'plugins', 'test-plugin', 'index.js'));
+const testPlugin = fs.readFileSync(path.resolve(__dirname, '..', 'plugins', 'lando-test', 'index.js'), 'utf8');
 const searchDirs = [
   path.join(os.tmpdir(), 'dir1'),
   path.join(os.tmpdir(), 'dir2'),
-  path.join(process.cwd(), 'test', 'fixtures'),
+  path.resolve(__dirname, '..'),
 ];
 const fsConfig = {};
 _.forEach(searchDirs, dir => {
-  fsConfig[path.join(dir, 'plugins', 'test-plugin', 'index.js')] = testPlugin;
+  fsConfig[path.join(dir, 'plugins', 'lando-test', 'index.js')] = testPlugin;
 });
 
 // This is the file we are testing
@@ -40,47 +39,41 @@ describe('plugins', () => {
 
     it('should use __non_webpack_require__ if __webpack_require__ is a func', () => {
       const plugins = new Plugins();
+      const find = plugins.find(searchDirs);
       global.__webpack_require__ = sinon.spy();
       global.__non_webpack_require__ = require;
-      return plugins.load('test-plugin', searchDirs).should.eventually.resolve;
-    });
-
-    it('should handle a string for paths to search', () => {
-      const plugins = new Plugins();
-      return plugins.load('test-plugin', _.last(searchDirs)).should.eventually.resolve;
-    });
-
-    it('should handle an array for paths to search', () => {
-      const plugins = new Plugins();
-      return plugins.load('test-plugin', searchDirs).should.eventually.resolve;
+      const data = plugins.load(find[0]);
+      data.should.be.an('Object');
+      data.data['plugin-test'].should.be.true;
+      data.name.should.equal(find[0].name);
+      data.path.should.equal(find[0].path);
+      data.dir.should.equal(find[0].dir);
     });
 
     it('should use the plugin from the last location it finds it', () => {
       const plugins = new Plugins();
-      return plugins.load('test-plugin', searchDirs)
-      .then(() => {
-        plugins.loadedModules.should.contain(_.last(_.keys(fsConfig)));
-      });
+      const find = plugins.find(searchDirs);
+      find[0].path.should.equal(_.last(_.keys(fsConfig)));
     });
 
-    it('should log a warning if plugin is not found', () => {
-      const log = {warn: sinon.spy(), debug: sinon.spy()};
-      const plugins = new Plugins(log);
-      return plugins.load('test-plugin', ['/looks/like/we/are/going/nowhere'])
-        .then(() => {
-          plugins.log.warn.firstCall.args[0].should.contain('Could not find plugin');
-          plugins.log.warn.callCount.should.equal(1);
-        })
-        .should.eventually.resolve;
+    it('should push a plugin to the plugin registry after it is loaded', () => {
+      const plugins = new Plugins();
+      const find = plugins.find(searchDirs);
+      global.__webpack_require__ = sinon.spy();
+      global.__non_webpack_require__ = require;
+      plugins.load(find[0]);
+      plugins.registry.should.be.lengthOf(1);
     });
 
     it('should throw an error if dynamic require fails', () => {
-      const plugins = new Plugins();
       filesystem();
-      sinon.stub(plugins, 'findPlugin').usingPromise(Promise).resolves('/aint/here/index.js');
-      return plugins.load('irrelevant', ['somewhere'])
-        .should.eventually.be.rejected
-        .then(() => plugins.findPlugin.restore());
+      const plugins = new Plugins({
+        debug: sinon.spy(),
+        error: sinon.spy(),
+        verbose: sinon.spy(),
+      });
+      plugins.load('irrelevant', 'somewhere', {});
+      plugins.log.error.callCount.should.equal(1);
     });
 
     afterEach(() => {

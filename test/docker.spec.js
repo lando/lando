@@ -8,6 +8,7 @@
 // Setup chai.
 const chai = require('chai');
 const expect = chai.expect;
+const filesystem = require('mock-fs');
 chai.should();
 chai.use(require('chai-as-promised'));
 const sinon = require('sinon');
@@ -16,24 +17,25 @@ const landerode = new Landerode();
 const Dockerode = require('dockerode');
 const Promise = require('./../lib/promise');
 const _ = require('lodash');
-const utils = require('./../lib/utils');
 
 const dummyContainer = (overrides = {}) => {
   return _.assign(
-      new Dockerode.Container(),
-      {
-        Id: '8675309',
-        app: 'Death Star',
-        Labels: {
-          'com.docker.compose.project': 'Death Star',
-          'com.docker.compose.service': 'Exhaust Port',
-          'com.docker.compose.container-number': 73,
-          'com.docker.compose.oneoff': 'no',
-          'io.lando.container': 'TRUE',
-          'io.lando.service-container': 'no',
-        },
+    new Dockerode.Container(),
+    {
+      Id: '8675309',
+      app: 'Death Star',
+      Labels: {
+        'com.docker.compose.project': 'Death Star',
+        'com.docker.compose.service': 'Exhaust Port',
+        'com.docker.compose.container-number': 73,
+        'com.docker.compose.oneoff': 'no',
+        'io.lando.container': 'TRUE',
+        'io.lando.src': '/tmp/.lando.yml',
+        'io.lando.id': 'lando',
+        'io.lando.service-container': 'no',
       },
-      overrides
+    },
+    overrides
   );
 };
 
@@ -155,6 +157,10 @@ describe('docker', () => {
   });
 
   describe('#list', () => {
+    beforeEach(() => {
+      filesystem({'/tmp/.lando.yml': 'CODEZ'});
+    });
+
     it('should filter out any containers that are pending removal', () => {
       const listStub = sinon.stub(landerode, 'listContainers')
       .usingPromise(Promise)
@@ -162,7 +168,6 @@ describe('docker', () => {
           dummyContainer({Status: 'Being Awesome'}),
           dummyContainer({Status: 'Removal In Progress'}),
       ]);
-
       return landerode.list()
       .should.eventually.be.an('Array').with.a.lengthOf(1)
       .then(() => {
@@ -205,17 +210,19 @@ describe('docker', () => {
       .usingPromise(Promise)
       .resolves([
         dummyContainer({Labels: {
-            'com.docker.compose.project': 'Alderaan',
-            'com.docker.compose.service': 'Rescue Mission',
-            'com.docker.compose.container-number': 73,
-            'com.docker.compose.oneoff': 'no',
-            'io.lando.container': 'TRUE',
-            'io.lando.service-container': 'no',
-          }}),
+          'com.docker.compose.project': 'alderaan',
+          'com.docker.compose.service': 'Rescue Mission',
+          'com.docker.compose.container-number': 73,
+          'com.docker.compose.oneoff': 'no',
+          'io.lando.container': 'TRUE',
+          'io.lando.id': 'lando',
+          'io.lando.service-container': 'no',
+          'io.lando.src': '/tmp/.lando.yml',
+        }}),
         dummyContainer(),
       ]);
 
-      return landerode.list('Alderaan')
+      return landerode.list('alderaan')
       .should.eventually.be.an('Array').with.a.lengthOf(1)
       .then(() => {
         listStub.restore();
@@ -230,6 +237,10 @@ describe('docker', () => {
       const fail = () => landerode.list();
       expect(fail).to.throw();
       return listStub.restore();
+    });
+
+    afterEach(() => {
+      filesystem.restore();
     });
   });
 
@@ -246,66 +257,6 @@ describe('docker', () => {
       .then(() => {
         getStub.restore();
         removeStub.restore();
-      });
-    });
-  });
-
-  describe('#run', () => {
-    it('should resolve with stdout when error code is 0', () => {
-      // This function has a lot of dependencies, so strap in...
-      const container = dummyContainer();
-      const exec = new Dockerode.Exec({Promise: Promise}, '1234');
-      const getStub = sinon.stub(landerode, 'getContainer')
-        .returns(container);
-      const execStub = sinon.stub(container, 'exec')
-        .usingPromise(Promise)
-        .resolves(exec);
-      const runStreamStub = sinon.stub(utils, 'runStream')
-        .usingPromise(Promise)
-        .resolves({stdout: 'Yay!', stderr: null});
-      const inspectStub = sinon.stub(exec, 'inspect')
-        .usingPromise(Promise)
-        .resolves({ExitCode: 0, stdout: 'Yay!'});
-      const startStub = sinon.stub(exec, 'start')
-        .usingPromise(Promise)
-        .resolves({output: ''});
-
-      return landerode.run('1234', 'dostuff').should.be.fulfilled
-      .then(() => {
-        getStub.restore();
-        execStub.restore();
-        runStreamStub.restore();
-        inspectStub.restore();
-        startStub.restore();
-      });
-    });
-    it('should reject with object containing output and exit code otherwise', () => {
-      // This function has a lot of dependencies, so strap in...
-      const container = dummyContainer();
-      const exec = new Dockerode.Exec({Promise: Promise}, '1234');
-      const getStub = sinon.stub(landerode, 'getContainer')
-        .returns(container);
-      const execStub = sinon.stub(container, 'exec')
-        .usingPromise(Promise)
-        .resolves(exec);
-      const runStreamStub = sinon.stub(utils, 'runStream')
-        .usingPromise(Promise)
-        .resolves({stdout: 'Yay!', stderr: null});
-      const inspectStub = sinon.stub(exec, 'inspect')
-        .usingPromise(Promise)
-        .resolves({ExitCode: 1, stderr: 'Oh No!'});
-      const startStub = sinon.stub(exec, 'start')
-        .usingPromise(Promise)
-        .resolves({output: ''});
-
-      return landerode.run('1234', 'dostuff').should.be
-      .rejectedWith({ExitCode: 1, stderr: 'Oh No!'})
-      .then(() => {
-        getStub.restore();
-        execStub.restore();
-        runStreamStub.restore();
-        inspectStub.restore();
-        startStub.restore();
       });
     });
   });

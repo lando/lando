@@ -45,11 +45,11 @@ describe('promise', () => {
       Promise.retry(func).should.eventually.equal(1).and.should.be.fulfilled;
     });
 
-    it('should retry a rejected promise max times with backoff and then throw error', () => {
+    it('should retry a rejected promise max times with backoff and then reject with Error', () => {
       const opts = {max: _.random(1, 7), backoff: _.random(1, 25)};
       const fail = () => {
         counter = counter + 1;
-        return Promise.reject('Death by Balrog');
+        return Promise.reject(new Error('Death by Balrog'));
       };
       const assertz = () => {
         const timer = new Date().getTime();
@@ -60,7 +60,7 @@ describe('promise', () => {
       };
       let counter = -1;
       const clock = sinon.useFakeTimers({now: 0, shouldAdvanceTime: true});
-      return Promise.retry(fail, opts).finally(assertz).should.be.rejectedWith(Error, 'Failed after ' + opts.max);
+      return Promise.retry(fail, opts).finally(assertz).should.be.rejectedWith(Error, 'Death by Balrog');
     });
   });
 });

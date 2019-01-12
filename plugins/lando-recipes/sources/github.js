@@ -6,7 +6,7 @@ const fs = require('fs');
 const GitHubApi = require('github');
 const os = require('os');
 const path = require('path');
-const Promise = require('./../../../lib/Promise');
+const Promise = require('./../../../lib/promise');
 
 // Github
 const github = new GitHubApi({Promise: Promise});

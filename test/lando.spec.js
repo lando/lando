@@ -21,7 +21,7 @@ describe('lando', () => {
     // @todo: do we need a stronger test? presumably downstream requires handle that?
     it('should return a Lando instance with correct default options', () => {
       const lando = new Lando();
-      lando.should.be.an('object');
+      lando.should.be.an.instanceof(Lando);
     });
 
     it('should use prexisting instance id if possible', () => {

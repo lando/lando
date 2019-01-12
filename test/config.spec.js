@@ -82,10 +82,12 @@ describe('config', () => {
   describe('#defaults', () => {
     it('should return a properly structured default config object', () => {
       const defaults = config.defaults();
+      expect(_.hasIn(defaults, 'composeBin')).to.equal(true);
+      expect(_.hasIn(defaults, 'dockerBin')).to.equal(true);
+      expect(_.hasIn(defaults, 'dockerBinDir')).to.equal(true);
       expect(_.hasIn(defaults, 'env')).to.equal(true);
       expect(_.hasIn(defaults, 'home')).to.equal(true);
       expect(_.hasIn(defaults, 'logLevel')).to.equal(true);
-      expect(_.hasIn(defaults, 'logLevelConsole')).to.equal(true);
       expect(_.hasIn(defaults, 'node')).to.equal(true);
       expect(_.hasIn(defaults, 'os')).to.equal(true);
       expect(_.hasIn(defaults, 'os.type')).to.equal(true);
@@ -93,7 +95,6 @@ describe('config', () => {
       expect(_.hasIn(defaults, 'os.release')).to.equal(true);
       expect(_.hasIn(defaults, 'os.arch')).to.equal(true);
       expect(_.hasIn(defaults, 'plugins')).to.equal(true);
-      expect(_.hasIn(defaults, 'product')).to.equal(true);
       expect(_.hasIn(defaults, 'process')).to.equal(true);
       expect(_.hasIn(defaults, 'userConfRoot')).to.equal(true);
     });
@@ -125,6 +126,15 @@ describe('config', () => {
       const processType = config.defaults().process;
       expect(processType).to.equal('node');
     });
+  });
+
+  describe('#getEngineConfig', () => {
+    it('should use default engine config if we dont have any already');
+    it('should default to a named pipe on windows');
+    it('should set env.DOCKER_HOST if we ar using a remote docker daemon');
+    it('should set appropriate DOCKER envvars if we have certs');
+    it('should set engineConfig with cert data if we have certs');
+    it('should return an object that dockerode can use to set config');
   });
 
   describe('#loadFiles', () => {

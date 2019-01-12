@@ -90,15 +90,16 @@ describe('env', () => {
 
     it('should fall back to an in PATH provided path if the lando-provided one does not exist', () => {
       setPlatform('linux');
+      const OLDPATH = process.env.PATH;
       process.env.PATH = '/usr/local/bin';
       filesystem({'/usr/local/bin/docker-compose': 'CODEZ'});
       const composeExecutable = env.getComposeExecutable();
       expect(_.isString(composeExecutable)).to.equal(true);
       expect(path.parse(composeExecutable)).to.be.an('Object');
       filesystem.restore();
+      process.env.PATH = OLDPATH;
       resetPlatform();
     });
-
 
     it('should return the correct lando-provided path on darwin', () => {
       setPlatform('darwin');
@@ -130,12 +131,14 @@ describe('env', () => {
 
     it('should fall back to an in PATH provided path if docker is not in the usual place', () => {
       setPlatform('linux');
+      const OLDPATH = process.env.PATH;
       process.env.PATH = '/usr/local/bin';
       filesystem({'/usr/local/bin/docker': 'CODEZ'});
       const dockerExecutable = env.getDockerExecutable();
       expect(_.isString(dockerExecutable)).to.equal(true);
       expect(path.parse(dockerExecutable)).to.be.an('Object');
       filesystem.restore();
+      process.env.PATH = OLDPATH;
       resetPlatform();
     });
 
@@ -145,14 +148,5 @@ describe('env', () => {
       expect(dockerExecutable).to.equal('/Applications/Docker.app/Contents/Resources/bin/docker');
       resetPlatform();
     });
-  });
-
-  describe('#getEngineConfig', () => {
-    it('should use default engine config if we dont have any already');
-    it('should default to a named pipe on windows');
-    it('should set env.DOCKER_HOST if we ar using a remote docker daemon');
-    it('should set appropriate DOCKER envvars if we have certs');
-    it('should set engineConfig with cert data if we have certs');
-    it('should return an object that dockerode can use to set config');
   });
 });

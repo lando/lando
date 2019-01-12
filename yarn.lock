@@ -3794,10 +3794,9 @@ mocha@^4.1.0:
     mkdirp "0.5.1"
     supports-color "4.4.0"
 
-mock-fs@^4.4.2:
+"mock-fs@https://github.com/pirog/mock-fs.git#256-ctxBindingAccess":
   version "4.7.0"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.7.0.tgz#9f17e219cacb8094f4010e0a8c38589e2b33c299"
-  integrity sha512-WlQNtUlzMRpvLHf8dqeUmNqfdPjGY29KrJF50Ldb4AcL+vQeR8QH3wQcFMgrhTwb1gHjZn9xggho+84tBskLgA==
+  resolved "https://github.com/pirog/mock-fs.git#491fec84c10f5ca9676f2622dbcbd73ae598aaab"
 
 move-concurrently@^1.0.1, move-concurrently@~1.0.1:
   version "1.0.1"

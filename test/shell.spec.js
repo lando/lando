@@ -6,7 +6,6 @@
 'use strict';
 
 const _ = require('lodash');
-const _esc = require('shell-escape');
 const _shell = require('shelljs');
 const child = require('child_process');
 const chai = require('chai');
@@ -133,45 +132,6 @@ describe('shell', () => {
         .then(() => {
           delete process.lando;
         });
-    });
-  });
-
-  describe('#escSpaces', () => {
-    it('should return \\\ escaped spaces string on posix', () => {
-      const shell = new Shell();
-      const thunderRoad = 'doors open but the ride aint free';
-      const result = shell.escSpaces(thunderRoad, 'darwin');
-      result.should.equal.thunderRoad;
-    });
-
-    it('should return ^ escaped string spaces on windoze', () => {
-      const shell = new Shell();
-      const rosalita = ['come', 'out', 'tonight'];
-      const result = shell.escSpaces(rosalita, 'win32');
-      result.split('^').should.be.length(3);
-    });
-
-    it('should use process.platform if not specified', () => {
-      const originalPlatform = process.platform;
-      Object.defineProperty(process, 'platform', {value: 'win32'});
-      const shell = new Shell();
-      const rosalita = ['come', 'out', 'tonight'];
-      const result = shell.escSpaces(rosalita);
-      result.split('^').should.be.length(3);
-      Object.defineProperty(process, 'platform', {value: originalPlatform});
-    });
-  });
-
-  describe('#esc', () => {
-    it('should return the same as shell-escape', () => {
-      const shell = new Shell();
-      const escapee1 = ['git', 'commit', '-m', 'maximum overdrive'];
-      const escapee2 = 'git commit -m "all the codez"';
-      _.forEach([escapee1, escapee2], escapee => {
-        const escape1 = shell.esc(escapee);
-        const escape2 = _esc(escapee);
-        escape1.should.equal(escape2);
-      });
     });
   });
 
