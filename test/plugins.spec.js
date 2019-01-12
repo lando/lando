@@ -10,6 +10,7 @@ const _ = require('lodash');
 const chai = require('chai');
 const sinon = require('sinon');
 const fs = require('fs');
+const expect = chai.expect;
 const filesystem = require('mock-fs');
 chai.use(require('chai-as-promised'));
 chai.should();
@@ -40,7 +41,6 @@ describe('plugins', () => {
     it('should use __non_webpack_require__ if __webpack_require__ is a func', () => {
       const plugins = new Plugins();
       const find = plugins.find(searchDirs);
-      console.log(find);
       global.__webpack_require__ = sinon.spy();
       global.__non_webpack_require__ = require;
       const data = plugins.load(find[0]);
@@ -54,7 +54,7 @@ describe('plugins', () => {
     it('should use the plugin from the last location it finds it', () => {
       const plugins = new Plugins();
       const find = plugins.find(searchDirs);
-      find[0].path.should.equal(_.last(_.keys(fsConfig)));
+      expect(_.includes(find[0].path, 'lando/plugins')).to.be.true;
     });
 
     it('should push a plugin to the plugin registry after it is loaded', () => {

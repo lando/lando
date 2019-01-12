@@ -35,10 +35,8 @@ const docs = {
       './lib/user.js',
       './lib/yaml.js',
     ],
-    engine: ['./plugins/lando-engine/engine.js'],
     tooling: ['./plugins/lando-tooling/tooling.js'],
     otherPlugins: [
-      './plugins/lando-app/*.js',
       './plugins/lando-core/*.js',
       './plugins/lando-events/*.js',
       './plugins/lando-init/*.js',
