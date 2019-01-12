@@ -14,7 +14,6 @@ Plugin Basics
 
 Plugins give you access to the [Lando API](./../api/api.md) so that you can modify and/or extend Lando. Here is the main entrypoint of the engine plugin that adds the `lando.engine` module and handles engine config.
 
-{% codesnippet "./../plugins/lando-engine/index.js" %}{% endcodesnippet %}
 
 Running your own plugins
 ------------------------

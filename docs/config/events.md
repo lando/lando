@@ -14,7 +14,6 @@ Usage
 
 Consider the following example to get an understanding on how the events framework works.
 
-{% codesnippet "./../examples/events/.lando.yml" %}{% endcodesnippet %}
 
 You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/events).
 

@@ -1,5 +1,3 @@
-php
-===
 
 [PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md)
 
@@ -27,7 +25,7 @@ Supported Versions
 Using patch versions
 --------------------
 
-Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html). 
+Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
 
 Installed Extensions
 --------------------
@@ -112,32 +110,27 @@ Alternatively you can extend our base `php` image by overriding your service to 
 
 #### Landofile
 
-{% codesnippet "./../examples/dockerfile/.lando.yml" %}{% endcodesnippet %}
 
 #### Dockerfile
 
-{% codesnippet "./../examples/dockerfile/php/Dockerfile" %}{% endcodesnippet %}
 
 You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/dockerfile).
 
 LAMP Example
 ------------
 
-{% codesnippet "./../examples/lamp/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lamp).
 
 LEMP Example
 ------------
 
-{% codesnippet "./../examples/lemp/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lemp).
 
 CLI Example
 ------------
 
-{% codesnippet "./../examples/phpcli/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/phpcli).
 

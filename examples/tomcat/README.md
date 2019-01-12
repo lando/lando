@@ -20,6 +20,5 @@ While Lando does not "officially" support specifying a patch version of this ser
 Example
 -------
 
-{% codesnippet "./../examples/tomcat/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/tomcat).

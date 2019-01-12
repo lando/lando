@@ -1,24 +1,16 @@
 name: lando.dev
-#proxy:
-#  docs:
-#    - docs.lndo.site:4000
-#services:
-#  docs:
-#    type: node:10
-#    install_dependencies_as_me:
-#      - yarn
-#      - node ./scripts/docs.js && yarn gitbook install
-#    command: yarn gitbook serve
-#    overrides:
-#      volumes:
-#        - /var/run/docker.sock:/var/run/docker.sock
+proxy:
+  docs:
+    - docs.lndo.site:4000
 services:
+  docs:
+    type: node:10
+    install_dependencies_as_me:
+      - yarn
+      - node ./scripts/docs.js && yarn gitbook install
+    command: yarn gitbook serve
   cli:
-    type: node:10.13
+    type: node:10
 tooling:
-  # lando:
-  #  service: lando
-  #  description: I heard you like Lando? Have some Lando in your Lando.
-  #  cmd: /app/bin/lando.js
   yarn:
     service: cli

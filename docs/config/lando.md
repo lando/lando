@@ -35,8 +35,6 @@ If all you want to do is run a Docker Compose configuration, then the above exam
 
 Recipes offer the highest level of abstraction, composing many lower-level features of Lando into a single, top-level `recipe` option:
 
-{% codesnippet "./../examples/envfile/.lando.yml" %}{% endcodesnippet %}
-
 This is a working example you can run by following [these instructions](/config/recipes.html). It spins up a full LEMP stack out of the box.
 
 The `config` Option

@@ -12,11 +12,9 @@ You can use your own images by overriding any service to build from a `Dockerfil
 
 #### Landofile (.lando.yml)
 
-{% codesnippet "./../examples/dockerfile/.lando.yml" %}{% endcodesnippet %}
 
 #### Dockerfile
 
-{% codesnippet "./../examples/dockerfile/php/Dockerfile" %}{% endcodesnippet %}
 
 You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/dockerfile).
 
