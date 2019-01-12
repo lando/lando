@@ -23,7 +23,7 @@ jobs:
             ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
             mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
             # Hyperdrive
-            curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.2/hyperdrive > /tmp/hyperdrive
+            curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
             /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
             # @TODO: anyway hyperdrive can assert dominance here?
