@@ -57,7 +57,7 @@ describe('lando', () => {
 
   describe('#bootstrap', () => {
     it('should return a lando object with the default config', () => {
-      const lando = new Lando();
+      const lando = new Lando({logLevelConsole: 'warn'});
       return lando.bootstrap().then(lando => {
         lando.config.userConfRoot.should.equal(os.tmpdir());
         lando.config.plugins.should.be.an('array').and.be.empty;
