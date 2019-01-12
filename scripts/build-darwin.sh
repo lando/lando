@@ -109,7 +109,7 @@ cd .. && \
 chmod +x uninstall.sh && \
 mv -f uninstall.sh dmg/uninstall.command && \
 mv -f lando.icns dmg/.VolumeIcon.icns && \
-cp -rf ../../README.md dmg/README.md && \
+cp -rf ../../docs/README.md dmg/README.md && \
 cp -rf ../../TERMS.md dmg/TERMS.md && \
 cp -rf ../../LICENSE.md dmg/LICENSE.md
 

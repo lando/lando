@@ -39,7 +39,7 @@ curl -fsSL -o bin/docker-compose "https://github.com/docker/compose/releases/dow
 chmod +x bin/docker-compose
 
 # Copy our docs
-cp -rf ../../../README.md docs/README.md
+cp -rf ../../../docs/README.md docs/README.md
 cp -rf ../../../TERMS.md docs/TERMS.md
 cp -rf ../../../LICENSE.md docs/LICENSE.md
 

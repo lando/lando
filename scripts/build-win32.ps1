@@ -81,7 +81,7 @@ Download -Url "https://download.docker.com/win/stable/$docker_version/Docker%20f
 # Copy over some other assets
 Write-Output "Copying over static assets..."
 New-Item $docs_dir -type directory -force
-Copy-Item "$pwd\README.md" "$docs_dir\README.md" -force
+Copy-Item "$pwd\docs\README.md" "$docs_dir\README.md" -force
 Copy-Item "$pwd\TERMS.md" "$docs_dir\TERMS.md" -force
 Copy-Item "$pwd\LICENSE.md" "$docs_dir\LICENSE.md" -force
 
