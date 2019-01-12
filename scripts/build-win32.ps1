@@ -5,7 +5,6 @@
 #
 # A script to build Lando on win32
 #
-
 $ErrorActionPreference = "Stop"
 
 # Get some ENV things
@@ -25,7 +24,7 @@ $inno_bin = "C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
 # Lando version information
 $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
-$docker_version = "19507"
+$docker_version = "29211"
 
 # Unzip helper
 function Unzip($file, $destination)
