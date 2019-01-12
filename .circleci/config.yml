@@ -18,30 +18,30 @@ jobs:
           name: Take this thing into hyperspace
           environment:
             TERM: xterm
-          command: |
+          command:
             # Spoof the public key
-            ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
-            mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
+            - ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
+            - mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
             # Hyperdrive
-            curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
-            chmod +x /tmp/hyperdrive
-            /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
+            - curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.2/hyperdrive > /tmp/hyperdrive
+            - chmod +x /tmp/hyperdrive
+            - /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
             # @TODO: anyway hyperdrive can assert dominance here?
-            sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
+            - sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
       - run:
           name: Install node modules
           command: yarn
       - run:
           name: Switch lando over to source
-          command: |
-            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
-            sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
-            sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
+          command:
+            - cp -f ~/project/.circleci/lando.yml ~/project/config.yml
+            - sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
+            - sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
       - run:
           name: Run func test
-          command: |
-            yarn generate-tests
-            yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
+          command:
+            - yarn generate-tests
+            # - yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
       - save_cache:
           paths:
             - ~/.cache/yarn

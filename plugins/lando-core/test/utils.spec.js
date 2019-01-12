@@ -17,27 +17,6 @@ const utils = require('./../lib/utils');
 
 // This is the file we are testing
 describe('lando-services.utils', () => {
-  // addConfig method
-  describe('#addConfig', () => {
-    it('should have a completed spec!');
-  });
-
-  // addScript method
-  describe('#addScript', () => {
-    it('should have a completed spec!');
-  });
-
-  // buildVolume method
-  describe('#buildVolume', () => {
-    it('should have a completed spec!');
-  });
-
-  // filterBuildSteps method
-  describe('#filterBuildSteps', () => {
-    it('should have a completed spec!');
-  });
-
-  // getHostPath method
   describe('#getHostPath', () => {
     it('should return the correct host path on posix', () => {
       const hostPath = utils.getHostPath('/thing:/stuff');
@@ -97,10 +76,5 @@ describe('lando-services.utils', () => {
       expect(normalized).to.equal(prefix + ['anything', 'thing'].join(path.sep));
       expect(path.isAbsolute(normalized)).to.equal(true);
     });
-  });
-
-  // setEntrypoint method
-  describe('#setEntrypoint', () => {
-    it('should have a completed spec!');
   });
 });
