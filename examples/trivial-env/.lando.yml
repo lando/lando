@@ -1,0 +1,8 @@
+# The name of my application
+name: trivial-env
+# A list of envvironment files to load relateive to my app root directory
+env_file:
+  - ./defaults.env
+# A list of docker compose files to load relative to my app root directory
+compose:
+  - compose.yml
