@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const chalk = require('chalk');
-const path = require('path');
 const utils = require('./../lib/utils');
 
 // Helper to handle options
@@ -30,7 +29,7 @@ module.exports = lando => {
         return;
       }
       // Try to get our app
-      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      const app = lando.getApp(options._app.root);
       // Rebuild the app
       if (app) {
         console.log(chalk.green('Rising anew like a fire phoenix from the ashes! Rebuilding app...'));

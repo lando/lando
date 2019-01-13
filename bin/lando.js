@@ -26,10 +26,12 @@ const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT;
 const Cli = require('./../lib/cli');
 const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
 
-// See if we have a lando file and if we do lets load the config
-const starter = path.resolve(process.cwd(), cli.defaultConfig().landoFile);
-const landoFile = _.find(bootstrap.traverseUp(starter), file => fs.existsSync(file));
-const config = (landoFile) ? bootstrap.getApp(landoFile, cli.defaultConfig().userConfRoot) : {};
+// Get an array of the lando files we need to load in
+const landoFile = cli.defaultConfig().landoFile;
+const preLandoFiles = cli.defaultConfig().preLandoFiles;
+const postLandoFiles = cli.defaultConfig().postLandoFiles;
+const landoFiles = bootstrap.getLandoFiles(_.flatten([preLandoFiles, [landoFile], postLandoFiles], process.cwd()));
+const config = (!_.isEmpty(landoFiles)) ? bootstrap.getApp(landoFiles, cli.defaultConfig().userConfRoot) : {};
 const bsLevel = (_.has(config, 'recipe')) ? 'APP' : 'TASKS';
 
 // Lando cache stuffs
@@ -58,7 +60,7 @@ if (fs.existsSync(process.landoTaskCacheFile)) {
   lando.bootstrap(bsLevel).then(lando => {
     // If bootstrap level is APP then we need to get and init our app to generate the app task cache
     if (bsLevel === 'APP') {
-      lando.getApp(landoFile).init().then(() => cli.run(bootstrap.getTasks(config, cli.argv()), config));
+      lando.getApp().init().then(() => cli.run(bootstrap.getTasks(config, cli.argv()), config));
     // Otherwise run as yooz
     } else {
       cli.run(bootstrap.getTasks(config, cli.argv()), config);

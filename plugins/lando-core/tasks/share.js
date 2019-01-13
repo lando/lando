@@ -3,7 +3,6 @@
 const _ = require('lodash');
 const chalk = require('chalk');
 const localtunnel = require('localtunnel');
-const path = require('path');
 const u = require('url');
 
 /*
@@ -67,7 +66,7 @@ module.exports = lando => {
         throw new Error('Need a url of the form http://localhost:port!');
       }
       // Try to get our app
-      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      const app = lando.getApp(options._app.root);
       // Get the sharing url
       if (app) {
         console.log(chalk.green('About to share your app to a whole new world!'));

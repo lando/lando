@@ -89,7 +89,7 @@ module.exports = (app, lando) => {
       LANDO_LOAD_PP_KEYS: lando.config.loadPassphraseProtectedKeys.toString(),
     },
     labels: {
-      'io.lando.src': app.configFile,
+      'io.lando.src': app.configFiles.join(','),
     },
   };
 };

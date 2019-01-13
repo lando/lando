@@ -20,7 +20,7 @@ describe('events', () => {
       const events = new AsyncEvents();
       events.should.be.instanceof(AsyncEvents);
       events.should.be.an('object').with.property('log');
-      events.should.have.property('_maxListeners', 20);
+      events.should.have.property('_maxListeners', 64);
       events._listeners.should.be.an('array').and.be.empty;
       events.should.have.property('_eventsCount', 0);
     });

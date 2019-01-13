@@ -1,7 +1,6 @@
 'use strict';
 
 const chalk = require('chalk');
-const path = require('path');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
@@ -18,7 +17,7 @@ module.exports = lando => {
         return;
       }
       // Try to get our app
-      const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+      const app = lando.getApp(options._app.root);
       // Destroy the app
       if (app) {
         console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));

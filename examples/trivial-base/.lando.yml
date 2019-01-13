@@ -1,0 +1,5 @@
+# The name of my application
+name: trivial-base
+# A list of docker compose files to load relative to my app root directory
+compose:
+  - compose.yml

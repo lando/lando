@@ -1,7 +1,5 @@
 'use strict';
 
-const path = require('path');
-
 module.exports = lando => ({
   command: 'info',
   describe: 'Prints info about your app',
@@ -15,7 +13,7 @@ module.exports = lando => ({
   },
   run: options => {
     // Try to get our app
-    const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile));
+    const app = lando.getApp(options._app.root);
     // Go deep if we need to
     if (app && options.deep) {
       return app.init().then(() => lando.engine.list(app.name).each(container => lando.engine.scan(container)

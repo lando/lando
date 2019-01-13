@@ -1,7 +1,6 @@
 'use strict';
 
 // Modules
-const path = require('path');
 const utils = require('./../lib/utils');
 
 // Other things
@@ -27,9 +26,9 @@ const task = {
 };
 
 module.exports = lando => {
-  task.run = ({appname = undefined, command = bashme, service = 'appserver', user = 'www-data'} = {}) => {
+  task.run = ({appname = undefined, command = bashme, service = 'appserver', user = 'www-data', _app = {}} = {}) => {
     // Try to get our app
-    const app = lando.getApp(path.resolve(process.cwd(), lando.config.landoFile), false);
+    const app = lando.getApp(_app.root, false);
     // If we have it then init and DOOOO EEEET
     if (app) {
       return app.init().then(() => lando.engine.run(utils.buildCommand(app, command, service, user))).catch(error => {
