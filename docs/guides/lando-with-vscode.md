@@ -1,7 +1,7 @@
 Using Lando with VS Code
 ========================
 
-[Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming. 
+[Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming.
 It is however not so easy to debug PHP applications - especially when they're run inside Docker containers, like Lando.
 
 This is a basic setup to help you in this task.
@@ -20,9 +20,9 @@ recipe: drupal8
 config:
   webroot: docroot
   xdebug: true
-  conf: 
+  conf:
     # Tell Lando to use additional PHP settings.
-    # The location of this file is arbitrary. 
+    # The location of this file is arbitrary.
     # We placed it inside .vscode/ folder simply because we find it convenient.
     php: .vscode/php.ini
 ```
@@ -50,8 +50,8 @@ xdebug.max_nesting_level = 256
 xdebug.show_exception_trace = 0
 xdebug.collect_params = 0
 # Extra custom Xdebug setting for debug to work in VSCode.
-xdebug.remote_enable = 1 
-xdebug.remote_autostart = 1 
+xdebug.remote_enable = 1
+xdebug.remote_autostart = 1
 ```
 
 Rebuild your environment.
@@ -90,7 +90,7 @@ code .vscode/launch.json
 }
 ```
 
-Done! 
+Done!
 
 You can now click start debugging (type F5 or click on the icon in the left sidebar).
 
