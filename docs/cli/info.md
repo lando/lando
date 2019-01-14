@@ -1,22 +1,33 @@
 info
 ====
 
-Displays relevant information for an app. Using this command you can see useful information such as which container volumes are being shared, which database ports are exposed (both internally and externally), and which URLs you can use to access an app.
+Prints info about your app.
+
+Using this command you can see useful information such as:
+
+* Shared container volumes
+* Service versions, exposed ports, hostnames and access credentials
+* Custom config file locations
+* Other depends-on-which-service relevant things
 
 Usage
 -----
 
 ```bash
-# From an app directory or its subdirectories
+# Get app info
 lando info
 
-# From outside of an app directory
-lando info myapp
+# Get super deep info about your app (this runs `docker inspect` under the hood)
+lando info --deep
 ```
 
 Options
 -------
 
 ```bash
-  --deep, -d  Get ALL the info                        [boolean] [default: false]
+--clear        Clears the lando tasks cache
+--deep, -d     Get ALL the info
+--lando        Show help for lando-based options
+--verbose, -v  Runs with extra verbosity
+--version      Show version number
 ```

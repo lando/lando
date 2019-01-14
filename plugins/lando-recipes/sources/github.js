@@ -90,6 +90,8 @@ const showTokenEntry = (source, answer, tokens = []) => (_.isEmpty(tokens) || an
 
 // Helper to get list of github projects
 const getRepos = (answers, done) => {
+  // Log
+  console.log('Getting your GitHub repos... this may take a moment if you have a lot');
   // Authenticate
   github.authenticate({type: 'token', token: answers['github-auth']});
   // Get all our slguzz

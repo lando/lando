@@ -1,33 +1,38 @@
 rebuild
 =======
 
-If you change your `.lando.yml` you'll want to run `lando rebuild` for the changes to take effect. This is also a great command to run if your app has gotten into a bad state and you want to set things right.
+Rebuilds your app from scratch, preserving data.
+
+This will rebuild your app as though you were starting it for the first time, while perserving any database data. If you change your Landofile you'll want to run `lando rebuild` for these changes to take effect. This is also a great command to run if your app has gotten into a bad state and you want to set things right.
+
+> #### Info::Rebuild vs restart?
+>
+> As of Lando 3.0.0-rc.1 you must explicitly invoke `lando rebuild` for changes in your Landofile to take effect. `lando restart` is now designed to preserve container state so that you do not get unexpected changes unless you have asked for them.
 
 Usage
 -----
 
 ```bash
-# From an app directory or its subdirectories
+# Rebuild an app
 lando rebuild
 
-# From outside of an app directory
-lando rebuild myapp
-
-# Non-interactive rebuild from app directory
+# Non-interactive rebuild
 lando rebuild --yes
 
-# Rebuild from anywhere in info mode
-lando rebuild appname -- -v
-
 # Rebuild only the appserver and cache services
-# NOTE: This will also trigger build steps for ONLY the specified services
 lando rebuild -s cache -s appserver
 ```
 
 Options
 -------
 
+Run `lando rebuild --lando` to get a complete list of options defaults, choices, etc.
+
 ```bash
-  --services, -s    Rebuild only the specific services           [array]
-  --yes, -y         Auto answer yes to prompts                           [boolean] [default: false]
+--clear         Clears the lando tasks cache
+--lando         Show help for lando-based options
+--services, -s  Rebuild only the specified services
+--verbose, -v   Runs with extra verbosity
+--version       Show version number
+--yes, -y       Auto answer yes to prompts
 ```

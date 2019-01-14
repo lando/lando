@@ -45,11 +45,13 @@ const defaultOpts = {
 };
 
 // Helper to get source option conflicts
+/*
 const getConflicts = (name, all, lando) => _(all)
   .filter(one => _.has(one, 'options'))
   .flatMap(one => _.keys(one.options(lando)))
   .thru(options => _.difference(options, _.keys(_.find(all, {name}).options(lando))))
   .value();
+*/
 
 // Name Opts
 const nameOpts = {
@@ -113,7 +115,9 @@ exports.getConfigOptions = (all, lando, options = {}) => {
   _.forEach(all, one => {
     if (_.has(one, 'options')) {
       _.forEach(one.options(lando), (option, key) => {
-        _.set(options, `${key}.conflicts`, getConflicts(one.name, all, lando));
+        // @TODO: get auto conflict assignment to work properly
+        // @NOTE: maybe it doesnt and we should just do this manually?
+        // _.set(options, `${key}.conflicts`, getConflicts(one.name, all, lando));
       });
       options = _.merge({}, one.options(lando), options);
     }

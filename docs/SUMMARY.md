@@ -1,7 +1,8 @@
 ## Basics
 
 *   [Overview](README.md)
-*   [Getting Started](started.md)
+*   [Core Concepts](started.md)
+*   [CLI Usage](cli/usage.md)
 
 ## Installation
 
@@ -13,7 +14,6 @@
 
 ## Command Line
 
-*   [Usage](cli/usage.md)
 *   [config](cli/config.md)
 *   [destroy](cli/destroy.md)
 *   [init](cli/init.md)

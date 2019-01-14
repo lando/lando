@@ -7,7 +7,7 @@ const path = require('path');
 // Default DB cli commands
 const mysqlCli = {
   service: ':host',
-  description: 'Drop into a MySQL shell on a database service',
+  description: 'Drops into a MySQL shell on a database service',
   cmd: 'mysql -uroot',
   options: {
     host: {
@@ -19,7 +19,7 @@ const mysqlCli = {
 };
 const postgresCli = {
   service: ':host',
-  description: 'Drop into a psql shell on a database service',
+  description: 'Drops into a psql shell on a database service',
   cmd: 'psql -Upostgres',
   user: 'root',
   options: {
@@ -114,7 +114,9 @@ exports.getServiceConfig = (options, types = ['php', 'server', 'vhosts']) => {
     if (_.has(options, `config.${type}`)) {
       config[type] = options.config[type];
     } else if (!_.has(options, `config.${type}`) && _.has(options, `defaultFiles.${type}`)) {
-      config[type] = path.join(options.confDest, options.defaultFiles[type]);
+      if (_.has(options, 'confDest')) {
+        config[type] = path.join(options.confDest, options.defaultFiles[type]);
+      }
     }
   });
   return config;

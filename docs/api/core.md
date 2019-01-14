@@ -1137,7 +1137,7 @@ return app.events.emit('sector001', config);
 <a id="landoappget"></a>
 
 <h2 id="landoappget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.app.get([file], [warn]) ⇒ <code>Promise</code></h2>
+  lando.app.get([startFrom], [warn]) ⇒ <code>Promise</code></h2>
 <div class="api-body-header"></div>
 
 Gets a fully instantiated app object.
@@ -1152,7 +1152,7 @@ Lando will also scan parent directories if no app is found.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [file] | <code>String</code> |  | The name of the app to get. |
+| [startFrom] | <code>String</code> |  | The name of the app to get. |
 | [warn] | <code>Boolean</code> | <code>true</code> | The name of the app to get. |
 
 **Returns**: <code>Promise</code> - Returns a Pronise with an instantiated app object or nothing.  

@@ -33,7 +33,7 @@ module.exports = {
         }}};
         options.tooling = {drupal: {
           service: 'appserver',
-          description: 'Run drupal console commands',
+          description: 'Runs drupal console commands',
         }};
       }
       super(id, options);

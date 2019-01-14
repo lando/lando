@@ -8,12 +8,11 @@ const utils = require('./../../lib/utils');
 const toolingDefaults = {
   'composer': {
     service: 'appserver',
-    description: 'Run composer commands',
     cmd: 'composer --ansi',
   },
   'db-import [file]': {
     service: ':host',
-    description: 'Import <file> into database service',
+    description: 'Imports a dump file into database service',
     cmd: '/helpers/sql-import.sh',
     options: {
       'host': {
@@ -29,7 +28,7 @@ const toolingDefaults = {
   },
   'db-export [file]': {
     service: ':host',
-    description: 'Export database from a service',
+    description: 'Exports database from a service into a file',
     cmd: '/helpers/sql-export.sh',
     options: {
       host: {
@@ -44,7 +43,6 @@ const toolingDefaults = {
   },
   'php': {
     service: 'appserver',
-    description: 'Run php commands',
     cmd: 'php',
   },
 };

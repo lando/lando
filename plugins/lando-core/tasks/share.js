@@ -19,11 +19,11 @@ const getOptions = () => ({
 /*
  * Helper to get localtunnel config
  */
-const parseConfig = (port = 80, host = 'localhost') => {
+const parseConfig = (port = '80', host = 'localhost') => {
   // Set port to 80 if null
-  if (_.isEmpty(80)) port = 80;
+  if (_.isEmpty(port)) port = '80';
   // Make sure we are at least 4 characters
-  if (_.size(host) <= 4) host = host + 'xxxx';
+  if (_.size(host) < 4) host = host + 'xxxx';
   // Makes sure we are at most 64 chars
   if (_.size(host) >= 63) host = host.substring(0, 57);
   return {port, host};

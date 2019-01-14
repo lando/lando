@@ -25,8 +25,6 @@ const showInit = (lando, options) => {
 // Helper for basic YAML
 const getYaml = (dest, options, lando) => {
   // Get existing lando if we have it
-  // @NOTE: need to remember to add support for lando.dist files whenever we have a
-  // a lando yaml config merge option available function available
   const existingLando = (fs.existsSync(dest)) ? lando.yaml.load(dest) : {};
   // Set the basics
   const landoConfig = {name: options.name, recipe: options.recipe};

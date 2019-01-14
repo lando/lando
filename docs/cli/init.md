@@ -1,58 +1,157 @@
 init
 ====
 
-Creates a `.lando.yml` file from various sources. Using this command you can initilize a local repo or pull down a repo from GitHub or Pantheon and get it ready to use with lando.
+Initializes code for use with lando
+
+This command will create a `.lando.yml` for a given recipe and with code from a given source. This is a good way to initialize a codebase for usage with Lando.
+
+Currently you can initialize code from your current working directory, a remote Git repository, a remote archive, [GitHub](https://github.com) and [Pantheon](https://pantheon.io).
+
+> #### Hint::Do not use if you already have a `.lando.yml` in your codebase
+>
+> If your code already has a Landofile then this command will likely produce undesirable results.
 
 Usage
 -----
 
 ```bash
-# Generate a .lando.yml in your current directory
+# Interactively instantiate your code for use with lando
 lando init
 
-# Non interactively pull a site from github and set it up as a lamp site
-lando init github \
-  --recipe lamp \
-  --github-auth MYTOKEN \
-  --github-repo git@github.com:lando/lando.git \
-  --dest ./ \
-  --webroot .
+# Spit out a full Drupal 7 Landofile using code from your current working directory
+lando init --source cwd --recipe drupal7 --name d7-hotsauce --webroot . --full
 
-# Interactively pull and set up a site from pantheon
-lando init pantheon
+# Pull code from github and set it up as a mean recipe
+lando init \
+  --source github \
+  --recipe mean \
+  --github-auth "$MY_GITHUB_TOKEN" \
+  --github-repo git@github.com:lando/lando.git \
+  --name my-awesome-app
+
+# Interactively pull a site from pantheon
+lando init --source pantheon
+
+# Set up a pantheon site but use code from a custom git repo
+lando init --source remote --remote-url https://my.git.repo/.git --recipe pantheon
 
 # Set up a local repo with the pantheon recipe
 lando init --recipe pantheon
 ```
 
-Pantheon
---------
+Getting code from various sources
+---------------------------------
 
-In order to pull down and initialize a Lando app from Pantheon you will need to make sure you have created a [machine token](https://pantheon.io/docs/machine-tokens/).
+### Current Working Directory
 
-While you **CAN** pull a site from Pantheon using `lando init pantheon` you can also initialize a local site or pull from GitHub and initialize that repo as a Pantheon site.
+By default Lando will use the code from the directory you are currently in. Nothing much special here, just navigate to the directory with your code and invoke `lando init`.
 
 ```bash
-# Pull code from github but connect it to a pantheon site
-lando init github --recipe=pantheon
+lando init --source cwd
 ```
 
-GitHub
-------
+### Remote git repo or archive
 
-In order to pull down and initialize a Lando app from GitHub you will need to make sure you have created a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) and that it has the `repo`, `admin:public_key` and `user` scopes.
+You can also tell Lando to either clone code from a remote Git repo or extract code from a remote tar archive. Note that if you clone from a git repo it is up to the user to make sure any relevant ssh keys are set up correctly.
+
+```bash
+# Let Lando walk you through it
+lando init --source remote
+
+# Get Drupal 8 from GitHub
+lando init --source remote --remote-url https://github.com/drupal/drupal.git
+
+# Get Drupal 8 from an archive
+lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz
+```
+
+Note that you can also pass in options to alter the behavior of the clone or archive extraction
+
+```bash
+# Shallow clone and checkout the 7.x branch
+# NOTE: you currently need to use the = below in `--remote-options` for yargs to parse this correctly
+lando init \
+  --source remote \
+  --remote-url https://github.com/drupal/drupal.git \
+  --remote-options="--branch 7.x --depth 1"
+
+# Strip the leading component of the tar
+# NOTE: you currently need to use the = below in `--remote-options` for yargs to parse this correctly
+lando init \
+  --source remote \
+  --remote-url https://www.drupal.org/download-latest/tar.gz \
+  --remote-options="--strip-components=1"
+```
+
+### Pantheon
+
+In order to pull down code from Pantheon or use the `pantheon` recipe you will need to make sure you have created a [machine token](https://pantheon.io/docs/machine-tokens/) first. Note that choosing `--source=pantheon` implies `--recipe=pantheon` eg we do not let you grab code from Pantheon and also select a recipe.
+
+That said, `--recipe=pantheon` does not imply `--source=pantheon` which means you can grab code using any of our initialization sources and then choose the `pantheon` recipe.
+
+Note that Lando will automatically create and post a SSH key to Pantheon for you if you use this init source.
+
+```bash
+# Let Lando walk you through it
+lando init --source pantheon
+
+# Pull my-site from pantheon and set it up as a pantheon recipe
+lando init --source pantheon --pantheon-auth "$MY_MACHINE_TOKEN" --pantheon-site my-site
+
+# Clone my code from a git repo and set it up as a pantheon recipe
+lando init \
+  --source remote \
+  --recipe pantheon \
+  --remote-url https://github.com/drupal/drupal.git \
+  --pantheon-auth "$MY_MACHINE_TOKEN" \
+  --pantheon-site my-site
+```
+
+### GitHub
+
+In order to pull down code from GitHub you will need to make sure you have created a [personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) and that it has the `repo`, `admin:public_key` and `user` scopes.
+
+Note that Lando will automatically create and post a SSH key to GitHub for you if you use this init source.
+
+```bash
+# Let Lando walk you through it
+lando init --source github
+
+# Pull git@github.com:lando/lando.git from github and set it up as a pantheon recipe
+lando init \
+  --source github \
+  --github-auth "$MY_GITHUB_TOKEN" \
+  --github-repo git@github.com:lando/lando.git
+
+# Pull code from github and set it up as a mean recipe
+lando init \
+  --source github \
+  --recipe mean \
+  --github-auth "$MY_GITHUB_TOKEN" \
+  --github-repo git@github.com:lando/lando.git \
+  --name lando
+```
 
 Options
 -------
 
+Run `lando init --lando` to get a complete list of options defaults, choices, recipes, sources etc.
+
 ```bash
-  --recipe, -r               The recipe to use       [string] [choices: "custom", "backdrop", "drupal6", "drupal7", "drupal8", "laravel", "lamp", "lemp", "pantheon", "wordpress"]
-  --github-auth              GitHub token or email of previously used token                                                                                               [string]
-  --github-repo              GitHub repo URL                                                                                                                              [string]
-  --pantheon-auth            Pantheon machine token or email of previously used token                                                                                     [string]
-  --pantheon-site            Pantheon site machine name                                                                                                                   [string]
-  --destination, --dest, -d  Specify where to init the app                                                                                                                [string]
-  --webroot                  Specify the webroot relative to destination                                                                                                  [string]
-  --name                     The name of the app                        [string]
-  --yes, -y                  Auto answer yes to prompts                                                                                                 [boolean] [default: false]
+--clear           Clears the lando tasks cache
+--full            Dump a lower level lando file
+--github-auth     A GitHub personal access token
+--github-repo     GitHub git url
+--lando           Show help for lando-based options
+--name            The name of the app
+--pantheon-auth   A Pantheon machine token
+--pantheon-site   A Pantheon site machine name
+--recipe, -r      The recipe with which to initialize the app
+--remote-options  Some options to pass into either the git clone or archive extract command
+--remote-url      The URL of your git repo or archive, only works when you set source to remote
+--source, --src   The location of your apps code
+--verbose, -v     Runs with extra verbosity
+--version         Show version number
+--webroot         Specify the webroot relative to app root
+--yes, -y         Auto answer yes to prompts
 ```

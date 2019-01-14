@@ -253,7 +253,7 @@ exports.getPantheonTooling = framework => {
   else {
     const tooling = {drush: {service: 'appserver'}};
     if (framework === 'drupal8') {
-      tooling.drupal = {service: 'appserver', description: 'Run drupal console commands'};
+      tooling.drupal = {service: 'appserver', description: 'Runs drupal console commands'};
     }
     return tooling;
   }
