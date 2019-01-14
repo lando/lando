@@ -1,72 +1,11 @@
 Installing
 ==========
 
-macOS
------
 
-#### Install DMG via direct download
-1.  Download the latest `.dmg` package from [GitHub](https://github.com/lando/lando/releases)
-2.  Mount the DMG by double-clicking it
-3.  Double-click on the `LandoInstaller.pkg`
-4.  Go through the setup workflow
-5.  Enter your username and password when prompted
-
-Prefer video tutorials?
-{% youtube %}
-https://youtu.be/W8qIutOAe-0
-{% endyoutube %}
-
-#### Install using [HomeBrew](https://brew.sh/)
-
-*Please note that the version installed via Homebrew is community-maintained and may not be the latest version as provided by the `.dmg` package from [GitHub](https://github.com/lando/lando/releases).*
-
-1. Ensure homebrew is installed and up-to-date.
-2. Add the lando cask: `brew cask install lando`
-
-Windows
--------
-
-1.  Make sure you are using **at least** Windows 10 Professional with the latest updates installed.
-2.  Download the latest Windows `.exe` installer from [GitHub](https://github.com/lando/lando/releases)
-3.  Double-click on `lando.exe`
-4.  Go through the setup workflow
-5.  Approve various UAC prompts during install
-
-> #### Warning::YOU MUST HAVE HYPER-V ENABLED
->
-> Make sure that [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install) or lando will not work!
 
 Linux
 -----
 
-1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script.**(17.06.1-ce or higher)**
-2.  Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
-3.  Double-click on the package to launch Software Center
-4.  Click the "Install" button and enter your password when prompted
-
-> #### Hint::Install from source for other Linux distros
->
-> If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](#from-source)
-
-### Arch
-
-Lando is also available on the AUR as [lando-git](https://aur.archlinux.org/packages/lando-git/), meaning it's built directly from source.
-
-### Caveats
-
-Because each Linux distribution handles things differently, these considerations may or may not apply to you:
-
-* If your distro uses a `docker` group, make sure your user is a member of it:
-
-  ```
-  sudo usermod -aG docker $USER
-  ```
-
-  You will need to log out for this change to take effect. Sometimes a reboot is necessary. See https://docs.docker.com/install/linux/linux-postinstall/ for more details.
-
-* If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
-
-* If you are using Manjaro or another Arch-based distro, you may need to enable the [AUR repository](https://aur.archlinux.org/packages/) for dependencies.
 
 Bleeding Edge
 -------------

@@ -8,7 +8,10 @@
 
 *   [System Requirements](installation/system-requirements.md)
 *   [Preflight Checks](installation/preflight.md)
-*   [Installing](installation/installing.md)
+*   [MacOS](installation/macos.md)
+*   [Linux](installation/linux.md)
+*   [Windows](installation/windows.md)
+*   [From Source](installation/source.md)
 *   [Updating](installation/updating.md)
 *   [Uninstalling](installation/uninstalling.md)
 
