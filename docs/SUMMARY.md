@@ -105,6 +105,7 @@
 *   [Setting up Additional Routes](config/proxy.md)
 *   [Setting up Additional Events](config/events.md)
 *   [Using Lando in Visual Studio Code](tutorials/lando-with-vscode.md)
+*   [Lando + PhpStorm + Xdebug](tutorials/lando-phpstorm.md)
 *   [Using NodeJS Frontend Tooling](tutorials/frontend.md)
 *   [Using $LANDO_INFO](tutorials/lando-info.md)
 *   [Accessing Your Services Externally](tutorials/external-access.md)
@@ -244,3 +245,7 @@
 
 *   [2018](changelog/2018.md)
 *   [2017](changelog/2017.md)
+
+## Jobs!
+
+*   [Full Stack Drupal Dev](jobs/2018-full-stack-dev.md)
