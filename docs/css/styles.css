@@ -3,12 +3,12 @@ body {
 }
 
 .api-body-footer {
-    padding-bottom: 100%;
+  padding-bottom: 100%;
 }
 
 .book-body {
   font-family: "Montserrat", "Trebuchet", sans-serif;
-  font-weight: 400;
+  font-weight: 300;
 }
 
 .book-body h1, h2, h3, h4, h5 {

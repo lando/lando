@@ -10,7 +10,7 @@ You can also configure how Lando itself works with a `config.yml`. This config s
 
 > #### Info::Discover other configs
 >
-> Check out [`lando config`](../cli/config.md) for a full list of config options.
+> Check out [`lando config`](./../cli/config.md) for a full list of config options.
 
 config.yml
 ----------

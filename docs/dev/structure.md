@@ -1,9 +1,6 @@
 Project Structure
 =================
 
-Lando Core
-----------
-
 Here is a general breakdown of where things live inside the Lando repo.
 
 ```bash
@@ -31,23 +28,3 @@ Some notes about the structure:
 * Code that is easily unit testable and does not require the `lando` object should live in `lib`.
 * Code that requires the `lando` object should be expressed in `plugins`.
 * Code that extends the core `lando` object will *almost always* be in `plugins` and not `lib`.
-
-Lando Plugins
--------------
-
-Lando plugins have a similar structure. Here is an example hypothetical plugin. You can read more about each folder and file in the [plugins documentation](./plugins.md).
-
-```bash
-./
-|-- compose         Services that get autoloaded first
-|-- lib             Unit testable libraries that do not require the `lando` object
-|-- recipes         Recipes that get autoladed
-|-- scripts         BASH or SH scripts that get injected into every container
-|-- services        Services that get autoloaded last
-|-- sources         Initialization sources that get autoloaded
-|-- tasks           Tasks that get autoloaded
-|-- test            Unit and functional tests
-|-- types           Services that get autoloaded second
-|-- app.js          Runs with the `lando` and `app` objects when an app is initialized
-|-- index.js        Required, runs with the lando` object when plugin gets loaded
-```

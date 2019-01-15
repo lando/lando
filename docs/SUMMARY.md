@@ -85,8 +85,6 @@
 *   [Getting Started](dev/started.md)
 *   [Repo Structure](dev/structure.md)
 *   [Plugins](dev/plugins.md)
-  *   [Services](dev/services.md)
-  *   [Recipes](dev/recipes.md)
 *   [Testing](dev/testing.md)
 *   [Building](dev/building.md)
 *   [Shipping](dev/shipping.md)
