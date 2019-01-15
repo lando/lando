@@ -24,24 +24,28 @@ There should be an `error.log` and a more robust `lando.log`.
 
 > #### Hint::Pro Tip: Use verbose mode
 >
-> Run the failing command again in verbose mode. You can pass in `-v`, `-vv`, `-vvv` or `-vvvv` as [global options](./../cli/usage.html#global-options) to toggle the level of verbosity. You can also [edit your global config](./../config/config.html) to set the default console log level.
+> Run the failing command again in verbose mode. You can pass in `-v`, `-vv`, `-vvv` or `-vvvv` to toggle the level of verbosity. You can also [edit your global config](./../config/config.html) to set the default console log level.
 
 Container Logs
 --------------
 
-See the [lando logs](./../cli/logs.md) command.
+```bash
+lando logs -s SOME_SERVICE
+```
+
+See the [lando logs](./../cli/logs.md) command for more information.
 
 Advanced Troubleshooting
 ------------------------
 
-One of the best ways to troubleshoot an issue is to use Docker commands directly or use the [lando ssh](./../cli/ssh.md) command.
+One of the best ways to troubleshoot an issue is to use Docker commands directly or use the [lando ssh](./../cli/ssh.md) or [lando info --deep](./../cli/info.md) command.
 
 ```bash
 # List all my containers
 docker ps --all
 
-# List all core lando containers
-docker ps --all | grep lando
+# List all lando containers
+docker ps --filter label=io.lando.container=TRUE --all
 
 # List all containers for a particular app
 docker ps --all | grep appname

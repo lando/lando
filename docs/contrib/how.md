@@ -4,7 +4,9 @@ How to Contribute
 Support
 -------
 
-All participants in the community are encouraged to provide support for new users within GitHub or on Slack. This support is provided as a way of growing the community. Those seeking support should recognize that all support activity within the project is voluntary and is therefore provided as and when time allows. A user requiring guaranteed response times or results should therefore seek to purchase a support contract from a vendor. (Of course, that vendor should be an active member of the community.) However, for those willing to engage with the project on its own terms, and willing to help support other users, the community support channels are ideal.
+All participants in the community are encouraged to provide support for new users within GitHub or on Slack. This support is provided as a way of growing the community. Those seeking support should recognize that all support activity within the project is voluntary and is therefore provided as and when time allows.
+
+A user requiring guaranteed response times or results should therefore seek to purchase a support contract from a vendor. Ideally that vendor should be an active member of the community. However, for those willing to engage with the project on its own terms, and willing to help support other users, the community support channels are ideal.
 
 Contribution Process
 --------------------

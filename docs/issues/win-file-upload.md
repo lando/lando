@@ -1,7 +1,11 @@
 Uploading Files in Windows
---------------------------
+==========================
 
-When uploading files via PHP (and potentially other things) in Lando on Windows you may see an error like the following:
+> #### Hint::Probably fixed in 3.0.0-rc.2
+>
+> It is likely this issue has been resolved in Lando `3.0.0-rc.2` but let's keep these docs around for awhile just in case
+
+When uploading files via PHP and potentially other things in Lando on Windows you may see an error like the following:
 
 ```
 The upload directory private://TESTDIR for the file field field_TESTFIELD could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.

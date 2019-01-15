@@ -41,13 +41,17 @@ Here are the top 10 design and development principles we use when making Lando t
 
 Less is more. We seek to use the least amount of code and dependencies to accomplish a given feature or objective. This makes the project more maintainable in the long run. New dependencies should not be introduced to the project without careful discussion and consideration.
 
+Read we like to make sure [CodeClimate](https://codeclimate.com/github/lando/lando) doesn't get too upset with us.
+
 #### 2. Deliberation
 
-It's easy to add in every seemingly small and benign feature or pull request from every user. But each added feature means more potential for support churn and thus less work on advanving the project's stated goald. Features should be added when they serve a stated design goal or objective or are overwhelmingly supported by the community. It is very important to assess whether each feature is going to be more trouble than its worth or if it furthers the projects stated goals.
+It's easy to add in every seemingly small and benign feature or pull request from every user. But each added feature means more potential for support churn and thus less work on advancing the project's stated goals.
+
+Features should be added when they serve a stated design goal or objective or are overwhelmingly supported by the community. It is very important to assess whether each feature is going to be more trouble than its worth or if it furthers the projects stated goals.
 
 #### 3. Unobtrusiveness
 
-If Lando cannot do something out of the box without editing a users's codebase then it's something the user needs to set up on their own. It is extremely difficult to provide a simple, consistent and reliable codebase edits that works for a majority of users. Often these code edits change frequently and are hard to maintain. Documentaton and examples are the way to go here.
+If Lando cannot do something out of the box without editing a users's codebase then it's something the user needs to set up on their own. It is extremely difficult to provide a simple, consistent and reliable codebase edits that work for a majority of users. Often these code edits change frequently and are hard to maintain. Documentaton and examples are the way to go here.
 
 #### 4. User Space
 
@@ -65,9 +69,11 @@ Great documentation and examples are often the things that make an open source p
 
 Well defined milestones and a Kanban board can go a long way to triaging and prioritizing issues. This focuses current sprints, generates a healthy backlog and icebox and keeps issues and tasks tidy, manageable and not overwhelming.
 
+We also like to [use robots](https://probot.github.io/apps/) to help keep our issues and pull requests tidy. See [this](https://github.com/probot/stale#is-closing-stale-issues-really-a-good-idea) for the benefits of issue automation.
+
 #### 8. Value
 
-Tackling "low hanging fruit" issues that are easy to test, solve and that impact many users keeps project morale high and
+Tackling "low hanging fruit" issues that are easy to test, solve and that impact many users keeps project morale high.
 
 #### 9. Testing
 
