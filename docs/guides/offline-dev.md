@@ -7,7 +7,9 @@ You may want the freedom of hacking away on your site while scaling Everest or j
 
 To enable offline custom TLD goodness, we'll use DNSMasq to route traffic to our local system and add a single config line to our global Lando config to direct lando to use that TLD for our sites.
 
-### Mac Specific Instructions
+Mac Specific Instructions
+-------------------------
+
 1. Ensure you've installed [Homebrew](https://brew.sh/).
 2. Install DNSMasq: `brew install dnsmasq`
 3. Follow the instructions in the output of `brew info dnsmasq`

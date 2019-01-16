@@ -7,3 +7,9 @@ events:
     - web2: hostname -A
   post-start:
     - web: hostname -A
+  post-thing:
+    - web: env
+tooling:
+  thing:
+    service: web
+    cmd: hostname -A

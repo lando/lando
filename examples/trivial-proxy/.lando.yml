@@ -41,7 +41,3 @@ proxy:
     # NOTE: this needs to be encapsulated in quotes because * is a special character
     - "*.wild.trivial-proxy.lndo.site"
     - "wild.*.trivial-proxy.lndo.site"
-
-services:
-  database:
-    type: mariadb

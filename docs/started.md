@@ -1,111 +1,193 @@
-Lando Basics
+Introduction
 ============
 
-In order for you to experience all the awesome Lando power a `.lando.yml` needs to exist in the root directory of an existing project. Lando does **not** install a new codebase for you unless you init with either the `pantheon` or `github` method.
+On a high level your `lando` configuration should contain **ALL** the things you need to run, develop and test your project. The ideal we strive for is best expressed as:
 
-On a high level the `.lando.yml` should contain **ALL** the things you need to both run and develop your project. The ideal workflow here is:
+> A user should be able to `git clone` a repository, run `lando start` and get **EVERYTHING** they need to develop their site locally in a few minutes.
 
-1. The person who sets up your DevOps creates a `.lando.yml` file for your project and ideally checks it into version control
-2. Subsequent devs clone down the project, run `lando start` and get equipped with all the things they need for the devs
+Implicit in the above is that your lando configuration should **always** be checked into version control at the root directory of your project.
 
-We **HIGHLY** recommend you read through our documentation to get a sense of the things the `.lando.yml` can do for your team but here is a non-exhaustive list of things it can do:
+We've found a useful pattern here is for the senior-est, most DevOps-y person on your team to craft the initial lando configuration and be responsible for its maintanence but to generally "set it and forget it".
 
-* Instantiate "sane defaults" for various pre-baked recipes like Drupal, Laravel or MEAN
-* Integrate with various hosting providers like [Pantheon](http://pantheon.io)
-* Add configurable auxiliary services like `elasticsearch`, `redis` or `mailhog`
-* Lock down versions, on a per-project basis, for front end tools like `node`, `yarn`, `gulp`, etc.
-* Setup relevant build steps like `composer install`, `yarn install` or `gulp sass`
-* Add in additional dependencies like `php-extensions`, `apache tika`, `phantomjs` or even `vim`
-* Add in event-driven hooks like `drush cim -y` after a `db-import`
+Ok cool, I dig it. What do I need to get started?
+-------------------------------------------------
 
-There are various ways to initialize a `.lando.yml` for your project, here is a list of them ordered from least to most difficult.
+In order for you to get started using the awesome power of Lando you need to have
 
-1. `lando init <METHOD>`
-------------------------
+* A [Landofile](./config/lando.md), generally this is called `.lando.yml`
+* Your applications codebase
 
-Lando offers a few [init methods](./cli/init.md) that will:
+If you are unclear on how to manually set this up check out our [lando init](./cli/init.md) command which can help you initialize code from various sources for use with Lando.
 
-1. Automatically set up relevant `ssh` keys (you need some sort of api key or token)
-2. Clone your site from the given method
-3. Interactively set up a barebones "sane default" recipe for your project
+So, what does this Landofile look like anyway?
+----------------------------------------------
 
-Currently we support init methods from either [GitHub](https://github.com) or [Pantheon](https://pantheon.io). Here are some examples on how to use Lando to initialize.
+As mentioned above, the Landofile is generally called `.lando.yml` but is both [configurable](./config/lando.md) and [overridable](./config/lando.md). It needs a `name` but beyond that it can contain any combination of the following things although generally it only uses a small subset of these.
 
-```bash
-# Create a folder to clone your site to
-# NOTE: this folder needs to be empty for this method to work
-mkdir mysite && cd mysite
-
-# Setup keys, clone a GitHub site and interactively set up a recipe start state
-# This requires a GitHub Personal Access Token
-# See: https://docs.devwithlando.io/cli/init.html#github
-lando init github
-
-# OR #
-
-# Initialize a Pantheon specific .lando.yml after getting code from Pantheon
-# This requires a Pantheon Machine Token
-# See: https://docs.devwithlando.io/cli/init.html#pantheon
-lando init pantheon
-
-# OR #
-
-# Initialize a Pantheon .lando.yml after getting code from GitHub
-# This requires a GitHub Personal Access Token
-# This requires a Pantheon Machine Token
-# See: https://docs.devwithlando.io/cli/init.html#github
-# See: https://docs.devwithlando.io/cli/init.html#pantheon
-lando init github --recipe pantheon
+```yaml
+name: my-app
+compose:
+  - docker-compose.yml
+  - docker-compose-2.yml
+env_file:
+  - defaults.env
+  - special.env
+events:
+  post-start:
+    - /helpers/my-setup-script.sh
+recipe: lamp
+config:
+  php: '7.2'
+  xdebug: true
+proxy:
+  web:
+    - my-app.lndo.site
+services:
+  web:
+    type: nginx
+tooling:
+  env:
+    service: web
 ```
 
-The following is equivalent but requires the user is aware of how [ssh keys](./config/ssh.md) work on Lando.
+Note that the values in each key above are not particularly relevant to what we are discussing which is the **purpose** of each. To that end here is some information about each and links to their docs if applicable
 
-```bash
-# Create a folder to clone your site to
-# NOTE: this folder needs to be empty for this method to work
-mkdir mysite && cd mysite
+**name** - Nothing special here. This should be a unique way for you to identify your app.
 
-# Get your site from somewhere
-# For this example we assume you are getting it from some remote git repo
-git clone https://url.to.my.repo.git
+**compose** - This is a list of `docker-compose` files you can tell Lando to start. The paths are relative to the root of your project. Generally this option is not used in favor of Lando [recipes](./config/recipes.md) and/or [services](./config/services.md) but is an option that makes sense under some circumstances.
 
-# Initialize my site
-lando init
-```
+Note that services located in these files will still get injected with Lando's [default environment variables](./config/env.md#defaults) and also be [networked](./config/networking.md) like any other Lando service but will not get any of the extra Lando *secret sauce*.
 
-2. `lando init`
----------------
+If you are interested in using something Lando does not currently offer we recommend looking at the [custom compose](./tutorials/compose.md) service.
 
-If you've already got your project locally and have relevant [ssh keys](./config/ssh.md) set up for use with Lando then you can do the following:
+**[env_file](./config/env.md#environment-files)** - A list of environment files relative to your project's root directory. Each file should contain a list of `KEY=VALUE` pairs that will then get injected into the environment of **every** service.
 
-```bash
-# Go into your project
-cd /path/to/my/project
+**[events](./config/events.md)** - Events allow the user to run arbitrary commands, or combinations of commands, on arbitrary services, or combinations of service after or before certain parts of the Lando runtime. A good example is clearing out an applications cache after a database is imported.
 
-# Interactively initialize your site
-lando init
+**[recipe](./config/recipes.md)** - Recipes are combinations of [services](./config/services.md), [proxies](./config/proxy.md), and [tooling](./config/tooling.md) designed as a start-state-of-sane-defaults for a particular use case eg `drupal7`.
 
-# OR #
+**[config](./config/recipes.md#configuration)** - Config allows you to set some of the more important things your recipe provides. These settings are usually different depending on the recipe you select.
 
-# Specify a particular recipe to init with
-lando init --recipe drupal7
-```
+**[proxy](./config/proxy.md)** - Proxy settings allow users to map arbitrary domain names to arbitrary ports inside of arbitrary services. Think: I go to the browser and type in `myapp.lndo.site` or `millard.filmore.for.lyfe` and it loads my application.
 
-3. Create manually
+**[services](./config/services.md)** - Services are simplified but still highly configurable Docker containers. They are able to run [build steps](./config/services.md#build-steps) such as installing a `php-extension` or running `yarn install` and can also be [overridden](./config/services.md#overrides) down to the `docker-compose` level. They also get some automatic [networking](./config/networking.md) and [security](./config/security.md) features.
+
+**[tooling](./config/tooling.md)** - Tooling allows users to run arbitrary commands, or combinations of commands, on arbitrary services, or combinations of services when invoked.
+
+This is helpful so you can run `lando yarn install` instead of `docker exec -it SERVICE yarn install` or so `lando test` can run `composer test` and `yarn test` in their respective services. You can also specify options, including interactive ones, to build out more complicated commands like `lando pull-my-database-from-aws --user=me --password=***` or to have a single command run on many services eg `lando db-import dump.sql -h database2`.
+
+**A LATE TL;DR** - We **HIGHLY** recommend you read through the linked documentation above to get a sense of the things the Landofile can do for you and/or your team.
+
+How do I make one?
 ------------------
 
-You can also manually craft a `.lando.yml` from a project you've already cloned down locally and set up relevant [ssh keys](./config/ssh.md) for.
+There are various ways to craft your Landofile but we've found and observed the following strategy to be *generally a good approach*.
 
-```bash
-# Go into your project
-cd /path/to/my/project
+1. Shop around for a [recipe](./config/recipes.md) that can serve as a good starting point. [lando init](./cli/init.md) is helpful for this.
+2. Add in additional [services](./config/recipes.md) when you need more **JUICE**
+3. Define more complex [tooling](./config/tooling.md) and [events](./config/events.md) to simplify difficult command patterns and automate common tasks
+4. Add in some [build steps](./config/services.md#build-steps) to further automate setting your services up or to mix in additional project dependencies
+5. Define [custom services](./tutorials/compose.md) as a catch all for anythign else you need
+6. Create [custom recipes or services](./dev/plugins.md) to lock down your new power tools
+7. Rinse and repeat
 
-# Create a .lando.yml file
-touch .lando.yml
+You have some examples?
+-----------------------
 
-# Open up a text editor to craft it
-vi .lando.yml
+Below are a few example Landofiles to help give you a sense of how simple or complex they can be. You can also check out our [large repository of tested-every-build and working examples](https://github.com/lando/lando/tree/master/examples)
+
+### Cold as ice
+
+```yaml
+name: my-app
+recipe: drupal7
 ```
 
-Here is a good example of a generic LEMP stack `.lando.yml`
+### Lighting the match
 
+```yaml
+name: my-app
+recipe: drupal7
+config:
+  database: postgres
+  php: '7.0'
+  xdbeug: true
+```
+
+### He's heating up!
+
+```yaml
+name: my-app
+recipe: drupal7
+config:
+  database: postgres
+  php: '7.0'
+  xdbeug: true
+  config:
+    php: my-custom-php.ini
+proxy:
+  pma:
+   - pma-my-app.lndo.site
+services:
+  node:
+    type: node:10
+    globals:
+      gulp: latest
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
+tooling:
+  yarn:
+    service: node
+```
+
+### He's on fire!!
+
+```yaml
+name: my-app
+recipe: drupal7
+config:
+  database: postgres
+  php: '7.0'
+  xdebug: true
+  config:
+    php: my-custom-php.ini
+events:
+  post-db-import:
+    - appserver: drush cc all -y
+proxy:
+  pma:
+   - pma-my-app.lndo.site
+services:
+  appserver:
+    build_as_root:
+      - apt update -y && apt-get install vim -y
+      - /helpers/my-script-to-install-php-extension.sh memcached
+    build:
+      - composer install
+    overrides:
+      environment:
+        APP_LEVEL: dev
+        TAYLOR: swift
+  node:
+    type: node:10
+    globals:
+      gulp: latest
+  frontend:
+    type: node:10
+    command: yarn start
+    build:
+      - yarn
+  pma:
+    type: phpmyadmin
+    hosts:
+      - database
+tooling:
+  yarn:
+    service: node
+  test:
+    cmd:
+      - appserver: composer test
+      - frontend: yarn test
+```

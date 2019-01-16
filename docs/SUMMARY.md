@@ -1,7 +1,7 @@
 ## Basics
 
 *   [Overview](README.md)
-*   [Core Concepts](started.md)
+*   [Introduction](started.md)
 *   [CLI Usage](cli/usage.md)
 
 ## Installation
@@ -50,21 +50,18 @@
 
 ## Configuration
 
-*   [.lando.yml](config/lando.md)
-*   [Recipes](config/recipes.md)
+*   [Landofile](config/lando.md)
+*   [Environment](config/env.md)
 *   [Events](config/events.md)
+*   [Recipes](config/recipes.md)
 *   [Proxy](config/proxy.md)
 *   [Services](config/services.md)
 *   [Tooling](config/tooling.md)
-*   [config.yml](config/config.md)
-*   [Environment](config/env.md)
 *   [Networking](config/networking.md)
 *   [SSH Keys](config/ssh.md)
 *   [SSL/TLS](config/security.md)
 *   [Shared Files](config/files.md)
-*   [Build Steps](config/build.md)
-*   [Scripting](config/scripting.md)
-*   [Advanced](config/advanced.md)
+*   [Global Config](config/config.md)
 
 ## Community
 

@@ -36,7 +36,7 @@ Yes! Well, sort of. You can think of Lando as both an abstraction layer and supe
 
 **As a utility** Lando handles some of the more arduous setup required for a *good* Docker Compose setup eg proxying, nice urls, cross-application networking (think Vue.js frontend talking to separate Laravel backend), host-container file permission handling, file sharing, per-container SSL certificate handling, ssh-key handling, etc.
 
-And! If you don't like the default choices we've made all of the above is highly configurable down to the Docker Compose level itself!
+**And!** If you don't like the default choices we've made all of the above is highly configurable down to the Docker Compose level itself!
 
 Begin by checking out
 ---------------------
@@ -122,100 +122,6 @@ And then dive deep into reference materials
 *   [API](http://docs.devwithlando.io/dev/api/api.html)
 *   [Troubleshooting and Support](http://docs.devwithlando.io/troubleshooting/logs.html)
 *   [Examples](https://github.com/lando/lando/tree/master/examples)
-
-Or TL;DR
---------
-
-A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
-
-#### 1. Pull a repo that already has a `.lando.yml`
-
-```bash
-git clone myproject.git
-cd myproject
-lando start
-```
-
-#### 2. Or init a local codebase with a `lando` recipe
-
-```bash
-cd /path/to/my/local/code
-lando init
-lando start
-```
-
-Note: Lando will not spin up a new codebase for you unless you init with either the `pantheon` or `github` method (see below). Otherwise, remember to always have an already existing project to init from.
-
-#### 3. Or pull from GitHub or Pantheon
-
-```bash
-mkdir -p mysite
-cd mysite
-lando init pantheon | lando init github
-lando start
-```
-
-You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipes.html)
-
-```yml
-name: myproject
-recipe: lamp
-config:
-  php: '7.1'
-  webroot: www
-  database: postgres:9.6
-  config:
-    php: config/php.ini
-```
-
-or go totally nuts and scaffold out a [custom stack](http://docs.devwithlando.io/config/services.html)
-
-```yml
-name: myproject
-recipe: lamp
-config:
-  php: '7.1'
-  webroot: www
-  database: postgres:9.6
-  config:
-    php: config/php.ini
-events:
-  post-start:
-    - appserver: echo SOMECOMMAND
-    - echo SOMETHINGELSE
-  post-mycustomthing:
-    - echo TEST
-services:
-  node:
-    type: node:6.10
-    globals:
-      grunt-cli: "latest"
-    run:
-      - cd /app && npm install --production
-  appserver:
-    run:
-      - cd /app && composer install
-  mailhog:
-    type: mailhog
-    hogfrom:
-      - appserver
-  cache:
-    type: memcached:1.4
-    mem: 128
-  search:
-    type: solr:5.5
-    core: hard
-tooling:
-  node:
-    service: node
-  npm:
-    service: node
-  grunt:
-    service: node
-  mycustomthing:
-    service: appserver
-    cmd: ps
-```
 
 Security Issues
 ---------------

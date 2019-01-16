@@ -1,7 +1,7 @@
 Shared Files
 ============
 
-While you can also share in additional files and directories via docker volumes (see [Advanced Service Configuration](./advanced.md)), we share a few useful host directories into each service by default.
+While you can also share in additional files and directories via Docker volumes (see [service overrides](./services.md#overrides)), we share a few useful host directories into each service by default.
 
 | Host Location | Container Location |
 | -- | -- |
