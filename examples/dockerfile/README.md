@@ -39,6 +39,9 @@ Burn it to the ground
 Run these commands to verify things have been cleaned up
 
 ```bash
+# Stop containers to remove images
+lando stop
+
 # Destroy the custom docker image
 docker rmi -f pirog/php:7.1-fpm-custom
 
