@@ -27,8 +27,15 @@ https://www.youtube.com/watch?v=lgaUqMy5a6A
  # You can get this via git clone or from an archive
  cd /path/to/my/codebase
 
- # Initialize a basic .lando.yml file for my recipe with sane defaults
+ # Initialize a basic .lando.yml file for a recipe with defaults
  lando init
+ 
+ # Update the lando.yml with info about your site using the Panthon recipe. This will get you access to the Panthon commands such as pull and push
+ # Go through the interactive prompts
+ lando init --recipe=pantheon
+
+ # Or run it non-interactively
+ lando init --recipe=pantheon --pantheon-auth=MYPANTHEONMACHINETOKEN --pantheon-site=MYPANTHEONSITEMACHINENAME
 
  # Commit the .lando.yml to your git repo (Optional but recommended)
  git add -A
