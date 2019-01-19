@@ -1,15 +1,18 @@
-Elasticsearch
-=============
+Memcached
+=========
 
-[Elasticsearch](https://www.elastic.co/products/elasticsearch) is a search and analytics engine, commonly used as a substitute for Solr or for collecting log and metrics data.
+[Redis](https://redis.io/) is an open source, in-memory and typed data structure store, used as a database, cache and message broker.
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
 
 Supported versions
 ------------------
 
-*   **[6](https://hub.docker.com/r/bitnami/elasticsearch)** **(default)**
-*   [5](https://hub.docker.com/r/bitnami/elasticsearch)
+*   **[5](https://hub.docker.com/_/redis)** **(default)**
+*   [5.0](https://hub.docker.com/_/redis)
+*   [4](https://hub.docker.com/_/redis)
+*   [4.0](https://hub.docker.com/_/redis)
+*   [2.8](https://hub.docker.com/_/redis)
 *   [custom](./../config/services.md#advanced)
 
 Patch versions
@@ -24,10 +27,10 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: elasticsearch:5.6.14
+    type: redis:4.0.12
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/elasticsearch/tags) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/_/redis/tags) for the underlying image we are using.
 
 Configuration
 -------------
@@ -39,13 +42,16 @@ Also note that the below options are in addition to the [build steps](./../confi
 ```yaml
 services:
   my-service:
-    type: elasticsearch:6
+    type: redis:5
+    persist: false
     portforward: false
-    mem: 1025m
-    plugins: []
     config:
       server: SEE BELOW
 ```
+
+### Persisting data
+
+This option is pretty straightforward. Use `persist: true` to persist the cache's data between restarts and rebuilds.
 
 ### Portforwarding
 
@@ -60,7 +66,7 @@ services:
 ```yaml
 services:
   my-service:
-    type: elasticsearch
+    type: redis
     portforward: true
 ```
 
@@ -69,42 +75,40 @@ services:
 ```yaml
 services:
   my-service:
-    type: elasticsearch
-    portforward: 9200
+    type: redis
+    portforward: 6379
 ```
 
 ### Using custom config files
 
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/elasticsearch). If you set `config.server` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
+The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/redis). If you set `config.server` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
 
 **A hypothetical project**
 
 ```bash
 ./
 |-- config
-   |-- elasticsearch.yml
+   |-- redis.conf
 |-- .lando.yml
 ```
 
-**Landofile's elastic config**
+**Landofile's redis config**
 
 ```yaml
 services:
   my-service:
-    type: elasticsearch
+    type: redis
     config:
-      server: config/elasticsearch.yml
+      server: config/redis.conf
 ```
-
-Note that `config.server` is intended to be an [`elasticsearch.yml`](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings) file.
 
 Getting information
 -------------------
 
-You can get connection and credential information about your elasticsearch instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+You can get connection and credential information about your redis instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
 
 Example
 -------
 
 If you are interested in a working example of this service that we test on every Lando build then check out
-[https://github.com/lando/lando/tree/master/examples/elasticsearch](https://github.com/lando/lando/tree/master/examples/elasticsearch)
+[https://github.com/lando/lando/tree/master/examples/redis](https://github.com/lando/lando/tree/master/examples/redis)

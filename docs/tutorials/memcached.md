@@ -1,15 +1,15 @@
-Elasticsearch
-=============
+Memcached
+=========
 
-[Elasticsearch](https://www.elastic.co/products/elasticsearch) is a search and analytics engine, commonly used as a substitute for Solr or for collecting log and metrics data.
+[Memcached](https://memcached.org/) is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering.
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
 
 Supported versions
 ------------------
 
-*   **[6](https://hub.docker.com/r/bitnami/elasticsearch)** **(default)**
-*   [5](https://hub.docker.com/r/bitnami/elasticsearch)
+*   **[1](https://hub.docker.com/r/bitnami/memcached)** **(default)**
+*   [1.5.12](https://hub.docker.com/r/bitnami/memcached)
 *   [custom](./../config/services.md#advanced)
 
 Patch versions
@@ -24,10 +24,10 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: elasticsearch:5.6.14
+    type: memcached:1.5.11
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/elasticsearch/tags) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/memcached/tags) for the underlying image we are using.
 
 Configuration
 -------------
@@ -39,12 +39,9 @@ Also note that the below options are in addition to the [build steps](./../confi
 ```yaml
 services:
   my-service:
-    type: elasticsearch:6
+    type: memcached:1
     portforward: false
-    mem: 1025m
-    plugins: []
-    config:
-      server: SEE BELOW
+    mem: 64
 ```
 
 ### Portforwarding
@@ -60,7 +57,7 @@ services:
 ```yaml
 services:
   my-service:
-    type: elasticsearch
+    type: memcached
     portforward: true
 ```
 
@@ -69,42 +66,17 @@ services:
 ```yaml
 services:
   my-service:
-    type: elasticsearch
-    portforward: 9200
+    type: memcached
+    portforward: 11211
 ```
-
-### Using custom config files
-
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/elasticsearch). If you set `config.server` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
-
-**A hypothetical project**
-
-```bash
-./
-|-- config
-   |-- elasticsearch.yml
-|-- .lando.yml
-```
-
-**Landofile's elastic config**
-
-```yaml
-services:
-  my-service:
-    type: elasticsearch
-    config:
-      server: config/elasticsearch.yml
-```
-
-Note that `config.server` is intended to be an [`elasticsearch.yml`](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings) file.
 
 Getting information
 -------------------
 
-You can get connection and credential information about your elasticsearch instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+You can get connection and credential information about your memcached instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
 
 Example
 -------
 
 If you are interested in a working example of this service that we test on every Lando build then check out
-[https://github.com/lando/lando/tree/master/examples/elasticsearch](https://github.com/lando/lando/tree/master/examples/elasticsearch)
+[https://github.com/lando/lando/tree/master/examples/memcached](https://github.com/lando/lando/tree/master/examples/memcached)

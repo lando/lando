@@ -1,12 +1,14 @@
-Apache
-======
+nginx
+=====
 
-[Apache](https://www.apache.org/) is a very common webserver which you can easily add to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
+[nginx](https://www.nginx.com/resources/wiki/) is a very common webserver and reverse proxy
+
+You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
 
 Supported versions
 ------------------
 
-*   **[2.4](https://hub.docker.com/r/bitnami/apache)** **(default)**
+*   **[1.14](https://hub.docker.com/r/bitnami/nginx)** **(default)**
 *   [custom](./../config/services.md#advanced)
 
 Patch versions
@@ -21,10 +23,10 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: apache:2.4.33
+    type: nginx:1.14.2
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/apache/tags) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/nginx) for the underlying image we are using.
 
 Configuration
 -------------
@@ -36,17 +38,18 @@ Also note that the below options are in addition to the [build steps](./../confi
 ```yaml
 services:
   my-service:
-    type: apache:2.4
+    type: nginx:1.14
     webroot: .
     ssl: false
     config:
       server: SEE BELOW
       vhosts: SEE BELOW
+      params: SEE BELOW
 ```
 
 ### Using custom config files
 
-The default `config` files depend on how you have set `ssl` but are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/apache).
+The default `config` files depend on how you have set `ssl` but are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/nginx).
 
 Note that if you set `config` to use your own files then those files should exist inside your applicaton and be expressed relative to your project root as below.
 
@@ -55,27 +58,27 @@ Note that if you set `config` to use your own files then those files should exis
 ```bash
 ./
 |-- config
-   |-- default.conf
-   |-- httpd.conf
-|-- docroot
-   |-- index.html
+   |-- default.conf.tpl
+   |-- nginx.conf.tpl
+   |-- fastcgi_params
+|-- index.html
 |-- .lando.yml
 ```
 
-**Landofile using custom apache config**
+**Landofile using custom nginx config**
 
 ```yaml
 services:
   my-service:
-    type: apache
-    webroot: docroot
+    type: nginx
     config:
-      server: config/httpd.conf
-      vhosts: config/default.conf
+      server: config/nginx.conf.tpl
+      vhosts: config/default.conf.tpl
+      param: config/fastcgi_params
 ```
 
 Example
 -------
 
 If you are interested in a working example of this service that we test on every Lando build then check out
-[https://github.com/lando/lando/tree/master/examples/apache](https://github.com/lando/lando/tree/master/examples/apache)
+[https://github.com/lando/lando/tree/master/examples/nginx](https://github.com/lando/lando/tree/master/examples/nginx)

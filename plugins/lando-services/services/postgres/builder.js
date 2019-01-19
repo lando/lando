@@ -9,8 +9,8 @@ const _ = require('lodash');
 module.exports = {
   name: 'postgres',
   config: {
-    version: '10.6.0',
-    supported: ['11.1', '11.0', '10.6.0', '10', '9.6'],
+    version: '10',
+    supported: ['11', '11.1', '11.0', '10', '10.6.0', '9.6'],
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
