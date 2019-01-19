@@ -107,9 +107,11 @@ lando destroy -y && lando start
 
 **Also note that by default all `mysql` services have a passwordless `root` user.**
 
-### Using custom config files
+### Using a custom MySQL config file
 
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/mysql). If you set `config.database` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
+You may need to override our [default MySQL config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/mysql) with your own [custom MySQL config](https://dev.mysql.com/doc/refman/8.0/en/option-files.html).
+
+If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
 
 **A hypothetical project**
 

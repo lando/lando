@@ -106,9 +106,11 @@ lando destroy -y && lando start
 
 **Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions.**
 
-### Using custom config files
+### Using a custom postgres config file
 
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/postgres). If you set `config.database` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
+You may need to override our [default postgres config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/postgres) with your own [custom postgres config](https://github.com/postgres/postgres/blob/master/src/backend/utils/misc/postgresql.conf.sample).
+
+If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
 
 **A hypothetical project**
 

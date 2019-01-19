@@ -36,7 +36,7 @@
 *   [dotnet](tutorials/dotnet.md)
 *   [elasticsearch](tutorials/elasticsearch.md)
 *   [go](tutorials/go.md)
-*   [mailhog](tutorials/apache.md)
+*   [mailhog](tutorials/mailhog.md)
 *   [mariadb](tutorials/mariadb.md)
 *   [memcached](tutorials/memcached.md)
 *   [mongo](tutorials/mongo.md)
@@ -45,14 +45,14 @@
 *   [nginx](tutorials/nginx.md)
 *   [node](tutorials/node.md)
 *   [php](tutorials/apache.md)
-*   [phpmyadmin](tutorials/apache.md)
+*   [phpmyadmin](tutorials/phpmyadmin.md)
 *   [postgres](tutorials/postgres.md)
 *   [python](tutorials/python.md)
 *   [redis](tutorials/redis.md)
 *   [ruby](tutorials/ruby.md)
 *   [solr](tutorials/apache.md)
 *   [tomcat](tutorials/apache.md)
-*   [varnish](tutorials/apache.md)
+*   [varnish](tutorials/varnish.md)
 
 ## Command Line
 

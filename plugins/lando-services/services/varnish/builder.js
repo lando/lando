@@ -40,6 +40,7 @@ module.exports = {
     remoteFiles: {
       vcl: '/etc/varnish/conf.d/lando.vcl',
     },
+    ssl: false,
     sources: [],
   },
   parent: '_lando',

@@ -107,9 +107,11 @@ lando destroy -y && lando start
 
 **Also note that by default all `mariadb` services have a passwordless `root` user.**
 
-### Using custom config files
+### Using a custom MariaDB config file
 
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/mariadb). If you set `config.database` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
+You may need to override our [default MySQL config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/mariadb) with your own [custom MySQL config](https://mariadb.com/kb/en/library/configuring-mariadb-with-option-files/).
+
+If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
 
 **A hypothetical project**
 

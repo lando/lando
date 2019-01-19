@@ -73,9 +73,11 @@ services:
     portforward: 9200
 ```
 
-### Using custom config files
+### Using a custom elasticsearch.yml
 
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/elasticsearch). If you set `config.server` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
+You may need to override our [elasticsearch config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/elasticsearch) with your own [elasticsearch config file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings).
+
+If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
 
 **A hypothetical project**
 
@@ -95,8 +97,6 @@ services:
     config:
       server: config/elasticsearch.yml
 ```
-
-Note that `config.server` is intended to be an [`elasticsearch.yml`](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings) file.
 
 Getting information
 -------------------

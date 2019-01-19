@@ -79,9 +79,11 @@ services:
     portforward: 6379
 ```
 
-### Using custom config files
+### Using a custom redis.conf
 
-The default `config` files are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/redis). If you set `config.server` to use your own file then that file should exist inside your applicaton and be expressed relative to your project root as below.
+You may need to override our [default redis server config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/redis) with your own [custom redis config file](https://redis.io/topics/config).
+
+If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
 
 **A hypothetical project**
 

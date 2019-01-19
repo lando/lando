@@ -44,7 +44,7 @@ services:
       vhosts: SEE BELOW
 ```
 
-### Using custom config files
+### Using custom Apache config files
 
 The default `config` files depend on how you have set `ssl` but are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/apache).
 

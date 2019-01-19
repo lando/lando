@@ -47,11 +47,13 @@ services:
       params: SEE BELOW
 ```
 
-### Using custom config files
+### Using custom nginx config files
 
-The default `config` files depend on how you have set `ssl` but are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/nginx).
+You may need to override our [default nginx config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/nginx) with your own custom [server](https://www.linode.com/docs/web-servers/nginx/how-to-configure-nginx/), [vhosts](https://www.linode.com/docs/web-servers/nginx/how-to-configure-nginx/) or [fastcgi_params](https://www.nginx.com/resources/wiki/start/topics/examples/full/) config.
 
-Note that if you set `config` to use your own files then those files should exist inside your applicaton and be expressed relative to your project root as below.
+If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+
+Note that the default files may change based on how you set `ssl`.
 
 **A hypothetical project**
 
