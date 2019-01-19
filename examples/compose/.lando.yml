@@ -10,7 +10,7 @@ proxy:
 services:
 
   # Create a service called "custom"
-  appserver:
+  custom-service:
 
     # Use docker compose to create a custom service.
     type: compose
@@ -32,5 +32,10 @@ services:
       ports:
         - '80'
 
+    # Any top level volumes that we have
     volumes:
       thing:
+
+    # Any top level networks that we have
+    networks:
+      default:

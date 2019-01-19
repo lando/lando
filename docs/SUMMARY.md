@@ -15,6 +15,45 @@
 *   [Updating](installation/updating.md)
 *   [Uninstalling](installation/uninstalling.md)
 
+## Recipes
+
+*   [Backdrop](tutorials/apache.md)
+*   [Drupal 6](tutorials/apache.md)
+*   [Drupal 7](tutorials/apache.md)
+*   [Drupal 8](tutorials/apache.md)
+*   [Joomla](tutorials/apache.md)
+*   [Laravel](tutorials/apache.md)
+*   [LAMP](tutorials/apache.md)
+*   [LEMP](tutorials/apache.md)
+*   [MEAN](tutorials/apache.md)
+*   [Pantheon](tutorials/apache.md)
+*   [WordPress](tutorials/apache.md)
+
+## Services
+
+*   [apache](tutorials/apache.md)
+*   [compose](tutorials/compose.md)
+*   [dotnet](tutorials/dotnet.md)
+*   [elasticsearch](tutorials/elasticsearch.md)
+*   [go](tutorials/go.md)
+*   [mailhog](tutorials/apache.md)
+*   [mariadb](tutorials/apache.md)
+*   [memcached](tutorials/apache.md)
+*   [mongo](tutorials/apache.md)
+*   [mssql](tutorials/apache.md)
+*   [mysql](tutorials/apache.md)
+*   [nginx](tutorials/apache.md)
+*   [node](tutorials/node.md)
+*   [php](tutorials/apache.md)
+*   [phpmyadmin](tutorials/apache.md)
+*   [postgres](tutorials/apache.md)
+*   [python](tutorials/python.md)
+*   [redis](tutorials/apache.md)
+*   [ruby](tutorials/ruby.md)
+*   [solr](tutorials/apache.md)
+*   [tomcat](tutorials/apache.md)
+*   [varnish](tutorials/apache.md)
+
 ## Command Line
 
 *   [config](cli/config.md)
@@ -31,22 +70,6 @@
 *   [start](cli/start.md)
 *   [stop](cli/stop.md)
 *   [version](cli/version.md)
-
-## Known Issues
-
-*   [DNS Rebinding Protection](issues/dns-rebind.md)
-*   [File Uploads on Windows](issues/win-file-upload.md)
-*   [File Syncing Stalled](issues/file-sync.md)
-*   [Running VB and HyperV](issues/win-also-vb.md)
-*   [Running behind a proxy](issues/proxy.md)
-*   [Switching Database Config](issues/switching-dbs.md)
-
-## Troubleshooting and Support
-
-*   [Accessing Logs](troubleshooting/logs.md)
-*   [Using Lando with Kalabox](troubleshooting/wkbox.md)
-*   [Reporting Issues](https://github.com/lando/lando/issues)
-*   [Slack Channel](https://slackpass.io/kalabox)
 
 ## Configuration
 
@@ -67,6 +90,22 @@
 
 *   [Slidedecks](https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC)
 
+## Known Issues
+
+*   [DNS Rebinding Protection](issues/dns-rebind.md)
+*   [File Uploads on Windows](issues/win-file-upload.md)
+*   [File Syncing Stalled](issues/file-sync.md)
+*   [Running VB and HyperV](issues/win-also-vb.md)
+*   [Running behind a proxy](issues/proxy.md)
+*   [Switching Database Config](issues/switching-dbs.md)
+
+## Troubleshooting and Support
+
+*   [Accessing Logs](troubleshooting/logs.md)
+*   [Using Lando with Kalabox](troubleshooting/wkbox.md)
+*   [Reporting Issues](https://github.com/lando/lando/issues)
+*   [Slack Channel](https://slackpass.io/kalabox)
+
 ## Contributing
 
 *   [Overview](contrib/contributing.md)
@@ -86,6 +125,61 @@
 *   [Building](dev/building.md)
 *   [Shipping](dev/shipping.md)
 *   [Documentation](dev/docs.md)
+
+## Examples
+
+*   [Build Steps](https://github.com/lando/lando/tree/master/examples/services)
+*   [Environment Files](https://github.com/lando/lando/tree/master/examples/base)
+*   [Events](https://github.com/lando/lando/tree/master/examples/events)
+*   [Networking](https://github.com/lando/lando/tree/master/examples/networking)
+*   [Overrides](https://github.com/lando/lando/tree/master/examples/overrides)
+*   [Proxying](https://github.com/lando/lando/tree/master/examples/proxy)
+*   [Tooling](https://github.com/lando/lando/tree/master/examples/tooling)
+*   [Networking](https://github.com/lando/lando/tree/master/examples/networking)
+
+---
+
+*   [Backdrop](https://github.com/lando/lando/tree/master/examples/backdrop)
+*   [Drupal 6](https://github.com/lando/lando/tree/master/examples/drupal6)
+*   [Drupal 7](https://github.com/lando/lando/tree/master/examples/drupal7)
+*   [Drupal 8](https://github.com/lando/lando/tree/master/examples/drupal8)
+*   [Joomla](https://github.com/lando/lando/tree/master/examples/joomla)
+*   [LAMP](https://github.com/lando/lando/tree/master/examples/lamp)
+*   [Laravel](https://github.com/lando/lando/tree/master/examples/laravel)
+*   [LEMP](https://github.com/lando/lando/tree/master/examples/lemp)
+*   [MEAN](https://github.com/lando/lando/tree/master/examples/mean)
+*   [Pantheon](https://github.com/lando/lando/tree/master/examples/pantheon)
+*   [WordPress](https://github.com/lando/lando/tree/master/examples/wordpress)
+
+---
+
+*   [Apache](https://github.com/lando/lando/tree/master/examples/apache)
+*   [Compose](https://github.com/lando/lando/tree/master/examples/compose)
+*   [Dotnet](https://github.com/lando/lando/tree/master/examples/dotnet)
+*   [Elasticsearch](https://github.com/lando/lando/tree/master/examples/elasticsearch)
+*   [Go](https://github.com/lando/lando/tree/master/examples/go)
+*   [MailHog](https://github.com/lando/lando/tree/master/examples/mailhog)
+*   [MariaDB](https://github.com/lando/lando/tree/master/examples/mariadb)
+*   [Memcached](https://github.com/lando/lando/tree/master/examples/memcached)
+*   [mongo](https://github.com/lando/lando/tree/master/examples/mongo)
+*   [MSSQL](https://github.com/lando/lando/tree/master/examples/mssql)
+*   [mysql](https://github.com/lando/lando/tree/master/examples/mysql)
+*   [nginx](https://github.com/lando/lando/tree/master/examples/nginx)
+*   [node](https://github.com/lando/lando/tree/master/examples/node)
+*   [PHP](https://github.com/lando/lando/tree/master/examples/php)
+*   [PhpMyAdmin](https://github.com/lando/lando/tree/master/examples/pma)
+*   [Postgres](https://github.com/lando/lando/tree/master/examples/postgres)
+*   [Python](https://github.com/lando/lando/tree/master/examples/python)
+*   [Redis](https://github.com/lando/lando/tree/master/examples/redis)
+*   [Ruby](https://github.com/lando/lando/tree/master/examples/ruby)
+*   [Solr](https://github.com/lando/lando/tree/master/examples/solr)
+*   [Tomcat](https://github.com/lando/lando/tree/master/examples/tomcat)
+*   [Varnish](https://github.com/lando/lando/tree/master/examples/varnish)
+
+---
+
+*   [SQL Export](https://github.com/lando/lando/tree/master/examples/sql-export)
+*   [SQL Import](https://github.com/lando/lando/tree/master/examples/sql-import)
 
 ## Lando API
 

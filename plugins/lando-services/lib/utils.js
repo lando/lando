@@ -90,7 +90,7 @@ exports.runBuild = (lando, steps, lockfile) => {
       lando.log.error('Looks like one of your build steps failed! with %s', error.stack);
       lando.log.warn('This **MAY** prevent your app from working');
       lando.log.warn('Check for errors above, fix them, and try again');
-      lando.log.debug('Build error %s');
+      lando.log.debug('Build error %j', error);
     });
   }
 };

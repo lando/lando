@@ -83,15 +83,3 @@ module.exports = {
     };
   },
 };
-
-/*
-  const info = (name, config) => {
-    // Surfaces the VCL file if specified
-    if (_.has(config, 'vcl')) info.vcl = config.vcl;
-    // Specify the backends varnish is servicing
-    info.backends = config.backends;
-    // Return the collected info
-    return info;
-  };
-*/
-

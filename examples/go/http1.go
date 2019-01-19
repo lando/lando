@@ -21,7 +21,7 @@ func Run(addr string, sslAddr string, ssl map[string]string) chan error {
 
     // Starting HTTPS server
     go func() {
-        log.Printf("Staring HTTPS service on %s ...", addr)
+        log.Printf("Staring HTTPS service on %s ...", sslAddr)
         if err := http.ListenAndServeTLS(sslAddr, ssl["cert"], ssl["key"], nil); err != nil {
             errs <- err
         }

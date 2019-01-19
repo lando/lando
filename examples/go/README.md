@@ -1,7 +1,6 @@
 Go Example
 ==========
 
-
 [Go](https://golang.org/) is an open source programming language that makes it easy to build simple, reliable, and efficient software. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
 
 Supported versions

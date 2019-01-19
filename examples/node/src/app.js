@@ -14,13 +14,11 @@ const express = require('express');
 const app = express();
 
 // Create our HTTPS server options
-const sslOpts = {
-  key: fs.readFileSync('/certs/cert.key'),
-  cert: fs.readFileSync('/certs/cert.crt'),
-};
+const key = fs.readFileSync('/certs/cert.key')
+const cert = fs.readFileSync('/certs/cert.crt'),
 
 // Create our servers
-https.createServer(sslOpts, app).listen(443);
+https.createServer({key, cert}, app).listen(443);
 http.createServer(app).listen(80);
 
 // Basic HTTP response
