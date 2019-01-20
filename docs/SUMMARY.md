@@ -44,14 +44,14 @@
 *   [mysql](tutorials/mysql.md)
 *   [nginx](tutorials/nginx.md)
 *   [node](tutorials/node.md)
-*   [php](tutorials/apache.md)
+*   [php](tutorials/php.md)
 *   [phpmyadmin](tutorials/phpmyadmin.md)
 *   [postgres](tutorials/postgres.md)
 *   [python](tutorials/python.md)
 *   [redis](tutorials/redis.md)
 *   [ruby](tutorials/ruby.md)
-*   [solr](tutorials/apache.md)
-*   [tomcat](tutorials/apache.md)
+*   [solr](tutorials/solr.md)
+*   [tomcat](tutorials/tomcat.md)
 *   [varnish](tutorials/varnish.md)
 
 ## Command Line

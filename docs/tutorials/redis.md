@@ -30,7 +30,7 @@ services:
     type: redis:4.0.12
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/_/redis/tags) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/redis/tags/) for the underlying image we are using.
 
 Configuration
 -------------
