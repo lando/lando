@@ -17,10 +17,10 @@
 
 ## Recipes
 
-*   [Backdrop](tutorials/apache.md)
-*   [Drupal 6](tutorials/apache.md)
-*   [Drupal 7](tutorials/apache.md)
-*   [Drupal 8](tutorials/apache.md)
+*   [Backdrop](tutorials/backdrop.md)
+*   [Drupal 6](tutorials/drupal6.md)
+*   [Drupal 7](tutorials/drupal7.md)
+*   [Drupal 8](tutorials/drupal8.md)
 *   [Joomla](tutorials/apache.md)
 *   [Laravel](tutorials/apache.md)
 *   [LAMP](tutorials/apache.md)
