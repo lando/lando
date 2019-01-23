@@ -12,6 +12,7 @@ const url = require('url');
 const pantheonTokenCache = 'pantheon.tokens';
 const pantheonLandoKey = 'pantheon.lando.id_rsa';
 const pantheonLandoKeyComment = 'lando@' + os.hostname();
+let pantheonSites = [];
 
 // Helper to parse a pantheon site into a git url
 const getGitUrl = site => url.format({
@@ -34,6 +35,19 @@ const showTokenList = (data, tokens = []) => !_.isEmpty(tokens) && data === 'pan
 
 // Helper to determine whether to show token password entry or not
 const showTokenEntry = (data, answer, tokens = []) => _.isEmpty(tokens) || answer === 'more' && data === 'pantheon';
+
+// Helper to get sites for autocomplete
+const getAutoCompleteSites = (answers, lando, input = null) => {
+  if (!_.isEmpty(pantheonSites)) {
+    return lando.Promise.resolve(pantheonSites).filter(site => _.startsWith(site.name, input));
+  } else {
+    const api = new PantheonApiClient(answers['pantheon-auth'], lando.log);
+    return api.auth().then(() => api.getSites().map(site => ({name: site.name, value: site.name}))).then(sites => {
+      pantheonSites = sites;
+      return pantheonSites;
+    });
+  };
+};
 
 /*
  * Init Lamp
@@ -66,11 +80,10 @@ module.exports = {
       describe: 'A Pantheon site machine name',
       string: true,
       interactive: {
-        type: 'list',
+        type: 'autocomplete',
         message: 'Which site?',
-        choices: answers => {
-          const api = new PantheonApiClient(answers['pantheon-auth'], lando.log);
-          return api.auth().then(() => api.getSites().map(site => ({name: site.name, value: site.name})));
+        source: (answers, input) => {
+          return getAutoCompleteSites(answers, lando, input);
         },
         when: answers => answers.recipe === 'pantheon',
         weight: 530,
