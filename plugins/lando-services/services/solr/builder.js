@@ -75,6 +75,7 @@ module.exports = {
     confSrc: __dirname,
     core: 'lando',
     dataDir: '/opt/solr/server/solr/mycores',
+    moreHttpPorts: ['8983'],
     port: '8983',
     remoteFiles: {
       dir: '/solrconf/conf',
@@ -90,7 +91,7 @@ module.exports = {
         volumes: [],
       };
       // Add in persistent datadir
-      if (!_.isEmpty(options.dataDir)) solr.volumes.push(`data_${options.name}:${options.dataDir}`);
+      if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, solr)});
     };

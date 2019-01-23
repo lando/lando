@@ -34,10 +34,11 @@ module.exports = {
         command: '/app-entrypoint.sh /run.sh',
         environment: {
           POSTGRESQL_DATABASE: options.creds.database,
+          POSTGRES_DB: options.creds.database,
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `data_${options.name}:/bitnami`,
+          `${options.data}:/bitnami`,
         ],
       };
       // Send it downstream

@@ -25,7 +25,6 @@ module.exports = {
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      '/var/www/.asp',
     ],
   },
   parent: '_appserver',

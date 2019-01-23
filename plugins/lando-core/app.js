@@ -4,20 +4,24 @@
 const _ = require('lodash');
 const utils = require('./lib/utils');
 
+// Helper to get http ports
+const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
+
 module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
-    app.events.on(event, () => app.engine.list(app.name)
-    // Return running containers
-    .filter(container => app.engine.isRunning(container.id))
-    // Make sure they are still a defined service (eg if the user changes their lando yml)
-    .filter(container => _.includes(app.services, container.service))
-    // Inspect each and add new URLS
-    .map(container => app.engine.scan(container))
-    // @TODO: figure out a good place to store "overrides" for services that should scan for more than
-    // 80/443 so we dont have to hardcode 8983 for SOLR
-    .map(data => utils.getUrls(data, ['80', '443', '8983']))
-    .map(data => _.find(app.info, {service: data.service}).urls = data.urls));
+    app.events.on(event, () => {
+      return app.engine.list(app.name)
+      // Return running containers
+      .filter(container => app.engine.isRunning(container.id))
+      // Make sure they are still a defined service (eg if the user changes their lando yml)
+      .filter(container => _.includes(app.services, container.service))
+      // Inspect each and add new URLS
+      .map(container => app.engine.scan(container))
+      // Scan all the http ports
+      .map(data => utils.getUrls(data, getHttpPorts(data)))
+      .map(data => _.find(app.info, {service: data.service}).urls = data.urls);
+    });
   });
 
   // Refresh all our certs

@@ -143,7 +143,8 @@ module.exports = {
       {name: 'post-key', func: (options, lando) => {
         return postKey(path.join(lando.config.userConfRoot, 'keys'), options['github-auth']);
       }},
-      {name: 'clone-repo', cmd: `/helpers/get-remote-url.sh ${options['github-repo']}`},
+      {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+      {name: 'clone-repo', cmd: `/helpers/get-remote-url.sh ${options['github-repo']}`, remove: true},
       {name: 'set-caches', func: (options, lando) => setCaches(options, lando)},
     ]),
   }],

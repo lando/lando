@@ -114,7 +114,8 @@ module.exports = {
           options['pantheon-git-url'] = getGitUrl(site[0]);
         });
       }},
-      {name: 'clone-repo', cmd: options => `/helpers/get-remote-url.sh ${options['pantheon-git-url']}`},
+      {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+      {name: 'clone-repo', cmd: options => `/helpers/get-remote-url.sh ${options['pantheon-git-url']}`, remove: 'true'},
     ]),
   }],
   build: (options, lando) => {

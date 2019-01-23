@@ -25,12 +25,6 @@ module.exports = {
       // Add in drupal console things
       if (options.drupal === true) {
         options.build = [dcInstall];
-        options.services = {appserver: {overrides: {
-          volumes: [
-            '/var/www/.drupal',
-            '/var/www/.drush',
-          ],
-        }}};
         options.tooling = {drupal: {
           service: 'appserver',
           description: 'Runs drupal console commands',

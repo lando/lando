@@ -28,7 +28,10 @@ module.exports = {
         confDest = '',
         confSrc = '',
         config = {},
+        data = `data_${name}`,
+        dataHome = `home_${name}`,
         home = '',
+        moreHttpPorts = [],
         info = {},
         legacy = [],
         patchesSupported = false,
@@ -75,6 +78,7 @@ module.exports = {
         `${userConfRoot}:/lando:delegated`,
         `${scriptsDir}:/helpers`,
         `${entrypoint}:/lando-entrypoint.sh`,
+        `${dataHome}:/var/www`,
       ];
 
       // Add in some more dirz if it makes sense
@@ -108,17 +112,18 @@ module.exports = {
       // Handle cert refresh
       // @TODO: this might only be relevant to the proxy, if so let's move it there
       if (refreshCerts) volumes.push(`${refreshCertsScript}:/scripts/refresh-certs.sh`);
-
       // Handle Environment
-      const environment = {
-        LANDO_SERVICE_NAME: name,
-        LANDO_SERVICE_TYPE: type,
-      };
+      const environment = {LANDO_SERVICE_NAME: name, LANDO_SERVICE_TYPE: type};
+      // Handle http ports
+      const labels = {'io.lando.http-ports': _.uniq(['80', '443'].concat(moreHttpPorts)).join(',')};
 
-      // Add stuff into our primary service
+      // Add named volumes and other thingz into our primary service
+      const namedVols = {};
+      _.set(namedVols, data, {});
+      _.set(namedVols, dataHome, {});
       sources.push({
-        services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, ports, volumes}),
-        volumes: _.set({}, `data_${name}`, {}),
+        services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, labels, ports, volumes}),
+        volumes: namedVols,
       });
 
       // Add our overrides at the end

@@ -5,7 +5,6 @@ Most modern frontend tooling relies upon the NPM package manager. In this tutori
 
 When you're done, you should be able to distribute your Lando app with a full set of frontend tools that are standardized to work the same on every team member's computer.
 
-
 Add Node Service
 ---------------
 
@@ -19,9 +18,9 @@ recipe: lamp
 
 services:
   node:
-    type: node:6.10
-    run:
-      - "cd $LANDO_MOUNT && npm install"
+    type: node
+    build:
+      - npm install
 ```
 
 Note the `run` section. This bash command will automatically run when we start our app, installing any Node packages specified in our package.json file.
@@ -35,12 +34,12 @@ While we're now able to install Node packages for our project, we still need to 
 ```yml
 services:
   node:
-    type: node:6.10
-    run:
-      - "cd $LANDO_MOUNT && npm install"
-      - "cd $LANDO_MOUNT && gulp"
+    type: node
+    build:
+      - npm install
+      - gulp
     globals:
-      gulp-cli: "latest"
+      gulp-cli: latest
 ```
 
 You can do the same thing for any NPM project; for example Grunt would be `grunt-cli: "latest"`. This is the equivalent to installing a package with `npm -g project-name`.
@@ -63,6 +62,8 @@ tooling:
   node:
     service: node
   gulp:
+    service: node
+  yarn:
     service: node
 ```
 

@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const util = require('util');
 
 module.exports = lando => {
   return {
@@ -13,10 +14,10 @@ module.exports = lando => {
       return lando.engine.list()
       // Map each app to a summary and print results
       .then(containers => {
-        console.log(_(containers)
+        console.log(util.inspect(_(containers)
           .map(container => _.omit(container, ['lando', 'id', 'instance']))
           .groupBy('app')
-          .value());
+          .value(), {colors: true, depth: 10, compact: false}));
       });
     },
   };

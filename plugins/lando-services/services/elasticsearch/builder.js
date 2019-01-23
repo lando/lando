@@ -39,7 +39,7 @@ module.exports = {
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `data_${options.name}:/bitnami/elasticsearch/data`,
+          `${options.data}:/bitnami/elasticsearch/data`,
         ],
       };
       // Add some info

@@ -22,7 +22,13 @@ print_r($info);
 Using Javascript/NodeJS
 -----------------------
 
-{% codesnippet "./../examples/landoinfo/info.js" %}{% endcodesnippet %}
+```js
+'use strict';
+
+var info = JSON.parse(process.env.LANDO_INFO);
+
+console.log(info);
+```
 
 Using Other
 -----------

@@ -1,20 +1,8 @@
 # The name of the app
 name: sql-export
 
-# Give me http://mysql-export.lndo.site and https://mysql-export.lndo.site
-proxy:
-  nginx:
-    - sql-export.lndo.site
-
 # Set up my services
 services:
-
-  # Set up a basic webserver running the latest nginx with ssl turned on
-  appserver:
-    via: nginx
-    type: php:7.1
-    ssl: true
-    webroot: www
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
@@ -22,13 +10,7 @@ services:
 
     # Use the latest version of mysql
     type: mysql
-
-    # Optionally forward out our port so we can access it at `localhost:someport`.
-    # This port will change every time you restart this app
-    #
-    # You can also set this to a static port you want to use `portforward:3311`.
-    # You will need to make sure the port is open and avialable
-    portforward: 5309
+    portforward: true
 
     # Optionally change the default db credentials
     creds:
@@ -38,6 +20,7 @@ services:
 
   # Spin up a secondary database for postgres
   database2:
+    portforward: true
     type: postgres
 
 tooling:
@@ -58,12 +41,12 @@ tooling:
     options:
       host:
         description: The database service to use
-        default: database
+        default: database2
         alias:
           - h
-  db-export:
+  'db-export [file]':
     service: :host
-    description: Export a database from a database service
+    description: Exports database from a database service to a file
     cmd: /helpers/sql-export.sh
     options:
       host:
@@ -75,7 +58,7 @@ tooling:
         description: Dump database to stdout
   'db-import <file>':
     service: :host
-    description: Import <file> into database
+    description: Imports a dump file into a database service
     cmd: /helpers/sql-import.sh
     options:
       host:
@@ -85,3 +68,4 @@ tooling:
           - h
       no-wipe:
         description: Do not destroy the existing database before an import
+        boolean: true

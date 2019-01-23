@@ -35,11 +35,6 @@ module.exports = {
       // Make sure our command is an array
       if (!_.isArray(options.command)) options.command = [options.command];
       options.command = options.command.join(' && ');
-      // Add our volumes
-      volumes.push([
-        `data_${options.name}:/var/www/.cache/pip`,
-        `data_${options.name}:/var/www/.local/bin`,
-      ]);
       // Build the nodez
       const python = {
         image: `python:${options.version}`,

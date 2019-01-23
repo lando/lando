@@ -81,7 +81,7 @@ Commands:
   lando composer          Runs composer commands
   lando config            Displays the lando configuration
   lando db-export [file]  Exports database from a service into a file
-  lando db-import [file]  Imports a dump file into database service
+  lando db-import <file>  Imports a dump file into database service
   lando destroy           Destroys your app
   lando info              Prints info about your app
   lando init              Initializes code for use with lando

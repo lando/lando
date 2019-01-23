@@ -112,11 +112,37 @@ Environment Config
 By default, Laravel comes with a `.env` configuration file set to use `homestead`. You will want to modify the following `.env` key value pairs:
 
 ```
-APP_URL=http://myproject.lndo.site
-DB_HOST=database
-DB_DATABASE=laravel
-DB_USERNAME=laravel
-DB_PASSWORD=laravel
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:2jPCXdQH3VDQ0Xe2ZA1p9CMbc4/lsHERo7smWKoyOUo=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+LOG_CHANNEL=stack
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
 ```
 
 If your app is already running, `lando restart` to ensure the changes are applied.

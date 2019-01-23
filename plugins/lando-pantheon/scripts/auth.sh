@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Get the auth and site
-AUTH=$1
-SITE=$2
-ENV=$3
+
+AUTH=${1:-${TERMINUS_TOKEN}}
+SITE=${2:-${PANTHEON_SITE}}
+ENV=${3:-${TERMINUS_ENV}}
 
 # Attempting various logins
 if [ ! -z "$AUTH" ]; then

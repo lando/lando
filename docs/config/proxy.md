@@ -42,7 +42,7 @@ Note that `web` and `web2` are the names of some of your [services](./services.m
 proxy:
   web:
     - myapp.lndo.site
-  web2
+  web2:
     - admin-myapp.lndo.site
 ```
 
@@ -87,7 +87,7 @@ To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example
 ```yaml
 proxy:
   web2:
-    - another.lndo.site:
+    - another.lndo.site
     - "*.mysite.lndo.site"
     - "orthis.*.lndo.site"
 ```
@@ -101,7 +101,7 @@ While you can sub-sub-...-sub-subdomain to your hearts content we recommend you 
 ```yaml
 proxy:
   web2:
-    - admin.mysite.lndo.site:
+    - admin.mysite.lndo.site
     - better.admin.mysite.lndo.site
     - mailhog.mysite.lndo.site
     - pma.mysite.lndo.site
@@ -112,7 +112,7 @@ proxy:
 ```yaml
 proxy:
   web2:
-    - admin-mysite.lndo.site:
+    - admin-mysite.lndo.site
     - better-admin-mysite.lndo.site
     - mailhog-mysite.lndo.site
     - pma-mysite.lndo.site

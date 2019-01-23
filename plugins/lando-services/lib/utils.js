@@ -64,6 +64,7 @@ exports.parseConfig = (config, app) => _(config)
   .map((service, name) => _.merge({}, service, {name}))
   .map(service => _.merge({}, service, {
     _app: app,
+    data: `data_${service.name}`,
     app: app.name,
     confDest: path.join(app._config.userConfRoot, 'config', service.type.split(':')[0]),
     home: app._config.home,
@@ -91,6 +92,7 @@ exports.runBuild = (lando, steps, lockfile) => {
       lando.log.warn('This **MAY** prevent your app from working');
       lando.log.warn('Check for errors above, fix them, and try again');
       lando.log.debug('Build error %j', error);
+      return lando.Promise.reject(error);
     });
   }
 };

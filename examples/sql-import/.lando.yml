@@ -1,20 +1,8 @@
 # The name of the app
 name: sql-import
 
-# Give me http://mysql-import.lndo.site and https://mysql-import.lndo.site
-proxy:
-  nginx:
-    - sql-import.lndo.site
-
 # Set up my services
 services:
-
-  # Set up a basic webserver running the latest nginx with ssl turned on
-  appserver:
-    via: nginx
-    type: php:7.1
-    ssl: true
-    webroot: www
 
   # Spin up a mariadb container called "database"
   # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
@@ -22,13 +10,7 @@ services:
 
     # Use the latest version of mysql
     type: mysql
-
-    # Optionally forward out our port so we can access it at `localhost:someport`.
-    # This port will change every time you restart this app
-    #
-    # You can also set this to a static port you want to use `portforward:3311`.
-    # You will need to make sure the port is open and avialable
-    portforward: 5309
+    portforward: true
 
     # Optionally change the default db credentials
     creds:
@@ -39,6 +21,7 @@ services:
   # Spin up a secondary database for postgres
   database2:
     type: postgres
+    portforward: true
 
 tooling:
   mysql:
@@ -63,7 +46,7 @@ tooling:
           - h
   'db-import <file>':
     service: :host
-    description: Import <file> into database
+    description: Imports a dump file into a database service
     cmd: /helpers/sql-import.sh
     options:
       host:
@@ -73,3 +56,4 @@ tooling:
           - h
       no-wipe:
         description: Do not destroy the existing database before an import
+        boolean: true

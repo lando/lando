@@ -36,12 +36,13 @@ module.exports = {
           ALLOW_EMPTY_PASSWORD: 'yes',
           // MARIADB_EXTRA_FLAGS for things like coallation?
           MARIADB_DATABASE: options.creds.database,
+          MYSQL_DATABASE: options.creds.database,
           MARIADB_PASSWORD: options.creds.password,
           MARIADB_USER: options.creds.user,
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `data_${options.name}:/bitnami/mariadb`,
+          `${options.data}:/bitnami/mariadb`,
         ],
       };
       // Send it downstream

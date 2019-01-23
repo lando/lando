@@ -21,13 +21,13 @@
 *   [Drupal 6](tutorials/drupal6.md)
 *   [Drupal 7](tutorials/drupal7.md)
 *   [Drupal 8](tutorials/drupal8.md)
-*   [Joomla](tutorials/apache.md)
-*   [Laravel](tutorials/apache.md)
-*   [LAMP](tutorials/apache.md)
-*   [LEMP](tutorials/apache.md)
-*   [MEAN](tutorials/apache.md)
-*   [Pantheon](tutorials/apache.md)
-*   [WordPress](tutorials/apache.md)
+*   [Joomla](tutorials/joomla.md)
+*   [Laravel](tutorials/laravel.md)
+*   [LAMP](tutorials/lamp.md)
+*   [LEMP](tutorials/lemp.md)
+*   [MEAN](tutorials/mean.md)
+*   [Pantheon](tutorials/pantheon.md)
+*   [WordPress](tutorials/wordpress.md)
 
 ## Services
 
@@ -70,6 +70,20 @@
 *   [start](cli/start.md)
 *   [stop](cli/stop.md)
 *   [version](cli/version.md)
+
+## Guides
+
+*   [Accessing Your Services Externally](guides/external-access.md)
+*   [Accessing Lando from Other Devices](guides/access-by-other-devices.md)
+*   [Exporting Databases](guides/db-export.md)
+*   [Importing Databases](guides/db-import.md)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+*   [Lando + PhpStorm + Xdebug](guides/lando-phpstorm.md)
+*   [Offline Development](guides/offline-dev.md)
+*   [Using $LANDO_INFO](guides/lando-info.md)
+*   [Using NodeJS Frontend Tooling](guides/frontend.md)
+*   [Using Lando in Visual Studio Code](guides/lando-with-vscode.md)
+*   [Climbing a mountain for love](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
 ## Configuration
 

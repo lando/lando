@@ -11,9 +11,6 @@ Checking Connection Info
 If you've spun up a Lando app using one of our [recipes](./../config/recipes.md) then its likely relevant services are already exposed and ready for access.
 
 ```bash
-# Navigate to the app
-cd /path/to/my/app
-
 # Get info about it
 lando info
 

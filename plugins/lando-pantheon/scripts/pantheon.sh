@@ -26,8 +26,6 @@ if [ "$LANDO_SERVICE_NAME" = "appserver" ]; then
 
 fi
 
-/helpers/auth.sh "$TERMINUS_TOKEN" "$PANTHEON_SITE"
-
 # LOCKR integration
 # If we don't have our dev cert already let's get it
 # if [ ! -f "/certs/binding.pem" ]; then

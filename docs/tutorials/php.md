@@ -45,7 +45,7 @@ Also note that the below options are in addition to the [build steps](./../confi
 services:
   my-service:
     type: php:7.2
-    via: apache
+    via: apache:2.4
     ssl: false
     webroot: .
     xdebug: false

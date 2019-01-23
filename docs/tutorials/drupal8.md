@@ -7,6 +7,11 @@ Lando offers a configurable [recipe](./../config/recipes.md) for developing [Dru
 
 <!-- toc -->
 
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=JGef7Fx44F4
+{% endyoutube %}
+
 Getting Started
 ---------------
 
@@ -46,9 +51,9 @@ Here are the configuration options, set to the default values, for this recipe. 
 recipe: drupal8
 config:
   php: 7.2
-  via: apache
+  via: apache:2.4
   webroot: .
-  database: mysql
+  database: mysql:5.7
   drush: 8
   xdebug: false
   config:
@@ -332,7 +337,7 @@ This means you can use things like `drush`, `composer` and `php` via Lando and a
 ```bash
 lando composer          Runs composer commands
 lando db-export [file]  Exports database from a service into a file
-lando db-import [file]  Imports a dump file into database service
+lando db-import <file>  Imports a dump file into database service
 lando drupal            Runs drupal console commands
 lando drush             Runs drush commands
 lando mysql             Drops into a MySQL shell on a database service
@@ -356,6 +361,12 @@ lando php -m
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+
+Example
+-------
+
+If you are interested in a working example of this recipe that we test on every Lando build then check out
+[https://github.com/lando/lando/tree/master/examples/drupal8](https://github.com/lando/lando/tree/master/examples/drupal8)
 
 Additional Reading
 ------------------

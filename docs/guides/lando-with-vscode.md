@@ -136,11 +136,7 @@ Next add some custom tooling to your .lando.yml file, that provides a command to
 tooling:
   phpunitdebug:
     service: appserver
-    cmd:
-      - "php"
-      - "-d"
-      - "xdebug.remote_port=9001"
-      - "vendor/bin/phpunit"
+    cmd: php -d xdebug.remote_port=900 vendor/bin/phpunit
 ```
 
 Now to run debug a PhpUnit test, do the following:
@@ -156,4 +152,3 @@ Read More
 
 *   [Original Gist with settings for XDebug in VS Code](https://gist.github.com/MatthieuScarset/0c3860def9ff1f0b84e32f618c740655)
 *   [PHP programming in VS code](https://code.visualstudio.com/docs/languages/php)
-

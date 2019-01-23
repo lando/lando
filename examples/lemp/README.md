@@ -1,5 +1,5 @@
-LEMP Recipe Example
-===================
+LEMP
+====
 
 Lando offers a configurable recipe for spinning up apps that use the [LEMP](https://lemp.io/) stack, a popular [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) variant that replaces the `apache` webserver with `nginx`.
 

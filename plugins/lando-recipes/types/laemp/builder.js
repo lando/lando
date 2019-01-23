@@ -10,9 +10,9 @@ const toolingDefaults = {
     service: 'appserver',
     cmd: 'composer --ansi',
   },
-  'db-import [file]': {
+  'db-import <file>': {
     service: ':host',
-    description: 'Imports a dump file into database service',
+    description: 'Imports a dump file into a database service',
     cmd: '/helpers/sql-import.sh',
     options: {
       'host': {
@@ -28,7 +28,7 @@ const toolingDefaults = {
   },
   'db-export [file]': {
     service: ':host',
-    description: 'Exports database from a service into a file',
+    description: 'Exports database from a database service to a file',
     cmd: '/helpers/sql-export.sh',
     options: {
       host: {

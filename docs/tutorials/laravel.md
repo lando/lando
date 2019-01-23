@@ -1,11 +1,16 @@
-Drupal 6
-========
+Laravel
+=======
 
-Drupal is a free and open source content-management framework written in PHP and distributed under the GNU General Public License. Drupal provides a back-end framework for at least 2.3% of all web sites worldwide – ranging from personal blogs to corporate, political, and government sites.
+Laravel is The PHP Framework For Web Artisans.
 
-Lando offers a configurable [recipe](./../config/recipes.md) for developing [Drupal 6](https://drupal.org/) apps.
+Lando offers a configurable [recipe](./../config/recipes.md) for developing [Laravel](https://laravel.com) apps.
 
 <!-- toc -->
+
+Prefer video tutorials?
+{% youtube %}
+https://www.youtube.com/watch?v=Ibxb2nh19yg
+{% endyoutube %}
 
 Getting Started
 ---------------
@@ -16,17 +21,18 @@ Before you get started with this recipe we assume that you have:
 2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Drupal 6.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Laravel.
 
 ```bash
-# Initialize a drupal6 recipe using the latest drupal 6 version
+# Initialize a laravel recipe
 lando init \
-  --source remote \
-  --remote-url https://ftp.drupal.org/files/projects/drupal-6.38.tar.gz \
-  --remote-options="--strip-components 1" \
-  --recipe drupal6 \
-  --webroot . \
-  --name my-first-drupal6-app
+  --source cwd \
+  --recipe laravel \
+  --webroot app/public \
+  --name my-first-laravel-app
+
+# Install laravel
+lando ssh -c "composer global require laravel/installer && laravel new app"
 
 # Start it up
 lando start
@@ -43,13 +49,13 @@ While Lando [recipes](./../config/recipes.md) set sane defaults so they work out
 Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
-  php: 5.6
+  php: 7.2
   via: apache:2.4
   webroot: .
   database: mysql:5.7
-  drush: 8
+  cache: none
   xdebug: false
   config:
     php: SEE BELOW
@@ -60,12 +66,12 @@ Note that if the above config options are not enough all Lando recipes can be fu
 
 ### Choosing a php version
 
-You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Drupal requirements](https://www.drupal.org/docs/7/system-requirements/php-requirements) to make sure that version is actually supported by Drupal 6 itself.
+You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Laravel requirements](https://laravel.com/docs/5.7/installation#web-server-configuration) to make sure that version is actually supported by Laravel itself.
 
-Here is the [recipe config](./../config/recipes.md#config) to set the Drupal 6 recipe to use `php` version `7.1`
+Here is the [recipe config](./../config/recipes.md#config) to set the Laravel recipe to use `php` version `7.1`
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   php: 7.1
 ```
@@ -77,7 +83,7 @@ By default this recipe will be served by the default version of our [apache](./a
 ** With Apache (default) **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   via: apache
 ```
@@ -85,7 +91,7 @@ config:
 ** With nginx **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   via: nginx
 ```
@@ -96,12 +102,12 @@ By default this recipe will use the default version of our [mysql](./mysql.md) s
 
 If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Drupal 6 requirements](https://www.drupal.org/docs/7/system-requirements/database-server) to make sure the `database` and `version` you select is actually supported by Drupal 6 itself.
+Also note that like the configuration of the `php` version you should consult the [Laravel requirements](https://laravel.com/docs/5.7/database#configuration) to make sure the `database` and `version` you select is actually supported by Laravel itself.
 
 ** Using MySQL (default) **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   database: mysql
 ```
@@ -109,7 +115,7 @@ config:
 ** Using MariaDB **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   database: mariadb
 ```
@@ -117,7 +123,7 @@ config:
 ** Using Postgres **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   database: postgres
 ```
@@ -125,54 +131,42 @@ config:
 ** Using a custom version **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   database: postgres:9.6
 ```
 
-### Using Drush
 
-By default our Drupal 6 recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) or the [latest version of Drush 7](http://docs.drush.org/en/7.x/install/) if you are using php 5.3. This means that you should be able to use `lando drush` out of the box.
+### Choosing a caching backend
 
-That said you can configure this recipe to use any version of Drush to which there is a resolvable package available via `composer`. That means that the following are all valid.
+By default this recipe will not spin up a caching backend.
 
-**Use the latest version of Drush**
+However, you can specify one using the `cache` recipe config and setting it to use either our use [`redis`](./redis.md) or [`memcached`](./memcached.md) service. Note that you can optionally/additionally specify a particular version for either *as long as it is a version documented as available for use with lando* for either service.
+
+If you are unsure about how to configure the `cache` we *highly recommend* you check out our [redis](./redis.md) and [memcached](./memcached.md)) docs as well as the [Laravel ones](https://laravel.com/docs/5.7/cache#configuration).
+
+** Using redis (recommended) **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
-  drush: "*"
+  cache: redis
 ```
 
-**Use the latest version of Drush 7**
+** Using Memcached **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
-  drush: ^7
+  cache: memcached
 ```
 
-**Use a specific version of Drush 8**
+** Using a custom version **
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
-  drush: 8.1.15
-```
-
-#### Configuring your root directory
-
-If you are using a webroot besides `.` you will need to remember to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
-
-If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
-
-**Note that hardcoding the `root` like this may have unforseen and bad consequences for some `drush` commands such as `drush scr`.**
-
-```yaml
-tooling:
-  drush:
-    service: appserver
-    cmd: drush --root=/app/PATH/TO/WEBROOT
+  cache: redis:2.8
 ```
 
 ### Using xdebug
@@ -180,7 +174,7 @@ tooling:
 This is just a passthrough option to the [xdebug setting](./php.md#toggling-xdebug) that exists on all our [php services](./php.md). The `tl;dr` is `xdebug: true` enables and configures the php xdebug extension and `xdebug: false` disables it.
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   xdebug: true|false
 ```
@@ -190,7 +184,7 @@ However, for more information we recommend you consult the [php service document
 
 ### Using custom config files
 
-You may need to override our [default Drupal 6 config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/drupal6) with your own.
+You may need to override our [default Laravel config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/laravel) with your own.
 
 If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
 
@@ -205,27 +199,78 @@ If you do this you must use files that exists inside your applicaton and express
 |-- .lando.yml
 ```
 
-**Landofile using custom drupal6 config**
+**Landofile using custom laravel config**
 
 ```yaml
-recipe: drupal6
+recipe: laravel
 config:
   config:
     php: config/php.ini
     database: config/my-custom.cnf
 ```
 
-Connecting to your database
----------------------------
+Environment File
+----------------
+
+By default, Laravel comes with a `.env` configuration file set to use `homestead`. You will want to modify the following `.env` key so that it makes sense for use with Lando.
+
+Here is what that file would look like if you installed laravel [as above](#getting-started). Note that your file might be slightly different depending on your configuration.
+
+```bash
+APP_NAME=Laravel
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://my-first-laravel-app.lndo.site
+
+LOG_CHANNEL=stack
+
+# If you set `database: mysql|mariadb` in this recipes config
+DB_CONNECTION=mysql
+DB_HOST=database
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=laravel
+
+# If you set `database: postgres` in this recipes config
+# DB_CONNECTION=pgsql
+# DB_HOST=database
+# DB_PORT=5432
+# DB_DATABASE=laravel
+# DB_USERNAME=postgres
+# DB_PASSWORD=null
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+# If you have `cache: redis` in this recipes config
+# REDIS_HOST=cache
+# REDIS_PASSWORD=null
+# REDIS_PORT=6379
+
+# If you added a mailhog service to this recipe
+# MAIL_DRIVER=smtp
+# MAIL_HOST=sendmailhog
+# MAIL_PORT=1025
+# MAIL_USERNAME=null
+# MAIL_PASSWORD=null
+# MAIL_ENCRYPTION=null
+```
+
+Connecting to your database and/or cache
+----------------------------------------
 
 Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
-Here are is the default database connection information for a Drupal 7 site. Note that the `host` is not `localhost` but `database`.
+Here are is the default database connection information for a Laravel site. Note that the `host` is not `localhost` but `database`.
 
 ```yaml
-database: drupal6
-username: drupal6
-password: drupal6
+database: laravel
+username: laravel
+password: laravel
 host: database
 # for mysql
 port: 3306
@@ -233,12 +278,22 @@ port: 3306
 # port: 5432
 ```
 
+If you've also specified a caching backend here are the default connection settings.
+
+```yaml
+host: cache
+# Redis
+port: 6379
+# Memcache
+port: 11211
+```
+
 You can get also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
 
 Importing Your Database
 -----------------------
 
-Once you've started up your Drupal 6 site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+Once you've started up your Laravel site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
 # Grab your database dump
@@ -256,15 +311,16 @@ You can learn more about the `db-import` command [over here](./../guides/db-impo
 Tooling
 -------
 
-By default each Lando Drupal 6 recipe will also ship with helpful dev utilities.
+By default each Lando Laravel recipe will also ship with helpful dev utilities.
 
-This means you can use things like `drush`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
+This means you can use things like `artisan`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
 ```bash
+lando artisan           Runs artisan commands
 lando composer          Runs composer commands
 lando db-export [file]  Exports database from a service into a file
 lando db-import <file>  Imports a dump file into database service
-lando drush             Runs drush commands
+lando laravel           Runs laravel commands
 lando mysql             Drops into a MySQL shell on a database service
 lando php               Runs php commands
 ```
@@ -272,17 +328,20 @@ lando php               Runs php commands
 **Usage examples**
 
 ```bash
-# Download a dependency with drush
-lando drush dl views
+# Do a basic laravel gut check with artisan
+lando artisan env
 
-# Run composer tests
-lando composer test
+# Run composer install
+lando composer install
+
+# List laravel commands
+lando laravel list
 
 # Drop into a mysql shell
 lando mysql
 
-# Check hte app's installed php extensions
-lando php -m
+# Check the app's php version
+lando php -v
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
@@ -291,7 +350,7 @@ Example
 -------
 
 If you are interested in a working example of this recipe that we test on every Lando build then check out
-[https://github.com/lando/lando/tree/master/examples/drupal6](https://github.com/lando/lando/tree/master/examples/drupal6)
+[https://github.com/lando/lando/tree/master/examples/laravel](https://github.com/lando/lando/tree/master/examples/laravel)
 
 Additional Reading
 ------------------

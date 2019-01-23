@@ -113,10 +113,7 @@ module.exports = {
     sources: [],
     ssl: false,
     via: 'apache',
-    volumes: [
-      '/var/www/.composer',
-      '/usr/local/bin',
-    ],
+    volumes: ['/usr/local/bin'],
     webroot: '.',
   },
   parent: '_appserver',

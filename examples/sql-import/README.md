@@ -75,8 +75,8 @@ Testing the example
 
 ```bash
 # Verify the databases are up and good
-lando ssh database -c "mysql -umysql -pmysql data1 -e\"quit\""
-lando ssh database2 -c "psql -U postgres database -c \'\\\dt\'"
+lando mysql -umysql -pmysql data1 -e "quit"
+lando psql -U postgres database -c "\dt"
 
 # Verify our dynamic commands work
 lando psql -h database2 -V
@@ -89,13 +89,13 @@ lando db-import test.sql
 lando db-import -h database2 test2.sql
 
 # Verify that we have a 'users' table on both databases
-lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
-lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
+lando mysql -u mysql -pmysql data1 -e "show tables;" | grep users
+lando psql -U postgres -h database2 database -c "\dt" | grep users
 
 # Verify that after a rebuild we still have the data tables
 lando rebuild -y
-lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
-lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
+lando mysql -u mysql -pmysql data1 -e "show tables;" | grep users
+lando psql -U postgres -h database2 database -c "\dt" | grep users
 ```
 
 Helpful Commands

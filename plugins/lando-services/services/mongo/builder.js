@@ -32,7 +32,7 @@ module.exports = {
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `data_${options.name}:/bitnami`,
+          `${options.data}:/bitnami`,
         ],
       };
       // Send it downstream

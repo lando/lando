@@ -18,7 +18,9 @@ const getServices = options => ({
   appserver: {
     type: `node:${options.node}`,
     command: options.command,
+    build_internal: options.build,
     globals: options.globals,
+    port: options.port,
     ssl: options.ssl,
   },
   database: {
@@ -45,12 +47,14 @@ module.exports = {
   name: 'mean',
   parent: '_recipe',
   config: {
+    build: ['npm install'],
     config: {},
     confSrc: __dirname,
     command: 'npm start',
     database: 'mongo',
     globals: {},
     node: '10',
+    port: '80',
     ssl: false,
   },
   builder: (parent, config) => class LandoMean extends parent {
@@ -58,7 +62,7 @@ module.exports = {
       options = _.merge({}, config, options);
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
-      options.proxy = _.set({}, 'appserver', [`${options.app}.${options._app._config.domain}`]);
+      options.proxy = _.set({}, 'appserver', [`${options.app}.${options._app._config.domain}:${options.port}`]);
       super(id, options);
     };
   },

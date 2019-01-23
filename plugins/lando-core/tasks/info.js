@@ -1,5 +1,8 @@
 'use strict';
 
+const util = require('util');
+const pp = data => console.log(util.inspect(data, {colors: true, depth: 10, compact: false}));
+
 module.exports = lando => ({
   command: 'info',
   describe: 'Prints info about your app',
@@ -17,9 +20,9 @@ module.exports = lando => ({
     // Go deep if we need to
     if (app && options.deep) {
       return app.init().then(() => lando.engine.list(app.name).each(container => lando.engine.scan(container)
-      .then(data => console.log(data))));
+      .then(data => pp(data))));
     } else if (app && !options.deep) {
-      return app.init().then(() => console.log(app.info));
+      return app.init().then(() => pp(app.info));
     }
   },
 });

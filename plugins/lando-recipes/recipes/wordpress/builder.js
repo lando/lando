@@ -23,9 +23,6 @@ module.exports = {
       php: 'php.ini',
     },
     php: '7.2',
-    services: {appserver: {overrides: {
-      volumes: ['/var/www/.wp-cli'],
-    }}},
     tooling: {wp: {service: 'appserver'}},
     via: 'apache',
     webroot: '.',
