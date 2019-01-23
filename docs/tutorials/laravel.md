@@ -155,8 +155,8 @@ events:
   # Composer install + custom script + artisan migrate
   post-start:
     - appserver: cd $LANDO_MOUNT && composer install
-    - appserver: cd $LANDO_WEBROOT && php script.php
-    - appserver: cd $LANDO_WEBROOT && artisan migrate
+    - appserver: cd $LANDO_MOUNT && php script.php
+    - appserver: cd $LANDO_MOUNT && php artisan migrate
 
 ```
 
