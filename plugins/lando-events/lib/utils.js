@@ -2,6 +2,10 @@
 
 // Modules
 const _ = require('lodash');
+const getUser = require('./../../../lib/utils').getUser;
+
+// Helper to find a command
+const getCommand = cmd => typeof cmd === 'object' ? cmd[getFirstKey(cmd)] : cmd;
 
 // Key find helper
 const getFirstKey = obj => _.first(_.keys(obj));
@@ -10,9 +14,6 @@ const getFirstKey = obj => _.first(_.keys(obj));
 const getService = (cmd, data = {}) => {
   return typeof cmd === 'object' ? getFirstKey(cmd) : _.get(data, 'service', 'appserver');
 };
-
-// Helper to find a command
-const getCommand = cmd => typeof cmd === 'object' ? cmd[getFirstKey(cmd)] : cmd;
 
 /*
  * Translate events into run objects
@@ -33,7 +34,7 @@ exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
     project: app.project,
     opts: {
       mode: 'attach',
-      user: 'www-data',
+      user: getUser(service, app.info),
       services: [service],
     },
   };

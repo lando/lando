@@ -34,6 +34,7 @@ module.exports = {
         moreHttpPorts = [],
         info = {},
         legacy = [],
+        meUser = 'www-data',
         patchesSupported = false,
         ports = [],
         project = '',
@@ -134,6 +135,7 @@ module.exports = {
       info.service = name;
       info.type = type;
       info.version = version;
+      info.meUser = meUser;
 
       // Pass it down
       super(id, info, ...sources);

@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const getUser = require('./../../../lib/utils').getUser;
 const path = require('path');
 
 /*
@@ -45,7 +46,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
             project: app.project,
             opts: {
               mode: 'attach',
-              user: (_.includes(rootSteps, section)) ? 'root' : 'www-data',
+              user: (_.includes(rootSteps, section)) ? 'root' : getUser(service, app.info),
               services: [service],
             },
           });

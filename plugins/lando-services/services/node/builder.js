@@ -47,11 +47,17 @@ module.exports = {
           PATH: options.path.join(':'),
           NODE_EXTRA_CA_CERTS: `/lando/certs/${options._app._config.domain}.pem`,
           NPM_CONFIG_PREFIX: '/var/www/.npm-global',
+          LANDO_WEBROOT_USER: 'node',
+          LANDO_WEBROOT_GROUP: 'node',
+          LANDO_WEBROOT_UID: '1000',
+          LANDO_WEBROOT_GID: '1000',
         },
         ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };
+      // Change the me user
+      options.meUser = 'node';
       // Add port to "moreHttpsPorts" if we care about it
       if (!_.isEmpty(options.port)) options.moreHttpPorts.push(options.port);
       // Add our npm things to run step

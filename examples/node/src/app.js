@@ -14,8 +14,8 @@ const express = require('express');
 const app = express();
 
 // Create our HTTPS server options
-const key = fs.readFileSync('/certs/cert.key')
-const cert = fs.readFileSync('/certs/cert.crt'),
+const key = fs.readFileSync('/certs/cert.key');
+const cert = fs.readFileSync('/certs/cert.crt');
 
 // Create our servers
 https.createServer({key, cert}, app).listen(443);
