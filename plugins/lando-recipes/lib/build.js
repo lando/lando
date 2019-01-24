@@ -40,7 +40,13 @@ exports.run = (lando, run) => lando.engine.run(run).catch(err => {
 exports.runDefaults = (lando, options) => {
   // Handle all the compose stuff
   const LandoUtil = lando.factory.get('_init');
-  const utilData = new LandoUtil(lando.config.userConfRoot, lando.config.home, options.destination);
+  const utilData = new LandoUtil(
+    lando.config.userConfRoot,
+    lando.config.home,
+    options.destination,
+    lando.config.appEnv,
+    lando.config.appLabels
+  );
   const utilDir = path.join(lando.config.userConfRoot, 'init', options.name);
   const utilFiles = lando.utils.dumpComposeData(utilData, utilDir);
   // Start to build out some propz and shiz

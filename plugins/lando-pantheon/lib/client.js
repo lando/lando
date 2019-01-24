@@ -22,7 +22,10 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
       log.verbose('Response recieved: %j.', response.data);
       return response.data;
     })
-    .catch(err => Promise.reject(err)), {max: 2});
+    .catch(err => {
+      const error = _.has(err, 'response.data') ? new Error(err.response.data) : err;
+      return Promise.reject(error);
+    }), {max: 2});
 };
 
 /*

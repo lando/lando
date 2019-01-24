@@ -31,10 +31,10 @@ const getTokens = (home, tokens = []) => _(utils.sortTokens(utils.getTerminusTok
   .value();
 
 // Helper to determine whether to show list of pre-used tokens or not
-const showTokenList = (data, tokens = []) => !_.isEmpty(tokens) && data === 'pantheon';
+const showTokenList = (data, tokens = []) => data === 'pantheon' && !_.isEmpty(tokens);
 
 // Helper to determine whether to show token password entry or not
-const showTokenEntry = (data, answer, tokens = []) => _.isEmpty(tokens) || answer === 'more' && data === 'pantheon';
+const showTokenEntry = (data, answer, tokens = []) => data === 'pantheon' && (_.isEmpty(tokens) || answer === 'more');
 
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (answers, lando, input = null) => {

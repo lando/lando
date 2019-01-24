@@ -11,7 +11,7 @@ const path = require('path');
 exports.addBuildStep = (steps, app, name, step = 'build_internal', front = false) => {
   const current = _.get(app, `config.services.${name}.${step}`, []);
   const add = (front) ? _.flatten([steps, current]) : _.flatten([current, steps]);
-  _.set(app, `config.services.${name}.${step}`, add);
+  _.set(app, `config.services.${name}.${step}`, _.uniq(add));
 };
 
 /*
@@ -53,6 +53,22 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
       }
     });
   });
+  // If we are on linux and we have steps let's unshift user-perm stuff
+  if (!_.isEmpty(build) && process.platform === 'linux') {
+    _.forEach(_.uniq(_.map(build, 'id')), container => {
+      build.unshift({
+        id: container,
+        cmd: '/helpers/user-perms.sh --silent',
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          mode: 'attach',
+          user: 'root',
+          services: [container.split('_')[1]],
+        },
+      });
+    });
+  }
   // Return
   return build;
 };
