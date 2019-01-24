@@ -34,7 +34,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s Start -s Boot -s Spin -s Launch -s 'This is the dawning' -t Test -t Validat -t Verif -t Sanity -c Clean -c Kill -c Tear -c Destruct -c Destroy -c Nuke -c Blow -c Burn -c Purge --split-file",
+    "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint bin docs lib plugins scripts test",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
@@ -111,7 +111,7 @@
     "gitbook-cli": "^2.3.0",
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
-    "leia-parser": "^0.3.3",
+    "leia-parser": "^0.3.4",
     "mocha": "^4.1.0",
     "nyc": "^12.0.1",
     "pkg": "^4.3.0-beta.5",

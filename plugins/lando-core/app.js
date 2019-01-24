@@ -94,6 +94,7 @@ module.exports = (app, lando) => {
     },
     labels: {
       'io.lando.src': app.configFiles.join(','),
+      'io.lando.http-ports': '80,443',
     },
   };
 };

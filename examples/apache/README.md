@@ -1,9 +1,7 @@
 Apache Example
 ==============
 
-[Apache](https://www.apache.org/) is a very common webserver which you can easily add to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
-
-Note that this example exists primarily to test our documentation and verify the service works as intended.
+This example exists primarily to test our documentation and to verify the service works as intended.
 See: https://docs.devwithlando.io/services/apache.html
 
 Bootup
