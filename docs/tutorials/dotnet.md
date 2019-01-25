@@ -8,8 +8,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 Supported versions
 ------------------
 
-*   [2](https://hub.docker.com/r/microsoft/dotnet/)
-*   **[2.0](https://hub.docker.com/r/microsoft/dotnet/)** **(default)**
+*   **[2](https://hub.docker.com/r/microsoft/dotnet/)** **(default)**
+*   [2.0](https://hub.docker.com/r/microsoft/dotnet/)
 *   [custom](./../config/services.md#advanced)
 
 Legacy versions
