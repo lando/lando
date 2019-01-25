@@ -3,6 +3,3 @@ env_file:
   - environment/moar.env
 compose:
   - docker-compose/moar.yml
-tooling:
-  env:
-    service: web

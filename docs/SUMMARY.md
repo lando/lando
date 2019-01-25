@@ -145,11 +145,11 @@
 *   [Build Steps](https://github.com/lando/lando/tree/master/examples/services)
 *   [Environment Files](https://github.com/lando/lando/tree/master/examples/base)
 *   [Events](https://github.com/lando/lando/tree/master/examples/events)
+*   [Landofiles](https://github.com/lando/lando/tree/master/examples/base)
 *   [Networking](https://github.com/lando/lando/tree/master/examples/networking)
-*   [Overrides](https://github.com/lando/lando/tree/master/examples/overrides)
+*   [Overrides](https://github.com/lando/lando/tree/master/examples/services)
 *   [Proxying](https://github.com/lando/lando/tree/master/examples/proxy)
 *   [Tooling](https://github.com/lando/lando/tree/master/examples/tooling)
-*   [Networking](https://github.com/lando/lando/tree/master/examples/networking)
 
 ---
 

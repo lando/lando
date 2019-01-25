@@ -150,7 +150,7 @@ exports.toolingDefaults = ({
   description = `Runs ${name} commands`,
   options = {},
   service = '',
-  user = 'www-data'} = {}) =>
+  user = null} = {}) =>
   ({
     name,
     app: app,
@@ -158,5 +158,5 @@ exports.toolingDefaults = ({
     describe: description,
     options: options,
     service: service,
-    user: getUser(service, app.info),
+    user: (user === null) ? getUser(service, app.info) : user,
   });

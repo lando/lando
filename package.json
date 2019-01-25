@@ -34,7 +34,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
-    "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
+    "generate-tests": "leia \"examples/**/README.md\" test -r 3 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint bin docs lib plugins scripts test",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",

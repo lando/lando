@@ -87,6 +87,7 @@ module.exports = (app, lando) => {
   // REturn defualts
   return {
     env: {
+      LANDO_APP_PROJECT: app.project,
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
       LANDO_APP_ROOT_BIND: app.root,
