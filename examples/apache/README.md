@@ -3,7 +3,7 @@ Apache Example
 
 This example exists primarily to test the following documentation:
 
-* [Apache](https://docs.devwithlando.io/services/apache.html)
+* [Apache Service](https://docs.devwithlando.io/tutorial/apache.html)
 
 Start up tests
 --------------
