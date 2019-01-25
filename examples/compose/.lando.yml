@@ -1,41 +1,14 @@
-# The name of my app
-name: compose
-
-# Use the lando proxy to map to the custom service
-proxy:
-  appserver:
-    - compose.lndo.site
-
-# Configure my services
+name: lando-compose
 services:
-
-  # Create a service called "custom"
   custom-service:
-
-    # Use docker compose to create a custom service.
     type: compose
-
-    # Specify the docker compose v3 services options here
     services:
-
-      # Specify what container to run to provide the service.
       image: drupal:8
-
-      # Required.
-      # You will need to investigate the images Dockerfile to find the "entrypoint" and "command"
-      # and then define the command as `ENTRYPOINT COMMAND`
-      #
-      # You can also try a completely custom command but YMMV
       command: docker-php-entrypoint apache2-foreground
-
-      # Probably need this
       ports:
         - '80'
-
-    # Any top level volumes that we have
     volumes:
-      thing:
-
-    # Any top level networks that we have
+      my-volume:
     networks:
-      default:
+      my-network:
+        external: true
