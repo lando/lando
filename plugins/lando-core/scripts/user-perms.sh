@@ -1,5 +1,24 @@
 #!/bin/sh
 
+# Get the linux flavor
+if [ -f /etc/os-release ]; then
+  . /etc/os-release
+  : ${FLAVOR:=$ID_LIKE}
+  : ${FLAVOR:=$ID}
+elif [ -f /etc/arch-release ]; then
+  FLAVOR="arch"
+elif [ -f /etc/debian_version ]; then
+  FLAVOR="debian"
+elif [ -f /etc/fedora-release ]; then
+  FLAVOR="fedora"
+elif [ -f /etc/gentoo-release ]; then
+  FLAVOR="gentoo"
+elif [ -f /etc/redhat-release ]; then
+  FLAVOR="redhat"
+else
+  FLAVOR="debian"
+fi
+
 # Set defaults
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
@@ -21,6 +40,7 @@ echo_maybe() {
 # Lets only do this if we are root
 if [ $(id -u) = 0 ]; then
   # Let's log some helpful things
+  echo_maybe "This is a $ID container"
   echo_maybe "user-perms.sh kicking off as user $(id)"
   echo_maybe "Lando ENVVARS set at"
   echo_maybe "LANDO_WEBROOT_USER: $LANDO_WEBROOT_USER"
@@ -50,8 +70,8 @@ if [ $(id -u) = 0 ]; then
 
   # Adding user if needed
   echo_maybe "Making sure correct user:group ($LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP) exists..."
-  add_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_WEBROOT_UID $LANDO_WEBROOT_GID
-  verify_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP
+  add_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_WEBROOT_UID $LANDO_WEBROOT_GID $FLAVOR
+  verify_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $FLAVOR
 
   # Correctly map users if we are on linux
   if [ "$LANDO_HOST_OS" = "linux" ]; then
@@ -59,7 +79,7 @@ if [ $(id -u) = 0 ]; then
     echo_maybe "LANDO_HOST_UID: $LANDO_HOST_UID"
     echo_maybe "LANDO_HOST_GID: $LANDO_HOST_GID"
     echo_maybe "Resetting $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP from $LANDO_WEBROOT_UID:$LANDO_WEBROOT_GID to $LANDO_HOST_UID:$LANDO_HOST_GID"
-    reset_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_HOST_UID $LANDO_HOST_GID
+    reset_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_HOST_UID $LANDO_HOST_GID $FLAVOR
     echo_maybe "$LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP is now running as $(id $LANDO_WEBROOT_USER)!"
   fi
 
