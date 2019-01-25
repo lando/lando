@@ -1,23 +1,13 @@
-# Name of my app
-name: apache
-
-# Build me an apache worthy of the internet
+name: lando-apache
 services:
-
-  # You can name this key anything you want.
-  html:
-
-    # Use the latest version of apache.
+  defaults:
     type: apache
-
-    # Optionally specify a webroot if it is a subdirectory of the appRoot
+  patch:
+    type: apache:2.4.37
+  custom:
+    type: apache
     webroot: web
-
-    # Turn on SSL
     ssl: true
-
-    # Optionally use a custom apache conf file
-    # This should live in your app root and is relative to it
     config:
       server: config/httpd.conf
       vhosts: config/custom.conf

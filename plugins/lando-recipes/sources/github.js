@@ -87,7 +87,7 @@ const setCaches = (options, lando) => {
 const showTokenList = (source, tokens = []) => !_.isEmpty(tokens) && source === 'github';
 
 // Helper to determine whether to show token password entry or not
-const showTokenEntry = (source, answer, tokens = []) => (_.isEmpty(tokens) || answer === 'more') && source === 'github';
+const showTokenEntry = (source, answer, tkez = []) => ((_.isEmpty(tkez) || answer === 'more')) && source === 'github';
 
 // Helper to get list of github projects
 const getRepos = (answers, Promise) => {
