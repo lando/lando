@@ -31,8 +31,8 @@ lando ssh -s php -c "env | grep MH_SENDMAIL_SMTP_ADDR=sendmailhog:1025"
 # Should be serving the admin interface on port 80
 lando ssh -s php -c "curl mailhog | grep MailHog"
 
-# Should have mailhog 1000 set as the meUser
-lando ssh -s mailhog -c "id | grep mailhog | grep 1000"
+# Should have mailhog set as the meUser
+lando ssh -s mailhog -c "id | grep mailhog"
 
 # Should be able to collect messages sent from php
 lando ssh -s php -c "php /app/mail.php"

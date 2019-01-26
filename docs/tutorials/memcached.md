@@ -10,6 +10,7 @@ Supported versions
 
 *   **[1](https://hub.docker.com/r/bitnami/memcached)** **(default)**
 *   [1.5.12](https://hub.docker.com/r/bitnami/memcached)
+*   [1.5.x](https://hub.docker.com/r/bitnami/memcached)
 *   [custom](./../config/services.md#advanced)
 
 Patch versions
