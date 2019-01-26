@@ -1,3 +1,4 @@
+# LANDOPARAMS
 fastcgi_param  QUERY_STRING           $query_string;
 fastcgi_param  REQUEST_METHOD         $request_method;
 fastcgi_param  CONTENT_TYPE           $content_type;
@@ -24,3 +25,4 @@ fastcgi_param  SERVER_NAME            $server_name;
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param  REDIRECT_STATUS        200;
 fastcgi_param  HOLLA                  atchaboi;
+fastcgi_param HTTP_PROXY "";

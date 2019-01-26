@@ -12,7 +12,7 @@ module.exports = (app, lando) => {
     _.forEach(app.config.events, (cmds, name) => {
       app.events.on(name, 9999, data => {
         const eventCommands = utils.events2Runz(cmds, app, data);
-        if (!_.isEmpty(eventCommands) && process.platform === 'linux') {
+        if (!_.isEmpty(eventCommands)) {
           _.forEach(_.uniq(_.map(eventCommands, 'id')), container => {
             eventCommands.unshift({
               id: container,

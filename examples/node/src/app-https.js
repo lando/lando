@@ -19,7 +19,7 @@ const cert = fs.readFileSync('/certs/cert.crt');
 
 // Create our servers
 https.createServer({key, cert}, app).listen(443);
-http.createServer(app).listen(80);
+http.createServer(app).listen(3000);
 
 // Basic HTTP response
 app.get('/', (req, res) => {

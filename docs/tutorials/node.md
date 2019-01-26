@@ -56,6 +56,7 @@ services:
     ssl: false
     command: tail -f /dev/null
     globals: []
+    port: 80
 ```
 
 ### Specifying a command
@@ -69,6 +70,17 @@ services:
   my-service:
     type: node
     command: npm start
+```
+
+### Setting a port
+
+While we assume your `node` service is running on port `80` we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
+
+```yaml
+services:
+  my-service:
+    type: node
+    port: 3000
 ```
 
 ### Using SSL

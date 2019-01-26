@@ -58,8 +58,8 @@ module.exports = {
       };
       // Change the me user
       options.meUser = 'node';
-      // Add port to "moreHttpsPorts" if we care about it
-      if (!_.isEmpty(options.port)) options.moreHttpPorts.push(options.port);
+      // Add port to "moreHttpsPorts"
+      options.moreHttpPorts.push(options.port);
       // Add our npm things to run step
       if (!_.isEmpty(options.globals)) {
         const commands = utils.getInstallCommands(options.globals, pkger, ['npm', 'install', '-g']);
