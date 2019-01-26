@@ -34,7 +34,7 @@ lando ssh -s patch -c "go version | grep go1.10.7"
 
 # Should serve over http and https if ssl is set by user
 lando ssh -s custom -c "curl http://localhost" | grep HEART
-lando ssh -s custom -c "curl https://localhost" | grep HEART
+lando ssh -s custom -c "curl -k https://localhost" | grep HEART
 
 # Should not serve port 80 for cli
 lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
