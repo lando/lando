@@ -1,28 +1,15 @@
-# The name of the app
 name: sql-export
-
-# Set up my services
 services:
-
-  # Spin up a mariadb container called "database"
-  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
   database:
-
-    # Use the latest version of mysql
     type: mysql
     portforward: true
-
-    # Optionally change the default db credentials
     creds:
       user: mysql
       password: mysql
       database: data1
-
-  # Spin up a secondary database for postgres
   database2:
     portforward: true
     type: postgres
-
 tooling:
   mysql:
     service: :host
