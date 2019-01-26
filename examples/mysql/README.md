@@ -1,121 +1,53 @@
 MySQL Example
 =============
 
-[MySQL](https://www.mysql.com/) is a very common database server. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+This example exists primarily to test the following documentation:
 
-Supported versions
-------------------
+* [MySQL Service](https://docs.devwithlando.io/tutorial/mysql.html)
 
-*   [8](https://hub.docker.com/r/_/mysql/)
-*   **[5.7](https://hub.docker.com/r/_/mysql/)** **(default)**
-*   [5.6](https://hub.docker.com/r/_/mysql/)
-*   [5.5](https://hub.docker.com/r/_/mysql/)
-*   custom
-
-> #### Warning::Be Careful Switching Database type, version or credentials
->
-> You should be careful switching database types, versions or credentials. In the case of type and version the underlying database files between these things may not be compatible. **Ignoring this warning can cause your database service to not start correctly!!!** In the case of credentials, these are set when the container is **initially created** so in order to change them you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
->
-> You can read more about this [here](./../issues/switching-dbs.md)
-
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/library/mysql/tags/) are all the tags that are available for this service.
-
-Example
--------
-
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mysql).
-
-Getting information
--------------------
-
-You can get connection and credential information about your database by running `lando info` from inside your app.
-
-```bash
-# Navigate to the app
-cd /path/to/app
-
-# Get info (app needs to be running to get this)
-lando info
-
-{
-  "appserver": {
-    "type": "nginx",
-    "version": "latest",
-    "urls": [
-      "https://localhost:32808",
-      "http://localhost:32809",
-      "http://mysql.lndo.site",
-      "https://mysql.lndo.site"
-    ]
-  },
-  "db": {
-    "type": "mysql",
-    "version": "latest",
-    "creds": {
-      "user": "mysql",
-      "password": "password",
-      "database": "database"
-    },
-    "internal_connection": {
-      "host": "db",
-      "port": 3306
-    },
-    "external_connection": {
-      "host": "localhost",
-      "port": true
-    }
-  }
-}
-```
-This example provides a very basic `mysql` service.
-
-See the `.lando.yml` in this directory for MySQL configuration options.
-
-Boot it
--------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the mysql
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validation Commands
--------------------
+Verification commands
+---------------------
 
-Run the following commands to confirm things
-
-```bash
-# Verify the correct version is being used
-lando ssh database -c "mysql -V | grep 5.7."
-
-# Verify the databases was setup correctly
-lando ssh database -c "mysql -umysql -ppassword database -e\"quit\""
-```
-
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```
-# Get DB connection info
-lando info
-```
-
-Destruction
------------
-
-Run the following commands to clean up
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Destroy the mysql
+# Should use 5.7.x as the default version
+lando ssh -s defaults -c "mysql -V | grep 5.7"
+
+# Should use the specfied version when set by the user
+lando ssh -s custom -c "mysql -V | grep 8.0"
+
+# Should use the patch version when set by the user
+lando ssh -s patch -c "mysql -V | grep 5.7.24"
+
+# Should use the correct default user pass db
+lando ssh -s defaults -c "mysql -umysql -pmysql database -e quit"
+
+# Should use the user provided creds if given
+lando ssh -s custom -c "mysql -upirog -ppassword stuff -e quit"
+
+# Should use a custom config file if specified
+lando mysql -e "show variables;" | grep table_open_cache | grep 513
+```
+
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```
