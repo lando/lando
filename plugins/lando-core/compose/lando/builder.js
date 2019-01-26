@@ -54,7 +54,7 @@ module.exports = {
       // If this version is not supported throw an error
       // @TODO: get this someplace else for unit tezting
       if (!_.includes(supported, version)) {
-        if (!patchesSupported || !_.includes(supported, utils.stripPatch(version))) {
+        if (!patchesSupported || !_.includes(utils.stripWild(supported), utils.stripPatch(version))) {
           throw Error(`${type} version ${version} is not supported`);
         }
       }

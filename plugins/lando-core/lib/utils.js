@@ -133,6 +133,13 @@ exports.startTable = app => {
 
 /*
  * Helper to strip the patch version
- * @TODO: lib for u test?
  */
 exports.stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
+
+/*
+ * Helper to help us allow wildcard patch versions eg when there is no minor version tag available
+ */
+exports.stripWild = versions => _(versions)
+  .map(version => (version.split('.')[2] === 'x') ? _.slice(version.split('.'), 0, 2).join('.') : version)
+  .value();
+

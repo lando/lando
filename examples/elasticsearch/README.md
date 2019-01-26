@@ -1,113 +1,58 @@
 Elasticsearch Example
 =====================
 
+This example exists primarily to test the following documentation:
 
-[Elasticsearch](https://www.elastic.co/products/elasticsearch) is a search and analytics engine, commonly used as a substitute for Solr or for collecting log and metrics data. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+* [Elasticsearch Service](https://docs.devwithlando.io/tutorial/elasticsearch.html)
 
-Supported versions
-------------------
-
-*   **[5.5](https://hub.docker.com/r/itzg/elasticsearch/)** **(default)**
-*   [5.4](https://hub.docker.com/r/itzg/elasticsearch/)
-*   [5.3](https://hub.docker.com/r/itzg/elasticsearch/)
-*   [5.2](https://hub.docker.com/r/itzg/elasticsearch/)
-*   [5.1](https://hub.docker.com/r/itzg/elasticsearch/)
-*   custom
-
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/itzg/elasticsearch/tags/) are all the tags that are available for this service.
-
-Example
--------
-
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/elasticsearch).
-
-Getting information
--------------------
-
-You can get connection and credential information about your elasticsearch instance by running `lando info` from inside your app.
-
-```bash
-# Navigate to the app
-cd /path/to/app
-
-# Get info (app needs to be running to get this)
-lando info
-
-{
-  "search": {
-    "type": "elasticsearch",
-    "version": "5.4",
-    "internal_connection": {
-      "host": "search",
-      "port": 9200
-    },
-    "external_connection": {
-      "host": "localhost",
-      "port": "9999"
-    }
-  },
-  "appserver": {
-    "type": "node",
-    "version": "6.10",
-    "urls": [
-      "http://localhost:32780",
-      "http://elasticsearch.lndo.site:8000"
-    ]
-  }
-}
-```
-
-This example provides Elasticsearch via a basic NodeJS web application.
-
-See the `.lando.yml` in this directory for Elasticsearch configuration options.
-
-Launch the app
+Start up tests
 --------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running
+with this example.
 
 ```bash
-# Start up the elastic search example
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things
---------------
+Verification commands
+---------------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify the portforward
-lando info | grep 9999
+# Should use version 6.x for the default version
+lando ssh -s defaults -c "curl -XGET localhost:9200" | grep "number" | grep "6."
 
-# Verify we have the node cli at the correct version
-lando node -v | grep v6.10.
+# Should use 1025m as the default heap size
+lando ssh -s defaults -c "env | grep ELASTICSEARCH_HEAP_SIZE=1025m"
 
-# Verify we have npm
-lando npm -v
+# Should not portforward by default
+lando info -s defaults | grep "not forwarded"
 
-# Verify we have yarn
-lando yarn --version
+# Should use version 5.6.14 for the patch service
+lando ssh -s patch -c "curl -XGET localhost:9200" | grep "number" | grep 5.6.14
 
-# Verify the ES version
-lando ssh appserver -c "curl -XGET search:9200 | grep 5.4."
+# Should portforward for custom
+lando info -s custom | grep "not forwarded" || echo $? | grep 1
 
-# Verify we can access ES
-lando ssh appserver -c "curl localhost | grep \"All is well\""
+# Should use the specified heap size when given
+lando ssh -s custom -c "env | grep ELASTICSEARCH_HEAP_SIZE=1026m"
+
+# Should mount custom config to the correct locations
+lando ssh -s custom -c "cat /opt/bitnami/elasticsearch/config/elasticsearch_custom.yml | grep 311"
 ```
 
-Kill it
--------
+Destroy tests
+-------------
 
-Run these to clean up the example
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the app
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```
+

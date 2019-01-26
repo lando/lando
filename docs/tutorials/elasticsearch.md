@@ -9,7 +9,9 @@ Supported versions
 ------------------
 
 *   **[6](https://hub.docker.com/r/bitnami/elasticsearch)** **(default)**
+*   [6.5.x](https://hub.docker.com/r/bitnami/elasticsearch)
 *   [5](https://hub.docker.com/r/bitnami/elasticsearch)
+*   [5.6.x](https://hub.docker.com/r/bitnami/elasticsearch)
 *   [custom](./../config/services.md#advanced)
 
 Patch versions

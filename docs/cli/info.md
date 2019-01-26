@@ -28,6 +28,7 @@ Options
 --clear        Clears the lando tasks cache
 --deep, -d     Get ALL the info
 --lando        Show help for lando-based options
+--service, -s  Get info for only the specified services
 --verbose, -v  Runs with extra verbosity
 --version      Show version number
 ```
