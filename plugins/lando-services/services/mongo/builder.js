@@ -11,10 +11,8 @@ module.exports = {
     supported: ['4.1', '4.0', '3.6'],
     patchesSupported: true,
     confSrc: __dirname,
+    healthcheck: 'echo \'db.runCommand("ping").ok\' | mongo localhost:27017/test',
     port: '27017',
-    defaultFiles: {
-      database: 'mongodb.conf',
-    },
     remoteFiles: {
       database: '/opt/bitnami/mongodb/conf/mongodb.conf',
     },
@@ -31,7 +29,6 @@ module.exports = {
           // MONGODB_EXTRA_FLAGS for things like coallation?
         },
         volumes: [
-          `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami`,
         ],
       };

@@ -1,125 +1,47 @@
 Mongo Example
-==============
+=============
 
+This example exists primarily to test the following documentation:
 
-[MongoDB](https://en.wikipedia.org/wiki/MongoDB)  is a free and open-source cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemas. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+* [Mongo Service](https://docs.devwithlando.io/tutorial/mongo.html)
 
-Supported versions
-------------------
-
-*   **[3.5](https://hub.docker.com/r/_/mongo/)** **(default)**
-*   [3.4](https://hub.docker.com/r/_/mongo/)
-*   [3.2](https://hub.docker.com/r/_/mongo/)
-*   [3.0](https://hub.docker.com/r/_/mongo/)
-*   custom
-
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/library/mongo/tags/) are all the tags that are available for this service.
-
-Example
--------
-
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mongo).
-
-Getting information
--------------------
-
-You can get connection and credential information about your mongo instance by running `lando info` from inside your app.
-
-```bash
-# Navigate to the app
-cd /path/to/app
-
-# Get info (app needs to be running to get this)
-lando info
-
-{
-  "database": {
-    "type": "mongo",
-    "version": "latest",
-    "internal_connection": {
-      "host": "database",
-      "port": 27017
-    },
-    "external_connection": {
-      "host": "localhost",
-      "port": "27018"
-    }
-  },
-  "appserver": {
-    "type": "node",
-    "version": "6.10",
-    "urls": [
-      "http://localhost:32835",
-      "http://mongo.lndo.site",
-      "https://mongo.lndo.site"
-    ]
-  }
-}
-```
-
-This example provides a very basic `mongo` example built on Lando NodeJS things.
-
-See the `.lando.yml` in this directory for `mongo` configuration options.
-
-Boot it
--------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the mongo
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validation Commands
--------------------
+Verification commands
+---------------------
 
-Run the following commands to confirm things
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify mongo portforward
-docker inspect mongo_database_1 | grep HostPort | grep 27018
-lando info | grep port | grep 27018
+# Should use 4.0.x as the default version
+lando ssh -s defaults -c "mongo --version | grep v4.0."
 
-# Verify the mongo cli is there and we have the correct mongo version
-lando mongo --version | grep v3.5.
+# Should use the user specified version if given
+lando ssh -s custom -c "mongo --version | grep v3.6"
 
-# Verify the database was setup correctly
-lando ssh appserver -c "curl localhost | grep db | grep test"
+# Should use the user specified patch version if given
+lando ssh -s patch -c "mongo --version | grep v4.1.4"
 
-# Verify the custom config file was used
-lando ssh database -c "cat /tmp/mongod.log && cat /config.yml"
+# Should use the user specified config if given
+lando ssh -s custom -c "cat /opt/bitnami/mongodb/conf/mongodb.conf | grep HELLOTHERE"
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Get DB connection info
-lando info
-
-# Run node commands
-lando npm -v
-lando node -v
-
-# Drop into the mongo cli
-lando mongo
-```
-
-Destruction
------------
-
-Run the following commands to clean up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the mongo
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```
