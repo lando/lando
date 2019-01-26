@@ -33,6 +33,10 @@ module.exports = {
           MH_HOSTNAME: `${options.name}.mailhog.lando`,
           MH_API_BIND_ADDR: ':80',
           MH_UI_BIND_ADDR: ':80',
+          LANDO_WEBROOT_USER: 'mailhog',
+          LANDO_WEBROOT_GROUP: 'mailhog',
+          LANDO_WEBROOT_UID: '1000',
+          LANDO_WEBROOT_GID: '1000',
         },
         ports: ['80'],
         command: 'MailHog',
@@ -42,6 +46,8 @@ module.exports = {
           },
         },
       };
+      // Change the me user
+      options.meUser = 'mailhog';
       // Add in hogfrom info
       options.info = {hogfrom: options.hogfrom};
       // Mailhog needs to do some crazy shit on other services to work
