@@ -49,6 +49,7 @@ Also note that the below options are in addition to the [build steps](./../confi
 services:
   my-service:
     type: ruby:2.5
+    port: 80
     command: tail -f /dev/null
 ```
 
@@ -63,6 +64,17 @@ services:
   my-service:
     type: ruby
     command: ruby /app/my-server.rb
+```
+
+### Setting a port
+
+While we assume your `ruby` service is running on port `80` we recognize that many `ruby` app's also run on port `8080` or otherwise. You can easily change our default to match whatever your app needs.
+
+```yaml
+services:
+  my-service:
+    type: ruby
+    port: 8080
 ```
 
 Path Considerations

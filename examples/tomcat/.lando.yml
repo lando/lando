@@ -1,21 +1,9 @@
-# Tomcat example server
-name: tomcat
-
-# Spin up services to run a basic tomcat server
+name: lando-tomcat
 services:
-
-  # Create a tomcat instance
-  appserver:
-
-    # tomcat version 8
+  custom:
     type: tomcat
-
-    # SSL
     ssl: true
-
-    # Webroot
     webroot: .
-
     # config:
     #   server: config/web.xml
     #   web: config/web.xml

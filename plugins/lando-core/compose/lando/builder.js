@@ -43,6 +43,7 @@ module.exports = {
         remoteFiles = {},
         scripts = [],
         ssl = false,
+        sslExpose = true,
         supported = ['custom'],
         root = '',
         webroot = '/app',
@@ -107,7 +108,7 @@ module.exports = {
       // Handle ssl
       if (ssl) {
         volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
-        ports.push('443');
+        if (sslExpose) ports.push('443');
       }
 
       // Handle cert refresh

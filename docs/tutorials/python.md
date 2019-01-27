@@ -49,6 +49,7 @@ Also note that the below options are in addition to the [build steps](./../confi
 services:
   my-service:
     type: python:3.7
+    port: 80
     ssl: false
     command: tail -f /dev/null
 ```
@@ -66,9 +67,28 @@ services:
     command: /app/my-server.py
 ```
 
+### Setting a port
+
+While we assume your `python` service is running on port `80` we recognize that many `python` app's also run on port `8000` or otherwise. You can easily change our default to match whatever your app needs.
+
+```yaml
+services:
+  my-service:
+    type: python
+    port: 8000
+```
+
 ### Using SSL
 
-Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `python` snippet:
+Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md). It is up to user to use the certs and secure port correctly in their application like as in this `python` snippet:
+
+```yaml
+services:
+  my-service:
+    type: python
+    ssl: true
+    port: 443
+```
 
 ```python
 // Starting HTTPS server
