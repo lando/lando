@@ -1,4 +1,1 @@
-files
-node_modules
-web/*
-!web/.gitkeep
+drupal6
