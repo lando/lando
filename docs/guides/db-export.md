@@ -26,7 +26,7 @@ lando db-export
 lando db-export
 
 # Export to a file called dump.sql.gz
-lando db-export dump.sql.gz
+lando db-export dump.sql
 
 # Export from a secondary database
 lando db-export --host db2

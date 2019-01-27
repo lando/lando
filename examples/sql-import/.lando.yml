@@ -1,49 +1,17 @@
-# The name of the app
-name: sql-import
-
-# Set up my services
+name: lando-sql-import
 services:
-
-  # Spin up a mariadb container called "database"
-  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
   database:
-
-    # Use the latest version of mysql
     type: mysql
-    portforward: true
-
-    # Optionally change the default db credentials
-    creds:
-      user: mysql
-      password: mysql
-      database: data1
-
-  # Spin up a secondary database for postgres
   database2:
     type: postgres
-    portforward: true
-
 tooling:
   mysql:
-    service: :host
-    description: Drop into a mysql shell on a database service
+    service: database
     cmd: mysql -u root
-    options:
-      host:
-        description: The database service to use
-        default: database
-        alias:
-          - h
-  psql:
-    service: :host
-    description: Drop into a postgres shell on a database service
-    cmd: psql -h localhost -p 5432 -U postgres
-    options:
-      host:
-        description: The database service to use
-        default: database2
-        alias:
-          - h
+  psqlverify:
+    service: database2
+    user: root
+    cmd: psql -U postgres database -c \dt
   'db-import <file>':
     service: :host
     description: Imports a dump file into a database service
