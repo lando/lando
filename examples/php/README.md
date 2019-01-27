@@ -1,174 +1,85 @@
+PHP Example
+===========
 
-[PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md)
+This example exists primarily to test the following documentation:
 
-You can also use the [Hip Hop Virtual Machine](http://hhvm.com/) by specifying `hhvm` as the version. This will currently run `hvvm:3.20`. In the future we will support more version of `hhvm`. Note that if you specify `hhvm` it will force usage of `nginx`.
+* [PHP Service](https://docs.devwithlando.io/tutorial/php.html)
 
-You can easily add `php` or `hhvm` to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+Start up tests
+--------------
 
-Supported Versions
-------------------
-
-*   **[7.2](https://hub.docker.com/r/devwithlando/php)** **(default)**
-*   [7.1](https://hub.docker.com/r/devwithlando/php)
-*   [7.0](https://hub.docker.com/r/devwithlando/php)
-*   [5.6](https://hub.docker.com/r/devwithlando/php)
-*   [5.5](https://hub.docker.com/r/devwithlando/php)
-*   [5.4](https://hub.docker.com/r/devwithlando/php)
-*   [5.3](https://hub.docker.com/r/devwithlando/php)
-*   [hhvm](https://hub.docker.com/r/baptistedonaux/hhvm)
-*   custom
-
-> #### Warning::Using Unsupported PHP Versions
->
-> While you can use [currently EOL](http://php.net/supported-versions.php) `php` versions with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
-
-Using patch versions
---------------------
-
-Because we use our own custom image for `php` specifying a patch version is not currently supported. If you need to use a patch version you might be able to use our [advanced service config](https://docs.devwithlando.io/config/advanced.html).
-
-Installed Extensions
---------------------
-
-* apc (in php 5.3 and 5.4)
-* apcu (in php 5.5+)
-* bcmath
-* bz2
-* calendar
-* Core
-* ctype
-* curl
-* date
-* dom
-* exif
-* fileinfo
-* filter
-* ftp
-* gd
-* gettext
-* hash
-* iconv
-* imagick
-* imap
-* intl
-* json
-* ldap
-* libxml
-* mbstring
-* mcrypt
-* memcached
-* mysqli
-* mysqlnd
-* OAuth
-* openssl
-* pcntl
-* pcre
-* PDO
-* pdo_mysql
-* pdo_pgsql
-* pdo_sqlite
-* Phar
-* posix
-* readline
-* redis
-* Reflection
-* session
-* SimpleXML
-* soap
-* SPL
-* sqlite3
-* standard
-* tokenizer
-* xdebug
-* xml
-* xmlreader
-* xmlwriter
-* Zend OPcache (in php 5.5+)
-* zip
-* zlib
-
-Installing Your Own Extensions
-------------------------------
-
-### Using Build Steps
-
-You can install your own extensions using the [`run_as_root`](./../config/build.md#steps-run-as-root) build step. Here is an example that installs the `memcached` extensions. Note that you will likely need to restart your app after this step for the extension to load correctly!
+Run the following commands to get up and running with this example.
 
 ```bash
-services:
-  appserver:
-    run_as_root:
-      - "apt-get update"
-      - "apt-get install libmemcached-dev -y"
-      - "pecl install memcached"
-      - "docker-php-ext-enable memcached"
+# Should start up succesfully
+lando poweroff
+lando start
 ```
 
-### Using a Dockerfile
+Verification commands
+---------------------
 
-Alternatively you can extend our base `php` image by overriding your service to build from a `Dockerfile` that lives somewhere inside your app.
+Run the following commands to validate things are rolling as they should.
 
-#### Landofile
+```bash
+# Should use 7.2 as the default php version
+lando ssh -s defaults -c "php -v | grep 7.2"
 
+# Should use apache 2.4 as the default webserver version
+lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
-#### Dockerfile
+# Should only serve over http by default
+lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
 
+# Should serve from the app root by default
+lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
 
-You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/dockerfile).
+# Should not enable xdebug by default
+lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
 
-LAMP Example
-------------
+# Should use specified php version if given
+lando ssh -s custom -c "php -v | grep 7.1"
 
+# Should serve via nginx if specified
+lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lamp).
+# Should serve via https if specified
+lando ssh -s custom_nginx -c "curl -k https://localhost | grep WEBDIR"
 
-LEMP Example
-------------
+# Should enable xdebug if specified
+lando ssh -s custom -c "php -m | grep xdebug"
 
+# Should not serve port 80 for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/lemp).
+# Should use custom php ini if specified
+lando ssh -s custom -c "php -i | grep memory_limit | grep 514"
 
-CLI Example
-------------
+# Should use specified php version if given
+lando ssh -s cliold -c "php -v | grep 5.6"
 
+# Should use specified php version if given
+lando ssh -s composer -c "php -v | grep 7.0"
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/phpcli).
+# Should install compose global dependencies if specified by user and have them available in PATH
+lando ssh -s composer -c "phpunit --version"
+lando ssh -s composer -c "which phpunit | grep /var/www/.composer/vendor/bin/phpunit"
 
-Using Xdebug
-------------
-
-You can activate `xdebug` for remote debugging by setting `xdebug: true` in the config for your `php` service. This will enable `xdebug` and configure it so you can connect from your host machine. You will need to configure your IDE so that it can connect.
-
-Here are the instructions to [setup XDebug in Visual Studio Code](/tutorials/lando-with-vscode.html).
-
-Here is some example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin:
-
-```
-"php-debug":
-  {
-    ServerPort: 9000
-    PathMaps: [
-      "/app/www;/Users/pirog/Desktop/work/lando/examples/lando/www"
-    ]
-  }
-```
-
-The first part of a pathmap will be the location of your code in the container. Generally, this should be `/app`. Also note that if your app is in a nested docroot, you will need to append that to the paths. The example above uses an app with a nested webroot called `www`.
-
-> #### Info::Problems starting XDEBUG
->
-> If you are visting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_START_SESSION=LANDO` to your request and seeing if that does the trick.
-
-### Troubleshooting
-
-If you have set `xdebug: true` in your recipe or service config and run `lando restart` but are still having issues getting `xdebug` to work correctly we recommend that you remove `xdebug: true`, run `lando restart` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something like below.
-
-```yaml
-xdebug.max_nesting_level = 256
-xdebug.show_exception_trace = 0
-xdebug.collect_params = 0
-xdebug.remote_enable = 1
-xdebug.remote_host = YOUR HOST IP ADDRESS
+# Should PATH prefer composer dependency binaries installed in /app/vendor over global ones
+lando ssh -s composer -c "composer require phpunit/phpunit"
+lando ssh -s composer -c "phpunit --version"
+lando ssh -s composer -c "which phpunit | grep /app/vendor/bin/phpunit"
+lando ssh -s composer -c "composer remove phpunit/phpunit"
+lando ssh -s composer -c "which phpunit | grep /var/www/.composer/vendor/bin/phpunit"
 ```
 
-You can use `lando info --deep | grep IPAddress` to help discover the correct host ip address but please note that this can change and will likely differ from dev to dev.
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
+lando destroy -y
+lando poweroff
+```
