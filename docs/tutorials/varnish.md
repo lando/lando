@@ -29,6 +29,7 @@ services:
     type: varnish:4.1
     backends:
       - appserver
+    backend_port: 80
     ssl: false
     config:
       vcl: SEE BELOW
@@ -50,6 +51,17 @@ services:
       - web1
   web1:
     type: nginx
+```
+
+### Setting a port
+
+While we assume your `varnish` service is running on port `80` we recognize that many apps also run on other ports. You can easily change our default to match whatever your app needs. Note that this port applies to **ALL BACKENDS**.
+
+```yaml
+services:
+  my-service:
+    type: varnish
+    backend_port: 8080
 ```
 
 ### Using SSL
@@ -93,7 +105,6 @@ my-service:
   overrides:
     environment:
       BACKENDS_PROBE_ENABLED: false
-      BACKENDS_PORT: 8080
       DNS_ENABLED: true
       BACKENDS_PROBE_INTERVAL: 3s
       BACKENDS_PROBE_TIMEOUT: 1s

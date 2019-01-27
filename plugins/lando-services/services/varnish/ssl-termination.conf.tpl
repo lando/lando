@@ -1,9 +1,8 @@
 upstream varnish {
-  server varnish;
+  server "{{LANDO_VARNISH_ALIAS}}";
 }
 
 server {
-
   listen *:443 ssl;
   server_name  localhost;
 
@@ -14,8 +13,7 @@ server {
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
   location / {
-
-    proxy_pass            http://varnish;
+    proxy_pass            "http://{{LANDO_VARNISH_ALIAS}}";
     proxy_read_timeout    90;
     proxy_connect_timeout 90;
     proxy_redirect        off;
@@ -25,6 +23,5 @@ server {
     proxy_set_header      X-Forwarded-Proto https;
     proxy_set_header      X-Forwarded-Port 443;
     proxy_set_header      Host $http_host;
-
   }
 }
