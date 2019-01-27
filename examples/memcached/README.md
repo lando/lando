@@ -23,13 +23,13 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should use 1.x as the default version
-lando ssh -s defaults -c "memcached --version grep 1."
+lando ssh -s defaults -c "memcached --version | grep 1."
 
 # Should use the user specified version if given
-lando ssh -s custom -c "memcached --version grep 1.5.12"
+lando ssh -s custom -c "memcached --version | grep 1.5.12"
 
 # Should use the user specifiec patch version if given
-lando ssh -s patch -c "memcached --version grep 1.5.11"
+lando ssh -s patch -c "memcached --version | grep 1.5.11"
 
 # Should set the default cache size to 64
 lando ssh -s defaults -c "env | grep MEMCACHED_CACHE_SIZE=64"

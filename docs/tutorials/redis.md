@@ -1,5 +1,5 @@
-Memcached
-=========
+Redis
+=====
 
 [Redis](https://redis.io/) is an open source, in-memory and typed data structure store, used as a database, cache and message broker.
 

@@ -1,27 +1,12 @@
-# Redis example
-name: redis
-
-# Spin up a basic nodes server with redis backend
+name: lando-redis
 services:
-
-  # Spin up a redis container called "cache"
-  # NOTE: "cache" is arbitrary, you could just as well call this "theboss" or "eljefe"
-  cache:
-
+  defaults:
     type: redis
-
-    # Optionally allow access to the cache at localhost:6380
-    # You will need to make sure port 6380 is open on your machine
-    #
-    # You can also set `portforward: true` to have Lando dynamically assign
-    # a port. Unlike specifying an actual port setting this to true will give you
-    # a different port every time you restart your app
-    portforward: 6380
-
-    # Optionally set the redis cache to persist
+  patch:
+    type: redis:4.0.11
+  custom:
+    type: redis:4
+    portforward: true
     persist: true
-
-    # Optionally load in a custom redis.conf this is relative to your app root
-    # directory
     config:
       server: config/redis.conf
