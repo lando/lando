@@ -150,7 +150,6 @@ Or learn how to contribute
 *   [Security](http://docs.devwithlando.io/contrib/security.html)
 *   [Resources](http://docs.devwithlando.io/contrib/resources.html)
 
-
 And finally check out some helpful and tested-on-every-build examples
 ---------------------------------------------------------------------
 
