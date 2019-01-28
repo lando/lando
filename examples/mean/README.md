@@ -20,7 +20,7 @@ lando init --source cwd --recipe mean --option port=2368 --option command="su - 
 
 # Should install the ghost cli and install a new ghost app
 cd mean
-lando ssh -c "npm install ghost-cli@latest -g && mkdir src && cd src && ghost install local --no-start --ip 0.0.0.0"
+lando ssh -c "npm install ghost-cli@latest -g && mkdir src && cd src && ghost install local --ip 0.0.0.0 && ghost stop"
 
 # Should start up succesfully
 cd mean
@@ -76,8 +76,7 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be destroyed with success
-# cd laravel
-# lando destroy -y
-# lando poweroff
-true
+cd laravel
+lando destroy -y
+lando poweroff
 ```

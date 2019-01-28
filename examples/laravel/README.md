@@ -18,9 +18,9 @@ lando poweroff
 rm -rf laravel && mkdir -p laravel && cd laravel
 lando init --source cwd --recipe laravel --webroot app/public --name lando-laravel --option cache=redis
 
-# Should install the laravel installer and install a new laravel app
+# Should isntall the laravel installer and install a new laravel app
 cd laravel
-lando ssh -c "composer global require laravel/installer && laravel new app"
+lando composer create-project --prefer-dist laravel/laravel app
 
 # Should start up succesfully
 cd laravel
@@ -74,8 +74,7 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be destroyed with success
-# cd laravel
-# lando destroy -y
-# lando poweroff
-true
+cd laravel
+lando destroy -y
+lando poweroff
 ```
