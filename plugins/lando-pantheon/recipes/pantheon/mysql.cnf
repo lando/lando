@@ -100,6 +100,9 @@ innodb_io_capacity      = 512
 innodb_flush_method     = O_DIRECT
 innodb_thread_concurrency = 8
 innodb_lock_wait_timeout = 120
+innodb_large_prefix=true
+innodb_file_format=barracuda
+
 #
 # * Security Features
 #
