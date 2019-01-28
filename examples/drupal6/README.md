@@ -38,12 +38,15 @@ cd drupal6
 lando php -v | grep 5.6
 
 # Should be running apache 2.4 by default
+cd drupal6
 lando ssh -s appserver -c "apachectl -V | grep 2.4"
 
 # Should be running mysql 5.7 by default
+cd drupal6
 lando mysql -V | grep 5.7
 
 # Should not enable xdebug by default
+cd drupal6
 lando php -m | grep xdebug || echo $? | grep 1
 
 # Should use the default database connection info
