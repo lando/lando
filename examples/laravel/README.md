@@ -18,9 +18,10 @@ lando poweroff
 rm -rf laravel && mkdir -p laravel && cd laravel
 lando init --source cwd --recipe laravel --webroot app/public --name lando-laravel --option cache=redis
 
-# Should isntall the laravel installer and install a new laravel app
+# Should install the laravel installer and install a new laravel app
 cd laravel
-lando ssh -c "composer global require laravel/installer && laravel new app"
+lando ssh -c "composer global require laravel/installer"
+lando ssh -c "laravel new app"
 
 # Should start up succesfully
 cd laravel
