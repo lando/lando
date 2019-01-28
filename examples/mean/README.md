@@ -76,7 +76,8 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be destroyed with success
-cd mean
-lando destroy -y
-lando poweroff
+# cd laravel
+# lando destroy -y
+# lando poweroff
+true
 ```

@@ -20,8 +20,7 @@ lando init --source cwd --recipe laravel --webroot app/public --name lando-larav
 
 # Should install the laravel installer and install a new laravel app
 cd laravel
-lando ssh -c "composer global require laravel/installer"
-lando ssh -c "laravel new app"
+lando ssh -c "composer global require laravel/installer && laravel new app"
 
 # Should start up succesfully
 cd laravel
@@ -75,7 +74,8 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be destroyed with success
-cd laravel
-lando destroy -y
-lando poweroff
+# cd laravel
+# lando destroy -y
+# lando poweroff
+true
 ```
