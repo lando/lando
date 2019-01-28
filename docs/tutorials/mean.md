@@ -25,7 +25,7 @@ Note that this could also be used for [ExpressJS](https://expressjs.com/), [Koa]
 lando init --source cwd \
   --recipe mean \
   --option port=2368 \
-  --option command="su - www-data -c '/var/www/.npm-global/bin/ghost run -d /app/src -D'" \
+  --option command="su - node -c '/var/www/.npm-global/bin/ghost run -d /app/src -D'" \
   --name meanest-app-youve-ever-seen
 
 # Install ghost
