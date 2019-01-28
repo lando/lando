@@ -3,7 +3,7 @@ Drupal 7 Example
 
 This example exists primarily to test the following documentation:
 
-* [Drupal 7](https://docs.devwithlando.io/tutorial/drupal7.html)
+* [Drupal 7 Recipe](https://docs.devwithlando.io/tutorial/drupal7.html)
 
 Start up tests
 --------------
@@ -40,6 +40,7 @@ lando php -v | grep 7.2
 # Should be running apache 2.4 by default
 cd drupal7
 lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
 
 # Should be running mysql 5.7 by default
 cd drupal7

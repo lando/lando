@@ -3,7 +3,7 @@ Backdrop Example
 
 This example exists primarily to test the following documentation:
 
-* [Backdrop](https://docs.devwithlando.io/tutorial/backdrop.html)
+* [Backdrop Recipe](https://docs.devwithlando.io/tutorial/backdrop.html)
 
 Start up tests
 --------------
@@ -40,6 +40,7 @@ lando php -v | grep 7.2
 # Should be running apache 2.4 by default
 cd backdrop
 lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
 
 # Should be running mysql 5.7 by default
 cd backdrop
