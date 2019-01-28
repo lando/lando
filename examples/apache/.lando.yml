@@ -1,39 +1,13 @@
-# Name of my app
-name: apache
-
-# Give me http://apache.lndo.site and https://apache.lndo.site
-proxy:
-  html:
-    - apache.lndo.site
-
-# Build me an apache worthy of the internet
+name: lando-apache
 services:
-
-  # You can name this key anything you want.
-  html:
-
-    # Use the latest version of apache.
-    type: apache:2.2
-
-    # Set this to true if you want to configure apache to also run over https
-    ssl: true
-
-    # Optionally specify a webroot if it is a subdirectory of the appRoot
+  defaults:
+    type: apache
+  patch:
+    type: apache:2.4.37
+  custom:
+    type: apache
     webroot: web
-
-    # Optionally use a custom apache conf file
-    # This should live in your app root and is relative to it
-    # config:
-      # server: config/httpd.conf
-
-    # These are v3 docker compose file overrides. They allow you to provide very
-    # precise fine tuning to your app
-    # See: https://docs.docker.com/compose/compose-file/
-    overrides:
-      services:
-        environment:
-          STUFF: THINGS
-        ports:
-          - '8081:80'
-        # Uncomment below to use a custom image or Dockerfile build location
-        # image: pirog/myapache:2
+    ssl: true
+    config:
+      server: config/httpd.conf
+      vhosts: config/custom.conf

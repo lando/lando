@@ -11,7 +11,8 @@ A decent cross purpose fpm based php 7.2 appserver.
 FROM php:7.2-fpm
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \
@@ -50,7 +51,6 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
-  && docker-php-ext-enable xdebug \
   && docker-php-ext-install \
     bcmath \
     bz2 \
@@ -69,9 +69,10 @@ RUN apt-get update && apt-get install -y \
     zip \
     intl \
     gettext \
+    pcntl \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "if (hash_file('SHA384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.8.0 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \

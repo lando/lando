@@ -1,7 +1,9 @@
 destroy
 =======
 
-Destroys the infrastructure needed to run an app. After you run this command you will not be able to access the app or use Lando tooling for development. The files (eg the git repo) for the app will not be removed.
+Destroys your app.
+
+After you run this command you will not be able to access the app or use Lando tooling for development unless you restart the app. The files (eg the git repo) for the app will not be removed.
 
 > #### Info::Only destroys an app, not Lando itself!
 >
@@ -11,22 +13,26 @@ Usage
 -----
 
 ```bash
-# From an app directory or its subdirectories
+# Interactive destruction
 lando destroy
 
-# From outside of an app directory
-lando destroy myapp
-
-# Non-interactive destruction from app directory
+# Non-interactive destruction
 lando destroy -y
 
-# Destruction from anywhere in debug mode
-lando destroy appname -- -vvv
+# Destroy with debug output
+lando destroy -vvv
+
+# Get help about the destory command
+lando destroy --lando
 ```
 
 Options
 -------
 
 ```bash
-  --yes, -y   Auto answer yes to prompts              [boolean] [default: false]
+--clear        Clears the lando tasks cache
+--lando        Show help for lando-based options
+--verbose, -v  Runs with extra verbosity
+--version      Show version number
+--yes, -y      Auto answer yes to prompts
 ```

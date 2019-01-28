@@ -1,0 +1,16 @@
+name: lando-proxy
+compose:
+  - compose.yml
+proxy:
+  web:
+    - lando-proxy.lndo.site
+    - sub.lando-proxy.lndo.site
+    - bob.frank.kbox.com
+    - frank.bob.joe
+    - tippecanoe.tyler.too
+  web2:
+    - another-way-to-eighty.lndo.site:80
+    # - andonemore.lndo.site:8000
+    # - db.lndo.site:3306
+    - "*-lando-proxy.lndo.site"
+    - "wild.*.lando-proxy.lndo.site"

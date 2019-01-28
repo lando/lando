@@ -1,56 +1,53 @@
 Postgres Example
 ================
 
-This example provides a very basic `postgres` service.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Postgres configuration options.
+* [Postgres Service](https://docs.devwithlando.io/tutorial/postgres.html)
 
-Boot it
--------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the postgres
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validation Commands
--------------------
+Verification commands
+---------------------
 
-Run the following commands to confirm things
-
-```bash
-# Verify postgres portforward
-docker inspect postgres_tswift_1 | grep HostPort | grep 5444
-lando info | grep port | grep 5444
-
-# Verify the correct version is being used
-lando ssh tswift -c "psql -V | grep 10.3"
-
-# Verify the database was setup correctly
-lando ssh tswift -c "psql -U trouble trouble -c \'\\\dt\'"
-
-# Verify the custom config file was used
-lando ssh tswift -c "psql -U trouble -c \'SHOW MAX_FILES_PER_PROCESS;\' | grep 999"
-```
-
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```
-# Get DB connection info
-lando info
-```
-
-Destruction
------------
-
-Run the following commands to clean up
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Destroy the postgres
+# Should use 10.x as the default version
+lando ssh -s defaults -c "psql -V | grep 10."
+
+# Should use the specfied version when set by the user
+lando ssh -s custom -c "psql -V | grep 11."
+
+# Should use the patch version when set by the user
+lando ssh -s patch -c "psql -V | grep 9.6.1"
+
+# Should use the correct default user pass db
+lando verifydefaults
+
+# Should use the correct default user pass db
+lando verifycustom
+
+# Should use a custom config file if specified
+lando showmax | grep 999
+```
+
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

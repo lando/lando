@@ -1,37 +1,38 @@
-MsSQL Example
+MSSQL Example
 =============
 
-This example provides a very basic `mssql` service.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for `mssql` configuration options.
+* [MSSQL Service](https://docs.devwithlando.io/tutorial/mssql.html)
 
-Getting Started
----------------
+Start up tests
+--------------
 
-You should be able to run the following steps to get up and running with this example.
-
-You will likely need to increase the default memory requirements of your docker host in order to run this service. If you are unsure whether you have enough memory run `lando logs -s database | grep 3250` and if you get a response, increase your memory and then `lando restart`.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the example
+# Should start up succesfully
+lando poweroff
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Get DB connection info
-lando info
+# Should be able to connect
+lando ssh -s defaults -c "sqlcmd -U sa -H database -P he11oTHERE -Q quit"
+```
 
-# Drop into a DB shell
-lando sqlcmd -U sa -H database -P he11oTHERE
+Destroy tests
+-------------
 
-# Run bcp commands
-lando bcp
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
+lando destroy -y
+lando poweroff
 ```

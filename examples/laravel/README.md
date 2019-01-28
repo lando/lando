@@ -1,78 +1,80 @@
-Laravel Recipe Example
-======================
+Laravel Example
+===============
 
-This example provides a very basic `laravel` recipe example.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Laravel configuration options.
+* [Laravel Recipe](https://docs.devwithlando.io/tutorial/laravel.html)
 
-Getting Started
----------------
+Start up tests
+--------------
 
-You should be able to run the following steps to get up and running with this example.
-
-```bash
-# Start up the example
-# NOTE: This will take awhile and ultiamtely show red URLs the first time you
-# do it but we need it to install the laravel-installer package for the next step
-lando start
-
-# Spin up a new laravel site
-lando laravel new web
-
-# Check out other commands you can use with this example
-lando
-```
-
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Get DB connection info
-lando info
+# Should poweroff
+lando poweroff
 
-# Run artisan commands
-cd web
-lando artisan
+# Initialize an empty laravel recipe
+rm -rf laravel && mkdir -p laravel && cd laravel
+lando init --source cwd --recipe laravel --webroot app/public --name lando-laravel --option cache=redis
 
-# Run laravel commands
-lando laravel
-```
+# Should compose create-project a new laravel app
+cd laravel
+lando composer create-project --prefer-dist laravel/laravel app
 
-Bootup
-------
-
-Start the Laravel recipe.
-
-```bash
-# Start the app
-if [ -d "web" ]; then rm -Rf web; fi
+# Should start up succesfully
+cd laravel
 lando start
 ```
 
-Testing
--------
+Verification commands
+---------------------
 
-Test the Laravel recipe.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Test spinning up a new Laravel app
-lando laravel new web
+# Should return the laravel default page
+cd laravel
+lando ssh -s appserver -c "curl -L localhost" | grep "Laravel"
 
-# Test we can use artisan tooling
-lando ssh -c "cd web && php artisan"
+# Should use 7.2 as the default php version
+cd laravel
+lando php -v | grep 7.2
 
-# Verify we can visit the homepage
-lando ssh -c "curl nginx |grep Laravel"
+# Should be running apache 2.4 by default
+cd laravel
+lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
+
+# Should be running mysql 5.7 by default
+cd laravel
+lando mysql -V | grep 5.7
+
+# Should not enable xdebug by default
+cd laravel
+lando php -m | grep xdebug || echo $? | grep 1
+
+# Should have redis running
+cd laravel
+lando ssh -s cache -c "redis-cli CONFIG GET databases"
+
+# Should use the default database connection info
+cd laravel
+lando mysql -ularavel -plaravel laravel -e quit
+
+# Should have artisan available
+cd laravel
+lando artisan env
 ```
 
-Cleanup
--------
+Destroy tests
+-------------
 
-Remove the test app.
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Remove the test laravel app.
+# Should be destroyed with success
+cd laravel
 lando destroy -y
+lando poweroff
 ```

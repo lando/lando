@@ -1,63 +1,47 @@
 Mongo Example
-==============
+=============
 
-This example provides a very basic `mongo` example built on Lando NodeJS things.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for `mongo` configuration options.
+* [Mongo Service](https://docs.devwithlando.io/tutorial/mongo.html)
 
-Boot it
--------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the mongo
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validation Commands
--------------------
+Verification commands
+---------------------
 
-Run the following commands to confirm things
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify mongo portforward
-docker inspect mongo_database_1 | grep HostPort | grep 27018
-lando info | grep port | grep 27018
+# Should use 4.0.x as the default version
+lando ssh -s defaults -c "mongo --version | grep v4.0."
 
-# Verify the mongo cli is there and we have the correct mongo version
-lando mongo --version | grep v3.5.
+# Should use the user specified version if given
+lando ssh -s custom -c "mongo --version | grep v3.6"
 
-# Verify the database was setup correctly
-lando ssh appserver -c "curl localhost | grep db | grep test"
+# Should use the user specified patch version if given
+lando ssh -s patch -c "mongo --version | grep v4.1.4"
 
-# Verify the custom config file was used
-lando ssh database -c "cat /tmp/mongod.log && cat /config.yml"
+# Should use the user specified config if given
+lando ssh -s custom -c "cat /opt/bitnami/mongodb/conf/mongodb.conf | grep HELLOTHERE"
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Get DB connection info
-lando info
-
-# Run node commands
-lando npm -v
-lando node -v
-
-# Drop into the mongo cli
-lando mongo
-```
-
-Destruction
------------
-
-Run the following commands to clean up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the mongo
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

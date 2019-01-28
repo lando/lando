@@ -1,7 +1,7 @@
 SSL/TLS
 =======
 
-Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our internal Lando network. They should live inside every service at `/certs`.
+Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our [internal Lando network](./network). They should live inside every service at `/certs`.
 
 ```bash
 /certs
@@ -15,14 +15,14 @@ Lando uses its own Certificate Authority to sign the certs for each service and 
 Trusting the CA
 ---------------
 
-You can also trust this CA on your host machine to alleviate browser warnings.
+While Lando will automatically trust this CA internally it is up to you to trust it on your host machine. Doing so will alleviate browser warnings regarding certs we issue.
 
 > #### Warning::You may need to destroy the proxy container and rebuild your app
 >
 > If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with
 > `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
 
-The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app. This will generate the CA if its not already there. Also note that if you change the Lando `proxyDomain` you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate.
+The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app. This will generate the CA if its not already there. Also note that if you change the Lando `domain` in the [global config](./config.md) you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate.
 
 Once it is you can add or remove it with the relevant commands below.
 

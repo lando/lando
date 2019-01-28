@@ -1,55 +1,79 @@
 Recipes
 =======
 
-Recipes are Lando's highest level abstraction and they contain common mixes of routing, events, services and tooling. Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
+Recipes are Lando's highest level abstraction and they contain common combinations of [routing](./proxy.md), [services](./services.md), and [tooling](./tooling.md). Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
 
-To do this, recipes provide a base environment for a common development use case with configurability of its most obvious pieces. In your `.lando.yml`:
+Usage
+-----
 
-```yml
-# Just give me a basic LAMP stack with recommended versions of all the things.
-name: myapp
-recipe: lamp
+You can use the top-level `recipe` config in your [Landofile](./lando.yml) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../dev/plugins.md).
+
+For example this will use the [Drupal 8](./../tutorials/drupal8.md) recipe.
+
+```yaml
+recipe: drupal8
 ```
 
+Config
+------
+
+You can optionally configure some of the more obvious things in your recipe such as service versions, database types and config files using the top-level `config` config in your [Landofile](./lando.yml).
+
+> #### Info::These options can differ from recipe to recipe
+>
+> While a decent amount config is the same from recipe to recipe we recommend you consult the documentation for the recipe you intende to use for the full list of its config options.
+
+For example here are some of the configureable things in the [LAMP](./../tutorials/lamp.md) recipe.
+
 ```yml
-# Let me customize a few basic parts of my LAMP stack
-name: myapp
 recipe: lamp
 config:
   php: '5.6'
   webroot: www
+  database: postgres:11.1
+  xdebug: true
+  config:
+    php: config/php.ini
+    database: config/mysql.cnf
+    vhosts: config/vhosts.conf
 ```
 
 Supported Recipes
 -----------------
 
-The following recipes are currently offered. Please check out each one to learn how to use them.
+The following recipes are currently offered. Please check out each one to learn how to specifically use them.
 
 *   ####[Backdrop](./../tutorials/backdrop.md)
-*   ####[Dotnet](./../services/dotnet.md)
 *   ####[Drupal 6](./../tutorials/drupal6.md)
 *   ####[Drupal 7](./../tutorials/drupal7.md)
 *   ####[Drupal 8](./../tutorials/drupal8.md)
-*   ####[Go](./../services/go.md)
 *   ####[Joomla](./../tutorials/joomla.md)
 *   ####[Laravel](./../tutorials/laravel.md)
 *   ####[LAMP](./../tutorials/lamp.md)
 *   ####[LEMP](./../tutorials/lemp.md)
 *   ####[MEAN](./../tutorials/mean.md)
 *   ####[Pantheon](./../tutorials/pantheon.md)
-*   ####[Python](./../services/python.md)
-*   ####[Ruby](./../services/ruby.md)
 *   ####[WordPress](./../tutorials/wordpress.md)
-*   ####[Custom](./../tutorials/custom.md)
 
 Extending and Overriding Recipes
 --------------------------------
 
-Since recipes are loaded first you can still mix in other `services`, `events`, `routing` or `tooling` or override the config provided by the recipe itself. Here is an example that adds some additional services and tooling and overrides to the LAMP recipe.
+While the first Landofile below is totally valid and used by many people there are even more people who set a recipe as a starting point for a more complex Landofile.
+
+This is possible because recipes load all their stuff first. A consequence of that is that you can still mix in other [services](./services.md), [events](./services.md), [routing](./proxy.md) and [tooling](./tooling.md) or directly override the config provided by the recipe itself.
 
 > #### Hint::Service and Tooling discovery
 >
 > Running `lando info` in your app directory is a good way to see what things your recipe offers. This is useful if you want to override or extend the things it provides, as in the example below.
+
+**That's cool bro...**
+
+```yaml
+name: my-app
+recipe: laravel
+```
+
+**But it would be a lot cooler if you did this**
 
 ```yaml
 name: myapp
@@ -73,9 +97,8 @@ services:
   # This service is provided by the lamp recipe
   appserver:
     overrides:
-      services:
-        environment:
-          WORD: covfefe
+      environment:
+        WORD: covfefe
 
 # Add additional tooling
 tooling:

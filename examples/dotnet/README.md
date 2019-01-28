@@ -1,37 +1,44 @@
-dotnet Example
+Dotnet Example
 ==============
 
-This example provides a basic dotnet web application.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for dotnet configuration options.
+* [Dotnet Service](https://docs.devwithlando.io/tutorial/dotnet.html)
 
-Start it
---------
+Start up tests
+--------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up a very basic dotnet app
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things
----------------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify we can access our app
-lando ssh -c "curl localhost | grep Hello"
+# Should return 2.x for the default version
+lando ssh -s defaults -c "dotnet --version | grep \'^2.\'"
 
-# Verify we have the dotnet cli
-lando dotnet --version
+# Should run on port 80 by default
+lando ssh -s defaults -c "curl http://localhost" | grep "Hello there"
+
+# Should not serve port 80 for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 ```
 
-Purge
------
+Destroy tests
+-------------
 
-Clean up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the dotnet app
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

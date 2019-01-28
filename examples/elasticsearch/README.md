@@ -1,51 +1,58 @@
 Elasticsearch Example
 =====================
 
-This example provides Elasticsearch via a basic NodeJS web application.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Elasticsearch configuration options.
+* [Elasticsearch Service](https://docs.devwithlando.io/tutorial/elasticsearch.html)
 
-Launch the app
+Start up tests
 --------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running
+with this example.
 
 ```bash
-# Start up the elastic search example
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things
---------------
+Verification commands
+---------------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify the portforward
-lando info | grep 9999
+# Should use version 6.x for the default version
+lando ssh -s defaults -c "curl -XGET localhost:9200" | grep "number" | grep "6."
 
-# Verify we have the node cli at the correct version
-lando node -v | grep v6.10.
+# Should use 1025m as the default heap size
+lando ssh -s defaults -c "env | grep ELASTICSEARCH_HEAP_SIZE=1025m"
 
-# Verify we have npm
-lando npm -v
+# Should not portforward by default
+lando info -s defaults | grep "not forwarded"
 
-# Verify we have yarn
-lando yarn --version
+# Should use version 5.6.14 for the patch service
+lando ssh -s patch -c "curl -XGET localhost:9200" | grep "number" | grep 5.6.14
 
-# Verify the ES version
-lando ssh appserver -c "curl -XGET search:9200 | grep 5.4."
+# Should portforward for custom
+lando info -s custom | grep "not forwarded" || echo $? | grep 1
 
-# Verify we can access ES
-lando ssh appserver -c "curl localhost | grep \"All is well\""
+# Should use the specified heap size when given
+lando ssh -s custom -c "env | grep ELASTICSEARCH_HEAP_SIZE=1026m"
+
+# Should mount custom config to the correct locations
+lando ssh -s custom -c "cat /opt/bitnami/elasticsearch/config/elasticsearch_custom.yml | grep 311"
 ```
 
-Kill it
--------
+Destroy tests
+-------------
 
-Run these to clean up the example
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the app
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```
+

@@ -1,15 +1,23 @@
 stop
 ====
 
-Stops an app. This will spin down all containers and services associated with this app.
+Stops an app.
+
+This will spin down all containers and services associated with this app.
 
 Usage
 -----
 
 ```bash
-# From an app directory or its subdirectories
 lando stop
+```
 
-# From outside of an app directory
-lando stop myapp
+Options
+-------
+
+```bash
+--clear        Clears the lando tasks cache
+--lando        Show help for lando-based options
+--verbose, -v  Runs with extra verbosity
+--version      Show version number
 ```

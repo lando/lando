@@ -6,22 +6,23 @@ Lando is designed to work on a wide range of computers. Here are some basic guid
 Operating System
 ----------------
 
-Currently Lando is compatible with...
-
-*   macOS 10.10+
-*   Windows 10 Pro+ (or equivalent) with Hyper-V running
-*   Linux (with kernel version 4.x or higher)
-
-> #### Warning::Hyper-V must be enabled on Windows
->
-> To learn how to enable Hyper-V check out this [article](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install).
+*   macOS 10.11 (El Capitan) or newest
+*   Windows 10 Pro+ or equivalent (eg Windows 10 Enterprise) [**with Hyper-V running**](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_instal)
+*   Linux with kernel version 4.x or higher
 
 Hardware Requirements
 ---------------------
 
-*   modern x64 processor architecture (eg within the last year or so)
-*   4GB RAM (but you really want 8GB+ for decent performance)
-*   5GB+ of available disk space
+*   Modern x64 architecture multi-core processor
+*   8GB RAM
+*   10GB+ of available disk space
+
+Hardware Recommendations
+------------------------
+
+*   8-core processor
+*   16GB+ RAM
+*   100GB+ of available disk space
 
 Docker Engine Requirements
 --------------------------

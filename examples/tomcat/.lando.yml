@@ -1,27 +1,11 @@
-# Tomcat example server
-name: tomcat
-
-# Give me http://tomcat.lndo.site and https://tomcat.lndo.site
-proxy:
-  appserver:
-    - tomcat.lndo.site
-
-# Spin up services to run a basic tomcat server
+name: lando-tomcat
 services:
-
-  # Create a tomcat instance
-  appserver:
-
-    # tomcat version 8
-    type: tomcat:8
-    config:
-      webroot: ./webapps
-      serverxmlfile: ./config/server.xml
-      tomcatusersfile: ./config/tomcat-users.xml
-      contextfragmentspath: ./config/contextFragments
-
-    # Optionally specify a command/script to run when you start your tomcat service up.
-    #
-    # This can be either a string or array.
-    #
-    # command: tomcat /app/server.rb
+  custom:
+    type: tomcat
+    ssl: true
+    webroot: .
+    # config:
+    #   server: config/web.xml
+    #   web: config/web.xml
+    #   context: config/context.xml
+    #   users: config/tomcat-users.xml

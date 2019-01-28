@@ -27,6 +27,7 @@ env.yml
 # gitbooks
 _books
 _book
+docs/examples
 
 # Build dirs
 build
@@ -37,4 +38,6 @@ dist
 coverage/
 
 # CCI test splitting
-test/func/split-file.txt
+test/split-file.txt
+ideas.md
+test/*.func.js

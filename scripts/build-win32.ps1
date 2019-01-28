@@ -5,7 +5,6 @@
 #
 # A script to build Lando on win32
 #
-
 $ErrorActionPreference = "Stop"
 
 # Get some ENV things
@@ -25,7 +24,7 @@ $inno_bin = "C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
 # Lando version information
 $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
-$docker_version = "19507"
+$docker_version = "30215"
 
 # Unzip helper
 function Unzip($file, $destination)
@@ -81,7 +80,7 @@ Download -Url "https://download.docker.com/win/stable/$docker_version/Docker%20f
 # Copy over some other assets
 Write-Output "Copying over static assets..."
 New-Item $docs_dir -type directory -force
-Copy-Item "$pwd\README.md" "$docs_dir\README.md" -force
+Copy-Item "$pwd\docs\README.md" "$docs_dir\README.md" -force
 Copy-Item "$pwd\TERMS.md" "$docs_dir\TERMS.md" -force
 Copy-Item "$pwd\LICENSE.md" "$docs_dir\LICENSE.md" -force
 

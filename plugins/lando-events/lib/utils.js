@@ -2,6 +2,10 @@
 
 // Modules
 const _ = require('lodash');
+const getUser = require('./../../../lib/utils').getUser;
+
+// Helper to find a command
+const getCommand = cmd => typeof cmd === 'object' ? cmd[getFirstKey(cmd)] : cmd;
 
 // Key find helper
 const getFirstKey = obj => _.first(_.keys(obj));
@@ -11,30 +15,26 @@ const getService = (cmd, data = {}) => {
   return typeof cmd === 'object' ? getFirstKey(cmd) : _.get(data, 'service', 'appserver');
 };
 
-// Helper to find a command
-const getCommand = cmd => typeof cmd === 'object' ? cmd[getFirstKey(cmd)] : cmd;
-
 /*
  * Translate events into run objects
  */
 exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
   // Discover the service
   const service = getService(cmd, data);
-  // Validate the service
-  if (!_.includes(_.keys(app.services), service)) {
+  // Validate the service if we can
+  // @NOTE fast engine runs might not have this data yet
+  if (app.services && !_.includes(app.services, service)) {
     throw new Error(`This app has no service called ${service}`);
   }
   // Add the build command
   return {
-    id: [app.name, service, '1'].join('_'),
+    id: `${app.project}_${service}_1`,
     cmd: getCommand(cmd),
     compose: app.compose,
-    project: app.name,
+    project: app.project,
     opts: {
-      app: app,
-      pre: 'cd /app',
       mode: 'attach',
-      user: 'www-data',
+      user: getUser(service, app.info),
       services: [service],
     },
   };

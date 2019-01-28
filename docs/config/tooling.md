@@ -1,79 +1,266 @@
 Tooling
 =======
 
-Lando provides a way to easily define nice `lando MYCOMMAND` commands so that users can take advantage of development tools that are installed inside of containers. Setting up some common routes for things like `composer` or `npm` allows the user to get a "native" experience but perhaps more importantly allows project specific development dependencies to be isolated and run in containers instead of on the user's host machine. You never need to worry about which version of `php` or `grunt` you need for each project.
+Lando provides a nice way to:
 
-You can think of tooling configuration as a nice way to alias a superset of commands that would otherwise need to be run as something like `lando ssh -c "composer install"`.
+* Emulate the experience of a "native" command but inside of a container
+* Chain multiple commands running on multiple services together
+* Provide dynamic routing so one command can be used on multiple services
+* Provide a simple interface so commands can handle options, including interactive ones
 
-The many ways you can configure tooling are in the example below but here are some of the more powerful use cases:
+This allows you to:
 
-1. Consolidating multiple commands on multiple services into a singular `lando SOMETHING` command. This is great for complex build steps, testing and deployment.
-2. Easily surface options and arguments that can be passed from Lando into a script running in your container.
-3. Run the same command on different services using a flag of your choosing.
+* Consolidate complex testing or build scripts into a single `lando do-stuff` command
+* Lock down the versions you need for your tooling on a per-Landofile basis
+* Avoid installing nightmares like `nvm`, `rvm` and their ilk directly on your computer
+* Never have to worry about which version of `php` or `grunt` you need for each project ever again
 
 > #### Warning::Make sure to install your dependencies
 >
-> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./../config/services.md#build-extras) or our [`ssh`](./../cli/ssh.md) command.
+> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./config/services.md#build-steps) or our [`ssh`](./../cli/ssh.md) command.
 
-Example
--------
+Usage
+-----
 
-{% codesnippet "./../examples/trivial-tooling/.lando.yml" %}{% endcodesnippet %}
+It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. Here are all the options you can use for a given tooling route and their default values.
 
-You can see the extra commands by running `lando` inside your app.
-
-```bash
-lando
-
-Usage: lando <command> [args] [options] [-- global options]
-
-Commands:
-  config                   Display the lando configuration
-  destroy [appname]        Destroy app in current directory or [appname]
-  info [appname]           Prints info about app in current directory or [appname]
-  init <appname> [method]  Initializes a lando app called <appname> with optional [method]
-  list                     List all lando apps
-  logs [appname]           Get logs for in current directory or [appname]
-  poweroff                 Spin down all lando related containers
-  rebuild [appname]        Rebuilds app in current directory or [appname]
-  restart [appname]        Restarts app in current directory or [appname]
-  ssh [appname] [service]  SSH into [service] in current app directory or [appname]
-  start [appname]          Start app in current directory or [appname]
-  stop [appname]           Stops app in current directory or [appname]
-  version                  Display the lando version
-  composer                 Run composer commands
-  php                      Run php commands
-  mysql                    Drop into a MySQL shell
-
-Global Options:
-  --help, -h  Show help
-  --verbose, -v, -vv, -vvv, -vvvv  Change verbosity of output
-
-You need at least one command before moving on
+```yaml
+tooling
+  mycommand:
+    service: this is required, use `lando info` to find the one you want
+    description: Runs <mycommand> commands
+    cmd: mycommand
+    user: you
+    options:
 ```
 
-Caveats
--------
+> #### Info::Tooling routes are cached!
+>
+> Note that tooling routes are cached at the end of every lando invocation so you will need to run something like `lando list` or dump the cache manually with `lando --clear` if you are not seeing your tooling commands or changes show up correctly.
+>
+> After doing so run `lando` to see all the tooling commands for a given Landofile
 
-There are some current caveats with Lando tooling with which you should be familiar
+Here are a few common implementations of the above:
 
-* Using pipes | or carrots < > can be strange because data needs to be streamed across the host-container boundary. In these situations we recommend you use `lando ssh -c "mycommand < myfile"` or set up on explicit tooling command to keep things entirely inside the container.
+### Native command emulation
+
+One of the most common uses of tooling is to emulate native commands like `php`, `composer` or `yarn`.
+
+```yaml
+tooling:
+  php:
+    service: appserver
+```
+
+The above will run `php` inside of the `appserver` and also pass in any additional args or options you specify. That means that you can run `lando php` in the *exact* same way as `php`. This greatly reduces the hassle involved in invoking said commands directly with `docker`, `docker-compose` or even `lando ssh`. See below:
+
+```bash
+# OMG WHYYYYY
+docker exec -it mysite_appserver_1 /bin/sh -c "/path/to/my/php -e \"phpinfo();\""
+
+# Hmm ok that's a bit better
+lando ssh -c "php -e \"phpinfo();\""
+
+# Oh so nice!
+lando php -e "phpinfo();"
+```
+
+### Consolidated command tooling
+
+You may also wish to consolidate a complex command into a simpler one. This is useful because it can help prevent human error and reduce documentation.
+
+```yaml
+tooling:
+  update-deps:
+    service: database
+    description: Updates the installed packages on my database service
+    cmd: apt update -y && apt install -y
+    user: root
+```
+
+```bash
+lando update-deps
+```
+
+### Multi-command tooling
+
+`cmd` can also be an array. This allows you to chain an indefinate amount of commands together.
+
+```yaml
+tooling:
+  fire-everything:
+    service: node
+    description: Runs a seemingly random assortment of commands
+    cmd:
+      - source ~/.bashrc
+      - npm install "$DEP_SET_BY_ENVVAR_SOURCED_BEFORE"
+      - /helpers/my-custom-script.sh --max-power
+      - ls -lsa
+      - env | grep LANDO_
+```
+
+```bash
+lando fire-everything
+```
+
+Note that each line of the above runs in a separate subshell so if you `source` a file in the first command like we unwisely did above it's not going to be available in any of the others. If you need that sort of behavior consider something like this instead
+
+```yaml
+tooling:
+  fire-everything:
+    service: node
+    description: Runs a seemingly random assortment of commands
+    cmd:
+      - source ~/.bashrc && npm install "$DEP_SET_BY_ENVVAR_SOURCED_BEFORE"
+      - /helpers/my-custom-script.sh --max-power
+      - ls -lsa
+      - env | grep LANDO_
+```
+
+### Multi-service Multi-command tooling
+
+You can also omit the `service` and define `cmd` as an array of objects where the `key` is the service and the `value` is the command. This can allow you to consolidate complex testing and build steps that need to happen across many different services.
+
+It also allows you to reuse a common interface across many different Landofiles eg `lando test` may differ from project to project but it's always what we use to run our tests.
+
+```yaml
+tooling:
+  build:
+    description: Manually invokes all our build steps
+    cmd:
+      - appserver: composer install
+      - node: yarn install
+      - node: yarn sass
+  test:
+    description: Run ALL THE TESTS
+    cmd:
+      - appserver: composer test
+      - node: yarn test
+```
+
+```bash
+lando test && lando build
+```
+
+### Dynamic service commands
+
+Sometimes you have, need or want a single command that can be used on a user-specified service. In these situations you can tell Lando to set the service with an option.
+
+Note that the `:` prefix is what tells Lando to use an option instead of a literal string. Also note that you should be careful to avoid collisions between options *you* specify and options the *underlying command* does.
+
+```yaml
+tooling:
+  php-version:
+    service: :service
+    cmd: php -v
+    options:
+      service:
+        default: appserver
+        describe: Run php in different service
+```
+
+```bash
+# Get the version in the appserver
+lando php-version
+
+# Get the version in the second appserver
+lando php-version --service appserver2
+
+# Get the version in the third appserver
+lando php-version --service appserver3
+```
+
+This can help avoid the following messy and hard-to-scale implementation
+
+```yaml
+tooling:
+  php-version:
+    service: appserver
+    cmd: php -v
+  php-version2:
+    service: appserver2
+    cmd: php -v
+  php-version3:
+    service: appserver3
+    cmd: php -v
+```
+
+### Options driven tooling
+
+You can also define your own options for use in tooling. These options follow the same spec as [Lando tasks](./../dev/plugins.md#tasks) and are generally used in combination with an underlying script.
+
+Note that the options interface just provides a way to define and then inject options into a given command. It is up to the user to make sure the underlying command or script knows what to do with such options. Note that if you use interactive options you need to set `level: app` as below.
+
+```yaml
+tooling:
+  word:
+    service: web
+    cmd: /app/word.sh
+    level: app
+    options:
+      word:
+        passthrough: true
+        alias:
+          - w
+        describe: Print what the word is
+        interactive:
+          type: input
+          message: What is the word?
+          default: bird
+          weight: 600
+```
+
+```bash
+# This will prompt for the word
+lando word
+
+# This will not
+lando word --word=fox
+```
+
+Pipes, Carrots and Ampersands OH MY!
+------------------------------------
+
+If Lando sees any combination of `|`, `<`, `>`, or `&` in any of the defined commands it will automatically wrap the entire command in `/bin/sh -c "<command>"`. This means that if you pipe or carrot commands they are all happening *INSIDE* the service and not going from the container to host or vice-versa.
+
+In most situations you will not notice this distinction but not in all situations. Consider the following:
+
+```bash
+# Go into the app root
+cd /path/to/my/app
+
+# Export a database
+lando db-export --stdout > dump.sql
+ls -lsa
+# See the database dump in the filesystem
+
+# Export someplace else and assume you can write to /
+lando db-export --stdout > /dump.sql
+ls -lsa /
+# Do not see the database dump
+lando ssh -s appserver -c "ls -lsa /"
+# See the database dump
+```
 
 Overriding
 ----------
 
-You can override tooling provided by Lando by redefining the tooling options in your `.lando.yml` file. For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory you could do the below.
+You can override tooling provided by Lando recipes or upstream Landofiles by redefining the tooling command in your Landofile.
+
+For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory and always uses the `drush` you installed via `composer` you could do the below.
 
 ```yml
 tooling:
   drush:
-    cmd: "drush --root=/app/web"
+    cmd: "/app/vendor/bin/drush --root=/app/web"
 ```
 
 Disabling
 ---------
 
-You can also disable built in tooling by setting the command to a non-object value in your `.lando.yml` file. While any value will do it's convention to use `disabled` as in the below.
+You can also use "tooling overrides" to disable any other predefined or upstream tooling by setting the command to a non-object value in your Lando file.
+
+While any value will do it's customary to use `disabled` as in the below.
 
 ```yml
 tooling:
@@ -83,20 +270,32 @@ tooling:
 Directory Mapping
 -----------------
 
-Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container.
+Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container. Consider
+
+```bash
+cd /path/to/my/app
+lando ssh -c "pwd"
+# /app
+cd web
+lando ssh -c "pwd"
+# /app/web
+
+```
 
 Tool Discovery
 --------------
 
 If you are not sure about what tools live inside your container, you can use `lando ssh` to drop into a shell on a specific service to both investigate and install any needed dependencies.
 
+Note that while you can do the below, it's generally recommended to install any additional dependencies as part of a build process using either the specific dependency management options built into the service you are using or with Lando's more generic [build steps](./services.md#build-steps).
+
 ```bash
 # SSH into the appserver
-lando ssh appserver
+lando ssh -s appserver
 
 # Explore whether grunt is installed
 which grunt
-  # not installed
+# not installed
 
 # Add grunt
 npm install -g grunt-cli
@@ -106,5 +305,3 @@ exit
 
 # Add grunt to the tooling in your .lando.yml
 ```
-
-While you can do the above, it's generally recommended to install any additional dependencies as part of the build process either using specific dependency management built into the service you are using or with Lando's more generic [build step process](./../config/services.md#build-extras).
