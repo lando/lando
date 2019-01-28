@@ -44,4 +44,7 @@ Destroy tests
 # Should destroy succesfully
 lando destroy -y
 lando poweroff
+
+# Should remove custom image
+docker rmi --force pirog/php:7.1-fpm-custom
 ```
