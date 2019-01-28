@@ -124,8 +124,6 @@ And then check out some helpful guides
 And the known issues
 --------------------
 
-## Known Issues
-
 *   [DNS Rebinding Protection](http://docs.devwithlando.io/issues/dns-rebind.html)
 *   [File Uploads on Windows](http://docs.devwithlando.io/issues/win-file-upload.html)
 *   [File Syncing Stalled](http://docs.devwithlando.io/issues/file-sync.html)
@@ -143,8 +141,6 @@ You can also get some troubleshooting and support
 
 Or learn how to contribute
 --------------------------
-
-## Contributing
 
 *   [Overview](http://docs.devwithlando.io/contrib/contributing.html)
 *   [Project Vision](http://docs.devwithlando.io/contrib/vision.html)
