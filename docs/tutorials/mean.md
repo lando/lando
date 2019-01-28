@@ -1,9 +1,9 @@
-Working with MEAN
-=================
+MEAN
+====
 
-Lando offers a configurable recipe for spinning up apps that use the [MEAN](http://mean.io) stack, a common set of infrastructure designed to run NodeJS applications.
+MEAN is a free and open-source JavaScript software stack for building dynamic web sites and web applications.
 
-Let's go over some basic usage.
+Lando offers a configurable [recipe](./../config/recipes.md) for developing [MEAN](https://en.wikipedia.org/wiki/MEAN_%28software_bundle%29) apps.
 
 <!-- toc -->
 
@@ -12,131 +12,310 @@ Getting Started
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../installation/system-requirements.md)
-2. [Read up on how to get a `.lando.yml`](./../started.md)
+1. [Installed Lando](./../installation/system-requirements.md) and gotten familar with [its basics](./../started.md)
+2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-If after reading #2 above you are still unclear how to get started then try this
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) here is an example of using the MEAN recipe to run a [Ghost](https://ghost.org/) project.
 
-```bash
-# Go into a local folder with your site or app codebase
-# You can get this via git clone or from an archive
-cd /path/to/my/codebase
-
-# Initialize a basic .lando.yml file for my recipe with sane defaults
-lando init
-
-# Commit the .lando.yml to your git repo (Optional but recommended)
-git add -A
-git commit -m "Adding Lando configuration file for easy and fun local development!"
-git push
-```
-
-For more info on how `lando init` works check out [this](./../cli/init.md).
-
-Starting Your Site
-------------------
-
-Once you've completed the above you should be able to start your MEAN site.
+Note that this could also be used for [ExpressJS](https://expressjs.com/), [Koa](https://koajs.com/), [KeystoneJS](https://keystonejs.com/) or any other MEANish project.
 
 ```bash
-# Install dependencies your app needs to run
-lando npm install || lando yarn install
+# Initialize a mean recipe for use with ghost
+lando init --source cwd \
+  --recipe mean \
+  --option port=2368 \
+  --option command="su - node -c '/var/www/.npm-global/bin/ghost run -d /app/src -D'" \
+  --name meanest-app-youve-ever-seen
 
-# Start up app
+# Install ghost
+lando ssh -c "npm install ghost-cli@latest -g && mkdir src && cd src && ghost install local --no-start --ip 0.0.0.0"
+
+# Start it up
 lando start
+
+# List information about this app.
+lando info
 ```
-
-If you visit any of the green-listed URLS that show up afterwards you should be presented with whatever content is loaded by the `main` script in your `package.json`.
-
-Tooling
--------
-
-Each MEAN recipe will also ship with some helpful `node` dev utilities. This means you can use things like `node` and `npm` via Lando and avoid mucking up your actual computer trying to manage `node` versions and global `npm` tooling.
-
-If you are interested in installing other helpful global `node` commands like `bower` or `gulp` we recommend you read our [Setting up front end tooling guide](./../tutorials/frontend.md).
-
-```bash
-lando mongo                    Drop into the mongo shell
-lando node                     Run node commands
-lando npm                      Run npm commands
-lando yarn                     Run yarn commands
-```
-
-```bash
-# Drop into a mongo shell
-lando mongo
-
-# Install the redis module
-lando npm install redis --save
-
-# Install wahts in my package.json with yarn
-lando yarn install
-
-# Run a node command
-lando node -e "console.log('hi');"
-```
-
-You can also run `lando` from inside your app directory for a complete list of commands.
 
 Configuration
 -------------
 
-### Recipe
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
 
-You can also manually configure the `.lando.yml` file to switch `node` or `mongo` versions, set a custom `command` besides `npm start` to run when you start your app or to use a custom `mongo` config file.
+Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
-{% codesnippet "./../examples/mean/.lando.yml" %}{% endcodesnippet %}
+```yaml
+recipe: mean
+config:
+  node: 10
+  build:
+    - npm install
+  command: npm start
+  database: mongo:4.0
+  globals: []
+  port: '80'
+  ssl: false
+  config:
+    database: SEE BELOW
+```
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/mean).
+Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
-### Environment Variables
+### Choosing a node version
 
-The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container.
+You can set `node` to any version that is available in our [node service](./node.md). However, you should consult the requirements for whatever you are running to make sure that version is actually supported.
+
+Here is the [recipe config](./../config/recipes.md#config) to set the MEAN recipe to use `node` version `8`
+
+```yaml
+recipe: mean
+config:
+  node: 8
+```
+
+
+### Installing application dependencies
+
+Because most MEAN projects will require you `npm install` before they can start succesfully Lando will automatically run `npm install` before it runs what you specify as your `commmand`. You can, however, alter this to whatever you need.
+
+```yaml
+recipe: mean
+config:
+  build:
+    - yarn install
+  command: yarn dev
+```
+
+Note that a good rule of thumb is that `build` should install whatever **node** dependencies you need to start your app. If you require other non-node dependencies like server packages consider using a [build step](./../config/services.md#build-steps).
+
+### Setting a command
+
+By default your MEAN recipe will attempt to start the `node` service by running `npm start`. You can easily change this any other command.
+
+**Running a node script directly**
+
+```yaml
+recipe: mean
+config:
+  command: node /app/server.js
+```
+
+**Running the `yarn dev` script**
+
+```yaml
+recipe: mean
+config:
+  command: yarn dev
+```
+
+Note that whatever `command` you specify you will want to make `build` is also set to something that makes sense.
+
+### Choosing a database backend
+
+By default this recipe will use the default version of our [mongo](./mongo.md) service as the database backend but you can also switch this to use [`mysql`](./mysql.md), [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead.
+
+Note that you can also specify a version *as long as it is a version available for use with lando* for either `mongo`, `mysql`, `mariadb` or `postgres`.
+
+** Using mongo (default) **
+
+```yaml
+recipe: mean
+config:
+  database: mongo
+```
+
+** Using MySQL **
+
+```yaml
+recipe: mean
+config:
+  database: mysql
+```
+
+** Using MariaDB **
+
+```yaml
+recipe: mean
+config:
+  database: mariadb
+```
+
+** Using Postgres **
+
+```yaml
+recipe: mean
+config:
+  database: postgres
+```
+
+** Using a custom version **
+
+```yaml
+recipe: mean
+config:
+  database: postgres:9.6
+```
+
+### Installing global dependencies
+
+You can also use the `globals` key if you need to install any [global node dependenices](https://docs.npmjs.com/cli/install). This follows the same syntax as your normal [`package.json`](https://docs.npmjs.com/files/package.json) except written as YAML instead of JSON.
+
+Here is an example of globally installing the `latest` `gulp-cli`.
+
+```yaml
+recipe: mean
+config:
+  globals:
+    gulp-cli: latest
+```
+
+See [install global node dependencies](./node.md#installing-global-dependencies) for more info.
+
+### Using SSL
+
+Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `node` snippet:
+
+```js
+// Get our ket and cert
+const key = fs.readFileSync('/certs/cert.key')
+const cert = fs.readFileSync('/certs/cert.crt'),
+
+// Create our servers
+https.createServer({key, cert}, app).listen(443);
+http.createServer(app).listen(80);
+
+// Basic HTTP response
+app.get('/', (req, res) => {
+  res.header('Content-type', 'text/html');
+  return res.end('<h1>I said "Oh my!" What a marvelous tune!!!</h1>');
+});
+```
+
+### Setting a port
+
+While we assume your MEAN app is running on port `80` we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
+
+```yaml
+recipe: mean
+config:
+  port: '3000'
+```
+
+### Using custom config files
+
+You may need to override our [default MEAN config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/mean) with your own.
+
+If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+
+**A hypothetical project**
 
 ```bash
-# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
-# The content of your variable may differ
-LANDO_INFO={"appserver":{"type":"node","version":"8.0","hostnames":["appserver"]},"database":{"type":"mongo","version":"3.2","hostnames":["database"],"internal_connection":{"host":"database","port":27017},"external_connection":{"host":"localhost","port":true}}}
+./
+|-- config
+   |-- my-custom.cnf
+|-- index.php
+|-- .lando.yml
 ```
 
-**NOTE:** These can vary based on the choices you make in your recipe config.
-**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
+**Landofile using custom mean config**
 
-### Automation
-
-You can take advantage of Lando's [events framework](./../config/events.md) to automate common tasks. Here are some useful examples you can drop in your `.lando.yml` to make your MEAN app super slick.
-
-```yml
-events:
-
-  # Runs yarn install after you start your app
-  post-start:
-    - appserver: cd $LANDO_MOUNT && yarn install
-
+```yaml
+recipe: mean
+config:
+  config:
+    database: config/my-custom.cnf
 ```
 
-Advanced Service Usage
-----------------------
+Connecting to your database
+---------------------------
 
-You can get more in-depth information about the services this recipe provides by running `lando info`.
+Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
-Read More
----------
+Here are is the default database connection information for a MEAN site. Note that the `host` is not `localhost` but `database`.
 
-### Workflow Docs
+```yaml
+host: database
 
-*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
-*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
-*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
-*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+# mongo
+user: root
+password: none
+port: 27017
 
-### Advanced Usage
+# mysql/mariadb
+# database: mean
+# username: mean
+# password: mean
+# port: 3306
 
-*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
-*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
-*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
-*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
-*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
-*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
+# postgres
+# database: mean
+# username: postgres
+# password: none
+# port: 5432
+```
+
+You can get also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
+
+Importing Your Database
+-----------------------
+
+**NOTE THIS ONLY APPLIES FOR SQL DATABASES AND NOT MONGO**
+
+Once you've started up your MEAN site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+
+```bash
+# Grab your database dump
+curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
+
+# Import the database
+# NOTE: db-import can handle uncompressed, gzipped or zipped files
+# Due to restrictions in how Docker handles file sharing your database
+# dump MUST exist somewhere inside of your app directory.
+lando db-import database.sql.gz
+```
+
+You can learn more about the `db-import` command [over here](./../guides/db-import.md)
+
+Tooling
+-------
+
+By default each Lando MEAN recipe will also ship with helpful dev utilities.
+
+This means you can use things like `yarn`, `npm`, `mongo` and `node` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
+
+```bash
+lando mongo     Drop into the mongo shell
+lando node      Runs node commands
+lando npm       Runs npm commands
+lando yarn      Runs yarn commands
+```
+
+**Usage examples**
+
+```bash
+# Install some things globally
+lando npm install -g gulp-cli@latest
+
+# Run yarn install
+lando yarn install
+
+# Drop into a mongo shell
+lando mongo
+
+# Check the node version
+lando node --version
+```
+
+You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mongo`.
+
+Example
+-------
+
+If you are interested in a working example of this recipe that we test on every Lando build then check out
+[https://github.com/lando/lando/tree/master/examples/mean](https://github.com/lando/lando/tree/master/examples/mean)
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

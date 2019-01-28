@@ -1,62 +1,197 @@
-Working with WordPress
-======================
+WordPress
+=========
 
-Lando offers a configurable recipe for spinning up [WordPress](https://wordpress.org/) apps. Let's go over some basic usage.
+WordPress is open source software you can use to create a beautiful website, blog, or app.
+
+Lando offers a configurable [recipe](./../config/recipes.md) for developing [WordPress](https://wordpress.org/) apps.
+
+<!-- toc -->
 
 Prefer video tutorials?
 {% youtube %}
 https://www.youtube.com/watch?v=QW3io3MFPNg
 {% endyoutube %}
 
-<!-- toc -->
-
 Getting Started
 ---------------
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../installation/system-requirements.md)
-2. [Read up on how to get a `.lando.yml`](./../started.md)
+1. [Installed Lando](./../installation/system-requirements.md) and gotten familar with [its basics](./../started.md)
+2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-If after reading #2 above you are still unclear how to get started then try this
-
-```bash
-# Go into a local folder with your site or app codebase
-# You can get this via git clone or from an archive
-cd /path/to/my/codebase
-
-# Initialize a basic .lando.yml file for my recipe with sane defaults
-lando init
-
-# Commit the .lando.yml to your git repo (Optional but recommended)
-git add -A
-git commit -m "Adding Lando configuration file for easy and fun local development!"
-git push
-```
-
-For more info on how `lando init` works check out [this](./../cli/init.md).
-
-Starting Your Site
-------------------
-
-Once you've completed the above you should be able to start your WordPress site.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of WordPress.
 
 ```bash
-# Start up app
+# Initialize a wordpress recipe using the latest WordPress version
+lando init \
+  --source remote \
+  --remote-url https://wordpress.org/latest.tar.gz \
+  --recipe wordpress \
+  --webroot wordpress \
+  --name my-first-wordpress-app
+
+# Start it up
 lando start
 
 # List information about this app.
 lando info
-
-# Optionally run composer install if needed
-lando composer install
 ```
 
-If you visit any of the green-listed URLs that show up afterwards you should be welcomed with the WordPress installation screen.
+Configuration
+-------------
 
-If you are installing WordPress from scratch will also want to scope out your database credentials by running `lando info` so you can be prepped to enter them during the installation. You will want to use `internal_connection` information.
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
 
-Or you can read below on how to import your database.
+Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
+
+```yaml
+recipe: wordpress
+config:
+  php: 7.2
+  via: apache:2.4
+  webroot: .
+  database: mysql:5.7
+  xdebug: false
+  config:
+    php: SEE BELOW
+    database: SEE BELOW
+```
+
+Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+
+### Choosing a php version
+
+You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [WordPress requirements](https://wordpress.org/about/requirements/) to make sure that version is actually supported by WordPress itself.
+
+Here is the [recipe config](./../config/recipes.md#config) to set the WordPress recipe to use `php` version `7.1`
+
+```yaml
+recipe: wordpress
+config:
+  php: 7.1
+```
+
+### Choosing a webserver
+
+By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
+
+** With Apache (default) **
+
+```yaml
+recipe: wordpress
+config:
+  via: apache
+```
+
+** With nginx **
+
+```yaml
+recipe: wordpress
+config:
+  via: nginx
+```
+
+### Choosing a database backend
+
+By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+
+If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+
+Also note that like the configuration of the `php` version you should consult the [WordPress requirements](https://downloads.wordpress.org/us/technical-requirements-us) to make sure the `database` and `version` you select is actually supported by WordPress itself.
+
+** Using MySQL (default) **
+
+```yaml
+recipe: wordpress
+config:
+  database: mysql
+```
+
+** Using MariaDB **
+
+```yaml
+recipe: wordpress
+config:
+  database: mariadb
+```
+
+** Using Postgres **
+
+```yaml
+recipe: wordpress
+config:
+  database: postgres
+```
+
+** Using a custom version **
+
+```yaml
+recipe: wordpress
+config:
+  database: postgres:9.6
+```
+
+### Using xdebug
+
+This is just a passthrough option to the [xdebug setting](./php.md#toggling-xdebug) that exists on all our [php services](./php.md). The `tl;dr` is `xdebug: true` enables and configures the php xdebug extension and `xdebug: false` disables it.
+
+```yaml
+recipe: wordpress
+config:
+  xdebug: true|false
+```
+
+However, for more information we recommend you consult the [php service documentation](./php.md).
+
+
+### Using custom config files
+
+You may need to override our [default WordPress config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/wordpress) with your own.
+
+If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+
+**A hypothetical project**
+
+```bash
+./
+|-- config
+   |-- my-custom.cnf
+   |-- php.ini
+|-- index.php
+|-- .lando.yml
+```
+
+**Landofile using custom wordpress config**
+
+```yaml
+recipe: wordpress
+config:
+  config:
+    php: config/php.ini
+    database: config/my-custom.cnf
+```
+
+Connecting to your database
+---------------------------
+
+Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+
+Here are is the default database connection information for a WordPress site. Note that the `host` is not `localhost` but `database`.
+
+```yaml
+database: wordpress
+username: wordpress
+password: wordpress
+host: database
+# for mysql
+port: 3306
+# for postgres
+# port: 5432
+```
+
+You can get also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
 
 Importing Your Database
 -----------------------
@@ -64,9 +199,6 @@ Importing Your Database
 Once you've started up your WordPress site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
-# Go into my app
-cd /path/to/my/app
-
 # Grab your database dump
 curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 
@@ -77,20 +209,25 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 lando db-import database.sql.gz
 ```
 
-You can learn more about the `db-import` command [over here](./db-import.md).
+You can learn more about the `db-import` command [over here](./../guides/db-import.md)
 
 Tooling
 -------
 
-Each Lando WordPress recipe will also ship with helpful dev utilities. This means you can use things like `wp-cli`, `composer` and `php-cli` via Lando and avoid mucking up your actual computer trying to manage PHP versions and tooling.
+By default each Lando WordPress recipe will also ship with helpful dev utilities.
+
+This means you can use things like `wp`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
 ```bash
-lando composer                 Run composer commands
-lando db-import <file>         Import <file> into database. File is relative to approot.
-lando mysql                    Drop into a MySQL shell
-lando php                      Run php commands
-lando wp                       Run wp-cli commands
+lando composer          Runs composer commands
+lando db-export [file]  Exports database from a service into a file
+lando db-import <file>  Imports a dump file into database service
+lando wp                Runs wordpress commands
+lando mysql             Drops into a MySQL shell on a database service
+lando php               Runs php commands
 ```
+
+**Usage examples**
 
 ```bash
 # Search-replace the domain name
@@ -102,77 +239,19 @@ lando composer install
 # Drop into a mysql shell
 lando mysql
 
-# Check the app's php version
-lando php -v
+# Check the app's php info
+lando php -i
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands.
+You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
-Configuration
--------------
+Example
+-------
 
-### Recipe
+If you are interested in a working example of this recipe that we test on every Lando build then check out
+[https://github.com/lando/lando/tree/master/examples/wordpress](https://github.com/lando/lando/tree/master/examples/wordpress)
 
-You can also manually configure the `.lando.yml` file to switch `php` versions, toggle between `apache` and `nginx`, activate `xdebug`, choose a database type and version, set a custom webroot locaton and use your own configuration files.
+Additional Reading
+------------------
 
-{% codesnippet "./../examples/wordpress/.lando.yml" %}{% endcodesnippet %}
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/wordpress).
-
-### Environment Variables
-
-The below are in addition to the [default variables](./../config/env.md#default-environment-variables) that we inject into every container. These are accessible via `php`'s [`getenv()`](http://php.net/manual/en/function.getenv.php) function.
-
-
-```bash
-# The below is a specific example to ILLUSTRATE the KINDS of things provided by this variable
-# The content of your variable may differ
-LANDO_INFO={"appserver":{"type":"php","version":"7.1","hostnames":["appserver"],"via":"nginx","webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/wordpress/wordpress.conf","conf":"/Users/pirog/.lando/services/config/wordpress/php.ini"}},"nginx":{"type":"nginx","version":"1.13","hostnames":["nginx"],"webroot":"web","config":{"server":"/Users/pirog/.lando/services/config/wordpress/wordpress.conf","conf":"/Users/pirog/.lando/services/config/wordpress/php.ini"}},"database":{"type":"mysql","version":"5.7","hostnames":["database"],"creds":{"user":"wordpress","password":"wordpress","database":"wordpress"},"internal_connection":{"host":"database","port":3306},"external_connection":{"host":"localhost","port":true},"config":{"confd":"/Users/pirog/.lando/services/config/wordpress/mysql"}}}
-```
-
-**NOTE:** These can vary based on the choices you make in your recipe config.
-**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
-
-### Automation
-
-You can take advantage of Lando's [events framework](./../config/events.md) to automate common tasks. Here are some useful examples you can drop in your `.lando.yml` to make your WordPress app super slick.
-
-```yml
-events:
-
-  # Runs composer install and a custom php script after your app starts
-  post-start:
-    - appserver: cd $LANDO_MOUNT && composer install
-    - appserver: cd $LANDO_WEBROOT && php script.php
-
-  # Runs wp search-replace after a db import
-  post-db-import:
-    - appserver: wp search-replace OLDURL NEWURL
-
-```
-
-Advanced Service Usage
-----------------------
-
-You can get more in-depth information about the services this recipe provides by running `lando info`.
-
-Read More
----------
-
-### Workflow Docs
-
-*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
-*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
-*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
-*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
-
-### Advanced Usage
-
-*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
-*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
-*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
-*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
-*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/external-access.html)
-*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
-*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
+{% include "./../snippets/guides.md" %}

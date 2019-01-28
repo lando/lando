@@ -1,89 +1,80 @@
-WordPress Composer Example
-==========================
+WordPress Example
+=================
 
-This example provides a Composer powered spin up of a WordPress site.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for WordPress configuration options.
+* [WordPress Recipe](https://docs.devwithlando.io/tutorial/wordpress.html)
 
-ONE
--------
+Start up tests
+--------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Install dependencies with Composer
-# Do some other stuff that doesnt matter
-lando composer install
+# Should poweroff
+lando poweroff
 
-# Start up the example
+# Should initialize the latest WordPress codebase
+rm -rf wordpress && mkdir -p wordpress && cd wordpress
+lando init --source remote --remote-url https://wordpress.org/latest.tar.gz --recipe wordpress --webroot wordpress --name lando-wordpress
+
+# Should start up succesfully
+cd wordpress
 lando start
 ```
 
-TWO
--------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Get service (eg database) connection info
-lando info
+# Should return the WordPress installation page by default
+cd wordpress
+lando ssh -s appserver -c "curl -L localhost" | grep "WordPress"
 
-# Run WP-cli commands
-lando wp --version
-true
+# Should use 7.2 as the default php version
+cd wordpress
+lando php -v | grep 7.2
+
+# Should be running apache 2.4 by default
+cd wordpress
+lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
+
+# Should be running mysql 5.7 by default
+cd wordpress
+lando mysql -V | grep 5.7
+
+# Should not enable xdebug by default
+cd wordpress
+lando php -m | grep xdebug || echo $? | grep 1
+
+# Should use the default database connection info
+cd wordpress
+lando mysql -uwordpress -pwordpress wordpress -e quit
+
+# Should have the wp-cli
+cd wordpress
+lando wp cli version | grep 2.1
+
+# Should create a wp-config file
+cd wordpress/wordpress
+lando wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --force
+
+# Should be able to install wordpress
+cd wordpress/wordpress
+lando wp core install --url=lando-wordpress.lndo.site --title=LandoPress --admin_user=admin --admin_email=mike@pirog.com --skip-email
 ```
 
-THREE
--------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the example
+# Should be destroyed with success
+cd wordpress
 lando destroy -y
-```
-
-Bootup
-------
-
-Start the WordPress test app.
-
-```bash
-# Start WordPress
-if [ -d "web" ]; then rm -Rf web; fi
-lando start
-lando composer install
-cp config/wp-config.php web/wp-config.php
-```
-
-Testing
--------
-
-Test the WordPress recipe.
-
-```bash
-# Test getting WordPress codebase via composer
-lando composer install
-
-# Verify we have a WordPress codebase
-ls web |grep index.php
-
-# Verify copy of wp-config.php file
-cp config/wp-config.php web/wp-config.php
-
-# Test installing WordPress via wp-cli
-lando wp core install --path=web --url=wordpress.lndo.site --admin_user=root --admin_email=gff@gff.gov --title=WordPressLando
-
-# Verify that we can access the homepage
-lando ssh -c "curl nginx |grep \'Welcome to WordPress. This is your first post. Edit or delete it, then start writing!\'"
-```
-
-Cleanup
--------
-
-Remove the test app.
-
-```bash
-# Remove the test WordPress app.
-lando destroy -y
+lando poweroff
 ```

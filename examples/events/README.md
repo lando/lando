@@ -1,33 +1,44 @@
 Events Example
 ==============
 
-This example provides basic Lando events handling via a simple LEMP stack.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for events configuration options.
+* [Events](http://docs.devwithlando.io/config/events.html)
 
-Getting Started
----------------
+See the [Landofiles](http://docs.devwithlando.io/config/lando.html) in this directory for the exact magicks.
 
-You should be able to run the following steps to get up and running with this example.
+Start up tests
+--------------
 
 ```bash
-# Start the example
+# Should start successfully
+rm -rf test
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to verify things work as expected
 
 ```bash
-# Test the post-start event
-lando start | grep "App restarted"
+# Should run events on the appserver container by default
+lando ssh -s appserver -c "cat /app/test/appserver-pre-start.txt | grep \\\$(hostname -s)"
 
-# Test the custom post-test event
-lando test
-lando test | grep "runs after test"
+# Should run events on the specified service
+lando ssh -s web -c "cat /app/test/web-pre-start.txt | grep \\\$(hostname -s)"
+lando ssh -s web -c "cat /app/test/web-post-start.txt | grep \\\$(hostname -s)"
+
+# Should run on tooling commands as well
+lando thing
+lando ssh -s web -c "cat /app/test/web-post-thing.txt | grep \\\$(hostname -s)"
+```
+
+Destroy tests
+-------------
+
+```bash
+# Should destroy succesfully
+lando destroy -y
+lando poweroff
 ```

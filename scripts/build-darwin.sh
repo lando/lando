@@ -2,8 +2,8 @@
 
 # Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="18.06.1-ce-mac73"
-DOCKER_DOWNLOAD="26764"
+DOCKER_VERSION="2.0.0.2"
+DOCKER_DOWNLOAD="30215"
 TEAM_ID="FY8GAUX282"
 PKG_SIGN=false
 DMG_SIGN=false
@@ -109,7 +109,7 @@ cd .. && \
 chmod +x uninstall.sh && \
 mv -f uninstall.sh dmg/uninstall.command && \
 mv -f lando.icns dmg/.VolumeIcon.icns && \
-cp -rf ../../README.md dmg/README.md && \
+cp -rf ../../docs/README.md dmg/README.md && \
 cp -rf ../../TERMS.md dmg/TERMS.md && \
 cp -rf ../../LICENSE.md dmg/LICENSE.md
 

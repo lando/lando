@@ -1,91 +1,79 @@
-PHP Nginx Services Example
-==========================
+LEMP Example
+============
 
-This example provides a very basic `LEMP` application using Lando services instead of a recipe.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for PHP configuration options.
+* [LEMP Recipe](https://docs.devwithlando.io/tutorial/lemp.html)
 
-Start me up!
-------------
+Start up tests
+--------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Starts up a LEMP stack using lando services
+# Should poweroff
+lando poweroff
+
+# Should initialize the latest cakephp codebase
+rm -rf lemp && mkdir -p lemp && cd lemp
+lando init --source remote --remote-url git://github.com/cakephp/cakephp.git --remote-options="--branch 2.x --depth 1" --recipe lemp --webroot . --name lando-lemp
+
+# Should start up succesfully
+cd lemp
 lando start
 ```
 
-Helpful Commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Get DB connection info
-lando info
+# Should return the drupal installation page by default
+cd lemp
+lando ssh -s appserver_nginx -c "curl -L localhost" | grep "CakePHP"
 
-# Run LEMP dev tools
-lando php -v
-lando composer
-lando mysql
-# This should fail
-lando phplint
+# Should use 7.2 as the default php version
+cd lemp
+lando php -v | grep 7.2
 
-# Run NODE dev tools
-lando node -v
-lando npm -v
+# Should be running nginx 1.x by default
+cd lemp
+lando ssh -s appserver_nginx -c "nginx -v 2>&1 | grep 1."
+lando ssh -s appserver_nginx -c "curl -IL localhost" | grep Server | grep nginx | grep "1."
+
+# Should be running mysql 5.7 by default
+cd lemp
+lando mysql -V | grep 5.7
+
+# Should not enable xdebug by default
+cd lemp
+lando php -m | grep xdebug || echo $? | grep 1
+
+# Should use the default database connection info
+cd lemp
+lando mysql -ulemp -plemp lemp -e quit
+
+# Should be able to global require a composer dep
+cd lemp
+lando composer global require phpunit/phpunit
+lando ssh -s appserver -c "phpunit --version"
+lando ssh -s appserver -c "which phpunit | grep /var/www/"
+
+# Should be able to require a composer dep
+cd lemp
+lando composer require phpunit/phpunit
+lando ssh -s appserver -c "/app/vendors/bin/phpunit --version"
 ```
 
-Verify things are in order
---------------------------
+Destroy tests
+-------------
 
-Run these commands to make sure things are right as rain.
-
-```bash
-# Verify that we are being served securely by nginx
-lando ssh appserver -c "curl -Ik https://nginx | grep Server | grep nginx"
-
-# Verify the php cli exists and has the right version
-lando php -v | grep 7.1.
-
-# Verify the webroot is set correctly
-lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
-
-# Verify we have the xdebug extension
-lando php -m | grep Xdebug
-
-# Verify the databases was setup correctly
-lando ssh database -c "mysql -umariadb -ppassword database -e\"quit\""
-
-# Verify mysql portforward
-docker inspect lemp_database_1 | grep HostPort | grep 3332
-lando info | grep port | grep 3332
-
-# Verify we have the composer tool
-lando composer --version
-
-# Verify we have the mysql cli and its using mariadb
-lando mysql -V | grep MariaDB
-
-# Verify we have the mysql cli and its the right version
-lando node -v | grep 6.10
-
-# Verify we have the phplint cli
-lando phplint --version
-
-# Verify our custom php settings
-lando php -i | grep memory_limit | grep 499M
-
-# Verify the custom db file was used
-lando ssh database -c "mysql -u root -e \'show variables;\' | grep key_buffer_size | grep 4026"
-```
-
-Blowup the app
---------------
-
-Run these commands to ensure we clean things up.
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroys the LEMP stack
+# Should be destroyed with success
+cd lemp
 lando destroy -y
+lando poweroff
 ```

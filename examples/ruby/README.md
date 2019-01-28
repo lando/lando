@@ -1,67 +1,53 @@
 Ruby Example
 ============
 
-This example provides a very basic Ruby web application.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Ruby configuration options.
+* [Ruby Service](https://docs.devwithlando.io/tutorial/ruby.html)
 
-Launch ruby
------------
+Start up tests
+--------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up this ruby app
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Verifying
----------
+Verification commands
+---------------------
 
-Validate things!
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify we are serving the right thing
-lando ssh appserver -c "curl localhost | grep TROUBLETROUBLETROUBLE"
+# Should use 2.5.x as the default version
+lando ssh -s defaults -c "ruby --version | grep 2.5."
 
-# Verify we have the ruby cli
-lando ruby -v
+# Should use the user specified version when set
+lando ssh -s custom -c "ruby --version | grep 2.6."
 
-# Verify we have the right ruby version
-lando ruby -v | grep 2.4.
+# Should use the user specified patch version when set
+lando ssh -s patch -c "ruby --version | grep 2.5.3"
 
-# Verify we have bundler cli
-lando bundler -v
+# Should run on the custom port when specified
+lando ssh -s custom -c "curl http://localhost:8080 | grep OHNO"
 
-# Verify we have the gem cli
-lando gem -v
+# Should run on port 80 by default
+lando ssh -s defaults -c "curl http://localhost | grep TROUBLE"
 
-# Verify we have the travis cli
-lando travis version
+# Should not serve port 80 for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Run ruby cli
-lando ruby -v
-
-# Run bundler things
-lando bundler
-
-# Use travis gem
-lando travis
-```
-
-Nuke everything
----------------
-
-Run the following steps to clean things up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Kill ruby
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

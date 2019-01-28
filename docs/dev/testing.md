@@ -11,7 +11,7 @@ You should be able to use this guide to...
 Code linting and standards
 --------------------------
 
-Lando implements some basic linting and a slghtly less annoying version of the `google` `es6` code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
+Lando implements some basic linting and a slightly less annoying version of the `google` `es6` code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
 
 ```bash
 yarn lint
@@ -20,7 +20,9 @@ yarn lint
 Unit tests
 ----------
 
-The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/). In order to familiarize yourself with where tests should live for both core and plugins please consult the [structure guide](./structure.md). Lando's core libraries currently have 100% coverage so you can [scope them out](https://github.com/lando/lando/tree/master/test/unit) for help writing tests.
+The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/).
+
+In order to familiarize yourself with where tests should live for both core and plugins please consult the [structure guide](./structure.md). Lando's core libraries currently have decent coverage so you can [scope them out](https://github.com/lando/lando/tree/master/test/unit) for help writing tests.
 
 To run the unit test suite, execute:
 
@@ -31,94 +33,35 @@ yarn test:unit
 Functional tests
 ----------------
 
-Lando uses it's own functional testing framework that combines mocha as the test runner, chai for assertions and [command-line-test](https://github.com/macacajs/command-line-test) to make the process of executing commands simpler. Tests are written as specially structured `markdown` files that live in the `examples` folder and contain code blocks. When the suite runs these are scanned, parsed and outputted as mocha tests.
+Lando uses it's own functional testing framework called [leia](https://github.com/lando/leia). Leia helps us ensure that Lando is the real hero we all know him to be.
 
-To run the functional test suite, execute:
-```bash
-yarn test:functional
-```
+Leia combines `mocha` as the test runner, `chai` for assertions and `command-line-test` to make the process of executing commands simpler. Tests are written as specially structured `README.md` files that live in the `examples` folder and contain code blocks. When the suite runs these are scanned, parsed and outputted as mocha tests.
 
 > #### Warning::Pretty sure these will not run on Windows yet
 >
 > SORRY WINDOZE USERS!
 
-In order for your `markdown` file to be recognized as a functional test it needs to have at least the following
-
-#### 1. A H1 Header
-
-```md
-ISSUE NUMBER - Brief description
-================================
-```
-
-#### 2. Three H2 Headers
-
-Our parser will look for three sections that contain instructions for installing needed test dependencies, the actual tests to run and instructions for how to cleanup after the tests run. These sections **must be begin** with the following words in order to be picked up by our parser and they are **case sensitive**
-
-```md
-Starting
---------
-
-... instructions
-
-Testing
--------
-
-... instructions
-
-Cleanup
--------
-
-... instructions
-```
-
-If you want to have MOARFUN with how you describe these sections, check out the other [starting phrases](https://github.com/lando/lando/blob/master/scripts/util.js#L11) we look for to identify each section.
-
-#### 3. A code block with at least one command and comment
-
-Under each of the above sections you need to have a triple tick [markdown code block](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code) that contains at least one comment and one command. The comment will be the human readable description of what the test does.
-
-Here is a basic code block that runs one test
+To generate tests from the `examples` repo and then run the functional test suite, execute:
 
 ```bash
-# Start up my example with lando
-lando start
+yarn generate-tests && yarn test:functional
 ```
 
-Here is another block with a more verbose comment
+**NOTE:** This may take awhile to complete locally and could destroy any apps you may already have running. It's best to use it in a continuos integration environment.
 
-```bash
-# Check to see if our app has the gd php extension installed
-# ADDITIONAL LINES OF COMMENTS ARE PERMITTED BUT ONLY THE FIRST LINE WILL BE
-# USED AS THE TEST DESCRIPTION
-lando php -m | grep gd
-```
+To better understand how these `markdown` files need to be parsed check out the [Leia docs](https://github.com/lando/leia). Lando will specifically look for headers that start with the following to determine which kinds of tests your code block is for:
 
-Here is an example that runs multiple tests. Note that you **MUST** drop a new line between the first and second test for it to read both.
+| Type | Headers |
+| -- | -- | -- |
+| Start | `Starting`|
+| Test | `Testing` |
+| Cleanup | `Cleaning` |
 
-```bash
-# Destroy my lando app
-lando destroy -y
-
-# Test whether truth really exists
-true
-```
-
-Here is an example that runs a multi line command. Note that these commands are concatenated together with `&&` behind the scenes.
-
-```bash
-# Do something a little more complicted
-lando db-import test.sql
-lando mysql data1 -e "show tables;" | grep users
-```
-
-Here is a [complete functional test](https://github.com/lando/lando/tree/master/examples/1141-freetype-fpm5.3) we wrote to replicate and then fix [#1141](https://github.com/lando/lando/issues/1141). This test actually runs in production on every code push. A good deal of our [examples](https://github.com/lando/lando/tree/master/examples) are also valid functional tests.
-
-Here are some caveats and general guidelines about when and how to write tests.
+Here are some caveats and general guidelines about when and how to write functional tests.
 
 #### So what's the catch?
 
-1. You can only run functional tests from the lando source root directory.
+1. The suite will run against the `lando` it finds in your PATH so you need to make sure that `lando` is running frmo source
 2. For test commands to pass they must return a 0 status code eg not have any errors
 3. Additional quotes inside of a `lando ssh -c "STUFF"` are not handled very well right now
 
@@ -137,9 +80,10 @@ References
 
 In addition to the tips above, looking at existing tests will give you a good idea of how to write your own, but if you're looking for more tips, we recommend:
 
+*	[Leia](https://github.com/lando/leia)
 *   [Mocha documentation](http://mochajs.org/)
 *   [Chai documentation](http://chaijs.com/)
 *   [Chai-As-Promised documentation](http://chaijs.com/plugins/chai-as-promised/)
-*   [Lando core unit tests](https://github.com/lando/lando/tree/master/test/unit)
-*   [Lando engine plugin unit tests](https://github.com/lando/lando/tree/master/plugins/lando-engine/test/unit)
-*   [Functional test for issue #1141](https://github.com/lando/lando/tree/master/examples/1141-freetype-fpm5.3)
+*	[Command Line Test](https://github.com/macacajs/command-line-test)
+*   [Lando core unit tests](https://github.com/lando/lando/tree/master/test)
+

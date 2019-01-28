@@ -1,43 +1,7 @@
-# dotnet app
-name: dotnet
-
-# Give me http://dotnet.lndo.site and https://dotnet.lndo.site
-proxy:
-  appserver:
-    - dotnet.lndo.site
-
-# Spin up services to run a basic dotnet server
+name: lando-dotnet
 services:
-
-  # Create a dotnet instance
-  appserver:
-
-    # dotnet version 2.0
-    type: dotnet:2.0
-
-    # Optionally create certs in /certs that can be used by your application
-    # to listen over https. Creates the following certs your app can use
-    #
-    #   - /certs/cert.key
-    #   - /certs/cert.crt
-    #   - /certs/cert.pem
-    #
-    # ssl: true
-
-    # Optionally specify a command/script to run when you start your dotnet service up.
-    #
-    # If you are using dotnet as a server you are going to want to define this.
-    # This can be either a string or array.
-    #
-    # If you are just spinning up a dotnet container for usage as a cli tool
-    # you can leave this blank and the container will boot up and stay on
-    #
+  defaults:
+    type: dotnet
     command: dotnet run
-
-# Add some nice command routing
-tooling:
-
-  # This will allow you to run things like `lando dotnet publish` without needing
-  # to `lando start` first.
-  dotnet:
-    service: appserver
+  cli:
+    type: dotnet

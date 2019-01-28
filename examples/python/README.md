@@ -1,70 +1,56 @@
 Python Example
 ==============
 
-This example provides a very basic `python` web server.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Python configuration options.
+* [Python Service](https://docs.devwithlando.io/tutorial/python.html)
 
-This is the dawning of the basic python app
--------------------------------------------
+Start up tests
+--------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up this python app
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Verifying
----------
+Verification commands
+---------------------
 
-Validate things!
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify we are serving the right thing
-lando ssh appserver -c "curl localhost | grep CAUSELOVINGHIMWASRED"
+# Should use 3.7 as the default version
+lando ssh -s defaults -c "python --version | grep 3.7."
 
-# Verify we have the python cli
-lando python --version
+# Should use the user specified version when set
+lando ssh -s custom -c "python --version | grep 3.6."
 
-# Verify we have the right python version
-lando python -V | grep 3.6.
+# Should use the user specified patch version when set
+lando ssh -s patch -c "python --version | grep 3.5.6"
 
-# Verify we have pip cli
-lando pip -V
+# Should run on the custom port when specified
+lando ssh -s custom -c "curl http://localhost:8000 | grep CUSTOMZ"
 
-# Verify we have the easy_install cli
-lando easy_install --version
+# Should run over ssl when specified
+lando ssh -s customssl -c "curl -k https://localhost:443 | grep ANDTHEFUTURETO"
 
-# Verify we have the pyvenv cli
-lando pyvenv --help
+# Should run on port 80 by default
+lando ssh -s defaults -c "curl http://localhost | grep OPENTHEPASTANDPRESENT"
 
-# Verify we have the livereload tool
-lando livereload -h
+# Should not serve port 80 for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Run python dev tools
-lando python --version
-lando pip
-lando easy_install
-lando pyvenv
-
-# livereload cli
-lando livereload
-```
-
-Kill the python
----------------
-
-Run the following steps to clean things up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Kill the python
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

@@ -1,83 +1,76 @@
-Backdrop Recipe Example
-=======================
+Backdrop Example
+================
 
-This example provides a very basic `backdrop` recipe example.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Backdrop configuration options.
+* [Backdrop Recipe](https://docs.devwithlando.io/tutorial/backdrop.html)
 
-Getting Started
----------------
+Start up tests
+--------------
 
-You should be able to run the following steps to get up and running with this example.
-
-```bash
-# Get backdrop
-# NOTE: Probably want to replace with the latest release
-# See: https://github.com/backdrop/backdrop/releases
-curl -fsSL "https://github.com/backdrop/backdrop/archive/1.9.2.tar.gz" | tar -xz --strip 1 -C ./www
-
-# Start up the example
-lando start
-
-# Check out other commands you can use with this example
-lando
-```
-
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Get DB connection info
-lando info
+# Should poweroff
+lando poweroff
 
-# Run Backdrop drush commands
-# You need to install Backdrop before you can do this
-cd www
-lando drush status
-```
+# Should initialize the latest Backdrop codebase
+rm -rf backdrop && mkdir -p backdrop && cd backdrop
+lando init --source remote --remote-url https://github.com/backdrop/backdrop/releases/download/1.12.1/backdrop.zip --recipe backdrop --webroot backdrop --name lando-backdrop
 
-Bootup
-------
-
-Bootup the example for testing.
-
-```bash
-# Start the Backdrop example app
+# Should start up succesfully
+cd backdrop
 lando start
 ```
 
-Testing
--------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Test getting Backdrop codebase
-if [ -d "www" ]; then rm -Rf www; fi
-git clone https://github.com/backdrop/backdrop.git www
+# Should return the drupal installation page by default
+cd backdrop
+lando ssh -s appserver -c "curl -L localhost" | grep "Backdrop CMS 1"
 
-# Verify that there is a backdrop code base
-lando ssh -c "ls www |grep index.php"
+# Should use 7.2 as the default php version
+cd backdrop
+lando php -v | grep 7.2
 
-# Test removing database
-lando ssh -c "mysql -ubackdrop -pbackdrop -h database -e \'drop database if exists backdrop\'"
+# Should be running apache 2.4 by default
+cd backdrop
+lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
 
-# Test adding a database
-lando ssh -c "mysql -ubackdrop -pbackdrop -h database -e \'create database if not exists backdrop\'"
+# Should be running mysql 5.7 by default
+cd backdrop
+lando mysql -V | grep 5.7
 
-# Test installing Backdrop via drush
-lando ssh -c "cd www && drush si --db-url=mysql://backdrop:backdrop@database/backdrop -y"
+# Should not enable xdebug by default
+cd backdrop
+lando php -m | grep xdebug || echo $? | grep 1
 
-# Verify that we can visit the homepage
-lando ssh -c "curl appserver |grep \'This is your first post! You may edit or delete it.\'"
+# Should use the default database connection info
+cd backdrop
+lando mysql -ubackdrop -pbackdrop backdrop -e quit
+
+# Should use drush 8.1.x by default
+cd backdrop
+lando drush version | grep 8.1
+
+# Should be able to install drupal
+cd backdrop/backdrop
+lando drush si --db-url=mysql://backdrop:backdrop@database/backdrop -y
 ```
 
-Cleanup
--------
+Destroy tests
+-------------
 
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the example
+# Should be destroyed with success
+cd backdrop
 lando destroy -y
+lando poweroff
 ```

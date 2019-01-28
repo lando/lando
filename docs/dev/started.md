@@ -6,10 +6,10 @@ This section of documentation serves as a guide to help people who wish to contr
 Forking and Installing Lando From Source
 ----------------------------------------
 
-In order to help contribute code you will likely need to get Lando running from source. **All subsequent documentation in this section assume you have done this!**
+In order to help contribute code you will likely need to get Lando running from source. **All subsequent documentation in this section assumes you have done this!**
 
 1. If you are not a Lando committer with write access to the [official repo](https://github.com/lando/lando) start by [forking the aforementioned repo](https://help.github.com/articles/fork-a-repo/)
-2. Follow the [install from source instructions](./../installing/installing.md#from-source) using either the [official repo](https://github.com/lando/lando) or your fork.
+2. Follow the [install from source instructions](./../installation/source.md) using either the [official repo](https://github.com/lando/lando) or your fork.
 3. Read through the [contribution section](./../contrib/contributing.md) to get a sense of how things work.
 
 Contributing Code
@@ -27,6 +27,6 @@ Before opening a PR its a good idea to
 
   * Run [tests locally](./testing.md)
   * Pull in the latest code from `master` with `git pull origin master`
-  * Make sure you have looked at the [PR checklist](https://github.com/lando/lando/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
+  * Make sure you have looked at the [PR checklist](https://github.com/lando/lando/blob/master/.github)
 
 **NEVER EVER EVER EVER PUSH ANYTHING DIRECTLY TO THE MASTER BRANCH!!!**

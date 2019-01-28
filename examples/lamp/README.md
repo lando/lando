@@ -1,73 +1,80 @@
-PHP Apache Services Example
-===========================
+LAMP Example
+============
 
-This example provides a very basic `LAMP` application using Lando services instead of a recipe.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for PHP configuration options.
+* [LAMP Recipe](https://docs.devwithlando.io/tutorial/lamp.html)
 
-This is the dawning of the age of LAMPquarius
----------------------------------------------
+Start up tests
+--------------
 
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Starts up a LAMP stack using lando services
+# Should poweroff
+lando poweroff
+
+# Should initialize the latest codeignitor codebase
+rm -rf lamp && mkdir -p lamp && cd lamp
+lando init --source remote --remote-url https://github.com/bcit-ci/CodeIgniter/archive/3.1.10.tar.gz --remote-options="--strip-components 1" --recipe lamp --webroot . --name lando-lamp
+
+# Should start up succesfully
+cd lamp
 lando start
 ```
 
-Helpful commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Get DB connection info
-lando info
+# Should return the drupal installation page by default
+cd lamp
+lando ssh -s appserver -c "curl -L localhost" | grep "CodeIgniter"
 
-# Run LAMP dev tools
-lando php -v
-lando composer
-lando mysql
+# Should use 7.2 as the default php version
+cd lamp
+lando php -v | grep 7.2
+
+# Should be running apache 2.4 by default
+cd lamp
+lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
+
+# Should be running mysql 5.7 by default
+cd lamp
+lando mysql -V | grep 5.7
+
+# Should not enable xdebug by default
+cd lamp
+lando php -m | grep xdebug || echo $? | grep 1
+
+# Should use the default database connection info
+cd lamp
+lando mysql -ulamp -plamp lamp -e quit
+
+# Should be able to global require a composer dep
+cd lamp
+lando composer global require phpunit/phpunit
+lando ssh -s appserver -c "phpunit --version"
+lando ssh -s appserver -c "which phpunit | grep /var/www/"
+
+# Should be able to require a composer dep
+cd lamp
+lando composer require phpunit/phpunit
+lando ssh -s appserver -c "phpunit --version"
+lando ssh -s appserver -c "which phpunit | grep /app"
 ```
 
-Sanity checks
+Destroy tests
 -------------
 
-Run these commands to make sure things are right as rain.
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Verify that we are being served by apache
-lando ssh appserver -c "curl -Ik https://localhost | grep Server | grep Apache"
-
-# Verify the php cli exists and has the right version
-lando php -v | grep 5.3.
-
-# Verify the webroot is set correctly
-lando ssh appserver -c "env | grep LANDO_WEBROOT=/app/www"
-
-# Verify we have the xdebug extension
-lando php -m | grep Xdebug
-
-# Verify mysql portforward
-docker inspect lamp_database_1 | grep HostPort | grep 3308
-lando info | grep port | grep 3308
-
-# Verify the databases was setup correctly
-lando ssh database -c "mysql -ulamp -plamp lamp -e\"quit\""
-
-# Verify we have the composer tool
-lando composer --version
-
-# Verify we have the mysql cli
-lando mysql -V
-```
-
-Nuke the whole god damn thing
------------------------------
-
-Run these commands to ensure we clean things up.
-
-```bash
-# Destroys the LAMP stack
+# Should be destroyed with success
+cd lamp
 lando destroy -y
+lando poweroff
 ```

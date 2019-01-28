@@ -1,41 +1,82 @@
 MEAN Example
 ============
 
-This example provides a very basic `mean` recipe example.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for `mean` configuration options.
+* [MEAN Recipe](https://docs.devwithlando.io/tutorial/mean.html)
 
-Getting Started
----------------
+Start up tests
+--------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Install the node deps
-lando npm install
+# Should poweroff
+lando poweroff
 
-# Start up the example
+# Initialize an empty mean recipe
+rm -rf mean && mkdir -p mean && cd mean
+lando init --source cwd --recipe mean --option port=2368 --option command="su - node -c \'/var/www/.npm-global/bin/ghost run -d /app/src -D\'" --name lando-mean
+
+# Should install the ghost cli and install a new ghost app
+cd mean
+lando ssh -c "npm install ghost-cli@latest -g && mkdir src && cd src && ghost install local --ip 0.0.0.0 && ghost stop"
+
+# Should start up succesfully
+cd mean
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Get DB connection info
-lando info
+# Should return the ghost default page
+cd mean
+lando ssh -s appserver -c "curl -L localhost:2368" | grep "Ghost"
 
-# Run node commands
-lando npm -v
-lando node -v
+# Should use node 10 by default
+cd mean
+lando node -v | grep v10.
+
+# Should be running mongo 4.0 by default
+cd mean
+lando ssh -s database -c "mongo --version | grep v4.0"
+
+# Should have yarn available
+cd mean
 lando yarn -v
-lando gulp -v
 
-# Drop into the mongo cli
-lando mongo
+# Should have npm available
+cd mean
+lando npm -v
+
+# Should have node available
+cd mean
+lando node -v
+
+# Should be able to npm global install
+cd mean
+lando npm -g install eslint
+lando ssh -s appserver -c "eslint -v"
+
+# Should be able to npm install
+cd mean
+lando npm install eslint
+lando ssh -s appserver -c "eslint -v"
+lando ssh -s appserver -c "which eslint | grep /app/node_modules"
+```
+
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
+cd mean
+lando destroy -y
+lando poweroff
 ```

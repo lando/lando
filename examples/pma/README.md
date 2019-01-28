@@ -1,54 +1,45 @@
-phpMyAdmin Example
+PhpMyAdmin Example
 ==================
 
-This example provides a very basic `phpmyadmin` example built ontop of the LEMP recipe.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for phpMyAdmin configuration options.
+* [PhpMyAdmin Service](https://docs.devwithlando.io/tutorial/phpmyadmin.html)
 
-Starting the example
---------------------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up PMA
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Testing the example
--------------------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify the PMA site is working
-lando ssh appserver -c "curl -I pma.lemp.lndo.site | grep 200 | grep OK"
+# Should return 200 for the pma admin site
+lando ssh -s pma -c "curl -I localhost | grep 200 | grep OK"
 
-# Verify the databases are up and good
-lando ssh database -c "mysql -ulemp -plemp lemp -e\"quit\""
-lando ssh database2 -c "mysql -umariadb -ppassword database -e\"quit\""
+# Should have databases that work correctly
+lando ssh -s database -c "mysql -umariadb -pmariadb database -e quit"
+lando ssh -s database2 -c "mysql -umariadb -pmariadb database -e quit"
 
 # Verify our databases are hooked up to PMA
-lando ssh pma -c "env | grep PMA_HOSTS=database,database2"
+lando ssh -s pma -c "env | grep PMA_HOSTS=database,database2"
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Get DB connection info
-lando info
-
-# Get URL info for accessing the pma interface
-lando info
-```
-
-Destroying the examples
------------------------
-
-Run the following commands to kill this example.
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy PMA
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

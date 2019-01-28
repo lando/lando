@@ -1,43 +1,58 @@
 nginx Example
 =============
 
-This example provides a very basic `nginx` web server.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for nginx configuration options.
+* [nginx Service](https://docs.devwithlando.io/tutorial/nginx.html)
 
-Spin things up
+Start up tests
 --------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up an nginx server
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Testing
--------
+Verification commands
+---------------------
 
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify we are using Lando certs
-sleep 10
-lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep ssl_certificate | grep /certs/cert.pem"
+# Should use 1.14.x as the default version
+lando ssh -s defaults -c "nginx -v 2>&1 | grep 1.14"
 
-# Verify the webroot is correct
-lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep root | grep /app/www"
+# Should use the user specified patch version if given
+lando ssh -s patch -c "nginx -v 2>&1 | grep 1.14.1"
 
-# Verify the custom config is loaded
-lando ssh appserver -c "cat /etc/nginx/conf.d/default.conf | grep CUSTOMTHINGGOTLODADED"
+# Should serve from the app root by default
+lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
+
+# Should only serve over http by default
+lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+
+# Should serve from webroot if specified
+lando ssh -s custom -c "curl http://localhost | grep WWWDIR"
+
+# Should serve from https when specified
+lando ssh -s custom -c "curl -k https://localhost | grep WWWDIR"
+
+# Should mount custom config to the correct locations
+lando ssh -s custom -c "cat /opt/bitnami/extra/nginx/templates/nginx.conf.tpl | grep LANDOSERVER"
+lando ssh -s custom -c "cat /opt/bitnami/extra/nginx/templates/default.conf.tpl | grep LANDOVHOSTS"
+lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/fastcgi_params | grep LANDOPARAMS"
 ```
 
-Cleanup
--------
+Destroy tests
+-------------
 
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the nginx server and clean things up
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

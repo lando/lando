@@ -5,28 +5,45 @@ Lando
 
 Lando is for developers who want to:
 
-1. Quickly specify and painlessly spin up the services and tools needed to develop their projects.
-2. Specify these local development dependencies in a per-project, lives-in-git config file called `.lando.yml`
-3. Automate complex build steps, testing setups, deployments or other repeated-more-than-once workflows
-4. Avoid the built-in-masochism of directly using `docker` or `docker-compose`
+* Quickly specify and painlessly spin up the [services](http://docs.devwithlando.io/config/services.html) and [tooling](http://docs.devwithlando.io/config/tooling.html) needed to develop their projects.
+* Ship these local development dependencies in a per-project, lives-in-git [config file](http://docs.devwithlando.io/config/lando.html)
+* Automate complex [build steps](http://docs.devwithlando.io/config/services.html#build-steps), testing setups, deployments or other [repeated-more-than-once workflows](http://docs.devwithlando.io/config/events.html)
+* Avoid the built-in-masochism of directly using `docker` or `docker-compose`
 
-It's a free, open source, cross-platform, **local** development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them. Think of it as your local development's dependency management and automation tool. It can even be installed right beside an old Kalabox installation with no interference, or used as a complete upgrade-replacement.
+It's a free, open source, cross-platform, **local** development environment and DevOps tool built on [Docker](http://docker.com) container technology and developed by [Tandem](http://thinktandem.io). Designed to work with most major languages, frameworks and services, Lando provides an easy way for developers of all skill levels to specify simple or complex requirements for their projects, and then quickly get to work on them.
 
-With Lando you can also...
+**Think of it as your local development dependency management and automation tool.**
 
-*   Easily mimic your production environment locally.
-*   Standardize your teams dev environments and tooling on OSX, Windows and Linux.
-*   Integrate with hosting providers like [Pantheon](https://pantheon.io)
-*   Easily customize or extend tooling, deployment options and basically any other functionality.
-*   Free yourself from the tyranny of inferior local development products.
+What is it good for?
+--------------------
 
-For the more technically curious, Lando is actually 2 separate abstraction layers built on top of [Docker Compose](https://docs.docker.com/compose/).
+*   Mimicking your production environment locally
+*   Standardizing your teams dev environments and tooling on OSX, Windows and Linux
+*   Integrating with hosting providers like [Pantheon](https://pantheon.io)
+*   Customizing or extending tooling, deployment options and basically any other functionality
+*   Running CI tests locally, running local tests in CI
+*   Using a single local development environment for *all* your projects
+*   Freeing yourself from the tyranny of inferior local development products
+
+Wait, doesn't Docker Compose do this?
+-------------------------------------
+
+Yes! Well, sort of. You can think of Lando as both an abstraction layer and superset of Docker Compose as well as a Docker Compose utility.
+
+**As an abtraction layer** Lando vastly reduces the complexity of spinning up containers by exposing only the most relevant config for a given "service" and setting "sane defaults". Lando also provides "recipes" which are common combinations of services and their tooling that satisfy a given development use case eg Drupal, Python, Laravel, Dotnet, etc.
+
+**As a superset** Lando provides ways for developers to run complex commands, build steps and automation on their services without the hassle of custom Dockerfiles or long "docker exec" commands. Think `lando yarn add express`. Think clear my applications cache after I import a database. Think install this `php-extension` before my appserver starts and then `composer install` after it does.
+
+**As a utility** Lando handles some of the more arduous setup required for a *good* Docker Compose setup eg proxying, nice urls, cross-application networking (think Vue.js frontend talking to separate Laravel backend), host-container file permission handling, file sharing, per-container SSL certificate handling, ssh-key handling, etc.
+
+**And!** If you don't like the default choices we've made all of the above is highly configurable down to the Docker Compose level itself!
 
 Begin by checking out
 ---------------------
 
-*   [How to install Lando](http://docs.devwithlando.io/installation/installing.html)
 *   [Lando basics](http://docs.devwithlando.io/started.html)
+*   [Lando CLI usage](http://docs.devwithlando.io/cli/usage.html)
+*   [Installing Lando](https://docs.devwithlando.io/installation/system-requirements.html)
 
 Then try out one of our preconfigured recipe start states
 ---------------------------------------------------------
@@ -42,163 +59,154 @@ Then try out one of our preconfigured recipe start states
 *   [LEMP](http://docs.devwithlando.io/tutorials/lemp.html)
 *   [Pantheon](http://docs.devwithlando.io/tutorials/pantheon.html)
 *   [WordPress](http://docs.devwithlando.io/tutorials/wordpress.html)
-*   [Custom](http://docs.devwithlando.io/tutorials/custom.html)
 
 Or build up from a base language
 --------------------------------
 
-*   [dotnet](http://docs.devwithlando.io/services/dotnet.html)
-*   [go](http://docs.devwithlando.io/services/go.html)
-*   [node](http://docs.devwithlando.io/services/node.html)
-*   [php](http://docs.devwithlando.io/services/php.html)
-*   [python](http://docs.devwithlando.io/services/python.html)
-*   [ruby](http://docs.devwithlando.io/services/ruby.html)
+*   [dotnet](http://docs.devwithlando.io/tutorials/dotnet.html)
+*   [go](http://docs.devwithlando.io/tutorials/go.html)
+*   [node](http://docs.devwithlando.io/tutorials/node.html)
+*   [php](http://docs.devwithlando.io/tutorials/php.html)
+*   [python](http://docs.devwithlando.io/tutorials/python.html)
+*   [ruby](http://docs.devwithlando.io/tutorials/ruby.html)
 
 And then mix in additional auxiliary services
 ---------------------------------------------
 
-*   [apache](http://docs.devwithlando.io/services/apache.html)
-*   [elasticsearch](http://docs.devwithlando.io/services/elasticsearch.html)
-*   [mailhog](http://docs.devwithlando.io/services/mailhog.html)
-*   [mariadb](http://docs.devwithlando.io/services/mariadb.html)
-*   [memcached](http://docs.devwithlando.io/services/memcached.html)
-*   [mongo](http://docs.devwithlando.io/services/mongo.html)
-*   [mssql](http://docs.devwithlando.io/services/mssql.html)
-*   [mysql](http://docs.devwithlando.io/services/mysql.html)
-*   [nginx](http://docs.devwithlando.io/services/nginx.html)
-*   [phpmyadmin](http://docs.devwithlando.io/services/phpmyadmin.html)
-*   [postgres](http://docs.devwithlando.io/services/postgres.html)
-*   [redis](http://docs.devwithlando.io/services/redis.html)
-*   [solr](http://docs.devwithlando.io/services/solr.html)
-*   [tomcat](http://docs.devwithlando.io/services/tomcat.html)
-*   [varnish](http://docs.devwithlando.io/services/varnish.html)
-
-And then get some pro workflow dialed
--------------------------------------
-
-*   [Using Composer to Manage a Project](http://docs.devwithlando.io/tutorials/composer-tutorial.html)
-*   [Lando and CI](http://docs.devwithlando.io/tutorials/lando-and-ci.html)
-*   [Lando, Pantheon, CI, and Behat (BDD)](http://docs.devwithlando.io/tutorials/lando-pantheon-workflow.html)
-*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
-
-And then try out some advanced stuff
-------------------------------------
-
-*   [Adding additional services](http://docs.devwithlando.io/tutorials/setup-additional-services.html)
-*   [Adding additional tooling](http://docs.devwithlando.io/tutorials/setup-additional-tooling.html)
-*   [Adding additional routes](http://docs.devwithlando.io/config/proxy.html)
-*   [Adding additional events](http://docs.devwithlando.io/config/events.html)
-*   [Setting up front end tooling](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Accessing services (eg your database) from the host](http://docs.devwithlando.io/tutorials/frontend.html)
-*   [Importing SQL databases](http://docs.devwithlando.io/tutorials/db-import.html)
-*   [Exporting SQL databases](http://docs.devwithlando.io/tutorials/db-export.html)
+*   [apache](http://docs.devwithlando.io/tutorials/apache.html)
+*   [elasticsearch](http://docs.devwithlando.io/tutorials/elasticsearch.html)
+*   [mailhog](http://docs.devwithlando.io/tutorials/mailhog.html)
+*   [mariadb](http://docs.devwithlando.io/tutorials/mariadb.html)
+*   [memcached](http://docs.devwithlando.io/tutorials/memcached.html)
+*   [mongo](http://docs.devwithlando.io/tutorials/mongo.html)
+*   [mssql](http://docs.devwithlando.io/tutorials/mssql.html)
+*   [mysql](http://docs.devwithlando.io/tutorials/mysql.html)
+*   [nginx](http://docs.devwithlando.io/tutorials/nginx.html)
+*   [phpmyadmin](http://docs.devwithlando.io/tutorials/phpmyadmin.html)
+*   [postgres](http://docs.devwithlando.io/tutorials/postgres.html)
+*   [redis](http://docs.devwithlando.io/tutorials/redis.html)
+*   [solr](http://docs.devwithlando.io/tutorials/solr.html)
+*   [tomcat](http://docs.devwithlando.io/tutorials/tomcat.html)
+*   [varnish](http://docs.devwithlando.io/tutorials/varnish.html)
 
 And then dive deep into reference materials
 -------------------------------------------
 
-*   [Configuration](http://docs.devwithlando.io/config/lando.html)
+*   [CLI](http://docs.devwithlando.io/cli/usage.html)
+*   [Landofiles](http://docs.devwithlando.io/config/lando.html)
+*   [Environment](http://docs.devwithlando.io/config/env.html)
+*   [Events](http://docs.devwithlando.io/config/events.html)
+*   [Networking](http://docs.devwithlando.io/config/networking.html)
+*   [Proxy](http://docs.devwithlando.io/config/proxy.html)
 *   [Recipes](http://docs.devwithlando.io/config/recipes.html)
 *   [Services](http://docs.devwithlando.io/config/services.html)
 *   [Tooling](http://docs.devwithlando.io/config/tooling.html)
-*   [CLI](http://docs.devwithlando.io/cli/usage.html)
-*   [Contributing](http://docs.devwithlando.io/contrib/contributing.html)
-*   [API](http://docs.devwithlando.io/dev/api/api.html)
-*   [Troubleshooting and Support](http://docs.devwithlando.io/troubleshooting/logs.html)
-*   [Examples](https://github.com/lando/lando/tree/master/examples)
+*   [SSH Keys](http://docs.devwithlando.io/config/ssh.html)
+*   [SSL/TLS](http://docs.devwithlando.io/config/security.html)
+*   [Shared Files](http://docs.devwithlando.io/config/files.html)
+*   [Global Config](http://docs.devwithlando.io/config/config.html)
 
-Or TL;DR
---------
+And then check out some helpful guides
+--------------------------------------
 
-A developer should be able to get a running site and the tools needed to develop that site with a single, short config file called `.lando.yml` that lives in the root directory of your project and a few `lando` commands.
+*   [Accessing Your Services Externally](http://docs.devwithlando.io/guides/external-access.html)
+*   [Accessing Lando from Other Devices](http://docs.devwithlando.io/guides/access-by-other-devices.html)
+*   [Exporting Databases](http://docs.devwithlando.io/guides/db-export.html)
+*   [Importing Databases](http://docs.devwithlando.io/guides/db-import.html)
+*   [Killer D8 Workflow with Platform.sh](https://thinktandem.io/blog/2017/10/23/killer-d8-workflow-using-lando-and-platform-sh/)
+*   [Lando + PhpStorm + Xdebug](http://docs.devwithlando.io/guides/lando-phpstorm.html)
+*   [Offline Development](http://docs.devwithlando.io/guides/offline-dev.html)
+*   [Using $LANDO_INFO](http://docs.devwithlando.io/guides/lando-info.html)
+*   [Using NodeJS Frontend Tooling](http://docs.devwithlando.io/guides/frontend.html)
+*   [Using Lando in Visual Studio Code](http://docs.devwithlando.io/guides/lando-with-vscode.html)
+*   [Climbing a mountain for love](https://www.youtube.com/watch?v=tkBVDh7my9Q)
 
-#### 1. Pull a repo that already has a `.lando.yml`
+And the known issues
+--------------------
 
-```bash
-git clone myproject.git
-cd myproject
-lando start
-```
+*   [DNS Rebinding Protection](http://docs.devwithlando.io/issues/dns-rebind.html)
+*   [File Uploads on Windows](http://docs.devwithlando.io/issues/win-file-upload.html)
+*   [File Syncing Stalled](http://docs.devwithlando.io/issues/file-sync.html)
+*   [Running VB and HyperV](http://docs.devwithlando.io/issues/win-also-vb.html)
+*   [Running behind a proxy](http://docs.devwithlando.io/issues/proxy.html)
+*   [Switching Database Config](http://docs.devwithlando.io/issues/switching-dbs.html)
 
-#### 2. Or init a local codebase with a `lando` recipe
+You can also get some troubleshooting and support
+-------------------------------------------------
 
-```bash
-cd /path/to/my/local/code
-lando init
-lando start
-```
+*   [Accessing Logs](http://docs.devwithlando.io/troubleshooting/logs.html)
+*   [Using Lando with Kalabox](http://docs.devwithlando.io/troubleshooting/wkbox.html)
+*   [Reporting Issues](https://github.com/lando/lando/issues)
+*   [Slack Channel](https://slackpass.io/kalabox)
 
-Note: Lando will not spin up a new codebase for you unless you init with either the `pantheon` or `github` method (see below). Otherwise, remember to always have an already existing project to init from.
+Or learn how to contribute
+--------------------------
 
-#### 3. Or pull from GitHub or Pantheon
+*   [Overview](http://docs.devwithlando.io/contrib/contributing.html)
+*   [Project Vision](http://docs.devwithlando.io/contrib/vision.html)
+*   [How to Contribute](http://docs.devwithlando.io/contrib/how.html)
+*   [Governance](http://docs.devwithlando.io/contrib/gov.html)
+*   [Roles and Responsibilities](http://docs.devwithlando.io/contrib/roles.html)
+*   [Security](http://docs.devwithlando.io/contrib/security.html)
+*   [Resources](http://docs.devwithlando.io/contrib/resources.html)
 
-```bash
-mkdir -p mysite
-cd mysite
-lando init pantheon | lando init github
-lando start
-```
+And finally check out some helpful and tested-on-every-build examples
+---------------------------------------------------------------------
 
-You can also easily configure a `lando.yml` [recipe](http://docs.devwithlando.io/config/recipes.html)
+#### Core functionality
 
-```yml
-name: myproject
-recipe: lamp
-config:
-  php: '7.1'
-  webroot: www
-  database: postgres:9.6
-  config:
-    php: config/php.ini
-```
+*   [Build Steps](https://github.com/lando/lando/tree/master/examples/services)
+*   [Environment Files](https://github.com/lando/lando/tree/master/examples/base)
+*   [Events](https://github.com/lando/lando/tree/master/examples/events)
+*   [Landofiles](https://github.com/lando/lando/tree/master/examples/base)
+*   [Networking](https://github.com/lando/lando/tree/master/examples/networking)
+*   [Overrides](https://github.com/lando/lando/tree/master/examples/services)
+*   [Proxying](https://github.com/lando/lando/tree/master/examples/proxy)
+*   [Tooling](https://github.com/lando/lando/tree/master/examples/tooling)
 
-or go totally nuts and scaffold out a [custom stack](http://docs.devwithlando.io/config/services.html)
+#### Recipes
 
-```yml
-name: myproject
-recipe: lamp
-config:
-  php: '7.1'
-  webroot: www
-  database: postgres:9.6
-  config:
-    php: config/php.ini
-events:
-  post-start:
-    - appserver: echo SOMECOMMAND
-    - echo SOMETHINGELSE
-  post-mycustomthing:
-    - echo TEST
-services:
-  node:
-    type: node:6.10
-    globals:
-      grunt-cli: "latest"
-    run:
-      - cd /app && npm install --production
-  appserver:
-    run:
-      - cd /app && composer install
-  mailhog:
-    type: mailhog
-    hogfrom:
-      - appserver
-  cache:
-    type: memcached:1.4
-    mem: 128
-  search:
-    type: solr:5.5
-    core: hard
-tooling:
-  node:
-    service: node
-  npm:
-    service: node
-  grunt:
-    service: node
-  mycustomthing:
-    service: appserver
-    cmd: ps
-```
+*   [Backdrop](https://github.com/lando/lando/tree/master/examples/backdrop)
+*   [Drupal 6](https://github.com/lando/lando/tree/master/examples/drupal6)
+*   [Drupal 7](https://github.com/lando/lando/tree/master/examples/drupal7)
+*   [Drupal 8](https://github.com/lando/lando/tree/master/examples/drupal8)
+*   [Joomla](https://github.com/lando/lando/tree/master/examples/joomla)
+*   [LAMP](https://github.com/lando/lando/tree/master/examples/lamp)
+*   [Laravel](https://github.com/lando/lando/tree/master/examples/laravel)
+*   [LEMP](https://github.com/lando/lando/tree/master/examples/lemp)
+*   [MEAN](https://github.com/lando/lando/tree/master/examples/mean)
+*   [Pantheon](https://github.com/lando/lando/tree/master/examples/pantheon)
+*   [WordPress](https://github.com/lando/lando/tree/master/examples/wordpress)
+
+#### Services
+
+*   [Apache](https://github.com/lando/lando/tree/master/examples/apache)
+*   [Compose](https://github.com/lando/lando/tree/master/examples/compose)
+*   [Dotnet](https://github.com/lando/lando/tree/master/examples/dotnet)
+*   [Elasticsearch](https://github.com/lando/lando/tree/master/examples/elasticsearch)
+*   [Go](https://github.com/lando/lando/tree/master/examples/go)
+*   [MailHog](https://github.com/lando/lando/tree/master/examples/mailhog)
+*   [MariaDB](https://github.com/lando/lando/tree/master/examples/mariadb)
+*   [Memcached](https://github.com/lando/lando/tree/master/examples/memcached)
+*   [mongo](https://github.com/lando/lando/tree/master/examples/mongo)
+*   [MSSQL](https://github.com/lando/lando/tree/master/examples/mssql)
+*   [mysql](https://github.com/lando/lando/tree/master/examples/mysql)
+*   [nginx](https://github.com/lando/lando/tree/master/examples/nginx)
+*   [node](https://github.com/lando/lando/tree/master/examples/node)
+*   [PHP](https://github.com/lando/lando/tree/master/examples/php)
+*   [PhpMyAdmin](https://github.com/lando/lando/tree/master/examples/pma)
+*   [Postgres](https://github.com/lando/lando/tree/master/examples/postgres)
+*   [Python](https://github.com/lando/lando/tree/master/examples/python)
+*   [Redis](https://github.com/lando/lando/tree/master/examples/redis)
+*   [Ruby](https://github.com/lando/lando/tree/master/examples/ruby)
+*   [Solr](https://github.com/lando/lando/tree/master/examples/solr)
+*   [Tomcat](https://github.com/lando/lando/tree/master/examples/tomcat)
+*   [Varnish](https://github.com/lando/lando/tree/master/examples/varnish)
+
+#### Other
+
+*   [SQL Export](https://github.com/lando/lando/tree/master/examples/sql-export)
+*   [SQL Import](https://github.com/lando/lando/tree/master/examples/sql-import)
 
 Security Issues
 ---------------

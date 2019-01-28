@@ -1,0 +1,50 @@
+name: lando-tooling
+compose:
+  - compose.yml
+tooling:
+  php:
+    service: php
+    description: Run php commands
+    cmd: php
+  iamroot:
+    service: php
+    cmd: echo "$HOME" && echo "$(id)" > /whoami
+    user: root
+  whoami:
+    service: php
+    cmd: id
+  test:
+    service: php
+    cmd:
+      - php -v
+      - php -m
+    description: Run all the tests
+  word:
+    service: web
+    cmd: /app/word.sh
+    level: app
+    options:
+      word:
+        passthrough: true
+        alias:
+          - w
+        describe: Print what the word is
+        interactive:
+          type: input
+          message: What is the word?
+          default: bird
+          weight: 600
+  dynamic:
+    cmd: env
+    service: :service
+    options:
+      service:
+        default: web
+        alias:
+          - s
+        describe: Run a different service
+  env:
+    cmd:
+      - php: env
+      - web: env
+    description: Print environment variables for a few things

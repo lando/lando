@@ -1,56 +1,50 @@
 Memcached Example
 =================
 
-This example provides Memcached via a NodeJS example.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Memcached configuration options.
+* [Memcached Service](https://docs.devwithlando.io/tutorial/memcached.html)
 
-Start me up
------------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the memcache
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things are good
-------------------------
+Verification commands
+---------------------
 
-Run the following commands to confirm things
-
-```bash
-# Verify the app booted up correctly and is showing memcache data
-lando ssh appserver -c "curl localhost | grep server | grep cache:11211"
-
-# Verify memcache portforward
-docker inspect memcached_cache_1 | grep HostPort | grep 11222
-lando info | grep port | grep 11222
-
-# Verify memcache version
-lando ssh cache -c "memcached -V | grep 1.4."
-
-# Verify our custom memory setting was passed in
-lando ssh appserver -c "curl localhost | grep limit_maxbytes | grep 268435456"
-```
-
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```
-# Get DB connection info
-lando info
-```
-
-Destroy things
---------------
-
-Run the following commands to clean up
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Destroy the memcache
+# Should use 1.x as the default version
+lando ssh -s defaults -c "memcached --version | grep 1."
+
+# Should use the user specified version if given
+lando ssh -s custom -c "memcached --version | grep 1.5.12"
+
+# Should use the user specifiec patch version if given
+lando ssh -s patch -c "memcached --version | grep 1.5.11"
+
+# Should set the default cache size to 64
+lando ssh -s defaults -c "env | grep MEMCACHED_CACHE_SIZE=64"
+
+# Should set the user specified cache size if given
+lando ssh -s custom -c "env | grep MEMCACHED_CACHE_SIZE=256"
+```
+
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

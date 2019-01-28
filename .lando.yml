@@ -9,18 +9,8 @@ services:
       - yarn
       - node ./scripts/docs.js && yarn gitbook install
     command: yarn gitbook serve
-    overrides:
-      services:
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
+  cli:
+    type: node:10
 tooling:
-  npm:
-    service: docs
-  node:
-    service: docs
-  # lando:
-  #  service: lando
-  #  description: I heard you like Lando? Have some Lando in your Lando.
-  #  cmd: /app/bin/lando.js
   yarn:
-    service: docs
+    service: cli

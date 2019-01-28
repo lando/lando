@@ -1,7 +1,0 @@
-// We need these deps to run our tezts
-const chai = require('chai');
-const CliTest = require('command-line-test');
-const path = require('path');
-chai.should();
-
-// eslint-disable max-len

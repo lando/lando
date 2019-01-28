@@ -1,62 +1,56 @@
 Redis Example
 =============
 
-This example provides a NodeJS based redis cache example.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for redis configuration options.
+* [Redis Service](https://docs.devwithlando.io/tutorial/redis.html)
 
-Start me up
------------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the redis
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things are good
-------------------------
+Verification commands
+---------------------
 
-Run the following commands to confirm things
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify the app booted up correctly and is showing redis data
-lando ssh appserver -c "curl localhost | grep run_id"
+# Should use 5.x as the default version
+lando ssh -s defaults -c "redis-server --version | grep v=5.0.3"
 
-# Verify redis version
-lando ssh appserver -c "curl localhost | grep redis_version | grep 3.2."
+# Should be able to connect to redis
+lando ssh -s defaults -c "redis-cli CONFIG GET databases"
 
-# Verify that redis was started in append only mode
-docker inspect redis_cache_1 | grep appendonly
+# Should use the user specified version if given
+lando ssh -s custom -c "redis-server --version | grep v=4."
 
-# Verify redis portforward
-docker inspect redis_cache_1 | grep HostPort | grep 6380
-lando info | grep port | grep 6380
+# Should use the user specifiec patch version if given
+lando ssh -s patch -c "redis-server --version | grep v=4.0.11"
 
-# Verify we have the redis cli
-lando redis-cli --version | grep 3.2.
+# Should persist data if specified
+docker inspect landoredis_custom_1 | grep appendonly
+
+# Should use custom config if specified
+lando ssh -s custom -c "redis-cli CONFIG GET databases" | grep 18
+
+# Should include the redis-cli
+lando ssh -s defaults -c "redis-cli --version"
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Get cache connection info
-lando info
-
-# Confirm redis connection and drop into redis-cli
-lando redis-cli
-```
-
-Destroy things
---------------
-
-Run the following commands to clean up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the redis
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

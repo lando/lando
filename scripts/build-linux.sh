@@ -21,7 +21,7 @@ fi
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
 
 # Docker things
-DOCKER_COMPOSE_VERSION="1.22.0"
+DOCKER_COMPOSE_VERSION="1.23.2"
 
 # Start up our build directory and go into it
 mkdir -p build/installer
@@ -39,7 +39,7 @@ curl -fsSL -o bin/docker-compose "https://github.com/docker/compose/releases/dow
 chmod +x bin/docker-compose
 
 # Copy our docs
-cp -rf ../../../README.md docs/README.md
+cp -rf ../../../docs/README.md docs/README.md
 cp -rf ../../../TERMS.md docs/TERMS.md
 cp -rf ../../../LICENSE.md docs/LICENSE.md
 

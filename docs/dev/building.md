@@ -10,10 +10,11 @@ You can easily build Lando from source with our helpful `yarn` scripts.
 ```bash
 # Build the Lando CLI binary
 yarn run pkg:cli
+# Navigate to where the built binaries are at
 cd dist/cli
 
 # Build the Lando installer.
-# This will build the installer for your current platform.
 yarn run pkg:full
+# Navigate to where the built installers are at
 cd dist
 ```

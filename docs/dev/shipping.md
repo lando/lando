@@ -1,18 +1,39 @@
 Shipping
 ========
 
-If you are a maintainer of Lando you can kick off an official release using our handy `grunt` tasks.
+If you are a maintainer of Lando you can kick off an official release using our handy `grunt` tasks. **THIS NEEDS TO BE DONE FROM THE MASTER BRANCH!**
 
 ```bash
-# Do a prerelease ie bump 0.0.0-beta.x
-yarn release:pre --dry-run
-yarn release:pre
+# Interactively do the release
+yarn release
 
-# Do a patch release ie bump 0.0.x
-yarn release:patch --dry-run
-yarn release:patch
+# Get help about other release options
+yarn release --help
 
-# Do a minor release ie bump 0.x.0
-yarn release:minor --dry-run
-yarn release:minor
+Usage: bump [options]
+
+# Options:
+#  -V, --version         output the version number
+#  --major               Increase major version
+#  --minor               Increase minor version
+#  --patch               Increase patch version
+#  --premajor            Increase major version, pre-release
+#  --preminor            Increase preminor version, pre-release
+#  --prepatch            Increase prepatch version, pre-release
+#  --prerelease          Increase prerelease version
+#  --prompt              Prompt for type of bump (patch, minor, major, premajor, prerelase, etc.)
+#  --preid <name>        The identifier for prerelease versions (default is "beta")
+#  --commit [message]    Commit changed files to Git (default message is "release vX.X.X")
+#  --tag                 Tag the commit in Git
+#  --push                Push the Git commit
+#  --all                 Commit/tag/push ALL pending files, not just the ones changed by bump
+#  --grep <filespec...>  Files and/or globs to do a text-replace of the old version number with the new one
+#  --lock                Also update the package-lock.json
+#  -h, --help            output usage information
+#  Examples:
+#
+#    $ bump --patch
+#    $ bump --major --tag
+#    $ bump --patch --tag --all --grep README.md
+#    $ bump --prompt --tag --push --all
 ```

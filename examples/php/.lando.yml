@@ -1,0 +1,23 @@
+name: lando-php
+services:
+  defaults:
+    type: php
+  cli:
+    type: php
+    via: cli
+  cliold:
+    type: php:5.6
+    via: cli
+  custom:
+    type: php:7.1
+    via: nginx
+    ssl: true
+    xdebug: true
+    webroot: web
+    config:
+      php: config/php.ini
+  composer:
+    type: php:7.0
+    composer:
+      phpunit/phpunit: "*"
+

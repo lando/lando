@@ -1,9 +1,10 @@
 'use strict';
 
+const util = require('util');
+
 module.exports = lando => ({
   command: 'config',
-  describe: 'Display the lando configuration',
-  run: () => {
-    console.log(JSON.stringify(lando.config, null, 2));
-  },
+  level: 'tasks',
+  describe: 'Displays the lando configuration',
+  run: () => console.log(util.inspect(lando.config, {colors: true, depth: 10, compact: false})),
 });

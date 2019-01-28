@@ -1,46 +1,24 @@
-# The name of the app
-name: postgres
-
-# Give me http://postgres.lndo.site and https://postgres.lndo.site
-proxy:
-  html:
-    - postgres.lndo.site
-
-# Service configuration
+name: lando-postgres
 services:
-
-  # Set up a basic webserver running the latest nginx with ssl turned on
-  html:
-    webroot: www
-    type: nginx
-    ssl: true
-
-  # Spin up a postgres container called "tswift"
-  tswift:
-
-    # Use the latest version of postgres
+  defaults:
     type: postgres
-
-    # Optionally allow access to the database at localhost:3307
-    # You will need to make sure port 3307 is open on your machine
-    #
-    # You can also set `portforward: true` to have Lando dynamically assign
-    # a port. Unlike specifying an actual port setting this to true will give you
-    # a different port every time you restart your app
-    portforward: 5444
-
-    # Optionally set the default db credentials
-    #
-    # Note: You will need to `lando destroy && lando start` to change these if you've
-    # already started your app
-    # See: https://docs.devwithlando.io/tutorials/lando-info.html
+  patch:
+    type: postgres:9.6.11
+  custom:
+    type: postgres:11
+    portforward: true
     creds:
-      user: trouble
-      password: trouble
       database: trouble
-
-    # Optionally load in all the postgres config files into the config directory
-    # This is relative to the app root
-    # NOTE: these files need to end in .conf
     config:
-      confd: confd
+      database: config/mythings.conf
+tooling:
+  verifydefaults:
+    service: defaults
+    cmd: psql -U postgres database -c \dt
+  verifycustom:
+    service: custom
+    cmd: psql -U postgres trouble -c \dt
+  showmax:
+    user: root
+    service: custom
+    cmd: psql -U postgres -c 'SHOW MAX_FILES_PER_PROCESS;'

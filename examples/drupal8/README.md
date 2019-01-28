@@ -1,87 +1,84 @@
-Drupal 8 Composer Recipe Example
-================================
+Drupal 8 Example
+================
 
-This example provides a very basic `drupal8` recipe example that is installed via Composer.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for Drupal 8 configuration options.
+* [Drupal 8 Recipe](https://docs.devwithlando.io/tutorial/drupal8.html)
 
-Getting Started
----------------
+Start up tests
+--------------
 
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Install Drupal 8 with composer
-lando composer install
-lando composer drupal-scaffold
+# Should poweroff
+lando poweroff
 
-# Start up the example
+# Should initialize the latest Drupal 8 codebase
+rm -rf drupal8 && mkdir -p drupal8 && cd drupal8
+lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz --remote-options="--strip-components 1" --recipe drupal8 --webroot . --name lando-drupal8
+
+# Should start up succesfully
+cd drupal8
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Get DB connection info
-lando info
+# Should return the drupal installation page by default
+cd drupal8
+lando ssh -s appserver -c "curl -L localhost" | grep "Drupal 8"
 
-# Run drush commands
-cd web
-lando drush status
+# Should use 7.2 as the default php version
+cd drupal8
+lando php -v | grep 7.2
 
-# Run console commands
-cd web
-lando drupal
+# Should be running apache 2.4 by default
+cd drupal8
+lando ssh -s appserver -c "apachectl -V | grep 2.4"
+lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
+
+# Should be running mysql 5.7 by default
+cd drupal8
+lando mysql -V | grep 5.7
+
+# Should not enable xdebug by default
+cd drupal8
+lando php -m | grep xdebug || echo $? | grep 1
+
+# Should use the default database connection info
+cd drupal8
+lando mysql -udrupal8 -pdrupal8 drupal8 -e quit
+
+# Should use drush 8.1.x by default
+cd drupal8
+lando drush version | grep 8.1
+
+# Should be able to install drupal
+cd drupal8
+lando drush si --db-url=mysql://drupal8:drupal8@database/drupal8 -y
+
+# Should install drupal console
+cd drupal8
+lando composer require drupal/console:~1.0 --prefer-dist --optimize-autoloader
+
+# Should have drupal console
+cd drupal8
+lando drupal -V
 ```
 
-Bootup
-------
+Destroy tests
+-------------
 
-Start up the Drupal 8 example recipe
-
-```bash
-# Start the Drupal 8 example recipe
-if [ -d "web" ]; then rm -Rf web; fi
-if [ -d "vendor" ]; then rm -Rf vendor; fi
-lando start
-lando composer install
-lando composer drupal-scaffold
-```
-
-Testing
--------
-
-Test the Drupal 8 example
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Test that we got a drupal 8 codebase
-lando ssh -c "ls web |grep index.php"
-
-# Test removing a database
-lando ssh -c "mysql -udrupal8 -pdrupal8 -h database -e \'drop database if exists drupal8;\'"
-
-# Test creating a database
-lando ssh -c "mysql -udrupal8 -pdrupal8 -h database -e \'create database if not exists drupal8;\'"
-
-# Test installing Drupal 8 via drush
-lando ssh -c "cd web && drush si --db-url=mysql://drupal8:drupal8@database/drupal8 -y"
-
-# Test that we can visit the homepage
-lando ssh -c "curl nginx |grep \'No front page content has been created yet.\'"
-```
-
-Cleanup
--------
-
-Remove the test app
-
-```bash
-# Destroy the test app
+# Should be destroyed with success
+cd drupal8
 lando destroy -y
+lando poweroff
 ```

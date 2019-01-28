@@ -1,9 +1,0 @@
-/*
- * This file was automatically generated, editing it manually would be foolish
- *
- * See https://docs.devwithlando.io/dev/testing.html#functional-tests for more
- * information on how all this magic works
- *
- * title: {{=it.title}}
- * src: {{=it.run}}
- */

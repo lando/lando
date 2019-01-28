@@ -1,7 +1,9 @@
 start
 =====
 
-Starts an app. This will build all relevant containers needed to run the app.
+Starts an app.
+
+On first run this will build all relevant containers needed to run the app. On subsequent runs it will simply start the built containers.
 
 > #### Hint::Containers are cached!
 >
@@ -11,9 +13,15 @@ Usage
 -----
 
 ```bash
-# From an app directory or its subdirectories
 lando start
+```
 
-# From outside of an app directory
-lando start myapp
+Options
+-------
+
+```bash
+--clear        Clears the lando tasks cache
+--lando        Show help for lando-based options
+--verbose, -v  Runs with extra verbosity
+--version      Show version number
 ```

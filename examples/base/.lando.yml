@@ -1,0 +1,5 @@
+name: lando-base
+env_file:
+  - environment/moar.env
+compose:
+  - docker-compose/moar.yml

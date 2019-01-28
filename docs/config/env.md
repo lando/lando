@@ -1,57 +1,66 @@
 Environment
 ===========
 
-Container Environment Variables
--------------------------------
+Lando will both inject a bunch of helpful environment variables into each service and allow the user to inject their own either by [file](#environment-files) or [configuration](#environment-configuration).
 
-While you can add additional environment variables on a per service basis with [Advanced Service Configuration](./advanced.md), or globally using a `.env` file with an [Environment File](#environment-file) Lando will also inject some common and helpful environment variables into each service.
+Default Environment Variables
+-----------------------------
 
-> #### Warning::This ONLY injects directly into the container environment.
->
-> All of the below methods will inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on the application side to grab them. For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
-
-### Default Environment Variables
-
-To see the environment variables in each service run `lando ssh SERVICE -c env | grep LANDO_`. This assume you have not changed the `envPrefix` config value.
-
-Here is an example of default container envvars inside of the [LEMP2 Example](https://github.com/lando/lando/tree/master/examples/lemp2).
+While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./config.md) value.
 
 ```bash
-# Discover envvars
-lando ssh appserver -c env | grep LANDO_
-
-# Output
-LANDO_WEBROOT=/app
-LANDO_HOST_GID=20
-LANDO_WEBROOT_UID=33
-LANDO_SERVICE_TYPE=php
-LANDO_APP_ROOT_BIND=/Users/pirog/Desktop/work/lando/examples/lemp2
-LANDO_MOUNT=/app
-LANDO_HOST_UID=501
-LANDO_CONFIG_DIR=/Users/pirog/.lando
-LANDO_SERVICE_NAME=appserver
-LANDO_HOST_IP=10.0.0.6
-LANDO_APP_ROOT=/Users/pirog/Desktop/work/lando/examples/lemp2
-LANDO_WEBROOT_USER=www-data
-LANDO_WEBROOT_GROUP=www-data
-LANDO_APP_NAME=lemp2
-LANDO_DOMAIN=lndo.site
-LANDO_HOST_OS=darwin
-LANDO_WEBROOT_GID=33
-LANDO_INFO=a JSON string representation of the lando info command
+lando ssh -s appserver -c env | grep LANDO_
 ```
 
-**NOTE:** See [this tutorial](./../tutorials/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
+For reference here is an example of the default container envvars inside of the [LAMP](https://github.com/lando/lando/tree/master/examples/lamp) recipe/example.
 
-### Environment File
+```bash
+LANDO_WEBROOT_USER=www-data
+LANDO_WEBROOT_GROUP=www-data
+LANDO_WEBROOT_UID=33
+LANDO_WEBROOT_GID=33
+LANDO_HOST_UID=501
+LANDO_HOST_GID=20
+LANDO_CA_CERT=/lando/certs/lndo.site.pem
+LANDO_CA_KEY=/lando/certs/lndo.site.key
+LANDO_CONFIG_DIR=/Users/pirog/.lando
+LANDO_DOMAIN=lndo.site
+LANDO_HOST_HOME=/Users/pirog
+LANDO_HOST_OS=darwin
+LANDO_HOST_IP=host.docker.internal
+LANDO_MOUNT=/app
+LANDO_APP_NAME=lamp
+LANDO_APP_ROOT=/Users/pirog/work/lando/examples/lamp
+LANDO_APP_ROOT_BIND=/Users/pirog/work/lando/examples/lamp
+LANDO_LOAD_PP_KEYS=false
+LANDO_INFO=[{"service":"appserver","urls":["http://lamp.lndo.site","https://lamp.lndo.site"],"type":"php","via":"apache","webroot":".","config":{},"version":"7.2","hostnames":["appserver.lamp.internal"]},{"service":"database","urls":[],"type":"mysql","internal_connection":{"host":"database","port":"3306"},"external_connection":{"host":"localhost","port":true},"creds":{"database":"lamp","password":"lamp","user":"lamp"},"config":{},"version":"5.7","hostnames":["database.lamp.internal"]}]
+LANDO_WEBROOT=/app/.
+LANDO_SERVICE_TYPE=php
+LANDO_SERVICE_NAME=appserver
+```
 
-If you drop a file named `.env` into the root directory of your app Lando will automatically inject the variables into all of your services. This is particularly useful if you want
+**NOTE:** See [this tutorial](./../guides/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
-1. To inject sensitive credentials into the environment (a la the 12-factor app model)
+Environment Files
+-----------------
+
+You can tell Lando to inject additional environment variables into every service in your app using environment files. This is particularly useful if you want to:
+
+1. Inject sensitive credentials into the environment a la the 12-factor app model
 2. Store credentials in a `.gitignored` file that is not committed to the repo
 3. Set config on a per environment basis
 
-That file will generally take the form below.
+You can accomplish this using the `env_file` top level config in your [Landofile](./lando.yml).
+
+```yaml
+env_file:
+  - defaults.env
+  - extras/special.env
+```
+
+These files are relative to your projects root directory.
+
+These files will need to take the form below. Note that this is **not a yaml file**.
 
 ```yaml
 DB_HOST=localhost
@@ -59,60 +68,13 @@ DB_USER=root
 DB_PASS=s1mpl3
 ```
 
-### Global Container Environment Variables
+> #### Warning::This ONLY injects directly into the container environment.
+>
+> We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.
+>
+> For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
 
-If you want to inject the same environment variables into every container in every app then you need to define the `containerGlobalEnv` in your [`config.yml`](./config.md).
+Environment Configuration
+-------------------------
 
-**We do not recommend using this setting because it is not something you can set in your repository and needs to be set on a user basis.**
-
-Here is an example `config.yml` for Global ENV injection.
-
-```yaml
-containerGlobalEnv:
-  nicklewis: THEBLOG
-```
-
-Runtime Environment Variables
------------------------------
-
-Lando also makes the following available **ON YOUR HOST MACHINE** so that you can use them in your `.lando.yml` file. Again, this assume you have not changed the `envPrefix` config value.
-
-Here is an example of default host envvars.
-
-```bash
-# Discover host level envvars
-lando config | grep LANDO_
-
-# Output
-LANDO_CONFIG_DIR: /Users/pirog/.lando,
-LANDO_APP_NAME: lando.dev,
-LANDO_APP_ROOT: /Users/pirog/Desktop/work/lando,
-LANDO_APP_ROOT_BIND: /Users/pirog/Desktop/work/lando,
-LANDO_HOST_OS: darwin,
-LANDO_HOST_UID: 501,
-LANDO_HOST_GID: 20,
-LANDO_HOST_IP: 10.0.0.6,
-LANDO_WEBROOT_USER: www-data,
-LANDO_WEBROOT_GROUP: www-data,
-LANDO_WEBROOT_UID: 33,
-LANDO_WEBROOT_GID: 33
-LANDO_ENGINE_CONF: /Users/pirog/.lando,
-LANDO_ENGINE_ID: 501,
-LANDO_ENGINE_GID: 20,
-LANDO_ENGINE_HOME: /Users/pirog,
-LANDO_ENGINE_IP: tcp://127.0.0.1,
-LANDO_ENGINE_REMOTE_IP: 10.0.0.6,
-LANDO_ENGINE_SCRIPTS_DIR: /Users/pirog/.lando/engine/scripts,
-LANDO_CONFIG_DIR: /Users/pirog/.lando,
-LANDO_APP_NAME: lando.dev,
-LANDO_APP_ROOT: /Users/pirog/Desktop/work/lando,
-LANDO_APP_ROOT_BIND: /Users/pirog/Desktop/work/lando,
-LANDO_HOST_OS: darwin,
-LANDO_HOST_UID: 501,
-LANDO_HOST_GID: 20,
-LANDO_HOST_IP: 10.0.0.6,
-LANDO_WEBROOT_USER: www-data,
-LANDO_WEBROOT_GROUP: www-data,
-LANDO_WEBROOT_UID: 33,
-LANDO_WEBROOT_GID: 33
-```
+If you'd like to avoid broad strokes and only certain inject environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).

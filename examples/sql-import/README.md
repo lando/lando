@@ -1,80 +1,52 @@
 SQL Import Example
 ==================
 
-This example provides a very basic `db-import` example built on Lando php services.
+This example exists primarily to test the following documentation:
 
-See the `.lando.yml` in this directory for `db-import` configuration options.
+* [Import SQL Database](https://docs.devwithlando.io/guides/db-import.html)
 
-Start the example
----------------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Boot up a sql-import example
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Testing the example
--------------------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify the databases are up and good
-lando ssh database -c "mysql -umysql -pmysql data1 -e\"quit\""
-lando ssh database2 -c "psql -U postgres database -c \'\\\dt\'"
+# Should be able to connect to the relevant databases
+lando mysql database -e quit
+lando psqlverify
 
-# Verify our dynamic commands work
-lando psql -h database2 -V
-lando mysql -V
-
-# Import the test mysql file against the default database
+# Should be able to import into database by default
 lando db-import test.sql
+lando mysql database -e "show tables;" | grep users
 
-# Import the test postgres file to the secondary database
+# Should be able to import into user specified database
 lando db-import -h database2 test2.sql
+lando psqlverify | grep users
 
-# Verify that we have a 'users' table on both databases
-lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
-lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
-
-# Verify that after a rebuild we still have the data tables
+# Should persist data after a rebuild
 lando rebuild -y
-lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
-lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
+lando mysql database -e "show tables;" | grep users
+lando psqlverify | grep users
 ```
 
-Helpful Commands
-----------------
+Destroy tests
+-------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Get DB connection info
-lando info
-
-# See mysql import options
-lando mysql -- --help
-lando db-import -- --help
-
-# Drop into a mysql shell on the default db
-lando mysql
-
-# Drop into a postgres shell on the secondary database
-lando psql -h database2
-
-# Import the test mysql file against the default database
-lando db-import test.sql
-
-# Import the test postgres file to the secondary database
-lando db-import -h database2 test2.sql
-```
-
-Destroying the example
-----------------------
-
-Run the following commands to destroy
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Blow up the sql-import example
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

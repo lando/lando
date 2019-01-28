@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
   && pecl install oauth-1.2.3 \
   && pecl install redis-2.2.8 \
   && pecl install xdebug-2.2.7 \
-  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apc \
@@ -50,7 +50,6 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
-  && docker-php-ext-enable xdebug \
   && docker-php-ext-install \
     bcmath \
     bz2 \
@@ -76,7 +75,7 @@ RUN apt-get update && apt-get install -y \
   && ln -s /usr/local/etc/php/conf.d /usr/local/lib/conf.d \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "if (hash_file('SHA384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.8.0 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && sh -c "composer global require hirak/prestissimo" -s /bin/sh www-data \
