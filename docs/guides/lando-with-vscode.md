@@ -49,7 +49,7 @@ Add your custom XDebug settings.
 xdebug.max_nesting_level = 256
 xdebug.show_exception_trace = 0
 xdebug.collect_params = 0
-# Extra custom Xdebug setting for debug to work in VSCode.
+; Extra custom Xdebug setting for debug to work in VSCode.
 xdebug.remote_enable = 1
 xdebug.remote_autostart = 1
 ```
