@@ -3,7 +3,7 @@ Using $LANDO_INFO
 
 Lando will inject an environment variable called `$LANDO_INFO` into each service. This is a `JSON` string representation of the `lando info` command and you can use it to see valuable information about other services such as service hostnames and database connection information and credentials.
 
-This is helpful if you want to set applicaiton configuration in a way that portable and dynamic between many lando apps.
+This is helpful if you want to set application configuration in a way that is portable and dynamic between many lando apps.
 
 > #### Warning::Use `internal_connection` information
 >
