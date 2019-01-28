@@ -105,7 +105,7 @@ services:
 lando destroy -y && lando start
 ```
 
-**Also note that by default all `mariadb` services have a passwordless `root` user.**
+Also note that by default all `mariadb` services have a passwordless `root` user. **DO NOT ALTER THE PASSWORD OF THE ROOT USER.**
 
 ### Using a custom MariaDB config file
 

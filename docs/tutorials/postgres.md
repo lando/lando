@@ -104,7 +104,8 @@ services:
 lando destroy -y && lando start
 ```
 
-**Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions.**
+Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions. **DO NOT ALTER THE PASSWORD OF THE POSTGRES USER.**
+
 
 ### Using a custom postgres config file
 

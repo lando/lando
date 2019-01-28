@@ -105,7 +105,8 @@ services:
 lando destroy -y && lando start
 ```
 
-**Also note that by default all `mysql` services have a passwordless `root` user.**
+Also note that by default all `mysql` services have a passwordless `root` user. **DO NOT ALTER THE PASSWORD OF THE ROOT USER.**
+
 
 ### Using a custom MySQL config file
 
