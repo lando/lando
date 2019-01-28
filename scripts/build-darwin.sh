@@ -2,8 +2,8 @@
 
 # Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="18.09.0-ce-mac81"
-DOCKER_DOWNLOAD="29211"
+DOCKER_VERSION="2.0.0.2"
+DOCKER_DOWNLOAD="30215"
 TEAM_ID="FY8GAUX282"
 PKG_SIGN=false
 DMG_SIGN=false

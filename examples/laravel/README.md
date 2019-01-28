@@ -18,7 +18,7 @@ lando poweroff
 rm -rf laravel && mkdir -p laravel && cd laravel
 lando init --source cwd --recipe laravel --webroot app/public --name lando-laravel --option cache=redis
 
-# Should isntall the laravel installer and install a new laravel app
+# Should compose create-project a new laravel app
 cd laravel
 lando composer create-project --prefer-dist laravel/laravel app
 

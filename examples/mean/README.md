@@ -33,7 +33,7 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should return the mean default page
+# Should return the ghost default page
 cd mean
 lando ssh -s appserver -c "curl -L localhost:2368" | grep "Ghost"
 
