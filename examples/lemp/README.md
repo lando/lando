@@ -39,8 +39,8 @@ lando php -v | grep 7.2
 
 # Should be running nginx 1.x by default
 cd lemp
-lando ssh -s appserver_nginx -c "nginx -v | grep 1."
-lando ssh -s appserver_nginx -c "curl -IL localhost" | grep Server | grep nginx | grep 1.
+lando ssh -s appserver_nginx -c "nginx -v 2>&1 | grep 1."
+lando ssh -s appserver_nginx -c "curl -IL localhost" | grep Server | grep nginx | grep "1."
 
 # Should be running mysql 5.7 by default
 cd lemp
@@ -63,8 +63,7 @@ lando ssh -s appserver -c "which phpunit | grep /var/www/"
 # Should be able to require a composer dep
 cd lemp
 lando composer require phpunit/phpunit
-lando ssh -s appserver -c "phpunit --version"
-lando ssh -s appserver -c "which phpunit | grep /app"
+lando ssh -s appserver -c "/app/vendors/bin/phpunit --version"
 ```
 
 Destroy tests
