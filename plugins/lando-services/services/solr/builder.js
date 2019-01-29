@@ -31,7 +31,7 @@ const parse4 = options => {
  * Helper to parse generic solr config
  */
 const parseElse = options => {
-  options.image = `solr:${options.version}-slim`;
+  options.image = `solr:${options.version}`;
   options.command = `docker-entrypoint.sh solr-precreate ${options.core}`;
   // Custom config dir command
   // @NOTE: idiot drupal hardcodes solrcore.properties so we need to do chaos like this
@@ -117,6 +117,11 @@ module.exports = {
       if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);
       // Add some info
       options.info = {core: getCore(options)};
+      // Set the healthcheck
+      if (getCore(options) !== 'not supported') {
+        const core = getCore(options);
+        options.healthcheck = `curl http://localhost:8983/solr/${core}/admin/ping`;
+      }
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, solr)});
     };
