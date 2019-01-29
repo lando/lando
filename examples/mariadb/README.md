@@ -3,7 +3,7 @@ MariaDB Example
 
 This example exists primarily to test the following documentation:
 
-* [MariaDB Service](https://docs.devwithlando.io/tutorial/mariadb.html)
+* [MariaDB Service](https://docs.devwithlando.io/tutorials/mariadb.html)
 
 Start up tests
 --------------

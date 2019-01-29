@@ -3,7 +3,7 @@ WordPress Example
 
 This example exists primarily to test the following documentation:
 
-* [WordPress Recipe](https://docs.devwithlando.io/tutorial/wordpress.html)
+* [WordPress Recipe](https://docs.devwithlando.io/tutorials/wordpress.html)
 
 Start up tests
 --------------

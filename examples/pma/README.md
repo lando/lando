@@ -3,7 +3,7 @@ PhpMyAdmin Example
 
 This example exists primarily to test the following documentation:
 
-* [PhpMyAdmin Service](https://docs.devwithlando.io/tutorial/phpmyadmin.html)
+* [PhpMyAdmin Service](https://docs.devwithlando.io/tutorials/phpmyadmin.html)
 
 Start up tests
 --------------

@@ -3,7 +3,7 @@ Compose Example
 
 This example exists primarily to test the following documentation:
 
-* [Compose Service](https://docs.devwithlando.io/tutorial/compose.html)
+* [Compose Service](https://docs.devwithlando.io/tutorials/compose.html)
 
 Start up tests
 --------------

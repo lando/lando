@@ -3,7 +3,7 @@ Postgres Example
 
 This example exists primarily to test the following documentation:
 
-* [Postgres Service](https://docs.devwithlando.io/tutorial/postgres.html)
+* [Postgres Service](https://docs.devwithlando.io/tutorials/postgres.html)
 
 Start up tests
 --------------

@@ -3,7 +3,7 @@ MySQL Example
 
 This example exists primarily to test the following documentation:
 
-* [MySQL Service](https://docs.devwithlando.io/tutorial/mysql.html)
+* [MySQL Service](https://docs.devwithlando.io/tutorials/mysql.html)
 
 Start up tests
 --------------

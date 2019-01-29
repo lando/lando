@@ -3,7 +3,7 @@ MailHog Example
 
 This example exists primarily to test the following documentation:
 
-* [MailHog Service](https://docs.devwithlando.io/tutorial/mailhog.html)
+* [MailHog Service](https://docs.devwithlando.io/tutorials/mailhog.html)
 
 Start up tests
 --------------

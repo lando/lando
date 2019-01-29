@@ -3,7 +3,7 @@ Memcached Example
 
 This example exists primarily to test the following documentation:
 
-* [Memcached Service](https://docs.devwithlando.io/tutorial/memcached.html)
+* [Memcached Service](https://docs.devwithlando.io/tutorials/memcached.html)
 
 Start up tests
 --------------
