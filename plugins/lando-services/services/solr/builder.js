@@ -37,7 +37,13 @@ const parseElse = options => {
   // Custom config dir command
   // @NOTE: idiot drupal hardcodes solrcore.properties so we need to do chaos like this
   if (_.has(options, 'config.dir')) {
-    options.command = `${options.command} /solrconf`;
+    options.command = [
+      '/bin/sh',
+      '-c',
+      '"echo \"solr.install.dir=/opt/solr\" >> /solrconf/conf/solrcore.properties',
+      '&&',
+      `${options.command} /solrconf"`,
+    ].join(' ');
   }
   return options;
 };
