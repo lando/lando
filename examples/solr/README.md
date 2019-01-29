@@ -17,18 +17,6 @@ lando poweroff
 lando start
 ```
 
-curl http://defaults:8983/solr/lando/update -H "Content-Type: text/xml" --data-binary '
-<add>
-  <doc>
-    <field name="authors">Patrick Eagar</field>
-    <field name="subject">Sports</field>
-    <field name="dd">796.35</field>
-    <field name="isbn">0002166313</field>
-    <field name="yearpub">1982</field>
-    <field name="publisher">Collins</field>
-  </doc>
-</add>'
-
 Verification commands
 ---------------------
 

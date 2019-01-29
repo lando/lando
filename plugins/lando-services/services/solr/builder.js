@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./../../lib/utils');
 
 /*
  * Helper to parse legacy solr 3 config
@@ -86,6 +87,9 @@ const getCore = options => {
   };
 };
 
+// Helper to chown
+const getChownage = dir => `chown -R solr:solr ${dir}`;
+
 // Builder
 module.exports = {
   name: 'solr',
@@ -110,6 +114,12 @@ module.exports = {
       const solr = {
         image: options.image,
         command: options.command,
+        environment: {
+          LANDO_WEBROOT_USER: 'solr',
+          LANDO_WEBROOT_GROUP: 'solr',
+          LANDO_WEBROOT_UID: '8983',
+          LANDO_WEBROOT_GID: '8983',
+        },
         volumes: [],
         ports: getAdminPort(options),
       };
@@ -117,8 +127,9 @@ module.exports = {
       if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);
       // Add some info
       options.info = {core: getCore(options)};
-      // Set the healthcheck
+      // Set the supported things
       if (getCore(options) !== 'not supported') {
+        options.meUser = 'solr';
         const core = getCore(options);
         options.healthcheck = `curl http://localhost:8983/solr/${core}/admin/ping`;
       }
