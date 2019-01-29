@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const utils = require('./../../lib/utils');
 
 /*
  * Helper to parse legacy solr 3 config
@@ -40,9 +39,9 @@ const parseElse = options => {
     options.command = [
       '/bin/sh',
       '-c',
-      '"echo \"solr.install.dir=/opt/solr\" >> /solrconf/conf/solrcore.properties',
+      '"echo \"solr.install.dir=/opt/solr\" >> /opt/mysolrhome/conf/solrcore.properties',
       '&&',
-      `${options.command} /solrconf"`,
+      `${options.command} /opt/mysolrhome"`,
     ].join(' ');
   }
   return options;
@@ -87,9 +86,6 @@ const getCore = options => {
   };
 };
 
-// Helper to chown
-const getChownage = dir => `chown -R solr:solr ${dir}`;
-
 // Builder
 module.exports = {
   name: 'solr',
@@ -104,7 +100,7 @@ module.exports = {
     moreHttpPorts: ['8983'],
     port: '8983',
     remoteFiles: {
-      dir: '/solrconf/conf',
+      dir: '/opt/mysolrhome/conf',
     },
   },
   parent: '_service',
@@ -125,6 +121,8 @@ module.exports = {
       };
       // Add in persistent datadir
       if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);
+      // Change the me user
+      options.meUser = 'solr';
       // Add some info
       options.info = {core: getCore(options)};
       // Set the supported things
