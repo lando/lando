@@ -57,7 +57,7 @@ services:
   my-service:
     type: solr:7
     portforward: false
-    core: freedom
+    core: lando
     config:
       dir: SEE BELOW
 ```

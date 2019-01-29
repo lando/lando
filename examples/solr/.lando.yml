@@ -1,31 +1,24 @@
-# solr server example
-name: solr
-
-# Spin up services to run a basic node server with solr backend
+name: lando-solr
 services:
-
-  # Spin up a solr container called "index"
-  # NOTE: "index" is arbitrary, you could just as well call this "tswift" or "covfefe"
-  index:
-
-    # Use solr
+  defaults:
     type: solr
-
-    # Optionally allow access to the database at localhost:9999
-    # You will need to make sure port 9999 is open on your machine
-    #
-    # You can also set `portforward: true` to have Lando dynamically assign
-    # a port. Unlike specifying an actual port setting this to true will give you
-    # a different port every time you restart your app
-    portforward: true
-
-    # Optionally declare the name of the solr core.
-    # This setting is only applicable for versions 5 and above
+  patch:
+    type: solr:5.5.5
+    core: solo
+  custom:
+    type: solr:7.6
     core: freedom
-
-    # Optionally use custom solr config files eg (schema.xml and solrconfig.xml)
-    # This is helpful if frameworks require custom config eg Drupal.
-    # This is relative to the app root (which may be different from your webroot).
-    # This should be the directory containing the schema.xml and solrconfig.xml files, not the path to a certain file.
     config:
       dir: config
+  legacy4:
+    type: solr:4
+  helper:
+    type: php
+    via: cli
+tooling:
+  post-record-defaults:
+    cmd: "curl http://defaults:8983/solr/lando/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
+    service: helper
+  post-record-patch:
+    cmd: "curl http://patch:8983/solr/solo/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
+    service: helper

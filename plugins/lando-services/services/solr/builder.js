@@ -11,8 +11,6 @@ const parse3 = options => {
   options.command = '/bin/bash -c "cd /opt/solr/example; java -Djetty.port=8983 -jar start.jar"';
   options.remoteFiles.dir = '/opt/solr/example/solr/conf';
   options.dataDir = '/opt/solr/example/solr/data';
-  // @TODO: set this to false because we cant scan it reliably, is there a way to redirect?
-  options.portforward = false;
   return options;
 };
 
@@ -26,8 +24,6 @@ const parse4 = options => {
   // @TODO: the below doesnt seem to work so lets just ignore for now sice 4.10 is legacy
   // options.dataDir = '/opt/solr-4.10.4/example/solr/collection1/data';
   options.dataDir = '';
-  // @TODO: set this to false because we cant scan it reliably, is there a way to redirect?
-  options.portforward = false;
   return options;
 };
 
@@ -52,6 +48,19 @@ const parseElse = options => {
 };
 
 /*
+ * Helper to return admin port to expose
+ */
+const getAdminPort = options => {
+  switch (options.version) {
+    case '3.6': return [];
+    case '3': return [];
+    case '4.10': return [];
+    case '4': return [];
+    default: return ['8983'];
+  };
+};
+
+/*
  * Helper to parse solr config
  */
 const parseConfig = options => {
@@ -61,6 +70,19 @@ const parseConfig = options => {
     case '4.10': return parse4(options);
     case '4': return parse4(options);
     default: return parseElse(options);
+  };
+};
+
+/*
+ * Helper to get core
+ */
+const getCore = options => {
+  switch (options.version) {
+    case '3.6': return 'not supported';
+    case '3': return 'not supported';
+    case '4.10': return 'not supported';
+    case '4': return 'not supported';
+    default: return options.core;
   };
 };
 
@@ -89,9 +111,12 @@ module.exports = {
         image: options.image,
         command: options.command,
         volumes: [],
+        ports: getAdminPort(options),
       };
       // Add in persistent datadir
       if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);
+      // Add some info
+      options.info = {core: getCore(options)};
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, solr)});
     };
