@@ -54,9 +54,9 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd wordpress
 lando mysql -uwordpress -pwordpress wordpress -e quit
 
-# Should have the wp-cli
+# Should have the 2.x wp-cli
 cd wordpress
-lando wp cli version | grep 2.1
+lando wp cli version | grep "WP-CLI 2."
 
 # Should create a wp-config file
 cd wordpress/wordpress
