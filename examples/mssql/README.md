@@ -3,7 +3,7 @@ MSSQL Example
 
 This example exists primarily to test the following documentation:
 
-* [MSSQL Service](https://docs.devwithlando.io/tutorial/mssql.html)
+* [MSSQL Service](https://docs.devwithlando.io/tutorials/mssql.html)
 
 Start up tests
 --------------

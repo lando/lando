@@ -3,7 +3,7 @@ Elasticsearch Example
 
 This example exists primarily to test the following documentation:
 
-* [Elasticsearch Service](https://docs.devwithlando.io/tutorial/elasticsearch.html)
+* [Elasticsearch Service](https://docs.devwithlando.io/tutorials/elasticsearch.html)
 
 Start up tests
 --------------

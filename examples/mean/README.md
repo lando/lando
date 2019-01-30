@@ -3,7 +3,7 @@ MEAN Example
 
 This example exists primarily to test the following documentation:
 
-* [MEAN Recipe](https://docs.devwithlando.io/tutorial/mean.html)
+* [MEAN Recipe](https://docs.devwithlando.io/tutorials/mean.html)
 
 Start up tests
 --------------

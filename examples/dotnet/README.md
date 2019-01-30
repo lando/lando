@@ -3,7 +3,7 @@ Dotnet Example
 
 This example exists primarily to test the following documentation:
 
-* [Dotnet Service](https://docs.devwithlando.io/tutorial/dotnet.html)
+* [Dotnet Service](https://docs.devwithlando.io/tutorials/dotnet.html)
 
 Start up tests
 --------------

@@ -3,7 +3,7 @@ Drupal 7 Example
 
 This example exists primarily to test the following documentation:
 
-* [Drupal 7 Recipe](https://docs.devwithlando.io/tutorial/drupal7.html)
+* [Drupal 7 Recipe](https://docs.devwithlando.io/tutorials/drupal7.html)
 
 Start up tests
 --------------

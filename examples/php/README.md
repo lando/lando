@@ -3,7 +3,7 @@ PHP Example
 
 This example exists primarily to test the following documentation:
 
-* [PHP Service](https://docs.devwithlando.io/tutorial/php.html)
+* [PHP Service](https://docs.devwithlando.io/tutorials/php.html)
 
 Start up tests
 --------------

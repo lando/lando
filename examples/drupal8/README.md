@@ -3,7 +3,7 @@ Drupal 8 Example
 
 This example exists primarily to test the following documentation:
 
-* [Drupal 8 Recipe](https://docs.devwithlando.io/tutorial/drupal8.html)
+* [Drupal 8 Recipe](https://docs.devwithlando.io/tutorials/drupal8.html)
 
 Start up tests
 --------------

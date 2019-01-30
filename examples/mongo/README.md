@@ -3,7 +3,7 @@ Mongo Example
 
 This example exists primarily to test the following documentation:
 
-* [Mongo Service](https://docs.devwithlando.io/tutorial/mongo.html)
+* [Mongo Service](https://docs.devwithlando.io/tutorials/mongo.html)
 
 Start up tests
 --------------
