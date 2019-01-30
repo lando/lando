@@ -181,6 +181,9 @@ fi
 # Get the files
 if [ "$FILES" != "none" ]; then
 
+  # Make sure the filemount actually exists
+  mkdir -p $LANDO_WEBROOT/$FILEMOUNT
+
   # Build the rsync command
   RSYNC_CMD="rsync -rlvz \
     --size-only \
@@ -206,7 +209,7 @@ if [ "$FILES" != "none" ]; then
 
   # Build the extract CMD
   if [ "$RSYNC" == "false" ]; then
-    PULL_FILES="rm -f $FILE_DUMP && terminus backup:get $SITE.$FILES --element=files --to=$FILE_DUMP && mkdir -p $LANDO_WEBROOT/$FILEMOUNT &&"
+    PULL_FILES="rm -f $FILE_DUMP && terminus backup:get $SITE.$FILES --element=files --to=$FILE_DUMP &&"
     if command -v pv >/dev/null 2>&1; then
       PULL_FILES="$PULL_FILES pv $FILE_DUMP | tar xzf - -C $LANDO_WEBROOT/$FILEMOUNT --strip-components 1 &&"
     else

@@ -59,6 +59,7 @@ lando wp cli version
 cd wordpress
 lando ssh -s appserver -c "curl -L http://appserver_nginx" | grep "WordPress for Lando"
 lando ssh -s appserver -c "curl -kL https://appserver_nginx" | grep "WordPress for Lando"
+lando ssh -s appserver -c "env" | grep "LANDO_WEBROOT=/app/web"
 
 # Should have terminus
 cd wordpress
@@ -74,11 +75,17 @@ lando php -v | grep "PHP 7.0"
 
 # Should disable edge, index or cache containers and tools when specified
 docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_nginx_1
-docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_appserver_1
-docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_database_1
-docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_cache_1 || echo $? | grep 1
-docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_index_1 || echo $? | grep 1
-docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_edge_1 || echo $? | grep 1
+docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_1
+docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_database_1
+docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_cache_1 || echo $? | grep 1
+docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_index_1 || echo $? | grep 1
+docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_edge_1 || echo $? | grep 1
+
+# Should still be logged in even after a rebuild
+cd wordpress
+lando terminus auth:whoami | grep landobot@devwithlando.io
+lando rebuild -y
+lando terminus auth:whoami | grep landobot@devwithlando.io
 
 # Should serve proxy from nginx
 cd wordpress
@@ -88,7 +95,7 @@ curl -LI http://landobot-wordress.lndo.site | grep Via || echo $? | grep 1
 cd drupal7
 lando drush status | grep "Connected"
 
-# SHould have drush
+# Should have drush
 cd drupal7
 lando drush version
 
@@ -104,6 +111,7 @@ lando terminus auth:whoami | grep landobot@devwithlando.io
 cd drupal7
 lando ssh -s appserver -c "curl -kL https://edge_ssl" | grep "Drupal 7 for Lando"
 lando ssh -s appserver -c "curl -L http://edge" | grep "Drupal 7 for Lando"
+lando ssh -s appserver -c "env" | grep "LANDO_WEBROOT=/app"
 
 # Should use php version 7.2 by default for drupal7 sites
 cd drupal7
@@ -111,12 +119,16 @@ lando php -v | grep "PHP 7.2"
 
 # Should have all pantheon services running and their tooling enabled by defaults
 docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_nginx_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_appserver_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_database_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_cache_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_index_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_edge_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_edge_ssl_1
+docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_appserver_1
+docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_database_1
+docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_cache_1
+docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_index_1
+docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_edge_1
+docker ps --filter label=com.docker.compose.project=landobotdrupal7 | grep landobotdrupal7_edge_ssl_1
+
+# Should not have xdebug enabled by defaults
+cd drupal7
+lando php -m | grep xdebug || echo $? | grep 1
 
 # Should be serving via varnish on the proxy
 cd drupal7
