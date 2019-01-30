@@ -52,6 +52,21 @@ const getCore = options => {
 };
 
 /*
+ * Helper to get the environment
+ */
+const getEnvironment = options => ({
+  LANDO_SOLR_CONFDIR: options.remoteFiles.dir,
+  LANDO_SOLR_CORE: options.core,
+  LANDO_SOLR_CUSTOM: _.get(options, 'config.dir', 'none'),
+  LANDO_SOLR_DATADIR: options.dataDir,
+  LANDO_SOLR_INSTALL_DIR: '/opt/solr',
+  LANDO_WEBROOT_USER: 'solr',
+  LANDO_WEBROOT_GROUP: 'solr',
+  LANDO_WEBROOT_UID: '8983',
+  LANDO_WEBROOT_GID: '8983',
+});
+
+/*
  * Helper to parse solr config
  */
 const parseConfig = options => {
@@ -90,17 +105,7 @@ module.exports = {
       const solr = {
         image: options.image,
         command: options.command,
-        environment: {
-          LANDO_SOLR_CONFDIR: options.remoteFiles.dir,
-          LANDO_SOLR_CORE: options.core,
-          LANDO_SOLR_CUSTOM: _.get(options, 'config.dir', 'none'),
-          LANDO_SOLR_DATADIR: options.dataDir,
-          LANDO_SOLR_INSTALL_DIR: '/opt/solr',
-          LANDO_WEBROOT_USER: 'solr',
-          LANDO_WEBROOT_GROUP: 'solr',
-          LANDO_WEBROOT_UID: '8983',
-          LANDO_WEBROOT_GID: '8983',
-        },
+        environment: getEnvironment(options),
         volumes: [
           `${options.confDest}/${options.startScript}:/helpers/start.sh`,
         ],
