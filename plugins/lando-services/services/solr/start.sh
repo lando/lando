@@ -22,8 +22,9 @@ if [ "$LANDO_SOLR_CUSTOM" != "none" ]; then
 fi
 
 # Chownage
-chown -R solr:solr "/solrconf"
-chown -R solr:solr "$LANDO_SOLR_DATADIR"
+mkdir -p /solrconf
+chown -R solr:solr /solrconf
+chown -R solr:solr /opt/solr
 
 # Go down to solr and run
 if [ "$LANDO_SOLR_CUSTOM" != "none" ]; then

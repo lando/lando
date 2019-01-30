@@ -25,6 +25,7 @@ fi
 chown -R solr:solr "$LANDO_SOLR_DATADIR"
 chown -R solr:solr "$LANDO_SOLR_INSTALL_DIR"
 chown -R solr:solr "$LANDO_SOLR_CONFDIR"
+chown -R solr:solr /opt/solr-4.10.4/example
 
 # Drop down to solr
 su - solr -c "/bin/bash -c '/opt/solr/bin/solr -f -p 8983'"
