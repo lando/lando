@@ -32,6 +32,9 @@ lando ssh -s web -c "cat /app/test/web-post-start.txt | grep \\\$(hostname -s)"
 # Should run on tooling commands as well
 lando thing
 lando ssh -s web -c "cat /app/test/web-post-thing.txt | grep \\\$(hostname -s)"
+
+# Should run on rebuild without failin
+lando rebuild -y | grep "ET TU, BRUT"
 ```
 
 Destroy tests
