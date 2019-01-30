@@ -193,7 +193,7 @@ tooling:
 
 #### Default URL Setup
 
-You may see `http://defualt` show up in many `drush` commands you run.
+You may see `http://default` show up in many `drush` commands you run.
 
 ```bash
 lando drush uli
