@@ -8,17 +8,27 @@ services:
   custom:
     type: solr:7.6
     core: freedom
+    portforward: true
     config:
-      dir: config
+      dir: '7.x'
   legacy4:
+    portforward: true
     type: solr:4
+    config:
+      dir: '4.x'
   helper:
     type: php
     via: cli
 tooling:
+  post-record-custom:
+    cmd: "curl http://custom:8983/solr/freedom/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
+    service: custom
   post-record-defaults:
     cmd: "curl http://defaults:8983/solr/lando/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
     service: helper
+  post-record-legacy:
+    cmd: "curl http://legacy4:8983/solr/collection1/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
+    service: legacy4
   post-record-patch:
     cmd: "curl http://patch:8983/solr/solo/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
     service: helper

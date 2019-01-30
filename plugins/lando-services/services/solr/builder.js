@@ -8,9 +8,10 @@ const _ = require('lodash');
  */
 const parse3 = options => {
   options.image = 'actency/docker-solr:3.6';
-  options.command = '/bin/bash -c "cd /opt/solr/example; java -Djetty.port=8983 -jar start.jar"';
+  options.command = '/bin/bash -c "cd /opt/solr/example/solr; java -Djetty.port=8983 -jar start.jar"';
   options.remoteFiles.dir = '/opt/solr/example/solr/conf';
   options.dataDir = '/opt/solr/example/solr/data';
+  options.moreHttpPorts = [];
   return options;
 };
 
@@ -19,11 +20,10 @@ const parse3 = options => {
  */
 const parse4 = options => {
   options.image = 'actency/docker-solr:4.10';
-  options.command = '/bin/bash -c "/opt/solr/bin/solr -f -p 8983"';
   options.remoteFiles.dir = '/opt/solr-4.10.4/example/solr/collection1/conf';
-  // @TODO: the below doesnt seem to work so lets just ignore for now sice 4.10 is legacy
-  // options.dataDir = '/opt/solr-4.10.4/example/solr/collection1/data';
-  options.dataDir = '';
+  options.dataDir = '/opt/solr-4.10.4/example/solr/collection1/data';
+  options.startScript = 'start-4.sh';
+  options.moreHttpPorts = [];
   return options;
 };
 
@@ -32,31 +32,22 @@ const parse4 = options => {
  */
 const parseElse = options => {
   options.image = `solr:${options.version}`;
-  options.command = `docker-entrypoint.sh solr-precreate ${options.core}`;
+  options.command = `/helpers/start.sh`;
   // Custom config dir command
-  // @NOTE: idiot drupal hardcodes solrcore.properties so we need to do chaos like this
-  if (_.has(options, 'config.dir')) {
-    options.command = [
-      '/bin/sh',
-      '-c',
-      '"echo \"solr.install.dir=/opt/solr\" >> /opt/mysolrhome/conf/solrcore.properties',
-      '&&',
-      `${options.command} /opt/mysolrhome"`,
-    ].join(' ');
-  }
+  if (_.has(options, 'config.dir')) options.command = `${options.command} ${options.config.dir}`;
   return options;
 };
 
 /*
- * Helper to return admin port to expose
+ * Helper to get core
  */
-const getAdminPort = options => {
+const getCore = options => {
   switch (options.version) {
-    case '3.6': return [];
-    case '3': return [];
-    case '4.10': return [];
-    case '4': return [];
-    default: return ['8983'];
+    case '3.6': return 'not supported';
+    case '3': return 'not supported';
+    case '4.10': return 'collection1';
+    case '4': return 'collection1';
+    default: return options.core;
   };
 };
 
@@ -73,19 +64,6 @@ const parseConfig = options => {
   };
 };
 
-/*
- * Helper to get core
- */
-const getCore = options => {
-  switch (options.version) {
-    case '3.6': return 'not supported';
-    case '3': return 'not supported';
-    case '4.10': return 'not supported';
-    case '4': return 'not supported';
-    default: return options.core;
-  };
-};
-
 // Builder
 module.exports = {
   name: 'solr',
@@ -96,11 +74,13 @@ module.exports = {
     patchesSupported: true,
     confSrc: __dirname,
     core: 'lando',
+    command: '/helpers/start.sh',
     dataDir: '/opt/solr/server/solr/mycores',
     moreHttpPorts: ['8983'],
     port: '8983',
+    startScript: 'start.sh',
     remoteFiles: {
-      dir: '/opt/mysolrhome/conf',
+      dir: '/solrconf/conf',
     },
   },
   parent: '_service',
@@ -111,13 +91,20 @@ module.exports = {
         image: options.image,
         command: options.command,
         environment: {
+          LANDO_SOLR_CONFDIR: options.remoteFiles.dir,
+          LANDO_SOLR_CORE: options.core,
+          LANDO_SOLR_CUSTOM: _.get(options, 'config.dir', 'none'),
+          LANDO_SOLR_DATADIR: options.dataDir,
+          LANDO_SOLR_INSTALL_DIR: '/opt/solr',
           LANDO_WEBROOT_USER: 'solr',
           LANDO_WEBROOT_GROUP: 'solr',
           LANDO_WEBROOT_UID: '8983',
           LANDO_WEBROOT_GID: '8983',
         },
-        volumes: [],
-        ports: getAdminPort(options),
+        volumes: [
+          `${options.confDest}/${options.startScript}:/helpers/start.sh`,
+        ],
+        user: 'root',
       };
       // Add in persistent datadir
       if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);
@@ -127,7 +114,6 @@ module.exports = {
       options.info = {core: getCore(options)};
       // Set the supported things
       if (getCore(options) !== 'not supported') {
-        options.meUser = 'solr';
         const core = getCore(options);
         options.healthcheck = `curl http://localhost:8983/solr/${core}/admin/ping`;
       }
