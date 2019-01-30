@@ -29,6 +29,7 @@ module.exports = (app, lando) => {
       project: app.project,
       compose: app.compose,
       root: app.root,
+      info: app.info,
     }, {persist: true});
   });
 

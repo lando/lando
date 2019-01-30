@@ -7,9 +7,9 @@ const _ = require('lodash');
 module.exports = {
   name: 'tomcat',
   config: {
-    version: '8.5',
-    supported: ['9.0', '8.5', '8.0', '7'],
-    legacy: ['7', '8.0'],
+    version: '8',
+    supported: ['9', '9.0', '8', '8.5', '8.0', '7', '7.0'],
+    legacy: ['7', '7.0'],
     patchesSupported: true,
     confSrc: __dirname,
     defaultFiles: {

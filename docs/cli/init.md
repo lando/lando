@@ -37,6 +37,13 @@ lando init --source remote --remote-url https://my.git.repo/.git --recipe panthe
 
 # Set up a local repo with the pantheon recipe
 lando init --recipe pantheon
+
+# Set up a mean recipe that runs on a particular port with a particular command
+lando init --source cwd \
+  --recipe mean \
+  --option port=3000 \
+  --option command="yarn watch" \
+  --name meanest-app-youve-ever-seen
 ```
 
 Getting code from various sources
@@ -144,6 +151,7 @@ Run `lando init --lando` to get a complete list of options defaults, choices, re
 --github-repo     GitHub git url
 --lando           Show help for lando-based options
 --name            The name of the app
+--options, -o     Merge additional KEY=VALUE pairs into your recipes config
 --pantheon-auth   A Pantheon machine token
 --pantheon-site   A Pantheon site machine name
 --recipe, -r      The recipe with which to initialize the app

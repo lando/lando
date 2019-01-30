@@ -28,7 +28,6 @@ env.yml
 _books
 _book
 docs/examples
-docs/tutorials
 
 # Build dirs
 build

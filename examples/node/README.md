@@ -1,68 +1,70 @@
-Express Example
-===============
+Node Example
+============
 
-[Node.js](https://nodejs.org/en/) is a JavaScript runtime built on Chrome's V8 JavaScript engine and uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Beyond running web applications, it is also commonly used for front-end tooling. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+This example exists primarily to test the following documentation:
 
-Supported versions
-------------------
+* [Node Service](https://docs.devwithlando.io/tutorials/node.html)
 
-*   [9](https://hub.docker.com/r/_/node/)
-*   [carbon](https://hub.docker.com/r/_/node/)
-*   [8](https://hub.docker.com/r/_/node/)
-*   **[8.9](https://hub.docker.com/r/_/node/)** **(default)**
-*   [8.4](https://hub.docker.com/r/_/node/)
-*   [8.0](https://hub.docker.com/r/_/node/)
-*   [boron](https://hub.docker.com/r/_/node/)
-*   [6](https://hub.docker.com/r/_/node/)
-*   [6.10](https://hub.docker.com/r/_/node/)
-*   [6.11](https://hub.docker.com/r/_/node/)
-*   [6.12](https://hub.docker.com/r/_/node/)
-*   [argon](https://hub.docker.com/r/_/node/)
-*   [4](https://hub.docker.com/r/_/node/)
-*   [4.8](https://hub.docker.com/r/_/node/)
-*   custom
+Start up tests
+--------------
 
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/library/node/tags/) are all the tags that are available for this service.
-
-Example
--------
-
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/express).
-This example provides a basic Express web application.
-
-See the `.lando.yml` in this directory for NodeJS configuration options.
-
-Getting Started
----------------
-
-You should be able to run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Install node dependencies
-lando yarn
-
-# Start up the example
+# Should start up succesfully
+lando poweroff
 lando start
-
-# Check out other commands you can use with this example
-lando
 ```
 
-Helpful Commands
-----------------
+Verification commands
+---------------------
 
-Here is a non-exhaustive list of commands that are relevant to this example.
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Run some node relevant commands
-lando node -v
-lando npm -v
-lando yarn -v
-lando gulp -v
+# Should use 10.x as the default version
+lando ssh -s defaults -c "node -v | grep v10."
+
+# Should use a user specified version if given
+lando ssh -s custom -c "node -v | grep v11."
+
+# Should use a user specified patch version if given
+lando ssh -s patch -c "node -v | grep v10.14.2"
+
+# Should serve over port 80 by default
+lando ssh -s defaults -c "curl http://localhost | grep tune"
+
+# Should only serve over http by default
+lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+
+# Should serve over specified port if given
+lando ssh -s custom -c "curl http://localhost:3000 | grep tune"
+
+# Should serve over https is ssl is set by user
+lando ssh -s custom -c "curl -k https://localhost | grep tune"
+
+# Should install global dependencies if specified by user and have them available in PATH
+lando ssh -s custom -c "gulp -v"
+lando ssh -s custom -c "which gulp | grep /var/www/.npm-global"
+
+# Should PATH prefer node dependency binaries installed in /app/node_modules over global ones
+lando ssh -s custom -c "npm install gulp-cli --no-save"
+lando ssh -s custom -c "gulp -v"
+lando ssh -s custom -c "which gulp | grep /app/node_modules/.bin"
+lando ssh -s custom -c "npm uninstall gulp-cli"
+lando ssh -s custom -c "which gulp | grep /var/www/.npm-global"
+
+# Should not serve port for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
+```
+
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
+lando destroy -y
+lando poweroff
 ```

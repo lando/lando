@@ -2,8 +2,9 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
 const escape = require('./../../../lib/utils').shellEscape;
+const getUser = require('./../../../lib/utils').getUser;
+const path = require('path');
 
 /*
  * Helper to map the cwd on the host to the one in the container
@@ -165,8 +166,7 @@ exports.toolingDefaults = ({
   description = `Runs ${name} commands`,
   options = {},
   service = '',
-  // @TODO: some better toggle here?
-  user = 'www-data'} = {}) =>
+  user = null} = {}) =>
   ({
     name,
     app: app,
@@ -174,5 +174,5 @@ exports.toolingDefaults = ({
     describe: description,
     options: options,
     service: service,
-    user: user,
+    user: (user === null) ? getUser(service, app.info) : user,
   });

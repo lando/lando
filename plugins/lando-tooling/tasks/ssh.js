@@ -1,6 +1,8 @@
 'use strict';
 
 // Modules
+const _ = require('lodash');
+const getUser = require('./../../../lib/utils').getUser;
 const utils = require('./../lib/utils');
 
 // Other things
@@ -26,14 +28,17 @@ const task = {
 };
 
 module.exports = lando => {
-  task.run = ({appname = undefined, command = bashme, service = 'appserver', user = 'www-data', _app = {}} = {}) => {
+  task.run = ({appname = undefined, command = bashme, service = 'appserver', user = null, _app = {}} = {}) => {
     // Try to get our app
     const app = lando.getApp(_app.root, false);
     // If we have it then init and DOOOO EEEET
     if (app) {
-      return app.init().then(() => lando.engine.run(utils.buildCommand(app, command, service, user))).catch(error => {
-        error.hide = true;
-        throw error;
+      return app.init().then(() => {
+        if (_.isNull(user)) user = getUser(service, app.info);
+        return lando.engine.run(utils.buildCommand(app, command, service, user)).catch(error => {
+          error.hide = true;
+          throw error;
+        });
       });
     }
   };

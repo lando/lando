@@ -31,9 +31,11 @@ module.exports = {
       },
     }),
     build: options => {
-      return [
-        {name: 'get-asset', cmd: `/helpers/get-remote-url.sh ${options['remote-url']} "${options['remote-options']}"`},
-      ];
+      return [{
+        name: 'get-asset',
+        cmd: `/helpers/get-remote-url.sh ${options['remote-url']} "${options['remote-options']}"`,
+        remove: true,
+      }];
     },
   }],
 };

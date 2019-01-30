@@ -1,7 +1,6 @@
 'use strict';
 
 // Modules
-const _ = require('lodash');
 const path = require('path');
 const utils = require('./../../../lib/utils');
 
@@ -26,7 +25,7 @@ exports.buildRun = config => ({
     mode: 'attach',
     user: config.user,
     services: ['init'],
-    autoRemove: true,
+    autoRemove: config.remove,
   },
 });
 
@@ -41,16 +40,23 @@ exports.run = (lando, run) => lando.engine.run(run).catch(err => {
 exports.runDefaults = (lando, options) => {
   // Handle all the compose stuff
   const LandoUtil = lando.factory.get('_init');
-  const utilData = new LandoUtil(lando.config.userConfRoot, lando.config.home, options.destination);
+  const utilData = new LandoUtil(
+    lando.config.userConfRoot,
+    lando.config.home,
+    options.destination,
+    lando.config.appEnv,
+    lando.config.appLabels
+  );
   const utilDir = path.join(lando.config.userConfRoot, 'init', options.name);
   const utilFiles = lando.utils.dumpComposeData(utilData, utilDir);
   // Start to build out some propz and shiz
-  const project = 'landoinit' + _.uniqueId(utils.dockerComposify(options.name));
+  const project = 'landoinit' + utils.dockerComposify(options.name);
   // Return
   return {
     id: `${project}_init_1`,
     project,
     user: 'www-data',
     compose: utilFiles,
+    remove: false,
   };
 };

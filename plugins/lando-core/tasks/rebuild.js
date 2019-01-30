@@ -6,8 +6,15 @@ const utils = require('./../lib/utils');
 
 // Helper to handle options
 const handleOpts = options => {
-  if (!_.isEmpty(options.services)) return {services: options.services};
-  else return {};
+  const opts = {
+    pullable: _(options._app.services)
+      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build')}))
+      .filter(service => !service.isLocal)
+      .map('service')
+      .value(),
+  };
+  if (!_.isEmpty(options.service)) opts.services = options.service;
+  return opts;
 };
 
 module.exports = lando => {
@@ -16,7 +23,7 @@ module.exports = lando => {
     command: 'rebuild',
     describe: 'Rebuilds your app from scratch, preserving data',
     options: {
-      services: {
+      service: {
         describe: 'Rebuild only the specified services',
         alias: ['s'],
         array: true,

@@ -41,7 +41,7 @@ module.exports = {
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `data_${options.name}:/bitnami/mysql/data`,
+          `${options.data}:/bitnami/mysql/data`,
         ],
       };
       // Send it downstream

@@ -1,25 +1,14 @@
-# Mongo example
-name: mongo
-
-# Spin up a basic nodes server with mongo backend
+name: lando-mongo
 services:
-
-  # Spin up a mongo container called "database"
-  # NOTE: "database" is arbitrary, you could just as well call this "thing" or "stuff"
-  database:
-
-    # Use latest stable version of mongo
+  defaults:
     type: mongo
-
-    # Optionally allow access to the database at localhost:27018
-    # You will need to make sure port 27018 is open on your machine
-    #
-    # You can also set `portforward: true` to have Lando dynamically assign
-    # a port. Unlike specifying an actual port setting this to true will give you
-    # a different port every time you restart your app
-    portforward: 27018
-
-    # Optionally use the following mongo config file
-    # This is relative to the app root
+  custom:
+    type: mongo:3.6
+    portforward: true
     config:
       database: custom.conf
+  patch:
+    type: mongo:4.1.4
+tooling:
+  mongo:
+    service: defaults

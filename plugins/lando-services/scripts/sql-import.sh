@@ -12,7 +12,6 @@ DEFAULT_COLOR='\033[0;0m'
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
   DATABASE=${POSTGRES_DB:-database}
-  PASSWORD=${PGPASSWORD:-password}
   PORT=5432
   USER=postgres
 else
@@ -72,7 +71,7 @@ else
 
   # Build DB specific connection string
   if [[ ${POSTGRES_DB} != '' ]]; then
-    CMD="psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DATABASE"
+    CMD="psql postgresql://$USER@$HOST:$PORT/$DATABASE"
   else
     CMD="mysql -h $HOST -P $PORT -u $USER"
   fi
@@ -98,10 +97,10 @@ if [ "$WIPE" == "true" ]; then
 
     # Drop and recreate database
     printf "\t\t${GREEN}Dropping database ...\n\n${DEFAULT_COLOR}"
-    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/postgres -c "drop database $DATABASE"
+    psql postgresql://$USER@$HOST:$PORT/postgres -c "drop database $DATABASE"
 
     printf "\t\t${GREEN}Creating database ...\n\n${DEFAULT_COLOR}"
-    psql postgresql://$USER:$PASSWORD@$HOST:$PORT/postgres -c "create database $DATABASE"
+    psql postgresql://$USER@$HOST:$PORT/postgres -c "create database $DATABASE"
 
   else
 
@@ -145,7 +144,7 @@ fi
 
 # Build DB specific import command
 if [[ ${POSTGRES_DB} != '' ]]; then
-  CMD="$CMD | psql postgresql://$USER:$PASSWORD@$HOST:$PORT/$DATABASE"
+  CMD="$CMD | psql postgresql://$USER@$HOST:$PORT/$DATABASE"
 else
   CMD="$CMD | mysql -h $HOST -P $PORT -u $USER $DATABASE"
 fi

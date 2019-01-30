@@ -13,6 +13,7 @@ const github = new GitHubApi({Promise: Promise});
 const githubTokenCache = 'github.tokens';
 const gitHubLandoKey = 'github.lando.id_rsa';
 const gitHubLandoKeyComment = 'lando@' + os.hostname();
+let gitHubRepos = [];
 
 // Helper to sort tokens
 const sortTokens = (...sources) => _(_.flatten([...sources]))
@@ -25,17 +26,17 @@ const sortTokens = (...sources) => _(_.flatten([...sources]))
 const throwError = err => `${err.code} ${err.status} ${err.message}`;
 
 // Helper to retrieve all github repoz
-const getAllRepos = (done, slugs = []) => (err, res) => {
-  // Throw error if we bad
-  if (err) throw Error(throwError(err));
+const getAllRepos = (resolve, reject, slugs = []) => (err, res) => {
+  // resolve([{name: 'seseg'}])
+  if (err) reject(err);
   // Add previous data to current
   slugs = slugs.concat(_.map(res.data, site => ({name: site.full_name, value: site.ssh_url})));
   // IF we have more pages lets add them
   if (github.hasNextPage(res)) {
-    github.getNextPage(res, getAllRepos(done));
+    return github.getNextPage(res, getAllRepos(resolve, reject, slugs));
   // Return if we are done
   } else {
-    done(null, _.sortBy(slugs, 'name'));
+    resolve(_.sortBy(slugs, 'name'));
   }
 };
 
@@ -86,16 +87,30 @@ const setCaches = (options, lando) => {
 const showTokenList = (source, tokens = []) => !_.isEmpty(tokens) && source === 'github';
 
 // Helper to determine whether to show token password entry or not
-const showTokenEntry = (source, answer, tokens = []) => (_.isEmpty(tokens) || answer === 'more') && source === 'github';
+const showTokenEntry = (source, answer, tkez = []) => ((_.isEmpty(tkez) || answer === 'more')) && source === 'github';
 
 // Helper to get list of github projects
-const getRepos = (answers, done) => {
+const getRepos = (answers, Promise) => {
   // Log
   console.log('Getting your GitHub repos... this may take a moment if you have a lot');
-  // Authenticate
-  github.authenticate({type: 'token', token: answers['github-auth']});
-  // Get all our slguzz
-  github.repos.getAll({affliation: 'owner,collaborator', per_page: 100}, getAllRepos(done));
+  return new Promise((resolve, reject) => {
+    // Authenticate
+    github.authenticate({type: 'token', token: answers['github-auth']});
+    // Get all our slguzz
+    github.repos.getAll({affliation: 'owner,collaborator', per_page: 100}, getAllRepos(resolve, reject));
+  });
+};
+
+// Helper to get sites for autocomplete
+const getAutoCompleteRepos = (answers, Promise, input = null) => {
+  if (!_.isEmpty(gitHubRepos)) {
+    return Promise.resolve(gitHubRepos).filter(site => _.startsWith(site.name, input));
+  } else {
+    return getRepos(answers, Promise).then(sites => {
+      gitHubRepos = sites;
+      return gitHubRepos;
+    });
+  };
 };
 
 module.exports = {
@@ -128,10 +143,10 @@ module.exports = {
         describe: 'GitHub git url',
         string: true,
         interactive: {
-          type: 'list',
+          type: 'autocomplete',
           message: 'Which repo?',
-          choices: function(answers) {
-            getRepos(answers, this.async());
+          source: (answers, input) => {
+            return getAutoCompleteRepos(answers, lando.Promise, input);
           },
           when: answers => answers.source === 'github',
           weight: 130,
@@ -143,7 +158,8 @@ module.exports = {
       {name: 'post-key', func: (options, lando) => {
         return postKey(path.join(lando.config.userConfRoot, 'keys'), options['github-auth']);
       }},
-      {name: 'clone-repo', cmd: `/helpers/get-remote-url.sh ${options['github-repo']}`},
+      {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+      {name: 'clone-repo', cmd: `/helpers/get-remote-url.sh ${options['github-repo']}`, remove: true},
       {name: 'set-caches', func: (options, lando) => setCaches(options, lando)},
     ]),
   }],

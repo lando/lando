@@ -3,6 +3,17 @@
 // Modules
 const _ = require('lodash');
 
+// Helper to builder nginx command
+const nginxCommand = vhost => [
+  '/bin/bash -c',
+  '"mkdir -p /opt/bitnami/nginx/conf/vhosts',
+  '&&',
+  'render-template',
+  `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
+  '&&',
+  '/entrypoint.sh /run.sh"',
+].join(' ');
+
 // Helper to get long varnish command
 const varnishCmd = [
   '/bin/sh -c',
@@ -13,16 +24,17 @@ const varnishCmd = [
 
 // Helper to get varnsh ssl nginx
 const varnishSsl = options => ({
-  command: '/entrypoint.sh /run.sh',
+  command: nginxCommand('/opt/bitnami/extra/nginx/templates/default.conf.tpl'),
   image: 'bitnami/nginx:1.14.2',
   depends_on: [options.name],
   environment: {
     NGINX_DAEMON_USER: 'root',
     NGINX_DAEMON_GROUP: 'root',
+    LANDO_VARNISH_ALIAS: `${options.name}_varnish`,
   },
   user: 'root',
   volumes: [
-    `${options.confDest}/${options.defaultFiles.ssl}:/opt/bitnami/nginx/conf/vhosts/varnish.conf`,
+    `${options.confDest}/${options.defaultFiles.ssl}:/opt/bitnami/extra/nginx/templates/default.conf.tpl`,
   ],
 });
 
@@ -34,13 +46,15 @@ module.exports = {
     supported: ['4.1'],
     backends: ['appserver'],
     confSrc: __dirname,
+    backend_port: '80',
+    ssl: false,
+    sources: [],
     defaultFiles: {
-      ssl: 'ssl-termination.conf',
+      ssl: 'ssl-termination.conf.tpl',
     },
     remoteFiles: {
       vcl: '/etc/varnish/conf.d/lando.vcl',
     },
-    sources: [],
   },
   parent: '_lando',
   builder: (parent, config) => class LandoVarnish extends parent {
@@ -55,10 +69,12 @@ module.exports = {
         depends_on: options.backends,
         environment: {
           BACKENDS: options.backends.join(' '),
+          BACKENDS_PORT: options.backend_port,
           ADDRESS_PORT: ':80',
           BACKENDS_PROBE_ENABLED: 'false',
+          LANDO_NO_USER_PERMS: 'NOTGONNADOIT',
         },
-        networks: {default: {aliases: ['varnish']}},
+        networks: {default: {aliases: [`${options.name}_varnish`]}},
         ports: ['80'],
       };
       // Set some info about our backends
@@ -83,15 +99,3 @@ module.exports = {
     };
   },
 };
-
-/*
-  const info = (name, config) => {
-    // Surfaces the VCL file if specified
-    if (_.has(config, 'vcl')) info.vcl = config.vcl;
-    // Specify the backends varnish is servicing
-    info.backends = config.backends;
-    // Return the collected info
-    return info;
-  };
-*/
-

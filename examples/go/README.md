@@ -1,60 +1,52 @@
 Go Example
 ==========
 
+This example exists primarily to test the following documentation:
 
-[Go](https://golang.org/) is an open source programming language that makes it easy to build simple, reliable, and efficient software. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+* [Go Service](https://docs.devwithlando.io/tutorials/go.html)
 
-Supported versions
-------------------
+Start up tests
+--------------
 
-*   [1.8.4](https://hub.docker.com/_/golang/)
-*   **[1.8](https://hub.docker.com/_/golang/)** **(default)**
-*   custom
-
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/library/golang/tags/) are all the tags that are available for this service.
-
-Example
--------
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/go).
-
-
-This example provides a very basic `go` web server.
-
-See the `.lando.yml` in this directory for Go configuration options.
-
-Start it
---------
-
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up a very basic go app
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things
----------------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify our go cli version
-lando go version | grep go1.8.
+# Should use 1.11 as the default version
+lando ssh -s defaults -c "go version | grep go1.11"
 
-# Verify we are serving the right thing
-lando ssh appserver -c "curl localhost | grep YOUDONTKNOWMEATALL"
+# Should run only on port 80 by default
+lando ssh -s defaults -c "curl http://localhost" | grep HEART
+lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+
+# Should use the version if specified by user
+lando ssh -s patch -c "go version | grep go1.10.7"
+
+# Should serve over http and https if ssl is set by user
+lando ssh -s custom -c "curl http://localhost" | grep HEART
+lando ssh -s custom -c "curl -k https://localhost" | grep HEART
+
+# Should not serve port 80 for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 ```
 
-Purge
------
+Destroy tests
+-------------
 
-Clean up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the dotnet app
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

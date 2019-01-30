@@ -1,30 +1,14 @@
-# The name of my app
-name: nginx
-
-# Configure my services
+name: lando-nginx
 services:
-
-  # Create an nginx service called "appserver"
-  appserver:
-
-    # Use nginx version
+  defaults:
     type: nginx
-
-    # Turn on SSL
+  patch:
+    type: nginx:1.14.1
+  custom:
+    type: nginx
     ssl: true
-
-    # Optionally specify a webroot if your index.html is in a subdirectory
     webroot: www
-
-    # Optionally use our own config files
     config:
-
-      # Use custom nginx server config located in config/server.conf relative
-      # to our app root
       server: config/server.conf
-
-      # Use custom nginx http config located in config/http.conf relative
-      # to our app root
       vhosts: config/custom.conf
-
       params: config/params

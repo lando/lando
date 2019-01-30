@@ -8,7 +8,7 @@ module.exports = {
   name: 'memcached',
   config: {
     version: '1',
-    supported: ['1', '1.5.12'],
+    supported: ['1', '1.5.12', '1.5.x'],
     patchesSupported: true,
     mem: 64,
     port: '11211',

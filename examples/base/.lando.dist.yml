@@ -1,0 +1,6 @@
+name: lando-base-dist
+env_file:
+  - defaults.env
+compose:
+  - compose.yml
+

@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const getUser = require('./../../../lib/utils').getUser;
 const path = require('path');
 
 /*
@@ -11,7 +12,7 @@ const path = require('path');
 exports.addBuildStep = (steps, app, name, step = 'build_internal', front = false) => {
   const current = _.get(app, `config.services.${name}.${step}`, []);
   const add = (front) ? _.flatten([steps, current]) : _.flatten([current, steps]);
-  _.set(app, `config.services.${name}.${step}`, add);
+  _.set(app, `config.services.${name}.${step}`, _.uniq(add));
 };
 
 /*
@@ -45,7 +46,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
             project: app.project,
             opts: {
               mode: 'attach',
-              user: (_.includes(rootSteps, section)) ? 'root' : 'www-data',
+              user: (_.includes(rootSteps, section)) ? 'root' : getUser(service, app.info),
               services: [service],
             },
           });
@@ -53,6 +54,22 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
       }
     });
   });
+  // If we are on linux and we have steps let's unshift user-perm stuff
+  if (!_.isEmpty(build)) {
+    _.forEach(_.uniq(_.map(build, 'id')), container => {
+      build.unshift({
+        id: container,
+        cmd: '/helpers/user-perms.sh --silent',
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          mode: 'attach',
+          user: 'root',
+          services: [container.split('_')[1]],
+        },
+      });
+    });
+  }
   // Return
   return build;
 };
@@ -64,6 +81,7 @@ exports.parseConfig = (config, app) => _(config)
   .map((service, name) => _.merge({}, service, {name}))
   .map(service => _.merge({}, service, {
     _app: app,
+    data: `data_${service.name}`,
     app: app.name,
     confDest: path.join(app._config.userConfRoot, 'config', service.type.split(':')[0]),
     home: app._config.home,
@@ -90,7 +108,8 @@ exports.runBuild = (lando, steps, lockfile) => {
       lando.log.error('Looks like one of your build steps failed! with %s', error.stack);
       lando.log.warn('This **MAY** prevent your app from working');
       lando.log.warn('Check for errors above, fix them, and try again');
-      lando.log.debug('Build error %s');
+      lando.log.debug('Build error %j', error);
+      return lando.Promise.reject(error);
     });
   }
 };

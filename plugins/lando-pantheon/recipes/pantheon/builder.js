@@ -29,13 +29,7 @@ module.exports = {
     framework: 'drupal',
     index: true,
     services: {appserver: {overrides: {
-      volumes: [
-        '/var/www/.backdrush',
-        '/var/www/.drupal',
-        '/var/www/.drush',
-        '/var/www/.terminus',
-        '/var/www/.wp-cli',
-      ],
+      volumes: [],
     }}},
     tooling: {terminus: {
       service: 'appserver',
@@ -50,10 +44,11 @@ module.exports = {
         path.join(options.root, 'pantheon.upstream.yml'),
         path.join(options.root, 'pantheon.yml'),
       ]));
+      // Normalize because 7.0 right away gets handled strangely by js-yaml
+      if (options.php === '7' || options.php === 7) options.php = '7.0';
       // Enforce certain options for pantheon parity
       options.via = 'nginx:1.14';
       options.database = 'mariadb:10.1';
-
       // Set correct things based on framework
       options.defaultFiles.vhosts = `${options.framework}.conf.tpl`;
       // Use our custom pantheon images
@@ -68,10 +63,7 @@ module.exports = {
       // NOTE: We do this here instead of in /scripts because we need to gaurantee
       // it runs before the other build steps so it can reset our CA correctly
       options.build_root.push('/helpers/pantheon.sh');
-
-      // Normalize because 7.0 gets handled strangely by js-yaml
-      if (options.php === 7) options.php = '7.0';
-
+      options.build.push('/helpers/auth.sh');
       // Add in cache if applicable
       if (options.cache) options = _.merge({}, options, utils.getPantheonCache());
       // Add in edge if applicable

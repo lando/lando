@@ -1,35 +1,19 @@
-# The name of the app
-name: mysql
-
-# Set up my services
+name: lando-mysql
 services:
-
-  # Spin up a mariadb container called "database"
-  # NOTE: "database" is arbitrary, you could just as well call this "db" or "kanye"
-  database:
-
-    # Use the latest version of mysql
+  defaults:
     type: mysql
-
-    # Optionally forward out our port so we can access it at `localhost:someport`.
-    # This port will change every time you restart this app
-    #
-    # You can also set this to a static port you want to use `portforward:3311`.
-    # You will need to make sure the port is open and available
+  patch:
+    type: mysql:5.7.24
+  custom:
+    type: mysql:8.0
     portforward: true
-
-    # Optionally change the default db credentials
-    #
-    # Note: You will need to `lando destroy && lando start` to change these if you've
-    # already started your app
-    # See: https://docs.devwithlando.io/tutorials/lando-info.html
-    # creds:
-      # user: mysql
-      # password: mysql
-      # database: mysql
-
-    # Optionally load in all the mysql config files in the config directory
-    # This is relative to the app root
-    # NOTE: these files need to end in .cnf
-    # config:
-    #  database: config/my.cnf
+    creds:
+      user: pirog
+      password: password
+      database: stuff
+    config:
+      database: my.cnf
+tooling:
+  mysql:
+    service: custom
+    cmd: mysql -uroot

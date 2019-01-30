@@ -114,10 +114,7 @@ module.exports = {
     sources: [],
     ssl: false,
     via: 'apache',
-    volumes: [
-      '/var/www/.composer',
-      '/usr/local/bin',
-    ],
+    volumes: ['/usr/local/bin'],
     webroot: '.',
   },
   parent: '_appserver',
@@ -129,7 +126,9 @@ module.exports = {
 
       // Shift on the docker entrypoint if this is a more recent version
       // @TODO: can we assume we will always have major.minor for php release?
-      if (semver.gt(`${options.version}.0`, '5.5.0')) options.command.unshift('docker-php-entrypoint');
+      if (options.version !== 'custom' && semver.gt(`${options.version}.0`, '5.5.0')) {
+        options.command.unshift('docker-php-entrypoint');
+      }
 
       // Build the php
       const php = {
@@ -141,7 +140,7 @@ module.exports = {
           XDEBUG_CONFIG: `remote_enable=true remote_host=${options._app.env.LANDO_HOST_IP}`,
         }),
         networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
-        ports: (_.startsWith(options.via, 'apache')) ? ['80'] : [],
+        ports: (_.startsWith(options.via, 'apache') && options.version !== 'custom') ? ['80'] : [],
         volumes: options.volumes,
         command: options.command.join(' '),
       };

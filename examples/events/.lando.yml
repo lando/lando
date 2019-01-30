@@ -1,0 +1,17 @@
+name: lando-events
+compose:
+  - compose.yml
+events:
+  pre-start:
+    - mkdir -p /app/test && echo "$(hostname -s)" > /app/test/appserver-pre-start.txt
+    - web: mkdir -p /app/test && echo "$(hostname -s)" > /app/test/web-pre-start.txt
+  post-start:
+    - web: mkdir -p /app/test && echo "$(hostname -s)" > /app/test/web-post-start.txt
+  post-thing:
+    - web: mkdir -p /app/test && echo "$(hostname -s)" > /app/test/web-post-thing.txt
+  post-rebuild:
+    - web: echo "ET TU, BRUT?"
+tooling:
+  thing:
+    service: web
+    cmd: echo "THINGS"

@@ -1,135 +1,59 @@
 SQL Export Example
-====================
+==================
 
+This example exists primarily to test the following documentation:
 
-Lando ships with a helper `db-export` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should export a database dump `DATABASE.TIMESTAMP.gz` into the `/app` directory.
+* [Export SQL Database](https://docs.devwithlando.io/guides/db-export.html)
 
-You can also export databases from other services.
-
-Usage
------
-
-At the command line execute:
-
-```bash
-lando db-export
-```
-
-Prefer video tutorials?
-{% youtube %}
-https://www.youtube.com/watch?v=KH_wZuaPeRc
-{% endyoutube %}
-
-### Examples
-
-```bash
-# Export to a file named `DATABASE.TIMESTAMP.gz`
-lando db-export
-
-# Export to a file called dump.sql.gz
-lando db-export dump.sql.gz
-
-# Export from a secondary database
-lando db-export --host db2
-
-# Dump the result to stdout
-lando db-export --stdout
-```
-
-### Options
-
-```bash
-Options:
-  --host, -h      The database service to use                  [default: "database"]
-  --stdout        Dump database to stdout
-```
-
-Adding the `db-export` command
-------------------------------
-
-If you are not using one of our `php`-y recipes you can add the `db-export` command and default options to your `.lando.yml` as follows.
-
-
-
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/sql-export).
-
-This example provides a very basic `db-export` example built on Lando php services.
-
-See the `.lando.yml` in this directory for `db-export` configuration options.
-
-Start the example
------------------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Boot up a sql-export example
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Testing the example
--------------------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify the databases are up and good
-lando ssh database -c "mysql -umysql -pmysql data1 -e\"quit\""
-lando ssh database2 -c "psql -U postgres database -c \'\\\dt\'"
+# Should be able to connect to the relevant databases
+lando mysql database -e quit
+lando psqlverify
 
-# Verify our dynamic commands work
-lando psql -h database2 -V
-lando mysql -V
-
-# Import the test mysql file against the default database
+# Should be able to import into database by default
 lando db-import test.sql
+lando mysql database -e "show tables;" | grep users
 
-# Import the test postgres file to the secondary database
+# Should be able to import into user specified database
 lando db-import -h database2 test2.sql
+lando psqlverify | grep users
 
-# Verify that we have a 'users' table on both databases
-lando ssh database -c "mysql -u mysql -pmysql data1 -e \'show tables;\' | grep users"
-lando ssh database2 -c "psql -U postgres -h database2 database -c \'\\\dt\' | grep users"
-
-# Export the contents of the dbs
-lando db-export
-lando db-export -h database2
-```
-
-Helpful Commands
-----------------
-
-Here is a non-exhaustive list of commands that are relevant to this example.
-
-```bash
-# Get DB connection info
-lando info
-
-# Import the test db to both databases
-lando db-import test.sql
-lando db-import -h database2 test2.sql
-
-# See export options
-lando db-export -- --help
-
-# Export the contents of the dbs
+# Should be able to export the contents of the dbs
 lando db-export
 lando db-export -h database2
 
-# Verify the expected export dumps are there
-cat data1.*.gz
-cat database.*.gz
+# Should export to filename if specified
+lando db-export database.dump.sql
+lando db-export -h database2 database2.dump.sql
+
+# Should dump ungizzeed stdout
+lando db-export --stdout > thing.sql
+cat thing.sql | grep Dump
 ```
 
-Destroying the example
-----------------------
+Destroy tests
+-------------
 
-Run the following commands to destroy
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Remove the exported DBs
-rm -f data1.*.gz
-rm -f database.*.gz
-
-# Blow up the sql-export example
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

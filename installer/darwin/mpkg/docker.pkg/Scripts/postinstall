@@ -27,6 +27,10 @@ sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.
 sudo plutil -insert Version -string 38 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
 sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
+# Disable autoupdates
+sudo defaults write com.docker.docker SUAutomaticallyUpdate 0
+sudo defaults write com.docker.docker SUEnableAutomaticChecks 0
+
 # Launch docker
 sudo -u ${console_user} open -a /Applications/Docker.app
 osascript <<EOD

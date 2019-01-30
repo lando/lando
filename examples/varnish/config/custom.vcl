@@ -1,3 +1,4 @@
+# LANDOVARNISH
 vcl 4.0;
 # For debugging, use the following and inspect the output of `varnishlog`:
 #

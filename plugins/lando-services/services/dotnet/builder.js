@@ -9,7 +9,7 @@ module.exports = {
   config: {
     version: '2',
     supported: ['2', '2.0', '1', '1.1', '1.0'],
-    patchesSupported: true,
+    patchesSupported: false,
     legacy: ['1', '1.1', '1.0'],
     command: 'tail -f /dev/null',
     path: [
@@ -25,7 +25,6 @@ module.exports = {
       '/usr/local/bin',
       '/usr/local/share',
       '/usr/local/bundle',
-      '/var/www/.asp',
     ],
   },
   parent: '_appserver',
@@ -37,7 +36,7 @@ module.exports = {
       options.command = options.command.join(' && ');
       // Build the nodez
       const dotnet = {
-        image: `microsoft/dotnet:${options.version}-sdk-jessie`,
+        image: `microsoft/dotnet:${options.version}-sdk`,
         environment: {
           PATH: options.path.join(':'),
           ASPNETCORE_URLS: 'http://+:80',

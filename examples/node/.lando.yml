@@ -1,47 +1,20 @@
-# node server example
-name: node
-
-# Spin up services to run a basic node server
+name: lando-node
 services:
-
-  # Create a node web server
-  appserver:
-    type: node:8
-
-    # Optionally create certs in /certs that can be used by your application
-    # to listen over https. Creates the following certs your app can use
-    #
-    #   - /certs/cert.key
-    #   - /certs/cert.crt
-    #   - /certs/cert.pem
-    #
-    ssl: true
-
-    # Optionally install the following npm dependencies globally
-    # These follow the normal package.json form
-    #
-    # Note that most deps should be installed by the normal npm install, this is
-    # for things like gulp/grunt cli that are global dependencies
-    globals:
-      gulp-cli: latest
-
+  defaults:
+    type: node
     build:
       - yarn
-
-    # Optionally specify a command to run when you start your node service up.
-    #
-    # If you are using node as a server you are going to want to define this.
-    # This can be either a string or array.
-    #
-    # If you are just spinning up a node container to run front end dependencies
-    # you can leave this blank and the container will boot up and stay on
-    #
-    # You will likely want to run `lando npm install` first so needed dependencies are
-    # installed before your server starts up.
-    #
-    command: npm start
-
-  # Create a node cli
+    command: /app/node_modules/.bin/nodemon src/app-http.js --watch src --ignore *.test.js
+  custom:
+    type: node:11
+    ssl: true
+    globals:
+      gulp-cli: latest
+    port: 3000
+    build:
+      - yarn
+    command: /app/node_modules/.bin/nodemon src/app-https.js --watch src --ignore *.test.js
+  patch:
+    type: node:10.14.2
   cli:
     type: node
-

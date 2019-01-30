@@ -12,7 +12,7 @@ module.exports = lando => ({
       default: false,
       boolean: true,
     },
-    services: {
+    service: {
       describe: 'Show logs for the specified services only',
       alias: ['s'],
       array: true,

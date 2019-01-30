@@ -1,51 +1,23 @@
-# Varnish recipe example
-name: varnish
-
-# Set up my services
+name: lando-varnish
 services:
-  edge:
+  defaults:
+    type: varnish
+  custom:
     type: varnish:4.1
-
-    # Specify the backend(s) that varnish should attempt to connect to
-    #
-    # This can be an array or string and should be the names of other services
-    # provided directly by this file or by a recipe. You can discover the services
-    # your app has by running `lando info`
-    #
     backends:
-      - backend
-
-    # Optionally spin up another nginx instance so that you can secure your
-    # traffic over ssl
-    #
-    # The varnish ssl service will be called NAME_ssl, or edge_ssl in this
-    # example
-    #
+      - appserver
     ssl: true
-
-    # Optionally load in a custom vcl file. This is relative to the app root
-    #
-    # You will not need to import the standard library or manage backends in this
-    # file. Those are handled automatically.
-    #
     config:
       vcl: config/custom.vcl
-
-    # There are various envvars you can specify to further customize how your
-    # varnish works.
-    #
-    # See: https://hub.docker.com/r/eeacms/varnish/
-    # Note: We set BACKENDS_PROBE_ENABLED to false by default
-    #
-    # overrides:
-      # environment:
-        # BACKENDS_PROBE_ENABLED: false
-        # BACKENDS_PORT: 8080
-        # DNS_ENABLED: true
-        # BACKENDS_PROBE_INTERVAL: 3s
-        # BACKENDS_PROBE_TIMEOUT: 1s
-        # BACKENDS_PROBE_WINDOW: 3
-        # BACKENDS_PROBE_THRESHOLD: 2
-   # Backend for varnish to connect to
-  backend:
+  customport:
+    type: varnish
+    backends:
+      - backend2
+    backend_port: 8000
+    ssl: true
+  appserver:
     type: nginx
+  backend2:
+    type: python
+    port: 8000
+    command: python /app/python.py

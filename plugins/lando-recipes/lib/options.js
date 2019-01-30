@@ -29,12 +29,16 @@ const defaultOpts = {
     hidden: true,
     alias: ['dest', 'd'],
     string: true,
-    default: process.cwd(),
   },
   full: {
     describe: 'Dump a lower level lando file',
     default: false,
     boolean: true,
+  },
+  option: {
+    alias: ['o'],
+    describe: 'Merge additional KEY=VALUE pairs into your recipes config',
+    array: true,
   },
   yes: {
     describe: 'Auto answer yes to prompts',
@@ -127,6 +131,8 @@ exports.getConfigOptions = (all, lando, options = {}) => {
 
 // Helper to parse options initially
 exports.parseOptions = options => {
+  // We set this here instad of as a default option because of our task caching
+  if (!_.has(options, 'destination')) options.destination = process.cwd();
   // Generate a machine name for the app.
   options.name = utils.appMachineName(options.name);
   // Get absolute path of destination

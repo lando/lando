@@ -4,9 +4,17 @@
 const _ = require('lodash');
 const utils = require('./../../lib/utils');
 
-// WPCLI
-const wpCliUrl = 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
-const wpStatusCheck = ['php', '/tmp/wp-cli.phar', '--allow-root', '--info'];
+// WP status check
+const getWpStatusCheck = (version = '7.2') => {
+  if (version === '5.3') return ['true'];
+  else return ['php', '/tmp/wp-cli.phar', '--info'];
+};
+
+// Helper to get WPCLI version
+const getWpCliUrl = (version = '7.2') => {
+  if (version === '5.3') return 'https://github.com/wp-cli/wp-cli/releases/download/v1.5.1/wp-cli-1.5.1.phar';
+  else return 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
+};
 
 /*
  * Build WordPress
@@ -23,9 +31,6 @@ module.exports = {
       php: 'php.ini',
     },
     php: '7.2',
-    services: {appserver: {overrides: {
-      volumes: ['/var/www/.wp-cli'],
-    }}},
     tooling: {wp: {service: 'appserver'}},
     via: 'apache',
     webroot: '.',
@@ -35,7 +40,12 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       // Add the wp cli install command
-      options.build.unshift(utils.getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck));
+      options.build.unshift(utils.getPhar(
+        getWpCliUrl(options.version),
+        '/tmp/wp-cli.phar',
+        '/usr/local/bin/wp',
+        getWpStatusCheck(options.version)
+      ));
       // Set the default vhosts if we are nginx
       if (_.startsWith(options.via, 'nginx')) options.defaultFiles.vhosts = 'default.conf.tpl';
       // Set the default mysql if we are there as well

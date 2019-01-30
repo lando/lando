@@ -7,7 +7,7 @@ const _ = require('lodash');
 module.exports = {
   name: 'redis',
   config: {
-    version: '5.0',
+    version: '5',
     supported: ['5', '5.0', '4', '4.0', '2.8'],
     patchesSupported: true,
     confSrc: __dirname,

@@ -1,24 +1,38 @@
-Tomcat
-======
+Tomcat Example
+==============
 
-[Tomcat](https://tomcat.apache.org/) The Apache Tomcat® software is an open source implementation of the Java Servlet, JavaServer Pages, Java Expression Language and Java WebSocket technologies. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+This example exists primarily to test the following documentation:
 
-Supported versions
-------------------
+* [Tomcat Service](https://docs.devwithlando.io/tutorials/tomcat.html)
 
-*   **[8](https://hub.docker.com/_/tomcat/)** **(default)**
-*   [7](https://hub.docker.com/_/tomcat/)
-*   custom
+Start up tests
+--------------
 
-Using patch versions
---------------------
+Run the following commands to get up and running with this example.
 
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
+```bash
+# Should start up succesfully
+lando poweroff
+lando start
+```
 
-[Here](https://hub.docker.com/r/library/tomcat/tags/) are all the tags that are available for this service.
+Verification commands
+---------------------
 
-Example
--------
+Run the following commands to validate things are rolling as they should.
 
+```bash
+# TODO
+true
+```
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/tomcat).
+Destroy tests
+-------------
+
+Run the following commands to trash this app like nothing ever happened.
+
+```bash
+# Should be destroyed with success
+lando destroy -y
+lando poweroff
+```

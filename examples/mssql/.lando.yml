@@ -1,32 +1,4 @@
-# The name of the app
-name: mssql
-
-# Note: You will need to increase the default memory requirements of your docker
-# host in order to run this service
-#
-# See: https://github.com/Microsoft/mssql-docker/issues/114
-
-# Set up my services
+name: lando-mssql
 services:
-  database:
-
-    # Use mssql (no versions available at this point)
+  defaults:
     type: mssql
-
-    # Optionally allow access to the database at localhost:1434
-    # You will need to make sure port 1434 is open on your machine
-    #
-    # You can also set `portforward: true` to have Lando dynamically assign
-    # a port. Unlike specifying an actual port setting this to true will give you
-    # a different port every time you restart your app
-    portforward: 1434
-
-    # Optionally set the default admin password
-    # Important note: This password needs to include at least 8 characters of
-    # at least three of these four categories:
-    #  - uppercase letters
-    #  - lowercase letters
-    #  - numbers
-    #  - non-alphanumeric symbols
-    creds:
-      password: he11oTHERE

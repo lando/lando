@@ -1,73 +1,57 @@
 Apache Example
 ==============
 
-[Apache](https://www.apache.org/) is a very common webserver which you can easily add to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+This example exists primarily to test the following documentation:
 
-Supported versions
-------------------
+* [Apache Service](https://docs.devwithlando.io/tutorials/apache.html)
 
-*   **[2.4](https://hub.docker.com/r/_/httpd/)** **(default)**
-*   [2.2](https://hub.docker.com/r/_/httpd/)
-*   custom
-
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/library/httpd/tags/) are all the tags that are available for this service.
-
-
-This example provides a very basic `apache` web server.
-
-See the `.lando.yml` in this directory for Apache configuration options.
-
-Bootup
-------
+Start up tests
+--------------
 
 Run the following commands to get up and running with this example.
 
 ```bash
-# Start up the example
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Testing
--------
+Verification commands
+---------------------
 
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify we actually have the correct version of apache
-lando ssh html -c "apachectl -V | grep Apache/2.2"
+# Should return 2.4.x for the default version
+lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
-# Verify $LANDO_WEBROOT is set correctly
-lando ssh html -c "env | grep LANDO_WEBROOT=/app/web"
+# Should return 2.4.37 for the patch service
+lando ssh -s patch -c "apachectl -V | grep 2.4.37"
 
-# Verify that Lando certs are being used
-lando ssh html -c "cat /usr/local/apache2/conf/httpd.conf | grep SSLCertificateFile | grep /certs/cert.crt"
+# Should serve from the app root by default
+lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
 
-# Verify that our custom envvar is in there
-lando ssh html -c "env | grep STUFF=THINGS"
+# Should only serve over http by default
+lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
 
-# Verify that we've exposed port 8081 correctly
-docker inspect apache_html_1 | grep HostPort | grep 8081
-lando info | grep http://localhost:8081
+# Should serve from webroot if specified
+lando ssh -s custom -c "curl http://localhost | grep WEBDIR"
+
+# Should serve from https when specified
+lando ssh -s custom -c "curl -k https://localhost | grep WEBDIR"
+
+# Should mount custom config to the correct locations
+lando ssh -s custom -c "cat /bitnami/apache/conf/httpd.conf | grep LANDOHTTPD"
+lando ssh -s custom -c "cat /bitnami/apache/conf/bitnami/bitnami.conf | grep LANDOCUSTOM"
 ```
 
-Cleanup
--------
+Destroy tests
+-------------
 
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the example
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```
-
-
-Example
--------
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/apache).
-

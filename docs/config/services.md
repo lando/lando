@@ -4,7 +4,6 @@ Services
 Lando services are our distillation of Docker containers into their most important options combined with some *special sauce* to setup good [networking](./networking.md), [certificates](./security.md) and [SSH keys](./ssh.md) as well as options to run [build steps](#build-steps) and provide low level [overrides](#overrides).
 
 You can use the top-level `services` config in your [Landofile](./lando.yml) to define and configure a service. Here are the various options you can specify in any service regardless of the service type.
-
 ```yaml
 services:
   myservice:
@@ -15,6 +14,8 @@ services:
     run:
     run_as_root:
 ```
+
+`myservice` in the example above can actully be set to anything the user wants but common conventions are things like `appserver`, `index`, `cache`, `database` or `kanye`.
 
 Note that you will need to set the `type` and its optional `version` to be eitehr one of the [supported services](#supported-services) below or as defined in one you [create your own](./../dev/plugins.md).
 

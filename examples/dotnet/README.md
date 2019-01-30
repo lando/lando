@@ -1,63 +1,44 @@
-dotnet Example
+Dotnet Example
 ==============
 
-[Dotnet](https://en.wikipedia.org/wiki/.NET_Framework)  is a software framework developed by Microsoft that runs primarily on Microsoft Windows. It includes a large class library named Framework Class Library (FCL) and provides language interoperability (each language can use code written in other languages) across several programming languages. You can easily add it to your Lando app by adding an entry to the `services` key in your app's `.lando.yml`.
+This example exists primarily to test the following documentation:
 
-Supported versions
-------------------
+* [Dotnet Service](https://docs.devwithlando.io/tutorials/dotnet.html)
 
-*   [2](https://hub.docker.com/r/microsoft/dotnet/)
-*   **[2.0](https://hub.docker.com/r/microsoft/dotnet/)** **(default)**
-*   [1](https://hub.docker.com/r/microsoft/dotnet/)
-*   [1.1](https://hub.docker.com/r/microsoft/dotnet/)
-*   [1.0](https://hub.docker.com/r/microsoft/dotnet/)
-*   custom
+Start up tests
+--------------
 
-Using patch versions
---------------------
-
-While Lando does not "officially" support specifying a patch version of this service you can try specifying one using [overrides](https://docs.devwithlando.io/config/advanced.html#overriding-with-docker-compose) if you need to. **This is not guaranteed to work** so use at your own risk and take some care to make sure you are using a `debian` flavored patch version that also matches up with the `major` and `minor` versions of the service that we indicate above in "Supported versions".
-
-[Here](https://hub.docker.com/r/microsoft/dotnet/tags/) are all the tags that are available for this service.
-
-Example
--------
-
-
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/dotnet).
-
-
-This example provides a basic dotnet web application.
-
-See the `.lando.yml` in this directory for dotnet configuration options.
-
-Start it
---------
-
-Run the following steps to get up and running with this example.
+Run the following commands to get up and running with this example.
 
 ```bash
-# Start up a very basic dotnet app
+# Should start up succesfully
+lando poweroff
 lando start
 ```
 
-Validate things
----------------
+Verification commands
+---------------------
+
+Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Verify we can access our app
-lando ssh -c "curl localhost | grep Hello"
+# Should return 2.x for the default version
+lando ssh -s defaults -c "dotnet --version | grep \'^2.\'"
 
-# Verify we have the dotnet cli
-lando dotnet --version
+# Should run on port 80 by default
+lando ssh -s defaults -c "curl http://localhost" | grep "Hello there"
+
+# Should not serve port 80 for cli
+lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 ```
 
-Purge
------
+Destroy tests
+-------------
 
-Clean up
+Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Destroy the dotnet app
+# Should be destroyed with success
 lando destroy -y
+lando poweroff
 ```

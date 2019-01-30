@@ -86,6 +86,12 @@ module.exports = lando => {
           _.merge(landoFile, new Recipe(landoFile.name, recipeConfig).config);
         }
 
+        // Merge in any additional configuration options specified
+        _.forEach(options.option, option => {
+          const key = _.first(option.split('='));
+          _.set(landoFile, `config.${key}`, _.last(option.split('=')));
+        });
+
         // Merge and dump the config file
         lando.yaml.dump(dest, _.merge(landoFile, config));
         // Show it

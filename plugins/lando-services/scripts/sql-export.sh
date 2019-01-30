@@ -12,7 +12,6 @@ DEFAULT_COLOR='\033[0;0m'
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
   DATABASE=${POSTGRES_DB:-database}
-  PASSWORD=${PGPASSWORD:-password}
   PORT=5432
   USER=postgres
 else
@@ -22,7 +21,7 @@ else
 fi
 
 # Set the default filename
-FILE=${DATABASE}.`date +"%Y%m%d%s"`
+FILE=${DATABASE}.`date +"%Y-%m-%d-%s"`.sql
 
 # PARSE THE ARGZZ
 # TODO: compress the mostly duplicate code below?
@@ -58,7 +57,7 @@ done
 
 # Get type-specific dump cpmmand
 if [[ ${POSTGRES_DB} != '' ]]; then
-  DUMPER="pg_dump postgresql://$USER:$PASSWORD@localhost:$PORT/$DATABASE"
+  DUMPER="pg_dump postgresql://$USER@localhost:$PORT/$DATABASE"
 else
   DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
 fi
@@ -71,20 +70,15 @@ else
   # Clean up last dump before we dump again
   unalias rm     2> /dev/null
   rm ${FILE}     2> /dev/null
-  rm ${FILE}.gz  2> /dev/null
   $DUMPER > ${FILE}
 
-  # Get result code
-  ret_val=$?
-
   # Show the user the result
-  if [ $ret_val -ne 0 ] && [ "$STDOUT" == "false" ]; then
-      rm ${FILE}
-      echo -e "${RED}Failed ${DEFAULT_COLOR}to create file: ${FILE}.gz."
-    else
-      # Gzip the mysql database dump file
-      gzip $FILE
-      echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
+  if [ $? -ne 0 ]; then
+    rm ${FILE}
+    echo -e "${RED}Failed ${DEFAULT_COLOR}to create file: ${FILE}"
+  else
+    # Gzip the mysql database dump file
+    gzip $FILE
+    echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
   fi
-
 fi

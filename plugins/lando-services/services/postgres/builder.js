@@ -9,8 +9,8 @@ const _ = require('lodash');
 module.exports = {
   name: 'postgres',
   config: {
-    version: '10.6.0',
-    supported: ['11.1', '11.0', '10.6.0', '10', '9.6'],
+    version: '10',
+    supported: ['11', '11.1', '11.0', '10', '10.6.0', '9.6'],
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
@@ -34,10 +34,11 @@ module.exports = {
         command: '/app-entrypoint.sh /run.sh',
         environment: {
           POSTGRESQL_DATABASE: options.creds.database,
+          POSTGRES_DB: options.creds.database,
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `data_${options.name}:/bitnami`,
+          `${options.data}:/bitnami`,
         ],
       };
       // Send it downstream

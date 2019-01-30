@@ -8,9 +8,10 @@ module.exports = {
   name: 'elasticsearch',
   config: {
     version: '6',
-    supported: ['6', '5'],
+    supported: ['6', '6.5.x', '5', '5.6.x'],
     patchesSupported: true,
     confSrc: __dirname,
+    healthcheck: 'curl -XGET localhost:9200',
     plugins: [],
     port: '9200',
     mem: '1025m',
@@ -39,7 +40,7 @@ module.exports = {
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `data_${options.name}:/bitnami/elasticsearch/data`,
+          `${options.data}:/bitnami/elasticsearch/data`,
         ],
       };
       // Add some info

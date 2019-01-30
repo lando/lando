@@ -55,8 +55,8 @@ module.exports = (app, lando) => {
   // Determine what ports we need to discover
   const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
   // Only do things if the proxy is enabled
-  // @TODO: deprecate PROXY=ON in favor of disablePlugins?
-  if (lando.config.proxy === 'ON') {
+  // @TODO: below is nasty and probably isnt precise enough
+  if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
     app.events.on('pre-start', 1, () => findProxyPorts(lando, protocolStatus)
       // Make sure the proxy is running with the correct settings
       .then(ports => lando.Promise.retry(() => {
