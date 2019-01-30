@@ -1,4 +1,7 @@
 name: lando-php
+events:
+  post-start:
+    - defaults: php -i | grep memory_limit | grep -e "-1"
 services:
   defaults:
     type: php
@@ -20,4 +23,6 @@ services:
     type: php:7.0
     composer:
       phpunit/phpunit: "*"
-
+tooling:
+  php:
+    service: defaults

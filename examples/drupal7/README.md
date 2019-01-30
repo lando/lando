@@ -61,6 +61,10 @@ lando drush version | grep 8.1
 # Should be able to install drupal
 cd drupal7
 lando drush si --db-url=mysql://drupal7:drupal7@database/drupal7 -y
+
+# Verify that drush has infinite memory
+cd drupal7
+lando drush eval "phpinfo();" | grep memory_limit | grep -e "-1"
 ```
 
 Destroy tests

@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const escape = require('./../../../lib/utils').shellEscape;
 const getUser = require('./../../../lib/utils').getUser;
+const getCliEnvironment = require('./../../../lib/utils').getCliEnvironment;
 const path = require('path');
 
 /*
@@ -18,6 +19,28 @@ const getContainerPath = appRoot => {
   dir.unshift('/app');
   // Return the directory
   return dir.join('/');
+};
+
+/*
+ * Build docker exec opts
+ */
+const getExecOpts = (docker, datum) => {
+  const exec = [
+    docker,
+    'exec',
+    '--interactive',
+    '--tty',
+    '--user',
+    datum.opts.user,
+    '--workdir',
+    datum.opts.workdir,
+  ];
+  _.forEach(datum.opts.environment, (value, key) => {
+    exec.push('--env');
+    exec.push(`${key}=${value}`);
+  });
+  exec.push(datum.id);
+  return exec;
 };
 
 /*
@@ -88,9 +111,7 @@ exports.buildCommand = (app, command, service, user) => ({
   project: app.project,
   cmd: command,
   opts: {
-    environment: {
-      PHP_MEMORY_LIMIT: '-1',
-    },
+    environment: getCliEnvironment(),
     mode: 'attach',
     workdir: getContainerPath(app.root),
     user: user,
@@ -104,27 +125,7 @@ exports.buildCommand = (app, command, service, user) => ({
  * Helper to build docker exec command
  */
 exports.dockerExec = (lando, datum = {}) => lando.shell.sh(
-  [
-    lando.config.dockerBin,
-    'exec',
-    '--interactive',
-    '--tty',
-    '--user',
-    datum.opts.user,
-    '--workdir',
-    datum.opts.workdir,
-  ]
-  .concat(
-    // add in environment variables
-    _.flatMap(
-      datum.opts.environment,
-      (value, key) => ['-e', `${key}=${value}`]
-    )
-  )
-  .concat([
-    datum.id,
-  ])
-  .concat(datum.cmd),
+  getExecOpts(lando.config.dockerBin, datum).concat(datum.cmd),
   {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']}
 );
 
