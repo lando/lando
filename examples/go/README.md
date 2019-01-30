@@ -3,7 +3,7 @@ Go Example
 
 This example exists primarily to test the following documentation:
 
-* [Go Service](https://docs.devwithlando.io/tutorial/go.html)
+* [Go Service](https://docs.devwithlando.io/tutorials/go.html)
 
 Start up tests
 --------------

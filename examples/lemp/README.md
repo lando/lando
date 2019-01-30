@@ -3,7 +3,7 @@ LEMP Example
 
 This example exists primarily to test the following documentation:
 
-* [LEMP Recipe](https://docs.devwithlando.io/tutorial/lemp.html)
+* [LEMP Recipe](https://docs.devwithlando.io/tutorials/lemp.html)
 
 Start up tests
 --------------

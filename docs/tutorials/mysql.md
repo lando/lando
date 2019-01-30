@@ -5,6 +5,8 @@ MySQL
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
 
+<!-- toc -->
+
 Supported versions
 ------------------
 
@@ -105,7 +107,8 @@ services:
 lando destroy -y && lando start
 ```
 
-**Also note that by default all `mysql` services have a passwordless `root` user.**
+Also note that by default all `mysql` services have a passwordless `root` user. **DO NOT ALTER THE PASSWORD OF THE ROOT USER.**
+
 
 ### Using a custom MySQL config file
 
@@ -142,3 +145,8 @@ Example
 
 If you are interested in a working example of this service that we test on every Lando build then check out
 [https://github.com/lando/lando/tree/master/examples/mysql](https://github.com/lando/lando/tree/master/examples/mysql)
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

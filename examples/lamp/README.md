@@ -3,7 +3,7 @@ LAMP Example
 
 This example exists primarily to test the following documentation:
 
-* [LAMP Recipe](https://docs.devwithlando.io/tutorial/lamp.html)
+* [LAMP Recipe](https://docs.devwithlando.io/tutorials/lamp.html)
 
 Start up tests
 --------------

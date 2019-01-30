@@ -3,7 +3,7 @@ nginx Example
 
 This example exists primarily to test the following documentation:
 
-* [nginx Service](https://docs.devwithlando.io/tutorial/nginx.html)
+* [nginx Service](https://docs.devwithlando.io/tutorials/nginx.html)
 
 Start up tests
 --------------

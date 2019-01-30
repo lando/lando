@@ -3,7 +3,7 @@ Node Example
 
 This example exists primarily to test the following documentation:
 
-* [Node Service](https://docs.devwithlando.io/tutorial/node.html)
+* [Node Service](https://docs.devwithlando.io/tutorials/node.html)
 
 Start up tests
 --------------

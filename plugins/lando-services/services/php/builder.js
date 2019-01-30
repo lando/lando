@@ -104,6 +104,7 @@ module.exports = {
     },
     environment: {
       COMPOSER_ALLOW_SUPERUSER: 1,
+      PHP_MEMORY_LIMIT: '1G',
     },
     remoteFiles: {
       _php: '/usr/local/etc/php/conf.d/xxx-lando-default.ini',

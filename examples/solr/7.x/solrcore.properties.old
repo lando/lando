@@ -1,0 +1,20 @@
+# Defines Solr properties for this specific core.
+solr.replication.master=false
+solr.replication.slave=false
+solr.replication.pollInterval=00:00:60
+solr.replication.masterUrl=http://localhost:8983/solr
+solr.replication.confFiles=schema.xml,mapping-ISOLatin1Accent.txt,protwords.txt,stopwords.txt,synonyms.txt,elevate.xml
+solr.mlt.timeAllowed=2000
+# You should not set your luceneMatchVersion to anything lower than your Solr
+# Version.
+solr.luceneMatchVersion=7.0
+solr.selectSearchHandler.timeAllowed=-1
+# don't autoCommit after x docs
+solr.autoCommit.MaxDocs=-1
+# autoCommit after 15 seconds
+solr.autoCommit.MaxTime=15000
+# don't autoSoftCommit after x docs
+solr.autoSoftCommit.MaxDocs=-1
+# don't autoSoftCommit after x seconds
+solr.autoSoftCommit.MaxTime=-1
+solr.install.dir=../../..

@@ -3,7 +3,7 @@ Python Example
 
 This example exists primarily to test the following documentation:
 
-* [Python Service](https://docs.devwithlando.io/tutorial/python.html)
+* [Python Service](https://docs.devwithlando.io/tutorials/python.html)
 
 Start up tests
 --------------

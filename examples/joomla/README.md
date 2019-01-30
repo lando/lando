@@ -3,7 +3,7 @@ Joomla Example
 
 This example exists primarily to test the following documentation:
 
-* [Joomla Recipe](https://docs.devwithlando.io/tutorial/joomla.html)
+* [Joomla Recipe](https://docs.devwithlando.io/tutorials/joomla.html)
 
 Start up tests
 --------------

@@ -3,7 +3,7 @@ PHP Example
 
 This example exists primarily to test the following documentation:
 
-* [PHP Service](https://docs.devwithlando.io/tutorial/php.html)
+* [PHP Service](https://docs.devwithlando.io/tutorials/php.html)
 
 Start up tests
 --------------
@@ -33,6 +33,13 @@ lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
 
 # Should serve from the app root by default
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
+
+# Should have a 1G php mem limit on appserver
+lando ssh -s defaults -c "curl http://localhost | grep memory_limit | grep 1G"
+
+# Should have unlimited memory for php for CLI opts
+lando php -i | grep memory_limit | grep -e "-1"
+lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""
 
 # Should not enable xdebug by default
 lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1

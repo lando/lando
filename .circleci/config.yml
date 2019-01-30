@@ -25,7 +25,7 @@ jobs:
             # Hyperdrive
             curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
-            /tmp/hyperdrive -y --name "Mike Pirog" --email mike@thinktandem.io
+            /tmp/hyperdrive -y --name "Lando System" --email landobot@devwithlando.io
             # @TODO: anyway hyperdrive can assert dominance here?
             sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
       - run:

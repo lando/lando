@@ -3,7 +3,7 @@ Backdrop Example
 
 This example exists primarily to test the following documentation:
 
-* [Backdrop Recipe](https://docs.devwithlando.io/tutorial/backdrop.html)
+* [Backdrop Recipe](https://docs.devwithlando.io/tutorials/backdrop.html)
 
 Start up tests
 --------------

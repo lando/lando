@@ -13,6 +13,8 @@ This service is useful if you are:
 2. Using Docker Compose config from other projects
 3. Need a service not currently provided by Lando itself
 
+<!-- toc -->
+
 Configuration
 -------------
 
@@ -48,3 +50,8 @@ Example
 
 If you are interested in a working example of this service that we test on every Lando build then check out
 [https://github.com/lando/lando/tree/master/examples/compose](https://github.com/lando/lando/tree/master/examples/compose)
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

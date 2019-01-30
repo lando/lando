@@ -3,7 +3,7 @@ Laravel Example
 
 This example exists primarily to test the following documentation:
 
-* [Laravel Recipe](https://docs.devwithlando.io/tutorial/laravel.html)
+* [Laravel Recipe](https://docs.devwithlando.io/tutorials/laravel.html)
 
 Start up tests
 --------------

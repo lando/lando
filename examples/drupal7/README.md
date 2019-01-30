@@ -3,7 +3,7 @@ Drupal 7 Example
 
 This example exists primarily to test the following documentation:
 
-* [Drupal 7 Recipe](https://docs.devwithlando.io/tutorial/drupal7.html)
+* [Drupal 7 Recipe](https://docs.devwithlando.io/tutorials/drupal7.html)
 
 Start up tests
 --------------
@@ -61,6 +61,10 @@ lando drush version | grep 8.1
 # Should be able to install drupal
 cd drupal7
 lando drush si --db-url=mysql://drupal7:drupal7@database/drupal7 -y
+
+# Verify that drush has infinite memory
+cd drupal7
+lando drush eval "phpinfo();" | grep memory_limit | grep -e "-1"
 ```
 
 Destroy tests

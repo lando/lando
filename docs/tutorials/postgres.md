@@ -5,6 +5,8 @@ Postgres
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
 
+<!-- toc -->
+
 Supported versions
 ------------------
 
@@ -104,7 +106,8 @@ services:
 lando destroy -y && lando start
 ```
 
-**Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions.**
+Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions. **DO NOT ALTER THE PASSWORD OF THE POSTGRES USER.**
+
 
 ### Using a custom postgres config file
 
@@ -141,3 +144,8 @@ Example
 
 If you are interested in a working example of this service that we test on every Lando build then check out
 [https://github.com/lando/lando/tree/master/examples/postgres](https://github.com/lando/lando/tree/master/examples/postgres)
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

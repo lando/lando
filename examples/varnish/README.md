@@ -3,7 +3,7 @@ Varnish Example
 
 This example exists primarily to test the following documentation:
 
-* [Varnish Service](https://docs.devwithlando.io/tutorial/varnish.html)
+* [Varnish Service](https://docs.devwithlando.io/tutorials/varnish.html)
 
 Start up tests
 --------------

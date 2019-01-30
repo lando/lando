@@ -3,7 +3,7 @@ Ruby Example
 
 This example exists primarily to test the following documentation:
 
-* [Ruby Service](https://docs.devwithlando.io/tutorial/ruby.html)
+* [Ruby Service](https://docs.devwithlando.io/tutorials/ruby.html)
 
 Start up tests
 --------------

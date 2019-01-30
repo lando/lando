@@ -1,1 +1,3 @@
 ROOTDIR
+
+<?php phpinfo(); ?>
