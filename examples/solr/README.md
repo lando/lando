@@ -49,7 +49,7 @@ lando ssh -s helper -c "curl patch:8983/solr/admin/cores?action=STATUS" | grep s
 lando ssh -s defaults -c "ls -lsa /opt/solr/server/solr/mycores/lando" | grep "solr solr" | wc -l | grep 5
 lando ssh -s custom -c "ls -lsa /opt/solr/server/solr/mycores/freedom" | grep "solr solr" | wc -l | grep 5
 lando ssh -s patch -c "ls -lsa /opt/solr/server/solr/mycores/solo" | grep "solr solr" | wc -l | grep 5
-lando ssh -s legacy4 -c "ls -lsa /opt/solr-4.10.4/example/solr/collection1" | grep "solr solr" | wc -l | grep 5
+lando ssh -s legacy4 -c "ls -lsa /opt/solr-4.10.4/example/solr/collection1" | grep "solr solr" | wc -l | grep 6
 
 # Should be able to set a record
 lando post-record-custom
