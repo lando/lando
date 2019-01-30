@@ -43,6 +43,7 @@ const parseElse = options => {
  */
 const getCore = options => {
   switch (options.version) {
+    case 'custom': return 'not supported';
     case '3.6': return 'not supported';
     case '3': return 'not supported';
     case '4.10': return 'collection1';

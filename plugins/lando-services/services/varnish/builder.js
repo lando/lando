@@ -72,6 +72,7 @@ module.exports = {
           BACKENDS_PORT: options.backend_port,
           ADDRESS_PORT: ':80',
           BACKENDS_PROBE_ENABLED: 'false',
+          LANDO_NO_USER_PERMS: 'NOTGONNADOIT',
         },
         networks: {default: {aliases: [`${options.name}_varnish`]}},
         ports: ['80'],

@@ -3,7 +3,7 @@ Solr Example
 
 This example exists primarily to test the following documentation:
 
-* [Solr Service](https://docs.devwithlando.io/tutorial/solr.html)
+* [Solr Service](https://docs.devwithlando.io/tutorials/solr.html)
 
 Start up tests
 --------------

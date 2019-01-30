@@ -1,4 +1,2 @@
-vendor
-config/sync
-.DS_Store
-web
+wordpress
+drupal7
