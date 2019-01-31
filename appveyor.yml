@@ -46,7 +46,15 @@ build_script:
   # Build dev releases
   - yarn pkg:full
   - mkdir release
-  - copy "dist\lando.exe" "release\lando-%APPVEYOR_REPO_TAG_NAME%.exe"
+  - ps: >-
+      copy "dist\lando.exe" "release\lando-deploy-test.exe"
+      If ($env:APPVEYOR_REPO_BRANCH -eq "master") {
+        copy "dist\lando.exe" "release\lando-$env:APPVEYOR_REPO_TAG_NAME.exe"
+        copy "dist\lando.exe" "release\lando-$env:APPVEYOR_REPO_COMMIT-dev.exe"
+      }
+      If ($env:APPVEYOR_REPO_TAG) {
+        copy "dist\lando.exe" "release\lando-stable.exe"
+      }
 
 artifacts:
   - path: release\*.exe
@@ -69,9 +77,8 @@ deploy:
       secure: hheF7PGTvLnmq4LzzxZv6/TyzBmPHkhxOVuQFzXZrFQ=
     secret_access_key:
       secure: n2Wto8btzQ6w029bsvN5POyXfbKs5sL5G83AUjaDvmOkqsoxIL8ijh+md+CkY4BS
-    bucket: installer.kalabox.io
+    bucket: files.devwithlando.io
     region: us-west-2
     set_public: true
     artifact: weezer
-    on:
-      branch: master
+

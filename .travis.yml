@@ -71,9 +71,14 @@ script:
   - mkdir -p release
   - yarn pkg:full
 
-  # Name the release depending on whether it is an official release or not
-  - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi
+  # Push out a latest-dev and commit hash package for all commits to master
+  - if [ -z "$TRAVIS_TAG" ] && [[ "$TRAVIS_BRANCH" == "master" ]] ; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi
+  - if [ -z "$TRAVIS_TAG" ] && [[ "$TRAVIS_BRANCH" == "master" ]] ; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_COMMIT-dev.$LANDO_PKG_TYPE; fi
+  # Always push out a test deploy
+  - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE "release/lando-deploy-test.$LANDO_PKG_TYPE"; fi
+  # Push out a versioned and stable package for tags
   - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE; fi
+  - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-stable.$LANDO_PKG_TYPE; fi
 
 notifications:
   email:
@@ -93,13 +98,13 @@ deploy:
     access_key_id: AKIAJXCGUYNMSXQPAKYQ
     secret_access_key:
       secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=
-    bucket: installer.kalabox.io
+    bucket: files.devwithlando.io
     local-dir: release
     acl: public_read
     region: us-west-2
     skip_cleanup: true
     on:
       repo: lando/lando
-      branch: master
+      all_branches: true
 after_success: yarn coverage
 
