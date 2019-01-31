@@ -126,3 +126,8 @@ Next, ensure your framework (PHP) interpreter is configured to use a Docker cont
 Finally, when configuring your framework, edit the Docker Container settings and change the Network Mode to the name of your Lando docker network.
 
 Now your IDE should be able to communicate with Lando.
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

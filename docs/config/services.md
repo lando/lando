@@ -65,7 +65,6 @@ The following services are currently supported. Please check out each one to lea
 *   ####[tomcat](./../tutorials/tomcat.md)
 *   ####[varnish](./../tutorials/varnish.md)
 
-
 Build Steps
 -----------
 

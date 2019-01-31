@@ -71,3 +71,8 @@ This guide explains how to use a pantheon [lando](https://github.com/lando/lando
     > **NOTE:** replace "example" in the hostname with the name of your application.
 
 9. Finally, you should be able to access your application by the hostname you added to your /etc/hosts file in the step above without any ports. If you are having trouble, try turning off and on your wifi or reboot your machine so that your /etc/resolver settings are applied successfully.
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

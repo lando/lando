@@ -68,3 +68,8 @@ tooling:
 ```
 
 After restarting your app, you should be able to run `lando node`, `lando gulp` or `lando npm` and have the corresponding commands run. This is particularly useful if you want to kickoff a watch task you might have configured, say `lando gulp watch`.
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

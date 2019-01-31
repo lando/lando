@@ -63,3 +63,8 @@ tooling:
       stdout:
         description: Dump database to stdout
 ```
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

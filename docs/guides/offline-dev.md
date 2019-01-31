@@ -61,3 +61,8 @@ Here are some vitals:
 13. Load it up in the browser and confirm everything is happy and working.
 
 Enjoy your signature top level domain while you hack away in complete wifi-less splendor.
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

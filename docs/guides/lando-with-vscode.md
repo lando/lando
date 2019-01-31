@@ -168,3 +168,8 @@ Read More
 
 *   [Original Gist with settings for XDebug in VSCode](https://gist.github.com/MatthieuScarset/0c3860def9ff1f0b84e32f618c740655)
 *   [PHP programming in VSCode](https://code.visualstudio.com/docs/languages/php)
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

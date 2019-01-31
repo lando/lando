@@ -7,3 +7,8 @@ and Drupal development. This video tutorial shows you how to set up PhpStorm wit
 {% youtube %}
 https://www.youtube.com/watch?v=sHNJxx0L9r0
 {% endyoutube %}
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

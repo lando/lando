@@ -37,3 +37,8 @@ More examples coming soon but in the meantime consult the documentation for your
 
 * Grab an environment variable
 * Decode a JSON string to an object
+
+Additional Reading
+------------------
+
+{% include "./../snippets/guides.md" %}

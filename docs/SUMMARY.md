@@ -73,6 +73,7 @@
 
 ## Guides
 
+*   [Updating your Landofiles to 3.0.0-rc.2+](guides/updating-to-rc2.md)
 *   [Accessing Your Services Externally](guides/external-access.md)
 *   [Accessing Lando from Other Devices](guides/access-by-other-devices.md)
 *   [Exporting Databases](guides/db-export.md)
