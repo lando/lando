@@ -155,10 +155,10 @@ Run the following commands to trash this app like nothing ever happened.
 cp -r remove-keys.sh drupal7/remove-keys.sh
 cp -r remove-keys.sh wordpress/remove-keys.sh
 cd wordpress
-lando ssh -s appserver -c "/app/remove-keys.sh"
+lando ssh -s appserver -c "/app/remove-keys.sh $(hostname)"
 cd ..
 cd drupal7
-lando ssh -s appserver -c "/app/remove-keys.sh"
+lando ssh -s appserver -c "/app/remove-keys.sh $(hostname)"
 cd ..
 rm -rf drupal7/remove-keys.sh
 rm -rf wordpress/remove-keys.sh
