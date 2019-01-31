@@ -7,6 +7,8 @@ Before you begin here we *highly recommend* you check out the [RC2 Release Blog 
 
 Here are the various things that have changed to your [Landofiles](./../config/lando.yml) syntax. We've tried to order them from the most common or most breaking config to the least. Note that this guide might not be an exhaustive list of all breaking changes and you are still *highly encouraged* to check out the other docs if you are running into an error running your older Landofiles on `3.0.0-rc.2` or higher.
 
+<!-- toc -->
+
 Overrides
 ---------
 
