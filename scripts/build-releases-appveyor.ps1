@@ -10,6 +10,6 @@ If ($env:APPVEYOR_REPO_BRANCH -eq "master") {
   Copy-Item "dist\lando.exe" -Destination "release\lando-$env:APPVEYOR_REPO_TAG_NAME.exe" -Force
   Copy-Item "dist\lando.exe" -Destination "release\lando-$env:APPVEYOR_REPO_COMMIT-dev.exe" -Force
 }
-If ($env:APPVEYOR_REPO_TAG) {
+If ($env:APPVEYOR_REPO_TAG -eq "true") {
   Copy-Item "dist\lando.exe" -Destination "release\lando-stable.exe" -Force
 }
