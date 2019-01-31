@@ -1,7 +1,7 @@
 Updating to 3.0.0-rc.2+
 =======================
 
-Before you begin here we *highly recommend* you check out the [RC2 Release Blog Post]() to get a higher level understanding on whats changed and why its changed in `3.0.0-rc.2`. After that you should be ready to get into the nitty gritty of what has changed.
+Before you begin here we *highly recommend* you check out the [RC2 Release Blog Post](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) to get a higher level understanding on whats changed and why its changed in `3.0.0-rc.2`. After that you should be ready to get into the nitty gritty of what has changed.
 
 **This guide is for people upgrading from `3.0.0-rc.1` or lower**.
 
