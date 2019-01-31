@@ -35,11 +35,14 @@ jobs:
           name: Install node modules
           command: yarn
       - run:
-          name: Switch lando over to source
+          name: Switch lando over to binary built from source
           command: |
             cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
-            sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
+            # sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
+            yarn pkg:cli
+            sudo mv dist/cli/* /usr/local/bin/lando
+            lando --version
       - run:
           name: Run func test
           command: |
