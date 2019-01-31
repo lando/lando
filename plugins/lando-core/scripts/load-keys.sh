@@ -20,6 +20,7 @@ mkdir -p /var/www/.ssh
 # We need to do some different magic on Windows because file sharing on windows
 # does not let you chmod files that are mounted
 if [ "$LANDO_HOST_OS" = "win32" ]; then
+  SSH_DIRS=( "/lando/keys" "/var/www/.ssh" )
   echo "Creating a special not-mounted key directory for Windows"
   mkdir -p /lando_keys
   for SSH_DIR in "${SSH_DIRS[@]}"; do
