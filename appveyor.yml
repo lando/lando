@@ -47,13 +47,13 @@ build_script:
   - yarn pkg:full
   - mkdir release
   - ps: >-
-      copy "dist\lando.exe" "release\lando-deploy-test.exe"
+      Copy-Item "dist\lando.exe" -Destination "release\lando-deploy-test.exe" -Force
       If ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-        copy "dist\lando.exe" "release\lando-$env:APPVEYOR_REPO_TAG_NAME.exe"
-        copy "dist\lando.exe" "release\lando-$env:APPVEYOR_REPO_COMMIT-dev.exe"
+        Copy-Item "dist\lando.exe" -Destination "release\lando-$env:APPVEYOR_REPO_TAG_NAME.exe" -Force
+        Copy-Item "dist\lando.exe" -Destination "release\lando-$env:APPVEYOR_REPO_COMMIT-dev.exe" -Force
       }
       If ($env:APPVEYOR_REPO_TAG) {
-        copy "dist\lando.exe" "release\lando-stable.exe"
+        Copy-Item "dist\lando.exe" -Destination "release\lando-stable.exe" -Force
       }
 
 artifacts:
