@@ -1,6 +1,6 @@
 ### Guides and Tutorials
 
-*   [Updating your Landofiles to 3.0.0-rc.2+](http://docs.devwithlando.io/guides/updating-to-rc2.md)
+*   [Updating your Landofiles to 3.0.0-rc.2+](http://docs.devwithlando.io/guides/updating-to-rc2.html)
 *   [Accessing Your Services Externally](http://docs.devwithlando.io/guides/external-access.html)
 *   [Accessing Lando from Other Devices](http://docs.devwithlando.io/guides/access-by-other-devices.html)
 *   [Exporting Databases](http://docs.devwithlando.io/guides/db-export.html)
