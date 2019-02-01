@@ -9,6 +9,25 @@ Here are the various things that have changed to your [Landofiles](./../config/l
 
 <!-- toc -->
 
+New Images
+----------
+
+We've rebased a lot our services on [Bitnamis](https://github.com/bitnami) which means it's **highly likely** you will need to `lando destroy` your app and then `lando start` it again. It's worth trying to see if things "just work" but if you run into an error using RC2 holla at this
+
+```bash
+lando destroy
+lando start
+```
+
+Note that a `lando rebuild` is not sufficient and a `lando destroy` is needed. Also note that this will **destroy your applications perisitent storage eg your database data, solr index, etc**. If you have data you want to save, its a good idea to do something like this.
+
+```bash
+lando db-export dump.sql
+lando destroy -y
+lando start
+lando db-import dump.sql.gz
+```
+
 Overrides
 ---------
 
