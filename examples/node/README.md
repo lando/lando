@@ -23,13 +23,13 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should use 10.x as the default version
-lando ssh -s defaults -c "node -v | grep v10."
+lando ssh -s defaults -c "env | grep NODE_VERSION=10."
 
 # Should use a user specified version if given
-lando ssh -s custom -c "node -v | grep v11."
+lando ssh -s custom -c "env | grep NODE_VERSION=11."
 
 # Should use a user specified patch version if given
-lando ssh -s patch -c "node -v | grep v10.14.2"
+lando ssh -s patch -c "env | grep NODE_VERSION=10.14.2"
 
 # Should serve over port 80 by default
 lando ssh -s defaults -c "curl http://localhost | grep tune"

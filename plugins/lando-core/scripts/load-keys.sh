@@ -14,8 +14,13 @@ SSH_IDENTITIES=()
 : ${LANDO_WEBROOT_GROUP:='www-data'}
 : ${LANDO_LOAD_PP_KEYS:='false'}
 
-# Ensure directory exists
-mkdir -p /var/www/.ssh
+# Make sure we have the system wide confdir
+mkdir -p $SSH_CONF
+
+# Ensure directories exists
+for SSH_DIR in "${SSH_DIRS[@]}"; do
+  mkdir -p "$SSH_DIR"
+done
 
 # We need to do some different magic on Windows because file sharing on windows
 # does not let you chmod files that are mounted
@@ -23,21 +28,20 @@ if [ "$LANDO_HOST_OS" = "win32" ]; then
   echo "Creating a special not-mounted key directory for Windows"
   mkdir -p /lando_keys
   for SSH_DIR in "${SSH_DIRS[@]}"; do
-    echo "Copying keys from $SSH_DIR..."
-    mkdir -p $SSH_DIR
-    chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $SSH_DIR
-    cp -rf $SSH_DIR/* /lando_keys
+    SSH_KEYS+=($(find "$SSH_DIR" -maxdepth 1 -not -name 'known_hosts' -type f | xargs))
+    for SSH_KEY in "${SSH_KEYS[@]}"; do
+      echo "Copying $SSH_KEY from $SSH_DIR to /lando_keys"
+      chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $SSH_KEY
+      cp -rf $SSH_KEY /lando_keys
+    done
   done
   SSH_DIRS=( "/lando_keys" )
+  SSH_KEYS=()
 fi
-
-# Make sure we have the system wide confdir
-mkdir -p $SSH_CONF
 
 # Scan the following directories for keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   echo "Scanning $SSH_DIR for keys..."
-  mkdir -p $SSH_DIR
   chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $SSH_DIR
   SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -type f | xargs))
 done
