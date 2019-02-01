@@ -132,7 +132,7 @@ module.exports = {
       // @TODO: get normalizeoverrides to work on windows
       // @NOTE: kick iff
       if (process.platform === 'win32') {
-        sources.push({services: _.set({}, name, utils.overrides)});
+        sources.push({services: _.set({}, name, overrides)});
       } else {
         sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});
       }
