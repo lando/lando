@@ -20,10 +20,17 @@ module.exports = (config, lando) => {
     // Build run objects
     .map(({command, service}) => utils.buildCommand(app, command, service, user))
     // Try to run the task quickly first and then fallback to compose launch
-    .each(runner => utils.dockerExec(lando, runner).catch(() => lando.engine.run(runner)).catch(error => {
-      error.hide = true;
-      throw error;
-    }))
+    .each(runner => {
+      return lando.engine.isRunning(runner.id)
+      .then(isRunning => {
+        if (isRunning) return utils.dockerExec(lando, runner);
+        else return lando.engine.run(runner);
+      })
+      .catch(error => {
+        error.hide = true;
+        throw error;
+      });
+    })
     // Post event
     .then(() => app.events.emit(`post-${name}`, config));
 
