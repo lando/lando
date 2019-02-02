@@ -21,7 +21,7 @@ module.exports = (config, lando) => {
     .map(({command, service}) => utils.buildCommand(app, command, service, user))
     // Try to run the task quickly first and then fallback to compose launch
     .each(runner => {
-      return lando.engine.isRunning(runner.id)
+      return lando.engine.isRunning(runner)
       .then(isRunning => {
         if (isRunning) return utils.dockerExec(lando, runner);
         else return lando.engine.run(runner);

@@ -7,7 +7,7 @@ const utils = require('./../../lib/utils');
 // WP status check
 const getWpStatusCheck = (version = '7.2') => {
   if (version === '5.3') return ['true'];
-  else return ['php', '/tmp/wp-cli.phar', '--info'];
+  else return ['php', '/usr/local/bin/wp', '--info'];
 };
 
 // Helper to get WPCLI version
