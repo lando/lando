@@ -25,20 +25,23 @@ const getContainerPath = appRoot => {
  * Build docker exec opts
  */
 const getExecOpts = (docker, datum) => {
-  const exec = [
-    docker,
-    'exec',
-    '--interactive',
-    '--tty',
-    '--user',
-    datum.opts.user,
-    '--workdir',
-    datum.opts.workdir,
-  ];
+  const exec = [docker, 'exec'];
+  // Should use interactive if we arent running this in leia
+  if (process.lando === 'node' && process.env.LEIA_PARSER_RUNNING !== 'true') {
+    exec.push('--tty');
+    exec.push('--interactive');
+  }
+  // Add user and workdir
+  exec.push('--user');
+  exec.push(datum.opts.user);
+  exec.push('--workdir');
+  exec.push(datum.opts.workdir);
+  // Add envvvars
   _.forEach(datum.opts.environment, (value, key) => {
     exec.push('--env');
     exec.push(`${key}=${value}`);
   });
+  // Add id
   exec.push(datum.id);
   return exec;
 };
