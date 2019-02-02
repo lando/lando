@@ -34,6 +34,9 @@ lando mysql database -e "show tables;" | grep users
 lando db-import -h database2 test2.sql
 lando psqlverify | grep users
 
+# Should be able to use db-import events
+lando ssh -s database -c "cat /tmp/iran.txt"
+
 # Should persist data after a rebuild
 lando rebuild -y
 lando mysql database -e "show tables;" | grep users

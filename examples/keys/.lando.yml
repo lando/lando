@@ -1,0 +1,20 @@
+name: lando-keys
+services:
+  cli:
+    type: php
+    via: cli
+    build_as_root:
+      - yes y | ssh-keygen -t rsa -N '' -C 'BADBADKEY' -f /lando/keys/badbadkey
+      - chown -R root:root /lando/keys/badbadkey
+      - chown -R root:root /lando/keys/badbadkey.pub
+  cli2:
+    type: php
+    via: cli
+    build_as_root:
+      - chmod 700 /lando/keys/ppkey
+      - chmod 644 /lando/keys/ppkey.pub
+    overrides:
+      volumes:
+        - ./ppkey:/lando/keys/ppkey
+        - ./ppkey.pub:/lando/keys/ppkey.pub
+        - ./index.html:/tmp/things

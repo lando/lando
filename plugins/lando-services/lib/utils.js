@@ -109,7 +109,6 @@ exports.runBuild = (lando, steps, lockfile) => {
       lando.log.warn('This **MAY** prevent your app from working');
       lando.log.warn('Check for errors above, fix them, and try again');
       lando.log.debug('Build error %j', error);
-      return lando.Promise.reject(error);
     });
   }
 };
