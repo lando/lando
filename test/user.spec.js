@@ -37,23 +37,10 @@ describe('user', () => {
       expect(isFinite(uid)).to.equal(true);
     });
 
-    it('should return a uid for username', () => {
-      const uid = user.getUid('root');
-      expect(uid).to.be.a('string');
-      expect(isFinite(uid)).to.equal(true);
-    });
 
     it('should return uid as a string', () => {
       const uid = user.getUid();
       expect(uid).to.be.a('string');
-    });
-
-    it('should throw an error for a bogus user on POSIX', () => {
-      if (process.platform === 'win32') {
-        expect(() => user.getUid('gandalflandokenobi5000')).to.not.throw(Error);
-      } else {
-        expect(() => user.getUid('gandalflandokenobi5000')).to.throw(Error);
-      }
     });
   });
 
@@ -73,23 +60,18 @@ describe('user', () => {
       expect(isFinite(gid)).to.equal(true);
     });
 
-    it('should return a gid for username', () => {
-      const gid = user.getGid('root');
-      expect(gid).to.be.a('string');
-      expect(isFinite(gid)).to.equal(true);
-    });
 
     it('should return gid as a string', () => {
       const gid = user.getGid();
       expect(gid).to.be.a('string');
     });
+  });
 
-    it('should throw an error for a bogus user on POSIX', () => {
-      if (process.platform === 'win32') {
-        expect(() => user.getGid('gandalflandokenobi5000')).to.not.throw(Error);
-      } else {
-        expect(() => user.getGid('gandalflandokenobi5000')).to.throw(Error);
-      }
+  describe('#getUsername', () => {
+    it('should return a string', () => {
+      const username = user.getUsername();
+      expect(username).to.be.a('string');
+      expect(username).to.not.be.empty;
     });
   });
 });

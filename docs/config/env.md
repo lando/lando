@@ -21,6 +21,7 @@ LANDO_WEBROOT_UID=33
 LANDO_WEBROOT_GID=33
 LANDO_HOST_UID=501
 LANDO_HOST_GID=20
+LANDO_HOST_USER=me
 LANDO_CA_CERT=/lando/certs/lndo.site.pem
 LANDO_CA_KEY=/lando/certs/lndo.site.key
 LANDO_CONFIG_DIR=/Users/pirog/.lando

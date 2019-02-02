@@ -12,6 +12,7 @@ SSH_IDENTITIES=()
 # Set defaults
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
+: ${LANDO_HOST_USER:=$LANDO_WEBROOT_USER}
 
 # Make sure we have the system wide confdir
 mkdir -p $SSH_CONF
@@ -73,6 +74,7 @@ OLDIFS="${IFS}"
 IFS=$'\n'
 cat > $SSH_CONF/ssh_config <<EOF
 Host *
+  User ${LANDO_HOST_USER}
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=ERROR

@@ -28,14 +28,16 @@ const defaults = {
 /*
  * Helper to get user conf
  */
-const userConfig = (uid, gid) => ({
+const uc = (uid, gid, username) => ({
   config: {
     appEnv: {
       LANDO_HOST_UID: uid,
       LANDO_HOST_GID: gid,
+      LANDO_HOST_USER: username,
     },
     gid,
     uid,
+    username,
   },
 });
 
@@ -78,7 +80,7 @@ module.exports = lando => {
   });
 
   // Return some default things
-  return _.merge({}, defaults, userConfig(lando.user.getUid(), lando.user.getGid()), {config: {
+  return _.merge({}, defaults, uc(lando.user.getUid(), lando.user.getGid(), lando.user.getUsername()), {config: {
     appEnv: {
       LANDO_CA_CERT: '/lando/certs/' + path.basename(caCert),
       LANDO_CA_KEY: '/lando/certs/' + path.basename(caKey),
