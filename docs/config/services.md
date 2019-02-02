@@ -186,7 +186,9 @@ We give you access to the Docker Compose layer with the `overrides` key.
 >
 > Overrides you specify get merged and injected directly into the `services` config used by Docker Compose. This means that you cannot use overrides to alter top level `networks` or `volumes`. If you are looking for that kind of **POWER** we suggest you look at the [custom](./../tutorials/compose.md) service.
 
-Here is an example of an overriden `apache` service that uses a custom image and injects some additional environment variables. However, you can put anything into `overrides` that you can put into the `services` config of a Docker Compose file.
+Here is an example of an overriden `apache` service that uses a custom image and injects some additional environment variables. However, you can put anything into `overrides` that you can put into the `services` config of a Docker Compose file. Note that if you change the image your success in running with that image is directly correlated to how close that image is to the ones we use by default. For that reason it is **highly recommended** your custom images are extended from ours so your chance of doing this with great success is maximized.
+
+If you are looking to use a *completely different* image then we recommend you a [custom compose service](./../tutorials/compose.md).
 
 ```yaml
 services:
