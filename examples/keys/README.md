@@ -31,11 +31,9 @@ Destroy tests
 -------------
 
 ```bash
-# Remove test keys
+# Remove generated test keys
 lando ssh -s cli -u root -c "rm -f /lando/keys/badbadkey"
 lando ssh -s cli -u root -c "rm -f /lando/keys/badbadkey.pub"
-lando ssh -s cli2 -u root -c "rm -f /lando/keys/ppkey"
-lando ssh -s cli2 -u root -c "rm -f /lando/keys/ppkey.pub"
 
 # Should destroy succesfully
 lando destroy -y
