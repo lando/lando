@@ -1,4 +1,8 @@
 name: lando-sql-import
+events:
+  post-db-import:
+    - database: /app/test-script.sh
+    - database: echo "i-ran" > /tmp/iran.txt
 services:
   database:
     type: mysql
