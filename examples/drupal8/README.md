@@ -69,6 +69,11 @@ lando composer require drupal/console:~1.0 --prefer-dist --optimize-autoloader
 # Should have drupal console
 cd drupal8
 lando drupal -V
+
+# Should be able to handoff to sitelocal drush without issue
+cd drupal8
+lando composer require drush/drush
+lando rebuild -y
 ```
 
 Destroy tests
