@@ -116,6 +116,57 @@ Of course these steps must make sense within the context of the container you ar
 
 Another potential consideration is "dependent commands". Each line of a build step runs in a separate subshell so if COMMAND B is dependent on something provided by COMMAND A such as `sourcing` a file you should combine the commands with `&&` and put them on a single line
 
+### Using SCRIPTY things
+
+While the following example *can* work please note that it is **NOT SUPPORTED.**
+
+```yaml
+run:
+  - |
+    /bin/sh -c "
+    if [ ! -z $LANDO_MOUNT ]; then
+      do something
+      some other command
+    fi
+    "
+```
+
+In these situations it is **highly recommended** you create a script and reference that instead. This keeps things cleaner and more portable.
+
+```bash
+#!/bin/sh
+if [ ! -z $LANDO_MOUNT ]; then
+  do something
+  some other command
+fi
+```
+
+```yaml
+run:
+  - /app/my-script.sh
+```
+
+An exception to this rule is the "one-liner" which may be favorable to a separate script. Note that you will need to wrap the command in the correct `shell` for it work correctly.
+
+**Will not work**
+
+```yaml
+run:
+  - if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi
+```
+
+**Will work**
+
+```yaml
+run:
+  - /bin/sh -c "if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi"
+```
+
+```yaml
+run:
+ - /bin/bash -c "if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi"
+```
+
 Advanced
 --------
 
