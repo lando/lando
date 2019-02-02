@@ -76,8 +76,8 @@ exports.getPhar = (url, src, dest, check = 'true') => {
   const pharInstall = [
     ['curl', url, '-L', '-o', src],
     ['chmod', '+x', src],
-    check,
     ['mv', src, dest],
+    check,
   ];
   // Return
   return _.map(pharInstall, cmd => cmd.join(' ')).join(' && ');

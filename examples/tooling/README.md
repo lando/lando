@@ -48,6 +48,9 @@ lando env
 lando dynamic --service web
 lando dynamic -s php
 lando dynamic --service web2
+
+# Should not run twice on failed commands
+lando busted | grep "i-do-not-exist" | wc -l | grep 1
 ```
 
 Destroy tests

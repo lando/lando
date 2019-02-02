@@ -178,6 +178,22 @@ services:
       - command8
 ```
 
+If you have been using either of the following *unsupported* syntaxes then make sure you also read about [using scripty things](./../config/services.md#using-scripty-things) in your build steps.
+
+```yaml
+run:
+  - |
+    if [ ! -z $LANDO_MOUNT ]; then
+      do something
+      some other command
+    fi
+```
+
+```yaml
+run:
+  - if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi
+```
+
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new build step syntax.
 
 Service Versions

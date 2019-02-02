@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
 // Helper to get http ports
@@ -46,7 +47,11 @@ module.exports = (app, lando) => {
   // @TODO: this is not currently the full lando info because a lot of it requires
   // the app to be on
   app.events.on('post-init', 10, () => {
-    app.env.LANDO_INFO = JSON.stringify(app.info);
+    const info = toObject(_.map(app.info, 'service'), {});
+    _.forEach(info, (value, key) => {
+      info[key] = _.find(app.info, {service: key});
+    });
+    app.env.LANDO_INFO = JSON.stringify(info);
   });
 
   // Reset app info on a stop, this helps prevent wrong/duplicate information being reported on a restart

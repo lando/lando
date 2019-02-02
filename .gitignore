@@ -39,5 +39,4 @@ coverage/
 
 # CCI test splitting
 test/split-file.txt
-ideas.md
 test/*.func.js

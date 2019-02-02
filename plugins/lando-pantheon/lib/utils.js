@@ -33,7 +33,7 @@ const PATH = [
 // Things
 const backdrushUrl = `https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz`;
 const wpCliUrl = 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
-const wpStatusCheck = ['php', '/tmp/wp-cli.phar', '--allow-root', '--info'];
+const wpStatusCheck = ['php', '/usr/local/bin/wp', '--allow-root', '--info'];
 const backdrushInstall = [
   'curl', '-fsSL', backdrushUrl, '|', 'tar', '-xz', '--strip-components=1', '-C', '/var/www/.drush', '&&',
   'drush', 'cc', 'drush',
@@ -107,7 +107,7 @@ const getPantheonSettings = options => ({
 exports.getPantheonBuildSteps = framework => {
   if (framework === 'wordpress') return [getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck)];
   else {
-    const build = [getDrush(DRUSH_VERSION, ['/tmp/drush.phar', 'core-status'])];
+    const build = [getDrush(DRUSH_VERSION, ['drush', 'status'])];
     if (framework === 'drupal8') {
       build.push(getPhar(
         'https://drupalconsole.com/installer',

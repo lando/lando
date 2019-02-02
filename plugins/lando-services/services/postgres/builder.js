@@ -22,7 +22,7 @@ module.exports = {
       database: 'postgresql.conf',
     },
     remoteFiles: {
-      database: '/opt/bitnami/postgresql/conf/postgresql.conf',
+      database: '/bitnami/postgresql/conf/conf.d/lando.conf',
     },
   },
   parent: '_service',
@@ -35,12 +35,15 @@ module.exports = {
         environment: {
           POSTGRESQL_DATABASE: options.creds.database,
           POSTGRES_DB: options.creds.database,
+          LANDO_WEBROOT_UID: '1001',
+          LANDO_WEBROOT_GID: '1001',
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami`,
         ],
       };
+      options.meUser = '1001';
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, postgres)});
     };

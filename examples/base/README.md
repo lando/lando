@@ -135,6 +135,9 @@ lando restart
 docker ps --filter label=com.docker.compose.project=landobase | grep landobase_log_1
 docker ps --filter label=com.docker.compose.project=landobase | grep landobase_web_1
 docker ps --filter label=com.docker.compose.project=landobase | grep landobase_web2_1
+
+# Should have non-numeric keys in LANDO_INFO
+lando php info.php
 ```
 
 Destroy tests

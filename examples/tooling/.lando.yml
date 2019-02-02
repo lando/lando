@@ -48,3 +48,6 @@ tooling:
       - php: env
       - web: env
     description: Print environment variables for a few things
+  busted:
+    service: web
+    cmd: i-do-not-exist
