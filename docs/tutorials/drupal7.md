@@ -232,8 +232,6 @@ services:
       - ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php
 ```
 
-Please refer to the [ssh section](./../config/ssh.md) if you need to set-up keys that require a passphrase.
-
 #### Configuring your root directory
 
 If you are using a webroot besides `.` you will need to remember to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.

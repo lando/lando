@@ -1,19 +1,7 @@
 SSH Keys
 ========
 
-By default Lando will forward all the **NOT PASSPHRASE PROTECTED** keys in your `~/.ssh` and `lando.config.userConfRoot/keys` directories into each service. This means that you should be able to use your ssh keys like you were running commands natively on your machine.
-
-You can additionally load in passphrase protected keys globally by adding the following to the Lando [global config](./config.md).
-
-```yaml
-loadPassphraseProtectedKeys: true
-```
-
-Or you can use them on a per-app or per-container basis by setting the following [environment variable](./env.md) in either a file or service override.
-
-```bash
-LANDO_LOAD_PP_KEYS="true"
-```
+By default Lando will forward all the correctly formatted, owned, and permissioned `ssh` keys, including **PASSPHRASE PROTECTED** keys it finds in your `~/.ssh` and `lando.config.userConfRoot/keys` directories into each service. This means that you should be able to use your ssh keys like you were running commands natively on your machine.
 
 Please note that `lando.config.userConfRoot/keys` is a location managed by Lando so it is recommended that you do not alter anything in this folder.
 
@@ -27,9 +15,6 @@ Please note that `lando.config.userConfRoot/keys` is a location managed by Lando
 If you are unsure about what keys get loaded you can use the following commands for key discovery.
 
 ```bash
-# Check whether global passphrase key loading is turned on or not
-lando config | grep loadPassphraseProtectedKeys
-
 # Check out service logs for key loading debug output
 # Obviously replace appserver with the service you are interested in
 lando logs -s appserver

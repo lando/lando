@@ -63,7 +63,6 @@ if [ $(id -u) = 0 ]; then
 
   # Symlink the known_hosts
   if [ -f "/user/.ssh/known_hosts" ]; then
-    mkdir -p /var/www/.ssh
     rm -f /var/www/.ssh/known_hosts
     ln -sf /user/.ssh/known_hosts /var/www/.ssh/known_hosts
   fi

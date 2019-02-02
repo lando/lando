@@ -32,7 +32,6 @@ LANDO_MOUNT=/app
 LANDO_APP_NAME=lamp
 LANDO_APP_ROOT=/Users/pirog/work/lando/examples/lamp
 LANDO_APP_ROOT_BIND=/Users/pirog/work/lando/examples/lamp
-LANDO_LOAD_PP_KEYS=false
 LANDO_INFO=[{"service":"appserver","urls":["http://lamp.lndo.site","https://lamp.lndo.site"],"type":"php","via":"apache","webroot":".","config":{},"version":"7.2","hostnames":["appserver.lamp.internal"]},{"service":"database","urls":[],"type":"mysql","internal_connection":{"host":"database","port":"3306"},"external_connection":{"host":"localhost","port":true},"creds":{"database":"lamp","password":"lamp","user":"lamp"},"config":{},"version":"5.7","hostnames":["database.lamp.internal"]}]
 LANDO_WEBROOT=/app/.
 LANDO_SERVICE_TYPE=php

@@ -96,6 +96,5 @@ module.exports = lando => {
     caDomain,
     caKey,
     caProject,
-    loadPassphraseProtectedKeys: false,
   }});
 };
