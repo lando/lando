@@ -33,7 +33,7 @@ const PATH = [
 // Things
 const backdrushUrl = `https://github.com/backdrop-contrib/drush/archive/${BACKDRUSH_VERSION}.tar.gz`;
 const wpCliUrl = 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
-const wpStatusCheck = ['php', '/tmp/wp-cli.phar', '--allow-root', '--info'];
+const wpStatusCheck = ['php', '/usr/local/bin/wp', '--allow-root', '--info'];
 const backdrushInstall = [
   'curl', '-fsSL', backdrushUrl, '|', 'tar', '-xz', '--strip-components=1', '-C', '/var/www/.drush', '&&',
   'drush', 'cc', 'drush',
