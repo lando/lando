@@ -39,6 +39,9 @@ lando verifycustom
 
 # Should use a custom config file if specified
 lando showmax | grep 999
+
+# Should be able to recieve connections from the outside
+lando crossconnect
 ```
 
 Destroy tests

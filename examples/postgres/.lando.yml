@@ -22,3 +22,6 @@ tooling:
     user: root
     service: custom
     cmd: psql -U postgres -c 'SHOW MAX_FILES_PER_PROCESS;'
+  crossconnect:
+    service: defaults
+    cmd: psql -h custom -U postgres trouble -c \dt
