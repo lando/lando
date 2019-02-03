@@ -267,6 +267,81 @@ run:
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new build step syntax.
 
+
+Global Environment Variables
+----------------------------
+
+Lando no longer sets its [default environment variables](./../config/env.md) on your host machine. They are now **service only**. While this usage has actually been deprecated for quite some time you may still be doing stuff like this.
+
+**old**
+
+```yaml
+events:
+  post-start:
+    - appserver: cd $LANDO_MOUNT && some-command
+services:
+  appserver:
+    build:
+      - cd $LANDO_MOUNT && some-other-command
+    overrides:
+      services:
+        volumes:
+        - $LANDO_APP_ROOT_BIND/.lando/build-sh-setup.sh:/helpers/build-sh-setup.sh
+        - $LANDO_ENGINE_CONF/.lando/build.sh:/helpers/build.sh
+```
+
+We have standardized these locations for quite some time and they **will not be changing** so you can now just do.
+
+**new**
+
+```yaml
+events:
+  post-start:
+    - appserver: some-command
+services:
+  appserver:
+    build:
+      - some-other-command
+    overrides:
+      volumes:
+        # You can use paths relative to your apps root directory
+        - ./.lando/build-sh-setup.sh:/helpers/build-sh-setup.sh
+```
+
+For `events` and `build-steps` these commands will be run from the `$LANDO_MOUNT` by default.
+
+Tooling commands will be run from the container analog of your `cwd`.
+
+If you find yourself **needing** to hard enter `$LANDO_MOUNT` you can safely just use `/app` as `$LANDO_MOUNT` will not change unless you've explicitly overridden it.
+
+```yaml
+events:
+  post-start:
+    - appserver: cd /app && command-that-def-needs-to-be-run-from-here
+```
+
+Note that in the case of something like `$LANDO_ENGINE_CONF` your application's `root` directory, the entire `~/.lando` config directory, and your user home folder are [already available inside every container](./../config/files.md) by default so you should invoke them directly instead of re-mounting them.
+
+### Accessing Environment variables in events, build-steps, tooling etc
+
+You can, however, still use the environment variables available in each service in your Landofiles by wrapping their invocation with `sh` or `bash`. This will explicitly let Lando know you want to use environment variables in the service and not the host. Note that while you **can** do this it's almost always better to just explictly refer to things.
+
+**works but not recommended**
+
+```yaml
+events:
+  post-start:
+    - /bin/sh -c 'cd "/app/$LANDO_APP_PROJECT" && do-something'
+```
+
+**works AND recommended**
+
+```yaml
+events:
+  post-start:
+    - cd /app/landoservices && do-something
+```
+
 Service Versions
 ----------------
 
