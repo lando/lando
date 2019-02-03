@@ -64,6 +64,75 @@ A consequence of this is that you can no longer overrides top level `volumes` an
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new override syntax.
 
+Internal Service Name Changes
+-----------------------------
+
+Lando still manages some services internally such as an [nginx](./../tutorials/nginx.md) service when you use `ssl` with [varnish](./../tutorials/varnish.md) or set `via: nginx` with [php](./../tutorials/php.md) however we've changed the default names of these services so they are namespaced better. The names of these services will be the same as before except they will now be prefixed by the service that generated them. For example if you have a `php` service using `nginx` and it is named `appserver` then Lando will spin up an internal nginx services called `appserver_nginx.`
+
+Pain for this change will likely manifest if you have custom [proxy settings](./../config/proxy.md).
+
+**old**
+
+```yaml
+proxy:
+  nginx:
+    - mydomain.lndo.site
+service:
+  myservice:
+    type: php
+    via: nginx
+```
+
+**new**
+
+```yaml
+proxy:
+  myservice_nginx:
+    - mydomain.lndo.site
+service:
+  myservice:
+    type: php
+    via: nginx
+```
+
+This can also be an issue if you are using the service name to set a base url or config envvars.
+
+**old**
+
+```yaml
+services:
+  appserver:
+    overrides:
+      environment:
+        BASEURL: http://nginx
+```
+
+
+In these situations we prefer you use an option available via our [networking](./../config/networking.md).
+
+**new**
+
+```yaml
+name: myapp
+services:
+  appserver:
+    overrides:
+      environment:
+        BASEURL: https://appserver_nginx.myapp.internal
+```
+
+```yaml
+name: myapp
+proxy:
+  appserver_nginx:
+    - myapp.lndo.site
+services:
+  appserver:
+    overrides:
+      environment:
+        BASEURL: https://myapp.lndo.site
+```
+
 Tooling
 -------
 
