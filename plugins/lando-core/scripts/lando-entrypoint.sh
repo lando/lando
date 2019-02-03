@@ -19,5 +19,10 @@ if [ -d "/scripts" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
 fi;
 
 # Run the COMMAND
+# @TODO: We should def figure out whether we can get away with running everything through exec at some point
 echo "Running command $@"
-exec "$@" || tail -f /dev/null
+if [ ! -z ${LANDO_NO_EXEC+x} ]; then
+ "$@" || tail -f /dev/null
+else
+  exec "$@" || tail -f /dev/null
+fi;
