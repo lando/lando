@@ -27,9 +27,8 @@ module.exports = lando => ({
   run: options => {
     // Try to get our app
     const app = lando.getApp(options._app.root);
-    if (app) {
-      return app.init()
-        .then(() => lando.engine.logs(_.merge(app, {opts: _.pick(options, ['follow', 'timestamps', 'services'])})));
-    }
+    const opts = _.pick(options, ['follow', 'timestamps', 'service']);
+    opts.services = opts.service;
+    if (app) return app.init().then(() => lando.engine.logs(_.merge(app, {opts})));
   },
 });
