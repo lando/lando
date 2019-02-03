@@ -11,7 +11,7 @@ default-character-set=utf8
 # * Basic Settings
 #
 # Data is stored in a volume on the db container /sql
-#default-storage-engine = innodb
+default-storage-engine = innodb
 
 #
 # * Character sets

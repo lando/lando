@@ -20,4 +20,4 @@ fi;
 
 # Run the COMMAND
 echo "Running command $@"
-"$@" || tail -f /dev/null
+exec "$@" || tail -f /dev/null
