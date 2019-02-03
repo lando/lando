@@ -67,7 +67,9 @@ Check out [this example](https://github.com/lando/lando/tree/master/examples/ser
 Internal Service Name Changes
 -----------------------------
 
-Lando still manages some services internally such as an [nginx](./../tutorials/nginx.md) service when you use `ssl` with [varnish](./../tutorials/varnish.md) or set `via: nginx` with [php](./../tutorials/php.md) however we've changed the default names of these services so they are namespaced better. The names of these services will be the same as before except they will now be prefixed by the service that generated them. For example if you have a `php` service using `nginx` and it is named `appserver` then Lando will spin up an internal nginx services called `appserver_nginx.`
+Lando still manages some services internally such as an [nginx](./../tutorials/nginx.md) service when you use `ssl` with [varnish](./../tutorials/varnish.md) or set `via: nginx` with [php](./../tutorials/php.md) however we've changed the default names of these services so they are namespaced better.
+
+The names of these services will be the same as before except they will now be prefixed by the service that generated them. For example if you have a `php` service using `nginx` and it is named `appserver` then Lando will spin up an internal nginx service called `appserver_nginx.`
 
 Pain for this change will likely manifest if you have custom [proxy settings](./../config/proxy.md).
 
@@ -76,7 +78,7 @@ Pain for this change will likely manifest if you have custom [proxy settings](./
 ```yaml
 proxy:
   nginx:
-    - mydomain.lndo.site
+    - myapp.lndo.site
 service:
   myservice:
     type: php
@@ -88,7 +90,7 @@ service:
 ```yaml
 proxy:
   myservice_nginx:
-    - mydomain.lndo.site
+    - myapp.lndo.site
 service:
   myservice:
     type: php

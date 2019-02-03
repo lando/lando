@@ -51,7 +51,6 @@ module.exports = {
           LANDO_WEBROOT_GROUP: 'node',
           LANDO_WEBROOT_UID: '1000',
           LANDO_WEBROOT_GID: '1000',
-          LANDO_NO_EXEC: 'NOTGONNADOIT',
         },
         ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,

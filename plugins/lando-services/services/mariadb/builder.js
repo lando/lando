@@ -41,6 +41,7 @@ module.exports = {
           MARIADB_USER: options.creds.user,
           LANDO_WEBROOT_UID: '1001',
           LANDO_WEBROOT_GID: '1001',
+          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,

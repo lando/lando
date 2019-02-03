@@ -21,8 +21,9 @@ fi;
 # Run the COMMAND
 # @TODO: We should def figure out whether we can get away with running everything through exec at some point
 echo "Running command $@"
-if [ ! -z ${LANDO_NO_EXEC+x} ]; then
- "$@" || tail -f /dev/null
-else
+if [ ! -z ${LANDO_NEEDS_EXEC+x} ]; then
+  echo "Running with exec!"
   exec "$@" || tail -f /dev/null
+else
+ "$@" || tail -f /dev/null
 fi;
