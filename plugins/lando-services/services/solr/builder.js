@@ -8,9 +8,9 @@ const _ = require('lodash');
  */
 const parse3 = options => {
   options.image = 'actency/docker-solr:3.6';
-  options.command = '/bin/bash -c "cd /opt/solr/example/solr; java -Djetty.port=8983 -jar start.jar"';
   options.remoteFiles.dir = '/opt/solr/example/solr/conf';
   options.dataDir = '/opt/solr/example/solr/data';
+  options.startScript = 'start-3.sh';
   options.moreHttpPorts = [];
   return options;
 };
