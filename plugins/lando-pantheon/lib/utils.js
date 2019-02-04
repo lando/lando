@@ -182,7 +182,7 @@ exports.getPantheonEnvironment = options => ({
   AUTH_SALT: getHash(options.app + options.framework),
   BACKDROP_SETTINGS: JSON.stringify(getPantheonSettings(options)),
   CACHE_HOST: PANTHEON_CACHE_HOST,
-  CACHE_PORT: PANTHEON_CACHE_HOST,
+  CACHE_PORT: PANTHEON_CACHE_PORT,
   CACHE_PASSWORD: PANTHEON_CACHE_PASSWORD,
   DB_HOST: 'database',
   DB_PORT: 3306,
