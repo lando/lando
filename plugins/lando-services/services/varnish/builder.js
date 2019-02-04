@@ -14,14 +14,6 @@ const nginxCommand = vhost => [
   '/entrypoint.sh /run.sh"',
 ].join(' ');
 
-// Helper to get long varnish command
-const varnishCmd = [
-  '/bin/sh -c',
-  '"sed -i \\\"/  enabled: /c\  enabled: false,\\\" /etc/chaperone.d/chaperone.conf',
-  '&&',
-  '/usr/local/bin/chaperone --user root --force --debug"',
-].join(' ');
-
 // Helper to get varnsh ssl nginx
 const varnishSsl = options => ({
   command: nginxCommand('/opt/bitnami/extra/nginx/templates/default.conf.tpl'),
@@ -51,6 +43,7 @@ module.exports = {
     sources: [],
     defaultFiles: {
       ssl: 'ssl-termination.conf.tpl',
+      chaperone: 'chaperone.conf',
     },
     remoteFiles: {
       vcl: '/etc/varnish/conf.d/lando.vcl',
@@ -65,7 +58,7 @@ module.exports = {
       // Build the default stuff here
       const varnish = {
         image: `eeacms/varnish:${options.version}-3.0`,
-        command: varnishCmd,
+        command: '/usr/local/bin/chaperone --user root --force --debug',
         depends_on: options.backends,
         environment: {
           BACKENDS: options.backends.join(' '),
@@ -73,10 +66,19 @@ module.exports = {
           ADDRESS_PORT: ':80',
           BACKENDS_PROBE_ENABLED: 'false',
           LANDO_NO_USER_PERMS: 'NOTGONNADOIT',
+          LANDO_WEBROOT_USER: 'varnish',
+          LANDO_WEBROOT_GROUP: 'varnish',
+          LANDO_WEBROOT_UID: '104',
+          LANDO_WEBROOT_GID: '107',
         },
         networks: {default: {aliases: [`${options.name}_varnish`]}},
         ports: ['80'],
+        volumes: [
+          `${options.confDest}/${options.defaultFiles.chaperone}:/etc/chaperone.d/chaperone.conf`,
+        ],
       };
+      // Change the me user
+      options.meUser = 'varnish';
       // Set some info about our backends
       options.info = {backends: options.backends};
       // Set the varnish
