@@ -22,6 +22,7 @@ module.exports = {
         command: '/app-entrypoint.sh /run.sh',
         environment: {
           MEMCACHED_CACHE_SIZE: options.mem,
+          LANDO_NEEDS_EXEC: 'DOEEET',
         },
       };
       // Send it downstream

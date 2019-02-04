@@ -50,6 +50,7 @@ module.exports = {
           // @TODO: switching this to non-root seems problematic
           NGINX_DAEMON_USER: 'root',
           NGINX_DAEMON_GROUP: 'root',
+          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         ports: ['80'],
         user: 'root',
