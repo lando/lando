@@ -44,13 +44,8 @@ lando ssh -s custom -c "curl -k https://localhost | grep WEBDIR"
 lando ssh -s custom -c "cat /bitnami/apache/conf/httpd.conf | grep LANDOHTTPD"
 lando ssh -s custom -c "cat /bitnami/apache/conf/bitnami/bitnami.conf | grep LANDOCUSTOM"
 
-# Verify that we've exposed port 8081 correctly
-docker inspect apache_html_1 | grep HostPort | grep 8081
-lando info | grep http://localhost:8081
-
-# Verify htaccess-lando is working
-# curl -I http://apache.lndo.site/folder1 | grep "Location: http://apache.lndo.site/folder2/"
-true
+# Should use htaccess-lando if it exists
+lando ssh -s override -c "curl -I http://landoapache.lndo.site/folder1" | grep Location | grep http://landoapache.lndo.site/folder2/
 ```
 
 Destroy tests

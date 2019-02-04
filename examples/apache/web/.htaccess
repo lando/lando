@@ -3,4 +3,4 @@
 
 Options +FollowSymLinks
 RewriteEngine On
-RewriteRule ^folder3.*$ http://apache.lndo.site/folder2/ [R=301,L]
+RewriteRule ^folder3.*$ http://landoapache.lndo.site/folder2/ [R=301,L]

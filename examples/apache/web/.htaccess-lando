@@ -2,4 +2,4 @@
 # just for the man in the blue cape!
 Options +FollowSymLinks
 RewriteEngine On
-RewriteRule ^folder1.*$ http://apache.lndo.site/folder2/ [R=301,L]
+RewriteRule ^folder1.*$ http://landoapache.lndo.site/folder2/ [R=301,L]
