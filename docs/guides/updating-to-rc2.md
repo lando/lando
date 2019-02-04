@@ -519,7 +519,7 @@ containerGlobalEnv:
   PARTY: USA
 ```
 
-**old**
+**new**
 
 ```yaml
 appEnv:
