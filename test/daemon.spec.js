@@ -101,8 +101,8 @@ describe('daemon', () => {
   describe('#down', () => {
     it('should resolve with truth if the context is not node and we are on linux');
     it('should resolve with truth if we are on win32 or darwin');
-    it("should try to stop docker if it's already up");
-    it("should throw an error if it can't shut down docker");
+    it('should try to stop docker if it\'s already up');
+    it('should throw an error if it can\'t shut down docker');
   });
 
   describe('#isUp', () => {
