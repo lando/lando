@@ -39,12 +39,17 @@ module.exports = {
           MYSQL_DATABASE: options.creds.database,
           MARIADB_PASSWORD: options.creds.password,
           MARIADB_USER: options.creds.user,
+          LANDO_WEBROOT_UID: '1001',
+          LANDO_WEBROOT_GID: '1001',
+          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/mariadb`,
         ],
       };
+      // Set the me user
+      options.meUser = '1001';
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, mariadb)});
     };

@@ -83,6 +83,12 @@ module.exports = (app, lando) => {
 
       // Map to docker compose things
       .map(service => {
+        // Throw error but proceed if we dont have the service
+        if (!_.includes(app.services, service.name)) {
+          lando.log.error(`${service.name} is a service that does not exist in your app!!!`);
+          lando.log.warn('Try running `lando info` and using one of the services listed there.');
+          return {};
+        }
         service.labels['traefik.docker.network'] = lando.config.proxyNet;
         return {
           services: _.set({}, service.name, {

@@ -185,7 +185,9 @@ if [ "$FILES" != "none" ]; then
   mkdir -p $LANDO_WEBROOT/$FILEMOUNT
 
   # Build the rsync command
-  RSYNC_CMD="rsync -rlvz \
+  RSYNC_CMD="rsync -rvlz \
+    --chmod=u=rwx,g=rx,o=rx \
+    --copy-unsafe-links \
     --size-only \
     --ipv4 \
     --progress \
@@ -223,7 +225,6 @@ if [ "$FILES" != "none" ]; then
   # Importing files
   echo "Pulling files from $FILES..."
   eval "$PULL_FILES"
-
 fi
 
 # Finish up!

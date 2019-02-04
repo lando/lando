@@ -11,6 +11,11 @@ services:
     portforward: true
     config:
       dir: '7.x'
+  legacy3:
+    portforward: true
+    type: solr:3
+    config:
+      dir: '3.x'
   legacy4:
     portforward: true
     type: solr:4

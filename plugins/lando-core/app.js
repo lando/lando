@@ -96,6 +96,8 @@ module.exports = (app, lando) => {
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
       LANDO_APP_ROOT_BIND: app.root,
+      // @todo: do we want to set the below based on the lando verbose level?
+      BITNAMI_DEBUG: 'true',
     },
     labels: {
       'io.lando.src': app.configFiles.join(','),
