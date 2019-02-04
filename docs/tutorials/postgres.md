@@ -58,6 +58,11 @@ services:
     portforward: false
     creds:
       database: database
+      # Note that you cannot change the below but they are shown here for transparency
+      # You can read more about why this is below
+      # By "NO PASSWORD" we mean the password is blank
+      user: postgres
+      password: NO PASSWORD
     config:
       database: SEE BELOW
 ```
@@ -90,6 +95,8 @@ services:
 
 ### Setting custom credentials
 
+The postgres service user is set to `postgres` and the password is empty. It does not allow setting a custom user or password as this interferes with tooling commands and build steps. Lando needs to access the postgres super user to perform tooling commands, see [the Bitnami documentation](https://github.com/bitnami/bitnami-docker-postgresql#creating-a-database-user-on-first-run) for more information.
+
 You can also configure the default `database`. However, it is *very important* to note that these things get set the **FIRST TIME YOU START** the service and **ONLY THE FIRST TIME.**
 
 This means that if you change any of the `creds` you need to `lando destroy` and then `lando start` the service for the changes to take effect. This stands in contrast to the normal `lando rebuild` method to change config and is a consequence of persisting the database's data directory between rebuilds.
@@ -108,6 +115,7 @@ lando destroy -y && lando start
 
 Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions. **DO NOT ALTER THE PASSWORD OF THE POSTGRES USER.**
 
+Due to the way
 
 ### Using a custom postgres config file
 

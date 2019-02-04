@@ -11,6 +11,12 @@ services:
       database: trouble
     config:
       database: config/mythings.conf
+  mimicarecipe:
+    type: postgres
+    creds:
+      user: notpostgres
+      database: mimic
+      password: 'not empty'
 tooling:
   verifydefaults:
     service: defaults

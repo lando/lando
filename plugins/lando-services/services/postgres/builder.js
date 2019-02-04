@@ -45,6 +45,9 @@ module.exports = {
         ],
       };
       options.meUser = '1001';
+      // The Bitnami Postgres container is particular about the user/pass.
+      options.creds.user = 'postgres';
+      options.creds.password = '';
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, postgres)});
     };
