@@ -42,6 +42,12 @@ lando showmax | grep 999
 
 # Should be able to recieve connections from the outside
 lando crossconnect
+
+# should show the correct user in info
+lando info -s mimicarecipe | grep user | grep postgres
+
+# should show the correct password in info
+lando info -s mimicarecipe | grep -v empty
 ```
 
 Destroy tests
