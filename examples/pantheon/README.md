@@ -38,7 +38,7 @@ lando pull --code none --database dev --files dev
 
 # Should pull down database and files for our drupal7 site
 cd drupal7
-lando pull --code none --database dev --files dev
+lando pull --code none --database dev --files dev --rsync
 ```
 
 Verification commands
@@ -94,6 +94,10 @@ curl -LI http://landobot-wordress.lndo.site | grep Via || echo $? | grep 1
 # Should be able to bootstrap drupal7
 cd drupal7
 lando drush status | grep "Connected"
+
+# Should have 755 on pulled files
+cd drupal7
+lando ssh -s appserver -c "stat sites/default/files/field/image/Lando-Calrissian-Cloud-City-Administrator.jpg" | grep "Access" | grep "0755"
 
 # Should have drush
 cd drupal7

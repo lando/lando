@@ -170,7 +170,7 @@ fi
 if [ "$FILES" != "none" ]; then
 
   # Build the rsync command
-  PUSH_FILES="rsync -rlvz \
+  PUSH_FILES="rsync -rLvz \
     --size-only \
     --ipv4 \
     --progress \
