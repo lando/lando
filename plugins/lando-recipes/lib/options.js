@@ -120,7 +120,7 @@ exports.getConfigOptions = (all, lando, options = {}) => {
     if (_.has(one, 'options')) {
       _.forEach(one.options(lando), (option, key) => {
         // @TODO: get auto conflict assignment to work properly
-        // @NOTE: maybe it doesnt and we should just do this manually?
+        // @NOTE: maybe it doesn't and we should just do this manually?
         // _.set(options, `${key}.conflicts`, getConflicts(one.name, all, lando));
       });
       options = _.merge({}, one.options(lando), options);

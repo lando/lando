@@ -27,7 +27,7 @@ FILE=${DATABASE}.`date +"%Y-%m-%d-%s"`.sql
 # TODO: compress the mostly duplicate code below?
 while (( "$#" )); do
   case "$1" in
-    # This doesnt do anything anymore
+    # This doesn't do anything anymore
     # we just keep it around for option validation
     -h|--host|--host=*)
       if [ "${1##--database=}" != "$1" ]; then

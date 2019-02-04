@@ -77,7 +77,7 @@ config:
 
 ### Installing application dependencies
 
-Because most MEAN projects will require you `npm install` before they can start succesfully Lando will automatically run `npm install` before it runs what you specify as your `commmand`. You can, however, alter this to whatever you need.
+Because most MEAN projects will require you `npm install` before they can start successfully Lando will automatically run `npm install` before it runs what you specify as your `commmand`. You can, however, alter this to whatever you need.
 
 ```yaml
 recipe: mean

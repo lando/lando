@@ -1,7 +1,7 @@
 Accessing Your Services Externally
 ==================================
 
-It is often desireable to interact with your services on the host machine level. Common examples of this are accessing a SQL database through a GUI client like SequelPro, or running unit tests through an IDE like PhpStorm.
+It is often desirable to interact with your services on the host machine level. Common examples of this are accessing a SQL database through a GUI client like SequelPro, or running unit tests through an IDE like PhpStorm.
 
 Lando makes this process relatively painless.
 

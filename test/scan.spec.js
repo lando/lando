@@ -67,7 +67,7 @@ describe('scan', () => {
         .should.be.fulfilled;
     });
 
-    it('should return "bad" status objects on wait codes that dont change after max retries', () => {
+    it('should return "bad" status objects on wait codes that don\'t change after max retries', () => {
       const scan = require('./../lib/scan')();
       const urls = ['http://thecultofscottbakula.com.666', 'http://anumalak.com.404'];
       return scan(urls, {max: 1, waitCodes: [666, 404]})

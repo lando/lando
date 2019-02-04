@@ -57,7 +57,7 @@ describe('docker', () => {
         stub.restore();
       });
     });
-    it('should throw an error if cant create network', () => {
+    it("should throw an error if can't create network", () => {
       const stub = sinon.stub(landerode, 'createNetwork').rejects('Too Many Capes');
 
       return landerode.createNet('hardtimes').should.be.rejectedWith('Too Many Capes')
@@ -124,7 +124,7 @@ describe('docker', () => {
       });
     });
 
-    it('should return false if container doesnt exist', () => {
+    it('should return false if container doesn't exist', () => {
       // Our own little bad container.
       const bogusContainer = new Dockerode.Container();
       // Throw the proper error.

@@ -141,7 +141,7 @@ module.exports = {
       const site = _.head(_.filter(results[0], site => site.name === options['pantheon-site']));
       const user = results[1];
 
-      // Error if site doesnt exist
+      // Error if site doesn't exist
       if (_.isEmpty(site)) throw Error(`${site} does not appear to be a Pantheon site!`);
 
       // This is a good token, lets update our cache

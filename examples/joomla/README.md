@@ -18,7 +18,7 @@ lando poweroff
 rm -rf joomla && mkdir -p joomla && cd joomla
 lando init --source remote --remote-url https://downloads.joomla.org/cms/joomla3/3-9-2/Joomla_3-9-2-Stable-Full_Package.tar.gz --recipe joomla --webroot . --name lando-joomla
 
-# Should start up succesfully
+# Should start up successfully
 cd joomla
 lando start
 ```

@@ -23,7 +23,7 @@ fi
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
-    # This doesnt do anything anymore
+    # This doesn't do anything anymore
     # we just keep it around for option validation
     -h|--host|--host=*)
       if [ "${1##--database=}" != "$1" ]; then

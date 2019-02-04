@@ -18,7 +18,7 @@ lando poweroff
 rm -rf lamp && mkdir -p lamp && cd lamp
 lando init --source remote --remote-url https://github.com/bcit-ci/CodeIgniter/archive/3.1.10.tar.gz --remote-options="--strip-components 1" --recipe lamp --webroot . --name lando-lamp
 
-# Should start up succesfully
+# Should start up successfully
 cd lamp
 lando start
 ```

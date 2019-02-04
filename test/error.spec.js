@@ -40,7 +40,7 @@ describe('error', () => {
 
     it('should not log error when error.hide is true', () => {
       const error = new ErrorHandler({error: sinon.spy()}, {report: sinon.spy()});
-      error.handle({message: 'super long dont log', stack: 'stack', hide: true});
+      error.handle({message: 'super long don't log', stack: 'stack', hide: true});
       error.log.error.callCount.should.equal(0);
     });
 

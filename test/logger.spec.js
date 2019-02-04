@@ -51,7 +51,7 @@ describe('logger', () => {
 
     it('should create a log directory and file transports if logDir specified', () => {
       // Need to preemptively load in the winston File transports because mock-fs handles
-      // lazy requires on the mock filesystem and CANT FIND SHIT
+      // lazy requires on the mock filesystem and CAN'T FIND SHIT
       // @see: https://github.com/tschaub/mock-fs/issues/213
       require(path.resolve('./node_modules/winston/lib/winston/transports/file')).File;
       filesystem();

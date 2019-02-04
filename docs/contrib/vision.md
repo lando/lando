@@ -63,7 +63,7 @@ Attempting to provide big Lando-based workarounds for significant issues in upst
 
 #### 6. Documentation
 
-Great documentation and examples are often the things that make an open source project succesful. We care about having extensive, well written and intuitively organized documentation.
+Great documentation and examples are often the things that make an open source project successful. We care about having extensive, well written and intuitively organized documentation.
 
 #### 7. Project Management
 

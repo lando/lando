@@ -129,7 +129,7 @@ describe('config', () => {
   });
 
   describe('#getEngineConfig', () => {
-    it('should use default engine config if we dont have any already');
+    it('should use default engine config if we don't have any already');
     it('should default to a named pipe on windows');
     it('should set env.DOCKER_HOST if we ar using a remote docker daemon');
     it('should set appropriate DOCKER envvars if we have certs');

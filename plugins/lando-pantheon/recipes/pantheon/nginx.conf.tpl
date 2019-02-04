@@ -45,7 +45,7 @@ http {
   # response for 'Request-URI Too Large'
   # http://mailman.nginx.org/pipermail/nginx/2012-July/034578.html
   #
-  # This is bad because styx consideres this an error, and will mark the binding
+  # This is bad because styx considers this an error, and will mark the binding
   # unhealthy. As a workaround, we are going to bump this buffer
   # size to avoid hitting 'Request-URI Too Large'
   #

@@ -133,7 +133,7 @@ tooling:
 Now to run debug a PhpUnit test, do the following:
 
 1. Select the compound "PhpUnit" as your debugger in VSCode's UI, and start it.
-2. Make sure you untick "Everything" in the breakpoints section of the UI, or it will break everytime PhpUnit throws an exception, even if it's properly caught by PhpUnit.
+2. Make sure you untick "Everything" in the breakpoints section of the UI, or it will break every time PhpUnit throws an exception, even if it's properly caught by PhpUnit.
 3. Add a breakpoint in your code that is being tested.
 4. On your command line run PhpUnit with something like `lando phpunitdebug --filter=testMyTestMethodName` (this example is of running a single test method, actually you can add any phpunit options you like at the end).
 

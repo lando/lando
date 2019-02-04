@@ -18,7 +18,7 @@ lando poweroff
 rm -rf drupal6 && mkdir -p drupal6 && cd drupal6
 lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-6.38.tar.gz --remote-options="--strip-components 1" --recipe drupal6 --webroot . --name lando-drupal6
 
-# Should start up succesfully
+# Should start up successfully
 cd drupal6
 lando start
 ```

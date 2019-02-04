@@ -12,7 +12,7 @@ Run the following commands to get up and running
 with this example.
 
 ```bash
-# Should start up succesfully
+# Should start up successfully
 lando poweroff
 lando start
 

@@ -11,7 +11,7 @@ Start up tests
 Run the following commands to get up and running with this example.
 
 ```bash
-# Should start up succesfully
+# Should start up successfully
 lando poweroff
 lando start
 ```
@@ -40,7 +40,7 @@ lando verifycustom
 # Should use a custom config file if specified
 lando showmax | grep 999
 
-# Should be able to recieve connections from the outside
+# Should be able to receive connections from the outside
 lando crossconnect
 
 # should show the correct user in info

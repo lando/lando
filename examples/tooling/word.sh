@@ -17,7 +17,7 @@ while (( "$#" )); do
       fi
       ;;
     --surprise)
-      echo "MUHAHAH! You've found a non explictly declared option for this script which is going to give you an error!"
+      echo "MUHAHAH! You've found a non explicitly declared option for this script which is going to give you an error!"
       exit 666
       ;;
     --)

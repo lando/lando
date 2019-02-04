@@ -60,7 +60,7 @@ module.exports = {
       // Add in our environment
       options.services.appserver.overrides.environment = utils.getPantheonEnvironment(options);
       // Add in our pantheon script
-      // NOTE: We do this here instead of in /scripts because we need to gaurantee
+      // NOTE: We do this here instead of in /scripts because we need to guarantee
       // it runs before the other build steps so it can reset our CA correctly
       options.build_root.push('/helpers/pantheon.sh');
       options.build.push('/helpers/auth.sh');

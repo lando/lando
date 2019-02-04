@@ -57,7 +57,7 @@ Destroy tests
 -------------
 
 ```bash
-# Should destroy succesfully
+# Should destroy successfully
 lando destroy -y
 lando poweroff
 ```

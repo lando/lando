@@ -18,7 +18,7 @@ lando poweroff
 rm -rf drupal7 && mkdir -p drupal7 && cd drupal7
 lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.59.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
 
-# Should start up succesfully
+# Should start up successfully
 cd drupal7
 lando start
 ```

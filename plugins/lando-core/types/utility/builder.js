@@ -14,7 +14,7 @@ module.exports = {
       // Set some other options and mixin stuffs
       options.labels['io.lando.service-container'] = 'TRUE';
       options.env.LANDO_NO_USER_PERMS = 'NOTGONNADOIT';
-      // Add some some globals to teh service
+      // Add some some globals to the service
       sources.push({services: _.set({}, options.name, {environment: options.env, labels: options.labels})});
       // Send downstream
       super(id, options, ...sources);

@@ -22,7 +22,7 @@ lando init --source cwd --recipe laravel --webroot app/public --name lando-larav
 cd laravel
 lando composer create-project --prefer-dist laravel/laravel app
 
-# Should start up succesfully
+# Should start up successfully
 cd laravel
 lando start
 ```

@@ -19,7 +19,7 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
   // Attempt the request and retry a few times
   return Promise.retry(() => request[verb](pathname.join('/'), data, options)
     .then(response => {
-      log.verbose('Response recieved: %j.', response.data);
+      log.verbose('Response received: %j.', response.data);
       return response.data;
     })
     .catch(err => {

@@ -23,7 +23,7 @@ You can optionally configure some of the more obvious things in your recipe such
 >
 > While a decent amount config is the same from recipe to recipe we recommend you consult the documentation for the recipe you intende to use for the full list of its config options.
 
-For example here are some of the configureable things in the [LAMP](./../tutorials/lamp.md) recipe.
+For example here are some of the configurable things in the [LAMP](./../tutorials/lamp.md) recipe.
 
 ```yml
 recipe: lamp
