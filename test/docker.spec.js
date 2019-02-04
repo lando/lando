@@ -124,7 +124,7 @@ describe('docker', () => {
       });
     });
 
-    it('should return false if container doesnt exist', () => {
+    it('should return false if container doesn\'t exist', () => {
       // Our own little bad container.
       const bogusContainer = new Dockerode.Container();
       // Throw the proper error.
