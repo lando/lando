@@ -57,7 +57,7 @@ describe('docker', () => {
         stub.restore();
       });
     });
-    it("should throw an error if can't create network", () => {
+    it('should throw an error if can\'t create network', () => {
       const stub = sinon.stub(landerode, 'createNetwork').rejects('Too Many Capes');
 
       return landerode.createNet('hardtimes').should.be.rejectedWith('Too Many Capes')
