@@ -58,6 +58,11 @@ services:
     portforward: false
     creds:
       database: database
+      # Note that you cannot change the below but they are shown here for transparency
+      # You can read more about why this is below
+      # By "NO PASSWORD" we mean the password is blank
+      user: postgres
+      password: NO PASSWORD
     config:
       database: SEE BELOW
 ```
