@@ -43,7 +43,7 @@ process.landoAppTaskCacheFile = !_.isEmpty(config) ? config.toolingCache : undef
 // Check for sudo usage
 cli.checkPerms();
 
-// Check to see if we have a recipe and if it doesnt have a tooling cache lets enforce a manual cache clear
+// Check to see if we have a recipe and if it doesn't have a tooling cache lets enforce a manual cache clear
 if (bsLevel === 'APP' && !fs.existsSync(config.toolingCache)) {
   if (fs.existsSync(process.landoTaskCacheFile)) fs.unlinkSync(process.landoTaskCacheFile);
 }

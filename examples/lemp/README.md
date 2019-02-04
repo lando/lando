@@ -18,7 +18,7 @@ lando poweroff
 rm -rf lemp && mkdir -p lemp && cd lemp
 lando init --source remote --remote-url git://github.com/cakephp/cakephp.git --remote-options="--branch 2.x --depth 1" --recipe lemp --webroot . --name lando-lemp
 
-# Should start up succesfully
+# Should start up successfully
 cd lemp
 lando start
 ```

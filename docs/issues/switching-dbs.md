@@ -5,9 +5,9 @@ If you are currently using a database with Lando and you decide to change its ty
 
 For a change in credentials it is required that you `lando destroy && lando start` since these are set at container creation and persist through a `lando rebuild`.
 
-For a change in type or version this is caused by incompatabilities in the underlying file format that various databases and versions use to store their data. If you are unsure about the aforementioned file format compatibility we recommend you `lando destroy` and recreate the app instead of doing a `lando restart` or `lando rebuild`.
+For a change in type or version this is caused by incompatibilities in the underlying file format that various databases and versions use to store their data. If you are unsure about the aforementioned file format compatibility we recommend you `lando destroy` and recreate the app instead of doing a `lando restart` or `lando rebuild`.
 
-If you do not do this and there exists an incompatability it is likely your database will not start up correctly. Newer versions of lando will report this as a warning that your database service is unhealthy. Luckily, even if you get this point a `lando destroy` and `lando start` should set you back onto the path of righteousness.
+If you do not do this and there exists an incompatibility it is likely your database will not start up correctly. Newer versions of lando will report this as a warning that your database service is unhealthy. Luckily, even if you get this point a `lando destroy` and `lando start` should set you back onto the path of righteousness.
 
 Listed below are a few tell tale signs that this is the situation you are in.
 
@@ -17,7 +17,7 @@ Listed below are a few tell tale signs that this is the situation you are in.
 If you run `lando mysql` or the analgous command for your database type you will see an error that looks similar to:
 
 ```bash
-ERROR 2002 (HY000): Cant connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2 "No such file or directory")
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2 "No such file or directory")
 ```
 
 2. Scoping Logs

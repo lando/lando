@@ -16,13 +16,13 @@ Maintainers
 Maintainers are committers who also make decisions for the overall direction of the project including but not limited to:
 
   * Helping set the [strategic vision](./vision.md)
-  * Assigning or removing roles and responsibilites
+  * Assigning or removing roles and responsibilities
   * Maintaining these contribution docs
   * Planning sprints and milestones
   * Determining release dates and cycles
   * Delegating to committers when and where appropriate
 
-Decisions are made by consensus with the Benevolent Dictator serving as final authority when consensus cannot be reached. Ideally, all decision making for the project is made by the maintainers and by concensus.
+Decisions are made by consensus with the Benevolent Dictator serving as final authority when consensus cannot be reached. Ideally, all decision making for the project is made by the maintainers and by consensus.
 
 Committers
 ----------

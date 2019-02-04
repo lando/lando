@@ -22,7 +22,7 @@ lando destroy -y
 # Destroy with debug output
 lando destroy -vvv
 
-# Get help about the destory command
+# Get help about the destroy command
 lando destroy --lando
 ```
 

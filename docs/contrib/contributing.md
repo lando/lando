@@ -41,7 +41,7 @@ These are committers with a specific or primary expertise area.
   * **Lando Core:** *Open*
   * **Lando Plugins:** *Open*
 
-If you are interested in any of the open areas above, or an area that is not explicitly enumerated, or helping out in an area that already has a specialist asigned, let us know (see [communication](#communication) below).
+If you are interested in any of the open areas above, or an area that is not explicitly enumerated, or helping out in an area that already has a specialist assigned, let us know (see [communication](#communication) below).
 
 Communication
 -------------

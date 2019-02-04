@@ -25,7 +25,7 @@ const cleanNetworks = lando => lando.engine.getNetworks()
       })
       // Filter out landoy ones
       .then(nets => _.filter(networks, network => !_.includes(nets, network.Name)))
-      // Inspect remaining networks to make sure we dont remove any with attached containers
+      // Inspect remaining networks to make sure we don't remove any with attached containers
       .map(network => lando.engine.getNetwork(network.Id))
       .map(network => network.inspect())
       // Filter out any with containers
@@ -45,7 +45,7 @@ const cleanNetworks = lando => lando.engine.getNetworks()
 
 
 module.exports = lando => {
-  // Preemptively make sure we have enough networks and if we dont smartly prune some of them
+  // Preemptively make sure we have enough networks and if we don't smartly prune some of them
   lando.events.on('pre-engine-start', 1, () => cleanNetworks(lando));
 
   // Make sure we have a lando bridge network

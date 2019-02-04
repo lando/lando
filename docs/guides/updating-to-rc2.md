@@ -324,7 +324,7 @@ Note that in the case of something like `$LANDO_ENGINE_CONF` your application's 
 
 ### Accessing Environment variables in events, build-steps, tooling etc
 
-You can, however, still use the environment variables available in each service in your Landofiles by wrapping their invocation with `sh` or `bash`. This will explicitly let Lando know you want to use environment variables in the service and not the host. Note that while you **can** do this it's almost always better to just explictly refer to things.
+You can, however, still use the environment variables available in each service in your Landofiles by wrapping their invocation with `sh` or `bash`. This will explicitly let Lando know you want to use environment variables in the service and not the host. Note that while you **can** do this it's almost always better to just explicitly refer to things.
 
 **works but not recommended**
 

@@ -66,8 +66,8 @@ module.exports = lando => {
   // @TODO: below might not be needed
   mkdirp.sync(caDir);
 
-  // Make sure we have a host-exposed root ca if we dont already
-  // NOTE: we dont run this on the caProject otherwise infinite loop happens!
+  // Make sure we have a host-exposed root ca if we don't already
+  // NOTE: we don't run this on the caProject otherwise infinite loop happens!
   lando.events.on('pre-engine-start', 2, data => {
     if (!fs.existsSync(caCert) && data.project !== caProject) {
       const LandoCa = lando.factory.get('_casetup');

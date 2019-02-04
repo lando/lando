@@ -59,7 +59,7 @@ sub vcl_recv {
       set req.http.Accept-Encoding = "gzip";
     }
     else {
-      # unkown algorithm
+      # unknown algorithm
       unset req.http.Accept-Encoding;
     }
   }
@@ -121,7 +121,7 @@ sub vcl_recv {
     # just because they put out a link to a redirect.
     #
     # This process isn't perfect. The capture will take everything from the beginning
-    # of the first occurrance of utm_, and restore it the same way. If a redirect
+    # of the first occurrence of utm_, and restore it the same way. If a redirect
     # is triggered, and the redirect appends query parameters after the first utm_,
     # they will be lost. This could be fixed robustly by not using regular
     # expressions here in this fashion, and instead using a Varnish module (vmod)

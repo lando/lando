@@ -18,7 +18,7 @@ lando poweroff
 rm -rf backdrop && mkdir -p backdrop && cd backdrop
 lando init --source remote --remote-url https://github.com/backdrop/backdrop/releases/download/1.12.1/backdrop.zip --recipe backdrop --webroot backdrop --name lando-backdrop
 
-# Should start up succesfully
+# Should start up successfully
 cd backdrop
 lando start
 ```

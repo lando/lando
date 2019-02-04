@@ -86,7 +86,7 @@ services:
     type: php
 ```
 
-Note that we will install the [mhsendmail](https://github.com/mailhog/mhsendmail) binary at `/usr/local/bin/mhsendmail` in each `hogfrom` service for you to use. Each of these services should also be able to access the MailHog STMP server using the `MH_SENDMAIL_SMTP_ADDR` environment variable whic his set to `sendmailhog:1025` by default.
+Note that we will install the [mhsendmail](https://github.com/mailhog/mhsendmail) binary at `/usr/local/bin/mhsendmail` in each `hogfrom` service for you to use. Each of these services should also be able to access the MailHog STMP server using the `MH_SENDMAIL_SMTP_ADDR` environment variable which his set to `sendmailhog:1025` by default.
 
 Getting information
 -------------------

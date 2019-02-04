@@ -94,7 +94,7 @@ describe('scripts', () => {
       command.should.not.have.property('name');
     });
 
-    it('should return itself if has alias property but it doesnt need wrapping', () => {
+    it('should return itself if has alias property but it doesn\'t need wrapping', () => {
       const command = util.fixAlias({alias: 'stuff'});
       command.alias.should.equal('stuff');
       command.should.not.have.property('name');

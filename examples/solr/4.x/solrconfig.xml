@@ -295,7 +295,7 @@
                    commit before automatically triggering a new commit.
 
          maxTime - Maximum amount of time that is allowed to pass
-                   since a document was added before automaticly
+                   since a document was added before automatically
                    triggering a new commit.
       -->
     <autoCommit>

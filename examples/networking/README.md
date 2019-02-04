@@ -59,7 +59,7 @@ Destroy tests
 # Should destroy lamp successfully
 cd lamp && lando destroy -y
 
-# Should destroy lemp succesfully
+# Should destroy lemp successfully
 cd lemp && lando destroy -y
 
 # Should poweroff

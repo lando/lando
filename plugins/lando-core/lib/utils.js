@@ -89,7 +89,7 @@ exports.normalizeOverrides = (overrides, volumes = []) => {
       } else {
         const local = exports.getHostPath(volume);
         const remote = _.last(volume.split(':'));
-        // @TODO: i dont think below does anything?
+        // @TODO: I don't think below does anything?
         const excludes = _.keys(volumes).concat(_.keys(overrides.volumes));
         const host = exports.normalizePath(local, '.', excludes);
         return [host, remote].join(':');

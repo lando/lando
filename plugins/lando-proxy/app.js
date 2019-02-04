@@ -55,7 +55,7 @@ module.exports = (app, lando) => {
   // Determine what ports we need to discover
   const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
   // Only do things if the proxy is enabled
-  // @TODO: below is nasty and probably isnt precise enough
+  // @TODO: below is nasty and probably isn't precise enough
   if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
     app.events.on('pre-start', 1, () => findProxyPorts(lando, protocolStatus)
       // Make sure the proxy is running with the correct settings
@@ -83,7 +83,7 @@ module.exports = (app, lando) => {
 
       // Map to docker compose things
       .map(service => {
-        // Throw error but proceed if we dont have the service
+        // Throw error but proceed if we don't have the service
         if (!_.includes(app.services, service.name)) {
           lando.log.error(`${service.name} is a service that does not exist in your app!!!`);
           lando.log.warn('Try running `lando info` and using one of the services listed there.');
@@ -100,7 +100,7 @@ module.exports = (app, lando) => {
       })
 
       // Add to our app
-      // @NOTE: we cant add this in the normal way since this happens AFTER our app
+      // @NOTE: we can't add this in the normal way since this happens AFTER our app
       // has been initialized
       .then(result => {
         const proxyData = new app.ComposeService('proxy', {}, ...result);

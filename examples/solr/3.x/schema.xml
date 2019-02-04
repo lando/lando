@@ -338,11 +338,11 @@
         <!-- The PatternReplaceFilter gives you the flexibility to use
             Java Regular expression to replace any sequence of characters
             matching a pattern with an arbitrary replacement string,
-            which may include back refrences to portions of the orriginal
+            which may include back references to portions of the original
             string matched by the pattern.
 
             See the Java Regular Expression documentation for more
-            infomation on pattern and replacement string syntax.
+            information on pattern and replacement string syntax.
 
             http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/package-summary.html
 

@@ -17,9 +17,9 @@ In fact, almost all of Lando's core functionality is provided via plugins. This 
 Plugin Loading
 --------------
 
-Lando will search in the `plugins` directory for any path listed in `lando.config.pluginDirs` and automatically load in any plugins that it finds. By default these directories are the lando source directory and `~/.lando` but note that they are configurable via the Lando [global config](./../config/config.md). In order for lando to succesfully identify and automatically load your plugin you need to have a directory named after your plugin eg `my-plugin` in one of the directories mentioned above and it needs to include a `index.js`.
+Lando will search in the `plugins` directory for any path listed in `lando.config.pluginDirs` and automatically load in any plugins that it finds. By default these directories are the lando source directory and `~/.lando` but note that they are configurable via the Lando [global config](./../config/config.md). In order for lando to successfully identify and automatically load your plugin you need to have a directory named after your plugin eg `my-plugin` in one of the directories mentioned above and it needs to include a `index.js`.
 
-If there are multiple occurences of the same-named plugin, Lando will use the last one it finds. This means that `lando` will priortize user plugins over core plugins by default.
+If there are multiple occurrences of the same-named plugin, Lando will use the last one it finds. This means that `lando` will priortize user plugins over core plugins by default.
 
 **A powerful corollary to this is that indiviual user apps can implement plugins that override or replace core plugin behavior.**
 
@@ -158,7 +158,7 @@ module.exports = lando => ({
       const app = lando.getApp(options._app.root);
       return app.init().then(() => app.power());
     } else {
-      lando.log.warn('MCFLY YOU BOJO! YOU KNOW HOVERBOARDS DONT FLOAT ON WATER! UNLESS YOUVE GOT POWERRRR!');
+      lando.log.warn("MCFLY YOU BOJO! YOU KNOW HOVERBOARDS DON'T FLOAT ON WATER! UNLESS YOU'VE GOT POWERRRR!");
     }
   },
 });
@@ -191,7 +191,7 @@ Lando builders use inheritance so that common functionality and service types ca
 
 The only difference between `compose`, `types` and `services` is that builders located in `compose` are loaded before those in `types` and builders located in `types` are loaded before those in `services`. This means that if you want a builder in `services` to extend another builder you should define that parent builder in `types` or `compose` so it is loaded beforehand and thus available for inheritance.
 
-The builder interface is fairly straightforward although it's often neccesary to proceed up the family tree and see how parent builders treat the various options and settings as these can vastly differ from builder to builder. This definitely creates a bit of a learning curve but once learned it enables the construction of other powerful builders extremely quickly.
+The builder interface is fairly straightforward although it's often necessary to proceed up the family tree and see how parent builders treat the various options and settings as these can vastly differ from builder to builder. This definitely creates a bit of a learning curve but once learned it enables the construction of other powerful builders extremely quickly.
 
 Here is an example of the `builder` interface being implemented to give lando an `apache` service.
 
@@ -345,7 +345,7 @@ module.exports = {
 };
 ```
 
-**name** - **Required.** This *should* but doesn't neccessarily need to match up with the name of the recipe
+**name** - **Required.** This *should* but doesn't necessarily need to match up with the name of the recipe
 
 **overrides** - Allows you to override any of the aux options in `lando init`. This can allow you to automatically set certain options like `recipe` and prevent them from being displayed to the user. For example the `pantheon` source automatically sets the `recipe` to also be `pantheon`.
 

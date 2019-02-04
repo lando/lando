@@ -47,7 +47,7 @@ describe('compose', () => {
   it('should include a --user for every command when opts.user is set');
   it('should include a string escaped --entrypoint for every command when opts.entrypoint is set');
   it('should include services as arguments when opts.services is set for every command');
-  // @note: its possible that it is ok for the below to work on all commands because we dont ever set it except on run
+  // @note: its possible that it is ok for the below to work on all commands because we don't ever set it except on run
   it('should include a command as an argument when opts.cmd is set for the run command');
   it('should return an object with array cmd and object opts');
 

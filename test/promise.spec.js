@@ -36,7 +36,7 @@ describe('promise', () => {
   });
 
   describe('#retry', () => {
-    it('should immediately fufill without retry if promise is not rejected', () => {
+    it('should immediately fulfill without retry if promise is not rejected', () => {
       let counter = 0;
       const func = () => {
         counter = counter + 1;

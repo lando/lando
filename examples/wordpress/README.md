@@ -18,7 +18,7 @@ lando poweroff
 rm -rf wordpress && mkdir -p wordpress && cd wordpress
 lando init --source remote --remote-url https://wordpress.org/latest.tar.gz --recipe wordpress --webroot wordpress --name lando-wordpress
 
-# Should start up succesfully
+# Should start up successfully
 cd wordpress
 lando start
 ```

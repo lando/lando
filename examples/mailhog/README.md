@@ -11,7 +11,7 @@ Start up tests
 Run the following commands to get up and running with this example.
 
 ```bash
-# Should start up succesfully
+# Should start up successfully
 lando poweroff
 lando start
 ```
@@ -64,7 +64,7 @@ lando info | grep 1026
 # Verify the mhsendmail binary was installed
 lando ssh appserver -c "ls -lsa /usr/local/bin | grep mhsendmail"
 
-# Verify we can send and recieve mail
+# Verify we can send and receive mail
 lando php /app/mail.php
 lando ssh -c "curl mailhog/api/v2/messages | grep leiaorgana@rebellion.mil"
 ```

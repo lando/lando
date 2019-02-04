@@ -35,7 +35,7 @@ Destroy tests
 lando ssh -s cli -u root -c "rm -f /lando/keys/badbadkey"
 lando ssh -s cli -u root -c "rm -f /lando/keys/badbadkey.pub"
 
-# Should destroy succesfully
+# Should destroy successfully
 lando destroy -y
 lando poweroff
 ```
