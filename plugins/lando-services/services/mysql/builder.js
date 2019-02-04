@@ -38,8 +38,6 @@ module.exports = {
           MYSQL_DATABASE: options.creds.database,
           MYSQL_PASSWORD: options.creds.password,
           MYSQL_USER: options.creds.user,
-          LANDO_WEBROOT_UID: '1001',
-          LANDO_WEBROOT_GID: '1001',
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
@@ -47,8 +45,6 @@ module.exports = {
           `${options.data}:/bitnami/mysql/data`,
         ],
       };
-      // Set the me user
-      options.meUser = '1001';
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, mysql)});
     };

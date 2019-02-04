@@ -35,8 +35,6 @@ module.exports = {
         environment: {
           POSTGRESQL_DATABASE: options.creds.database,
           POSTGRES_DB: options.creds.database,
-          LANDO_WEBROOT_UID: '1001',
-          LANDO_WEBROOT_GID: '1001',
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
@@ -44,7 +42,6 @@ module.exports = {
           `${options.data}:/bitnami`,
         ],
       };
-      options.meUser = '1001';
       // The Bitnami Postgres container is particular about the user/pass.
       options.creds.user = 'postgres';
       options.creds.password = '';

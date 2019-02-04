@@ -54,6 +54,7 @@ tooling:
     service: :host
     description: Exports database from a database service to a file
     cmd: /helpers/sql-export.sh
+    user: root
     options:
       host:
         description: The database service to use
