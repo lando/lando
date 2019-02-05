@@ -26,5 +26,4 @@ Options
 --lando        Show help for lando-based options
 --url, -u      Url to share. Needs to be in the form http://localhost:port
 --verbose, -v  Runs with extra verbosity
---version      Show version number
 ```

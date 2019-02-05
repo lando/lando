@@ -159,7 +159,6 @@ Run `lando init --lando` to get a complete list of options defaults, choices, re
 --remote-url      The URL of your git repo or archive, only works when you set source to remote
 --source, --src   The location of your apps code
 --verbose, -v     Runs with extra verbosity
---version         Show version number
 --webroot         Specify the webroot relative to app root
 --yes, -y         Auto answer yes to prompts
 ```

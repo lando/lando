@@ -69,7 +69,6 @@ cd ..
 lando config --lando | grep version
 
 # Should return the version
-lando --version | grep 3.0.0
 lando version | grep 3.0.0
 
 # Should run with specified verbosity

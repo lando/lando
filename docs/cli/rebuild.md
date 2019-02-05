@@ -33,6 +33,5 @@ Run `lando rebuild --lando` to get a complete list of options defaults, choices,
 --lando         Show help for lando-based options
 --services, -s  Rebuild only the specified services
 --verbose, -v   Runs with extra verbosity
---version       Show version number
 --yes, -y       Auto answer yes to prompts
 ```
