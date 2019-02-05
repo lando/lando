@@ -105,8 +105,9 @@ This can also be an issue if you are using the service name to set a base url or
 services:
   appserver:
     overrides:
-      environment:
-        BASEURL: http://nginx
+      services:
+	environment:
+	  BASEURL: http://nginx
 ```
 
 
