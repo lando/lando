@@ -23,13 +23,13 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should use 5.7.x as the default version
-lando ssh -s defaults -c "mysql -V | grep 5.7"
+lando ssh -s defaults -c "mysql --version | grep 5.7"
 
 # Should use the specfied version when set by the user
-lando ssh -s custom -c "mysql -V | grep 8.0"
+lando ssh -s custom -c "mysql --version | grep 8.0"
 
 # Should use the patch version when set by the user
-lando ssh -s patch -c "mysql -V | grep 5.7.24"
+lando ssh -s patch -c "mysql --version | grep 5.7.24"
 
 # Should use the correct default user pass db
 lando ssh -s defaults -c "mysql -umysql -pmysql database -e quit"

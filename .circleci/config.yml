@@ -40,7 +40,7 @@ jobs:
             yarn pkg:cli
             sudo mv dist/cli/* /usr/local/bin/lando
             ls -lsa /usr/local/bin
-            lando --version
+            lando version
       - run:
           name: Run func test
           command: |
