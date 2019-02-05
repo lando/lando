@@ -73,6 +73,11 @@ lando terminus auth:whoami | grep landobot@devwithlando.io
 cd wordpress
 lando php -v | grep "PHP 7.0"
 
+# Should set the correct wordpress specific pantheon environment
+cd wordpress
+lando ssh -c "env" | grep FRAMEWORK | grep wordpress
+lando ssh -c "env" | grep FILEMOUNT | grep "wp-content/uploads"
+
 # Should disable edge, index or cache containers and tools when specified
 docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_nginx_1
 docker ps --filter label=com.docker.compose.project=landobotwordpress | grep landobotwordpress_appserver_1
@@ -111,8 +116,32 @@ lando terminus -V
 cd drupal7
 lando terminus auth:whoami | grep landobot@devwithlando.io
 
+# Should set the correct pantheon environment
+cd drupal7
+lando ssh -c "env" | grep BACKDROP_SETTINGS | grep pantheon
+lando ssh -c "env" | grep CACHE_HOST | grep cache
+lando ssh -c "env" | grep CACHE_PORT | grep 6379
+lando ssh -c "env" | grep DB_HOST | grep database
+lando ssh -c "env" | grep DB_PORT | grep 3306
+lando ssh -c "env" | grep DB_USER | grep pantheon
+lando ssh -c "env" | grep DB_PASSWORD | grep pantheon
+lando ssh -c "env" | grep DB_NAME | grep pantheon
+lando ssh -c "env" | grep FRAMEWORK | grep drupal
+lando ssh -c "env" | grep FILEMOUNT | grep "sites/default/files"
+lando ssh -c "env" | grep PANTHEON_ENVIRONMENT | grep lando
+lando ssh -c "env" | grep PANTHEON_INDEX_HOST | grep index
+lando ssh -c "env" | grep PANTHEON_INDEX_PORT | grep 449
+lando ssh -c "env" | grep PANTHEON_SITE | grep 6e8d4bb2-dd6f-4640-9d12-d95a942c34ca
+lando ssh -c "env" | grep PANTHEON_SITE_NAME | grep landobot-drupal7
+lando ssh -c "env" | grep php_version | grep "7.2"
+lando ssh -c "env" | grep PRESSFLOW_SETTINGS | grep pantheon
+lando ssh -c "env" | grep TERMINUS_ENV | grep dev
+lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal7
+lando ssh -c "env" | grep TERMINUS_TOKEN | grep _wD
+lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
+
 # Should not set any 8983 perms
-cd drupal
+cd drupal7
 lando ssh -c "ls -ls /app" | grep "8983" || echo $? | grep 1
 
 # Should be running from the root directory by default
