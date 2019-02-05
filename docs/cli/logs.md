@@ -37,5 +37,4 @@ Run `lando logs --lando` to get a complete list of options defaults, choices, et
 --services, -s    Show logs for the specified services only
 --timestamps, -t  Show log timestamps
 --verbose, -v     Runs with extra verbosity
---version         Show version number
 ```

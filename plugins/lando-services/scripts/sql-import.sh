@@ -165,5 +165,6 @@ if [ $STATUS -eq 0 ]; then
 else
   echo ""
   printf "${RED}Import failed.${DEFAULT_COLOR}"
+  exit $STATUS
   echo ""
 fi

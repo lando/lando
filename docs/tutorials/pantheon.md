@@ -221,7 +221,6 @@ lando pull --auth "$PANTHEON_MACHINE_TOKEN" --database=none --rsync
 --lando         Show help for lando-based options
 --rsync         Rsync the files, good for subsequent pulls
 --verbose, -v   Runs with extra verbosity
---version       Show version number
 ```
 
 Please consult the manual import documentation below if this command produces an error.
@@ -306,7 +305,6 @@ lando push --auth "$PANTHEON_MACHINE_TOKEN" --database=none
 --lando         Show help for lando-based options
 --message, -m   A message describing your change
 --verbose, -v   Runs with extra verbosity
---version       Show version number
 ```
 
 Working With Multidev

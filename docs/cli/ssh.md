@@ -38,5 +38,4 @@ Run `lando ssh --lando` to get a complete list of options defaults, choices, etc
 --service, -s  SSH into this service
 --user, -u     Run as a specific user
 --verbose, -v  Runs with extra verbosity
---version      Show version number
 ```

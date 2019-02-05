@@ -68,17 +68,23 @@ if [ "$STDOUT" == "true" ]; then
 else
 
   # Clean up last dump before we dump again
-  unalias rm     2> /dev/null
-  rm ${FILE}     2> /dev/null
+  unalias rm 2> /dev/null
+  rm ${FILE} 2> /dev/null
   $DUMPER > ${FILE}
 
   # Show the user the result
   if [ $? -ne 0 ]; then
     rm ${FILE}
     echo -e "${RED}Failed ${DEFAULT_COLOR}to create file: ${FILE}"
+    exit 1
   else
     # Gzip the mysql database dump file
     gzip $FILE
+    # Reset perms on linux
+    if [ "$LANDO_HOST_OS" = "linux" ]; then
+      chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
+    fi
+    # Report
     echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
   fi
 fi

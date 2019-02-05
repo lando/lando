@@ -17,5 +17,4 @@ Options
 --clear        Clears the lando tasks cache
 --lando        Show help for lando-based options
 --verbose, -v  Runs with extra verbosity
---version      Show version number
 ```

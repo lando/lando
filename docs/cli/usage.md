@@ -39,7 +39,6 @@ Options:
   --clear        Clears the lando tasks cache                                                                               [boolean]
   --lando        Show help for lando-based options                                                                          [boolean]
   --verbose, -v  Runs with extra verbosity                                                                                    [count]
-  --version      Show version number                                                                                        [boolean]
 
 Examples:
   lando start            Run lando start
@@ -102,7 +101,6 @@ Options:
   --clear        Clears the lando tasks cache                                                                               [boolean]
   --lando        Show help for lando-based options                                                                          [boolean]
   --verbose, -v  Runs with extra verbosity                                                                                    [count]
-  --version      Show version number                                                                                        [boolean]
 
 Examples:
   lando start            Run lando start

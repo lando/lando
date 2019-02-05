@@ -1,17 +1,50 @@
 Linux
 =====
 
-1.  Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 17.06.1-ce)**
-2.  Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
-3.  Double-click on the package to launch your distro's "Software Center" or install it with your distros package manager eg `apt`.
-4.  Click the "Install" button if using GUI and enter your password when prompted
+1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 17.06.1-ce)**
+2. Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
+3. Run the required package installation command for your os eg `sudo dpkg -i lando-stable.deb`, See below for defatails on each
+4. Make sure you look at the caveats below and follow them appropriately
 
 > #### Hint::Install from source for other Linux distros
 >
 > If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](./source.md)
 
+Note that you *may* also be able to just double click on the package and install via your distributions "Software Center" or equivalent.
+
+Debian
+------
+
+```bash
+sudo dpkg -i lando-stable.deb
+```
+
+Fedora
+------
+
+```bash
+sudo dnf install lando-stable.rpm
+```
+
+Arch
+----
+
+```bash
+sudo pacman -U lando-stable.pacman
+```
+
 Caveats
 -------
+
+### `docker-ce`
+
+We set `docker-ce` as a hard dependency for our packages. This means if you have docker installed a different way it is likely installing the package will fail. You *may* be able to get around this if your package utility allows dependency ignorance
+
+```bash
+dpkg -i --ignore-depends=docker-ce lando-stable.deb
+```
+
+We are currently considering whether to support alternate means of installing Docker such as with [moby-engine](https://github.com/lando/lando/issues/1294)
 
 ### Arch
 
