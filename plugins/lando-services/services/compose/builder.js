@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./../../../lando-core/lib/utils');
 
 // Builder
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       super(id, options, {
-        services: _.set({}, options.name, options.services),
+        services: _.set({}, options.name, utils.normalizeOverrides(options.services)),
         networks: options.networks,
         volumes: options.volumes,
       });

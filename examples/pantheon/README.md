@@ -63,7 +63,7 @@ lando ssh -s appserver -c "env" | grep "LANDO_WEBROOT=/app/web"
 
 # Should set /var/www/.wp-cli/config.yml with LANDO_WEBROOT as PATH
 cd wordpress
-lando ssh -s appserver -c "cat /var/www/.wp-cli/config.yml | grep path | grep \"$LANDO_WEBROOT\""
+lando ssh -s appserver -c "cat /var/www/.wp-cli/config.yml | grep path | grep /app/web"
 
 # Should have terminus
 cd wordpress

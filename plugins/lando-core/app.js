@@ -28,18 +28,25 @@ module.exports = (app, lando) => {
   // Refresh all our certs
   app.events.on('post-init', () => {
     const buildServices = _.get(app, 'opts.services', app.services);
-    app.events.on('post-start', 9999, () => lando.engine.run(_.map(buildServices, service => ({
-      id: `${app.project}_${service}_1`,
-      cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
-      compose: app.compose,
-      project: app.project,
-      opts: {
-        detach: true,
-        mode: 'attach',
-        user: 'root',
-        services: [service],
-      },
-    }))));
+    app.events.on('post-start', 9999, () => lando.Promise.each(buildServices, service => {
+      return lando.engine.run({
+        id: `${app.project}_${service}_1`,
+        cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          detach: true,
+          mode: 'attach',
+          user: 'root',
+          services: [service],
+        },
+      })
+      .catch(err => {
+        lando.log.error('Looks like %s is not running! It should be so this is a problem.', service);
+        lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', service);
+        lando.log.debug(err.stack);
+      });
+    }));
   });
 
   // Collect info so we can inject LANDO_INFO

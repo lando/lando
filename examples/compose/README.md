@@ -34,6 +34,15 @@ docker inspect landocompose_custom-service_1  | grep apache2-foreground
 
 # Should be the drupal8 installation page
 lando ssh -s custom-service -c "curl -L localhost" | grep "Choose language"
+
+# Should allow relative paths in volume mounting
+lando ssh -s custom-service2 -c "cat /tmp/monkeysee.txt" | grep CHAOS
+
+# Should have built custom service 2 from local relative path
+lando ssh -s custom-service2 -c "env | grep SPICE=GIRLS"
+
+# Should be able to rebuild without pulling local image
+lando rebuild -y
 ```
 
 Destroy tests
