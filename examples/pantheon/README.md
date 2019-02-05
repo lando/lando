@@ -111,6 +111,10 @@ lando terminus -V
 cd drupal7
 lando terminus auth:whoami | grep landobot@devwithlando.io
 
+# Should not set any 8983 perms
+cd drupal
+lando ssh -c "ls -ls /app" | grep "8983" || echo $? | grep 1
+
 # Should be running from the root directory by default
 cd drupal7
 lando ssh -s appserver -c "curl -kL https://edge_ssl" | grep "Drupal 7 for Lando"
