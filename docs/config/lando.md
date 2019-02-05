@@ -37,9 +37,9 @@ The base, override and Landofile itself are all configurable via the Lando [glob
 ```yaml
 landoFile: .lando.yml
 preLandoFiles:
-  - .lando.local.yml
-postLandoFiles:
   - .lando.base.yml
   - .lando.dist.yml
   - .lando.upstream.yml
+postLandoFiles:
+  - .lando.local.yml
 ```
