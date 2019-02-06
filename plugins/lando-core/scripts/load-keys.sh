@@ -28,13 +28,13 @@ if [ "$LANDO_HOST_OS" = "win32" ]; then
   echo "Creating a special not-mounted key directory for Windows"
   mkdir -p /lando_keys
   for SSH_DIR in "${SSH_DIRS[@]}"; do
-    SSH_KEYS+=($(find "$SSH_DIR" -maxdepth 1 -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $LANDO_WEBROOT_GROUP -type f | xargs))
+    SSH_KEYS+=($(find "$SSH_DIR" -maxdepth 1 -not -name 'known_hosts' -type f | xargs))
     for SSH_KEY in "${SSH_KEYS[@]}"; do
       echo "Copying $SSH_KEY from $SSH_DIR to /lando_keys"
-      chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $SSH_KEY
-      cp -rf $SSH_KEY /lando_keys
+      cp -rfp $SSH_KEY /lando_keys
     done
   done
+  chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /lando_keys
   SSH_DIRS=( "/lando_keys" )
   SSH_KEYS=()
 fi
