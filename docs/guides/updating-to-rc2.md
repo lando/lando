@@ -424,6 +424,22 @@ env_file:
   - .env
 ```
 
+By happenstance you could previously use the following *unsupported* syntax in your `env` files.
+
+```bash
+WP_ENV=development
+WP_HOME=http://wpb4.test
+WP_SITEURL=${WP_HOME}/wp
+```
+
+Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like:
+
+```bash
+WP_ENV=development
+WP_HOME=http://wpb4.test
+WP_SITEURL=http://wpb4.test/wp
+```
+
 Check out [this example](https://github.com/lando/lando/tree/master/examples/base) which is tested on every build for some examples of the new environment file syntax.
 
 Drush Handling
