@@ -12,7 +12,7 @@ module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
     app.events.on(event, () => {
-      return app.engine.list(app.name)
+      return app.engine.list({app: app.name})
       // Return running containers
       .filter(container => app.engine.isRunning(container.id))
       // Make sure they are still a defined service (eg if the user changes their lando yml)
@@ -65,7 +65,7 @@ module.exports = (app, lando) => {
   app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
 
   // Add some logic that extends start until healthchecked containers report as healthy
-  app.events.on('post-start', 1, () => lando.engine.list(app.name)
+  app.events.on('post-start', 1, () => lando.engine.list({app: app.name})
     .map(container => lando.Promise.retry(() => {
       // Log that we are checking shit
       console.log('Waiting until %s service is ready...', container.service);

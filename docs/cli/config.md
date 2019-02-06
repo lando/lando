@@ -3,7 +3,7 @@ config
 
 Displays the lando configuration.
 
-*Almost all* of these options can be overriden via the Lando global `config.yml`. See the [config system](../config/config.md) for more info.
+You can also use `--field` to only display a single config value. *Almost all* of these options can be overriden via the Lando global `config.yml`. See the [config system](../config/config.md) for more info.
 
 Usage
 -----
@@ -21,7 +21,7 @@ Options
 
 ```bash
 --clear        Clears the lando tasks cache
+--field, -f    Show only a specific field
 --lando        Show help for lando-based options
 --verbose, -v  Runs with extra verbosity
---field, -f    Show only a specific field
 ```
