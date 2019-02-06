@@ -27,7 +27,7 @@ const getContainerPath = appRoot => {
 const getExecOpts = (docker, datum) => {
   const exec = [docker, 'exec'];
   // Should use interactive if we arent running this in leia
-  if (process.lando === 'node' && process.env.LEIA_PARSER_RUNNING !== 'true') {
+  if (process.stdin.isTTY) {
     exec.push('--tty');
     exec.push('--interactive');
   }
