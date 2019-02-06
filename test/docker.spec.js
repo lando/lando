@@ -205,7 +205,7 @@ describe('docker', () => {
       });
     });
 
-    it('should filter by appName if given', () => {
+    it('should filter by app name if given', () => {
       const listStub = sinon.stub(landerode, 'listContainers')
       .usingPromise(Promise)
       .resolves([
@@ -222,7 +222,7 @@ describe('docker', () => {
         dummyContainer(),
       ]);
 
-      return landerode.list('alderaan')
+      return landerode.list({app: 'alderaan'})
       .should.eventually.be.an('Array').with.a.lengthOf(1)
       .then(() => {
         listStub.restore();

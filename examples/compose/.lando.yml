@@ -11,4 +11,13 @@ services:
       my-volume:
     networks:
       my-network:
-        external: true
+  custom-service2:
+    type: compose
+    services:
+      image: pirog/custom:hyperion
+      build: ./custom
+      networks:
+        - my-network
+      volumes:
+        - ./chaosmonkey.txt:/tmp/monkeysee.txt
+      command: tail -f /dev/null

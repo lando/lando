@@ -80,6 +80,10 @@ lando config -vvvv | grep silly
 # Should run lando config without error
 lando config
 
+# Should only show specified field in lando config
+lando config -f mode | grep mode | grep cli
+lando config --field mode | grep recipes || echo $? | grep 1
+
 # Should run lando info without error
 lando info
 

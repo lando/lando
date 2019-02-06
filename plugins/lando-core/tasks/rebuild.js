@@ -8,7 +8,7 @@ const utils = require('./../lib/utils');
 const handleOpts = options => {
   const opts = {
     pullable: _(options._app.services)
-      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build')}))
+      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build') || _.has(data, 'services.build')}))
       .filter(service => !service.isLocal)
       .map('service')
       .value(),

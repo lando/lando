@@ -13,7 +13,7 @@ module.exports = (app, lando) => {
     // We assume the lando net exists at this point
     const landonet = lando.engine.getNetwork(lando.config.networkBridge);
     // List all our app containers
-    return lando.engine.list(app.name)
+    return lando.engine.list({app: app.name})
     // Go through each container
     .map(container => {
       // Grab from the proxy if we have them

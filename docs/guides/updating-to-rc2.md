@@ -5,7 +5,7 @@ Before you begin here we *highly recommend* you check out the [RC2 Release Blog 
 
 **This guide is for people upgrading from `3.0.0-rc.1` or lower**.
 
-Here are the various things that have changed to your [Landofiles](./../config/lando.yml) syntax. We've tried to order them from the most common or most breaking config to the least. Note that this guide might not be an exhaustive list of all breaking changes and you are still *highly encouraged* to check out the other docs if you are running into an error running your older Landofiles on `3.0.0-rc.2` or higher.
+Here are the various things that have changed to your [Landofiles](./../config/lando.md) syntax. We've tried to order them from the most common or most breaking config to the least. Note that this guide might not be an exhaustive list of all breaking changes and you are still *highly encouraged* to check out the other docs if you are running into an error running your older Landofiles on `3.0.0-rc.2` or higher.
 
 <!-- toc -->
 
@@ -45,6 +45,8 @@ services:
           STUFF: THINGS
           THINGS: GUYS
         image: pirog/myapache:2
+        volumes:
+          - ./mythings:/tmp/mythings
 ```
 
 **new**
@@ -58,9 +60,45 @@ services:
         STUFF: THINGS
         THINGS: GUYS
       image: pirog/myapache:2
+      volumes:
+        - ./mythings:/tmp/mythings
 ```
 
-A consequence of this is that you can no longer overrides top level `volumes` and `networks`. If you need to edit those things we recommend you look at using our [custom compose service](./../tutorials/compose.md) instead.
+A consequence of this is that you can no longer overrides top level `volumes` and `networks`. If you need to edit those things we recommend you look at using our [custom compose service](./../tutorials/compose.md) instead. Note the below distinction between *top level* `volumes` and `networks` and service level ones These are docker compose files not Landofiles.
+
+**top level - not supported, use a compose service**
+
+```yaml
+version: '3.6'
+services:
+  web:
+    image: nginx
+  web2:
+    image: nginx
+    ports:
+      - '80'
+volumes:
+  my-volume:
+networks:
+  my-network
+```
+
+**service level - still supported, can use a service override**
+
+```yaml
+version: '3.6'
+services:
+  web:
+    image: nginx
+  web2:
+    volumes:
+      my-volume:/tmp
+    networks:
+      - my-network
+    image: nginx
+    ports:
+      - '80'
+```
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new override syntax.
 
@@ -385,6 +423,22 @@ You now have to explicitly set the top level [`env_file`](./../config/env.md#env
 ```yaml
 env_file:
   - .env
+```
+
+By happenstance you could previously use the following *unsupported* syntax in your `env` files.
+
+```bash
+WP_ENV=development
+WP_HOME=http://wpb4.test
+WP_SITEURL=${WP_HOME}/wp
+```
+
+Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like:
+
+```bash
+WP_ENV=development
+WP_HOME=http://wpb4.test
+WP_SITEURL=http://wpb4.test/wp
 ```
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/base) which is tested on every build for some examples of the new environment file syntax.

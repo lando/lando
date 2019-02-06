@@ -291,16 +291,19 @@ return lando.engine.isRunning('myapp_web_1').then(isRunning) {
 <a id="landoenginelist"></a>
 
 <h2 id="landoenginelist" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.list([data]) ⇒ <code>Promise</code></h2>
+  lando.engine.list([options]) ⇒ <code>Promise</code></h2>
 <div class="api-body-header"></div>
 
 Lists all the Lando containers. Optionally filter by app name.
 
 **Since**: 3.0.0  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| [data] | <code>String</code> | An appname to filter the containers by. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [options] | <code>Object</code> |  | Options to filter the list. |
+| [options.all] | <code>Boolean</code> | <code>false</code> | Show even stopped containers |
+| [options.app] | <code>String</code> |  | Show containers for only a certain app |
+| [options.filter] | <code>Array</code> |  | Filter by additional key=value pairs |
 
 **Returns**: <code>Promise</code> - A Promise with an Array of container Objects.  
 **Example**  

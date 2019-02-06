@@ -68,6 +68,22 @@ DB_USER=root
 DB_PASS=s1mpl3
 ```
 
+By happenstance you could previously use the following *unsupported* syntax in your `env` files.
+
+```bash
+WP_ENV=development
+WP_HOME=http://wpb4.test
+WP_SITEURL=${WP_HOME}/wp
+```
+
+Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like:
+
+```bash
+WP_ENV=development
+WP_HOME=http://wpb4.test
+WP_SITEURL=http://wpb4.test/wp
+```
+
 > #### Warning::This ONLY injects directly into the container environment.
 >
 > We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.

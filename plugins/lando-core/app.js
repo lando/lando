@@ -8,11 +8,16 @@ const utils = require('./lib/utils');
 // Helper to get http ports
 const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
 
+// Helper to get scannable or not scannable services
+const getScannable = (app, scan = true) => _.filter(app.info, service => {
+  return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
+});
+
 module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
     app.events.on(event, () => {
-      return app.engine.list(app.name)
+      return app.engine.list({app: app.name})
       // Return running containers
       .filter(container => app.engine.isRunning(container.id))
       // Make sure they are still a defined service (eg if the user changes their lando yml)
@@ -28,18 +33,25 @@ module.exports = (app, lando) => {
   // Refresh all our certs
   app.events.on('post-init', () => {
     const buildServices = _.get(app, 'opts.services', app.services);
-    app.events.on('post-start', 9999, () => lando.engine.run(_.map(buildServices, service => ({
-      id: `${app.project}_${service}_1`,
-      cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
-      compose: app.compose,
-      project: app.project,
-      opts: {
-        detach: true,
-        mode: 'attach',
-        user: 'root',
-        services: [service],
-      },
-    }))));
+    app.events.on('post-start', 9999, () => lando.Promise.each(buildServices, service => {
+      return lando.engine.run({
+        id: `${app.project}_${service}_1`,
+        cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          detach: true,
+          mode: 'attach',
+          user: 'root',
+          services: [service],
+        },
+      })
+      .catch(err => {
+        lando.log.error('Looks like %s is not running! It should be so this is a problem.', service);
+        lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', service);
+        lando.log.debug(err.stack);
+      });
+    }));
   });
 
   // Collect info so we can inject LANDO_INFO
@@ -58,7 +70,7 @@ module.exports = (app, lando) => {
   app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
 
   // Add some logic that extends start until healthchecked containers report as healthy
-  app.events.on('post-start', 1, () => lando.engine.list(app.name)
+  app.events.on('post-start', 1, () => lando.engine.list({app: app.name})
     .map(container => lando.Promise.retry(() => {
       // Log that we are checking shit
       console.log('Waiting until %s service is ready...', container.service);
@@ -86,8 +98,21 @@ module.exports = (app, lando) => {
     }));
 
   // Scan urls
-  app.events.on('post-start', 10, () => lando.scanUrls(_.flatMap(app.info, 'urls'), {max: 16})
-    .then(urls => app.urls = urls));
+  app.events.on('post-start', 10, () => {
+    // Filter out any services where the scanner might be disabled
+    return lando.scanUrls(_.flatMap(getScannable(app), 'urls'), {max: 16}).then(urls => {
+      // Get data about our scanned urls
+      app.urls = urls;
+      // Add in unscannable ones if we have them
+      if (!_.isEmpty(getScannable(app, false))) {
+        app.urls = app.urls.concat(_.map(_.flatMap(getScannable(app, false), 'urls'), url => ({
+          url,
+          status: true,
+          color: 'yellow',
+        })));
+      }
+    });
+  });
 
   // REturn defualts
   return {

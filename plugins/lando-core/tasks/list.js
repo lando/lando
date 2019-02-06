@@ -9,9 +9,25 @@ module.exports = lando => {
     command: 'list',
     describe: 'Lists all running lando apps and containers',
     level: 'engine',
-    run: () => {
+    options: {
+      all: {
+        describe: 'Show all containers, even those not running',
+        alias: ['a'],
+        boolean: true,
+      },
+      app: {
+        describe: 'Show containers for only a particular app',
+        string: true,
+      },
+      filter: {
+        describe: 'Filter by "key=value"',
+        alias: ['f'],
+        array: true,
+      },
+    },
+    run: options => {
       // List all the apps
-      return lando.engine.list()
+      return lando.engine.list(options)
       // Map each app to a summary and print results
       .then(containers => {
         console.log(util.inspect(_(containers)
