@@ -631,6 +631,7 @@ module.exports = lando => {
       const token = _.get(cache, 'token');
       const terminusLogin = 'terminus auth:login --machine-token=' + token;
       build.services[cliService].install_dependencies_as_me_internal.push(terminusLogin);
+      build.services[cliService].install_dependencies_as_me_internal.push('/helpers/lockr.sh');
     }
 
     // Return the things
