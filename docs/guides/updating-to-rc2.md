@@ -45,6 +45,8 @@ services:
           STUFF: THINGS
           THINGS: GUYS
         image: pirog/myapache:2
+        volumes:
+          - ./mythings:/tmp/mythings
 ```
 
 **new**
@@ -58,9 +60,45 @@ services:
         STUFF: THINGS
         THINGS: GUYS
       image: pirog/myapache:2
+      volumes:
+        - ./mythings:/tmp/mythings
 ```
 
-A consequence of this is that you can no longer overrides top level `volumes` and `networks`. If you need to edit those things we recommend you look at using our [custom compose service](./../tutorials/compose.md) instead.
+A consequence of this is that you can no longer overrides top level `volumes` and `networks`. If you need to edit those things we recommend you look at using our [custom compose service](./../tutorials/compose.md) instead. Note the below distinction between *top level* `volumes` and `networks` and service level ones These are docker compose files not Landofiles.
+
+**top level - not supported, use a compose service**
+
+```yaml
+version: '3.6'
+services:
+  web:
+    image: nginx
+  web2:
+    image: nginx
+    ports:
+      - '80'
+volumes:
+  my-volume:
+networks:
+  my-network
+```
+
+**service level - still supported, can use a service override**
+
+```yaml
+version: '3.6'
+services:
+  web:
+    image: nginx
+  web2:
+    volumes:
+      my-volume:/tmp
+    networks:
+      - my-network
+    image: nginx
+    ports:
+      - '80'
+```
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new override syntax.
 
