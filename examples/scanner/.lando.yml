@@ -1,0 +1,11 @@
+name: lando-scanner
+services:
+  scanme:
+    type: apache
+  moreports:
+    type: apache
+    moreHttpPorts:
+      - '8888'
+  dontlookatme:
+    type: apache
+    scanner: false

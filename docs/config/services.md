@@ -13,6 +13,8 @@ services:
     build_as_root:
     run:
     run_as_root:
+    moreHttpPorts: []
+    scanner: true
 ```
 
 `myservice` in the example above can actully be set to anything the user wants but common conventions are things like `appserver`, `index`, `cache`, `database` or `kanye`.
@@ -201,6 +203,45 @@ services:
       image: pirog/myapache:2
       volumes:
         - ./mythings:/tmp/mythings
+```
+
+### Localhost Assignment
+
+Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default this is most of our services. An exception is the [`compose`](./../tutorials/compose.md) service which requires the user manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
+
+```yaml
+services:
+  my-service:
+    type: apache
+    moreHttpPorts:
+      - '8888'
+    overrides:
+      ports:
+       - '8888'
+```
+
+Note that while you *can* do the above it is highly unlikely you will *need* to do it as most Lando services provide automatic handling of this. Also note the use of the service overrides to ensure that port `8888` is actually exposed.
+
+### Service URL Scanning
+
+Lando will automatically try to scan all `localhost` and `proxy` URLS after your app starts. We do this to:
+
+1. Provide some immediate feedback to the user regarding the health of their application and the routing that Lando has set up for it
+2. Help compile first-run application caches behind the scenes to improve initial loaded-in-browser speed
+
+Note that by default the "scan" will pass unless your app returns either a `400`, `502` or `404` https status code. The results of the scan will be coded
+
+* GREEN - Scan passed and you are good to go!
+* YELLOW - Scan was not attempted
+* RED - There *may* be a problem with your networking, routing or application
+
+That said, we do realize there are legitimate use cases where you may not want this behavior or have purposefully set up your application to emit one of the naughty status codes above. For these use cases you can disable the scanner:
+
+```yaml
+services:
+  my-service:
+    type: apache
+    scanner: false
 ```
 
 ### Using Dockerfiles

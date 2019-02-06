@@ -8,6 +8,11 @@ const utils = require('./lib/utils');
 // Helper to get http ports
 const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
 
+// Helper to get scannable or not scannable services
+const getScannable = (app, scan = true) => _.filter(app.info, service => {
+  return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
+});
+
 module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
@@ -93,8 +98,21 @@ module.exports = (app, lando) => {
     }));
 
   // Scan urls
-  app.events.on('post-start', 10, () => lando.scanUrls(_.flatMap(app.info, 'urls'), {max: 16})
-    .then(urls => app.urls = urls));
+  app.events.on('post-start', 10, () => {
+    // Filter out any services where the scanner might be disabled
+    return lando.scanUrls(_.flatMap(getScannable(app), 'urls'), {max: 16}).then(urls => {
+      // Get data about our scanned urls
+      app.urls = urls;
+      // Add in unscannable ones if we have them
+      if (!_.isEmpty(getScannable(app, false))) {
+        app.urls = app.urls.concat(_.map(_.flatMap(getScannable(app, false), 'urls'), url => ({
+          url,
+          status: true,
+          color: 'yellow',
+        })));
+      }
+    });
+  });
 
   // REturn defualts
   return {
