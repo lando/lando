@@ -20,6 +20,7 @@ module.exports = {
       '/sbin',
       '/bin',
     ],
+    port: '80',
     ssl: false,
     volumes: [
       '/usr/local/bin',
@@ -39,9 +40,9 @@ module.exports = {
         image: `microsoft/dotnet:${options.version}-sdk`,
         environment: {
           PATH: options.path.join(':'),
-          ASPNETCORE_URLS: 'http://+:80',
+          ASPNETCORE_URLS: `http://+:${options.port}`,
         },
-        ports: (options.command !== 'tail -f /dev/null') ? ['80'] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };
