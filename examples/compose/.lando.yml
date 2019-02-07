@@ -21,3 +21,12 @@ services:
       volumes:
         - ./chaosmonkey.txt:/tmp/monkeysee.txt
       command: tail -f /dev/null
+  custom-database:
+    type: compose
+    services:
+      image: postgres:9.4
+      command: docker-entrypoint.sh postgres
+      volumes:
+        - data_volume:/var/lib/postgresql/data
+    volumes:
+      data_volume:

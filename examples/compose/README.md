@@ -41,8 +41,12 @@ lando ssh -s custom-service2 -c "cat /tmp/monkeysee.txt" | grep CHAOS
 # Should have built custom service 2 from local relative path
 lando ssh -s custom-service2 -c "env | grep SPICE=GIRLS"
 
-# Should be able to rebuild without pulling local image
+# Should be able to add named volume data persistance
+lando ssh -s custom-database -u root -c "echo things > /var/lib/postgresql/data/stuff"
+
+# Should be able to rebuild without pulling local image and named volumes should work
 lando rebuild -y
+lando ssh -s custom-database -u root -c "cat /var/lib/postgresql/data/stuff | grep things"
 ```
 
 Destroy tests
