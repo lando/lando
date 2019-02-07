@@ -38,13 +38,13 @@ const backdrushInstall = version => [
 ].join(' ');
 
 /*
- * Build Drupal 8
+ * Build Backdrop
  */
 module.exports = {
   name: 'backdrop',
   parent: '_drupaly',
   config: {
-    backdrush: '0.0.6',
+    backdrush: '0.1.0',
     build: [],
     confSrc: __dirname,
     defaultFiles: {},
