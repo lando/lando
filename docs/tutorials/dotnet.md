@@ -41,6 +41,7 @@ services:
     type: dotnet:2.0
     ssl: false
     command: tail -f /dev/null
+    port: 80
 ```
 
 ### Specifying a command
@@ -59,6 +60,17 @@ services:
 ### Using SSL
 
 Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in [this article](https://asp.net-hacker.rocks/2018/07/05/aspnetcore-ssl.html).
+
+### Setting a port
+
+While we assume your `dotnet` service is running on port `80` we recognize that many `dotnet` app's also run on port `8888` or otherwise. You can easily change our default to match whatever your app needs.
+
+```yaml
+services:
+  my-service:
+    type: dotnet
+    port: 8888
+```
 
 Example
 -------
