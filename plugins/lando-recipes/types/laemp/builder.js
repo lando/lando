@@ -55,6 +55,7 @@ const getServices = options => ({
   appserver: {
     build_as_root_internal: options.build_root,
     build_internal: options.build,
+    run_as_root_internal: options.run_root,
     composer: options.composer,
     config: utils.getServiceConfig(options),
     type: `php:${options.php}`,
