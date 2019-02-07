@@ -16,6 +16,21 @@ if [ ! -z "$AUTH" ]; then
   if [ ! -z "$SITE" ]; then
     echo "Verifying that you have accesss to $SITE..."
     terminus site:info $SITE || exit 1
+
+    # LOCKR integration
+    # If we don't have our dev cert already let's get it
+    echo "Pantheon LOCKR setup"
+    if [ ! -f "/var/www/certs/binding.pem" ]; then
+      $(terminus connection:info $SITE.dev --field=sftp_command):certs/binding.pem /var/www/certs/binding.pem
+    fi
+
+    # Lets also check to see if we should refresh our cert
+    if openssl x509 -checkend 86400 -noout -in /var/www/certs/binding.pem; then
+      echo "Cert is good!"
+    else
+      rm -f /var/www/certs/binding.pem
+      $(terminus connection:info $SITE.dev --field=sftp_command):certs/binding.pem /var/www/certs/binding.pem
+    fi
   fi
 
   # Validate this environment
@@ -23,14 +38,4 @@ if [ ! -z "$AUTH" ]; then
     echo "Validating whether $ENV is a valid environment and that you have access to it"
     terminus env:list $SITE | grep $ENV || exit 1
   fi
-
 fi
-
-# Ensuring a viable ssh key
-# NOTE: Figure out what do about below
-# echo "Checking for $SSH_KEY"
-# if [ ! -f "$SSH_KEY" ]; then
-#   ssh-keygen -t rsa -N "" -C "lando" -f "$SSH_KEY"
-#   terminus ssh-key:add "$SSH_KEY.pub"
-#   /scripts/load-keys.sh
-# fi

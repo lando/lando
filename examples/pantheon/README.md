@@ -120,6 +120,11 @@ lando terminus -V
 cd drupal7
 lando terminus auth:whoami | grep landobot@devwithlando.io
 
+# Should have a binding.pem in all the right places
+cd drupal7
+lando ssh -s appserver -c "stat /var/www/certs/binding.pem"
+lando ssh -s appserver -u root -c "stat /root/certs/binding.pem"
+
 # Should set the correct pantheon environment
 cd drupal7
 lando ssh -c "env" | grep BACKDROP_SETTINGS | grep pantheon

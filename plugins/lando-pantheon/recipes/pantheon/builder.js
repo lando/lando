@@ -17,6 +17,7 @@ module.exports = {
   config: {
     build: [],
     build_root: [],
+    run_root: [],
     cache: true,
     confSrc: __dirname,
     defaultFiles: {
@@ -64,6 +65,7 @@ module.exports = {
       // it runs before the other build steps so it can reset our CA correctly
       options.build_root.push('/helpers/pantheon.sh');
       options.build.push('/helpers/auth.sh');
+      options.run_root.push('/helpers/binding.sh');
       // Add in cache if applicable
       if (options.cache) options = _.merge({}, options, utils.getPantheonCache());
       // Add in edge if applicable
