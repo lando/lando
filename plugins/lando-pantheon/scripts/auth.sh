@@ -19,8 +19,8 @@ if [ ! -z "$AUTH" ]; then
 
     # LOCKR integration
     # If we don't have our dev cert already let's get it
-    echo "Pantheon LOCKR setup"
-    if [ ! -f "/var/www/certs/binding.pem" ]; then
+    if ! openssl x509 -noout -text -in /var/www/certs/binding.pem 2>/dev/null | grep Pantheon 1>/dev/null; then
+      echo "Pantheon LOCKR setup"
       $(terminus connection:info $SITE.dev --field=sftp_command):certs/binding.pem /var/www/certs/binding.pem
     fi
 
