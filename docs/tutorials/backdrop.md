@@ -17,7 +17,7 @@ Getting Started
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../installation/system-requirements.md) and gotten familar with [its basics](./../started.md)
+1. [Installed Lando](./../installation/system-requirements.md) and gotten familiar with [its basics](./../started.md)
 2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
@@ -136,7 +136,7 @@ If you are using a webroot besides `.` you will need to `cd` into that directory
 
 If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
 
-**Note that hardcoding the `root` like this may have unforseen and bad consequences for some `drush` commands such as `drush scr`.**
+**Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
 
 ```yaml
 tooling:
@@ -247,7 +247,7 @@ lando php               Runs php commands
 # Download a dependency with drush
 lando drush dl webform
 
-# Check hte app's installed php extensions
+# Check the app's installed php extensions
 lando php -m
 ```
 
