@@ -1,0 +1,3 @@
+FROM postgres:9.4
+
+ENV BRITNEY SPEARS

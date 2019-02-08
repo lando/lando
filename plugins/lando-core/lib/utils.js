@@ -79,7 +79,11 @@ exports.normalizePath = (local, base = '.', excludes = []) => {
 exports.normalizeOverrides = (overrides, volumes = {}) => {
   // Normalize any build paths
   if (_.has(overrides, 'build')) {
-    overrides.build = exports.normalizePath(overrides.build, '.');
+    if (_.isObject(overrides.build) && _.has(overrides, 'build.context')) {
+      overrides.build.context = exports.normalizePath(overrides.build.context, '.');
+    } else {
+      overrides.build = exports.normalizePath(overrides.build, '.');
+    }
   }
   // Normalize any volumes
   if (_.has(overrides, 'volumes')) {
