@@ -30,3 +30,11 @@ services:
         - data_volume:/var/lib/postgresql/data
     volumes:
       data_volume:
+  custom-database2:
+    type: compose
+    services:
+      image: pirog/postgres:9.4
+      build:
+        context: ./custom
+        dockerfile: Dockerfile-database
+      command: docker-entrypoint.sh postgres

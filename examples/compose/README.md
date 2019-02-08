@@ -41,6 +41,9 @@ lando ssh -s custom-service2 -c "cat /tmp/monkeysee.txt" | grep CHAOS
 # Should have built custom service 2 from local relative path
 lando ssh -s custom-service2 -c "env | grep SPICE=GIRLS"
 
+# Should have built custom database 2 from local relative path
+lando ssh -s custom-database2 -c "env | grep BRITNEY=SPEARS"
+
 # Should be able to add named volume data persistance
 lando ssh -s custom-database -u root -c "echo things > /var/lib/postgresql/data/stuff"
 

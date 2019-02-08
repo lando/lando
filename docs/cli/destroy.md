@@ -23,7 +23,7 @@ lando destroy -y
 lando destroy -vvv
 
 # Get help about the destroy command
-lando destroy --lando
+lando destroy --help
 ```
 
 Options
@@ -31,7 +31,7 @@ Options
 
 ```bash
 --clear        Clears the lando tasks cache
---lando        Show help for lando-based options
+--help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity
 --yes, -y      Auto answer yes to prompts
 ```

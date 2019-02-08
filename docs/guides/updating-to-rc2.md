@@ -549,7 +549,7 @@ lando start -vvv
 lando start -vvvv
 
 # Lando help
-lando start --lando
+lando start --help
 ```
 
 A nice consequence of this is you can now use `--` in other tooling commands and have more predictable tooling results

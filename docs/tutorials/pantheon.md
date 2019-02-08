@@ -218,7 +218,7 @@ lando pull --auth "$PANTHEON_MACHINE_TOKEN" --database=none --rsync
 --code, -c      The environment from which to pull the code
 --database, -d  The environment from which to pull the database
 --files, -f     The environment from which to pull the files
---lando         Show help for lando-based options
+--help          Shows lando or delegated command help if applicable
 --rsync         Rsync the files, good for subsequent pulls
 --verbose, -v   Runs with extra verbosity
 ```
@@ -302,7 +302,7 @@ lando push --auth "$PANTHEON_MACHINE_TOKEN" --database=none
 --code, -c      The environment to which the code will be pushed
 --database, -d  The environment to which the database will be pushed
 --files, -f     The environment to which the files will be pushed
---lando         Show help for lando-based options
+--help          Shows lando or delegated command help if applicable
 --message, -m   A message describing your change
 --verbose, -v   Runs with extra verbosity
 ```

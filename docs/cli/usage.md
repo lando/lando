@@ -36,13 +36,13 @@ Commands:
   lando version   Displays the lando version
 
 Options:
-  --clear        Clears the lando tasks cache                                                                               [boolean]
-  --lando        Show help for lando-based options                                                                          [boolean]
-  --verbose, -v  Runs with extra verbosity                                                                                    [count]
+  --clear        Clears the lando tasks cache
+  --help         Shows lando or delegated command help if applicable
+  --verbose, -v  Runs with extra verbosity
 
 Examples:
   lando start            Run lando start
-  lando rebuild --lando  Get help about using the lando rebuild command
+  lando rebuild --help  Get help about using the lando rebuild command
   lando destroy -y -vvv  Run lando destroy non-interactively and with maximum verbosity
   lando --clear          Clear the lando tasks cache
 
@@ -98,13 +98,13 @@ Commands:
   lando version           Displays the lando version
 
 Options:
-  --clear        Clears the lando tasks cache                                                                               [boolean]
-  --lando        Show help for lando-based options                                                                          [boolean]
-  --verbose, -v  Runs with extra verbosity                                                                                    [count]
+  --clear        Clears the lando tasks cache
+  --help         Shows lando or delegated command help if applicable
+  --verbose, -v  Runs with extra verbosity
 
 Examples:
   lando start            Run lando start
-  lando rebuild --lando  Get help about using the lando rebuild command
+  lando rebuild --help  Get help about using the lando rebuild command
   lando destroy -y -vvv  Run lando destroy non-interactively and with maximum verbosity
   lando --clear          Clear the lando tasks cache
 

@@ -22,6 +22,6 @@ Options
 ```bash
 --clear        Clears the lando tasks cache
 --field, -f    Show only a specific field
---lando        Show help for lando-based options
+--help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity
 ```

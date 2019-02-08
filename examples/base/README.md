@@ -66,6 +66,7 @@ lando ssh -s web -c "env" | grep "LOCAL=LANDO"
 cd ..
 
 # Should return lando help
+lando config --help | grep verbose
 lando config --lando | grep verbose
 
 # Should return the version
