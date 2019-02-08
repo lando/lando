@@ -40,7 +40,7 @@ module.exports = {
       if (!_.has(options, 'drush')) options.drush = (options.php === '5.3') ? DRUSH7 : DRUSH8;
       // Add the drush install command
       if (!_.isNull(semver.valid(options.drush)) && semver.major(options.drush) === 8) {
-        options.build.unshift(utils.getDrush(options.drush, ['drush', 'status']));
+        options.build.unshift(utils.getDrush(options.drush, ['drush', '--version']));
       } else if (options.drush !== false) {
         options.composer['drush/drush'] = options.drush;
       }

@@ -107,7 +107,7 @@ const getPantheonSettings = options => ({
 exports.getPantheonBuildSteps = framework => {
   if (framework === 'wordpress') return [getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck)];
   else {
-    const build = [getDrush(DRUSH_VERSION, ['drush', 'status'])];
+    const build = [getDrush(DRUSH_VERSION, ['drush', '--version'])];
     if (framework === 'drupal8') {
       build.push(getPhar(
         'https://drupalconsole.com/installer',

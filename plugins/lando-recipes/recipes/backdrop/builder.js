@@ -66,7 +66,7 @@ module.exports = {
           via: 'cli',
           overrides: {image: 'devwithlando/php:5.5-fpm'},
           build_internal: [
-            utils.getDrush(options.drush, ['drush', 'status']),
+            utils.getDrush(options.drush, ['drush', '--version']),
             backdrushInstall(options.backdrush),
           ],
         });
