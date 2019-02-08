@@ -559,7 +559,7 @@ A nice consequence of this is you can now use `--` in other tooling commands and
 lando terminus remote:drush "$SITE.$ENV" -- cr --all -y
 
 # Worry less about escaping crap
-lando php -e "phpinfo();"
+lando php -r "phpinfo();"
 ```
 
 Global Envvars
