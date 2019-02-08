@@ -23,7 +23,7 @@ Options
 
 ```bash
 --clear        Clears the lando tasks cache
---lando        Show help for lando-based options
+--help         Shows lando or delegated command help if applicable
 --url, -u      Url to share. Needs to be in the form http://localhost:port
 --verbose, -v  Runs with extra verbosity
 ```

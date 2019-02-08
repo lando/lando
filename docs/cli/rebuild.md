@@ -26,11 +26,11 @@ lando rebuild -s cache -s appserver
 Options
 -------
 
-Run `lando rebuild --lando` to get a complete list of options defaults, choices, etc.
+Run `lando rebuild --help` to get a complete list of options defaults, choices, etc.
 
 ```bash
 --clear         Clears the lando tasks cache
---lando         Show help for lando-based options
+--help          Shows lando or delegated command help if applicable
 --services, -s  Rebuild only the specified services
 --verbose, -v   Runs with extra verbosity
 --yes, -y       Auto answer yes to prompts

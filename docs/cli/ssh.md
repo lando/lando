@@ -29,12 +29,12 @@ lando ssh --service web --user root --command "apt install vim -y"
 Options
 -------
 
-Run `lando ssh --lando` to get a complete list of options defaults, choices, etc.
+Run `lando ssh --help` to get a complete list of options defaults, choices, etc.
 
 ```bash
 --clear        Clears the lando tasks cache
 --command, -c  Run a command in the service
---lando        Show help for lando-based options
+--help         Shows lando or delegated command help if applicable
 --service, -s  SSH into this service
 --user, -u     Run as a specific user
 --verbose, -v  Runs with extra verbosity

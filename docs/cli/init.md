@@ -142,14 +142,14 @@ lando init \
 Options
 -------
 
-Run `lando init --lando` to get a complete list of options defaults, choices, recipes, sources etc.
+Run `lando init --help` to get a complete list of options defaults, choices, recipes, sources etc.
 
 ```bash
 --clear           Clears the lando tasks cache
 --full            Dump a lower level lando file
 --github-auth     A GitHub personal access token
 --github-repo     GitHub git url
---lando           Show help for lando-based options
+--help            Shows lando or delegated command help if applicable
 --name            The name of the app
 --options, -o     Merge additional KEY=VALUE pairs into your recipes config
 --pantheon-auth   A Pantheon machine token

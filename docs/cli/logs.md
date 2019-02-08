@@ -28,12 +28,12 @@ lando logs -s cache -s database
 Options
 -------
 
-Run `lando logs --lando` to get a complete list of options defaults, choices, etc.
+Run `lando logs --help` to get a complete list of options defaults, choices, etc.
 
 ```bash
 --clear           Clears the lando tasks cache
 --follow, -f      Follow the logs
---lando           Show help for lando-based options
+--help            Shows lando or delegated command help if applicable
 --services, -s    Show logs for the specified services only
 --timestamps, -t  Show log timestamps
 --verbose, -v     Runs with extra verbosity

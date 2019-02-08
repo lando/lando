@@ -30,6 +30,6 @@ Options
 --app          Show containers for only a particular app
 --clear        Clears the lando tasks cache
 --filter, -f   Filter by "key=value"
---lando        Show help for lando-based options
+--help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity
 ```

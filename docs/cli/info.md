@@ -27,7 +27,7 @@ Options
 ```bash
 --clear        Clears the lando tasks cache
 --deep, -d     Get ALL the info
---lando        Show help for lando-based options
+--help         Shows lando or delegated command help if applicable
 --service, -s  Get info for only the specified services
 --verbose, -v  Runs with extra verbosity
 ```
