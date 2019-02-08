@@ -41,7 +41,7 @@ module.exports = (config, lando) => {
   return {
     command: name,
     describe,
-    run: run,
-    options: options,
+    run,
+    options,
   };
 };
