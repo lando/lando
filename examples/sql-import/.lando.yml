@@ -3,7 +3,10 @@ events:
   post-db-import:
     - database: /app/test-script.sh
     - database: echo "i-ran" > /tmp/iran.txt
+    - echo "stuff"
 services:
+  appserver:
+    type: mysql
   database:
     type: mysql
   database2:

@@ -4,3 +4,5 @@ services:
     image: php:7.1-fpm-alpine
   web:
     image: nginx
+    environment:
+      SERVICE: 'web'
