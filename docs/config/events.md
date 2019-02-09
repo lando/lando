@@ -49,11 +49,13 @@ Specifically, you need to hook into an event where the service you are running t
 Usage
 -----
 
-It's fairly straightforward to add events to your [Landofile](./lando.md) using the `events` top level config. Note that due to the nature of events eg automating steps that the *user* usually runs all event commands are run as "you" and do not have `sudo` or `root` access.
+It's fairly straightforward to add events to your [Landofile](./lando.md) using the `events` top level config.
 
-### Appserver commands
+Note that due to the nature of events, eg. automating steps that the _user_ usually runs, all commands are run as "you" and do not have `sudo` or `root` access.
 
-By default commands will run on the `appserver` service which **may not exist** if you are not using one of Lando's [recipes](./recipes.md) as a starting point for your Landofile.
+### Default commands
+
+By default, event commands will run on the `appserver` service which **may not exist** if you are not using one of Lando's [recipes](./recipes.md) as a starting point for your Landofile.
 
 ```yaml
 events:
@@ -62,15 +64,46 @@ events:
     - echo "I JUST YARNED"
 ```
 
+An exception for this is events that are based on [tooling](./../tooling.md) commands which will use the tooling `service` as the default.
+
+```yaml
+events:
+  post-thing:
+    - some-command
+tooling:
+  thing:
+    service: web
+```
+
+In the above scenario, `some-command` will run on the `web` service by default instead of the `appserver`. For [dynamic tooling routes](./../tooling.md#dynamic-service-commands) events will use the default of the dynamic route.
+
+```yaml
+events:
+  post-dynamic:
+    - some-command
+tooling
+  dynamic:
+    cmd: env
+    service: :host
+    options:
+      host:
+        default: web2
+        alias:
+          - h
+        describe: Run a different service
+```
+
+In the above scenario, `some-command` will run on `web2` by default.
+
 ### Service commands
 
-This expands on the example above. We are still running some `appserver` commands on the `pre-start` event but now we are running a command on the `node` service and then the `appserver` service on the `post-start` event.
+While the defaults above are good to know we *highly recommend* you just explicitly define which commands should run on which services by keying the command with a service as below.
 
 ```yaml
 events:
   pre-start:
-    - composer install
-    - echo "I JUST COMPOSERED"
+    - appserver: composer install
+    - database: echo "I JUST COMPOSERED"
   post-start:
     - node: yarn sass
     - appserver: composer compile-templates

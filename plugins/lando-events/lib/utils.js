@@ -4,6 +4,20 @@
 const _ = require('lodash');
 const getUser = require('./../../../lib/utils').getUser;
 
+// Helper to find the default service
+const getDefaultService = data => {
+  if (_.has(data, 'service')) {
+    if (_.startsWith(data.service, ':')) {
+      const option = _.trimStart(data.service, ':');
+      return _.get(data, `options.${option}.default`, 'appserver');
+    } else {
+      return _.get(data, 'service');
+    }
+  } else {
+    return 'appserver';
+  }
+};
+
 // Helper to find a command
 const getCommand = cmd => typeof cmd === 'object' ? cmd[getFirstKey(cmd)] : cmd;
 
@@ -12,7 +26,7 @@ const getFirstKey = obj => _.first(_.keys(obj));
 
 // Helper to find a service
 const getService = (cmd, data = {}) => {
-  return typeof cmd === 'object' ? getFirstKey(cmd) : _.get(data, 'service', 'appserver');
+  return typeof cmd === 'object' ? getFirstKey(cmd) : getDefaultService(data);
 };
 
 /*

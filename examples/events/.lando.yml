@@ -9,9 +9,22 @@ events:
     - web: mkdir -p /app/test && echo "$(hostname -s)" > /app/test/web-post-start.txt
   post-thing:
     - web: mkdir -p /app/test && echo "$(hostname -s)" > /app/test/web-post-thing.txt
+    - env | grep "SERVICE=web"
   post-rebuild:
     - web: echo "ET TU, BRUT?"
+  post-dynamic:
+    - web: env | grep "SERVICE=web"
+    - echo "thing"
 tooling:
   thing:
     service: web
     cmd: echo "THINGS"
+  dynamic:
+    cmd: env
+    service: :host
+    options:
+      host:
+        default: web
+        alias:
+          - h
+        describe: Run a different service
