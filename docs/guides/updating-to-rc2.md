@@ -174,6 +174,35 @@ services:
         BASEURL: https://myapp.lndo.site
 ```
 
+Hyphens in project names
+------------------------
+
+If you have a `.lando.yml` that starts with
+
+```yaml
+name: site-with-hyphens
+```
+
+Then Lando generates URLs like this:
+
+**old**
+
+```
+https://sitewithhyphens.lndo.site
+```
+
+**new**
+
+````
+https://site-with-hyphens.lndo.site
+```
+
+This does not really break anything, but you may want to update the following:
+
+- If you have any browser tabs open on your Lando sites, then update the URLs after updating Lando.
+- If any of your projects have affected `.lando.yml` files, then update the URLs in related README files or other documentation.
+- If you are bothered by cruft, then see [Removing lingering Lando configuration](https://docs.devwithlando.io/installation/uninstalling.html#removing-lingering-lando-configuration). You can remove files and directories based on the old hyphenless names in the Lando configuration directory and its subdirectories.
+
 Tooling
 -------
 
