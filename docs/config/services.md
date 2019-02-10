@@ -104,7 +104,7 @@ services:
     run:
       - /helpers/some-helper-script.sh
     run_as_root:
-      - echo "mysite.lndo.site 127.0.0.1" >> /etc/hosts
+      - echo "127.0.0.1 mysite.lndo.site" >> /etc/hosts
 ```
 
 As you can likely surmise from the above each step is intended for a pretty specific use case
