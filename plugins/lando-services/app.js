@@ -75,7 +75,7 @@ module.exports = (app, lando) => {
   });
 
   // Discover portforward true info
-  app.events.on('post-init', () => {
+  app.events.on('ready', () => {
     const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
     return lando.engine.list({app: app.project})
     .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
