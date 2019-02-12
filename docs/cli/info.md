@@ -30,4 +30,6 @@ Options
 --help         Shows lando or delegated command help if applicable
 --service, -s  Get info for only the specified services
 --verbose, -v  Runs with extra verbosity
+--output, -o   Output in given format: json
+--path, -p     Only return the value at the given path
 ```
