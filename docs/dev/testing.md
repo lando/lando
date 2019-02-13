@@ -61,7 +61,7 @@ Here are some caveats and general guidelines about when and how to write functio
 
 #### So what's the catch?
 
-1. The suite will run against the `lando` it finds in your PATH so you need to make sure that `lando` is running frmo source
+1. The suite will run against the `lando` it finds in your PATH so you need to make sure that `lando` is running from source
 2. For test commands to pass they must return a 0 status code eg not have any errors
 3. Additional quotes inside of a `lando ssh -c "STUFF"` are not handled very well right now
 
