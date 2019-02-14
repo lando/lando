@@ -117,7 +117,7 @@ Pain for this change will likely manifest if you have custom [proxy settings](./
 proxy:
   nginx:
     - myapp.lndo.site
-service:
+services:
   myservice:
     type: php
     via: nginx
@@ -129,7 +129,7 @@ service:
 proxy:
   myservice_nginx:
     - myapp.lndo.site
-service:
+services:
   myservice:
     type: php
     via: nginx
@@ -193,7 +193,7 @@ https://sitewithhyphens.lndo.site
 
 **new**
 
-````
+```
 https://site-with-hyphens.lndo.site
 ```
 

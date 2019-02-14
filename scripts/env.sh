@@ -26,13 +26,13 @@ DEPS=( iptables procps )
 # Add OS specific deps
 case "$1" in
   rpm)
-    DEPS+=( git-core docker-ce )
+    DEPS+=( docker-ce )
     ;;
   deb)
-    DEPS+=( git-core docker-ce )
+    DEPS+=( docker-ce )
     ;;
   pacman)
-    DEPS+=( git docker )
+    DEPS+=( docker )
 esac
 
 # Loop through to build our PKG_DEPS

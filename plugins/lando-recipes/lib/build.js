@@ -1,6 +1,7 @@
 'use strict';
 
 // Modules
+const _ = require('lodash');
 const path = require('path');
 const utils = require('./../../../lib/utils');
 
@@ -39,13 +40,13 @@ exports.run = (lando, run) => lando.engine.run(run).catch(err => {
 // Helper to get run defaults
 exports.runDefaults = (lando, options) => {
   // Handle all the compose stuff
-  const LandoUtil = lando.factory.get('_init');
-  const utilData = new LandoUtil(
+  const LandoInit = lando.factory.get('_init');
+  const utilData = new LandoInit(
     lando.config.userConfRoot,
     lando.config.home,
     options.destination,
-    lando.config.appEnv,
-    lando.config.appLabels
+    _.cloneDeep(lando.config.appEnv),
+    _.cloneDeep(lando.config.appLabels)
   );
   const utilDir = path.join(lando.config.userConfRoot, 'init', options.name);
   const utilFiles = lando.utils.dumpComposeData(utilData, utilDir);
