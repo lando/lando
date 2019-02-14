@@ -10,7 +10,7 @@ const parse3 = options => {
   options.image = 'actency/docker-solr:3.6';
   options.remoteFiles.dir = '/opt/solr/example/solr/conf';
   options.dataDir = '/opt/solr/example/solr/data';
-  options.startScript = 'start-3.sh';
+  options.startScript = 'start-solr-3.sh';
   options.moreHttpPorts = [];
   return options;
 };
@@ -22,7 +22,7 @@ const parse4 = options => {
   options.image = 'actency/docker-solr:4.10';
   options.remoteFiles.dir = '/opt/solr-4.10.4/example/solr/collection1/conf';
   options.dataDir = '/opt/solr-4.10.4/example/solr/collection1/data';
-  options.startScript = 'start-4.sh';
+  options.startScript = 'start-solr-4.sh';
   options.moreHttpPorts = [];
   return options;
 };
@@ -32,7 +32,6 @@ const parse4 = options => {
  */
 const parseElse = options => {
   options.image = `solr:${options.version}`;
-  options.command = `/helpers/start.sh`;
   // Custom config dir command
   if (_.has(options, 'config.dir')) options.command = `${options.command} ${options.config.dir}`;
   return options;
@@ -88,13 +87,13 @@ module.exports = {
     supported: ['7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
     legacy: ['4.10', '4', '3.6', '3'],
     patchesSupported: true,
+    command: 'chmod +x /start.sh && /start.sh',
     confSrc: __dirname,
     core: 'lando',
-    command: '/helpers/start.sh',
     dataDir: '/opt/solr/server/solr/mycores',
     moreHttpPorts: ['8983'],
     port: '8983',
-    startScript: 'start.sh',
+    startScript: 'start-solr.sh',
     remoteFiles: {
       dir: '/solrconf/conf',
     },
@@ -105,10 +104,10 @@ module.exports = {
       options = parseConfig(_.merge({}, config, options));
       const solr = {
         image: options.image,
-        command: options.command,
+        command: `/bin/sh -c "${options.command}"`,
         environment: getEnvironment(options),
         volumes: [
-          `${options.confDest}/${options.startScript}:/helpers/start.sh`,
+          `${options.confDest}/${options.startScript}:/start.sh`,
         ],
         user: 'root',
       };

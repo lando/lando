@@ -93,15 +93,16 @@ describe('shell', () => {
         .then(child.spawn.restore());
     });
 
-    it('should force collect mode and ignore stdin and stderr when process.lando is not node', () => {
+    it('should ignore stdin and pipe stdout and stderr when process.lando is not node', () => {
       const shell = new Shell();
       process.lando = 'browser';
       sinon.stub(child, 'spawn').callsFake((cmd, args, opts) => {
-        opts.mode.should.equal('collect');
         opts.stdio[0].should.equal('ignore');
-        opts.stdio[2].should.equal('ignore');
+        opts.stdio[1].should.equal('pipe');
+        opts.stdio[2].should.equal('pipe');
         return {
           stdout: {on: sinon.spy()},
+          stderr: {on: sinon.spy()},
           on: (type, fn) => {
             if (type === 'close') fn(0);
           },
@@ -114,11 +115,10 @@ describe('shell', () => {
         });
     });
 
-    it('should inherit stdio when in attach mode and process.lando is node', () => {
+    it('should inherit stdio when process.lando is node', () => {
       const shell = new Shell();
       process.lando = 'node';
       sinon.stub(child, 'spawn').callsFake((cmd, args, opts) => {
-        opts.mode.should.equal('attach');
         opts.stdio.should.equal('inherit');
         return {
           stdout: {on: sinon.spy()},
