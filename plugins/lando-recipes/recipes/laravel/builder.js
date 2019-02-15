@@ -58,10 +58,6 @@ module.exports = {
         cmd: `php /app/${options.webroot}/../artisan`,
       };
       if (_.has(options, 'cache')) options.services.cache = getCache(options.cache);
-      // Set the default vhosts if we are nginx
-      if (_.startsWith(options.via, 'nginx')) options.defaultFiles.vhosts = 'default.conf.tpl';
-      // Set the default mysql if we are there as well
-      if (!_.startsWith(options.database, 'postgres')) options.defaultFiles.database = 'mysql.cnf';
       // Send downstream
       super(id, options);
     };

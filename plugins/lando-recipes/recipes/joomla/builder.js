@@ -28,10 +28,6 @@ module.exports = {
       options = _.merge({}, config, options);
       // Add the joomla cli install command
       options.composer['joomlatools/console'] = '*';
-      // Set the default vhosts if we are nginx
-      if (_.startsWith(options.via, 'nginx')) options.defaultFiles.vhosts = 'default.conf.tpl';
-      // Set the default mysql if we are there as well
-      if (!_.startsWith(options.database, 'postgres')) options.defaultFiles.database = 'mysql.cnf';
       // Send downstream
       super(id, options);
     };

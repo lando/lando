@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
 const utils = require('./../../lib/utils');
 
 // Tooling defaults
@@ -49,6 +50,36 @@ const toolingDefaults = {
 };
 
 /*
+ * Helper to get config defaults
+ */
+const getConfigDefaults = options => {
+  // Get the viaconf
+  if (_.startsWith(options.via, 'nginx')) options.defaultFiles.vhosts = 'default.conf.tpl';
+
+  // Get the default db conf
+  const dbConfig = _.get(options, 'database', 'mysql');
+  const database = _.first(dbConfig.split(':'));
+  const version = _.last(dbConfig.split(':'));
+  if (database === 'mysql' || database === 'mariadb') {
+    if (version === '8.0') {
+      options.defaultFiles.database = 'mysql8.cnf';
+    } else {
+      options.defaultFiles.database = 'mysql.cnf';
+    }
+  }
+
+  // Verify files exist and remove if it doesnt
+  _.forEach(options.defaultFiles, (file, type) => {
+    if (!fs.existsSync(`${options.confDest}/${file}`)) {
+      delete options.defaultFiles[type];
+    }
+  });
+
+  // Return
+  return options.defaultFiles;
+};
+
+/*
  * Helper to get services
  */
 const getServices = options => ({
@@ -90,6 +121,7 @@ module.exports = {
   config: {
     confSrc: __dirname,
     database: 'mysql',
+    defaultFiles: {},
     php: '7.2',
     via: 'apache',
     webroot: '.',
@@ -106,6 +138,9 @@ module.exports = {
         else if (_.startsWith(options.via, 'apache')) options.proxyService = 'appserver';
       }
       options.proxy = _.set({}, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
+      // Set the default config if we can
+      options.defaultFiles = getConfigDefaults(options);
+      // Downstream
       super(id, options);
     };
   },
