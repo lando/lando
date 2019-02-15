@@ -76,7 +76,7 @@ const getConfigDefaults = options => {
   });
 
   // Return
-  return options.defaultFiles
+  return options.defaultFiles;
 };
 
 /*
