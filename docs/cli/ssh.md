@@ -23,7 +23,8 @@ lando ssh -s database
 lando ssh -c "ls -ls /"
 
 # Installs the vim package on the web service
-lando ssh --service web --user root --command "apt install vim -y"
+lando ssh --service appserver --user root --command "apt-get update &
+& apt install vim -y"
 ```
 
 Options
