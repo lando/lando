@@ -148,13 +148,18 @@ run:
   - /app/my-script.sh
 ```
 
-An exception to this rule is the "one-liner" which may be favorable to a separate script. Note that you will need to wrap the command in the correct `shell` for it work correctly.
+An exception to this rule is the "one-liner" which may be favorable to a separate script. Note that you will need to wrap the command in the correct `shell` for it work correctly. Also, `~` will resolve only if you wrap it in bash.
 
 **Will not work**
 
 ```yaml
 run:
   - if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi
+```
+
+```yaml
+build:
+  - mkdir -p ~/.drush/site-aliases
 ```
 
 **Will work**
@@ -165,8 +170,8 @@ run:
 ```
 
 ```yaml
-run:
- - /bin/bash -c "if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi"
+build:
+  - /bin/sh -c "mkdir -p ~/.drush/site-aliases"
 ```
 
 Advanced
