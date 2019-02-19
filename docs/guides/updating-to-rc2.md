@@ -475,7 +475,7 @@ Check out [this example](https://github.com/lando/lando/tree/master/examples/bas
 Drush Handling
 --------------
 
-We've vastly simplified our [Drush handling](./../tutorials/drupa8.md#using-drush). You can now only set `drush` to a particular version for global installation. If you've installed `drush` via `composer` then Lando will use that version instead of the one in your Landofile.
+We've vastly simplified our [Drush handling](./../tutorials/drupal8.md#using-drush). You can now only set `drush` to a particular version for global installation. If you've installed `drush` via `composer` then Lando will use that version instead of the one in your Landofile.
 
 **old**
 
