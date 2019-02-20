@@ -18,6 +18,6 @@ module.exports = lando => ({
     utils.outputFormatted(
       options.field ? _.pick(lando.config, options.field) : lando.config,
       options.path,
-      options.output
+      options.format
     ),
 });

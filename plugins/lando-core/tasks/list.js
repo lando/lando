@@ -35,7 +35,7 @@ module.exports = lando => {
           .groupBy('app')
           .value(),
         options.path,
-        options.output
+        options.format
       ));
     },
   };
