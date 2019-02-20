@@ -150,9 +150,8 @@ exports.stripWild = versions => _(versions)
 
 
 exports.formattedOptions = {
-  output: {
+  format: {
     describe: 'Output in given format: json',
-    alias: ['o'],
     string: true,
   },
   path: {
