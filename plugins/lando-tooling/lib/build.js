@@ -15,7 +15,7 @@ module.exports = (config, lando) => {
   const eventName = name.split(' ')[0];
   const run = answers => lando.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
     // Kick off the pre event wrappers
-    .then(() => app.events.emit(`pre-${eventName}`, config))
+    .then(() => app.events.emit(`pre-${eventName}`, config, answers))
     // Get an interable of our commandz
     .then(() => _.map(utils.parseConfig(cmd, service, options, answers)))
     // Build run objects
@@ -35,7 +35,7 @@ module.exports = (config, lando) => {
       });
     }))
     // Post event
-    .then(() => app.events.emit(`post-${eventName}`, config));
+    .then(() => app.events.emit(`post-${eventName}`, config, answers));
 
   // Return our tasks
   return {
