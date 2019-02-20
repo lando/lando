@@ -130,8 +130,8 @@ module.exports = {
   builder: (parent, config) => class LandoLaemp extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-      // Set the default config if we can
-      options.defaultFiles = getConfigDefaults(options);
+      // Rebase on top of any default config we might already have
+      options.defaultFiles = _.merge({}, getConfigDefaults(_.cloneDeep(options)), options.defaultFiles);
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
       // Switch the proxy if needed
