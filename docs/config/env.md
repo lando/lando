@@ -93,4 +93,4 @@ WP_SITEURL=http://wpb4.test/wp
 Environment Configuration
 -------------------------
 
-If you'd like to avoid broad strokes and only certain inject environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).
+If you'd like to avoid broad strokes and only inject certain environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).
