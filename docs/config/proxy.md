@@ -58,7 +58,7 @@ proxy:
 
 ### Using a non `lndo.site` domain
 
-You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution.
+You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution and any relevant cert handling. See the configuration section below for more details.
 
 > #### Info::Pro Tip: Add custom domains to your `hosts` file.
 >
@@ -150,6 +150,8 @@ domain: lndo.site
 ```
 
 You will need to do a `lando poweroff` to apply these changes.
+
+Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example if you set `domain` to a top level domain such as `test` you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
 
 Working Offline or Using Custom Domains
 ---------------------------------------

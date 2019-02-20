@@ -37,7 +37,7 @@ sudo killall -HUP mDNSResponder
 ```
 10. Open your `~/.lando/config.yml` file and add the following line:
 ```yaml
-domain: test
+domain: test.me
 ```
 Again, allow your creativity to flourish and use whatever TLD makes you smile.
 11. Power Lando down with `lando poweroff`
