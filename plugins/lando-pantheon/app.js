@@ -8,6 +8,13 @@ const utils = require('./lib/utils');
 module.exports = (app, lando) => {
   // Only do this on pantheon recipes
   if (_.get(app, 'config.recipe') === 'pantheon') {
+    // Add tokens and other meta to our app
+    app.pantheonTokenCache = 'pantheon.tokens';
+    app.pantheonTokens = lando.cache.get(app.pantheonTokenCache) || [];
+    app.terminusTokens = utils.getTerminusTokens(lando.config.home);
+    console.log(app.metaCache)
+    console.log(app.meta)
+    console.log(app.pantheonTokenCache)
     // Set the app caches, validate tokens and update token cache
     _.forEach(['pull', 'push', 'switch'], command => {
       lando.events.on(`cli-${command}-run`, data => {
@@ -26,10 +33,5 @@ module.exports = (app, lando) => {
         });
       });
     });
-
-    // Add tokens and other meta to our app
-    app.pantheonTokenCache = 'pantheon.tokens';
-    app.pantheonTokens = lando.cache.get(app.pantheonTokenCache) || [];
-    app.terminusTokens = utils.getTerminusTokens(lando.config.home);
   }
 };
