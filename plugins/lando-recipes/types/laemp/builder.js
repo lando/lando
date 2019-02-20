@@ -130,6 +130,8 @@ module.exports = {
   builder: (parent, config) => class LandoLaemp extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+      // Set the default config if we can
+      options.defaultFiles = getConfigDefaults(options);
       options.services = _.merge({}, getServices(options), options.services);
       options.tooling = _.merge({}, getTooling(options), options.tooling);
       // Switch the proxy if needed
@@ -138,8 +140,6 @@ module.exports = {
         else if (_.startsWith(options.via, 'apache')) options.proxyService = 'appserver';
       }
       options.proxy = _.set({}, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
-      // Set the default config if we can
-      options.defaultFiles = getConfigDefaults(options);
       // Downstream
       super(id, options);
     };
