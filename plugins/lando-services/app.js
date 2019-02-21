@@ -54,7 +54,6 @@ module.exports = (app, lando) => {
       const Service = lando.factory.get(service.type);
       const data = new Service(service.name, service, lando.factory);
       app.add(data);
-      // console.log(data.info);
       app.info.push(data.info);
     });
   });
