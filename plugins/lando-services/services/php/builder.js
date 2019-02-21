@@ -123,6 +123,9 @@ module.exports = {
       options = parseConfig(_.merge({}, config, options));
       // Mount our default php config
       options.volumes.push(`${options.confDest}/${options.defaultFiles._php}:${options.remoteFiles._php}`);
+      // options.volumes.push(`${options._app.root}:/app:delegated`);
+      // options.volumes.push('exclude_vendor:/app/vendor');
+      // options.volumes.push('exclude_core:/app/core');
 
       // Shift on the docker entrypoint if this is a more recent version
       // @TODO: can we assume we will always have major.minor for php release?

@@ -3,7 +3,6 @@
 // Modules
 const _ = require('lodash');
 const path = require('path');
-const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
 // Helper to make excludes unique
@@ -34,26 +33,41 @@ module.exports = (app, lando) => {
         const mountDir = path.join(lando.config.userConfRoot, 'mounter', app.name);
         const mountFiles = lando.utils.dumpComposeData(mountData, mountDir);
         return lando.engine.run({
-          compose: mountFiles,
+          compose: _.flatten([app.compose, mountFiles]),
           project: app.project,
           cmd: getPopCommand(excludes),
           opts: {
             mode: 'attach',
             services: ['mounter'],
             autoRemove: true,
-            workdir: '/app',
+            workdir: '/source',
           },
         });
       }
     });
 
-    // Add populated volumes to our app
-    app.events.on('post-init', 9, () => {
-      // Add our named volumes to the beginning
-      app.add(new app.ComposeService('excludes-named-volumes', {}, {volumes: utils.getNamedVolumes(excludes)}), true);
-      // And our service volumes to the end
-      const volumes = utils.getServiceVolumes(excludes, '/app');
-      app.add(new app.ComposeService('excludes-volumes', {}, {services: toObject(app.services, {volumes})}));
+    // Sharing is caring
+    app.events.on('post-init', () => {
+      // Add the top level volumes
+      app.add(new app.ComposeService('excludes-volumes', {}, {
+        volumes: utils.getNamedVolumes(excludes),
+      }));
+      // Drill down into each service and modify the volumes
+      // @NOTE: for some reason this is necessary and we cant do the same thing
+      // we are doing above, seems like the nested /app volumes need to be declared in teh same place
+      // and early on
+      /*
+      _.forEach(app.composeData, service => {
+        if (_.includes(app.services, service.id) && _.has(service.data[0], `services.${service.id}.volumes`)) {
+          // Re-add the host mounted /app
+          service.data[0].services[service.id].volumes.push(`${app.root}:/app:delegated`);
+          // Add the named volumes
+          _.forEach(utils.getServiceVolumes(excludes, '/app'), volume => {
+            service.data[0].services[service.id].volumes.push(volume);
+          });
+        }
+      })
+      */
     });
   }
 };

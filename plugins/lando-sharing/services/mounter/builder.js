@@ -30,7 +30,7 @@ module.exports = {
       };
       // Add in named volume mounts
       mountService.services.mounter.volumes = utils.getServiceVolumes(excludes);
-      mountService.services.mounter.volumes.push(`${app}:/app:delegated`);
+      mountService.services.mounter.volumes.push(`${app}:/source:delegated`);
       // Add moar stuff
       mountService.services.mounter.environment.LANDO_SERVICE_TYPE = 'mounter';
       mountService.services.mounter.labels['io.lando.service-container'] = 'TRUE';

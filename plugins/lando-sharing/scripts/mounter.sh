@@ -7,9 +7,9 @@ echo "Please allow a few moments for us to sync your host into the container"
 
 # Rysync the things
 for MOUNT in "$@"; do
-  SOURCE="/app/$MOUNT"
+  SOURCE="/source/$MOUNT"
   DEST="/tmp/$MOUNT"
-  echo "Syncing $SOURCE..."
+  echo "Syncing $MOUNT..."
   # @TODO: verify the below
   rsync --archive --info=progress2 $SOURCE/ $DEST
 done
