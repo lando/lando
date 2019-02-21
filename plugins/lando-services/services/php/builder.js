@@ -81,9 +81,9 @@ const parseConfig = options => {
 module.exports = {
   name: 'php',
   config: {
-    version: '7.2',
-    supported: ['7.2', '7.1', '7.0', '5.6', '5.5', '5.4', '5.3'],
-    legacy: ['5.5', '5.4', '5.3'],
+    version: '7.3',
+    supported: ['7.3', '7.2', '7.1', '7.0', '5.6', '5.5', '5.4', '5.3'],
+    legacy: ['7.0', '5.6', '5.5', '5.4', '5.3'],
     path: [
       '/app/vendor/bin',
       '/usr/local/sbin',
