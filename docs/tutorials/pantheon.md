@@ -258,8 +258,19 @@ lando terminus backup:create MYSITE.MYENV --element=files
 
 # Download and extract backup of the files
 lando terminus backup:get MYSITE.MYENV --element=files --to=/tmp/files.tar.gz
-lando ssh -c "mkdir -p \$LANDO_WEBROOT/\$FILEMOUNT"
-lando ssh -c "tar -xzvf /tmp/files.tar.gz -C \$LANDO_WEBROOT/\$FILEMOUNT --strip-components 1"
+# Import your files
+
+#Drupal
+lando ssh -c "mkdir -p /app/sites/default/files"
+lando ssh -c "tar -xzvf /tmp/files.tar.gz -C /app/sites/default/files --strip-components 1"
+
+#Backdrop
+lando ssh -c "mkdir -p /app/files"
+lando ssh -c "tar -xzvf /tmp/files.tar.gz -C /app/files --strip-components 1"
+
+#WordPress
+lando ssh -c "mkdir -p /app/wp-content/uploads"
+lando ssh -c "tar -xzvf /tmp/files.tar.gz -C /app/wp-content/uploads --strip-components 1"
 ```
 
 You can alternatively download the backup and manually extract it to the correct location.
