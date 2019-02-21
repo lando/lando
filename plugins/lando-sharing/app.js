@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const path = require('path');
+const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
 // Helper to make excludes unique
@@ -33,7 +34,7 @@ module.exports = (app, lando) => {
         const mountDir = path.join(lando.config.userConfRoot, 'mounter', app.name);
         const mountFiles = lando.utils.dumpComposeData(mountData, mountDir);
         return lando.engine.run({
-          compose: _.flatten([app.compose, mountFiles]),
+          compose: mountFiles,
           project: app.project,
           cmd: getPopCommand(excludes),
           opts: {
@@ -48,26 +49,12 @@ module.exports = (app, lando) => {
 
     // Sharing is caring
     app.events.on('post-init', () => {
-      // Add the top level volumes
-      app.add(new app.ComposeService('excludes-volumes', {}, {
+      app.add(new app.ComposeService('excludes', {}, {
         volumes: utils.getNamedVolumes(excludes),
+        services: toObject(app.services, {
+          volumes: utils.getServiceVolumes(excludes, '/app'),
+        }),
       }));
-      // Drill down into each service and modify the volumes
-      // @NOTE: for some reason this is necessary and we cant do the same thing
-      // we are doing above, seems like the nested /app volumes need to be declared in teh same place
-      // and early on
-      /*
-      _.forEach(app.composeData, service => {
-        if (_.includes(app.services, service.id) && _.has(service.data[0], `services.${service.id}.volumes`)) {
-          // Re-add the host mounted /app
-          service.data[0].services[service.id].volumes.push(`${app.root}:/app:delegated`);
-          // Add the named volumes
-          _.forEach(utils.getServiceVolumes(excludes, '/app'), volume => {
-            service.data[0].services[service.id].volumes.push(volume);
-          });
-        }
-      })
-      */
     });
   }
 };
