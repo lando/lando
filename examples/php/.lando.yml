@@ -19,6 +19,9 @@ services:
     webroot: web
     config:
       php: config/php.ini
+    overrides:
+      environment:
+        DUALBLADE: maxim
   composer:
     type: php:7.0
     composer:

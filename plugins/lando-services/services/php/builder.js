@@ -17,6 +17,7 @@ const nginxConfig = options => ({
   confDest: path.resolve(options.confDest, '..', 'nginx'),
   home: options.home,
   name: `${options.name}_nginx`,
+  overrides: options.overrides,
   project: options.project,
   root: options.root,
   ssl: options.nginxSsl,

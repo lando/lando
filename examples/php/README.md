@@ -63,6 +63,10 @@ lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 lando ssh -s custom -c "php -i | grep memory_limit | grep 514"
 lando ssh -s custom -c "curl http://custom_nginx" | grep html_errors | grep On | grep On
 
+# Should inherit overrides from its generator
+lando ssh -s custom -c "env | grep DUALBLADE | grep maxim"
+lando ssh -s custom_nginx -c "env | grep DUALBLADE | grep maxim"
+
 # Should use specified php version if given
 lando ssh -s cliold -c "php -v | grep 5.6"
 

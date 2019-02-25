@@ -7,6 +7,9 @@ services:
     backends:
       - appserver
     ssl: true
+    overrides:
+      environment:
+        MEGAMAN: X
     config:
       vcl: config/custom.vcl
   customport:
