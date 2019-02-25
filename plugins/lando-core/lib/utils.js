@@ -63,8 +63,8 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
  * the docker-compose files were in the app root.
  */
 exports.normalizePath = (local, base = '.', excludes = []) => {
-  // Return local if it starts with $
-  if (_.startsWith(local, '$')) return local;
+  // Return local if it starts with $ or ~
+  if (_.startsWith(local, '$') || _.startsWith(local, '~')) return local;
   // Return local if it is one of the excludes
   if (_.includes(excludes, local)) return local;
   // Return local if local is an absolute path
