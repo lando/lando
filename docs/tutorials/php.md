@@ -13,6 +13,8 @@ Supported versions
 *   **[7.3](https://hub.docker.com/r/devwithlando/php)** **(default)**
 *   [7.2](https://hub.docker.com/r/devwithlando/php)
 *   [7.1](https://hub.docker.com/r/devwithlando/php)
+*   [7.0](https://hub.docker.com/r/devwithlando/php)
+*   [5.6](https://hub.docker.com/r/devwithlando/php)
 *   [custom](./../config/services.md#advanced)
 
 Legacy versions
@@ -24,8 +26,6 @@ Legacy versions
 
 You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
 
-*   [7.0](https://hub.docker.com/r/devwithlando/php)
-*   [5.6](https://hub.docker.com/r/devwithlando/php)
 *   [5.5](https://hub.docker.com/r/devwithlando/php)
 *   [5.4](https://hub.docker.com/r/devwithlando/php)
 *   [5.3](https://hub.docker.com/r/devwithlando/php)
