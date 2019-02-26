@@ -35,7 +35,7 @@ lando ssh -s appserver -c "curl -L localhost" | grep "Backdrop CMS 1"
 
 # Should use 7.2 as the default php version
 cd backdrop
-lando php -v | grep 7.2
+lando php -v | grep "PHP 7.2"
 
 # Should be running apache 2.4 by default
 cd backdrop
