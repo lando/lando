@@ -17,7 +17,7 @@ const nginxConfig = options => ({
   confDest: path.resolve(options.confDest, '..', 'nginx'),
   home: options.home,
   name: `${options.name}_nginx`,
-  overrides: options.overrides,
+  overrides: utils.cloneOverrides(options.overrides),
   project: options.project,
   root: options.root,
   ssl: options.nginxSsl,
@@ -133,7 +133,6 @@ module.exports = {
 
       // Build the php
       const php = {
-        // @TODO: new images with xdebug off?
         image: `devwithlando/php:${options.version}-${options.image}-2`,
         environment: _.merge({}, options.environment, {
           PATH: options.path.join(':'),

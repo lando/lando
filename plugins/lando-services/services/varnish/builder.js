@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./../../lib/utils');
 
 // Helper to builder nginx command
 const nginxCommand = vhost => [
@@ -88,6 +89,7 @@ module.exports = {
       if (options.ssl) {
         // Sort of copy our options
         const sslOpts = _.cloneDeep(options);
+        sslOpts.overrides = utils.cloneOverrides(options.overrides);
         sslOpts.name = `${options.name}_ssl`;
         // Set another lando service we can pass down the stream
         const LandoService = factory.get('_lando');

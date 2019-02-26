@@ -20,6 +20,7 @@ services:
     config:
       php: config/php.ini
     overrides:
+      image: devwithlando/php:7.1-fpm-2
       environment:
         DUALBLADE: maxim
   composer:
