@@ -66,7 +66,7 @@ module.exports = {
         utils.addBuildStep(commands, options._app, options.name);
       }
       // Set the sport is ssl is numeric
-      if (options.ssl !== false && _.isInteger(options.ssl)) options.sport = options.ssl
+      if (options.ssl !== false && _.isInteger(options.ssl)) options.sport = options.ssl;
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, node)});
     };
