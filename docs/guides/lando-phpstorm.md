@@ -25,7 +25,7 @@ services:
 You are free to assign any name to "serverName" as long as it matches the server you define in the IDE settings.
 In the example above we set the variable to `appserver` and created a path mapping for the server accordingly:
 
-![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/drush-xdebug-phpstorm.png)
+![screenshot](../images/drush-xdebug-phpstorm.png)
 
 Additional Reading
 ------------------
