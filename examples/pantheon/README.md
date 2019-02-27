@@ -100,10 +100,6 @@ lando terminus auth:whoami | grep landobot@devwithlando.io
 cd wordpress
 curl -LI http://landobot-wordress.lndo.site | grep Via || echo $? | grep 1
 
-# Should have a running solr instance
-cd wordpress
-lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/index/admin/"
-
 # Should be able to bootstrap drupal7
 cd drupal7
 lando drush status | grep "Connected"
