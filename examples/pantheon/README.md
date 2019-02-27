@@ -100,6 +100,10 @@ lando terminus auth:whoami | grep landobot@devwithlando.io
 cd wordpress
 curl -LI http://landobot-wordress.lndo.site | grep Via || echo $? | grep 1
 
+# Should have a running solr instance
+cd wordpress
+lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/index/admin/"
+
 # Should be able to bootstrap drupal7
 cd drupal7
 lando drush status | grep "Connected"
@@ -179,6 +183,10 @@ lando php -m | grep xdebug || echo $? | grep 1
 # Should be serving via varnish on the proxy
 cd drupal7
 curl -LI http://landobot-drupal7.lndo.site | grep Via | grep varnish-v4
+
+# Should have a running solr instance
+cd drupal7
+lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/index/admin/"
 
 # Should be able to push commits to pantheon
 cd drupal7
