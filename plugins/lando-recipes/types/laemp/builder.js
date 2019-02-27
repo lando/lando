@@ -122,7 +122,7 @@ module.exports = {
     confSrc: __dirname,
     database: 'mysql',
     defaultFiles: {},
-    php: '7.2',
+    php: '7.3',
     via: 'apache',
     webroot: '.',
     xdebug: false,

@@ -13,7 +13,10 @@ Usage
 lando config
 
 # Show me only the "mode"
-lando config -f mode
+lando config --path mode
+
+# Show me in json
+lando config --format json
 ```
 
 Options
@@ -21,7 +24,8 @@ Options
 
 ```bash
 --clear        Clears the lando tasks cache
---field, -f    Show only a specific field
+--format       Output in given format: json
 --help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity
+--path, -p     Only return the value at the given path
 ```

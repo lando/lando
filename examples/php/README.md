@@ -22,8 +22,8 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 7.2 as the default php version
-lando ssh -s defaults -c "php -v | grep 7.2"
+# Should use 7.3 as the default php version
+lando ssh -s defaults -c "php -v" | grep "PHP 7.3"
 
 # Should use apache 2.4 as the default webserver version
 lando ssh -s defaults -c "apachectl -V | grep 2.4."
@@ -45,7 +45,7 @@ lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""
 lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
 
 # Should use specified php version if given
-lando ssh -s custom -c "php -v | grep 7.1"
+lando ssh -s custom -c "php -v" | grep "PHP 7.1"
 
 # Should serve via nginx if specified
 lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
@@ -63,11 +63,15 @@ lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
 lando ssh -s custom -c "php -i | grep memory_limit | grep 514"
 lando ssh -s custom -c "curl http://custom_nginx" | grep html_errors | grep On | grep On
 
-# Should use specified php version if given
-lando ssh -s cliold -c "php -v | grep 5.6"
+# Should inherit overrides from its generator
+lando ssh -s custom -c "env | grep DUALBLADE | grep maxim"
+lando ssh -s custom_nginx -c "env | grep DUALBLADE | grep maxim"
 
 # Should use specified php version if given
-lando ssh -s composer -c "php -v | grep 7.0"
+lando ssh -s cliold -c "php -v" | grep "PHP 5.6"
+
+# Should use specified php version if given
+lando ssh -s composer -c "php -v" | grep "PHP 7.0"
 
 # Should install compose global dependencies if specified by user and have them available in PATH
 lando ssh -s composer -c "phpunit --version"

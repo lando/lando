@@ -19,6 +19,9 @@ lando info
 
 # Get super deep info about your app (this runs `docker inspect` under the hood)
 lando info --deep
+
+# Get super deep data as json
+lando info --deep --format json
 ```
 
 Options
@@ -27,7 +30,9 @@ Options
 ```bash
 --clear        Clears the lando tasks cache
 --deep, -d     Get ALL the info
+--format       Output in given format: json
 --help         Shows lando or delegated command help if applicable
 --service, -s  Get info for only the specified services
 --verbose, -v  Runs with extra verbosity
+--path, -p     Only return the value at the given path
 ```

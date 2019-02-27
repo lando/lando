@@ -42,6 +42,7 @@ module.exports = {
         refreshCerts = false,
         remoteFiles = {},
         scripts = [],
+        sport = '443',
         ssl = false,
         sslExpose = true,
         supported = ['custom'],
@@ -108,7 +109,7 @@ module.exports = {
       // Handle ssl
       if (ssl) {
         volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
-        if (sslExpose) ports.push('443');
+        if (sslExpose) ports.push(sport);
       }
 
       // Handle cert refresh

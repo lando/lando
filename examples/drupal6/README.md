@@ -35,7 +35,7 @@ lando ssh -s appserver -c "curl -L localhost" | grep "Choose language"
 
 # Should use 5.6 as the default php version
 cd drupal6
-lando php -v | grep 5.6
+lando php -v | grep "PHP 5.6"
 
 # Should be running apache 2.4 by default
 cd drupal6

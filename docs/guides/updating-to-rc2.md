@@ -28,6 +28,16 @@ lando start
 lando db-import dump.sql.gz
 ```
 
+Removing `~/.lando`
+-------------------
+
+While most updates do not require the removal of `~/.lando` there are some circumstances where this seems neccessary. If you are running into any of the below known issues, or things don't seem _quite right_ we recommend a quick `rm -rf ~/.lando` and then trying again.
+
+* [Database doesn't start or reports as unhealthy](https://github.com/lando/lando/issues/1486)
+* [`lndo.site` sites are not accessible](https://github.com/lando/lando/issues/1490)
+
+If you are running into an issue that is resolved by removing `~/.lando` please [submit a ticket](https://github.com/lando/lando/issues/new/choose) so we can add it to the above list.
+
 Overrides
 ---------
 
