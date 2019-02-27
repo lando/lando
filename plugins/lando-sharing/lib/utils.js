@@ -5,8 +5,6 @@ const _ = require('lodash');
 const path = require('path');
 const toObject = require('./../../../lib/utils').toObject;
 
-// @NOTE: move below helpers to lib
-
 // Helper to get named volume
 const getNamedVolumeName = exclude => 'exclude_' + path.normalize(exclude).split(path.sep).join('_');
 
@@ -16,10 +14,17 @@ const getNamedVolumeNames = (excludes = []) => _(excludes)
   .value();
 
 // Helper to get named volumes
-exports.getNamedVolumes = (excludes = []) => toObject(getNamedVolumeNames(excludes));
+exports.getNamedVolumes = (excludes = []) => _(excludes)
+  .thru(excludes => toObject(getNamedVolumeNames(excludes)))
+  .value();
 
 // Get service volumes
 exports.getServiceVolumes = (excludes = [], base = '/tmp') => _(excludes)
   .map(exclude => ({mount: getNamedVolumeName(exclude), path: path.join(base, exclude)}))
   .map(exclude => `${exclude.mount}:${exclude.path}`)
+  .value();
+
+// Get directories to include
+exports.getIncludeVolumes = (excludes = [], base = '/app') => _(excludes)
+  .map(exclude => `${base}/${exclude}:/app/${exclude}:delegated`)
   .value();

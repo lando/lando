@@ -6,18 +6,23 @@ const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
-// @TODO: make sure exclude exists on host
-// @TODO: make sure container is destroyed on sync fails
+// Helper to get excludes
+const getExcludes = (data = [], inverse = false) => _(data)
+  .filter(exclude => _.startsWith(exclude, '!') === inverse)
+  .map(exclude => _.trimStart(exclude, '!'))
+  .uniq()
+  .compact()
+  .value();
 
-// Helper to make excludes unique
-const parseExcludes = (excludes = []) => _(excludes).uniq().compact().value();
+// Helper to get includes
+const getIncludes = data => getExcludes(data, true);
 
 // Helper to determine whether we should exclude
 const shouldExclude = (excludes = []) => {
   // Only do this on non linux
   if (process.platform === 'linux') return false;
   // Otherwise return if we have non-empty config
-  return !_.isEmpty(parseExcludes(excludes));
+  return !_.isEmpty(getExcludes(excludes));
 };
 
 // Helper to get popuylation command
@@ -26,7 +31,8 @@ const getPopCommand = (excludes = []) => _.compact(_.flatten([['/helpers/mounter
 module.exports = (app, lando) => {
   if (shouldExclude(_.get(app, 'config.excludes', []))) {
     // Get our excludes
-    const excludes = parseExcludes(app.config.excludes);
+    const excludes = getExcludes(app.config.excludes);
+    const includes = getIncludes(app.config.excludes, true);
 
     // If we have no build lock lets make sure we (re)populate our volumes
     app.events.on('pre-start', 2, () => {
@@ -35,7 +41,7 @@ module.exports = (app, lando) => {
         const mountData = new LandoMounter(lando.config.userConfRoot, app.root, excludes);
         const mountDir = path.join(lando.config.userConfRoot, 'mounter', app.name);
         const mountFiles = lando.utils.dumpComposeData(mountData, mountDir);
-        return lando.engine.run({
+        const run = {
           compose: mountFiles,
           project: app.project,
           cmd: getPopCommand(excludes),
@@ -45,16 +51,24 @@ module.exports = (app, lando) => {
             autoRemove: true,
             workdir: '/source',
           },
+        };
+        return lando.engine.run(run)
+        // Destroy on fail
+        .catch(err => {
+          run.opts = {purge: true, mode: 'attach'};
+          return lando.engine.stop(run).then(() => lando.engine.destroy(run)).then(() => lando.Promise.reject(err));
         });
       }
     });
 
     // Sharing is caring
     app.events.on('post-init', () => {
+      const serviceExcludes = utils.getServiceVolumes(excludes, '/app');
+      const serviceIncludes = utils.getIncludeVolumes(includes, app.root);
       app.add(new app.ComposeService('excludes', {}, {
         volumes: utils.getNamedVolumes(excludes),
         services: toObject(app.services, {
-          volumes: utils.getServiceVolumes(excludes, '/app'),
+          volumes: _.compact(serviceExcludes.concat(serviceIncludes)),
         }),
       }));
     });
