@@ -22,9 +22,11 @@ While Lando will automatically trust this CA internally it is up to you to trust
 > If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with
 > `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
 
-The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app. This will generate the CA if its not already there. Also note that if you change the Lando `domain` in the [global config](./config.md) you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate.
+The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app. This will generate the CA if its not already there. Note that if you change the Lando `domain` in the [global config](./config.md) you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate correctly.
 
-Once it is you can add or remove it with the relevant commands below.
+Also note that in accordance with the [restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) on wildcard certs changing the `domain` may result in unexpected behavior depending on how you set it. For example, setting `domain` to a top level domain such as `test` will not work.
+
+That all said, once you've located the correct cert you can add or remove it with the relevant commands below.
 
 ### macOS
 

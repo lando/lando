@@ -80,7 +80,7 @@ module.exports = (app, lando) => {
     customModule: require('./lib/customMod'),
     config: {
       mySetting: true,
-      domain: 'mydomain.come',
+      domain: 'mydomain.com',
     };
   };
 };
