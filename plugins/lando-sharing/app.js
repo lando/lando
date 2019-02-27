@@ -6,8 +6,10 @@ const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
-// Helper to make excludes unique
 // @TODO: make sure exclude exists on host
+// @TODO: make sure container is destroyed on sync fails
+
+// Helper to make excludes unique
 const parseExcludes = (excludes = []) => _(excludes).uniq().compact().value();
 
 // Helper to determine whether we should exclude

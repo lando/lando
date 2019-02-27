@@ -101,7 +101,7 @@ lando info --deep | grep NetworkSettings
 lando info --format json
 
 # Should return a specified path when given with lando info
-lando info --path "[0].service" | grep web
+lando info --path "[0]" | grep service | wc -l | grep 1
 
 # Should list this apps containers
 lando list | grep landobase_log_1
@@ -111,8 +111,8 @@ lando list | grep landobase_web2_1
 # Should output JSON in lando list without error
 lando list --format json
 
-# Should return a specified path when given with lando info
-lando list --path "landobase.[0].service" | grep web
+# Should return a specified path when given with lando list
+lando list --path "landobase" | grep landobase
 
 # Should return logs without error
 lando logs
