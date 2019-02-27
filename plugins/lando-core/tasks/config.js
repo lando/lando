@@ -1,22 +1,23 @@
 'use strict';
 
 const _ = require('lodash');
-const util = require('util');
+const utils = require('./../lib/utils');
 
 module.exports = lando => ({
   command: 'config',
   level: 'tasks',
   describe: 'Displays the lando configuration',
-  options: {
+  options: _.merge(utils.formattedOptions, {
     field: {
       describe: 'Show only a specific field',
       alias: ['f'],
       string: true,
     },
-  },
-  run: options => {
-    const inspectOpts = {colors: true, depth: 10, compact: false};
-    if (options.field) console.log(util.inspect(_.pick(lando.config, options.field), inspectOpts));
-    else console.log(util.inspect(lando.config, inspectOpts));
-  },
+  }),
+  run: options =>
+    utils.outputFormatted(
+      options.field ? _.pick(lando.config, options.field) : lando.config,
+      options.path,
+      options.format
+    ),
 });

@@ -32,4 +32,6 @@ Options
 --filter, -f   Filter by "key=value"
 --help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity
+--output, -o   Output in given format: json
+--path, -p     Only return the value at the given path
 ```
