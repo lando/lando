@@ -92,6 +92,7 @@
 *   [Environment](config/env.md)
 *   [Events](config/events.md)
 *   [Recipes](config/recipes.md)
+*   [Performance](config/performance.md)
 *   [Proxy](config/proxy.md)
 *   [Services](config/services.md)
 *   [Tooling](config/tooling.md)
