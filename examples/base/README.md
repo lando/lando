@@ -82,8 +82,13 @@ lando config -vvvv | grep silly
 lando config
 
 # Should only show specified field in lando config
-lando config -f mode | grep mode | grep cli
+lando config --path mode | grep cli
+lando config -p mode | grep cli
+lando config --field mode | grep cli
 lando config --field mode | grep recipes || echo $? | grep 1
+
+# Should output JSON in lando config without error
+lando config --format json
 
 # Should run lando info without error
 lando info
@@ -92,10 +97,22 @@ lando info
 lando info -d | grep NetworkSettings
 lando info --deep | grep NetworkSettings
 
+# Should output JSON in lando info without error
+lando info --format json
+
+# Should return a specified path when given with lando info
+lando info --path "[0].service" | grep web
+
 # Should list this apps containers
 lando list | grep landobase_log_1
 lando list | grep landobase_web_1
 lando list | grep landobase_web2_1
+
+# Should output JSON in lando list without error
+lando list --format json
+
+# Should return a specified path when given with lando info
+lando list --path "landobase.[0].service" | grep web
 
 # Should return logs without error
 lando logs

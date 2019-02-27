@@ -69,7 +69,7 @@ done
 # Print some messages afterwards
 if [ $LANDO_UNINSTALLED == true ]; then
   echo ""
-  echo "We have removed the lando binary but you still nay have lingering lando configuration files"
+  echo "We have removed the lando binary but you still may have lingering lando configuration files"
   echo "You can optionally remove these by running"
   echo -e "\033[91mrm -rf ~/.lando\033[39m"
 

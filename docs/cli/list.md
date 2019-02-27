@@ -20,6 +20,12 @@ lando list -a --app my-app
 
 # Get all services of kind=service, note the quotes are important
 lando list --filter "kind=service"
+
+# Get all the data as json
+lando list --all --format json
+
+# Get the name for the first service of a given app, note the quote are important
+lando list --path "my-app.[0].service"
 ```
 
 Options
@@ -30,8 +36,8 @@ Options
 --app          Show containers for only a particular app
 --clear        Clears the lando tasks cache
 --filter, -f   Filter by "key=value"
+--format       Output in given format: json
 --help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity
---output, -o   Output in given format: json
 --path, -p     Only return the value at the given path
 ```

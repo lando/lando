@@ -9,7 +9,7 @@ module.exports = lando => {
     command: 'list',
     describe: 'Lists all running lando apps and containers',
     level: 'engine',
-    options: _.merge(utils.formattedOptions, {
+    options: _.merge({}, utils.formattedOptions, {
       all: {
         describe: 'Show all containers, even those not running',
         alias: ['a'],
