@@ -12,6 +12,8 @@ Getting Started
 
 Enable Xdebug by adding some lines to your Lando recipe.
 
+**Lando beta versions and rc.1** need `conf:` at file root as follow:
+
 ```yaml
 name: mywebsite
 recipe: drupal8
@@ -19,11 +21,23 @@ config:
   webroot: docroot
   xdebug: true
   conf:
-    # Tell Lando to use additional PHP settings.
-    # The location of this file is arbitrary.
-    # We placed it inside .vscode/ folder simply because we find it convenient.
     php: .vscode/php.ini
 ```
+
+**Lando rc.2+** needs `config:` under `services:` as follow:
+
+```yaml
+name: mywebsite
+recipe: drupal8
+services:
+  appserver:
+    webroot: web
+    xdebug: true
+    config: 
+      php: .vscode/php.ini
+```
+
+**Tell Lando to use additional PHP settings**
 
 Create the custom `php.ini` file to add XDebug settings to PHP.
 
@@ -31,6 +45,10 @@ Create the custom `php.ini` file to add XDebug settings to PHP.
 touch .vscode/php.ini
 code .vscode/php.ini
 ```
+
+The location of this file is arbitrary.
+
+We placed it inside `.vscode/` folder simply because we find it convenient.
 
 Add your custom XDebug settings.
 
