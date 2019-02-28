@@ -259,6 +259,7 @@ lando terminus backup:create MYSITE.MYENV --element=files
 # Download and extract backup of the files
 lando terminus backup:get MYSITE.MYENV --element=files --to=/tmp/files.tar.gz
 # Import your files
+Please be aware the following paths **are not valid if you are using a nested webroot in your Pantheon recipe.**
 
 #Drupal
 lando ssh -c "mkdir -p /app/sites/default/files"
