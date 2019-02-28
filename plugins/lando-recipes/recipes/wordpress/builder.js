@@ -5,13 +5,13 @@ const _ = require('lodash');
 const utils = require('./../../lib/utils');
 
 // WP status check
-const getWpStatusCheck = (version = '7.2') => {
+const getWpStatusCheck = (version = '7.3') => {
   if (version === '5.3') return ['true'];
   else return ['php', '/usr/local/bin/wp', '--info'];
 };
 
 // Helper to get WPCLI version
-const getWpCliUrl = (version = '7.2') => {
+const getWpCliUrl = (version = '7.3') => {
   if (version === '5.3') return 'https://github.com/wp-cli/wp-cli/releases/download/v1.5.1/wp-cli-1.5.1.phar';
   else return 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar';
 };
@@ -30,7 +30,7 @@ module.exports = {
     defaultFiles: {
       php: 'php.ini',
     },
-    php: '7.2',
+    php: '7.3',
     tooling: {wp: {service: 'appserver'}},
     via: 'apache',
     webroot: '.',

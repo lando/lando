@@ -93,7 +93,7 @@ exports.getLampDefaults = (name = 'lamp', via = 'apache') => ({
   config: {
     confSrc: __dirname,
     database: 'mysql',
-    php: '7.2',
+    php: '7.3',
     via,
     webroot: '.',
     xdebug: false,

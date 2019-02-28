@@ -41,15 +41,15 @@ exports.run = (lando, run) => lando.engine.run(run).catch(err => {
 exports.runDefaults = (lando, options) => {
   // Handle all the compose stuff
   const LandoInit = lando.factory.get('_init');
-  const utilData = new LandoInit(
+  const initData = new LandoInit(
     lando.config.userConfRoot,
     lando.config.home,
     options.destination,
     _.cloneDeep(lando.config.appEnv),
     _.cloneDeep(lando.config.appLabels)
   );
-  const utilDir = path.join(lando.config.userConfRoot, 'init', options.name);
-  const utilFiles = lando.utils.dumpComposeData(utilData, utilDir);
+  const initDir = path.join(lando.config.userConfRoot, 'init', options.name);
+  const initFiles = lando.utils.dumpComposeData(initData, initDir);
   // Start to build out some propz and shiz
   const project = 'landoinit' + utils.dockerComposify(options.name);
   // Return
@@ -57,7 +57,7 @@ exports.runDefaults = (lando, options) => {
     id: `${project}_init_1`,
     project,
     user: 'www-data',
-    compose: utilFiles,
+    compose: initFiles,
     remove: false,
   };
 };

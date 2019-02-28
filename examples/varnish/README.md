@@ -34,6 +34,10 @@ lando ssh -s custom_ssl -c "curl -k https://localhost | grep sophisticated"
 # Shoule use a custom vcl file if specified
 lando ssh -s custom -c "cat /etc/varnish/conf.d/lando.vcl | grep LANDOVARNISH"
 
+# Should inherit overrides from its generator
+lando ssh -s custom -c "env | grep MEGAMAN | grep X"
+lando ssh -s custom_ssl -c "env | grep MEGAMAN | grep X"
+
 # Should use a custom backend port when specified
 lando ssh -s customport -c "curl http://localhost | grep SAW"
 

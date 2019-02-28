@@ -40,11 +40,14 @@ lando ssh -s defaults -c \'env | grep NODE_EXTRA_CA_CERTS | grep "$LANDO_CA_CERT
 # Should only serve over http by default
 lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
 
-# Should serve over specified port if given
+# Should serve over specified ports if given
 lando ssh -s custom -c "curl http://localhost:3000 | grep tune"
 
 # Should serve over https is ssl is set by user
 lando ssh -s custom -c "curl -k https://localhost | grep tune"
+
+# Should servce over a custom https port if ssl is set to a specific port
+lando ssh -s custom2 -c "curl -k https://localhost:4444 | grep DANCING"
 
 # Should install global dependencies if specified by user and have them available in PATH
 lando ssh -s custom -c "gulp -v"

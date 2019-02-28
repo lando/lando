@@ -5,6 +5,7 @@ const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const url = require('url');
+const util = require('util');
 
 /*
  * A toggle to either start or restart
@@ -63,8 +64,8 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
  * the docker-compose files were in the app root.
  */
 exports.normalizePath = (local, base = '.', excludes = []) => {
-  // Return local if it starts with $
-  if (_.startsWith(local, '$')) return local;
+  // Return local if it starts with $ or ~
+  if (_.startsWith(local, '$') || _.startsWith(local, '~')) return local;
   // Return local if it is one of the excludes
   if (_.includes(excludes, local)) return local;
   // Return local if local is an absolute path
@@ -147,3 +148,41 @@ exports.stripWild = versions => _(versions)
   .map(version => (version.split('.')[2] === 'x') ? _.slice(version.split('.'), 0, 2).join('.') : version)
   .value();
 
+
+exports.formattedOptions = {
+  format: {
+    describe: 'Output in given format: json',
+    string: true,
+  },
+  path: {
+    describe: 'Only return the value at the given path',
+    alias: ['p'],
+    default: null,
+    string: true,
+  },
+};
+
+exports.outputFormatted = (input, path = null, format = null) => {
+  const data = path && _.has(input, path) ?
+    _.get(input, path) :
+    input;
+
+  let output;
+
+  switch (format) {
+    case 'json':
+      output = JSON.stringify(data);
+      break;
+
+    // @TODO: Add CSV.
+
+    default:
+      output = util.inspect(data, {
+        colors: true,
+        depth: 10,
+        compact: false,
+      });
+  }
+
+  return console.log(output);
+};

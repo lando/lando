@@ -180,6 +180,10 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal7
 curl -LI http://landobot-drupal7.lndo.site | grep Via | grep varnish-v4
 
+# Should have a running solr instance
+cd drupal7
+lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/index/admin/"
+
 # Should be able to push commits to pantheon
 cd drupal7
 lando ssh -s appserver -c "git rev-parse HEAD > test.log"

@@ -105,6 +105,16 @@ app.get('/', (req, res) => {
 });
 ```
 
+You can also set `ssl` to a specific port. This will do the same thing as `ssl: true` except it will expose the port you specify instead of `443`.
+
+```yaml
+services:
+  my-service:
+    type: node
+    port: 3000
+    ssl: 4444
+```
+
 ### Installing global dependencies
 
 You can also use the `globals` key if you need to install any [global node dependenices](https://docs.npmjs.com/cli/install). This follows the same syntax as your normal [`package.json`](https://docs.npmjs.com/files/package.json) except written as YAML instead of JSON.

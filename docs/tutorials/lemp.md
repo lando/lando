@@ -47,7 +47,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: lemp
 config:
-  php: 7.2
+  php: 7.3
   webroot: .
   database: mysql:5.7
   xdebug: false

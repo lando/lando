@@ -19,6 +19,17 @@ exports.addBuildStep = (steps, app, name, step = 'build_internal', front = false
  * Helper to get global deps
  * @TODO: this looks pretty testable? should services have libs?
  */
+exports.cloneOverrides = (overrides = {}) => {
+  const newOverrides = _.cloneDeep(overrides);
+  if (_.has(newOverrides, 'image')) delete newOverrides.image;
+  if (_.has(newOverrides, 'build')) delete newOverrides.build;
+  return newOverrides;
+};
+
+/*
+ * Helper to get global deps
+ * @TODO: this looks pretty testable? should services have libs?
+ */
 exports.getInstallCommands = (deps, pkger, prefix = []) => _(deps)
   .map((version, pkg) => _.flatten([prefix, pkger(pkg, version)]))
   .map(command => command.join(' '))

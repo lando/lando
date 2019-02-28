@@ -49,7 +49,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: wordpress
 config:
-  php: 7.2
+  php: 7.3
   via: apache:2.4
   webroot: .
   database: mysql:5.7
