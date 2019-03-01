@@ -1,3 +1,6 @@
+http://docs.lando.dev/:
+  type: redirect
+  to: http://{default}/
 http://docs.lndo.io/:
   type: redirect
   to: http://{default}/
