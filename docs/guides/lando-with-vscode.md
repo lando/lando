@@ -133,7 +133,7 @@ First, you need to have VSCode listen for debugging on 2 separate ports, because
   "compounds": [
     {
         "name": "PhpUnit",
-        "configurations": ["Normal", "PhpUnit dummy"]
+        "configurations": ["Listen for XDebug", "PhpUnit dummy"]
     }
        ]
 }
