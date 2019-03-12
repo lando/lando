@@ -72,15 +72,14 @@ if [ $(id -u) = 0 ]; then
   add_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_WEBROOT_UID $LANDO_WEBROOT_GID $FLAVOR
   verify_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $FLAVOR
 
-  # Correctly map users if we are on linux
-  if [ "$LANDO_HOST_OS" = "linux" ]; then
-    echo_maybe "Remapping ownership to handle Linux docker volume sharing..."
-    echo_maybe "LANDO_HOST_UID: $LANDO_HOST_UID"
-    echo_maybe "LANDO_HOST_GID: $LANDO_HOST_GID"
-    echo_maybe "Resetting $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP from $LANDO_WEBROOT_UID:$LANDO_WEBROOT_GID to $LANDO_HOST_UID:$LANDO_HOST_GID"
-    reset_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_HOST_UID $LANDO_HOST_GID $FLAVOR
-    echo_maybe "$LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP is now running as $(id $LANDO_WEBROOT_USER)!"
-  fi
+  # Correctly map users
+  # Lets do this regardless of OS now
+  echo_maybe "Remapping ownership to handle docker volume sharing..."
+  echo_maybe "LANDO_HOST_UID: $LANDO_HOST_UID"
+  echo_maybe "LANDO_HOST_GID: $LANDO_HOST_GID"
+  echo_maybe "Resetting $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP from $LANDO_WEBROOT_UID:$LANDO_WEBROOT_GID to $LANDO_HOST_UID:$LANDO_HOST_GID"
+  reset_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_HOST_UID $LANDO_HOST_GID $FLAVOR
+  echo_maybe "$LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP is now running as $(id $LANDO_WEBROOT_USER)!"
 
   # Make sure we set the ownership of the mount and HOME when we start a service
   echo_maybe "And here. we. go."
