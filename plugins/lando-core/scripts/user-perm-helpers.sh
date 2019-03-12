@@ -46,6 +46,7 @@ reset_user() {
     usermod -o -u "$HOST_UID" "$USER" 2>/dev/null
     groupmod -g "$HOST_GID" "$GROUP" 2>/dev/null || true
     usermod -g $(getent group "$LANDO_HOST_GID" | cut -d: -f1) "$USER" 2>/dev/null || true
+    usermod -a -G "$GROUP" "$USER" 2>/dev/null || true
   fi;
   # If this mapping is incorrect lets abort here
   if [ "$(id -u $USER)" != "$HOST_UID" ]; then
@@ -80,7 +81,7 @@ perm_sweep() {
   nohup chown -R $USER:$GROUP /usr/local/share >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /usr/local >/dev/null 2>&1 &
 
-  # Make sure we chown the $LANDO_WEBROOT_USER home directory
+  # Make sure we chown the $USER home directory
   nohup chown -R $USER:$GROUP $(getent passwd $USER | cut -d : -f 6) >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /lando >/dev/null 2>&1 &
 }
