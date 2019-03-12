@@ -18,6 +18,9 @@ lando poweroff
 rm -rf drupal8 && mkdir -p drupal8 && cd drupal8
 lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz --remote-options="--strip-components 1" --recipe drupal8 --webroot . --name lando-drupal8
 
+# Should copy in the .lando.local.yml
+cp -f .lando.local.yml drupal8/.lando.local.yml
+
 # Should start up successfully
 cd drupal8
 lando start
