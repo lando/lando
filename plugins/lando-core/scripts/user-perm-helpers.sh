@@ -8,11 +8,11 @@ add_user() {
   local GID=$4
   local DISTRO=$5
   if [ "$DISTRO" = "alpine" ]; then
-    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP"
-    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP"
+    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
+    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
   else
-    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP"
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER"
+    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
+    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER" 2>/dev/null
   fi;
 }
 
@@ -40,11 +40,12 @@ reset_user() {
   local DISTRO=$5
   if [ "$DISTRO" = "alpine" ]; then
     deluser "$USER"
-    addgroup -g "$HOST_GID" "$GROUP"
-    adduser -u "$HOST_UID" -G "$GROUP" -h /var/www -u "$HOST_UID" -D "$USER"
+    addgroup -g "$HOST_GID" "$GROUP" 2>/dev/null
+    adduser -u "$HOST_UID" -G "$GROUP" -h /var/www -u "$HOST_UID" -D "$USER" 2>/dev/null
   else
-    usermod -o -u "$HOST_UID" "$USER"
-    groupmod -g "$HOST_GID" "$GROUP" || true
+    usermod -o -u "$HOST_UID" "$USER" 2>/dev/null
+    groupmod -g "$HOST_GID" "$GROUP" 2>/dev/null || true
+    usermod -g $(getent group "$LANDO_HOST_GID" | cut -d: -f1) "$USER" 2>/dev/null || true
   fi;
   # If this mapping is incorrect lets abort here
   if [ "$(id -u $USER)" != "$HOST_UID" ]; then
