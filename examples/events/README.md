@@ -44,4 +44,7 @@ Destroy tests
 # Should destroy successfully
 lando destroy -y
 lando poweroff
+
+# Should trigger pre-destroy event
+stat test/destroy.txt
 ```
