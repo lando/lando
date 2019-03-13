@@ -38,7 +38,10 @@ reset_user() {
   local HOST_UID=$3
   local HOST_GID=$4
   local DISTRO=$5
-  local HOST_GROUP=$(getent group "$HOST_GID" | cut -d: -f1)
+  local HOST_GROUP=$GROUP
+  if getent group "$HOST_GID" 1>/dev/null 2>/dev/null; then
+    HOST_GROUP=$(getent group "$HOST_GID" | cut -d: -f1)
+  fi
   if [ "$DISTRO" = "alpine" ]; then
     deluser "$USER" 2>/dev/null
     addgroup -g "$HOST_GID" "$GROUP" 2>/dev/null | addgroup "$GROUP" 2>/dev/null
@@ -48,7 +51,7 @@ reset_user() {
   else
     usermod -o -u "$HOST_UID" "$USER" 2>/dev/null
     groupmod -g "$HOST_GID" "$GROUP" 2>/dev/null || true
-    usermod -g $(getent group "$HOST_GID" | cut -d: -f1) "$USER" 2>/dev/null || true
+    usermod -g "$HOST_GID" "$USER" 2>/dev/null || true
     usermod -a -G "$GROUP" "$USER" 2>/dev/null || true
   fi;
   # If this mapping is incorrect lets abort here
