@@ -133,7 +133,7 @@ First, you need to have VSCode listen for debugging on 2 separate ports, because
   "compounds": [
     {
         "name": "PhpUnit",
-        "configurations": ["Normal", "PhpUnit dummy"]
+        "configurations": ["Listen for XDebug", "PhpUnit dummy"]
     }
        ]
 }
@@ -145,7 +145,7 @@ Next add some custom tooling to your .lando.yml file, that provides a command to
 tooling:
   phpunitdebug:
     service: appserver
-    cmd: php -d xdebug.remote_port=900 vendor/bin/phpunit
+    cmd: php -d xdebug.remote_port=9000 vendor/bin/phpunit
 ```
 
 Now to run debug a PhpUnit test, do the following:

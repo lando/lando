@@ -72,7 +72,7 @@ Here is the [recipe config](./../config/recipes.md#config) to set the Drupal 8 r
 ```yaml
 recipe: drupal8
 config:
-  php: 7.0
+  php: '7.0'
 ```
 
 ### Choosing a webserver

@@ -17,7 +17,7 @@ This allows you to:
 
 > #### Warning::Make sure to install your dependencies
 >
-> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./config/services.md#build-steps) or our [`ssh`](./../cli/ssh.md) command.
+> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./services.md#build-steps) or our [`ssh`](./../cli/ssh.md) command.
 
 Usage
 -----
@@ -56,13 +56,13 @@ The above will run `php` inside of the `appserver` and also pass in any addition
 
 ```bash
 # OMG WHYYYYY
-docker exec -it mysite_appserver_1 /bin/sh -c "/path/to/my/php -e \"phpinfo();\""
+docker exec -it mysite_appserver_1 /bin/sh -c "/usr/local/bin/php -r 'phpinfo();'"
 
 # Hmm ok that's a bit better
-lando ssh -c "php -e \"phpinfo();\""
+lando ssh -c "php -r 'phpinfo();'"
 
 # Oh so nice!
-lando php -e "phpinfo();"
+lando php -r "phpinfo();"
 ```
 
 ### Consolidated command tooling
