@@ -18,6 +18,10 @@ lando poweroff
 rm -rf lemp && mkdir -p lemp && cd lemp
 lando init --source remote --remote-url git://github.com/cakephp/cakephp.git --remote-options="--branch 2.x --depth 1" --recipe lemp --webroot . --name lando-lemp
 
+# Should move in our custom config and landofile
+cp -f .lando.local.yml lemp/.lando.local.yml
+cp -rf config lemp/config
+
 # Should start up successfully
 cd lemp
 lando start
