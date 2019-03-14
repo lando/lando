@@ -10,6 +10,8 @@ events:
   post-thing:
     - web: mkdir -p /app/test && echo "$(hostname -s)" > /app/test/web-post-thing.txt
     - env | grep "SERVICE=web"
+  pre-rebuild:
+    - web: mkdir -p /app/test && echo "rebuilding" > /app/test/web-pre-rebuild.txt
   post-rebuild:
     - web: echo "ET TU, BRUT?"
   post-dynamic:

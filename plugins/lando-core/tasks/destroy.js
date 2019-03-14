@@ -21,9 +21,7 @@ module.exports = lando => {
       // Destroy the app
       if (app) {
         console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));
-        return app.init()
-          .then(() => app.destroy())
-          .then(() => console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!')));
+        return app.destroy().then(() => console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!')));
       }
     },
   };
