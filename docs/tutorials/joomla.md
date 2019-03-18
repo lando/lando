@@ -169,7 +169,7 @@ Note that you can put your configuration files anywhere inside your application 
 **Landofile using custom joomla config**
 
 ```yaml
-recipe: drupal7
+recipe: joomla
 config:
   config:
     database: config/my-custom.cnf

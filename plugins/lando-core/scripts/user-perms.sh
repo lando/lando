@@ -22,7 +22,7 @@ fi
 # Set defaults
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
-: ${LANDO_WEBROOT_UID:=$(id -u $LANDO_WEBROOT_GROUP)}
+: ${LANDO_WEBROOT_UID:=$(id -u $LANDO_WEBROOT_USER)}
 : ${LANDO_WEBROOT_GID:=$(id -g $LANDO_WEBROOT_GROUP)}
 : ${SILENT:=$1}
 
