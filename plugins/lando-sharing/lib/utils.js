@@ -21,7 +21,7 @@ exports.getNamedVolumes = (excludes = []) => _(excludes)
 
 // Get service volumes
 exports.getServiceVolumes = (excludes = [], base = '/tmp') => _(excludes)
-  .map(exclude => ({mount: getNamedVolumeName(exclude), path: path.join(base, exclude)}))
+  .map(exclude => ({mount: getNamedVolumeName(exclude), path: path.posix.join(base, exclude)}))
   .map(exclude => `${exclude.mount}:${exclude.path}`)
   .value();
 
