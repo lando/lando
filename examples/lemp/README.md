@@ -58,6 +58,14 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd lemp
 lando mysql -ulemp -plemp lemp -e quit
 
+# Should use custom server config
+cd lemp
+lando ssh -s appserver_nginx -c "cat /opt/bitnami/nginx/conf/nginx.conf" | grep "CUSTOMSERVERCONFIG"
+
+# Should use custom vhosts config
+cd lemp
+lando ssh -s appserver_nginx -c "cat /opt/bitnami/nginx/conf/vhosts/lando.conf" | grep "CUSTOMVHOSTSCONFIG"
+
 # Should be able to global require a composer dep
 cd lemp
 lando composer global require phpunit/phpunit

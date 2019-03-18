@@ -1,4 +1,4 @@
-#
+# CUSTOMVHOSTSCONFIG
 # nginx configuration example for CakePHP 2.x
 #
 
