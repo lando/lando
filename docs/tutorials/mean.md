@@ -210,6 +210,8 @@ If you do this you must use files that exists inside your applicaton and express
 
 **A hypothetical project**
 
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+
 ```bash
 ./
 |-- config

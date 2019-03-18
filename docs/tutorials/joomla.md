@@ -50,8 +50,10 @@ config:
   database: mysql:5.7
   xdebug: false
   config:
-    php: SEE BELOW
     database: SEE BELOW
+    php: SEE BELOW
+    server: SEE BELOW
+    vhosts: SEE BELOW
 ```
 
 Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
@@ -147,13 +149,19 @@ You may need to override our [default Joomla config](https://github.com/lando/la
 
 If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
 
+Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
+
 **A hypothetical project**
+
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
 
 ```bash
 ./
 |-- config
+   |-- default.conf
    |-- my-custom.cnf
    |-- php.ini
+   |-- server.conf
 |-- index.php
 |-- .lando.yml
 ```
@@ -161,11 +169,13 @@ If you do this you must use files that exists inside your applicaton and express
 **Landofile using custom joomla config**
 
 ```yaml
-recipe: joomla
+recipe: drupal7
 config:
   config:
-    php: config/php.ini
     database: config/my-custom.cnf
+    php: config/php.ini
+    server: config/server.conf
+    vhosts: config/default.conf
 ```
 
 Connecting to your database

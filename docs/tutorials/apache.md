@@ -54,6 +54,8 @@ Note that if you set `config` to use your own files then those files should exis
 
 **A hypothetical project**
 
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+
 ```bash
 ./
 |-- config
