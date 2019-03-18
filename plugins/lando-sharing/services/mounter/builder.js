@@ -16,13 +16,16 @@ module.exports = {
     name: 'mounter',
   },
   builder: (parent, config) => class LandoMounter extends parent {
-    constructor(userConfRoot, app, excludes = []) {
+    constructor({userConfRoot, gid, uid}, app, excludes = []) {
       const mountService = {
         services: {
           mounter: {
             command: 'tail -f /dev/null',
             image: 'devwithlando/util:2',
-            environment: {},
+            environment: {
+              LANDO_HOST_UID: uid,
+              LANDO_HOST_GID: gid,
+            },
             labels: {},
           },
         },

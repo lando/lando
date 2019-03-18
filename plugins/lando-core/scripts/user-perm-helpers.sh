@@ -8,11 +8,11 @@ add_user() {
   local GID=$4
   local DISTRO=$5
   if [ "$DISTRO" = "alpine" ]; then
-    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP"
-    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP"
+    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
+    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
   else
-    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP"
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER"
+    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
+    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER" 2>/dev/null
   fi;
 }
 
@@ -38,13 +38,21 @@ reset_user() {
   local HOST_UID=$3
   local HOST_GID=$4
   local DISTRO=$5
+  local HOST_GROUP=$GROUP
+  if getent group "$HOST_GID" 1>/dev/null 2>/dev/null; then
+    HOST_GROUP=$(getent group "$HOST_GID" | cut -d: -f1)
+  fi
   if [ "$DISTRO" = "alpine" ]; then
-    deluser "$USER"
-    addgroup -g "$HOST_GID" "$GROUP"
-    adduser -u "$HOST_UID" -G "$GROUP" -h /var/www -u "$HOST_UID" -D "$USER"
+    deluser "$USER" 2>/dev/null
+    addgroup -g "$HOST_GID" "$GROUP" 2>/dev/null | addgroup "$GROUP" 2>/dev/null
+    addgroup -g "$HOST_GID" "$HOST_GROUP" 2>/dev/null
+    adduser -u "$HOST_UID" -G "$HOST_GROUP" -h /var/www -D "$USER" 2>/dev/null
+    adduser "$USER" "$GROUP" 2>/dev/null
   else
-    usermod -o -u "$HOST_UID" "$USER"
-    groupmod -g "$HOST_GID" "$GROUP" || true
+    usermod -o -u "$HOST_UID" "$USER" 2>/dev/null
+    groupmod -g "$HOST_GID" "$GROUP" 2>/dev/null || true
+    usermod -g "$HOST_GID" "$USER" 2>/dev/null || true
+    usermod -a -G "$GROUP" "$USER" 2>/dev/null || true
   fi;
   # If this mapping is incorrect lets abort here
   if [ "$(id -u $USER)" != "$HOST_UID" ]; then
@@ -79,7 +87,7 @@ perm_sweep() {
   nohup chown -R $USER:$GROUP /usr/local/share >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /usr/local >/dev/null 2>&1 &
 
-  # Make sure we chown the $LANDO_WEBROOT_USER home directory
+  # Make sure we chown the $USER home directory
   nohup chown -R $USER:$GROUP $(getent passwd $USER | cut -d : -f 6) >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /lando >/dev/null 2>&1 &
 }
