@@ -13,9 +13,11 @@ FROM devwithlando/php:7.0-fpm-2
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
+ENV PHANTOMJS_OLD_VERSION 1.7.0
 ENV TERMINUS_VERSION 1.9.0
 ENV MAVEN_VERSION 3.5.4
 
+# Install the additional things that make the pantheon
 RUN apt-get update && apt-get install -y \
     openjdk-7-jre-headless \
     openjdk-7-jdk \
@@ -35,6 +37,10 @@ RUN apt-get update && apt-get install -y \
   && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v${PHANTOMJS_VERSION}/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2" | tar -xjv \
   && mv phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
   && rm -rf phantomjs-${PHANTOMJS_VERSION}-linux-x86_64 && rm -f phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 \
+  && chmod +x /srv/bin/phantomjs \
+  && curl -fsSL "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/phantomjs/phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64.tar.bz2" | tar -xjv \
+  && mv phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
+  && rm -rf phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64 && rm -f phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64.tar.bz2 \
   && chmod +x /srv/bin/phantomjs \
   && curl -fsSL "http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" | tar -xz -C /tmp \
   && cd /tmp && curl -OL "http://archive.apache.org/dist/tika/apache-tika-1.1-src.zip" \

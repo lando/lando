@@ -54,8 +54,9 @@ services:
     xdebug: false
     composer: []
     config:
-      vhosts: SEE BELOW
       php: SEE BELOW
+      server: SEE BELOW
+      vhosts: SEE BELOW
 ```
 
 ### Choosing a server, or no server
@@ -173,16 +174,19 @@ You may need to override our [default php config](https://github.com/lando/lando
 
 If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
 
-Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts`
+Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
-If you set `via: cli` then, as you might suspect, `vhosts` is not going to do anything.
+If you set `via: cli` then, as you might suspect, `vhosts` and/or `server` is not going to do anything.
 
 **A hypothetical project**
+
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
 
 ```bash
 ./
 |-- config
    |-- default.conf
+   |-- nginx.conf
    |-- php.ini
 |-- index.php
 |-- .lando.yml
@@ -196,6 +200,7 @@ services:
     type: php
     config:
       php: config/php.ini
+      server: config/nginx.conf
       vhosts: config/default.conf
 ```
 

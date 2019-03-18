@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # Set defaults
-: ${LANDO_WEBROOT_USER:='www-data'}
-: ${LANDO_WEBROOT_GROUP:='www-data'}
-: ${LANDO_WEBROOT_UID:='33'}
-: ${LANDO_WEBROOT_GID:='33'}
+: ${LANDO_HOST_UID:='1000'}
+: ${LANDO_HOST_GID:='1000'}
 
 # Inform the user what is happening
 echo -ne "\n\033[35m"
@@ -28,5 +26,5 @@ for MOUNT in "$@"; do
   mkdir -p $SOURCE
   echo "Syncing $MOUNT..."
   rsync --archive --info=progress2 $SOURCE/ $DEST
-  chown $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP -R $DEST
+  chown $LANDO_HOST_UID:$LANDO_HOST_GID -R $DEST
 done
