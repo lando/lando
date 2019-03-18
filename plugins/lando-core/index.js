@@ -15,8 +15,6 @@ const defaults = {
       LANDO: 'ON',
       LANDO_WEBROOT_USER: 'www-data',
       LANDO_WEBROOT_GROUP: 'www-data',
-      LANDO_WEBROOT_UID: '33',
-      LANDO_WEBROOT_GID: '33',
       TERM: 'xterm',
     },
     appLabels: {

@@ -44,7 +44,7 @@ module.exports = {
         environment: {
           PATH: options.path.join(':'),
           PIP_USER: 'true',
-          PYTHONUSERBASE: '/var/www/.local/bin',
+          PYTHONUSERBASE: '/var/www/.local',
         },
         ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,

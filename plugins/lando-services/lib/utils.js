@@ -65,7 +65,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
       }
     });
   });
-  // If we are on linux and we have steps let's unshift user-perm stuff
+  // Let's silent run user-perm stuff
   if (!_.isEmpty(build)) {
     _.forEach(_.uniq(_.map(build, 'id')), container => {
       build.unshift({

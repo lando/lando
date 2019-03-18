@@ -18,6 +18,10 @@ lando poweroff
 rm -rf lemp && mkdir -p lemp && cd lemp
 lando init --source remote --remote-url git://github.com/cakephp/cakephp.git --remote-options="--branch 2.x --depth 1" --recipe lemp --webroot . --name lando-lemp
 
+# Should move in our custom config and landofile
+cp -f .lando.local.yml lemp/.lando.local.yml
+cp -rf config lemp/config
+
 # Should start up successfully
 cd lemp
 lando start
@@ -53,6 +57,14 @@ lando php -m | grep xdebug || echo $? | grep 1
 # Should use the default database connection info
 cd lemp
 lando mysql -ulemp -plemp lemp -e quit
+
+# Should use custom server config
+cd lemp
+lando ssh -s appserver_nginx -c "cat /opt/bitnami/nginx/conf/nginx.conf" | grep "CUSTOMSERVERCONFIG"
+
+# Should use custom vhosts config
+cd lemp
+lando ssh -s appserver_nginx -c "cat /opt/bitnami/nginx/conf/vhosts/lando.conf" | grep "CUSTOMVHOSTSCONFIG"
 
 # Should be able to global require a composer dep
 cd lemp
