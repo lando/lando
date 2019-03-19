@@ -13,6 +13,7 @@ SSH_IDENTITIES=()
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
 : ${LANDO_HOST_USER:=$LANDO_WEBROOT_USER}
+GROUP=$(getent group "$LANDO_HOST_GID" | cut -d: -f1)
 
 # Make sure we have the system wide confdir
 mkdir -p $SSH_CONF
@@ -34,7 +35,7 @@ if [ "$LANDO_HOST_OS" = "win32" ]; then
       cp -rfp $SSH_KEY /lando_keys
     done
   done
-  chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP /lando_keys
+  chown -R $LANDO_WEBROOT_USER:$GROUP /lando_keys
   SSH_DIRS=( "/lando_keys" )
   SSH_KEYS=()
 fi
@@ -42,13 +43,13 @@ fi
 # Scan the following directories for keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   echo "Scanning $SSH_DIR for keys..."
-  SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $LANDO_WEBROOT_GROUP -type f | xargs))
+  SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f | xargs))
 done
 
 # Filter out non private keys
 for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
   echo "Ensuring permissions and ownership $SSH_KEY..."
-  chown -R $LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP $SSH_CANDIDATE
+  chown -R $LANDO_WEBROOT_USER:$GROUP $SSH_CANDIDATE
   chmod 700 $SSH_CANDIDATE
   chmod 644 $SSH_CANDIDATE.pub || true
   echo "Checking whether $SSH_CANDIDATE is a private key..."

@@ -52,8 +52,10 @@ config:
   database: mysql:5.7
   xdebug: false
   config:
+    server: SEE BELOW
     php: SEE BELOW
     database: SEE BELOW
+    vhosts: SEE BELOW
 ```
 
 Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
@@ -127,12 +129,18 @@ You may need to override our [default LEMP config](https://github.com/lando/land
 
 If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
 
+Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be explicitly for `nginx`. We *highly recommend* you check out the [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
+
 **A hypothetical project**
+
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
 
 ```bash
 ./
 |-- config
+   |-- default.conf
    |-- my-custom.cnf
+   |-- nginx.conf
    |-- php.ini
 |-- index.php
 |-- .lando.yml

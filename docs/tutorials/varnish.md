@@ -76,6 +76,8 @@ It's highly likely you will want to use your own [vcl](https://varnish-cache.org
 
 **A hypothetical project**
 
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+
 ```bash
 ./
 |-- config

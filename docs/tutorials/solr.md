@@ -112,6 +112,8 @@ Consider the below example of a Drupal 8 application injecting the Solr 7.x conf
 
 **A hypothetical project**
 
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+
 ```bash
 ./
 |-- sites/all/modules/search_api_solr/solr-conf/7.x

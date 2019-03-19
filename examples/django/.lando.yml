@@ -1,0 +1,10 @@
+name: lando-django
+services:
+  appserver:
+    type: python
+    build:
+      - pip install -r requirements.txt
+tooling:
+  django-admin:
+    service: appserver
+    cmd: django-admin

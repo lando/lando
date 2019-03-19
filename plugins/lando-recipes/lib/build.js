@@ -51,7 +51,7 @@ exports.runDefaults = (lando, options) => {
   const initDir = path.join(lando.config.userConfRoot, 'init', options.name);
   const initFiles = lando.utils.dumpComposeData(initData, initDir);
   // Start to build out some propz and shiz
-  const project = 'landoinit' + utils.dockerComposify(options.name);
+  const project = `${lando.config.product}init` + utils.dockerComposify(options.name);
   // Return
   return {
     id: `${project}_init_1`,
