@@ -312,6 +312,8 @@ host: database
 # for mysql
 port: 3306
 # for postgres
+# username: postgres
+# password: ''
 # port: 5432
 ```
 
