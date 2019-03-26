@@ -80,7 +80,7 @@ const buildTooling = options => {
     service: 'appserver',
     cmd: `n98-magerun2`,
   };
-}
+};
 
 /*
  * Build Magento
