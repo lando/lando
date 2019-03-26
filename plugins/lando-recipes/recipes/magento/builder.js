@@ -34,8 +34,56 @@ const getServiceDefaults = options => ({
   },
 });
 
+const buildTooling = options => {
+  // Add in Magento tooling
+  const magentoCli = `php /app/${options.webroot}/../bin/magento`;
+  options.tooling.magento = {
+    description: 'Magento CLI tools',
+    service: 'appserver',
+    cmd: magentoCli,
+  };
+
+  options.tooling['magento:env:apply'] = {
+    description: 'Configures Magento to use Lando\'s redis and database services',
+    service: 'appserver',
+    needs: ['cache', 'session', 'database'],
+    cmd: [
+      `${magentoCli} setup:config:set`,
+      // Configure Cache for Magento
+      '--cache-backend=redis --cache-backend-redis-server=cache',
+      // Configure Session for Magento
+      '--session-save=redis --session-save-redis-host=session',
+      // Configure Database for Magento
+      '--db-host=database --db-name=magento --db-user=magento --db-password=magento',
+    ].join(' '),
+  };
+  options.tooling['magento:fresh'] = {
+    description: 'Destroys your database, installs composer dependencies, and installs a brand new Magento!',
+    service: 'appserver',
+    needs: ['cache', 'session', 'database'],
+    cmd: [
+      // Ensure Composer is ready to go
+      'composer install &&',
+      // Configure Cache & Services
+      `${options.tooling['magento:env:apply'].cmd} &&`,
+      // Rebuild Magento Database
+      `${magentoCli} setup:install`,
+      '--cleanup-database',
+      // Run Module Setup Scripts
+      `&& ${magentoCli} setup:upgrade`,
+      `&& ${magentoCli} deploy:mode:set developer`,
+      `&& ${magentoCli} cache:flush`,
+    ].join(' '),
+  };
+  options.tooling.magerun = {
+    description: 'netz98 magerun CLI tools for Magento 2',
+    service: 'appserver',
+    cmd: `n98-magerun2`,
+  };
+}
+
 /*
- * Build WordPress
+ * Build Magento
  */
 module.exports = {
   name: 'magento',
@@ -78,51 +126,7 @@ module.exports = {
       // Add the magento cli installer command
       options.composer['n98/magerun2'] = '*';
 
-      // Add in Magento tooling
-      const magentoCli = `php /app/${options.webroot}/../bin/magento`;
-      options.tooling.magento = {
-        description: 'Magento CLI tools',
-        service: 'appserver',
-        cmd: magentoCli,
-      };
-
-      options.tooling['magento:env:apply'] = {
-        description: 'Configures Magento to use Lando\'s redis and database services',
-        service: 'appserver',
-        needs: ['cache', 'session', 'database'],
-        cmd: [
-          `${magentoCli} setup:config:set`,
-          // Configure Cache for Magento
-          '--cache-backend=redis --cache-backend-redis-server=cache',
-          // Configure Session for Magento
-          '--session-save=redis --session-save-redis-host=session',
-          // Configure Database for Magento
-          '--db-host=database --db-name=magento --db-user=magento --db-password=magento',
-        ].join(' '),
-      };
-      options.tooling['magento:fresh'] = {
-        description: 'Destroys your database, installs composer dependencies, and installs a brand new Magento!',
-        service: 'appserver',
-        needs: ['cache', 'session', 'database'],
-        cmd: [
-          // Ensure Composer is ready to go
-          'composer install &&',
-          // Configure Cache & Services
-          `${options.tooling['magento:env:apply'].cmd} &&`,
-          // Rebuild Magento Database
-          `${magentoCli} setup:install`,
-          '--cleanup-database',
-          // Run Module Setup Scripts
-          `&& ${magentoCli} setup:upgrade`,
-          `&& ${magentoCli} deploy:mode:set developer`,
-          `&& ${magentoCli} cache:flush`,
-        ].join(' '),
-      };
-      options.tooling.magerun = {
-        description: 'netz98 magerun CLI tools for Magento 2',
-        service: 'appserver',
-        cmd: `n98-magerun2`,
-      };
+      buildTooling(options);
 
       // Default to Magento-recommended cache service
       options.services.cache = recommendedRedis();
