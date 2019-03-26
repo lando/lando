@@ -23,6 +23,7 @@ const recommendedRedis = () => {
  */
 const getServiceDefaults = options => ({
   appserver: {
+    // This can be removed after the Dockerfile extension updates have ben published
     build_as_root_internal: [
       // Prepare APT
       'apt update -yqq',
