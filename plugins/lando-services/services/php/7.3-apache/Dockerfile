@@ -23,6 +23,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libxml2-dev \
     libicu-dev \
     libzip-dev \
+    libxslt-dev \
     mysql-client \
     postgresql-client-9.6 \
     pv \
@@ -65,6 +66,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     intl \
     gettext \
     pcntl \
+    xsl \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && php -r "if (hash_file('SHA384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.8.4 \

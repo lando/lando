@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libxml2-dev \
     libicu-dev \
+    libxslt-dev \
     mysql-client \
     postgresql-client \
     pv \
@@ -30,6 +31,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     xfonts-base \
     xfonts-75dpi \
+    xsl \
     zlib1g-dev \
   && pecl install apcu \
   && pecl install imagick \

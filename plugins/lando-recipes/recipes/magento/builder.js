@@ -43,6 +43,7 @@ module.exports = {
     confSrc: __dirname,
     config: {},
     composer: {},
+    // Magnto 2.* Compatible DB
     database: 'mariadb:10.2',
     defaultFiles: {
       php: 'php.ini',
