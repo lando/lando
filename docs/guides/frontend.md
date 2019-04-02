@@ -69,6 +69,30 @@ tooling:
 
 After restarting your app, you should be able to run `lando node`, `lando gulp` or `lando npm` and have the corresponding commands run. This is particularly useful if you want to kickoff a watch task you might have configured, say `lando gulp watch`.
 
+Setting up Browsersync
+----------------------
+
+Add following options to your Browsersync script:
+
+```javascript
+browserSync.init(files, {
+  proxy: 'http://appserver',
+  port: 3000,
+  open: false,
+});
+```
+
+And make port 3000 in your node environment available to localhost
+
+```yml
+services:
+  node:
+    type: node:10
+    overrides:
+      ports:
+        - 3000:3000
+```
+
 Additional Reading
 ------------------
 
