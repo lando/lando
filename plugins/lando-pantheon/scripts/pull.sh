@@ -101,8 +101,10 @@ if [ "$CODE" != "none" ]; then
   # Make sure we are in the git root
   cd $LANDO_MOUNT
 
+  # On Pantheon this matches a protected multidev env, which only uses branch `master`
+  PROTECTED_ENV=("dev" "test" "live")
   # Fetch the origin if this is a new branch and set the branch
-  if [ "$CODE" != "dev" ]; then
+  if ! [[ $(printf "_[%s]_" "${PROTECTED_ENV[@]}") =~ .*_\[$CODE\]_.* ]]; then 
     git fetch --all
     GIT_BRANCH=$CODE
   fi
