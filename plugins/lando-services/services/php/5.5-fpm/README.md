@@ -11,7 +11,8 @@ A decent cross purpose fpm based php 5.5 appserver.
 FROM php:5.5-fpm
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \
