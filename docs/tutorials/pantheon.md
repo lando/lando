@@ -473,8 +473,8 @@ You will want to consult the relevant install instructions for each plugin but h
 services:
   appserver:
     build:
-      - mkdir -p ~/.terminus/plugins
-      - composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1
+      - /bin/sh -c "mkdir -p ~/.terminus/plugins"
+      - /bin/sh -c "composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1"
 ```
 
 Tooling
