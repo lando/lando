@@ -8,6 +8,8 @@ and Drupal development. This video tutorial shows you how to set up PhpStorm wit
 https://www.youtube.com/watch?v=sHNJxx0L9r0
 {% endyoutube %}
 
+If you’ve a local php installation (for example php 7.1 installed with homebrew on macOS) that listens on port 9000 you may need to change the containers php.ini port specification to another port (i.e. `xdebug.remote_port=9001`) and tell phpstorm to listen on that port. See also [Debugging Drupal 8 with PHPstorm and Lando on your Mac](https://www.isovera.com/blog/debugging-drupal-8-phpstorm-and-lando-your-mac).
+
 ### Debugging Drush Commands
 By default our Drupal recipes come with Drush out of the box. In order to debug any Drush command using Xdebug using
 PhpStorm or a similar IDE, you will need to set an additional environment variable `PHP_IDE_CONFIG` and configure the 
