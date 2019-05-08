@@ -19,7 +19,7 @@ services:
 
 `myservice` in the example above can actully be set to anything the user wants but common conventions are things like `appserver`, `index`, `cache`, `database` or `kanye`.
 
-Note that you will need to set the `type` and its optional `version` to be eitehr one of the [supported services](#supported-services) below or as defined in one you [create your own](./../dev/plugins.md).
+Note that you will need to set the `type` and its optional `version` to be either one of the [supported services](#supported-services) below or as defined in one you [create your own](./../dev/plugins.md).
 
 Each service also contains a bunch of its own configuartion options. As such we *highly recommend* you check out the documentation for each service. For example here are some of the configuration options available to the `php` service.
 
