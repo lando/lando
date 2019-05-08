@@ -19,7 +19,9 @@ ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
 SUDOERS=$(awk -F':' '$1 == "sudo" {print $4}' /etc/group)
 
 # Bump this for ES search things
-sysctl -w vm.max_map_count=262144
+if [ -f /proc/sys/vm/max_map_count ]; then
+  sysctl -w vm.max_map_count=262144
+fi
 
 # Transform sudoers into IFS default separation and loop
 for u in ${SUDOERS//,/ }
