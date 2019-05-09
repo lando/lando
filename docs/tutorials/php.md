@@ -147,6 +147,8 @@ You can also use the `composer` key if you need to require any [global composer 
 > #### Info::Use composer.json if you can
 >
 > While there are some legitimate use cases to globally install a composer dependency it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+>
+> Note that both `lando composer` is not provided out of the box by the `php` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
 
 Here is an example of globally installing `phpunit/phpunit` `^6.5`
 

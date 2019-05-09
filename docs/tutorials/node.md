@@ -122,6 +122,8 @@ You can also use the `globals` key if you need to install any [global node depen
 > #### Info::Use package.json if you can
 >
 > While there are some legitimate use cases to globally install a node dependency it is almost always preferred to install using your applications normal `package.json` and then running either `lando npm` or `lando yarn` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+>
+> Note that both `lando yarn` and `lando npm` are not provided out of the box by the `node` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
 
 Here is an example of globally installing the `latest` `gulp-cli`.
 
