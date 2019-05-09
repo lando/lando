@@ -207,6 +207,7 @@ exports.getPantheonEnvironment = options => ({
   php_version: options.php_version,
   PRESSFLOW_SETTINGS: JSON.stringify(getPantheonSettings(options)),
   TERMINUS_ENV: 'dev',
+  TERMINUS_HIDE_UPDATE_MESSAGE: 1,
   // TERMINUS_ORG: ''
   TERMINUS_SITE: options.site,
   TERMINUS_TOKEN: _.get(options, '_app.meta.token'),
