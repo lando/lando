@@ -5,7 +5,7 @@ services:
   patch:
     type: mariadb:10.2.21
   custom:
-    type: mariadb:10.2
+    type: mariadb:10.3
     portforward: true
     creds:
       user: pirog
