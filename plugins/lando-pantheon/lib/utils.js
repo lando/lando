@@ -11,7 +11,7 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 // Constants
-const DRUSH_VERSION = '8.1.18';
+const DRUSH_VERSION = '8.2.3';
 const BACKDRUSH_VERSION = '0.0.6';
 const PANTHEON_CACHE_HOST = 'cache';
 const PANTHEON_CACHE_PORT = '6379';

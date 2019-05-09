@@ -5,7 +5,6 @@ set -e
 # Set up our things
 SSH_CONF="/etc/ssh"
 SSH_DIRS=( "/lando/keys" "/user/.ssh" "/var/www/.ssh" )
-SSH_CANDIDATES=()
 SSH_KEYS=()
 SSH_IDENTITIES=()
 
@@ -29,10 +28,10 @@ if [ "$LANDO_HOST_OS" = "win32" ]; then
   echo "Creating a special not-mounted key directory for Windows"
   mkdir -p /lando_keys
   for SSH_DIR in "${SSH_DIRS[@]}"; do
-    SSH_KEYS+=($(find "$SSH_DIR" -maxdepth 1 -not -name 'known_hosts' -type f | xargs))
+    readarray -t SSH_KEYS < <(find "$SSH_DIR" -maxdepth 1 -not -name 'known_hosts' -type f)
     for SSH_KEY in "${SSH_KEYS[@]}"; do
       echo "Copying $SSH_KEY from $SSH_DIR to /lando_keys"
-      cp -rfp $SSH_KEY /lando_keys
+      cp -rfp "$SSH_KEY" /lando_keys
     done
   done
   chown -R $LANDO_WEBROOT_USER:$GROUP /lando_keys
@@ -40,31 +39,30 @@ if [ "$LANDO_HOST_OS" = "win32" ]; then
   SSH_KEYS=()
 fi
 
-# Scan the following directories for keys
+# Scan the following directories for keys and filter out non-private keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   echo "Scanning $SSH_DIR for keys..."
-  SSH_CANDIDATES+=($(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f | xargs))
-done
-
-# Filter out non private keys
-for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
-  echo "Ensuring permissions and ownership $SSH_KEY..."
-  chown -R $LANDO_WEBROOT_USER:$GROUP $SSH_CANDIDATE
-  chmod 700 $SSH_CANDIDATE
-  chmod 644 $SSH_CANDIDATE.pub || true
-  echo "Checking whether $SSH_CANDIDATE is a private key..."
-  if grep -L "PRIVATE KEY" $SSH_CANDIDATE &> /dev/null; then
-    if command -v ssh-keygen >/dev/null 2>&1; then
-      echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
-      if ssh-keygen -l -f $SSH_CANDIDATE &> /dev/null; then
+  readarray -t SSH_CANDIDATES < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f)
+  echo "Found keys ${SSH_CANDIDATES[@]}"
+  for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
+    echo "Ensuring permissions and ownership of $SSH_CANDIDATE..."
+    chown -R $LANDO_WEBROOT_USER:$GROUP "$SSH_CANDIDATE"
+    chmod 700 "$SSH_CANDIDATE"
+    chmod 644 "$SSH_CANDIDATE.pub" || true
+    echo "Checking whether $SSH_CANDIDATE is a private key..."
+    if grep -L "PRIVATE KEY" "$SSH_CANDIDATE" &> /dev/null; then
+      if command -v ssh-keygen >/dev/null 2>&1; then
+        echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
+        if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
+          SSH_KEYS+=("$SSH_CANDIDATE")
+          SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+        fi
+      else
         SSH_KEYS+=($SSH_CANDIDATE)
         SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
       fi
-    else
-      SSH_KEYS+=($SSH_CANDIDATE)
-      SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
     fi
-  fi
+  done
 done
 
 # Log
