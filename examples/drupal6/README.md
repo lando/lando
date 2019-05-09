@@ -54,9 +54,9 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal6
 lando mysql -udrupal6 -pdrupal6 drupal6 -e quit
 
-# Should use drush 8.1.x by default
+# Should use drush 8.2.x by default
 cd drupal6
-lando drush version | grep 8.1
+lando drush version | grep 8.2
 
 # Should be able to install drupal
 cd drupal6

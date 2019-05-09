@@ -54,7 +54,7 @@ config:
   via: apache:2.4
   webroot: .
   database: mysql:5.7
-  drush: 8
+  drush: ^8
   xdebug: false
   config:
     database: SEE BELOW
