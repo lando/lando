@@ -47,7 +47,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: lemp
 config:
-  php: 7.3
+  php: '7.3'
   webroot: .
   database: mysql:5.7
   xdebug: false
@@ -69,7 +69,7 @@ Here is the [recipe config](./../config/recipes.md#config) to set the LEMP recip
 ```yaml
 recipe: lemp
 config:
-  php: 5.4
+  php: '5.4'
 ```
 
 ### Choosing a database backend

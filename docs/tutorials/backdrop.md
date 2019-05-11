@@ -49,7 +49,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: backdrop
 config:
-  php: 7.2
+  php: '7.2'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
@@ -73,7 +73,7 @@ Here is the [recipe config](./../config/recipes.md#config) to set the Backdrop r
 ```yaml
 recipe: backdrop
 config:
-  php: 5.5
+  php: '5.5'
 ```
 
 ### Choosing a webserver
