@@ -77,6 +77,15 @@ module.exports = lando => {
     }
   });
 
+  // Let's also make a copy of caCert with the standarized .crt ending for better linux compat
+  // See: https://github.com/lando/lando/issues/1550
+  lando.events.on('pre-engine-start', 3, data => {
+    const caNormalizedCert = path.join(caDir, `${caDomain}.crt`);
+    if (fs.existsSync(caCert) && !fs.existsSync(caNormalizedCert)) {
+      fs.copyFileSync(caCert, caNormalizedCert);
+    }
+  });
+
   // Return some default things
   return _.merge({}, defaults, uc(lando.user.getUid(), lando.user.getGid(), lando.user.getUsername()), {config: {
     appEnv: {

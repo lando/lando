@@ -9,7 +9,8 @@ FROM eugeneware/php-5.3:master
 COPY apache2.conf /etc/apache2/apache2.conf
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list \
+  && apt-get update && apt-get install -y \
     bzip2 \
     curl \
     exiftool \

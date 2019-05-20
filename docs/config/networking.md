@@ -33,10 +33,10 @@ lando ssh -s appserver -c "curl https://appserver.lamp2.internal"
 
 # And the reverse
 cd /path/to/lamp2
-lando ssh -s appserver -c "curl https://lamp.lndo.site"
-lando ssh -s appserver -c "curl https://appserver.lamp.internal"
+lando ssh -s appserver -c "curl https://lamp1.lndo.site"
+lando ssh -s appserver -c "curl https://appserver.lamp1.internal"
 
 # You should even by able to connect to a database in a different app
 cd /path/to/lamp2
-lando ssh -s database -c "mysql -uroot -h database.lamp.internal"
+lando ssh -s database -c "mysql -uroot -h database.lamp1.internal"
 ```

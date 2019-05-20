@@ -5,7 +5,7 @@ By default Lando runs a [traefik](https://traefik.io/) reverse proxy when needed
 
 While you can [configure](#configuration) the default `domain` of this proxy we *highly recommend* you do not alter the default behavior unless you have a fairly compelling reason to do so. A compelling reason to *not* change them are that the default `lndo.site` domain works "out of the box" while custom domains require [additional setup](#working-offline-or-using-custom-domains).
 
-Specifically, `*.lando.site` is an actual *ON THE INTERNET* wildcard DNS entry that points all `*.lndo.site` subdomains to `localhost/127.0.0.1`. This means that if you lose your internet connection, you will not be able to visit your app at these addresses. However, you can [take steps](#working-offline-or-using-custom-domains) to work around this restriction or use your own [custom domain](#configuration) and handle the DNS yourself with `dnsmasq` or some other solution.
+Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry that points all `*.lndo.site` subdomains to `localhost/127.0.0.1`. This means that if you lose your internet connection, you will not be able to visit your app at these addresses. However, you can [take steps](#working-offline-or-using-custom-domains) to work around this restriction or use your own [custom domain](#configuration) and handle the DNS yourself with `dnsmasq` or some other solution.
 
 > #### Info::Proxying is not required
 >

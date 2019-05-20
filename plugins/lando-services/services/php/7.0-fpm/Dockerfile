@@ -2,10 +2,11 @@
 #
 # docker build -t devwithlando/php:7.0-fpm .
 
-FROM php:7.0-fpm-jessie
+FROM php:7.0-fpm
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \
@@ -18,12 +19,12 @@ RUN apt-get update && apt-get install -y \
     libmagickwand-dev \
     libmcrypt-dev \
     libmemcached-dev \
-    libpng12-dev \
+    libpng-dev \
     libpq-dev \
     libxml2-dev \
     libicu-dev \
     mysql-client \
-    postgresql-client \
+    postgresql-client-9.6 \
     pv \
     ssh \
     unzip \

@@ -1,14 +1,8 @@
-Lando Pantheon appserver
-========================
-
-A container that approximates the appserver used on Pantheon.
-
-```
-# Pantheon php 7.0 fpm appserver for Lando
+# Pantheon php 7.3 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:7.0-2 .
+# docker build -t devwithlando/pantheon-appserver:7.3-2 .
 
-FROM devwithlando/php:7.0-fpm-2
+FROM devwithlando/php:7.3-fpm-2
 
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.3
@@ -53,4 +47,3 @@ RUN mkdir -p /usr/share/man/man1 \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
-```

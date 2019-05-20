@@ -8,7 +8,7 @@ module.exports = {
   name: 'mariadb',
   config: {
     version: '10.1',
-    supported: ['10.2', '10.1'],
+    supported: ['10.3', '10.2', '10.1'],
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
