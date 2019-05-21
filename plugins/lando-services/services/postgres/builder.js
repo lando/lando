@@ -40,7 +40,7 @@ module.exports = {
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `${options.data}:/bitnami`,
+          `${options.data}:/bitnami/postgresql`,
         ],
       };
       // The Bitnami Postgres container is particular about the user/pass.
