@@ -31,7 +31,7 @@ module.exports = lando => ({
     app.opts = (!_.isEmpty(options.service)) ? {services: options.service} : {};
     // Go deep if we need to
     if (app && options.deep) {
-      return app.init().then(() => lando.engine.list({app: app.name})
+      return app.init().then(() => lando.engine.list({project: app.project})
         .filter(container => filterServices(container.service, options.service))
         .each(container => lando.engine.scan(container)
           .then(data => utils.outputFormatted(data, options.path, options.format)))
