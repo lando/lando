@@ -31,15 +31,16 @@ module.exports = {
       options = _.merge({}, config, options);
       const postgres = {
         image: `bitnami/postgresql:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/entrypoint.sh /run.sh',
         environment: {
+          ALLOW_EMPTY_PASSWORD: 'yes',
           POSTGRESQL_DATABASE: options.creds.database,
           POSTGRES_DB: options.creds.database,
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
-          `${options.data}:/bitnami`,
+          `${options.data}:/bitnami/postgresql`,
         ],
       };
       // The Bitnami Postgres container is particular about the user/pass.
