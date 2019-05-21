@@ -31,8 +31,9 @@ module.exports = {
       options = _.merge({}, config, options);
       const postgres = {
         image: `bitnami/postgresql:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/entrypoint.sh /run.sh',
         environment: {
+          ALLOW_EMPTY_PASSWORD: 'yes',
           POSTGRESQL_DATABASE: options.creds.database,
           POSTGRES_DB: options.creds.database,
           LANDO_NEEDS_EXEC: 'DOEEET',
