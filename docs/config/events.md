@@ -33,7 +33,7 @@ You can also hook into `pre` and `post` events for all [tooling](./tooling.md) c
 Discovering Events
 ------------------
 
-While the above lists are great starting point they may be out of data. You can explicitly discover what events are available by running:
+While the above lists are great starting point they may be out of date. You can explicitly discover what events are available by running:
 
 ```bash
 # Discover hookable events for the `lando start` command
