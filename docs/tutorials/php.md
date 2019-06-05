@@ -120,7 +120,7 @@ The first part of a pathmap will be the location of your code in the container. 
 
 **VSCODE**
 
-[Setup XDebug in Visual Studio Code Guide](./guides/lando-with-vscode.md)
+[Setup XDebug in Visual Studio Code Guide](./../guides/lando-with-vscode.md)
 
 #### Troubleshooting Xdebug
 
