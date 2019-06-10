@@ -6,7 +6,7 @@ services:
   defaults:
     type: apache
   patch:
-    type: apache:2.4.37
+    type: apache:2.4.39
   custom:
     type: apache
     webroot: web
