@@ -75,6 +75,10 @@ if [ ! -f "/certs/cert.pem" ]; then
     -sha256 \
     -extfile /certs/cert.ext
   cat /certs/cert.crt /certs/cert.key > /certs/cert.pem
+  # This is a weird hack to handle recent changes to bitnami's apache image without causing
+  # breaking changes
+  cp -f /certs/cert.crt /certs/server.crt
+  cp -f /certs/cert.key /certs/server.key
 fi
 
 # Trust our root CA

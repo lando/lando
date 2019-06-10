@@ -25,8 +25,8 @@ Run the following commands to validate things are rolling as they should.
 # Should return 2.4.x for the default version
 lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
-# Should return 2.4.37 for the patch service
-lando ssh -s patch -c "apachectl -V | grep 2.4.37"
+# Should return 2.4.39 for the patch service
+lando ssh -s patch -c "apachectl -V | grep 2.4.39"
 
 # Should serve from the app root by default
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
