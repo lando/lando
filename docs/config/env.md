@@ -50,7 +50,7 @@ You can tell Lando to inject additional environment variables into every service
 2. Store credentials in a `.gitignored` file that is not committed to the repo
 3. Set config on a per environment basis
 
-You can accomplish this using the `env_file` top level config in your [Landofile](./lando.yml).
+You can accomplish this using the `env_file` top level config in your [Landofile](./lando.md).
 
 ```yaml
 env_file:
