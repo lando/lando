@@ -82,7 +82,8 @@ module.exports = lando => {
   lando.events.on('pre-engine-start', 3, data => {
     const caNormalizedCert = path.join(caDir, `${caDomain}.crt`);
     if (fs.existsSync(caCert) && !fs.existsSync(caNormalizedCert)) {
-      fs.copyFileSync(caCert, caNormalizedCert);
+      // @NOTE: we need to use pre node 8.x-isms because pld roles with node 7.9 currently
+      fs.writeFileSync(caNormalizedCert, fs.readFileSync(caCert));
     }
   });
 

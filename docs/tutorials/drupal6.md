@@ -45,7 +45,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: drupal6
 config:
-  php: 5.6
+  php: '5.6'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
@@ -69,7 +69,7 @@ Here is the [recipe config](./../config/recipes.md#config) to set the Drupal 6 r
 ```yaml
 recipe: drupal6
 config:
-  php: 7.1
+  php: '7.1'
 ```
 
 ### Choosing a webserver

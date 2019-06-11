@@ -44,7 +44,7 @@ module.exports = {
   name: 'backdrop',
   parent: '_drupaly',
   config: {
-    backdrush: '0.1.0',
+    backdrush: '0.1.1',
     build: [],
     confSrc: __dirname,
     defaultFiles: {},

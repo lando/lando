@@ -47,7 +47,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: lamp
 config:
-  php: 7.3
+  php: '7.3'
   webroot: .
   database: mysql:5.7
   xdebug: false
@@ -69,7 +69,7 @@ Here is the [recipe config](./../config/recipes.md#config) to set the LAMP recip
 ```yaml
 recipe: lamp
 config:
-  php: 5.3
+  php: '5.3'
 ```
 
 ### Choosing a database backend

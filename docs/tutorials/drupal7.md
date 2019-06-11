@@ -1,7 +1,7 @@
 Drupal 7
 ========
 
-Drupal is a free and open source content-management framework written in PHP and distributed under the GNU General Public License. Drupal provides a back-end framework for at least 2.3% of all web sites worldwide – ranging from personal blogs to corporate, political, and government sites.
+Drupal is a free and open source content management framework written in PHP and distributed under the GNU General Public License. Drupal provides a back-end framework for at least 2.3% of all web sites worldwide – ranging from personal blogs to corporate, political, and government sites.
 
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [Drupal 7](https://drupal.org/) apps.
 
@@ -15,11 +15,11 @@ https://youtu.be/sxEMvXJZaTo
 Getting Started
 ---------------
 
-Before you get started with this recipe we assume that you have:
+Before you get started with this recipe, we assume that you have:
 
-1. [Installed Lando](./../installation/system-requirements.md) and gotten familar with [its basics](./../started.md)
+1. [Installed Lando](./../installation/system-requirements.md) and gotten familiar with [its basics](./../started.md)
 2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
-3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
+3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md), and [routing](./../config/proxy.md) Lando offers.
 
 However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Drupal 7.
 
@@ -43,14 +43,14 @@ lando info
 Configuration
 -------------
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults, so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
-Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
 ```yaml
 recipe: drupal7
 config:
-  php: 7.2
+  php: '7.2'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
@@ -63,11 +63,11 @@ config:
     vhosts: SEE BELOW
 ```
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough all Lando recipes can be further [extended and overridden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Choosing a php version
 
-You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Drupal requirements](https://www.drupal.org/docs/7/system-requirements/php-requirements) to make sure that version is actually supported by Drupal 7 itself.
+You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Drupal requirements](https://www.drupal.org/docs/7/system-requirements/php-requirements) to make sure that version is supported by Drupal 7 itself.
 
 Here is the [recipe config](./../config/recipes.md#config) to set the Drupal 7 recipe to use `php` version `7.0`
 
@@ -79,7 +79,7 @@ config:
 
 ### Choosing a webserver
 
-By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
+By default, this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
 ** With Apache (default) **
 
@@ -99,11 +99,11 @@ config:
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend, but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with Lando* for either `mysql`, `mariadb` or `postgres`.
 
 If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Drupal 7 requirements](https://www.drupal.org/docs/7/system-requirements/database-server) to make sure the `database` and `version` you select is actually supported by Drupal 7 itself.
+Also, note that like the configuration of the `php` version you should consult the [Drupal 7 requirements](https://www.drupal.org/docs/7/system-requirements/database-server) to make sure the `database` and `version` you select is supported by Drupal 7 itself.
 
 ** Using MySQL (default) **
 
@@ -139,7 +139,7 @@ config:
 
 ### Using Drush
 
-By default our Drupal 7 recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) or the [latest version of Drush 7](http://docs.drush.org/en/7.x/install/) if you are using php 5.3. This means that you should be able to use `lando drush` out of the box.
+By default, our Drupal 7 recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) or the [latest version of Drush 7](http://docs.drush.org/en/7.x/install/) if you are using php 5.3. This means that you should be able to use `lando drush` out of the box.
 
 That said you can configure this recipe to use any version of Drush to which there is a resolvable package available via `composer`. That means that the following are all valid.
 
@@ -195,14 +195,14 @@ tooling:
 
 #### Default URL Setup
 
-You may see `http://defualt` show up in many `drush` commands you run.
+You may see `http://default` show up in many `drush` commands you run.
 
 ```bash
 lando drush uli
 // http://default/user/reset/1/1548025070/Px6PbLyJ_2laXqoDe6OukHXaX-cXExo4ErfrKbkqsE4/login
 ```
 
-This happens because it is actually a difficult problem for Lando to 100% know the canonical URL or service that is serving your application. However you can set up your environment so that commands like `lando drush uli` return the proper URL.
+This happens because it is actually a difficult problem for Lando to 100% know the canonical URL or service that is serving your application. However, you can set up your environment so that commands like `lando drush uli` return the proper URL.
 
 Create or edit the relevant `settings.php` file and add these lines. Note that you may need to specify a port depending on your Lando installation. You can run `lando info` to see if your URLs use explicit ports or not.
 
@@ -212,7 +212,7 @@ $base_url = "http://mysite.lndo.site:PORT_IF_NEEDED"
 
 #### Aliases
 
-You can also use `drush` aliases with command like `lando drush @sitealias cc all` by following the instructions below.
+You can also use `drush` aliases with a command like `lando drush @sitealias cc all` by following the instructions below.
 
 Make sure the alias file exists within the drush folder in your app. An example could be the files structure below.
 
@@ -222,7 +222,7 @@ Make sure the alias file exists within the drush folder in your app. An example 
       |-- yoursite.aliases.drushrc.php
 ```
 
-For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
+For info on how to set up your alias, please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
 
 Then configure the following [build step](./../config/services.md#build-steps) in your [Landofile](./../config/lando.md) and `lando rebuild`.
 
@@ -240,7 +240,7 @@ If you are using a webroot besides `.` you will need to remember to `cd` into th
 
 If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
 
-**Note that hardcoding the `root` like this may have unforseen and bad consequences for some `drush` commands such as `drush scr`.**
+**Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
 
 ```yaml
 tooling:
@@ -266,7 +266,7 @@ However, for more information we recommend you consult the [php service document
 
 You may need to override our [default Drupal 7 config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/drupal7) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this you must use files that exist inside your application and express them relative to your project root as below.
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
@@ -300,7 +300,7 @@ config:
 Connecting to your database
 ---------------------------
 
-Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+Lando will automatically set up a database with a user and password and also set an environment variable called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
 Here are is the default database connection information for a Drupal 7 site. Note that the `host` is not `localhost` but `database`.
 
@@ -340,17 +340,17 @@ You can learn more about the `db-import` command [over here](./../guides/db-impo
 Tooling
 -------
 
-By default each Lando Drupal 7 recipe will also ship with helpful dev utilities.
+By default, each Lando Drupal 7 recipe will also ship with helpful dev utilities.
 
 This means you can use things like `drush`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
 ```bash
-lando composer          Runs composer commands
+lando composer          Runs Composer commands
 lando db-export [file]  Exports database from a service into a file
 lando db-import <file>  Imports a dump file into database service
-lando drush             Runs drush commands
+lando drush             Runs Drush commands
 lando mysql             Drops into a MySQL shell on a database service
-lando php               Runs php commands
+lando php               Runs PHP commands
 ```
 
 **Usage examples**

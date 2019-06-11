@@ -51,7 +51,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: laravel
 config:
-  php: 7.3
+  php: '7.3'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
@@ -75,7 +75,7 @@ Here is the [recipe config](./../config/recipes.md#config) to set the Laravel re
 ```yaml
 recipe: laravel
 config:
-  php: 7.1
+  php: '7.1'
 ```
 
 ### Choosing a webserver

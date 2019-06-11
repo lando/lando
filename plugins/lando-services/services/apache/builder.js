@@ -16,8 +16,8 @@ module.exports = {
       vhosts: 'default.conf',
     },
     remoteFiles: {
-      server: '/bitnami/apache/conf/httpd.conf',
-      vhosts: '/bitnami/apache/conf/bitnami/bitnami.conf',
+      server: '/opt/bitnami/apache/conf/httpd.conf',
+      vhosts: '/opt/bitnami/apache/conf/vhosts/lando.conf',
     },
     ssl: false,
     webroot: '.',
@@ -31,7 +31,7 @@ module.exports = {
       // Build the default stuff here
       const apache = {
         image: `bitnami/apache:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/app-entrypoint.sh httpd -f /opt/bitnami/apache/conf/httpd.conf -DFOREGROUND',
         environment: {
           APACHE_HTTP_PORT_NUMBER: '80',
           APACHE_HTTPS_PORT_NUMBER: '443',
