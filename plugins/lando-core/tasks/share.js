@@ -71,8 +71,7 @@ module.exports = lando => {
       if (app) {
         console.log(chalk.green('About to share your app to a whole new world!'));
         // Ensure the app is up and lets share
-        // @TODO: only start below if we need to
-        return app.start().then(app => lando.metrics.report('share', {}))
+        return app.init().then(app => lando.metrics.report('share', {}))
         // Get the URLS
         .then(() => {
           const config = parseConfig(u.parse(options.url).port, _.lowerCase(app.name).replace(/[^0-9a-z]/g, ''));
