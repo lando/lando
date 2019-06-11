@@ -3,7 +3,7 @@ Services
 
 Lando services are our distillation of Docker containers into their most important options combined with some *special sauce* to setup good [networking](./networking.md), [certificates](./security.md) and [SSH keys](./ssh.md) as well as options to run [build steps](#build-steps) and provide low level [overrides](#overrides).
 
-You can use the top-level `services` config in your [Landofile](./lando.yml) to define and configure a service. Here are the various options you can specify in any service regardless of the service type.
+You can use the top-level `services` config in your [Landofile](./lando.md) to define and configure a service. Here are the various options you can specify in any service regardless of the service type.
 ```yaml
 services:
   myservice:

@@ -3,7 +3,7 @@ Go
 
 [Go](https://golang.org/) is an open source programming language that makes it easy to build simple, reliable, and efficient software.
 
-You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
+You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
 
 <!-- toc -->
 

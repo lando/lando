@@ -6,7 +6,7 @@ Recipes are Lando's highest level abstraction and they contain common combinatio
 Usage
 -----
 
-You can use the top-level `recipe` config in your [Landofile](./lando.yml) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../dev/plugins.md).
+You can use the top-level `recipe` config in your [Landofile](./lando.md) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../dev/plugins.md).
 
 For example this will use the [Drupal 8](./../tutorials/drupal8.md) recipe.
 
@@ -17,7 +17,7 @@ recipe: drupal8
 Config
 ------
 
-You can optionally configure some of the more obvious things in your recipe such as service versions, database types and config files using the top-level `config` config in your [Landofile](./lando.yml).
+You can optionally configure some of the more obvious things in your recipe such as service versions, database types and config files using the top-level `config` config in your [Landofile](./lando.md).
 
 > #### Info::These options can differ from recipe to recipe
 >
