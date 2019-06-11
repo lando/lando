@@ -3,7 +3,7 @@ Python
 
 [Python](https://www.python.org/) is a programming language that lets you work more quickly and integrate your systems more effectively.
 
-You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.yml).
+You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
 
 <!-- toc -->
 
