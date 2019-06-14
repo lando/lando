@@ -7,7 +7,7 @@ Operating System
 ----------------
 
 *   macOS 10.11 (El Capitan) or newest
-*   Windows 10 Pro+ or equivalent (eg Windows 10 Enterprise) [**with Hyper-V running**](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_instal)
+*   Windows 10 Pro+ or equivalent (eg Windows 10 Enterprise) [**with Hyper-V running**](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install)
 *   Linux with kernel version 4.x or higher
 
 Hardware Requirements
