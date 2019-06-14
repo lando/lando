@@ -53,7 +53,7 @@ config:
   via: apache:2.4
   webroot: .
   database: mysql:5.7
-  backdrush: 0.1.1
+  backdrush: 0.2.0
   xdebug: false
   config:
     database: SEE BELOW
