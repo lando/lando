@@ -18,7 +18,7 @@ Usage
 # Get the logs=z
 lando logs
 
-# Follow the logs and show timestampls
+# Follow the logs and show timestamps
 lando logs -t -f
 
 # Show logs for only the database and cache services
