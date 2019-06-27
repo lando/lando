@@ -26,7 +26,7 @@ The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you
 
 Also note that in accordance with the [restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) on wildcard certs changing the `domain` may result in unexpected behavior depending on how you set it. For example, setting `domain` to a top level domain such as `test` will not work while `local.test` will.
 
-Also also note that we produce a duplicate `crt` file that you can use for systems that have stricter rules around how the certs are named. This means that by default you will also end up with a file called `~/.lando/certs/lndo.site.crt` in addition to `~/.lando/certs/lndo.site.pem`.
+Also note that we produce a duplicate `crt` file that you can use for systems that have stricter rules around how the certs are named. This means that by default you will also end up with a file called `~/.lando/certs/lndo.site.crt` in addition to `~/.lando/certs/lndo.site.pem`.
 
 That all said, once you've located the correct cert you can add or remove it with the relevant commands below.
 
