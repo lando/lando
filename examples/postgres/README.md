@@ -25,9 +25,6 @@ Run the following commands to validate things are rolling as they should.
 # Should use 10.x as the default version
 lando ssh -s defaults -c "psql -V | grep 10."
 
-# Should use 10.x as the default postgresql-client version
-lando ssh -s appserver -c "psql -V | grep 10."
-
 # Should use the specfied version when set by the user
 lando ssh -s custom -c "psql -V | grep 11."
 

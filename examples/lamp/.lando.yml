@@ -1,0 +1,5 @@
+name: lando-lamp
+recipe: lamp
+config:
+  webroot: .
+
