@@ -58,12 +58,12 @@ It you are a contributor it is **highly recommended** you also install [ZenHub](
 
 #### Slack
 
-Slack serves as the mechanism for Lando support and contributor coordination. You can join the Lando slack org via [SlackPass](https://launchpass.com/kalabox) and it has the following channels you can join
+Slack serves as the mechanism for Lando support and contributor coordination. You can join the Lando slack org via [LaunchPass](https://launchpass.com/devwithlando) and it has the following channels you can join
 
+  * **#community** - For Lando community support
   * **#kalabox** - For legacy Kalabox community support
-  * **#lando** - For Lando community support
   * **#contributors** - For all Lando contributors
-  * **#community** - For users looking to evangelize the project at meetups, events, camps, etc
+  * **#events** - For users looking to evangelize the project at meetups, events, camps, etc
 
 Join a channel and say hi!
 

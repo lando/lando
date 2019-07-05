@@ -43,7 +43,7 @@ Committers that acquire more project breadth and high level insight around the p
 Contributors
 ------------
 
-Contributors are community members who either have no desire to become committers, or have not yet been given the opportunity by the project maintainers. They make valuable contributions, such as those outlined in the list below, but generally do not have the authority to make direct changes to the project code. Contributors engage with the project primarily through the [#contributors](https://launchpass.com/kalabox) Slack and issues in the [issue tracker](https://github.com/lando/lando/issues).
+Contributors are community members who either have no desire to become committers, or have not yet been given the opportunity by the project maintainers. They make valuable contributions, such as those outlined in the list below, but generally do not have the authority to make direct changes to the project code. Contributors engage with the project primarily through the [#contributors](https://launchpass.com/devwithlando) Slack and issues in the [issue tracker](https://github.com/lando/lando/issues).
 
 Anyone can become a contributor. There is no expectation of commitment to the project, no specific skill requirements and no selection process. To become a contributor, a community member simply has to perform one or more actions that are beneficial to the project.
 

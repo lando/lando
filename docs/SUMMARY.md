@@ -119,7 +119,7 @@
 *   [Accessing Logs](troubleshooting/logs.md)
 *   [Using Lando with Kalabox](troubleshooting/wkbox.md)
 *   [Reporting Issues](https://github.com/lando/lando/issues)
-*   [Slack Channel](https://slackpass.io/kalabox)
+*   [Slack Channel](https://launchpass.io/devwithlando)
 
 ## Contributing
 
