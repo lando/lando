@@ -17,3 +17,5 @@ If you can't or don't want to remove this protection, you can alternatively:
 2.  [Disable proxying](./../config/proxy.html#configuration) and rely on the Lando produced `localhost` address
 
 That said, the ideal scenario is to make sure your network is set up to not block `*.lndo.site` addresses.
+
+For DD-WRT router firmware, look under the services tab in the admin interface for DNSMasq. In the `Additional DNSMasq Options` textarea, add `address=/lndo.site/127.0.0.1` and save the changes. When you start your app, your Appserver URLs should come up green.
