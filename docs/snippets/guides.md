@@ -43,4 +43,4 @@
 *   [Accessing Logs](http://docs.devwithlando.io/troubleshooting/logs.html)
 *   [Using Lando with Kalabox](http://docs.devwithlando.io/troubleshooting/wkbox.html)
 *   [Reporting Issues](https://github.com/lando/lando/issues)
-*   [Slack Channel](https://slackpass.io/kalabox)
+*   [Slack Channel](https://launchpass.com/devwithlando)

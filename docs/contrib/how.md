@@ -13,7 +13,7 @@ Contribution Process
 
 Anyone can contribute to the project, regardless of their skills, as there are many ways to contribute. For instance, a contributor might be active on the project slack and issue tracker, or might supply pull requests. The various ways of contributing are described in more detail in our [roles](./roles.md) document.
 
-The `#contributors` channel on our [Slack](https://launchpass.com/kalabox) is the most appropriate place for a contributor to ask for help when making their first contribution.
+The `#contributors` channel on our [Slack](https://launchpass.com/devwithlando) is the most appropriate place for a contributor to ask for help when making their first contribution.
 
 Committing Code
 ---------------
