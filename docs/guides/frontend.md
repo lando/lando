@@ -23,7 +23,7 @@ services:
       - npm install
 ```
 
-Note the `run` section. This bash command will automatically run when we start our app, installing any Node packages specified in our package.json file.
+Note the `build` section. This bash command will automatically run when we start our app, installing any Node packages specified in our package.json file.
 
 Adding Grunt/Gulp/Etc.
 ---------------------
