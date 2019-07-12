@@ -1,7 +1,7 @@
 SSL/TLS
 =======
 
-Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our [internal Lando network](./network). They should live inside every service at `/certs`.
+Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our [internal Lando network](./networking.md). They should live inside every service at `/certs`.
 
 ```bash
 /certs
