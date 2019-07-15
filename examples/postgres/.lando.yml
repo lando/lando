@@ -1,9 +1,9 @@
 name: lando-postgres
 services:
   defaults:
-    type: postgres
+    type: postgres:10
   patch:
-    type: postgres:9.6.11
+    type: postgres:9.6.14
   custom:
     type: postgres:11
     portforward: true
