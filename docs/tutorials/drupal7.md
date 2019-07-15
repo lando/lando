@@ -365,7 +365,7 @@ lando composer test
 # Drop into a mysql shell
 lando mysql
 
-# Check hte app's installed php extensions
+# Check the app's installed php extensions
 lando php -m
 ```
 
