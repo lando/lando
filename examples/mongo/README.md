@@ -29,7 +29,7 @@ lando ssh -s defaults -c "mongo --version | grep v4.0."
 lando ssh -s custom -c "mongo --version | grep v3.6"
 
 # Should use the user specified patch version if given
-lando ssh -s patch -c "mongo --version | grep v4.1.4"
+lando ssh -s patch -c "mongo --version | grep v4.1.13"
 
 # Should add a new collection
 lando mongo test --eval "printjson(db.createCollection(\'lando\'))"

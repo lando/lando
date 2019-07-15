@@ -23,7 +23,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const mongo = {
         image: `bitnami/mongodb:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/entrypoint.sh /run.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           LANDO_NEEDS_EXEC: 'DOEEET',
