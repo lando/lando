@@ -4,18 +4,12 @@ Lando Apache PHP 5.6 appserver
 A decent cross purpose apache based php 5.6 appserver.
 
 ```
-# Basic apache php 5.6 appserver for Lando
-#
-# docker build -t devwithlando/php:5.6-apache .
-
-FROM php:5.6-apache-jessie
-
 # Install dependencies we need
 # Basic apache php 5.6 appserver for Lando
 #
 # docker build -t devwithlando/php:5.6-apache .
 
-FROM php:5.6-apache
+FROM php:5.6-apache-stretch
 
 # Install dependencies we need
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \

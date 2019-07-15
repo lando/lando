@@ -8,7 +8,7 @@ A decent cross purpose fpm based php 7.0 appserver.
 #
 # docker build -t devwithlando/php:7.0-fpm .
 
-FROM php:7.0-fpm
+FROM php:7.0-fpm-stretch
 
 # Install dependencies we need
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \

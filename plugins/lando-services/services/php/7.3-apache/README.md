@@ -8,7 +8,7 @@ A decent cross purpose apache based php 7.3 appserver.
 #
 # docker build -t devwithlando/php:7.3-apache .
 
-FROM php:7.3-apache
+FROM php:7.3-apache-stretch
 
 # Install dependencies we need
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
