@@ -23,7 +23,7 @@ services:
       - npm install
 ```
 
-Note the `run` section. This bash command will automatically run when we start our app, installing any Node packages specified in our package.json file.
+Note the `build` section. This bash command will automatically run when we start our app, installing any Node packages specified in our package.json file.
 
 Adding Grunt/Gulp/Etc.
 ---------------------
@@ -42,9 +42,9 @@ services:
       gulp-cli: latest
 ```
 
-You can do the same thing for any NPM project; for example Grunt would be `grunt-cli: "latest"`. This is the equivalent to installing a package with `npm -g project-name`.
+You can do the same thing for any NPM project; for example Grunt would be `grunt-cli: "latest"`. This is the equivalent to installing a package with `npm install -g project-name`.
 
-Note we've now added a further bash command to `run` to automatically run gulp every time we start the app.
+Note we've now added a further bash command to `build` to automatically run gulp every time we start the app.
 
 > #### Hint::Package Versions Are Fully Armed and Customizable
 >
