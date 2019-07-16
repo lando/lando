@@ -1,8 +1,4 @@
 name: lando-postgres
-recipe: lamp
-config:
-  webroot: .
-  database: postgres:10
 services:
   defaults:
     type: postgres:10
