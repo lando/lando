@@ -1,9 +1,9 @@
 name: lando-elasticsearch
 services:
-  #defaults:
-  #  type: elasticsearch
-  #patch:
-  #  type: elasticsearch:5.6.15
+  defaults:
+    type: elasticsearch
+  patch:
+    type: elasticsearch:5.6.15
   custom:
     type: elasticsearch:7
     portforward: true
