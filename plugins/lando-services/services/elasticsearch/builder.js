@@ -8,18 +8,15 @@ module.exports = {
   name: 'elasticsearch',
   config: {
     version: '6',
-    supported: ['6', '6.5.x', '5', '5.6.x'],
+    supported: ['7', '6', '6.5.x', '5', '5.6.x'],
     patchesSupported: true,
     confSrc: __dirname,
     healthcheck: 'curl -XGET localhost:9200',
     plugins: [],
     port: '9200',
     mem: '1025m',
-    defaultFiles: {
-      server: 'config.yml',
-    },
     remoteFiles: {
-      server: '/opt/bitnami/elasticsearch/config/elasticsearch_custom.yml',
+      server: '/opt/bitnami/elasticsearch/config/elasticsearch.yml',
     },
   },
   parent: '_service',
@@ -30,9 +27,8 @@ module.exports = {
         image: `bitnami/elasticsearch:${options.version}`,
         command: '/entrypoint.sh /run.sh',
         environment: {
-          ELASTICSEARCH_IS_DEDICATED_NODE: 'yes',
+          ELASTICSEARCH_IS_DEDICATED_NODE: 'no',
           ELASTICSEARCH_CLUSTER_NAME: 'bespin',
-          ELASTICSEARCH_NODE_TYPE: 'master',
           ELASTICSEARCH_NODE_NAME: 'lando',
           ELASTICSEARCH_PORT_NUMBER: 9200,
           ELASTICSEARCH_PLUGINS: options.plugins.join(';'),
@@ -40,7 +36,6 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
-          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
           `${options.data}:/bitnami/elasticsearch/data`,
         ],
       };
