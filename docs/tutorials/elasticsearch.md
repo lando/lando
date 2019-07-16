@@ -10,6 +10,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 Supported versions
 ------------------
 
+*   [7](https://hub.docker.com/r/bitnami/elasticsearch)
 *   **[6](https://hub.docker.com/r/bitnami/elasticsearch)** **(default)**
 *   [6.5.x](https://hub.docker.com/r/bitnami/elasticsearch)
 *   [5](https://hub.docker.com/r/bitnami/elasticsearch)
@@ -28,7 +29,7 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: elasticsearch:5.6.14
+    type: elasticsearch:5.6.15
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/elasticsearch/tags) for the underlying image we are using.
@@ -79,7 +80,7 @@ services:
 
 ### Using a custom elasticsearch.yml
 
-You may need to override our [elasticsearch config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/elasticsearch) with your own [elasticsearch config file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings).
+You may need to override the default config with your own [elasticsearch config file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings). Note that [according to the underlying upstream image](https://github.com/bitnami/bitnami-docker-elasticsearch#configuration-file) this will _completely_ replace the default config. Further note that by default our elasticsearch services start as `data` nodes. If you want to activate your node to also be an `ingest` node then check out [this example](https://github.com/lando/lando/tree/master/examples/elasticsearch).
 
 If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
 
