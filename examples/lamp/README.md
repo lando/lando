@@ -17,13 +17,9 @@ lando poweroff
 # Should initialize the latest codeignitor codebase
 rm -rf lamp && mkdir -p lamp && cd lamp
 lando init --source remote --remote-url https://github.com/bcit-ci/CodeIgniter/archive/3.1.10.tar.gz --remote-options="--strip-components 1" --recipe lamp --webroot . --name lando-lamp
-rm -rf lapp && mkdir -p lapp && cd lapp
-lando init --source remote --remote-url https://github.com/bcit-ci/CodeIgniter/archive/3.1.10.tar.gz --remote-options="--strip-components 1" --recipe lamp --webroot . --name lando-lamp --option database=postgres
 
 # Should start up successfully
 cd lamp
-lando start
-cd lapp
 lando start
 ```
 
@@ -58,10 +54,6 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd lamp
 lando mysql -ulamp -plamp lamp -e quit
 
-# Should use 10.x as the default postgresql-client version
-cd lapp
-lando ssh -s appserver -c "psql -V | grep 10."
-
 # Should be able to global require a composer dep
 cd lamp
 lando composer global require phpunit/phpunit
@@ -83,8 +75,6 @@ Run the following commands to trash this app like nothing ever happened.
 ```bash
 # Should be destroyed with success
 cd lamp
-lando destroy -y
-cd lapp
 lando destroy -y
 lando poweroff
 ```
