@@ -111,7 +111,7 @@ recipe: drupal7
 config:
   database: postgres
   php: '7.0'
-  xdbeug: true
+  xdebug: true
 ```
 
 ### He's heating up!
@@ -122,7 +122,7 @@ recipe: drupal7
 config:
   database: postgres
   php: '7.0'
-  xdbeug: true
+  xdebug: true
   config:
     php: my-custom-php.ini
 proxy:
