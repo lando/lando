@@ -24,6 +24,8 @@ web:
           allow: true
         ^/robots\.txt$:
           allow: true
+        ^/ads\.txt$:
+          allow: true
         search_index\.json$:
           allow: true
 
@@ -41,6 +43,7 @@ hooks:
     yarn
     yarn docs
     cp docs/images/favicon.ico _book/gitbook/images/favicon.ico
+    cp docs/ads.txt _book/ads.txt
 
 crons:
   renewcert:
