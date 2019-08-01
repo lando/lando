@@ -36,12 +36,12 @@ We placed it inside `.lando/` folder simply because we find it convenient.
 
 ```bash
 #!/bin/sh
-
-# Fetch pmaterial theme, then extract and install.
-wget https://files.phpmyadmin.net/themes/pmaterial/1.1/pmaterial-1.1.zip
-unzip pmaterial-1.1.zip
-mv pmaterial /www/themes/
-rm pmaterial-1.1.zip
+if [ ! -z $LANDO_MOUNT ]; then
+    # Fetch pmaterial theme, then extract and install.
+    wget https://files.phpmyadmin.net/themes/pmaterial/1.1/pmaterial-1.1.zip
+    unzip pmaterial-1.1.zip -d /www/themes/
+    rm pmaterial-1.1.zip
+fi
 ```
 
 Checkout the available themes [here](https://www.phpmyadmin.net/themes/). Make sure you choose a theme compatible with your version of phpMyAdmin. Modify the script according to the theme you want.
