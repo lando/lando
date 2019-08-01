@@ -120,6 +120,11 @@ Example
 If you are interested in a working example of this service that we test on every Lando build then check out
 [https://github.com/lando/lando/tree/master/examples/pma](https://github.com/lando/lando/tree/master/examples/pma)
 
+Adding Themes
+-------------
+
+See [this page](./../guides/phpmyadmin-themes.md) for detailed instructions.
+
 Additional Reading
 ------------------
 
