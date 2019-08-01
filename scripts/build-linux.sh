@@ -21,7 +21,7 @@ fi
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
 
 # Docker things
-DOCKER_COMPOSE_VERSION="1.23.2"
+DOCKER_COMPOSE_VERSION="1.24.1"
 
 # Start up our build directory and go into it
 mkdir -p build/installer

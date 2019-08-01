@@ -39,6 +39,10 @@ lando ssh -s custom -c "mysql -upirog -ppassword stuff -e quit"
 
 # Should use a custom config file if specified
 lando mysql -e "show variables;" | grep table_open_cache | grep 513
+
+# Should still run even after a restart
+lando restart
+lando ssh -s custom -c "mysql -upirog -ppassword stuff -e quit"
 ```
 
 Destroy tests

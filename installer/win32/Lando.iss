@@ -38,7 +38,7 @@ SetupLogging=yes
 ChangesEnvironment=true
 
 [CustomMessages]
-WelcomeLabel3=%nLando will also install Docker for Windows for you.%n%nDocker for Windows is a requirement!%n%nIf you do not already have Docker for Windows and you %nelect to not install Docker for Windows then Lando will not work!
+WelcomeLabel3=%nLando will also install Docker Desktop for you.%n%nDocker Desktop is a requirement!%n%nIf you do not already have Docker Desktop and you %nelect to not install Docker Desktop then Lando will not work!
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -53,7 +53,7 @@ Name: modifypath; Description: "Add lando binary to PATH"
 [Components]
 Name: "Git"; Description: "Git for Windows"; Types: full custom;
 Name: "Lando"; Description: "Lando" ; Types: full custom; Flags: disablenouninstallwarning fixed
-Name: "Docker"; Description: "Docker for Windows" ; Types: full custom;
+Name: "Docker"; Description: "Docker Desktop" ; Types: full custom;
 
 [Files]
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"
@@ -90,7 +90,7 @@ function InitializeSetup(): Boolean;
 begin
   if (FileExists(ExpandConstant('{pf}\Docker\Docker\resources\bin\docker.exe'))) then
   begin
-    MsgBox('The installer has detected that Docker for Windows is already installed!' + #13#10 + #13#10 + 'If you are using the Stable version make sure you close Docker for Windows before continuing this installation as Lando will install the latest version.' + #13#10 + #13#10 + 'If you wish to continue with your current version of Docker for Windows without upgrading make sure you customize your installation on the next step and choose to not install Docker for Windows.' + #13#10 + #13#10 + 'Keeping your current version of Docker for Windows is not supported so YMMV.' + #13#10 + #13#10 + 'Also note that if you are upgrading from Docker for Windows 17.09.0-ce-win27 or earlier you may need to uninstall Docker for Windows for this installer to succeed.', mbInformation, MB_OK);
+    MsgBox('The installer has detected that Docker Desktop is already installed!' + #13#10 + #13#10 + 'If you are using the Stable version make sure you close Docker Desktop before continuing this installation as Lando will install the latest version.' + #13#10 + #13#10 + 'If you wish to continue with your current version of Docker Desktop without upgrading make sure you customize your installation on the next step and choose to not install Docker Desktop.' + #13#10 + #13#10 + 'Keeping your current version of Docker Desktop is not supported so YMMV.' + #13#10 + #13#10 + 'Also note that if you are upgrading from Docker Desktop 17.09.0-ce-win27 or earlier you may need to uninstall Docker Desktop for this installer to succeed.', mbInformation, MB_OK);
     Result := True;
   end
   else
@@ -127,14 +127,14 @@ procedure RunInstallDocker();
 var
   ResultCode: Integer;
 begin
-  MsgBox('You will now be prompted to install Docker for Windows.' + #13#10 +  #13#10 + 'Please approve any Docker installation prompts to make sure your Lando install completes with great success!', mbInformation, MB_OK);
-  WizardForm.FilenameLabel.Caption := 'Installing Docker for Windows...'
+  MsgBox('You will now be prompted to install Docker Desktop.' + #13#10 +  #13#10 + 'Please approve any Docker installation prompts to make sure your Lando install completes with great success!', mbInformation, MB_OK);
+  WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop...'
   if Exec(ExpandConstant('{app}\installers\docker\docker.exe'), '', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
     //MsgBox('git installed OK', mbInformation, MB_OK);
   end
   else begin
-    MsgBox('Docker for Windows install failure!', mbCriticalError, MB_OK);
+    MsgBox('Docker Desktop install failure!', mbCriticalError, MB_OK);
   end
 end;
 

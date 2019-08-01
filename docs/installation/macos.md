@@ -1,6 +1,10 @@
 macOS
 =====
 
+> #### Hint::Do not fear the package size!
+>
+> Note that our macOS installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages. When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
+
 Install DMG via direct download
 -------------------------------
 
