@@ -17,7 +17,7 @@ Add the build script to your Lando recipe where you should have the phpMyAdmin s
 services:
   pma:
     type: phpmyadmin:4.7
-    build_as_root: .lando/pma-theme.sh
+    build_as_root: /app/.lando/pma-theme.sh
 ```
 
 Create script to download and install the third-party theme
