@@ -16,7 +16,7 @@ module.exports = {
       password: 'mysql',
       user: 'mysql',
     },
-    healthcheck: 'mysql -uroot --silent --execute "SHOW DATABASES;"',
+    healthcheck: 'bash -c "[ -f /bitnami/mysql/.mysql_initialized ]" && mysql -uroot --silent --execute "SHOW DATABASES;"',
     port: '3306',
     defaultFiles: {
       database: 'my_custom.cnf',
