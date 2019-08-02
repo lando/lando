@@ -9,7 +9,6 @@ A friend of Lando is looking for a full-stack Drupal developer to help grow thei
 
 This is a remote position, but it is _only_ available to individuals (no teams or outsourcing) who are able to work within the United States, are located within 3 hours of PST and willing to work PST days.
 
-
 Must have...
 ------------
 

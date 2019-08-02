@@ -1,9 +1,6 @@
-<a id="lando"></a>
+<a name="Lando"></a>
 
-<h2 id="lando" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  Lando ⇒ [<code>Lando</code>](#Lando)</h2>
-<div class="api-body-header"></div>
-
+## Lando ⇒ [<code>Lando</code>](#Lando)
 The class to instantiate a new Lando
 
 Generally you will not need to do this unless you are using Lando to build your own
@@ -12,13 +9,14 @@ interface.
 Check out `./bin/lando.js` in this repository for an example of how we instantiate
 `lando` for usage in a CLI.
 
+**Kind**: global variable  
+**Returns**: [<code>Lando</code>](#Lando) - An initialized Lando instance  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | [options] | <code>Object</code> | Options to initialize a Lando object with |
 
-**Returns**: [<code>Lando</code>](#Lando) - An initialized Lando instance  
 **Example**  
 ```js
 // Get a new lando instance
@@ -32,15 +30,12 @@ const lando = new Lando({
   mode: 'cli'
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_pre_bootstrap_config"></a>
+<a name="event_pre_bootstrap_config"></a>
 
-<h2 id="event_pre_bootstrap_config" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-bootstrap-config()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-bootstrap-config()
 Event that runs before we bootstrap config.
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -54,15 +49,12 @@ lando.events.on('pre-bootstrap-config', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_pre_bootstrap_tasks"></a>
+<a name="event_pre_bootstrap_tasks"></a>
 
-<h2 id="event_pre_bootstrap_tasks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-bootstrap-tasks()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-bootstrap-tasks()
 Event that runs before we bootstrap tasks.
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -76,15 +68,12 @@ lando.events.on('pre-bootstrap-tasks', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_pre_bootstrap_engine"></a>
+<a name="event_pre_bootstrap_engine"></a>
 
-<h2 id="event_pre_bootstrap_engine" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-bootstrap-engine()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-bootstrap-engine()
 Event that runs before we bootstrap the engine.
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -98,15 +87,12 @@ lando.events.on('pre-bootstrap-engine', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_pre_bootstrap_app"></a>
+<a name="event_pre_bootstrap_app"></a>
 
-<h2 id="event_pre_bootstrap_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-bootstrap-app()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-bootstrap-app()
 Event that runs before we bootstrap the app.
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -120,15 +106,12 @@ lando.events.on('pre-bootstrap-app', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_post_bootstrap_config"></a>
+<a name="event_post_bootstrap_config"></a>
 
-<h2 id="event_post_bootstrap_config" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-bootstrap-config()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-bootstrap-config()
 Event that runs after we bootstrap config
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -142,15 +125,12 @@ lando.events.on('post-bootstrap-config', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_post_bootstrap_tasks"></a>
+<a name="event_post_bootstrap_tasks"></a>
 
-<h2 id="event_post_bootstrap_tasks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-bootstrap-tasks()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-bootstrap-tasks()
 Event that runs after we bootstrap tasks
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -164,15 +144,12 @@ lando.events.on('post-bootstrap-tasks', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_post_bootstrap_engine"></a>
+<a name="event_post_bootstrap_engine"></a>
 
-<h2 id="event_post_bootstrap_engine" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-bootstrap-engine()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-bootstrap-engine()
 Event that runs after we bootstrap the engine
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -186,15 +163,12 @@ lando.events.on('post-bootstrap-engine', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="event_post_bootstrap_app"></a>
+<a name="event_post_bootstrap_app"></a>
 
-<h2 id="event_post_bootstrap_app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-bootstrap-app()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-bootstrap-app()
 Event that runs after we bootstrap the app
 
+**Kind**: global function  
 **Since**: 3.0.0  
 **Properties**
 
@@ -208,13 +182,9 @@ lando.events.on('post-bootstrap-app', lando => {
   // My codes
 });
 ```
-<div class="api-body-footer"></div>
-<a id="landobootstrap"></a>
+<a name="lando.bootstrap"></a>
 
-<h2 id="landobootstrap" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.bootstrap([level]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.bootstrap([level]) ⇒ <code>Promise</code>
 Bootstraps Lando, this should
 
  1. Emit bootstrap events
@@ -240,6 +210,8 @@ the order presented.
 Check out `./bin/lando.js` in this repository for an example of bootstraping
 `lando` for usage in a CLI.
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise  
 **Emits**: [<code>lando.events:pre-bootstrap-config</code>](#event_pre_bootstrap_config), [<code>lando.events:pre-bootstrap-tasks</code>](#event_pre_bootstrap_tasks), [<code>lando.events:pre-bootstrap-engine</code>](#event_pre_bootstrap_engine), [<code>lando.events:pre-bootstrap-app</code>](#event_pre_bootstrap_app), [<code>lando.events:post-bootstrap-config</code>](#event_post_bootstrap_config), [<code>lando.events:post-bootstrap-tasks</code>](#event_post_bootstrap_tasks), [<code>lando.events:post-bootstrap-engine</code>](#event_post_bootstrap_engine), [<code>lando.events:post-bootstrap-app</code>](#event_post_bootstrap_app)  
 **Since**: 3.0.0  
 
@@ -247,23 +219,20 @@ Check out `./bin/lando.js` in this repository for an example of bootstraping
 | --- | --- | --- | --- |
 | [level] | <code>String</code> | <code>app</code> | Level with which to bootstrap Lando |
 
-**Returns**: <code>Promise</code> - A Promise  
 **Example**  
 ```js
 // Bootstrap lando at default level and then exit
 lando.bootstrap().then(() => process.exit(0))l
 ```
-<div class="api-body-footer"></div>
-<a id="landogetapp"></a>
+<a name="lando.getApp"></a>
 
-<h2 id="landogetapp" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.getApp([startFrom], [warn]) ⇒ <code>App</code></h2>
-<div class="api-body-header"></div>
-
+## lando.getApp([startFrom], [warn]) ⇒ <code>App</code>
 Gets a fully instantiated App instance.
 
 Lando will also scan parent directories if no app is found in `startFrom`
 
+**Kind**: global function  
+**Returns**: <code>App</code> - Returns an instantiated App instandce.  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -271,9 +240,7 @@ Lando will also scan parent directories if no app is found in `startFrom`
 | [startFrom] | <code>String</code> | <code>process.cwd()</code> | The directory to start looking for an app |
 | [warn] | <code>Boolean</code> | <code>true</code> | Show a warning if we can't find an app |
 
-**Returns**: <code>App</code> - Returns an instantiated App instandce.  
 **Example**  
 ```js
 const app = lando.getApp('/path/to/my/app')
 ```
-<div class="api-body-footer"></div>

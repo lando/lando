@@ -7,6 +7,6 @@ You can contribute to docs by clicking on the *Edit Page* link on each page of t
 # Build the documentation
 yarn docs
 
-# Serve the documentation with gitbooks
-yarn serve
+# Serve the documentation
+yarn dev:docs
 ```

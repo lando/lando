@@ -24,7 +24,7 @@ node_modules
 env.yaml
 env.yml
 
-# gitbooks
+# docs
 _books
 _book
 docs/examples

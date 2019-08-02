@@ -33,13 +33,13 @@
   },
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "docs": "node ./scripts/docs.js && gitbook install && gitbook build",
+    "docs": "node ./scripts/docs.js && vuepress build docs -d _book",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint bin docs lib plugins scripts test",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release": "bump --prompt --tag --all --push",
-    "serve": "node ./scripts/docs.js && gitbook install && gitbook serve",
+    "dev:docs": "node ./scripts/docs.js && vuepress dev docs",
     "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js plugins/**/test/**/*.spec.js",
     "test:unit:core": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js",
     "test:unit:plugins": "nyc --reporter=html --reporter=text mocha --timeout 5000 plugins/**/test/**/*.spec.js",
@@ -105,8 +105,6 @@
     "coveralls": "^3.0.1",
     "eslint": "^4.15.0",
     "eslint-config-google": "^0.9.1",
-    "gitbook-cli": "^2.3.0",
-    "gitbook-plugin-adsense": "^1.0.3",
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
     "leia-parser": "^0.3.4",
@@ -116,6 +114,7 @@
     "pkg": "^4.3.7",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
-    "version-bump-prompt": "^4.2.1"
+    "version-bump-prompt": "^4.2.1",
+    "vuepress": "^1.0.3"
   }
 }

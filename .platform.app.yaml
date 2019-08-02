@@ -37,15 +37,23 @@ dependencies:
   nodejs:
     yarn: "*"
 
-# The hooks that will be performed when the package is deployed.
+# Automation
 hooks:
   build: |
-    yarn
+    set -e
+    yarn install
     yarn docs
-    cp docs/images/favicon.ico _book/gitbook/images/favicon.ico
-    cp docs/ads.txt _book/ads.txt
+    curl -sS https://platform.sh/cli/installer | php
 
+# The configuration of scheduled execution.
 crons:
+  snapshot:
+    # Take a snapshot automatically every night at 3 am (UTC).
+    spec: '0 3 * * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        /app/.platformsh/bin/platform snapshot:create --yes --no-wait
+      fi
   renewcert:
     # Force a redeploy at 9 am (UTC) on the 14th of every month.
     spec: '0 9 14 * *'

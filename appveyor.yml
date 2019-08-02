@@ -5,7 +5,6 @@ environment:
   nodejs_version: "10"
 cache:
   - node_modules
-  - '%USERPROFILE%\.gitbook'
 install:
 
   # Get the latest stable version of Node.js or io.js
