@@ -1,40 +1,36 @@
-Linux
-=====
+# Linux
 
 1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 17.06.1-ce)**
 2. Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
 3. Run the required package installation command for your os eg `sudo dpkg -i lando-stable.deb`, See below for defatails on each
 4. Make sure you look at the caveats below and follow them appropriately
 
-> #### Hint::Install from source for other Linux distros
->
-> If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](./source.md)
+
+::: tip Install from source for other Linux distros
+If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](./source.md)
+:::
 
 Note that you *may* also be able to just double click on the package and install via your distributions "Software Center" or equivalent.
 
-Debian
-------
+## Debian
 
 ```bash
 sudo dpkg -i lando-stable.deb
 ```
 
-Fedora
-------
+## Fedora
 
 ```bash
 sudo dnf install lando-stable.rpm
 ```
 
-Arch
-----
+## Arch
 
 ```bash
 sudo pacman -U lando-stable.pacman
 ```
 
-Caveats
--------
+## Caveats
 
 ### `docker-ce`
 

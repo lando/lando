@@ -1,16 +1,14 @@
-destroy
-=======
+# destroy
 
 Destroys your app.
 
 After you run this command you will not be able to access the app or use Lando tooling for development unless you restart the app. The files (eg the git repo) for the app will not be removed.
 
-> #### Info::Only destroys an app, not Lando itself!
->
-> This command should not be confused with uninstalling Lando. It **will only** destroy the app that you use it on.
+::: warning Only destroys an app, not Lando itself!
+This command should not be confused with uninstalling Lando. It **will only** destroy the app that you use it on.
+:::
 
-Usage
------
+## Usage
 
 ```bash
 # Interactive destruction
@@ -26,8 +24,7 @@ lando destroy -vvv
 lando destroy --help
 ```
 
-Options
--------
+## Options
 
 ```bash
 --clear        Clears the lando tasks cache

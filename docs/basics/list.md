@@ -1,12 +1,10 @@
-list
-====
+# list
 
 Lists all running lando apps and containers.
 
 Optionally you can include show not running services with `--all` or filter by `--app`.
 
-Usage
------
+## Usage
 
 ```bash
 # Get all running lando services
@@ -28,8 +26,7 @@ lando list --all --format json
 lando list --path "my-app.[0].service"
 ```
 
-Options
--------
+## Options
 
 ```bash
 --all, -a      Show all containers, even those not running

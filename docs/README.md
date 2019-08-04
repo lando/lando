@@ -2,7 +2,7 @@
 home: true
 heroImage: /images/hero.png
 actionText: OoOoO! TELL ME MORE! →
-actionLink: /manifesto/
+actionLink: /basics/
 features:
 - title: Digital Agency
   details: Strategy, design, development, testing and hosting. We do it all and you get a website that grows your organization.

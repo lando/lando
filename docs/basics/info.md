@@ -1,5 +1,4 @@
-info
-====
+# info
 
 Prints info about your app.
 
@@ -10,8 +9,7 @@ Using this command you can see useful information such as:
 * Custom config file locations
 * Other depends-on-which-service relevant things
 
-Usage
------
+## Usage
 
 ```bash
 # Get app info
@@ -24,8 +22,7 @@ lando info --deep
 lando info --deep --format json
 ```
 
-Options
--------
+## Options
 
 ```bash
 --clear        Clears the lando tasks cache

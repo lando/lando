@@ -1,5 +1,4 @@
-Introduction
-============
+# Introduction
 
 On a high level your `lando` configuration should contain **ALL** the things you need to run, develop and test your project. The ideal we strive for is best expressed as:
 
@@ -9,8 +8,7 @@ Implicit in the above is that your lando configuration should **always** be chec
 
 We've found a useful pattern here is for the senior-est, most DevOps-y person on your team to craft the initial lando configuration and be responsible for its maintanence but to generally "set it and forget it".
 
-Ok cool, I dig it. What do I need to get started?
--------------------------------------------------
+## Ok cool, I dig it. What do I need to get started?
 
 In order for you to get started using the awesome power of Lando you need to have
 
@@ -19,8 +17,7 @@ In order for you to get started using the awesome power of Lando you need to hav
 
 If you are unclear on how to manually set this up check out our [lando init](./cli/init.md) command which can help you initialize code from various sources for use with Lando.
 
-So, what does this Landofile look like anyway?
-----------------------------------------------
+## So, what does this Landofile look like anyway?
 
 As mentioned above, the Landofile is generally called `.lando.yml` but is both [configurable](./config/lando.md) and [overridable](./config/lando.md). It needs a `name` but beyond that it can contain any combination of the following things although generally it only uses a small subset of these.
 
@@ -78,8 +75,7 @@ This is helpful so you can run `lando yarn install` instead of `docker exec -it 
 
 **A LATE TL;DR** - We **HIGHLY** recommend you read through the linked documentation above to get a sense of the things the Landofile can do for you and/or your team.
 
-How do I make one?
-------------------
+## How do I make one?
 
 There are various ways to craft your Landofile but we've found and observed the following strategy to be *generally a good approach*.
 
@@ -91,8 +87,7 @@ There are various ways to craft your Landofile but we've found and observed the 
 6. Create [custom recipes or services](./dev/plugins.md) to lock down your new power tools
 7. Rinse and repeat
 
-You have some examples?
------------------------
+## You have some examples?
 
 Below are a few example Landofiles to help give you a sense of how simple or complex they can be. You can also check out our [large repository of tested-every-build and working examples](https://github.com/lando/lando/tree/master/examples)
 

@@ -1,5 +1,4 @@
-From Source
-===========
+# From Source
 
 To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults. You will also need...
 
@@ -8,10 +7,9 @@ To install from source you need to first make sure you've [installed the latest 
 
 On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`.
 
-> #### Hint::Or take things to lightspeed
->
-> If you are using macOS or a Debian flavored linux distro you can easily install Lando's dev requirements using [hyperdrive](https://github.com/lando/hyperdrive)
-
+::: tip Or take things to lightspeed
+If you are using macOS or a Debian flavored linux distro you can easily install Lando's dev requirements using [hyperdrive](https://github.com/lando/hyperdrive)
+:::
 
 Then do the following:
 

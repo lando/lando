@@ -1,5 +1,4 @@
-init
-====
+# init
 
 Initializes code for use with lando
 
@@ -7,12 +6,12 @@ This command will create a `.lando.yml` for a given recipe and with code from a 
 
 Currently you can initialize code from your current working directory, a remote Git repository, a remote archive, [GitHub](https://github.com) and [Pantheon](https://pantheon.io).
 
-> #### Hint::Do not use if you already have a `.lando.yml` in your codebase
->
-> If your code already has a Landofile then this command will likely produce undesirable results.
 
-Usage
------
+::: tip Do not use if you already have a `.lando.yml` in your codebase
+If your code already has a Landofile then this command will likely produce undesirable results.
+:::
+
+## Usage
 
 ```bash
 # Interactively instantiate your code for use with lando
@@ -46,8 +45,7 @@ lando init --source cwd \
   --name meanest-app-youve-ever-seen
 ```
 
-Getting code from various sources
----------------------------------
+## Getting code from various sources
 
 ### Current Working Directory
 
@@ -139,8 +137,7 @@ lando init \
   --name lando
 ```
 
-Options
--------
+## Options
 
 Run `lando init --help` to get a complete list of options defaults, choices, recipes, sources etc.
 

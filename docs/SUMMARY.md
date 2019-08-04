@@ -4,17 +4,6 @@
 *   [Introduction](started.md)
 *   [CLI Usage](cli/usage.md)
 
-## Installation
-
-*   [System Requirements](installation/system-requirements.md)
-*   [Preflight Checks](installation/preflight.md)
-*   [MacOS](installation/macos.md)
-*   [Linux](installation/linux.md)
-*   [Windows](installation/windows.md)
-*   [From Source](installation/source.md)
-*   [Updating](installation/updating.md)
-*   [Uninstalling](installation/uninstalling.md)
-
 ## Recipes
 
 *   [Backdrop](tutorials/backdrop.md)
@@ -53,23 +42,6 @@
 *   [solr](tutorials/solr.md)
 *   [tomcat](tutorials/tomcat.md)
 *   [varnish](tutorials/varnish.md)
-
-## Command Line
-
-*   [config](cli/config.md)
-*   [destroy](cli/destroy.md)
-*   [init](cli/init.md)
-*   [info](cli/info.md)
-*   [list](cli/list.md)
-*   [logs](cli/logs.md)
-*   [poweroff](cli/poweroff.md)
-*   [rebuild](cli/rebuild.md)
-*   [restart](cli/restart.md)
-*   [share](cli/share.md)
-*   [ssh](cli/ssh.md)
-*   [start](cli/start.md)
-*   [stop](cli/stop.md)
-*   [version](cli/version.md)
 
 ## Guides
 

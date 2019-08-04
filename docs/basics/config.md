@@ -1,12 +1,10 @@
-config
-======
+# config
 
 Displays the lando configuration.
 
 You can also use `--field` to only display a single config value. *Almost all* of these options can be overriden via the Lando global `config.yml`. See the [config system](../config/config.md) for more info.
 
-Usage
------
+## Usage
 
 ```bash
 # Show me a config worthy of lando
@@ -19,8 +17,7 @@ lando config --path mode
 lando config --format json
 ```
 
-Options
--------
+## Options
 
 ```bash
 --clear        Clears the lando tasks cache

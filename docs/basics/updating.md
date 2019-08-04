@@ -1,5 +1,4 @@
-Updating
-========
+# Updating
 
 Updating is fairly simple.
 
@@ -7,8 +6,7 @@ Updating is fairly simple.
 2.  Turn off Docker.
 3.  Follow the [normal installation steps](./system-requirements.md) with the new version.
 
-Caveats
--------
+## Caveats
 
 Lando has tried to maintain backwards compatibility as best as possible on it's road to a stable `3.0.0` release. However it has introduced breaking changes in a few Lando version. For these versions you will likely want to [uninstall](./uninstalling.md) and consult the relevant release notes for the breaking versions.
 

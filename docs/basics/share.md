@@ -1,5 +1,4 @@
-share
-=====
+# share
 
 Shares your local site publicly.
 
@@ -7,19 +6,17 @@ This is useful for sharing work with clients or testing your local site on multi
 
 SSL is provided via `localtunnel`, the underlying technology lando uses to share local `urls`.
 
-> #### Hint::What URL to use
->
-> Try running `lando info` from inside your app. Any service with a `http://localhost:port` address should be shareable.
+::: tip What URL to use?
+Try running `lando info` from inside your app. Any service with a `http://localhost:port` address should be shareable.
+:::
 
-Usage
------
+## Usage
 
 ```bash
 lando share -u http://localhost:32785
 ```
 
-Options
--------
+## Options
 
 ```bash
 --clear        Clears the lando tasks cache

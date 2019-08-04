@@ -1,17 +1,16 @@
-version
-=======
+# stop
 
-Displays the lando version.
+Stops an app.
 
-Usage
------
+This will spin down all containers and services associated with this app.
+
+## Usage
 
 ```bash
-lando version
+lando stop
 ```
 
-Options
--------
+## Options
 
 ```bash
 --clear        Clears the lando tasks cache
