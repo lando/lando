@@ -1,5 +1,4 @@
-Tooling
-=======
+# Tooling
 
 Lando provides a nice way to:
 
@@ -19,8 +18,7 @@ This allows you to:
 >
 > You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./services.md#build-steps) or our [`ssh`](./../cli/ssh.md) command.
 
-Usage
------
+## Usage
 
 It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. Here are all the options you can use for a given tooling route and their default values.
 
@@ -218,8 +216,7 @@ lando word
 lando word --word=fox
 ```
 
-Pipes, Carrots and Ampersands OH MY!
-------------------------------------
+## Pipes, Carrots and Ampersands OH MY!
 
 If Lando sees any combination of `|`, `<`, `>`, or `&` in any of the defined commands it will automatically wrap the entire command in `/bin/sh -c "<command>"`. This means that if you pipe or carrot commands they are all happening *INSIDE* the service and not going from the container to host or vice-versa.
 
@@ -242,8 +239,7 @@ lando ssh -s appserver -c "ls -lsa /"
 # See the database dump
 ```
 
-Overriding
-----------
+## Overriding
 
 You can override tooling provided by Lando recipes or upstream Landofiles by redefining the tooling command in your Landofile.
 
@@ -255,8 +251,7 @@ tooling:
     cmd: "/app/vendor/bin/drush --root=/app/web"
 ```
 
-Disabling
----------
+## Disabling
 
 You can also use "tooling overrides" to disable any other predefined or upstream tooling by setting the command to a non-object value in your Lando file.
 
@@ -267,8 +262,7 @@ tooling:
   push: disabled
 ```
 
-Directory Mapping
------------------
+## Directory Mapping
 
 Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container. Consider
 
@@ -282,8 +276,7 @@ lando ssh -c "pwd"
 
 ```
 
-Tool Discovery
---------------
+## Tool Discovery
 
 If you are not sure about what tools live inside your container, you can use `lando ssh` to drop into a shell on a specific service to both investigate and install any needed dependencies.
 

@@ -1,5 +1,4 @@
-Networking
-==========
+# Networking
 
 Lando sets up and manages its own internal Docker network. This provides a common pattern, predictable hostnames and a more reliable experience for local development networking generally.
 
@@ -9,8 +8,7 @@ Specifically, every Lando service, even those added via the `compose` top level 
 >
 > If you want a service in App A to talk to a service in App B then you need to make sure you've started up both apps!
 
-Automatic Hostnames
--------------------
+## Automatic Hostnames
 
 By default every service will get and be accessible at a hostname of the form `<service>.<app>.internal`. For example if you have an app called `labouche` and a service called `redis` it should be accessible from any other container using `redis.labouche.internal`.
 
@@ -20,8 +18,7 @@ You can get information about which hostnames and urls map to what services usin
 
 **Note that this automatic networking only happens INSIDE of the Docker daemon and not on your host.**
 
-Testing
--------
+## Testing
 
 You can verify that networking is set up correctly by spinning up two `lamp` recipes called `lamp1` and `lamp2` and running a few `curl` commands.
 

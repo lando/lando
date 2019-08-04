@@ -1,10 +1,8 @@
-Recipes
-=======
+# Recipes
 
 Recipes are Lando's highest level abstraction and they contain common combinations of [routing](./proxy.md), [services](./services.md), and [tooling](./tooling.md). Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
 
-Usage
------
+## Usage
 
 You can use the top-level `recipe` config in your [Landofile](./lando.md) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../dev/plugins.md).
 
@@ -14,8 +12,7 @@ For example this will use the [Drupal 8](./../tutorials/drupal8.md) recipe.
 recipe: drupal8
 ```
 
-Config
-------
+## Config
 
 You can optionally configure some of the more obvious things in your recipe such as service versions, database types and config files using the top-level `config` config in your [Landofile](./lando.md).
 
@@ -38,8 +35,7 @@ config:
     vhosts: config/vhosts.conf
 ```
 
-Supported Recipes
------------------
+## Supported Recipes
 
 The following recipes are currently offered. Please check out each one to learn how to specifically use them.
 
@@ -55,8 +51,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ####[Pantheon](./../tutorials/pantheon.md)
 *   ####[WordPress](./../tutorials/wordpress.md)
 
-Extending and Overriding Recipes
---------------------------------
+## Extending and Overriding Recipes
 
 While the first Landofile below is totally valid and used by many people there are even more people who set a recipe as a starting point for a more complex Landofile.
 

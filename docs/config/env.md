@@ -1,10 +1,8 @@
-Environment
-===========
+# Environment
 
 Lando will both inject a bunch of helpful environment variables into each service and allow the user to inject their own either by [file](#environment-files) or [configuration](#environment-configuration). Note that these variables are only available **inside** each service and **not on your host machine.**
 
-Default Environment Variables
------------------------------
+## Default Environment Variables
 
 While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./config.md) value.
 
@@ -41,8 +39,7 @@ LANDO_SERVICE_NAME=appserver
 
 **NOTE:** See [this tutorial](./../guides/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
-Environment Files
------------------
+## Environment Files
 
 You can tell Lando to inject additional environment variables into every service in your app using environment files. This is particularly useful if you want to:
 
@@ -90,7 +87,6 @@ WP_SITEURL=http://wpb4.test/wp
 >
 > For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
 
-Environment Configuration
--------------------------
+## Environment Configuration
 
 If you'd like to avoid broad strokes and only inject certain environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).

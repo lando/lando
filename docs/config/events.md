@@ -1,5 +1,4 @@
-Events
-======
+# Events
 
 > #### Hint::When should I use events instead of a build step?
 >
@@ -30,8 +29,7 @@ Events allow you to automate commands or tasks you might often or always run eit
 
 You can also hook into `pre` and `post` events for all [tooling](./tooling.md) commands. For example, the command `lando db-import` should expose `pre-db-import` and `post-db-import`
 
-Discovering Events
-------------------
+## Discovering Events
 
 While the above lists are great starting point they may be out of date. You can explicitly discover what events are available by running:
 
@@ -46,8 +44,7 @@ lando test -vvv | grep "Emitting"
 
 Specifically, you need to hook into an event where the service you are running the command against exists and is running.
 
-Usage
------
+## Usage
 
 It's fairly straightforward to add events to your [Landofile](./lando.md) using the `events` top level config.
 

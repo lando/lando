@@ -1,5 +1,4 @@
-Services
-========
+# Services
 
 Lando services are our distillation of Docker containers into their most important options combined with some *special sauce* to setup good [networking](./networking.md), [certificates](./security.md) and [SSH keys](./ssh.md) as well as options to run [build steps](#build-steps) and provide low level [overrides](#overrides).
 
@@ -39,8 +38,7 @@ service:
 >
 > If you want to load Docker compose files **and** use services, you should note that compose files are loaded first. This means that depending on how you name things, your services could override things set in your compose files.
 
-Supported Services
-------------------
+## Supported Services
 
 The following services are currently supported. Please check out each one to learn how to use them.
 
@@ -67,8 +65,7 @@ The following services are currently supported. Please check out each one to lea
 *   ####[tomcat](./../tutorials/tomcat.md)
 *   ####[varnish](./../tutorials/varnish.md)
 
-Build Steps
------------
+## Build Steps
 
 One of the great features of Lando is its ability to destroy a single planet...  we mean add additional dependencies or build steps to your service without the hassle of having to build or manage your own Dockerfiles.
 
@@ -174,8 +171,7 @@ build:
   - /bin/sh -c "mkdir -p ~/.drush/site-aliases"
 ```
 
-Advanced
---------
+## Advanced
 
 > #### Warning::ENTERING THE DANGER ZONE
 >

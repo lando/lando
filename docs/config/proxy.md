@@ -1,5 +1,4 @@
-Proxy
-=====
+# Proxy
 
 By default Lando runs a [traefik](https://traefik.io/) reverse proxy when needed so that users' apps can route stable, predictable and "nice" URLS to various ports inside of various services.
 
@@ -13,8 +12,7 @@ Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry th
 
 There is also a [known issue](./../issues/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
 
-Automatic Port Assignment
--------------------------
+## Automatic Port Assignment
 
 By default Lando will attempt to bind the proxy to your host machines port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
 
@@ -29,8 +27,7 @@ sudo lsof -n -i :443 | grep LISTEN
 sudo kill -9 $PID
 ```
 
-Usage
------
+## Usage
 
 You can add routing to various services and their ports using the top-level `proxy` config in your [Landofile](./lando.md). Because our proxy also benefits from our [automatic certificate and CA setup](./security.md) all proxy entries will automatically be available over both `http` and `https`.
 
@@ -120,8 +117,7 @@ proxy:
 
 You can read more about this restriction [here](https://stackoverflow.com/questions/26744696/ssl-multilevel-subdomain-wildcard).
 
-Configuration
--------------
+## Configuration
 
 Various parts of the proxy are configurable via the Lando [global config](./config.md).
 
@@ -153,8 +149,7 @@ You will need to do a `lando poweroff` to apply these changes.
 
 Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example if you set `domain` to a top level domain such as `test` you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
 
-Working Offline or Using Custom Domains
----------------------------------------
+## Working Offline or Using Custom Domains
 
 If you are working offline and/or have added custom domains and want to get them to work, you will need to edit your `hosts` file. Generally, this file is located at `/etc/hosts` on Linux and macOS and `C:\Windows\System32\Drivers\etc\host` on Windows. You will need administrative privileges to edit this file.
 

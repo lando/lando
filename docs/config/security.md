@@ -1,5 +1,4 @@
-SSL/TLS
-=======
+# SSL/TLS
 
 Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our [internal Lando network](./networking.md). They should live inside every service at `/certs`.
 
@@ -12,8 +11,7 @@ Lando uses its own Certificate Authority to sign the certs for each service and 
 |-- cert.pem
 ```
 
-Trusting the CA
----------------
+## Trusting the CA
 
 While Lando will automatically trust this CA internally it is up to you to trust it on your host machine. Doing so will alleviate browser warnings regarding certs we issue.
 

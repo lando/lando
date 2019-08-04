@@ -1,5 +1,4 @@
-Shared Files
-============
+# Shared Files
 
 While you can also share in additional files and directories via Docker volumes (see [service overrides](./services.md#overrides)), we share a few useful host directories into each service by default.
 
