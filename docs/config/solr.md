@@ -27,9 +27,9 @@ You can still run these versions with Lando but for all intents and purposes the
 
 ## Patch versions
 
-> #### Warning::Not officially supported!
->
-> While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV. Also note that patch versions are not available for Solr 3.x and 4.x
+::: warning Not officially supported!
+While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV. Also note that patch versions are not available for Solr 3.x and 4.x
+:::
 
 To use a patch version you can do something like this:
 
@@ -94,10 +94,9 @@ services:
     core: my-core
 ```
 
-> #### Info::Solr 5+ only
->
-> The `core` config value does not work for Solr 3.x or 4.x
-
+::: warning Solr 5+ only!
+The `core` config value does not work for Solr 3.x or 4.x
+:::
 
 ### Using custom solr config
 

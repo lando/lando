@@ -11,9 +11,9 @@
 
 ## Patch versions
 
-> #### Warning::Not officially supported!
->
-> While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+::: warning Not officially supported!
+While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+:::
 
 To use a patch version you can do something like this:
 

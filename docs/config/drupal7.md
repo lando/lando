@@ -73,7 +73,7 @@ config:
 
 By default, this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
-** With Apache (default) **
+#### With Apache (default)
 
 ```yaml
 recipe: drupal7
@@ -81,7 +81,7 @@ config:
   via: apache
 ```
 
-** With nginx **
+#### With nginx
 
 ```yaml
 recipe: drupal7
@@ -97,7 +97,7 @@ If you are unsure about how to configure the `database` we *highly recommend* yo
 
 Also, note that like the configuration of the `php` version you should consult the [Drupal 7 requirements](https://www.drupal.org/docs/7/system-requirements/database-server) to make sure the `database` and `version` you select is supported by Drupal 7 itself.
 
-** Using MySQL (default) **
+#### Using MySQL (default)
 
 ```yaml
 recipe: drupal7
@@ -105,7 +105,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: drupal7
@@ -113,7 +113,7 @@ config:
   database: mariadb
 ```
 
-** Using Postgres **
+#### Using Postgres
 
 ```yaml
 recipe: drupal7
@@ -121,7 +121,7 @@ config:
   database: postgres
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: drupal7
@@ -135,7 +135,7 @@ By default, our Drupal 7 recipe will globally install the [latest version of Dru
 
 That said you can configure this recipe to use any version of Drush to which there is a resolvable package available via `composer`. That means that the following are all valid.
 
-**Use the latest version of Drush**
+### Use the latest version of Drush
 
 ```yaml
 recipe: drupal7
@@ -143,7 +143,7 @@ config:
   drush: "*"
 ```
 
-**Use the latest version of Drush 7**
+#### Use the latest version of Drush 7
 
 ```yaml
 recipe: drupal7
@@ -151,7 +151,7 @@ config:
   drush: ^7
 ```
 
-**Use a specific version of Drush 8**
+#### Use a specific version of Drush 8
 
 ```yaml
 recipe: drupal7
@@ -289,8 +289,7 @@ config:
     vhosts: config/default.conf
 ```
 
-Connecting to your database
----------------------------
+## Connecting to your database
 
 Lando will automatically set up a database with a user and password and also set an environment variable called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 

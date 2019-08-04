@@ -72,7 +72,7 @@ config:
 
 By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
-** With Apache (default) **
+#### With Apache (default)
 
 ```yaml
 recipe: backdrop
@@ -80,7 +80,7 @@ config:
   via: apache
 ```
 
-** With nginx **
+#### With nginx
 
 ```yaml
 recipe: backdrop
@@ -96,7 +96,7 @@ If you are unsure about how to configure the `database` we *highly recommend* yo
 
 Also note that like the configuration of the `php` version you should consult the [Backdrop requirements](https://backdropcms.org/requirements) to make sure the `database` and `version` you select is actually supported by Backdrop itself.
 
-** Using MySQL (default) **
+#### Using MySQL (default)
 
 ```yaml
 recipe: backdrop
@@ -104,7 +104,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: backdrop
@@ -112,7 +112,7 @@ config:
   database: mariadb
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: backdrop

@@ -37,9 +37,9 @@ services:
 
 You will need to list the database services you want to be able to access via `phpmyadmin`. Note that the services in this list should be other MySQLy services in your application. They can be discovered by running [lando info](./../cli/info.md).
 
-> #### Warning::Note that PhpMyAdmin is designed specifically for MySql and MariaDB type databases
->
-> You will likely be sad if you try to use a non-MySQL-ish database.
+::: warning Note that PhpMyAdmin is designed specifically for MySql and MariaDB type databases!
+You will likely be sad if you try to use a non-MySQL-ish database.
+:::
 
 Here is an example of a Landofile's `services` config that connects to two `mysql` database backends called `mysql57` and `mysql8`.
 

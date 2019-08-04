@@ -114,7 +114,7 @@ By default this recipe will use the default version of our [mongo](./mongo.md) s
 
 Note that you can also specify a version *as long as it is a version available for use with lando* for either `mongo`, `mysql`, `mariadb` or `postgres`.
 
-** Using mongo (default) **
+#### Using mongo (default)
 
 ```yaml
 recipe: mean
@@ -122,7 +122,7 @@ config:
   database: mongo
 ```
 
-** Using MySQL **
+#### Using MySQL
 
 ```yaml
 recipe: mean
@@ -130,7 +130,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: mean
@@ -138,7 +138,7 @@ config:
   database: mariadb
 ```
 
-** Using Postgres **
+#### Using Postgres
 
 ```yaml
 recipe: mean
@@ -146,7 +146,7 @@ config:
   database: postgres
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: mean

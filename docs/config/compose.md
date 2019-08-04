@@ -18,10 +18,9 @@ This service is useful if you are:
 
 Unlike other services, `compose` does not require a `version`, instead it allows you to directly configure Docker Compose's top-level `volumes`, `networks`, and `services` config directly.
 
-> #### Info::We highly recommend you check the Docker Compose docs!
->
-> `services`, `volumes` and `networks` below come directly from Docker Compose so we *highly recommend* you check out their [docs](https://docs.docker.com/compose/compose-file/).
-
+::: tip We highly recommend you check the Docker Compose docs!
+`services`, `volumes` and `networks` below come directly from Docker Compose so we *highly recommend* you check out their [docs](https://docs.docker.com/compose/compose-file/).
+:::
 
 ```yaml
 services:

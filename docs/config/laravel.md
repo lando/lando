@@ -74,7 +74,7 @@ config:
 
 By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
-** With Apache (default) **
+#### With Apache (default)
 
 ```yaml
 recipe: laravel
@@ -82,7 +82,7 @@ config:
   via: apache
 ```
 
-** With nginx **
+#### With nginx
 
 ```yaml
 recipe: laravel
@@ -98,7 +98,7 @@ If you are unsure about how to configure the `database` we *highly recommend* yo
 
 Also note that like the configuration of the `php` version you should consult the [Laravel requirements](https://laravel.com/docs/5.7/database#configuration) to make sure the `database` and `version` you select is actually supported by Laravel itself.
 
-** Using MySQL (default) **
+#### Using MySQL (default)
 
 ```yaml
 recipe: laravel
@@ -106,7 +106,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: laravel
@@ -114,7 +114,7 @@ config:
   database: mariadb
 ```
 
-** Using Postgres **
+#### Using Postgres
 
 ```yaml
 recipe: laravel
@@ -122,7 +122,7 @@ config:
   database: postgres
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: laravel
@@ -154,7 +154,7 @@ config:
   cache: memcached
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: laravel

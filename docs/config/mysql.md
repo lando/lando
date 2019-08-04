@@ -14,9 +14,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Patch versions
 
-> #### Warning::Not officially supported!
->
-> While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+::: warning Not officially supported!
+While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+:::
 
 To use a patch version you can do something like this:
 
@@ -34,15 +34,14 @@ Here are the configuration options, set to the default values, for this service.
 
 Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
 
-> #### Warning::Be careful when switching database type, version or credentials
->
-> You should be careful switching database `type`, `version` or `creds`.
->
-> In the case of type and version the underlying database files between these things is likely not be compatible. In the case of credentials, these are set when the container is **initially created** so in order to change them you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
->
->
-> **Ignoring this warning can cause your database service to not start correctly!!!**
-> You can read more about this [here](./../issues/switching-dbs.md)
+::: warning Be careful when switching database type, version or credentials!
+You should be careful switching database `type`, `version` or `creds`.
+
+In the case of type and version the underlying database files between these things is likely not be compatible. In the case of credentials, these are set when the container is **initially created** so in order to change them you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
+
+
+**Ignoring this warning can cause your database service to not star**
+:::
 
 ```yaml
 services:

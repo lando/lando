@@ -73,7 +73,7 @@ config:
 
 By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
-** With Apache (default) **
+#### With Apache (default)
 
 ```yaml
 recipe: drupal6
@@ -81,7 +81,7 @@ config:
   via: apache
 ```
 
-** With nginx **
+#### With nginx
 
 ```yaml
 recipe: drupal6
@@ -97,7 +97,7 @@ If you are unsure about how to configure the `database` we *highly recommend* yo
 
 Also note that like the configuration of the `php` version you should consult the [Drupal 6 requirements](https://www.drupal.org/docs/7/system-requirements/database-server) to make sure the `database` and `version` you select is actually supported by Drupal 6 itself.
 
-** Using MySQL (default) **
+#### Using MySQL (default)
 
 ```yaml
 recipe: drupal6
@@ -105,7 +105,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: drupal6
@@ -113,7 +113,7 @@ config:
   database: mariadb
 ```
 
-** Using Postgres **
+#### Using Postgres
 
 ```yaml
 recipe: drupal6
@@ -121,7 +121,7 @@ config:
   database: postgres
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: drupal6

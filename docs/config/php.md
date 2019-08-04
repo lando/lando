@@ -17,9 +17,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-> #### Warning::Using Unsupported PHP Versions
->
-> While you can currently use some [EOL php version](http://php.net/supported-versions.php) with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
+::: warning Using Unsupported PHP Versions!
+While you can currently use some [EOL php version](http://php.net/supported-versions.php) with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
+:::
 
 You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
 
@@ -60,7 +60,7 @@ By default `php` services will be served by the default version of our [apache](
 
 Like with `apache`, `nginx` will use the the default version of our [nginx](./nginx.md) service while `cli` will just spin up a `php` container without a webserver. The latter is useful if you just want to work on a CLI utility or lock down what version `composer` runs with.
 
-** With Apache (default) **
+#### With Apache (default)
 
 ```yaml
 services:
@@ -69,7 +69,7 @@ services:
     via: apache
 ```
 
-** With nginx **
+#### With nginx
 
 ```yaml
 services:
@@ -119,9 +119,9 @@ The first part of a pathmap will be the location of your code in the container. 
 
 #### Troubleshooting Xdebug
 
-> #### Info::Problems starting XDEBUG
->
-> If you are visiting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_START_SESSION=LANDO` to your request and seeing if that does the trick.
+::: tip Problems starting XDEBUG
+If you are visiting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_START_SESSION=LANDO` to your request and seeing if that does the trick.
+:::
 
 If you have set `xdebug: true` in your recipe or service config and run `lando rebuild` but are still having issues getting `xdebug` to work correctly we recommend that you remove `xdebug: true`, run `lando rebuild` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something like below.
 
@@ -139,11 +139,11 @@ You can use `lando info --deep | grep IPAddress` to help discover the correct ho
 
 You can also use the `composer` key if you need to require any [global composer dependenices](https://getcomposer.org/doc/03-cli.md#require). This follows the same syntax as your normal [`composer.json`](https://getcomposer.org/doc/01-basic-usage.md#composer-json-project-setup) except written as YAML instead of JSON.
 
-> #### Info::Use composer.json if you can
->
-> While there are some legitimate use cases to globally install a composer dependency it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
->
-> Note that both `lando composer` is not provided out of the box by the `php` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
+::: tip Use composer.json if you can
+While there are some legitimate use cases to globally install a composer dependency it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+
+Note that both `lando composer` is not provided out of the box by the `php` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
+:::
 
 Here is an example of globally installing `phpunit/phpunit` `^6.5`
 

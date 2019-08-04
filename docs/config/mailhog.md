@@ -59,10 +59,9 @@ services:
 
 You will need to list the services the wish to hog mail from using the `hogfrom` config key. Note that the services in the list should be other services in your application. They can be discovered by running [lando info](./../cli/info.md).
 
-> #### Warning::Config may differ
->
-> While we will automatically configure the underlying `mail` binary for any `php` service you choose to `hogfrom` you may need to consult the documentation for the specific type of service you are choosing to hogfrom.
->
+::: warning Config may differ!
+While we will automatically configure the underlying `mail` binary for any `php` service you choose to `hogfrom` you may need to consult the documentation for the specific type of service you are choosing to hogfrom.
+:::
 
 Here is an example of a Landofile's `services` config that hogfroms a `php` service called `appserver`.
 

@@ -75,7 +75,7 @@ By default this recipe will use the default version of our [mysql](./mysql.md) s
 
 If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-** Using MySQL (default) **
+#### Using MySQL (default)
 
 ```yaml
 recipe: lamp
@@ -83,7 +83,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: lamp
@@ -91,7 +91,7 @@ config:
   database: mariadb
 ```
 
-** Using Postgres **
+#### Using Postgres
 
 ```yaml
 recipe: lamp
@@ -99,7 +99,7 @@ config:
   database: postgres
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: lamp
