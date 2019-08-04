@@ -1,17 +1,10 @@
-SQL Export
-==========
+# SQL Export
 
 Lando ships with a helper `db-export` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should export a database dump `DATABASE.TIMESTAMP.gz` into the `/app` directory.
 
 You can also export databases from other services.
 
-Prefer video tutorials?
-{% youtube %}
-https://www.youtube.com/watch?v=KH_wZuaPeRc
-{% endyoutube %}
-
-Usage
------
+## Usage
 
 At the command line execute:
 
@@ -43,8 +36,7 @@ Options:
   --stdout        Dump database to stdout
 ```
 
-Adding the `db-export` command
-------------------------------
+## Adding the `db-export` command
 
 If you are not using one of our LAMPy [recipes](./../config/recipes.md) you can add the `db-export` command and default options to the ['tooling'](./../config/tooling.md) section of your [Landofile](./../config/lando.md).
 
@@ -64,8 +56,3 @@ tooling:
       stdout:
         description: Dump database to stdout
 ```
-
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}

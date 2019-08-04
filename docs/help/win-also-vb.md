@@ -1,10 +1,7 @@
-Windows is also running VirtualBox
-==================================
+# Windows is also running VirtualBox
 
 In some cases you cannot use VirtualBox, a common development virtualization tool, with Hyper-V. The **tl;dr** there is:
 
-> #### Quote::VirtualBox loses
->
 > VirtualBox and Hyper-V cannot co-exist on the same machine. Only one hypervisor can run at a time, and since Hyper-V runs all the time, while VirtualBox only runs when it is launched, VirtualBox is the loser in this scenario.
 
 Luckily, there is a documented workaround you can check out over at

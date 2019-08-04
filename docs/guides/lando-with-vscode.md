@@ -1,14 +1,12 @@
-Using Lando with VSCode
-========================
+# Using Lando with VSCode
 
 [Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming. Debugging PHP applications with it can be easy too.
 
 This is a basic setup to help you in this task.
 
-<!-- toc -->
+[[toc]]
 
-Getting Started
----------------
+## Getting Started
 
 Enable Xdebug by adding some lines to your Lando recipe.
 
@@ -33,7 +31,7 @@ services:
   appserver:
     webroot: web
     xdebug: true
-    config: 
+    config:
       php: .vscode/php.ini
 ```
 
@@ -102,8 +100,7 @@ Done!
 
 You can now click start debugging (type F5 or click on the icon in the left sidebar).
 
-Debugging PhpUnit
------------------
+## Debugging PhpUnit
 
 Debugging PhpUnit tests in VSCode requires a little more setup, but Lando helps to make it easier.
 
@@ -155,8 +152,7 @@ Now to run debug a PhpUnit test, do the following:
 3. Add a breakpoint in your code that is being tested.
 4. On your command line run PhpUnit with something like `lando phpunitdebug --filter=testMyTestMethodName` (this example is of running a single test method, actually you can add any phpunit options you like at the end).
 
-Known issues
------------------
+## Known issues
 
 **Xdebug session doesn't start**
 
@@ -180,14 +176,7 @@ This is how you can open a specific port on a Debian/Ubuntu:
 
 `sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9000 -j ACCEPT`
 
-
-Read More
----------
+## Read More
 
 *   [Original Gist with settings for XDebug in VSCode](https://gist.github.com/MatthieuScarset/0c3860def9ff1f0b84e32f618c740655)
 *   [PHP programming in VSCode](https://code.visualstudio.com/docs/languages/php)
-
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}

@@ -1,5 +1,4 @@
-Plugins
-=======
+# Plugins
 
 Lando has an advanced plugin system that allows developers to add and extend Lando's core functionality. Here are a few examples of things you can do with plugins:
 
@@ -14,8 +13,7 @@ Lando has an advanced plugin system that allows developers to add and extend Lan
 
 In fact, almost all of Lando's core functionality is provided via plugins. This includes its [core tasks](https://github.com/lando/lando/tree/master/plugins/lando-core/tasks), [proxy](https://github.com/lando/lando/tree/master/plugins/lando-proxy), [events system](https://github.com/lando/lando/tree/master/plugins/lando-events), [services](https://github.com/lando/lando/tree/master/plugins/lando-services), [recipes](https://github.com/lando/lando/tree/master/plugins/lando-recipes), [tooling layer](https://github.com/lando/lando/tree/master/plugins/lando-tooling) and [container networking](https://github.com/lando/lando/tree/master/plugins/lando-networking).
 
-Plugin Loading
---------------
+## Plugin Loading
 
 Lando will search in the `plugins` directory for any path listed in `lando.config.pluginDirs` and automatically load in any plugins that it finds. By default, these directories are the Lando source directory and `~/.lando` but note that they are configurable via the Lando [global config](./../config/config.md). In order for Lando to successfully identify and automatically load your plugin, you need to have a directory named after your plugin, eg. `my-plugin`, in one of the directories mentioned above and it needs to include an `index.js`.
 
@@ -23,12 +21,11 @@ If there are multiple occurrences of the same-named plugin, Lando will use the l
 
 **A powerful corollary to this is that individual user apps can implement plugins that override or replace core plugin behavior.**
 
-> #### Info::Plugins are no longer loaded from apps by default
->
-> As of `3.0.0-rc.2`, Lando will no longer look for plugins in your app's root directory by default. We intend to eventually provide better scaffolding around grabbing and loading plugins directly from your Landofile but for now this is left to the user.
+::: warning Plugins are no longer loaded from apps by default!
+As of `3.0.0-rc.2`, Lando will no longer look for plugins in your app's root directory by default. We intend to eventually provide better scaffolding around grabbing and loading plugins directly from your Landofile but for now this is left to the user.
+:::
 
-Plugin Anatomy
---------------
+## Plugin Anatomy
 
 At the bare minimum, your plugin needs to have the following structure to be recognized and autoloaded by Lando.
 
@@ -407,7 +404,6 @@ Below are some more details about each key.
 **build** - This is what will allow your new source to actually **DO STUFF**. It's an array of command metadata. If you specify a `cmd`, it will run inside of a special `init` service. If you specify a `func`, it will simply invoke that function.
 
 
-Plugin Examples
----------------
+## Plugin Examples
 
 Check out some of our [core plugins](https://github.com/lando/lando/tree/master/plugins) for motivation in creating your own.

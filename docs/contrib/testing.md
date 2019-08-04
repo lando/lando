@@ -1,5 +1,4 @@
-Testing
-=======
+# Testing
 
 You should be able to use this guide to...
 
@@ -8,8 +7,7 @@ You should be able to use this guide to...
 3.  Run and write functional tests
 4.  Learn how to write tests
 
-Code linting and standards
---------------------------
+## Code linting and standards
 
 Lando implements some basic linting and a slightly less annoying version of the `google` `es6` code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
 
@@ -17,8 +15,7 @@ Lando implements some basic linting and a slightly less annoying version of the 
 yarn lint
 ```
 
-Unit tests
-----------
+## Unit tests
 
 The unit tests use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/).
 
@@ -30,16 +27,15 @@ To run the unit test suite, execute:
 yarn test:unit
 ```
 
-Functional tests
-----------------
+## Functional tests
 
 Lando uses it's own functional testing framework called [leia](https://github.com/lando/leia). Leia helps us ensure that Lando is the real hero we all know him to be.
 
 Leia combines `mocha` as the test runner, `chai` for assertions and `command-line-test` to make the process of executing commands simpler. Tests are written as specially structured `README.md` files that live in the `examples` folder and contain code blocks. When the suite runs these are scanned, parsed and outputted as mocha tests.
 
-> #### Warning::Pretty sure these will not run on Windows yet
->
-> SORRY WINDOZE USERS!
+::: danger Pretty sure these will not run on Windows yet!!!
+SORRY WINDOZE USERS!
+::::
 
 To generate tests from the `examples` repo and then run the functional test suite, execute:
 
@@ -59,24 +55,23 @@ To better understand how these `markdown` files need to be parsed check out the 
 
 Here are some caveats and general guidelines about when and how to write functional tests.
 
-#### So what's the catch?
+### So what's the catch?
 
 1. The suite will run against the `lando` it finds in your PATH so you need to make sure that `lando` is running from source
 2. For test commands to pass they must return a 0 status code eg not have any errors
 3. Additional quotes inside of a `lando ssh -c "STUFF"` are not handled very well right now
 
-#### So when does your code need to include functional tests?
+### So when does your code need to include functional tests?
 
 When you are fixing a bug, you should first write a test to confirm the bug exists repeatably, then you can fix the bug, and the test should pass. Because this framework is essentially just running a bunch of Lando and/or Docker commands it should be pretty easy to write out steps to replicate using the framework.
 
-#### When shouldn't you bother with a new functional test?
+### When shouldn't you bother with a new functional test?
 
 1. Your PR is docs only
 2. Your PR is outside the critical path (writing tests, altering our build pipeline)
 3. Your code alters Lando in a way that doesn't alter the 'contract' with the user. Internal refactoring should add or alter appropriate unit tests, but if the net affect is not visible to an end user, it doesn't need a functional test.
 
-References
-----------
+## References
 
 In addition to the tips above, looking at existing tests will give you a good idea of how to write your own, but if you're looking for more tips, we recommend:
 

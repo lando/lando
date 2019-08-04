@@ -1,10 +1,8 @@
-Getting Started
-===============
+# Getting Started
 
 This section of documentation serves as a guide to help people who wish to contribute code get used to how the Lando source repo works.
 
-Forking and Installing Lando From Source
-----------------------------------------
+## Forking and Installing Lando From Source
 
 In order to help contribute code you will likely need to get Lando running from source. **All subsequent documentation in this section assumes you have done this!**
 
@@ -12,8 +10,7 @@ In order to help contribute code you will likely need to get Lando running from 
 2. Follow the [install from source instructions](./../installation/source.md) using either the [official repo](https://github.com/lando/lando) or your fork.
 3. Read through the [contribution section](./../contrib/contributing.md) to get a sense of how things work.
 
-Contributing Code
------------------
+## Contributing Code
 
 Lando uses a modified [GitHub Flow](https://guides.github.com/introduction/flow/) development model. You can read more about this process in the aforementioned link but the general flow is:
 

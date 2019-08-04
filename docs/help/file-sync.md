@@ -1,13 +1,12 @@
-File syncing issues
-===================
+# File syncing issues
 
 There are generally a few causes of slow or stalled file sharing. Here are some workarounds and checks you can do in each circumstance.
 
-### 1. Has my sync stalled or failed?
+## 1. Has my sync stalled or failed?
 
 A common reason for a failed sync is that the docker filesharing daemon has crashed. You can resolve the latter by restarting the docker daemon itself.
 
-### 2. Is my app located in a shared directory?
+## 2. Is my app located in a shared directory?
 
 Your app needs to live inside of a shared drive or folder. Here are the following default shared drive/folder locations:
 

@@ -55,11 +55,6 @@ Note that our macOS installer _includes_ Docker Desktop and this accounts for it
 4.  Go through the setup workflow
 5.  Enter your username and password when prompted
 
-Prefer video tutorials?
-{% youtube %}
-  https://youtu.be/W8qIutOAe-0
-{% endyoutube %}
-
 ### Install via [HomeBrew](https://brew.sh/)
 
 *Please note that the version installed via Homebrew is community-maintained and may not be the latest version as provided by the `.dmg` package from [GitHub](https://github.com/lando/lando/releases).*

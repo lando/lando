@@ -1,5 +1,4 @@
-Developing offline
-==================
+# Developing offline
 
 Out of the box Lando uses an actual on-the-internet wildcard domain at `*.lndo.site` to route your domain names back to your localhost to provide convenient proxying. This method is minimally invasive and doesn't require Lando to alter your machine's DNS routing. This has the downside of requiring an internet connection to access your sites.
 
@@ -9,8 +8,7 @@ To enable offline custom domain goodness, we'll use DNSMasq to route traffic to 
 
 That said and before we get started we **highly recommend** you consult both the [proxy](./../config/proxy.md) and [security](./../config/security.md) documentation to get a good handle on what is possible (and not possible) here.
 
-Mac Specific Instructions
--------------------------
+## Mac Specific Instructions
 
 1. Ensure you've installed [Homebrew](https://brew.sh/).
 2. Install DNSMasq: `brew install dnsmasq`
@@ -64,7 +62,3 @@ Here are some vitals:
 
 Enjoy your signature domain while you hack away in complete wifi-less splendor.
 
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}

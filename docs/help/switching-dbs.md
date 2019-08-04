@@ -1,5 +1,4 @@
-Switching Database Configuration
-================================
+## Switching Database Configuration
 
 If you are currently using a database with Lando and you decide to change its type, version or credentials in your `.lando.yml` file *it's possible* that your database service will not restart correctly or with the expected values once you've made the change.
 
@@ -11,8 +10,7 @@ If you do not do this and there exists an incompatibility it is likely your data
 
 Listed below are a few tell tale signs that this is the situation you are in.
 
-1. Running `lando mysql`
-------------------------
+## 1. Running `lando mysql`
 
 If you run `lando mysql` or the analgous command for your database type you will see an error that looks similar to:
 
@@ -20,8 +18,7 @@ If you run `lando mysql` or the analgous command for your database type you will
 ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2 "No such file or directory")
 ```
 
-2. Scoping Logs
----------------
+## 2. Scoping Logs
 
 You can also run `lando logs -s database` where `database` is the name of your database service. If you are unsure what the name of your service is you can run `lando info` to see.
 

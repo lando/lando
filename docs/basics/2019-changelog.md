@@ -1,5 +1,6 @@
-v3.0.0-rc.19 - [July 31, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.19)
-------------------------------
+# 2019
+
+## v3.0.0-rc.19 - [July 31, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.19)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
@@ -11,8 +12,7 @@ v3.0.0-rc.19 - [July 31, 2019](https://github.com/lando/lando/releases/tag/v3.0.
 * Fixed critical breaking upstream change that prevented the `mysql` service from restarting [#1718](https://github.com/lando/lando/issues/1718)
 * Updated to Docker Desktop `2.1.0.0` and `docker-compose` `1.24.1`
 
-v3.0.0-rc.18 - [July 17, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.18)
-------------------------------
+## v3.0.0-rc.18 - [July 17, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.18)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
@@ -30,8 +30,7 @@ v3.0.0-rc.18 - [July 17, 2019](https://github.com/lando/lando/releases/tag/v3.0.
 * Updated default `psql` client to match our default `postgres` version `(10)` [#1680](https://github.com/lando/lando/issues/1680)
 * Updated `backdrop` `drush` to `1.0.0`
 
-v3.0.0-rc.17 - [May 24, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.17)
------------------------------
+## v3.0.0-rc.17 - [May 24, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.17)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
@@ -45,8 +44,7 @@ v3.0.0-rc.17 - [May 24, 2019](https://github.com/lando/lando/releases/tag/v3.0.0
 * Fixed breaking upstream change in `postgres` service [#1612](https://github.com/lando/lando/issues/1612)
 * Updated `backdrop` `drush` to `0.1.1`
 
-v3.0.0-rc.16 - [May 10, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.16)
------------------------------
+## v3.0.0-rc.16 - [May 10, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.16)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
@@ -68,8 +66,7 @@ v3.0.0-rc.16 - [May 10, 2019](https://github.com/lando/lando/releases/tag/v3.0.0
 * Updated `drush` defaults to latest versions [#1543](https://github.com/lando/lando/issues/1543)
 * Updated `terminus` to version `2.0.1` [#1551](https://github.com/lando/lando/issues/1551)
 
-v3.0.0-rc.15 - [April 23, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.15)
--------------------------------
+## v3.0.0-rc.15 - [April 23, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.15)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
@@ -80,8 +77,7 @@ v3.0.0-rc.15 - [April 23, 2019](https://github.com/lando/lando/releases/tag/v3.0
 
 * This release has no content or changes. It's meant to repopulate S3 assets.
 
-v3.0.0-rc.14 - [March 18, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.14)
--------------------------------
+## v3.0.0-rc.14 - [March 18, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.14)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -100,8 +96,7 @@ v3.0.0-rc.14 - [March 18, 2019](https://github.com/lando/lando/releases/tag/v3.0
 * Fixed `pre-rebuild` event [#1531](https://github.com/lando/lando/issues/1531)
 * Improved permission handling for hyperdrived directories
 
-v3.0.0-rc.13 - [March 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.13)
-------------------------------
+## v3.0.0-rc.13 - [March 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.13)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -124,8 +119,7 @@ v3.0.0-rc.13 - [March 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.
 * Updated `composer` to version `1.8.4` [#1375](https://github.com/lando/lando/issues/1375) [#1488](https://github.com/lando/lando/issues/1488)
 * Updated `docker` to version `2.0.0.3/18.09.2` [#1375](https://github.com/lando/lando/issues/1375)
 
-v3.0.0-rc.12 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.12)
-----------------------------------
+## v3.0.0-rc.12 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.12)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -140,8 +134,7 @@ v3.0.0-rc.12 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v
 * Fixed `machine token` persistance for `pantheon` apps that are `git cloned` instead of `lando init` [#1475](https://github.com/lando/lando/issues/1475)
 * Fixed regression causing `pantheon` `nginx` config to not load correctly
 
-v3.0.0-rc.11 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.11)
-----------------------------------
+## v3.0.0-rc.11 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.11)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -154,8 +147,7 @@ v3.0.0-rc.11 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v
 
 * Fixed critical regression causing default recipe config files not to load correctly [#1478](https://github.com/lando/lando/issues/1478)
 
-v3.0.0-rc.10 - [February 14, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.10)
-----------------------------------
+## v3.0.0-rc.10 - [February 14, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.10)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -173,8 +165,7 @@ v3.0.0-rc.10 - [February 14, 2019](https://github.com/lando/lando/releases/tag/v
 * Improved `solr` start up script naming and mounting, _probably_ fixes [#1442](https://github.com/lando/lando/issues/1442)
 * Removed unneeded `git` dependency from Linux packages, fixes [#1437](https://github.com/lando/lando/issues/1437)
 
-v3.0.0-rc.9 - [Febraury 8, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.9)
---------------------------------
+## v3.0.0-rc.9 - [Febraury 8, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.9)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -192,8 +183,7 @@ v3.0.0-rc.9 - [Febraury 8, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Improved `drush` healthcheck to be decoupled from apps [#1325](https://github.com/lando/lando/issues/1325)
 * Removed legacy Kalabox code still hanging around, fixes [#1431](https://github.com/lando/lando/issues/1431)
 
-v3.0.0-rc.8 - [Febraury 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.8)
---------------------------------
+## v3.0.0-rc.8 - [Febraury 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.8)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -210,8 +200,7 @@ v3.0.0-rc.8 - [Febraury 7, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Fixed regression causing named volumes to not mount properly in `compose` services [#1422](https://github.com/lando/lando/issues/1422)
 * Improved `TTY` detection and passthru, fixes [#904](https://github.com/lando/lando/issues/904)
 
-v3.0.0-rc.7 - [Febraury 6, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.7)
---------------------------------
+## v3.0.0-rc.7 - [Febraury 6, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.7)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -228,8 +217,7 @@ v3.0.0-rc.7 - [Febraury 6, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Added support for relative paths to `compose` service [#1415](https://github.com/lando/lando/issues/1415)
 * Improved auto `wp search-replace` in `pantheon` recipes [#1409](https://github.com/lando/lando/issues/1409)
 
-v3.0.0-rc.6 - [Febraury 5, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.6)
---------------------------------
+## v3.0.0-rc.6 - [Febraury 5, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.6)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -245,8 +233,7 @@ v3.0.0-rc.6 - [Febraury 5, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Fixed bug where `--help` and `--version` were routing to lando instead of tooling commands [#1407](https://github.com/lando/lando/issues/1407)
 * Fixed regression causing `db-export` to fail on `linux` [#1394](https://github.com/lando/lando/issues/1394)
 
-v3.0.0-rc.5 - [Febraury 4, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.5)
---------------------------------
+## v3.0.0-rc.5 - [Febraury 4, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.5)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -260,8 +247,7 @@ v3.0.0-rc.5 - [Febraury 4, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Fixed regression setting `CACHE_PORT` for `pantheon` recipes [#1396](https://github.com/lando/lando/issues/1396)
 * Switched all `bitnami` images to set `LANDO_NEEDS_EXEC`
 
-v3.0.0-rc.4 - [Febraury 4, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.4)
---------------------------------
+## v3.0.0-rc.4 - [Febraury 4, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.4)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -285,8 +271,7 @@ v3.0.0-rc.4 - [Febraury 4, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Improved `ssh` key loading to use the `LANDO_HOST_USER` by default [#1082](https://github.com/lando/lando/issues/1082)
 * Improved handling when an unknown service is used with the `proxy` [#1389](https://github.com/lando/lando/issues/1389)
 
-v3.0.0-rc.3 - [Febraury 3, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.3)
---------------------------------
+## v3.0.0-rc.3 - [Febraury 3, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.3)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 
@@ -304,8 +289,7 @@ v3.0.0-rc.3 - [Febraury 3, 2019](https://github.com/lando/lando/releases/tag/v3.
 * Fixed regression causing databases to report as unhealthy after a restart [#1381](https://github.com/lando/lando/issues/1381)
 * Improved tooling is-service-already-running delegation [#1378](https://github.com/lando/lando/issues/1378)
 
-v3.0.0-rc.2 - [Febraury 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.2)
---------------------------------
+## v3.0.0-rc.2 - [Febraury 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.2)
 
 ### PLEASE PLEASE PLEASE FOR THE LOVE OF ALL THINGS THAT ARE HOLY AND GOOD READ THE BELOW BEFORE PROCEEDING!!!
 

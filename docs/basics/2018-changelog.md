@@ -1,5 +1,6 @@
-v3.0.0-rc.1 - [September 11, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-rc.1)
-----------------------------------
+# 2018
+
+## v3.0.0-rc.1 - [September 11, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-rc.1)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU [CHECK OUT THE BIG CHANGES](https://docs.devwithlando.io) IN RC! ALSO NOTE THAT THIS VERSION IS STILL IN PRERELEASE WHICH MEANS YOU SHOULD ONLY TRY IT OUT IF YOU ARE FEELING INTREPID**
 
@@ -25,8 +26,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 * Updated our `examples` to be func testing compatible [#1144](https://github.com/lando/lando/issues/1144)
 * Updated to latest Docker deps [#1148](https://github.com/lando/lando/issues/1148)
 
-v3.0.0-beta.47 - [June 1, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.47)
--------------------------------
+## v3.0.0-beta.47 - [June 1, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.47)
 
 If you are upgrading from pre-beta.40 follow the [beta.41 release note instructions](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41) If you are on beta.41 or above you can follow the usual JUST-RUN-THE-INSTALLER upgrade process.
 
@@ -34,8 +34,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 
 * Fixed various show-stopping Windows bugs [#1004](https://github.com/lando/lando/issues/1004)
 
-v3.0.0-beta.46 - [May 27, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.46)
--------------------------------
+## v3.0.0-beta.46 - [May 27, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.46)
 
 If you are upgrading from pre-beta.40 follow the [beta.41 release note instructions](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41) If you are on beta.41 or above you can follow the usual JUST-RUN-THE-INSTALLER upgrade process.
 
@@ -49,8 +48,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 * Improved `pantheon` pre-run scripting with better perm handling and `$HOME` support [#975](https://github.com/lando/lando/issues/975)
 * Improved custom `build` and `volumes` overrides to handle absolute and relative paths [#950](https://github.com/lando/lando/issues/950)
 
-v3.0.0-beta.45 - [May 16, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.45)
--------------------------------
+## v3.0.0-beta.45 - [May 16, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.45)
 
 If you are upgrading from pre-beta.40 follow the [beta.41 release note instructions](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41) If you are on beta.41 or above you can follow the usual JUST-RUN-THE-INSTALLER upgrade process.
 
@@ -75,8 +73,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 * Moved `prestissimo` from build step to image [#882](https://github.com/lando/lando/issues/882)
 * Updated legacy Pantheon API endpoints [#953](https://github.com/lando/lando/issues/953)
 
-v3.0.0-beta.44 - [May 4, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.44)
-------------------------------
+## v3.0.0-beta.44 - [May 4, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.44)
 
 **THIS IS A HOTFIX RELEASE DUE TO BREAKING UPSTREAM CHANGES**
 
@@ -86,8 +83,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 
 * Fixed bad id issue interacting with Pantheon API [#943](https://github.com/lando/lando/issues/943)
 
-v3.0.0-beta.43 - [May 2, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.43)
-------------------------------
+## v3.0.0-beta.43 - [May 2, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.43)
 
 **THIS IS A HOTFIX RELEASE DUE TO BREAKING UPSTREAM CHANGES**
 
@@ -98,8 +94,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 * Fixed nasty bug where user sites were returning "undefined" [#922](https://github.com/lando/lando/issues/922)
 * Fixed "Named volume "$LANDO_ENGINE_CONF:/lando:rw" issue [#927](https://github.com/lando/lando/issues/927)
 
-v3.0.0-beta.42 - [April 30, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.42)
----------------------------------
+## v3.0.0-beta.42 - [April 30, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.42)
 
 **THIS IS A HOTFIX RELEASE DUE TO BREAKING UPSTREAM CHANGES**
 
@@ -110,8 +105,7 @@ If you are upgrading from pre-beta.40 follow the [beta.41 release note instructi
 * Set default service versions [#908](https://github.com/lando/lando/issues/908)
 * Convert interactive name parameters to machine safe [#891](https://github.com/lando/lando/issues/891)
 
-v3.0.0-beta.41 - [April 30, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41)
----------------------------------
+## v3.0.0-beta.41 - [April 30, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41)
 
 **THIS IS A HOTFIX RELEASE DUE TO BREAKING UPSTREAM CHANGES**
 
@@ -129,8 +123,7 @@ If you are upgrading from pre-beta.40 it is recommended (although possibly not n
 * Set default service versions [#908](https://github.com/lando/lando/issues/908)
 * Convert interactive name parameters to machine safe [#891](https://github.com/lando/lando/issues/891)
 
-v3.0.0-beta.40 - [April 8, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.40)
---------------------------------
+## v3.0.0-beta.40 - [April 8, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.40)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -145,8 +138,7 @@ v3.0.0-beta.40 - [April 8, 2018](https://github.com/lando/lando/releases/tag/v3.
 * Signed all container certs with new Lando Local CA [#446](https://github.com/lando/lando/issues/446)
 * Updated `terminus` to version `1.8.0` [#848](https://github.com/lando/lando/issues/848)
 
-v3.0.0-beta.39 - [March 30, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.39)
----------------------------------
+## v3.0.0-beta.39 - [March 30, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.39)
 
 **WE HIGHLY RECOMMEND YOU UPDATE TO THIS VERSION!!!**
 
@@ -155,8 +147,7 @@ v3.0.0-beta.39 - [March 30, 2018](https://github.com/lando/lando/releases/tag/v3
 * Fixed bug where `linux` `LANDO_ENGINE_REMOTE_IP` was not set to detected IP
 * Updated problematic Docker for Mac 59 to Docker for Mac 60
 
-v3.0.0-beta.38 - [March 29, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.38)
----------------------------------
+## v3.0.0-beta.38 - [March 29, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.38)
 
 **WE HIGHLY RECOMMEND YOU UPDATE TO THIS VERSION!!!**
 
@@ -172,8 +163,7 @@ v3.0.0-beta.38 - [March 29, 2018](https://github.com/lando/lando/releases/tag/v3
 * Improved and simplified our examples [#798](https://github.com/lando/lando/issues/798) [#801](https://github.com/lando/lando/issues/801)
 * Switched to use new `host.docker.internal` for host resolution from container.
 
-v3.0.0-beta.37 - [March 20, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.37)
----------------------------------
+## v3.0.0-beta.37 - [March 20, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.37)
 
 **THIS RELEASE CONTAINS SIGNIFICANT CODE REFACTORING TO HELP WITH TESTING. YOU MAY WANT TO HOLD OFF FOR A FEW VERSIONS IF YOU WANT TO BE SUPER SAFE ABOUT THINGS!**
 
@@ -219,8 +209,7 @@ v3.0.0-beta.37 - [March 20, 2018](https://github.com/lando/lando/releases/tag/v3
 * Updated docs to reflect new refactor, dx and governance. [#685](https://github.com/lando/lando/issues/685)
 * Updated `terminus` to version `1.7.1`
 
-v3.0.0-beta.35 - [January 8, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.35)
-----------------------------------
+## v3.0.0-beta.35 - [January 8, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.35)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -228,8 +217,7 @@ v3.0.0-beta.35 - [January 8, 2018](https://github.com/lando/lando/releases/tag/v
 * Fixed bug in URL scanning where wilcard domains were unintentionally being scanned [#627](https://github.com/lando/lando/issues/627)
 * Fixed bug in Windows where custom `php` config file was being mounted with wrong path separator [#625](https://github.com/lando/lando/issues/625)
 
-v3.0.0-beta.34 - [January 5, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.34)
-----------------------------------
+## v3.0.0-beta.34 - [January 5, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.34)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -244,15 +232,13 @@ v3.0.0-beta.34 - [January 5, 2018](https://github.com/lando/lando/releases/tag/v
 * Improved handling of custom `php.ini` files so injection is clearer [#589](https://github.com/lando/lando/issues/589)
 * Improved handling of `docker` too-many-networks error [#274](https://github.com/lando/lando/issues/274)
 
-v3.0.0-beta.33 - [January 4, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.33)
-----------------------------------
+## v3.0.0-beta.33 - [January 4, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.33)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * Fixed a bug where Pantheon recipes were erroring on no `solr` user [#611](https://github.com/lando/lando/issues/611)
 
-v3.0.0-beta.32 - [January 4, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.32)
-----------------------------------
+## v3.0.0-beta.32 - [January 4, 2018](https://github.com/lando/lando/releases/tag/v3.0.0-beta.32)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 

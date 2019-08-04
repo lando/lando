@@ -1,9 +1,8 @@
-Uploading Files in Windows
-==========================
+# Uploading Files in Windows
 
-> #### Hint::Probably fixed in 3.0.0-rc.2
->
-> It is likely this issue has been resolved in Lando `3.0.0-rc.2` but let's keep these docs around for awhile just in case
+::: tip Probably fixed in 3.0.0-rc.2+
+It is likely this issue has been resolved in Lando `3.0.0-rc.2` but let's keep these docs around for awhile just in case
+:::
 
 When uploading files via PHP and potentially other things in Lando on Windows you may see an error like the following:
 
@@ -11,8 +10,7 @@ When uploading files via PHP and potentially other things in Lando on Windows yo
 The upload directory private://TESTDIR for the file field field_TESTFIELD could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.
 ```
 
-The Problem
------------
+## The Problem
 
 The `tl;dr` is `php` will incorrectly assume a writable directory mounted by Docker for Windows is in fact not writable.
 
@@ -34,8 +32,7 @@ If you are interested in replicating the issue yourself you should be able to do
 
 The Drupal core `includes/file.inc` file contains a function `file_prepare_directory`. This function is called on each file upload. If the upload is in a directory that does not yet exist, the directory is created, its writability is assumed and the upload succeeds. However, if a file upload is done in a directory that already exists then php's built-in function `is_writable` is used. This will fail for non-root users.
 
-The Solutions
--------------
+## The Solutions
 
 ### Using nginx (recommended)
 

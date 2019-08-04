@@ -1,13 +1,13 @@
-v3.0.0-beta.31 - [November 26, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.31)
-------------------------------------
+# 2017
+
+## v3.0.0-beta.31 - [November 26, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.31)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * Added `README`s to our examples [#51](https://github.com/lando/lando/issues/51)
 * Give error when trying to run Lando with `sudo` [#545](https://github.com/lando/lando/issues/545)
 
-v3.0.0-beta.29 - [November 25, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.29)
-------------------------------------
+## v3.0.0-beta.29 - [November 25, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.29)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -18,23 +18,20 @@ v3.0.0-beta.29 - [November 25, 2017](https://github.com/lando/lando/releases/tag
 * Added `intl` and `gettext` extensions for `php` [#528](https://github.com/lando/lando/issues/528)
 * Udpated base images to `jessie` where applicable [#539](https://github.com/lando/lando/issues/539)
 
-v3.0.0-beta.28 - [November 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.28)
-------------------------------------
+## v3.0.0-beta.28 - [November 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.28)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * This release is only intended to verify the new update logic [#430](https://github.com/lando/lando/issues/430)
 
-v3.0.0-beta.27 - [November 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.27)
-------------------------------------
+## 3.0.0-beta.27 - [November 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.27)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * Signed `macOS` package.
 * Improved update considerations [#430](https://github.com/lando/lando/issues/430)
 
-v3.0.0-beta.26 - [November 20, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.26)
-------------------------------------
+## v3.0.0-beta.26 - [November 20, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.26)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -43,8 +40,7 @@ v3.0.0-beta.26 - [November 20, 2017](https://github.com/lando/lando/releases/tag
 * Improved support for `python` [#444](https://github.com/lando/lando/issues/444)
 * Persisted `solr` index data through rebuilds [#59](https://github.com/lando/lando/issues/59)
 
-v3.0.0-beta.25 - [November 16, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.25)
-------------------------------------
+## v3.0.0-beta.25 - [November 16, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.25)
 
 **THIS RELEASE SHOULD AUTOFIX [#497](https://github.com/lando/lando/issues/497) SEE BULLET BELOW FOR DETAIL**
 
@@ -56,8 +52,7 @@ v3.0.0-beta.25 - [November 16, 2017](https://github.com/lando/lando/releases/tag
 * Improved `tmp` directory handling for `pantheon` recipes [#481](https://github.com/lando/lando/issues/481)
 * Improved handling of botched script/conf file injection [#497](https://github.com/lando/lando/issues/497)
 
-v3.0.0-beta.24 - [November 14, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.24)
-------------------------------------
+## v3.0.0-beta.24 - [November 14, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.24)
 
 **HOTFIX RELEASE!!!**
 
@@ -65,8 +60,7 @@ v3.0.0-beta.24 - [November 14, 2017](https://github.com/lando/lando/releases/tag
 
 * Fixed missing nginx conf file
 
-v3.0.0-beta.23 - [November 14, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.23)
-------------------------------------
+## v3.0.0-beta.23 - [November 14, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.23)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -82,8 +76,7 @@ v3.0.0-beta.23 - [November 14, 2017](https://github.com/lando/lando/releases/tag
 * Removed the deletion of user configuration files for Lando during un-install on Linux and OSX [#470](https://github.com/lando/lando/issues/470)
 * Upgraded `terminus` to `1.6.1` for `pantheon` recipes `lando rebuild` required [#487](https://github.com/lando/lando/issues/487)
 
-v3.0.0-beta.22 - [October 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.22)
------------------------------------
+## v3.0.0-beta.22 - [October 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.22)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -92,8 +85,7 @@ v3.0.0-beta.22 - [October 23, 2017](https://github.com/lando/lando/releases/tag/
 * Fixed `drush` compatibility on Backdrop sites using `php 5.3` [#418](https://github.com/lando/lando/issues/418)
 * Update Backdrop Drush to `0.0.6`
 
-v3.0.0-beta.21 - [October 15, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.21)
------------------------------------
+## v3.0.0-beta.21 - [October 15, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.21)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -103,8 +95,7 @@ v3.0.0-beta.21 - [October 15, 2017](https://github.com/lando/lando/releases/tag/
 * Improved `lando pull` for pantheon recipes to not clear caches on live env [#406](https://github.com/lando/lando/issues/406)
 * Updated to use new Docker for Windows installer (#thanksdocker) [#405](https://github.com/lando/lando/issues/405)
 
-v3.0.0-beta.20 - [October 12, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.20)
------------------------------------
+## v3.0.0-beta.20 - [October 12, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.20)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -125,15 +116,13 @@ v3.0.0-beta.20 - [October 12, 2017](https://github.com/lando/lando/releases/tag/
 * Upgraded to `terminus` 1.6.0. [#343](https://github.com/lando/lando/issues/343)
 * Fixed bug reporting `manifest for solr:4.10 not found` [#380](https://github.com/lando/lando/issues/380)
 
-v3.0.0-beta.19 - [October 2, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.19)
-----------------------------------
+## v3.0.0-beta.19 - [October 2, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.19)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * Hotfixed regression introduced by [#351](https://github.com/lando/lando/issues/376) that borked `lando` [#376](https://github.com/lando/lando/issues/312)
 
-v3.0.0-beta.18 - [October 1, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.18)
-----------------------------------
+## v3.0.0-beta.18 - [October 1, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.18)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -144,8 +133,7 @@ v3.0.0-beta.18 - [October 1, 2017](https://github.com/lando/lando/releases/tag/v
 * Fixed bug caused by badly formatted `lando share` subdomain [#368](https://github.com/lando/lando/issues/368)
 * Fixed bug where `lando CMD` was throwing `arg.match` error when using numbers [#351](https://github.com/lando/lando/issues/351)
 
-v3.0.0-beta.17 - [September 9, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.17)
-------------------------------------
+## v3.0.0-beta.17 - [September 9, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.17)
 
 **SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
@@ -154,26 +142,22 @@ v3.0.0-beta.17 - [September 9, 2017](https://github.com/lando/lando/releases/tag
 *  Added extra check to validate format of injected `ssh` keys [#335](https://github.com/lando/lando/issues/335)
 *  Fixed broken `php-fpm 5.3` service [#328](https://github.com/lando/lando/issues/328)
 
-v3.0.0-beta.16 - [September 5, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.16)
-------------------------------------
+## v3.0.0-beta.16 - [September 5, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.16)
 
 *  Moved from `kalabox` namespace to `lando` namespace.
 
-v3.0.0-beta.15 - [September 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.15)
-------------------------------------
+## v3.0.0-beta.15 - [September 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.15)
 
 *  Moved from `kalabox` namespace to `lando` namespace.
 
-v3.0.0-beta.14 - [September 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.14)
-------------------------------------
+## v3.0.0-beta.14 - [September 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.14)
 
 **SERIOUSLY, READ THE DOCS: https://docs.devwithlando.io/**
 
 *  Fixed hang when starting Pantheon recipe [#300](https://github.com/lando/lando/issues/300) [#302](https://github.com/lando/lando/issues/302) [#311](https://github.com/lando/lando/issues/311)
 *  Fixed issue grabbing files on different branches for Pantheon recipes [#329](https://github.com/lando/lando/issues/329)
 
-v3.0.0-beta.13 - [September 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.13)
-------------------------------------
+## v3.0.0-beta.13 - [September 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.13)
 
 **SERIOUSLY, READ THE DOCS: https://docs.devwithlando.io/**
 
@@ -181,8 +165,7 @@ v3.0.0-beta.13 - [September 4, 2017](https://github.com/lando/lando/releases/tag
 *  Added a `MSSQL` service [#320](https://github.com/lando/lando/issues/320)
 *  Added `joomla` recipe [#321](https://github.com/lando/lando/issues/321)
 
-v3.0.0-beta.12 - [September 1, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.12)
-------------------------------------
+## v3.0.0-beta.12 - [September 1, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.12)
 
 **SERIOUSLY, READ THE DOCS: https://docs.devwithlando.io/**
 
@@ -193,8 +176,7 @@ v3.0.0-beta.12 - [September 1, 2017](https://github.com/lando/lando/releases/tag
 *  Fixed "bug" causing SQL imports to fail on single large transactions [#313](https://github.com/lando/lando/issues/313)
 *  Fixed bug that required `db-import` dbs to be in same dir as `.lando.yml` [#314](https://github.com/lando/lando/issues/314)
 
-v3.0.0-beta.11 - [August 27, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.11)
-----------------------------------
+## v3.0.0-beta.11 - [August 27, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.11)
 
 **SERIOUSLY, READ THE DOCS: https://docs.devwithlando.io/**
 
@@ -203,8 +185,7 @@ v3.0.0-beta.11 - [August 27, 2017](https://github.com/lando/lando/releases/tag/v
 *  Added new versions to all services where applicable. [#303](https://github.com/lando/lando/issues/303)
 *  Added `ruby` service. [#68](https://github.com/lando/lando/issues/68)
 
-v3.0.0-beta.10 - [August 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.10)
-----------------------------------
+## v3.0.0-beta.10 - [August 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.10)
 
 ### THIS RELEASE CHANGES THE USAGE OF `lando init`
 
@@ -226,8 +207,7 @@ Consult https://docs.devwithlando.io/cli/init.html or run `lando init -- --help`
 *   Fixed bug where app names with `.` in them were silently failing [#283](https://github.com/lando/lando/issues/283)
 *   Fixed regression that caused machine token to not be saved correctly.
 
-v3.0.0-beta.9 - [August 18, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.9)
----------------------------------
+## v3.0.0-beta.9 - [August 18, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.9)
 
 ### THIS RELEASE CHANGES THE USAGE OF `lando init`
 
@@ -248,8 +228,7 @@ Consult https://docs.devwithlando.io/cli/init.html or run `lando init -- --help`
 *   Improved UX `lando push` and `lando pull` return terminal color to default after message
 *   Fixed bug where app names with `.` in them were silently failing [#283](https://github.com/lando/lando/issues/283)
 
-v3.0.0-beta.8 - [August 10, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.8)
----------------------------------
+## v3.0.0-beta.8 - [August 10, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.8)
 
 ### THIS RELEASE HAS BREAKING API CHANGES
 
@@ -270,13 +249,11 @@ If you are upgrading and encounter issues try doing a `lando rebuild` on your ap
 *   Fixed bug where `pantheon` `lando push/pull` was not using the right environments [#261](https://github.com/lando/lando/issues/261)
 *   Fixed bugs with using `pantheon` site without using `lando init` [#269](https://github.com/lando/lando/issues/269)
 
-v3.0.0-beta.7 - [August 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.7)
---------------------------------
+## v3.0.0-beta.7 - [August 4, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.7)
 
 *   Fixed URL unknowns
 
-v3.0.0-beta.6 - [August 3, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.6)
---------------------------------
+## v3.0.0-beta.6 - [August 3, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.6)
 
 *   Added `lando switch` command to handle `pantheon` multidev [#241](https://github.com/lando/lando/issues/241)
 *   Added `interactivity` to `pantheon` utility commands [#249](https://github.com/lando/lando/issues/249)
@@ -284,34 +261,29 @@ v3.0.0-beta.6 - [August 3, 2017](https://github.com/lando/lando/releases/tag/v3.
 *   Added `mongo` service. [#54](https://github.com/lando/lando/issues/54)
 *   Added `mean` recipe. [#54](https://github.com/lando/lando/issues/54)
 
-v3.0.0-beta.5 - [August 2, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.5)
---------------------------------
+## v3.0.0-beta.5 - [August 2, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.5)
 
 *   Made `lando pull` more robust for Pantheon recipes [#240](https://github.com/lando/lando/issues/240)
 *   Added `lando push` command for `pantheon` recipes [#239](https://github.com/lando/lando/issues/239)
 *   Fixed brittle remote host determination [#231](https://github.com/lando/lando/issues/231)
 
-v3.0.0-beta.4 - [August 1, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.4)
---------------------------------
+## v3.0.0-beta.4 - [August 1, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.4)
 
 *   Improved addition of `sudoers` to `docker` group
 *   Fixed incorrect assertion that `drush alias` does not exist during `lando pull` [#240](https://github.com/lando/lando/issues/240)
 
-v3.0.0-beta.3 - [July 31, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.3)
--------------------------------
+## v3.0.0-beta.3 - [July 31, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.3)
 
 *   Fixed critical `localtunnel` not found bug.
 
-v3.0.0-beta.2 - [July 31, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.2)
--------------------------------
+## v3.0.0-beta.2 - [July 31, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.2)
 
 *   Added the `events` framework [#242](https://github.com/lando/lando/issues/242)
 *   Added a `lando share` command to share your local site publicly [#84](https://github.com/lando/lando/issues/84)
 *   Fixed build step "merge" to concatenate [#228](https://github.com/lando/lando/issues/228)
 *   Fixed `lando init` to rebase on preexisting `.lando.yml` [#243](https://github.com/lando/lando/issues/243)
 
-v3.0.0-beta.1 - [July 30, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.1)
--------------------------------
+## v3.0.0-beta.1 - [July 30, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-beta.1)
 
 *   Updated `GitHub` issue template [#137](https://github.com/lando/lando/issues/137)
 *   Added option to rebuild specific services on a `lando rebuild` [#223](https://github.com/lando/lando/issues/223)
@@ -320,8 +292,7 @@ v3.0.0-beta.1 - [July 30, 2017](https://github.com/lando/lando/releases/tag/v3.0
 *   Fixed proxy `extra_hosts` not working on `linux` [#221](https://github.com/lando/lando/issues/221)
 *   Fixed `xdebug` not working on `linux` [#231](https://github.com/lando/lando/issues/231)
 
-v3.0.0-alpha.19 - [July 29, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.19)
--------------------------------
+## v3.0.0-alpha.19 - [July 29, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.19)
 
 *   Revamped the docs to prep for `beta.1` [#139](https://github.com/lando/lando/issues/139)
 *   Provided option handling for `tooling` routes [#141](https://github.com/lando/lando/issues/141)
@@ -333,33 +304,28 @@ v3.0.0-alpha.19 - [July 29, 2017](https://github.com/lando/lando/releases/tag/v3
 *   Switched default `lando ssh` user from `root` to `you`
 *   Fixed broken `php:5.3-apache` because @uberhacker is the best :)
 
-v3.0.0-alpha.18 - [July 22, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.18)
--------------------------------
+## v3.0.0-alpha.18 - [July 22, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.18)
 
-*   Bumped binary to use `node8`, gives a nice ~33% CLI speed improvement
+*   Bumped binary to use `node8`, gives a nice 33% CLI speed improvement
 *   Removed references to needing to set up shared drives on `win32`, this happens on demand now [#219](https://github.com/lando/lando/issues/219)
 *   Moved `/usr/local/bin` `chown` setting up the start up stack. [#184](https://github.com/lando/lando/issues/184)
 *   "Fixed" hyper annoying `exec` hang bug on `win32` with `docker-compose exec` shellout workaround [#181](https://github.com/lando/lando/issues/181)
-*   "Fixed" (read "provided better handing for") `user 33 doesn't exist` race condition [#184](https://github.com/lando/lando/issues/184)
+*   "Fixed" read provided better handing for `user 33 doesn't exist` race condition [#184](https://github.com/lando/lando/issues/184)
 
-v3.0.0-alpha.17 - [July 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.17)
--------------------------------
+## v3.0.0-alpha.17 - [July 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.17)
 
 *   Made sure `/srv/includes/pantheon.sh` is executable.
 
-v3.0.0-alpha.16 - [July 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.16)
--------------------------------
+## v3.0.0-alpha.16 - [July 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.16)
 
 *   Ensured auto-creation of `/user/.lando/keys`
 
-v3.0.0-alpha.15 - [July 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.15)
--------------------------------
+## v3.0.0-alpha.15 - [July 19, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.15)
 
 *   Fixed bug where wrong `LANDO_ENGINE_REMOTE_IP` was borking `extra_hosts` [#129](https://github.com/lando/lando/issues/129)
-*   Fixed some lingering permissions errors` [#129](https://github.com/lando/lando/issues/129) [#163](https://github.com/lando/lando/issues/163) [#177](https://github.com/lando/lando/issues/177)
+*   Fixed some lingering permissions errors [#129](https://github.com/lando/lando/issues/129) [#163](https://github.com/lando/lando/issues/163) [#177](https://github.com/lando/lando/issues/177)
 
-v3.0.0-alpha.14 - [July 18, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.14)
--------------------------------
+## v3.0.0-alpha.14 - [July 18, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.14)
 
 *   Updated documentation [#130](https://github.com/lando/lando/issues/130)
 *   Added `mailhog` service [#64](https://github.com/lando/lando/issues/64)
@@ -373,8 +339,7 @@ v3.0.0-alpha.14 - [July 18, 2017](https://github.com/lando/lando/releases/tag/v3
 *   Fixed bug where Lando was not delegating `--help` correctly [#131](https://github.com/lando/lando/issues/131)
 *   Fixed bug where `lando ssh` was not dumping user into `$LANDO_MOUNT` [#159](https://github.com/lando/lando/issues/159)
 
-v3.0.0-alpha.13 - [June 29, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.13)
--------------------------------
+## v3.0.0-alpha.13 - [June 29, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.13)
 
 *   Fixed `util` container scripts to be set to executable
 *   Fixed regression where `scripts` lost executability
@@ -395,27 +360,23 @@ v3.0.0-alpha.13 - [June 29, 2017](https://github.com/lando/lando/releases/tag/v3
 *   Added `pantheon` init method. [#110](https://github.com/lando/lando/issues/110)
 *   Added `github` init method. [#110](https://github.com/lando/lando/issues/110)
 
-v3.0.0-alpha.12 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.12)
--------------------------------
+## v3.0.0-alpha.12 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.12)
 
 *   Fixed regression where `scripts` lost executability
 
-v3.0.0-alpha.11 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.11)
--------------------------------
+## v3.0.0-alpha.11 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.11)
 
 *   Fixed bug where `init` method permissions were stopping `ssh-keygen` on `linux`
 *   Tweaked `init` permission handling on `windoze`
 *   Fixed persistent cache fail on `windoze`
 
-v3.0.0-alpha.10 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.10)
--------------------------------
+## v3.0.0-alpha.10 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.10)
 
 *   Updated `linux` to use `docker-compose` `1.14.0`
 *   Included `routes.json` in executable
 *   Fixed bug where `lando init mysite github --recipe pantheon` was not giving Pantheon options
 
-v3.0.0-alpha.9 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.9)
--------------------------------
+## v3.0.0-alpha.9 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.9)
 
 *   Removed `unison` file sharing in favor of `osxfs`. Requires `Docker for Mac 17.04+`. [#41](https://github.com/lando/lando/issues/41)
 *   Added `phpmyadmin` service. [#66](https://github.com/lando/lando/issues/66)
@@ -428,28 +389,24 @@ v3.0.0-alpha.9 - [June 28, 2017](https://github.com/lando/lando/releases/tag/v3.
 *   Added `pantheon` init method. [#110](https://github.com/lando/lando/issues/110)
 *   Added `github` init method. [#110](https://github.com/lando/lando/issues/110)
 
-v3.0.0-alpha.8 - [June 24, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.8)
--------------------------------
+## v3.0.0-alpha.8 - [June 24, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.8)
 
 *   Fixed `pantheon` recipe not sharing `prepend.php` and `pantheon.vcl` correctly.
 
-v3.0.0-alpha.7 - [June 24, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.7)
--------------------------------
+## v3.0.0-alpha.7 - [June 24, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.7)
 
 *   Added `laravel` recipe. [#94](https://github.com/lando/lando/issues/94)
 *   Added `pantheon` recipe. [#95](https://github.com/lando/lando/issues/95)
 *   Fixed volume mounting bug that was causing no `css` or `js` to show up on `nginx` on `linux`
 *   Fixed incorrect `DB_PORT` env for `L{A|E}MP` recipes using `postgres`. [#111](https://github.com/lando/lando/issues/111)
 
-v3.0.0-alpha.6 - [June 20, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.6)
---------------------------------
+## v3.0.0-alpha.6 - [June 20, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.6)
 
 *   Switched from `encloseJS` to `pkg`. [#108](https://github.com/lando/lando/issues/108)
 *   Added `.gitattributes` to force `LF` checkout of container files. [#108](https://github.com/lando/lando/issues/108)
 *   Fixed broken `win32` build. [#108](https://github.com/lando/lando/issues/108)
 
-v3.0.0-alpha.5 - [June 16, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.5)
---------------------------------
+## v3.0.0-alpha.5 - [June 16, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.5)
 
 *   Fixed bug where recipe overrides were not being mixed in correctly. [#97](https://github.com/lando/lando/issues/97)
 *   Fixed bug where `portforward: true` was not showing the actual port given. [#97](https://github.com/lando/lando/issues/97)
@@ -462,8 +419,7 @@ v3.0.0-alpha.5 - [June 16, 2017](https://github.com/lando/lando/releases/tag/v3.
 *   Added `xdebug` options. [#65](https://github.com/lando/lando/issues/65)
 *   Fixed bug where tooling cmds were dropping path parts in common with `appRoot`. [#104](https://github.com/lando/lando/issues/104)
 
-v3.0.0-alpha.4 - [June 9, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.4)
--------------------------------
+## v3.0.0-alpha.4 - [June 9, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.4)
 
 *   Added a `recipe` layer on top of `services`, `sharing` and `proxy`. [#9](https://github.com/lando/lando/issues/9)
 *   Increased `maxListeners` for `lando.events`. [#9](https://github.com/lando/lando/issues/9)
@@ -482,8 +438,7 @@ v3.0.0-alpha.4 - [June 9, 2017](https://github.com/lando/lando/releases/tag/v3.0
 *   Fixed `linux` perm mapping when `LANDO_ENGINE_UID` already exists. [#85](https://github.com/lando/lando/issues/85)
 *   Fixed bug where `win32` was incorrectly escaping command spaces. [#85](https://github.com/lando/lando/issues/85)
 
-v3.0.0-alpha.3 - [June 7, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.3)
--------------------------------
+## v3.0.0-alpha.3 - [June 7, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.3)
 
 *   Added API docs. [#48](https://github.com/lando/lando/issues/48)
 *   Fixed bug where `node` was looking for webserver when in CLI mode. [#61](https://github.com/lando/lando/issues/61)
@@ -494,8 +449,7 @@ v3.0.0-alpha.3 - [June 7, 2017](https://github.com/lando/lando/releases/tag/v3.0
 *   Added `redis` service. [#14](https://github.com/lando/lando/issues/14)
 *   Added `lando logs` command. [#56](https://github.com/lando/lando/issues/56)
 
-v3.0.0-alpha.2 - [June 2, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.2)
--------------------------------
+## v3.0.0-alpha.2 - [June 2, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.2)
 
 *   Added a [Backdrop CMS](https://backdropcms.org/) example. [#52](https://github.com/lando/lando/issues/52)
 *   Added Lando API to documentation [#48](https://github.com/lando/lando/issues/48)
@@ -512,12 +466,10 @@ v3.0.0-alpha.2 - [June 2, 2017](https://github.com/lando/lando/releases/tag/v3.0
 *   Added a `solr` service. [#15](https://github.com/lando/lando/issues/15)
 *   Added a `drupal8-composer` example with `solr` support. [#15](https://github.com/lando/lando/issues/15)
 
-v3.0.0-alpha.1 - [May 24, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.1)
--------------------------------
+## v3.0.0-alpha.1 - [May 24, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.1)
 
 *   Initial release of Lando core framework.
 
-v3.0.0-alpha.0 - [May 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.0)
--------------------------------
+## v3.0.0-alpha.0 - [May 23, 2017](https://github.com/lando/lando/releases/tag/v3.0.0-alpha.0)
 
 *   Testing release cycle.

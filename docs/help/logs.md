@@ -1,10 +1,8 @@
-Accessing Logs
-==============
+# Accessing Logs
 
 Lando has a few different log layers to help you diagnose any issues you might be having.
 
-Install Logs
-------------
+## Install Logs
 
 If you have a failed installation, you should be able to find logs in the following locations...
 
@@ -12,8 +10,7 @@ If you have a failed installation, you should be able to find logs in the follow
 *   **macOS** - `/var/log/install.log`
 *   **Linux** - Differs per system but check common `apt` or `dnf/yum` logs
 
-Runtime Logs
-------------
+## Runtime Logs
 
 If you encounter an error during runtime, check out the runtime logs at...
 
@@ -22,12 +19,11 @@ If you encounter an error during runtime, check out the runtime logs at...
 
 There should be an `error.log` and a more robust `lando.log`.
 
-> #### Hint::Pro Tip: Use verbose mode
->
-> Run the failing command again in verbose mode. You can pass in `-v`, `-vv`, `-vvv` or `-vvvv` to toggle the level of verbosity. You can also [edit your global config](./../config/config.html) to set the default console log level.
+::: tip
+Run the failing command again in verbose mode. You can pass in `-v`, `-vv`, `-vvv` or `-vvvv` to toggle the level of verbosity. You can also [edit your global config](./../config/global.html) to set the default console log level.
+:::
 
-Container Logs
---------------
+## Container Logs
 
 ```bash
 lando logs -s SOME_SERVICE
@@ -35,8 +31,7 @@ lando logs -s SOME_SERVICE
 
 See the [lando logs](./../cli/logs.md) command for more information.
 
-Advanced Troubleshooting
-------------------------
+## Advanced Troubleshooting
 
 One of the best ways to troubleshoot an issue is to use Docker commands directly or use the [lando ssh](./../cli/ssh.md) or [lando info --deep](./../cli/info.md) command.
 
