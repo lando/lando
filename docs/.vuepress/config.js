@@ -22,19 +22,9 @@ module.exports = {
           collapsable: false,
           children: [
             '',
-          ],
-        },
-        {
-          title: 'Installation',
-          collapsable: false,
-          children: [
-            'system-requirements',
-            'preflight',
-            'macos',
-            'linux',
-            'windows',
-            'source',
-            'updating',
+            'basics',
+            'installation',
+            'first-app',
             'uninstalling',
           ],
         },
