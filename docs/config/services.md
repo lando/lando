@@ -34,36 +34,36 @@ service:
       php: config/php.ini
 ```
 
-> #### Info::Docker compose files are loaded first
->
-> If you want to load Docker compose files **and** use services, you should note that compose files are loaded first. This means that depending on how you name things, your services could override things set in your compose files.
+::: warning Docker compose files are loaded first!
+If you want to load Docker compose files **and** use services, you should note that compose files are loaded first. This means that depending on how you name things, your services could override things set in your compose files.
+:::
 
 ## Supported Services
 
 The following services are currently supported. Please check out each one to learn how to use them.
 
-*   ####[apache](./../tutorials/apache.md)
-*   ####[custom](./../tutorials/compose.md)
-*   ####[dotnet](./../tutorials/dotnet.md)
-*   ####[elasticsearch](./../tutorials/elasticsearch.md)
-*   ####[go](./../tutorials/go.md)
-*   ####[mailhog](./../tutorials/mailhog.md)
-*   ####[mariadb](./../tutorials/mariadb.md)
-*   ####[memcached](./../tutorials/memcached.md)
-*   ####[mongo](./../tutorials/mongo.md)
-*   ####[mssql](./../tutorials/mssql.md)
-*   ####[mysql](./../tutorials/mysql.md)
-*   ####[nginx](./../tutorials/nginx.md)
-*   ####[node](./../tutorials/node.md)
-*   ####[php](./../tutorials/php.md)
-*   ####[phpmyadmin](./../tutorials/phpmyadmin.md)
-*   ####[postgres](./../tutorials/postgres.md)
-*   ####[python](./../tutorials/python.md)
-*   ####[redis](./../tutorials/redis.md)
-*   ####[ruby](./../tutorials/ruby.md)
-*   ####[solr](./../tutorials/solr.md)
-*   ####[tomcat](./../tutorials/tomcat.md)
-*   ####[varnish](./../tutorials/varnish.md)
+*   ### [apache](./apache.md)
+*   ### [custom](./compose.md)
+*   ### [dotnet](./dotnet.md)
+*   ### [elasticsearch](./elasticsearch.md)
+*   ### [go](./go.md)
+*   ### [mailhog](./mailhog.md)
+*   ### [mariadb](./mariadb.md)
+*   ### [memcached](./memcached.md)
+*   ### [mongo](./mongo.md)
+*   ### [mssql](./mssql.md)
+*   ### [mysql](./mysql.md)
+*   ### [nginx](./nginx.md)
+*   ### [node](./node.md)
+*   ### [php](./php.md)
+*   ### [phpmyadmin](./phpmyadmin.md)
+*   ### [postgres](./postgres.md)
+*   ### [python](./python.md)
+*   ### [redis](./redis.md)
+*   ### [ruby](./ruby.md)
+*   ### [solr](./solr.md)
+*   ### [tomcat](./tomcat.md)
+*   ### [varnish](./varnish.md)
 
 ## Build Steps
 
@@ -71,9 +71,9 @@ One of the great features of Lando is its ability to destroy a single planet... 
 
 Note that build steps will **ONLY RUN THE FIRST TIME YOU SPIN UP YOUR APP.** That means that if you change them you will need to run `lando rebuild` for them to re-run.
 
-> #### Hint::When should I use build steps?
->
-> If you need additional on-server dependencies like php extensions or node modules then sounds like a build step may be for you. If you have automation you want to run **EVERY TIME** you may want to consider using [events](./events.md) instead.
+:::tip When should I use build steps?
+If you need additional on-server dependencies like php extensions or node modules then sounds like a build step may be for you. If you have automation you want to run **EVERY TIME** you may want to consider using [events](./events.md) instead.
+:::
 
 There are four major build steps.
 
@@ -173,11 +173,11 @@ build:
 
 ## Advanced
 
-> #### Warning::ENTERING THE DANGER ZONE
->
-> While the below options can be very powerful in the hands of a seasoned pro they are not for the faint of heart. Please be careful and note that YMMV.
->
-> While we will make a good faith effort to support intrepid users please note that once you go down any of these paths you are more or less on your own!
+::: danger ENTERING THE DANGER ZONE
+While the below options can be very powerful in the hands of a seasoned pro they are not for the faint of heart. Please be careful and note that YMMV.
+
+While we will make a good faith effort to support intrepid users please note that once you go down any of these paths you are more or less on your own!
+:::
 
 ### Overrides
 
@@ -185,13 +185,13 @@ Lando services are just an abstraction layer on top of the [Docker compose v3 fi
 
 We give you access to the Docker Compose layer with the `overrides` key.
 
-> #### Info::You can only override Docker Compose's top-level `services` config
->
-> Overrides you specify get merged and injected directly into the `services` config used by Docker Compose. This means that you cannot use overrides to alter *top level* `networks` or `volumes`. If you are looking for that kind of **POWER** we suggest you look at the [custom](./../tutorials/compose.md) service.
+::: tip You can only override Docker Compose's top-level `services` config
+Overrides you specify get merged and injected directly into the `services` config used by Docker Compose. This means that you cannot use overrides to alter *top level* `networks` or `volumes`. If you are looking for that kind of **POWER** we suggest you look at the [custom](./compose.md) service.
+:::
 
 Here is an example of an overriden `apache` service that uses a custom image and injects some additional environment variables. However, you can put anything into `overrides` that you can put into the `services` config of a Docker Compose file. Note that if you change the image your success in running with that image is directly correlated to how close that image is to the ones we use by default. For that reason it is **highly recommended** your custom images are extended from ours so your chance of doing this with great success is maximized.
 
-If you are looking to use a *completely different* image then we recommend you a [custom compose service](./../tutorials/compose.md).
+If you are looking to use a *completely different* image then we recommend you a [custom compose service](./compose.md).
 
 ```yaml
 services:
@@ -208,7 +208,7 @@ services:
 
 ### Localhost Assignment
 
-Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default this is most of our services. An exception is the [`compose`](./../tutorials/compose.md) service which requires the user manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
+Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default this is most of our services. An exception is the [`compose`](./compose.md) service which requires the user manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
 
 ```yaml
 services:
@@ -277,7 +277,7 @@ RUN apt-get update -y \
 
 ### Building a Custom Service
 
-If the above is not enough and you still *crave more power* you can consider our "catch all" [custom](./../tutorials/compose.md) service. This allows power users to specify custom services that are not currently one of Lando's "supported" services.
+If the above is not enough and you still *crave more power* you can consider our "catch all" [custom](./compose.md) service. This allows power users to specify custom services that are not currently one of Lando's "supported" services.
 
 Technically speaking, this service is just a way for a user to define a service directly using the [Docker Compose V3](https://docs.docker.com/compose/compose-file/) file format and still get some of the Lando *secret sauce*.
 
@@ -288,9 +288,5 @@ This service is useful if you are:
 1. Thinking about contributing your own custom Lando service and just want to prototype something
 2. Using Docker Compose config from other projects
 3. Need a service not currently provided by Lando itself
-
-Here is an example custom service
-
-{% codesnippet "./../examples/compose/.lando.yml" %}{% endcodesnippet %}
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/compose).

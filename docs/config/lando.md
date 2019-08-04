@@ -4,9 +4,9 @@ A `.lando.yml` file is at the heart of every Lando app. It is needed to tell Lan
 
 If you make changes to your `.lando.yml` you will need to `lando rebuild` your app for those changes to be applied.
 
-> #### Hint::You're low, go high
->
-> This documentation is specifically about configuring the Landofile itself. If you are interested in a more high level view of what the Landofile can do and its purpose then check out our [Lando introduction](./../started.md)
+::: tip You're low, go high
+This documentation is specifically about configuring the Landofile itself. If you are interested in a more high level view of what the Landofile can do and its purpose then check out our [Lando introduction](./basics/)
+:::
 
 ## Base File
 
@@ -28,7 +28,7 @@ On the flip side you might have some user-specific configuration you'd like to u
 
 ## Configuration
 
-The base, override and Landofile itself are all configurable via the Lando [global config](./config.md). Here are the default values:
+The base, override and Landofile itself are all configurable via the Lando [global config](./global.md). Here are the default values:
 
 ```yaml
 landoFile: .lando.yml

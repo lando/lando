@@ -4,9 +4,9 @@ Lando sets up and manages its own internal Docker network. This provides a commo
 
 Specifically, every Lando service, even those added via the `compose` top level config should be able to communicate with every other service regardless of whether that service is part of your app or not.  Also note that because of our [automatic certificate and CA setup](./security.md) you should be able to access all of these services over `https` without needing, for example the `-k` option in `curl`.
 
-> #### Warning::Cross app service communication requires all apps be on
->
-> If you want a service in App A to talk to a service in App B then you need to make sure you've started up both apps!
+::: warning Cross app service communication requires all apps be on!
+If you want a service in App A to talk to a service in App B then you need to make sure you've started up both apps!
+:::
 
 ## Automatic Hostnames
 

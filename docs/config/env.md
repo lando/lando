@@ -4,7 +4,7 @@ Lando will both inject a bunch of helpful environment variables into each servic
 
 ## Default Environment Variables
 
-While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./config.md) value.
+While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./global.md) value.
 
 ```bash
 lando ssh -s appserver -c env | grep LANDO_
@@ -81,11 +81,11 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=http://wpb4.test/wp
 ```
 
-> #### Warning::This ONLY injects directly into the container environment.
->
-> We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.
->
-> For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
+::: warning This ONLY injects directly into the container environment!
+We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.
+
+For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
+:::
 
 ## Environment Configuration
 

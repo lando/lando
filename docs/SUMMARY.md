@@ -4,45 +4,6 @@
 *   [Introduction](started.md)
 *   [CLI Usage](cli/usage.md)
 
-## Recipes
-
-*   [Backdrop](tutorials/backdrop.md)
-*   [Drupal 6](tutorials/drupal6.md)
-*   [Drupal 7](tutorials/drupal7.md)
-*   [Drupal 8](tutorials/drupal8.md)
-*   [Joomla](tutorials/joomla.md)
-*   [Laravel](tutorials/laravel.md)
-*   [LAMP](tutorials/lamp.md)
-*   [LEMP](tutorials/lemp.md)
-*   [MEAN](tutorials/mean.md)
-*   [Pantheon](tutorials/pantheon.md)
-*   [WordPress](tutorials/wordpress.md)
-
-## Services
-
-*   [apache](tutorials/apache.md)
-*   [compose](tutorials/compose.md)
-*   [dotnet](tutorials/dotnet.md)
-*   [elasticsearch](tutorials/elasticsearch.md)
-*   [go](tutorials/go.md)
-*   [mailhog](tutorials/mailhog.md)
-*   [mariadb](tutorials/mariadb.md)
-*   [memcached](tutorials/memcached.md)
-*   [mongo](tutorials/mongo.md)
-*   [mssql](tutorials/mssql.md)
-*   [mysql](tutorials/mysql.md)
-*   [nginx](tutorials/nginx.md)
-*   [node](tutorials/node.md)
-*   [php](tutorials/php.md)
-*   [phpmyadmin](tutorials/phpmyadmin.md)
-*   [postgres](tutorials/postgres.md)
-*   [python](tutorials/python.md)
-*   [redis](tutorials/redis.md)
-*   [ruby](tutorials/ruby.md)
-*   [solr](tutorials/solr.md)
-*   [tomcat](tutorials/tomcat.md)
-*   [varnish](tutorials/varnish.md)
-
 ## Guides
 
 *   [Updating your Landofiles to 3.0.0-rc.2+](guides/updating-to-rc2.md)
@@ -57,21 +18,6 @@
 *   [Using NodeJS Frontend Tooling](guides/frontend.md)
 *   [Using Lando in Visual Studio Code](guides/lando-with-vscode.md)
 *   [Climbing a mountain for love](https://www.youtube.com/watch?v=tkBVDh7my9Q)
-
-## Configuration
-
-*   [Landofile](config/lando.md)
-*   [Environment](config/env.md)
-*   [Events](config/events.md)
-*   [Recipes](config/recipes.md)
-*   [Proxy](config/proxy.md)
-*   [Services](config/services.md)
-*   [Tooling](config/tooling.md)
-*   [Networking](config/networking.md)
-*   [SSH Keys](config/ssh.md)
-*   [SSL/TLS](config/security.md)
-*   [Shared Files](config/files.md)
-*   [Global Config](config/config.md)
 
 ## Community
 

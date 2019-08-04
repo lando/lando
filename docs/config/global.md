@@ -1,8 +1,8 @@
 # Global Config
 
-> #### Warning::With great power comes great ability to really mess things up
->
-> If you do not have a **VERY** good idea about how to modify the Lando global config it is *highly recommended* that you do not!
+::: warning With great power comes great ability to really mess things up!
+If you do not have a **VERY** good idea about how to modify the Lando global config it is *highly recommended* that you do not!
+:::
 
 You can also configure how Lando itself works using a file called `config.yml`. This config system is highly flexible and allows you to override basically anything that shows up when you run `lando config`. A few more common overrides are:
 
@@ -18,9 +18,9 @@ Note that there are some configuration options **THAT MUST** be set during the b
 
 This file specifies the core configuration options for Lando. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. **PLEASE NOTE THAT THIS FILE IS DIFFERENT THAN YOUR LANDOFILE!** If you add any of these settings to your Landofile the expected result should be "nothing happens".
 
-> #### Hint::What directories are scanned?
->
-> Run `lando config` and look at the `configSources` key to find what directories are scanned for config.
+::: tip What directories are scanned?
+Run `lando config` and look at the `configSources` key to find what directories are scanned for config.
+:::
 
 Note that overrides will be merged in successively. This means the values in the last `configSources` take priority.
 
@@ -34,9 +34,9 @@ export LANDO_MODE=mymode
 
 For more complex config eg an object or array you can set the envvar to a `JSON` string and Lando will parse it for you. Note that Lando keys that are `camelCase` will be separated as envvars with `_`. For example `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
 
-> #### Hint::What is my `envPrefix`
->
-> BY default this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
+::: tip What is my `envPrefix`?
+By default this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
+:::
 
 ## Examples
 

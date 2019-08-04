@@ -14,9 +14,9 @@ This allows you to:
 * Avoid installing nightmares like `nvm`, `rvm` and their ilk directly on your computer
 * Never have to worry about which version of `php` or `grunt` you need for each project ever again
 
-> #### Warning::Make sure to install your dependencies
->
-> You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./services.md#build-steps) or our [`ssh`](./../cli/ssh.md) command.
+::: warning Make sure to install your dependencies!!!
+You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./services.md#build-steps) or our [`ssh`](./../basics/ssh.md) command.
+:::
 
 ## Usage
 
@@ -32,11 +32,11 @@ tooling
     options:
 ```
 
-> #### Info::Tooling routes are cached!
->
-> Note that tooling routes are cached at the end of every lando invocation so you will need to run something like `lando list` or dump the cache manually with `lando --clear` if you are not seeing your tooling commands or changes show up correctly.
->
-> After doing so run `lando` to see all the tooling commands for a given Landofile
+::: tip Tooling routes are cached!
+Note that tooling routes are cached at the end of every lando invocation so you will need to run something like `lando list` or dump the cache manually with `lando --clear` if you are not seeing your tooling commands or changes show up correctly.
+
+After doing so run `lando` to see all the tooling commands for a given Landofile
+:::
 
 Here are a few common implementations of the above:
 

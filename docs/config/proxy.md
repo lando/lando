@@ -6,9 +6,9 @@ While you can [configure](#configuration) the default `domain` of this proxy we 
 
 Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry that points all `*.lndo.site` subdomains to `localhost/127.0.0.1`. This means that if you lose your internet connection, you will not be able to visit your app at these addresses. However, you can [take steps](#working-offline-or-using-custom-domains) to work around this restriction or use your own [custom domain](#configuration) and handle the DNS yourself with `dnsmasq` or some other solution.
 
-> #### Info::Proxying is not required
->
-> As long as your containers or services expose ports `80` and/or `443`, Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
+::: tip Proxying is not required
+As long as your containers or services expose ports `80` and/or `443`, Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
+:::
 
 There is also a [known issue](./../issues/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
 
@@ -57,9 +57,9 @@ proxy:
 
 You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution and any relevant cert handling. See the configuration section below for more details.
 
-> #### Info::Pro Tip: Add custom domains to your `hosts` file.
->
-> If your custom domain does not end in `lndo.site` and you unsure about how to handle DNS resolution using something like DNSMasq then you are going to need to add it to your `hosts` file so that it points to `127.0.0.1`.
+::: tip
+If your custom domain does not end in `lndo.site` and you unsure about how to handle DNS resolution using something like DNSMasq then you are going to need to add it to your `hosts` file so that it points to `127.0.0.1`.
+::::
 
 ```yaml
 proxy:
@@ -76,10 +76,9 @@ If a service is able to listen to multiple domain names following a common patte
 
 To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example use `*.myapp.lndo.site` or `*.*.lndo.site`.
 
-> #### Info::Wildcard domains need to be encapsulated in quotations
->
-> If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
-
+::: tip Wildcard domains need to be encapsulated in quotations
+If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
+:::
 
 ```yaml
 proxy:
@@ -119,7 +118,7 @@ You can read more about this restriction [here](https://stackoverflow.com/questi
 
 ## Configuration
 
-Various parts of the proxy are configurable via the Lando [global config](./config.md).
+Various parts of the proxy are configurable via the Lando [global config](./global.md).
 
 **Again, you REALLY REALLY REALLY should not change these settings unless you have a good reason and know what you are doing!**
 

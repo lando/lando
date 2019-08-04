@@ -15,12 +15,11 @@ Lando uses its own Certificate Authority to sign the certs for each service and 
 
 While Lando will automatically trust this CA internally it is up to you to trust it on your host machine. Doing so will alleviate browser warnings regarding certs we issue.
 
-> #### Warning::You may need to destroy the proxy container and rebuild your app
->
-> If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with
-> `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
+::: warning You may need to destroy the proxy container and rebuild your app!
+If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
+:::
 
-The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app as this will generate the CA if its not already there. Note that if you change the Lando `domain` in the [global config](./config.md) you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate correctly.
+The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app as this will generate the CA if its not already there. Note that if you change the Lando `domain` in the [global config](./global.md) you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate correctly.
 
 Also note that in accordance with the [restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) on wildcard certs changing the `domain` may result in unexpected behavior depending on how you set it. For example, setting `domain` to a top level domain such as `test` will not work while `local.test` will.
 
@@ -62,10 +61,11 @@ sudo rm -f /usr/local/share/ca-certificates/lndo.site.crt
 sudo update-ca-certificates --fresh
 ```
 
-> #### Warning::Firefox maintains its own certificate store
->
-> Firefox users may still see browser warnings after performing the steps above. Firefox maintains its own certificate store and does not, by default, use the operating system's certificate store. To allow Firefox to use the operating system's certificate store, the **security.enterprise_roots.enabled** setting must be set to **true**.
-> * In Firefox, type `about:config` in the address bar
-> * If prompted, accept any warnings
-> * Search for `security.enterprise_roots.enabled`
-> * Set the value to `true`
+::: warning Firefox maintains its own certificate store!
+Firefox users may still see browser warnings after performing the steps above. Firefox maintains its own certificate store and does not, by default, use the operating system's certificate store. To allow Firefox to use the operating system's certificate store, the **security.enterprise_roots.enabled** setting must be set to **true**.
+
+* In Firefox, type `about:config` in the address bar
+* If prompted, accept any warnings
+* Search for `security.enterprise_roots.enabled`
+* Set the value to `true`
+:::
