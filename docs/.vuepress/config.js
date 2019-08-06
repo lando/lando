@@ -16,7 +16,7 @@ module.exports = {
       { text: 'Getting Started', link: '/basics/' },
       { text: 'Config', link: '/config/lando.md' },
       { text: 'Guides', link: '/guides/' },
-      { text: 'Help and Support', link: '/help/' },
+      { text: 'Help and Support', link: '/help/logs/' },
       { text: 'Examples', link: 'https://github.com/lando/lando/tree/master/examples' },
       { text: 'Contributing', link: '/contrib/contributing/' },
       { text: 'API', link: '/api/app.md' },
@@ -169,7 +169,7 @@ module.exports = {
           title: 'Support',
           collapsable: false,
           children: [
-            'reporting',
+            'community',
           ],
         },
       ],
