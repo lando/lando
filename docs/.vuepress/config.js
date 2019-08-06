@@ -2,8 +2,8 @@ module.exports = {
   title: 'Lando',
   description: 'An ancient codex to power agency-incubators that are magical to work at and with.',
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
-    ['link', { rel: 'stylesheet', href: '/styles/overrides.css'}],
+    ['link', {rel: 'icon', href: '/favicon.ico'}],
+    ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
   ],
   themeConfig: {
     repo: 'lando/lando',
@@ -13,14 +13,14 @@ module.exports = {
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
     nav: [
-      { text: 'Getting Started', link: '/basics/' },
-      { text: 'Config', link: '/config/lando.md' },
-      { text: 'Guides', link: '/guides/' },
-      { text: 'Help and Support', link: '/help/logs/' },
-      { text: 'Examples', link: 'https://github.com/lando/lando/tree/master/examples' },
-      { text: 'Contributing', link: '/contrib/contributing/' },
-      { text: 'API', link: '/api/app.md' },
-      { text: 'YouTube', link: 'https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg' },
+      {text: 'Getting Started', link: '/basics/'},
+      {text: 'Config', link: '/config/lando.md'},
+      {text: 'Guides', link: '/guides/lando-info/'},
+      {text: 'Help and Support', link: '/help/logs/'},
+      {text: 'Examples', link: 'https://github.com/lando/lando/tree/master/examples'},
+      {text: 'Contributing', link: '/contrib/contributing/'},
+      {text: 'API', link: '/api/app.md'},
+      {text: 'YouTube', link: 'https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg'},
     ],
     sidebar: {
       '/basics/': [
@@ -54,15 +54,6 @@ module.exports = {
             'start',
             'stop',
             'version',
-          ],
-        },
-        {
-          title: 'Changelog',
-          collapsable: false,
-          children: [
-            '2019-changelog',
-            '2018-changelog',
-            '2017-changelog',
           ],
         },
       ],
@@ -132,17 +123,59 @@ module.exports = {
         },
       ],
       '/guides/': [
-        'updating-to-rc2',
-        'external-access.md',
-        'access-by-other-devices',
-        'db-export',
-        'db-import',
-        'lando-phpstorm',
-        'offline-dev',
-        'lando-info',
-        'frontend',
-        'lando-with-vscode',
-        'https://www.youtube.com/watch?v=tkBVDh7my9Q',
+        {
+          title: 'General',
+          collapsable: false,
+          children: [
+            'lando-info',
+          ],
+        },
+        {
+          title: 'Databases',
+          collapsable: false,
+          children: [
+            'db-import',
+            'db-export',
+          ],
+        },
+        {
+          title: 'Frontend',
+          collapsable: false,
+          children: [
+            'frontend',
+          ],
+        },
+        {
+          title: 'IDEs',
+          collapsable: false,
+          children: [
+            'lando-phpstorm',
+            'lando-with-vscode',
+          ],
+        },
+        {
+          title: 'Networking',
+          collapsable: false,
+          children: [
+            'external-access.md',
+            'access-by-other-devices',
+            'offline-dev',
+          ],
+        },
+        {
+          title: 'Updating',
+          collapsable: false,
+          children: [
+            'updating-to-rc2',
+          ],
+        },
+        {
+          title: 'Recreation',
+          collapsable: false,
+          children: [
+            ['https://www.youtube.com/watch?v=tkBVDh7my9Q', 'Mountain climbing'],
+          ],
+        },
       ],
       '/help/': [
         {
@@ -169,7 +202,18 @@ module.exports = {
           title: 'Support',
           collapsable: false,
           children: [
-            'community',
+            ['https://github.com/lando/lando/issues', 'GitHub issue queue'],
+            ['https://launchpass.com/devwithlando', 'Slack - Official Lando'],
+            ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
+          ],
+        },
+        {
+          title: 'Changelog',
+          collapsable: false,
+          children: [
+            '2019-changelog',
+            '2018-changelog',
+            '2017-changelog',
           ],
         },
       ],
@@ -203,7 +247,8 @@ module.exports = {
           title: 'Resources',
           collapsable: false,
           children: [
-            'resources',
+            'opensource',
+            ['https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC', 'Training materials'],
           ],
         },
       ],
@@ -225,4 +270,4 @@ module.exports = {
       ],
     },
   },
-}
+};
