@@ -6,45 +6,45 @@ Lando is designed to work on a wide range of computers. Here are some basic guid
 
 ### Operating System
 
-*   macOS 10.11 (El Capitan) or newest
+*   macOS 10.14 or newest
 *   Windows 10 Pro+ or equivalent (eg Windows 10 Enterprise) [**with Hyper-V running**](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install)
 *   Linux with kernel version 4.x or higher
 
-## Hardware Requirements
-
-*   Modern x64 architecture multi-core processor
-*   8GB RAM
-*   10GB+ of available disk space
-
-### Hardware Recommendations
-
-*   8-core processor
-*   16GB+ RAM
-*   100GB+ of available disk space
-
 ### Docker Engine Requirements
 
-Please also verify you meet the requirements of our Docker engine backend.
+Please also verify you meet the requirements needed to run our Docker engine backend. Note that the macOS and Windows Lando installer will install Docker for you if needed.
 
 *   Linux Docker engine [requirements](https://docs.docker.com/engine/installation/linux)
 *   Docker for Mac [requirements](https://docs.docker.com/docker-for-mac/#/what-to-know-before-you-install)
 *   Docker for Windows [requirements](https://docs.docker.com/docker-for-windows/#/what-to-know-before-you-install)
 
+## Hardware Requirements
+
+::: warning Not for the faint of heart!
+Note that Lando is basically a PaaS running on your computer and as such we don't recommend you use it [UNLESS YOU'VE GOT POWER!!!](https://www.youtube.com/watch?v=NowdrL6fvb4). Said another way this ain't your grandaddy's local dev environment.
+:::
+
+*   8-core processor
+*   16GB+ RAM
+*   100GB+ of available disk space
+
 ## Preflight Checks
 
-1.  Verify that your system meets the [minimum system and hardware requirements](system-requirements.md) to run Lando.
+1.  Verify that your system meets the [minimum system and hardware requirements](#system-requirements) to run Lando.
 2.  Verify that you are connected to the internet.
 3.  Verify that you have administrative access to your machine.
 
 ### Optional checks
 
 1.  If you already have Docker installed it needs to be set to factory defaults.
-2.  If you are also running VirtualBox on Windows check out [this](./../issues/win-also-vb.md).
+2.  If you are also running VirtualBox on Windows check out [this](./../help/win-also-vb.md).
 
 ## MacOS
 
 ::: tip Do not fear the package size!
-Note that our macOS installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages. When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
+Note that our macOS installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages.
+
+When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
 :::
 
 ### Install DMG via direct download
@@ -71,7 +71,7 @@ Note that our macOS installer _includes_ Docker Desktop and this accounts for it
 
 
 ::: tip Install from source for other Linux distros
-If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](./source.md)
+If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](#from-source)
 :::
 
 Note that you *may* also be able to just double click on the package and install via your distributions "Software Center" or equivalent.
@@ -120,7 +120,7 @@ Because each Linux distribution handles things differently, these considerations
   sudo usermod -aG docker $USER
   ```
 
-  You will need to log out for this change to take effect. Sometimes a reboot is necessary. See https://docs.docker.com/install/linux/linux-postinstall/ for more details.
+  You will need to log out for this change to take effect. Sometimes a reboot is necessary. See [this](https://docs.docker.com/install/linux/linux-postinstall/) for more details.
 
 * If your distro uses SystemD, make sure that both `docker.service` and `docker.socket` daemons are running.
 
@@ -133,7 +133,9 @@ Make sure that [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualizat
 :::
 
 ::: tip Do not fear the package size!
-Note that our Windows installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages. When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
+Note that our Windows installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages.
+
+When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
 :::
 
 1.  Make sure you are using **at least** Windows 10 Professional with the latest updates installed.
@@ -178,13 +180,13 @@ Updating is fairly simple.
 
 1.  Shutdown Lando eg `lando poweroff` and kill any running Lando processes.
 2.  Turn off Docker.
-3.  Follow the [normal installation steps](./system-requirements.md) with the new version.
+3.  Follow the normal installation steps with the new version.
 
 ### Caveats
 
 Lando has tried to maintain backwards compatibility as best as possible on it's road to a stable `3.0.0` release. However it has introduced breaking changes in a few Lando version. For these versions you will likely want to [uninstall](./uninstalling.md) and consult the relevant release notes for the breaking versions.
 
-* 3.0.0-rc.2 - https://github.com/lando/lando/releases/tag/v3.0.0-rc.2
-* 3.0.0-rc.1 - https://github.com/lando/lando/releases/tag/v3.0.0-rc.1
-* 3.0.0-beta.41 - https://github.com/lando/lando/releases/tag/v3.0.0-beta.41
+* [3.0.0-rc.2](https://github.com/lando/lando/releases/tag/v3.0.0-rc.2)
+* [3.0.0-rc.1](https://github.com/lando/lando/releases/tag/v3.0.0-rc.1)
+* [3.0.0-beta.41](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41)
 

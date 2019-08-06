@@ -34,11 +34,13 @@ sudo dpkg -P lando
 sudo dnf remove lando
 ```
 
-## Removing lingering Lando configuration
+## Further cleanup
+
+### Removing lingering Lando configuration
 
 If you've uninstalled Lando but want to remove **ALL TRACES OF IT** you will also want to remove its configuration directory.
 
-Unless you've edited Lando's [global config](./../config/config.md) Lando will store app configuration inside your home folder. You can use `lando config | grep userConfRoot` to locate the precise location on your machine. By default these locations will be:
+Unless you've edited Lando's [global config](./../config/global.md) Lando will store app configuration inside your home folder. You can use `lando config | grep userConfRoot` to locate the precise location on your machine. By default these locations will be:
 
 | Operating System | Default Location |
 | -- | -- |
@@ -48,7 +50,7 @@ Unless you've edited Lando's [global config](./../config/config.md) Lando will s
 
 To remove on Linux or macOS you can run `rm -rf ~/.lando`. You can use `explorer` to remove on Windows.
 
-## Removing lingering Lando containers
+### Removing lingering Lando containers
 
 You can also run this `docker` one-liner to force remove any Lando containers that, like the [Cranberries](https://www.youtube.com/watch?v=G6Kspj3OO0s) may still be lingering
 
