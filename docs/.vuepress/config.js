@@ -18,7 +18,7 @@ module.exports = {
       { text: 'Guides', link: '/guides/' },
       { text: 'Help and Support', link: '/help/' },
       { text: 'Examples', link: 'https://github.com/lando/lando/tree/master/examples' },
-      { text: 'Contributing', link: '/contrib/' },
+      { text: 'Contributing', link: '/contrib/contributing/' },
       { text: 'API', link: '/api/app.md' },
       { text: 'YouTube', link: 'https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg' },
     ],
@@ -184,11 +184,10 @@ module.exports = {
             'gov',
             'roles',
             'security',
-            'resources',
           ],
         },
         {
-          title: 'Developing',
+          title: 'Contributing Code',
           collapsable: false,
           children: [
             'started',
@@ -198,6 +197,13 @@ module.exports = {
             'building',
             'shipping',
             'docs',
+          ],
+        },
+        {
+          title: 'Resources',
+          collapsable: false,
+          children: [
+            'resources',
           ],
         },
       ],
