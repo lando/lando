@@ -1,13 +1,12 @@
 module.exports = {
   title: 'Lando',
-  description: 'An ancient codex to power agency-incubators that are magical to work at and with.',
+  description: 'An ancient codex of power',
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
+    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}]
   ],
   themeConfig: {
-    repo: 'lando/lando',
-    repoLabel: 'GitHub',
     docsDir: 'docs',
     docsBranch: 'master',
     editLinks: true,
@@ -17,10 +16,8 @@ module.exports = {
       {text: 'Config', link: '/config/lando.md'},
       {text: 'Guides', link: '/guides/lando-info/'},
       {text: 'Help and Support', link: '/help/logs/'},
-      {text: 'Examples', link: 'https://github.com/lando/lando/tree/master/examples'},
       {text: 'Contributing', link: '/contrib/contributing/'},
       {text: 'API', link: '/api/app.md'},
-      {text: 'YouTube', link: 'https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg'},
     ],
     sidebar: {
       '/basics/': [
@@ -205,6 +202,8 @@ module.exports = {
             ['https://github.com/lando/lando/issues', 'GitHub issue queue'],
             ['https://launchpass.com/devwithlando', 'Slack - Official Lando'],
             ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
+            ['https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg', 'YouTube Tutorials'],
+            ['https://github.com/lando/lando/tree/master/examples', 'Code examples'],
           ],
         },
         {

@@ -1,8 +1,12 @@
 ---
 home: true
+pageClass: lando-home
+layout: Lando
 heroImage: /images/hero.png
+heroText: Lando is for people who do things
 actionText: OoOoO! TELL ME MORE! →
 actionLink: /basics/
+navbar: true
 features:
 - title: Digital Agency
   details: Strategy, design, development, testing and hosting. We do it all and you get a website that grows your organization.
