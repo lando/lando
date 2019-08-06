@@ -24,7 +24,7 @@ sudo mkdir -p /usr/local/bin
 # Set up our VMNET things
 sudo install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
 sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
-sudo plutil -insert Version -string 38 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
+sudo plutil -insert Version -string 45 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
 sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
 # Disable autoupdates
