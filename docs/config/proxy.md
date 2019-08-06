@@ -10,7 +10,7 @@ Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry th
 As long as your containers or services expose ports `80` and/or `443`, Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
 :::
 
-There is also a [known issue](./../issues/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
+There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
 
 ## Automatic Port Assignment
 

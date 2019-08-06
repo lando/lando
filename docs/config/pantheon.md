@@ -19,8 +19,8 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../installation/system-requirements.md) and gotten familar with [its basics](./../started.md)
-2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
+2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
 However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of WordPress.
@@ -63,7 +63,7 @@ config:
   cache: true
 ```
 
-If you do not already have a [Landofile](./../config/lando.md) for your Pantheon site we highly recommend you use [`lando init`](./../cli/init.md) to get one as that will automatically populate the `framework`, `id` and `site` for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
+If you do not already have a [Landofile](./../config/lando.md) for your Pantheon site we highly recommend you use [`lando init`](./../basics/init.md) to get one as that will automatically populate the `framework`, `id` and `site` for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
 
 Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
