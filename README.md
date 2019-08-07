@@ -1,7 +1,7 @@
 Lando
 =====
 
-![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/images/lando-screenshot.png)
+![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/lando-screenshot.png)
 
 Lando is for developers who want to:
 
