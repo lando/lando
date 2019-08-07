@@ -11,6 +11,10 @@ build:
 
 # The size of the persistent disk of the application (in MB).
 disk: 10000
+mounts:
+  run:
+    source: local
+    source_path: run
 
 # The configuration of app when it is exposed to the web.
 web:
