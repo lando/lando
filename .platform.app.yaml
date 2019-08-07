@@ -5,24 +5,18 @@
 name: docs
 
 # The toolstack used to build the application.
-type: nodejs:10
+type: php:7.3
 build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
 disk: 4096
-mounts:
-  run:
-    source: local
-    source_path: run
-  '/tmp': 'shared:files/tmp'
-  '/app': 'shared:files/app'
 
 # The configuration of app when it is exposed to the web.
 web:
-  commands:
+  #commands:
     # Run a no-op process that uses no CPU resources, since this is a static site.
-    start: sleep infinity
+  #  start: sleep infinity
   locations:
     "/":
       root: "_docs"
@@ -49,9 +43,16 @@ dependencies:
 # Automation
 hooks:
   build: |
-    # set -e
-    # yarn install
-    # yarn docs
+    set -e
+    unset NPM_CONFIG_PREFIX
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | dash
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm current
+    nvm install 10
+    nvm use 10
+    yarn install
+    yarn docs
     curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.
