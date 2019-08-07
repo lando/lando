@@ -13,6 +13,9 @@ module.exports = {
     logo: '/images/logo-small.png',
     editLinks: false,
     nav: [
+      {text: 'Memberships', link: '/memberships/'},
+      {text: 'Services', link: '/services/'},
+      {text: 'Support', link: '/support/'},
       {text: 'Documentation', link: 'https://docs.lando.dev'},
     ],
   },

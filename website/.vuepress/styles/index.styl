@@ -1,38 +1,50 @@
 // .vuepress/style.styl, your extra styles.
-
-#my-style {}
-
-.video-responsive {
-  overflow: hidden;
-  padding-bottom: 56.25%;
+a.button,
+  input.button
+    padding: 0.50em 2em
+    border-radius: 2em
+    display: inline-block
+    color: #fff
+    background-color: lighten($accentColor, 8%)
+    transition: all .15s ease
+    box-sizing: border-box
+    border: 1px solid lighten($accentColor, 8%)
+    &.has-icon
+      position: relative
+      text-indent: 1.4em;
+      > svg
+        position: absolute
+        left: 0.4em
+        top: 0.3em
+        width: 2em
+    &.white
+      background-color: #fff
+      color: $accentColor
+    &.gray
+      background-color: #4e6e8e
+      color: $light
+      border-color: #4e6e8e
+header
+  background-color: #fff;
+  height: 60px;
+  padding: 10px 60px;
   position: relative;
-  height: 0;
-}
-
-.video-responsive iframe {
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-}
-
-.search-box input {
-  line-height: 30px;
-  box-sizing: border-box;
-  padding: 0 15px 0 30px;
-  border: 1px solid #e3e3e3;
-  color: #273849;
-  outline: none;
-  border-radius: 15px;
-  margin-right: 10px;
-  transition: border-color 0.2s ease;
-  background-size: 20px;
-  vertical-align: middle !important;
-  opacity: .66;
-}
-
-.custom-block.tip {
-  background-color: #f3f5f7;
-  border-color: #ed3f7a;
-}
+  z-index: 100;
+header.navbar
+  border: 0;
+  .logo
+    display: none
+#footer
+  background-color: #4e6e8e
+  padding: 40px 0
+  color: #fff
+  text-align: center
+  font-size: 0.9em
+  .social-icon
+    margin 0 5px
+    svg
+      width 18px
+      height 18px
+  a
+    font-weight: 700
+    color: #fff

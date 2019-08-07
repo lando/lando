@@ -56,7 +56,7 @@
 
     <div id="news">
       <div class="inner">
-        <h3><label for="member_email">Join the Alliance, get updates</label></h3>
+        <h3><label for="member_email">Join the Lando Alliance, get updates</label></h3>
           <div id="mc_embed_signup">
             <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
               <div id="mc_embed_signup_scroll">
@@ -188,41 +188,6 @@ export default {
 
 <style lang="stylus">
 .lando-home
-  a.button,
-    input.button
-      padding: 0.50em 2em
-      border-radius: 2em
-      display: inline-block
-      color: #fff
-      background-color: lighten($accentColor, 8%)
-      transition: all .15s ease
-      box-sizing: border-box
-      border: 1px solid lighten($accentColor, 8%)
-      &.has-icon
-        position: relative
-        text-indent: 1.4em;
-        > svg
-          position: absolute
-          left: 0.4em
-          top: 0.3em
-          width: 2em
-      &.white
-        background-color: #fff
-        color: $accentColor
-      &.gray
-        background-color: #4e6e8e
-        color: $light
-        border-color: #4e6e8e
-  header
-    background-color: #fff;
-    height: 60px;
-    padding: 10px 60px;
-    position: relative;
-    z-index: 100;
-  header.navbar
-    border: 0;
-    .logo
-      display: none
   #hero,
   #news
     padding: 70px 40px 30px
@@ -341,20 +306,6 @@ export default {
       height: calc(100% - 8px)
       right: 4px
       top: 4px
-  #footer
-    background-color: #4e6e8e
-    padding: 40px 0
-    color: #fff
-    text-align: center
-    font-size: 0.9em
-    .social-icon
-      margin 0 5px
-      svg
-        width 18px
-        height 18px
-    a
-      font-weight: 700
-      color: #fff
 @media (max-width: $MQMobile)
   .lando-home
     #hero

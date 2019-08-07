@@ -56,7 +56,7 @@
 
     <div id="news">
       <div class="inner">
-        <h3><label for="member_email">Join the Alliance, get updates</label></h3>
+        <h3><label for="member_email">Join the Lando Alliance, get updates</label></h3>
           <div id="mc_embed_signup">
             <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
               <div id="mc_embed_signup_scroll">
