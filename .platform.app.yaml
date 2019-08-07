@@ -2,7 +2,7 @@
 # in the same project.
 
 # The name of this app. Must be unique within a project.
-name: docs
+name: app
 
 # The toolstack used to build the application.
 type: nodejs:10
