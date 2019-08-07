@@ -63,8 +63,9 @@ script:
   # Run code and styling
   - yarn test
 
-  # Make sure we can build the docs
-  - yarn docs
+  # Make sure we can build the docs and website
+  - yarn build:docs
+  - yarn build:site
 
   # Run the build
   - mkdir -p release

@@ -38,6 +38,23 @@ web:
           allow: true
         search_index\.json$:
           allow: true
+  locations:
+    "/":
+      root: "_site"
+      index:
+        - "index.html"
+      expires: 300s
+      scripts: true
+      allow: false
+      rules:
+        \.(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
+          allow: true
+        ^/robots\.txt$:
+          allow: true
+        ^/ads\.txt$:
+          allow: true
+        search_index\.json$:
+          allow: true
 
 # Build time dependencies.
 dependencies:
@@ -50,7 +67,8 @@ hooks:
     set -e
     bash -c 'while true; do df -h; df -i; sleep 1; done' &
     yarn install
-    yarn docs
+    yarn build:docs
+    yarn build:site
     curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.

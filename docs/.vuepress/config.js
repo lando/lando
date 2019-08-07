@@ -242,6 +242,7 @@ module.exports = {
             'building',
             'shipping',
             'docs',
+            'website',
           ],
         },
         {
