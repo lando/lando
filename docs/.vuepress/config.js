@@ -4,11 +4,13 @@ module.exports = {
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
-    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}]
+    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
+    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
   ],
   themeConfig: {
     docsDir: 'docs',
     docsBranch: 'master',
+    logo: '/images/logo-small.png',
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
     nav: [
