@@ -6,8 +6,10 @@ http://docs.lndo.io/:
   to: http://{default}/
 http://{default}/:
   type: upstream
-  upstream: app:http
+  upstream: docs:http
   cache:
+    headers: ['Accept', 'Accept-Language', 'Origin']
+    default_ttl: 2600
     enabled: true
   ssi:
     enabled: false
