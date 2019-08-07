@@ -65,7 +65,6 @@ dependencies:
 hooks:
   build: |
     set -e
-    bash -c 'while true; do df -h; df -i; sleep 1; done' &
     yarn install
     yarn build:docs
     yarn build:site
