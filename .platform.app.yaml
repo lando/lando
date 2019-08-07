@@ -2,12 +2,21 @@
 # in the same project.
 
 # The name of this app. Must be unique within a project.
-name: app
+name: docs
 
 # The toolstack used to build the application.
 type: nodejs:10
 build:
   flavor: none
+
+# The size of the persistent disk of the application (in MB).
+disk: 4096
+mounts:
+  run:
+    source: local
+    source_path: run
+  '/tmp': 'shared:files/tmp'
+  '/app': 'shared:files/app'
 
 # The configuration of app when it is exposed to the web.
 web:
@@ -31,9 +40,6 @@ web:
           allow: true
         search_index\.json$:
           allow: true
-
-# The size of the persistent disk of the application (in MB).
-disk: 4096
 
 # Build time dependencies.
 dependencies:
