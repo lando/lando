@@ -4,12 +4,20 @@ excludes:
 proxy:
   docs:
     - docs.lndo.site:8080
+  site:
+    - site.lndo.site:8080
 services:
   docs:
     type: node:10
     build:
       - yarn install
     command: "su - node -c 'cd /app && yarn dev:docs'"
+    port: 8080
+  site:
+    type: node:10
+    build:
+      - yarn install
+    command: "su - node -c 'cd /app && yarn dev:site'"
     port: 8080
   platform:
     type: php:7.3
