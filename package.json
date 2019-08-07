@@ -33,7 +33,7 @@
   },
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "docs": "node ./scripts/docs.js && vuepress build docs -d _book",
+    "docs": "node ./scripts/docs.js && vuepress build docs -d _docs",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint --no-ignore bin docs/.vuepress/config.js lib plugins scripts test",
     "pkg:cli": "node ./scripts/pkg.js",

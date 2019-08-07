@@ -13,7 +13,7 @@ build:
 web:
   locations:
     "/":
-      root: "_book"
+      root: "_docs"
       index:
         - "index.html"
       expires: 300s
