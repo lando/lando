@@ -49,9 +49,9 @@ dependencies:
 # Automation
 hooks:
   build: |
-    set -e
-    yarn install
-    yarn docs
+    # set -e
+    # yarn install
+    # yarn docs
     curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.
