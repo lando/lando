@@ -14,6 +14,7 @@ module.exports = {
     search: false,
     editLinks: false,
     nav: [
+      {text: 'Get Lando!', link: '/download/'},
       {text: 'Memberships', link: '/memberships/'},
       {text: 'Services', link: '/services/'},
       {text: 'Support', link: '/support/'},
