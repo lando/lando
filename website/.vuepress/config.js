@@ -10,13 +10,15 @@ module.exports = {
   themeConfig: {
     docsDir: 'website',
     docsBranch: 'master',
-    logo: '/images/logo-small.png',
+    logo: '/images/logo-small-white.png',
+    search: false,
     editLinks: false,
     nav: [
       {text: 'Memberships', link: '/memberships/'},
       {text: 'Services', link: '/services/'},
       {text: 'Support', link: '/support/'},
       {text: 'Documentation', link: 'https://docs.lando.dev'},
+      {text: 'Contact Us', link: '/contact/'},
     ],
   },
 };

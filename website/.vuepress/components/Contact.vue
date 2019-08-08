@@ -22,7 +22,7 @@
         </div>
         <div class="right">
           <h2 class="hide">Lando</h2>
-          <h1>A Liberating Dev Tool<br/> For All Your Projects</h1>
+          <h1>Contact Us</h1>
           <p>
             <a class="button has-icon" href="/basics/">
               <svg aria-labelledby="simpleicons-play-icon" role="img" viewBox="0 0 100 125" fill="#FFFFFF"><title id="simpleicons-play-icon" lang="en">Play icon</title><path d="M50,3.8C24.5,3.8,3.8,24.5,3.8,50S24.5,96.2,50,96.2S96.2,75.5,96.2,50S75.5,3.8,50,3.8z M71.2,53.3l-30.8,18  c-0.6,0.4-1.3,0.5-1.9,0.5c-0.6,0-1.3-0.1-1.9-0.5c-1.2-0.6-1.9-1.9-1.9-3.3V32c0-1.4,0.8-2.7,1.9-3.3c1.2-0.6,2.7-0.6,3.8,0  l30.8,18c1.2,0.6,1.9,1.9,1.9,3.3S72.3,52.7,71.2,53.3z"></path></svg>
@@ -187,14 +187,11 @@ export default {
 </script>
 
 <style lang="stylus">
-.lando-front
-  header.navbar
-   .logo
-      display: none
+.lando-home
   #hero,
   #news
     padding: 70px 40px 30px
-    background-color: $accentColor
+    background-color: #fff
     .inner
       max-width: 1260px;
       margin: 0 auto
@@ -282,7 +279,6 @@ export default {
   #news
     padding: 10px 20px 70px
     text-align: center
-    background-color: #ffffff
     p
       margin-top: 10px
     a
