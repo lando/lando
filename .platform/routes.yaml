@@ -1,4 +1,4 @@
-http://docs.lando.dev/:
+http://docs.devwithlando.io/:
   type: redirect
   to: http://{default}/
 http://docs.lndo.io/:
