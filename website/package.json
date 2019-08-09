@@ -9,7 +9,7 @@
     "url": "https://github.com/lando/lando/issues"
   },
   "scripts": {
-    "build": "vuepress build ./ -d _site",
+    "build": "vuepress build ./ -d _site"
   },
   "devDependencies": {
     "vuepress": "^1.0.3"
