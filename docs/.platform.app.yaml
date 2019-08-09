@@ -10,7 +10,7 @@ build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
-disk: 10000
+disk: 5000
 mounts:
   run:
     source: local
@@ -38,23 +38,6 @@ web:
           allow: true
         search_index\.json$:
           allow: true
-  locations:
-    "/":
-      root: "_site"
-      index:
-        - "index.html"
-      expires: 300s
-      scripts: true
-      allow: false
-      rules:
-        \.(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
-          allow: true
-        ^/robots\.txt$:
-          allow: true
-        ^/ads\.txt$:
-          allow: true
-        search_index\.json$:
-          allow: true
 
 # Build time dependencies.
 dependencies:
@@ -67,7 +50,6 @@ hooks:
     set -e
     yarn install
     yarn build:docs
-    yarn build:site
     curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.
