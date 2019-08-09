@@ -1,0 +1,17 @@
+{
+  "name": "lando-website",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lando/lando"
+  },
+  "bugs": {
+    "email": "mike@thinktandem.io",
+    "url": "https://github.com/lando/lando/issues"
+  },
+  "scripts": {
+    "build": "vuepress build ./ -d _site",
+  },
+  "devDependencies": {
+    "vuepress": "^1.0.3"
+  }
+}
