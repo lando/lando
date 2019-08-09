@@ -64,6 +64,7 @@ script:
   - yarn test
 
   # Make sure we can build the docs and website
+  - yarn lint:sites
   - yarn build:docs
   - yarn build:site
 
