@@ -1,13 +1,13 @@
+http://devwithlando.io/:
+  type: redirect
+  to: http://{default}/
 http://docs.devwithlando.io/:
   type: redirect
   to: http://docs.{default}/
-http://docs.lndo.io/:
-  type: redirect
-  to: http://docs.{default}/
-http://devwithlando.io/:
-  type: redirect
-  to: http://docs.{default}/
 http://lndo.io/:
+  type: redirect
+  to: http://{default}/
+http://docs.lndo.io/:
   type: redirect
   to: http://docs.{default}/
 http://docs.{default}/:
@@ -21,7 +21,7 @@ http://docs.{default}/:
     enabled: false
 http://{default}/:
   type: upstream
-  upstream: docs:http
+  upstream: site:http
   cache:
     headers: ['Accept', 'Accept-Language', 'Origin']
     default_ttl: 2600
