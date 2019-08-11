@@ -19,7 +19,6 @@ module.exports = {
       {text: 'Services', link: '/services/'},
       {text: 'Support', link: '/support/'},
       {text: 'Documentation', link: 'https://docs.lando.dev'},
-      {text: 'Contact Us', link: '/contact/'},
     ],
   },
 };

@@ -59,6 +59,7 @@
       margin: 0 0 10px
       display: none
     .button
+      background-color: $accentColor
       margin: 1em 0
       font-size: 1em
       font-weight: 500

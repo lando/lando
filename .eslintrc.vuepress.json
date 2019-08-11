@@ -12,7 +12,7 @@
       "as-needed"
     ],
     "max-len": ["error", {
-      "code": 1200,
+      "code": 12000,
       "ignoreComments": true
     }]
   }
