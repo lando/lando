@@ -16,22 +16,6 @@ header.navbar .site-name {
   font-weight: 500;
 }
 
-.search-box input {
-  line-height: 30px;
-  box-sizing: border-box;
-  padding: 0 15px 0 30px;
-  border: 1px solid #e3e3e3;
-  color: #273849;
-  outline: none;
-  border-radius: 15px;
-  margin-right: 10px;
-  transition: border-color 0.2s ease;
-  background: #fff url(../images/search.png) 8px 5px no-repeat;
-  background-size: 20px;
-  vertical-align: middle !important;
-  opacity: .66;
-}
-
 .theme-container .custom-block.tip {
   background-color: #f3f5f7;
   border-color: #ed3f7a;

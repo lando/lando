@@ -6,6 +6,7 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
+    ['link', {rel: 'stylesheet', href: '//cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css'}],
   ],
   themeConfig: {
     docsDir: 'website',
@@ -14,11 +15,12 @@ module.exports = {
     search: false,
     editLinks: false,
     nav: [
-      {text: 'Get Lando!', link: '/download/'},
-      {text: 'Memberships', link: '/memberships/'},
-      {text: 'Services', link: '/services/'},
-      {text: 'Support', link: '/support/'},
+      {text: 'Get Lando!', link: 'https://github.com/lando/lando/releases'},
+      // {text: 'Memberships', link: '/memberships/'},
+      // {text: 'Services', link: '/services/'},
+      // {text: 'Support', link: '/support/'},
       {text: 'Documentation', link: 'https://docs.lando.dev'},
+      {text: 'GitHub', link: 'https://github.com/lando/lando'},
     ],
   },
 };
