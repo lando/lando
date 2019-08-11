@@ -1,12 +1,9 @@
 ---
 home: true
+navbar: true
 pageClass: lando-home
 layout: Lando
 heroImage: /images/hero.png
-heroText: Lando is for people who do things
-actionText: OoOoO! TELL ME MORE! →
-actionLink: /basics/
-navbar: true
 features:
 - title: Easy
   details: One click installer, cross-platform, simple config file, sane defaults and reduced complexity for power features

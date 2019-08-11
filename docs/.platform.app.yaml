@@ -10,7 +10,7 @@ build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
-disk: 10000
+disk: 5000
 mounts:
   run:
     source: local
@@ -49,7 +49,7 @@ hooks:
   build: |
     set -e
     yarn install
-    yarn docs
+    yarn build
     curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.

@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Lando',
-  description: 'An ancient codex of power',
+  description: 'The liberating local development tool for all your projects.',
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
@@ -242,6 +242,7 @@ module.exports = {
             'building',
             'shipping',
             'docs',
+            'website',
           ],
         },
         {

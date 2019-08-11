@@ -12,7 +12,11 @@ You should be able to use this guide to...
 Lando implements some basic linting and a slightly less annoying version of the `google` `es6` code standards to make sure things remain consistent between developers and to prevent syntax errors. You can easily check whether your code matches these standards using grunt.
 
 ```bash
+# For lando proper
 yarn lint
+
+# For the docs and website
+yarn lint:sites
 ```
 
 ## Unit tests

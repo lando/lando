@@ -1,0 +1,53 @@
+// .vuepress/style.styl, your extra styles.
+a.button,
+  input.button
+    padding: 0.50em 2em
+    border-radius: 2em
+    display: inline-block
+    color: #fff
+    background-color: lighten($accentColor, 33%)
+    transition: all .15s ease
+    box-sizing: border-box
+    border: 1px solid lighten($accentColor, 8%)
+    &.has-icon
+      position: relative
+      text-indent: 1.4em
+      > svg
+        position: absolute
+        left: 0.4em
+        top: 0.3em
+        width: 2em
+    &.white
+      background-color: #fff
+      color: $accentColor
+    &.gray
+      background-color: #4e6e8e
+      color: $light
+      border-color: #4e6e8e
+header
+  height: 60px
+  padding: 10px 60px
+  position: relative
+  z-index: 100;
+header.navbar
+  background-color: $accentColor
+  border: 0
+  .site-name
+    color: #ffffff
+  .links
+    background-color: $accentColor
+  .nav-links
+    a
+      color: #ffffff
+    a:hover
+      color: #ffffff
+      border-bottom: 2px solid lighten($accentColor, 75%)
+    a:active,
+    .nav-item > a:not(.external).router-link-active
+      color: #ffffff
+      border-bottom: 2px solid lighten($accentColor, 75%)
+    .icon.outbound
+      color: #ffffff
+@media (max-width: $MQMobile)
+  .sidebar-button
+    color: #ffffff
