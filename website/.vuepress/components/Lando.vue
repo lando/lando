@@ -45,20 +45,79 @@
       </div>
     </div>
 
-    <div id="wheres">
+    <div id="wheres" v-if="data.wheres && data.wheres.length">
       <div class="inner">
         <h2>Where can I use it?</h2>
         <p>{{ data.whereByline }}</p>
-          <div class="point" v-for="(where, index) in data.wheres" :key="index">
-            <a v-if="where.link" :href="where.link" target="_blank">
-              <div class="tech-icon"><i :class="where.icon"></i></div>
-              <h3>{{ where.title }}</h3>
+        <div class="point" v-for="(where, index) in data.wheres" :key="index">
+          <a v-if="where.link" :href="where.link" target="_blank">
+            <div class="tech-icon"><i :class="where.icon"></i></div>
+            <h3>{{ where.title }}</h3>
+          </a>
+          <span v-else>
+            <div class="tech-icon"><i :class="where.icon"></i></div>
+            <h3>{{ where.title }}</h3>
+          </span>
+        </div>
+        <div class="learn-more">
+          <a href="https://docs.lando.dev/basics/installation.html" target="_blank">Learn how to install Lando anywhere >></a>
+        </div>
+      </div>
+    </div>
+
+    <div id="whats" >
+      <div class="inner">
+        <h2>What can it run?</h2>
+        <p>{{ data.whatByline }}</p>
+
+        <div class="languages what-section" v-if="data.whatLanguages && data.whatLanguages.length">
+          <div class="point" v-for="(language, index) in data.whatLanguages" :key="index">
+            <a v-if="language.link" :href="language.link" target="_blank">
+              <div class="tech-icon"><i :class="language.icon"></i></div>
+              <h3>{{ language.title }}</h3>
             </a>
             <span v-else>
-              <div class="tech-icon"><i :class="where.icon"></i></div>
-              <h3>{{ where.title }}</h3>
+              <div class="tech-icon"><i :class="language.icon"></i></div>
+              <h3>{{ language.title }}</h3>
             </span>
           </div>
+          <div class="learn-more">
+            <a href="https://docs.lando.dev/config/lando.html" target="_blank">Learn about the other languages Lando supports >></a>
+          </div>
+        </div>
+
+        <div class="frameworks what-section" v-if="data.whatFrameworks && data.whatFrameworks.length">
+          <div class="point" v-for="(framework, index) in data.whatFrameworks" :key="index">
+            <a v-if="framework.link" :href="framework.link" target="_blank">
+              <div class="tech-icon"><i :class="framework.icon"></i></div>
+              <h3>{{ framework.title }}</h3>
+            </a>
+            <span v-else>
+              <div class="tech-icon"><i :class="framework.icon"></i></div>
+              <h3>{{ framework.title }}</h3>
+            </span>
+          </div>
+          <div class="learn-more">
+            <a href="https://docs.lando.dev/config/lando.html" target="_blank">Learn about Backdrop CMS, Pantheon, LAMP, LEMP, MEAN, and the other frameworks Lando supports >></a>
+          </div>
+        </div>
+
+        <div class="services what-section" v-if="data.whatServices && data.whatServices.length">
+          <div class="point" v-for="(service, index) in data.whatServices" :key="index">
+            <a v-if="service.link" :href="service.link" target="_blank">
+              <div class="tech-icon"><i :class="service.icon"></i></div>
+              <h3>{{ service.title }}</h3>
+            </a>
+            <span v-else>
+              <div class="tech-icon"><i :class="service.icon"></i></div>
+              <h3>{{ service.title }}</h3>
+            </span>
+          </div>
+          <div class="learn-more">
+            <a href="https://docs.lando.dev/config/lando.html" target="_blank">Learn about elasticsearch, MailHog, XDebug, MariaDB, MSSQL, PhpMyAdmin, Solr, Varnish and the other services Lando supports >> </a>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -219,7 +278,7 @@ export default {
       font-size: 1.5rem
   #whys,
   #wheres,
-  #runs
+  #whats
     background-color: #fff
     padding-bottom: 70px
     .inner
@@ -267,18 +326,27 @@ export default {
         font-size: 1em
         padding-bottom: 0
   #wheres,
-  #runs
+  #whats
     h3
       display: none;
     background-color: lighten($accentColor, 90%)
     .point
-      width: 20%
+      width: 25%
       padding-bottom: 2em
       .tech-icon
         font-size: 128px
-        color: $accentColor
-  #runs
-    background-color: lighten($accentColor, 80%)
+        color: lighten(#4A617D, 25%)
+    .learn-more
+      font-size: 1.5em
+      a
+        font-style: italic
+        color: lighten($accentColor, 10%)
+  #whats
+    background-color: lighten($accentColor, 95%)
+    .what-section
+      padding-top: 1em
+      .learn-more
+        padding-bottom: 4em
 @media (max-width: $MQMobile)
   .lando-front
     #hero
@@ -301,7 +369,7 @@ export default {
         font-size: .9em
     #whys,
     #wheres,
-    #runs
+    #whats
       .point
         display: block
         margin: 0 auto
@@ -311,7 +379,7 @@ export default {
           content: "—"
           color: $accentColor
     #wheres,
-    #runs
+    #whats
       .point
         &:before
           content: ""

@@ -22,7 +22,7 @@ whys:
 - title: Powerful Overrides
   details: Don't like our defaults? Every part of Lando is customizable down to the Docker level. This means you get all the benefits of Lando without sacrificing any of the power.
 
-whereByline: Lando is not meant for production but you can run it pretty much anywhere. For example it works locally on macOS, Linux and Windows, in a continuous integration environment like Travis or CircleCI or as a throwaway preview environment on AWS, among other things!
+whereByline: Lando is not meant for production but you can run it pretty much anywhere. For example it works locally on macOS, Linux and Windows, in a continuous integration environment like Travis, CircleCI, Jenkins or as a throwaway preview environment on AWS, among other things!
 wheres:
 - title: Apple
   icon: devicon-apple-original
@@ -32,10 +32,73 @@ wheres:
   icon: devicon-windows8-original
 - title: Travis
   icon: devicon-travis-plain
+- title: Jenkins
+  icon: devicons devicons-jenkins
 - title: Amazon Web Services
   icon: devicon-amazonwebservices-original
 
-runs: Lando runs most major languages, frameworks, services and dev tools all in isolated containers that won't pollute your machine. In fact, you don't need any other tool but Lando! Here are some of the things our users like best...
+whatByline: Lando runs most major languages, frameworks, services and dev tools all in isolated containers that won't pollute your machine. In fact, you don't need any other tool but Lando! Here are some of the things our users like best...
+whatLanguages:
+- title: PHP
+  icon: devicon-php-plain
+- title: JavaScript/NodeJS
+  icon: devicon-nodejs-plain
+- title: Ruby
+  icon: devicon-ruby-plain-wordmark
+- title: Python
+  icon: devicon-python-plain-wordmark
+- title: dotnet
+  icon: devicon-dot-net-plain-wordmark
+- title: go
+  icon: devicon-go-plain
+- title: java
+  icon: devicon-java-plain-wordmark
+whatFrameworks:
+- title: AngularJS
+  icon: devicon-angularjs-plain
+- title: Bootstrap
+  icon: devicon-bootstrap-plain-wordmark
+- title: CodeIgniter
+  icon: devicon-codeigniter-plain-wordmark
+- title: Django
+  icon: devicon-django-plain
+- title: Drupal
+  icon: devicon-drupal-plain-wordmark
+- title: Express
+  icon: devicon-express-original
+- title: Jekyll
+  icon: devicons devicons-jekyll_small
+- title: Joomla
+  icon: devicons devicons-joomla
+- title: Laravel
+  icon: devicon-laravel-plain-wordmark
+- title: Rails
+  icon: devicon-rails-plain-wordmark
+- title: React
+  icon: devicon-react-original-wordmark
+- title: Symfony
+  icon: devicon-symfony-original-wordmark
+- title: Symfony
+  icon: devicon-symfony-original-wordmark
+- title: Vue.js
+  icon: devicon-vuejs-plain-wordmark
+- title: WordPress
+  icon: devicon-wordpress-plain-wordmark
+whatServices:
+- title: Apache
+  icon: devicon-apache-plain-wordmark
+- title: MySQL
+  icon: devicon-mysql-plain-wordmark
+- title: mongodb
+  icon: devicon-mongodb-plain-wordmark
+- title: nginx
+  icon: devicon-nginx-original
+- title: postgresql
+  icon: devicon-postgresql-plain-wordmark
+- title: redis
+  icon: devicon-redis-plain-wordmark
+- title: tomcat
+  icon: devicon-tomcat-line-wordmark
 ---
 
 - How does it work?
@@ -49,23 +112,3 @@ runs: Lando runs most major languages, frameworks, services and dev tools all in
 - Who uses it?
 
 10,000+ developers
-
-    <div id="runs">
-      <div class="inner">
-        <h2>What can it run?</h2>
-        <p>{{ data.whatCan }}</p>
-
-        <div class="languages">
-          <div class="point" v-for="(run, index) in data." :key="index">
-            <a v-if="run.link" :href="run.link" target="_blank">
-              <div class="tech-icon"><i :class="run.icon"></i></div>
-              <h3>{{ run.title }}</h3>
-            </a>
-            <span v-else>
-              <div class="tech-icon"><i :class="run.icon"></i></div>
-              <h3>{{ run.title }}</h3>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
