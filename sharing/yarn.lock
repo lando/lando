@@ -353,6 +353,11 @@ path-to-regexp@^1.1.1:
   dependencies:
     isarray "0.0.1"
 
+platformsh-config@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/platformsh-config/-/platformsh-config-2.2.5.tgz#e0b302fccf12fe65374aebcff90c348091555e15"
+  integrity sha512-aZXI88zcyfUrHgYNMy68D+kb/bXjGm9U+Bo2AUivsrEt0ns4i/6AAStsvJ32DuhzZM/dHmZa5gmELq8jjhl3kg==
+
 pump@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pump/-/pump-3.0.0.tgz#b4a2116815bde2f4e1ea602354e8c75565107a64"
