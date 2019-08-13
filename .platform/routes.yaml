@@ -1,28 +1,28 @@
-https://devwithlando.io/:
+http://devwithlando.io/:
   type: redirect
-  to: https://{default}/
-https://docs.devwithlando.io/:
+  to: http://{default}/
+http://docs.devwithlando.io/:
   type: redirect
-  to: https://docs.{default}/
-https://share.devwithlando.io/:
+  to: http://docs.{default}/
+http://share.devwithlando.io/:
   type: redirect
-  to: https://share.{default}/
-https://*.share.devwithlando.io/:
+  to: http://share.{default}/
+http://*.share.devwithlando.io/:
   type: redirect
-  to: https://share.{default}/
-https://lndo.io/:
+  to: http://share.{default}/
+http://lndo.io/:
   type: redirect
-  to: https://{default}/
-https://docs.lndo.io/:
+  to: http://{default}/
+http://docs.lndo.io/:
   type: redirect
-  to: https://docs.{default}/
-https://share.lndo.io/:
+  to: http://docs.{default}/
+http://share.lndo.io/:
   type: redirect
-  to: https://share.{default}/
-https://*.share.lndo.io/:
+  to: http://share.{default}/
+http://*.share.lndo.io/:
   type: redirect
-  to: https://share.{default}/
-https://{default}/:
+  to: http://share.{default}/
+http://{default}/:
   type: upstream
   upstream: site:http
   cache:
@@ -31,7 +31,7 @@ https://{default}/:
     enabled: true
   ssi:
     enabled: false
-https://docs.{default}/:
+http://docs.{default}/:
   type: upstream
   upstream: docs:http
   cache:
@@ -40,12 +40,12 @@ https://docs.{default}/:
     enabled: true
   ssi:
     enabled: false
-https://share.{default}/:
+http://share.{default}/:
   type: upstream
   upstream: share:http
   ssi:
     enabled: false
-https://*.share.{default}/:
+http://*.share.{default}/:
   type: upstream
   upstream: share:http
   ssi:
