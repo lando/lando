@@ -17,7 +17,7 @@ module.exports = {
     editLinks: false,
     nav: [
       {text: 'Get Lando!', link: 'https://github.com/lando/lando/releases'},
-      // {text: 'Memberships', link: '/memberships/'},
+      {text: 'Memberships', link: 'https://www.patreon.com/join/devwithlando?'},
       // {text: 'Services', link: '/services/'},
       // {text: 'Support', link: '/support/'},
       {text: 'Documentation', link: 'https://docs.lando.dev'},
