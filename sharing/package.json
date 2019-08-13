@@ -1,0 +1,14 @@
+{
+  "name": "lando-sharing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lando/lando"
+  },
+  "bugs": {
+    "email": "mike@thinktandem.io",
+    "url": "https://github.com/lando/lando/issues"
+  },
+  "devDependencies": {
+    "localtunnel-server": "lando/sharing-server"
+  }
+}
