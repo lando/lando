@@ -1,5 +1,19 @@
 # 2019
 
+## v3.0.0-rc.20 - [August 16, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.20)
+
+**WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
+
+1. [CHECK OUT THE BIG CHANGES](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) IN RC.2!
+2. USE [THIS GUIDE](https://docs.devwithlando.io/guides/updating-to-rc2.html) TO UPDATE YOUR LANDOFILES
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
+
+* Added [marketing site](https://lando.dev) [#1410](https://github.com/lando/lando/issues/1410)
+* Added ability to [sponsor lando](https://www.patreon.com/join/devwithlando?)
+* Updated to `composer` `1.9.0` for `php` `7.1+`
+* Updated [documentation site](https://docs.lando.dev) [#1410](https://github.com/lando/lando/issues/1410)
+
 ## v3.0.0-rc.19 - [July 31, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.19)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
