@@ -27,8 +27,8 @@
             <p>{{ data.byline }}</p>
           </div>
           <p>
-            <a class="button white" href="https://github.com/lando/lando/releases">GET LANDO!</a>
-            <a class="button" href="https://www.patreon.com/join/devwithlando?" target="_blank">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+            <a class="button white" href="/download/">GET LANDO!</a>
+            <a class="button" href="/memberships/">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
           </p>
         </div>
       </div>
@@ -124,23 +124,30 @@
       <div class="inner">
         <h2>How does it work?</h2>
         <p>{{ data.howByline }}</p>
-        <div class="initialize how-section" v-if="data.howInitialize">
-          <h3>{{ data.howInitialize.title }}</h3>
-          <p>{{ data.howInitialize.description }}</p>
-          <div class="init-section" v-for="(example, index) in data.howInitialize.examples" :key="index">
-            <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment">{{ example.comment }}</span><br>{{ example.code }}</code></pre>
-          </div>
-        </div>
-
-        </div>
-        <div class="learn-more">
-          <a href="https://docs.lando.dev/basics/installation.html" target="_blank">Learn how to install Lando anywhere >></a>
+        <div class="initialize how-section">
+          <div class="init-section"><Content/></div>
         </div>
       </div>
     </div>
 
-    <Newsletter />
+    <div id="whos">
+      <div class="inner">
+        <h2>Wait... so who is using this again?</h2>
+        <p>Lando is used by professional developers, leading digital agencies, universities and non-profits to make their dev better. It's also the engine that powers tools like <a href="https://pantheon.io/localdev" target="_blank">Pantheon Localdev</a> and is battle-tested by over</p>
+        <div class="current-users">{{ currentUsers }}</div>
+        <p>users and counting!</p>
+      </div>
+    </div>
+
+    <div id="ready">
+      <div class="inner">
+        <h2>Ready for dev liberation?</h2>
+        <p><a class="button white" href="/download/">GET LANDO!</a></p>
+      </div>
+    </div>
+
     <MadeByTandem />
+    <Newsletter />
     <Footer/>
   </div>
 </template>
@@ -161,9 +168,18 @@ export default {
     return {
       isSidebarOpen: false,
       data: {},
+      growthRate: 0.0004,
+      startingTime: 1565701419,
+      startingUsers: 11212,
     };
   },
   computed: {
+    currentUsers() {
+      const now = Date.now() / 1000;
+      const secondsSince = now - this.startingTime;
+      const currentUsers = Math.floor(secondsSince * this.growthRate) + this.startingUsers;
+      return currentUsers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     shouldShowNavbar() {
       const {themeConfig} = this.$site;
       const {frontmatter} = this.$page;
@@ -297,7 +313,9 @@ export default {
   #whys,
   #wheres,
   #whats,
-  #hows
+  #hows,
+  #whos,
+  #ready
     background-color: #fff
     padding-bottom: 70px
     .inner
@@ -385,7 +403,6 @@ export default {
       a
         color: lighten($landoGreen, 80%)
   #hows
-    display: none
     .how-section
       text-align: left
       padding: 0 2em
@@ -393,18 +410,74 @@ export default {
         font-style: normal
         font-size: 1.4em
         margin: 0
+        padding-bottom: 1.2em
         color: lighten($landoGrey, 18%)
+      .step-number
+        p
+          margin-top: 0.10em
+          font-size: 3.5em
+          color: lighten($landoGrey, 55%)
       h3
         color: lighten($landoPink, 18%)
         font-weight: 300
         font-size: 2em
-        padding: 0 0 0.24em 0
+        padding: .66em 0.24em 0
         margin: 0
+      h4
+        color: $landoGreen
+        font-weight: 300
+        font-size: 1.4em
+        padding: 1.3em 0 0.24em 0
+        margin: 0
+    .left, .right
+      display: inline-block
+      vertical-align: top
+    .left
+      width: 15%
+    .right
+      width: 79%
     .learn-more
-      padding-top: 2em
-      padding-bottom: 0
+      text-align: center
+      padding-top: 1em
+      padding-bottom: 2em
       a
         color: lighten($landoBlue, 18%)
+  #whos
+    background-color: $landoPink
+    .current-users
+      color: #ffffff
+      font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
+      font-size: 9em
+    h2
+      color: lighten($landoPink, 70%)
+    h3
+      display: none
+    p
+      padding-bottom: 0
+      color: lighten($landoPink, 90%)
+      a
+        color: lighten($landoPink, 90%)
+      a:hover
+        text-decoration: underline
+  #ready
+    background-color: darken($landoPink, 13%)
+    h2
+      color: lighten($landoPink, 90%)
+    h3
+      display: none
+    p
+      padding-bottom: 0
+      color: darken($landoPink, 90%)
+  #news
+    background-color: darken($landoBlue, 12%)
+    padding: 2em 0
+    h3
+      font-size: 1.5em
+      a
+        color: lighten($landoGrey, 75%)
+  #made-by
+    padding: 7em 0
+    margin: 0
 @media (max-width: $MQMobile)
   .lando-front
     #hero
@@ -427,7 +500,8 @@ export default {
         font-size: .9em
     #whys,
     #wheres,
-    #whats
+    #whats,
+    #whos
       .point
         width: 90%
         display: inline-block
@@ -454,6 +528,15 @@ export default {
         padding: 0 2em
         &:after
           content: ""
+    #hows
+      .left, .right
+        text-align: center
+        width: 100%
+      .step-number
+        margin-bottom: 1em
+    div[class*=language-]
+      margin: .85rem -3.5em
+      border-radius: 0
 @media (max-width: $MQMobileNarrow)
   .lando-home
     padding-left 1.5rem
@@ -469,5 +552,5 @@ export default {
         &:before
           content: ""
         .tech-icon
-          font-size: 128px;
+          font-size: 128px
 </style>
