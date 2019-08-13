@@ -23,7 +23,7 @@
 <style lang="stylus">
 .lando-front
   #footer
-    background-color: #4e6e8e
+    background-color: $landoBlue
     padding: 40px 0
     color: lighten(#4e6e8e, 44%)
     text-align: center
