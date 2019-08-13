@@ -10,7 +10,13 @@ Over the last year or so we've watched our community grow from several hundred u
 
 As such we want to make sure Lando has a healthy and sustainable foundation for continued future growth. For that reason we are launching our membership program: _The Lando Alliance_, a movement to liberate developers across the galaxy so they can focus on their most important work.
 
-If you find that Lando saves you time, money and/or frustration then please consider becoming a member of _The Alliance_. This helps us provide better...
+<a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+
+## Why Join?
+
+If you find that Lando saves you time, money and/or frustration then please consider becoming a member of _The Alliance_.
+
+This helps us provide better...
 
 <div class="point">
   <h3>Support</h3>
@@ -73,3 +79,6 @@ If you like or want more of the above then we _**highly encourage**_ you to join
   <h3>Liberation</h3>
   <p>Get an overwhelming feeling of freedom and harmony knowing you've helped to liberate developers everywhere!</p>
 </div>
+
+<a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+

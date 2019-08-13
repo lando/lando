@@ -19,7 +19,6 @@
       <div class="inner">
         <div class="memberships membership-section">
           <div class="member-section"><Content/></div>
-          <a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
         </div>
       </div>
     </div>
@@ -134,7 +133,7 @@ export default {
     padding-top: 4em
     .button
       background-color: $landoPink
-      font-size: 2em
+      font-size: 1em
       margin-top: 3em
     .inner
       max-width: 900px;
