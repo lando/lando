@@ -2,7 +2,7 @@
 # in the same project.
 
 # The name of this app. Must be unique within a project.
-name: docs
+name: share
 
 # The toolstack used to build the application.
 type: nodejs:10
@@ -10,34 +10,13 @@ build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
-disk: 2000
-mounts:
-  run:
-    source: local
-    source_path: run
+disk: 1000
 
 # The configuration of app when it is exposed to the web.
 web:
   commands:
     # Run a no-op process that uses no CPU resources, since this is a static site.
-    start: sleep infinity
-  locations:
-    "/":
-      root: "_docs"
-      index:
-        - "index.html"
-      expires: 300s
-      scripts: true
-      allow: false
-      rules:
-        \.(css|js|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
-          allow: true
-        ^/robots\.txt$:
-          allow: true
-        ^/ads\.txt$:
-          allow: true
-        search_index\.json$:
-          allow: true
+    start: ./node_modules/localtunnel-server/bin/server --port 80 --domain share.lando.dev
 
 # Build time dependencies.
 dependencies:
@@ -49,7 +28,6 @@ hooks:
   build: |
     set -e
     yarn install
-    yarn build
     curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.
