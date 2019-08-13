@@ -21,20 +21,19 @@
 </script>
 
 <style lang="stylus">
-.lando-front
-  #footer
-    background-color: $landoBlue
-    padding: 40px 0
-    color: lighten(#4e6e8e, 44%)
-    text-align: center
-    font-size: 0.9em
-    .social-icon
-      margin 0 5px
-      svg
-        width: 36px
-        height: 36px
-        fill: lighten(#4e6e8e, 80%)
-    a
-      font-weight: 700
-      color: #fff
+#footer
+  background-color: $landoBlue
+  padding: 40px 0
+  color: lighten(#4e6e8e, 44%)
+  text-align: center
+  font-size: 0.9em
+  .social-icon
+    margin 0 5px
+    svg
+      width: 36px
+      height: 36px
+      fill: lighten(#4e6e8e, 80%)
+  a
+    font-weight: 700
+    color: #fff
 </style>

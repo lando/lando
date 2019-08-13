@@ -102,8 +102,14 @@ whatServices:
 
 howByline: The main idea behind Lando is a user should be able to clone a repository, run a single command and get everything they need to work on their site locally in a few minutes.
 ---
-
-### 1. Initialize a codebase for usage with Lando
+<div class="step">
+  <div class="left">
+    <div class="step-number"><p>1</p></div>
+  </div>
+  <div class="right">
+    <h3>Initialize a codebase for usage with Lando</h3>
+  </div>
+</div>
 
 This will create a starter Lando config file that you can then slowly augment with further dependencies as needed. You can initialize from code in a local folder or pull in code from a remote archive, git repo, GitHub or [Pantheon](https://pantheon.io)!
 
@@ -142,7 +148,14 @@ lando init \
   <a href="https://docs.lando.dev/basics/init.html" target="_blank">Learn how to initialize in more ways >></a>
 </div>
 
-### 2. Optionally customize your new Landofile for MOAR POWER
+<div class="step">
+  <div class="left">
+    <div class="step-number"><p>2</p></div>
+  </div>
+  <div class="right">
+    <h3>Optionally customize for MOAR POWER</h3>
+  </div>
+</div>
 
 While our recipe defaults are plenty good for most use cases Lando let's you customize further. This means you can configure our [recipes](https://docs.lando.dev/config/recipes.html#config), add [additional services](https://docs.lando.dev/config/services.html#services), [proxy routes](https://docs.lando.dev/config/proxy.html#proxy), [tooling commands](https://docs.lando.dev/config/tooling.html#tooling), [build steps](https://docs.lando.dev/config/services.html#build-steps), [runtime automation](https://docs.lando.dev/config/events.html#events), and [Docker Compose overrides](https://docs.lando.dev/config/services.html#overrides) or do nothing at all!
 
@@ -263,7 +276,14 @@ tooling:
   <a href="https://docs.lando.dev/config/" target="_blank">Learn how to configure all the things >></a>
 </div>
 
-### 3. Try out some tooling commands
+<div class="step">
+  <div class="left">
+    <div class="step-number"><p>3</p></div>
+  </div>
+  <div class="right">
+    <h3>Try out some tooling commands</h3>
+  </div>
+</div>
 
 Lando isn't only about containerized services to run your application it also containerizes common dev tools like `node`, `composer`, `drush`, `artisan` and `python`. Try running `lando` after you start a project to see the tools available to your app, or [add additional tooling]().
 
@@ -298,7 +318,14 @@ lando gulp watch
   <a href="https://docs.lando.dev/config/tooling.html" target="_blank">Learn how to configure tooling >></a>
 </div>
 
-### 4. Deploy and distribute
+<div class="step">
+  <div class="left">
+    <div class="step-number"><p>4</p></div>
+  </div>
+  <div class="right">
+    <h3>Deploy and distribute</h3>
+  </div>
+</div>
 
 Once you are feeling good about your Landofile, commit it to your repository so other developers can easily get setup.
 

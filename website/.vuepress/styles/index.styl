@@ -24,6 +24,20 @@ a.button,
       background-color: #4e6e8e
       color: $light
       border-color: #4e6e8e
+.step
+  padding-bottom: 2em
+.step-number
+  border: 0.1em solid lighten($landoPink, 66%)
+  border-radius: 100%
+  height: 6em
+  width: 6em
+  text-align: center
+  p
+    margin-top: 0.10em
+    font-size: 3.5em
+    font-weight: bold
+    font-family: sans-serif
+    color: lighten($landoGrey, 35%)
 header
   height: 60px
   padding: 10px 60px
@@ -51,3 +65,5 @@ header.navbar
 @media (max-width: $MQMobile)
   .sidebar-button
     color: #ffffff
+  .step-number
+    margin: auto

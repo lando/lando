@@ -27,8 +27,8 @@
             <p>{{ data.byline }}</p>
           </div>
           <p>
-            <a class="button white" href="https://github.com/lando/lando/releases">GET LANDO!</a>
-            <a class="button" href="https://www.patreon.com/join/devwithlando?" target="_blank">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+            <a class="button white" href="/download/">GET LANDO!</a>
+            <a class="button" href="/memberships/">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
           </p>
         </div>
       </div>
@@ -142,7 +142,7 @@
     <div id="ready">
       <div class="inner">
         <h2>Ready for dev liberation?</h2>
-        <p><a class="button white" href="https://github.com/lando/lando/releases">GET LANDO!</a></p>
+        <p><a class="button white" href="/download/">GET LANDO!</a></p>
       </div>
     </div>
 
@@ -412,11 +412,16 @@ export default {
         margin: 0
         padding-bottom: 1.2em
         color: lighten($landoGrey, 18%)
+      .step-number
+        p
+          margin-top: 0.10em
+          font-size: 3.5em
+          color: lighten($landoGrey, 55%)
       h3
         color: lighten($landoPink, 18%)
         font-weight: 300
         font-size: 2em
-        padding: 0 0 0.24em 0
+        padding: .66em 0.24em 0
         margin: 0
       h4
         color: $landoGreen
@@ -424,6 +429,13 @@ export default {
         font-size: 1.4em
         padding: 1.3em 0 0.24em 0
         margin: 0
+    .left, .right
+      display: inline-block
+      vertical-align: top
+    .left
+      width: 15%
+    .right
+      width: 79%
     .learn-more
       text-align: center
       padding-top: 1em
@@ -516,6 +528,12 @@ export default {
         padding: 0 2em
         &:after
           content: ""
+    #hows
+      .left, .right
+        text-align: center
+        width: 100%
+      .step-number
+        margin-bottom: 1em
     div[class*=language-]
       margin: .85rem -3.5em
       border-radius: 0

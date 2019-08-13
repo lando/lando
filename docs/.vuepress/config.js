@@ -7,6 +7,11 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
   ],
+  plugins: [
+    ['@vuepress/google-analytics', {
+      ga: 'UA-74237404-3',
+    }],
+  ],
   themeConfig: {
     docsDir: 'docs',
     docsBranch: 'master',
