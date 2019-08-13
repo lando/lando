@@ -28,7 +28,7 @@
           </div>
           <p>
             <a class="button white" href="https://github.com/lando/lando/releases">GET LANDO!</a>
-            <a class="button" href="#newsletter">JOIN THE ALLIANCE</a>
+            <a class="button" href="https://www.patreon.com/join/devwithlando?" target="_blank">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
           </p>
         </div>
       </div>
@@ -82,7 +82,7 @@
             </span>
           </div>
           <div class="learn-more">
-            <a href="https://docs.lando.dev/config/lando.html" target="_blank">Learn about the other languages Lando supports >></a>
+            <a href="https://docs.lando.dev/config/services.html" target="_blank">Learn about the other languages Lando supports >></a>
           </div>
         </div>
 
@@ -98,7 +98,7 @@
             </span>
           </div>
           <div class="learn-more">
-            <a href="https://docs.lando.dev/config/lando.html" target="_blank">Learn about Backdrop CMS, Pantheon, LAMP, LEMP, MEAN, and the other frameworks Lando supports >></a>
+            <a href="https://docs.lando.dev/config/recipes.html" target="_blank">Learn about Backdrop CMS, Pantheon, LAMP, LEMP, MEAN, and the other frameworks Lando supports >></a>
           </div>
         </div>
 
@@ -114,10 +114,28 @@
             </span>
           </div>
           <div class="learn-more">
-            <a href="https://docs.lando.dev/config/lando.html" target="_blank">Learn about elasticsearch, MailHog, XDebug, MariaDB, MSSQL, PhpMyAdmin, Solr, Varnish and the other services Lando supports >> </a>
+            <a href="https://docs.lando.dev/config/services.html" target="_blank">Learn about elasticsearch, MailHog, XDebug, MariaDB, MSSQL, PhpMyAdmin, Solr, Varnish and the other services Lando supports >> </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="hows">
+      <div class="inner">
+        <h2>How does it work?</h2>
+        <p>{{ data.howByline }}</p>
+        <div class="initialize how-section" v-if="data.howInitialize">
+          <h3>{{ data.howInitialize.title }}</h3>
+          <p>{{ data.howInitialize.description }}</p>
+          <div class="init-section" v-for="(example, index) in data.howInitialize.examples" :key="index">
+            <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment">{{ example.comment }}</span><br>{{ example.code }}</code></pre>
           </div>
         </div>
 
+        </div>
+        <div class="learn-more">
+          <a href="https://docs.lando.dev/basics/installation.html" target="_blank">Learn how to install Lando anywhere >></a>
+        </div>
       </div>
     </div>
 
@@ -278,7 +296,8 @@ export default {
       font-size: 1.5rem
   #whys,
   #wheres,
-  #whats
+  #whats,
+  #hows
     background-color: #fff
     padding-bottom: 70px
     .inner
@@ -287,7 +306,7 @@ export default {
       text-align: center
       padding: 0 1.5em;
     h2
-      color: lighten(#2c3e50, 18%)
+      color: lighten($landoBlue, 18%)
       font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
       font-size: 3.5em
       font-weight: 400
@@ -296,11 +315,10 @@ export default {
       border: 0
     p
       font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
-      font-size: 1.2em
-      font-weight: 600
+      font-size: 1.5em
+      word-spacing: 10px
       font-style: italic
       word-spacing: 0.05em
-      color: #4f5959
       line-height: 1.4
       margin-block-start: 1em
       margin-block-end: 1em
@@ -312,41 +330,81 @@ export default {
       display: inline-block
       vertical-align: top
       box-sizing: border-box
-      padding: 0 2em
+      padding: 1em 2em
       h3
-        color: lighten($accentColor, 18%)
+        color: lighten($accentColor, 33%)
         font-size: 1.5em
-        font-weight: 400
+        font-weight: 500
         margin: 0
         padding: .5em 0
         border: 0
       p
         font-style: normal
         font-weight: 500
-        font-size: 1em
+        font-size: 1.1em
         padding-bottom: 0
-  #wheres,
-  #whats
+    .learn-more
+      font-size: 1.5em
+      a
+        font-style: italic
+  #wheres
+    background-color: $landoBlue
+    h2
+      color: lighten($landoBlue, 60%)
     h3
       display: none;
-    background-color: lighten($accentColor, 90%)
+    p
+      color: lighten($landoBlue, 90%)
     .point
       width: 25%
       padding-bottom: 2em
       .tech-icon
         font-size: 128px
-        color: lighten(#4A617D, 25%)
+        color: lighten($landoBlue, 95%)
     .learn-more
-      font-size: 1.5em
       a
-        font-style: italic
-        color: lighten($accentColor, 10%)
+        color: lighten($landoBlue, 60%)
   #whats
-    background-color: lighten($accentColor, 95%)
+    background-color: $landoGreen
+    h2
+      color: lighten($landoGreen, 70%)
+    h3
+      display: none;
+    p
+      color: lighten($landoGreen, 90%)
+    .point
+      width: 20%
+      padding-bottom: 2em
+      .tech-icon
+        font-size: 96px;
+        color: lighten($landoGreen, 95%)
     .what-section
       padding-top: 1em
-      .learn-more
-        padding-bottom: 4em
+    .learn-more
+      padding-bottom: 4em
+      a
+        color: lighten($landoGreen, 80%)
+  #hows
+    display: none
+    .how-section
+      text-align: left
+      padding: 0 2em
+      p
+        font-style: normal
+        font-size: 1.4em
+        margin: 0
+        color: lighten($landoGrey, 18%)
+      h3
+        color: lighten($landoPink, 18%)
+        font-weight: 300
+        font-size: 2em
+        padding: 0 0 0.24em 0
+        margin: 0
+    .learn-more
+      padding-top: 2em
+      padding-bottom: 0
+      a
+        color: lighten($landoBlue, 18%)
 @media (max-width: $MQMobile)
   .lando-front
     #hero
@@ -371,20 +429,45 @@ export default {
     #wheres,
     #whats
       .point
-        display: block
-        margin: 0 auto
-        width: 300px
-        padding: 0 40px 30px
-        &:before
-          content: "—"
+        width: 90%
+        display: inline-block
+        vertical-align: top
+        box-sizing: border-box
+        padding: 0 2em
+        h3
+          padding-top: 2em
+          font-size: 2em
+        p
+          font-size: 1.2em
+        .tech-icon
+          font-size: 128px
+        &:after
+          content: "________"
           color: $accentColor
     #wheres,
     #whats
       .point
-        &:before
+        width: 50%
+        display: inline-block
+        vertical-align: top
+        box-sizing: border-box
+        padding: 0 2em
+        &:after
           content: ""
 @media (max-width: $MQMobileNarrow)
   .lando-home
     padding-left 1.5rem
     padding-right 1.5rem
+    #whys,
+    #wheres,
+    #whats
+      .point
+        display: block
+        margin: 0 auto
+        width: 300px
+        padding: 0 40px 30px
+        &:before
+          content: ""
+        .tech-icon
+          font-size: 128px;
 </style>

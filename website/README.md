@@ -7,7 +7,7 @@ layout: Lando
 heroImage: /images/hero-white.png
 byline: Free yourself from the mind-forged manacles of lesser dev tools. Save time, headaches, frustration and do more real work.
 
-whyLando: While developers love Lando because it's easy, powerful and fun... Lando actually exists to solve business problems by removing tons of unneeded complexity from development workflows thereby maximizing value delivery to clients and customers.
+whyLando: While developers love Lando because it's free, open source and awesome... Lando actually exists to solve business problems by removing tons of unneeded complexity from development workflows thereby maximizing value delivery to clients and customers.
 whys:
 - title: Easy
   details: Don't waste time fighting your tools. Install lando and get your first project rolling in minutes regardless of the tech or your operating system.
@@ -78,8 +78,6 @@ whatFrameworks:
   icon: devicon-react-original-wordmark
 - title: Symfony
   icon: devicon-symfony-original-wordmark
-- title: Symfony
-  icon: devicon-symfony-original-wordmark
 - title: Vue.js
   icon: devicon-vuejs-plain-wordmark
 - title: WordPress
@@ -87,6 +85,8 @@ whatFrameworks:
 whatServices:
 - title: Apache
   icon: devicon-apache-plain-wordmark
+- title: Composer
+  icon: devicons devicons-composer
 - title: MySQL
   icon: devicon-mysql-plain-wordmark
 - title: mongodb
@@ -99,7 +99,19 @@ whatServices:
   icon: devicon-redis-plain-wordmark
 - title: tomcat
   icon: devicon-tomcat-line-wordmark
+
+howByline: The main idea behind Lando is a user should be able to clone a repository, run a single command and get everything they need to work on their site locally in a few minutes.
+howInitialize:
+  title: 1. Setup a project for usage with Lando
+  description: Initialize a codebase for usage with Lando. This will create a starter Lando config file that you can slowly augment with the dependencies you need. You can initialize from code in a local folder or pull in code from a remote archive, git repo, GitHub or Pantheon!
+  examples:
+    - comment: Interactively instantiate your code for use with lando
+      code: lando init
+    - comment: Interactively instantiate your code for use with lando
+      code: lando init
 ---
+
+
 
 - How does it work?
 
