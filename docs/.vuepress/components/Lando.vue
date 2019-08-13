@@ -54,9 +54,18 @@
       </div>
     </div>
 
+    <div id="alliance">
+      <div class="inner">
+        <Content/>
+        <div>
+          <a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO</a>
+        </div>
+      </div>
+    </div>
+
     <div id="news">
       <div class="inner">
-        <h3><label for="member_email">Join the Lando Alliance, get updates</label></h3>
+        <h3><label for="member_email">Get updates about the Alliance</label></h3>
           <div id="mc_embed_signup">
             <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
               <div id="mc_embed_signup_scroll">
@@ -224,7 +233,8 @@ export default {
     .logo
       display: none
   #hero,
-  #news
+  #news,
+  #alliance
     padding: 70px 40px 30px
     background-color: #fff
     .inner
@@ -268,6 +278,12 @@ export default {
         display: inline-block
         vertical-align: middle
         margin-right: 15px
+  #alliance
+    h2
+      display: block
+      border: 0
+    p
+      font-size: 1.1em
   #made-by
     background-color: #fff
     text-align: center
@@ -281,7 +297,8 @@ export default {
       vertical-align: middle
     img
       margin: 15px
-  #features
+  #features,
+  #alliance
     background-color: #fff
     padding-bottom: 70px
     .inner
