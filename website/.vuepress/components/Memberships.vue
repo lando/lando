@@ -19,7 +19,7 @@
       <div class="inner">
         <div class="memberships membership-section">
           <div class="member-section"><Content/></div>
-          <a class="button" href="https://www.patreon.com/devwithlando">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+          <a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
         </div>
       </div>
     </div>
