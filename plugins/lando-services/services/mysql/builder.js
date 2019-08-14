@@ -40,11 +40,9 @@ module.exports = {
           MYSQL_USER: options.creds.user,
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
-        user: 'root',
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/mysql/data`,
-          `${options.confDest}/mysql-flush.sh:/helpers/mysql-flush.sh`,
         ],
       };
       // Send it downstream
