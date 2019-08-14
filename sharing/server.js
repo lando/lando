@@ -49,7 +49,7 @@ const server = CreateServer({
 });
 
 server.listen(argv.port, argv.address, () => {
-    debug('server listening on port: %d', server.address().port);
+    log.info('server listening on port: %d', server.address().port);
 });
 
 process.on('SIGINT', () => {
