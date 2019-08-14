@@ -12,6 +12,7 @@
 * Added [marketing site](https://lando.dev) [#1410](https://github.com/lando/lando/issues/1410)
 * Added ability to [sponsor lando](https://www.patreon.com/join/devwithlando?)
 * Added support for patch versions of `elasticsearch` `7.3` [#1729](https://github.com/lando/lando/issues/1729)
+* Fixed `mysql` failing on `linux` on `restart` [#1739](https://github.com/lando/lando/issues/1739)
 * Updated to Docker Desktop 2.1.0.1 [#1728](https://github.com/lando/lando/issues/1728)
 * Updated to `composer` `1.9.0` for `php` `7.1+`
 * Updated [documentation site](https://docs.lando.dev) [#1410](https://github.com/lando/lando/issues/1410)
