@@ -45,6 +45,7 @@ const server = CreateServer({
     max_tcp_sockets: argv['max-sockets'],
     secure: argv.secure,
     domain: argv.domain,
+    landing: 'https://docs.lando.dev/basics/share.html',
 });
 
 server.listen(argv.port, argv.address, () => {
