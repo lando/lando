@@ -11,3 +11,6 @@ fi
 if [ -f "/opt/bitnami/mysql/tmp/mysql.sock.lock" ]; then
   rm -rf "/opt/bitnami/mysql/tmp/mysql.sock.lock"
 fi
+
+# Drop down and run the normal vibe
+su - 1001 -c "/bin/bash -c '/entrypoint.sh /run.sh'"
