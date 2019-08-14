@@ -8,7 +8,8 @@
     "email": "mike@thinktandem.io",
     "url": "https://github.com/lando/lando/issues"
   },
-  "devDependencies": {
-    "localtunnel-server": "lando/sharing-server"
+  "dependencies": {
+    "localtunnel-server": "lando/sharing-server",
+    "platformsh-config": "^2.2.5"
   }
 }
