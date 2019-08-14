@@ -12,11 +12,11 @@ The upload directory private://TESTDIR for the file field field_TESTFIELD could 
 
 ## The Problem
 
-The `tl;dr` is `php` will incorrectly assume a writable directory mounted by Docker for Windows is in fact not writable.
+The `tl;dr` is `php` will incorrectly assume a writable directory mounted by Docker Desktop is in fact not writable.
 
 This seems to be caused by a convergence of two factors:
 
-1. How Docker for Windows uses `SMB` to mount files
+1. How Docker Desktop uses `SMB` to mount files
 2. How the built in php function [`is_writable`](http://php.net/manual/en/function.is-writable.php) behaves
 
 [This comment](https://github.com/wodby/docker4drupal/issues/29#issuecomment-316055081) while Drupal in flavor is helpful for a deeper dive on things.
@@ -46,4 +46,4 @@ Running `apache` as `root` is currently not supported. See [this issue](https://
 
 If switching to `nginx` is not an option then it's possible the framework you are using (eg Drupal or Laravel) may have already identified this issue and supplied a patch to help. For example [this](https://www.drupal.org/node/944582) may be relevant for Drupal 7.
 
-A Google search for `docker for windows file sharing MYFRAMEWORK` is probably a good way to start.
+A Google search for `Docker Desktop file sharing MYFRAMEWORK` is probably a good way to start.

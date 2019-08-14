@@ -74,7 +74,7 @@ Write-Output "Grabbing the files we need..."
 # Lando things
 Copy-Item "build\cli\lando-win32-x64-v$lando_version.exe" "$bin_dir\lando.exe" -force
 
-# Docker for Windows
+# Docker Desktop
 # Download -Url "https://download.docker.com/win/stable/$docker_version/Docker%20for%20Windows%20Installer.exe" -Destination "$base_dir\Docker.exe"
 Download -Url "https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe" -Destination "$base_dir\Docker.exe"
 
