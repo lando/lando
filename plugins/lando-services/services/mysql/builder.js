@@ -43,7 +43,6 @@ module.exports = {
         volumes: [
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/mysql/data`,
-          `${options.confDest}/mysql-flush.sh:/scripts/mysql-flush.sh`,
         ],
       };
       // Send it downstream

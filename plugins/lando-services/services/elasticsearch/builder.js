@@ -8,7 +8,7 @@ module.exports = {
   name: 'elasticsearch',
   config: {
     version: '6',
-    supported: ['7', '6', '6.5.x', '5', '5.6.x'],
+    supported: ['7', '7.3', '7.3.x', '6', '6.5.x', '5', '5.6.x'],
     patchesSupported: true,
     confSrc: __dirname,
     healthcheck: 'curl -XGET localhost:9200',
