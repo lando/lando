@@ -76,7 +76,7 @@ module.exports = lando => {
         .then(() => {
           const config = parseConfig(u.parse(options.url).port, _.lowerCase(app.name).replace(/[^0-9a-z]/g, ''));
           // Set up the localtunnel
-          localtunnel(config.port, {subdomain: config.host, host: 'https://share.lando.dev'}, (err, tunnel) => {
+          localtunnel(config.port, {subdomain: config.host}, (err, tunnel) => {
             // Error if needed
             if (err) lando.log.error(err);
             // Handler

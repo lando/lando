@@ -9,7 +9,6 @@
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
-* Added dedicated `lando share` server @ `https://*.share.lando.dev` [#1675](https://github.com/lando/lando/issues/1675)
 * Added [marketing site](https://lando.dev) [#1410](https://github.com/lando/lando/issues/1410)
 * Added ability to [sponsor lando](https://www.patreon.com/join/devwithlando?)
 * Updated to `composer` `1.9.0` for `php` `7.1+`
