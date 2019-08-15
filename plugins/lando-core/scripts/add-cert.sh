@@ -18,6 +18,7 @@ cat > /certs/cert.ext <<EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = *.${LANDO_DOMAIN}
@@ -71,7 +72,7 @@ if [ ! -f "/certs/cert.pem" ]; then
     -CAkey $LANDO_CA_KEY \
     -CAcreateserial \
     -out /certs/cert.crt \
-    -days 8675 \
+    -days 825 \
     -sha256 \
     -extfile /certs/cert.ext
   cat /certs/cert.crt /certs/cert.key > /certs/cert.pem
