@@ -8,7 +8,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[7](https://hub.docker.com/r/_/solr/)** **(default)**
+*   **[8](https://hub.docker.com/r/_/solr/)** **(default)**
+*   [8.2](https://hub.docker.com/r/_/solr/)
+*   [7](https://hub.docker.com/r/_/solr/)
 *   [7.6](https://hub.docker.com/r/_/solr/)
 *   [6.6](https://hub.docker.com/r/_/solr/)
 *   [6](https://hub.docker.com/r/_/solr/)

@@ -83,8 +83,8 @@ const parseConfig = options => {
 module.exports = {
   name: 'solr',
   config: {
-    version: '7',
-    supported: ['7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
+    version: '8',
+    supported: ['8.2', '8', '7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
     legacy: ['4.10', '4', '3.6', '3'],
     patchesSupported: true,
     command: 'chmod +x /start-solr.sh && /start-solr.sh',
