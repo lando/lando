@@ -44,7 +44,7 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      FILE="$(pwd)/$1"
+      FILE=$1
       shift
       ;;
   esac
