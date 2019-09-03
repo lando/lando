@@ -1,12 +1,10 @@
-Accessing Your Services Externally
-==================================
+# Accessing Your Services Externally
 
 It is often desirable to interact with your services on the host machine level. Common examples of this are accessing a SQL database through a GUI client like SequelPro, or running unit tests through an IDE like PhpStorm.
 
 Lando makes this process relatively painless.
 
-Checking Connection Info
-------------------------
+## Checking Connection Info
 
 If you've spun up a Lando app using one of our [recipes](./../config/recipes.md) then its likely relevant services are already exposed and ready for access.
 
@@ -51,14 +49,13 @@ In the example above you can access the `mariadb` database from your host at `lo
 
 That said, Lando provides a way to "lock down" these ports so they are more predictable.
 
-Locking Down Ports
-------------------
+## Locking Down Ports
 
 Say you've spun up an app using our Backdrop recipe but you are frustrated by the external database port always changing. You can modify your `.lando.yml` with some recipe overrides to assign a static port.
 
-> #### Warning::THE PORT YOU FORWARD MUST BE AVAILABLE ON YOUR HOST!
->
-> You are going to need to select a port that is actually available on your host machine. If you don't, then this will fail. It's a good idea to avoid common ports like `3306` which likely are in use already. To that end it's good practice to use a port CLOSE TO the default eg `3307` for `3306` or `5433` for `5432`.
+::: warning THE PORT YOU FORWARD MUST BE AVAILABLE ON YOUR HOST!
+You are going to need to select a port that is actually available on your host machine. If you don't, then this will fail. It's a good idea to avoid common ports like `3306` which likely are in use already. To that end it's good practice to use a port CLOSE TO the default eg `3307` for `3306` or `5433` for `5432`.
+:::
 
 ```yml
 name: myapp
@@ -108,8 +105,7 @@ lando info
 }
 ```
 
-Mapping to The Lando Network
-----------------------------
+## Mapping to The Lando Network
 
 Some IDEs, such as PhpStorm, will spin up a separate container to run their appserver for services like built-in unit testing.  This means that it is separate from the Lando network and cannot communicate with Lando's other containers, such as the database.  In order to allow them to communicate, you need to tell your interpreter which network to listen on.
 
@@ -127,7 +123,3 @@ Finally, when configuring your framework, edit the Docker Container settings and
 
 Now your IDE should be able to communicate with Lando.
 
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}

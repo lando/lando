@@ -1,5 +1,4 @@
-Governance
-==========
+# Governance
 
 Governance of the project is simple and straightforward:
 

@@ -16,7 +16,7 @@ SET DOCKER_TLS_VERIFY=
 SET DOCKER_CERT_PATH=
 
 :: Start up the Docker daemon
-START /I "" "%ProgramFiles%\Docker\Docker\Docker for Windows.exe"
+START /I "" "%ProgramFiles%\Docker\Docker\Docker Desktop.exe"
 
 :: Try to get the Daemon running
 CALL :TRY 32

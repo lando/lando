@@ -1,8 +1,6 @@
-Roles and Responsibilities
-==========================
+# Roles and Responsibilities
 
-Benevolent Dictator
--------------------
+## Benevolent Dictator
 
 Typically, the benevolent dictator, or project lead, is self-appointed. However, because the community always has the ability to fork, this person is fully answerable to the community. The project lead's role is a difficult one: they ultimately set the [strategic vision](./vision.md) of the project and communicate these clearly to the project maintainers and community at large. They also have to understand the community as a whole and strive to satisfy as many conflicting needs as possible, while ensuring that the project survives in the long term.
 
@@ -10,8 +8,7 @@ In many ways, the role of the benevolent dictator is less about dictatorship and
 
 Check out [this read](https://producingoss.com/html-chunk/benevolent-dictator.html) on some of the qualifications we expect in a good BD.
 
-Maintainers
------------
+## Maintainers
 
 Maintainers are committers who also make decisions for the overall direction of the project including but not limited to:
 
@@ -24,8 +21,7 @@ Maintainers are committers who also make decisions for the overall direction of 
 
 Decisions are made by consensus with the Benevolent Dictator serving as final authority when consensus cannot be reached. Ideally, all decision making for the project is made by the maintainers and by consensus.
 
-Committers
-----------
+## Committers
 
 Committers are contributors who have made several valuable contributions to the project and are now relied upon to both write code directly to the repository and screen the contributions of others. In many cases they are programmers but it is also possible that they contribute in a different role. Typically, a committer will focus on a specific aspect of the project, and will bring a level of expertise and understanding that earns them the respect of the community and the project maintainers. The role of committer is an official one and it is generally a position that influential members of the community will find themselves in as the project maintainers looks to them for guidance and support. Some more popular areas of focus for committers are:
 
@@ -40,10 +36,9 @@ Committers have no authority over the overall direction of the project. However,
 
 Committers that acquire more project breadth and high level insight around the projects vision may find that the project maintainers start relying on them more and more. When this begins to happen, they gradually adopt the role of maintainer, as described above.
 
-Contributors
-------------
+## Contributors
 
-Contributors are community members who either have no desire to become committers, or have not yet been given the opportunity by the project maintainers. They make valuable contributions, such as those outlined in the list below, but generally do not have the authority to make direct changes to the project code. Contributors engage with the project primarily through the [#contributors](https://launchpass.com/kalabox) Slack and issues in the [issue tracker](https://github.com/lando/lando/issues).
+Contributors are community members who either have no desire to become committers, or have not yet been given the opportunity by the project maintainers. They make valuable contributions, such as those outlined in the list below, but generally do not have the authority to make direct changes to the project code. Contributors engage with the project primarily through the [#contributors](https://launchpass.com/devwithlando) Slack and issues in the [issue tracker](https://github.com/lando/lando/issues).
 
 Anyone can become a contributor. There is no expectation of commitment to the project, no specific skill requirements and no selection process. To become a contributor, a community member simply has to perform one or more actions that are beneficial to the project.
 
@@ -63,13 +58,11 @@ Some contributors will already be engaging with the project as users, but will a
 
 As contributors gain experience and familiarity with the project, they may find that the project maintainers start relying on them more and more. When this begins to happen, they gradually adopt the role of committer, as described above.
 
-Security
---------
+## Security
 
 If you have discovered a security issue with Lando, please contact the Lando Security Team directly at [security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or tweeting about it.
 
-Users
------
+## Users
 
 Users are community members who have a need for the project. They are the most important members of the community: without them, the project would have no purpose. Anyone can be a user; there are no specific requirements.
 

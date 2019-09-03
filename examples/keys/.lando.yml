@@ -17,4 +17,6 @@ services:
       volumes:
         - ./ppkey:/lando/keys/ppkey
         - ./ppkey.pub:/lando/keys/ppkey.pub
+        - "./ppkey:/lando/keys/key with space"
+        - "./ppkey.pub:/lando/keys/key with space.pub"
         - ./index.html:/tmp/things

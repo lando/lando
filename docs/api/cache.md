@@ -1,11 +1,9 @@
-<a id="landocacheset"></a>
+<a name="lando.cache.set"></a>
 
-<h2 id="landocacheset" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cache.set(key, data, [opts])</h2>
-<div class="api-body-header"></div>
-
+## lando.cache.set(key, data, [opts])
 Sets an item in the cache
 
+**Kind**: global function  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -27,36 +25,30 @@ lando.cache.set('mykey', data, {persist: true});
 // Add an object to the cache for five seconds
 lando.cache.set('mykey', data, {ttl: 5});
 ```
-<div class="api-body-footer"></div>
-<a id="landocacheget"></a>
+<a name="lando.cache.get"></a>
 
-<h2 id="landocacheget" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cache.get(key) ⇒ <code>Any</code></h2>
-<div class="api-body-header"></div>
-
+## lando.cache.get(key) ⇒ <code>Any</code>
 Gets an item in the cache
 
+**Kind**: global function  
+**Returns**: <code>Any</code> - The data stored in the cache if applicable.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>String</code> | The name of the key to retrieve the data. |
 
-**Returns**: <code>Any</code> - The data stored in the cache if applicable.  
 **Example**  
 ```js
 // Get the data stored with key mykey
 const data = lando.cache.get('mykey');
 ```
-<div class="api-body-footer"></div>
-<a id="landocacheremove"></a>
+<a name="lando.cache.remove"></a>
 
-<h2 id="landocacheremove" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.cache.remove(key)</h2>
-<div class="api-body-header"></div>
-
+## lando.cache.remove(key)
 Manually remove an item from the cache.
 
+**Kind**: global function  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -68,4 +60,3 @@ Manually remove an item from the cache.
 // Remove the data stored with key mykey
 lando.cache.remove('mykey');
 ```
-<div class="api-body-footer"></div>

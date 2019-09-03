@@ -24,9 +24,9 @@ node_modules
 env.yaml
 env.yml
 
-# gitbooks
-_books
-_book
+# docs
+_docs
+_site
 docs/examples
 
 # Build dirs

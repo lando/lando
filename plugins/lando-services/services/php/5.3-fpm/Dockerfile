@@ -9,7 +9,8 @@ COPY docker-php-ext-* /usr/local/bin/
 COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \

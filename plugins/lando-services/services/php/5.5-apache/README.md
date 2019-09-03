@@ -11,7 +11,8 @@ A decent cross purpose apache based php 5.5 appserver.
 FROM php:5.5-apache
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \

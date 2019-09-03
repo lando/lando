@@ -1,5 +1,4 @@
-SQL Import
-==========
+# SQL Import
 
 Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default but can be used on additional database services as well.
 
@@ -7,21 +6,15 @@ You can also import databases into other hosts and databases. It will currently 
 
 **This command will wipe out the target database before it runs the import unless you use the `--no-wipe` flag!**
 
-Prefer video tutorials?
-{% youtube %}
-https://www.youtube.com/watch?v=KH_wZuaPeRc
-{% endyoutube %}
-
-Usage
------
+## Usage
 
 ```bash
 lando db-import somedumpfile.sql.gz
 ```
 
-> #### Warning::DB dump must reside within app directory
->
-> Due to restrictions in how Docker handles file sharing your database dump **MUST** exist somewhere inside of your app directory. This means that **IT IS A VERY GOOD IDEA** to make sure you add SQL dumps to your `.gitignore` file.
+::: warning DB dump must reside within app directory!
+Due to restrictions in how Docker handles file sharing your database dump **MUST** exist somewhere inside of your app directory. This means that **IT IS A VERY GOOD IDEA** to make sure you add SQL dumps to your `.gitignore` file.
+:::
 
 ### Examples
 
@@ -49,8 +42,7 @@ Options:
   --no-wipe       Do not destroy the existing database before an import
 ```
 
-Adding the `db-import` command
-------------------------------
+## Adding the `db-import` command
 
 If you are not using one of our LAMPy [recipes](./../config/recipes.md) you can add the `db-import` command and default options to the ['tooling'](./../config/tooling.md) section of your [Landofile](./../config/lando.md).
 
@@ -70,8 +62,3 @@ tooling:
         description: Do not destroy the existing database before an import
         boolean: true
 ```
-
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}
