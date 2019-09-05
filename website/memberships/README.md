@@ -16,7 +16,7 @@ As such we want to make sure Lando has a healthy and sustainable foundation for 
 
 If you find that Lando saves you time, money and/or frustration then please consider becoming a member of _The Alliance_.
 
-This helps us provide better...
+Not only does this help us cover infrastucture costs it also allows us to provide better...
 
 <div class="point">
   <h3>Support</h3>
@@ -74,6 +74,10 @@ If you like or want more of the above then we _**highly encourage**_ you to join
 <div class="benefits">
   <h3>Sprint planning</h3>
   <p>Get dedicated bi-weekly sprint planning meetings where you can help select the features you want to see in Lando!</p>
+</div>
+<div class="benefits">
+  <h3>Project Direction</h3>
+  <p>Get quarterly surveys to help us prioritize future Lando features, bug fixes and services!</p>
 </div>
 <div class="benefits">
   <h3>Liberation</h3>
