@@ -13,6 +13,12 @@ module.exports = {
     }],
   ],
   themeConfig: {
+    algolia: {
+      apiKey: '15e332850128e9ec96929f44c62f6c88',
+      indexName: 'lando',
+      // uncomment the below to make styling inspection easier
+      // debug: true,
+    },
     docsDir: 'docs',
     docsBranch: 'master',
     logo: '/images/logo-small.png',

@@ -10,7 +10,7 @@ build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
-disk: 2000
+disk: 2500
 mounts:
   run:
     source: local
