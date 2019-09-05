@@ -28,13 +28,3 @@ http://docs.{default}/:
     enabled: true
   ssi:
     enabled: false
-http://share.{default}/:
-  type: upstream
-  upstream: share:http
-  ssi:
-    enabled: false
-http://*.share.{default}/:
-  type: upstream
-  upstream: share:http
-  ssi:
-    enabled: false

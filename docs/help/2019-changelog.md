@@ -1,5 +1,16 @@
 # 2019
 
+## v3.0.0-rc.21 - [September 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.21)
+
+**WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
+
+1. [CHECK OUT THE BIG CHANGES](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) IN RC.2!
+2. USE [THIS GUIDE](https://docs.devwithlando.io/guides/updating-to-rc2.html) TO UPDATE YOUR LANDOFILES
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
+
+* Improved documentation search with Algolia [#1756](https://github.com/lando/lando/issues/1756)
+
 ## v3.0.0-rc.20 - [August 16, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.20)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
