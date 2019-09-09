@@ -1,5 +1,4 @@
-Performance
-===========
+# Performance
 
 If you've ever tried to run a site with a shload of files using Docker Desktop on Windows or macOS then you've likely experienced some of the [very well documented](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076/89) performance issues associated with doing so. Usually, these performance issues manifest themselves in slow page load times, or exceptionally long cli operations like installing a dependency or clearing an application's cache.
 
@@ -11,8 +10,7 @@ The downside of this approach is that all "exluded" directories are decoupled fr
 
 We also have a roadmap to address this specific "syncing" concern but wanted to roll out this option first since it is pretty useful by itself.
 
-Configuration
--------------
+## Configuration
 
 You can exclude directories by adding the top-level `excludes` key to your Landofile and then running a `lando rebuild`.
 
@@ -35,12 +33,11 @@ excludes:
   - "!modules/contrib/my-module"
 ```
 
-> #### Hint::Restart Docker
->
-> We've noticed in some instances you need to restart Docker in order to benefit from these performance improvements. If you exclude a decent amount of directories and do not notice a considerable speed increase we recommend you restart Docker and try again.
+::: tip Restart Docker
+We've noticed in some instances you need to restart Docker in order to benefit from these performance improvements. If you exclude a decent amount of directories and do not notice a considerable speed increase we recommend you restart Docker and try again.
+:::
 
-Caveats
--------
+## Caveats
 
 Here are some of the main caveats you need to be aware of when structuring your excludes.
 
@@ -127,8 +124,7 @@ If you run a `lando rebuild` with the above Landofile you should expect to see a
 
 All of the directories you exclude cannot be removed with a `rm -rf /path/to/exclude` while inside of your container. You will likely get an error indicating the device is busy. This means if you exclude a directory that gets removed during a dependency update or build step you will likely experience some degree of sadness.
 
-Roadmap
--------
+## Roadmap
 
 Ultimately we will offer some "exclude" syncing strategies so that your app can run super fast and you don't have to sacrifice code editability from your host. However, we'd like to get more feedback and lock down the stability of the exclude feature first.
 
