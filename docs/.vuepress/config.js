@@ -220,6 +220,13 @@ module.exports = {
           ],
         },
         {
+          title: 'Project Updates',
+          collapsable: false,
+          children: [
+            ['q3-2019', 'Q3 2019'],
+          ],
+        },
+        {
           title: 'Changelog',
           collapsable: false,
           children: [
