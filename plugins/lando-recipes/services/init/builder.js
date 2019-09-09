@@ -3,12 +3,6 @@
 // Modules
 const _ = require('lodash');
 
-// Helper to get command
-const getCommand = (platform = process.platform) => {
-  if (platform !== 'linux') return 'tail -f /dev/null';
-  else return '/bin/sh -c "/helpers/user-perms.sh --silent && tail -f /dev/null"';
-};
-
 /*
  * Build CA service
  */
@@ -26,7 +20,7 @@ module.exports = {
       const initService = {
         services: {
           init: {
-            command: getCommand(process.platform),
+            command: '/bin/sh -c "/helpers/user-perms.sh --silent && tail -f /dev/null"',
             image: 'devwithlando/util:2',
             environment: env,
             labels: labels,

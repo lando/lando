@@ -33,8 +33,9 @@ lando ssh -s web -c "cat /app/test/web-post-start.txt | grep \\\$(hostname -s)"
 lando thing
 lando ssh -s web -c "cat /app/test/web-post-thing.txt | grep \\\$(hostname -s)"
 
-# Should run on rebuild without failin
+# Should run on rebuild without failin and trigger pre-rebuild event
 lando rebuild -y | grep "ET TU, BRUT"
+lando ssh -s web -c "cat /app/test/web-pre-rebuild.txt | grep rebuilding"
 ```
 
 Destroy tests
@@ -44,4 +45,7 @@ Destroy tests
 # Should destroy successfully
 lando destroy -y
 lando poweroff
+
+# Should trigger pre-destroy event
+stat test/destroy.txt
 ```

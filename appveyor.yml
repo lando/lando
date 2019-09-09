@@ -5,7 +5,6 @@ environment:
   nodejs_version: "10"
 cache:
   - node_modules
-  - '%USERPROFILE%\.gitbook'
 install:
 
   # Get the latest stable version of Node.js or io.js
@@ -38,8 +37,10 @@ install:
   # Run tests
   - yarn test
 
-  # Make sure we can build the docs
-  - yarn docs
+  # Make sure we can build the docs and website
+  - yarn lint:sites
+  - yarn build:docs
+  - yarn build:site
 
 build_script:
 

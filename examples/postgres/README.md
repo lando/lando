@@ -29,7 +29,7 @@ lando ssh -s defaults -c "psql -V | grep 10."
 lando ssh -s custom -c "psql -V | grep 11."
 
 # Should use the patch version when set by the user
-lando ssh -s patch -c "psql -V | grep 9.6.1"
+lando ssh -s patch -c "psql -V | grep 9.6.14"
 
 # Should use the correct default user pass db
 lando verifydefaults

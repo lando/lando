@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Set defaults
+: ${LANDO_HOST_UID:='1000'}
+: ${LANDO_HOST_GID:='1000'}
+
 # Inform the user what is happening
 echo -ne "\n\033[35m"
   cat << "EOF"
@@ -22,4 +26,5 @@ for MOUNT in "$@"; do
   mkdir -p $SOURCE
   echo "Syncing $MOUNT..."
   rsync --archive --info=progress2 $SOURCE/ $DEST
+  chown $LANDO_HOST_UID:$LANDO_HOST_GID -R $DEST
 done

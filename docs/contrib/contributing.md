@@ -1,5 +1,4 @@
-Overview
-========
+# Overview
 
 Lando is led by a [benevolent dictator](./roles.md#benevolent-dictator) and committee of [maintainers](./roles.md#maintainers) and managed by the community.
 
@@ -7,29 +6,28 @@ That is, the community actively contributes to the day-to-day maintenance of the
 
 In turn, it is the community’s job to guide the decisions of the benevolent dictator through active engagement and contribution.
 
-Current Team
-------------
+## Current Team
 
 The following [roles and responsibilities](./roles.md) are currently assigned to the following people:
 
-#### Benevolent Dictator
+### Benevolent Dictator
 
   * [Mike Pirog](https://github.com/pirog)
 
-#### Maintainers
+### Maintainers
 
   * [Dustin LeBlanc](https://github.com/dustinleblanc)
   * [Geoff St. Pierre](https://github.com/serundeputy)
   * [Mike Pirog](https://github.com/pirog)
 
-#### Committers
+### Committers
 
   * [Alec Reynolds](https://github.com/reynoldsalec)
   * [Dustin LeBlanc](https://github.com/dustinleblanc)
   * [Geoff St. Pierre](https://github.com/serundeputy)
   * [Mike Pirog](https://github.com/pirog)
 
-#### Specialists
+### Specialists
 
 These are committers with a specific or primary expertise area.
 
@@ -43,12 +41,11 @@ These are committers with a specific or primary expertise area.
 
 If you are interested in any of the open areas above, or an area that is not explicitly enumerated, or helping out in an area that already has a specialist assigned, let us know (see [communication](#communication) below).
 
-Communication
--------------
+## Communication
 
 Project collaboration happens primarily on [GitHub](https://github.com) or [Slack](https://slack.com/).
 
-#### GitHub
+### GitHub
 
 GitHub serves as the mechanism for all Lando code, issue reporting/tracking and project management.
 
@@ -56,19 +53,18 @@ The [Lando Organization](https://github.com/lando) is the starting point for all
 
 It you are a contributor it is **highly recommended** you also install [ZenHub](https://www.zenhub.com/extension) to get access to a nice Kanban style board for the GitHub issues.
 
-#### Slack
+### Slack
 
-Slack serves as the mechanism for Lando support and contributor coordination. You can join the Lando slack org via [SlackPass](https://launchpass.com/kalabox) and it has the following channels you can join
+Slack serves as the mechanism for Lando support and contributor coordination. You can join the Lando slack org via [LaunchPass](https://launchpass.com/devwithlando) and it has the following channels you can join
 
+  * **#community** - For Lando community support
   * **#kalabox** - For legacy Kalabox community support
-  * **#lando** - For Lando community support
   * **#contributors** - For all Lando contributors
-  * **#community** - For users looking to evangelize the project at meetups, events, camps, etc
+  * **#events** - For users looking to evangelize the project at meetups, events, camps, etc
 
 Join a channel and say hi!
 
-Learn More
-----------
+## Learn More
 
 If you are interested in learning more or contributing we recommend you check out:
 

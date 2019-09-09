@@ -2,10 +2,16 @@
 #
 # docker build -t devwithlando/php:7.0-apache .
 
-FROM php:7.0-apache-jessie
+FROM php:7.0-apache-stretch
 
 # Install dependencies we need
-RUN apt-get update && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
+  && apt -y update && apt-get install -y \
+    gnupg2 \
+    wget \
+  && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' >> /etc/apt/sources.list.d/pgdg.list \
+  && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+  && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
     git-core \
@@ -18,12 +24,12 @@ RUN apt-get update && apt-get install -y \
     libmagickwand-dev \
     libmcrypt-dev \
     libmemcached-dev \
-    libpng12-dev \
+    libpng-dev \
     libpq-dev \
     libxml2-dev \
     libicu-dev \
     mysql-client \
-    postgresql-client \
+    postgresql-client-10 \
     pv \
     ssh \
     unzip \

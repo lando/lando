@@ -6,7 +6,8 @@ const path = require('path');
 const toObject = require('./../../../lib/utils').toObject;
 
 // Helper to get named volume
-const getNamedVolumeName = exclude => 'exclude_' + path.normalize(exclude).split(path.sep).join('_');
+const getNamedVolumeName = exclude => 'exclude_' + path
+  .normalize(exclude).replace(/\W/g, '').split(path.sep).join('_');
 
 // Helper to map exclude directories to named volume name
 const getNamedVolumeNames = (excludes = []) => _(excludes)
@@ -20,7 +21,7 @@ exports.getNamedVolumes = (excludes = []) => _(excludes)
 
 // Get service volumes
 exports.getServiceVolumes = (excludes = [], base = '/tmp') => _(excludes)
-  .map(exclude => ({mount: getNamedVolumeName(exclude), path: path.join(base, exclude)}))
+  .map(exclude => ({mount: getNamedVolumeName(exclude), path: path.posix.join(base, exclude)}))
   .map(exclude => `${exclude.mount}:${exclude.path}`)
   .value();
 
@@ -28,3 +29,4 @@ exports.getServiceVolumes = (excludes = [], base = '/tmp') => _(excludes)
 exports.getIncludeVolumes = (excludes = [], base = '/app') => _(excludes)
   .map(exclude => `${base}/${exclude}:/app/${exclude}:delegated`)
   .value();
+

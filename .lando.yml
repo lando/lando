@@ -1,16 +1,41 @@
-name: lando.dev
+name: lando
+excludes:
+  - node_modules
 proxy:
   docs:
-    - docs.lndo.site:4000
+    - docs.lndo.site:8008
+  site:
+    - site.lndo.site:8009
 services:
   docs:
     type: node:10
-    install_dependencies_as_me:
-      - yarn
-      - node ./scripts/docs.js && yarn gitbook install
-    command: yarn gitbook serve
-  cli:
+    build:
+      - yarn install
+    command: "su - node -c 'cd /app && yarn dev:docs'"
+    port: 8008
+  site:
     type: node:10
+    build:
+      - yarn install
+    command: "su - node -c 'cd /app && yarn dev:site'"
+    port: 8009
+  platform:
+    type: php:7.3
+    via: cli
+    build:
+      - mkdir -p /var/www/.platformsh/bin
+      - curl -fsSL -o /var/www/.platformsh/bin/platform https://github.com/platformsh/platformsh-cli/releases/download/v3.40.4/platform.phar
+      - chmod ug+x /var/www/.platformsh/bin/platform
 tooling:
+  platform:
+    service: platform
+    description: Run Platform CLI commands
+    cmd: /var/www/.platformsh/bin/platform
+  # should these be able to run on either service once we've got the website in here too?
   yarn:
-    service: cli
+    service: docs
+  node:
+    service: docs
+  vuepress:
+    service: docs
+

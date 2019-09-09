@@ -38,7 +38,7 @@ module.exports = (app, lando) => {
     app.events.on('pre-start', 2, () => {
       if (!lando.cache.get(`${app.name}.build.lock`)) {
         const LandoMounter = lando.factory.get('_mounter');
-        const mountData = new LandoMounter(lando.config.userConfRoot, app.root, excludes);
+        const mountData = new LandoMounter(lando.config, app.root, excludes);
         const mountDir = path.join(lando.config.userConfRoot, 'mounter', app.name);
         const mountFiles = lando.utils.dumpComposeData(mountData, mountDir);
         const run = {

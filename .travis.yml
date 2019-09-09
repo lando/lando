@@ -20,7 +20,6 @@ cache:
   yarn: true
   directories:
     - node_modules
-    - ~/.gitbook
 
 before_install:
   # Import our keys on OSX
@@ -64,8 +63,10 @@ script:
   # Run code and styling
   - yarn test
 
-  # Make sure we can build the docs
-  - yarn docs
+  # Make sure we can build the docs and website
+  - yarn lint:sites
+  - yarn build:docs
+  - yarn build:site
 
   # Run the build
   - mkdir -p release

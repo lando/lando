@@ -75,7 +75,7 @@ lando terminus auth:whoami | grep landobot@devwithlando.io
 
 # Should use custom php version if set in pantheon.yml
 cd wordpress
-lando php -v | grep "PHP 7.0"
+lando php -v | grep "PHP 7.3"
 
 # Should set the correct wordpress specific pantheon environment
 cd wordpress
@@ -99,6 +99,22 @@ lando terminus auth:whoami | grep landobot@devwithlando.io
 # Should serve proxy from nginx
 cd wordpress
 curl -LI http://landobot-wordress.lndo.site | grep Via || echo $? | grep 1
+
+# Should have phantomjs 2.1.1 installed at /srv/bin/phantomjs-2.1.1
+cd wordpress
+lando ssh -s appserver -c "/srv/bin/phantomjs-2.1.1 --version" | grep "2.1.1"
+
+# Should have phantomjs 1.7.0 installed at /srv/bin/phantomjs
+cd wordpress
+lando ssh -s appserver -c "/srv/bin/phantomjs --version" | grep "1.7.0"
+
+# Should have apache tika1.18 installed /srv/bin/tika-app-1.18.jar
+cd wordpress
+lando ssh -s appserver -c "java -jar /srv/bin/tika-app-1.1.jar --version" | grep "Apache Tika 1.1"
+
+# Should have wkhtmltopdf installed at /srv/bin/wkhtmltopdf
+cd wordpress
+lando ssh -s appserver -c "/srv/bin/wkhtmltopdf --version"
 
 # Should be able to bootstrap drupal7
 cd drupal7

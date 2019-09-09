@@ -8,10 +8,15 @@ A decent cross purpose apache based php 7.2 appserver.
 #
 # docker build -t devwithlando/php:7.2-apache .
 
-FROM php:7.2-apache
+FROM php:7.2-apache-stretch
 
 # Install dependencies we need
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
+  && apt -y update && apt-get install -y \
+    gnupg2 \
+    wget \
+  && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' >> /etc/apt/sources.list.d/pgdg.list \
+  && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
   && apt-get update && apt-get install -y \
     bzip2 \
     exiftool \
@@ -29,7 +34,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libxml2-dev \
     libicu-dev \
     mysql-client \
-    postgresql-client-9.6 \
+    postgresql-client-10 \
     pv \
     ssh \
     unzip \
@@ -71,8 +76,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     gettext \
     pcntl \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php -r "if (hash_file('SHA384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.8.4 \
+  && php -r "if (hash_file('SHA384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.9.0 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \

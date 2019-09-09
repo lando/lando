@@ -15,8 +15,6 @@ const defaults = {
       LANDO: 'ON',
       LANDO_WEBROOT_USER: 'www-data',
       LANDO_WEBROOT_GROUP: 'www-data',
-      LANDO_WEBROOT_UID: '33',
-      LANDO_WEBROOT_GID: '33',
       TERM: 'xterm',
     },
     appLabels: {
@@ -76,6 +74,16 @@ module.exports = lando => {
       const caData = new LandoCa(lando.config.userConfRoot, env, labels);
       const caFiles = lando.utils.dumpComposeData(caData, caDir);
       return lando.engine.run(getCaRunner(caProject, caFiles));
+    }
+  });
+
+  // Let's also make a copy of caCert with the standarized .crt ending for better linux compat
+  // See: https://github.com/lando/lando/issues/1550
+  lando.events.on('pre-engine-start', 3, data => {
+    const caNormalizedCert = path.join(caDir, `${caDomain}.crt`);
+    if (fs.existsSync(caCert) && !fs.existsSync(caNormalizedCert)) {
+      // @NOTE: we need to use pre node 8.x-isms because pld roles with node 7.9 currently
+      fs.writeFileSync(caNormalizedCert, fs.readFileSync(caCert));
     }
   });
 
