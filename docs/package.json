@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
-    "vuepress": "^1.0.3"
+    "vuepress": "^1.0.4",
+    "vuepress-plugin-autometa": "^0.1.12"
   }
 }
