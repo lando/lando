@@ -37,7 +37,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint --quiet --no-ignore bin lib plugins scripts test",
-    "lint:sites": "eslint  --quiet --ext .js,.vue --no-ignore --config .eslintrc.vuepress.json docs/.vuepress docs/.vuepress/components website/.vuepress website/.vuepress/components",
+    "lint:sites": "eslint  --quiet --ext .js,.vue --no-ignore --config .eslintrc.vuepress.json docs/.vuepress docs/.vuepress/theme/** website/.vuepress website/.vuepress/theme/**",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release": "bump --prompt --tag --all --push",
@@ -120,6 +120,7 @@
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
     "version-bump-prompt": "^4.2.1",
-    "vuepress": "^1.0.3"
+    "vuepress": "^1.0.4",
+    "vuepress-plugin-autometa": "^0.1.12"
   }
 }

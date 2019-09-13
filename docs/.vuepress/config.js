@@ -7,11 +7,18 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
   ],
-  plugins: [
-    ['@vuepress/google-analytics', {
+  plugins: {
+    '@vuepress/google-analytics': {
       ga: 'UA-74237404-5',
-    }],
-  ],
+    },
+    'autometa': {
+      site: {
+        name: 'Lando',
+        twitter: 'devwithlando',
+      },
+      canonical_base: 'https://docs.lando.dev',
+    },
+  },
   themeConfig: {
     algolia: {
       apiKey: '15e332850128e9ec96929f44c62f6c88',

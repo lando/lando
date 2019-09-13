@@ -3,6 +3,7 @@
     <Navbar v-if="shouldShowNavbar" @toggle-sidebar="toggleSidebar"/>
 
     <div class="sidebar-mask" @click="toggleSidebar(false)"></div>
+
     <Sidebar
       :items="sidebarItems"
       @toggle-sidebar="toggleSidebar">
@@ -14,10 +15,10 @@
         slot="bottom"/>
     </Sidebar>
 
-    <div id="downloads">
+    <div id="memberships">
       <div class="inner">
-        <div class="downloads-section">
-          <div class="download-section"><Content/></div>
+        <div class="memberships membership-section">
+          <div class="member-section"><Content/></div>
         </div>
       </div>
     </div>
@@ -32,12 +33,12 @@
 // Core components and things
 import Navbar from '@theme/components/Navbar.vue';
 import Sidebar from '@theme/components/Sidebar.vue';
-import {resolveSidebarItems} from '@theme/util';
+import {resolveSidebarItems} from '@parent-theme/util/index.js';
 
 // Lando components
-import MadeByTandem from './MadeByTandem';
-import Newsletter from './Newsletter';
-import Footer from './Footer';
+import MadeByTandem from '@theme/components/MadeByTandem';
+import Newsletter from '@theme/components/Newsletter';
+import Footer from '@theme/components/Footer';
 export default {
   components: {Sidebar, Navbar, MadeByTandem, Newsletter, Footer},
   data() {
@@ -125,15 +126,15 @@ export default {
 </script>
 
 <style lang="stylus">
-.lando-download
-  #downloads
+.lando-memberships
+  #memberships
     background-color: #fff
     padding-bottom: 70px
     padding-top: 4em
     .button
       background-color: $landoPink
-      font-size: 1.2em
-      margin: 2em 0
+      font-size: 1em
+      margin-top: 3em
     .inner
       max-width: 900px;
       margin: 0 auto
@@ -158,59 +159,33 @@ export default {
       margin-block-end: 1em
       margin-inline-start: 0px
       margin-inline-end: 0px
-      padding-bottom: 1em
-    .downloads-section
-      padding: 0 2em
-      .step-number
-        margin: auto
-        p
-          margin-top: 0.1em
-          font-size: 3.5em
-          color: lighten($landoGrey, 55%)
-      .step
-        margin-bottom: 5em
-        &:after
-          content: "________"
-          color: $accentColor
-      .hide-ender
-        margin-bottom: 0em
-        &:after
-          content: ""
+      padding-bottom: 2em
+    .point,
+    .benefits
+      width: 33%
+      display: inline-block
+      vertical-align: top
+      box-sizing: border-box
+      padding: 1em 2em
       h3
-        color: lighten($landoPink, 18%)
-        font-weight: 300
-        font-size: 2.4em
-        padding: .66em 0.24em 0
+        color: lighten($landoPink, 33%)
+        font-size: 1.5em
+        font-weight: 500
         margin: 0
-    .left, .right
-      text-align: center
-      width: 100%
-    .step-number
-      margin-bottom: 1em
-  .newsletter-form
-    position: relative
-    max-width: 550px
-    margin: 0 auto
-    box-sizing: border-box
-    padding: 2em 0
-  .newsletter-input
-    width: 100%
-    box-sizing: border-box
-    padding: 10px 80px 10px 20px
-    height: 50px
-    border-radius: 50px
-    border: 1px solid #ccc
-    font-size: 16px
-    &:focus
-      outline: none
-      border-color: lighten($accentColor, 18%)
-  .newsletter-button.button
-    position: absolute
-    padding: 4px 20px
-    margin: 0
-    height: calc(100% - 8px)
-    right: 4px
-    top: 4px
+        padding: .5em 0
+        border: 0
+      p
+        font-style: normal
+        font-weight: 500
+        font-size: 1.1em
+        padding-bottom: 0
+    .benefits
+      h3
+        color: $landoGreen
+    .learn-more
+      font-size: 1.5em
+      a
+        font-style: italic
   #news
     background-color: darken($landoBlue, 12%)
     padding: 2em 0
@@ -222,8 +197,29 @@ export default {
     padding: 7em 0
     margin: 0
 @media (max-width: $MQMobile)
-  .lando-download
-    #downloads
+  .lando-memberships
+    #memberships
+      .point,
+      .benefits
+        width: 90%
+        display: inline-block
+        vertical-align: top
+        box-sizing: border-box
+        padding: 0 2em
+        h3
+          padding-top: 2em
+          font-size: 2em
+        p
+          font-size: 1.2em
+        .tech-icon
+          font-size: 128px
+        &:after
+          content: "________"
+          color: $landoPink
+      .benefits
+        &:after
+          content: "________"
+          color: $landoGreen
       .button
         background-color: $landoPink
         font-size: 1.5em

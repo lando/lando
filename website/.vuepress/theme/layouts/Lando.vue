@@ -156,12 +156,12 @@
 // Core components and things
 import Navbar from '@theme/components/Navbar.vue';
 import Sidebar from '@theme/components/Sidebar.vue';
-import {resolveSidebarItems} from '@theme/util';
+import {resolveSidebarItems} from '@parent-theme/util/index.js';
 
 // Lando components
-import MadeByTandem from './MadeByTandem';
-import Newsletter from './Newsletter';
-import Footer from './Footer';
+import MadeByTandem from '@theme/components/MadeByTandem';
+import Newsletter from '@theme/components/Newsletter';
+import Footer from '@theme/components/Footer';
 export default {
   components: {Sidebar, Navbar, MadeByTandem, Newsletter, Footer},
   data() {
