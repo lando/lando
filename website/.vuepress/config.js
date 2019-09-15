@@ -20,6 +20,16 @@ module.exports = {
       },
       canonical_base: 'https://lando.dev',
     },
+    'canonical': {
+      baseURL: 'https://lando.dev',
+    },
+    'robots': {
+      host: 'https://lando.dev',
+    },
+    'sitemap': {
+      hostname: 'https://lando.dev',
+      exclude: ['/404.html'],
+    },
   },
   themeConfig: {
     docsDir: 'website',

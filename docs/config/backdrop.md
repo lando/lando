@@ -1,3 +1,7 @@
+---
+description: Documentation on getting started with Backdrop CMS on Lando. Learn how to config php version, swap db backends or webserver, use drush, xdebug and custom config files.
+---
+
 # Backdrop
 
 [Backdrop CMS](https://backdropcms.org/) is the free and Open Source CMS that helps you build websites for businesses and non-profits.

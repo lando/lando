@@ -27,6 +27,7 @@ web:
       index:
         - "index.html"
       expires: 300s
+      passthru: false
       scripts: true
       allow: false
       rules:
@@ -37,6 +38,8 @@ web:
         ^/ads\.txt$:
           allow: true
         search_index\.json$:
+          allow: true
+        ^/sitemap\.xml$:
           allow: true
 
 # Build time dependencies.

@@ -18,6 +18,16 @@ module.exports = {
       },
       canonical_base: 'https://docs.lando.dev',
     },
+    'canonical': {
+      baseURL: 'https://docs.lando.dev',
+    },
+    'robots': {
+      host: 'https://docs.lando.dev',
+    },
+    'sitemap': {
+      hostname: 'https://docs.lando.dev',
+      exclude: ['/404.html'],
+    },
   },
   themeConfig: {
     algolia: {

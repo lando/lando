@@ -1,9 +1,5 @@
 ---
-metaTitle: Stuff
-description: Apache things
-meta:
-  - name: keywords
-    content: super duper SEO
+description: Documentation to add an Apache webserver service to your Lando config. Learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
 ---
 
 # Apache
