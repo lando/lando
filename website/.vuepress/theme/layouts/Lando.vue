@@ -34,6 +34,12 @@
       </div>
     </div>
 
+    <div id="carbon">
+      <div class="inner">
+        <CarbonAds />
+      </div>
+    </div>
+
     <div id="whys" v-if="data.whys && data.whys.length">
       <div class="inner">
         <h2>I dig it! but why Lando?</h2>
@@ -154,6 +160,7 @@
 
 <script>
 // Core components and things
+import CarbonAds from '@theme/components/CarbonAds.vue';
 import Navbar from '@theme/components/Navbar.vue';
 import Sidebar from '@theme/components/Sidebar.vue';
 import {resolveSidebarItems} from '@parent-theme/util/index.js';
@@ -163,7 +170,7 @@ import MadeByTandem from '@theme/components/MadeByTandem';
 import Newsletter from '@theme/components/Newsletter';
 import Footer from '@theme/components/Footer';
 export default {
-  components: {Sidebar, Navbar, MadeByTandem, Newsletter, Footer},
+  components: {CarbonAds, Sidebar, Navbar, MadeByTandem, Newsletter, Footer},
   data() {
     return {
       isSidebarOpen: false,
@@ -275,8 +282,8 @@ export default {
     .right
       width: 60%
     .hero-logo
-      width: 311px
-      height: 311px
+      width: 368px;
+      height: 368px
       float: right
       margin-right: 60px
     h1
@@ -310,12 +317,26 @@ export default {
       color: lighten($accentColor, 80%)
       font-weight: 600
       font-size: 1.5rem
+  .carbon-ads
+    min-height: 102px
+    padding: 3em
+    font-size: 0.75rem
+    margin: auto
+    width: 300px
+  .carbon-ads
+    a
+     color: lighten($accentColor, 65%)
+    .carbon-wrap
+      margin-top: 5px
+      a
+        color: #ffffff
   #whys,
   #wheres,
   #whats,
   #hows,
   #whos,
-  #ready
+  #ready,
+  #carbon
     background-color: #fff
     padding-bottom: 70px
     .inner
@@ -459,15 +480,10 @@ export default {
         color: lighten($landoPink, 90%)
       a:hover
         text-decoration: underline
-  #ready
+  #ready,
+  #carbon
+    padding-bottom: 0
     background-color: darken($landoPink, 13%)
-    h2
-      color: lighten($landoPink, 90%)
-    h3
-      display: none
-    p
-      padding-bottom: 0
-      color: darken($landoPink, 90%)
   #news
     background-color: darken($landoBlue, 12%)
     padding: 2em 0
@@ -478,6 +494,12 @@ export default {
   #made-by
     padding: 7em 0
     margin: 0
+@media (max-width: $MQNarrow)
+  .lando-front
+    #hero
+      .hero-logo
+        width: 240px
+        height: 240px
 @media (max-width: $MQMobile)
   .lando-front
     #hero

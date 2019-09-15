@@ -47,7 +47,7 @@
 
     <div id="carbon-ads">
       <div class="inner">
-        <CarbonAds slot="sidebar-top"/>
+        <CarbonAds />
       </div>
     </div>
 

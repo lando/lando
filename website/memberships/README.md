@@ -2,9 +2,14 @@
 navbar: true
 pageClass: lando-memberships
 layout: Memberships
+metaTitle: The Lando Alliance
+description: Support Lando by joining The Alliance to liberate developers everywhere from the mind-forged manacles of unnecessary work, repeatable steps and dev monotony.
+image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/lando-alliance.png
 ---
 
 # Join and support the movement!
+
+<img src="/images/lando-alliance.png">
 
 Over the last year or so we've watched our community grow from several hundred users to over 10,000 and this exponential growth trajectory doesn't seem to be stopping anytime soon!
 
