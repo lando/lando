@@ -128,6 +128,8 @@ export default {
 <style lang="stylus">
 .lando-memberships
   #memberships
+    img
+      padding: 2em
     background-color: #fff
     padding-bottom: 70px
     padding-top: 4em
