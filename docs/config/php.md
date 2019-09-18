@@ -308,4 +308,27 @@ services:
       - docker-php-ext-enable memcached
 ```
 
+Following example uses [build steps](./../config/services.md#build-steps) to install the `sqlsrv` and `pdo_sqlsrv` php extensions required for connecting PHP to MSSQL database.
+
+```yaml
+services:
+  appserver:
+    type: php:7.2
+    overrides:
+      environment:
+        ACCEPT_EULA: "Y"
+    build_as_root:
+      - apt-get update -y
+      - apt-get install apt-transport-https -y
+      - curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+      - curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+      - apt-get update -y
+      - apt-get install msodbcsql17 -y
+      - apt-get install unixodbc-dev -y
+      - pecl install sqlsrv
+      - pecl install pdo_sqlsrv
+      - docker-php-ext-enable sqlsrv
+      - docker-php-ext-enable pdo_sqlsrv
+``` 
+
 Note the usage of `docker-php-ext-enable`. Our images extend the [official Docker php images](https://hub.docker.com/r/library/php) which ship with a bunch of [helpful utility scripts](https://github.com/docker-library/php) to manage php extensions.
