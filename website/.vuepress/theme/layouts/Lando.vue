@@ -175,7 +175,7 @@ export default {
     return {
       isSidebarOpen: false,
       data: {},
-      growthRate: 0.0004,
+      growthRate: 0.0001,
       startingTime: 1565701419,
       startingUsers: 11212,
     };
@@ -320,7 +320,7 @@ export default {
   .carbon-ads
     min-height: 102px
     padding: 3em
-    font-size: 0.75rem
+    font-size: 0.88rem
     margin: auto
     width: 300px
   .carbon-ads
