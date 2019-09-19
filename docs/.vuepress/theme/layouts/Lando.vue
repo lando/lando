@@ -243,7 +243,7 @@ export default {
     min-height: 102px
     padding: 3em
     margin-bottom: -0.5rem
-    font-size: 0.75rem
+    font-size: 0.90rem
     margin: auto
     width: 300px
     border: 1px solid $accentColor
