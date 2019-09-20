@@ -31,7 +31,7 @@ module.exports = {
       // Build the default stuff here
       const apache = {
         image: `bitnami/apache:${options.version}`,
-        command: '/app-entrypoint.sh httpd -f /opt/bitnami/apache/conf/httpd.conf -DFOREGROUND',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           APACHE_HTTP_PORT_NUMBER: '80',
           APACHE_HTTPS_PORT_NUMBER: '443',
@@ -42,6 +42,7 @@ module.exports = {
         ports: ['80'],
         user: 'root',
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
         ],

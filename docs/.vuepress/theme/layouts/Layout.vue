@@ -1,6 +1,6 @@
 <template>
   <ParentLayout>
-    <CarbonAds slot="sidebar-top"/>
+    <CarbonAds v-if="showAds" slot="sidebar-top"/>
   </ParentLayout>
 </template>
 
@@ -11,6 +11,11 @@ export default {
   components: {
     ParentLayout,
     CarbonAds,
+  },
+  computed: {
+    showAds() {
+      return this.$frontmatter.home ? !this.$frontmatter.home : true;
+    },
   },
 };
 </script>

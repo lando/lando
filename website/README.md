@@ -6,7 +6,6 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 home: true
 navbar: true
 pageClass: lando-front
-layout: Lando
 
 heroImage: /images/hero-white.png
 byline: Free yourself from the mind-forged manacles of lesser dev tools. Save time, headaches, frustration and do more real work.

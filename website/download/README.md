@@ -1,7 +1,5 @@
 ---
 navbar: true
-pageClass: lando-download
-layout: Download
 metaTitle: Download Lando
 description: Download Lando and take your local development and DevOps workflow to lightspeed.
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
@@ -34,7 +32,7 @@ We're down to keep solving DevOps for everyone and with your support we can.
   <div class="right">
     <h3>Install Lando</h3>
     <div>
-      <p>Installing is usually as simple as double clicking on the package you just downloaded but definitely consult the <a href="https://docs.lando.dev/basics/installation.html" target="_blank">documentation</a> for complete instructions.</p>
+      <p>Installing is as simple as double clicking on the package you just downloaded but definitely consult the <a href="https://docs.lando.dev/basics/installation.html" target="_blank">documentation</a> for complete instructions and troubleshooting info.</p>
     </div>
   </div>
 </div>
@@ -45,6 +43,10 @@ We're down to keep solving DevOps for everyone and with your support we can.
   </div>
   <div class="right">
     <h3>Spin up your first app</h3>
+    <div>
+      <p>Try spinning up a basic <em>Hello World!</em> app before spinning up <a href="https://docs.lando.dev/basics/first-app.html" target="_blank">more complex apps</a> or trying any of our <a href="https://github.com/lando/lando/tree/master/examples" target="_blank">myriad examples</a>.
+      </p>
+    </div>
   </div>
 </div>
 
@@ -61,8 +63,6 @@ lando init --source cwd --recipe lamp --webroot . --name hello-lando
 # Start it up
 lando start
 ```
-[or try other examples](https://github.com/lando/lando/tree/master/examples)
-
 <div class="step"></div>
 
 <div class="step">
@@ -71,6 +71,10 @@ lando start
   </div>
   <div class="right">
     <h3>Sign up and get the latest Alliance news</h3>
+    <div>
+      <p>Stay up to date on the status of the Lando project and get a periodic digest of new documentation, helpful guides, features and new Lando services.
+      </p>
+    </div>
     <div id="#news">
       <div id="mc_embed_signup">
         <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
@@ -97,6 +101,10 @@ lando start
   </div>
   <div class="right">
     <h3>Join the movement to liberate developers everywhere</h3>
+    <div>
+      <p>Help us keep Lando by and for developers everywhere by supporting <a href="https://lando.dev/memberships/" target="_blank">our movement</a> to liberate developers from dev monotony so they can focus on their most important work.
+      </p>
+    </div>
     <div>
       <a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO</a>
     </div>
