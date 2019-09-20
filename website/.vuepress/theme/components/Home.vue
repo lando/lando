@@ -390,7 +390,7 @@ export default {
     background-color: darken($landoPink, 13%)
   #ready
     h2
-      color: lighten($landoPink, 80%)
+      color: lighten($landoPink, 100%)
     p
       font-style: normal
 @media (max-width: $MQNarrow)

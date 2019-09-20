@@ -158,7 +158,7 @@ export default {
     margin-block-end: 1em
     margin-inline-start: 0px
     margin-inline-end: 0px
-    padding-bottom: 1em
+    padding-bottom: 2em
   .section-inner
     .step-number
       margin: auto
