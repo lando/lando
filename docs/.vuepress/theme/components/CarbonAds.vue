@@ -32,6 +32,10 @@ export default {
 </script>
 
 <style lang="stylus">
+.sidebar
+  .carbon-ads
+    a
+      display: block
 .carbon-ads
   min-height 102px
   padding 1.5rem 1.5rem 0
