@@ -5,7 +5,6 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 home: true
 navbar: true
 pageClass: lando-home
-layout: Lando
 heroImage: /images/hero.png
 features:
 - title: Easy

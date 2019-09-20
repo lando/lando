@@ -39,7 +39,6 @@ import {resolveNavLinkItem} from '@parent-theme/util/index.js';
 import NavLink from '@theme/components/NavLink.vue';
 
 const getUserLinkClassName = link => {
-  console.log(link);
   return link.text
     ? 'nav-item-' + link.text.replace(/[^\w\s]/gi, '').replace(' ', '-').toLowerCase()
     : 'unknown-name';

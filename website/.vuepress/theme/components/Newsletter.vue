@@ -113,9 +113,7 @@
     right: 4px
     top: 4px
 @media (max-width: $MQMobile)
-  #made-by
-    span
-      display: block
-    img
-      width: 125px
+  #news
+    .newsletter-input
+      width: 90%
 </style>
