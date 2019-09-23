@@ -1,3 +1,8 @@
+---
+metaTitle: lando start | Lando
+description: lando start boots up the containers needed to serve, run and develop your application.
+---
+
 # start
 
 Starts an app.

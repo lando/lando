@@ -1,3 +1,8 @@
+---
+metaTitle: Lando CLI Usage, How Do I Use It? | Lando
+description: Lando is a CLI driven tool by default, here are all the out of the box commands it runs.
+---
+
 # CLI Usage
 
 While Lando is actually a library that can be implemented various ways it ships with a command line interface by default. The command line interface is dynamic which means if it detects a `Landofile` it will augment your list of available commands with any relevant `tooling` that has been set up by that `Landofile`.

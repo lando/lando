@@ -1,3 +1,8 @@
+---
+metaTitle: lando ssh | Lando
+description: lando ssh docker execs into a Lando service, dropping you into a shell by default or running specific comands as a given user.
+---
+
 # ssh
 
 Drops into a shell on a service, runs commands

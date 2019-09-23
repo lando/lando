@@ -1,3 +1,8 @@
+---
+metaTitle: lando logs | Lando
+description: lando logs is a light wrapper around docker logs and shows container logs written to stdout or stderr.
+---
+
 # logs
 
 Displays logs for your app

@@ -1,3 +1,8 @@
+---
+metaTitle: lando init | Lando
+description: lando init is a powerful command that initializes a codebase for usage with a Lando recipe, it can pull code from Pantheon, GitHub and other remote sources.
+---
+
 # init
 
 Initializes code for use with lando
@@ -5,7 +10,6 @@ Initializes code for use with lando
 This command will create a `.lando.yml` for a given recipe and with code from a given source. This is a good way to initialize a codebase for usage with Lando.
 
 Currently you can initialize code from your current working directory, a remote Git repository, a remote archive, [GitHub](https://github.com) and [Pantheon](https://pantheon.io).
-
 
 ::: tip Do not use if you already have a `.lando.yml` in your codebase
 If your code already has a Landofile then this command will likely produce undesirable results.

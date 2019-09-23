@@ -1,3 +1,7 @@
+---
+description: Learn how to boot up and initialize your first project for usage with Lando with a Hello World!, Drupal 7 and Pantheon example.
+---
+
 # Starting your first app
 
 Now that you've got Lando installed you should try a few easy examples before you _get into it_.
@@ -80,3 +84,7 @@ lando start
 # Import your database and files
 lando pull
 ```
+
+## More
+
+Check out the [`lando init` docs](./init.md) to get a better sense of its power or try running one of our countless [examples](https://github.com/lando/lando/tree/master/examples).
