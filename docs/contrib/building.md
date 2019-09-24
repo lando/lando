@@ -1,3 +1,7 @@
+---
+description: Learn how to build and package Lando from source.
+---
+
 # Building
 
 You can easily build Lando from source with our helpful `yarn` scripts.

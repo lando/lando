@@ -1,3 +1,7 @@
+---
+description: Learn how to contribute to Lando documentation.
+---
+
 # Documentation
 
 You can contribute to docs by clicking on the *Edit Page* link on each page of this documentation. If you want to build and preview documentation locally you can use either run `yarn` commands or use [lando on lando](https://www.youtube.com/watch?v=STYsEXiuruU).

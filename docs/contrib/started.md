@@ -1,3 +1,7 @@
+---
+description: Learn about how to get started contributing code to Lando.
+---
+
 # Getting Started
 
 This section of documentation serves as a guide to help people who wish to contribute code get used to how the Lando source repo works.

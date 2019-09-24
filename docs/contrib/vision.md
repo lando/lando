@@ -1,3 +1,7 @@
+---
+description: The Lando project vision; liberate developers from dev monotony together as a community!
+---
+
 # Project Vision
 
 This document serves as a high level set of considerations that maintainers should reference and attempt to adhere to while making decisions.
