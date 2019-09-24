@@ -1,5 +1,5 @@
 ---
-description: Use Drupal 7 on Lando; config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
+description: Use Drupal 7 on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
 ---
 
 # Drupal 7

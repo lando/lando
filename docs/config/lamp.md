@@ -1,5 +1,5 @@
 ---
-description: Use a generic LAMP stack on Lando; learn how to config php and apache version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and exports databases.
+description: Use a generic LAMP stack on Lando for local development; powered by Docker and Docker Compose; learn how to config php and apache version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and exports databases.
 ---
 
 # LAMP

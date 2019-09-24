@@ -1,5 +1,5 @@
 ---
-description: Use a generic MEAN stack on Lando; learn how to config node, npm and yarn version, use postgres or mysql or mariadb or mongodb.
+description: Use a generic MEAN stack on Lando for local development; powered by Docker and Docker Compose, learn how to config node, npm and yarn version, use postgres or mysql or mariadb or mongodb.
 ---
 
 # MEAN

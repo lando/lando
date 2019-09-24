@@ -1,5 +1,5 @@
 ---
-description: Use WordPress on Lando; config php version, swap db backends or webserver, use composer, wp cli, xdebug and custom config files, oh and also import and exports databases.
+description: Use WordPress on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, wp cli, xdebug and custom config files, oh and also import and exports databases.
 ---
 
 # WordPress
