@@ -1,3 +1,7 @@
+---
+description: Learn how to configure xdebug in Lando using PhpStorm.
+---
+
 # Lando + PhpStorm + Xdebug
 
 [PhpStorm](https://www.jetbrains.com/phpstorm/) is a popular code IDE for PHP

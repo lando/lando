@@ -1,3 +1,7 @@
+---
+description: Learn how to access your Lando services externally from your host machine.
+---
+
 # Accessing Your Services Externally
 
 It is often desirable to interact with your services on the host machine level. Common examples of this are accessing a SQL database through a GUI client like SequelPro, or running unit tests through an IDE like PhpStorm.

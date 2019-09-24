@@ -1,3 +1,7 @@
+---
+description: Understand hiccups, caveats or issues switching databases when using Lando for local development.
+---
+
 ## Switching Database Configuration
 
 If you are currently using a database with Lando and you decide to change its type, version or credentials in your `.lando.yml` file *it's possible* that your database service will not restart correctly or with the expected values once you've made the change.

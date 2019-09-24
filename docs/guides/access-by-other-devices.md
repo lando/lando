@@ -1,3 +1,7 @@
+---
+description: Learn how to access your Lando sites from other devices on your network like mobile phones or tablets.
+---
+
 # Accessing Lando from Other Devices on Your Local Network
 
 You may want to use another device (e.g., a smartphone or tablet) to test your Lando app.  You can access your lando app easily from another device as follows.
