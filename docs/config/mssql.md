@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable Microsoft MSSQL service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MSSQL
 
 [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2016) lets you build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics.

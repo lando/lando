@@ -1,3 +1,7 @@
+---
+description: Use Joomla on Lando;  config php version, swap db backends or webserver, use composer, Joomla CLI, xdebug and custom config files, oh and also import and exports databases.
+---
+
 # Joomla
 
 Joomla! is an award-winning content management system (CMS), which enables you to build web sites and powerful online applications.

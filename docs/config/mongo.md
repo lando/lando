@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable MongoDB service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MongoDB
 
 [MongoDB](https://en.wikipedia.org/wiki/MongoDB)  is a free and open-source cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemas.

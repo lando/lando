@@ -1,3 +1,7 @@
+---
+description: If there isn't a service Lando provides out of the box use this to add any other Docker image using Docker Compose syntax.
+---
+
 # Compose
 
 This service is a "catch all" that allows power users to specify custom services that are not currently one of Lando's [supported services](./../config/services.md). You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).

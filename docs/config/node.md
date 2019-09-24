@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable node service to Lando for local development with all the power of Docker and Docker Compose; includes npm and yarn for dependencies funsies.
+---
+
 # Node
 
 [Node.js](https://nodejs.org/en/) is a JavaScript runtime built on Chrome's V8 JavaScript engine and uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Beyond running web applications, it is also commonly used for front-end tooling.

@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable MySQL service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MySQL
 
 [MySQL](https://www.mysql.com/) is a very common database server.

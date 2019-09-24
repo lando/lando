@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable memcached service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Memcached
 
 [Memcached](https://memcached.org/) is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering.

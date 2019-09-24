@@ -1,3 +1,7 @@
+---
+description: Use Laravel on Lando; config php version, swap db or caching backends or webserver, use composer. laravel CLI and artisan, xdebug and custom config files, oh and also import and exports databases.
+---
+
 # Laravel
 
 Laravel is The PHP Framework For Web Artisans.
