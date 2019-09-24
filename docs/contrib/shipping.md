@@ -1,3 +1,7 @@
+---
+description: Learn how to ship Lando releases if you are a maintainer.
+---
+
 # Shipping
 
 If you are a maintainer of Lando you can kick off an official release using our handy `grunt` tasks. **THIS NEEDS TO BE DONE FROM THE MASTER BRANCH!**

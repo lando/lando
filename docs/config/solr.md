@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable apache solr service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Solr
 
 [Solr](http://lucene.apache.org/solr/) is highly reliable, scalable and fault tolerant, providing distributed indexing, replication and load-balanced querying, automated failover and recovery, centralized configuration and more. Solr powers the search and navigation features of many of the world's largest internet sites.

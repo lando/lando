@@ -1,5 +1,5 @@
 ---
-metaTitle: Lando Documentation
+metaTitle: Documentation | Lando
 description: Documentation for Lando; a free, open source and Docker driven local development and DevOps tool for all your projects that is fast, easy, powerful and liberating.
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 home: true

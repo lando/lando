@@ -1,3 +1,7 @@
+---
+description: Learn how to handle file syncing issue when using Lando for local development.
+---
+
 # File syncing issues
 
 There are generally a few causes of slow or stalled file sharing. Here are some workarounds and checks you can do in each circumstance.

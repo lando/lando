@@ -1,5 +1,5 @@
 ---
-description: Documentation on getting started with Backdrop CMS on Lando. Learn how to config php version, swap db backends or webserver, use drush, xdebug and custom config files.
+description: Use Backdrop CMS on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
 ---
 
 # Backdrop

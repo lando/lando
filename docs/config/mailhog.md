@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable mailhog service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MailHog
 
 [MailHog](https://github.com/mailhog/MailHog) is an email testing tool for developers.

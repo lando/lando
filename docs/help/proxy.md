@@ -1,3 +1,7 @@
+---
+description: Learn how to handle other proxies or things running on ports 80 or 443 when using Lando for local development.
+---
+
 # Running Lando behind a Proxy
 
 Users, particularly Windows users, may need to provide some additional networking configuration to their apps if they are sitting behind a proxy. A tell tale sign that you require this sort of configuration is connection issues. Here is an example of what such an issue looks like...

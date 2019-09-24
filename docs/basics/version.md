@@ -1,3 +1,8 @@
+---
+metaTitle: lando version | Lando
+description: If you can't guess what this command does you might want to consider a different career ;)
+---
+
 # version
 
 Displays the lando version.

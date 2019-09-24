@@ -1,3 +1,7 @@
+---
+description: Use a generic MEAN stack on Lando for local development; powered by Docker and Docker Compose, learn how to config node, npm and yarn version, use postgres or mysql or mariadb or mongodb.
+---
+
 # MEAN
 
 MEAN is a free and open-source JavaScript software stack for building dynamic web sites and web applications.

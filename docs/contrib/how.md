@@ -1,3 +1,7 @@
+---
+description: Learn how to contribute to Lando support, code, events, presentations, etc.
+---
+
 # How to Contribute
 
 ## Support

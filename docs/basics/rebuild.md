@@ -1,3 +1,8 @@
+---
+metaTitle: lando rebuild | Lando
+description: lando rebuild rebuilds your app from scratch, preserving data and re-running any configured build steps as though you were starting your app for the first time.
+---
+
 # rebuild
 
 Rebuilds your app from scratch, preserving data.

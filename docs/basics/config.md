@@ -1,3 +1,8 @@
+---
+metaTitle: lando config | Lando
+description: lando config displays the lando configuration.
+---
+
 # config
 
 Displays the lando configuration.

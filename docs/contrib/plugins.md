@@ -1,3 +1,7 @@
+---
+description: Learn about Lando's amazing plugin structure.
+---
+
 # Plugins
 
 Lando has an advanced plugin system that allows developers to add and extend Lando's core functionality. Here are a few examples of things you can do with plugins:

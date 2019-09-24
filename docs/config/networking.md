@@ -1,3 +1,7 @@
+---
+description: Lando improves the core networking provided by Docker and Docker Compose so it is more useful in the local development context, let containers talk to each other even across application.
+---
+
 # Networking
 
 Lando sets up and manages its own internal Docker network. This provides a common pattern, predictable hostnames and a more reliable experience for local development networking generally.

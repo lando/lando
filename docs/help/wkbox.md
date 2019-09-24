@@ -1,3 +1,7 @@
+---
+description: Learn about using Lando with Kalabox.
+---
+
 ## Using Lando with Kalabox
 
 While Lando is in many ways the successor project to Kalabox it is actually a completely different project that can run side by side with a users existing Kalabox... with a few caveats.

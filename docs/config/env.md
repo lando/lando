@@ -1,3 +1,7 @@
+---
+description: Lando sets a bunch of useful environment variables in each service by default, or you can inject your own by configurating your Landofile or using a custom environment file.
+---
+
 # Environment
 
 Lando will both inject a bunch of helpful environment variables into each service and allow the user to inject their own either by [file](#environment-files) or [configuration](#environment-configuration). Note that these variables are only available **inside** each service and **not on your host machine.**

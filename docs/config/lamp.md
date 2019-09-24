@@ -1,3 +1,7 @@
+---
+description: Use a generic LAMP stack on Lando for local development; powered by Docker and Docker Compose; learn how to config php and apache version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and exports databases.
+---
+
 # LAMP
 
 The [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack is a common infrastructure designed to run PHP applications.

@@ -1,3 +1,7 @@
+---
+description: Learn how to contribute to Lando.
+---
+
 # Overview
 
 Lando is led by a [benevolent dictator](./roles.md#benevolent-dictator) and committee of [maintainers](./roles.md#maintainers) and managed by the community.

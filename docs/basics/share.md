@@ -1,3 +1,8 @@
+---
+metaTitle: lando share | Lando
+description: lando share exposes your local site to the world with a publicly accesible URL.
+---
+
 # share
 
 Shares your local site publicly.

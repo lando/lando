@@ -1,3 +1,7 @@
+---
+description: The Landofile is at the heart of every Lando app but it itself can also be customized, learn how to set a base configuration or override it on a per user basis.
+---
+
 # Landofile
 
 A `.lando.yml` file is at the heart of every Lando app. It is needed to tell Lando what things your app needs for development. It usually will contain the services and tools needed to run and develop your app. This file should live in the root directory of your app's code repository and ideally be tracked in its version control system.

@@ -1,3 +1,7 @@
+---
+description: Learn how to configure xdebug in Lando using VSCode.
+---
+
 # Using Lando with VSCode
 
 [Visual Studio Code](https://github.com/Microsoft/vscode/) is a great open source editor for programming. Debugging PHP applications with it can be easy too.

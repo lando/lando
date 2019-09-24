@@ -1,3 +1,7 @@
+---
+description: Learn how to use Lando for offline local development.
+---
+
 # Developing offline
 
 Out of the box Lando uses an actual on-the-internet wildcard domain at `*.lndo.site` to route your domain names back to your localhost to provide convenient proxying. This method is minimally invasive and doesn't require Lando to alter your machine's DNS routing. This has the downside of requiring an internet connection to access your sites.

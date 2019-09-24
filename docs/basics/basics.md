@@ -1,5 +1,6 @@
 ---
-description: Documentation to add an Apache webserver service to your Lando config. Learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
+metaTitle: Lando Basics, How Does It Work? | Lando
+description: Learn Lando basics and how to configure your first Landofile for either simple or complex development and/or DevOps requirements.
 ---
 
 # Lando 101

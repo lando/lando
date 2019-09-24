@@ -1,5 +1,5 @@
 ---
-description: Documentation to add an Apache webserver service to your Lando config. Learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
+description: Add an Apache webserver service to your Lando config for local development with all the power of Docker and Docker Compose; learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
 ---
 
 # Apache

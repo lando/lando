@@ -1,3 +1,7 @@
+---
+description: The best local development option for Drupal 7, Drupal 8 or WordPress sites running on Pantheon, get terminus and all the usual power tools plus awesome workflow automation.
+---
+
 # Pantheon
 
 [Pantheon](https://pantheon.io) is a web development hosting platform for open-source Drupal and WordPress websites. It is an app-specific PaaS provider, sold on a monthly subscription basis, with several support tiers available.

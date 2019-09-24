@@ -1,3 +1,7 @@
+---
+description: Lando open source contribution resources.
+---
+
 # Open Source
 
 Much of the documentation contained in this section was inspired by (or directly lifted from) the following resources. As such it is worth reviewing them to get a more in depth picture of the intended governance model.
