@@ -207,6 +207,8 @@ export default {
       font-weight: 500
       font-size: 1.1em
       padding-bottom: 0
+    img
+      width: 60%
   .benefits
     h3
       color: $landoGreen
