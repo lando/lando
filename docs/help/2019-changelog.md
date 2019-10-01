@@ -1,6 +1,6 @@
 # 2019
 
-## v3.0.0-rc.21 - [September 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.21)
+## v3.0.0-rc.21 - [October 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.21)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
@@ -9,6 +9,8 @@
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
+* Fixed upstream bug with `apache` [#1804](https://github.com/lando/lando/issues/1804)
+* Fixed upstream bug with `memcached` [#1804](https://github.com/lando/lando/issues/1804)
 * Improved documentation search with Algolia [#1756](https://github.com/lando/lando/issues/1756)
 
 ## v3.0.0-rc.20 - [August 16, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.20)
