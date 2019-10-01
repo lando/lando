@@ -6,6 +6,8 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
+    ['script', {src: '//js.hs-scripts.com/6478338.js'}],
+    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
   plugins: {
     '@vuepress/google-analytics': {
