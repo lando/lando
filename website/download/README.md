@@ -9,7 +9,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
 Lando is and always will be _**free**_ and _**open source**_.
 
-That said, it takes a considerable amount of time to maintain, support and grow Lando. If you like Lando and think it's valuable we'd _highly encourage_ you to [join _The Lando Alliance_](/memberships/) and return some of that value to help support our movement to liberate developers everywhere.
+That said, it takes a considerable amount of time to maintain, support and grow Lando. If you like Lando and think it's valuable we'd _highly encourage_ you to [join _The Lando Alliance_](/alliance/join/) and return some of that value to help support our movement to liberate developers everywhere.
 
 We're down to keep solving DevOps for everyone and with your support we can.
 
@@ -70,43 +70,13 @@ lando start
     <div class="step-number"><p>4</p></div>
   </div>
   <div class="right">
-    <h3>Sign up and get the latest Alliance news</h3>
-    <div>
-      <p>Stay up to date on the status of the Lando project and get a periodic digest of new documentation, helpful guides, features and new Lando services.
-      </p>
-    </div>
-    <div id="#news">
-      <div id="mc_embed_signup">
-        <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
-          <div id="mc_embed_signup_scroll">
-            <div class="mc-field-group">
-              <input type="email" value="" placeholder="Email address" name="EMAIL" class="required email newsletter-input" id="mce-EMAIL">
-            </div>
-            <div id="mce-responses" class="clear">
-              <div class="response" id="mce-error-response" style="display:none"></div>
-              <div class="response" id="mce-success-response" style="display:none"></div>
-            </div>
-            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_59874b4d6910fa65e724a4648_613837077f" tabindex="-1" value=""></div>
-            <div class="clear"><input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="step">
-  <div class="left">
-    <div class="step-number"><p>5</p></div>
-  </div>
-  <div class="right">
     <h3>Join the movement to liberate developers everywhere</h3>
     <div>
-      <p>Help us keep Lando by and for developers everywhere by supporting <a href="https://lando.dev/memberships/" target="_blank">our movement</a> to liberate developers from dev monotony so they can focus on their most important work.
+      <p>Help us keep Lando by and for developers everywhere by supporting <a href="https://lando.dev/alliance/join/" target="_blank">our movement</a> to liberate developers from dev monotony so they can focus on their most important work.
       </p>
     </div>
     <div>
-      <a class="button" href="https://www.patreon.com/join/devwithlando?">SUPPORT LANDO</a>
+      <a class="button big" href="/alliance/join/">JOIN THE ALLIANCE!</a>
     </div>
   </div>
 </div>

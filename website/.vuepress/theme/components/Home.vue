@@ -13,7 +13,7 @@
           </div>
           <p>
             <a class="button white" href="/download/">GET LANDO!</a>
-            <a class="button" href="/memberships/">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+            <a class="button" href="/alliance/join/">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
           </p>
         </div>
       </div>
