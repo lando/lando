@@ -32,8 +32,8 @@
               <p>
                 <script>
                   hbspt.forms.create({
-                  portalId: "6478338",
-                  formId: "9017bea2-dd0c-402a-8c97-d1b1d7429a00"
+                  portalId: '6478338',
+                  formId: '9017bea2-dd0c-402a-8c97-d1b1d7429a00',
                 });
                 </script>
               </p>
