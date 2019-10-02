@@ -1,5 +1,7 @@
 # 2019
 
+* Add lando status command [#183](https://github.com/lando/lando/issues/183)
+
 ## v3.0.0-rc.21 - [October 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.21)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
