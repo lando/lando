@@ -71,7 +71,7 @@ if [ ! -f "/certs/cert.pem" ]; then
     -CAkey $LANDO_CA_KEY \
     -CAcreateserial \
     -out /certs/cert.crt \
-    -days 8675 \
+    -days 825 \
     -sha256 \
     -extfile /certs/cert.ext
   cat /certs/cert.crt /certs/cert.key > /certs/cert.pem
