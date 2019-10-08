@@ -27,7 +27,7 @@ You will want to make sure you install the tools you need inside of the services
 It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. Here are all the options you can use for a given tooling route and their default values.
 
 ```yaml
-tooling
+tooling:
   mycommand:
     service: this is required, use `lando info` to find the one you want
     description: Runs <mycommand> commands
