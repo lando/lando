@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable MariaDB service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MariaDB
 
 [MariaDB](https://mariadb.org/) is a very common database server which is *EXTREMELY* similar to MySQL but has a guarantee of being open source.

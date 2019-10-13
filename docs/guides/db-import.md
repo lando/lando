@@ -1,3 +1,8 @@
+---
+metaTitle: Importing SQL Databases | Lando
+description: Learn how to import your MySQL, MariaDB or Postgres databases to Lando.
+---
+
 # SQL Import
 
 Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default but can be used on additional database services as well.

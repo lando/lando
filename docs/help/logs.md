@@ -1,3 +1,7 @@
+---
+description: Learn how to access logs for general troubleshooting when using Lando for local development.
+---
+
 # Accessing Logs
 
 Lando has a few different log layers to help you diagnose any issues you might be having.

@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-rc.20",
+  "version": "3.0.0-rc.22",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -37,7 +37,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint --quiet --no-ignore bin lib plugins scripts test",
-    "lint:sites": "eslint  --quiet --ext .js,.vue --no-ignore --config .eslintrc.vuepress.json docs/.vuepress docs/.vuepress/components website/.vuepress website/.vuepress/components",
+    "lint:sites": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json docs/.vuepress website/.vuepress",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release": "bump --prompt --tag --all --push",
@@ -85,7 +85,7 @@
     "ip": "^1.1.5",
     "js-yaml": "^3.4.6",
     "jsonfile": "^2.4.0",
-    "localtunnel": "^1.8.3",
+    "localtunnel": "^1.9.2",
     "lodash": "^4.15.0",
     "mkdirp": "^0.5.1",
     "node-cache": "^4.1.1",
@@ -120,6 +120,10 @@
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
     "version-bump-prompt": "^4.2.1",
-    "vuepress": "^1.0.3"
+    "vuepress": "^1.0.4",
+    "vuepress-plugin-autometa": "^0.1.12",
+    "vuepress-plugin-canonical": "^1.0.0",
+    "vuepress-plugin-robots": "^1.0.1",
+    "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4"
   }
 }

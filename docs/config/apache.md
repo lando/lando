@@ -1,3 +1,7 @@
+---
+description: Add an Apache webserver service to your Lando config for local development with all the power of Docker and Docker Compose; learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
+---
+
 # Apache
 
 [Apache](https://www.apache.org/) is a very common webserver which you can easily add to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).

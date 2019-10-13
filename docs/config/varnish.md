@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable varnish service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Varnish
 
 [Varnish Cache](https://varnish-cache.org/intro/index.html#intro) is a web application accelerator also known as a caching HTTP reverse proxy. You install it in front of any server that speaks HTTP and configure it to cache the contents.

@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable postgres service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Postgres
 
 [PostgreSQL](https://www.postgresql.org/) is an advanced open source database server.

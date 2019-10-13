@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable php service to Lando for local development with all the power of Docker and Docker Compose; comes with composer and xdebug and multiple verions for lols.
+---
+
 # PHP
 
 [PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md)

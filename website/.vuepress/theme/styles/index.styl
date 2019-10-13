@@ -24,6 +24,13 @@ a.button,
       background-color: #4e6e8e
       color: $light
       border-color: #4e6e8e
+    &.blue
+      background-color: lighten($landoBlue, 25%)
+      color: #ffffff
+      border-color: lighten($landoBlue, 25%)
+    &.big
+      width: 75%
+      padding: 1em 1em
 .step
   padding-bottom: 2em
 .step-number
@@ -62,6 +69,26 @@ header.navbar
       border-bottom: 2px solid lighten($accentColor, 75%)
     .icon.outbound
       color: #ffffff
+@media (min-width: $MQMobile)
+  .nav-item-get-lando
+    text-transform: uppercase;
+    padding: 0.2em 2em
+    border-radius: 2em
+    display: inline-block
+    background-color: lighten($landoBlue, 25%)
+    transition: all 0.15s ease
+    box-sizing: border-box
+    border: 1px solid #ee4e85
+@media (min-width: $MQMobile)
+  .nav-item-join-the
+    text-transform: uppercase;
+    padding: 0.2em 2em
+    border-radius: 2em
+    display: inline-block
+    background-color: lighten($landoPink, 25%)
+    transition: all 0.15s ease
+    box-sizing: border-box
+    border: 1px solid #ee4e85
 @media (max-width: $MQMobile)
   .sidebar-button
     color: #ffffff

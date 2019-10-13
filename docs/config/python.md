@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable python service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Python
 
 [Python](https://www.python.org/) is a programming language that lets you work more quickly and integrate your systems more effectively.

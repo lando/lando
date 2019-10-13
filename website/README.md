@@ -1,8 +1,11 @@
 ---
+metaTitle: A Local Dev Tool For Every Project | Lando
+description: Lando is a free, open source and Docker driven local development tool for all projects that is fast, easy, powerful, liberating and works on Windows, macOS and Linux.
+image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
+
 home: true
 navbar: true
 pageClass: lando-front
-layout: Lando
 
 heroImage: /images/hero-white.png
 byline: Free yourself from the mind-forged manacles of lesser dev tools. Save time, headaches, frustration and do more real work.

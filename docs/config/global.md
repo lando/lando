@@ -1,3 +1,7 @@
+---
+description: Almost all parts of how Lando itself works are configurable, from proxy domains and ports to the name of the Landofile to the max size of Lando logs.
+---
+
 # Global Config
 
 ::: warning With great power comes great ability to really mess things up!

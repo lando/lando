@@ -1,3 +1,8 @@
+---
+metaTitle: lando info | Lando
+description: lando info prints useful information about your app like service connection information and urls.
+---
+
 # info
 
 Prints info about your app.

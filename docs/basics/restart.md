@@ -1,3 +1,8 @@
+---
+metaTitle: lando restart | Lando
+description: lando restart stops your lando app and then starts it again, preserving container state.
+---
+
 # restart
 
 Restarts your app.

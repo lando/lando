@@ -1,3 +1,8 @@
+---
+metaTitle: Lando Basics, How Does It Work? | Lando
+description: Learn Lando basics and how to configure your first Landofile for either simple or complex development and/or DevOps requirements.
+---
+
 # Lando 101
 
 On a high level your `lando` configuration should contain **ALL** the things you need to run, develop and test your project. The ideal we strive for is best expressed as:

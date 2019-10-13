@@ -1,3 +1,7 @@
+---
+description: Lando recipes set sane defaults for common use cases like Drupal, WordPress or MEAN but are also highly configurable and extensible for all occasions.
+---
+
 # Recipes
 
 Recipes are Lando's highest level abstraction and they contain common combinations of [routing](./proxy.md), [services](./services.md), and [tooling](./tooling.md). Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.

@@ -1,3 +1,7 @@
+---
+description: Learn how to add node services to your Lando app so you can use yarn, npm, grunt, gulp, webpack, etc for all the frontend magic.
+---
+
 # Frontend Tooling
 
 Most modern frontend tooling relies upon the NPM package manager. In this tutorial we'll show you how to add Node to your app, download tools like Gulp/Grunt/Webpack, and run them in your Lando app.

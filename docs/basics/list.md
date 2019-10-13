@@ -1,3 +1,8 @@
+---
+metaTitle: lando list | Lando
+description: lando list lists all running lando apps and containers and is filterable.
+---
+
 # list
 
 Lists all running lando apps and containers.

@@ -1,20 +1,5 @@
 <template>
-  <div class="theme-container" :class="pageClasses" @touchstart="onTouchStart" @touchend="onTouchEnd">
-    <Navbar v-if="shouldShowNavbar" @toggle-sidebar="toggleSidebar"/>
-
-    <div class="sidebar-mask" @click="toggleSidebar(false)"></div>
-
-    <Sidebar
-      :items="sidebarItems"
-      @toggle-sidebar="toggleSidebar">
-      <slot
-        name="sidebar-top"
-        slot="top"/>
-      <slot
-        name="sidebar-bottom"
-        slot="bottom"/>
-    </Sidebar>
-
+  <div>
     <div id="hero">
       <div class="inner">
         <div class="left">
@@ -28,9 +13,15 @@
           </div>
           <p>
             <a class="button white" href="/download/">GET LANDO!</a>
-            <a class="button" href="/memberships/">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
+            <a class="button" href="/alliance/join/">SUPPORT LANDO. JOIN THE ALLIANCE.</a>
           </p>
         </div>
+      </div>
+    </div>
+
+    <div id="carbon">
+      <div class="inner">
+        <CarbonAds />
       </div>
     </div>
 
@@ -142,33 +133,22 @@
     <div id="ready">
       <div class="inner">
         <h2>Ready for dev liberation?</h2>
-        <p><a class="button white" href="/download/">GET LANDO!</a></p>
+        <p><a class="button blue" href="/download/">GET LANDO!</a></p>
       </div>
     </div>
-
-    <MadeByTandem />
-    <Newsletter />
-    <Footer/>
   </div>
 </template>
 
 <script>
 // Core components and things
-import Navbar from '@theme/components/Navbar.vue';
-import Sidebar from '@theme/components/Sidebar.vue';
-import {resolveSidebarItems} from '@theme/util';
+import CarbonAds from '@theme/components/CarbonAds.vue';
 
-// Lando components
-import MadeByTandem from './MadeByTandem';
-import Newsletter from './Newsletter';
-import Footer from './Footer';
 export default {
-  components: {Sidebar, Navbar, MadeByTandem, Newsletter, Footer},
+  components: {CarbonAds},
   data() {
     return {
-      isSidebarOpen: false,
       data: {},
-      growthRate: 0.0004,
+      growthRate: 0.0001,
       startingTime: 1565701419,
       startingUsers: 11212,
     };
@@ -180,78 +160,9 @@ export default {
       const currentUsers = Math.floor(secondsSince * this.growthRate) + this.startingUsers;
       return currentUsers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
-    shouldShowNavbar() {
-      const {themeConfig} = this.$site;
-      const {frontmatter} = this.$page;
-      if (
-        frontmatter.navbar === false
-        || themeConfig.navbar === false) {
-        return false;
-      }
-      return (
-        this.$title
-        || themeConfig.logo
-        || themeConfig.repo
-        || themeConfig.nav
-        || this.$themeLocaleConfig.nav
-      );
-    },
-    shouldShowSidebar() {
-      const {frontmatter} = this.$page;
-      return (
-        !frontmatter.home
-        && frontmatter.sidebar !== false
-        && this.sidebarItems.length
-      );
-    },
-    sidebarItems() {
-      return resolveSidebarItems(
-        this.$page,
-        this.$page.regularPath,
-        this.$site,
-        this.$localePath
-      );
-    },
-    pageClasses() {
-      const userPageClass = this.$page.frontmatter.pageClass;
-      return [
-        {
-          'no-navbar': !this.shouldShowNavbar,
-          'sidebar-open': this.isSidebarOpen,
-          'no-sidebar': !this.shouldShowSidebar,
-        },
-        userPageClass,
-      ];
-    },
   },
   mounted() {
-    this.$router.afterEach(() => {
-      this.isSidebarOpen = false;
-    });
     this.data = this.$page.frontmatter;
-  },
-  methods: {
-    toggleSidebar(to) {
-      this.isSidebarOpen = typeof to === 'boolean' ? to : !this.isSidebarOpen;
-    },
-    // side swipe
-    onTouchStart(e) {
-      this.touchStart = {
-        x: e.changedTouches[0].clientX,
-        y: e.changedTouches[0].clientY,
-      };
-    },
-    onTouchEnd(e) {
-      const dx = e.changedTouches[0].clientX - this.touchStart.x;
-      const dy = e.changedTouches[0].clientY - this.touchStart.y;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-        if (dx > 0 && this.touchStart.x <= 80) {
-          this.toggleSidebar(true);
-        } else {
-          this.toggleSidebar(false);
-        }
-      }
-    },
   },
 };
 </script>
@@ -275,8 +186,8 @@ export default {
     .right
       width: 60%
     .hero-logo
-      width: 311px
-      height: 311px
+      width: 368px;
+      height: 368px
       float: right
       margin-right: 60px
     h1
@@ -310,12 +221,26 @@ export default {
       color: lighten($accentColor, 80%)
       font-weight: 600
       font-size: 1.5rem
+  .carbon-ads
+    min-height: 102px
+    padding: 3em
+    font-size: 0.88rem
+    margin: auto
+    width: 300px
+  .carbon-ads
+    a
+     color: lighten($accentColor, 65%)
+    .carbon-wrap
+      margin-top: 5px
+      a
+        color: #ffffff
   #whys,
   #wheres,
   #whats,
   #hows,
   #whos,
-  #ready
+  #ready,
+  #carbon
     background-color: #fff
     padding-bottom: 70px
     .inner
@@ -459,25 +384,21 @@ export default {
         color: lighten($landoPink, 90%)
       a:hover
         text-decoration: underline
-  #ready
+  #ready,
+  #carbon
+    padding-bottom: 0
     background-color: darken($landoPink, 13%)
+  #ready
     h2
-      color: lighten($landoPink, 90%)
-    h3
-      display: none
+      color: lighten($landoPink, 100%)
     p
-      padding-bottom: 0
-      color: darken($landoPink, 90%)
-  #news
-    background-color: darken($landoBlue, 12%)
-    padding: 2em 0
-    h3
-      font-size: 1.5em
-      a
-        color: lighten($landoGrey, 75%)
-  #made-by
-    padding: 7em 0
-    margin: 0
+      font-style: normal
+@media (max-width: $MQNarrow)
+  .lando-front
+    #hero
+      .hero-logo
+        width: 240px
+        height: 240px
 @media (max-width: $MQMobile)
   .lando-front
     #hero

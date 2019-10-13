@@ -1,3 +1,7 @@
+---
+description: The Lando proxy layer allows you to specify HTTP or HTTPS eg TLS/SSL routes to specific services in a few lines of config. You can also customize the domain and certificates used.
+---
+
 # Proxy
 
 By default Lando runs a [traefik](https://traefik.io/) reverse proxy when needed so that users' apps can route stable, predictable and "nice" URLS to various ports inside of various services.

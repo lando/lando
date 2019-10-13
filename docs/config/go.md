@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable go service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Go
 
 [Go](https://golang.org/) is an open source programming language that makes it easy to build simple, reliable, and efficient software.

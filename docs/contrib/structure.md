@@ -1,3 +1,7 @@
+---
+description: Learn about Lando's project and directory structure.
+---
+
 # Project Structure
 
 Here is a general breakdown of where things live inside the Lando repo.

@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable Elasticsearch service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Elasticsearch
 
 [Elasticsearch](https://www.elastic.co/products/elasticsearch) is a search and analytics engine, commonly used as a substitute for Solr or for collecting log and metrics data.

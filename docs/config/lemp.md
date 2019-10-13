@@ -1,3 +1,7 @@
+---
+description: Use a generic LEMP stack on Lando for local development; powered by Docker and Docker Compose, learn how to config php and nginx version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and exports databases.
+---
+
 # LEMP
 
 The LEMP stack is a common infrastructure designed to run PHP applications, it is similar to the more well known [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack but replaces [Apache](http://apache.org/) with [nginx](http://nginx.org) as the webserver.

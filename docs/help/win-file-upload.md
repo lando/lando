@@ -1,3 +1,7 @@
+---
+description: Learn about weird file upload issues when using Lando for local development especially while using Drupal on Windows.
+---
+
 # Uploading Files in Windows
 
 ::: tip Probably fixed in 3.0.0-rc.2+

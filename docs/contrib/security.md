@@ -1,3 +1,7 @@
+---
+description: Learn how to submit a security issue to Lando.
+---
+
 # Security
 
 If you have discovered a security issue with Lando, please contact the Lando Security Team directly at

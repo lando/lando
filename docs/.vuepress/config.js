@@ -6,13 +6,38 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
+    ['script', {src: '//js.hs-scripts.com/6478338.js'}],
+    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
-  plugins: [
-    ['@vuepress/google-analytics', {
-      ga: 'UA-74237404-3',
-    }],
-  ],
+  plugins: {
+    '@vuepress/google-analytics': {
+      ga: 'UA-74237404-5',
+    },
+    'autometa': {
+      site: {
+        name: 'Lando',
+        twitter: 'devwithlando',
+      },
+      canonical_base: 'https://docs.lando.dev',
+    },
+    'canonical': {
+      baseURL: 'https://docs.lando.dev',
+    },
+    'robots': {
+      host: 'https://docs.lando.dev',
+    },
+    'sitemap': {
+      hostname: 'https://docs.lando.dev',
+      exclude: ['/404.html'],
+    },
+  },
   themeConfig: {
+    algolia: {
+      apiKey: '15e332850128e9ec96929f44c62f6c88',
+      indexName: 'lando',
+      // uncomment the below to make styling inspection easier
+      // debug: true,
+    },
     docsDir: 'docs',
     docsBranch: 'master',
     logo: '/images/logo-small.png',
@@ -211,6 +236,13 @@ module.exports = {
             ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
             ['https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg', 'YouTube Tutorials'],
             ['https://github.com/lando/lando/tree/master/examples', 'Code examples'],
+          ],
+        },
+        {
+          title: 'Project Updates',
+          collapsable: false,
+          children: [
+            ['q3-2019', 'Q3 2019'],
           ],
         },
         {

@@ -1,3 +1,7 @@
+---
+description: Learn about Lando's open source governance roles and responsibilities for maintainers, contributors, committers and security team things.
+---
+
 # Roles and Responsibilities
 
 ## Benevolent Dictator

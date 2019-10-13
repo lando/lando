@@ -1,3 +1,8 @@
+---
+metaTitle: lando poweroff | Lando
+description: No! Shut them all down! lando poweroff will stop ALL lando related apps and containers.
+---
+
 # poweroff
 
 Spins down all lando related containers

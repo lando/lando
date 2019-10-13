@@ -1,3 +1,7 @@
+---
+description: Learn about the Lando governance model.
+---
+
 # Governance
 
 Governance of the project is simple and straightforward:
