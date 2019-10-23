@@ -1,5 +1,7 @@
 # 2019
 
+* Correct spelling with codespell
+
 ## v3.0.0-rc.22 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.22)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
@@ -172,7 +174,7 @@
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * Added `<<` and `>>` to list of `SHELL` auto-wrapped characters in tooling/events/build commands
-* Fixed `machine token` persistance for `pantheon` apps that are `git cloned` instead of `lando init` [#1475](https://github.com/lando/lando/issues/1475)
+* Fixed `machine token` persistence for `pantheon` apps that are `git cloned` instead of `lando init` [#1475](https://github.com/lando/lando/issues/1475)
 * Fixed regression causing `pantheon` `nginx` config to not load correctly
 
 ## v3.0.0-rc.11 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.11)
