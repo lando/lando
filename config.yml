@@ -1,3 +1,5 @@
 stats:
   - report: true
     url: https://metrics.devwithlando.io
+  - report: true
+    url: http://metrics.lndo.site
