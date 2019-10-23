@@ -76,4 +76,4 @@ If you are interested in learning more or contributing we recommend you check ou
   * [Governance](./gov.md)
   * [Roles and Responsibilities](./roles.md)
   * [Project Vision](./vision.md)
-  * [Developing](./../dev/started.md)
+  * [Developing](./started.md)
