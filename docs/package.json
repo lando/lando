@@ -5,7 +5,7 @@
     "url": "https://github.com/lando/lando"
   },
   "bugs": {
-    "email": "mike@thinktandem.io",
+    "email": "mike@lando.dev",
     "url": "https://github.com/lando/lando/issues"
   },
   "scripts": {

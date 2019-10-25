@@ -1,4 +1,6 @@
 name: lando
+env_file:
+  - lando.env
 excludes:
   - node_modules
 proxy:
@@ -6,6 +8,8 @@ proxy:
     - docs.lndo.site:8008
   site:
     - site.lndo.site:8009
+  metrics:
+    - metrics.lndo.site:8010
 services:
   docs:
     type: node:10
@@ -19,6 +23,15 @@ services:
       - yarn install
     command: "su - node -c 'cd /app && yarn dev:site'"
     port: 8009
+  metrics:
+    type: node:10
+    build:
+      - yarn install
+    command: yarn run start:metrics
+    overrides:
+      environment:
+        LANDO_METRICS_PORT: 8010
+    port: 8010
   platform:
     type: php:7.3
     via: cli
