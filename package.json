@@ -127,7 +127,6 @@
     "platformsh": "^1.0.0",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
-    "verror": "^1.6.0",
     "version-bump-prompt": "^4.2.1",
     "vuepress": "^1.0.4",
     "vuepress-plugin-autometa": "^0.1.12",

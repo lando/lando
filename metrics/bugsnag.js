@@ -1,33 +1,30 @@
 'use strict';
 
-var bugsnag = require('bugsnag');
-var Promise = require('bluebird');
-var VError = require('verror');
+const bugsnag = require('bugsnag');
+const Promise = require('bluebird');
 
-module.exports = function(opts) {
-
-  // Report error data.
-  function report(data) {
-
+/**
+ * Bugsnag plugin and things
+ * @param {Object} opts options
+ * @return {Object} stuff
+ */
+module.exports = opts => ({
+  report: (data = {}) => {
     // Run inside of a promise context.
     return Promise.try(function() {
       // Only report errors.
       if (data.action === 'error') {
-
         // Get app version and remove trailing '-dev'.
-        var appVersion = data.version.replace(/-dev$/, '');
-
+        const appVersion = data.version.replace(/-dev$/, '');
         // Get release stage based on devMode.
-        var releaseStage = data.devMode ? 'development' : 'production';
-
+        const releaseStage = data.devMode ? 'development' : 'production';
         // Register bug snag api from config.
         bugsnag.register(opts.apiKey, {
           appVersion: appVersion,
-          releaseStage: releaseStage
+          releaseStage: releaseStage,
         });
-
         // Create a new error with err message.
-        var err = new Error(data.message);
+        const err = new Error(data.message);
         // Add stack trace.
         err.stack = data.stack;
         // Report to bug snag along with full meta data.
@@ -37,12 +34,7 @@ module.exports = function(opts) {
       }
     })
     .catch(function(err) {
-      throw new VError(err, 'Error notifying bugsnag.');
+      throw new Error(err, 'Error notifying bugsnag.');
     });
-  }
-
-  // Export api.
-  return {
-    report: report
-  };
-};
+  },
+});

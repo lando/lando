@@ -1,189 +1,96 @@
 'use strict';
 
-var _ = require('lodash');
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var Promise = require('bluebird');
-var Db = require('./elastic.js');
-var VError = require('verror');
+const _ = require('lodash');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const log = require('./lib/logger.js');
+const path = require('path');
+const Promise = require('bluebird');
 
-/*
- * Helper to load the config things
- */
-var getConfig = function() {
-
-  // Start with defualts
-  var config = {
-    'LANDO_METRICS_PORT': 80,
-    'LANDO_METRICS_TIMEOUT': 10000,
-    'LANDO_METRICS_BUGSNAG': {},
-    'LANDO_METRICS_ELASTIC': {}
-  };
-
-  // Merge in .env file
-  require('dotenv').config();
-
-  // Merge in process.env as relevant
-  _.forEach(_.keys(config), function(key) {
-    if (_.has(process.env, key)) {
-      config[key] = process.env[key];
-    }
-  });
-
-  // Merge in platformsh stuff
-  if (!_.isEmpty(process.env.PLATFORM_ENVIRONMENT)) {
-
-    // Get platform config
-    var pconfig = require('platformsh').config();
-
-    // Load in platform vars
-    if (!_.isEmpty(pconfig.variables)) {
-      _.forEach(pconfig.variables, function(value, key) {
-        config[key] = value;
-      });
-    }
-
-    // Set the port
-    config.LANDO_METRICS_PORT = pconfig.port;
-
-  }
-
-  // Make sure we JSON parse relevant config
-  _.forEach(['LANDO_METRICS_BUGSNAG', 'LANDO_METRICS_ELASTIC'], function(key) {
-    if (typeof config[key] === 'string') {
-      config[key] = JSON.parse(config[key]);
-    }
-  });
-
-  // Return config
-  return config;
-
+// Define default config
+const defaultConfig = {
+  // The name should match with the file in `plugins/NAME.js`
+  // The config (eg config.LANDO_METRICS_ELASTIC) to instantiate the plugin
+  'LANDO_METRICS_PLUGINS': [
+    {name: 'elastic', config: 'LANDO_METRICS_ELASTIC'},
+    {name: 'bugsnag', config: 'LANDO_METRICS_BUGSNAG'},
+  ],
+  'LANDO_METRICS_PORT': 80,
+  'LANDO_METRICS_TIMEOUT': 10000,
 };
 
-// Load .env file
-require('dotenv').config();
+// Get configuration
+const config = require('./lib/config.js')(defaultConfig);
+log.info('Starting app with config %j', config);
 
-/*
- * Use json body parser plugin.
- */
+// Iterate through plugins and build list of reporters
+const plugins = _(config.LANDO_METRICS_PLUGINS)
+  .map(plugin => _.merge({}, plugin, {path: path.resolve(__dirname, 'plugins', `${plugin.name}.js`)}))
+  .filter(plugin => fs.existsSync(plugin.path))
+  .map(plugin => _.merge({}, plugin, {Reporter: require(plugin.path)}))
+  .value();
+log.info('Loaded plugins %j', plugins);
+
+// Get the app ready
+const express = require('express');
+const app = express();
+// App usage
 app.use(bodyParser.json());
 
-/*
- * Logging function.
+/**
+ * Handler function.
+ * @param {function} fn thing
+ * @return {String} log shit
  */
-function log() {
-  return console.log.apply(this, _.toArray(arguments));
-}
-
-/*
- * Lazy load bugsnag module.
- */
-var bugsnag = _.once(function() {
-  return require('./bugsnag.js')(getConfig().LANDO_METRICS_BUGSNAG);
-});
-
-/*
- * Pretty print function.
- */
-function pp(obj) {
-  return JSON.stringify(obj);
-}
-
-/*
- * Get a db connection, will dispose itself.
- */
-function db() {
-  // Use this ref for disposing.
-  var instance = null;
-  // Create db connection.
-  return Promise.try(function() {
-    instance = new Db(getConfig().LANDO_METRICS_ELASTIC);
-    return instance;
-  })
-  // Wrap errors.
-  .catch(function(err) {
-    throw new VError(
-      err,
-      'Error connecting to database: %s',
-      pp(getConfig().LANDO_METRICS_ELASTIC)
-    );
-  })
-  // Make sure to close connection.
-  .disposer(function() {
-    if (instance) {
-      instance.close();
-    }
-  });
-}
-
-/*
- * Helper function for mapping promise to response.
- */
-function handle(fn) {
+const handle = fn => {
   // Returns a handler function.
-  return function(req, res) {
+  return (req, res) => {
+    log.request(req, res);
     // Call fn in context of a promise.
     return Promise.try(fn, [req, res])
     // Make sure we have a timeout.
-    .timeout(getConfig().LANDO_METRICS_TIMEOUT || 10 * 1000)
-    // Handler failure.
-    .catch(function(err) {
-      console.log(err.message);
-      console.log(err.stack);
-      res.status(500);
-      res.json({status: {err: 'Unexected server error.'}});
-      res.end();
-    })
+    .timeout(config.LANDO_METRICS_TIMEOUT || 10 * 1000)
     // Handle success.
-    .then(function(data) {
+    .then(data => {
       res.status(200);
       res.json(data);
       res.end();
+      log.response(res, 'info', data);
+    })
+    // Handler failure.
+    .catch(err => {
+      res.status(err.statusCode || err.status);
+      res.send(err);
+      res.end();
+      log.response(res, 'error', err);
     });
   };
-}
+};
 
 /*
- * Respond to status pings.
+ * Respond to status pings and sanity checks.
  */
-app.get('/status', handle(function(req, res) {
-  var result = {status: 'OK'};
-  log(JSON.stringify(result));
-  return result;
-}));
-
-/*
- * Sanity check.
- */
-app.get('/', handle(function(req, res) {
-  var result = {status: 'THING'};
-  log(JSON.stringify(result));
-  return result;
-}));
+app.get('/status', handle((req, res) => ({status: 'OK'})));
+app.get('/ping', handle((req, res) => ({status: 'pong'})));
+app.get('/', handle((req, res) => ({ping: 'pong'})));
 
 /*
  * Post new meta data for metrics.
  */
-app.post('/metrics/v2/:id', handle(function(req, res) {
-
-  var data = req.body;
-  data.instance = req.params.id;
-
-  return Promise.all([
-    // Insert into database.
-    Promise.using(db(), function(db) {
-      return db.insert(data);
-    }),
-    // Report to bugsnag.
-    bugsnag().report(data)
-  ])
-  .return({status: 'OK'});
+app.post('/metrics/v2/:id', handle((req, res) => {
+  return Promise.map(plugins, plugin => {
+    const reporter = new plugin.Reporter(config[plugin.config]);
+    return reporter.ping()
+      .then(() => reporter.report(_.merge({}, req.body, {instance: req.params.id})))
+      .then(() => log.info('Reported to %s', plugin.name))
+      .then(() => reporter.close());
+  });
 }));
 
-Promise.fromNode(function(cb) {
-  app.listen(getConfig().LANDO_METRICS_PORT, cb);
+// Main logix
+Promise.fromNode(cb => {
+  app.listen(config.LANDO_METRICS_PORT, cb);
 })
-.then(function() {
-  log('Listening on port: %s', getConfig().LANDO_METRICS_PORT);
+.then(() => {
+  log.info('Listening on port: %s', config.LANDO_METRICS_PORT);
 });
