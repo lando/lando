@@ -1,7 +1,7 @@
 'use strict';
 
 // Modules
-const bugsnag = require('bugsnag');
+const bugsnag = require('@bugsnag/js');
 const Promise = require('bluebird');
 
 /*
@@ -67,8 +67,11 @@ class Bugsnag {
         // Add stack trace.
         err.stack = data.stack;
         // Report to bug snag along with full meta data.
-        return Promise.fromNode(cb => {
-          client.notify(err, {}, cb);
+        return new Promise((resolve, reject) => {
+          client.notify(err, {}, (err, report) => {
+            if (err) reject(err);
+            else resolve(report);
+          });
         });
       }
     });
