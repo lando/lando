@@ -1,5 +1,6 @@
 # 2019
 
+* Change $PATH directory order for the pantheon recipe
 * Correct spelling with codespell
 
 ## v3.0.0-rc.22 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.22)
