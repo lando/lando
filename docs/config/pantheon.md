@@ -416,6 +416,28 @@ This means that you should be able to use `lando drush` out of the box. That sai
 
 If you decide to list `drush` as a dependency in your project's `composer.json` then Lando will use that one instead. You should be careful if you use Drush 9 as this is not currently *officially* supported by Pantheon.
 
+If you wish to override the globally installed Drush, edit your `.lando.yml` and add the following:
+```yaml
+services:
+  appserver:
+    composer:
+      drush/drush: ^9
+...
+tooling:
+  drush:
+    service: appserver
+    cmd: drush --root=/app/web
+```
+This will override the globally installed Drush with the latest release of 9.x for a nested webroot project.  Keep in mind, if you have a site-local Drush install (ie. in your `composer.json`), that will override the globally installed version.
+
+The order of precedence for the Drush executable is below:
+1. Site-local Drush install
+2. Landofile (ie. `.lando.yml`) configured Drush
+3. Globally installed Drush
+
+What this means essentially is if you want to use the globally installed (or overridden) Drush version, do not install Drush as a dependency in your project (ie. in your `composer.json`).
+Pantheon recommends the globally installed Drush for most use cases.  See https://pantheon.io/docs/drush-versions.
+
 ### Configuring your root directory
 
 If you are using `web_docroot` in your `pantheon.yml` you will need to remember to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
@@ -447,6 +469,14 @@ $base_url = "http://mysite.lndo.site"
 ```php
 $options['uri'] = "http://mysite.lndo.site";
 ```
+Another way is to add the uri option in the tooling command as shown below:
+```yaml
+tooling:
+  drush:
+    service: appserver
+    cmd: drush --root=/app/web --uri=http://mysite.lndo.site
+```
+This will set the uri for a nested webroot project.
 
 ## Using Terminus
 

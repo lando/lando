@@ -20,13 +20,13 @@ const PANTHEON_INDEX_HOST = 'index';
 const PANTHEON_INDEX_PORT = '449';
 const PATH = [
   '/app/vendor/bin',
+  '/var/www/.composer/vendor/bin',
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',
   '/usr/bin',
   '/sbin',
   '/bin',
-  '/var/www/.composer/vendor/bin',
   '/srv/bin',
 ];
 
