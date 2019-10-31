@@ -29,7 +29,7 @@ const getUserData = (data = {}) => ({
 const getContextData = (data = {}) => {
   switch (data.product) {
     case 'lando': return data.command;
-    case 'pld': return data.operation || data.command;
+    case 'localdev': return data.operation || data.command;
     default: return 'kalabox';
   }
 };
