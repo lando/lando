@@ -48,7 +48,7 @@ You can do the same thing for any NPM project; for example Grunt would be `grunt
 Note we've now added a further bash command to `build` to automatically run gulp every time we start the app.
 
 :: tip Package Versions Are Fully Armed and Customizable
-You can lock your app tooling to whatever package version you like. Don't use node:6.10? Change to one of the other available versions in the [service documentation](services/node.md). And you're free to download whatever version of a global service your heart desires. For example, if you want to lock your team to something more stable than the latest gulp-cli, change that entry in `globals` to `gulp-cli:1.3.0`.
+You can lock your app tooling to whatever package version you like. Don't use node:6.10? Change to one of the other available versions in the [service documentation](./../config/node.md). And you're free to download whatever version of a global service your heart desires. For example, if you want to lock your team to something more stable than the latest gulp-cli, change that entry in `globals` to `gulp-cli:1.3.0`.
 :::
 
 ## Making Tooling Available on the CLI
