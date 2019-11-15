@@ -96,7 +96,7 @@
                       color: #4e6e8e;
                     }
                   `;
-                  window.onload = () => {
+                  window.onload = function() {
                     const joinHTML = document.getElementById("hs-form-iframe-0").contentDocument;
                     joinHTML.body.innerHTML += '<style>' + hscss + '</style>';
                   }
