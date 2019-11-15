@@ -37,7 +37,6 @@
                     formId: '9017bea2-dd0c-402a-8c97-d1b1d7429a00',
                   });
                 </script>
-
               </p>
             </div>
           </div>
@@ -188,11 +187,17 @@ export default {
     this.$router.afterEach(() => {
       this.isSidebarOpen = false;
     });
-    // Let's inject some CSS to make things look a bit nicer
-    window.onload = function() {
-      const joinHTML = document.getElementById("hs-form-iframe-0").contentDocument;
-      joinHTML.body.innerHTML += `<style>${hscss}</style>`;
-    }
+
+    // Let's inject some CSS to make things look a bit nicer but add some
+    // nasty recursion just to make sure everthing is in order
+    const iid = setInterval(() => {
+      if (document.getElementById('hs-form-iframe-0') !== null) {
+        const joinHTML = document.getElementById('hs-form-iframe-0');
+        joinHTML.contentDocument.body.innerHTML += `<style>${hscss}</style>`;
+        joinHTML.style.height = '1000px';
+        window.clearInterval(iid);
+      }
+    }, 250);
   },
   methods: {
     toggleSidebar(to) {
