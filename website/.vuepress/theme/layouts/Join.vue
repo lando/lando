@@ -122,6 +122,13 @@ const hscss = `
   .hs-available_for_contract_work label.hs-form-booleancheckbox-display span {
     color: #4e6e8e;
   }
+  @media (max-width: 750px) {
+    form {
+      margin: auto;
+      padding: 0;
+      border: 0;
+    }
+  }
 `;
 
 export default {
@@ -301,8 +308,6 @@ export default {
     font-size: 1.5em
     a
       font-style: italic
-#hs-form-iframe-0
-  text-align: center;
 .newsletter-form
   position: relative
   max-width: 550px
