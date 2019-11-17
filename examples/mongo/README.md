@@ -39,7 +39,7 @@ lando rebuild -y
 lando mongo test --eval "printjson(db.getCollectionNames())" | grep lando
 
 # Should use the user specified config if given
-lando ssh -s custom -c "cat /opt/bitnami/mongodb/conf/mongodb.conf | grep HELLOTHERE"
+lando ssh -s custom -c "cat /bitnami/mongodb/conf/lando.conf | grep HELLOTHERE"
 ```
 
 Destroy tests
