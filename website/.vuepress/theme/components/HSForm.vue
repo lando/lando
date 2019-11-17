@@ -103,8 +103,8 @@ export default {
     // Let's inject some CSS to make things look a bit nicer but add some
     // nasty recursion just to make sure everthing is in order
     const iid = setInterval(() => {
-      if (document.getElementById('hs-form-iframe-0') !== null) {
-        const joinHTML = document.getElementById('hs-form-iframe-0');
+      if (document.getElementsByClassName('hs-form-iframe')[0] !== null) {
+        const joinHTML = document.getElementsByClassName('hs-form-iframe')[0];
         joinHTML.contentDocument.body.innerHTML += `<style>${hscss}</style>`;
         joinHTML.style.height = `${this.height}px`;
         window.clearInterval(iid);

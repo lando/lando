@@ -30,7 +30,9 @@
               <h3>I'd love to join <em>The Alliance</em> as a(n)...</h3>
 
               <p>
-                <HSForm form="9017bea2-dd0c-402a-8c97-d1b1d7429a00"></HSForm>
+                <keep-alive>
+                  <HSForm form="9017bea2-dd0c-402a-8c97-d1b1d7429a00" />
+                </keep-alive>
               </p>
             </div>
           </div>
