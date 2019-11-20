@@ -25,11 +25,6 @@
 import ParentLayout from '@theme/layouts/Layout.vue';
 import HSForm from '@theme/components/HSForm';
 
-// Update data
-const updateData = (data) => {
-
-};
-
 export default {
   components: {HSForm, ParentLayout},
   data() {
@@ -50,7 +45,7 @@ export default {
     },
   },
   watch: {
-    '$route.path': function (action) {
+    '$route.path': function() {
       this.refreshData();
     },
   },
@@ -84,8 +79,32 @@ export default {
   #hs_form
     .inner
       max-width: 900px
+  .newsletter-form
+    padding-top: 2em
+    position: relative
+    max-width: 75%
+    margin: 0 auto
+    box-sizing: border-box
+    .button
+      font-size: 1.6em
+  .newsletter-input
+    width: 100%
+    box-sizing: border-box
+    padding: 10px 80px 10px 20px
+    height: 50px
+    border-radius: 50px
+    border: 1px solid #ccc
+    font-size: 16px
+    &:focus
+      outline: none
+      border-color: lighten($accentColor, 18%)
 @media (max-width: $MQMobile)
   #content
+    .newsletter-form
+      max-width: 90%
+      .button
+        font-size: 1.2em
+        width: 100%
     #hero
       h1
         font-size: 4em

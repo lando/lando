@@ -105,7 +105,7 @@ whats:
 - title: tomcat
   icon: devicon-tomcat-line-wordmark
 
-howByline: Commit a Landofile with all your project's dependencies to your code repository and collaborate like you would with any other file.
+howByline: Commit a Landofile that describes your project's dependencies to your code repository and collaborate like you would any other file.
 ---
 <div class="step">
   <div class="left">

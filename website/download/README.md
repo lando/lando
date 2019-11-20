@@ -8,33 +8,22 @@ description: Download Lando and take your local development and DevOps workflow 
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 ---
 
-<div class="step">
+<div class="step step-full">
   <div class="left">
     <div class="step-number"><p>1</p></div>
   </div>
   <div class="right">
-    <h3>Download Lando</h3>
+    <h3>Download & Install Lando</h3>
     <div>
       <p>Head over to the releases section of our GitHub page and <a href="https://github.com/lando/lando/releases" target="_blank">download</a> the version that makes sense for your operating system.</p>
+      <p>Double click the package in the download and consult the <a href="https://docs.lando.dev/basics/installation.html" target="_blank">documentation</a> if you have trouble.</p>
     </div>
   </div>
 </div>
 
-<div class="step">
+<div class="step step-full step-border hide-ender">
   <div class="left">
     <div class="step-number"><p>2</p></div>
-  </div>
-  <div class="right">
-    <h3>Install Lando</h3>
-    <div>
-      <p>Installing is as simple as double clicking on the package you just downloaded but definitely consult the <a href="https://docs.lando.dev/basics/installation.html" target="_blank">documentation</a> for complete instructions and troubleshooting info.</p>
-    </div>
-  </div>
-</div>
-
-<div class="step hide-ender">
-  <div class="left">
-    <div class="step-number"><p>3</p></div>
   </div>
   <div class="right">
     <h3>Spin up your first app</h3>
@@ -58,20 +47,34 @@ lando init --source cwd --recipe lamp --webroot . --name hello-lando
 # Start it up
 lando start
 ```
-<div class="step"></div>
+<br />
+<br />
+<br />
 
-<div class="step">
+<div class="step step-full step-border hide-ender">
   <div class="left">
-    <div class="step-number"><p>4</p></div>
+    <div class="step-number"><p>3</p></div>
   </div>
   <div class="right">
-    <h3>Join the movement to liberate developers everywhere</h3>
+    <h3>Get setup for success!</h3>
     <div>
-      <p>Help us keep Lando by and for developers everywhere by supporting <a href="https://lando.dev/alliance/join/" target="_blank">our movement</a> to liberate developers from dev monotony so they can focus on their most important work.
-      </p>
+      <p>We'll send you a welcome email with all you need to know to get the most out of Lando.</p>
+      <p>This will also include things like code examples, helpful development and support resources, project updates and a monthly digest of helpful Lando blog posts.</p>
     </div>
-    <div>
-      <a class="button big" href="/alliance/join/">JOIN THE ALLIANCE!</a>
+    <div id="mc_embed_signup" class="download-newsletter">
+      <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
+        <div id="mc_embed_signup_scroll">
+          <div class="mc-field-group">
+            <input type="email" value="" placeholder="Email address" name="EMAIL" class="required email newsletter-input" id="mce-EMAIL">
+          </div>
+          <div id="mce-responses" class="clear">
+            <div class="response" id="mce-error-response" style="display:none"></div>
+            <div class="response" id="mce-success-response" style="display:none"></div>
+          </div>
+          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_59874b4d6910fa65e724a4648_613837077f" tabindex="-1" value=""></div>
+          <div class="clear"><input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

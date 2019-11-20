@@ -12,13 +12,16 @@
             <div class="byline">
               <p>{{ data.byline }}</p>
             </div>
+            <div class="hero-action">
+              <div class="hero-primary">
+                <a class="button blue" href="/download/">GET LANDO!</a>
+              </div>
+              <div class="hero-secondary">
+                <a class="button" href="/alliance/join/">JOIN</a>
+                <a class="button" href="/sponsor">SPONSOR</a>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="hero-footer">
-          <a class="button blue" href="/download/">GET LANDO!</a>
-          <a class="button" href="/alliance/join/">JOIN THE ALLIANCE</a>
-          <a class="button" href="/sponsor">SPONSOR LANDO</a>
         </div>
       </div>
     </div>
@@ -198,6 +201,7 @@ export default {
     h1
       padding-top: 0
       margin-top: .5em
+      color: #2c3e50
     h2
       font-size: 5em
       margin: 0 0 10px
@@ -213,14 +217,19 @@ export default {
     .hero-right
       width: 60%
       text-align: right
-    .hero-footer
-      margin: auto
-      text-align: center
     .hero-logo
-      width: 368px
-      height: 368px
+      width: 555px
+      height: 555px
       float: right
       margin-right: 60px
+    .hero-primary
+      .button
+        margin: .1em
+      a
+        width: 70%
+    .hero-secondary
+      a
+        width: 35%
     .button
       width: 30%
       margin: 1em 0
@@ -370,8 +379,6 @@ export default {
         border: 0
       .hero-header
         padding-bottom: 0
-      .hero-footer
-        padding-bottom: 2em
       .hero-logo
         float: none
         margin: 30px 0 15px
@@ -380,6 +387,14 @@ export default {
       .hero-left, .hero-right
         text-align: center
         width: 100%
+      .hero-primary
+        .button
+          margin: .1em
+        a
+          width: 90%
+      .hero-secondary
+        a
+          width: 45%
       .byline
         padding-top: 3em
         p
@@ -429,6 +444,14 @@ export default {
       div[class*=language-]
         margin: .85rem -1.5em
         border-radius: 0
+@media (max-width: $MQMobileNarrow)
+  .lando-front
+    #hero
+      .hero-primary,
+      .hero-secondary
+        a
+          width: 100%
+          margin-bottom: .2em
 @media (max-width: 321px)
   .lando-front
     h1,
@@ -446,4 +469,9 @@ export default {
     #whos
       .inner
         padding: 0
+    #hero
+      .hero-primary,
+      .hero-secondary
+        a
+          width: 100%
 </style>

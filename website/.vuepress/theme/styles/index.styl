@@ -7,7 +7,7 @@ p
   word-spacing: 0.05em
   line-height: 2
 h1, h2
-  color: #000000;
+  color: #2c3e50;
   font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
   font-size: 4em
   margin: 0
@@ -29,6 +29,7 @@ h4
 a.button,
   input.button
     padding: 0.50em 2em
+    border: 0
     border-radius: 2em
     display: inline-block
     color: #fff
@@ -49,15 +50,12 @@ a.button,
     &.gray
       background-color: #4e6e8e
       color: $light
-      border-color: #4e6e8e
     &.blue
       background-color: lighten($landoBlue, 25%)
       color: #ffffff
-      border-color: lighten($landoBlue, 25%)
     &.green
       background-color: lighten($landoGreen, 25%)
       color: #ffffff
-      border-color: lighten($landoGreen, 25%)
     &.big
       width: 75%
       padding: 1em 1em
@@ -98,6 +96,19 @@ header.navbar
   padding-top: 3em
   padding-bottom: 2em
   text-align: center
+.step-half
+  display: inline-block
+  vertical-align: top
+  width: 45%
+  padding-left: 1em
+  padding-right: 1em
+.step-full
+  width: 80%
+  margin: auto
+.step-border
+  border-top: 1px solid lighten($landoBlue, 25%)
+.theme-default-content:not(.custom) > *:first-child
+  margin-top: 0;
 .step-end
   padding-bottom: 2em
   &:after
@@ -117,6 +128,10 @@ header.navbar
     font-weight: bold
     font-family: "Poppins"
     color: #ffffff
+@media (max-width: $MQNarrow)
+  .step-half
+    vertical-align: top;
+    width: 80%
 @media (min-width: $MQMobile)
   .nav-item-get-lando
     text-transform: uppercase
