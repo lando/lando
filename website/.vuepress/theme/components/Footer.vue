@@ -282,11 +282,11 @@
   .footer-right
     text-align: center
     vertical-align: middle
-    .footer-social,
+    .footer-social
       padding-top: 1em
       padding-bottom: 3em
     .social-icon
-      margin 0 5px
+      margin: 0 5px
       padding: 1em
       svg
         width: 64px
