@@ -134,7 +134,7 @@
             </div>
             <div class="footer-newsletter">
               <h3 class="strikethrough">
-                <label for="member_email"><a id="newsletter">Get the latest Alliance updates</a></label>
+                <label for="member_email"><a id="newsletter">Get the latest updates</a></label>
               </h3>
               <div id="mc_embed_signup">
                 <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
@@ -244,10 +244,11 @@
     h3
       font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
       text-align: center
-      color: $landoPink
+      color: lighten($landoBlue, 90%)
       font-size: 2em
       letter-spacing: 0
       a
+        color: lighten($landoBlue, 90%)
         font-weight: 800
         font-size: .9em
     h4
@@ -293,7 +294,6 @@
         height: 64px
         fill: lighten($landoBlue, 50%)
     .footer-newsletter
-      padding-top: 25%
       #mc_embed_signup
         padding-top: 2em
   .footer-bottom,

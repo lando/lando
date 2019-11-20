@@ -1,13 +1,12 @@
 ---
 navbar: true
+layout: LandoPage
+title: Get Lando!
+byline: Free yourself from the mind-forged manacles of lesser dev tools. Save time, headaches, frustration and do more real work.
 metaTitle: Get Lando | Lando
 description: Download Lando and take your local development and DevOps workflow to lightspeed.
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 ---
-
-# Get Lando!
-
-Lando is and always will be _**free**_ and _**open source**_.
 
 <div class="step">
   <div class="left">
@@ -76,9 +75,3 @@ lando start
     </div>
   </div>
 </div>
-
-
-That said, it takes a considerable amount of time to maintain, support and grow Lando. If you like Lando and think it's valuable we'd _highly encourage_ you to [join _The Lando Alliance_](/alliance/join/) and return some of that value to help support our movement to liberate developers everywhere.
-
-We're down to keep solving DevOps for everyone and with your support we can.
-

@@ -166,6 +166,8 @@ export default {
 
 <style lang="stylus">
 .lando-front
+  background-image: url("/images/space.jpg")
+  background-repeat-y: repeat
   .nav-item-get-lando,
   .nav-item-join-the,
   .nav-item-sponsor
@@ -359,13 +361,13 @@ export default {
       visibility: visible
       opacity: 1
     #hero
+      padding: 40px 40px 30px
       h1
         font-size: 3em
       h2
         display: block
         color: #ffffff
         border: 0
-      padding: 40px 40px 30px
       .hero-header
         padding-bottom: 0
       .hero-footer

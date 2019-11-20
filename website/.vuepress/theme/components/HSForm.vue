@@ -18,13 +18,13 @@ const hscss = `
     margin: 0;
     padding-bottom: 1em;
   }
-  .inputs-list label {
-    line-height: 26px;
-  }
   form {
     margin: auto;
     padding: 5em;
-    border: 1px #ed3f7a solid;
+    background-color: #024164;
+  }
+  .inputs-list label {
+    line-height: 26px;
   }
   .inputs-list:first-child {
     padding-top: 2em;
@@ -99,7 +99,7 @@ export default {
     },
     height: {
       type: Number,
-      default: 1000,
+      default: 1100,
     },
     portal: {
       type: String,
