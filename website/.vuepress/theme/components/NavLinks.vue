@@ -6,6 +6,7 @@
     <!-- user links -->
     <div
       :class="item.classes"
+      :id="item.id"
       v-for="item in userLinks"
       :key="item.link"
     >
@@ -89,6 +90,7 @@ export default {
         return Object.assign(resolveNavLinkItem(link), {
           items: (link.items || []).map(resolveNavLinkItem),
           classes: ['nav-item', getUserLinkClassName(link)].join(' '),
+          id: getUserLinkClassName(link),
         });
       });
     },

@@ -11,6 +11,13 @@
 
 // CSS
 const hscss = `
+  h1, h2, h3 {
+    color: #f06292;
+    font-weight: 600;
+    font-size: 2.4em;
+    margin: 0;
+    padding-bottom: 1em;
+  }
   .inputs-list label {
     line-height: 26px;
   }
