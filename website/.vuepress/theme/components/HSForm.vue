@@ -1,10 +1,5 @@
 <template>
-  <script>
-    hbspt.forms.create({
-      portalId: '{{ portal }}',
-      formId: '{{ form }}',
-    });
-  </script>
+  <div id="hs_form_injector"></div>
 </template>
 
 <script>
@@ -12,10 +7,14 @@
 // CSS
 const hscss = `
   h1, h2, h3 {
-    color: #f06292;
-    font-weight: 600;
-    font-size: 2.4em;
+    color: #fff;
+    font-family: "Poppins", "Helvetica Neue", Arial, sans-serif;
+    font-size: 4em;
     margin: 0;
+    padding: 0;
+    border: 0;
+    letter-spacing: -1px;
+    line-height: 1;
     padding-bottom: 1em;
   }
   form {
@@ -32,8 +31,21 @@ const hscss = `
   .inputs-list .hs-form-checkbox  {
     padding-bottom: 2em;
   }
+  .inputs-list .hs-form-checkbox span {
+    color: #efefef;
+  }
   .inputs-list .hs-form-checkbox small  {
-    color: #4e6e8e;
+    color: #daf2fe;
+  }
+  .inputs-list .hs-form-checkbox strong  {
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    text-align: center;
+    color: #daf2fe;
+    font-size: 1.4em;
+    letter-spacing: 0;
+  }
+  .inputs-list .hs-form-checkbox  {
+    color: #daf2fe;
   }
   .multi-container {
     padding-bottom: 1em;
@@ -73,14 +85,10 @@ const hscss = `
     font-size: 1em;
   }
   .hs-available_for_contract_work label.hs-form-booleancheckbox-display span {
-    color: #4e6e8e;
+    color: #daf2fe;
   }
-  @media (max-width: 750px) {
-    form {
-      margin: auto;
-      padding: 0;
-      border: 0;
-    }
+  .hs_i_m_interested_in label span {
+    color: #daf2fe;
   }
 `;
 
@@ -107,16 +115,38 @@ export default {
     },
   },
   mounted() {
-    // Let's inject some CSS to make things look a bit nicer but add some
-    // nasty recursion just to make sure everthing is in order
-    const iid = setInterval(() => {
-      if (document.getElementsByClassName('hs-form-iframe')[0] !== null) {
-        const joinHTML = document.getElementsByClassName('hs-form-iframe')[0];
-        joinHTML.contentDocument.body.innerHTML += `<style>${hscss}</style>`;
-        joinHTML.style.height = `${this.height}px`;
-        window.clearInterval(iid);
-      }
-    }, this.delay);
+    this.injectForm();
+  },
+  methods: {
+    injectForm() {
+      // Get and reset the element
+      const hsFormInjector = document.getElementById('hs_form_injector');
+      hsFormInjector.innerHTML = '';
+
+      // Add the new script tag
+      const injector = document.createElement('script');
+      injector.type = 'text/javascript';
+      injector.text = `hbspt.forms.create({
+        portalId: '${this.portal}',
+        formId: '${this.form}',
+      });`;
+      hsFormInjector.appendChild(injector);
+
+      // Attempt to style the form
+      const iid = setInterval(() => {
+        if (document.getElementsByClassName('hs-form-iframe')[0] !== null) {
+          const joinHTML = document.getElementsByClassName('hs-form-iframe')[0];
+          joinHTML.contentDocument.body.innerHTML += `<style>${hscss}</style>`;
+          joinHTML.style.height = `${this.height}px`;
+          window.clearInterval(iid);
+        }
+      }, this.delay);
+    },
+  },
+  watch: {
+    form: function() {
+      this.injectForm();
+    },
   },
 };
 </script>

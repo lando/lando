@@ -1,9 +1,13 @@
 ---
 navbar: true
 layout: LandoPage
+
 title: Join the movement!
 byline: Join the The Lando Alliance and help us liberate developers everywhere from unnecessary work, repeatable steps and dev monotony.
+
 form: 9017bea2-dd0c-402a-8c97-d1b1d7429a00
+formHeight: 1222
+
 metaTitle: Join The Lando Alliance | Lando
 description: Support Lando by joining The Lando Alliance; our movement to liberate developers everywhere from the mind-forged manacles of unnecessary work, repeatable steps and dev monotony.
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/lando-alliance.png

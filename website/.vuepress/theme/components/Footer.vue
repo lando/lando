@@ -75,11 +75,11 @@
             <div class="footer-column-half">
               <h4>Services</h4>
               <ul>
-                <li><a href="https://thinktandem.io/contact/" target="_blank">Training</a></li>
-                <li><a href="https://thinktandem.io/contact/" target="_blank">Development</a></li>
-                <li><a href="https://thinktandem.io/contact/" target="_blank">DevOps</a></li>
-                <li><a href="https://thinktandem.io/contact/" target="_blank">Whitelabeling</a></li>
-                <li><a href="https://thinktandem.io/contact/" target="_blank">Development</a></li>
+                <li><a href="https://lando.dev/contact/" target="_blank">Training</a></li>
+                <li><a href="https://lando.dev/contact/" target="_blank">Development</a></li>
+                <li><a href="https://lando.dev/contact/" target="_blank">DevOps</a></li>
+                <li><a href="https://lando.dev/contact/" target="_blank">Whitelabeling</a></li>
+                <li><a href="https://lando.dev/contact/" target="_blank">Development</a></li>
               </ul>
               <h4>Repos</h4>
               <ul>
@@ -103,7 +103,7 @@
                 <li><a href="https://launchpass.com/devwithlando" target="_blank">Slack</a></li>
                 <li><a href="https://github.com/lando/lando/tree/master/examples" target="_blank">Code Samples</a></li>
                 <li><a href="https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg" target="_blank">YouTube</a></li>
-                <li><a href="https://thinktandem.io/contact/" target="_blank">Dedicated</a></li>
+                <li><a href="https://lando.dev/contact/" target="_blank">Dedicated</a></li>
               </ul>
               <h4>Kalabox</h4>
               <ul>
@@ -114,6 +114,10 @@
               <ul>
                 <li><a href="/terms/">Terms</a></li>
                 <li><a href="/privacy/">Privacy Policy</a></li>
+              </ul>
+              <h4>Other</h4>
+              <ul>
+                <li><a href="/contact/">Contact</a></li>
               </ul>
             </div>
           </div>

@@ -12,9 +12,7 @@
     </div>
     <div id="hs_form" v-if="form" slot="page-bottom">
       <div class="inner">
-        <keep-alive>
-          <HSForm :form="form" />
-        </keep-alive>
+        <HSForm :form="form" :height="formHeight" />
       </div>
     </div>
   </ParentLayout>
@@ -31,6 +29,7 @@ export default {
     return {
       byline: '',
       form: '',
+      formHeight: 1000,
       title: '',
     };
   },
@@ -41,6 +40,7 @@ export default {
     refreshData() {
       this.byline = this.$frontmatter.byline || '';
       this.form = this.$frontmatter.form || '';
+      this.formHeight = this.$frontmatter.formHeight;
       this.title = this.$frontmatter.title || this.$siteTitle;
     },
   },
