@@ -27,7 +27,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
   <em>Our common cause?</em> To liberate developers across the galaxy so they can <strong>focus on their most important work</strong>.
 
-  Lando is <em>free and open source</em> software and relies on community contributions to sustain itself. So if you like Lando and think it's valuable we'd highly encourage you to return some of that value with your time or a financial contribution.
+  Lando is <em>free and open source</em> software and relies on community contributions to sustain itself. So, if you like Lando and think it's valuable we'd highly encourage you to return some of that value with your time or a financial contribution.
 
   With your help we can cover infrastruture costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.
 
