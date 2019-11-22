@@ -42,6 +42,8 @@ module.exports = {
       {text: 'Get Lando!', link: '/download/'},
       {text: 'Join The Alliance', link: '/alliance/join/'},
       {text: 'Sponsor', link: '/sponsor/'},
+      {text: 'Documentation', link: 'https://docs.lando.dev'},
+      // {text: 'Blog', link: 'https://blog.lando.dev'},
       {text: 'Services & Support', link: '/contact/'},
     ],
   },

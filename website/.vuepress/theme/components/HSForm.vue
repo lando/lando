@@ -90,6 +90,14 @@ const hscss = `
   .hs_i_m_interested_in label span {
     color: #daf2fe;
   }
+  @media (max-width: 400px) {
+    form {
+      padding: 3em;
+    }
+    h1, h2, h3 {
+      font-size: 3em;
+    }
+  }
 `;
 
 export default {
@@ -132,12 +140,18 @@ export default {
       });`;
       hsFormInjector.appendChild(injector);
 
+      // Add a correction factor to height on smaller devices
+      let height = this.height;
+      if (window.screen.width < 800) {
+        height = height + 830 - window.screen.width;
+      }
+
       // Attempt to style the form
       const iid = setInterval(() => {
         if (document.getElementsByClassName('hs-form-iframe')[0] !== null) {
           const joinHTML = document.getElementsByClassName('hs-form-iframe')[0];
           joinHTML.contentDocument.body.innerHTML += `<style>${hscss}</style>`;
-          joinHTML.style.height = `${this.height}px`;
+          joinHTML.style.height = `${height}px`;
           window.clearInterval(iid);
         }
       }, this.delay);

@@ -23,7 +23,12 @@
         </ul>
       </div>
       <div :class="priceButtonColor">
-        <a :href="link">Sponsor</a>
+        <a :href="link" target="_blank"><i class="devicon-github-plain"></i>Sponsor</a>
+      </div>
+      <div class="other-links">
+        <span class="other-link" v-for="other in otherLinks" :key="other.name">
+          <a :href="other.url" target="_blank">{{other.name}}</a>
+        </span>
       </div>
     </div>
   </div>
@@ -48,6 +53,13 @@ export default {
       type: String,
       default: 'https://github.com/sponsors/lando?preview=true',
     },
+    otherLinks: {
+      type: Array,
+      default: () => ([
+        {name: 'Patreon', url: 'https://www.patreon.com/devwithlando'},
+        {name: 'OpenCollective', url: 'https://opencollective.com/devwithlando'},
+      ]),
+    },
     price: {
       type: String,
       default: '4',
@@ -70,6 +82,24 @@ export default {
 <style lang="stylus">
 #lando-tier
   margin: 50px 0 50px 0
+  i
+    font-size: 1em
+    padding-right: .3em
+    position: relative
+    top: 1px
+  .other-links
+    padding-bottom: 25px
+    a
+      color: $landoBlue
+      font-size: .7em
+      text-transform: uppercase
+    .other-link
+      margin-right: 5px
+      &:after
+        content: ' |'
+      &:last-child
+        &:after
+          content: ''
   .lando-tier-content
     border-bottom: 1px solid #cccccc
     background-color: lighten(#efefef, 90%)
@@ -136,7 +166,7 @@ export default {
           .fa
             padding: 0 10px
     .lando-price-button
-      margin: 20px 0 32px
+      margin: 20px 0 10px
       a
         border-radius: 50px
         display: inline-block

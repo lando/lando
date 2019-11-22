@@ -114,7 +114,8 @@ export default {
 @media (max-width: $MQMobileNarrow)
   #content
     #hero
-      padding: 20px 10px 10px
       h1
-        font-size: 3.5em
+        font-size: 2.8em
+      .byline
+        font-size: 1em
 </style>

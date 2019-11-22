@@ -17,7 +17,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
   <img src="/images/lando-alliance.png">
 </div>
 
-<div class="liberation-manifesto" style="text-align: justify; width: 80%; margin: auto;">
+<div class="liberation-manifesto">
   <p>
   Over the last year we've watched our community grow from several hundred to over <b>10,000</b> and this exponential growth trajectory doesn't seem to be stopping anytime soon!
 
