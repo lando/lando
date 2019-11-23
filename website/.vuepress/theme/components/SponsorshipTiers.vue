@@ -22,10 +22,13 @@ export default {
       tiers: [
         {
           benefits: [
-            {value: 'shoutout', key: 'on twitter and our websites'},
-            {value: 'swag ', key: 'a shirt, mug, etc every year'},
-            {value: 'shoutout', key: 'on twitter and our websites'},
-            {value: 'swag ', key: 'a shirt, mug, etc every year'},
+            {value: 'support', key: 'get better community support'},
+            {value: 'bugs & features', key: 'get more bug fixes and features'},
+            {value: 'shoutout', key: 'get a shoutout on twitter and anywhere else we list sponsors'},
+            {value: 'swag', key: 'get a yearly surprise swag benefit be it shirt, mug, hoodie or other'},
+            {value: '', key: ''},
+            {value: '', key: ''},
+            {value: '', key: ''},
           ],
           color: 'blue',
           level: 'developer',
@@ -34,10 +37,12 @@ export default {
         },
         {
           benefits: [
-            {value: 'advert', key: 'my logo featured on Lando websites'},
-            {value: 'marketing', key: 'on-demand retweets of my content'},
-            {value: 'early access', key: 'exclusive accesss to new features'},
-            {value: 'surveys', key: 'help us prioritize new features and bugs'},
+            {value: 'advertise', key: 'get your logo featured anywhere we list sponsors'},
+            {value: 'market', key: 'get on demand retweets of your content and an initial twitter shoutout'},
+            {value: 'early access', key: 'get exclusive early accesss to new features'},
+            {value: 'surveys', key: 'participate in quarterly surveys to help us prioritize new features and bugs'},
+            {value: '', key: ''},
+            {value: '', key: ''},
           ],
           color: 'green',
           level: 'team',
@@ -46,10 +51,10 @@ export default {
         },
         {
           benefits: [
-            {value: 'advert', key: 'my logo featured on Lando websites'},
-            {value: 'marketing', key: 'on-demand retweets of my content'},
-            {value: 'early access', key: 'exclusive accesss to new features'},
-            {value: 'surveys', key: 'help us prioritize new features and bugs'},
+            {value: 'advertise', key: 'get prominent logo placement of your choosing on our websites and digital marketing'},
+            {value: 'market', key: 'get on demand retweets of your orgs content and an initial twitter shoutout'},
+            {value: 'connect', key: 'get a private slack channel and regular meetings with the lando team to plan out your needs'},
+            {value: 'tailor', key: 'get dedicated hours from the lando team for bugs, features, training or other services'},
           ],
           level: 'special',
           link: 'https://github.com/sponsors/lando?preview=true',

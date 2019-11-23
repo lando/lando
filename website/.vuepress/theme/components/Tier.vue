@@ -19,7 +19,10 @@
       </div>
       <div class="lando-tier-list">
         <ul v-for="benefit in benefits" :key="benefit.key">
-          <li><span>{{ benefit.value }}</span> {{ benefit.key }}</li>
+          <li>
+            <div class="benefit-key">{{ benefit.value }}</div>
+            <div class="benefit-value">{{ benefit.key }}</div>
+          </li>
         </ul>
       </div>
       <div :class="priceButtonColor">
@@ -161,10 +164,15 @@ export default {
           font-size: 18px
           padding: 15px 0
           transition: all 0.3s ease-in-out 0s
-          span
+          .benefit-key
+            text-transform: uppercase
+            font-size: 1.1em
             color: #414141
           .fa
             padding: 0 10px
+          .benefit-value
+            width: 95%
+            margin: auto
     .lando-price-button
       margin: 20px 0 10px
       a
