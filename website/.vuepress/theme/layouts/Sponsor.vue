@@ -17,6 +17,14 @@
       <div class="smaller-inner">
         <h3 class="join-sponsors">Join our great list of sponsors</h3>
         <Patriots />
+        <Partners />
+        <Allies />
+        <Heralds />
+      </div>
+      <div class="smaller-inner sponsor-button">
+        <a class="button big sponsor" href="https://github.com/sponsors/lando?preview=true" target="_blank">
+          <i class="devicon-github-plain"></i>  Sponsor
+        </a>
       </div>
     </div>
   </ParentLayout>
@@ -24,12 +32,15 @@
 
 <script>
 // Lando components
+import Allies from '@theme/components/Allies.vue';
+import Heralds from '@theme/components/Heralds.vue';
 import ParentLayout from '@theme/layouts/Layout.vue';
+import Partners from '@theme/components/Partners.vue';
 import Patriots from '@theme/components/Patriots.vue';
 import SponsorshipTiers from '@theme/components/SponsorshipTiers.vue';
 
 export default {
-  components: {ParentLayout, Patriots, SponsorshipTiers},
+  components: {Allies, Heralds, ParentLayout, Partners, Patriots, SponsorshipTiers},
   data() {
     return {
       byline: '',
@@ -80,6 +91,14 @@ export default {
   .join-sponsors
     text-align: center
     color: $landoPink
+  .smaller-inner
+    &.sponsor-button
+      text-align: center
+      padding: 3em
+  .button.big.sponsor
+    text-align: center
+    text-transform: uppercase
+    margin: auto
 @media (max-width: $MQMobile)
   #content
     #hero

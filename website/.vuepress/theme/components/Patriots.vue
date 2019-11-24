@@ -1,7 +1,7 @@
 <template>
   <div id="patriots">
     <div class="sponsor-patriot-block-header">
-      <h4>Hero<br />Patriots</h4>
+      <h4>hero<br />patriots</h4>
     </div>
     <div class="sponsor-patriot-block" v-for="(patriot, index) in patriots" :key="index">
       <a :href="patriot.url" target="_blank">
@@ -21,7 +21,6 @@ export default {
   },
   mounted() {
     this.patriots = this.$page.sponsors.patriots;
-    console.log(this);
   },
 };
 </script>
@@ -29,19 +28,18 @@ export default {
 <style lang="stylus">
 #patriots
   padding-top: 4em
-  padding-bottom: 4em
+  text-align: center
   .sponsor-patriot-block
-    max-width: 25%
-    display: inline-block;
-    vertical-align: middle;
-    box-sizing: border-box;
-    padding: 0em 1em;
+    max-width: 33%
+    display: inline-block
+    vertical-align: middle
+    box-sizing: border-box
+    padding: 2em 1em
   .sponsor-patriot-block-header
-    max-width: 25%
-    display: inline-block;
-    vertical-align: middle;
-    box-sizing: border-box;
-    padding: 4em 2em;
+    display: block
+    margin: auto
+    max-width: 250px
+    padding: 2em 1em
     background-color: $landoBlue
     text-align: right
     h4
@@ -52,8 +50,8 @@ export default {
   .sponsor-patriot-block-image
     img
       margin: 0
-      width: 125px
-      height: 125px
+      width: 200px
+      height: 200px
 @media (max-width: $MQMobile)
   #patriots
     text-align: center
@@ -61,10 +59,10 @@ export default {
       display: block
       margin: auto
       max-width: 250px
+      padding: 2em 2em
     .sponsor-patriot-block
       padding-top: 3em
       max-width: 33%
-      content-align: middle;
 @media (max-width: $MQMobileNarrow)
   #patriots
     .sponsor-patriot-block-header
@@ -74,7 +72,6 @@ export default {
       padding-top: 1em
       padding-bottom: 0
       max-width: 90%
-      content-align: middle;
     .sponsor-patriot-block-image
       img
         margin: 0
