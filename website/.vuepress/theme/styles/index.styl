@@ -96,6 +96,9 @@ header.navbar
     content: ""
 .sidebar-button
   color: #ffffff
+.smaller-inner
+  max-width: 900px
+  margin: 0 auto
 .step
   padding-top: 3em
   padding-bottom: 2em
@@ -130,6 +133,20 @@ header.navbar
     font-weight: bold
     font-family: "Poppins"
     color: #ffffff
+.strikethrough
+  display: table
+  white-space: nowrap
+  &:before, &:after
+    border-top: 1px solid lighten($landoBlue, 5%)
+    content: ''
+    display: table-cell
+    position: relative
+    top: 0.6em
+    width: 45%
+  &:before
+    right: 2.5%
+  &:after
+    left: 2.5%
 .theme-default-content:not(.custom) > *:first-child
   margin-top: 0;
 @media (max-width: $MQNarrow)
@@ -166,6 +183,19 @@ header.navbar
     border: 1px solid #ee4e85
   .step-number
     margin: auto
+  .strikethrough
+    display: table
+    white-space: nowrap
+    &:before, &:after
+      border-top: 1px solid lighten($landoBlue, 5%)
+      content: ''
+      display: table-cell
+      position: relative
+      top: 0.6em
+    &:before
+      right: 2.5%
+    &:after
+      left: 2.5%
 @media (max-width: $MQMobileNarrow)
   h1, h2
     font-size: 3em

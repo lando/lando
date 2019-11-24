@@ -262,20 +262,6 @@
       font-size: 1em
       letter-spacing: -1px
       text-transform: uppercase
-    .strikethrough
-      display: table
-      white-space: nowrap
-      &:before, &:after
-        border-top: 1px solid lighten($landoBlue, 5%)
-        content: ''
-        display: table-cell
-        position: relative
-        top: 0.6em
-        width: 45%
-      &:before
-        right: 2.5%
-      &:after
-        left: 2.5%
     .footer-image
       text-align: center
       padding-top: 2em
@@ -308,20 +294,6 @@
     color: lighten($landoBlue, 99%)
 @media (max-width: $MQMobile)
   #footer
-    .footer-top
-      .strikethrough
-        display: table
-        white-space: nowrap
-        &:before, &:after
-          border-top: 1px solid lighten($landoBlue, 5%)
-          content: ''
-          display: table-cell
-          position: relative
-          top: 0.6em
-        &:before
-          right: 2.5%
-        &:after
-          left: 2.5%
     .footer-column
       width: auto
 @media (max-width: $MQMobileNarrow)

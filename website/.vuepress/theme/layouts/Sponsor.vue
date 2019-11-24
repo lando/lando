@@ -14,6 +14,10 @@
       <div class="inner">
         <SponsorshipTiers />
       </div>
+      <div class="smaller-inner">
+        <h3 class="join-sponsors">Join our great list of sponsors</h3>
+        <Patriots />
+      </div>
     </div>
   </ParentLayout>
 </template>
@@ -21,10 +25,11 @@
 <script>
 // Lando components
 import ParentLayout from '@theme/layouts/Layout.vue';
+import Patriots from '@theme/components/Patriots.vue';
 import SponsorshipTiers from '@theme/components/SponsorshipTiers.vue';
 
 export default {
-  components: {ParentLayout, SponsorshipTiers},
+  components: {ParentLayout, Patriots, SponsorshipTiers},
   data() {
     return {
       byline: '',
@@ -72,6 +77,9 @@ export default {
       p
         line-height: 2
         font-size: 2em
+  .join-sponsors
+    text-align: center
+    color: $landoPink
 @media (max-width: $MQMobile)
   #content
     #hero

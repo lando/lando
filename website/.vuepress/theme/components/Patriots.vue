@@ -1,42 +1,83 @@
 <template>
-  <div id="news">
-    <div class="inner">
-      <h3><label for="member_email"><a id="newsletter">Get the latest Alliance updates</a></label></h3>
-        <div id="mc_embed_signup">
-          <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
-            <div id="mc_embed_signup_scroll">
-              <div class="mc-field-group">
-                <input type="email" value="" placeholder="Email address" name="EMAIL" class="required email newsletter-input" id="mce-EMAIL">
-              </div>
-              <div id="mce-responses" class="clear">
-                <div class="response" id="mce-error-response" style="display:none"></div>
-                <div class="response" id="mce-success-response" style="display:none"></div>
-              </div>
-
-              <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_59874b4d6910fa65e724a4648_613837077f" tabindex="-1" value=""></div>
-              <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-            </div>
-          </form>
-        </div>
+  <div id="patriots">
+    <div class="sponsor-patriot-block-header">
+      <h4>Hero<br />Patriots</h4>
+    </div>
+    <div class="sponsor-patriot-block" v-for="(patriot, index) in patriots" :key="index">
+      <a :href="patriot.url" target="_blank">
+        <div class="sponsor-patriot-block-image"><img :src="patriot.logo" :alt="patriot.name"></div>
+      </a>
     </div>
   </div>
 </template>
 
+
 <script>
+export default {
+  data() {
+    return {
+      patriots: [],
+    };
+  },
+  mounted() {
+    this.patriots = this.$page.sponsors.patriots;
+    console.log(this);
+  },
+};
 </script>
 
 <style lang="stylus">
-.sponsor-patriot-block
-  background-color: darken(rgba($landoPink, .92), 13%)
-  margin: auto
-  width: 10%
-  padding: 2em 4em
-  border: 1
-  text-align: center
-  img
-    height: 100px
-    filter: grayscale(.7);
-
-  a
-    color: #ffffff
+#patriots
+  padding-top: 4em
+  padding-bottom: 4em
+  .sponsor-patriot-block
+    max-width: 25%
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    padding: 0em 1em;
+  .sponsor-patriot-block-header
+    max-width: 25%
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    padding: 4em 2em;
+    background-color: $landoBlue
+    text-align: right
+    h4
+      font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
+      font-size: 2.5em
+      line-height: .8em
+      color: white
+  .sponsor-patriot-block-image
+    img
+      margin: 0
+      width: 125px
+      height: 125px
+@media (max-width: $MQMobile)
+  #patriots
+    text-align: center
+    .sponsor-patriot-block-header
+      display: block
+      margin: auto
+      max-width: 250px
+    .sponsor-patriot-block
+      padding-top: 3em
+      max-width: 33%
+      content-align: middle;
+@media (max-width: $MQMobileNarrow)
+  #patriots
+    .sponsor-patriot-block-header
+      h4
+        font-size: 2em
+    .sponsor-patriot-block
+      padding-top: 1em
+      padding-bottom: 0
+      max-width: 90%
+      content-align: middle;
+    .sponsor-patriot-block-image
+      img
+        margin: 0
+        width: 200px
+        height: auto
 </style>
