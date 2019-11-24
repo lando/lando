@@ -18,10 +18,10 @@
         </div>
       </div>
       <div class="lando-tier-list">
-        <ul v-for="benefit in benefits" :key="benefit.key">
+        <ul v-for="(benefit, index) in benefits" :key="index">
           <li>
-            <div class="benefit-key">{{ benefit.value }}</div>
-            <div class="benefit-value">{{ benefit.key }}</div>
+            <div v-if="benefit.value" class="benefit-key">{{ benefit.value }}</div>
+            <div v-if="benefit.value" class="benefit-value">{{ benefit.key }}</div>
           </li>
         </ul>
       </div>

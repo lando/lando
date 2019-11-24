@@ -288,7 +288,7 @@ export default {
         margin-right: 1%
   #carbon
     padding-bottom: 0
-    background-color: darken($landoPink, 13%)
+    background-color: darken(rgba($landoPink, .92), 13%)
     .carbon-ads
       min-height: 102px
       padding: 3em
@@ -470,6 +470,10 @@ export default {
       .inner
         padding: 0
     #hero
+      h2
+        font-size: 4em
+      h1
+        font-size: 3em
       .hero-primary,
       .hero-secondary
         a
