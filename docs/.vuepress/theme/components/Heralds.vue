@@ -52,7 +52,6 @@ export default {
   .strikethrough
     &:before, &:after
       top: 0.4em
-      border-top: 1px solid lighten($landoGrey, 85%)
 @media (max-width: $MQMobile)
   #heralds
     width: 80%

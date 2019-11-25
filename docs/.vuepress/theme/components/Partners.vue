@@ -1,9 +1,9 @@
 <template>
-  <div id="allies" class="smaller-inner">
-    <h4 class="strikethrough">allies</h4>
-    <div class="sponsor-ally-block" v-for="(ally, index) in allies" :key="index">
-      <a :href="ally.url" target="_blank">
-        <div class="sponsor-ally-block-image"><img :src="ally.logo" :alt="ally.name"></div>
+  <div id="partners" class="smaller-inner">
+    <h4 class="strikethrough">key<br />partners</h4>
+    <div class="sponsor-partner-block" v-for="(partner, index) in partners" :key="index">
+      <a :href="partner.url" target="_blank">
+        <div class="sponsor-partner-block-image"><img :src="partner.logo" :alt="partner.name"></div>
       </a>
     </div>
   </div>
@@ -13,17 +13,17 @@
 export default {
   data() {
     return {
-      allies: [],
+      partners: [],
     };
   },
   mounted() {
-    this.allies = this.$page.sponsors.teams;
+    this.partners = this.$page.sponsors.partners;
   },
 };
 </script>
 
 <style lang="stylus">
-#allies
+#partners
   padding-top: 4em
   padding-bottom: 4em
   h4
@@ -35,41 +35,40 @@ export default {
   &.smaller-inner
     max-width: 700px
     margin: auto
-  .sponsor-ally-block
-    min-width: 100px
-    max-width: 20%
+  .sponsor-partner-block
+    min-width: 120px
+    max-width: 25%
     display: inline-block
     vertical-align: middle
     box-sizing: border-box
-  .sponsor-ally-block-image
+  .sponsor-partner-block-image
     img
       margin: 0
-      width: 75px
+      width: 125px
       filter: grayscale(1)
-  .strikethrough
-    &:before, &:after
-      top: 0.4em
-      border-top: 1px solid lighten($landoGrey, 85%)
-#allies:hover
-  .sponsor-ally-block-image
+#partners:hover
+  .sponsor-partner-block-image
     img
       filter: grayscale(0)
 @media (max-width: $MQMobile)
-  #allies
+  #partners
+    padding-top: 1em
+    padding-bottom: 1em
     text-align: center
     width: 80%
-    .sponsor-ally-block
+    .sponsor-partner-block
       padding-top: 3em
-      max-width: 50%
+      max-width: 33%
+      content-align: middle
 @media (max-width: $MQMobileNarrow)
-  #allies
-    .sponsor-ally-block
+  #partners
+    .sponsor-partner-block
       padding-top: 1em
       padding-bottom: 0
-      width: 33%
-    .sponsor-ally-block-image
+      width: 40%
+    .sponsor-partner-block-image
       img
         margin: 0
         padding: .5em
-        width: 50px
+        width: 100px
 </style>

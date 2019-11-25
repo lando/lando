@@ -34,6 +34,7 @@ export default {
     padding-bottom: 1em
   &.smaller-inner
     max-width: 700px
+    margin: auto
   .sponsor-partner-block
     min-width: 120px
     max-width: 25%
@@ -45,6 +46,9 @@ export default {
       margin: 0
       width: 125px
       filter: grayscale(1)
+  .strikethrough
+    &:before, &:after
+      border-top: 1px solid lighten($landoGrey, 85%)
 #partners:hover
   .sponsor-partner-block-image
     img
