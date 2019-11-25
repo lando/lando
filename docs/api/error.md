@@ -1,16 +1,22 @@
 <a name="lando.error.handle"></a>
 
-## lando.error.handle() ⇒ <code>Object</code>
+## lando.error.handle(error, report) ⇒ <code>Integer</code>
 Returns the lando options
 
 This means all the options passed in before the `--` flag.
 
 **Kind**: global function  
-**Returns**: <code>Object</code> - Yarg parsed options  
+**Returns**: <code>Integer</code> - the error code  
 **Since**: 3.0.0  
 **Todo**
 
 - [ ] make this static and then fix all call sites
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| error | <code>Object</code> | Error object |
+| report | <code>Boolean</code> | Whether to report the error or not |
 
 **Example**  
 ```js

@@ -12,6 +12,7 @@ matrix:
     env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
     node_js: '10'
   - os: osx
+    osx_image: xcode11.2
     env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
     node_js: '10'
 services:
