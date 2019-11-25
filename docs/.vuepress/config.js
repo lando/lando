@@ -4,8 +4,7 @@ module.exports = {
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
-    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
-    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
+    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
     ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
@@ -25,6 +24,7 @@ module.exports = {
     },
     'robots': {
       host: 'https://docs.lando.dev',
+      sitemap: '/sitemap.xml',
     },
     'sitemap': {
       hostname: 'https://docs.lando.dev',

@@ -3,7 +3,7 @@
     <div class="footer-top">
       <div class="inner">
         <div class="footer-image">
-          <img src="/images/hero-white.png" alt="lando logo">
+          <img src="/images/hero-pink.png" alt="lando logo">
         </div>
         <div class="footer-column footer-left">
           <h3 class="strikethrough">Documentation</h3>

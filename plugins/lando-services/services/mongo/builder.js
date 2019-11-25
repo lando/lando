@@ -14,7 +14,7 @@ module.exports = {
     healthcheck: 'echo \'db.runCommand("ping").ok\' | mongo localhost:27017/test',
     port: '27017',
     remoteFiles: {
-      database: '/opt/bitnami/mongodb/conf/mongodb.conf',
+      database: '/bitnami/mongodb/conf/lando.conf',
     },
   },
   parent: '_service',

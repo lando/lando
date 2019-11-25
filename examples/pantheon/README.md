@@ -162,7 +162,6 @@ lando ssh -c "env" | grep php_version | grep "7.2"
 lando ssh -c "env" | grep PRESSFLOW_SETTINGS | grep pantheon
 lando ssh -c "env" | grep TERMINUS_ENV | grep dev
 lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal7
-lando ssh -c "env" | grep TERMINUS_TOKEN | grep _wD
 lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
 
 # Should not set any 8983 perms

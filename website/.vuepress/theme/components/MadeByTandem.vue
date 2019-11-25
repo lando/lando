@@ -14,10 +14,11 @@
 
 <style lang="stylus">
 #made-by
-  background-color: #fff
-  text-align: center
-  padding-bottom: 30px
-  margin-top: 2em
+  width: 25%;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  padding: 1em 2em;
   h3
     margin 0
   a
