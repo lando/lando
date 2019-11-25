@@ -44,7 +44,6 @@ export default {
     img
       margin: 0
       width: 125px
-      height: 125px
       filter: grayscale(1)
 #partners:hover
   .sponsor-partner-block-image
@@ -71,5 +70,4 @@ export default {
         margin: 0
         padding: .5em
         width: 100px
-        height: auto
 </style>

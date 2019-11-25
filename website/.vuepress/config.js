@@ -26,10 +26,22 @@ module.exports = {
     },
     'robots': {
       host: 'https://lando.dev',
+      sitemap: '/sitemap.xml',
+      policies: [
+        {
+          userAgent: '*',
+          disallow: [
+            '/alliance/thanks',
+          ],
+        },
+      ],
     },
     'sitemap': {
       hostname: 'https://lando.dev',
-      exclude: ['/404.html'],
+      exclude: [
+        '/404.html',
+        '/alliance/thanks/',
+      ],
     },
   },
   themeConfig: {

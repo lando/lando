@@ -35,13 +35,13 @@ export default {
     color: lighten($landoBlue, 20%)
     padding-bottom: 1em
   a
-    color: $landoGrey
+    color: lighten($landoGrey, 20%)
     font-weight: 800
     font-size: 1.2em
     &:after
       content: ', '
   a:hover
-    color: $landoPink
+    color: lighten($landoPink, 20%)
   .sponsor-herald:last-child
     a
       &:after

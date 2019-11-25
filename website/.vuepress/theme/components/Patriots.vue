@@ -51,7 +51,6 @@ export default {
     img
       margin: 0
       width: 200px
-      height: 200px
 @media (max-width: $MQMobile)
   #patriots
     text-align: center
@@ -76,5 +75,4 @@ export default {
       img
         margin: 0
         width: 200px
-        height: auto
 </style>

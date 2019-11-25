@@ -44,7 +44,6 @@ export default {
     img
       margin: 0
       width: 75px
-      height: 75px
       filter: grayscale(1)
   .strikethrough
     &:before, &:after
@@ -71,5 +70,4 @@ export default {
         margin: 0
         padding: .5em
         width: 50px
-        height: auto
 </style>
