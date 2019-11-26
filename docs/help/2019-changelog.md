@@ -20,8 +20,6 @@
 * Improved `metrics` server
 * Updated to Docker Desktop 2.1.0.5
 
-for Catalina prep [#1804](https://github.com/lando/lando/issues/1804)
-
 ## v3.0.0-rc.22 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.22)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
