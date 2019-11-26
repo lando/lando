@@ -2,12 +2,11 @@
 navbar: true
 layout: Sponsor
 title: Thanks For Joining Our Movement!
-byline: You'll receive an onboarding email from us shortly with all the details on your new role as Liberator of Developers
+byline: You'll receive an onboarding email from us shortly with all the details on your new role as Liberator of Developers. But in the meantime... consider a sponsorship!
 metaTitle: Thanks For Joining the Lando Alliance | Lando
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 ---
 
-<h3>In the meantime... consider a sponsorship</h3>
 <div class="seal-of-liberation">
   <img src="/images/lando-alliance.png">
 </div>

@@ -139,8 +139,10 @@ export default {
   .theme-default-content
     max-width: 900px;
     margin: 0 auto
-    text-align: center
     padding: 0 1.5em;
+    h2, h3, h4
+      padding-left: 0
+      margin-left: -8px
 @media (max-width: $MQMobile)
   #content
     .button
