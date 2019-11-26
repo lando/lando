@@ -1,5 +1,6 @@
 # 2019
 
+* Add Node.js 12 LTS support
 * Correct spelling with codespell
 
 ## v3.0.0-rc.22 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.22)

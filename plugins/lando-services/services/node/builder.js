@@ -14,7 +14,7 @@ module.exports = {
   name: 'node',
   config: {
     version: '10',
-    supported: ['11', '11.4', '10', '10.14', '10.13', '8', '8.14', '6', '6.15'],
+    supported: ['12', '12.13', '11', '11.4', '10', '10.14', '10.13', '8', '8.14', '6', '6.15'],
     patchesSupported: true,
     legacy: ['8', '6'],
     command: 'tail -f /dev/null',
