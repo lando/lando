@@ -239,6 +239,13 @@ module.exports = {
           ],
         },
         {
+          title: 'Data',
+          collapsable: false,
+          children: [
+            ['data', 'Privacy Policy for Humans'],
+          ],
+        },
+        {
           title: 'Project Updates',
           collapsable: false,
           children: [

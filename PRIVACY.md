@@ -1,6 +1,7 @@
 # Privacy Policy
 
 Effective date: November 26, 2019
+
 Kalabox Inc DBA Tandem ("Tandem", "us", "we", or "our") operates the Lando software (hereinafter referred to as the "Software").
 
 This page informs you of our policies regarding the collection, use and disclosure of personal data when you use our Software and the choices you have associated with that data.
@@ -9,7 +10,7 @@ The Software automatically communicates with Tandem to send error reports and co
 
 We use your data to provide and improve the Software. By using the Software, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, the terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible at https://raw.githubusercontent.com/lando/lando/master/TERMS.md
 
-For a more human readable version of this, check out: https://docs.lando.dev/help/data.html
+For a more human readable explanation of this, check out: https://docs.lando.dev/help/data.html
 
 ## Definitions
 
@@ -59,7 +60,7 @@ You may opt out of sending the usage data and error reports by following instruc
 
 #### Crash Data
 
-Crash Data will only be sent to Tandem if the user opts in and gives us permission to do so. We have tried our best to anonymize Crash Data, but recognize that some path names and other information that we collect may inadvertently include Personal Data, including but not limited to usernames and site names.
+Crash Data will only be sent to Tandem if the user opts in and gives us permission to do so. We have tried our best to pseudonymize Crash Data, but recognize that some path names and other information that we collect may inadvertently include Personal Data, including but not limited to usernames and site names.
 
 View a Lando log file to see a sample of what we collect.
 https://docs.lando.dev/help/data.html
@@ -142,7 +143,7 @@ You have the right to complain to a Data Protection Authority about our collecti
 
 ## Software Providers
 
-Tandem utilizes services from Bugsnag Inc. and Qbox, Inc. to store and process data from the Software and has obtained Data Protection Agreements with both entities for this purpose.
+Tandem utilizes services from Bugsnag Inc. and Qbox, Inc. to store and process data from the Software and has obtained DPAs with both entities for this purpose.
 
 These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
 

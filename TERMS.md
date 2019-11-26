@@ -77,9 +77,7 @@ PLEASE READ THIS AGREEMENT CAREFULLY. BY CLICKING “I ACCEPT,” OR BY INSTALLI
 
 ## Privacy Notices
 
-The Software automatically communicates with to send error reports and collect usage data so we may improve the Software. You may opt out of sending the usage data and error reports by following instructions provided in relevant Software documentation.
-
-We have tried our best to anonymize usage data, but recognize that some path names and other information that we collect may inadvertently include personally identifiable information, including but not limited to usernames and sitenames. View a Lando log file to see a sample of what we collect.
+See PRIVACY.md
 
 ## Disclaimers and Limitations on Liability
 
