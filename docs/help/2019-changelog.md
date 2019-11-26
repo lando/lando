@@ -14,6 +14,7 @@
 * Added sponsorship options to the website and docs [#0](https://lando.dev/sponsor/)
 * Added `The Lando Alliance` to the website [#0](https://lando.dev/alliance/join/)
 * Added Catalina support via Notarization [#1829](https://github.com/lando/lando/issues/1829)
+* Clarified and updated Terms of Use and Privacy Policy
 * Fixed `NET::ERR_CERT_INVALID` on Chrome, may require `lando restart` [#1831](https://github.com/lando/lando/issues/1831)
 * Improved anonymity of usage reporting
 * Improved `metrics` server
