@@ -32,9 +32,16 @@ jobs:
           name: Install node modules
           command: yarn
       - run:
+          name: Disable usage and error reporting
+          command: |
+            # Disable usage reporting
+            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
+            # Disable error reporting
+            mkdir -p ~/.lando/cache
+            echo false > ~/.lando/cache/report_errors
+      - run:
           name: Switch lando over to binary built from source
           command: |
-            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
             # sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
             yarn pkg:cli

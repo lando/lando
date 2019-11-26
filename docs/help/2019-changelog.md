@@ -1,6 +1,10 @@
 # 2019
 
-* Correct spelling with codespell
+## v3.0.0-rc.23 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.23)
+
+**SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
+* Updated to Docker Desktop 2.1.0.2/3 for Catalina prep [#1804](https://github.com/lando/lando/issues/1804)
 
 ## v3.0.0-rc.22 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.22)
 
