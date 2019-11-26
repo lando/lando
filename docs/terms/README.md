@@ -5,7 +5,7 @@ description: Lando Documentation's Terms and Conditions
 
 # Terms and Conditions
 
-Last updated: November 26, 2019
+**Last updated:** _November 26, 2019_
 
 These Terms and Conditions ("Terms", "Terms and Conditions") govern your relationship with <https://docs.lando.dev> website (the "Service") operated by Kalabox Inc DBA Tandem ("us", "we", or "our").
 

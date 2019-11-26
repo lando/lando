@@ -5,7 +5,7 @@ description: Lando Documentation's Privacy Policy
 
 # Privacy Policy
 
-Effective date: November 26, 2019
+**Effective date:** _November 26, 2019_
 
 Kalabox Inc DBA Tandem ("us", "we", or "our") operates the <https://docs.lando.dev> website (hereinafter referred to as the "Service").
 
@@ -190,7 +190,7 @@ We may use third-party Service Providers to show advertisements to you to help s
 
 *   **BuySellAds**
 
-    Read more: https://www.buysellads.com/about/privacy
+    Read more: <https://www.buysellads.com/about/privacy>
 
 ## Links to Other Sites
 
@@ -216,4 +216,4 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 
 If you have any questions about this Privacy Policy, please contact us:
 
-*   By email: support@lando.dev
+*   By email: <support@lando.dev>

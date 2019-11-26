@@ -137,10 +137,14 @@ export default {
     &.big
       font-size: 2em
   .theme-default-content
-    max-width: 900px;
+    font-size: .8em
+    max-width: 800px;
     margin: 0 auto
     padding: 0 1.5em;
-    h2, h3, h4
+    h2, h3
+      padding-left: 0
+      margin-left: -12px
+    h3
       padding-left: 0
       margin-left: -8px
 @media (max-width: $MQMobile)
