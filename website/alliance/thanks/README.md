@@ -1,42 +1,18 @@
 ---
 navbar: true
+layout: Sponsor
+title: Thanks For Joining Our Movement!
+byline: You'll receive an onboarding email from us shortly with all the details on your new role as Liberator of Developers. But in the meantime... consider a sponsorship!
+metaTitle: Thanks For Joining the Lando Alliance | Lando
+image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 ---
 
-# Thanks For Joining The Movement!
-
-But you can do more!
-
-Help us support the project by spreading the word and/or throwing down some $$$
-
-<div class="point">
-  <a href="http://github.com/lando/lando" target="_blank">
-    <h3>Star Us On GitHub</h3>
-    <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png">
-    <p>GitHub Stars help validate our project!</p>
-  </a>
-</div>
-<div class="point">
-  <a href="http://twitter.com/devwithlando" target="_blank">
-    <h3>Follow Us On Twitter</h3>
-    <img src="http://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c53e.png">
-    <p>Joining Twitter tightens the feedback loop!</p>
-  </a>
-</div>
-<div class="point">
-  <a href="https://www.patreon.com/join/devwithlando?" target="_blank">
-    <h3>Give On Patreon</h3>
-    <img src="https://www.stickpng.com/assets/images/58481774cef1014c0b5e4992.png">
-    <p>We spend a lot on Lando, help us cover costs!</p>
-  </a>
+<div class="seal-of-liberation">
+  <img src="/images/lando-alliance.png">
 </div>
 
-<br />
-<br />
-<br />
-<br />
-<br />
-
-<div>
-  And after you do those...
+<div class="liberation-manifesto">
+  <p>
+  With your help we can cover infrastructure costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.
+  </p>
 </div>
-<a class="button" href="https://docs.lando.dev/">LEARN MORE!</a>

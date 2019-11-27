@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-rc.22",
+  "version": "3.0.0-rc.23",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -76,6 +76,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bluebird": "^3.4.1",
+    "clean-stacktrace": "^1.1.0",
     "cli-table": "^0.3.1",
     "copy-dir": "^0.4.0",
     "dockerode": "^2.4.2",
