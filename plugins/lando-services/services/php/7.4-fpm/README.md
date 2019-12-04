@@ -4,9 +4,9 @@ Lando PHP-FPM 7.4 appserver
 A decent cross purpose fpm based php 7.4 appserver.
 
 ```
-# Basic php-fpm 7.3 appserver for Lando
+# Basic php-fpm 7.4 appserver for Lando
 #
-# docker build -t devwithlando/php:7.3-fpm .
+# docker build -t devwithlando/php:7.4-fpm .
 
 FROM php:7.4-fpm-buster
 
@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libxml2-dev \
     libzip-dev \
+    libonig-dev \
     openssl \
     postgresql-client-10 \
     pv \
@@ -60,7 +61,10 @@ RUN pecl install xdebug-2.8.1
 
 # Compile and configure all pecl packages
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr
-RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-imap-ssl --with-kerberos
+
+# RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+# RUN docker-php-ext-install imap "-j${NPROC}" imap;
+
 RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
 RUN docker-php-ext-enable apcu
 RUN docker-php-ext-enable imagick
@@ -72,7 +76,6 @@ RUN docker-php-ext-install bz2
 RUN docker-php-ext-install calendar
 RUN docker-php-ext-install exif
 RUN docker-php-ext-install gd
-RUN docker-php-ext-install imap
 RUN docker-php-ext-install ldap
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install mysqli
@@ -84,7 +87,7 @@ RUN docker-php-ext-install soap
 RUN docker-php-ext-install zip
 RUN docker-php-ext-install intl
 RUN docker-php-ext-install gettext
-RUN docker-php-ext-install pcn
+RUN docker-php-ext-install pcntl
 
 # Composer installation
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
