@@ -55,10 +55,6 @@ RUN pecl install xdebug-2.8.1
 
 # Compile and configure all pecl packages
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr
-
-# RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl
-# RUN docker-php-ext-install imap "-j${NPROC}" imap;
-
 RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
 RUN docker-php-ext-enable apcu
 RUN docker-php-ext-enable imagick
@@ -70,18 +66,18 @@ RUN docker-php-ext-install bz2
 RUN docker-php-ext-install calendar
 RUN docker-php-ext-install exif
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install gettext
+RUN docker-php-ext-install intl
 RUN docker-php-ext-install ldap
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install opcache
+RUN docker-php-ext-install pcntl
 RUN docker-php-ext-install pdo
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install pdo_pgsql
 RUN docker-php-ext-install soap
 RUN docker-php-ext-install zip
-RUN docker-php-ext-install intl
-RUN docker-php-ext-install gettext
-RUN docker-php-ext-install pcntl
 
 # Composer installation
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -95,3 +91,7 @@ RUN chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-da
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
+
+# Configure imap support. Purposely put at the bottom else imap configuration might fail.
+RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+RUN docker-php-ext-install imap
