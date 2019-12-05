@@ -1,6 +1,6 @@
-# Basic php-fpm 7.3 appserver for Lando
+# Basic php-fpm 7.4 appserver for Lando
 #
-# docker build -t devwithlando/php:7.3-fpm .
+# docker build -t devwithlando/php:7.4-fpm .
 
 FROM php:7.4-fpm-buster
 
