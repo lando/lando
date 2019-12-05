@@ -1,5 +1,9 @@
 # 2019
 
+## Unreleased
+
+* Added support for PHP 7.4 [#1891](https://github.com/lando/lando/pull/1892)
+
 ## v3.0.0-rc.24 - [December 25, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.24)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
