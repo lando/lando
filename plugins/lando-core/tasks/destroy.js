@@ -1,6 +1,5 @@
 'use strict';
 
-const chalk = require('chalk');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
@@ -13,15 +12,15 @@ module.exports = lando => {
     run: options => {
       // Stop rebuild if user decides its a nogo
       if (!options.yes) {
-        console.log(chalk.yellow('DESTRUCTION AVERTED!'));
+        console.log(lando.cli.makeArt('appDestroy', {phase: 'abort'}));
         return;
       }
       // Try to get our app
       const app = lando.getApp(options._app.root);
       // Destroy the app
       if (app) {
-        console.log((chalk.green(`Preparing to resign ${app.name} to the dustbin of history...`)));
-        return app.destroy().then(() => console.log(chalk.red('Your app has paid the IRON PRICE. App destroyed!')));
+        console.log(lando.cli.makeArt('appDestroy', {name: app.name, phase: 'pre'}));
+        return app.destroy().then(() => console.log(lando.cli.makeArt('appDestroy', {name: app.name, phase: 'post'})));
       }
     },
   };

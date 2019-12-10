@@ -1,6 +1,5 @@
 'use strict';
 
-const chalk = require('chalk');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
@@ -14,8 +13,8 @@ module.exports = lando => {
       const app = lando.getApp(options._app.root);
       // Restart it if we can!
       if (app) {
-        console.log(chalk.green('Stopping your app... just so we can start it up again ¯\\_(ツ)_/¯'));
-        return utils.appToggle(app, 'restart', table, lando.cli.makeArt());
+        console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'pre'}));
+        return utils.appToggle(app, 'restart', table, lando.cli.makeArt('appRestart', {name: app.name, phase: 'post'}));
       }
     },
   };

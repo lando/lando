@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const chalk = require('chalk');
 const utils = require('./../lib/utils');
 
 // Helper to handle options
@@ -32,16 +31,16 @@ module.exports = lando => {
     },
     run: options => {
       if (!options.yes) {
-        console.log(chalk.yellow('Rebuild aborted'));
+        console.log(lando.cli.makeArt('appRebuild', {phase: 'abort'}));
         return;
       }
       // Try to get our app
       const app = lando.getApp(options._app.root);
       // Rebuild the app
       if (app) {
-        console.log(chalk.green('Rising anew like a fire phoenix from the ashes! Rebuilding app...'));
         app.opts = handleOpts(options);
-        return utils.appToggle(app, 'rebuild', table, lando.cli.makeArt());
+        console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'pre'}));
+        return utils.appToggle(app, 'rebuild', table, lando.cli.makeArt('appRebuild', {name: app.name, phase: 'post'}));
       }
     },
   };
