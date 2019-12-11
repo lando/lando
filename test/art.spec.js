@@ -8,7 +8,6 @@
 const _ = require('lodash');
 const art = require('./../lib/art');
 const chai = require('chai');
-const os = require('os');
 chai.should();
 
 describe('art', () => {
