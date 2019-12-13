@@ -27,7 +27,7 @@ services:
     type: node:10
     build:
       - yarn install
-    command: yarn run start:metrics
+    command: yarn run dev:metrics
     overrides:
       environment:
         LANDO_METRICS_PORT: 8010

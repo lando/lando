@@ -44,6 +44,7 @@ module.exports = {
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
     nav: [
+      {text: 'Sponsor', link: 'https://lando.dev/sponsor'},
       {text: 'Getting Started', link: '/basics/'},
       {text: 'Config', link: '/config/lando.md'},
       {text: 'Guides', link: '/guides/lando-info/'},
@@ -231,11 +232,13 @@ module.exports = {
           title: 'Support',
           collapsable: false,
           children: [
+            ['https://lando.dev/contact', 'Dedicated Support'],
             ['https://github.com/lando/lando/issues', 'GitHub issue queue'],
             ['https://launchpass.com/devwithlando', 'Slack - Official Lando'],
             ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
             ['https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg', 'YouTube Tutorials'],
             ['https://github.com/lando/lando/tree/master/examples', 'Code examples'],
+            ['security', 'Security Issues'],
           ],
         },
         {
@@ -268,11 +271,22 @@ module.exports = {
           collapsable: false,
           children: [
             'contributing',
-            'vision',
-            'how',
+            'join',
+            'comms',
+            'activate',
+            'first',
+            'allianceroles',
+          ],
+        },
+        {
+          title: 'Goveranance',
+          collapsable: false,
+          children: [
             'gov',
+            'vision',
+            'team',
             'roles',
-            'security',
+            ['opensource', 'Resources'],
           ],
         },
         {
@@ -293,7 +307,6 @@ module.exports = {
           title: 'Resources',
           collapsable: false,
           children: [
-            'opensource',
             ['https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC', 'Training materials'],
           ],
         },
