@@ -33,34 +33,36 @@ log.info('Loaded plugins %j', plugins);
 
 // Get the app ready
 const express = require('express');
-const app = express();
+const api = express();
 // App usage
-app.use(bodyParser.json());
+api.use(bodyParser.json());
 
 /**
- * Handler function.
+ * handlerr function.
  * @param {function} fn thing
  * @return {String} log shit
  */
-const handle = fn => {
-  // Returns a handler function.
+const handler = fn => {
+  // Returns a handlerr function.
   return (req, res) => {
     log.request(req, res);
     // Call fn in context of a promise.
     return Promise.try(fn, [req, res])
     // Make sure we have a timeout.
     .timeout(config.LANDO_METRICS_TIMEOUT || 10 * 1000)
-    // Handle success.
+    // handler success.
     .then(data => {
       res.status(200);
       res.json(data);
       res.end();
       log.response(res, 'info', data);
     })
-    // Handler failure.
+    // handlerr failure.
     .catch(err => {
-      res.status(err.statusCode || err.status);
-      res.send(err);
+      const code = err.statusCode || err.status || 500;
+      const message = err.message || err.statusMessage || 'Unknown Error';
+      res.status(code);
+      res.send({code, message});
       res.end();
       log.response(res, 'error', err);
     });
@@ -70,14 +72,14 @@ const handle = fn => {
 /*
  * Respond to status pings and sanity checks.
  */
-app.get('/status', handle((req, res) => ({status: 'OK'})));
-app.get('/ping', handle((req, res) => ({status: 'pong'})));
-app.get('/', handle((req, res) => ({ping: 'pong'})));
+api.get('/status', handler((req, res) => ({status: 'OK'})));
+api.get('/ping', handler((req, res) => ({status: 'pong'})));
+api.get('/', handler((req, res) => ({ping: 'pong'})));
 
 /*
  * Post new meta data for metrics.
  */
-app.post('/metrics/v2/:id', handle((req, res) => {
+api.post('/metrics/v2/:id', handler((req, res) => {
   return Promise.map(plugins, plugin => {
     const reporter = new plugin.Reporter(config[plugin.config]);
     return reporter.ping()
@@ -89,7 +91,7 @@ app.post('/metrics/v2/:id', handle((req, res) => {
 
 // Main logix
 Promise.fromNode(cb => {
-  app.listen(config.LANDO_METRICS_PORT, cb);
+  api.listen(config.LANDO_METRICS_PORT, cb);
 })
 .then(() => {
   log.info('Listening on port: %s', config.LANDO_METRICS_PORT);

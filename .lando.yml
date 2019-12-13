@@ -4,6 +4,8 @@ env_file:
 excludes:
   - node_modules
 proxy:
+  api:
+    - api.lndo.site:8011
   docs:
     - docs.lndo.site:8008
   site:
@@ -11,6 +13,15 @@ proxy:
   metrics:
     - metrics.lndo.site:8010
 services:
+  api:
+    type: node:10
+    build:
+      - yarn install
+    command: yarn run dev:api
+    overrides:
+      environment:
+        LANDO_API_PORT: 8011
+    port: 8011
   docs:
     type: node:10
     build:

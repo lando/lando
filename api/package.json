@@ -1,0 +1,21 @@
+{
+  "name": "lando-api",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lando/lando"
+  },
+  "bugs": {
+    "email": "mike@lando.dev",
+    "url": "http://github.com/lando/lando"
+  },
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "compression": "^1.7.4",
+    "express": "^4.13.3",
+    "express-urlrewrite": "^1.2.0",
+    "js-yaml": "^3.13.1",
+    "lodash": "~4.17.13",
+    "platformsh": "^1.0.0",
+    "winston": "2.2"
+  }
+}
