@@ -17,7 +17,12 @@ export default {
     };
   },
   mounted() {
-    this.heralds = this.$page.sponsors.individuals;
+    this.$api(this.$page.apiUrl).get('/v1/sponsors/individuals').then(response => {
+      this.heralds = response.data || [];
+    })
+    .catch(error => {
+      console.error(error);
+    });
   },
 };
 </script>

@@ -1,6 +1,9 @@
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
+  extraWatchFiles: [
+    '.vuepress/plugins/lando-api/plugin.js',
+  ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
@@ -8,29 +11,40 @@ module.exports = {
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
     ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
-  plugins: {
-    '@vuepress/google-analytics': {
-      ga: 'UA-74237404-5',
-    },
-    'autometa': {
-      site: {
-        name: 'Lando',
-        twitter: 'devwithlando',
+  plugins: [
+    ['@vuepress/google-analytics',
+      {
+        ga: 'UA-74237404-5',
       },
-      canonical_base: 'https://docs.lando.dev',
-    },
-    'canonical': {
-      baseURL: 'https://docs.lando.dev',
-    },
-    'robots': {
-      host: 'https://docs.lando.dev',
-      sitemap: '/sitemap.xml',
-    },
-    'sitemap': {
-      hostname: 'https://docs.lando.dev',
-      exclude: ['/404.html'],
-    },
-  },
+    ],
+    ['autometa',
+      {
+        site: {
+          name: 'Lando',
+          twitter: 'devwithlando',
+        },
+        canonical_base: 'https://docs.lando.dev',
+      },
+    ],
+    ['canonical',
+      {
+        baseURL: 'https://docs.lando.dev',
+      },
+    ],
+    [require('./plugins/lando-api/plugin.js'), {stuff: 'things'}],
+    ['robots',
+      {
+        host: 'https://docs.lando.dev',
+        sitemap: '/sitemap.xml',
+      },
+    ],
+    ['sitemap',
+      {
+        hostname: 'https://docs.lando.dev',
+        exclude: ['/404.html'],
+      },
+    ],
+  ],
   themeConfig: {
     algolia: {
       apiKey: '15e332850128e9ec96929f44c62f6c88',

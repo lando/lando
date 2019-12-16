@@ -2,17 +2,21 @@
 
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const rewrite = require('express-urlrewrite');
+const cors = require('cors');
 const fs = require('fs');
 const log = require('./lib/logger.js');
 const path = require('path');
 const Promise = require('bluebird');
-const currentVersion = 'v1';
 
 // Define default config
 const defaultConfig = {
   'LANDO_API_PORT': 80,
   'LANDO_API_TIMEOUT': 10000,
+  'LANDO_API_ALLOWED_ORIGINS': [
+    /https:\/\/([a-z0-9]+[.])*lando[.]dev/,
+    /https:\/\/([a-z0-9]+[.])*lndo[.]site/,
+    /https?:\/\/([a-z0-9]+[.])*iaimrn624qfk6[.]us[.]platform[.]sh/,
+  ],
 };
 
 // Get configuration
@@ -25,9 +29,9 @@ const api = express();
 
 // App usage
 api.use(compression());
+api.use(cors({origin: defaultConfig.LANDO_API_ALLOWED_ORIGINS}));
 api.use(bodyParser.urlencoded({extended: true}));
 api.use(bodyParser.json());
-api.use(rewrite('/*', `/${currentVersion}/$1`));
 
 /**
  * Handler function.

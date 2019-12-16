@@ -1,5 +1,6 @@
 const path = require('path');
 const utils = require('./../lib/utils');
+
 const sponsorsFile = path.resolve(__dirname, '..', 'data', 'sponsors.yml');
 
 /*

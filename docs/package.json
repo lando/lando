@@ -12,6 +12,7 @@
     "build": "vuepress build ./ -d _docs"
   },
   "devDependencies": {
+    "axios": "^0.19.0",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
     "vuepress": "^1.0.4",
     "vuepress-plugin-autometa": "^0.1.12",

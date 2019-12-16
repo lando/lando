@@ -1,6 +1,9 @@
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
+  extraWatchFiles: [
+    '.vuepress/plugins/lando-api/plugin.js',
+  ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
@@ -10,40 +13,51 @@ module.exports = {
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
     ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
-  plugins: {
-    '@vuepress/google-analytics': {
-      ga: 'UA-74237404-3',
-    },
-    'autometa': {
-      site: {
-        name: 'Lando',
-        twitter: 'devwithlando',
+  plugins: [
+    ['@vuepress/google-analytics',
+      {
+        ga: 'UA-74237404-3',
       },
-      canonical_base: 'https://lando.dev',
-    },
-    'canonical': {
-      baseURL: 'https://lando.dev',
-    },
-    'robots': {
-      host: 'https://lando.dev',
-      sitemap: '/sitemap.xml',
-      policies: [
-        {
-          userAgent: '*',
-          disallow: [
-            '/alliance/thanks',
-          ],
+    ],
+    ['autometa',
+      {
+        site: {
+          name: 'Lando',
+          twitter: 'devwithlando',
         },
-      ],
-    },
-    'sitemap': {
-      hostname: 'https://lando.dev',
-      exclude: [
-        '/404.html',
-        '/alliance/thanks/',
-      ],
-    },
-  },
+        canonical_base: 'https://lando.dev',
+      },
+    ],
+    ['canonical',
+      {
+        baseURL: 'https://lando.dev',
+      },
+    ],
+    [require('./plugins/lando-api/plugin.js'), {stuff: 'things'}],
+    ['robots',
+      {
+        host: 'https://lando.dev',
+        sitemap: '/sitemap.xml',
+        policies: [
+          {
+            userAgent: '*',
+            disallow: [
+              '/alliance/thanks',
+            ],
+          },
+        ],
+      },
+    ],
+    ['sitemap',
+      {
+        hostname: 'https://lando.dev',
+        exclude: [
+          '/404.html',
+          '/alliance/thanks/',
+        ],
+      },
+    ],
+  ],
   themeConfig: {
     docsDir: 'website',
     docsBranch: 'master',
