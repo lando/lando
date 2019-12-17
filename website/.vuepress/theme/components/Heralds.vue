@@ -17,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.$api(this.$page.apiUrl).get('/v1/sponsors/individuals').then(response => {
+    this.$api(this.$page.apiUrl).get('/v1/sponsors/herald').then(response => {
       this.heralds = response.data || [];
     })
     .catch(error => {

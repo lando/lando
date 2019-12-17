@@ -17,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.$api(this.$page.apiUrl).get('/v1/sponsors/partners').then(response => {
+    this.$api(this.$page.apiUrl).get('/v1/sponsors/partner').then(response => {
       this.partners = response.data || [];
     })
     .catch(error => {

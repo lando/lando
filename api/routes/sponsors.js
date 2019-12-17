@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const path = require('path');
 const utils = require('./../lib/utils');
 
@@ -12,6 +13,6 @@ module.exports = (api, handler) => {
     return utils.loadFile(sponsorsFile);
   }));
   api.get('/v1/sponsors/:type', handler((req, res) => {
-    return utils.loadFile(sponsorsFile)[req.params.type] || res.redirect('/sponsors');
+    return _.filter(utils.loadFile(sponsorsFile), {type: req.params.type});
   }));
 };
