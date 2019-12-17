@@ -71,7 +71,9 @@
       "plugins/**/*.tpl",
       "plugins/**/*.vcl",
       "plugins/**/*.xml",
-      "plugins/**/*.yml"
+      "plugins/**/*.yml",
+      "node_modules/figlet/fonts/Small Slant.flf",
+      "node_modules/figlet/fonts/ANSI Shadow.flf"
     ]
   },
   "dependencies": {
