@@ -163,10 +163,7 @@ exports.formattedOptions = {
 };
 
 exports.outputFormatted = (input, path = null, format = null) => {
-  const data = path && _.has(input, path) ?
-    _.get(input, path) :
-    input;
-
+  const data = path && _.has(input, path) ? _.get(input, path) : input;
   let output;
 
   switch (format) {

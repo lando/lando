@@ -10,7 +10,7 @@ const sponsorsFile = path.resolve(__dirname, '..', 'data', 'sponsors.yml');
 
 module.exports = (api, handler) => {
   api.get('/v1/sponsors', handler((req, res) => {
-    return utils.loadFile(sponsorsFile);
+    return utils.loadFile(sponsorsFile) || [];
   }));
   api.get('/v1/sponsors/:type', handler((req, res) => {
     return _.filter(utils.loadFile(sponsorsFile), {type: req.params.type});
