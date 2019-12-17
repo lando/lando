@@ -29,14 +29,14 @@ module.exports = lando => {
       // List all the apps
       return lando.engine.list(options)
       // Map each app to a summary and print results
-      .then(containers => utils.outputFormatted(
+      .then(containers => console.log(utils.outputFormatted(
         _(containers)
           .map(container => _.omit(container, ['lando', 'id', 'instance']))
           .groupBy('app')
           .value(),
         options.path,
         options.format
-      ));
+      )));
     },
   };
 };

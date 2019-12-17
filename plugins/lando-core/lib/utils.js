@@ -164,22 +164,16 @@ exports.formattedOptions = {
 
 exports.outputFormatted = (input, path = null, format = null) => {
   const data = path && _.has(input, path) ? _.get(input, path) : input;
-  let output;
-
   switch (format) {
     case 'json':
-      output = JSON.stringify(data);
+      return JSON.stringify(data);
       break;
-
     // @TODO: Add CSV.
-
     default:
-      output = util.inspect(data, {
-        colors: true,
+      return util.inspect(data, {
+        colors: process.stdout.isTTY,
         depth: 10,
         compact: false,
       });
   }
-
-  return console.log(output);
 };

@@ -16,6 +16,6 @@ module.exports = lando => ({
   }),
   run: options => {
     if (!_.isNil(options.field)) options.path = options.field;
-    utils.outputFormatted(lando.config, options.path, options.format);
+    console.log(utils.outputFormatted(lando.config, options.path, options.format));
   },
 });
