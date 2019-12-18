@@ -44,6 +44,13 @@ module.exports = {
         exclude: ['/404.html'],
       },
     ],
+    ['feed',
+      {
+        canonical_base: 'https://docs.lando.dev',
+        posts_directories: ['/guides/'],
+        count: 100,
+      }
+    ],
   ],
   themeConfig: {
     algolia: {
