@@ -36,7 +36,7 @@ module.exports = {
         canonical_base: 'https://docs.lando.dev',
         posts_directories: ['/guides/'],
         count: 100,
-      }
+      },
     ],
     [require('./plugins/lando-api/plugin.js')],
     ['robots',
