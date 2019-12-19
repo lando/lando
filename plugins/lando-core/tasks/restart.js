@@ -15,7 +15,7 @@ module.exports = lando => {
         console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'pre'}));
         return app.restart().then(() => {
           console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'post'}));
-          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {sort: false, border: false}));
+          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
         });
       }

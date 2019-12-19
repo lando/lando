@@ -18,20 +18,18 @@ module.exports = lando => {
         alias: ['i'],
         string: true,
         interactive: {
-          type: 'autocomplete',
-          message: 'Which contributor?',
-          source: (answers, input) => {
-            if (!input) return lando.Promise.resolve(api.read('contributors'));
-            return lando.Promise.resolve(_(api.read('contributors'))
-              .filter(contributor => _.includes(contributor.name, input))
-              .map(contributor => ({name: contributor.name, value: contributor.id}))
-              .value());
-          },
+          type: 'list',
+          message: 'Which contributor do you want to remove?',
+          choices: _(api.read('contributors'))
+            .map(contributor => ({name: contributor.name, value: contributor.id}))
+            .value(),
         },
       },
+      yes: lando.cli.confirm('Are you sure?'),
     },
     run: options => {
-      api.delete('contributors', options.id);
+      const id = api.delete('contributors', options.id);
+      console.log(`Removed contributor with id ${id}`);
     },
   };
 };

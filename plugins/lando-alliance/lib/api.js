@@ -26,7 +26,8 @@ module.exports = class LandoApiClient {
   create(source, data = {}) {
     const database = this.read(source);
     database.push(_.merge({}, data, {id: hasher(data)}));
-    return this.yaml.dump(path.resolve(this.base, `${source}.yml`), _.uniqBy(database, 'id'));
+    this.yaml.dump(path.resolve(this.base, `${source}.yml`), _.uniqBy(database, 'id'));
+    return this.read(source, {id: hasher(data)});
   };
 
   /*
@@ -34,8 +35,9 @@ module.exports = class LandoApiClient {
    */
   delete(source, id) {
     if (!id) throw Error('Specify a resource ID to remove!');
-    const database = _(this.read(source)).filter(item => item.id === id).value();
-    return this.yaml.dump(path.resolve(this.base, `${source}.yml`), database);
+    const database = _(this.read(source)).filter(item => item.id !== id).value();
+    this.yaml.dump(path.resolve(this.base, `${source}.yml`), database);
+    return id;
   };
 
   /*

@@ -15,7 +15,7 @@ const showInit = (lando, options) => {
     location: options.destination,
     recipe: options.recipe,
     docs: `https://docs.lando.dev/config/${options.recipe}.html`,
-  }, {format: 'table'}, {sort: false, border: false}));
+  }, {format: 'table'}, {border: false}));
   // Space it
   console.log('');
 };
