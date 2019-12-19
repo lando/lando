@@ -9,6 +9,7 @@
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
+* Added a `table` output format, consolidated CLI data formatting [#1737](https://github.com/lando/lando/issues/1789)
 * Fixed bug causing ANSI characters to leak when not a `tty` [#1789](https://github.com/lando/lando/issues/1789)
 
 ## v3.0.0-rc.23 - [November 26, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.23)

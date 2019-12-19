@@ -3,7 +3,6 @@
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
-  const table = lando.cli.makeTable();
   return {
     command: 'start',
     describe: 'Starts your app',
@@ -13,7 +12,11 @@ module.exports = lando => {
       // Start it if we can!
       if (app) {
         console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'pre'}));
-        return utils.appToggle(app, 'start', table, lando.cli.makeArt('appStart', {name: app.name, phase: 'post'}));
+        return app.start().then(() => {
+          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'post'}));
+          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {sort: false, border: false}));
+          console.log('');
+        });
       }
     },
   };

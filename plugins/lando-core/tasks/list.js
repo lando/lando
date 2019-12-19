@@ -26,7 +26,6 @@ module.exports = lando => {
       .then(containers => console.log(lando.cli.formatData(
         _(containers)
           .map(container => _.omit(container, ['lando', 'id', 'instance']))
-          .groupBy('app')
           .value(),
         options
       )));

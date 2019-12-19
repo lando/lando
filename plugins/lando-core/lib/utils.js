@@ -7,22 +7,6 @@ const path = require('path');
 const url = require('url');
 
 /*
- * A toggle to either start or restart
- */
-exports.appToggle = (app, toggle = 'start', table, header = '') => app[toggle]().then(() => {
-  // Header it
-  console.log(header);
-  // Inject start table into the table
-  _.forEach(exports.startTable(app), (value, key) => {
-    const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
-    table.add(_.toUpper(key), value, opts);
-  });
-  // Print the table
-  console.log(table.toString());
-  console.log('');
-});
-
-/*
  * Helper method to get the host part of a volume
  */
 exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
@@ -92,14 +76,12 @@ exports.normalizeOverrides = (overrides, volumes = {}) => {
  * Returns a CLI table with app start metadata info
  */
 exports.startTable = app => {
-  // Spin up collectors
-  const data = {};
+  const data = {
+    name: app.name,
+    location: app.root,
+    services: app.services.join(', '),
+  };
   const urls = {};
-
-  // Add generic data
-  data.name = app.name;
-  data.location = app.root;
-  data.services = app.services;
 
   // Categorize and colorize URLS if and as appropriate
   _.forEach(app.info, info => {

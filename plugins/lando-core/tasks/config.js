@@ -6,7 +6,7 @@ module.exports = lando => ({
   command: 'config',
   level: 'tasks',
   describe: 'Displays the lando configuration',
-  options: _.merge({}, lando.cli.formatOptions(), {
+  options: _.merge({}, lando.cli.formatOptions(['filter']), {
     // @NOTE: This is for backwards compat and needs to be removed
     field: {
       describe: 'Show only a specific field',

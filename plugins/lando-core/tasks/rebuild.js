@@ -17,7 +17,6 @@ const handleOpts = options => {
 };
 
 module.exports = lando => {
-  const table = lando.cli.makeTable();
   return {
     command: 'rebuild',
     describe: 'Rebuilds your app from scratch, preserving data',
@@ -40,7 +39,11 @@ module.exports = lando => {
       if (app) {
         app.opts = handleOpts(options);
         console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'pre'}));
-        return utils.appToggle(app, 'rebuild', table, lando.cli.makeArt('appRebuild', {name: app.name, phase: 'post'}));
+        return app.rebuild().then(() => {
+          console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'post'}));
+          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {sort: false, border: false}));
+          console.log('');
+        });
       }
     },
   };
