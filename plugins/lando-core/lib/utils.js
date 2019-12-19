@@ -5,7 +5,6 @@ const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const url = require('url');
-const util = require('util');
 
 /*
  * A toggle to either start or restart
@@ -21,21 +20,6 @@ exports.appToggle = (app, toggle = 'start', table, header = '') => app[toggle]()
   // Print the table
   console.log(table.toString());
   console.log('');
-});
-
-/*
- * Returns a normal default interactive confirm with custom message
- */
-exports.buildConfirm = (message = 'Are you sure?') => ({
-  describe: 'Auto answer yes to prompts',
-  alias: ['y'],
-  default: false,
-  boolean: true,
-  interactive: {
-    type: 'confirm',
-    default: false,
-    message: message,
-  },
 });
 
 /*
@@ -147,33 +131,3 @@ exports.stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
 exports.stripWild = versions => _(versions)
   .map(version => (version.split('.')[2] === 'x') ? _.slice(version.split('.'), 0, 2).join('.') : version)
   .value();
-
-
-exports.formattedOptions = {
-  format: {
-    describe: 'Output in given format: json',
-    string: true,
-  },
-  path: {
-    describe: 'Only return the value at the given path',
-    alias: ['p'],
-    default: null,
-    string: true,
-  },
-};
-
-exports.outputFormatted = (input, path = null, format = null) => {
-  const data = path && _.has(input, path) ? _.get(input, path) : input;
-  switch (format) {
-    case 'json':
-      return JSON.stringify(data);
-      break;
-    // @TODO: Add CSV.
-    default:
-      return util.inspect(data, {
-        colors: process.stdout.isTTY,
-        depth: 10,
-        compact: false,
-      });
-  }
-};

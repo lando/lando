@@ -27,7 +27,7 @@ module.exports = lando => {
         alias: ['s'],
         array: true,
       },
-      yes: utils.buildConfirm('Are you sure you want to rebuild?'),
+      yes: lando.cli.confirm('Are you sure you want to rebuild?'),
     },
     run: options => {
       if (!options.yes) {

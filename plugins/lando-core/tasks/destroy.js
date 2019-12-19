@@ -1,13 +1,11 @@
 'use strict';
 
-const utils = require('./../lib/utils');
-
 module.exports = lando => {
   return {
     command: 'destroy',
     describe: 'Destroys your app',
     options: {
-      yes: utils.buildConfirm('Are you sure you want to DESTROY?'),
+      yes: lando.cli.confirm('Are you sure you want to DESTROY?'),
     },
     run: options => {
       // Stop rebuild if user decides its a nogo

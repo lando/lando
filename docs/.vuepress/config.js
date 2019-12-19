@@ -31,7 +31,14 @@ module.exports = {
         baseURL: 'https://docs.lando.dev',
       },
     ],
-    [require('./plugins/lando-api/plugin.js'), {stuff: 'things'}],
+    ['feed',
+      {
+        canonical_base: 'https://docs.lando.dev',
+        posts_directories: ['/guides/'],
+        count: 100,
+      }
+    ],
+    [require('./plugins/lando-api/plugin.js')],
     ['robots',
       {
         host: 'https://docs.lando.dev',
@@ -43,13 +50,6 @@ module.exports = {
         hostname: 'https://docs.lando.dev',
         exclude: ['/404.html'],
       },
-    ],
-    ['feed',
-      {
-        canonical_base: 'https://docs.lando.dev',
-        posts_directories: ['/guides/'],
-        count: 100,
-      }
     ],
   ],
   themeConfig: {

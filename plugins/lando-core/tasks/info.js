@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const utils = require('./../lib/utils');
 
 // Helper to filter services
 const filterServices = (service, services = []) => {
@@ -11,7 +10,7 @@ const filterServices = (service, services = []) => {
 module.exports = lando => ({
   command: 'info',
   describe: 'Prints info about your app',
-  options: _.merge({}, utils.formattedOptions, {
+  options: _.merge({}, lando.cli.formatOptions(), {
     deep: {
       describe: 'Get ALL the info',
       alias: ['d'],
@@ -34,13 +33,12 @@ module.exports = lando => ({
       return app.init().then(() => lando.engine.list({project: app.project})
         .filter(container => filterServices(container.service, options.service))
         .each(container => lando.engine.scan(container)
-          .then(data => console.log(utils.outputFormatted(data, options.path, options.format))))
+          .then(data => console.log(lando.cli.formatData(data, options))))
         );
     } else if (app && !options.deep) {
-      return app.init().then(() => console.log(utils.outputFormatted(
+      return app.init().then(() => console.log(lando.cli.formatData(
         _.filter(app.info, service => filterServices(service.service, options.service)),
-        options.path,
-        options.format
+        options
       )));
     }
   },
