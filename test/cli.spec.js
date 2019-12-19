@@ -8,7 +8,6 @@
 // Setup chai.
 const _ = require('lodash');
 const art = require('./../lib/art');
-const Table = require('./../lib/table');
 const chai = require('chai');
 const Cli = require('./../lib/cli');
 const sinon = require('sinon');
@@ -129,13 +128,6 @@ describe('cli', () => {
       const func = 'updateAvailable';
       const opts = {url: 'https://lando.dev'};
       cli.makeArt(func, opts).should.deep.equal(art[func](opts));
-    });
-  });
-
-  describe('#makeTable', () => {
-    it('should be the same as new Table()', () => {
-      const cli = new Cli();
-      cli.makeTable().should.deep.equal(new Table());
     });
   });
 
