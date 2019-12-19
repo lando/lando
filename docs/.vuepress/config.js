@@ -175,6 +175,13 @@ module.exports = {
       ],
       '/guides/': [
         {
+          title: 'Testing',
+          collapsable: false,
+          children: [
+            'testing-new-layout',
+          ],
+        },
+        {
           title: 'General',
           collapsable: false,
           children: [
