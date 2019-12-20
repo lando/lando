@@ -17,18 +17,18 @@ describe('table', () => {
       table.should.be.instanceof(Table);
       table.options.head.should.be.empty;
       table.border.should.be.true;
-      table.sort.should.be.true;
+      table.sort.should.be.false;
       table.joiner.should.equal(os.EOL);
       table.keyColor.should.equal('cyan');
       table.options.chars.should.have.property('bottom', '─');
     });
 
     it('should return a Table instance with custom options', () => {
-      const table = new Table({}, {border: false, keyColor: 'green', sort: false, joiner: ', '});
+      const table = new Table({}, {border: false, keyColor: 'green', sort: true, joiner: ', '});
       table.should.be.instanceof(Table);
       table.options.head.should.be.empty;
       table.border.should.be.false;
-      table.sort.should.be.false;
+      table.sort.should.be.true;
       table.joiner.should.equal(', ');
       table.keyColor.should.equal('green');
       table.options.chars.should.have.property('bottom', '');
