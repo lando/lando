@@ -16,6 +16,7 @@ const roles = [
   'Issues',
   'Meetups',
   'Outreach',
+  'Support',
   'Training',
 ];
 

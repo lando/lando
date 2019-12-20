@@ -305,7 +305,7 @@ module.exports = {
           children: [
             'gov',
             'vision',
-            'team',
+            ['team', 'Current Team'],
             'roles',
             ['opensource', 'Resources'],
           ],
