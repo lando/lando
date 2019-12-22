@@ -22,6 +22,7 @@ That said and before we get started we **highly recommend** you consult both the
 address=/local.host/127.0.0.1
 ```
 Sub in your favorite domain for 'local.host' here if you want to use something more flashy.
+
 5. Restart DNSMasq: `brew services restart dnsmasq`
 6. For macOS to resolve requests from *.local.host to localhost we need to add a resolver:
 ```
@@ -44,6 +45,7 @@ sudo killall -HUP mDNSResponder
 domain: local.host
 ```
 Again, allow your creativity to flourish and use whatever domain makes you smile.
+
 11. Power Lando down with `lando poweroff`
 12. Start up your favorite Lando app to test it out with `lando start` from within your app's root directory. You should see something like:
 
