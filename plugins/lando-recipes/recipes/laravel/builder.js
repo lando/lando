@@ -24,7 +24,7 @@ const getCache = cache => {
 };
 
 /*
- * Build WordPress
+ * Build Laravel
  */
 module.exports = {
   name: 'laravel',
