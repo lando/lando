@@ -20,5 +20,6 @@
     "vuepress-plugin-feed": "^0.1.8",
     "vuepress-plugin-robots": "^1.0.1",
     "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4"
-  }
+  },
+  "dependencies": {}
 }

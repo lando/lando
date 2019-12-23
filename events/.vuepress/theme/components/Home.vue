@@ -5,42 +5,33 @@
   >
     <header class="hero">
       <img
-          v-if="data.heroImage"
-          :src="$withBase(data.heroImage)"
-          :alt="data.heroAlt || 'hero'"
+          v-if="data.frontmatter.heroImage"
+          :src="$withBase(data.frontmatter.heroImage)"
+          :alt="data.frontmatter.heroAlt || 'hero'"
       >
 
       <h1
-          v-if="data.heroText !== null"
+          v-if="data.frontmatter.heroText !== null"
           id="main-title"
       >
-        {{ data.heroText || $title || 'Hello' }}
+        {{ data.frontmatter.heroText || $title || 'Hello' }}
       </h1>
 
       <p
-          v-if="data.tagline !== null"
+          v-if="data.frontmatter.tagline !== null"
           class="description"
       >
-        {{ data.tagline || $description || 'Welcome to your VuePress site' }}
+        {{ data.frontmatter.tagline || $description || 'Welcome to your VuePress site' }}
       </p>
 
-      <p
-          v-if="data.actionText && data.actionLink"
-          class="action"
-      >
-        <NavLink
-            class="action-button"
-            :item="actionLink"
-        />
-      </p>
     </header>
 
     <div
-        v-if="data.features && data.features.length"
+        v-if="data.frontmatter.features && data.frontmatter.features.length"
         class="features"
     >
       <div
-          v-for="(feature, index) in data.features"
+          v-for="(feature, index) in data.frontmatter.features"
           :key="index"
           class="feature"
       >
@@ -52,10 +43,10 @@
     <Content class="theme-default-content custom" />
 
     <div
-        v-if="data.footer"
+        v-if="data.frontmatter.footer"
         class="footer"
     >
-      {{ data.footer }}
+      {{ data.frontmatter.footer }}
     </div>
   </main>
 </template>
@@ -70,16 +61,21 @@
 
     computed: {
       data () {
-        return this.$page.frontmatter
-      },
-
-      actionLink () {
         return {
-          link: this.data.actionLink,
-          text: this.data.actionText
+          events: [],
+          frontmatter: this.$page.frontmatter,
         }
-      }
-    }
+      },
+    },
+
+    mounted() {
+      this.$api(this.$page.apiUrl).get('/v1/events').then(response => {
+        this.events = response.data.events || [];
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    },
   }
 </script>
 
