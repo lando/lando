@@ -5,17 +5,11 @@
       @touchstart="onTouchStart"
       @touchend="onTouchEnd"
   >
-    <Navbar
-        v-if="shouldShowNavbar"
-        @toggle-sidebar="toggleSidebar"
-    />
+    <Navbar v-if="shouldShowNavbar" />
 
     <Home v-if="$page.frontmatter.home" />
 
-    <Page
-        v-else
-        :sidebar-items="sidebarItems"
-    >
+    <Page v-else >
       <template #top>
         <slot name="page-top" />
       </template>
@@ -27,7 +21,7 @@
 </template>
 
 <script>
-  import Home from '@parent-theme/components/Home.vue'
+  import Home from '@theme/components/Home.vue'
   import Navbar from '@parent-theme/components/Navbar.vue'
   import Page from '@parent-theme/components/Page.vue'
 
@@ -62,9 +56,7 @@
         const userPageClass = this.$page.frontmatter.pageClass
         return [
           {
-            'no-navbar': !this.shouldShowNavbar,
-            'sidebar-open': this.isSidebarOpen,
-            'no-sidebar': !this.shouldShowSidebar
+            'no-navbar': !this.shouldShowNavbar
           },
           userPageClass
         ]
