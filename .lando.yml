@@ -12,6 +12,8 @@ proxy:
     - site.lndo.site:8009
   metrics:
     - metrics.lndo.site:8010
+  events:
+    - events.lndo.site:8011
 services:
   api:
     type: node:10
@@ -43,6 +45,12 @@ services:
       environment:
         LANDO_METRICS_PORT: 8010
     port: 8010
+  events:
+    type: node:10
+    build:
+      - yarn install
+    command: "su - node -c 'cd /app && yarn dev:events'"
+    port: 8011
   platform:
     type: php:7.3
     via: cli

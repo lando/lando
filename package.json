@@ -34,6 +34,7 @@
   "scripts": {
     "build:docs": "node ./scripts/docs.js && vuepress build docs -d _docs",
     "build:site": "vuepress build website -d _site",
+    "build:events": "vuepress build website -d _events",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint --quiet --no-ignore api bin lib plugins scripts test metrics",
@@ -45,6 +46,7 @@
     "dev:docs": "node ./scripts/docs.js && vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8008 docs",
     "dev:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
     "dev:site": "vuepress dev --temp /tmp/lando-site --cache /tmp/lando-docs-site --port 8009 website",
+    "dev:events": "vuepress dev --temp /tmp/lando-events --cache /tmp/lando-docs-events --port 8011 events",
     "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js plugins/**/test/**/*.spec.js",
     "test:unit:core": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js",
     "test:unit:plugins": "nyc --reporter=html --reporter=text mocha --timeout 5000 plugins/**/test/**/*.spec.js",
