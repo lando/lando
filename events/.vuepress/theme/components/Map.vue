@@ -1,14 +1,14 @@
 <template>
   <GmapMap
-      :center="{lat:0, lng:0}"
-      :zoom="2"
+      :center="{lat:42.346790, lng:-71.098648}"
+      :zoom="8"
       map-type-id="terrain"
       style="width: 1000px; height: 500px"
   >
     <GmapMarker
         :key="index"
-        v-for="(event, index) in data.events"
-        :position="google && geoCode(event.location)"
+        v-for="(event, index) in events"
+        :position="google && new google.maps.LatLng(event.location.lat, event.location.lon)"
         :clickable="true"
         :draggable="true"
     />
@@ -21,44 +21,42 @@
   export default {
     name: 'Map',
 
-    computed: {
-      google: gmapApi,
-      data () {
-        return {
-          events: [
-            {
-              name: 'Tandem Test 1',
-              location: '4 Jersey St, Boston, MA 02215',
-              date: '01-01-1901',
-              url: 'https://www.mlb.com/redsox',
+    data() {
+      return {
+        events: [
+          {
+            name: 'Tandem Test 1',
+            location: {
+              lat: '42.346790',
+              lon: '-71.098648'
             },
-            {
-              name: 'Tandem Test 2',
-              location: '100 Legends Way, Boston, MA 02114',
-              date: '01-01-1946',
-              url: 'https://www.nba.com/celtics',
+            date: '01-01-1901',
+            url: 'https://www.mlb.com/redsox',
+          },
+          {
+            name: 'Tandem Test 2',
+            location: {
+              lat: '42.366581',
+              lon: '-71.061630'
             },
-            {
-              name: 'Tandem Test 3',
-              location: '1 Patriot Pl, Foxborough, MA 02035',
-              date: '01-01-1959',
-              url: 'https://www.patriots.com',
+            date: '01-01-1946',
+            url: 'https://www.nba.com/celtics',
+          },
+          {
+            name: 'Tandem Test 3',
+            location: {
+              lat: '42.093811',
+              lon: '-71.265800'
             },
-          ],
-          frontmatter: this.$page.frontmatter,
-        }
-      },
+            date: '01-01-1959',
+            url: 'https://www.patriots.com',
+          },
+        ],
+      }
     },
 
-    methods: {
-      geoCode(address) {
-        let geocoder = new this.google.maps.Geocoder();
-        return geocoder.geocode({ 'address': address }, (results, status) => {
-          if (status === 'OK') {
-            return results[0].geometry.location;
-          }
-        });
-      }
+    computed: {
+      google: gmapApi
     },
 
     mounted() {
