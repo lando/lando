@@ -1,18 +1,33 @@
 <template>
-  <GmapMap
-      :center="{lat:42.346790, lng:-71.098648}"
-      :zoom="8"
-      map-type-id="terrain"
-      style="width: 1000px; height: 500px"
-  >
-    <GmapMarker
-        :key="index"
-        v-for="(event, index) in events"
-        :position="google && new google.maps.LatLng(event.location.lat, event.location.lon)"
-        :clickable="true"
-        :draggable="true"
-    />
-  </GmapMap>
+  <div id="map">
+    <div class="map">
+      <GmapMap
+          :center="{lat:42.346790, lng:-71.098648}"
+          :zoom="8"
+          map-type-id="terrain"
+          style="width: 1000px; height: 500px"
+      >
+        <GmapMarker
+            :key="index"
+            v-for="(event, index) in events"
+            :position="google && new google.maps.LatLng(event.location.lat, event.location.lon)"
+            :clickable="true"
+            :draggable="true"
+        />
+      </GmapMap>
+    </div>
+    <div class="listing">
+      <div
+          :key="index"
+          v-for="(event, index) in events">
+        <h2>{{ event.name }}</h2>
+        <h3>{{ event.location }}</h3>
+        <p>{{ event.date }}</p>
+        <p><a :href="event.url">{{ event.url }}</a></p>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
