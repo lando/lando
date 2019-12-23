@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as VueGoogleMaps from 'vue2-google-maps'
 /*
  * Use this file to augment vuepress with other vue-y things
  */
@@ -16,4 +17,10 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
       },
     });
   }
+  Vue.use(VueGoogleMaps, {
+    load: {
+      key: 'AIzaSyCVn7jO9AOE6vSEZMd_sI8zneL2WZ8-XB4',
+      libraries: 'places',
+    },
+  });
 };
