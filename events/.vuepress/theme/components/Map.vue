@@ -5,6 +5,13 @@
       map-type-id="terrain"
       style="width: 1000px; height: 500px"
   >
+    <GmapMarker
+        :key="index"
+        v-for="(event, index) in data.events"
+        :position="google && geoCode(event.location)"
+        :clickable="true"
+        :draggable="true"
+    />
   </GmapMap>
 </template>
 
@@ -46,6 +53,11 @@
     methods: {
       geoCode(address) {
         let geocoder = new this.google.maps.Geocoder();
+        return geocoder.geocode({ 'address': address }, (results, status) => {
+          if (status === 'OK') {
+            return results[0].geometry.location;
+          }
+        });
       }
     },
 
