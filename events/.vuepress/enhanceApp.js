@@ -19,7 +19,7 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
   }
   Vue.use(VueGoogleMaps, {
     load: {
-      key: 'AIzaSyCVn7jO9AOE6vSEZMd_sI8zneL2WZ8-XB4',
+      key: '',
       libraries: 'places',
     },
   });
