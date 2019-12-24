@@ -126,6 +126,7 @@
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
     "leia-parser": "^0.3.4",
+    "mailchimp-api-v3": "^1.13.1",
     "mocha": "^4.1.0",
     "mock-fs": "https://github.com/pirog/mock-fs.git#256-ctxBindingAccess",
     "nodemon": "^1.11.0",

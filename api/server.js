@@ -17,11 +17,17 @@ const defaultConfig = {
     /https:\/\/([a-z0-9]+[.])*lndo[.]site/,
     /https?:\/\/([a-z0-9]+[.])*iaimrn624qfk6[.]us[.]platform[.]sh/,
   ],
+  'LANDO_API_MAILCHIMP_KEY': null,
 };
 
 // Get configuration
 const config = require('./lib/config.js')(defaultConfig);
 log.info('Starting app with config %j', config);
+
+// Warn if we don't have a set mailchimp get
+if (!config.LANDO_API_MAILCHIMP_KEY) {
+  log.error('LANDO_API_MAILCHIMP_KEY is not set!');
+}
 
 // Get the app ready
 const express = require('express');

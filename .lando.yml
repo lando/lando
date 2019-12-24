@@ -13,10 +13,12 @@ proxy:
   metrics:
     - metrics.lndo.site:8010
 services:
-  api:
+  cli:
     type: node:10
     build:
       - yarn install
+  api:
+    type: node:10
     command: yarn run dev:api
     overrides:
       environment:
@@ -24,20 +26,14 @@ services:
     port: 8011
   docs:
     type: node:10
-    build:
-      - yarn install
     command: "su - node -c 'cd /app && yarn dev:docs'"
     port: 8008
   site:
     type: node:10
-    build:
-      - yarn install
     command: "su - node -c 'cd /app && yarn dev:site'"
     port: 8009
   metrics:
     type: node:10
-    build:
-      - yarn install
     command: yarn run dev:metrics
     overrides:
       environment:
@@ -57,9 +53,9 @@ tooling:
     cmd: /var/www/.platformsh/bin/platform
   # should these be able to run on either service once we've got the website in here too?
   yarn:
-    service: docs
+    service: cli
   node:
-    service: docs
+    service: cli
   vuepress:
-    service: docs
+    service: cli
 

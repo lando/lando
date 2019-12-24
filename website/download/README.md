@@ -67,6 +67,12 @@ lando start
           <div class="mc-field-group">
             <input type="email" value="" placeholder="Email address" name="EMAIL" class="required email newsletter-input" id="mce-EMAIL">
           </div>
+          <div class="mc-field-group input-group">
+              <ul>
+                <li>
+                  <input type="checkbox" value="4" name="group[37773][4]" id="mce-group[37773]-37773-0" checked><label for="mce-group[37773]-37773-0">NEW USER</label></li>
+              </ul>
+          </div>
           <div id="mce-responses" class="clear">
             <div class="response" id="mce-error-response" style="display:none"></div>
             <div class="response" id="mce-success-response" style="display:none"></div>
