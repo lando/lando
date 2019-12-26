@@ -126,7 +126,7 @@ export default {
     &:not(:last-child)
       margin-right: 1%
     &.disabled
-      background-color: lighten($landoPink, 50%)
+      opacity: .5
   .newsletter-input
     width: 100%
     box-sizing: border-box

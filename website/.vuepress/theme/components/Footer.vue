@@ -140,22 +140,11 @@
               <h3 class="strikethrough">
                 <label for="member_email"><a id="newsletter">Get the latest updates</a></label>
               </h3>
-              <div id="mc_embed_signup">
-                <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
-                  <div id="mc_embed_signup_scroll">
-                    <div class="mc-field-group">
-                      <input type="email" value="" placeholder="Email address" name="EMAIL" class="required email newsletter-input" id="mce-EMAIL">
-                    </div>
-                    <div id="mce-responses" class="clear">
-                      <div class="response" id="mce-error-response" style="display:none"></div>
-                      <div class="response" id="mce-success-response" style="display:none"></div>
-                    </div>
-
-                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_59874b4d6910fa65e724a4648_613837077f" tabindex="-1" value=""></div>
-                    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-                  </div>
-                </form>
-              </div>
+              <Subscribe
+                :customStyles="customStyles"
+                :personas="personas"
+                theme="dark"
+                :title="title"/>
              </div>
           </div>
         </div>
@@ -167,7 +156,23 @@
   </div>
 </template>
 
+
 <script>
+// Lando components
+import Subscribe from '@theme/components/Subscribe';
+
+export default {
+  components: {Subscribe},
+  data() {
+    return {
+      customStyles: {
+        padding: 0,
+      },
+      title: '',
+      personas: ['NEWSLETTER'],
+    };
+  },
+};
 </script>
 
 <style lang="stylus">
@@ -187,6 +192,8 @@
     text-align: center
     &:not(:last-child)
       margin-right: 1%
+    &.disabled
+      opacity: .5
   .newsletter-form
     position: relative
     max-width: 550px
