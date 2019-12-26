@@ -15,6 +15,18 @@
         <HSForm :form="form" :height="formHeight" />
       </div>
     </div>
+    <div id="subscribe" v-else-if="Object.keys(subscribe).length > 0" slot="page-bottom">
+      <div class="inner">
+        <Subscribe
+          :alliance="subscribe.alliance"
+          :button="subscribe.button"
+          :customStyles="subscribe.customStyles"
+          :devNetwork="subscribe.devNetwork"
+          :funnel="subscribe.funnel"
+          :theme="subscribe.theme"
+          :title="subscribe.title"/>
+      </div>
+    </div>
   </ParentLayout>
 </template>
 
@@ -22,14 +34,16 @@
 // Lando components
 import ParentLayout from '@theme/layouts/Layout.vue';
 import HSForm from '@theme/components/HSForm';
+import Subscribe from '@theme/components/Subscribe';
 
 export default {
-  components: {HSForm, ParentLayout},
+  components: {HSForm, ParentLayout, Subscribe},
   data() {
     return {
       byline: '',
       form: '',
       formHeight: 1000,
+      subscribe: {},
       title: '',
     };
   },
@@ -41,6 +55,7 @@ export default {
       this.byline = this.$frontmatter.byline || '';
       this.form = this.$frontmatter.form || '';
       this.formHeight = this.$frontmatter.formHeight;
+      this.subscribe = this.$frontmatter.subscribe || {};
       this.title = this.$frontmatter.title || this.$siteTitle;
     },
   },

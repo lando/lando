@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const fs = require('fs');
 const yaml = require('js-yaml');
 
@@ -14,3 +15,17 @@ exports.loadFile = file => {
     throw Error(`Could not load file ${file}`);
   }
 };
+
+/*
+ * Helper to make an error with an HTTP code
+ */
+exports.makeError = (message, code = 500) => {
+  const error = new Error(message);
+  error.status = code;
+  return error;
+};
+
+/*
+ * Helper to md5Hash a string
+ */
+exports.md5 = data => crypto.createHash('md5').update(data).digest('hex');

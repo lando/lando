@@ -78,7 +78,7 @@ Promise.fromNode(cb => {
 // Load our routes
 .then(() => {
   fs.readdirSync(path.join(__dirname, 'routes')).map(file => {
-    require(`./routes/${file}`)(api, handler);
+    require(`./routes/${file}`)(api, handler, config);
     log.info('Loaded route %s', file);
   });
   log.info('Listening on port: %s', config.LANDO_API_PORT);

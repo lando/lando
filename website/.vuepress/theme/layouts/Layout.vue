@@ -92,6 +92,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this);
     this.$router.afterEach(() => {
       this.isSidebarOpen = false;
     });
@@ -124,18 +125,18 @@ export default {
 </script>
 
 <style lang="stylus">
+.button
+  background-color: $landoPink
+  font-size: 1.2em
+  margin: 2em 0
+  &.big
+    font-size: 2em
 #content
   img
     padding: 2em
   background-color: #fff
   padding-bottom: 70px
   padding-top: 4em
-  .button
-    background-color: $landoPink
-    font-size: 1.2em
-    margin: 2em 0
-    &.big
-      font-size: 2em
   .theme-default-content
     font-size: .8em
     max-width: 800px;

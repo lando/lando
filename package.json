@@ -110,6 +110,7 @@
     "@bugsnag/js": "^6.4.3",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
     "body-parser": "^1.14.2",
+    "canvas-confetti": "^1.0.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
     "chai-events": "^0.0.1",
