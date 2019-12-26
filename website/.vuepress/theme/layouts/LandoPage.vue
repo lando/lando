@@ -22,7 +22,7 @@
           :button="subscribe.button"
           :customStyles="subscribe.customStyles"
           :devNetwork="subscribe.devNetwork"
-          :funnel="subscribe.funnel"
+          :personas="subscribe.personas"
           :theme="subscribe.theme"
           :title="subscribe.title"/>
       </div>

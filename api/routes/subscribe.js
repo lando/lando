@@ -1,16 +1,10 @@
+'use strict';
+
+// Modules
 const _ = require('lodash');
 const Mailchimp = require('mailchimp-api-v3');
 const utils = require('./../lib/utils');
 
-/*
-{
-  "email_address": "mike+testapi@lando.dev",
-  "status_if_new": "subscribed",
-  "interests": {
-    "2abe119d23": true
-  }
-}
-*/
 
 /*
  * Work on mailchimp subscribers
@@ -26,11 +20,32 @@ module.exports = (api, handler, config) => {
       throw utils.makeError('Malformed email!', 422);
     }
 
-    // Update the stuff
-    return mailchimp.put(`/lists/613837077f/members/${utils.md5(req.body.email)}`, {
-      email_address: req.body.email,
-      status: 'subscribed',
+    // Get and reconcile interests
+    const groups = _.compact(_.flatten([req.body.alliance, req.body.devNetwork, req.body.personas]));
+    return mailchimp.get('lists/613837077f/interest-categories').then(results => {
+      return Promise.all(_(_.get(results, 'categories', []))
+        .map(category => category.id)
+        .map(id => mailchimp.get(`lists/613837077f/interest-categories/${id}/interests`))
+        .value())
+        .then(categories => _(categories)
+          .map(category => category.interests)
+          .flatten()
+          .map(interest => ({name: interest.name, id: interest.id}))
+        )
+        .then(interests => _(interests)
+          .filter(interest => _.includes(groups, interest.name))
+          .map(interest => ([interest.id, true]))
+          .fromPairs()
+          .value()
+        );
     })
-    .then(results => results);
+    // Update the contact
+    .then(interests => {
+      return mailchimp.put(`/lists/613837077f/members/${utils.md5(req.body.email)}`, {
+        email_address: req.body.email,
+        interests,
+        status: 'subscribed',
+      });
+    });
   }));
 };

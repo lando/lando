@@ -12,8 +12,9 @@ subscribe:
   customStyles:
     width: 40%
     margin-top: -100px
-  funnel:
-    - NEW USER
+  personas:
+    - NEWUSER
+    - NEWSLETTER
 ---
 
 <div class="step step-full">

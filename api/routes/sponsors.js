@@ -1,7 +1,11 @@
+'use strict';
+
+// Modules
 const _ = require('lodash');
 const path = require('path');
 const utils = require('./../lib/utils');
 
+// Data
 const sponsorsFile = path.resolve(__dirname, '..', 'data', 'sponsors.yml');
 
 /*

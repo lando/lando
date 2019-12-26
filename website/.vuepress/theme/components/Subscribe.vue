@@ -44,7 +44,7 @@ export default {
       type: Array,
       default: () => ([]),
     },
-    funnel: {
+    personas: {
       type: Array,
       default: () => (['NEWSLETTER']),
     },
@@ -76,7 +76,7 @@ export default {
         alliance: this.alliance,
         devNetwork: this.devNetwork,
         email: this.email,
-        funnel: this.funnel,
+        personas: this.personas,
       };
 
       // Wait and then do things
