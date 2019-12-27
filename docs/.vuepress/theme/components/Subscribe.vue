@@ -1,6 +1,6 @@
 <template>
   <div :class="{ subscribe: true, 'subscribe-dark': theme === 'dark' }" :style="customStyles">
-    <h3 v>{{ title }}</h3>
+    <h3>{{ title }}</h3>
     <form id="subscribe-user" @submit.prevent="subscribe" class="subscribe-form">
       <div v-if="showAlliance" class="subscribe-alliance">
         <div v-for="(description, key) in allianceRoles" :key="key" class="subscribe-alliance-wrapper">
@@ -48,9 +48,6 @@
 </template>
 
 <script>
-// Modules
-import confetti from 'canvas-confetti';
-
 // Const
 const allianceRoles = {
   administrator: 'Help manage the Lando Alliance, our sponsors, marketing, outreach, event logistics, etc!',

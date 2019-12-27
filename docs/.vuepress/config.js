@@ -10,6 +10,7 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
     ['script', {src: '//js.hsforms.net/forms/shell.js'}],
+    ['script', {src: '//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js'}],
   ],
   plugins: [
     ['@vuepress/google-analytics',
@@ -174,13 +175,6 @@ module.exports = {
         },
       ],
       '/guides/': [
-        {
-          title: 'Testing',
-          collapsable: false,
-          children: [
-            'testing-new-layout',
-          ],
-        },
         {
           title: 'General',
           collapsable: false,

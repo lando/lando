@@ -48,9 +48,6 @@
 </template>
 
 <script>
-// Modules
-import confetti from 'canvas-confetti';
-
 // Const
 const allianceRoles = {
   administrator: 'Help manage the Lando Alliance, our sponsors, marketing, outreach, event logistics, etc!',

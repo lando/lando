@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 /*
  * Use this file to augment vuepress with other vue-y things
  */
