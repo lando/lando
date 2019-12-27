@@ -33,7 +33,7 @@ a.button,
     border-radius: 2em
     display: inline-block
     color: #fff
-    background-color: lighten($accentColor, 33%)
+    background-color: lighten($landoPink, 33%)
     transition: all .15s ease
     box-sizing: border-box
     &.has-icon
@@ -46,7 +46,7 @@ a.button,
         width: 2em
     &.white
       background-color: #fff
-      color: $accentColor
+      color: $landoPink
     &.gray
       background-color: #4e6e8e
       color: $light
@@ -55,6 +55,9 @@ a.button,
       color: #ffffff
     &.green
       background-color: lighten($landoGreen, 25%)
+      color: #ffffff
+    &.pink
+      background-color: $landoPink
       color: #ffffff
     &.big
       width: 75%
@@ -65,22 +68,22 @@ header
   position: relative
   z-index: 100
 header.navbar
-  background-color: $accentColor
+  background-color: $landoPink
   border: 0
   .site-name
     color: #ffffff
   .links
-    background-color: $accentColor
+    background-color: $landoPink
   .nav-links
     a
       color: #ffffff
     a:hover
       color: #ffffff
-      border-bottom: 2px solid lighten($accentColor, 75%)
+      border-bottom: 2px solid lighten($landoPink, 75%)
     a:active,
     .nav-item > a:not(.external).router-link-active
       color: #ffffff
-      border-bottom: 2px solid lighten($accentColor, 75%)
+      border-bottom: 2px solid lighten($landoPink, 75%)
     .icon.outbound
       color: #ffffff
 .inner
@@ -120,7 +123,7 @@ header.navbar
   padding-bottom: 2em
   &:after
     content: "________"
-    color: $accentColor
+    color: $landoPink
 .step-number
   margin: auto
   font-family: "Poppins", "Helvetica Neue", Arial, sans-serif

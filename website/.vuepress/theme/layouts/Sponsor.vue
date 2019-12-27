@@ -22,7 +22,7 @@
         <Heralds />
       </div>
       <div class="smaller-inner sponsor-button">
-        <a class="button big sponsor" href="https://github.com/sponsors/lando?preview=true" target="_blank">
+        <a class="button big pink sponsor" href="https://github.com/sponsors/lando?preview=true" target="_blank">
           <i class="devicon-github-plain"></i>  Sponsor
         </a>
       </div>

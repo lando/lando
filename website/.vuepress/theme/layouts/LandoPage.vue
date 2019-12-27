@@ -18,11 +18,13 @@
     <div id="subscribe" v-else-if="Object.keys(subscribe).length > 0" slot="page-bottom">
       <div class="inner">
         <Subscribe
-          :alliance="subscribe.alliance"
-          :button="subscribe.button"
+          :buttonLabel="subscribe.buttonLabel"
           :customStyles="subscribe.customStyles"
-          :devNetwork="subscribe.devNetwork"
-          :personas="subscribe.personas"
+          :groups="subscribe.groups"
+          :redirect="subscribe.redirect"
+          :successMessage="subscribe.successMessage"
+          :showAlliance="subscribe.showAlliance"
+          :showDevNetwork="subscribe.showDevNetwork"
           :theme="subscribe.theme"
           :title="subscribe.title"/>
       </div>
@@ -94,32 +96,59 @@ export default {
   #hs_form
     .inner
       max-width: 900px
-  .newsletter-form
-    padding-top: 2em
-    position: relative
-    max-width: 75%
-    margin: 0 auto
-    box-sizing: border-box
-    .button
-      font-size: 1.6em
-  .newsletter-input
-    width: 100%
-    box-sizing: border-box
-    padding: 10px 80px 10px 20px
-    height: 50px
-    border-radius: 50px
-    border: 1px solid #ccc
-    font-size: 16px
-    &:focus
-      outline: none
-      border-color: lighten($accentColor, 18%)
-@media (max-width: $MQMobile)
+.join-alliance
   #content
-    .newsletter-form
-      max-width: 90%
+    #subscribe
+      .inner
+        max-width: 900px
+    .subscribe
+      padding: 5em
+      margin: auto
+      background-color: #024164;
+      text-align: left
+      h1, h2, h3
+        color: #fff
+        font-family: "Helvetica Neue", Arial, sans-serif
+        font-size: 3.75em
+        margin: 0
+        padding: 0
+        border: 0
+        letter-spacing: -2px
+        line-height: 1
+        font-weight: bold;
+    .subscribe-form
+      padding-top: 2em
+      margin: 0 auto
+      box-sizing: border-box
       .button
-        font-size: 1.2em
-        width: 100%
+        font-size: 1.6em
+    .subscribe-input
+      width: 100%
+      box-sizing: border-box
+      padding: 10px 80px 10px 20px
+      height: 50px
+      border-radius: 50px
+      border: 1px solid #ccc
+      font-size: 16px
+      &:focus
+        outline: none
+        border-color: lighten($accentColor, 18%)
+@media (max-width: $MQMobile)
+  .join-alliance
+    #content
+      #subscribe
+        .inner
+          width: 90%
+      .subscribe
+        padding: 2em
+        .button
+          font-size: 1.2em
+          width: 100%
+        form
+          margin: auto
+        h1, h2, h3
+          font-size: 3em
+  #content
     #hero
       h1
         font-size: 4em

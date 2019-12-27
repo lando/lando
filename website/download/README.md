@@ -12,9 +12,11 @@ subscribe:
   customStyles:
     width: 40%
     margin-top: -100px
-  personas:
+  groups:
     - NEWUSER
     - NEWSLETTER
+    - ALLIANCE
+    - LOOKING TO HIRE
 ---
 
 <div class="step step-full">

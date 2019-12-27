@@ -142,7 +142,7 @@
               </h3>
               <Subscribe
                 :customStyles="customStyles"
-                :personas="personas"
+                :groups="groups"
                 theme="dark"
                 :title="title"/>
              </div>
@@ -156,7 +156,6 @@
   </div>
 </template>
 
-
 <script>
 // Lando components
 import Subscribe from '@theme/components/Subscribe';
@@ -169,7 +168,7 @@ export default {
         padding: 0,
       },
       title: '',
-      personas: ['NEWSLETTER'],
+      groups: ['NEWSLETTER'],
     };
   },
 };
@@ -199,7 +198,7 @@ export default {
     max-width: 550px
     margin: 0 auto
     box-sizing: border-box
-  .newsletter-input
+  .subscribe-input
     width: 100%
     box-sizing: border-box
     padding: 10px 80px 10px 20px
