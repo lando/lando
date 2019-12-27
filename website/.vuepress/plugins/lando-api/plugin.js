@@ -1,6 +1,8 @@
 module.exports = (options = {}, context) => ({
   name: 'lando-api-plugin',
   extendPageData($page) {
-    $page.apiUrl = (context.isProd) ? 'https://api.lando.dev' : 'https://api.lndo.site';
+    // @TODO: not sure why the below doesnt work?
+    // $page.apiUrl = (context.isProd) ? 'https://api.lando.dev' : 'https://api.lndo.site';
+    $page.apiUrl = 'https://api.lando.dev';
   },
 });
