@@ -15,8 +15,6 @@ subscribe:
   groups:
     - NEWUSER
     - NEWSLETTER
-    - ALLIANCE
-    - LOOKING TO HIRE
 ---
 
 <div class="step step-full">
