@@ -5,8 +5,19 @@ layout: LandoPage
 title: Join the movement!
 byline: Join the The Lando Alliance and help us liberate developers everywhere from unnecessary work, repeatable steps and dev monotony.
 
-form: 9017bea2-dd0c-402a-8c97-d1b1d7429a00
-formHeight: 1222
+pageClass: join-alliance
+subscribe:
+  title: I hereby commit to the goal of developer liberation as a...
+  theme: dark
+  customStyles:
+    width: auto
+  groups:
+    - ALLIANCE
+    - NEWSLETTER
+  buttonLabel: Join the Alliance
+  redirect: /alliance/thanks
+  showAlliance: true
+  showDevNetwork: true
 
 metaTitle: Join The Lando Alliance | Lando
 description: Support Lando by joining The Lando Alliance; our movement to liberate developers everywhere from the mind-forged manacles of unnecessary work, repeatable steps and dev monotony.

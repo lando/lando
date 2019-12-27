@@ -17,6 +17,8 @@ Lando has an advanced plugin system that allows developers to add and extend Lan
 
 In fact, almost all of Lando's core functionality is provided via plugins. This includes its [core tasks](https://github.com/lando/lando/tree/master/plugins/lando-core/tasks), [proxy](https://github.com/lando/lando/tree/master/plugins/lando-proxy), [events system](https://github.com/lando/lando/tree/master/plugins/lando-events), [services](https://github.com/lando/lando/tree/master/plugins/lando-services), [recipes](https://github.com/lando/lando/tree/master/plugins/lando-recipes), [tooling layer](https://github.com/lando/lando/tree/master/plugins/lando-tooling) and [container networking](https://github.com/lando/lando/tree/master/plugins/lando-networking).
 
+[[toc]]
+
 ## Plugin Loading
 
 Lando will search in the `plugins` directory for any path listed in `lando.config.pluginDirs` and automatically load in any plugins that it finds. By default, these directories are the Lando source directory and `~/.lando` but note that they are configurable via the Lando [global config](./../config/config.md). In order for Lando to successfully identify and automatically load your plugin, you need to have a directory named after your plugin, eg. `my-plugin`, in one of the directories mentioned above and it needs to include an `index.js`.

@@ -24,6 +24,7 @@ const hscss = `
   }
   .inputs-list label {
     line-height: 26px;
+    cursor: pointer;
   }
   .inputs-list:first-child {
     padding-top: 2em;

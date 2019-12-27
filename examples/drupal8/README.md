@@ -67,6 +67,7 @@ lando drush si --db-url=mysql://drupal8:drupal8@database/drupal8 -y
 
 # Should install drupal console
 cd drupal8
+chmod -Rv 755 sites/default
 lando composer require drupal/console:~1.0 --prefer-dist --optimize-autoloader
 
 # Should have drupal console
@@ -75,6 +76,7 @@ lando drupal -V
 
 # Should be able to handoff to sitelocal drush without issue
 cd drupal8
+chmod -Rv 755 sites/default
 lando composer require drush/drush
 lando rebuild -y
 ```

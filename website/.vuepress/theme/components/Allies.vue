@@ -17,7 +17,12 @@ export default {
     };
   },
   mounted() {
-    this.allies = this.$page.sponsors.teams;
+    this.$api(this.$page.apiUrl).get('/v1/sponsors/ally').then(response => {
+      this.allies = response.data || [];
+    })
+    .catch(error => {
+      console.error(error);
+    });
   },
 };
 </script>

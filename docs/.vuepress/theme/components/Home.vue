@@ -200,24 +200,6 @@ export default {
       max-width: 900px
       margin: 0 auto
       text-align: center
-    .point
-      width: 33%
-      display: inline-block
-      vertical-align: top
-      box-sizing: border-box
-      padding: 0 2em
-      h3
-        color: lighten($landoPink, 18%)
-        font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
-        font-size: 1.7em
-        padding: .66em 0.24em 0
-        margin: 0
-        letter-spacing: -2px
-      p
-        font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
-        font-size: 1.1em
-        word-spacing: 0.05em
-        line-height: 1.5
   #sponsors
     padding-top: 2em
     padding-bottom: 2em
@@ -261,8 +243,6 @@ export default {
       color: lighten($landoGrey, 30%)
 @media (max-width: $MQMobile)
   .lando-home
-    .inner
-      width: 80%
     #hero
       .hero-logo
         float: none
@@ -281,14 +261,6 @@ export default {
         font-size: .9em
     #hero_header
       width: 80%
-    #features
-      .point
-        margin: 0 auto
-        width: 80%
-        padding: 0
-        &:after
-          content: "—"
-          color: $landoBlue
 @media (max-width: $MQMobileNarrow)
   .lando-home
     padding-left 1.5rem

@@ -1,10 +1,8 @@
 'use strict';
 
-const chalk = require('chalk');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
-  const table = lando.cli.makeTable();
   return {
     command: 'start',
     describe: 'Starts your app',
@@ -13,8 +11,12 @@ module.exports = lando => {
       const app = lando.getApp(options._app.root);
       // Start it if we can!
       if (app) {
-        console.log(chalk.green('Let\'s get this party started! Starting app..'));
-        return utils.appToggle(app, 'start', table, lando.cli.makeArt());
+        console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'pre'}));
+        return app.start().then(() => {
+          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'post'}));
+          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
+          console.log('');
+        });
       }
     },
   };

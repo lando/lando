@@ -1,36 +1,58 @@
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
+  extraWatchFiles: [
+    '.vuepress/plugins/lando-api/plugin.js',
+  ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
     ['script', {src: '//js.hsforms.net/forms/shell.js'}],
+    ['script', {src: '//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js'}],
   ],
-  plugins: {
-    '@vuepress/google-analytics': {
-      ga: 'UA-74237404-5',
-    },
-    'autometa': {
-      site: {
-        name: 'Lando',
-        twitter: 'devwithlando',
+  plugins: [
+    ['@vuepress/google-analytics',
+      {
+        ga: 'UA-74237404-5',
       },
-      canonical_base: 'https://docs.lando.dev',
-    },
-    'canonical': {
-      baseURL: 'https://docs.lando.dev',
-    },
-    'robots': {
-      host: 'https://docs.lando.dev',
-      sitemap: '/sitemap.xml',
-    },
-    'sitemap': {
-      hostname: 'https://docs.lando.dev',
-      exclude: ['/404.html'],
-    },
-  },
+    ],
+    ['autometa',
+      {
+        site: {
+          name: 'Lando',
+          twitter: 'devwithlando',
+        },
+        canonical_base: 'https://docs.lando.dev',
+      },
+    ],
+    ['canonical',
+      {
+        baseURL: 'https://docs.lando.dev',
+      },
+    ],
+    ['feed',
+      {
+        canonical_base: 'https://docs.lando.dev',
+        posts_directories: ['/guides/'],
+        count: 100,
+      },
+    ],
+    [require('./plugins/lando-api/plugin.js')],
+    ['robots',
+      {
+        host: 'https://docs.lando.dev',
+        sitemap: '/sitemap.xml',
+      },
+    ],
+    ['sitemap',
+      {
+        hostname: 'https://docs.lando.dev',
+        exclude: ['/404.html'],
+      },
+    ],
+  ],
   themeConfig: {
     algolia: {
       apiKey: '15e332850128e9ec96929f44c62f6c88',
@@ -44,6 +66,7 @@ module.exports = {
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
     nav: [
+      {text: 'Sponsor', link: 'https://lando.dev/sponsor'},
       {text: 'Getting Started', link: '/basics/'},
       {text: 'Config', link: '/config/lando.md'},
       {text: 'Guides', link: '/guides/lando-info/'},
@@ -231,11 +254,13 @@ module.exports = {
           title: 'Support',
           collapsable: false,
           children: [
+            ['https://lando.dev/contact', 'Dedicated Support'],
             ['https://github.com/lando/lando/issues', 'GitHub issue queue'],
             ['https://launchpass.com/devwithlando', 'Slack - Official Lando'],
             ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
             ['https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg', 'YouTube Tutorials'],
             ['https://github.com/lando/lando/tree/master/examples', 'Code examples'],
+            ['security', 'Security Issues'],
           ],
         },
         {
@@ -268,11 +293,22 @@ module.exports = {
           collapsable: false,
           children: [
             'contributing',
-            'vision',
-            'how',
+            'join',
+            'comms',
+            'activate',
+            'first',
+            'allianceroles',
+          ],
+        },
+        {
+          title: 'Goveranance',
+          collapsable: false,
+          children: [
             'gov',
+            'vision',
+            ['team', 'Current Team'],
             'roles',
-            'security',
+            ['opensource', 'Resources'],
           ],
         },
         {
@@ -293,7 +329,6 @@ module.exports = {
           title: 'Resources',
           collapsable: false,
           children: [
-            'opensource',
             ['https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC', 'Training materials'],
           ],
         },

@@ -1,13 +1,20 @@
-// Get our sponsors
-import sponsors from './sponsors.js';
+import axios from 'axios';
 
 /*
  * Use this file to augment vuepress with other vue-y things
  */
 export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
-  // @TODO: ultimately we want to serve these from some API endpoint so we can
-  // surface them across properties from hubspot without a ton of overhead
-  siteData.pages.forEach(page => {
-    page.sponsors = sponsors;
-  });
+  if (typeof process === 'undefined') {
+    Vue.use({
+      install(Vue) {
+        Object.defineProperties(Vue.prototype, {
+          $api: {
+            get() {
+              return (base = 'https://api.lando.dev') => axios.create({baseURL: base});
+            },
+          },
+        });
+      },
+    });
+  }
 };

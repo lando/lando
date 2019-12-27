@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const chalk = require('chalk');
 const utils = require('./../lib/utils');
 
 // Helper to handle options
@@ -18,7 +17,6 @@ const handleOpts = options => {
 };
 
 module.exports = lando => {
-  const table = lando.cli.makeTable();
   return {
     command: 'rebuild',
     describe: 'Rebuilds your app from scratch, preserving data',
@@ -28,20 +26,24 @@ module.exports = lando => {
         alias: ['s'],
         array: true,
       },
-      yes: utils.buildConfirm('Are you sure you want to rebuild?'),
+      yes: lando.cli.confirm('Are you sure you want to rebuild?'),
     },
     run: options => {
       if (!options.yes) {
-        console.log(chalk.yellow('Rebuild aborted'));
+        console.log(lando.cli.makeArt('appRebuild', {phase: 'abort'}));
         return;
       }
       // Try to get our app
       const app = lando.getApp(options._app.root);
       // Rebuild the app
       if (app) {
-        console.log(chalk.green('Rising anew like a fire phoenix from the ashes! Rebuilding app...'));
         app.opts = handleOpts(options);
-        return utils.appToggle(app, 'rebuild', table, lando.cli.makeArt());
+        console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'pre'}));
+        return app.rebuild().then(() => {
+          console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'post'}));
+          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
+          console.log('');
+        });
       }
     },
   };

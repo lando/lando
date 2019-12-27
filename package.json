@@ -36,14 +36,15 @@
     "build:site": "vuepress build website -d _site",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
-    "lint": "eslint --quiet --no-ignore bin lib plugins scripts test metrics",
+    "lint": "eslint --quiet --no-ignore api bin lib plugins scripts test metrics",
     "lint:sites": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json docs/.vuepress website/.vuepress",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release": "bump --prompt --tag --all --push",
+    "dev:api": "./node_modules/nodemon/bin/nodemon.js ./api/server.js",
     "dev:docs": "node ./scripts/docs.js && vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8008 docs",
+    "dev:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
     "dev:site": "vuepress dev --temp /tmp/lando-site --cache /tmp/lando-docs-site --port 8009 website",
-    "start:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
     "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js plugins/**/test/**/*.spec.js",
     "test:unit:core": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js",
     "test:unit:plugins": "nyc --reporter=html --reporter=text mocha --timeout 5000 plugins/**/test/**/*.spec.js",
@@ -70,7 +71,9 @@
       "plugins/**/*.tpl",
       "plugins/**/*.vcl",
       "plugins/**/*.xml",
-      "plugins/**/*.yml"
+      "plugins/**/*.yml",
+      "node_modules/figlet/fonts/Small Slant.flf",
+      "node_modules/figlet/fonts/ANSI Shadow.flf"
     ]
   },
   "dependencies": {
@@ -78,6 +81,7 @@
     "bluebird": "^3.4.1",
     "clean-stacktrace": "^1.1.0",
     "cli-table": "^0.3.1",
+    "cli-table3": "^0.5.1",
     "copy-dir": "^0.4.0",
     "dockerode": "^2.4.2",
     "github": "^12.0.0",
@@ -110,6 +114,8 @@
     "chai-as-promised": "^7.1.1",
     "chai-events": "^0.0.1",
     "command-line-test": "^1.0.10",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "coveralls": "^3.0.1",
     "dotenv": "^4.0.0",
     "elasticsearch": "~10.1.2",
@@ -120,6 +126,7 @@
     "highlight.js": "9.8.0",
     "jsdoc-to-markdown": "^4.0.1",
     "leia-parser": "^0.3.4",
+    "mailchimp-api-v3": "^1.13.1",
     "mocha": "^4.1.0",
     "mock-fs": "https://github.com/pirog/mock-fs.git#256-ctxBindingAccess",
     "nodemon": "^1.11.0",
@@ -132,6 +139,7 @@
     "vuepress": "^1.0.4",
     "vuepress-plugin-autometa": "^0.1.12",
     "vuepress-plugin-canonical": "^1.0.0",
+    "vuepress-plugin-feed": "^0.1.8",
     "vuepress-plugin-robots": "^1.0.1",
     "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4"
   }

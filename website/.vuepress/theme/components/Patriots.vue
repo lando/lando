@@ -26,7 +26,12 @@ export default {
     };
   },
   mounted() {
-    this.patriots = this.$page.sponsors.patriots;
+    this.$api(this.$page.apiUrl).get('/v1/sponsors/patriot').then(response => {
+      this.patriots = response.data || [];
+    })
+    .catch(error => {
+      console.error(error);
+    });
   },
 };
 </script>

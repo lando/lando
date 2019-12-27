@@ -41,6 +41,12 @@ web:
           allow: true
         ^/sitemap\.xml$:
           allow: true
+        ^/rss\.xml$:
+          allow: true
+        ^/feed\.atom$:
+          allow: true
+        ^/feed\.json$:
+          allow: true
 
 # Build time dependencies.
 dependencies:

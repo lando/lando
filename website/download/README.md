@@ -6,6 +6,17 @@ byline: Free yourself from the mind-forged manacles of lesser dev tools. Save ti
 metaTitle: Get Lando | Lando
 description: Download Lando and take your local development and DevOps workflow to lightspeed.
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
+
+subscribe:
+  title:
+  customStyles:
+    width: 40%
+    margin-top: -100px
+  groups:
+    - NEWUSER
+    - NEWSLETTER
+    - ALLIANCE
+    - LOOKING TO HIRE
 ---
 
 <div class="step step-full">
@@ -60,21 +71,6 @@ lando start
     <div>
       <p>We'll send you a welcome email with all you need to know to get the most out of Lando.</p>
       <p>This will also include things like code examples, helpful development and support resources, project updates and a monthly digest of helpful Lando blog posts.</p>
-    </div>
-    <div id="mc_embed_signup" class="download-newsletter">
-      <form action="https://kalabox.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate newsletter-form" target="_blank" novalidate>
-        <div id="mc_embed_signup_scroll">
-          <div class="mc-field-group">
-            <input type="email" value="" placeholder="Email address" name="EMAIL" class="required email newsletter-input" id="mce-EMAIL">
-          </div>
-          <div id="mce-responses" class="clear">
-            <div class="response" id="mce-error-response" style="display:none"></div>
-            <div class="response" id="mce-success-response" style="display:none"></div>
-          </div>
-          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_59874b4d6910fa65e724a4648_613837077f" tabindex="-1" value=""></div>
-          <div class="clear"><input type="submit" value="SUBSCRIBE" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-        </div>
-      </form>
     </div>
   </div>
 </div>

@@ -1,3 +1,14 @@
+# Api
+http://api.{default}/:
+  type: upstream
+  upstream: api:http
+  cache:
+    headers: ['Accept', 'Accept-Language', 'Origin']
+    default_ttl: 299
+    enabled: true
+  ssi:
+    enabled: false
+
 # Site
 http://devwithlando.io/:
   type: redirect
