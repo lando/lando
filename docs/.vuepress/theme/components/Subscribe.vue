@@ -11,6 +11,14 @@
             :value="uppercase(key)" v-model="userGroups">
           <label :for="key">{{ uppercase(key) }} - </label><small>{{ description }}</small>
         </div>
+        <input
+          disabled="true"
+          class="hidden-field"
+          name="alliance_role"
+          type="text"
+          :value="getAllianceGroupList()" />
+        <input disabled="true" class="hidden-field" name="alliance_member" type="text" :value="true" />
+        <input disabled="true" class="hidden-field" name="anniversary_date" type="text" :value="today()" />
       </div>
       <input
         :disabled="buttonDisabled"
@@ -26,6 +34,12 @@
             id="WORK"
             value="LOOKING FOR WORK" v-model="userGroups">
           <label for="WORK">I'm a developer looking for contract work, full time employment or other opportunities</label>
+          <input
+            disabled="true"
+            class="hidden-field"
+            name="available_for_contract_work"
+            type="text"
+            :value="lookingWork" />
         </div>
         <div class="subscribe-devnetwork-checkbox">
           <input
@@ -33,6 +47,12 @@
             id="HIRE"
             value="LOOKING TO HIRE" v-model="userGroups">
           <label for="HIRE">I'm an employer looking to hire contractors or employees</label>
+          <input
+            disabled="true"
+            class="hidden-field"
+            name="looking_for_developers_for_contract_or_hire"
+            type="text"
+            :value="lookingHire" />
         </div>
       </div>
       <div v-if="error" class="subscribe-error">{{ error }}. Try again!</div>
@@ -57,6 +77,17 @@ const allianceRoles = {
   guider: 'Share working examples of my Lando config (eg browsersync) on the Lando site and get credit for it!',
   sponsor: 'Sponsor Lando and get swag, shoutouts on Twitter and our websites and other exclusive benefits',
   upseller: 'Help convince my org, boss or relevant decision maker to sponsor Lando or purchase Lando support/services!',
+};
+const defaultGroups = {
+  '36113a4526': false,
+  '2abe119d23': false,
+  'f020990e25': false,
+  '4a81e85359': false,
+  'f63decb94d': false,
+  '20270ed04e': false,
+  '8a2f0956f5': false,
+  '57cd8bf7a6': false,
+  '99872980bb': false,
 };
 
 export default {
@@ -110,10 +141,29 @@ export default {
       userGroups: [],
     };
   },
+  computed: {
+    lookingHire() {
+      return this.userGroups.includes('LOOKING TO HIRE');
+    },
+    lookingWork() {
+      return this.userGroups.includes('LOOKING FOR WORK');
+    },
+  },
   methods: {
     clear() {
       this.success = '';
       this.error = '';
+    },
+    getDefaultGroups() {
+      return (this.showDevNetwork || this.showAlliance) ? defaultGroups : {};
+    },
+    getAllianceGroupList() {
+      return this.userGroups.filter(value => {
+        return value !== 'LOOKING FOR WORK' && value !== 'LOOKING TO HIRE';
+      }).join(';');
+    },
+    today() {
+      return new Date(new Date().setUTCHours(0, 0, 0, 0)).getTime();
     },
     subscribe() {
       // UX
@@ -121,7 +171,7 @@ export default {
       this.error = '';
       this.success = '';
       // Set data
-      const data = {email: this.email, groups: this.groups.concat(this.userGroups)};
+      const data = {defaults: this.getDefaultGroups(), email: this.email, groups: this.groups.concat(this.userGroups)};
       // Wait and then do things
       setTimeout(() => this.$api(this.$page.apiUrl).put('/v1/subscribe', data).then(response => {
         this.success = this.successMessage;
@@ -179,6 +229,8 @@ export default {
       margin-right: 1%
     &.disabled
       opacity: .5
+  .hidden-field
+    visibility: hidden
   .subscribe-alliance,
   .subscribe-devnetwork
     padding-top: 2em

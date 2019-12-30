@@ -1,6 +1,6 @@
 <template>
   <div :class="{ subscribe: true, 'subscribe-dark': theme === 'dark' }" :style="customStyles">
-    <h3 v>{{ title }}</h3>
+    <h3>{{ title }}</h3>
     <form id="subscribe-user" @submit.prevent="subscribe" class="subscribe-form">
       <div v-if="showAlliance" class="subscribe-alliance">
         <div v-for="(description, key) in allianceRoles" :key="key" class="subscribe-alliance-wrapper">
@@ -11,6 +11,14 @@
             :value="uppercase(key)" v-model="userGroups">
           <label :for="key">{{ uppercase(key) }} - </label><small>{{ description }}</small>
         </div>
+        <input
+          disabled="true"
+          class="hidden-field"
+          name="alliance_role"
+          type="text"
+          :value="getAllianceGroupList()" />
+        <input disabled="true" class="hidden-field" name="alliance_member" type="text" :value="true" />
+        <input disabled="true" class="hidden-field" name="anniversary_date" type="text" :value="today()" />
       </div>
       <input
         :disabled="buttonDisabled"
@@ -26,6 +34,12 @@
             id="WORK"
             value="LOOKING FOR WORK" v-model="userGroups">
           <label for="WORK">I'm a developer looking for contract work, full time employment or other opportunities</label>
+          <input
+            disabled="true"
+            class="hidden-field"
+            name="available_for_contract_work"
+            type="text"
+            :value="lookingWork" />
         </div>
         <div class="subscribe-devnetwork-checkbox">
           <input
@@ -33,6 +47,12 @@
             id="HIRE"
             value="LOOKING TO HIRE" v-model="userGroups">
           <label for="HIRE">I'm an employer looking to hire contractors or employees</label>
+          <input
+            disabled="true"
+            class="hidden-field"
+            name="looking_for_developers_for_contract_or_hire"
+            type="text"
+            :value="lookingHire" />
         </div>
       </div>
       <div v-if="error" class="subscribe-error">{{ error }}. Try again!</div>
@@ -121,6 +141,14 @@ export default {
       userGroups: [],
     };
   },
+  computed: {
+    lookingHire() {
+      return this.userGroups.includes('LOOKING TO HIRE');
+    },
+    lookingWork() {
+      return this.userGroups.includes('LOOKING FOR WORK');
+    },
+  },
   methods: {
     clear() {
       this.success = '';
@@ -128,6 +156,14 @@ export default {
     },
     getDefaultGroups() {
       return (this.showDevNetwork || this.showAlliance) ? defaultGroups : {};
+    },
+    getAllianceGroupList() {
+      return this.userGroups.filter(value => {
+        return value !== 'LOOKING FOR WORK' && value !== 'LOOKING TO HIRE';
+      }).join(';');
+    },
+    today() {
+      return new Date(new Date().setUTCHours(0, 0, 0, 0)).getTime();
     },
     subscribe() {
       // UX
@@ -193,6 +229,8 @@ export default {
       margin-right: 1%
     &.disabled
       opacity: .5
+  .hidden-field
+    visibility: hidden
   .subscribe-alliance,
   .subscribe-devnetwork
     padding-top: 2em
