@@ -58,6 +58,17 @@ const allianceRoles = {
   sponsor: 'Sponsor Lando and get swag, shoutouts on Twitter and our websites and other exclusive benefits',
   upseller: 'Help convince my org, boss or relevant decision maker to sponsor Lando or purchase Lando support/services!',
 };
+const defaultGroups = {
+  '36113a4526': false,
+  '2abe119d23': false,
+  'f020990e25': false,
+  '4a81e85359': false,
+  'f63decb94d': false,
+  '20270ed04e': false,
+  '8a2f0956f5': false,
+  '57cd8bf7a6': false,
+  '99872980bb': false,
+};
 
 export default {
   props: {
@@ -115,13 +126,16 @@ export default {
       this.success = '';
       this.error = '';
     },
+    getDefaultGroups() {
+      return (this.showDevNetwork || this.showAlliance) ? defaultGroups : {};
+    },
     subscribe() {
       // UX
       this.buttonDisabled = true;
       this.error = '';
       this.success = '';
       // Set data
-      const data = {email: this.email, groups: this.groups.concat(this.userGroups)};
+      const data = {defaults: this.getDefaultGroups(), email: this.email, groups: this.groups.concat(this.userGroups)};
       // Wait and then do things
       setTimeout(() => this.$api(this.$page.apiUrl).put('/v1/subscribe', data).then(response => {
         this.success = this.successMessage;
