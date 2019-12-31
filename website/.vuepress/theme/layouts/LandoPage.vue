@@ -21,10 +21,12 @@
           :buttonLabel="subscribe.buttonLabel"
           :customStyles="subscribe.customStyles"
           :groups="subscribe.groups"
+          :passcode="subscribe.passcode"
           :redirect="subscribe.redirect"
           :successMessage="subscribe.successMessage"
           :showAlliance="subscribe.showAlliance"
           :showDevNetwork="subscribe.showDevNetwork"
+          :showSponsors="subscribe.showSponsors"
           :theme="subscribe.theme"
           :title="subscribe.title"/>
       </div>

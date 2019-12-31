@@ -12,7 +12,6 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
   <img src="/images/lando-alliance.png">
 </div>
 
-
 <div class="liberation-manifesto">
   <p>
   With your help we can cover infrastructure costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.

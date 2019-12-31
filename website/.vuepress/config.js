@@ -44,6 +44,7 @@ module.exports = {
             userAgent: '*',
             disallow: [
               '/alliance/thanks',
+              '/sponsor/subscribe/',
             ],
           },
         ],
@@ -55,6 +56,7 @@ module.exports = {
         exclude: [
           '/404.html',
           '/alliance/thanks/',
+          '/sponsor/subscribe/',
         ],
       },
     ],
