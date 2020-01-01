@@ -1,12 +1,12 @@
 ---
 navbar: true
 layout: LandoPage
-title: Admin
+title: Add Sponsor
 byline: Basic admin page to help add a sponsor
 
 pageClass: join-alliance
 subscribe:
-  title: Enter the email, sponsor level and SECRET CODE
+  title: Enter the sponsor level, SECRET CODE and email
   theme: dark
   customStyles:
     width: auto

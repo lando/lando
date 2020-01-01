@@ -34,7 +34,7 @@
         <input disabled="true" class="hidden-field" name="verified_sponsor" type="text" :value="true" />
         <input disabled="true" class="hidden-field" name="sponsor_joined" type="text" :value="today()" />
         <p>Check out <a href="https://github.com/sponsors/lando" target="_blank">https://github.com/sponsors/lando</a> if you are unclear
-          on how to match up the sponsorship levels. Email <strong>mike@lando.dev</strong> if things don't seem to match up anymore.</p>
+          on how to match up the sponsorship levels. Email <strong>sponsorships@lando.dev</strong> if things don't seem to match up anymore.</p>
       </div>
 
       <input v-if="passcode"
