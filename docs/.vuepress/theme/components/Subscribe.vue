@@ -105,8 +105,8 @@ const allianceRoles = {
   upseller: 'Help convince my org, boss or relevant decision maker to sponsor Lando or purchase Lando support/services!',
 };
 const sponsorRoles = {
-  herald: '$4',
-  hero: '$9',
+  hero: '$4',
+  herald: '$9',
   ally: '$99',
   partner: '$999',
   patriot: '$1776',
