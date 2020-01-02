@@ -5,21 +5,6 @@ const _ = require('lodash');
 const Mailchimp = require('mailchimp-api-v3');
 const utils = require('./../lib/utils');
 
-// Constants
-// @NOTE: this doesnt seem right, we should probably be passing in better data
-// and handling things like this client side
-const groupDefaults = {
-  '36113a4526': false,
-  '2abe119d23': false,
-  'f020990e25': false,
-  '4a81e85359': false,
-  'f63decb94d': false,
-  '20270ed04e': false,
-  '8a2f0956f5': false,
-  '57cd8bf7a6': false,
-  '99872980bb': false,
-};
-
 /*
  * Work on mailchimp subscribers
  */
@@ -56,7 +41,7 @@ module.exports = (api, handler, config) => {
     .then(interests => {
       return mailchimp.put(`/lists/613837077f/members/${utils.md5(req.body.email)}`, {
         email_address: req.body.email,
-        interests: _.merge({}, groupDefaults, interests),
+        interests: _.merge({}, _.get(req, 'body.defaults', {}), interests),
         status: 'subscribed',
       });
     });
