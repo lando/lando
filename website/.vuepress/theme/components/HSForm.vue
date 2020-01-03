@@ -114,7 +114,7 @@ export default {
       type: String,
       required: true,
     },
-    height: {
+    formHeight: {
       type: Number,
       default: 1100,
     },
@@ -142,7 +142,7 @@ export default {
       hsFormInjector.appendChild(injector);
 
       // Add a correction factor to height on smaller devices
-      let height = this.height;
+      let height = this.formHeight;
       if (window.screen.width < 800) {
         height = height + 830 - window.screen.width;
       }
