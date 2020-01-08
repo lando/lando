@@ -74,6 +74,7 @@ module.exports = {
       {text: 'Contributing', link: '/contrib/contributing/'},
       {text: 'API', link: '/api/app.md'},
     ],
+    repo: 'lando/lando',
     sidebar: {
       '/basics/': [
         {
