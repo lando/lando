@@ -19,13 +19,10 @@ module.exports = {
       options = _.merge({}, config, options);
       const memcached = {
         image: `bitnami/memcached:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/entrypoint.sh /run.sh',
         environment: {
           MEMCACHED_CACHE_SIZE: options.mem,
         },
-        volumes: [
-          `${options.confDest}/launch.sh:/launch.sh`,
-        ],
       };
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, memcached)});
