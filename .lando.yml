@@ -26,12 +26,18 @@ services:
     port: 8011
   docs:
     type: node:10
-    command: "su - node -c 'cd /app && yarn dev:docs'"
+    command: "su -c 'cd /app && yarn --link-folder /home/node --cache-folder /home/node dev:docs' --preserve-environment - node"
     port: 8008
+    overrides:
+      environment:
+        LANDO_API: https://api.lndo.site
   site:
     type: node:10
-    command: "su - node -c 'cd /app && yarn dev:site'"
+    command: "su -c 'cd /app && yarn --link-folder /home/node --cache-folder /home/node dev:site'  --preserve-environment - node"
     port: 8009
+    overrides:
+      environment:
+        LANDO_API: https://api.lndo.site
   metrics:
     type: node:10
     command: yarn run dev:metrics

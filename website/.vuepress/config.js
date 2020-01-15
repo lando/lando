@@ -1,6 +1,15 @@
+const webpack = require('webpack');
+
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
+  configureWebpack: config => {
+    return {plugins: [
+      new webpack.EnvironmentPlugin({
+        LANDO_API: process.env.LANDO_API || 'https://api.lando.dev',
+      }),
+    ]};
+  },
   extraWatchFiles: [
     '.vuepress/plugins/lando-api/plugin.js',
   ],
@@ -14,69 +23,58 @@ module.exports = {
     ['script', {src: '//js.hsforms.net/forms/shell.js'}],
     ['script', {src: '//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js'}],
   ],
-  plugins: [
-    ['@vuepress/google-analytics',
-      {
-        ga: 'UA-74237404-3',
+  plugins: {
+    '@vuepress/google-analytics': {
+      ga: 'UA-74237404-3',
+    },
+    'autometa': {
+      site: {
+        name: 'Lando',
+        twitter: 'devwithlando',
       },
-    ],
-    ['autometa',
-      {
-        site: {
-          name: 'Lando',
-          twitter: 'devwithlando',
+      canonical_base: 'https://lando.dev',
+    },
+    'canonical': {
+      baseURL: 'https://lando.dev',
+    },
+    'robots': {
+      host: 'https://lando.dev',
+      sitemap: '/sitemap.xml',
+      policies: [
+        {
+          userAgent: '*',
+          disallow: [
+            '/alliance/thanks',
+            '/info/',
+            '/sponsor/ally/',
+            '/sponsor/herald/',
+            '/sponsor/hero/',
+            '/sponsor/partner/',
+            '/sponsor/patriot/',
+            '/sponsor/subscribe/',
+            '/sponsor/thanks/',
+            '/thanks/',
+          ],
         },
-        canonical_base: 'https://lando.dev',
-      },
-    ],
-    ['canonical',
-      {
-        baseURL: 'https://lando.dev',
-      },
-    ],
-    [require('./plugins/lando-api/plugin.js'), {stuff: 'things'}],
-    ['robots',
-      {
-        host: 'https://lando.dev',
-        sitemap: '/sitemap.xml',
-        policies: [
-          {
-            userAgent: '*',
-            disallow: [
-              '/alliance/thanks',
-              '/info/',
-              '/sponsor/ally/',
-              '/sponsor/herald/',
-              '/sponsor/hero/',
-              '/sponsor/partner/',
-              '/sponsor/patriot/',
-              '/sponsor/subscribe/',
-              '/sponsor/thanks/',
-              '/thanks/',
-            ],
-          },
-        ],
-      },
-    ],
-    ['sitemap',
-      {
-        hostname: 'https://lando.dev',
-        exclude: [
-          '/404.html',
-          '/alliance/thanks',
-          '/info/',
-          '/sponsor/ally/',
-          '/sponsor/herald/',
-          '/sponsor/hero/',
-          '/sponsor/partner/',
-          '/sponsor/patriot/',
-          '/sponsor/subscribe/',
-          '/sponsor/thanks/',
-          '/thanks/',
-        ],
-      },
-    ],
-  ],
+      ],
+    },
+    'sitemap': {
+      hostname: 'https://lando.dev',
+      exclude: [
+        '/404.html',
+        '/alliance/thanks',
+        '/info/',
+        '/sponsor/ally/',
+        '/sponsor/herald/',
+        '/sponsor/hero/',
+        '/sponsor/partner/',
+        '/sponsor/patriot/',
+        '/sponsor/subscribe/',
+        '/sponsor/thanks/',
+        '/thanks/',
+      ],
+    },
+  },
   themeConfig: {
     docsDir: 'website',
     docsBranch: 'master',

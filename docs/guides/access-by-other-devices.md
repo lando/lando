@@ -1,5 +1,9 @@
 ---
 description: Learn how to access your Lando sites from other devices on your network like mobile phones or tablets.
+layout: Guide
+author:
+  name: Team Lando
+  twitter: devwithlando
 ---
 
 # Accessing Lando from Other Devices on Your Local Network

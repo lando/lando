@@ -1,0 +1,64 @@
+[
+  {
+    "title": "Databases",
+    "collapsable": false,
+    "children": [
+      "db-import",
+      "db-export"
+    ]
+  },
+  {
+    "title": "Drupal",
+    "collapsable": false,
+    "children": []
+  },
+  {
+    "title": "Frontend",
+    "collapsable": false,
+    "children": [
+      "frontend"
+    ]
+  },
+  {
+    "title": "General",
+    "collapsable": false,
+    "children": [
+      "a-precise-title-such-as-running-drupal-4-6-on-lando",
+      "lando-info"
+    ]
+  },
+  {
+    "title": "IDEs",
+    "collapsable": false,
+    "children": [
+      "lando-phpstorm",
+      "lando-with-vscode"
+    ]
+  },
+  {
+    "title": "Networking",
+    "collapsable": false,
+    "children": [
+      "external-access.md",
+      "access-by-other-devices",
+      "offline-dev"
+    ]
+  },
+  {
+    "title": "Recreation",
+    "collapsable": false,
+    "children": [
+      [
+        "https://www.youtube.com/watch?v=tkBVDh7my9Q",
+        "Mountain climbing"
+      ]
+    ]
+  },
+  {
+    "title": "Updating",
+    "collapsable": false,
+    "children": [
+      "updating-to-rc2"
+    ]
+  }
+]

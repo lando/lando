@@ -1,6 +1,6 @@
 <template>
   <ParentLayout class="current-team">
-    <CarbonAds v-if="showAds" slot="sidebar-top"/>
+    <CarbonAds slot="sidebar-top"/>
     <div id="current-team" class="current-team-wrapper" slot="page-top">
       <h1>Current Team</h1>
       <p>
@@ -23,11 +23,6 @@ export default {
     return {
       members: [],
     };
-  },
-  computed: {
-    showAds() {
-      return this.$frontmatter.home ? !this.$frontmatter.home : true;
-    },
   },
   mounted() {
     this.$api(this.$page.apiUrl).get('/v1/contributors').then(response => {
