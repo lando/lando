@@ -144,3 +144,5 @@ services:
 ## Getting information
 
 You can get connection and credential information about your solr instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Solr"/>

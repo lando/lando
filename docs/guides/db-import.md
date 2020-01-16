@@ -5,6 +5,8 @@ description: Learn how to import your MySQL, MariaDB or Postgres databases to La
 
 # SQL Import
 
+<GuideHeader />
+
 Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default but can be used on additional database services as well.
 
 You can also import databases into other hosts and databases. It will currently handle uncompressed, gzipped or zipped dump files.
@@ -67,3 +69,7 @@ tooling:
         description: Do not destroy the existing database before an import
         boolean: true
 ```
+
+<GuideFooter repo="https://github.com/lando/lando/tree/master/examples/sql-import" />
+<Newsletter />
+

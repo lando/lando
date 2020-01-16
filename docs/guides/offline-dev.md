@@ -4,6 +4,8 @@ description: Learn how to use Lando for offline local development.
 
 # Developing offline
 
+<GuideHeader />
+
 Out of the box Lando uses an actual on-the-internet wildcard domain at `*.lndo.site` to route your domain names back to your localhost to provide convenient proxying. This method is minimally invasive and doesn't require Lando to alter your machine's DNS routing. This has the downside of requiring an internet connection to access your sites.
 
 However, you may want the freedom of hacking away on your site while scaling Everest or just to simply route your projects to a different wildcard domain, like `*.local.dev`, `*.seriously.hanshotfirst` or `*.my.test`. Note that we **DO NOT** recommend you use a _true_ top-level domain such as `*.test`. You can read more about why in our [security](./../config/security.md) documentation.
@@ -68,3 +70,5 @@ Here are some vitals:
 
 Enjoy your signature domain while you hack away in complete wifi-less splendor.
 
+<GuideFooter />
+<Newsletter />

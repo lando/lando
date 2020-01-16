@@ -45,3 +45,5 @@ services:
 Note that while `compose` services also get the same Lando *secret sauce* but there is a notable difference here. By default Lando will hijack the Docker containers `entrypoint`. This means if your custom container set's its own entrypoint you will need to remove that entrypoint and set it as the first argument in the `command`.
 
 In the example above `docker-php-entrypoint` is the default `entrypoint` for the `drupal:8` image but we have moved it so that it is the first argument of `command`. This both allows the container to run as expected and allows Lando to do its thing.
+
+<RelatedGuides tag="Compose"/>

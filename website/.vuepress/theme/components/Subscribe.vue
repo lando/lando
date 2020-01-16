@@ -1,5 +1,6 @@
 <template>
   <div :class="{ subscribe: true, 'subscribe-dark': theme === 'dark' }" :style="customStyles">
+    <script src="//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js"></script>
     <h3>{{ title }}</h3>
     <form id="subscribe-user" @submit.prevent="subscribe" class="subscribe-form">
       <div v-if="showAlliance" class="subscribe-alliance">

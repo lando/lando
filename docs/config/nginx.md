@@ -82,3 +82,5 @@ services:
       vhosts: config/default.conf.tpl
       param: config/fastcgi_params
 ```
+
+<RelatedGuides tag="nginx"/>

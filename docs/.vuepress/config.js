@@ -1,58 +1,54 @@
+const fs = require('fs');
+const webpack = require('webpack');
+
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
+  configureWebpack: config => {
+    return {plugins: [
+      new webpack.EnvironmentPlugin({
+        LANDO_API: process.env.LANDO_API || 'https://api.lando.dev',
+      }),
+    ]};
+  },
   extraWatchFiles: [
     '.vuepress/plugins/lando-api/plugin.js',
+    '.vuepress/guides.json',
   ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
-    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
-    ['script', {src: '//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js'}],
   ],
-  plugins: [
-    ['@vuepress/google-analytics',
-      {
-        ga: 'UA-74237404-5',
+  plugins: {
+    '@vuepress/google-analytics': {
+      ga: 'UA-74237404-5',
+    },
+    'autometa': {
+      site: {
+        name: 'Lando',
+        twitter: 'devwithlando',
       },
-    ],
-    ['autometa',
-      {
-        site: {
-          name: 'Lando',
-          twitter: 'devwithlando',
-        },
-        canonical_base: 'https://docs.lando.dev',
-      },
-    ],
-    ['canonical',
-      {
-        baseURL: 'https://docs.lando.dev',
-      },
-    ],
-    ['feed',
-      {
-        canonical_base: 'https://docs.lando.dev',
-        posts_directories: ['/guides/'],
-        count: 100,
-      },
-    ],
-    [require('./plugins/lando-api/plugin.js')],
-    ['robots',
-      {
-        host: 'https://docs.lando.dev',
-        sitemap: '/sitemap.xml',
-      },
-    ],
-    ['sitemap',
-      {
-        hostname: 'https://docs.lando.dev',
-        exclude: ['/404.html'],
-      },
-    ],
-  ],
+      canonical_base: 'https://docs.lando.dev',
+    },
+    'canonical': {
+      baseURL: 'https://docs.lando.dev',
+    },
+    'feed': {
+      canonical_base: 'https://docs.lando.dev',
+      posts_directories: ['/guides/'],
+      count: 100,
+    },
+    'robots': {
+      host: 'https://docs.lando.dev',
+      sitemap: '/sitemap.xml',
+    },
+    'sitemap': {
+      hostname: 'https://docs.lando.dev',
+      exclude: ['/404.html'],
+    },
+  },
   themeConfig: {
     algolia: {
       apiKey: '15e332850128e9ec96929f44c62f6c88',
@@ -65,6 +61,7 @@ module.exports = {
     logo: '/images/logo-small.png',
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
+    lastUpdated: 'Last Updated',
     nav: [
       {text: 'Sponsor', link: 'https://lando.dev/sponsor'},
       {text: 'Getting Started', link: '/basics/'},
@@ -174,61 +171,7 @@ module.exports = {
           ],
         },
       ],
-      '/guides/': [
-        {
-          title: 'General',
-          collapsable: false,
-          children: [
-            'lando-info',
-          ],
-        },
-        {
-          title: 'Databases',
-          collapsable: false,
-          children: [
-            'db-import',
-            'db-export',
-          ],
-        },
-        {
-          title: 'Frontend',
-          collapsable: false,
-          children: [
-            'frontend',
-          ],
-        },
-        {
-          title: 'IDEs',
-          collapsable: false,
-          children: [
-            'lando-phpstorm',
-            'lando-with-vscode',
-          ],
-        },
-        {
-          title: 'Networking',
-          collapsable: false,
-          children: [
-            'external-access.md',
-            'access-by-other-devices',
-            'offline-dev',
-          ],
-        },
-        {
-          title: 'Updating',
-          collapsable: false,
-          children: [
-            'updating-to-rc2',
-          ],
-        },
-        {
-          title: 'Recreation',
-          collapsable: false,
-          children: [
-            ['https://www.youtube.com/watch?v=tkBVDh7my9Q', 'Mountain climbing'],
-          ],
-        },
-      ],
+      '/guides/': JSON.parse(fs.readFileSync(require.resolve('./guides.json'))),
       '/help/': [
         {
           title: 'Troubleshooting',
