@@ -76,3 +76,5 @@ services:
 ## Getting information
 
 You can get connection and credential information about your memcached instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Memcached"/>

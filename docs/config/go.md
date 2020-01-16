@@ -79,3 +79,5 @@ go func() {
   }
 }()
 ```
+
+<RelatedGuides tag="Go"/>

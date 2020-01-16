@@ -169,3 +169,5 @@ Here is an example:
 ```
 
 For a more comprehensive doc on this please check out our [Working Offline Guide](./../guides/offline-dev.md).
+
+<RelatedGuides tag="Proxy"/>
