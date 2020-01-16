@@ -64,6 +64,8 @@ export default {
   border-bottom: 1px dotted #ddd
   display: flex
   margin: auto
+  &:last-child
+    border: none
   .team-member-pic,
   .team-member-bio,
   .team-member-details
