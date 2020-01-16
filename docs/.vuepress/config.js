@@ -1,8 +1,6 @@
 const fs = require('fs');
 const webpack = require('webpack');
 
-console.log(process.env);
-
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
@@ -22,8 +20,6 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
-    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
-    ['script', {src: '//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js'}],
   ],
   plugins: {
     '@vuepress/google-analytics': {

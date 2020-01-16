@@ -20,8 +20,6 @@ module.exports = {
     ['link', {rel: 'stylesheet', href: '//cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css'}],
     ['link', {rel: 'stylesheet', href: '//cdn.jsdelivr.net/devicons/1.8.0/css/devicons.min.css'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
-    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
-    ['script', {src: '//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js'}],
   ],
   plugins: {
     '@vuepress/google-analytics': {

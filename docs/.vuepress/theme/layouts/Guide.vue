@@ -11,7 +11,7 @@
     <div id="subscribe" slot="page-bottom">
       <div class="inner">
         <Subscribe
-          title="eghwe"/>
+          title="ffff"/>
       </div>
     </div>
   </ParentLayout>

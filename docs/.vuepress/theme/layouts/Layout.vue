@@ -12,10 +12,6 @@ export default {
     ParentLayout,
     CarbonAds,
   },
-  mounted() {
-    console.log('ewgweg');
-    console.log(process.env.LANDO_API);
-  },
   computed: {
     showAds() {
       return this.$frontmatter.home ? !this.$frontmatter.home : true;
