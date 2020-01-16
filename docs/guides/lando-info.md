@@ -4,6 +4,8 @@ description: Learn how to use Lando's default environment variables inside you a
 
 # Using $LANDO_INFO
 
+<GuideHeader />
+
 Lando will inject an environment variable called `$LANDO_INFO` into each service. This is a `JSON` string representation of the `lando info` command and you can use it to see valuable information about other services such as service hostnames and database connection information and credentials.
 
 This is helpful if you want to set application configuration in a way that is portable and dynamic between many lando apps.
@@ -37,3 +39,6 @@ More examples coming soon but in the meantime consult the documentation for your
 
 * Grab an environment variable
 * Decode a JSON string to an object
+
+<GuideFooter />
+<Newsletter />

@@ -23,7 +23,6 @@
     "title": "General",
     "collapsable": false,
     "children": [
-      "a-precise-title-such-as-running-drupal-4-6-on-lando",
       "lando-info"
     ]
   },

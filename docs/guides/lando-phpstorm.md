@@ -4,6 +4,8 @@ description: Learn how to configure xdebug in Lando using PhpStorm.
 
 # Lando + PhpStorm + Xdebug
 
+<GuideHeader />
+
 [PhpStorm](https://www.jetbrains.com/phpstorm/) is a popular code IDE for PHP
 and Drupal development. This video tutorial shows you how to set up PhpStorm with Xdebug.
 
@@ -28,3 +30,6 @@ You are free to assign any name to "serverName" as long as it matches the server
 In the example above we set the variable to `appserver` and created a path mapping for the server accordingly:
 
 ![screenshot](/images/drush-xdebug-phpstorm.png)
+
+<GuideFooter />
+<Newsletter />
