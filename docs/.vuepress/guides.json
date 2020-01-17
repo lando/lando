@@ -54,6 +54,11 @@
     ]
   },
   {
+    "title": "Solr",
+    "collapsable": false,
+    "children": []
+  },
+  {
     "title": "Updating",
     "collapsable": false,
     "children": [
