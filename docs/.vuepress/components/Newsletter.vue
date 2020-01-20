@@ -3,7 +3,7 @@
     <Subscribe
       buttonLabel="Sign me up!"
       successMessage="More awesome guide material will be heading your way!"
-      title="Want to get informed of new guide content? Then sign up!" />
+      title="Want to know about new guides and tutorials? Then sign up!" />
     </div>
 </template>
 

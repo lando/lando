@@ -38,3 +38,4 @@ Next, get the port of your lando app.  You can do this by running `lando info` f
 You can now visit your lando app from other devices by going to `IP address: Port number`.  (Example: `http://192.168.0.123:33333`)
 
 <GuideFooter />
+<Newsletter />
