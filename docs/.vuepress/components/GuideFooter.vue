@@ -8,6 +8,12 @@
     <div class="original-article" v-if="original">
       This guide is adapted from other content. If you are interested in the original then <a target="_blank" :href="original">check it out here</a>.
     </div>
+    <div class="original-article">
+      Have a Lando question you'd like to see as a guide? <a target="_blank" href="https://github.com/lando/lando/issues/new/choose"> Suggest one!</a>
+    </div>
+    <div class="original-article">
+      Want to write a Lando guide? <a href="./../contrib/guides-intro.html"> Learn how!</a>
+    </div>
   </div>
 </template>
 

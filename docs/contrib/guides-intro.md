@@ -50,4 +50,8 @@ Here are the steps to get set up for writing guides. Note that _you should have 
 2. [Install Lando from source and activate secret toggle](./activate.md)
 3. [Add yourself as a contributor](./first.md)
 
+## What should I write?
 
+If you do not have a specific guide in mind you can always check to see if there are any [GitHub issues](https://github.com/lando/lando/labels/guide) that have been tagged `guide`. These issues are generally questions submitted by end users who are unsure how to do a specific thing in Lando.
+
+You should also feel free to add any of your own guide ideas [over here](https://github.com/lando/lando/issues/new/choose). Note that you will want to select "Question" as the issue type.

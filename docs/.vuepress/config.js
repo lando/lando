@@ -249,7 +249,7 @@ module.exports = {
           ],
         },
         {
-          title: 'Goveranance',
+          title: 'Governance',
           collapsable: false,
           children: [
             'gov',
