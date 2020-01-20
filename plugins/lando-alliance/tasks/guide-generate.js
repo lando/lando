@@ -17,8 +17,8 @@ module.exports = lando => {
   const guidesPath = path.join(docsPath, 'guides');
 
   // Get the authors
-  const authors = _.map(api.read('contributors'), 'name');
-  authors.unshift('Team Lando');
+  const authors = _.map(api.read('contributors'), author => ({name: author.name, value: author.id}));
+  authors.unshift({name: 'Team Lando', value: 'none'});
   // Get the categories
   const categories = _.map(guidesData, 'title');
 
@@ -31,7 +31,7 @@ module.exports = lando => {
         string: true,
         interactive: {
           type: 'input',
-          default: 'A precise title such as Running Drupal 4.6 on Lando',
+          default: 'An example guide',
           message: 'Guide title?',
           validate: input => {
             if (_.size(input) > 100) return 'Must be 100 characters or less!';
@@ -45,7 +45,7 @@ module.exports = lando => {
         interactive: {
           type: 'input',
           default: 'A longer and SEO dense description',
-          message: 'Guide title?',
+          message: 'Guide description?',
           validate: input => {
             if (_.size(input) > 160) return 'Must be 160 characters or less!';
             return true;
@@ -92,39 +92,39 @@ module.exports = lando => {
       },
     },
     run: options => {
-      console.log(options);
-      // Build template and dump data
-      const data = options;
-      const filePath = path.join(guidesPath, `${_.kebabCase(options.title)}.md`);
+      // Build The basic data
+      const data = _.merge({}, options, {
+        date: new Date().toISOString(),
+        filePath: path.join(guidesPath, `${_.kebabCase(options.title)}.md`),
+        url: `https://docs.lndo.site/guides/${_.kebabCase(options.title)}.html`,
+      });
 
       // if file already exists then throw error
-      if (fs.existsSync(filePath)) throw Error(`Guide already exists at ${filePath}!`);
+      // if (fs.existsSync(data.filePath)) throw Error(`Guide already exists at ${data.filePath}!`);
 
       // Add new guide to selected category and update categories file
-      const section = _.find(guidesData, {title: options.category});
-      section.children.push(_.kebabCase(options.title));
+      const section = _.find(guidesData, {title: data.category});
+      section.children.push(_.kebabCase(data.title));
       section.children = _.uniq(_.sortBy(section.children));
       fs.writeFileSync(guidesFile, JSON.stringify(_.orderBy(guidesData, ['title']), null, 2));
 
+      // Add author data if we have it
+      if (data.author !== 'none') {
+        const author = _.first(api.read('contributors', {id: data.author}));
+        data.author = author.name;
+        data.pic = author.pic;
+        data.link = author.twitter ? `https://twitter.com/${author.twitter}` : `https://github.com/${author.github}`;
+      }
+
       // Dump the new guide
       const compiled = _.template(fs.readFileSync(templateFile, 'utf8'));
-      fs.writeFileSync(filePath, compiled({title: 'mustache'}));
+      fs.writeFileSync(data.filePath, compiled(data));
 
       // Log
-      console.log('"%s" was created at %s', data.title, filePath);
+      const displayData = _.omit(data, ['_', '_app', 'v', 'verbose', '$0']);
+      console.log(lando.cli.makeArt('newContent'));
+      console.log(lando.cli.formatData(displayData, {format: 'table'}, {border: false}));
+      console.log(' ');
     },
   };
 };
-
-/*
----
-date: 12-23-2019
-original: https://link.to.where.blog.shows.up
-repo: https://link.to.example.code
-author:
-  name: Mike Pirog
-  title: Benevolent Dicatator
-  twitter: pirogcommamike
-  github: pirog
----
-*/

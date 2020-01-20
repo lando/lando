@@ -36,8 +36,12 @@ module.exports = {
       baseURL: 'https://docs.lando.dev',
     },
     'feed': {
+      image: 'https://docs.lando.dev/images/hero-pink.png',
+      favicon: 'https://docs.lando.dev/favicon.ico',
       canonical_base: 'https://docs.lando.dev',
-      posts_directories: ['/guides/'],
+      posts_directories: [
+        '/guides/',
+      ],
       count: 100,
     },
     'robots': {
@@ -240,6 +244,7 @@ module.exports = {
             'comms',
             'activate',
             'first',
+            'support',
             'allianceroles',
           ],
         },
@@ -258,7 +263,7 @@ module.exports = {
           title: 'Contributing Code',
           collapsable: false,
           children: [
-            'started',
+            'contrib-intro',
             'structure',
             'plugins',
             'testing',
@@ -266,6 +271,17 @@ module.exports = {
             'shipping',
             'docs',
             'website',
+          ],
+        },
+        {
+          title: 'Writing Guides',
+          collapsable: false,
+          children: [
+            'guides-intro',
+            'guides-add',
+            'guides-remove',
+            'guides-promote',
+            'guides-advanced',
           ],
         },
         {

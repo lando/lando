@@ -7,7 +7,13 @@ metaTitle: Contributing | Lando
 
 If you are interested in helping out with the Lando project then you've come to the _**right place!**_
 
-We are looking for people to help out in any of the following capacities.
+<div style="text-align: center; padding: 3em;">
+  <a href="https://lando.dev/join" target="_blank">
+    <img src="https://lando.dev/images/lando-alliance.png">
+  </a>
+</div>
+
+We are looking for people to help out in any of the following capacities:
 
 <div id="alliance-roles">
   <div class="point-half">
@@ -32,7 +38,7 @@ We are looking for people to help out in any of the following capacities.
   </div>
   <div class="point-half">
     <h4>UPSELLER</h4>
-    <p>Help convince your org, boss or relevant decision maker to sponsor Lando!</p>
+    <p>Help convince your org, boss or relevant decision maker to sponsor or purchase Lando services!</p>
   </div>
   <div class="point-half">
     <h4>SPONSOR</h4>
@@ -40,4 +46,4 @@ We are looking for people to help out in any of the following capacities.
   </div>
 </div>
 
-**If any of the above sounds up your alley then proceed to the next section to get rolling and learn more.**
+**If any of the above sound up your alley then proceed to the next section to get rolling and learn more.**
