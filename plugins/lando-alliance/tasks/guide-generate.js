@@ -115,7 +115,12 @@ module.exports = lando => {
         data.pic = author.pic;
         data.link = author.twitter ? `https://twitter.com/${author.twitter}` : `https://github.com/${author.github}`;
       }
-
+      // Default to Team Lando
+      else if(data.author === 'none') {
+        data.author = 'Team Lando';
+        data.pic = 'https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd';
+        data.link = 'https://twitter.com/devwithlando';
+      }
       // Dump the new guide
       const compiled = _.template(fs.readFileSync(templateFile, 'utf8'));
       fs.writeFileSync(data.filePath, compiled(data));
