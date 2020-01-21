@@ -10,7 +10,9 @@
   {
     "title": "Drupal",
     "collapsable": false,
-    "children": []
+    "children": [
+      "drupal-7-landoize-an-extant-app"
+    ]
   },
   {
     "title": "Frontend",
