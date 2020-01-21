@@ -104,7 +104,9 @@ describe('env', () => {
     it('should return the correct lando-provided path on darwin', () => {
       setPlatform('darwin');
       const composeExecutable = env.getComposeExecutable();
-      expect(composeExecutable).to.equal('/Applications/Docker.app/Contents/Resources/bin/docker-compose');
+      expect(composeExecutable)
+        .to
+        .equal('/Applications/Docker.app/Contents/Resources/bin/docker-compose/docker-compose');
       resetPlatform();
     });
   });
