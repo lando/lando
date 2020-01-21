@@ -1,19 +1,10 @@
 ---
-metaTitle: Documentation | Lando
+metaTitle: Blog | Lando
 description: Documentation for Lando; a free, open source and Docker driven local development and DevOps tool for all your projects that is fast, easy, powerful and liberating.
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 home: true
 navbar: true
 pageClass: lando-home
-heroImage: /images/hero.png
-features:
-- title: Easy
-  details: One click installer, cross-platform, simple config file, sane defaults and reduced complexity for power features
-- title: Powerful
-  details: A single dev tool for all your projects. Lock down services, tools, dependencies and automation on a per-repo basis
-- title: Liberating
-  details: Free yourself from the mind-forged manacles of lesser dev tools. Save time, headaches, frustration and do more real work
-footer: Copyright © 2016-present Tandem
 ---
 
 ## Join the Alliance

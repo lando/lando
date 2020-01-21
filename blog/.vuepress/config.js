@@ -10,9 +10,6 @@ module.exports = {
       }),
     ]};
   },
-  extraWatchFiles: [
-    '.vuepress/guides.json',
-  ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
@@ -20,35 +17,42 @@ module.exports = {
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
   ],
   plugins: {
+    '@vuepress/blog': {
+      directories: [
+        {
+          id: 'post',
+          dirname: 'articles',
+          path: '/',
+        },
+      ],
+      feed: {
+       canonical_base: 'https://blog.lando.dev',
+      },
+      frontmatters: [
+        {
+          id: 'tag',
+          keys: ['tag', 'tags'],
+          path: '/tag/',
+          frontmatter: {title: 'Tag'},
+        },
+      ],
+      sitemap: {
+        hostname: 'https://blog.lando.dev',
+      },
+    },
     '@vuepress/google-analytics': {
-      ga: 'UA-74237404-5',
+      ga: 'UA-74237404-6',
     },
     'autometa': {
       site: {
         name: 'Lando',
         twitter: 'devwithlando',
       },
-      canonical_base: 'https://docs.lando.dev',
-    },
-    'canonical': {
-      baseURL: 'https://docs.lando.dev',
-    },
-    'feed': {
-      image: 'https://docs.lando.dev/images/hero-pink.png',
-      favicon: 'https://docs.lando.dev/favicon.ico',
-      canonical_base: 'https://docs.lando.dev',
-      posts_directories: [
-        '/guides/',
-      ],
-      count: 100,
+      canonical_base: 'https://blog.lando.dev',
     },
     'robots': {
-      host: 'https://docs.lando.dev',
+      host: 'https://blog.lando.dev',
       sitemap: '/sitemap.xml',
-    },
-    'sitemap': {
-      hostname: 'https://docs.lando.dev',
-      exclude: ['/404.html'],
     },
   },
   themeConfig: {
