@@ -12,7 +12,6 @@ module.exports = {
     ]};
   },
   extraWatchFiles: [
-    '.vuepress/plugins/lando-api/plugin.js',
     '.vuepress/guides.json',
   ],
   head: [
