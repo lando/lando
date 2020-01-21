@@ -114,9 +114,7 @@ module.exports = lando => {
         data.author = author.name;
         data.pic = author.pic;
         data.link = author.twitter ? `https://twitter.com/${author.twitter}` : `https://github.com/${author.github}`;
-      }
-      // Default to Team Lando
-      else if(data.author === 'none') {
+      } else if (data.author === 'none') {
         data.author = 'Team Lando';
         data.pic = 'https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd';
         data.link = 'https://twitter.com/devwithlando';
