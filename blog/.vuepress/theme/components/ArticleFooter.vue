@@ -1,5 +1,5 @@
 <template>
-  <div class="originally-appeared">
+  <div class="originally-appeared post-meta">
     <div class="original-rule"></div>
     <ul v-if="tags" class="post-meta-tags">
       <PostTag v-for="tag in resolvedTags" :key="tag" :tag="tag" />
@@ -41,19 +41,37 @@ export default {
 <style lang="stylus">
 .originally-appeared
   img
-    width: 24px
-    border-radius: 100%
-    float: right
-    position: relative
-    bottom: 6px
+    width 24px
+    border-radius 100%
+    float right
+    position relative
+    bottom 6px
   .original-article
-    font-size: .85em
-    font-style: italic
+    font-size .85em
+    font-style italic
   .original-rule
-    border-bottom: 1px dotted #ddd
-    padding-top: 1em
+    border-bottom 1px dotted #ddd
+    padding-top 1em
     margin-bottom 1em
   .custom-block.tip
-    border-color: $landoGreen
-
+    border-color $landoGreen
+  .post-meta
+    &-tags
+      display flex
+      flex-wrap wrap
+      list-style none
+      overflow hidden
+      padding 0
+      margin 20px 0
+      > li
+        margin-bottom 10px
+    > div
+      display inline-flex
+      line-height 12px
+      font-size 12px
+      margin-right 20px
+    svg
+      margin-right 5px
+      width 14px
+      height 14px
 </style>

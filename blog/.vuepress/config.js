@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 
 module.exports = {
-  title: 'Lando',
-  description: 'The liberating local development tool for all your projects.',
+  title: 'Landoblog',
+  description: 'A liberating blog about DevOps, local development and Lando.',
   configureWebpack: config => {
     return {plugins: [
       new webpack.EnvironmentPlugin({
@@ -57,10 +57,28 @@ module.exports = {
   },
   theme: '@vuepress/theme-blog',
   themeConfig: {
+    logo: '/images/logo-pink-small.png',
     docsDir: 'blog',
     docsBranch: 'master',
-    logo: '/images/logo-small-white.png',
     search: false,
     editLinks: false,
+    nav: [
+      {
+        text: 'Featured',
+        link: '/tag/featured',
+      },
+      {
+        text: 'Case Studies',
+        link: '/tag/case-studies',
+      },
+      {
+        text: 'DevOps',
+        link: '/tag/devops',
+      },
+      {
+        text: 'Lando',
+        link: '/tag/lando',
+      },
+    ],
   },
 };

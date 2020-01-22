@@ -28,7 +28,7 @@ import ArticleFooter from './../components/ArticleFooter.vue';
 import CarbonAds from './../components/CarbonAds.vue';
 import Newsletter from './../components/Newsletter.vue';
 // We load the below basically just to get styles we need
-import NewsletterStyles from '@theme/components/Newsletter.vue';
+import NewsletterStyles from '@parent-theme/components/Newsletter.vue';
 import Toc from '@theme/components/Toc.vue';
 
 export default {

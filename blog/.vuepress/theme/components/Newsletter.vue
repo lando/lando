@@ -1,8 +1,8 @@
 <template>
   <div class="newsletter article-subscribe">
     <div class="newsletter__wrap">
-      <div class="newsletter__title">Newsletter</div>
-      <div class="newsletter__content">wefwefwef</div>
+      <div class="newsletter__title">Join Us</div>
+      <div class="newsletter__content">Stay up to date with new content and Lando updates!</div>
       <Subscribe
         successMessage="More awesome blog material will be heading your way!"
         :customStyles="stylez"
