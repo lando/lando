@@ -41,6 +41,7 @@ export default {
     color #444
     font-weight normal
     display inline
+    text-decoration: none
   .carbon-img
     float left
     margin-right 1rem

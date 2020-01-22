@@ -1157,10 +1157,10 @@
     semver "^6.0.0"
     upath "^1.1.0"
 
-"@vuepress/theme-blog@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@vuepress/theme-blog/-/theme-blog-1.7.1.tgz#a223ddbd290fd20263edae498c5d5d6b11af2177"
-  integrity sha512-acbwDcviJ8L2IGtxbzGT2WbdMyrSeeiWpN2gvAvkuwLBJ87o3HVIs8heXJNRbiR2mxDA0yYprXUkyxfusxXV9g==
+"@vuepress/theme-blog@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@vuepress/theme-blog/-/theme-blog-2.0.0.tgz#6ecd0dec2a98cee8a8ee766e5cc68ae48986f1a6"
+  integrity sha512-jKQkfdnfJpP+zZOZfhGqzsABIdjEH3ySe8mpv914lg12Zmjamz1LHvoJ6hZ6uld5EdIpeD40xlg4bV/wjP0lAA==
   dependencies:
     "@vuepress/plugin-blog" "^1.9.2"
     "@vuepress/plugin-medium-zoom" "1.0.0"

@@ -112,7 +112,7 @@
     "@bugsnag/js": "^6.4.3",
     "@vuepress/plugin-blog": "^1.9.2",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
-    "@vuepress/theme-blog": "^1.7.1",
+    "@vuepress/theme-blog": "^2.0.0",
     "body-parser": "^1.14.2",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",

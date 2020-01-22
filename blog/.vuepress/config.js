@@ -55,6 +55,7 @@ module.exports = {
       sitemap: '/sitemap.xml',
     },
   },
+  theme: '@vuepress/theme-blog',
   themeConfig: {
     docsDir: 'blog',
     docsBranch: 'master',
