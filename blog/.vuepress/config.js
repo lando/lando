@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 
 module.exports = {
-  title: 'Landoblog',
-  description: 'A liberating blog about DevOps, local development and Lando.',
+  title: 'Landob.log',
+  description: 'A liberating blog by and for professional developers. We share things about tech, DevOps and development using but not limited to Lando.',
   configureWebpack: config => {
     return {plugins: [
       new webpack.EnvironmentPlugin({
@@ -22,7 +22,7 @@ module.exports = {
         {
           id: 'post',
           dirname: 'articles',
-          path: '/',
+          path: '/blog',
         },
       ],
       feed: {
@@ -34,6 +34,9 @@ module.exports = {
           keys: ['tag', 'tags'],
           path: '/tag/',
           frontmatter: {title: 'Tag'},
+          pagination: {
+            lengthPerPage: 6,
+          },
         },
       ],
       sitemap: {
@@ -65,19 +68,19 @@ module.exports = {
     nav: [
       {
         text: 'Featured',
-        link: '/tag/featured',
+        link: '/tag/featured/',
       },
       {
         text: 'Case Studies',
-        link: '/tag/case-studies',
+        link: '/tag/case-study/',
       },
       {
         text: 'DevOps',
-        link: '/tag/devops',
+        link: '/tag/devops/',
       },
       {
         text: 'Lando',
-        link: '/tag/lando',
+        link: '/tag/lando/',
       },
     ],
   },

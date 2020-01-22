@@ -54,6 +54,17 @@ export default {
     width: 295px
   hr
     border-top: 1px dotted #ddd
+  .custom-block
+    &.caption
+      background-color: #f8f8f8
+      padding: .1em 1em
+      color: $landoBlue
+      font-size: .8em
+      font-weight: 700
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
+    &.thumbnail
+      border: 1px dashed #ccc
+      padding: 1em
 .vuepress-blog-theme-content
   font-size 16px
   letter-spacing 0px

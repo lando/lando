@@ -18,6 +18,7 @@
     "axios": "^0.19.0",
     "vuepress": "^1.0.4",
     "vuepress-plugin-autometa": "^0.1.12",
+    "vuepress-plugin-container": "^2.1.2",
     "vuepress-plugin-robots": "^1.0.1"
   }
 }
