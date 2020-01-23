@@ -1,8 +1,8 @@
 <template>
-  <div id="vuepress-theme-blog__post-layout" class="article-content">
+  <div id="vuepress-theme-blog__post-layout" class="post-content">
     <div class="vuepress-blog-theme-content">
       <h1 class="post-title">{{ $frontmatter.title }}</h1>
-      <ArticleHeader
+      <PostHeader
         :name="$frontmatter.author"
         :pic="$frontmatter.pic"
         :link="$frontmatter.link"
@@ -13,7 +13,7 @@
       <Content />
       <hr />
       <Newsletter />
-      <ArticleFooter
+      <PostFooter
         :tags="$frontmatter.tags"
         :original="$frontmatter.original"
       />
@@ -23,21 +23,18 @@
 </template>
 
 <script>
-import ArticleHeader from './../components/ArticleHeader.vue';
-import ArticleFooter from './../components/ArticleFooter.vue';
-import CarbonAds from './../components/CarbonAds.vue';
-import Newsletter from './../components/Newsletter.vue';
-// We load the below basically just to get styles we need
-import NewsletterStyles from '@parent-theme/components/Newsletter.vue';
+import PostHeader from '@theme/components/PostHeader.vue';
+import PostFooter from '@theme/components/PostFooter.vue';
+import CarbonAds from '@theme/components/CarbonAds.vue';
 import Toc from '@theme/components/Toc.vue';
 
 export default {
-  components: {ArticleHeader, ArticleFooter, CarbonAds, Newsletter, NewsletterStyles, Toc}, // eslint-disable-line
+  components: {PostHeader, PostFooter, CarbonAds, Toc}, // eslint-disable-line
 };
 </script>
 
 <style lang="stylus">
-.article-content
+.post-content
   .carbon-ads
     position: fixed
     max-height: 100vh
@@ -74,7 +71,7 @@ export default {
   .post-title
     padding-top 0
 @media (max-width: $MQSmall)
-  .article-content
+  .post-content
     .carbon-ads
       position: relative
       float: right

@@ -1,17 +1,28 @@
 <template>
   <div>
-    <Home v-if="$frontmatter.home" />
-    <BaseListLayout v-else-if="$pagination" />
+    <PostList
+      :title="tagTitle"
+      v-if="$pagination"
+    />
     <Content v-else />
   </div>
 </template>
 
 
 <script>
-import Home from '@theme/components/home.vue';
+import PostList from '@theme/components/PostList.vue';
 
 export default {
-  components: {Home},
+  components: {PostList},
+  computed: {
+    tagTitle() {
+      if (!this.$currentTag) {
+        return 'all';
+      } else {
+        return this.$currentTag.key;
+      }
+    },
+  },
 };
 </script>
 

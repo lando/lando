@@ -1,5 +1,5 @@
 <template>
-  <div class="newsletter article-subscribe">
+  <div class="newsletter post-subscribe">
     <div class="newsletter__wrap">
       <div class="newsletter__title">Join Us</div>
       <div class="newsletter__content">Stay up to date with new content and Lando updates!</div>
@@ -13,11 +13,12 @@
 </template>
 
 <script>
+import NewsletterStyles from '@parent-theme/components/Newsletter.vue';
 import Subscribe from '@theme/components/Subscribe.vue';
 
 export default {
   name: 'Newsletter',
-  components: {Subscribe},
+  components: {NewsletterStyles, Subscribe}, // eslint-disable-line
   data() {
     return {
       stylez: {
@@ -29,7 +30,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.article-subscribe
+.post-subscribe
   .subscribe
     width: 100%
     padding: 0

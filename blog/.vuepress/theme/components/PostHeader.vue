@@ -13,7 +13,7 @@ import {ClockIcon, NavigationIcon} from 'vue-feather-icons';
 
 export default {
   components: {ClockIcon, NavigationIcon},
-  name: 'ArticleHeader',
+  name: 'PostHeader',
   props: {
     name: {
       type: String,

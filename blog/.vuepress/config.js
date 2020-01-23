@@ -20,9 +20,10 @@ module.exports = {
     '@vuepress/blog': {
       directories: [
         {
-          id: 'post',
-          dirname: 'articles',
-          path: '/blog',
+          title: 'All',
+          id: 'posts',
+          dirname: 'posts',
+          path: '/',
         },
       ],
       feed: {
@@ -35,7 +36,7 @@ module.exports = {
           path: '/tag/',
           frontmatter: {title: 'Tag'},
           pagination: {
-            lengthPerPage: 6,
+            lengthPerPage: 25,
           },
         },
       ],
@@ -67,16 +68,20 @@ module.exports = {
     editLinks: false,
     nav: [
       {
-        text: 'Featured',
-        link: '/tag/featured/',
-      },
-      {
         text: 'Case Studies',
         link: '/tag/case-study/',
+      },
+        {
+        text: 'Development',
+        link: '/tag/development/',
       },
       {
         text: 'DevOps',
         link: '/tag/devops/',
+      },
+      {
+        text: 'Workflows',
+        link: '/tag/workflows/',
       },
       {
         text: 'Lando',

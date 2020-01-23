@@ -5,10 +5,10 @@
       <PostTag v-for="tag in resolvedTags" :key="tag" :tag="tag" />
     </ul>
     <hr>
-    <div class="original-article" v-if="original">
-      This guide is adapted from other content. If you are interested in the original then <a target="_blank" :href="original">check it out here</a>.
+    <div class="original-post" v-if="original">
+      This content is adapted from other content. If you are interested in the original then <a target="_blank" :href="original">check it out here</a>.
     </div>
-    <div class="original-article">
+    <div class="original-post">
       Want to contribute content here? <a href="https://docs.lando.dev/contrib/blog-intro.html"> Learn how!</a>
     </div>
   </div>
@@ -19,7 +19,7 @@ import PostTag from '@theme/components/PostTag.vue';
 
 export default {
   components: {PostTag},
-  name: 'ArticleFooter',
+  name: 'PostFooter',
   props: {
     original: {
       type: String,
@@ -46,7 +46,7 @@ export default {
     float right
     position relative
     bottom 6px
-  .original-article
+  .original-post
     font-size .85em
     font-style italic
   .original-rule
