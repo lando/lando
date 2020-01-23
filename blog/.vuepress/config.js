@@ -20,7 +20,7 @@ module.exports = {
     '@vuepress/blog': {
       directories: [
         {
-          title: 'All',
+          title: 'Home',
           id: 'posts',
           dirname: 'posts',
           path: '/',
