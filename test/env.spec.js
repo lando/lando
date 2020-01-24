@@ -88,7 +88,18 @@ describe('env', () => {
       resetPlatform();
     });
 
-    it('should fall back to an in PATH provided path if the lando-provided one does not exist', () => {
+    it('should return the correct lando-provided path on darwin', () => {
+      setPlatform('darwin');
+      filesystem({'/Applications/Docker.app/Contents/Resources/bin/docker-compose/docker-compose': 'CODEZ'});
+      const composeExecutable = env.getComposeExecutable();
+      expect(composeExecutable)
+        .to
+        .equal('/Applications/Docker.app/Contents/Resources/bin/docker-compose/docker-compose');
+      filesystem.restore();
+      resetPlatform();
+    });
+
+    it('should fall back on POSIX to PATH if the lando-provided one does not exist', () => {
       setPlatform('linux');
       const OLDPATH = process.env.PATH;
       process.env.PATH = '/usr/local/bin';
@@ -98,15 +109,6 @@ describe('env', () => {
       expect(path.parse(composeExecutable)).to.be.an('Object');
       filesystem.restore();
       process.env.PATH = OLDPATH;
-      resetPlatform();
-    });
-
-    it('should return the correct lando-provided path on darwin', () => {
-      setPlatform('darwin');
-      const composeExecutable = env.getComposeExecutable();
-      expect(composeExecutable)
-        .to
-        .equal('/Applications/Docker.app/Contents/Resources/bin/docker-compose/docker-compose');
       resetPlatform();
     });
   });
