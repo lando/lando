@@ -133,6 +133,15 @@ describe('env', () => {
       resetPlatform();
     });
 
+    it('should return the correct lando-provided path on darwin', () => {
+      setPlatform('darwin');
+      filesystem({'/Applications/Docker.app/Contents/Resources/bin/docker': 'CODEZ'});
+      const dockerExecutable = env.getDockerExecutable();
+      expect(dockerExecutable).to.equal('/Applications/Docker.app/Contents/Resources/bin/docker');
+      filesystem.restore();
+      resetPlatform();
+    });
+
     it('should fall back to an in PATH provided path if docker is not in the usual place', () => {
       setPlatform('linux');
       const OLDPATH = process.env.PATH;
@@ -143,13 +152,6 @@ describe('env', () => {
       expect(path.parse(dockerExecutable)).to.be.an('Object');
       filesystem.restore();
       process.env.PATH = OLDPATH;
-      resetPlatform();
-    });
-
-    it('should return the correct lando-provided path on darwin', () => {
-      setPlatform('darwin');
-      const dockerExecutable = env.getDockerExecutable();
-      expect(dockerExecutable).to.equal('/Applications/Docker.app/Contents/Resources/bin/docker');
       resetPlatform();
     });
   });
