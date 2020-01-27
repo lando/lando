@@ -12,7 +12,6 @@ module.exports = {
     ]};
   },
   extraWatchFiles: [
-    '.vuepress/plugins/lando-api/plugin.js',
     '.vuepress/guides.json',
   ],
   head: [
@@ -218,16 +217,10 @@ module.exports = {
           ],
         },
         {
-          title: 'Project Updates',
-          collapsable: false,
-          children: [
-            ['q3-2019', 'Q3 2019'],
-          ],
-        },
-        {
           title: 'Changelog',
           collapsable: false,
           children: [
+            '2020-changelog',
             '2019-changelog',
             '2018-changelog',
             '2017-changelog',
