@@ -41,6 +41,7 @@ install:
   - yarn lint:sites
   - yarn build:docs
   - yarn build:site
+  - yarn build:blog
 
 build_script:
 

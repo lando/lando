@@ -10,9 +10,6 @@ module.exports = {
       }),
     ]};
   },
-  extraWatchFiles: [
-    '.vuepress/plugins/lando-api/plugin.js',
-  ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
