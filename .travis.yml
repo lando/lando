@@ -69,6 +69,7 @@ script:
   - yarn lint:sites
   - yarn build:docs
   - yarn build:site
+  - yarn build:blog
 
   # Run the build
   - mkdir -p release
