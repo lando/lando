@@ -67,6 +67,12 @@ if [ $(id -u) = 0 ]; then
     ln -sf /user/.ssh/known_hosts /var/www/.ssh/known_hosts
   fi
 
+  # Symlink the ssh config
+  if [ -f "/user/.ssh/config" ]; then
+    rm -f /var/www/.ssh/config
+    ln -sf /user/.ssh/config /var/www/.ssh/config
+  fi
+
   # Adding user if needed
   echo_maybe "Making sure correct user:group ($LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP) exists..."
   add_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_WEBROOT_UID $LANDO_WEBROOT_GID $FLAVOR
