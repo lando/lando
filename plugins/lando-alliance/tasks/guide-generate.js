@@ -18,7 +18,7 @@ module.exports = lando => {
 
   // Get the authors
   const authors = _.map(api.read('contributors'), author => ({name: author.name, value: author.id}));
-  authors.unshift({name: 'Team Lando', value: 'none'});
+  authors.unshift({name: 'Team Lando', value: 'Team Lando'});
   // Get the categories
   const categories = _.map(guidesData, 'title');
 
@@ -93,11 +93,18 @@ module.exports = lando => {
     },
     run: options => {
       // Build The basic data
-      const data = _.merge({}, options, {
-        date: new Date().toISOString(),
-        filePath: path.join(guidesPath, `${_.kebabCase(options.title)}.md`),
-        url: `https://docs.lndo.site/guides/${_.kebabCase(options.title)}.html`,
-      });
+      const data = _.merge(
+        {},
+        {
+          date: new Date().toISOString(),
+          filePath: path.join(guidesPath, `${_.kebabCase(options.title)}.md`),
+          url: `https://docs.lndo.site/guides/${_.kebabCase(options.title)}.html`,
+          author: 'Team Lando',
+          pic: 'https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd',
+          link: 'https://twitter.com/devwithlando',
+        },
+        options
+      );
 
       // if file already exists then throw error
       // if (fs.existsSync(data.filePath)) throw Error(`Guide already exists at ${data.filePath}!`);
@@ -109,16 +116,13 @@ module.exports = lando => {
       fs.writeFileSync(guidesFile, JSON.stringify(_.orderBy(guidesData, ['title']), null, 2));
 
       // Add author data if we have it
-      if (data.author !== 'none') {
+      if (data.author !== 'Team Lando') {
         const author = _.first(api.read('contributors', {id: data.author}));
         data.author = author.name;
         data.pic = author.pic;
         data.link = author.twitter ? `https://twitter.com/${author.twitter}` : `https://github.com/${author.github}`;
-      } else if (data.author === 'none') {
-        data.author = 'Team Lando';
-        data.pic = 'https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd';
-        data.link = 'https://twitter.com/devwithlando';
       }
+
       // Dump the new guide
       const compiled = _.template(fs.readFileSync(templateFile, 'utf8'));
       fs.writeFileSync(data.filePath, compiled(data));
