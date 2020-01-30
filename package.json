@@ -39,7 +39,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint --quiet --no-ignore api bin lib plugins scripts test metrics",
-    "lint:sites": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json blog/.vuepress docs/.vuepress website/.vuepress",
+    "lint:sites": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json blog/.vuepress docs/.vuepress events/.vuepress website/.vuepress",
     "pkg:cli": "node ./scripts/pkg.js",
     "pkg:full": "node ./scripts/pkg.js --installer",
     "release": "bump --prompt --tag --all --push",

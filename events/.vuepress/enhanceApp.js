@@ -1,5 +1,6 @@
 import axios from 'axios';
-import * as VueGoogleMaps from 'vue2-google-maps'
+import * as VueGoogleMaps from 'vue2-google-maps';
+
 /*
  * Use this file to augment vuepress with other vue-y things
  */
@@ -10,7 +11,7 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
         Object.defineProperties(Vue.prototype, {
           $api: {
             get() {
-              return (base = 'https://api.lando.dev') => axios.create({baseURL: base});
+              return (base = process.env.LANDO_API) => axios.create({baseURL: base});
             },
           },
         });
@@ -19,7 +20,7 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
   }
   Vue.use(VueGoogleMaps, {
     load: {
-      key: '',
+      key: process.env.LANDO_GOOGLE_API_KEY,
       libraries: 'places',
     },
   });

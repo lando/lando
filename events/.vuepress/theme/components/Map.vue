@@ -43,7 +43,7 @@
             name: 'Tandem Test 1',
             location: {
               lat: '42.346790',
-              lon: '-71.098648'
+              lon: '-71.098648',
             },
             date: '01-01-1901',
             url: 'https://www.mlb.com/redsox',
@@ -52,7 +52,7 @@
             name: 'Tandem Test 2',
             location: {
               lat: '42.366581',
-              lon: '-71.061630'
+              lon: '-71.061630',
             },
             date: '01-01-1946',
             url: 'https://www.nba.com/celtics',
@@ -61,17 +61,17 @@
             name: 'Tandem Test 3',
             location: {
               lat: '42.093811',
-              lon: '-71.265800'
+              lon: '-71.265800',
             },
             date: '01-01-1959',
             url: 'https://www.patriots.com',
           },
         ],
-      }
+      };
     },
 
     computed: {
-      google: gmapApi
+      google: gmapApi,
     },
 
     mounted() {
@@ -82,5 +82,5 @@
       //   console.error(error);
       // });
     },
-  }
+  };
 </script>

@@ -1,15 +1,21 @@
+const webpack = require('webpack');
+
 module.exports = {
-  title: 'Lando',
-  description: 'The liberating local development tool for all your projects.',
-  extraWatchFiles: [
-    '.vuepress/plugins/lando-api/plugin.js',
-  ],
+  title: 'Lando Events and Meetups',
+  description: 'A list of liberating events and meetups.',
+  configureWebpack: config => {
+    return {plugins: [
+      new webpack.EnvironmentPlugin({
+        LANDO_API: process.env.LANDO_API || 'https://api.lando.dev',
+        LANDO_GOOGLE_API_KEY: process.env.LANDP_GOOGLE_API_KEY,
+      }),
+    ]};
+  },
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
     ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
-    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
   plugins: [
     ['@vuepress/google-analytics',
@@ -31,7 +37,6 @@ module.exports = {
         baseURL: 'https://events.lando.dev',
       },
     ],
-    [require('./plugins/lando-api/plugin.js')],
     ['robots',
       {
         host: 'https://events.lando.dev',

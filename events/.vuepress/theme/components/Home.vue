@@ -18,19 +18,19 @@
 </template>
 
 <script>
-  import Map from '@theme/components/Map.vue'
+  import Map from '@theme/components/Map.vue';
 
   export default {
     name: 'Home',
 
-    components: { Map },
+    components: {Map},
 
     computed: {
-      data () {
+      data() {
         return this.$page.frontmatter;
       },
     },
-  }
+  };
 </script>
 
 <style lang="stylus">
