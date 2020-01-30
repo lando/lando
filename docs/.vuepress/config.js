@@ -278,6 +278,14 @@ module.exports = {
           ],
         },
         {
+          title: 'Sponsoring',
+          collapsable: false,
+          children: [
+            'sponsor-intro',
+            'upseller-intro',
+          ],
+        },
+        {
           title: 'Resources',
           collapsable: false,
           children: [

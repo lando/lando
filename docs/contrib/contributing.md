@@ -37,11 +37,11 @@ We are looking for people to help out in any of the following capacities:
     <p>Help us manage the <em>Lando Alliance</em>, our sponsors, marketing, outreach, event logistics, etc.</p>
   </div>
   <div class="point-half">
-    <h4>UPSELLER</h4>
+    <h4><a href="/contrib/upseller-intro.html">UPSELLER</a></h4>
     <p>Help convince your org, boss or relevant decision maker to sponsor or purchase Lando services!</p>
   </div>
   <div class="point-half">
-    <h4>SPONSOR</h4>
+    <h4><a href="/contrib/sponsor-intro.html">SPONSOR</a></h4>
     <p>Give the dollars and get exclusive benefits</p>
   </div>
 </div>
