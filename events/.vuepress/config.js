@@ -51,15 +51,11 @@ module.exports = {
     ],
   ],
   themeConfig: {
-    docsDir: 'events',
-    docsBranch: 'master',
     editLinks: false,
     navbar: false,
     search: false,
+    sidebar: false,
     nextLinks: false,
     prevLinks: false,
-    nav: [
-      {text: 'Home', link: '/'},
-    ],
   },
 };
