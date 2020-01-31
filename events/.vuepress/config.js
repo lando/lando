@@ -57,6 +57,8 @@ module.exports = {
     navbar: false,
     sidebar: false,
     search: false,
+    nextLinks: false,
+    prevLinks: false,
     nav: [
       {text: 'Home', link: '/'},
     ],
