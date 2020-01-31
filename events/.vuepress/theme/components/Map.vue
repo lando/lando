@@ -11,9 +11,6 @@
           :key="index"
           v-for="(marker, index) in markers"
           :position="google && new google.maps.LatLng(marker.lat, marker.lng)"
-          :clickable="true"
-          :draggable="true"
-          @click="center=google && new google.maps.LatLng(marker.lat, marker.lng)"
         />
       </GmapMap>
     </div>

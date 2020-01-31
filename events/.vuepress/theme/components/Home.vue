@@ -13,18 +13,18 @@
         <a href="#" @click="previous">previous</a>
       </div>
       <div class="listing">
-        <EventCard
-          :key="index"
-          v-for="(event, index) in cards"
-          :name="event.name"
-          :location="event.location"
-          :date="event.date"
-          :summary="event.summary"
-          :link="event.url"
-          :presenter="event.presenter"
-          :presenter-link="event.presenterLink"
-          :presenter-pic="event.presenterPic"
-        />
+        <div v-for="(event, index) in cards" :key="index" class="listing-event">
+          <EventCard
+            :name="event.name"
+            :location="event.location"
+            :date="event.date"
+            :summary="event.summary"
+            :link="event.url"
+            :presenter="event.presenter"
+            :presenter-link="event.presenterLink"
+            :presenter-pic="event.presenterPic"
+          />
+        </div>
       </div>
       <div class="footer">
         <a href="/privacy/">privacy policy</a> |
@@ -70,7 +70,6 @@ export default {
         },
       })
       .then(result => {
-        console.log(result);
         if (result.status === 200 && !result.data.error_message) {
           event.geocode = result.data.results[0];
           event.lat = event.geocode.geometry.location.lat;
