@@ -7,6 +7,11 @@
         :options="options"
         style="width: 100vw; height: 100vh;"
       >
+        <GmapMarker
+          :key="index"
+          v-for="(marker, index) in markers"
+          :position="google && new google.maps.LatLng(marker.lat, marker.lng)"
+        />
       </GmapMap>
     </div>
   </div>
@@ -25,15 +30,13 @@ export default {
   },
   computed: {
     google: gmapApi,
-    center() {
-      return {
-        lat: 10,
-        lng: Math.floor(Math.random() * Math.floor(180)),
-      };
-    },
   },
   data() {
     return {
+      center: {
+        lat: 10,
+        lng: 10,
+      },
       options: {
        zoomControl: true,
        mapTypeControl: false,
