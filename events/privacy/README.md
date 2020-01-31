@@ -1,5 +1,4 @@
 ---
-navbar: true
 title: Privacy Policy
 metaTitle: Privacy Policy | Lando
 description: The privacy policies for Lando web properties and Lando as software

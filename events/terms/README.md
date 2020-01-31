@@ -1,10 +1,10 @@
 ---
-navbar: true
 title: Terms and Conditions
 metaTitle: Terms and Conditions | Lando
 description: The Terms of Use for Lando web properties and Lando as software
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
 ---
+
 [» home](/)
 
 # Terms and Conditions
@@ -124,4 +124,3 @@ By continuing to access or use our Service after those revisions become effectiv
 If you have any questions about these Terms, please contact us.
 
 [» home](/)
-
