@@ -43,6 +43,23 @@ http://docs.{default}/:
   ssi:
     enabled: false
 
+# Blog
+http://events.devwithlando.io/:
+  type: redirect
+  to: http://events.{default}/
+http://events.lndo.io/:
+  type: redirect
+  to: http://events.{default}/
+http://events.{default}/:
+  type: upstream
+  upstream: events:http
+  cache:
+    headers: ['Accept', 'Accept-Language', 'Origin']
+    default_ttl: 2600
+    enabled: true
+  ssi:
+    enabled: false
+
 # Metrics
 https://stats.devwithlando.io/:
   type: upstream
