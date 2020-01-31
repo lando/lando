@@ -174,8 +174,17 @@ export default {
     .title
       h1
         font-size 3em
-    .listing-filters
+    .listing-filters,
+    .footer
       background white
       a
         color $landoBlue
+    .footer
+      font-size .9em
+      padding-top 2em
+      .copyright
+        display block
+        padding 0
+        color $landoGrey
+
 </style>
