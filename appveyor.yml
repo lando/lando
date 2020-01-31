@@ -39,9 +39,10 @@ install:
 
   # Make sure we can build the docs and website
   - yarn lint:sites
-  - yarn build:docs
-  - yarn build:site
   - yarn build:blog
+  - yarn build:docs
+  - yarn build:events
+  - yarn build:site
 
 build_script:
 

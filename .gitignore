@@ -28,6 +28,7 @@ lando.env
 # docs
 _blog
 _docs
+_events
 _site
 docs/examples
 

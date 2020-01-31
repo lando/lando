@@ -6,11 +6,10 @@ excludes:
 proxy:
   api:
     - api.lndo.site:8011
-  blog:
+  cli:
     - blog.lndo.site:8007
-  docs:
     - docs.lndo.site:8008
-  site:
+    - events.lndo.site:8006
     - site.lndo.site:8009
   metrics:
     - metrics.lndo.site:8010
@@ -19,6 +18,15 @@ services:
     type: node:10
     build:
       - yarn install
+    scanner: false
+    overrides:
+      environment:
+        LANDO_API: https://api.lndo.site
+      ports:
+        - '8006:8006'
+        - '8007:8007'
+        - '8008:8008'
+        - '8009:8009'
   api:
     type: node:10
     command: yarn run dev:api
@@ -26,27 +34,6 @@ services:
       environment:
         LANDO_API_PORT: 8011
     port: 8011
-  blog:
-    type: node:10
-    command: "su -c 'cd /app && yarn --link-folder /home/node --cache-folder /home/node dev:blog' --preserve-environment - node"
-    port: 8007
-    overrides:
-      environment:
-        LANDO_API: https://api.lndo.site
-  docs:
-    type: node:10
-    command: "su -c 'cd /app && yarn --link-folder /home/node --cache-folder /home/node dev:docs' --preserve-environment - node"
-    port: 8008
-    overrides:
-      environment:
-        LANDO_API: https://api.lndo.site
-  site:
-    type: node:10
-    command: "su -c 'cd /app && yarn --link-folder /home/node --cache-folder /home/node dev:site'  --preserve-environment - node"
-    port: 8009
-    overrides:
-      environment:
-        LANDO_API: https://api.lndo.site
   metrics:
     type: node:10
     command: yarn run dev:metrics
@@ -62,15 +49,25 @@ services:
       - curl -fsSL -o /var/www/.platformsh/bin/platform https://github.com/platformsh/platformsh-cli/releases/download/v3.40.4/platform.phar
       - chmod ug+x /var/www/.platformsh/bin/platform
 tooling:
+  blog:
+    service: cli
+    cmd: yarn dev:blog
+  docs:
+    service: cli
+    cmd: yarn dev:docs
+  events:
+    service: cli
+    cmd: yarn dev:events
+  node:
+    service: cli
   platform:
     service: platform
     description: Run Platform CLI commands
     cmd: /var/www/.platformsh/bin/platform
-  # should these be able to run on either service once we've got the website in here too?
-  yarn:
+  site:
     service: cli
-  node:
-    service: cli
+    cmd: yarn dev:site
   vuepress:
     service: cli
-
+  yarn:
+    service: cli
