@@ -2,8 +2,8 @@
   <div id="map">
     <div class="map">
       <GmapMap
-        :center="{lat:10, lng:0}"
-        :zoom="3"
+        :center="center"
+        :zoom="2"
         :options="options"
         style="width: 100vw; height: 100vh"
       >
@@ -33,6 +33,12 @@ export default {
   },
   computed: {
     google: gmapApi,
+    center() {
+      return {
+        lat: 10,
+        lng: Math.floor(Math.random() * Math.floor(180)),
+      };
+    },
   },
   data() {
     return {
@@ -44,6 +50,7 @@ export default {
        rotateControl: false,
        fullscreenControl: false,
        disableDefaultUi: false,
+       minZoom: 3,
        styles: [
         {
           elementType: 'geometry',

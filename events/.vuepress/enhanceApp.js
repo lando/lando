@@ -11,7 +11,7 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
         Object.defineProperties(Vue.prototype, {
           $api: {
             get() {
-              return (base = process.env.LANDO_API) => axios.create({baseURL: base});
+              return axios.create({baseURL: process.env.LANDO_API});
             },
           },
           $gmaps: {

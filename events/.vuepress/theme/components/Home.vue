@@ -47,58 +47,18 @@ export default {
     return {
       markers: [],
       cards: [],
-      events: [
-        {
-          name: 'Tandem Test 1',
-          date: '01-01-2021',
-          location: 'Fenway Park',
-          presenter: 'Mike Pirog',
-          presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb',
-          presenterLink: 'https://twitter.com/pirogcommamike',
-          summary: 'Get trained on how to do all the things!',
-          url: 'https://www.mlb.com/redsox',
-        },
-        {
-          name: 'Tandem Test 4',
-          location: 'San Francisco, CA',
-          date: '01-01-2021',
-          url: 'https://www.mlb.com/redsox',
-        },
-        {
-          name: 'Tandem Test 2',
-          location: 'Boston Garden',
-          date: '01-01-2021',
-          url: 'https://www.nba.com/celtics',
-        },
-        {
-          name: 'Tandem Test 2',
-          location: 'Boston Garden',
-          date: '01-01-2021',
-          url: 'https://www.nba.com/celtics',
-        },
-        {
-          name: 'Tandem Test 3',
-          location: 'Irkutsk',
-          date: '01-01-1918',
-          url: 'https://www.patriots.com',
-        },
-        {
-          name: 'Tandem Test 1',
-          date: '01-01-2019',
-          location: 'Moscow',
-          presenter: 'Mike Pirog',
-          presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb',
-          presenterLink: 'https://twitter.com/pirogcommamike',
-          summary: 'Get trained on how to do all the things!',
-          url: 'https://www.mlb.com/redsox',
-        },
-      ],
+      events: [],
     };
   },
   mounted() {
-    // @TODO: add API call here first
-    Promise.all(this.events.map(event => this.geocode(event))).then(() => {
-      this.upcoming();
+    this.$api.get('/v1/events').then(response => {
+      this.events = response.data || [];
+      Promise.all(this.events.map(event => this.geocode(event))).then(() => {
+        this.upcoming();
+      });
+    })
+    .catch(error => {
+      console.error(error);
     });
   },
   methods: {
@@ -110,6 +70,7 @@ export default {
         },
       })
       .then(result => {
+        console.log(result);
         if (result.status === 200 && !result.data.error_message) {
           event.geocode = result.data.results[0];
           event.lat = event.geocode.geometry.location.lat;
@@ -126,7 +87,7 @@ export default {
       this.cards = this.events.filter(event => dayjs(event.date).isAfter(dayjs()));
       this.markers = this.events.filter(event => dayjs(event.date).isAfter(dayjs()));
     },
-  }
+  },
 };
 </script>
 
