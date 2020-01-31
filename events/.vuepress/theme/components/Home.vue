@@ -9,21 +9,11 @@
         <h1>Lando events and meetups</h1>
       </div>
       <div class="listing-filters">
-        <a href="#" @click="upcoming">upcoming</a> |
-        <a href="#" @click="previous">previous</a>
+        <a href="#" v-on:click="upcoming">upcoming</a> |
+        <a href="#" v-on:click="previous">previous</a>
       </div>
       <div class="listing">
         <div v-for="(event, index) in cards" :key="index" class="listing-event">
-          <EventCard
-            :name="event.name"
-            :location="event.location"
-            :date="event.date"
-            :summary="event.summary"
-            :link="event.url"
-            :presenter="event.presenter"
-            :presenter-link="event.presenterLink"
-            :presenter-pic="event.presenterPic"
-          />
         </div>
       </div>
       <div class="footer">
@@ -38,11 +28,10 @@
 <script>
 import dayjs from 'dayjs';
 import Map from '@theme/components/Map.vue';
-import EventCard from '@theme/components/EventCard.vue';
 
 export default {
   name: 'Home',
-  components: {EventCard, Map},
+  components: {Map},
   data() {
     return {
       markers: [],
@@ -185,5 +174,4 @@ export default {
         display block
         padding 0
         color $landoGrey
-
 </style>
