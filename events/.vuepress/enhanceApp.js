@@ -14,6 +14,16 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
               return (base = process.env.LANDO_API) => axios.create({baseURL: base});
             },
           },
+          $gmaps: {
+            get() {
+              return axios.create({baseURL: 'https://maps.googleapis.com/maps/api'});
+            },
+          },
+          $axios: {
+            get() {
+              return axios;
+            },
+          },
         });
       },
     });
@@ -21,7 +31,7 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
   Vue.use(VueGoogleMaps, {
     load: {
       key: process.env.LANDO_GOOGLE_API_KEY,
-      libraries: 'places',
+      libraries: 'places,geocoder',
     },
   });
 };

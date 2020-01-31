@@ -59,7 +59,9 @@ module.exports = {
     },
     docsDir: 'events',
     docsBranch: 'master',
-    logo: '/images/logo-small-white.png',
     editLinks: false,
+    navbar: false,
+    sidebar: false,
+    search: false,
   },
 };

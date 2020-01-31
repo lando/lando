@@ -2,85 +2,281 @@
   <div id="map">
     <div class="map">
       <GmapMap
-          :center="{lat:42.346790, lng:-71.098648}"
-          :zoom="8"
-          map-type-id="terrain"
-          style="width: 1000px; height: 500px"
+        :center="{lat:10, lng:0}"
+        :zoom="3"
+        :options="options"
+        style="width: 100vw; height: 100vh"
       >
         <GmapMarker
-            :key="index"
-            v-for="(event, index) in events"
-            :position="google && new google.maps.LatLng(event.location.lat, event.location.lon)"
-            :clickable="true"
-            :draggable="true"
+          :key="index"
+          v-for="(marker, index) in markers"
+          :position="google && new google.maps.LatLng(marker.lat, marker.lng)"
+          :clickable="true"
+          :draggable="true"
+          @click="center=google && new google.maps.LatLng(marker.lat, marker.lng)"
         />
       </GmapMap>
     </div>
-    <div class="listing">
-      <div
-          :key="index"
-          v-for="(event, index) in events">
-        <h2>{{ event.name }}</h2>
-        <h3>{{ event.location }}</h3>
-        <p>{{ event.date }}</p>
-        <p><a :href="event.url">{{ event.url }}</a></p>
-      </div>
-    </div>
   </div>
-
 </template>
 
 <script>
-  import {gmapApi} from 'vue2-google-maps';
+import {gmapApi} from 'vue2-google-maps';
 
-  export default {
-    name: 'Map',
-
-    data() {
-      return {
-        events: [
-          {
-            name: 'Tandem Test 1',
-            location: {
-              lat: '42.346790',
-              lon: '-71.098648',
-            },
-            date: '01-01-1901',
-            url: 'https://www.mlb.com/redsox',
-          },
-          {
-            name: 'Tandem Test 2',
-            location: {
-              lat: '42.366581',
-              lon: '-71.061630',
-            },
-            date: '01-01-1946',
-            url: 'https://www.nba.com/celtics',
-          },
-          {
-            name: 'Tandem Test 3',
-            location: {
-              lat: '42.093811',
-              lon: '-71.265800',
-            },
-            date: '01-01-1959',
-            url: 'https://www.patriots.com',
-          },
-        ],
-      };
+export default {
+  name: 'Map',
+  props: {
+    markers: {
+      type: Array,
+      default: () => ([]),
     },
-
-    computed: {
-      google: gmapApi,
-    },
-
-    mounted() {
-      // this.$api(this.$page.apiUrl).get('/v1/events').then(response => {
-      //   this.events = response.data.events || [];
-      // })
-      // .catch(error => {
-      //   console.error(error);
-      // });
-    },
-  };
+  },
+  computed: {
+    google: gmapApi,
+  },
+  data() {
+    return {
+      options: {
+       zoomControl: true,
+       mapTypeControl: false,
+       scaleControl: false,
+       streetViewControl: false,
+       rotateControl: false,
+       fullscreenControl: false,
+       disableDefaultUi: false,
+       styles: [
+        {
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#f5f5f5',
+            },
+          ],
+        },
+        {
+          elementType: 'labels',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          elementType: 'labels.icon',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#616161',
+            },
+          ],
+        },
+        {
+          elementType: 'labels.text.stroke',
+          stylers: [
+            {
+              color: '#f5f5f5',
+            },
+          ],
+        },
+        {
+          featureType: 'administrative',
+          elementType: 'geometry',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'administrative.land_parcel',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'administrative.land_parcel',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#bdbdbd',
+            },
+          ],
+        },
+        {
+          featureType: 'administrative.neighborhood',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'poi',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'poi',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#eeeeee',
+            },
+          ],
+        },
+        {
+          featureType: 'poi',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#757575',
+            },
+          ],
+        },
+        {
+          featureType: 'poi.park',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#e5e5e5',
+            },
+          ],
+        },
+        {
+          featureType: 'poi.park',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#9e9e9e',
+            },
+          ],
+        },
+        {
+          featureType: 'road',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'road',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#ffffff',
+            },
+          ],
+        },
+        {
+          featureType: 'road',
+          elementType: 'labels.icon',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'road.arterial',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#757575',
+            },
+          ],
+        },
+        {
+          featureType: 'road.highway',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#dadada',
+            },
+          ],
+        },
+        {
+          featureType: 'road.highway',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#616161',
+            },
+          ],
+        },
+        {
+          featureType: 'road.local',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#9e9e9e',
+            },
+          ],
+        },
+        {
+          featureType: 'transit',
+          stylers: [
+            {
+              visibility: 'off',
+            },
+          ],
+        },
+        {
+          featureType: 'transit.line',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#e5e5e5',
+            },
+          ],
+        },
+        {
+          featureType: 'transit.station',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#eeeeee',
+            },
+          ],
+        },
+        {
+          featureType: 'water',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#c9c9c9',
+            },
+          ],
+        },
+        {
+          featureType: 'water',
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              color: '#9e9e9e',
+            },
+          ],
+        },
+      ]},
+    };
+  },
+};
 </script>
+
+<style lang="stylus">
+@media (max-width: $MQMapless)
+  #map
+    display none
+</style>
