@@ -5,13 +5,8 @@
         :center="center"
         :zoom="2"
         :options="options"
-        style="width: 100vw; height: 100vh"
+        style="width: 100vw; height: 100vh;"
       >
-        <GmapMarker
-          :key="index"
-          v-for="(marker, index) in markers"
-          :position="google && new google.maps.LatLng(marker.lat, marker.lng)"
-        />
       </GmapMap>
     </div>
   </div>
