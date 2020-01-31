@@ -27,11 +27,10 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
         });
       },
     });
+    Vue.use(VueGoogleMaps, {
+      load: {
+        key: process.env.LANDO_GOOGLE_API_KEY,
+      },
+    });
   }
-  Vue.use(VueGoogleMaps, {
-    load: {
-      key: process.env.LANDO_GOOGLE_API_KEY,
-      libraries: 'places,geocoder',
-    },
-  });
 };

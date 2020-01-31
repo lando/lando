@@ -55,7 +55,6 @@ module.exports = {
     docsBranch: 'master',
     editLinks: false,
     navbar: false,
-    sidebar: false,
     search: false,
     nextLinks: false,
     prevLinks: false,
