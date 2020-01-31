@@ -1,6 +1,5 @@
 <template>
   <main class="home" aria-labelledby="main-title">
-    <Map :markers="markers" />
     <div class="overlay">
       <div class="logo">
         <a href="/"><img src="/images/logo-pink-small.png" alt="Lando logo"></a>
@@ -37,12 +36,11 @@
 
 <script>
 import dayjs from 'dayjs';
-import Map from '@theme/components/Map.vue';
 import EventCard from '@theme/components/EventCard.vue';
 
 export default {
   name: 'Home',
-  components: {EventCard, Map},
+  components: {EventCard},
   data() {
     return {
       markers: [],
