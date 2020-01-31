@@ -5,7 +5,7 @@
         :center="center"
         :zoom="2"
         :options="options"
-        style="width: 100vw; height: 100vh;"
+        :style="fullscreen"
       >
         <GmapMarker
           :key="index"
@@ -33,6 +33,10 @@ export default {
   },
   data() {
     return {
+      fullscreen: {
+        width: '100vw',
+        height: '100vh',
+      },
       center: {
         lat: 10,
         lng: 10,
