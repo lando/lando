@@ -43,7 +43,7 @@ http://docs.{default}/:
   ssi:
     enabled: false
 
-# Blog
+# Events
 http://events.devwithlando.io/:
   type: redirect
   to: http://events.{default}/
