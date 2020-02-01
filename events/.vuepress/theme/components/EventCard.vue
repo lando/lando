@@ -11,7 +11,7 @@
     </div>
 
     <div class="event-presenter">
-      presented by <a :href="presenterLink" target="_blank">{{ presenter }}</a>
+      featuring <a :href="presenterLink" target="_blank">{{ presenter }}</a>
       <a :href="presenterLink" target="_blank"><img :src="presenterPic" :alt="presenter" /></a>
     </div>
     <div class="event-link">
