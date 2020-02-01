@@ -5,9 +5,6 @@ cache:
   yarn: true
   directories:
     - node_modules
-env:
-  - YARN_GPG=no
-  - GRADLE_OPTS=-Dorg.gradle.daemon=false
 
 # Set some immportant things to help maximize our CI performance
 before_install:
@@ -66,6 +63,7 @@ jobs:
     - name: Unit Tests - Windoze
       os: windows
       script: yarn test
+      env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
 
     # Build
     - stage: Build
