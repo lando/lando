@@ -5,34 +5,72 @@ cache:
   yarn: true
   directories:
     - node_modules
+
+before_script: ./scripts/travis-env.sh
+install: yarn
+
 jobs:
   include:
+    # Sanity checks
+    - stage: sanity
+      name: Change Sniffer
+      os: linux
+      dist: xenial
+      install: skip
+      script: |
+        ./scripts/travis-env.sh
+        env
+    - name: Code Linter
+      script: |
+        yarn lint
+        yarn lint:sites
+
+
     # Test
     - stage: test
       name: Unit Tests - Linux
       os: linux
       dist: xenial
-      before_script: ./scripts/travis-env.sh
-      install: yarn
       script: yarn test
-      if: env(TRAVIS_COMMIT_RANGE) IS NOT blank
     - name: Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
-      before_script: ./scripts/travis-env.sh
-      install: yarn
       script: yarn test
     - name: Unit Tests - Windoze
       os: windows
-      before_script: ./scripts/travis-env.sh
       install: yarn
       script: yarn test
+
+    # Build
+    - stage: Build
+      name: Blog
+      script: yarn build:blog
+    - name: Documentation
+      script: yarn build:docs
+    - name: Events
+      script: yarn build:events
+    - name: Website
+      script: yarn build:site
+    - name: CLI Binary - Linux
+      script: yarn pkg:cli
+    - name: CLI Binary - macOS
+      os: osx
+      osx_image: xcode11.2
+      script: yarn pkg:cli
+    - name: CLI Binary - Windoze
+      os: windows
+      script: yarn pkg:cli
+
+    # Deploy
     - stage: deploy
       name: "Deploy to GCP"
       script: |
         ./scripts/travis-env.sh
         node -v
       if: env(LANDO) IS present
+
 stages:
+  - sanity
   - test
+  - build
   - deploy
