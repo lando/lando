@@ -6,12 +6,10 @@ cache:
   directories:
     - node_modules
 
-before_script:
+before_install:
+  - ./scripts/travis-env.sh
   - export GRADLE_OPTS=-Dorg.gradle.daemon=false
   - export TRAVIS_FILES_CHANGED=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
-  - export TRAVIS_BUILD_CHANGED=$(echo $TRAVIS_FILES_CHANGED | grep -e .travis.yml)
-  - export TRAVIS_DOCS_CHANGED=$(echo $TRAVIS_FILES_CHANGED | grep -e docs/)
-  - ./scripts/travis-env.sh
 install: yarn
 
 jobs:
@@ -24,8 +22,9 @@ jobs:
       install: skip
       script:
         - echo $TRAVIS_FILES_CHANGED
-        - echo $TRAVIS_BUILD_CHANGED
-        - echo $TRAVIS_DOCS_CHANGED
+        - echo $TRAVIS_FILES_CHANGED | grep -e .travis.yml
+        - echo $TRAVIS_FILES_CHANGED | grep -e docs/
+        - echo $TRAVIS_FILES_CHANGED | grep -e .travis.yml2 -e scripts/
     - name: Code Linter
       script:
         - yarn lint
@@ -33,41 +32,43 @@ jobs:
 
 
     # Test
-    - stage: test
-      name: Unit Tests - Linux
-      os: linux
-      dist: xenial
-      script: yarn test
-    - name: Unit Tests - macOS
-      os: osx
-      osx_image: xcode11.2
-      script: yarn test
+    # - stage: test
+    #  name: Unit Tests - Linux
+    #  os: linux
+    #  dist: xenial
+    #  script: yarn test
+    #- name: Unit Tests - macOS
+    #  os: osx
+    #  osx_image: xcode11.2
+    #  script: yarn test
     # - name: Unit Tests - Windoze
     #  os: windows
     #  before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
     #  script: yarn test
 
     # Build
-    - stage: Build
-      name: Blog
-      script: yarn build:blog
-    - name: Documentation
-      script: yarn build:docs
-      if: env(TRAVIS_DOCS_CHANGED) IS NOT blank
-    - name: Events
-      script: yarn build:events
-    - name: Website
-      script: yarn build:site
-    - name: CLI Binary - Linux
-      script: yarn pkg:cli
-    - name: CLI Binary - macOS
-      os: osx
-      osx_image: xcode11.2
-      script: yarn pkg:cli
-    - name: CLI Binary - Windoze
-      before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
-      os: windows
-      script: yarn pkg:cli
+    #- stage: Build
+    #  name: Blog
+    #  script: yarn build:blog
+    #- name: Documentation
+    #  script: yarn build:docs
+    #  if: env(TRAVIS_DOCS_CHANGED) IS NOT blank
+    #- name: Events
+    #  script: yarn build:events
+    #- name: Website
+    #  script: yarn build:site
+    #- name: CLI Binary - Linux
+    #  script:
+    #    - yarn pkg:cli
+    #    # execute version or something
+    #- name: CLI Binary - macOS
+    #  os: osx
+    #  osx_image: xcode11.2
+    #  script: yarn pkg:cli
+    # - name: CLI Binary - Windoze
+    #  before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
+    #  os: windows
+    #  script: yarn pkg:cli
 
     # Deploy
     - stage: deploy
