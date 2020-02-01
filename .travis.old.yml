@@ -1,0 +1,115 @@
+language: node_js
+dist: xenial
+matrix:
+  include:
+  - os: linux
+    env: LANDO_PKG_TYPE=pacman LANDO_SUDO_PASSWORD=
+    node_js: '10'
+  - os: linux
+    env: LANDO_PKG_TYPE=rpm LANDO_SUDO_PASSWORD=
+    node_js: '10'
+  - os: linux
+    env: LANDO_PKG_TYPE=deb LANDO_SUDO_PASSWORD=
+    node_js: '10'
+  - os: osx
+    osx_image: xcode11.2
+    env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
+    node_js: '10'
+services:
+  - docker
+sudo: required
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+before_install:
+  # Import our keys on OSX
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [ ! -z "$APPLE_CERTS_DATA" ] && [ ! -z "$APPLE_CERTS_PASSWORD" ]; then
+
+      # Export
+      echo $APPLE_CERTS_DATA | base64 --decode > /tmp/certs.p12
+
+      # Create keychain and import things
+      security create-keychain -p travis macos-build.keychain
+      security default-keychain -s macos-build.keychain
+      security unlock-keychain -p travis macos-build.keychain
+      security set-keychain-settings -t 3600 -u macos-build.keychain
+      security import /tmp/certs.p12 -k ~/Library/Keychains/macos-build.keychain -P "$APPLE_CERTS_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign
+
+      # Key signing
+      security set-key-partition-list -S apple-tool:,apple: -s -k travis macos-build.keychain
+
+      # Verify the things
+      security find-identity -v macos-build.keychain | grep FY8GAUX282 | grep "Developer ID Installer"
+      security find-identity -v macos-build.keychain | grep FY8GAUX282 | grep "Developer ID Application"
+
+    fi
+
+before_script:
+
+  # Edit the package.json if this isn't an official release
+  - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
+
+  # Nice dev helpers to verify our env
+  - ./scripts/travis-env.sh
+
+  # Sanity checks
+  - node --version
+  - yarn --version
+  - node bin/lando.js version
+
+script:
+
+  # Run code and styling
+  - yarn test
+
+  # Make sure we can build the docs and website
+  - yarn lint:sites
+  - yarn build:blog
+  - yarn build:docs
+  - yarn build:events
+  - yarn build:site
+
+  # Run the build
+  - mkdir -p release
+  - yarn pkg:full
+
+  # Push out a latest-dev and commit hash package for all commits to master
+  - if [ -z "$TRAVIS_TAG" ] && [[ "$TRAVIS_BRANCH" == "master" ]] ; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi
+  - if [ -z "$TRAVIS_TAG" ] && [[ "$TRAVIS_BRANCH" == "master" ]] ; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_COMMIT-dev.$LANDO_PKG_TYPE; fi
+  # Always push out a test deploy
+  - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE "release/lando-deploy-test.$LANDO_PKG_TYPE"; fi
+  # Push out a versioned and stable package for tags
+  - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE; fi
+  - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-stable.$LANDO_PKG_TYPE; fi
+
+notifications:
+  email:
+    recipients:
+      - mike@thinktandem.io
+    on_failure: always
+deploy:
+  - provider: releases
+    api_key:
+      secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
+    file: release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
+    skip_cleanup: true
+    on:
+      repo: lando/lando
+      tags: true
+  - provider: s3
+    access_key_id: AKIAJXCGUYNMSXQPAKYQ
+    secret_access_key:
+      secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=
+    bucket: files.devwithlando.io
+    local-dir: release
+    acl: public_read
+    region: us-west-2
+    skip_cleanup: true
+    on:
+      repo: lando/lando
+      all_branches: true
+after_success: yarn coverage
+
