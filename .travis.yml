@@ -6,7 +6,10 @@ cache:
   directories:
     - node_modules
 
-before_script: ./scripts/travis-env.sh
+before_script:
+  - ./scripts/travis-env.sh
+  - export GRADLE_OPTS=-Dorg.gradle.daemon=false
+  - export PIROG=true
 install: yarn
 
 jobs:
@@ -17,13 +20,11 @@ jobs:
       os: linux
       dist: xenial
       install: skip
-      script: |
-        ./scripts/travis-env.sh
-        env
+      script: env
     - name: Code Linter
-      script: |
-        yarn lint
-        yarn lint:sites
+      script:
+        - yarn lint
+        - yarn lint:sites
 
 
     # Test
@@ -38,7 +39,6 @@ jobs:
       script: yarn test
     - name: Unit Tests - Windoze
       os: windows
-      install: yarn
       script: yarn test
 
     # Build
