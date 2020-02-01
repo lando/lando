@@ -8,15 +8,9 @@ cache:
 
 before_script:
   - export GRADLE_OPTS=-Dorg.gradle.daemon=false
-  - git diff --name-only $TRAVIS_COMMIT_RANGE | cat
-  - git diff --name-only "$TRAVIS_COMMIT_RANGE" | cat
-  - export CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
-  - export PIROG2=true
-  - env
-  - |
-    export PIROG=true
-    export
-    export CHANGED_FILES2=($(git diff --name-only $TRAVIS_COMMIT_RANGE))
+  - export TRAVIS_FILES_CHANGED=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+  - export TRAVIS_BUILD_CHANGED=$(echo $TRAVIS_FILES_CHANGED | grep -e .travis.yml)
+  - export TRAVIS_DOCS_CHANGED=$(echo $TRAVIS_FILES_CHANGED | grep -e docs/)
   - ./scripts/travis-env.sh
 install: yarn
 
@@ -28,7 +22,10 @@ jobs:
       os: linux
       dist: xenial
       install: skip
-      script: env
+      script:
+        - echo $TRAVIS_FILES_CHANGED
+        - echo $TRAVIS_BUILD_CHANGED
+        - echo $TRAVIS_DOCS_CHANGED
     - name: Code Linter
       script:
         - yarn lint
@@ -45,10 +42,10 @@ jobs:
       os: osx
       osx_image: xcode11.2
       script: yarn test
-    - name: Unit Tests - Windoze
-      os: windows
-      before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
-      script: yarn test
+    # - name: Unit Tests - Windoze
+    #  os: windows
+    #  before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
+    #  script: yarn test
 
     # Build
     - stage: Build
@@ -56,6 +53,7 @@ jobs:
       script: yarn build:blog
     - name: Documentation
       script: yarn build:docs
+      if: env(TRAVIS_DOCS_CHANGED) IS NOT blank
     - name: Events
       script: yarn build:events
     - name: Website
