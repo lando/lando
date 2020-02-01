@@ -3,6 +3,7 @@ title: Privacy Policy
 metaTitle: Privacy Policy | Lando
 description: The privacy policies for Lando web properties and Lando as software
 image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/hero-pink.png
+navbar: false
 ---
 
 [» home](/)
