@@ -6,73 +6,95 @@ cache:
   directories:
     - node_modules
 
+# Set some immportant things to help maximize our CI performance
 before_install:
-  - ./scripts/travis-env.sh
+  # Set some things to help with windows
   - export GRADLE_OPTS=-Dorg.gradle.daemon=false
   - export YARN_GPG=no
-  - export TRAVIS_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
-  - export TRAVIS_LANDO_CHANGED=$(echo $TRAVIS_CHANGED_FILES | grep -e wefwefffef &>/dev/null && echo true || echo false)
-  - export TRAVIS_BUILD_CHANGED=$(echo $TRAVIS_CHANGED_FILES | grep -e .travis.yml -e scripts/ &>/dev/null && echo true || echo false)
-  - env
+
+  # Get list of files that have changed
+  - export LANDO_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+  # Assess whether our web props have changed
+  - export LANDO_API_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e api/ &>/dev/null && echo true || echo false)
+  - export LANDO_BLOG_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e blog/ &>/dev/null && echo true || echo false)
+  - export LANDO_DOCS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e docs/ &>/dev/null && echo true || echo false)
+  - export LANDO_EVENTS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e events/ &>/dev/null && echo true || echo false)
+  - export LANDO_METRICS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e metrics/ &>/dev/null && echo true || echo false)
+  - export LANDO_SITE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e website/ &>/dev/null && echo true || echo false)
+  # Assess what parts of lando have changed
+  - export LANDO_CODE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ &>/dev/null && echo true || echo false)
+  - export LANDO_TESTS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e examples/ -e test/ &>/dev/null && echo true || echo false)
+  - export LANDO_BUILD_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e .travis.yml -e /scripts &>/dev/null && echo true || echo false)
+  - export LANDO_INSTALLER_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e /installer -e /scripts &>/dev/null && echo true || echo false)
+  # Assess build/devops changes
+  - export LANDO_BUILD_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e .travis.yml -e scripts/ &>/dev/null && echo true || echo false)
+
+  # Check the status of the important things
+  - env | grep LANDO_
+  - ./scripts/travis-env.sh
+
+# Run some sanity checks
+before_script:
+  # Edit the package.json if this isn't an official release
+  - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
+  # Do some sanity checks
+  - node --version
+  - yarn --version
+  - node bin/lando.js version
 install: yarn
 
 jobs:
   include:
     # Sanity checks
-    - stage: sanity
-      name: Change Sniffer
+    - stage: preflight
+      name: Code Linter
       os: linux
       dist: xenial
-      install: skip
-      script:
-        - echo $TRAVIS_FILES_CHANGED
-        - echo $TRAVIS_FILES_CHANGED | grep -e .travis.yml
-        - echo $TRAVIS_FILES_CHANGED | grep -e docs/
-        - echo $TRAVIS_FILES_CHANGED | grep -e .travis.yml2 -e scripts/
-    - name: Code Linter
       script:
         - yarn lint
         - yarn lint:sites
 
-
     # Test
-    # - stage: test
-    #  name: Unit Tests - Linux
-    #  os: linux
-    #  dist: xenial
-    #  script: yarn test
-    #- name: Unit Tests - macOS
-    #  os: osx
-    #  osx_image: xcode11.2
-    #  script: yarn test
-    # - name: Unit Tests - Windoze
-    #  os: windows
-    #  before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
-    #  script: yarn test
+    - stage: test
+      name: Unit Tests - Linux
+      os: linux
+      dist: xenial
+      script: if [[ "$LANDO_CODE_CHANGED" == "true" ]] || [[ "$LANDO_TESTS_CHANGED" == "true" ]] ; then yarn test; fi
+    - name: Unit Tests - macOS
+      os: osx
+      osx_image: xcode11.2
+      script: if [[ "$LANDO_CODE_CHANGED" == "true" ]] || [[ "$LANDO_TESTS_CHANGED" == "true" ]] ; then yarn test; fi
+    - name: Unit Tests - Windoze
+      os: windows
+      script: if [[ "$LANDO_CODE_CHANGED" == "true" ]] || [[ "$LANDO_TESTS_CHANGED" == "true" ]] ; then yarn test; fi
 
     # Build
     - stage: Build
+      name: API
+      script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true test; fi
       name: Blog
-      script: yarn build:blog
+      script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog test; fi
     - name: Documentation
-      script: yarn build:docs
-      if: env(TRAVIS_DOCS_CHANGED) IS NOT blank
-    #- name: Events
-    #  script: yarn build:events
-    #- name: Website
-    #  script: yarn build:site
-    #- name: CLI Binary - Linux
-    #  script:
-    #    - yarn pkg:cli
-    #    # execute version or something
-    #- name: CLI Binary - macOS
-    #  os: osx
-    #  osx_image: xcode11.2
-    #  script: yarn pkg:cli
+      script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs test; fi
+    - name: Events
+      script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events test; fi
+    - name: Metrics
+      script: if [[ "$LANDO_METRICS_CHANGED" == "true" ]] ; then true test; fi
+    - name: Website
+      script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site test; fi
+    - name: CLI Binary - Linux
+      script:
+        - yarn pkg:cli
+        - ./dist/cli/lando-* version
+    - name: CLI Binary - macOS
+      os: osx
+      osx_image: xcode11.2
+      script:
+        - yarn pkg:cli
+        - ./dist/cli/lando-* version
     # - name: CLI Binary - Windoze
-    #  before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
-    #  os: windows
-    #  script: yarn pkg:cli
+    # os: windows
+    # script: yarn pkg:cli
 
     # Deploy
     - stage: deploy
@@ -83,7 +105,7 @@ jobs:
       if: env(LANDO) IS present
 
 stages:
-  - sanity
+  - preflight
   - test
   - build
   - deploy
