@@ -5,13 +5,12 @@ cache:
   yarn: true
   directories:
     - node_modules
+env:
+  - YARN_GPG=no
+  - GRADLE_OPTS=-Dorg.gradle.daemon=false
 
 # Set some immportant things to help maximize our CI performance
 before_install:
-  # Set some things to help with windows
-  - export GRADLE_OPTS=-Dorg.gradle.daemon=false
-  - export YARN_GPG=no
-
   # Get list of files that have changed
   - export LANDO_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
   # Assess whether our web props have changed
@@ -59,20 +58,20 @@ jobs:
       name: Unit Tests - Linux
       os: linux
       dist: xenial
-      script: if [[ "$LANDO_CODE_CHANGED" == "true" ]] || [[ "$LANDO_TESTS_CHANGED" == "true" ]] ; then yarn test; fi
+      script: yarn test
     - name: Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
-      script: if [[ "$LANDO_CODE_CHANGED" == "true" ]] || [[ "$LANDO_TESTS_CHANGED" == "true" ]] ; then yarn test; fi
+      script: yarn test
     - name: Unit Tests - Windoze
       os: windows
-      script: if [[ "$LANDO_CODE_CHANGED" == "true" ]] || [[ "$LANDO_TESTS_CHANGED" == "true" ]] ; then yarn test; fi
+      script: yarn test
 
     # Build
     - stage: Build
       name: API
       script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true test; fi
-      name: Blog
+    - name: Blog
       script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog test; fi
     - name: Documentation
       script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs test; fi
