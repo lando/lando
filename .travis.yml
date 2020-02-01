@@ -7,9 +7,11 @@ cache:
     - node_modules
 
 before_script:
-  - ./scripts/travis-env.sh
   - export GRADLE_OPTS=-Dorg.gradle.daemon=false
-  - export PIROG=true
+  - |
+    export PIROG=true
+    export CHANGED_FILES=($(git diff --name-only $TRAVIS_COMMIT_RANGE))
+  - ./scripts/travis-env.sh
 install: yarn
 
 jobs:
@@ -39,6 +41,7 @@ jobs:
       script: yarn test
     - name: Unit Tests - Windoze
       os: windows
+      before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
       script: yarn test
 
     # Build
@@ -58,6 +61,7 @@ jobs:
       osx_image: xcode11.2
       script: yarn pkg:cli
     - name: CLI Binary - Windoze
+      before_script: export GRADLE_OPTS=-Dorg.gradle.daemon=false
       os: windows
       script: yarn pkg:cli
 
