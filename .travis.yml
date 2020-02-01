@@ -1,35 +1,37 @@
+language: node_js
+node_js: 10
+dist: xenial
 cache:
   yarn: true
   directories:
     - node_modules
 jobs:
   include:
+    # Test
     - stage: test
-      name: Unit Tests
+      name: Unit Tests - Linux
       os: linux
       dist: xenial
-      node_js: 10
       before_script: ./scripts/travis-env.sh
-      script: env
-    - name: Integration Tests
-      node_js: 10
-      install: skip
-      script: |
-        env
-        echo "things"
-    - name: Unit Tests macOS
+      install: yarn
+      script: yarn test
+      if: env(TRAVIS_COMMIT_RANGE) IS NOT blank
+    - name: Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
-      node_js: 10
-      script: true
-    - name: Unit Tests windoze
+      before_script: ./scripts/travis-env.sh
+      install: yarn
+      script: yarn test
+    - name: Unit Tests - Windoze
       os: windows
-      node_js: 10
-      script: true
+      before_script: ./scripts/travis-env.sh
+      install: yarn
+      script: yarn test
     - stage: deploy
-      node_js: 10
       name: "Deploy to GCP"
-      script: ./scripts/travis-env.sh
+      script: |
+        ./scripts/travis-env.sh
+        node -v
       if: env(LANDO) IS present
 stages:
   - test
