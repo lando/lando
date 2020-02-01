@@ -9,7 +9,11 @@ cache:
 before_install:
   - ./scripts/travis-env.sh
   - export GRADLE_OPTS=-Dorg.gradle.daemon=false
-  - export TRAVIS_FILES_CHANGED=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+  - export YARN_GPG=no
+  - export TRAVIS_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+  - export TRAVIS_LANDO_CHANGED=$(echo $TRAVIS_CHANGED_FILES | grep -e wefwefffef &>/dev/null && echo true || echo false)
+  - export TRAVIS_BUILD_CHANGED=$(echo $TRAVIS_CHANGED_FILES | grep -e .travis.yml -e scripts/ &>/dev/null && echo true || echo false)
+  - env
 install: yarn
 
 jobs:
@@ -47,12 +51,12 @@ jobs:
     #  script: yarn test
 
     # Build
-    #- stage: Build
-    #  name: Blog
-    #  script: yarn build:blog
-    #- name: Documentation
-    #  script: yarn build:docs
-    #  if: env(TRAVIS_DOCS_CHANGED) IS NOT blank
+    - stage: Build
+      name: Blog
+      script: yarn build:blog
+    - name: Documentation
+      script: yarn build:docs
+      if: env(TRAVIS_DOCS_CHANGED) IS NOT blank
     #- name: Events
     #  script: yarn build:events
     #- name: Website
