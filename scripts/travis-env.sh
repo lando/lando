@@ -11,6 +11,9 @@ echo "TRAVIS_COMMIT_RANGE: $TRAVIS_COMMIT_RANGE"
 
 # And other stuff
 echo "CHANGED_FILES: $CHANGED_FILES"
+echo "CHANGED_FILES2: $CHANGED_FILES2"
+echo "PIROG: $PIROG"
+
 echo "PATH: $PATH"
 
 export LANDO="thing"

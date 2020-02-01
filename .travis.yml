@@ -8,9 +8,15 @@ cache:
 
 before_script:
   - export GRADLE_OPTS=-Dorg.gradle.daemon=false
+  - git diff --name-only $TRAVIS_COMMIT_RANGE | cat
+  - git diff --name-only "$TRAVIS_COMMIT_RANGE" | cat
+  - export CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+  - export PIROG2=true
+  - env
   - |
     export PIROG=true
-    export CHANGED_FILES=($(git diff --name-only $TRAVIS_COMMIT_RANGE))
+    export
+    export CHANGED_FILES2=($(git diff --name-only $TRAVIS_COMMIT_RANGE))
   - ./scripts/travis-env.sh
 install: yarn
 
