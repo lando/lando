@@ -12,7 +12,6 @@ jobs:
       - run:
           name: Assess needs
           command: |
-            env
             # Extract commit range (or single commit)
             COMMIT_RANGE=$(echo "${CIRCLE_COMPARE_URL}" | cut -d/ -f7)
 
@@ -20,12 +19,17 @@ jobs:
             if [[ $COMMIT_RANGE != *"..."* ]]; then
               COMMIT_RANGE="${COMMIT_RANGE}...${COMMIT_RANGE}"
             fi
-            echo $COMMIT_RANGE
-            LANDO_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+
+            # Check if we need to run tests and bail if we dont
+            LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
             LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
+            echo $COMMIT_RANGE
             echo $LANDO_CHANGED_FILES
             echo $LANDO_NEEDS_TESTS
-            circleci-agent step halt
+
+            if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
+              circleci-agent step halt
+            fi
       - restore_cache:
           keys:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}

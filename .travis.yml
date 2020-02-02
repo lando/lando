@@ -110,32 +110,32 @@ jobs:
 
     # Web builds
     - name: API
-      script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true test; fi
+      script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true; fi
       if: |
         type = push AND \
         type != pull_request
     - name: Blog
-      script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog test; fi
+      script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog; fi
       if: |
         type = push AND \
         type != pull_request
     - name: Documentation
-      script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs test; fi
+      script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs; fi
       if: |
         type = push AND \
         type != pull_request
     - name: Events
-      script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events test; fi
+      script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events; fi
       if: |
         type = push AND \
         type != pull_request
     - name: Metrics
-      script: if [[ "$LANDO_METRICS_CHANGED" == "true" ]] ; then true test; fi
+      script: if [[ "$LANDO_METRICS_CHANGED" == "true" ]] ; then true; fi
       if: |
         type = push AND \
         type != pull_request
     - name: Website
-      script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site test; fi
+      script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site; fi
       if: |
         type = push AND \
         type != pull_request
