@@ -46,6 +46,7 @@ jobs:
     machine:
       image: circleci/classic:201710-01
       docker_layer_caching: true
+    parallelism: 8
     steps:
       - checkout
       - restore_cache:
@@ -66,3 +67,11 @@ jobs:
           command: |
             yarn generate-tests
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
