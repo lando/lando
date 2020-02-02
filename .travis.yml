@@ -162,7 +162,7 @@ jobs:
       if: type = push
 
     # Test Deployz
-    - stage: Deploy
+    - stage: Test Deploy
       name: Test Deploy - S3
       install: skip
       script: mkdir release && touch release/test
@@ -179,7 +179,8 @@ jobs:
         skip_cleanup: true
 
     # Dev deployz
-    - name: Dev Deploy - PACMAN
+    - stage: Test Deploy
+      name: Dev Deploy - PACMAN
       env: LANDO_PKG_TYPE=pacman
       script: |
         mkdir release
@@ -201,29 +202,10 @@ jobs:
         acl: public_read
         region: us-west-2
         skip_cleanup: true
-
-    # Prod deployz
-    - name: Deploy - PACMAN
-      env: LANDO_PKG_TYPE=pacman
-      script: |
-        mkdir release
-        yarn pkg:full
-        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
-        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-stable.$LANDO_PKG_TYPE; fi
-      if: |
-        type = push AND \
-        tag IS NOT blank AND \
-        branch = "master"
-      deploy:
-        provider: releases
-        api_key:
-          secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
-        file: release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
-        skip_cleanup: true
-
-      # Edit the package.json if this isn't an official release
-      # - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
-      # Do some sanity checks
+    - name: Dev Deploy - RPM
+      env: LANDO_PKG_TYPE=rpm
+    - name: Dev Deploy - DEB
+      env: LANDO_PKG_TYPE=deb
 
 stages:
   - preflight
