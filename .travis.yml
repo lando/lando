@@ -116,7 +116,7 @@ jobs:
           ./dist/cli/lando-* version
         fi
       if: type = push
-    - name: Installer - Pacman
+    - name: Installer - PACMAN
       env: LANDO_PKG_TYPE=pacman
       script: |
         if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then
@@ -161,7 +161,7 @@ jobs:
       script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site; fi
       if: type = push
 
-    # Deploy
+    # Test Deployz
     - stage: Deploy
       name: Test Deploy - S3
       install: skip
@@ -178,17 +178,48 @@ jobs:
         region: us-west-2
         skip_cleanup: true
 
-      # name: Test Deploy
-      # os: osx
-      # osx_image: xcode11.2
-      # script: |
-      #  if [[ "$LANDO_BUILD_CHANGED" == "true" ]] ; then
-      #    yarn pkg:full
-      #  fi
-      # deploy:
-      #
-      # if: type = pull_request
+    # Dev deployz
+    - name: Dev Deploy - PACMAN
+      env: LANDO_PKG_TYPE=pacman
+      script: |
+        mkdir release
+        node ./scripts/dev-version.js
+        yarn pkg:full
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_COMMIT-dev.$LANDO_PKG_TYPE
+      if: |
+        type = push AND \
+        tag IS blank AND \
+        branch != "master"
+      deploy:
+        provider: s3
+        access_key_id: AKIAJXCGUYNMSXQPAKYQ
+        secret_access_key:
+          secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=
+        bucket: files.devwithlando.io
+        local-dir: release
+        acl: public_read
+        region: us-west-2
+        skip_cleanup: true
 
+    # Prod deployz
+    - name: Deploy - PACMAN
+      env: LANDO_PKG_TYPE=pacman
+      script: |
+        mkdir release
+        yarn pkg:full
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-stable.$LANDO_PKG_TYPE; fi
+      if: |
+        type = push AND \
+        tag IS NOT blank AND \
+        branch = "master"
+      deploy:
+        provider: releases
+        api_key:
+          secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
+        file: release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE
+        skip_cleanup: true
 
       # Edit the package.json if this isn't an official release
       # - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
