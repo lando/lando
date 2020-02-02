@@ -38,14 +38,16 @@ install: yarn
 
 jobs:
   include:
-    # Test
-    - stage: test
+    # Preflight
+    - stage: preflight
       name: Code Linter
       script:
         - yarn lint
         - yarn lint:sites
-      if: type = pull_request
-    - name: Unit Tests - Linux
+
+    # Test
+    - stage: test
+      name: Unit Tests - Linux
       script: yarn test:unit
       if: type = pull_request
     - name: Unit Tests - macOS
@@ -161,7 +163,7 @@ jobs:
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false LANDO_PKG_TYPE=exe
       before_script:
         - git config --global core.autocrlf true
-        - choco install innosetup --version=5.5.9
+        - choco install innosetup --version=5.5.9 --allow-empty-checksums
       script:
         - mkdir -p releases
         - yarn pkg:full

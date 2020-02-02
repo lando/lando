@@ -4,14 +4,13 @@ jobs:
     machine:
       image: circleci/classic:201710-01
       docker_layer_caching: true
-    # parallelism: 16
     steps:
       - checkout
       - restore_cache:
           keys:
-            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-v1-{{ .Branch }}-
-            - yarn-packages-v1-
+            - lando-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - lando-{{ .Branch }}-
+            - lando-
       - run:
           name: Take this thing into hyperspace
           environment:
@@ -30,28 +29,40 @@ jobs:
           name: Install node modules
           command: yarn
       - run:
-          name: Disable usage and error reporting
-          command: |
-            # Disable usage reporting
-            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
-            # Disable error reporting
-            mkdir -p ~/.lando/cache
-            echo false > ~/.lando/cache/report_errors
-      - run:
           name: Switch lando over to binary built from source
           command: |
             sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
-            # sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
             yarn pkg:cli
             sudo mv dist/cli/* /usr/local/bin/lando
-            ls -lsa /usr/local/bin
             lando version
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+            - node_modules
+            - /usr/local/bin/lando
+            - /usr/share/lando
+          key: lando-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  test:
+    machine:
+      image: circleci/classic:201710-01
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
+      - run:
+        name: Disable usage and error reporting
+        command: |
+          # Disable usage reporting
+          cp -f ~/project/.circleci/lando.yml ~/project/config.yml
+          # Disable error reporting
+          mkdir -p ~/.lando/cache
+          echo false > ~/.lando/cache/report_errors
       - run:
           name: Run func test
           command: |
             yarn generate-tests
-            # yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
-      - save_cache:
-          paths:
-            - ~/.cache/yarn
-          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
