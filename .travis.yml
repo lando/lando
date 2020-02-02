@@ -47,49 +47,78 @@ jobs:
       if: type = pull_request
     - name: Unit Tests - Linux
       script: yarn test:unit
+      if: type = pull_request
     - name: Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
       script: yarn test:unit
+      if: type = pull_request
     - name: Unit Tests - Windoze
       os: windows
       script: yarn test:unit
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
+      if: type = pull_request
 
     # Build
     # Web builds
     - stage: Build
       name: API
       script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true test; fi
-      if: type = push
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Blog
       script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog test; fi
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Documentation
       script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs test; fi
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Events
       script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events test; fi
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Metrics
       script: if [[ "$LANDO_METRICS_CHANGED" == "true" ]] ; then true test; fi
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Website
       script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site test; fi
+      if: |
+        type = push AND \
+        type != pull_request
 
     # CLI builds
     - name: CLI Binary - Linux
       script:
         - yarn pkg:cli
         - ./dist/cli/lando-* version
+      if: |
+        type = push AND \
+        type != pull_request
     - name: CLI Binary - macOS
       os: osx
       osx_image: xcode11.2
       script:
         - yarn pkg:cli
         - ./dist/cli/lando-* version
+      if: |
+        type = push AND \
+        type != pull_request
     - name: CLI Binary - Windoze
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
       script:
         - yarn pkg:cli
         - ./dist/cli/lando-* version
+      if: |
+        type = push AND \
+        type != pull_request
 
     # Installer builds
     - name: Installer - Pacman
@@ -97,16 +126,25 @@ jobs:
       script:
         - mkdir -p releases
         - yarn pkg:full
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Installer - RPM
       env: LANDO_PKG_TYPE=rpm
       script:
         - mkdir -p releases
         - yarn pkg:full
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Installer - DEB
       env: LANDO_PKG_TYPE=deb
       script:
         - mkdir -p releases
         - yarn pkg:full
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Installer - DMG
       os: osx
       osx_image: xcode11.2
@@ -115,6 +153,9 @@ jobs:
       script:
         - mkdir -p releases
         - yarn pkg:full
+      if: |
+        type = push AND \
+        type != pull_request
     - name: Installer - EXE
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false LANDO_PKG_TYPE=exe
@@ -124,7 +165,9 @@ jobs:
       script:
         - mkdir -p releases
         - yarn pkg:full
-
+      if: |
+        type = push AND \
+        type != pull_request
 
     # Deploy
     - stage: deploy
