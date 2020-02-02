@@ -20,11 +20,9 @@ before_install:
   # Assess what parts of lando have changed
   - export LANDO_CODE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e yarn.lock -e package.json -e config.yml -e bin/ -e lib/ -e plugins/ &>/dev/null && echo true || echo false)
   - export LANDO_TESTS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e examples/ -e test/ &>/dev/null && echo true || echo false)
+  # Assess devops changes
   - export LANDO_BUILD_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e .travis.yml -e /scripts &>/dev/null && echo true || echo false)
   - export LANDO_INSTALLER_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e /installer -e /scripts &>/dev/null && echo true || echo false)
-  # Assess build/devops changes
-  - export LANDO_BUILD_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e .travis.yml -e scripts/ &>/dev/null && echo true || echo false)
-
   # Check the status of the important things
   - env | grep LANDO_
   - ./scripts/travis-env.sh
@@ -79,7 +77,7 @@ jobs:
       env: LANDO_PKG_TYPE=dmg APPLE_NO_NOTARIZE=notgonnadoit
       before_script: ./scripts/import-apple-keys.sh
       script: |
-        - mkdir -p releases
+        - mkdir release
         - yarn pkg:full
       if: type = push
 
@@ -100,7 +98,7 @@ jobs:
         - git config --global core.autocrlf true
         - choco install innosetup --version=5.5.9 --allow-empty-checksums
       script: |
-        - mkdir -p releases
+        - mkdir release
         - yarn pkg:full
       if: type = push
 
@@ -135,29 +133,51 @@ jobs:
     - name: Installer - Pacman
       env: LANDO_PKG_TYPE=pacman
       script:
-        - mkdir -p releases
+        - mkdir release
         - yarn pkg:full
       if: type = push
     - name: Installer - RPM
       env: LANDO_PKG_TYPE=rpm
       script:
-        - mkdir -p releases
+        - mkdir release
         - yarn pkg:full
       if: type = push
     - name: Installer - DEB
       env: LANDO_PKG_TYPE=deb
       script:
-        - mkdir -p releases
+        - mkdir release
         - yarn pkg:full
       if: type = push
 
     # Deploy
-    - stage: deploy
-      name: "Deploy to GCP"
-      script: |
-        ./scripts/travis-env.sh
-        node -v
-      if: env(LANDO) IS present
+    - stage: Deploy
+      name: Test Deploy - S3
+      env: LANDO_PKG_TYPE=deb
+      install: skip
+      script: touch release/test
+      if: type = pull_request
+      deploy:
+        provider: s3
+        access_key_id: AKIAJXCGUYNMSXQPAKYQ
+        secret_access_key:
+          secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=
+        bucket: files.devwithlando.io
+        local-dir: release
+        acl: public_read
+        region: us-west-2
+        skip_cleanup: true
+
+      # name: Test Deploy
+      # os: osx
+      # osx_image: xcode11.2
+      # script: |
+      #  if [[ "$LANDO_BUILD_CHANGED" == "true" ]] ; then
+      #    yarn pkg:full
+      #  fi
+      # deploy:
+      #
+      # if: type = pull_request
+
 
       # Edit the package.json if this isn't an official release
       # - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
