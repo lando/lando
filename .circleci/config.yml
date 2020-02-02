@@ -39,8 +39,6 @@ jobs:
           paths:
             - ~/.cache/yarn
             - node_modules
-            - /usr/local/bin/lando
-            - /usr/share/lando
           key: lando-{{ .Branch }}-{{ checksum "yarn.lock" }}
   test:
     machine:
