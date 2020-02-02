@@ -18,7 +18,7 @@ before_install:
   - export LANDO_METRICS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e metrics/ &>/dev/null && echo true || echo false)
   - export LANDO_SITE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e website/ &>/dev/null && echo true || echo false)
   # Assess what parts of lando have changed
-  - export LANDO_CODE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ &>/dev/null && echo true || echo false)
+  - export LANDO_CODE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e yarn.lock -e package.json -e config.yml -e bin/ -e lib/ -e plugins/ &>/dev/null && echo true || echo false)
   - export LANDO_TESTS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e examples/ -e test/ &>/dev/null && echo true || echo false)
   - export LANDO_BUILD_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e .travis.yml -e /scripts &>/dev/null && echo true || echo false)
   - export LANDO_INSTALLER_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e /installer -e /scripts &>/dev/null && echo true || echo false)
@@ -68,33 +68,31 @@ jobs:
       os: osx
       osx_image: xcode11.2
       script:
-        - yarn pkg:cli
-        - ./dist/cli/lando-* version
-      if: |
-        type = push AND \
-        type != pull_request
+        if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then
+          yarn pkg:cli
+          ./dist/cli/lando-* version
+        fi
+      if: type = push
     - name: Installer - DMG
       os: osx
       osx_image: xcode11.2
-      env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
+      env: LANDO_PKG_TYPE=dmg APPLE_NO_NOTARIZE=notgonnadoit
       before_script: ./scripts/import-apple-keys.sh
       script:
         - mkdir -p releases
         - yarn pkg:full
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
 
     # Windoze builds
     - name: CLI Binary - Windoze
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
-      script:
-        - yarn pkg:cli
-        - ./dist/cli/lando-* version
-      if: |
-        type = push AND \
-        type != pull_request
+      script: |
+        if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then
+          yarn pkg:cli
+          ./dist/cli/lando-* version
+        fi
+      if: type = push
     - name: Installer - EXE
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false LANDO_PKG_TYPE=exe
@@ -104,74 +102,54 @@ jobs:
       script:
         - mkdir -p releases
         - yarn pkg:full
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
 
     # Web builds
     - name: API
       script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true; fi
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Blog
       script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog; fi
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Documentation
       script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs; fi
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Events
       script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events; fi
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Metrics
       script: if [[ "$LANDO_METRICS_CHANGED" == "true" ]] ; then true; fi
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Website
       script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site; fi
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
 
     # Linux builds
     - name: CLI Binary - Linux
       script:
-        - yarn pkg:cli
-        - ./dist/cli/lando-* version
-      if: |
-        type = push AND \
-        type != pull_request
+        if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then
+          yarn pkg:cli
+          ./dist/cli/lando-* version
+        fi
+      if: type = push
     - name: Installer - Pacman
       env: LANDO_PKG_TYPE=pacman
       script:
         - mkdir -p releases
         - yarn pkg:full
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Installer - RPM
       env: LANDO_PKG_TYPE=rpm
       script:
         - mkdir -p releases
         - yarn pkg:full
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
     - name: Installer - DEB
       env: LANDO_PKG_TYPE=deb
       script:
         - mkdir -p releases
         - yarn pkg:full
-      if: |
-        type = push AND \
-        type != pull_request
+      if: type = push
 
     # Deploy
     - stage: deploy
