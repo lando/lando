@@ -156,7 +156,7 @@ jobs:
       name: Test Deploy - S3
       env: LANDO_PKG_TYPE=deb
       install: skip
-      script: touch release/test
+      script: mkdir release && touch release/test
       if: type = pull_request
       deploy:
         provider: s3
