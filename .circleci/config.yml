@@ -54,15 +54,15 @@ jobs:
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
       - run:
-        name: Disable usage and error reporting
-        command: |
-          # Disable usage reporting
-          cp -f ~/project/.circleci/lando.yml ~/project/config.yml
-          # Disable error reporting
-          mkdir -p ~/.lando/cache
-          echo false > ~/.lando/cache/report_errors
+          name: Disable usage and error reporting
+          command: |
+            # Disable usage reporting
+            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
+            # Disable error reporting
+            mkdir -p ~/.lando/cache
+            echo false > ~/.lando/cache/report_errors
       - run:
-        name: Run func test
-        command: |
-          yarn generate-tests
-          yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
+          name: Run func test
+          command: |
+            yarn generate-tests
+            yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
