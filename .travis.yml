@@ -163,7 +163,7 @@ jobs:
 
     # Test Deployz
     - stage: Test Deploy
-      name: Test Deploy - S3
+      name: S3
       install: skip
       script: mkdir release && touch release/test
       if: |
@@ -186,7 +186,7 @@ jobs:
       name: DMG
       os: osx
       osx_image: xcode11.2
-      env: LANDO_PKG_TYPE=dmg APPLE_NO_NOTARIZE=notgonnadoit
+      env: LANDO_PKG_TYPE=dmg
       before_script: ./scripts/import-apple-keys.sh
       script: |
         mkdir release
@@ -198,6 +198,16 @@ jobs:
         type = push AND \
         tag IS blank AND \
         branch != "master"
+      deploy:
+        provider: s3
+        access_key_id: AKIAJXCGUYNMSXQPAKYQ
+        secret_access_key:
+          secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=
+        bucket: files.devwithlando.io
+        local-dir: release
+        acl: public_read
+        region: us-west-2
+        skip_cleanup: true
     - name: EXE
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false LANDO_PKG_TYPE=exe
