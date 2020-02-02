@@ -44,15 +44,16 @@ jobs:
       script:
         - yarn lint
         - yarn lint:sites
+      if: type = pull_request
     - name: Unit Tests - Linux
-      script: yarn test
+      script: yarn test:unit
     - name: Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
-      script: yarn test
+      script: yarn test:unit
     - name: Unit Tests - Windoze
       os: windows
-      script: yarn test
+      script: yarn test:unit
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
 
     # Build
@@ -60,6 +61,7 @@ jobs:
     - stage: Build
       name: API
       script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true test; fi
+      if: type = push
     - name: Blog
       script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog test; fi
     - name: Documentation
@@ -92,19 +94,16 @@ jobs:
     # Installer builds
     - name: Installer - Pacman
       env: LANDO_PKG_TYPE=pacman
-      install: skip
       script:
         - mkdir -p releases
         - yarn pkg:full
     - name: Installer - RPM
       env: LANDO_PKG_TYPE=rpm
-      install: skip
       script:
         - mkdir -p releases
         - yarn pkg:full
-    - name: Installer - Debian
+    - name: Installer - DEB
       env: LANDO_PKG_TYPE=deb
-      install: skip
       script:
         - mkdir -p releases
         - yarn pkg:full
@@ -112,7 +111,6 @@ jobs:
       os: osx
       osx_image: xcode11.2
       env: LANDO_PKG_TYPE=dmg LANDO_SUDO_PASSWORD=
-      install: skip
       before_script: ./scripts/import-apple-keys.sh
       script:
         - mkdir -p releases
@@ -120,10 +118,9 @@ jobs:
     - name: Installer - EXE
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false LANDO_PKG_TYPE=exe
-      install: skip
       before_script:
         - git config --global core.autocrlf true
-        - choco install -y InnoSetup
+        - choco install innosetup --version=5.5.9
       script:
         - mkdir -p releases
         - yarn pkg:full
