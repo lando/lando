@@ -62,7 +62,7 @@ jobs:
           mkdir -p ~/.lando/cache
           echo false > ~/.lando/cache/report_errors
       - run:
-          name: Run func test
-          command: |
-            yarn generate-tests
-            yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
+        name: Run func test
+        command: |
+          yarn generate-tests
+          yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
