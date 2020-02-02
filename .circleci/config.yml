@@ -3,14 +3,34 @@ jobs:
   build:
     machine:
       image: circleci/classic:201710-01
-      docker_layer_caching: true
+      # @TODO:: once we have more tests running lets buy the below and
+      # set up max parallelism
+      # docker_layer_caching: true
+    parallelism: 16
     steps:
       - checkout
-      # - restore_cache:
-      #    keys:
-      #      - lando-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      #      - lando-{{ .Branch }}-
-      #      - lando-
+      - run:
+        name: Assess needs
+        command: |
+          env
+          # Extract commit range (or single commit)
+          COMMIT_RANGE=$(echo "${CIRCLE_COMPARE_URL}" | cut -d/ -f7)
+
+          # Fix single commit, unfortunately we don't always get a commit range from Circle CI
+          if [[ $COMMIT_RANGE != *"..."* ]]; then
+            COMMIT_RANGE="${COMMIT_RANGE}...${COMMIT_RANGE}"
+          fi
+          echo $COMMIT_RANGE
+          LANDO_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
+          LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
+          echo $LANDO_CHANGED_FILES
+          echo $LANDO_NEEDS_TESTS
+          circleci-agent step halt
+      - restore_cache:
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
       - run:
           name: Take this thing into hyperspace
           environment:
@@ -29,30 +49,6 @@ jobs:
           name: Install node modules
           command: yarn
       - run:
-          name: Switch lando over to binary built from source
-          command: |
-            sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
-            yarn pkg:cli
-            sudo mv dist/cli/* /usr/local/bin/lando
-            lando version
-      - save_cache:
-          paths:
-            - ~/.cache/yarn
-            - node_modules
-          key: lando-{{ .Branch }}-{{ checksum "yarn.lock" }}
-  test:
-    machine:
-      image: circleci/classic:201710-01
-      docker_layer_caching: true
-    parallelism: 8
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-packages-v1-{{ .Branch }}-
-            - yarn-packages-v1-
-      - run:
           name: Disable usage and error reporting
           command: |
             # Disable usage reporting
@@ -61,15 +57,20 @@ jobs:
             mkdir -p ~/.lando/cache
             echo false > ~/.lando/cache/report_errors
       - run:
+          name: Switch lando over to binary built from source
+          command: |
+            sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
+            # sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
+            yarn pkg:cli
+            sudo mv dist/cli/* /usr/local/bin/lando
+            ls -lsa /usr/local/bin
+            lando version
+      - run:
           name: Run func test
           command: |
             yarn generate-tests
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
