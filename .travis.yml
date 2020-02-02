@@ -77,8 +77,8 @@ jobs:
       env: LANDO_PKG_TYPE=dmg APPLE_NO_NOTARIZE=notgonnadoit
       before_script: ./scripts/import-apple-keys.sh
       script: |
-        - mkdir release
-        - yarn pkg:full
+        mkdir release
+        yarn pkg:full
       if: type = push
 
     # Windoze builds
@@ -98,8 +98,8 @@ jobs:
         - git config --global core.autocrlf true
         - choco install innosetup --version=5.5.9 --allow-empty-checksums
       script: |
-        - mkdir release
-        - yarn pkg:full
+        mkdir release
+        yarn pkg:full
       if: type = push
 
     # Web builds

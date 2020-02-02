@@ -27,8 +27,6 @@ script:
   # Push out a latest-dev and commit hash package for all commits to master
   - if [ -z "$TRAVIS_TAG" ] && [[ "$TRAVIS_BRANCH" == "master" ]] ; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE; fi
   - if [ -z "$TRAVIS_TAG" ] && [[ "$TRAVIS_BRANCH" == "master" ]] ; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_COMMIT-dev.$LANDO_PKG_TYPE; fi
-  # Always push out a test deploy
-  - if [ -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE "release/lando-deploy-test.$LANDO_PKG_TYPE"; fi
   # Push out a versioned and stable package for tags
   - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_TAG.$LANDO_PKG_TYPE; fi
   - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-stable.$LANDO_PKG_TYPE; fi
