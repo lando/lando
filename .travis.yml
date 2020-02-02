@@ -59,7 +59,7 @@ jobs:
         region: us-west-2
         skip_cleanup: true
 
-    # Dev deployz
+    # Dev deployzz
     - stage: Dev Deploy
       name: Dev Deploy - PACMAN
       env: LANDO_PKG_TYPE=pacman
