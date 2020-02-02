@@ -31,7 +31,6 @@ before_install:
 before_script:
   - node --version
   - yarn --version
-  - node bin/lando.js version
 install: yarn
 
 jobs:
@@ -46,15 +45,18 @@ jobs:
     # Test
     - stage: test
       name: Unit Tests - Linux
+      before_script: node bin/lando.js version
       script: yarn test:unit
       if: type = pull_request
     - name: Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
+      before_script: node bin/lando.js version
       script: yarn test:unit
       if: type = pull_request
     - name: Unit Tests - Windoze
       os: windows
+      before_script: node bin/lando.js version
       script: yarn test:unit
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
       if: type = pull_request
