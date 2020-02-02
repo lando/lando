@@ -85,8 +85,28 @@ jobs:
         skip_cleanup: true
     - name: Dev Deploy - RPM
       env: LANDO_PKG_TYPE=rpm
+        script: |
+        mkdir release
+        node ./scripts/dev-version.js
+        yarn pkg:full
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_COMMIT-dev.$LANDO_PKG_TYPE
+      if: |
+        type = push AND \
+        tag IS blank AND \
+        branch != "master"
     - name: Dev Deploy - DEB
       env: LANDO_PKG_TYPE=deb
+      script: |
+        mkdir release
+        node ./scripts/dev-version.js
+        yarn pkg:full
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-latest-dev.$LANDO_PKG_TYPE
+        cp -rf dist/lando.$LANDO_PKG_TYPE release/lando-$TRAVIS_COMMIT-dev.$LANDO_PKG_TYPE
+      if: |
+        type = push AND \
+        tag IS blank AND \
+        branch != "master"
 
 stages:
   - preflight
