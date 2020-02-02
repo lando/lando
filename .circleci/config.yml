@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Assess needs
+          name: Assess needs or bail
           command: |
             # Extract commit range (or single commit)
             COMMIT_RANGE=$(echo "${CIRCLE_COMPARE_URL}" | cut -d/ -f7)
@@ -23,10 +23,6 @@ jobs:
             # Check if we need to run tests and bail if we dont
             LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
             LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
-            echo $COMMIT_RANGE
-            echo $LANDO_CHANGED_FILES
-            echo $LANDO_NEEDS_TESTS
-
             if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
               circleci-agent step halt
             fi
