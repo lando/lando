@@ -67,7 +67,7 @@ jobs:
       name: CLI Binary - macOS
       os: osx
       osx_image: xcode11.2
-      script:
+      script: |
         if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then
           yarn pkg:cli
           ./dist/cli/lando-* version
@@ -78,7 +78,7 @@ jobs:
       osx_image: xcode11.2
       env: LANDO_PKG_TYPE=dmg APPLE_NO_NOTARIZE=notgonnadoit
       before_script: ./scripts/import-apple-keys.sh
-      script:
+      script: |
         - mkdir -p releases
         - yarn pkg:full
       if: type = push
@@ -99,7 +99,7 @@ jobs:
       before_script:
         - git config --global core.autocrlf true
         - choco install innosetup --version=5.5.9 --allow-empty-checksums
-      script:
+      script: |
         - mkdir -p releases
         - yarn pkg:full
       if: type = push
@@ -126,7 +126,7 @@ jobs:
 
     # Linux builds
     - name: CLI Binary - Linux
-      script:
+      script: |
         if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then
           yarn pkg:cli
           ./dist/cli/lando-* version
