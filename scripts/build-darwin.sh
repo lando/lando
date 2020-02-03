@@ -104,7 +104,7 @@ if [ "$PKG_SIGN" == "true" ]; then
   rm -f ../dmg/UnsignedLandoInstaller.pkg
 
   # Notarize if possible
-  if [ ! -z "$APPLE_NOTARY_USER" ] && [ ! -z "$APPLE_NOTARY_PASSWORD" ]; then
+  if [ ! -z "$APPLE_NOTARY_USER" ] && [ ! -z "$APPLE_NOTARY_PASSWORD" ] && [ -z "$APPLE_NO_NOTARIZE" ]; then
     # Start the notarization process
     echo "Uploading Lando for notarization..."
     RID=$(xcrun altool \
