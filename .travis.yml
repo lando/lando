@@ -37,7 +37,7 @@ before_install:
   # Check the status of the important things
   - env | grep LANDO_
   - ./scripts/travis-env.sh
-  - mkdir release
+  - mkdir -p release
 # Run some sanity checks
 before_script:
   - node --version
@@ -47,13 +47,6 @@ install: yarn
 jobs:
   include:
     # Tests
-    - stage: test
-      name: Linting and Unit Tests - Linux
-      before_script: node bin/lando.js version
-      script:
-        - yarn lint
-        - yarn lint:sites
-        - yarn test:unit
     - name: Linting and Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
@@ -70,6 +63,13 @@ jobs:
         - yarn lint
         - yarn lint:sites
         - yarn test:unit
+    - stage: test
+      name: Linting and Unit Tests - Linux
+      before_script: node bin/lando.js version
+      script:
+        - yarn lint
+        - yarn lint:sites
+        - yarn test:unit
 
     # Build tests
     - stage: build
@@ -79,7 +79,7 @@ jobs:
       env: APPLE_NO_NOTARIZE=notgonnadoit
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
-        - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; ./dist/cli/lando-* version; fi
+        - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
         - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full fi
     - name: Test Build - Windoze packages
       os: windows
@@ -91,12 +91,12 @@ jobs:
         fi
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
-        - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; ./dist/cli/lando-* version; fi
+        - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
         - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full fi
     - name: Test Build - Linux packages
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
-        - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; ./dist/cli/lando-* version; fi
+        - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
         - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full fi
     - name: Test Build - API
       script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true; fi
@@ -112,7 +112,7 @@ jobs:
       script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site; fi
     - name: Test Deploy - S3
       install: skip
-      script: mkdir release && touch release/test
+      script: touch release/test
       deploy:
         provider: s3
         access_key_id: AKIAJXCGUYNMSXQPAKYQ
@@ -186,7 +186,6 @@ jobs:
             tags: true
     - name: Linux Packages
       script:
-        - mkdir release
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
         # debian
