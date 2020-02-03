@@ -9,4 +9,5 @@ Now that you are set up for contributing in general proceed to docs for the spec
 
 * ### [CONTRIBUTOR](./contrib-intro.md)
 * ### [GUIDER](./guides-intro.md)
-
+* ### [SPONSOR](./sponsor-intro.md)
+* ### [REFERRER](./referrer-intro.md)
