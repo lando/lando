@@ -80,7 +80,7 @@ jobs:
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
-        - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full fi
+        - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full; fi
     - name: Test Build - Windoze packages
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
@@ -92,12 +92,12 @@ jobs:
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
-        - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full fi
+        - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full; fi
     - name: Test Build - Linux packages
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
-        - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full fi
+        - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full; fi
     - name: Test Build - API
       script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true; fi
     - name: Test Build - Blog
