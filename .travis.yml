@@ -9,7 +9,6 @@ stages:
   - test
   - name: build
     if: |
-    30.21
       type = push AND \
       tag IS blank AND \
       branch != "master"
