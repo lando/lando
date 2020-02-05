@@ -27,7 +27,11 @@ module.exports = {
         },
       ],
       feed: {
-       canonical_base: 'https://blog.lando.dev',
+        canonical_base: 'https://blog.lando.dev',
+        feed_options: {
+          favicon: 'https://lando.dev/favicon.ico',
+          image: 'https://lando.dev/images/logo-pink-small.png',
+        },
       },
       frontmatters: [
         {

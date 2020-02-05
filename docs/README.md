@@ -5,7 +5,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 home: true
 navbar: true
 pageClass: lando-home
-heroImage: /images/hero.png
+heroImage: /images/hero-pink.png
 features:
 - title: Easy
   details: One click installer, cross-platform, simple config file, sane defaults and reduced complexity for power features

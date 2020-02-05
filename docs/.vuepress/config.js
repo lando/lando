@@ -35,9 +35,11 @@ module.exports = {
       baseURL: 'https://docs.lando.dev',
     },
     'feed': {
-      image: 'https://docs.lando.dev/images/hero-pink.png',
-      favicon: 'https://docs.lando.dev/favicon.ico',
       canonical_base: 'https://docs.lando.dev',
+      feed_options: {
+        favicon: 'https://lando.dev/favicon.ico',
+        image: 'https://lando.dev/images/logo-pink-small.png',
+      },
       posts_directories: [
         '/guides/',
       ],
@@ -61,7 +63,7 @@ module.exports = {
     },
     docsDir: 'docs',
     docsBranch: 'master',
-    logo: '/images/logo-small.png',
+    logo: '/images/logo-pink-small.png',
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
     lastUpdated: 'Last Updated',
