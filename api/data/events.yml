@@ -1,22 +1,26 @@
 - name: MidCamp 2020
   id: wahtever
-  date: 3-18-2020
-  url: https://www.midcamp.org/
+  date: '2020-03-18'
+  url: 'https://www.midcamp.org/'
   location: DePaul University
   presenter: Mike Pirog
   type: camp
-  presenterPic: https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb
-  presenterLink: https://twitter.com/pirogcommamike
+  presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
+  presenterLink: 'https://twitter.com/pirogcommamike'
   summary: >-
-    Come hang out with Lando project lead Mike Pirog and hear what we've got in store for you in 2020! There isn't a session but we will buy you a beer!
+    Come hang out with Lando project lead Mike Pirog and hear what we've got in
+    store for you in 2020! There isn't a session but we will buy you a beer!
 - name: BadCamp 2017
   id: wahtever2
-  date: 10-18-2017
-  url: https://2017.badcamp.net/session/coding-development/intermediate/future-dev-now
+  date: '2017-10-18'
+  url: >-
+    https://2017.badcamp.net/session/coding-development/intermediate/future-dev-now
   location: UC Berkeley
   presenter: Mike Pirog
   type: camp
-  presenterPic: https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb
-  presenterLink: https://twitter.com/pirogcommamike
+  presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
+  presenterLink: 'https://twitter.com/pirogcommamike'
   summary: >-
-    Come see (and then use!) the future of local development tools: Lando, a free, open source and cross platform devops tool that is also the most advanced, powerful and easy local development environment in the galaxy.
+    Come see (and then use!) the future of local development tools: Lando, a
+    free, open source and cross platform devops tool that is also the most
+    advanced, powerful and easy local development environment in the galaxy.

@@ -52,12 +52,15 @@ tooling:
   blog:
     service: cli
     cmd: yarn dev:blog
+    description: Launch the blog
   docs:
     service: cli
     cmd: yarn dev:docs
+    description: Launch the documentation site
   events:
     service: cli
     cmd: yarn dev:events
+    description: Launch the events listing
   node:
     service: cli
   platform:
@@ -67,6 +70,7 @@ tooling:
   site:
     service: cli
     cmd: yarn dev:site
+    description: Launch the marketing site
   vuepress:
     service: cli
   yarn:
