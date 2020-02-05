@@ -7,11 +7,11 @@ description: Lando Documentation's Privacy Policy
 
 **Effective date:** _November 26, 2019_
 
-Kalabox Inc DBA Tandem ("us", "we", or "our") operates the <https://docs.lando.dev> website (hereinafter referred to as the "Service").
+Kalabox Inc DBA Tandem ("us", "we", or "our") operates the <https://blog.lando.dev> website (hereinafter referred to as the "Service").
 
 This page informs you of our policies regarding the collection, use and disclosure of personal data when you use our Service and the choices you have associated with that data.
 
-We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, the terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from <https://docs.lando.dev>
+We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, the terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from <https://blog.lando.dev>
 
 ## Other Policies
 
@@ -21,7 +21,7 @@ If you are looking for the Privacy Policy for Lando the software you should [loo
 
 *   **Service**
 
-    Service is the <https://docs.lando.dev> website operated by Kalabox Inc DBA Tandem
+    Service is the <https://blog.lando.dev> website operated by Kalabox Inc DBA Tandem
 
 *   **Personal Data**
 
