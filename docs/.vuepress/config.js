@@ -260,6 +260,7 @@ module.exports = {
             'evangelist-present',
             'evangelist-events',
             'evangelist-social',
+            'evangelist-promote',
             'talking-points',
           ],
         },
@@ -268,6 +269,9 @@ module.exports = {
           collapsable: false,
           children: [
             'blogging-intro',
+            'blogging-add',
+            'blogging-remove',
+            'blogging-promote',
           ],
         },
         {

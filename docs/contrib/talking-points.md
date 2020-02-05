@@ -55,4 +55,4 @@ _This data was last updated in early 2020._
 
 * Lando is officially version 3. This reflects its Kalabox heritage which had two major versions.
 * Lando was supposed to only be the code name for this project but it got popular too fast and the name stuck.
-* Lando is the only local development solution that has [a mascot](https://www.youtube.com/watch?v=oHg5SJYRHA0).
+* Lando is the only local development solution that has [a mascot](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
