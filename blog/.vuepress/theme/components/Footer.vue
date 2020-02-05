@@ -10,10 +10,11 @@
     <div class="footer-bottom">
       <div>
         <a target="_blank" href="https://twitter.com/devwithlando">Follow us</a> |
+        <a target="_blank" href="https://github.com/lando/lando">GitHub</a> |
         <a target="_blank" href="https://docs.lando.dev">Documentation</a> |
+        <a target="_blank" href="https://events.lando.dev/lando/lando">Events & Meetups</a> |
         <a target="_blank" href="https://lando.dev/sponsor">Sponsor</a> |
         <a target="_blank" href="https://lando.dev/join">Join the Alliance</a> |
-        <a target="_blank" href="https://github.com/lando/lando">GitHub</a>
       </div>
       <div>
         <a href="/terms/">Terms</a> |
