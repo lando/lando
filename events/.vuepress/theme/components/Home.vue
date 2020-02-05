@@ -12,7 +12,7 @@
         <a href="#" @click="upcoming">upcoming</a> |
         <a href="#" @click="previous">previous</a>
       </div>
-      <div class="listing">
+      <div v-if="cards.length > 0" class="listing">
         <div v-for="(event, index) in cards" :key="index" class="listing-event">
           <EventCard
             :name="event.name"
@@ -24,6 +24,12 @@
             :presenter-link="event.presenterLink"
             :presenter-pic="event.presenterPic"
           />
+        </div>
+      </div>
+      <div v-else class="no-events">
+        <div class="no-events-block">
+          <h3>No upcoming events!</h3>
+          <p>Check back soon or <a href="https://docs.lando.dev/contrib/evangelist-events.html">add your event</a> to the listing!</p>
         </div>
       </div>
       <div class="footer">
@@ -46,7 +52,7 @@ export default {
   data() {
     return {
       markers: [],
-      cards: [],
+      cards: ['loading'],
       events: [],
     };
   },
@@ -120,7 +126,8 @@ export default {
       color #efefef
     a:hover
       text-decoration underline
-  .listing
+  .listing,
+  .no-events
     position absolute
     right 1em
     top 4em
@@ -129,6 +136,11 @@ export default {
     opacity .75
     height 80%
     overflow scroll
+  .no-events
+    height auto
+    text-align center
+    .no-events-block
+      padding 2em 4em
   .footer
     position absolute
     bottom 0
@@ -161,6 +173,7 @@ export default {
     .logo,
     .title,
     .listing,
+    .no-events,
     .listing-filters,
     .footer
       position relative
