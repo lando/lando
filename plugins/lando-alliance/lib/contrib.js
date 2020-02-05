@@ -7,7 +7,7 @@ const _ = require('lodash');
 const roles = [
   'Administration',
   'Code',
-  'Content and Case Studies',
+  'Content',
   'DevOps',
   'Documentation',
   'Evangelism',
