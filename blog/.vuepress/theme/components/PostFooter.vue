@@ -9,7 +9,7 @@
       This content is adapted from other content. If you are interested in the original then <a target="_blank" :href="original">check it out here</a>.
     </div>
     <div class="original-post">
-      Want to contribute content here? <a href="https://docs.lando.dev/contrib/blog-intro.html"> Learn how!</a>
+      Want to contribute content here? <a href="https://docs.lando.dev/contrib/blogging-intro.html"> Learn how!</a>
     </div>
   </div>
 </template>
