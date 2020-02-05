@@ -253,17 +253,21 @@ module.exports = {
           ],
         },
         {
-          title: 'Contributing Code',
+          title: 'Evangelizing',
           collapsable: false,
           children: [
-            'contrib-intro',
-            'structure',
-            'plugins',
-            'testing',
-            'building',
-            'shipping',
-            'docs',
-            'website',
+            'evangelist-intro',
+            'evangelist-present',
+            'evangelist-events',
+            'evangelist-social',
+            'talking-points',
+          ],
+        },
+        {
+          title: 'Blogging',
+          collapsable: false,
+          children: [
+            'blogging-intro',
           ],
         },
         {
@@ -278,6 +282,20 @@ module.exports = {
           ],
         },
         {
+          title: 'Contributing Code',
+          collapsable: false,
+          children: [
+            'contrib-intro',
+            'structure',
+            'plugins',
+            'testing',
+            'building',
+            'shipping',
+            'docs',
+            'website',
+          ],
+        },
+        {
           title: 'Sponsoring',
           collapsable: false,
           children: [
@@ -286,10 +304,17 @@ module.exports = {
           ],
         },
         {
-          title: 'Resources',
+          title: 'Upselling',
           collapsable: false,
           children: [
-            ['https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC', 'Training materials'],
+            'upseller-intro',
+          ],
+        },
+        {
+          title: 'Administering',
+          collapsable: false,
+          children: [
+            'admin-intro',
           ],
         },
       ],

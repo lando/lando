@@ -1,4 +1,5 @@
 - name: MidCamp 2020
+  id: wahtever
   date: 3-18-2020
   url: https://www.midcamp.org/
   location: DePaul University
@@ -9,6 +10,7 @@
   summary: >-
     Come hang out with Lando project lead Mike Pirog and hear what we've got in store for you in 2020! There isn't a session but we will buy you a beer!
 - name: BadCamp 2017
+  id: wahtever2
   date: 10-18-2017
   url: https://2017.badcamp.net/session/coding-development/intermediate/future-dev-now
   location: UC Berkeley

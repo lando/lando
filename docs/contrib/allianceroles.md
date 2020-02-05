@@ -5,9 +5,53 @@ metaTitle: Read more on how to contribute | Lando
 
 # 7. Read More
 
-Now that you are set up for contributing in general proceed to docs for the specific roles you are interested in.
+Now that you are set up for contributing in general proceed to the docs for the specific roles you are interested in. Here is a rough idea of what you will learn about in each section.
 
-* ### [CONTRIBUTOR](./contrib-intro.md)
-* ### [GUIDER](./guides-intro.md)
-* ### [SPONSOR](./sponsor-intro.md)
-* ### [REFERRER](./referrer-intro.md)
+::: half
+#### [EVANGELIST](evangelist-intro)
+* Lando talking points
+* Lando slidedeck templates
+* Posting your event to [events.lando.dev](https://events.lando.dev)
+* Marketing your talk
+:::
+
+::: half
+#### [CONTRIBUTOR](contrib-intro)
+* Contributing code to Lando
+* Working on Lando web properties
+* Writing Lando tests
+* Lando DevOps
+* Lando plugins
+:::
+
+::: half
+#### [GUIDER](guides-intro)
+* Writing Lando guides
+* Testing guide content with Leia
+* Marketing guide content
+:::
+
+::: half
+#### [BLOGGER](blogging-intro)
+* Writing blog content
+* Marketing blog content
+:::
+
+::: half
+#### [ADMINISTRATOR](admin-intro)
+* Administering the Lando Alliance
+* Administering Lando sponsors
+* Running Lando social media
+* Coordinating Lando outreach
+:::
+
+::: half
+#### [UPSELLER](upseller-intro)
+* Talking points for your boss
+:::
+
+::: half
+#### [SPONSOR](sponsor-intro)
+* Frequently asked questions
+* Managing your sponsorship
+:::
