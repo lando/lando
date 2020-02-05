@@ -27,10 +27,10 @@ git checkout -b addContribMe
 
 ```bash
 # Follow and answer the interactive prompts
-lando contrib:add
+lando.dev contrib:add
 
 # Verify you've been added
-lando contrib:list
+lando.dev contrib:list
 ```
 
 ## Commit and push
