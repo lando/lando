@@ -2,10 +2,6 @@
   type: patriot
   logo: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/tandem-pink.png
   url: https://thinktandem.io
-- name: Platform.sh
-  type: patriot
-  logo: https://2019.badcamp.org/sites/default/files/sponsors/logos/2019-06/Platformsh%20logo.png
-  url: https://platform.sh
 - name: OpenDevShop
   type: partner
   logo: https://avatars1.githubusercontent.com/u/6655472?s=200&v=4
