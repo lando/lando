@@ -9,6 +9,7 @@ date: 2019-11-05
 # Accessing Lando from Other Devices on Your Local Network
 
 <GuideHeader />
+<YouTube url="https://www.youtube.com/watch?v=wVHAQX5sSaU" />
 
 You may want to use another device (e.g., a smartphone or tablet) to test your Lando app.  You can access your lando app easily from another device as follows.
 

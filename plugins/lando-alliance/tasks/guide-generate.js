@@ -90,6 +90,14 @@ module.exports = lando => {
           message: 'URL of example repo?',
         },
       },
+      youtube: {
+        describe: 'YouTube video',
+        string: true,
+        interactive: {
+          type: 'input',
+          message: 'URL of YouTube video?',
+        },
+      },
     },
     run: options => {
       // Build The basic data

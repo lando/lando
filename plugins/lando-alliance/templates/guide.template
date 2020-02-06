@@ -26,6 +26,7 @@ feed:
 # <%= title %>
 
 <GuideHeader name="<%= author %>" pic="<%= pic %>" link="<%= link %>" />
+<YouTube url="<%= youtube %>" />
 
 Here is some demo content to help get you started. We are using it primarily to...
 
