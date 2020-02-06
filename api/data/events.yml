@@ -10,42 +10,6 @@
   summary: >-
     Come hang out with Lando project lead Mike Pirog and hear what we've got in
     store for you in 2020! There isn't a session but we will buy you a beer!
-- name: MidCamp 2020
-  id: wahtever
-  date: '2020-03-18'
-  url: 'https://www.midcamp.org/'
-  location: 16 Red Deer Rd Londonderry
-  presenter: Mike Pirog
-  type: conference
-  presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
-  presenterLink: 'https://twitter.com/pirogcommamike'
-  summary: >-
-    Come hang out with Lando project lead Mike Pirog and hear what we've got in
-    store for you in 2020! There isn't a session but we will buy you a beer!
-- name: MidCamp 2020
-  id: wahtever3
-  date: '2020-03-18'
-  url: 'https://www.midcamp.org/'
-  location: Moscow
-  presenter: Mike Pirog
-  type: other
-  presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
-  presenterLink: 'https://twitter.com/pirogcommamike'
-  summary: >-
-    Come hang out with Lando project lead Mike Pirog and hear what we've got in
-    store for you in 2020! There isn't a session but we will buy you a beer!
-- name: MidCamp 2020
-  id: wahtever6
-  date: '2020-03-18'
-  url: 'https://www.midcamp.org/'
-  location: Miami
-  presenter: Mike Pirog
-  type: other
-  presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
-  presenterLink: 'https://twitter.com/pirogcommamike'
-  summary: >-
-    Come hang out with Lando project lead Mike Pirog and hear what we've got in
-    store for you in 2020! There isn't a session but we will buy you a beer!
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
