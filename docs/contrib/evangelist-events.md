@@ -57,3 +57,31 @@ git push origin addMyEvent
 ```
 
 And then [open a pull request](https://help.github.com/articles/creating-a-pull-request/).
+
+## 5. Fallbacks
+
+### Directly edit
+
+Try editing the [events database](https://github.com/lando/lando/blob/master/api/data/events.yml) directly. If you are not sure how to do that then consult [these docs](https://help.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository).
+
+You will want to add an entry like this:
+
+```yaml
+- name: MidCamp 2020
+  id: wahteverf
+  date: '2020-03-18'
+  url: 'https://www.midcamp.org/'
+  location: DePaul University
+  presenter: Mike Pirog
+  type: camp
+  presenterPic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
+  presenterLink: 'https://twitter.com/pirogcommamike'
+  summary: >-
+    Come hang out with Lando project lead Mike Pirog and hear what we've got in
+    store for you in 2020! There isn't a session but we will buy you a beer!
+```
+
+### Submit an issue
+
+If even the above is not sufficient then [open an issue](https://github.com/lando/lando/issues/new/choose) on GitHub.
+
