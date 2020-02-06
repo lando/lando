@@ -1,5 +1,6 @@
 ---
 description: Learn how to configure xdebug in Lando using VSCode.
+date: 2019-11-05
 ---
 
 # Using Lando with VSCode

@@ -1,3 +1,7 @@
+---
+date: 2019-11-05
+---
+
 # How to set up a Pantheon application without a proxy on macOS 10.12+
 
 <GuideHeader />

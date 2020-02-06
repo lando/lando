@@ -1,5 +1,6 @@
 ---
 description: Learn how to use Lando's default environment variables inside you application.
+date: 2019-11-05
 ---
 
 # Using $LANDO_INFO
