@@ -50,7 +50,7 @@ jobs:
     - name: Linting and Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
-      # before_script: node bin/lando.js version
+      before_script: node bin/lando.js version
       script:
         - yarn lint
         - yarn lint:sites
@@ -58,14 +58,14 @@ jobs:
     - name: Linting and Unit Tests - Windoze
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
-      # before_script: node bin/lando.js version
+      before_script: node bin/lando.js version
       script:
         - yarn lint
         - yarn lint:sites
         - yarn test:unit
     - stage: test
       name: Linting and Unit Tests - Linux
-      # before_script: node bin/lando.js version
+      before_script: node bin/lando.js version
       script:
         - yarn lint
         - yarn lint:sites
