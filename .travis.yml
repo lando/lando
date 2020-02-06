@@ -127,6 +127,8 @@ jobs:
     # Build and deploy macOS
     - stage: Deploy
       name: macOS Packages
+      # @TODO: WE NED TO REMOVE THE BELOW BEFORE THE NEXT RELEASE
+      env: APPLE_NO_NOTARIZE=notgonnadoit
       os: osx
       osx_image: xcode11.2
       script:
