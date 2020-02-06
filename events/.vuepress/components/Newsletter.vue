@@ -1,7 +1,7 @@
 <template>
   <div class="newsletter post-subscribe">
     <div class="newsletter__wrap">
-      <div class="newsletter__title">Want new guide content?</div>
+      <div class="newsletter__title">Want to hear about new events?</div>
       <div class="newsletter__content">Sign up and we'll send you the latest and greatest!</div>
       <Subscribe
         successMessage="More awesome blog material will be heading your way!"
@@ -39,8 +39,7 @@ export default {
     padding 1.8rem 2.3rem
     border-radius 3px
     box-sizing border-box
-    width auto
-    background-color #f8f8f8
+    max-width 420px
   &__title
     font-size 1.7rem
   &__content
@@ -92,7 +91,7 @@ export default {
   .subscribe-input
     background-color: #fff
     font-size: inherit
-    border: 1px solid #ddd
+    border: 1px solid grey
     width: 100%
     padding: 0.6rem 1.2rem
     box-sizing: border-box

@@ -11,7 +11,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
 **Last updated:** _November 26, 2019_
 
-These Terms and Conditions ("Terms", "Terms and Conditions") govern your relationship with <https://lando.dev> website (the "Service") operated by Kalabox Inc DBA Tandem ("us", "we", or "our").
+These Terms and Conditions ("Terms", "Terms and Conditions") govern your relationship with <https://events.lando.dev> website (the "Service") operated by Kalabox Inc DBA Tandem ("us", "we", or "our").
 
 Please read these Terms and Conditions carefully before using the Service.
 

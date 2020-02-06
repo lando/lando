@@ -243,6 +243,8 @@ export default {
       color: lighten($landoGrey, 30%)
 @media (max-width: $MQMobile)
   .lando-home
+    .inner
+      width: auto
     #hero
       .hero-logo
         float: none
@@ -265,6 +267,4 @@ export default {
   .lando-home
     padding-left 1.5rem
     padding-right 1.5rem
-    .inner
-      width: auto
 </style>
