@@ -155,6 +155,7 @@ jobs:
           skip_cleanup: true
           on:
             repo: lando/lando
+            tags: true
     - name: Windoze Packages
       os: windows
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
