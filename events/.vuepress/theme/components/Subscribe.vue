@@ -254,7 +254,7 @@ export default {
       // Set data
       const data = {defaults: this.getDefaultGroups(), email: this.email, groups: this.getGroups()};
       // Wait and then do things
-      setTimeout(() => this.$api().put('/v1/subscribe', data).then(response => {
+      setTimeout(() => this.$api.put('/v1/subscribe', data).then(response => {
         this.success = this.successMessage;
         this.buttonDisabled = false;
         this.email = '';

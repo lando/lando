@@ -4,7 +4,7 @@
       <div class="newsletter__title">Want to hear about new events?</div>
       <div class="newsletter__content">Sign up and we'll send you the latest and greatest!</div>
       <Subscribe
-        successMessage="More awesome blog material will be heading your way!"
+        successMessage="More awesome events will be heading your way!"
         :customStyles="stylez"
         title=""
       />
