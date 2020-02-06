@@ -25,7 +25,7 @@ feed:
 
 # <%= title %>
 
-<GuideHeader name="<%= author %>" pic="<%= pic %>" link="<%= link %>" />
+<GuideHeader test="<%= test %>" name="<%= author %>" pic="<%= pic %>" link="<%= link %>" />
 <YouTube url="<%= youtube %>" />
 
 Here is some demo content to help get you started. We are using it primarily to...
@@ -94,5 +94,5 @@ lando rebuild -y
 
 You should see the `localhost` _and_ proxy URLs when the rebuild completes. :star:
 
-<GuideFooter original="<%= original %>" repo="<%= repo %>"/>
+<GuideFooter test="<%= test %>" original="<%= original %>" repo="<%= repo %>"/>
 <Newsletter />

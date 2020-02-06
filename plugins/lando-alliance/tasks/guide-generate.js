@@ -98,6 +98,14 @@ module.exports = lando => {
           message: 'URL of YouTube video?',
         },
       },
+      test: {
+        describe: 'Test results',
+        string: true,
+        interactive: {
+          type: 'input',
+          message: 'URL of test results?',
+        },
+      },
     },
     run: options => {
       // Build The basic data
