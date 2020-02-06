@@ -1,6 +1,6 @@
 <template>
   <main class="home" aria-labelledby="main-title">
-    <Map :markers="markers" />
+    <Map :markers="markers" v-on:update-marker="highlightEvent" />
     <div class="overlay">
       <div class="logo">
         <a href="/"><img src="/images/logo-pink-small.png" alt="Lando logo"></a>
@@ -13,9 +13,13 @@
         <a href="#" @click="previous">previous</a>
       </div>
       <div v-if="cards.length > 0" class="listing">
-        <div v-for="(event, index) in cards" :key="index" class="listing-event">
+        <div v-for="event in cards" :key="event.id" class="listing-event">
           <EventCard
+            v-on:update-marker="highlightEvent"
+            :selected="event.selected"
+            :id="event.id"
             :name="event.name"
+            :border="getTypeColor(event.type)"
             :location="event.location"
             :date="event.date"
             :summary="event.summary"
@@ -45,6 +49,7 @@
 import dayjs from 'dayjs';
 import Map from '@theme/components/Map.vue';
 import EventCard from '@theme/components/EventCard.vue';
+import {gmapApi} from 'vue2-google-maps';
 
 export default {
   name: 'Home',
@@ -55,6 +60,9 @@ export default {
       cards: ['loading'],
       events: [],
     };
+  },
+  computed: {
+    google: gmapApi,
   },
   mounted() {
     this.$api.get('/v1/events').then(response => {
@@ -68,6 +76,29 @@ export default {
     });
   },
   methods: {
+    getIcon(color = 'grey') {
+      return {
+        path: this.google.maps.SymbolPath.CIRCLE,
+        scale: 5,
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: color,
+      };
+    },
+    getTypeColor(type) {
+      switch (type) {
+        case 'conference':
+          return '#2ecc71';
+        case 'camp':
+          return '#ed3f7a';
+        case 'meetup':
+          return '#ed3f7a';
+        case 'other':
+          return '#ed3f7a';
+        default:
+          return '#ed3f7a';
+      };
+    },
     geocode(event) {
       return this.$gmaps.get('/geocode/json', {
         params: {
@@ -80,6 +111,7 @@ export default {
           event.geocode = result.data.results[0];
           event.lat = event.geocode.geometry.location.lat;
           event.lng = event.geocode.geometry.location.lng;
+          event.icon = this.getIcon();
         }
         return result.status;
       });
@@ -91,6 +123,20 @@ export default {
     upcoming() {
       this.cards = this.events.filter(event => dayjs(event.date).isAfter(dayjs()));
       this.markers = this.events.filter(event => dayjs(event.date).isAfter(dayjs()));
+    },
+    highlightEvent(id) {
+      this.markers = this.markers.map(marker => {
+        if (marker.id === id) {
+          marker.icon = this.getIcon(this.getTypeColor(marker.type));
+        } else {
+          marker.icon = this.getIcon();
+        }
+        return marker;
+      });
+      this.cards = this.cards.map(card => {
+        card.selected = card.id === id;
+        return card;
+      });
     },
   },
 };

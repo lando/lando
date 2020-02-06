@@ -1,6 +1,6 @@
 <template>
-  <div class="event-card">
-    <h2>{{ name }}</h2>
+  <div :class="{'event-card': true, 'event-selected': selected}" :style="selectedStyle">
+    <a href="#" @click="$emit('update-marker', id)"><h2>{{ name }}</h2></a>
     <div class="event-details">
       at <NavigationIcon /> {{ location }}
       on <ClockIcon /> {{ resolvedDate }}
@@ -28,6 +28,12 @@ export default {
   components: {ClockIcon, NavigationIcon},
   name: 'EventCard',
   props: {
+    id: {
+      type: String,
+    },
+    border: {
+      type: String,
+    },
     date: {
       type: String,
     },
@@ -52,6 +58,10 @@ export default {
       type: String,
       default: 'https://twitter.com/devwithlando',
     },
+    selected: {
+      type: Boolean,
+      default: false,
+    },
     summary: {
       type: String,
     },
@@ -61,6 +71,9 @@ export default {
       return dayjs(this.date).format(
         this.$themeConfig.dateFormat || 'ddd MMM DD YYYY'
       );
+    },
+    selectedStyle() {
+      return (this.selected) ? {background: `${this.border}`} : {};
     },
   },
 };
@@ -78,6 +91,18 @@ export default {
     text-color black
   .event-link
     padding-top 1em
+  &.event-selected
+    color #fff
+    font-weight 500
+    h2
+      color #fff
+    svg
+      color #fff
+    a
+      color #fff
+      font-weight 700
+    a:hover
+      text-decoration underline
   h2
     margin 0
   img
