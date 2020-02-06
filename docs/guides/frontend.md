@@ -1,5 +1,6 @@
 ---
 description: Learn how to add node services to your Lando app so you can use yarn, npm, grunt, gulp, webpack, etc for all the frontend magic.
+date: 2019-11-05
 ---
 
 # Frontend Tooling

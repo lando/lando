@@ -1,32 +1,32 @@
 ---
-title: <%= title %>
-metaTitle: <%= title %> | Lando
-description: <%= description %>
-date: <%= date %>
-original: <%= original %>
-repo: <%= original %>
+title: An example guide
+metaTitle: An example guide | Lando
+description: A longer and SEO dense description
+date: 2020-02-06T04:46:59.727Z
+original: 
+repo: 
 
 author:
-  name: <%= author %>
-  pic: <%= pic %>
-  link: <%= link %>
+  name: Team Lando
+  pic: https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd
+  link: https://twitter.com/devwithlando
 
 feed:
   enable: true
   author:
-    - name: <%= author %>
+    - name: Team Lando
       email: alliance@lando.dev
-      link: <%= link %>
+      link: https://twitter.com/devwithlando
   contributor:
-    - name: <%= author %>
+    - name: Team Lando
       email: alliance@lando.dev
-      link: <%= link %>
+      link: https://twitter.com/devwithlando
 ---
 
-# <%= title %>
+# An example guide
 
-<GuideHeader test="<%= test %>" name="<%= author %>" pic="<%= pic %>" link="<%= link %>" />
-<YouTube url="<%= youtube %>" />
+<GuideHeader test="https://www.youtube.com/watch?v=uCcNcHx2DpY" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
+<YouTube url="" />
 
 Here is some demo content to help get you started. We are using it primarily to...
 
@@ -94,5 +94,5 @@ lando rebuild -y
 
 You should see the `localhost` _and_ proxy URLs when the rebuild completes. :star:
 
-<GuideFooter test="<%= test %>" original="<%= original %>" repo="<%= repo %>"/>
+<GuideFooter test="https://www.youtube.com/watch?v=uCcNcHx2DpY" original="" repo=""/>
 <Newsletter />

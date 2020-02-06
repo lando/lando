@@ -1,5 +1,6 @@
 ---
 description: Learn how to use Lando for offline local development.
+date: 2019-11-05
 ---
 
 # Developing offline

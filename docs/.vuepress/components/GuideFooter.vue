@@ -29,6 +29,9 @@ export default {
       type: String,
       default: '',
     },
+    test: {
+      type: String,
+    },
   },
 };
 </script>
