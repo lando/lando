@@ -37,9 +37,18 @@
         </div>
       </div>
       <div class="footer">
-        <a href="/privacy/">privacy policy</a> |
-        <a href="/terms/">terms of use</a>
-        <span class="copyright">copyright © 2016-present Tandem</span>
+        <a target="_blank" href="https://twitter.com/devwithlando">follow us</a> |
+        <a target="_blank" href="https://github.com/lando/lando">github</a> |
+        <a target="_blank" href="https://docs.lando.dev">docs</a> |
+        <a target="_blank" href="https://lando.dev">why lando?</a> |
+        <a target="_blank" href="https://blog.lando.dev">blog</a> |
+        <a target="_blank" href="https://lando.dev/sponsor">sponsor</a> |
+        <a target="_blank" href="https://lando.dev/join">join</a>
+        <span class="copyright">copyright © 2016-present Tandem | </span>
+        <span class="policies">
+          <a href="/privacy/">privacy policy</a> |
+          <a href="/terms/">terms of use</a>
+        </span>
       </div>
     </div>
   </main>
@@ -202,6 +211,8 @@ export default {
       text-decoration underline
     .copyright
       padding-left 3em
+      font-size .7em
+    .policies
       font-size .7em
 .home
   padding 0
