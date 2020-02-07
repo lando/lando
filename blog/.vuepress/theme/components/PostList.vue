@@ -1,9 +1,9 @@
 <template>
   <div id="base-list-layout" :class="{'posts-list-wrapper': true, 'blog-home': isHome}">
     <div v-if="isHome" class="home-header">
-      <h1>Welcome to a tech blog by and for professional developers</h1>
+      <h1>The tech blog by and for professional developers</h1>
       <div class="home-header-byline">
-        We share things about tech, DevOps, workflows and doing the developments to help make other developers lives easier.
+        We share things about tech, DevOps, workflows and doing the developments because it makes other developers lives easier.
       </div>
     </div>
     <CarbonAds :class="{'carbon-ads-home': isHome}"/>

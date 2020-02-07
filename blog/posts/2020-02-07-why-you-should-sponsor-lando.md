@@ -1,14 +1,15 @@
 ---
 title: Why you should sponsor Lando
 metaTitle: Why you should sponsor Lando | Lando
+summary:
 description: Things
-date: 2020-02-07
+date: 2020-02-09
 original:
 
 author: Mike Pirog
 pic: https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb
 link: https://twitter.com/pirogcommamike
-location: Undisclosed Location
+location: Manchvegas, NH
 
 tags:
 - lando
