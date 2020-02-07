@@ -9,7 +9,7 @@
     <CarbonAds :class="{'carbon-ads-home': isHome}"/>
     <hr v-if="isHome" />
     <h1 v-if="!isHome">{{ title }}</h1>
-    <div class="posts-list">
+    <div :class="tagClass">
       <div v-if="featured" class="posts-featured">
         <PostSummary :post="featured" />
       </div>
@@ -57,6 +57,10 @@ export default {
     };
   },
 
+  mounted() {
+    console.log(this);
+  },
+
   computed: {
     featured() {
       if (this.top) return this.$pagination.pages.slice(0, 1)[0];
@@ -75,6 +79,9 @@ export default {
     },
     isHome() {
       return this.$route.path === '/';
+    },
+    tagClass() {
+      return (this.$currentTag) ? `posts-list ${this.$currentTag.key}` : 'posts-list';
     },
   },
 
@@ -136,6 +143,27 @@ export default {
     width: 50%
     padding-top: 2em
     padding-bottom: 1em
+.posts-list
+  &.lando
+    .posts-featured
+      #post
+        background-color $landoPink
+  &.devops
+    .posts-featured
+      #post
+         background-color $landoBlue
+  &.development
+    .posts-featured
+      #post
+        background-color $landoGreen
+  &.case-study
+    .posts-featured
+      #post
+        background-color $landoOrange
+  &.workflows
+    .posts-featured
+      #post
+        background-color $landoGrey
 .posts-featured
   #post
     border 0
