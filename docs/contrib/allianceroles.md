@@ -48,6 +48,7 @@ Now that you are set up for contributing in general proceed to the docs for the 
 ::: half
 #### [UPSELLER](upseller-intro)
 * Talking points for your boss
+* Lando services and support
 :::
 
 ::: half

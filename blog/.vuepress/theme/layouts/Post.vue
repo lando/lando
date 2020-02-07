@@ -9,6 +9,7 @@
         :date="$frontmatter.date"
         :location="$frontmatter.location"
       />
+      <SponsorsList />
       <CarbonAds />
       <Content />
       <hr />
@@ -23,13 +24,14 @@
 </template>
 
 <script>
+import CarbonAds from '@theme/components/CarbonAds.vue';
 import PostHeader from '@theme/components/PostHeader.vue';
 import PostFooter from '@theme/components/PostFooter.vue';
-import CarbonAds from '@theme/components/CarbonAds.vue';
 import Toc from '@theme/components/Toc.vue';
+import SponsorsList from '@theme/components/SponsorsList.vue';
 
 export default {
-  components: {PostHeader, PostFooter, CarbonAds, Toc}, // eslint-disable-line
+  components: {CarbonAds, PostHeader, PostFooter, SponsorsList, Toc}, // eslint-disable-line
 };
 </script>
 
@@ -44,6 +46,13 @@ export default {
     top: 0
     right: 10px
     box-sizing: border-box
+    z-index: 0
+  #special_sponsors
+    opacity .8
+    position: fixed
+    padding-top: 8em
+    top: 0
+    left 0
     z-index: 0
   .vuepress-toc
     padding-top: 250px

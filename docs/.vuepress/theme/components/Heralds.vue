@@ -17,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.$api().get('/v1/sponsors/herald').then(response => {
+    this.$api.get('/v1/sponsors/herald').then(response => {
       this.heralds = response.data || [];
     })
     .catch(error => {

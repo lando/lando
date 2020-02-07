@@ -1,9 +1,9 @@
 <template>
   <div id="base-list-layout" :class="{'posts-list-wrapper': true, 'blog-home': isHome}">
     <div v-if="isHome" class="home-header">
-      <h1>Welcome to a liberating blog by and for professional developers</h1>
+      <h1>Welcome to a tech blog by and for professional developers</h1>
       <div class="home-header-byline">
-        We share things about tech, DevOps, workflows and doing the developments with but not limited to Lando.
+        We share things about tech, DevOps, workflows and doing the developments to help make other developers lives easier.
       </div>
     </div>
     <CarbonAds :class="{'carbon-ads-home': isHome}"/>
@@ -64,10 +64,10 @@ export default {
     },
     pages() {
       if (!this.top) return this.$pagination.pages;
-      else return this.$pagination.pages.slice(3);
+      else return this.$pagination.pages.slice(4);
     },
     secondary() {
-      if (this.top) return this.$pagination.pages.slice(1, 3);
+      if (this.top) return this.$pagination.pages.slice(1, 4);
       else return undefined;
     },
     top() {
@@ -136,10 +136,37 @@ export default {
     width: 50%
     padding-top: 2em
     padding-bottom: 1em
-.posts-featured-secondary
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
+.posts-featured
+  #post
+    border 0
+    background-color $landoPink
+    color #fff
+    font-size 1.314em
+    a
+      color #fff
+    a:hover
+      color #fff
+    .written-by
+      color lighten($landoPink, 90%)
+      svg
+        color lighten($landoPink, 90%)
+      a
+        color lighten($landoPink, 90%)
+      a:hover
+        color #fff
+    .post-title
+      font-size 1.4em
+      a
+        color #fff
+.posts-tertiary
+  #post
+    padding-bottom 1em
+    .post-summary
+      display none
+    .post-title
+      font-size 0.8em
+    .written-by
+      border 0
 @media (max-width: $MQMobile)
   .posts-featured-secondary
       display block

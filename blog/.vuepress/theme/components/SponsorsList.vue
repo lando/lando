@@ -39,14 +39,12 @@ export default {
 
 <style lang="stylus">
 #special_sponsors
-  border 1px #ccc dashed
   padding 3em
   position absolute
   right 2em
   top 6em
   width 150px
   background white
-  opacity .75
   text-align center
   font-size .8em
   .special-sponsor-block
