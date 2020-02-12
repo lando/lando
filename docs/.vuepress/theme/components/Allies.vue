@@ -17,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.$api(this.$page.apiUrl).get('/v1/sponsors/ally').then(response => {
+    this.$api().get('/v1/sponsors/ally').then(response => {
       this.allies = response.data || [];
     })
     .catch(error => {

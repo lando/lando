@@ -90,20 +90,36 @@ module.exports = lando => {
           message: 'URL of example repo?',
         },
       },
+      youtube: {
+        describe: 'YouTube video',
+        string: true,
+        interactive: {
+          type: 'input',
+          message: 'URL of YouTube video?',
+        },
+      },
+      test: {
+        describe: 'Test results',
+        string: true,
+        interactive: {
+          type: 'input',
+          message: 'URL of test results?',
+        },
+      },
     },
     run: options => {
       // Build The basic data
       const data = _.merge({}, {
-          date: new Date().toISOString(),
-          filePath: path.join(guidesPath, `${_.kebabCase(options.title)}.md`),
-          url: `https://docs.lndo.site/guides/${_.kebabCase(options.title)}.html`,
-          author: 'Team Lando',
-          pic: 'https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd',
-          link: 'https://twitter.com/devwithlando',
-        }, options);
+        date: new Date().toISOString(),
+        filePath: path.join(guidesPath, `${_.kebabCase(options.title)}.md`),
+        url: `https://docs.lndo.site/guides/${_.kebabCase(options.title)}.html`,
+        author: 'Team Lando',
+        pic: 'https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd',
+        link: 'https://twitter.com/devwithlando',
+      }, options);
 
       // if file already exists then throw error
-      // if (fs.existsSync(data.filePath)) throw Error(`Guide already exists at ${data.filePath}!`);
+      if (fs.existsSync(data.filePath)) throw Error(`Guide already exists at ${data.filePath}!`);
 
       // Add new guide to selected category and update categories file
       const section = _.find(guidesData, {title: data.category});

@@ -8,8 +8,10 @@
         :style="fullscreen"
       >
         <GmapMarker
-          :key="index"
-          v-for="(marker, index) in markers"
+          :key="marker.id"
+          @click="$emit('update-marker', marker.id)"
+          v-for="marker in markers"
+          :icon="marker.icon"
           :position="google && new google.maps.LatLng(marker.lat, marker.lng)"
         />
       </GmapMap>

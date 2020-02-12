@@ -1,5 +1,6 @@
 ---
 description: Learn how to update Lando from beta to rc and beyond.
+date: 2019-11-05
 ---
 
 # Updating to 3.0.0-rc.2+
