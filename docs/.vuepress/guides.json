@@ -23,6 +23,7 @@
     "title": "General",
     "collapsable": false,
     "children": [
+      "how-do-i-configure-a-lando-recipe",
       "lando-info"
     ]
   },
