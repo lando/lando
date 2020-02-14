@@ -1,8 +1,8 @@
 ---
 title: Why you should sponsor Lando
 metaTitle: Why you should sponsor Lando | Lando
-summary: Sponsoring Lando is more than just supporting a free and open source local development tool, it's supporting a community of developers dedicated to making development easier for all of us.
-description: Sponsoring Lando is more than just supporting a free and open source local development tool, it's supporting a community of developers dedicated to making development easier for all of us.
+summary: Sponsoring Lando is more than just supporting a free and open source local development tool, it's supporting a community of developers dedicated to making development easier for us all.
+description: Sponsoring Lando is more than just supporting a free and open source local development tool, it's supporting a community of developers dedicated to making development easier for us all.
 date: 2020-02-09
 
 author: Mike Pirog
@@ -27,7 +27,7 @@ feed:
 
 Sponsoring Lando is more than just supporting a free and open source local development tool. It's supporting a community and alliance of developers dedicated to making #devlife easier for us all.
 
-If that is not reason enough... here are five more ;)
+However, if that is not reason enough... here are five more ;)
 
 ## 1. It saves you time and money
 
@@ -76,6 +76,5 @@ The math on this is fairly straightforward! If every Lando user [sponsored us](h
 * Work on Lando full time, this means staying up to date with development changes, version updates, new tools, bug fixes, user features; everything.
 * Take more time to manage the Lando community and its contributors.
 * Cover our infrastructure costs and compensate our core contributor team.
-
 
 If you think that sounds like a pretty fucking good deal then please, [support our mission](https://lando.dev/sponsor) to liberate developers across the galaxy so they can focus on their most important work!
