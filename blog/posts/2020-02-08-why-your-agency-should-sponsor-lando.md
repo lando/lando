@@ -25,4 +25,37 @@ feed:
       link: https://twitter.com/pirogcommamike
 ---
 
-YOUR POST DOTH GOES HITHER
+I think the lack of other
+
+* Give some value back
+* Help us staff support, save more time, scope of questions we answer increase with size of sponsorships dollars
+* Get yearly sweet swag and help spread the word
+* Help us compensate devs, evangelist, etc
+* Help us pay for infrastructure
+
+### 1. The Money Reason
+
+If it saves you time and money return a small percentage of that.
+
+### 2. The Relationship Reason
+
+Every year we will send a surprise swag benefit. not only will this make you cool, it will also help us market and spread the word.
+
+### 3. The Advertising Reason
+
+It costs money to run lando
+
+### 4. The Hiring Reason
+
+more money meeans more consistent contribution to lando which means more bug fixes, more new features, more updates, tech doesnt sleep
+
+### 5. The Support Reason
+
+we would love to be able to provide more consistent support at larger scope.
+
+## Conclusion
+
+If everyone who uses Lando sponsored at the $4 level.
+
+* Giving back value
+* Getting support

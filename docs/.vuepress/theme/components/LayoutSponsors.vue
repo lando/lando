@@ -39,7 +39,6 @@ export default {
 
 <style lang="stylus">
 #special_sponsors
-  border 1px #ccc dashed
   padding 3em
   position absolute
   right 2em
