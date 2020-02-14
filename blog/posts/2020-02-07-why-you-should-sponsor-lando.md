@@ -33,17 +33,17 @@ If that is not reason enough... here are five more ;)
 
 Solving local dev [is hard](/2017/10/23/journey-lando/), _very hard_, so chances are Lando has saved you considerable time and money when compared to its competitors or DIY options.
 
-The more resources we have the more we can make sure Lando, its documentation, guides, tutorials and video trainings are up to date. After all, development, workflows and tools are _always_ changing. The more Lando keeps pace the more time and money you save.
+The more resources we have the more we can make sure Lando, its documentation, guides, tutorials and video trainings are up to date. After all, development, workflows and tools are _always_ changing. The more Lando keeps pace the more time and money we can save you.
 
-If Lando has given you value, return some of that value back to us so we can provide even more value back in return. [Help us, help you](https://www.youtube.com/watch?v=XmlXU4uK5rA)!
+If Lando has given you value, return some of that value back to us so we can provide even more value back in return. Positive feedback loop! [Help us, help you](https://www.youtube.com/watch?v=XmlXU4uK5rA)!
 
 ## 2. It's developer insurance
 
-Lando has an active community on [Slack](https://launchpass.com/devwithlando) and offers free, real time support to everyone as time allows.
+Lando has an active community on [Slack](https://launchpass.com/devwithlando) that offers free, real time support to everyone as time allows.
 
-Generally, we try to scope questions so they are Lando focused but we are more than happy to answer _any_ development question if we can afford to do so. If every Lando user sponsored us at a :beer:'s worth every month we would be able to provide **TWO** dedicated support personal to help answer any blocking dev questions you might have.
+Generally, we try to scope questions so they are Lando focused but we are more than happy to answer _any_ development question if we can afford to do so. If every Lando user sponsored us at a :beer:'s worth every month we would be able to provide **TWO** dedicated support persons to help answer any blocking dev questions you might have.
 
-How awesome would it be knowing that the Lando team has got your back if you get into a tight spot and need someone to help unblock you? You don't even need to use Lando!
+How awesome would it be knowing that the Lando team has got your back if you get into a tight spot and need someone to help unblock you? You don't even need to use Lando we're down to try and help!
 
 ## 3. It has _f**** great_ swag
 
@@ -55,7 +55,7 @@ Be the coolest, proudest cat at your next dev meetup and help us spread our mess
 
 One of the best things about Lando is its extended ecosystem of [documentation](https://docs.lando.dev), [helpful guides](https://docs.lando.dev/guides/lando-info.html), [video tutorials](https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg), [blog posts](https://blog.lando.dev), [trainings, presentations and other events](https://events.lando.dev).
 
-Not only will these materials save you a bunch of time getting spun up or help you with that tricky Lando use case but they are free training materials to help you take your dev game to the next level.
+Not only will these materials save you a bunch of time getting spun up or help you navigate that tricky Lando use case but they are free training materials to help you take your dev game to the next level.
 
 We are happy to generate as much of this material as our users want and with your sponsorship we can!
 
