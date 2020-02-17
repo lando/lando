@@ -14,7 +14,13 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
 <div class="liberation-manifesto">
   <p>
-  With your help we can cover infrastructure costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.
+  With your direct contribution we can cover infrastructure costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.
+
+  If that's not reason enough we recommend you check out the following:
+
+  * #### [Why you should sponsor Lando](https://blog.lando.dev/2020/02/08/why-you-should-sponsor-lando/)
+  * #### [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-agency-should-sponsor-lando/)
+  * #### [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/06/why-your-pass-should-sponsor-lando/)
 
   *__We're down to keep solving DevOps and with your help we can.__*
 
