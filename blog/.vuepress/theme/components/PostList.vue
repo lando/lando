@@ -57,10 +57,6 @@ export default {
     };
   },
 
-  mounted() {
-    console.log(this);
-  },
-
   computed: {
     featured() {
       if (this.top) return this.$pagination.pages.slice(0, 1)[0];
