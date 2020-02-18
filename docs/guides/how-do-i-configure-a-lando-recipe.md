@@ -25,7 +25,7 @@ feed:
 
 # How do I configure a Lando Recipe?
 
-<GuideHeader name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
+<GuideHeader name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" test="https://github.com/lando/lando/tree/master/examples/lamp"/>
 
 When you first initialize a lando app (`lando init`) you get a very simple `.lando.yml` configuration file. Here is the `.lando.yml` file for the LAMP recipe.
 
@@ -36,8 +36,8 @@ config:
   webroot: .
 ```
 
-By using the `config` key in the `lando.yml` file we can configure aspects of our app to say match your production instance. For example say our production server
-is using PHP 5.6; we can set that under the `config` key like so:
+By using the `config` key in the `lando.yml` file you can configure aspects of your app to say match the production instance. For example say your production server
+is using PHP 5.6; you can set that under the `config` key like so:
 
 ```yaml
 name: mylamp
@@ -71,6 +71,7 @@ recipe: lamp
 config:
   webroot: .
   php: 5.6
+  database: mariadb:10.3
 ```
 
 Again rebuild for the changes: `lando rebuild -y` and 💥 you now have PHP 5.6 and MariaDB 10.3!
