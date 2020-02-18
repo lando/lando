@@ -323,6 +323,10 @@ module.exports = {
           collapsable: false,
           children: [
             'admin-intro',
+            'admin-onboarding',
+            'admin-sponsors',
+            'admin-alliance',
+            'admin-timeline',
           ],
         },
       ],
