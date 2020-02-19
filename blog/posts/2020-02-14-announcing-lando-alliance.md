@@ -94,55 +94,77 @@ This isn't supposed to be a business! This is supposed to be a god damn fucking 
 
 ## The Lando Alliance
 
-_The Lando Alliance_ is a movement with a single purpose: to make developer's lives easier. Membership criteria is simple and straightforward.
+_The Lando Alliance_ is a movement with a single purpose: to make developer's lives easier. Membership criteria is simple and straightforward:
 
-> If you give a shit about developers and want to make their lives easier by giving some of your time or money then you should join.
+> If you give a shit about developers, want to make their lives easier and are willing to give some of your time or money to do so, then join.
 
-_The Alliance_ encompasses **much more** than just Lando the local development tool, it is also...
+This means that the _The Alliance_ encompasses **much more** than just Lando the local development tool. In fact, you don't even need to be a Lando user or supporter to join because it is also...
 
 * A [tech blog](https://blog.lando.dev) by and for professional developers
 * A [Slack channel](https://launchpass.com/devwithlando) where developers can get help for _any_ of their dev problems
 * A group of evangelists committed to making dev easier through [presentations and trainings](https://events.lando.dev)
-* A place with helpful [guides](https://docs.lando.dev/guides/lando-info.html) and [video tutorials](https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg).
+* A place with helpful [guides](https://docs.lando.dev/guides/lando-info.html) and [video tutorials](https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg)
 * A place for developers to find new work opportunities
 * An advocacy group for developers.
 
-You can think of it as both a developer's [Q](https://en.wikipedia.org/wiki/Q_(James_Bond)), doling out best in breed tools (or in some cases only in breed) so you can accomplish your current mission and their [Oracle](https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)), advising and guiding them in their fight against The Matrix.
+You can think of it as both a developer's [Q](https://en.wikipedia.org/wiki/Q_(James_Bond)), doling out best in breed (or in some cases only in breed) tools so they can accomplish their current mission and their [Oracle](https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)), advising and guiding them in their fight against The Matrix.
 
-Fundamentally, no business model and no funding means we answer to each other.
+You can also think of it as a positive feedback loop where participation increasingly grows and strengthens the movement.
+
+And, of course, at the end of the day no business model and no funding means we answer to no one but each other. If you think it's valuable then vote with your time or money.
+
+Speaking of...
 
 ### Giving time
 
-If you are intereseed
-Each one of the bullet points above, and working on Lando itself, are
+The first way to help grow our movement is with your time. We are looking for people to help with all of the bullet points above and with Lando itself. In fact, we've even put together programs to help coordinate these specific things.
+
+#### BLOGGING
+
+If you've got something to share that could make a developers life easier then share it on [this very blog](/)! It could be technical advice, a case study, some comparison of the hottest new dev tools or devlife coaching. We'll help you promote your content!
+
+#### EVANGELIZING
+
+Similarly, If you've got a presentation or training that focuses on making things easier for developers then add it to our [events listing](https://events.lando.dev) and we will help sound the clarion call so even more people show up to hear you!
+
+#### GUIDING
+
+If you've done something super cool with Lando and want to share it with the rest of us then this is for you! Share that recipe or configuration in our [guides](https://docs.lando.dev/guides/lando-info.html). We'll give you credit for your contribution and share it with our users!
+
+#### CONTRIBUTING
+
+If you're interested in helping out with Lando itself, either by writing code, contributing docs, improving DevOps or even working on our various websites then _we need you_! In the future, if this movement grows and is successfull we hope to build _even more_ great free and open source developer tools.
 
 ### Giving money
 
+The second way to help grow the movement is to [sponsor it](https://lando.dev/sponsor/) with your hard earned cash.
 
+The reason why we've always looked for a business model is because paying for this is not easy, and its decreasingly easy at increasing scale. Infrastructure needs to be paid for, contributors need to be compensated for their time and users demand timely support and more consistent releases.
 
-Lando, the open source tool you know and love is only a _small_ part of this mission
+We, as Tandem, are more than happy to continue sponsoring the movement ourselves at the highest level. However, if this movement is to succeed we need others to do the same.
 
+Sponsoring includes many [additional benefits](https://lando.dev/sponsor/) depending on the tier you choose but our immediate goals are to fund...
 
+* [A stable Lando 3.0.0 release](2020/02/09/q1-2020-update/#lando-3-0-0) on May 4, 2020
+* A dedicated full time developer to work on Lando so there is a consistent release cycle with new features and bug requests. The way we develop is always changing and this means that Lando itself will never "be done" and needs to be updated frequetly.
+* Another dedicated full time developer devoted to helping people with their #devproblems on Slack, regardless of whether they are Lando related or not.
 
-* lando is now mission critical for tons of people, what does that mean?
-  * we need to be rolling out regular releaases because dev changes all the time, bugs, etc
-  * we need to
-  * return to the question: what is the business model?
+If every Lando user sponsored at the $4/month level we would be able to do all of the above and much, much more. This leads me to our longer term plans.
 
-* annouce the alliance
-  * this is our solution, a platform for developers to help one another, a positive feedback loop where conntributions can
-    * that in the short term:
-      * can fund work on lando, provide support, help developers
-    * that in the long term
-      * can be a developer advocacy org
-      * a place to go to get help with all your developer questions
-      * a place that is making the tools you need
-      * by, for and accountable to developers
+If we are able to grow this movement beyond the above we would love to...
 
-* go over the programs
-* call to action
+* Build more awesome developer tools
+* Sponsor developer events
+* Sponsor our evangelist's trips
+* Pay our extended contributors
+* Provide _even better_ support for _even more things_ on our Slack channel
 
+If the above reasons are not compelling enough we've also prepared a few articles that highlight some of the business reasons why you might want to sponsor.
 
-> That's cool bro, but what's the business model?
+* [Why you should sponsor Lando](/2020/02/08/why-you-should-sponsor-lando/)
+* [Why your agency or org should sponsor Lando](/2020/02/07/why-your-agency-should-sponsor-lando/)
+* [Why your PaaS or dev tool should sponsor Lando](/2020/02/06/why-your-pass-should-sponsor-lando/)
 
-The business model is _fuck off_ and let us work on what matters.
+### Joining our movement
+
+[Join our movement](https://lando.dev/alliance/join/) to make developers lives easier!
