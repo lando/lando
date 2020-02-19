@@ -47,9 +47,9 @@ Kalabox Version 1 Dashboard
 We spent the next year or so evangelizing our project; travelling around the country to various events touting its myriad of benefits and how ahead of the curve it was until two critical things changed our destiny forever...
 
 1. [Docker](http://docker.com) and containers became **A THING**
-2. A conversation with a developer we respect a lot (**cough** Derek DeRaps **cough**) convinced us (me) that Kalabox would never be a widely adopted project until it was less monolithic and more flexible
+2. A conversation with a developer we respect a lot (**cough** Hawkeye Tenderwolf **cough**) convinced us (me) that Kalabox would never be a widely adopted project until it was less monolithic and more flexible
 
-It wasn't super hard to connect the metaphorical dots of those two point so we [launched a Kickstarter](https://www.kickstarter.com/projects/kalabox/kalabox-advanced-web-tools-for-the-people) and resolved to complete the righteous work of remaking Kalabox as a cross-platform and Docker powered solution.
+It wasn't super hard to connect the metaphorical dots of those two points so we [launched a Kickstarter](https://www.kickstarter.com/projects/kalabox/kalabox-advanced-web-tools-for-the-people) and resolved to complete the righteous work of remaking Kalabox as a cross-platform and Docker powered solution.
 
 [Making our own kind of music](https://www.youtube.com/watch?v=PEQxEJ5_5zA) turned out to be a daunting task, an easy order of magnitude more difficult than our original Kalabox 1 project. We hired some people, fired some people, spent **WAY WAY** more money than we originally intended (or wanted) and left the agency we co-founded. But, after a year and a half we *finally* launched Kalabox 2.
 

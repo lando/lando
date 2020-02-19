@@ -32,6 +32,9 @@ import SponsorsList from '@theme/components/SponsorsList.vue';
 
 export default {
   components: {CarbonAds, PostHeader, PostFooter, SponsorsList, Toc}, // eslint-disable-line
+  mounted() {
+    console.log(this);
+  },
 };
 </script>
 
