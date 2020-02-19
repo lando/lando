@@ -60,11 +60,11 @@ In the aftermath of our failure to find a business model for Kalabox 2 we realiz
 
 We resolved to continue the quest by first attacking the scale and cost problems. Done. Enter Lando, with _ten_ times the users of Kalabox 2 at _one half_ the development and maintainence cost. It's the Model 3 to our Model S. More on that [here](/2017/10/23/journey-lando/) if you're interested.
 
-We further resolved to kick the can on the "business model" part of the equation until we reached 10,000 active monthly users because on some level I don't think we _actually ever expected_ to get there...
+We further resolved to kick the can on the "business model" part of the equation until we reached 10,000 active monthly users mostly because, on some level, I don't think we _actually ever expected_ to get there...
 
 Fast forward to six months ago and I'm at a bar, where all great ideas happen, looking over a cheap and neat double whiskey at my business partner Alec who utters: _ok, so, yeah, we got to 10,000, um, sort of fast, without, uh, basically any marketing_.
 
-We spend the next few hours rehasing _all the old conversations_ we had years earlier when trying to build a business around Kalabox 2. How do we monetize? Do we try to raise money? What's the go to market strategy? Perhaps, most importantly, _how can we sustain the continued development and maintainence of this project as we continue to grow?_
+We spend the next few hours rehasing _all the old conversations_ we had years earlier when trying to build a business around Kalabox 2. How do we monetize? Do we try to raise money? What's the go to market strategy? Perhaps, most importantly, _how can we sustain the continued development and maintainence costs of this project as we continue to grow?_
 
 We quickly realize that we've been this way before and while we are now better equipped the terrain looks _pretty much_ the same. Sadness. ;( Another drink. :beer: Frustration. :angry: More drinks. :beers: Then...
 
@@ -72,9 +72,9 @@ Then _The Question_.
 
 > Why are we doing this?
 
-It's really amazing to me how easy it is to forget why you are doing something. How easy it is to be captured and held hostage by what other people think you should be doing. It's even more embarrassing when you get convinced that these are actually _your own_ ideas and you then _believe_ them _for years._
+It's really amazing to me how easy it is to forget why you are doing something. How easy it is to be captured and held hostage by what other people think you should be doing. It's even more embarrassing when you get convinced that these are actually _your own_ ideas that you then _believe for years._
 
-Maybe we couldn't find a business model because we _shouldn't_ have a business model.
+Maybe we couldn't find a business model because there _shouldn't_ be a business model.
 
 Why _are_ we doing this? To make money? Clearly not ;)
 
@@ -94,13 +94,40 @@ This isn't supposed to be a business! This is supposed to be a god damn fucking 
 
 ## The Lando Alliance
 
+_The Lando Alliance_ is a movement with a single purpose: to make developer's lives easier. Membership criteria is simple and straightforward.
+
+> If you give a shit about developers and want to make their lives easier by giving some of your time or money then you should join.
+
+_The Alliance_ encompasses **much more** than just Lando the local development tool, it is also...
+
+* A [tech blog](https://blog.lando.dev) by and for professional developers
+* A [Slack channel](https://launchpass.com/devwithlando) where developers can get help for _any_ of their dev problems
+* A group of evangelists committed to making dev easier through [presentations and trainings](https://events.lando.dev)
+* A place with helpful [guides](https://docs.lando.dev/guides/lando-info.html) and [video tutorials](https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg).
+* A place for developers to find new work opportunities
+* An advocacy group for developers.
+
+You can think of it as both a developer's [Q](https://en.wikipedia.org/wiki/Q_(James_Bond)), doling out best in breed tools (or in some cases only in breed) so you can accomplish your current mission and their [Oracle](https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)), advising and guiding them in their fight against The Matrix.
+
+Fundamentally, no business model and no funding means we answer to each other.
+
+### Giving time
+
+If you are intereseed
+Each one of the bullet points above, and working on Lando itself, are
+
+### Giving money
+
+
+
+Lando, the open source tool you know and love is only a _small_ part of this mission
+
+
+
 * lando is now mission critical for tons of people, what does that mean?
   * we need to be rolling out regular releaases because dev changes all the time, bugs, etc
   * we need to
   * return to the question: what is the business model?
-
-* there shouldnt be a buisness model, there should be a movement, because this has always been
-  * this isnt about making money, it never has been, its about developers helping other developers, and giving a shit.
 
 * annouce the alliance
   * this is our solution, a platform for developers to help one another, a positive feedback loop where conntributions can
