@@ -165,6 +165,6 @@ If the above reasons are not compelling enough we've also prepared a few article
 * [Why your agency or org should sponsor Lando](/2020/02/07/why-your-agency-should-sponsor-lando/)
 * [Why your PaaS or dev tool should sponsor Lando](/2020/02/06/why-your-pass-should-sponsor-lando/)
 
-### Joining our movement
+### What are you waiting for?
 
 [Join our movement](https://lando.dev/alliance/join/) to make developers lives easier!
