@@ -15,8 +15,7 @@
     </div>
 
     <p class="post-summary">
-      {{ post.frontmatter.summary || post.summary }}
-      <!-- <Content :page-key="post.key" slot-key="intro"/>-->
+      {{ post.frontmatter.description || post.description || post.frontmatter.summary || post.summary  }}
     </p>
 
     <p class="post-summary">
@@ -31,7 +30,6 @@ import PostHeader from '@theme/components/PostHeader.vue';
 
 export default {
   components: {PostHeader},
-
   props: {
     post: {
       type: Object,

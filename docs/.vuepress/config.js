@@ -68,13 +68,14 @@ module.exports = {
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
     lastUpdated: 'Last Updated',
     nav: [
-      // {text: 'Sponsor', link: 'https://lando.dev/sponsor'},
       {text: 'Getting Started', link: '/basics/'},
       {text: 'Config', link: '/config/lando.md'},
       {text: 'Guides', link: '/guides/lando-info/'},
       {text: 'Help and Support', link: '/help/logs/'},
       {text: 'Contributing', link: '/contrib/contributing/'},
       {text: 'API', link: '/api/app.md'},
+      {text: 'Blog', link: 'https://blog.lando.dev'},
+      {text: 'Events & Meetups', link: 'https://events.lando.dev'},
     ],
     sidebar: {
       '/basics/': [
@@ -292,13 +293,17 @@ module.exports = {
           collapsable: false,
           children: [
             'contrib-intro',
-            'structure',
-            'plugins',
-            'testing',
-            'building',
-            'shipping',
-            'docs',
-            'website',
+            'contrib-structure',
+            'contrib-plugins',
+            'contrib-testing',
+            'contrib-building',
+            'contrib-shipping',
+            'contrib-api',
+            'contrib-blog',
+            'contrib-docs',
+            'contrib-events',
+            'contrib-metrics',
+            'contrib-website',
           ],
         },
         {
@@ -306,7 +311,8 @@ module.exports = {
           collapsable: false,
           children: [
             'sponsor-intro',
-            'upseller-intro',
+            'sponsor-benefits',
+            'sponsor-faq',
           ],
         },
         {
@@ -321,6 +327,10 @@ module.exports = {
           collapsable: false,
           children: [
             'admin-intro',
+            'admin-onboarding',
+            'admin-sponsors',
+            'admin-alliance',
+            'admin-timeline',
           ],
         },
       ],

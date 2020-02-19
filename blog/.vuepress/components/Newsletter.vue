@@ -1,7 +1,7 @@
 <template>
   <div class="newsletter post-subscribe">
     <div class="newsletter__wrap">
-      <div class="newsletter__title">Join Us</div>
+      <div class="newsletter__title">Get notified of new content</div>
       <div class="newsletter__content">Stay up to date with new content and Lando updates!</div>
       <Subscribe
         successMessage="More awesome blog material will be heading your way!"

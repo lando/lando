@@ -11,17 +11,21 @@ Here is a general breakdown of where things live inside the Lando repo.
 |-- .circleci       CircleCi config to run our generated functional tests
 |-- .github         Helpful GitHub templates
 |-- .platform       Platform.sh config to run our docs site
+|-- api             Our express API
 |-- bin             CLI entrypoint script
-|-- docs            Source markdown files for the documentation you are reading
+|-- blog            Vuepress blog and its content
+|-- docs            Vuepress docs site and its content
+|-- events          Vuepress events listing and its content
 |-- examples        Examples user in this documentation and to generate func tests
 |-- installer       Installer pkgs and helpers
 |-- lib             Core libraries
+|-- metrics         Express metrics server
 |-- plugins         Core plugins
 |-- scripts         Scripts to help with build, test and deploy automation
 |-- test            Unit and functional tests
+|-- website         Vuepress marketing site and its content
+|-- .lando.yml      The Landofile for Lando
 |-- .travis.yml     Travis CI config for POSIX unit tests, build and deploy
-|-- appveyor.yml    Appveyor config for Windows unit tests, build and deploy
-|-- book.json       GitBook configuration
 |-- config.yml      Default Lando global config
 |-- package.json    Lando node dependencies
 ```

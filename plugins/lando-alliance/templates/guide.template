@@ -2,6 +2,7 @@
 title: <%= title %>
 metaTitle: <%= title %> | Lando
 description: <%= description %>
+summary: <%= description %>
 date: <%= date %>
 original: <%= original %>
 repo: <%= original %>

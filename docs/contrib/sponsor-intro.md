@@ -1,79 +1,57 @@
 ---
 description: Learn how (and why) to sponsor Lando.
+metaTitle: Learn how and why to sponsor Lando | Lando
+title: Getting Started
 ---
 
-# Sponsor Lando
+# Getting Started
 
-## Why Sponsor Lando
-
-Lando is free and open source, but freedom isn't free in the land of brave and home of the Lando. Thousands of man hours have gone into creating Lando, and hundreds more are spent each year.
-
-By sponsoring Lando with your hard earned American dollars, the Lando team can...
-
-- Fix bugs
-- Pay for hosting/bug monitoring
-- Develop new features
-- Create how-tos and Lando documentation
-- Allow @pirog to see the light of day
-
-Every sponsorship dollar helps Lando get better!
+Sponsorship is the easiest and often-most-helpful-to-us way to contribue; just register directly with one of the supported sponsorship platforms below or [join The Lando Alliance](https://lando.dev/alliance/join/) and start helping Lando!
 
 ## How to Sponsor
 
-Sponsorship is the easiest contribution method; just register on one of our sponsorship platform accounts and start helping Lando!
+While you can sponsor directly using any of the below platforms we recommend you [join The Lando Alliance](https://lando.dev/alliance/join/) and sponsor through the mechanisms presented there. This way we can better engage with you in the future.
 
-Github Sponsors, Patreon, and Open Collective: all three of these official Lando sponsorship methods are valid, but each comes with its own transaction fees and caveats. Broadly speaking, we've adjusted the sponsorship amount to account for transaction fees.
+GitHub Sponsors, Patreon, and Open Collective: all three of these official Lando sponsorship methods are valid, but each comes with its own transaction fees and caveats. Broadly speaking, we've adjusted the sponsorship amount to account for transaction fees.
 
-### [Github Sponsors](https://github.com/sponsors/lando) (**preferred**)
+### [With GitHub Sponsors](https://github.com/sponsors/lando) (**preferred**)
 
-[Github Sponsors](https://github.com/sponsors/lando) is the best way to sponsor Lando for the following reasons:
+[GitHub Sponsors](https://github.com/sponsors/lando) is the best way to sponsor Lando for the following reasons:
 
-**Lowest Sponsorship Amount**: Github Sponsors doesn't charge a transaction fee right now, so all your sponsorship $$$ helps Lando!
-**2X Matching**: Github Sponsors will match all sponsorship dollars up to $5,000 in the first year. Your cash goes further!
+**Lowest Sponsorship Amount**: GitHub Sponsors doesn't charge a transaction fee right now, so all your sponsorship $$$ helps Lando!
+**2X Matching**: GitHub Sponsors will match all sponsorship dollars up to $5,000 in the first year. Your cash goes further!
 
-[Sponsor With Github Here](https://github.com/sponsors/lando)
+[Sponsor With GitHub Here](https://github.com/sponsors/lando)
 
-### [Patreon](https://patreon.com/devwithlando)
+### [With Patreon](https://patreon.com/devwithlando)
 
-The gold standard of sponsoring creatives, [Patreon](https://patreon.com/devwithlando) does charge a transactional fee, hence why you'll see sponsorship rates are a little higher there. Rest assured that Lando gets the same amount, but all things being equal you might want to use Github Sponsors instead.
+The gold standard of sponsoring creatives, [Patreon](https://patreon.com/devwithlando) does charge a transactional fee, hence why you'll see sponsorship rates are a little higher there. Rest assured that Lando gets the same amount, but all things being equal you might want to use GitHub Sponsors instead.
 
 [Sponsor with Patreon Here](https://patreon.com/devwithlando)
 
-### [Open Collective](https://opencollective.com/devwithlando)
+### [With Open Collective](https://opencollective.com/devwithlando)
 
-[Open Collective](https://opencollective.com/devwithlando) has similar drawbacks to Patreon, _however_, it may allow us to redistribute funds to projects Lando relies upon and other contributors in the future. If you're a devotee to the Open Collective ethos, give her, otherwise, Github Sponsors!
+[Open Collective](https://opencollective.com/devwithlando) has similar drawbacks to Patreon, _however_, it may allow us to redistribute funds to projects Lando relies upon and other contributors in the future. If you're a devotee to the Open Collective ethos, give here, otherwise, GitHub Sponsors!
 
 [Sponsor with Open Collective Here](https://opencollective.com/devwithlando)
 
-## Sponsor Benefits
+## Why Sponsor Lando
 
-Within a few days of pledging your sponsorship on one of the above platforms you should receive an email with instructions on how to claim your sponsor benefits. If you don't get that email, let us know by emailing sponsorships@lando.dev.
+Lando is free and open source, but freedom isn't free in the land of brave and home of the Lando. Thousands of man hours have gone into creating Lando, and hundreds more are spent each year providing support and maintenance.
 
-Benefits start at the "Herald" level (currently the $9/month individual sponsor level) and include...
+By sponsoring Lando with your hard earned American dollars, the Lando team can...
 
-- Lando Alliance t-shirt (and future swag benefits)
-- "Thank you" mention on the Lando website and docs
-- Shout out on Twitter
+* Fix bugs
+* Pay for hosting/bug monitoring
+* Develop new features
+* Create guides, tutorial, video and improve Lando documentation
+* Answer developer questions on [Slack](https://launchpass.com/devwithlando)
+* Allow [@pirog](https://github.com/pirog) to see the light of day
 
-"Ally" team-level sponsors also get...
+If you'd like to read more about why you should sponsor Lando we encourage you to check out the following posts
 
-- Your team's logo featured as a sponsor
-- Participation in product roadmap survey
+* [Why you should sponsor Lando](https://blog.lando.dev/2020/02/08/why-you-should-sponsor-lando/)
+* [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-agency-should-sponsor-lando/)
+* [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/06/why-your-pass-should-sponsor-lando/)
 
-"Partner" and "Patriot" level sponsorships are intended for organizations with large teams or products that integrate with Lando. These sponsors receive access to the Lando team, support, and other benefits depending on commitment level. If you know an organization that needs a local development solution, let us know by becoming an [upseller](./upseller-intro.md).
-
-## Future Benefits
-
-Our sponsors make the Lando world go round. Some of the ideas we have for thanking you in the future include...
-
-- Access to exclusive videos and content
-- Invitation to special events
-- Voting on the Lando feature roadmap
-- Free and discounted services
-- ...as many things that can improve your life as a developer!
-
-## Managing Your Benefits
-
-If you have any questions regarding your benefits let us know at sponsorships@lando.dev.
-
-## Frequently Asked Questions
+If you are interested in sponsoring at one of our higher tiers then definitely [contact us](https://lando.dev/contact/) so we can figure out the terms of your sponsorship.

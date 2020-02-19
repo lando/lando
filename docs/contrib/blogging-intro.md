@@ -29,5 +29,3 @@ Here are some Lando and non-Lando ideas for content
 * An article about how QBASIC is the future of dev
 
 You can always check to see if there are any [GitHub issues](https://github.com/lando/lando/labels/guide) that have been tagged `blog post`.
-
-
