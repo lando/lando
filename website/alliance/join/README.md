@@ -44,6 +44,6 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
   <b><em>We're down to keep solving DevOps and with your help we can.</em></b>
 
-  If you're interested in reading more about <em>The Alliance</em>, what it is and how it works then check out our [announcement post](https://blog.lando.dev/2020/02/13/announcing-lando-alliance/).
+  If you're interested in reading more about <em>The Alliance</em>, what it is and how it works then check out our [announcement post](https://blog.lando.dev/2020/02/14/announcing-lando-alliance/).
   </p>
 </div>

@@ -13,7 +13,11 @@
         <a href="#" @click="previous">previous</a> |
         <a href="#" @click="newsletterToggle">get event updates</a>
       </div>
-      <div v-if="selector === 'events' && cards.length > 0" class="listing">
+      <div v-if="selector === 'loading'" class="listing-loading">
+        <div class="throb">
+        </div>
+      </div>
+      <div v-else-if="selector === 'events' && cards.length > 0" class="listing">
         <div v-for="event in cards" :key="event.id" class="listing-event">
           <EventCard
             v-on:update-marker="highlightEvent"
@@ -86,7 +90,7 @@ export default {
       cards: ['loading'],
       evangelists: [],
       events: [],
-      selector: 'events',
+      selector: 'loading',
     };
   },
   computed: {
@@ -220,6 +224,7 @@ export default {
   .listing,
   .no-events,
   .newsletter-wrapper,
+  .listing-loading,
   .listing-member
     position absolute
     right 1em
@@ -235,7 +240,9 @@ export default {
     .no-events-block
       padding 2em 4em
   .newsletter-wrapper
-    height: auto
+    height auto
+  .listing-loading
+    height 350px
   .footer
     position absolute
     bottom 0
@@ -257,6 +264,48 @@ export default {
     a.special-link
       color white
       font-weight 600
+
+@keyframes cycle-colors {
+  0% { border-color: $landoPink }
+  25% { border-color: $landoPink }
+  50% { border-color: $landoPink }
+  75% { border-color: $landoPink }
+  100% { border-color: $landoPink }
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0;
+    transform: scale(.1);
+  }
+}
+
+.throb::before,
+.throb::after
+  animation pulse 2s linear infinite
+  border #fff solid 8px
+  border-radius 9999px
+  box-sizing border-box
+  content ' '
+  height 140%
+  left -20%
+  opacity .6
+  position absolute
+  top -20%
+  transform scale(0.714)
+  width 140%
+  z-index 1
+
+.throb::after
+  animation-delay 1s
+
+.throb::before,
+.throb::after
+  animation pulse 2s linear infinite, cycle-colors 9s linear infinite
+
+.avatar::after
+  animation-delay .5s
+
 .home
   padding 0
   margin 0px auto
@@ -287,6 +336,7 @@ export default {
       h1
         font-size 3em
     .newsletter-wrapper,
+    .listing-loading,
     .listing-member
       display none
     .newsletter-wrapper-mobile,
