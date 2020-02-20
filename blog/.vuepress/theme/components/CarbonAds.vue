@@ -6,6 +6,11 @@ export default {
   mounted() {
     this.load();
   },
+  data() {
+    return {
+      isLoaded: false,
+    };
+  },
   watch: {
     '$route'(to, from) {
       if (
@@ -22,26 +27,32 @@ export default {
   },
   methods: {
     load() {
-      const s = document.createElement('script');
-      s.id = '_carbonads_js';
-      s.src = `//cdn.carbonads.com/carbon.js?serve=CE7DCKJU&placement=landodev`;
-      this.$el.appendChild(s);
+      if (!this.isLoaded) {
+        this.isLoaded = true;
+        const s = document.createElement('script');
+        s.id = '_carbonads_js';
+        s.src = `//cdn.carbonads.com/carbon.js?serve=CE7DCKJU&placement=landodev`;
+        this.$el.appendChild(s);
+      }
     },
   },
 };
 </script>
 
 <style lang="stylus">
+.sidebar
+  .carbon-ads
+    a
+      display: block
 .carbon-ads
   min-height 102px
   padding 1.5rem 1.5rem 0
   margin-bottom -0.5rem
-  font-size 0.75rem
+  font-size .75rem
   a
     color #444
     font-weight normal
     display inline
-    text-decoration: none
   .carbon-img
     float left
     margin-right 1rem

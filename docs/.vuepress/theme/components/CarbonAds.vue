@@ -6,6 +6,11 @@ export default {
   mounted() {
     this.load();
   },
+  data() {
+    return {
+      isLoaded: false,
+    };
+  },
   watch: {
     '$route'(to, from) {
       if (
@@ -22,10 +27,13 @@ export default {
   },
   methods: {
     load() {
-      const s = document.createElement('script');
-      s.id = '_carbonads_js';
-      s.src = `//cdn.carbonads.com/carbon.js?serve=CE7DCKJU&placement=landodev`;
-      this.$el.appendChild(s);
+      if (!this.isLoaded) {
+        this.isLoaded = true;
+        const s = document.createElement('script');
+        s.id = '_carbonads_js';
+        s.src = `//cdn.carbonads.com/carbon.js?serve=CE7DCKJU&placement=landodev`;
+        this.$el.appendChild(s);
+      }
     },
   },
 };
