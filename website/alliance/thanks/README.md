@@ -17,9 +17,9 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
   If that's not reason enough we recommend you check out the following:
 
-  * #### [Why you should sponsor Lando](https://blog.lando.dev/2020/02/08/why-you-should-sponsor-lando/)
-  * #### [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-agency-should-sponsor-lando/)
-  * #### [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/06/why-your-pass-should-sponsor-lando/)
+  * #### [Why you should sponsor Lando](https://blog.lando.dev/2020/02/09/why-you-should-sponsor-lando/)
+  * #### [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/08/why-your-agency-should-sponsor-lando/)
+  * #### [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-pass-should-sponsor-lando/)
 
   *__We're down to keep solving DevOps and with your help we can.__*
 

@@ -25,6 +25,6 @@ If you and your team are saving development time using Lando, your organization 
 
 Asking your boss to sponsor Lando might seem tough. Why should they pay for something they're already getting for free? There are _many_ reasons and we've prepared them all in the easily distributable blog content below
 
-* [Why you should sponsor Lando](https://blog.lando.dev/2020/02/08/why-you-should-sponsor-lando/)
-* [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-agency-should-sponsor-lando/)
-* [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/06/why-your-pass-should-sponsor-lando/)
+* [Why you should sponsor Lando](https://blog.lando.dev/2020/02/09/why-you-should-sponsor-lando/)
+* [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/08/why-your-agency-should-sponsor-lando/)
+* [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-pass-should-sponsor-lando/)

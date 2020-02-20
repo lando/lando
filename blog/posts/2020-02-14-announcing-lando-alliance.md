@@ -161,9 +161,9 @@ If we are able to grow this movement beyond the above we would love to...
 
 If the above reasons are not compelling enough we've also prepared a few articles that highlight some of the business reasons why you might want to sponsor.
 
-* [Why you should sponsor Lando](/2020/02/08/why-you-should-sponsor-lando/)
-* [Why your agency or org should sponsor Lando](/2020/02/07/why-your-agency-should-sponsor-lando/)
-* [Why your PaaS or dev tool should sponsor Lando](/2020/02/06/why-your-pass-should-sponsor-lando/)
+* [Why you should sponsor Lando](/2020/02/09/why-you-should-sponsor-lando/)
+* [Why your agency or org should sponsor Lando](/2020/02/08/why-your-agency-should-sponsor-lando/)
+* [Why your PaaS or dev tool should sponsor Lando](/2020/02/07/why-your-pass-should-sponsor-lando/)
 
 ### What are you waiting for?
 

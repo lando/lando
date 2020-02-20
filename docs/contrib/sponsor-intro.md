@@ -50,8 +50,8 @@ By sponsoring Lando with your hard earned American dollars, the Lando team can..
 
 If you'd like to read more about why you should sponsor Lando we encourage you to check out the following posts
 
-* [Why you should sponsor Lando](https://blog.lando.dev/2020/02/08/why-you-should-sponsor-lando/)
-* [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-agency-should-sponsor-lando/)
-* [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/06/why-your-pass-should-sponsor-lando/)
+* [Why you should sponsor Lando](https://blog.lando.dev/2020/02/09/why-you-should-sponsor-lando/)
+* [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/08/why-your-agency-should-sponsor-lando/)
+* [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-pass-should-sponsor-lando/)
 
 If you are interested in sponsoring at one of our higher tiers then definitely [contact us](https://lando.dev/contact/) so we can figure out the terms of your sponsorship.
