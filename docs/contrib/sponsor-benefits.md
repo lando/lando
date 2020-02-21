@@ -22,7 +22,7 @@ Benefits start at the "Herald" level (currently the $9/month individual sponsor 
 
 If you know an organization that needs a local development solution, let us know by becoming an [upseller](./upseller-intro.md).
 
-For the official list of benefits check out our [GitHub Sponsors](https://github.com/sponsors/lando?preview=true) page.
+For the official list of benefits check out our [GitHub Sponsors](https://github.com/sponsors/lando) page.
 
 ## Future Benefits
 

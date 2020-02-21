@@ -54,7 +54,7 @@ export default {
     },
     link: {
       type: String,
-      default: 'https://github.com/sponsors/lando?preview=true',
+      default: 'https://github.com/sponsors/lando',
     },
     linkText: {
       type: String,
