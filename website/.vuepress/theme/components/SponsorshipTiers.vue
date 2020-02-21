@@ -34,7 +34,7 @@ export default {
           ],
           color: 'blue',
           level: 'developer',
-          link: 'https://github.com/sponsors/lando?preview=true',
+          link: 'https://github.com/sponsors/lando',
           price: '4',
         },
         {
@@ -48,7 +48,7 @@ export default {
           ],
           color: 'green',
           level: 'team',
-          link: 'https://github.com/sponsors/lando?preview=true',
+          link: 'https://github.com/sponsors/lando',
           price: '99',
         },
         {
@@ -62,7 +62,7 @@ export default {
           link: 'https://lando.dev/contact/',
           linkText: 'Contact Us',
           otherLinks: [
-            {name: 'Plan Details', url: 'https://github.com/sponsors/lando?preview=true'},
+            {name: 'Plan Details', url: 'https://github.com/sponsors/lando'},
             {name: 'Read More', url: 'https://blog.lando.dev/2020/02/06/why-your-pass-should-sponsor-lando/'},
           ],
           price: '999',
