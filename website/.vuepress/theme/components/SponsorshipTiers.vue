@@ -34,7 +34,7 @@ export default {
           ],
           color: 'blue',
           level: 'developer',
-          link: 'https://github.com/sponsors/lando?preview=true',
+          link: 'https://github.com/sponsors/lando',
           price: '4',
         },
         {
@@ -48,7 +48,7 @@ export default {
           ],
           color: 'green',
           level: 'team',
-          link: 'https://github.com/sponsors/lando?preview=true',
+          link: 'https://github.com/sponsors/lando',
           price: '99',
         },
         {
