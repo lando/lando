@@ -76,6 +76,20 @@
   location: 'Bethesda, MD'
   url: >-
     https://drupal.tv/external-video/2018-08-23/horizontal-devops-scale-your-team-and-tools-across-projects
+- id: d249a527cd49d3441d35c55add89a43da0efde6d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'DrupalCon Nashville 2018: Horizontal DevOps'
+  date: '2018-04-11'
+  summary: >-
+    We often think of DevOps in a super siloed context (eg one project at a
+    time), but having an organizational DevOps plan/strategy and some cross
+    project standardization is really how you benefit.
+  type: conference
+  location: 'Nashville, TN'
+  url: >-
+    https://drupal.tv/external-video/2018-04-11/drupalcon-nashville-2018-horizontal-devops-scale-your-team-and-tools
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
