@@ -16,5 +16,5 @@ subscribe:
   buttonLabel: Add Sponsor
   showSponsors: true
   successMessage: Congrats! New sponsor added!
-  passcode: 87f5345008cbf9f4835d9985f07c78cd53c6816375eb942b54263d5fa2aaadc8
+  passcode: 1f23a5a6b58e5a44aff4ada0fa128b115fe88956666c9c6b54d8333db9ab13f4
 ---

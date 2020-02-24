@@ -313,3 +313,5 @@ services:
 ```
 
 Note the usage of `docker-php-ext-enable`. Our images extend the [official Docker php images](https://hub.docker.com/r/library/php) which ship with a bunch of [helpful utility scripts](https://github.com/docker-library/php) to manage php extensions.
+
+<RelatedGuides tag="PHP"/>

@@ -507,3 +507,5 @@ lando drush dl webform
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands.
+
+<RelatedGuides tag="Pantheon"/>

@@ -302,3 +302,5 @@ exit
 
 # Add grunt to the tooling in your .lando.yml
 ```
+
+<RelatedGuides tag="Tooling"/>

@@ -26,7 +26,7 @@
         </ul>
       </div>
       <div :class="priceButtonColor">
-        <a :href="link" target="_blank"><i class="devicon-github-plain"></i>Sponsor</a>
+        <a :href="link" target="_blank"><i class="devicon-github-plain"></i>{{ linkText }}</a>
       </div>
       <div class="other-links">
         <span class="other-link" v-for="other in otherLinks" :key="other.name">
@@ -54,7 +54,11 @@ export default {
     },
     link: {
       type: String,
-      default: 'https://github.com/sponsors/lando?preview=true',
+      default: 'https://github.com/sponsors/lando',
+    },
+    linkText: {
+      type: String,
+      default: 'Sponsor',
     },
     otherLinks: {
       type: Array,

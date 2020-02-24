@@ -41,3 +41,5 @@ lando ssh -s appserver -c "curl https://appserver.lamp1.internal"
 cd /path/to/lamp2
 lando ssh -s database -c "mysql -uroot -h database.lamp1.internal"
 ```
+
+<RelatedGuides tag="Networking"/>

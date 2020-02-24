@@ -13,6 +13,18 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
 <div class="liberation-manifesto">
   <p>
-  With your help we can cover infrastructure costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.
+  With your direct contribution we can cover infrastructure costs, compensate our team of developers, fix bugs, sponsor evangelists, provide community support, build new features and most importantly continue to spread our message of freedom, justice, beauty and truth to the far reaches of the internet.
+
+  If that's not reason enough we recommend you check out the following:
+
+  * #### [Why you should sponsor Lando](https://blog.lando.dev/2020/02/09/why-you-should-sponsor-lando/)
+  * #### [Why your agency or org should sponsor Lando](https://blog.lando.dev/2020/02/08/why-your-agency-should-sponsor-lando/)
+  * #### [Why your PaaS or dev tool should sponsor Lando](https://blog.lando.dev/2020/02/07/why-your-pass-should-sponsor-lando/)
+
+  *__We're down to keep solving DevOps and with your help we can.__*
+
+  We prefer you sponsor through [GitHub Sponsors](https://github.com/sponsors/lando) due to their lack of fees and current offer to match sponsorships __up to $5,000__. This ensures that your sponsorship dollars have *__maximum impact__*. However, if you prefer alternate sponsorship routes we also have pages on [Patreon](https://www.patreon.com/devwithlando) and [OpenCollective](https://opencollective.com/devwithlando).
+
+  We also highly recommend you join *[The Lando Alliance](/alliance/join)* if you haven't already. If you decide to do that first you will have an opportunity to sponsor after you sign up. If you don't then choose a plan below!
   </p>
 </div>
