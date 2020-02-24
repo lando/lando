@@ -90,6 +90,16 @@
   location: 'Nashville, TN'
   url: >-
     https://drupal.tv/external-video/2018-04-11/drupalcon-nashville-2018-horizontal-devops-scale-your-team-and-tools
+- id: 7086f079a387de70ce2ff3b5e5730c23fda9c7cd
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: NERD Summit 2018
+  date: '2018-03-17'
+  summary: Horizontal DevOps with lando.
+  type: camp
+  location: 'Amherst, MA'
+  url: 'https://www.youtube.com/watch?v=PYZccRva7Co'
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
