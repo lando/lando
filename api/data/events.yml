@@ -104,3 +104,16 @@
     Come see (and then use!) the future of local development tools: Lando, a
     free, open source and cross platform devops tool that is also the most
     advanced, powerful and easy local development environment in the galaxy.
+- id: bcfb4c83e71e860ab3cfa3abc7c90696cf2ef9a9
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'NERD Summit 2017: Introduction to Kalabox, CI, CD'
+  date: '2017-03-19'
+  summary: >-
+    With Kalabox, GitFlow, Continuous Integration (CI), and Continuous
+    Deployment (CD) you can make small(ish) changes, run automated tests, human
+    test (QA), and always be ready to deploy with these sane dev workflows.
+  type: camp
+  location: 'Amherst, MA'
+  url: 'https://www.youtube.com/watch?v=HqHC5XWktME&feature=emb_title'
