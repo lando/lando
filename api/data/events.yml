@@ -61,6 +61,21 @@
   type: camp
   location: 'Amherst, MA'
   url: 'https://drupal.tv/external-video/2019-03-11/contenta-cms-drupal-api-nuxtjs'
+- id: 2346f1c67eea089f9e520647fea4fa071b36813f
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: Drupal GovCon
+  date: '2018-08-23'
+  summary: >-
+    We often think of DevOps in a siloed context (eg one project at a time), but
+    having an organizational DevOps plan/strategy and some cross project
+    standardization is really how you benefit. This talk is about the business
+    value of horizontal DevOps across people and projects.
+  type: camp
+  location: 'Bethesda, MD'
+  url: >-
+    https://drupal.tv/external-video/2018-08-23/horizontal-devops-scale-your-team-and-tools-across-projects
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
