@@ -51,6 +51,16 @@
   location: 'Ithaca, NY'
   url: >-
     https://camp.drupal.cornell.edu/sessions/advanced-local-development-workflows-lando
+- id: cc41ea67c39f3e3c0172c02429bf8fe37bf3bac9
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: NERD Summit 2019 Contenta CMS (Drupal API) + Nuxt.js
+  date: '2019-03-11'
+  summary: Get started with Headless/API first Drupal + Nuxt.js
+  type: camp
+  location: 'Amherst, MA'
+  url: 'https://drupal.tv/external-video/2019-03-11/contenta-cms-drupal-api-nuxtjs'
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
