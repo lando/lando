@@ -37,6 +37,20 @@
   location: 'Ithaca, NY'
   url: >-
     https://camp.drupal.cornell.edu/sessions/localdev-lando-and-local-development-landscape-safari
+- id: 4167c5f9560f9e7891224679973c9b3f4e99e00e
+  presenter: Dustin LeBlanc
+  presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
+  presenterLink: 'https://twitter.com/DustinLeblanc'
+  name: 'Cornell DrupalCamp: Advanced Local Development Workflows with Lando'
+  date: '2019-09-27'
+  summary: >-
+    While Lando is a pretty great tool to get you up and running with Drupal and
+    a wide variety of other tech stacks quickly, the real power lies in Lando's
+    extensibility.
+  type: camp
+  location: 'Ithaca, NY'
+  url: >-
+    https://camp.drupal.cornell.edu/sessions/advanced-local-development-workflows-lando
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
