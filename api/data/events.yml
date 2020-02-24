@@ -24,6 +24,19 @@
   location: 'Berkeley, CA'
   url: >-
     https://2019.badcamp.org/training/become-developer-experience-superhero-building-processes-unlock-your-teams-potential
+- id: 3dc218b80c79d951000acc5dca0a9e07a11350cc
+  presenter: Dustin LeBlanc
+  presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
+  presenterLink: 'https://twitter.com/DustinLeblanc'
+  name: Cornell DrupalCamp
+  date: '2019-09-27'
+  summary: >-
+    In this talk, we'll take a look at a few options for local development
+    environments from Pantheon's new LocalDev, to Lando, and even Laravel Valet.
+  type: camp
+  location: 'Ithaca, NY'
+  url: >-
+    https://camp.drupal.cornell.edu/sessions/localdev-lando-and-local-development-landscape-safari
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
