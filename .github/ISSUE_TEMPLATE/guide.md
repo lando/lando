@@ -1,5 +1,5 @@
 ---
-name: Question
+name: Ask a question
 about: Ask a question about how to do a very specific thing in Lando
 labels: guide
 ---

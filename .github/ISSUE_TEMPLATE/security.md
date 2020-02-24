@@ -1,5 +1,5 @@
 ---
-name: Security
+name: Flag a security issue
 about: Create a security issue
 labels: documentation
 ---
