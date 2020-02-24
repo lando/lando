@@ -10,6 +10,20 @@
   summary: >-
     Come hang out with Lando project lead Mike Pirog and hear what we've got in
     store for you in 2020! There isn't a session but we will buy you a beer!
+- id: f29513bc14a05f97b3f7910c975c24a6b8e0f324
+  presenter: Dustin LeBlanc
+  presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
+  presenterLink: 'https://twitter.com/DustinLeblanc'
+  name: BadCamp 2019
+  date: '2019-10-02'
+  summary: >-
+    Time is wasted and quality suffers when there is no agreed-upon process for
+    onboarding new developers into a project, running project tests (you wrote
+    tests right?), and deploying the project to your staging infrastructure.
+  type: camp
+  location: 'Berkeley, CA'
+  url: >-
+    https://2019.badcamp.org/training/become-developer-experience-superhero-building-processes-unlock-your-teams-potential
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
