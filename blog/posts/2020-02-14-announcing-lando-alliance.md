@@ -145,7 +145,7 @@ We, as Tandem, are more than happy to continue sponsoring the movement ourselves
 
 Sponsoring includes many [additional benefits](https://lando.dev/sponsor/) depending on the tier you choose but our immediate goals are to fund...
 
-* [A stable Lando 3.0.0 release](2020/02/10/q1-2020-update/#lando-3-0-0) on May 4, 2020
+* [A stable Lando 3.0.0 release](/2020/02/10/q1-2020-update#lando-3-0-0) on May 4, 2020
 * A dedicated full time developer to work on Lando so there is a consistent release cycle with new features and bug requests. The way we develop is always changing and this means that Lando itself will never "be done" and needs to be updated frequently.
 * Another dedicated full time developer devoted to helping people with their #devproblems on Slack, regardless of whether they are Lando related or not.
 
