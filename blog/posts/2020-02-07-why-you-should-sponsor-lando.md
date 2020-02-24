@@ -31,7 +31,7 @@ However, if that is not reason enough... here are five more ;)
 
 ## 1. It saves you time and money
 
-Solving local dev [is hard](/2017/10/23/journey-lando/), _very hard_, so chances are Lando has saved you considerable time and money when compared to its competitors or DIY options.
+Solving local dev [is hard](/2017/10/24/journey-lando/), _very hard_, so chances are Lando has saved you considerable time and money when compared to its competitors or DIY options.
 
 The more resources we have the more we can make sure Lando, its documentation, guides, tutorials and video trainings are up to date. After all, development, workflows and tools are _always_ changing. The more Lando keeps pace the more time and money we can save you.
 

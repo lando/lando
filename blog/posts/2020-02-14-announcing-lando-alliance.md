@@ -17,7 +17,7 @@ feed:
   enable: true
   author:
     - name: Mike Pirog
-      email: mike@lando.dev
+      email: mike@lando.devf
       link: https://twitter.com/pirogcommamike
   contributor:
     - name: Mike Pirog
@@ -86,7 +86,7 @@ Along the way, however, we lost sight of that deeper truth; caught up in the shi
 
 1. If we give a shit about making developers lives easier then we need to be accountable to developers
 2. If we need a business model then we are at worst accountable to shareholders and at best distracted from our primary mission in pursuit of dat cash
-3. If we are willing to spend our own time and money making developers lives easier, then _there must be others_.
+3. If we are willing to spend our own time and money making developers lives easier, then _there must be others_
 
 And that was it.
 
@@ -145,8 +145,8 @@ We, as Tandem, are more than happy to continue sponsoring the movement ourselves
 
 Sponsoring includes many [additional benefits](https://lando.dev/sponsor/) depending on the tier you choose but our immediate goals are to fund...
 
-* [A stable Lando 3.0.0 release](2020/02/09/q1-2020-update/#lando-3-0-0) on May 4, 2020
-* A dedicated full time developer to work on Lando so there is a consistent release cycle with new features and bug requests. The way we develop is always changing and this means that Lando itself will never "be done" and needs to be updated frequetly.
+* [A stable Lando 3.0.0 release](2020/02/10/q1-2020-update/#lando-3-0-0) on May 4, 2020
+* A dedicated full time developer to work on Lando so there is a consistent release cycle with new features and bug requests. The way we develop is always changing and this means that Lando itself will never "be done" and needs to be updated frequently.
 * Another dedicated full time developer devoted to helping people with their #devproblems on Slack, regardless of whether they are Lando related or not.
 
 If every Lando user sponsored at the $4/month level we would be able to do all of the above and much, much more. This leads me to our longer term plans.
