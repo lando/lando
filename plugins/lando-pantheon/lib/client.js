@@ -92,7 +92,8 @@ module.exports = class PantheonApiClient {
       return pantheonRequest(this.request, this.log, 'get', getOrgs)
       .map(org => {
         if (org.role !== 'unprivileged') {
-          return pantheonRequest(this.request, this.log, 'get', ['organizations', org.id, 'memberships', 'sites?limit=5000'])
+          return pantheonRequest(this.request, this.log, 'get',
+          ['organizations', org.id, 'memberships', 'sites?limit=5000'])
           .map(site => _.merge(site, site.site));
         }
       })
