@@ -28,3 +28,15 @@
   title: Maintainer
   pic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
   id: 433bd1bd859bb7eb64c7be9f0acd798692d49b62
+- name: Amy Helfman
+  role:
+    - Content
+    - Documentation
+    - Evangelism
+    - Guides and Tutorials
+  location: 'Cambridge, MA'
+  github: amyh
+  twitter: webczarina
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/2c6cdc36a10d55f3028f30625f16fb1d'
+  id: 76867213a544e4ee9b93caeb2857fccdc0c5efbf
