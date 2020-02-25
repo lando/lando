@@ -1,8 +1,11 @@
 ---
 description: Learn how to add node services to your Lando app so you can use yarn, npm, grunt, gulp, webpack, etc for all the frontend magic.
+date: 2019-11-05
 ---
 
 # Frontend Tooling
+
+<GuideHeader />
 
 Most modern frontend tooling relies upon the NPM package manager. In this tutorial we'll show you how to add Node to your app, download tools like Gulp/Grunt/Webpack, and run them in your Lando app.
 
@@ -48,7 +51,7 @@ You can do the same thing for any NPM project; for example Grunt would be `grunt
 Note we've now added a further bash command to `build` to automatically run gulp every time we start the app.
 
 :: tip Package Versions Are Fully Armed and Customizable
-You can lock your app tooling to whatever package version you like. Don't use node:6.10? Change to one of the other available versions in the [service documentation](services/node.md). And you're free to download whatever version of a global service your heart desires. For example, if you want to lock your team to something more stable than the latest gulp-cli, change that entry in `globals` to `gulp-cli:1.3.0`.
+You can lock your app tooling to whatever package version you like. Don't use node:6.10? Change to one of the other available versions in the [service documentation](./../config/node.md). And you're free to download whatever version of a global service your heart desires. For example, if you want to lock your team to something more stable than the latest gulp-cli, change that entry in `globals` to `gulp-cli:1.3.0`.
 :::
 
 ## Making Tooling Available on the CLI
@@ -69,3 +72,5 @@ tooling:
 
 After restarting your app, you should be able to run `lando node`, `lando gulp` or `lando npm` and have the corresponding commands run. This is particularly useful if you want to kickoff a watch task you might have configured, say `lando gulp watch`.
 
+<GuideFooter />
+<Newsletter />

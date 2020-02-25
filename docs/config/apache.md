@@ -81,3 +81,5 @@ services:
 ### Custom .htaccess-Lando
 
 In some cases, you may want Apache to behave differently when running in Lando than in other environments. If you are using the default httpd.conf shipped with Lando, you can include a `.htaccess-lando` next to your normal `.htaccess` file. **Note**: If you include this file, the default `.htaccess` won't be loaded in Lando, so be sure to copy over the relevant rules to your `.htaccess-lando` file.
+
+<RelatedGuides tag="Apache"/>

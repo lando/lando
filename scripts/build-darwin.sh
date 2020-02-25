@@ -2,11 +2,27 @@
 
 # Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="2.1.0.3"
-DOCKER_DOWNLOAD="38240"
+DOCKER_VERSION="2.1.0.5"
+DOCKER_DOWNLOAD="40693"
 TEAM_ID="FY8GAUX282"
 PKG_SIGN=false
 DMG_SIGN=false
+
+if [ ! -z "$APPLE_CERTS_DATA" ] && [ ! -z "$APPLE_CERTS_PASSWORD" ]; then
+  # Export
+  echo $APPLE_CERTS_DATA | base64 --decode > /tmp/certs.p12
+  # Create keychain and import things
+  security create-keychain -p travis macos-build.keychain
+  security default-keychain -s macos-build.keychain
+  security unlock-keychain -p travis macos-build.keychain
+  security set-keychain-settings -t 3600 -u macos-build.keychain
+  security import /tmp/certs.p12 -k ~/Library/Keychains/macos-build.keychain -P "$APPLE_CERTS_PASSWORD" -T /usr/bin/codesign -T /usr/bin/productsign
+  # Key signing
+  security set-key-partition-list -S apple-tool:,apple: -s -k travis macos-build.keychain
+  # Verify the things
+  security find-identity -v macos-build.keychain | grep FY8GAUX282 | grep "Developer ID Installer"
+  security find-identity -v macos-build.keychain | grep FY8GAUX282 | grep "Developer ID Application"
+fi
 
 # Check our certificates situation
 if security find-identity -v | grep "$TEAM_ID" | grep "Developer ID Application"; then
@@ -102,6 +118,47 @@ if [ "$PKG_SIGN" == "true" ]; then
   pkgutil --check-signature ../dmg/LandoInstaller.pkg
   # Remove unsigned
   rm -f ../dmg/UnsignedLandoInstaller.pkg
+
+  # Notarize if possible
+  if [ ! -z "$APPLE_NOTARY_USER" ] && [ ! -z "$APPLE_NOTARY_PASSWORD" ] && [ -z "$APPLE_NO_NOTARIZE" ]; then
+    # Start the notarization process
+    echo "Uploading Lando for notarization..."
+    RID=$(xcrun altool \
+      --notarize-app \
+      --primary-bundle-id "io.lando.mpkg.lando" \
+      --username "$APPLE_NOTARY_USER" \
+      --password "$APPLE_NOTARY_PASSWORD" \
+      --file "../dmg/LandoInstaller.pkg" 2>&1 | awk '/RequestUUID/ { print $NF; }')
+
+    # Handle success or fail of upload
+    echo "Notarization RequestUUID: $RID"
+    if [[ $RID == "" ]]; then
+      echo "Problem uploading!"
+      exit 1
+    fi
+
+    # Wait until we good
+    NOTARY_STATUS="in progress"
+    while [[ "$NOTARY_STATUS" == "in progress" ]]; do
+      echo -n "waiting... "
+      sleep 10
+      NOTARY_STATUS=$(xcrun altool \
+        --notarization-info "$RID" \
+        --username "$APPLE_NOTARY_USER" \
+        --password "$APPLE_NOTARY_PASSWORD" 2>&1 | awk -F ': ' '/Status:/ { print $2; }' )
+      echo "We are currently waiting with status of $NOTARY_STATUS"
+    done
+
+    # Exit if there is an issue
+    if [[ $NOTARY_STATUS != "success" ]]; then
+      echo "Could not notarize Lando! Status: $NOTARY_STATUS"
+      exit 1
+    fi
+
+    # Do a final stapling
+    echo "Stapling Lando..."
+    xcrun stapler staple "../dmg/LandoInstaller.pkg"
+  fi
 fi
 
 # Copy in other DMG  asssets
@@ -109,7 +166,8 @@ cd .. && \
 chmod +x uninstall.sh && \
 mv -f uninstall.sh dmg/uninstall.command && \
 mv -f lando.icns dmg/.VolumeIcon.icns && \
-cp -rf ../../docs/README.md dmg/README.md && \
+cp -rf ../../README.md dmg/README.md && \
+cp -rf ../../PRIVACY.md dmg/PRIVACY.md && \
 cp -rf ../../TERMS.md dmg/TERMS.md && \
 cp -rf ../../LICENSE.md dmg/LICENSE.md
 

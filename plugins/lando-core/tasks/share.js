@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const chalk = require('chalk');
 const localtunnel = require('localtunnel');
 const u = require('url');
 
@@ -32,13 +31,10 @@ const parseConfig = (port = '80', host = 'localhost') => {
 /*
  * Helper to manage the tunnel
  */
-const tunnelHandler = (tunnel, header = '') => {
-  // Header it
-  console.log(header);
+const tunnelHandler = (tunnel, lando) => {
   // the assigned public url for your tunnel
   // i.e. https://abcdefgjhij.localtunnel.me
-  console.log(chalk.blue(tunnel.url), '\n');
-  console.log(chalk.yellow('Press any key to close the tunnel.'));
+  console.log(lando.cli.makeArt('tunnel', {url: tunnel.url, phase: 'post'}));
   // Set stdin to the correct mode
   // @todo: We will need to change this for better localdev gui usage
   process.stdin.resume();
@@ -51,7 +47,7 @@ const tunnelHandler = (tunnel, header = '') => {
 
   // Close the process
   tunnel.on('close', () => {
-    console.log(chalk.green('Tunnel closed!'));
+    console.log(lando.cli.makeArt('tunnel', {phase: 'closed'}));
     process.stdin.pause();
   });
 };
@@ -69,7 +65,7 @@ module.exports = lando => {
       const app = lando.getApp(options._app.root);
       // Get the sharing url
       if (app) {
-        console.log(chalk.green('About to share your app to a whole new world!'));
+        console.log(lando.cli.makeArt('tunnel', {phase: 'pre'}));
         // Ensure the app is up and lets share
         return app.init().then(app => lando.metrics.report('share', {}))
         // Get the URLS
@@ -80,7 +76,7 @@ module.exports = lando => {
             // Error if needed
             if (err) lando.log.error(err);
             // Handler
-            tunnelHandler(tunnel, lando.cli.makeArt('tunnel'));
+            tunnelHandler(tunnel, lando);
           });
         });
       }

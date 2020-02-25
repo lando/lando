@@ -1,13 +1,24 @@
+const fs = require('fs');
+const webpack = require('webpack');
+
 module.exports = {
   title: 'Lando',
   description: 'The liberating local development tool for all your projects.',
+  configureWebpack: config => {
+    return {plugins: [
+      new webpack.EnvironmentPlugin({
+        LANDO_API: process.env.LANDO_API || 'https://api.lando.dev',
+      }),
+    ]};
+  },
+  extraWatchFiles: [
+    '.vuepress/guides.json',
+  ],
   head: [
     ['link', {rel: 'icon', href: '/favicon.ico'}],
     ['link', {rel: 'stylesheet', href: '/styles/overrides.css'}],
-    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Dosis&display=swap'}],
-    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap'}],
+    ['link', {rel: 'stylesheet', href: '//fonts.googleapis.com/css?family=Poppins:700|Source+Sans+Pro&display=swap'}],
     ['script', {src: '//js.hs-scripts.com/6478338.js'}],
-    ['script', {src: '//js.hsforms.net/forms/shell.js'}],
   ],
   plugins: {
     '@vuepress/google-analytics': {
@@ -23,8 +34,20 @@ module.exports = {
     'canonical': {
       baseURL: 'https://docs.lando.dev',
     },
+    'feed': {
+      canonical_base: 'https://docs.lando.dev',
+      feed_options: {
+        favicon: 'https://lando.dev/favicon.ico',
+        image: 'https://lando.dev/images/logo-pink-small.png',
+      },
+      posts_directories: [
+        '/guides/',
+      ],
+      count: 100,
+    },
     'robots': {
       host: 'https://docs.lando.dev',
+      sitemap: '/sitemap.xml',
     },
     'sitemap': {
       hostname: 'https://docs.lando.dev',
@@ -40,9 +63,10 @@ module.exports = {
     },
     docsDir: 'docs',
     docsBranch: 'master',
-    logo: '/images/logo-small.png',
+    logo: '/images/logo-pink-small.png',
     editLinks: true,
     editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
+    lastUpdated: 'Last Updated',
     nav: [
       {text: 'Getting Started', link: '/basics/'},
       {text: 'Config', link: '/config/lando.md'},
@@ -50,6 +74,8 @@ module.exports = {
       {text: 'Help and Support', link: '/help/logs/'},
       {text: 'Contributing', link: '/contrib/contributing/'},
       {text: 'API', link: '/api/app.md'},
+      {text: 'Blog', link: 'https://blog.lando.dev'},
+      {text: 'Events & Meetups', link: 'https://events.lando.dev'},
     ],
     sidebar: {
       '/basics/': [
@@ -151,61 +177,7 @@ module.exports = {
           ],
         },
       ],
-      '/guides/': [
-        {
-          title: 'General',
-          collapsable: false,
-          children: [
-            'lando-info',
-          ],
-        },
-        {
-          title: 'Databases',
-          collapsable: false,
-          children: [
-            'db-import',
-            'db-export',
-          ],
-        },
-        {
-          title: 'Frontend',
-          collapsable: false,
-          children: [
-            'frontend',
-          ],
-        },
-        {
-          title: 'IDEs',
-          collapsable: false,
-          children: [
-            'lando-phpstorm',
-            'lando-with-vscode',
-          ],
-        },
-        {
-          title: 'Networking',
-          collapsable: false,
-          children: [
-            'external-access.md',
-            'access-by-other-devices',
-            'offline-dev',
-          ],
-        },
-        {
-          title: 'Updating',
-          collapsable: false,
-          children: [
-            'updating-to-rc2',
-          ],
-        },
-        {
-          title: 'Recreation',
-          collapsable: false,
-          children: [
-            ['https://www.youtube.com/watch?v=tkBVDh7my9Q', 'Mountain climbing'],
-          ],
-        },
-      ],
+      '/guides/': JSON.parse(fs.readFileSync(require.resolve('./guides.json'))),
       '/help/': [
         {
           title: 'Troubleshooting',
@@ -231,24 +203,27 @@ module.exports = {
           title: 'Support',
           collapsable: false,
           children: [
+            ['https://lando.dev/contact', 'Dedicated Support'],
             ['https://github.com/lando/lando/issues', 'GitHub issue queue'],
             ['https://launchpass.com/devwithlando', 'Slack - Official Lando'],
             ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
             ['https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg', 'YouTube Tutorials'],
             ['https://github.com/lando/lando/tree/master/examples', 'Code examples'],
+            ['security', 'Security Issues'],
           ],
         },
         {
-          title: 'Project Updates',
+          title: 'Data',
           collapsable: false,
           children: [
-            ['q3-2019', 'Q3 2019'],
+            ['data', 'Privacy Policy for Humans'],
           ],
         },
         {
           title: 'Changelog',
           collapsable: false,
           children: [
+            '2020-changelog',
             '2019-changelog',
             '2018-changelog',
             '2017-changelog',
@@ -261,33 +236,101 @@ module.exports = {
           collapsable: false,
           children: [
             'contributing',
-            'vision',
-            'how',
+            'join',
+            'comms',
+            'activate',
+            'first',
+            'support',
+            'allianceroles',
+          ],
+        },
+        {
+          title: 'Governance',
+          collapsable: false,
+          children: [
             'gov',
+            'vision',
+            ['team', 'Current Team'],
             'roles',
-            'security',
+            ['opensource', 'Resources'],
+          ],
+        },
+        {
+          title: 'Evangelizing',
+          collapsable: false,
+          children: [
+            'evangelist-intro',
+            'evangelist-present',
+            'evangelist-events',
+            'evangelist-social',
+            'evangelist-promote',
+            'talking-points',
+          ],
+        },
+        {
+          title: 'Blogging',
+          collapsable: false,
+          children: [
+            'blogging-intro',
+            'blogging-add',
+            'blogging-remove',
+            'blogging-promote',
+          ],
+        },
+        {
+          title: 'Writing Guides',
+          collapsable: false,
+          children: [
+            'guides-intro',
+            'guides-add',
+            'guides-remove',
+            'guides-promote',
+            'guides-advanced',
           ],
         },
         {
           title: 'Contributing Code',
           collapsable: false,
           children: [
-            'started',
-            'structure',
-            'plugins',
-            'testing',
-            'building',
-            'shipping',
-            'docs',
-            'website',
+            'contrib-intro',
+            'contrib-structure',
+            'contrib-plugins',
+            'contrib-testing',
+            'contrib-building',
+            'contrib-shipping',
+            'contrib-api',
+            'contrib-blog',
+            'contrib-docs',
+            'contrib-events',
+            'contrib-metrics',
+            'contrib-website',
           ],
         },
         {
-          title: 'Resources',
+          title: 'Sponsoring',
           collapsable: false,
           children: [
-            'opensource',
-            ['https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC', 'Training materials'],
+            'sponsor-intro',
+            'sponsor-benefits',
+            'sponsor-faq',
+          ],
+        },
+        {
+          title: 'Upselling',
+          collapsable: false,
+          children: [
+            'upseller-intro',
+          ],
+        },
+        {
+          title: 'Administering',
+          collapsable: false,
+          children: [
+            'admin-intro',
+            'admin-onboarding',
+            'admin-sponsors',
+            'admin-alliance',
+            'admin-timeline',
           ],
         },
       ],

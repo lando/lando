@@ -1,3 +1,11 @@
+<a name="lando.shell.get"></a>
+
+## lando.shell.get() ⇒ <code>Array</code>
+Gets running processes.
+
+**Kind**: global function  
+**Returns**: <code>Array</code> - An array of the currently running processes  
+**Since**: 3.0.0  
 <a name="lando.shell.sh"></a>
 
 ## lando.shell.sh(cmd, [opts]) ⇒ <code>Promise</code>

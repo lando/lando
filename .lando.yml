@@ -1,24 +1,46 @@
 name: lando
+env_file:
+  - lando.env
 excludes:
   - node_modules
 proxy:
-  docs:
+  api:
+    - api.lndo.site:8011
+  cli:
+    - blog.lndo.site:8007
     - docs.lndo.site:8008
-  site:
+    - events.lndo.site:8006
     - site.lndo.site:8009
+  metrics:
+    - metrics.lndo.site:8010
 services:
-  docs:
+  cli:
     type: node:10
     build:
       - yarn install
-    command: "su - node -c 'cd /app && yarn dev:docs'"
-    port: 8008
-  site:
+    scanner: false
+    overrides:
+      environment:
+        LANDO_API: https://api.lndo.site
+      ports:
+        - '8006:8006'
+        - '8007:8007'
+        - '8008:8008'
+        - '8009:8009'
+  api:
     type: node:10
-    build:
-      - yarn install
-    command: "su - node -c 'cd /app && yarn dev:site'"
-    port: 8009
+    command: yarn run dev:api
+    overrides:
+      environment:
+        LANDO_API_PORT: 8011
+    port: 8011
+  metrics:
+    type: node:10
+    command: yarn run dev:metrics
+    overrides:
+      environment:
+        LANDO_METRICS_PORT: 8010
+    port: 8010
   platform:
     type: php:7.3
     via: cli
@@ -27,15 +49,29 @@ services:
       - curl -fsSL -o /var/www/.platformsh/bin/platform https://github.com/platformsh/platformsh-cli/releases/download/v3.40.4/platform.phar
       - chmod ug+x /var/www/.platformsh/bin/platform
 tooling:
+  blog:
+    service: cli
+    cmd: yarn dev:blog
+    description: Launch the blog
+  docs:
+    service: cli
+    cmd: yarn dev:docs
+    description: Launch the documentation site
+  events:
+    service: cli
+    cmd: yarn dev:events
+    description: Launch the events listing
+  node:
+    service: cli
   platform:
     service: platform
     description: Run Platform CLI commands
     cmd: /var/www/.platformsh/bin/platform
-  # should these be able to run on either service once we've got the website in here too?
-  yarn:
-    service: docs
-  node:
-    service: docs
+  site:
+    service: cli
+    cmd: yarn dev:site
+    description: Launch the marketing site
   vuepress:
-    service: docs
-
+    service: cli
+  yarn:
+    service: cli

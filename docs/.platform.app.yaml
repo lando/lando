@@ -10,7 +10,7 @@ build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
-disk: 2500
+disk: 1000
 mounts:
   run:
     source: local
@@ -40,6 +40,12 @@ web:
         search_index\.json$:
           allow: true
         ^/sitemap\.xml$:
+          allow: true
+        ^/rss\.xml$:
+          allow: true
+        ^/feed\.atom$:
+          allow: true
+        ^/feed\.json$:
           allow: true
 
 # Build time dependencies.

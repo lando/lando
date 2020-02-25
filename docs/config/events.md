@@ -109,3 +109,5 @@ events:
     - node: yarn sass
     - appserver: composer compile-templates
 ```
+
+<RelatedGuides tag="Events"/>

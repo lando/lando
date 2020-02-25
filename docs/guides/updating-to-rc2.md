@@ -1,8 +1,11 @@
 ---
 description: Learn how to update Lando from beta to rc and beyond.
+date: 2019-11-05
 ---
 
 # Updating to 3.0.0-rc.2+
+
+<GuideHeader />
 
 Before you begin here we *highly recommend* you check out the [RC2 Release Blog Post](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) to get a higher level understanding on whats changed and why its changed in `3.0.0-rc.2`. After that you should be ready to get into the nitty gritty of what has changed.
 
@@ -32,7 +35,7 @@ lando db-import dump.sql.gz
 
 ## Removing `~/.lando`
 
-While most updates do not require the removal of `~/.lando` there are some circumstances where this seems neccessary. If you are running into any of the below known issues, or things don't seem _quite right_ we recommend a quick `rm -rf ~/.lando` and then trying again.
+While most updates do not require the removal of `~/.lando` there are some circumstances where this seems necessary. If you are running into any of the below known issues, or things don't seem _quite right_ we recommend a quick `rm -rf ~/.lando` and then trying again.
 
 * [Database doesn't start or reports as unhealthy](https://github.com/lando/lando/issues/1486)
 * [`lndo.site` sites are not accessible](https://github.com/lando/lando/issues/1490)
@@ -630,3 +633,6 @@ If you have written your own custom plugins
 2. Once you see the new format you'll feel better :)
 
 We've finally locked down a [Plugin System](./../dev/plugins.md) that uses the [Lando](./../api/lando.md) and [App](./../api/app.md) APIs and while we still don't have a great way to manage the installation and management of these plugins it is going to be the defining feature of `3.1.0`.
+
+<GuideFooter />
+<Newsletter />

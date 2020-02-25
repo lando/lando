@@ -23,9 +23,12 @@ node_modules
 # lando config
 env.yaml
 env.yml
+lando.env
 
 # docs
+_blog
 _docs
+_events
 _site
 docs/examples
 

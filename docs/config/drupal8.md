@@ -362,3 +362,5 @@ lando php -m
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+
+<RelatedGuides tag="Drupal"/>

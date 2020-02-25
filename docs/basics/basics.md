@@ -84,7 +84,7 @@ This is helpful so you can run `lando yarn install` instead of `docker exec -it 
 
 There are various ways to craft your Landofile but we've found and observed the following strategy to be *generally a good approach*.
 
-1. Shop around for a [recipe](./../onfig/recipes.md) that can serve as a good starting point. [lando init](./init.md) is helpful for this.
+1. Shop around for a [recipe](./../config/recipes.md) that can serve as a good starting point. [lando init](./init.md) is helpful for this.
 2. Add in additional [services](./../config/recipes.md) when you need more **JUICE**
 3. Define more complex [tooling](./../config/tooling.md) and [events](./../config/events.md) to simplify difficult command patterns and automate common tasks
 4. Add in some [build steps](./../config/services.md#build-steps) to further automate setting your services up or to mix in additional project dependencies
