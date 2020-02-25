@@ -13,15 +13,30 @@ Managing Lando sponsors is perhaps the most important thing that adminstrators d
 
 The general flow for adding a new sponsor is...
 
-1. You'll recieve an email from one of our sponsor platforms (GitHub, Patreon or OpenCollective) when a new person sponsors the project.
-2. You'll then enter the sponsors email, sponsor level and auth code into our sponsor admin portal. This will enroll the sponsor and ask them to fill out some other details so we can complete their sponsorship.
+**1. Receive Sponsorship Confirmation**
+
+You'll receive an email from one of our sponsor platforms (GitHub, Patreon or OpenCollective) when a new person sponsors the project.
+
+**2. Register Sponsor on Admin Portal**
+
+Open a new incognito browser window and enter the sponsors email, sponsor level and auth code into our sponsor admin portal. This will enroll the sponsor and ask them to fill out some other details so we can complete their sponsorship. The incognito window is necessary to make sure your form submission doesn't merge the new subscriber's information into an existing record.
 
 ::: tip Ask about the admin portal
 For security reasons we cannot expose the admin portal url or auth code, best bet is to ping another admin for the info!
 :::
 
-3. Once the sponsor completes the step above you'll receive another email with the completed details.
-4. You will want to use that information to add the sponsor [here](https://github.com/lando/lando/blob/master/api/data/sponsors.yml). This will add the sponsor to all relevant web properties and complete the sponsorship. Note that $4 _hero_ level sponsors do not get added. Also note that _patriot_ or _special_ sponsors may have unique terms so make sure you check in before adding them.
+**3. Sponsor Provides Onboarding Info**
+
+Once the sponsor completes the sponsorship onboarding form you'll receive another email with the completed details.
+
+**4. Add Sponsor to Website** (Herald Tier and Above)
+
+You will want to use the onboarding information to add the sponsor [here](https://github.com/lando/lando/blob/master/api/data/sponsors.yml). This will add the sponsor to all relevant web properties and complete the sponsorship. Note that $4 _hero_ level sponsors do not get added. Also note that _patriot_ or _special_ sponsors may have unique terms so make sure you check in before adding them.
+
+**5. Send Sponsor Benefits** (Herald Tier and Above)
+
+Depending on the sponsorship level these will vary; see the guide below.
+
 
 ### Removing a sponsor
 
