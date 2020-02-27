@@ -366,7 +366,7 @@ git clone my-project & cd my-project & lando start
     <div class="step-number"><p>5</p></div>
   </div>
   <div class="right">
-    <h3>Focus on more important shit</h3>
+    <h3>Focus on more important goals</h3>
   </div>
 </div>
 

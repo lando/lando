@@ -26,7 +26,7 @@ feed:
       link: https://twitter.com/pirogcommamike
 ---
 
-Sponsoring Lando is more than just supporting a free and open source local development tool. It's about giving a shit about your developers and giving them the tools they want and need to do their best work. Happy developers are productive and focused developers. And get it for way less than it would cost to build similar tools in-house. Trust us, [we know](/2017/10/24/journey-lando/) :)
+Sponsoring Lando is more than just supporting a free and open source local development tool. It's about truly caring about your developers and giving them the tools they want and need to do their best work. Happy developers are productive and focused developers. And get it for way less than it would cost to build similar tools in-house. Trust us, [we know](/2017/10/24/journey-lando/) :)
 
 However, if that is not reason enough... here are five more ;)
 
@@ -50,7 +50,7 @@ How awesome would it be knowing that the Lando team has got your back if you get
 
 Want to attract great developers? We know over 10,000! Sponsor Lando and we'll proudly fly your orgs logo on our [documentation](https://docs.lando.dev), [marketing site](https://lando.dev) and [blog](https://docs.lando.dev). We're also down to co-market, partner and retweet your orgs content.
 
-What better way to attract great talent then to declare loudly, proudly and clearly that you are on their side. Join our movement of developer advocacy and show that you give a shit.
+What better way to attract great talent then to declare loudly, proudly and clearly that you are on their side. Join our movement of developer advocacy and show that you truly care.
 
 ## 4. It's an investment in your team
 
@@ -78,4 +78,4 @@ The math on this is fairly straightforward! If every Lando-using org or agency [
 * Take more time to manage the Lando community and its contributors.
 * Cover our infrastructure costs and compensate our core contributor team.
 
-To put this in perspective, you likely pay more money to host a _single_ website than you would to a support a tool that can single handedly build _any_ website. If you think that sounds like a pretty fucking good deal then please, [support our mission](https://lando.dev/sponsor) to liberate developers across the galaxy so they can focus on their most important work!
+To put this in perspective, you likely pay more money to host a _single_ website than you would to a support a tool that can single handedly build _any_ website. If you think that sounds like a pretty good deal then please, [support our mission](https://lando.dev/sponsor) to liberate developers across the galaxy so they can focus on their most important work!

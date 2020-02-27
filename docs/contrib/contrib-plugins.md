@@ -138,7 +138,7 @@ Every task has a common interface as follows:
 
 module.exports = lando => ({
   command: 'mycommand',
-  describe: 'Does some pretty crazy shit',
+  describe: 'Does some pretty crazy stuff',
   level: 'app',
   options: {
     power: {

@@ -58,13 +58,13 @@ Needless to say none of the above were sufficient to sustain our operations and 
 
 In the aftermath of our failure to find a business model for Kalabox 2 we realized that _if_ there actually was a business model to find it definitely required a tool that could scale to more users, was less costly to develop and maintain and that also had the funding to scale up until a business model was RFO. (Real. Fucking. Obvious)
 
-We resolved to continue the quest by first attacking the scale and cost problems. Done. Enter Lando, with _ten_ times the users of Kalabox 2 at _one half_ the development and maintainence cost. It's the Model 3 to our Model S. More on that [here](/2017/10/23/journey-lando/) if you're interested.
+We resolved to continue the quest by first attacking the scale and cost problems. Done. Enter Lando, with _ten_ times the users of Kalabox 2 at _one half_ the development and maintenance cost. It's the Model 3 to our Model S. More on that [here](/2017/10/23/journey-lando/) if you're interested.
 
 We further resolved to kick the can on the "business model" part of the equation until we reached 10,000 active monthly users mostly because, on some level, I don't think we _actually ever expected_ to get there...
 
 Fast forward to six months ago and I'm at a bar, where all great ideas happen, looking over a cheap and neat double whiskey at my business partner Alec who utters: _ok, so, yeah, we got to 10,000 users, um, sort of fast, without, uh, basically any marketing_.
 
-We spend the next few hours rehasing _all the old conversations_ we had years earlier when trying to build a business around Kalabox 2. How do we monetize? Do we try to raise money? What's the go to market strategy? Perhaps, most importantly, _how can we sustain the continued development and maintainence costs of this project as we continue to grow?_
+We spend the next few hours rehashing _all the old conversations_ we had years earlier when trying to build a business around Kalabox 2. How do we monetize? Do we try to raise money? What's the go to market strategy? Perhaps, most importantly, _how can we sustain the continued development and maintenance costs of this project as we continue to grow?_
 
 We quickly realize that we've been this way before and while now better equipped the terrain looks _pretty much the same_. Sadness. ;( Another drink. :beer: Frustration. :angry: More drinks. :beers: Then...
 
@@ -78,25 +78,25 @@ It's really amazing to me how easy it is to forget why you are doing something. 
 
 Why _are_ we doing this? To make money? Clearly not ;) Why _are_ we doing this?
 
-> It's because we give a shit.
+> It's because we truly care.
 
-When we first started making these kinds of tools it was to make our own and other developers lives easier. It was because we felt the pain of developer life and we wanted to help. Period. Full stop.
+When we first started making these kinds of tools it was to make our own and other developers' lives easier. It was because we felt the pain of developer life and we wanted to help. Period. Full stop.
 
 Along the way, however, we lost sight of that deeper truth; caught up in the shiny of marketing plans, business models and raising money. Now, freed from the mind-forged manacles called the assumptions and expectations of other people we recalculated our situation.
 
-1. If we give a shit about making developers lives easier then we need to be accountable to developers
-2. If we need a business model then we are at worst accountable to shareholders and at best distracted from our primary mission in pursuit of dat cash
-3. If we are willing to spend our own time and money making developers lives easier, then _there must be others_
+1. If we truly care about making developers' lives easier, then we need to be accountable to developers
+2. If we need a business model, then we are at worst accountable to shareholders and at best distracted from our primary mission in pursuit of cash
+3. If we are willing to spend our own time and money making developers' lives easier, then _there must be others_
 
 And that was it.
 
-This isn't supposed to be a business! This is supposed to be a god damn fucking righteous movement! And with that the circle was now complete and [hope was rekindled](https://www.youtube.com/watch?v=SFo-XMUsy24). So we got right to work on...
+This isn't supposed to be a business! This is supposed to be a righteous movement! And with that the circle was now complete and [hope was rekindled](https://www.youtube.com/watch?v=SFo-XMUsy24). So we got right to work on...
 
 ## The Lando Alliance
 
-_The Lando Alliance_ is a movement with a single purpose: to make developer's lives easier. The membership criteria is simple and straightforward:
+_The Lando Alliance_ is a movement with a single purpose: to make developers' lives easier. The membership criteria is simple and straightforward:
 
-> If you give a shit about developers, want to make their lives easier and are willing to give some of your time or money to do so, then join us.
+> If you truly care about developers, want to make their lives easier and are willing to give some of your time or money to do so, then join us.
 
 This means that the _The Alliance_ encompasses **much more** than just Lando the local development tool. In fact, you don't even need to be a Lando user or supporter to join because it is also...
 
@@ -133,7 +133,7 @@ If you've done something super cool with Lando and want to share it with the res
 
 #### CONTRIBUTING
 
-If you're interested in helping out with Lando itself, either by writing code, contributing docs, improving DevOps or even working on our various websites then _we need you_! In the future, if this movement grows and is successfull we hope to build _even more_ great free and open source developer tools.
+If you're interested in helping out with Lando itself, either by writing code, contributing docs, improving DevOps or even working on our various websites then _we need you_! In the future, if this movement grows and is successful we hope to build _even more_ great free and open source developer tools.
 
 ### Giving money
 

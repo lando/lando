@@ -101,8 +101,8 @@ describe('scripts', () => {
     });
 
     it('should return itself if has alias that needs wrapping but alias starts with \\\'lando.', () => {
-      const command = util.fixAlias({alias: 'fuck.lando.thing'});
-      command.alias.should.equal('fuck.lando.thing');
+      const command = util.fixAlias({alias: 'this.lando.thing'});
+      command.alias.should.equal('this.lando.thing');
       command.should.not.have.property('name');
     });
 

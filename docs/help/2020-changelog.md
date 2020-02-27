@@ -10,3 +10,4 @@
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
 * Upgraded to Docker Desktop 2.2.0.0
+* Spell check with codespell and clean up the 'shit'. :)

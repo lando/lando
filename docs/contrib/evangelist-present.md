@@ -25,7 +25,7 @@ Here are some well known places to get you started.
 
 Once you've found an event the next step is usually to submit a session/proposal and/or start creating the content for your presentation, talk or training.
 
-While you certainly can create content from scratch we recommend you request access to this [Google Folder](https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC) as it contains a large cache of previously submitted sessions, proposals, slidedecks and training materials. It's highly likely you can fork or adapt some of this shit as a starting point.
+While you certainly can create content from scratch we recommend you request access to this [Google Folder](https://drive.google.com/drive/folders/1ooK_NTMBuwOV0uix8O54umJGwAODL9dC) as it contains a large cache of previously submitted sessions, proposals, slidedecks and training materials. It's highly likely you can fork or adapt some of this as a starting point.
 
 We also highly encourage you to contribute your finished presentation materials back to the same Google folder. This both aids future evangelists and also serves as a record for posterity.
 

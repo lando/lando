@@ -34,7 +34,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 
   However, because so many users now rely on Lando we want to make sure it has a healthy and sustainable foundation for continued growth.
 
-  For that reason we are launching _The Lando Alliance_, a movement of misfit developers, frustrated engineering managers and efficiency-minded business leaders and organizations who give a shit about making developers lives easier.
+  For that reason we are launching _The Lando Alliance_, a movement of misfit developers, frustrated engineering managers and efficiency-minded business leaders and organizations who truly care about making developers' lives easier.
 
   <em>Our common cause?</em> To liberate developers across the galaxy so they can <strong>focus on their most important work</strong> by providing great developer tools, content, documentation, events, trainings and tutorials.
 

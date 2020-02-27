@@ -77,4 +77,4 @@ The math on this is fairly straightforward! If every Lando user [sponsored us](h
 * Take more time to manage the Lando community and its contributors.
 * Cover our infrastructure costs and compensate our core contributor team.
 
-If you think that sounds like a pretty fucking good deal then please, [support our mission](https://lando.dev/sponsor) to liberate developers across the galaxy so they can focus on their most important work!
+If you think that sounds like a pretty good deal then please, [support our mission](https://lando.dev/sponsor) to liberate developers across the galaxy so they can focus on their most important work!
