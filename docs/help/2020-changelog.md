@@ -1,6 +1,6 @@
 # 2020
 
-## v3.0.0-rc.25 - [January 25, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rc.25)
+## v3.0.0-aft.1 - March 13, 2020 (estimated release date)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
 
