@@ -10,7 +10,7 @@ Guides are intended to fill in the gaps between our documentation and real world
 
 You can think of them as glorified gists or less shitty and more curated Stack Overflow articles.
 
-**So you wanna to write a guide?** Holla! That's great because it's not very hard!
+**So you wanna write a guide?** Holla! That's great because it's not very hard!
 
 ## What is a guide?
 
