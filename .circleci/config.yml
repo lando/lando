@@ -72,8 +72,3 @@ jobs:
           paths:
             - ~/.cache/yarn
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-workflows:
-  version: 2
-  functional_tests:
-    jobs:
-      - test
