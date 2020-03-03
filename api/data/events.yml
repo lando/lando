@@ -10,6 +10,16 @@
   summary: >-
     Come hang out with Lando project lead Mike Pirog and hear what we've got in
     store for you in 2020! There isn't a session but we will buy you a beer!
+- id: e2c0016f145808994387446642aa177f14fc5f82
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Bay Area Drupal Camp 2019
+  date: '2019-10-05'
+  summary: Aaron Feledy presents "Level Up Your Development Experience with Lando"
+  type: camp
+  location: 'Berkeley, CA'
+  url: 'https://2019.badcamp.org/session/level-your-development-experience-lando'
 - id: f29513bc14a05f97b3f7910c975c24a6b8e0f324
   presenter: Dustin LeBlanc
   presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
@@ -38,6 +48,28 @@
   location: 'Ithaca, NY'
   url: >-
     https://camp.drupal.cornell.edu/sessions/advanced-local-development-workflows-lando
+- id: d8c181610dfef81616ed73a3bc784075eb38189a
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Drupal Camp Chattanooga 2019
+  date: '2019-06-08'
+  summary: Aaron Feledy presents "Level Up Your Development Experience with Lando"
+  type: camp
+  location: 'Chattanooga, TN'
+  url: >-
+    https://www.drupalcampchattanooga.com/events/drupalcamp/drupal-camp-chattanooga-2019
+- id: a9d05cbc3e916ed881cbd370b765d9ab531ebeb3
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: MidCamp 2019
+  date: '2019-03-22'
+  summary: Aaron Feledy presents "Level Up Your Development Experience with Lando"
+  type: camp
+  location: 'Chicago, IL'
+  url: >-
+    https://www.midcamp.org/2019/topic-proposal/level-your-development-experience-lando
 - id: cc41ea67c39f3e3c0172c02429bf8fe37bf3bac9
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
@@ -63,6 +95,16 @@
   location: 'Bethesda, MD'
   url: >-
     https://drupal.tv/external-video/2018-08-23/horizontal-devops-scale-your-team-and-tools-across-projects
+- id: eeaf3ca0447bac3ab8a0df00a89ccff5cf012115
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Drupal Camp Asheville 2018
+  date: '2018-07-14'
+  summary: Aaron Feledy presents "Make Local Dev Great with Lando!"
+  type: camp
+  location: 'Asheville, NC'
+  url: 'https://www.drupalasheville.com/2018/session/make-local-dev-great-lando'
 - id: d249a527cd49d3441d35c55add89a43da0efde6d
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'

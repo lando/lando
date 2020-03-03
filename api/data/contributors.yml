@@ -50,3 +50,19 @@
   title: Contributor
   pic: 'https://s.gravatar.com/avatar/b94fb6501cf666caf2b8f47d4e4e3b1c'
   id: 433bd1bd859bb74aa4c7be9f0acd798692d49b62
+- name: Aaron Feledy
+  role:
+    - Documentation
+    - Evangelism
+    - Events
+    - Issues
+    - Support
+  bio: >-
+    Aaron Feledy is a Drupal consultant, developer, and the owner of <a
+    href="http://arrow.one" target="_blank">Arrow One Solutions</a>.
+  location: 'Chicago, IL'
+  github: aaronfeledy
+  twitter: aaronfeledy
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  id: c04e9d90c77dfe1891cfdfafaff854a9106fd64e
