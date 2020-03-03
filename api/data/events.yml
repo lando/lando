@@ -10,6 +10,83 @@
   summary: >-
     Come hang out with Lando project lead Mike Pirog and hear what we've got in
     store for you in 2020! There isn't a session but we will buy you a beer!
+- id: f29513bc14a05f97b3f7910c975c24a6b8e0f324
+  presenter: Dustin LeBlanc
+  presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
+  presenterLink: 'https://twitter.com/DustinLeblanc'
+  name: BadCamp 2019
+  date: '2019-10-02'
+  summary: >-
+    Time is wasted and quality suffers when there is no agreed-upon process for
+    onboarding new developers into a project, running project tests (you wrote
+    tests right?), and deploying the project to your staging infrastructure.
+  type: camp
+  location: 'Berkeley, CA'
+  url: >-
+    https://2019.badcamp.org/training/become-developer-experience-superhero-building-processes-unlock-your-teams-potential
+- id: 4167c5f9560f9e7891224679973c9b3f4e99e00e
+  presenter: Dustin LeBlanc
+  presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
+  presenterLink: 'https://twitter.com/DustinLeblanc'
+  name: 'Cornell DrupalCamp'
+  date: '2019-09-27'
+  summary: >-
+    While Lando is a pretty great tool to get you up and running with Drupal and
+    a wide variety of other tech stacks quickly, the real power lies in Lando's
+    extensibility.
+  type: camp
+  location: 'Ithaca, NY'
+  url: >-
+    https://camp.drupal.cornell.edu/sessions/advanced-local-development-workflows-lando
+- id: cc41ea67c39f3e3c0172c02429bf8fe37bf3bac9
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: NERD Summit 2019
+  date: '2019-03-11'
+  summary: Get started with Headless/API first Drupal + Nuxt.js
+  type: camp
+  location: 'Amherst, MA'
+  url: 'https://drupal.tv/external-video/2019-03-11/contenta-cms-drupal-api-nuxtjs'
+- id: 2346f1c67eea089f9e520647fea4fa071b36813f
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: Drupal GovCon 2018
+  date: '2018-08-23'
+  summary: >-
+    We often think of DevOps in a siloed context (eg one project at a time), but
+    having an organizational DevOps plan/strategy and some cross project
+    standardization is really how you benefit. This talk is about the business
+    value of horizontal DevOps across people and projects.
+  type: camp
+  location: 'Bethesda, MD'
+  url: >-
+    https://drupal.tv/external-video/2018-08-23/horizontal-devops-scale-your-team-and-tools-across-projects
+- id: d249a527cd49d3441d35c55add89a43da0efde6d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'DrupalCon Nashville 2018'
+  date: '2018-04-11'
+  summary: >-
+    We often think of DevOps in a super siloed context (eg one project at a
+    time), but having an organizational DevOps plan/strategy and some cross
+    project standardization is really how you benefit.
+  type: conference
+  location: 'Nashville, TN'
+  url: >-
+    https://drupal.tv/external-video/2018-04-11/drupalcon-nashville-2018-horizontal-devops-scale-your-team-and-tools
+- id: 7086f079a387de70ce2ff3b5e5730c23fda9c7cd
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: NERD Summit 2018
+  date: '2018-03-17'
+  summary: Horizontal DevOps with lando.
+  type: camp
+  location: 'Amherst, MA'
+  url: 'https://www.youtube.com/watch?v=PYZccRva7Co'
 - name: BadCamp 2017
   id: wahtever24
   date: '2017-10-18'
@@ -24,3 +101,16 @@
     Come see (and then use!) the future of local development tools: Lando, a
     free, open source and cross platform devops tool that is also the most
     advanced, powerful and easy local development environment in the galaxy.
+- id: bcfb4c83e71e860ab3cfa3abc7c90696cf2ef9a9
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'NERD Summit 2017'
+  date: '2017-03-19'
+  summary: >-
+    With Kalabox, GitFlow, Continuous Integration (CI), and Continuous
+    Deployment (CD) you can make small(ish) changes, run automated tests, human
+    test (QA), and always be ready to deploy with these sane dev workflows.
+  type: camp
+  location: 'Amherst, MA'
+  url: 'https://www.youtube.com/watch?v=HqHC5XWktME&feature=emb_title'

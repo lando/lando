@@ -16,4 +16,4 @@ Getting the ball rolling is a one-step process:
 
 1. [Join the alliance as an administrator](./join.md)
 
-You'll get an email from our current admins so we can set up an inital interview!
+You'll get an email from our current admins so we can set up an initial interview!
