@@ -139,6 +139,7 @@ module.exports = {
             'drupal6',
             'drupal7',
             'drupal8',
+            'drupal9',
             'joomla',
             'laravel',
             'lamp',
