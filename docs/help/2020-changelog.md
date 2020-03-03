@@ -10,3 +10,4 @@
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
 * Upgraded to Docker Desktop 2.2.0.0
+* Added support for WordPress Site Networks (Multisite) to Pantheon recipe.
