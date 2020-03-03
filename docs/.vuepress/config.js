@@ -77,6 +77,7 @@ module.exports = {
       {text: 'Blog', link: 'https://blog.lando.dev'},
       {text: 'Events & Meetups', link: 'https://events.lando.dev'},
     ],
+    repo: 'lando/lando',
     sidebar: {
       '/basics/': [
         {
