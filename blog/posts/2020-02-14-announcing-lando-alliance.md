@@ -17,7 +17,7 @@ feed:
   enable: true
   author:
     - name: Mike Pirog
-      email: mike@lando.dev
+      email: mike@lando.devf
       link: https://twitter.com/pirogcommamike
   contributor:
     - name: Mike Pirog
@@ -58,13 +58,13 @@ Needless to say none of the above were sufficient to sustain our operations and 
 
 In the aftermath of our failure to find a business model for Kalabox 2 we realized that _if_ there actually was a business model to find it definitely required a tool that could scale to more users, was less costly to develop and maintain and that also had the funding to scale up until a business model was RFO. (Real. Fucking. Obvious)
 
-We resolved to continue the quest by first attacking the scale and cost problems. Done. Enter Lando, with _ten_ times the users of Kalabox 2 at _one half_ the development and maintainence cost. It's the Model 3 to our Model S. More on that [here](/2017/10/23/journey-lando/) if you're interested.
+We resolved to continue the quest by first attacking the scale and cost problems. Done. Enter Lando, with _ten_ times the users of Kalabox 2 at _one half_ the development and maintenance cost. It's the Model 3 to our Model S. More on that [here](/2017/10/23/journey-lando/) if you're interested.
 
 We further resolved to kick the can on the "business model" part of the equation until we reached 10,000 active monthly users mostly because, on some level, I don't think we _actually ever expected_ to get there...
 
 Fast forward to six months ago and I'm at a bar, where all great ideas happen, looking over a cheap and neat double whiskey at my business partner Alec who utters: _ok, so, yeah, we got to 10,000 users, um, sort of fast, without, uh, basically any marketing_.
 
-We spend the next few hours rehasing _all the old conversations_ we had years earlier when trying to build a business around Kalabox 2. How do we monetize? Do we try to raise money? What's the go to market strategy? Perhaps, most importantly, _how can we sustain the continued development and maintainence costs of this project as we continue to grow?_
+We spend the next few hours rehashing _all the old conversations_ we had years earlier when trying to build a business around Kalabox 2. How do we monetize? Do we try to raise money? What's the go to market strategy? Perhaps, most importantly, _how can we sustain the continued development and maintenance costs of this project as we continue to grow?_
 
 We quickly realize that we've been this way before and while now better equipped the terrain looks _pretty much the same_. Sadness. ;( Another drink. :beer: Frustration. :angry: More drinks. :beers: Then...
 
@@ -84,9 +84,9 @@ When we first started making these kinds of tools it was to make our own and oth
 
 Along the way, however, we lost sight of that deeper truth; caught up in the shiny of marketing plans, business models and raising money. Now, freed from the mind-forged manacles called the assumptions and expectations of other people we recalculated our situation.
 
-1. If we give a shit about making developers lives easier then we need to be accountable to developers
+1. If we give a shit about making developers' lives easier, then we need to be accountable to developers
 2. If we need a business model then we are at worst accountable to shareholders and at best distracted from our primary mission in pursuit of dat cash
-3. If we are willing to spend our own time and money making developers lives easier, then _there must be others_.
+3. If we are willing to spend our own time and money making developers' lives easier, then _there must be others_
 
 And that was it.
 
@@ -94,7 +94,7 @@ This isn't supposed to be a business! This is supposed to be a god damn fucking 
 
 ## The Lando Alliance
 
-_The Lando Alliance_ is a movement with a single purpose: to make developer's lives easier. The membership criteria is simple and straightforward:
+_The Lando Alliance_ is a movement with a single purpose: to make developers' lives easier. The membership criteria is simple and straightforward:
 
 > If you give a shit about developers, want to make their lives easier and are willing to give some of your time or money to do so, then join us.
 
@@ -133,7 +133,7 @@ If you've done something super cool with Lando and want to share it with the res
 
 #### CONTRIBUTING
 
-If you're interested in helping out with Lando itself, either by writing code, contributing docs, improving DevOps or even working on our various websites then _we need you_! In the future, if this movement grows and is successfull we hope to build _even more_ great free and open source developer tools.
+If you're interested in helping out with Lando itself, either by writing code, contributing docs, improving DevOps or even working on our various websites then _we need you_! In the future, if this movement grows and is successful we hope to build _even more_ great free and open source developer tools.
 
 ### Giving money
 
@@ -145,8 +145,8 @@ We, as Tandem, are more than happy to continue sponsoring the movement ourselves
 
 Sponsoring includes many [additional benefits](https://lando.dev/sponsor/) depending on the tier you choose but our immediate goals are to fund...
 
-* [A stable Lando 3.0.0 release](2020/02/09/q1-2020-update/#lando-3-0-0) on May 4, 2020
-* A dedicated full time developer to work on Lando so there is a consistent release cycle with new features and bug requests. The way we develop is always changing and this means that Lando itself will never "be done" and needs to be updated frequetly.
+* [A stable Lando 3.0.0 release](/2020/02/10/q1-2020-update#lando-3-0-0) on May 4, 2020
+* A dedicated full time developer to work on Lando so there is a consistent release cycle with new features and bug requests. The way we develop is always changing and this means that Lando itself will never "be done" and needs to be updated frequently.
 * Another dedicated full time developer devoted to helping people with their #devproblems on Slack, regardless of whether they are Lando related or not.
 
 If every Lando user sponsored at the $4/month level we would be able to do all of the above and much, much more. This leads me to our longer term plans.

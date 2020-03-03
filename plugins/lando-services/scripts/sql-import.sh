@@ -23,7 +23,7 @@ fi
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
-    # This doesn't do anything anymore
+    # This option is now handled with landos built in dynamic options
     # we just keep it around for option validation
     -h|--host|--host=*)
       if [ "${1##--database=}" != "$1" ]; then

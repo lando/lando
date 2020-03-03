@@ -45,6 +45,8 @@ Note that Lando is basically a PaaS running on your computer and as such we don'
 
 ## MacOS
 
+<YouTube url="https://www.youtube.com/embed/W8qIutOAe-0" />
+
 ::: tip Do not fear the package size!
 Note that our macOS installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages.
 
