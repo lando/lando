@@ -11,7 +11,8 @@
     "title": "Drupal",
     "collapsable": false,
     "children": [
-      "drupal-7-landoize-an-extant-app"
+      "drupal-7-landoize-an-extant-app",
+      "updating-local-environments"
     ]
   },
   {

@@ -1,33 +1,33 @@
 ---
-title: Neat Lando Tool
-metaTitle: Neat Lando Tool | Lando
+title: Updating local environments
+metaTitle: Updating local environments | Lando
 description: Add this tool to catch your local dev environment up to date.
-date: 2020-03-03
+summary: Add this tool to catch your local dev environment up to date.
+date: 2020-03-03T21:14:32.815Z
 original: 
+repo: 
 
-author: Jason Purdy
-pic: https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9
-link: https://twitter.com/jason_purdy
-location: Apex, NC
-
-tags:
-- case-study
-- devops
-- development
-- lando
-- workflows
+author:
+  name: Jason Purdy
+  pic: https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9
+  link: https://twitter.com/jason_purdy
 
 feed:
   enable: true
   author:
     - name: Jason Purdy
-      email: jason@purdy.info
+      email: alliance@lando.dev
       link: https://twitter.com/jason_purdy
   contributor:
     - name: Jason Purdy
-      email: jason@purdy.info
+      email: alliance@lando.dev
       link: https://twitter.com/jason_purdy
 ---
+
+# Updating local environments
+
+<GuideHeader test="" name="Jason Purdy" pic="https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9" link="https://twitter.com/jason_purdy" />
+<YouTube url="" />
 
 I can't claim credit for this, but I wanted to share a really powerful and useful addition we add to our .lando.yml files in the tooling section. It should be said that this particular use case works for Drupal and Pantheon users.
 
@@ -53,3 +53,6 @@ The first time you run this, you may run into an issue where your environment ca
  You could still use this for non-Pantheon cases, but you'll have to change the terminus command to something that grabs your latest database backup and copies it into the `artifacts` folder.
 
  You'll also want to add the `artifacts` folder to your `.gitignore` file so you don't commit any database backups.
+
+<GuideFooter test="" original="" repo=""/>
+<Newsletter />
