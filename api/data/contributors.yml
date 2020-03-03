@@ -50,3 +50,22 @@
   title: Contributor
   pic: 'https://s.gravatar.com/avatar/b94fb6501cf666caf2b8f47d4e4e3b1c'
   id: 433bd1bd859bb74aa4c7be9f0acd798692d49b62
+- name: Jason Purdy
+  role:
+    - Content
+    - Documentation
+    - Evangelism
+    - Events
+    - Guides and Tutorials
+    - Meetups
+    - Outreach
+    - Training
+  bio: >-
+    Disciple of Jesus, Husband, Father and Developer (Drupal, PHP, JS, HTML/CSS,
+    Web and Android) and home chef; that should cover it for now.
+  location: 'Apex, NC'
+  github: purdy
+  twitter: jason_purdy
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9'
+  id: 1a7cb15c9746209501ccf1491a103486c898d426
