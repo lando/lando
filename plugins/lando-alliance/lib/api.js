@@ -23,9 +23,12 @@ module.exports = class LandoApiClient {
   /*
    * Create a data source
    */
-  create(source, data = {}) {
-    const database = this.read(source);
+  create(source, data = {}, sort = []) {
+    let database = this.read(source);
     database.push(_.merge({}, data, {id: hasher(data)}));
+    // Sort if we have to
+    if (!_.isEmpty(sort)) database = _.orderBy(database, ...sort);
+    // Dump results
     this.yaml.dump(path.resolve(this.base, `${source}.yml`), _.uniqBy(database, 'id'));
     return this.read(source, {id: hasher(data)});
   };
@@ -52,7 +55,7 @@ module.exports = class LandoApiClient {
   /*
    * Alias of create
    */
-  update(source, data = {}) {
-    return this.create(source, data);
+  update(source, data = {}, sort = []) {
+    return this.create(source, data, sort);
   };
 };

@@ -98,9 +98,9 @@
 // Const
 const allianceRoles = {
   administrator: 'Help manage the Lando Alliance, our sponsors, marketing, outreach, event logistics, etc!',
-  blogger: 'Contribute case studies, training materials and other less-technical content to the Lando blog and get credit for it!',
+  blogger: 'Contribute case studies, training materials and other less-technical content to the Lando Alliance blog and get credit for it!',
   contributor: 'Work on Lando\'s code, help manage issues, improve documentation and engage in community support!',
-  evangelist: 'Present, train or speak about Lando at various meetups, camps and conferences and generally spread the good word far and wide!',
+  evangelist: 'Present, train or speak about Lando and other topics at various meetups, camps and conferences and generally spread the good word far and wide!',
   guider: 'Share working examples of my Lando config (eg browsersync) on the Lando site and get credit for it!',
   sponsor: 'Sponsor Lando and get swag, shoutouts on Twitter and our websites and other exclusive benefits',
   upseller: 'Help convince my org, boss or relevant decision maker to sponsor Lando or purchase Lando support/services!',
@@ -253,7 +253,7 @@ export default {
       // Set data
       const data = {defaults: this.getDefaultGroups(), email: this.email, groups: this.getGroups()};
       // Wait and then do things
-      setTimeout(() => this.$api(this.$page.apiUrl).put('/v1/subscribe', data).then(response => {
+      setTimeout(() => this.$api.put('/v1/subscribe', data).then(response => {
         this.success = this.successMessage;
         this.buttonDisabled = false;
         this.email = '';

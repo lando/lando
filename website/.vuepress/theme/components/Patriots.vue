@@ -26,7 +26,7 @@ export default {
     };
   },
   mounted() {
-    this.$api(this.$page.apiUrl).get('/v1/sponsors/patriot').then(response => {
+    this.$api.get('/v1/sponsors/patriot').then(response => {
       this.patriots = response.data || [];
     })
     .catch(error => {

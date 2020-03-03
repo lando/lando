@@ -8,7 +8,6 @@
   </div>
 </template>
 
-
 <script>
 import PostList from '@theme/components/PostList.vue';
 

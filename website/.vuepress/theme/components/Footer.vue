@@ -117,6 +117,9 @@
               </ul>
               <h4>Other</h4>
               <ul>
+                <li><a href="https://blog.lando.dev/tag/case-study/">Case Studies</a></li>
+                <li><a href="https://blog.lando.dev/tag/lando/">Blog</a></li>
+                <li><a href="https://events.lando.dev">Events</a></li>
                 <li><a href="/contact/">Contact</a></li>
               </ul>
             </div>

@@ -49,7 +49,7 @@
         :disabled="buttonDisabled"
         type="email"
         v-model="email"
-        placeholder="Email address"
+        placeholder="Email"
         name="email"
         :class="{ 'subscribe-input': true, disabled: buttonDisabled }" />
 

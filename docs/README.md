@@ -5,7 +5,7 @@ image: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/publi
 home: true
 navbar: true
 pageClass: lando-home
-heroImage: /images/hero.png
+heroImage: /images/hero-pink.png
 features:
 - title: Easy
   details: One click installer, cross-platform, simple config file, sane defaults and reduced complexity for power features
@@ -23,3 +23,5 @@ Lando is and always will be _**free**_ and _**open source**_.
 That said, it takes a considerable amount of time to maintain, support and grow Lando as well as pay for needed infrastructure. If you like Lando and think it's valuable we'd _highly encourage_ you to [join _The Lando Alliance_](https://lando.dev/join/) and return some of that value to help support our movement to liberate developers everywhere.
 
 _**We're down to keep solving DevOps for everyone and with your support: we can.**_
+
+.

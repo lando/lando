@@ -6,11 +6,11 @@ title: Getting Started
 
 # Getting Started Writing Guides
 
-**So you wanna to write a guide?** Holla! That's great because it's not very hard!
+Guides are intended to fill in the gaps between our documentation and real world usage by providing concise, code-snippet-heavy content that answer specific techincal questions.
 
-::: warning Make sure you activate Secret Toggle!!!
-These docs assume you've [installed Lando from source](./activate.md), [toggled its Secret Toggle](./activate.md), [added yourself as a contributor](./first.md) and generally gotten up to speed with [contributing in general](./contributing.md)
-:::
+You can think of them as glorified gists or less shitty and more curated Stack Overflow articles.
+
+**So you wanna write a guide?** Holla! That's great because it's not very hard!
 
 ## What is a guide?
 
@@ -18,7 +18,7 @@ On the highest level a guide should answer a very specific technical question su
 
 > _How do I run Drupal 4.6 using Lando?_
 
-This differs from the other documentation which is declarative and reads more like a technical manual and our blog which is for higher level, less technical content like case studies.
+This differs from the other documentation which is declarative and reads more like a technical manual and our blog which is for higher level, less technical content like case studies and is not Lando specific.
 
 Good guides should...
 
@@ -44,11 +44,15 @@ And titles for some things that might be better as blog posts or general documen
 
 ## What do I need to get started?
 
-Here are the steps to get set up for writing guides. Note that _you should have already done these steps_. However, We've included them here "for completeness" which is otherwise known as people don't RTFM ;).
+You will need to go through all the steps in our [Getting Involved](contributing) section if you have not done so already. This will get you rolling for contribution. Here are all the steps from the aforementioned section for completeness.
 
 1. [Join the alliance](./join.md)
-2. [Install Lando from source and activate secret toggle](./activate.md)
-3. [Add yourself as a contributor](./first.md)
+2. [Join the comms](./comms.md)
+3. [Install Lando from source and activate secret toggle](./activate.md)
+4. [Add yourself as a contributor](./first.md)
+5. [Proceed to adding your first guide](./guides-add.md)
+
+If you are having issues with any of the above or need some guidance from one of our guide pros make sure you [join our Slack org](https://launchpass.com/devwithlando) and check out the **#community** and/or **#guiders** channels.
 
 ## What should I write?
 
