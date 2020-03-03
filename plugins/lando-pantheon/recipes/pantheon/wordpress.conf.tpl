@@ -123,6 +123,20 @@ server {
         error_page 301 =301 $client_scheme://$host$uri/$is_args$args;
     }
 
+    # Rewrite multisite '.../wp-.*' and '.../*.php'.
+    # Because even if the site is in a subdirectory at http://site.com/site-a/
+    # requests for the wp-admin, or other specific php files, need to go to the docroot.
+    if (!-e $request_filename) {
+        rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+        rewrite ^/[_0-9a-zA-Z-]+(/wp-.*) $1 last;
+        rewrite ^/[_0-9a-zA-Z-]+(/.*\.php)$ $1 last;
+    }
+    # Legacy site network files support.
+    location ~ ^/wp-content/blogs.dir/([_0-9a-zA-Z-]+)/files/(.*)$ {
+        try_files /wp-content/blogs.dir/$1/files/$2 /wp-includes/ms-files.php?file=$2 ;
+        access_log off; log_not_found off; expires max;
+    }
+
     location @cleanurl {
         rewrite ^/(.*)$ /index.php?q=$1 last;
     }
