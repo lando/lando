@@ -85,6 +85,8 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=http://wpb4.test/wp
 ```
 
+If you add or change the `env_file` config, or alter the contents of any env files being used in this config, you will need to run `lando rebuild` for your changes to take effect.
+
 ::: warning This ONLY injects directly into the container environment!
 We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.
 
