@@ -30,7 +30,7 @@ const supportedVersions = [
   '8',
   '8.14',
   '6',
-  '6.15'
+  '6.15',
 ];
 
 /*
