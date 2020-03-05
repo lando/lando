@@ -25,8 +25,20 @@ Please also verify you meet the requirements needed to run our Docker engine bac
 ## Hardware Requirements
 
 ::: warning Not for the faint of heart!
-Note that Lando is basically a PaaS running on your computer and as such we don't recommend you use it [UNLESS YOU'VE GOT POWER!!!](https://www.youtube.com/watch?v=NowdrL6fvb4). Said another way this ain't your grandaddy's local dev environment.
+Note that Lando is basically a PaaS running on your computer and as such we don't recommend you use it [UNLESS YOU'VE GOT POWER!!!](https://www.youtube.com/watch?v=NowdrL6fvb4).
 :::
+
+### Minimum requirements
+
+You _can_ run Lando using the below but your experience may be less than ideal.
+
+*   2-core processor
+*   4GB+ RAM
+*   25GB+ of available disk space
+
+### Preferred
+
+We've found the below or better to deliver the best experience.
 
 *   8-core processor
 *   16GB+ RAM
