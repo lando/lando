@@ -13,10 +13,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 ## Supported versions
 
 *   [11](https://hub.docker.com/r/_/node/)
-*   [11.4](https://hub.docker.com/r/_/node/)
+*   [11.4 - 11.15](https://hub.docker.com/r/_/node/)
 *   **[10](https://hub.docker.com/r/_/node/)** **(default)**
-*   [10.14](https://hub.docker.com/r/_/node/)
-*   [10.13](https://hub.docker.com/r/_/node/)
+*   [10.14 - 10.19](https://hub.docker.com/r/_/node/)
 *   [custom](./../config/services.md#advanced)
 
 ## Legacy versions
