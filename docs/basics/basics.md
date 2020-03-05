@@ -64,7 +64,7 @@ If you are interested in using something Lando does not currently offer as a ser
 
 **[env_file](./../config/env.md#environment-files)** - A list of environment files relative to your project's root directory. Each file should contain a list of `KEY=VALUE` pairs that will then get injected into the environment of **every** service.
 
-**[events](./../config/events.md)** - Events allow the user to run arbitrary commands, or combinations of commands, on arbitrary services, or combinations of services before or after certain parts of the Lando runtime. A good example is clearing out an applications cache after a database is imported.
+**[events](./../config/events.md)** - Events allow the user to run arbitrary commands, or combinations of commands, on arbitrary services, or combinations of services before or after certain parts of the Lando runtime. A good example is clearing out an application's cache after a database is imported.
 
 **[recipe](./../config/recipes.md)** - Recipes are combinations of [services](./../config/services.md), [proxies](./../config/proxy.md), and [tooling](./../config/tooling.md) designed as a start-state-of-sane-defaults for a particular use case - e.g. `drupal7`.
 
