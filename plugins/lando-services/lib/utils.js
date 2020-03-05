@@ -56,6 +56,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
             compose: app.compose,
             project: app.project,
             opts: {
+              build: true,
               mode: 'attach',
               user: (_.includes(rootSteps, section)) ? 'root' : getUser(service, app.info),
               services: [service],
@@ -65,7 +66,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
       }
     });
   });
-  // Let's silent run user-perm stuff
+  // Let's silent run user-perm stuff and add a "last" flag
   if (!_.isEmpty(build)) {
     _.forEach(_.uniq(_.map(build, 'id')), container => {
       build.unshift({
@@ -74,12 +75,15 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
         compose: app.compose,
         project: app.project,
         opts: {
+          build: true,
           mode: 'attach',
           user: 'root',
           services: [container.split('_')[1]],
         },
       });
     });
+    const last = _.last(build);
+    last.opts.last = true;
   }
   // Return
   return build;
