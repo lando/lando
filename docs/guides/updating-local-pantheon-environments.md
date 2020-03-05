@@ -1,6 +1,6 @@
 ---
-title: Updating local environments
-metaTitle: Updating local environments | Lando
+title: Updating your Pantheon site from the latest DB backup
+metaTitle: Updating your Pantheon site from the latest DB backup | Lando
 description: Add this tool to catch your local dev environment up to date.
 summary: Add this tool to catch your local dev environment up to date.
 date: 2020-03-03T21:14:32.815Z
@@ -24,27 +24,31 @@ feed:
       link: https://twitter.com/jason_purdy
 ---
 
-# Updating local environments
+# Updating your Pantheon site from the latest DB backup
 
 <GuideHeader test="" name="Jason Purdy" pic="https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9" link="https://twitter.com/jason_purdy" />
 <YouTube url="" />
 
 I can't claim credit for this, but I wanted to share a really powerful and useful addition we add to our .lando.yml files in the tooling section. It should be said that this particular use case works for Drupal and Pantheon users.
 
-    tooling:
-      latest:
-        service: appserver
-        description: Updates the database from the latest backup
-        cmd:
-          - mkdir -p /app/artifacts
-          - rm -f /app/artifacts/database.sql.gz
-          - terminus backup:get site.env --element=db --to=/app/artifacts/database.sql.gz
-          - database: cd /app && /helpers/sql-import.sh artifacts/database.sql.gz
-          - drush cc all && drush en devel stage_file_proxy -y && drush sql-sanitize --sanitize-password="1234" --yes
+```yaml
+tooling:
+  latest:
+    service: appserver
+    description: Updates the database from the latest backup
+    cmd:
+      - mkdir -p /app/artifacts
+      - rm -f /app/artifacts/database.sql.gz
+      - terminus backup:get site.env --element=db --to=/app/artifacts/database.sql.gz
+      - database: cd /app && /helpers/sql-import.sh artifacts/database.sql.gz
+      - drush cc all && drush en devel stage_file_proxy -y && drush sql-sanitize --sanitize-password="1234" --yes
+```
 
 For Drupal 8, we setup [config split](https://www.drupal.org/project/config_split) to handle separate development configurations, so our last line looks something like this:
 
-      - cd /app/web && drush cr && drush sql-sanitize --sanitize-password="1234" --yes && drush cr && drush config-split:import config_dev -y
+```yaml
+- cd /app/web && drush cr && drush sql-sanitize --sanitize-password="1234" --yes && drush cr && drush config-split:import config_dev -y
+```
 
 Once you add this, then you can type `lando latest` whenever you want to refresh your local environment to bring it up to date with the latest database backup.
 

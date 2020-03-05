@@ -11,8 +11,14 @@
     "title": "Drupal",
     "collapsable": false,
     "children": [
-      "drupal-7-landoize-an-extant-app",
-      "updating-local-environments"
+      "drupal-7-landoize-an-extant-app"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
     ]
   },
   {
