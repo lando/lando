@@ -15,13 +15,6 @@
     ]
   },
   {
-    "title": "Pantheon",
-    "collapsable": false,
-    "children": [
-      "updating-local-pantheon-environments"
-    ]
-  },
-  {
     "title": "Frontend",
     "collapsable": false,
     "children": [
@@ -51,6 +44,13 @@
       "external-access.md",
       "access-by-other-devices",
       "offline-dev"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
     ]
   },
   {
