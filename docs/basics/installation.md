@@ -65,7 +65,7 @@ Note that our macOS installer _includes_ Docker Desktop and this accounts for it
 When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
 :::
 
-### Install DMG via direct download
+### Install DMG via direct download (recommended)
 
 1.  Download the latest `.dmg` package from [GitHub](https://github.com/lando/lando/releases)
 2.  Mount the DMG by double-clicking it
@@ -73,9 +73,13 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 4.  Go through the setup workflow
 5.  Enter your username and password when prompted
 
-### Install via [HomeBrew](https://brew.sh/)
+### Install via [HomeBrew](https://brew.sh/) (third party)
 
-*Please note that the version installed via Homebrew is community-maintained and may not be the latest version as provided by the `.dmg` package from [GitHub](https://github.com/lando/lando/releases).*
+::: warning We do not maintain this!
+Please note that the versions of Lando and Docker installed via Homebrew are community-maintained and may not be the latest version as provided by the `.dmg` package from [GitHub](https://github.com/lando/lando/releases). **This also means that `brew` may install an unsupported version of Docker for you.**
+
+See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
+:::
 
 1. Ensure homebrew is installed and up-to-date.
 2. Add the lando cask: `brew cask install lando`
