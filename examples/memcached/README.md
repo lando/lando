@@ -31,11 +31,16 @@ lando ssh -s custom -c "memcached --version | grep 1.5.12"
 # Should use the user specifiec patch version if given
 lando ssh -s patch -c "memcached --version | grep 1.5.11"
 
+# Should have a memcached process running on port 11211 by default
+docker top landomemcached_defaults_1 | grep "memcached -p 11211"
+
 # Should set the default cache size to 64
 lando ssh -s defaults -c "env | grep MEMCACHED_CACHE_SIZE=64"
+docker top landomemcached_defaults_1 | grep "memcached -p 11211 -m 64"
 
 # Should set the user specified cache size if given
 lando ssh -s custom -c "env | grep MEMCACHED_CACHE_SIZE=256"
+docker top landomemcached_custom_1 | grep "memcached -p 11211 -m 256"
 ```
 
 Destroy tests
