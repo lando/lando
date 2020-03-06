@@ -25,7 +25,7 @@ jobs:
             echo "The following files have changed: $LANDO_CHANGED_FILES"
             LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
             if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
-              circleci-agent step halt
+              # circleci-agent step halt
             fi
       - restore_cache:
           keys:
