@@ -25,7 +25,7 @@ Run the following commands to validate things are rolling as they should.
 # Should set 80,443 in io.lando.http-ports label by default
 docker inspect landoscanner_scanme_1 | grep io.lando.http-ports | grep "80,443"
 
-# Should add an extra port if specified
+# Should add an extra port to io.lando.http-ports if specified
 docker inspect landoscanner_moreports_1 | grep io.lando.http-ports | grep "80,443,8888"
 ```
 

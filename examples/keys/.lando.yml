@@ -5,8 +5,6 @@ services:
     via: cli
     build_as_root:
       - yes y | ssh-keygen -t rsa -N '' -C 'BADBADKEY' -f /lando/keys/badbadkey
-      - chown -R root:root /lando/keys/badbadkey
-      - chown -R root:root /lando/keys/badbadkey.pub
   cli2:
     type: php
     via: cli
