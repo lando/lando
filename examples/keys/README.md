@@ -23,6 +23,7 @@ Run the following commands to verify things work as expected
 
 ```bash
 # Should have our keys
+lando restart
 lando ssh -s cli -u root -c "cat /etc/ssh/ssh_config | grep /lando/keys/badbadkey"
 lando ssh -s cli2 -u root -c "cat /etc/ssh/ssh_config | grep /lando/keys/ppkey"
 lando ssh -s cli2 -u root -c "cat /etc/ssh/ssh_config | grep /lando/keys/key | grep with | grep space"
