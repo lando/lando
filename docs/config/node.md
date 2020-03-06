@@ -88,7 +88,7 @@ services:
 Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `node` snippet:
 
 ```js
-// Get our ket and cert
+// Get our key and cert
 const key = fs.readFileSync('/certs/cert.key')
 const cert = fs.readFileSync('/certs/cert.crt'),
 
