@@ -43,7 +43,6 @@ const cleanNetworks = lando => lando.engine.getNetworks()
     }
   });
 
-
 module.exports = lando => {
   // Preemptively make sure we have enough networks and if we don't smartly prune some of them
   lando.events.on('pre-engine-start', 1, () => cleanNetworks(lando));
