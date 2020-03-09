@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Versions and things
+LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
+DOCKER_COMPOSE_VERSION="1.25.4"
+
 # Checking to see that we have the correct core build dependencies
 if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
   echo "You do not have the correct dependencies installed to build Lando! Trying to install them..."
@@ -16,12 +20,6 @@ if [ ! $(type -p fpm) ]; then
   ./scripts/install-deps.sh
   gem install --verbose fpm || sudo gem install --verbose fpm
 fi
-
-# Lando things
-LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-
-# Docker things
-DOCKER_COMPOSE_VERSION="1.24.1"
 
 # Start up our build directory and go into it
 mkdir -p build/installer
