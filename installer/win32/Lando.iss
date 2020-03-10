@@ -4,9 +4,12 @@
 #define MyAppContact "https://docs.devwithlando.io"
 
 #define docker "Docker.exe"
-#define engineSetup "engine.bat"
+#define dockerVersion {#DockerVersion}
 #define lando "bundle"
 #define landoIco "lando.ico"
+#define landoVersion {#MyAppVersion}
+#define engineSetup "engine.bat"
+#define settings "settings.ps1"
 
 [Setup]
 AppCopyright={#MyAppPublisher}
@@ -20,22 +23,24 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
+ChangesEnvironment=true
+Compression=lzma
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName=Lando
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
-OutputDir=dist
-OutputBaseFilename=lando
-WizardImageAlphaFormat=premultiplied
-WizardSmallImageFile=lando.bmp
-WizardImageFile=lando-side.bmp
-Compression=lzma
-SolidCompression=yes
-WizardImageStretch=yes
-UninstallDisplayIcon={app}\unins000.exe
 SetupIconFile=lando.ico
 SetupLogging=yes
-ChangesEnvironment=true
+SolidCompression=yes
+
+OutputBaseFilename=lando
+OutputDir=dist
+WizardImageAlphaFormat=premultiplied
+WizardImageFile=lando-side.bmp
+WizardImageStretch=yes
+WizardSmallImageFile=lando.bmp
+WizardStyle=modern
+UninstallDisplayIcon={app}\unins000.exe
 
 [CustomMessages]
 WelcomeLabel3=%nLando will also install Docker Desktop for you.%n%nDocker Desktop is a requirement!%n%nIf you do not already have Docker Desktop and you %nelect to not install Docker Desktop then Lando will not work!
@@ -51,14 +56,14 @@ Name: "custom"; Description: "Custom installation"; Flags: iscustom
 Name: modifypath; Description: "Add lando binary to PATH"
 
 [Components]
-Name: "Git"; Description: "Git for Windows"; Types: full custom;
-Name: "Lando"; Description: "Lando" ; Types: full custom; Flags: disablenouninstallwarning fixed
-Name: "Docker"; Description: "Docker Desktop" ; Types: full custom;
+Name: "Lando"; Description: "Lando {#landoVersion}" ; Types: full custom; Flags: disablenouninstallwarning fixed
+Name: "Docker"; Description: "Docker Desktop {#dockerVersion}" ; Types: full custom;
 
 [Files]
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"
 Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lando"
-Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; BeforeInstall: CheckHyperV(); AfterInstall: RunInstallDocker(); Components: "Docker"
+Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; AfterInstall: RunInstallDocker(); Components: "Docker"
+Source: "{#settings}"; DestDir: "{app}"; Components: "Docker"; AfterInstall: RunSetttingsSetup();
 Source: "{#engineSetup}"; DestDir: "{app}"; Components: "Docker"; AfterInstall: RunEngineSetup();
 
 [Registry]
@@ -68,7 +73,6 @@ Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PA
 Type: filesandordirs; Name: "{userappdata}\..\.lando"
 
 [Code]
-
 var
   WelcomeLabel3: TNewStaticText;
 
@@ -90,7 +94,7 @@ function InitializeSetup(): Boolean;
 begin
   if (FileExists(ExpandConstant('{pf}\Docker\Docker\resources\bin\docker.exe'))) then
   begin
-    MsgBox('The installer has detected that Docker Desktop is already installed!' + #13#10 + #13#10 + 'If you are using the Stable version make sure you close Docker Desktop before continuing this installation as Lando will install the latest version.' + #13#10 + #13#10 + 'If you wish to continue with your current version of Docker Desktop without upgrading make sure you customize your installation on the next step and choose to not install Docker Desktop.' + #13#10 + #13#10 + 'Keeping your current version of Docker Desktop is not supported so YMMV.' + #13#10 + #13#10 + 'Also note that if you are upgrading from Docker Desktop 17.09.0-ce-win27 or earlier you may need to uninstall Docker Desktop for this installer to succeed.', mbInformation, MB_OK);
+    MsgBox('The installer has detected that Docker Desktop is already installed!' + #13#10 + #13#10 + 'Make sure you close Docker Desktop before continuing this installation as Lando will install the version it needs.' + #13#10 + #13#10 + 'If you wish to continue with your current version of Docker Desktop without upgrading make sure you customize your installation on the next step and choose to not install Docker Desktop.' + #13#10 + #13#10 + 'Keeping your current version of Docker Desktop is not supported so YMMV.', mbInformation, MB_OK);
     Result := True;
   end
   else
@@ -99,20 +103,33 @@ begin
   end;
 end;
 
-procedure CheckHyperV();
+procedure RunInstallDocker();
 var
   ResultCode: Integer;
 begin
-  WizardForm.FilenameLabel.Caption := 'Checking that HyperV is enabled and running...'
-  if ExecAsOriginalUser(ExpandConstant('sc'), ExpandConstant('query vmms'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop...'
+  if Exec(ExpandConstant('{app}\installers\docker\docker.exe'), 'install --quiet', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  begin
+    //MsgBox('git installed OK', mbInformation, MB_OK);
+  end
+  else begin
+    MsgBox('Docker Desktop install failure!', mbCriticalError, MB_OK);
+  end
+end;
+
+procedure RunSetttingsSetup();
+var
+  ResultCode: Integer;
+begin
+  WizardForm.FilenameLabel.Caption := 'Modifying Docker Config...'
+  if ExecAsOriginalUser(ExpandConstant('{app}\settings.ps1'), '', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
     if ( ResultCode = 0 ) then
     begin
-      Log('HyperV is running with code ' + IntToStr(ResultCode));
+      Log('Docker settings modified! ' + IntToStr(ResultCode));
     end
     else begin
-      Log('HyperV is not running with code ' + IntToStr(ResultCode));
-      MsgBox('HyperV is not running! Please install first and then run this installer.', mbCriticalError, MB_OK);
+      Log('Docker settings modification failed with code ' + IntToStr(ResultCode));
       WizardForm.Close;
       exit;
     end;
@@ -123,26 +140,11 @@ begin
   end;
 end;
 
-procedure RunInstallDocker();
-var
-  ResultCode: Integer;
-begin
-  MsgBox('You will now be prompted to install Docker Desktop.' + #13#10 +  #13#10 + 'Please approve any Docker installation prompts to make sure your Lando install completes with great success!', mbInformation, MB_OK);
-  WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop...'
-  if Exec(ExpandConstant('{app}\installers\docker\docker.exe'), '', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-  begin
-    //MsgBox('git installed OK', mbInformation, MB_OK);
-  end
-  else begin
-    MsgBox('Docker Desktop install failure!', mbCriticalError, MB_OK);
-  end
-end;
-
 procedure RunEngineSetup();
 var
   ResultCode: Integer;
 begin
-  WizardForm.FilenameLabel.Caption := 'Activating the HyperV Docker Engine...'
+  WizardForm.FilenameLabel.Caption := 'Activating the Docker Engine...'
   if ExecAsOriginalUser(ExpandConstant('{app}\engine.bat'), '', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
     if ( ResultCode = 0 ) then

@@ -15,7 +15,7 @@
 'DOCKER_INSTALLED_TLE' = "Docker Desktop installation detected!";
 'DOCKER_INSTALLED_MSG' = "The installer has detected that Docker Desktop is already installed!
 
-If you are using the Stable version make sure you close Docker Desktop before continuing this installation as Lando will install the latest version.
+Make sure you close Docker Desktop before continuing this installation as Lando will install the version it needs.
 
 If you wish to continue with your current version of Docker Desktop without upgrading make sure you customize your installation on the next step and choose to not install Docker Desktop.
 

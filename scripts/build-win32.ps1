@@ -7,6 +7,11 @@
 #
 $ErrorActionPreference = "Stop"
 
+$lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
+$lando_version = $lando_pkg.version
+$docker_build = "42716"
+$docker_version = "2.2.0.3"
+
 # Get some ENV things
 $temp_dir = $env:TMP
 $base_dir = "$pwd\build\installer"
@@ -19,12 +24,10 @@ $plugins_dir = "$bundle_dir\plugins"
 # Build dependencies
 $inno_url = "http://www.jrsoftware.org/download.php/is.exe"
 $inno_dest = "$temp_dir\inno-installer.exe"
-$inno_bin = "C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
+$inno_bin = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 
 # Lando version information
-$lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
-$lando_version = $lando_pkg.version
-$docker_version = "40693"
+
 
 # Unzip helper
 function Unzip($file, $destination)
@@ -75,7 +78,7 @@ Write-Output "Grabbing the files we need..."
 Copy-Item "build\cli\lando-win32-x64-v$lando_version.exe" "$bin_dir\lando.exe" -force
 
 # Docker Desktop
-Download -Url "https://download.docker.com/win/stable/$docker_version/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
+Download -Url "https://download.docker.com/win/stable/$docker_build/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
 
 # Copy over some other assets
 Write-Output "Copying over static assets..."
@@ -87,4 +90,4 @@ Copy-Item "$pwd\LICENSE.md" "$docs_dir\LICENSE.md" -force
 
 # Create our inno-installer
 Write-Output "Creating our package..."
-Start-Process -Wait "$inno_bin" -ArgumentList "$base_dir\Lando.iss /DMyAppVersion=$lando_version"
+Start-Process -Wait "$inno_bin" -ArgumentList "$base_dir\Lando.iss /DMyAppVersion=$lando_version /DDockerVersion=$docker_version"
