@@ -39,8 +39,9 @@ module.exports = (api, handler, config) => {
     })
     // Update the contact
     .then(interests => {
-      return mailchimp.put(`/lists/613837077f/members/${utils.md5(req.body.email)}`, {
-        email_address: req.body.email,
+      const email = _.toLower(req.body.email);
+      return mailchimp.put(`/lists/613837077f/members/${utils.md5(email)}`, {
+        email_address: email,
         interests: _.merge({}, _.get(req, 'body.defaults', {}), interests),
         status: 'subscribed',
       });
