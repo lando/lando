@@ -15,8 +15,8 @@ $docker_settings = "$env:APPDATA\Docker\settings.json"
 # Boot up docker desktop
 Start-Process "$docker_desktop"
 
-while (!(Test-Path "$docker_settings")) 
-{ 
+while (!(Test-Path "$docker_settings"))
+{
   Start-Sleep -s 10
 }
 

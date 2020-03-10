@@ -63,7 +63,7 @@ Source: "{#engine}"; DestDir: "{app}"; DestName: "engine.ps1"; Components: "Land
 Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; AfterInstall: RunInstallDocker(); Components: "Docker"
 
 [Run]
-Filename: powershell.exe; Parameters: "-ExecutionPolicy Bypass -File ""{app}\engine.ps1"""; Description: "Launch Docker"; WorkingDir: {app}; Flags: postinstall runasoriginaluser 
+Filename: powershell.exe; Parameters: "-ExecutionPolicy Bypass -File ""{app}\engine.ps1"""; Description: "Launch Docker"; WorkingDir: {app}; Flags: postinstall runasoriginaluser runhidden
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;
