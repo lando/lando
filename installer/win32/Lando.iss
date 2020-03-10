@@ -4,10 +4,8 @@
 #define MyAppContact "https://docs.devwithlando.io"
 
 #define docker "Docker.exe"
-#define dockerVersion {#DockerVersion}
 #define lando "bundle"
 #define landoIco "lando.ico"
-#define landoVersion {#MyAppVersion}
 #define engineSetup "engine.bat"
 #define settings "settings.ps1"
 
@@ -38,7 +36,6 @@ OutputDir=dist
 WizardImageAlphaFormat=premultiplied
 WizardImageFile=lando-side.bmp
 WizardImageStretch=yes
-WizardSmallImageFile=lando.bmp
 WizardStyle=modern
 UninstallDisplayIcon={app}\unins000.exe
 
@@ -56,8 +53,8 @@ Name: "custom"; Description: "Custom installation"; Flags: iscustom
 Name: modifypath; Description: "Add lando binary to PATH"
 
 [Components]
-Name: "Lando"; Description: "Lando {#landoVersion}" ; Types: full custom; Flags: disablenouninstallwarning fixed
-Name: "Docker"; Description: "Docker Desktop {#dockerVersion}" ; Types: full custom;
+Name: "Lando"; Description: "Lando {#MyAppVersion}" ; Types: full custom; Flags: disablenouninstallwarning fixed
+Name: "Docker"; Description: "Docker Desktop {#DockerVersion}" ; Types: full custom;
 
 [Files]
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"

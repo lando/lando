@@ -7,6 +7,7 @@
 #
 $ErrorActionPreference = "Stop"
 
+# Lando version information
 $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
 $docker_build = "42716"
@@ -25,9 +26,6 @@ $plugins_dir = "$bundle_dir\plugins"
 $inno_url = "http://www.jrsoftware.org/download.php/is.exe"
 $inno_dest = "$temp_dir\inno-installer.exe"
 $inno_bin = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-
-# Lando version information
-
 
 # Unzip helper
 function Unzip($file, $destination)

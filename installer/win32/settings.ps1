@@ -5,6 +5,4 @@
 #
 # A script to build Lando on win32
 #
-$ErrorActionPreference = "Stop"
-
 Write-Output "Holla!"
