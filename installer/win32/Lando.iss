@@ -6,8 +6,7 @@
 #define docker "Docker.exe"
 #define lando "bundle"
 #define landoIco "lando.ico"
-#define engineSetup "engine.bat"
-#define settings "settings.ps1"
+#define engine "engine.ps1"
 
 [Setup]
 AppCopyright={#MyAppPublisher}
@@ -60,11 +59,11 @@ Name: "Docker"; Description: "Docker Desktop {#DockerVersion}" ; Types: full cus
 [Files]
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"
 Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lando"
+Source: "{#engine}"; DestDir: "{app}"; DestName: "engine.ps1"; Components: "Lando"
 Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; AfterInstall: RunInstallDocker(); Components: "Docker"
 
 [Run]
-Filename: "{pf}\Docker\Docker\Docker Desktop.exe"; Description: "Launch Docker"; WorkingDir: {app}; Flags: runhidden runasoriginaluser nowait postinstall 
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\settings.ps1"""; Description: "Pin Docker version to Lando"; WorkingDir: {app}; Flags: runhidden runasoriginaluser postinstall
+Filename: powershell.exe; Parameters: "-ExecutionPolicy Bypass -File ""{app}\engine.ps1"""; Description: "Launch Docker"; WorkingDir: {app}; Flags: postinstall runasoriginaluser 
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;

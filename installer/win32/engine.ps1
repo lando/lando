@@ -7,16 +7,17 @@
 # PowerShell.exe -ExecutionPolicy Bypass -File settings.ps1
 #
 
-# Get path to settings File
+# Get paths to things
+$docker = "$env:ProgramFiles\Docker\Docker\resources\bin\docker.exe"
+$docker_desktop = "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
 $docker_settings = "$env:APPDATA\Docker\settings.json"
 
-# Wait a bit until we can ensure the settings file exists
-Start-Sleep -Seconds 5
+# Boot up docker desktop
+Start-Process "$docker_desktop"
 
-# Exit but dont fail if we cant find 
-if (!(Test-Path "$docker_settings"))
-{
-  exit 0
+while (!(Test-Path "$docker_settings")) 
+{ 
+  Start-Sleep -s 10
 }
 
 # Start the settings update
