@@ -41,6 +41,7 @@ UninstallDisplayIcon={app}\unins000.exe
 
 [CustomMessages]
 WelcomeLabel3=%nLando will also install Docker Desktop for you.%n%nDocker Desktop is a requirement!%n%nIf you do not already have Docker Desktop and you %nelect to not install Docker Desktop then Lando will not work!
+FinishedMessage=%nLando Setup will now launch Docker Desktop for you!%n%nThis is a requirement to use Lando and may take a few moments to start.%nYou will immediately see a whale icon in your taskbar!
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -60,8 +61,10 @@ Name: "Docker"; Description: "Docker Desktop {#DockerVersion}" ; Types: full cus
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"
 Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lando"
 Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; AfterInstall: RunInstallDocker(); Components: "Docker"
-Source: "{#settings}"; DestDir: "{app}"; Components: "Docker"; AfterInstall: RunSetttingsSetup();
-Source: "{#engineSetup}"; DestDir: "{app}"; Components: "Docker"; AfterInstall: RunEngineSetup();
+
+[Run]
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\settings.ps1"""; Description: "Updating Docker Settings"; WorkingDir: {app}; Flags: runhidden runasoriginaluser
+Filename: "{pf}\Docker\Docker\Docker Desktop.exe"; Description: "Launch Docker"; WorkingDir: {app}; Flags: runhidden runasoriginaluser nowait postinstall 
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;
@@ -72,10 +75,12 @@ Type: filesandordirs; Name: "{userappdata}\..\.lando"
 [Code]
 var
   WelcomeLabel3: TNewStaticText;
+  FinishedMessage: TNewStaticText;
 
 procedure InitializeWizard;
 begin
   WizardForm.WelcomeLabel2.AutoSize := True;
+
   WelcomeLabel3 := TNewStaticText.Create(WizardForm);
   WelcomeLabel3.Parent := WizardForm.WelcomePage;
   WelcomeLabel3.AutoSize := False;
@@ -85,6 +90,17 @@ begin
   WelcomeLabel3.Height := WizardForm.WelcomePage.Height - WelcomeLabel3.Top;
   WelcomeLabel3.Font.Assign(WizardForm.WelcomeLabel2.Font);
   WelcomeLabel3.Caption := CustomMessage('WelcomeLabel3');
+
+  FinishedMessage := TNewStaticText.Create(WizardForm);
+  FinishedMessage.Parent := WizardForm.FinishedPage;
+  FinishedMessage.AutoSize := False;
+  FinishedMessage.Left := WizardForm.FinishedLabel.Left;
+  FinishedMessage.Top := WizardForm.FinishedLabel.Top + WizardForm.FinishedLabel.Height + WizardForm.FinishedLabel.Height;
+  FinishedMessage.Width := WizardForm.FinishedLabel.Width;
+  FinishedMessage.Height := WizardForm.FinishedPage.Height - FinishedMessage.Top;
+  FinishedMessage.Font.Assign(WizardForm.FinishedLabel.Font);
+  FinishedMessage.Font.Style := [fsBold];
+  FinishedMessage.Caption := CustomMessage('FinishedMessage');
 end;
 
 function InitializeSetup(): Boolean;
@@ -107,58 +123,11 @@ begin
   WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop...'
   if Exec(ExpandConstant('{app}\installers\docker\docker.exe'), 'install --quiet', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
-    //MsgBox('git installed OK', mbInformation, MB_OK);
+    // MsgBox('git installed OK', mbInformation, MB_OK);
   end
   else begin
     MsgBox('Docker Desktop install failure!', mbCriticalError, MB_OK);
   end
-end;
-
-procedure RunSetttingsSetup();
-var
-  ResultCode: Integer;
-begin
-  WizardForm.FilenameLabel.Caption := 'Modifying Docker Config...'
-  if ExecAsOriginalUser(ExpandConstant('{app}\settings.ps1'), '', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-  begin
-    if ( ResultCode = 0 ) then
-    begin
-      Log('Docker settings modified! ' + IntToStr(ResultCode));
-    end
-    else begin
-      Log('Docker settings modification failed with code ' + IntToStr(ResultCode));
-      WizardForm.Close;
-      exit;
-    end;
-  end
-  else begin
-    Log('Something bad happened with code ' + IntToStr(ResultCode));
-    MsgBox('Something bad happened. Install Fail.', mbCriticalError, MB_OK);
-  end;
-end;
-
-procedure RunEngineSetup();
-var
-  ResultCode: Integer;
-begin
-  WizardForm.FilenameLabel.Caption := 'Activating the Docker Engine...'
-  if ExecAsOriginalUser(ExpandConstant('{app}\engine.bat'), '', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-  begin
-    if ( ResultCode = 0 ) then
-    begin
-      Log('Engine activated with great success and result code ' + IntToStr(ResultCode));
-    end
-    else begin
-      Log('Engine activation failed with code ' + IntToStr(ResultCode));
-      MsgBox('Engine activation failed!', mbCriticalError, MB_OK);
-      WizardForm.Close;
-      exit;
-    end;
-  end
-  else begin
-    Log('Something bad happened with code ' + IntToStr(ResultCode));
-    MsgBox('Something bad happened. Install Fail.', mbCriticalError, MB_OK);
-  end;
 end;
 
 const
