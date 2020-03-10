@@ -2,8 +2,8 @@
 
 # Vars
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_VERSION="2.1.0.5"
-DOCKER_DOWNLOAD="40693"
+DOCKER_VERSION="2.2.0.3"
+DOCKER_DOWNLOAD="42716"
 TEAM_ID="FY8GAUX282"
 PKG_SIGN=false
 DMG_SIGN=false
@@ -45,7 +45,6 @@ cp -rf "../../build/cli/lando-osx-x64-v${LANDO_VERSION}" lando
 chmod +x lando
 
 # Get Docker for mac
-# @todo: Would be great to pin this version
 curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
   mkdir -p /tmp/lando/docker && \
   hdiutil attach -mountpoint /tmp/lando/docker Docker.dmg && \
