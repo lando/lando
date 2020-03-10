@@ -63,8 +63,8 @@ Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lan
 Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; AfterInstall: RunInstallDocker(); Components: "Docker"
 
 [Run]
-Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\settings.ps1"""; Description: "Updating Docker Settings"; WorkingDir: {app}; Flags: runhidden runasoriginaluser
 Filename: "{pf}\Docker\Docker\Docker Desktop.exe"; Description: "Launch Docker"; WorkingDir: {app}; Flags: runhidden runasoriginaluser nowait postinstall 
+Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -File ""{app}\settings.ps1"""; Description: "Pin Docker version to Lando"; WorkingDir: {app}; Flags: runhidden runasoriginaluser postinstall
 
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;

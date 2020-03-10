@@ -10,6 +10,9 @@
 # Get path to settings File
 $docker_settings = "$env:APPDATA\Docker\settings.json"
 
+# Wait a bit until we can ensure the settings file exists
+Start-Sleep -Seconds 5
+
 # Exit but dont fail if we cant find 
 if (!(Test-Path "$docker_settings"))
 {
