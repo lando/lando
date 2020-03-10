@@ -56,7 +56,6 @@ module.exports = lando => {
       .then(data => _.keys(data.Containers))
       .each(id => landonet.disconnect({Container: id, Force: true}))
       .then(() => landonet.remove())
-      .then(() => lando.cache.set('versions', _.merge({}, lando.versions, {networking: 2}), {persist: true}))
       .catch(err => {
         lando.log.verbose('Error inspecting lando_bridge_network, probably does not exit yet');
         lando.log.debug(err);
@@ -72,10 +71,12 @@ module.exports = lando => {
     return lando.engine.getNetworks()
     // Try to find our net
     .then(networks => _.some(networks, network => network.Name === lando.config.networkBridge))
-    // Create if needed
+    // Create if needed and set our network version number
     .then(exists => {
       if (!exists) {
-        return lando.engine.createNetwork(lando.config.networkBridge);
+        return lando.engine.createNetwork(lando.config.networkBridge).then(() => {
+          lando.cache.set('versions', _.merge({}, lando.versions, {networking: 2}), {persist: true});
+        });
       }
     });
   });
