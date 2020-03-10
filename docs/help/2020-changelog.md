@@ -9,6 +9,7 @@
 * Fixed bug causing `memcached` to not boot up correctly [#1827](https://github.com/lando/lando/issues/1827)
 * Improved macOS and Windows Lando installers [#1975](https://github.com/lando/lando/issues/1975)
 * Improved build step and restart performance [#2013](https://github.com/lando/lando/issues/2013)
+* Remove lingering reference to `Git for Windows` in Windoze intaller [#1865](https://github.com/lando/lando/issues/1865)
 * Updated to `docker-compose` `1.25.4` [#1975](https://github.com/lando/lando/issues/1975)
 * Updated to Docker Desktop `2.2.0.3` for macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
 
