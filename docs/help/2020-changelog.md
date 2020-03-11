@@ -4,6 +4,7 @@
 
 * Added support for `node` `12` and `13` [#1866](https://github.com/lando/lando/issues/1866)
 * Added support for new `node` `10` and `11` minor versions [#1981](https://github.com/lando/lando/issues/1981)
+* Added support for `php` `7.4` [#1891](https://github.com/lando/lando/pull/1892)
 * Added `json` and `table` formats to some `lando` commands [#1737](https://github.com/lando/lando/issues/1737)
 * Added compatibility for Docker Desktop `2.2.0.3` on macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
 * Fixed bug causing cli output colorization in non `TTY` contexts [#1789](https://github.com/lando/lando/issues/1789)

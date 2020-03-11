@@ -48,6 +48,9 @@ lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""
 lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
 
 # Should use specified php version if given
+lando ssh -s cli74 -c "php -v" | grep "PHP 7.4"
+
+# Should use specified php version if given
 lando ssh -s custom -c "php -v" | grep "PHP 7.1"
 
 # Should serve via nginx if specified
@@ -61,6 +64,23 @@ lando ssh -s custom -c "php -m | grep xdebug"
 
 # Should not serve port 80 for cli
 lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
+
+# Should use custom php ini if specified
+lando ssh -s custom74 -c "php -i | grep memory_limit | grep 514"
+lando ssh -s custom74 -c "curl http://custom_nginx" | grep html_errors | grep On | grep On
+
+# Should inherit overrides from its generator
+lando ssh -s custom74 -c "env | grep DUALBLADE | grep maxim"
+lando ssh -s custom74_nginx -c "env | grep DUALBLADE | grep maxim"
+
+# Should enable xdebug if specified
+lando ssh -s custom74 -c "php -m | grep xdebug" || echo $? | grep 1
+
+# Should serve via nginx if specified
+lando ssh -s custom74_nginx -c "curl http://localhost | grep WEBDIR"
+
+# Should serve via apache if specified
+lando ssh -s custom74_apache -c "curl http://localhost | grep ROOTDIR"
 
 # Should use custom php ini if specified
 lando ssh -s custom -c "php -i | grep memory_limit | grep 514"
