@@ -12,5 +12,6 @@
 * Remove lingering reference to `Git for Windows` in Windoze intaller [#1865](https://github.com/lando/lando/issues/1865)
 * Updated to `docker-compose` `1.25.4` [#1975](https://github.com/lando/lando/issues/1975)
 * Updated to Docker Desktop `2.2.0.3` for macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
+* Updated `xdebug` to latest in `php` `7.2` and `7.3`
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
