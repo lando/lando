@@ -12,6 +12,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [13](https://hub.docker.com/r/_/node/)
+*   [12.4 - 12.16](https://hub.docker.com/r/_/node/)
+*   [12](https://hub.docker.com/r/_/node/)
 *   [11](https://hub.docker.com/r/_/node/)
 *   [11.4 - 11.15](https://hub.docker.com/r/_/node/)
 *   **[10](https://hub.docker.com/r/_/node/)** **(default)**
@@ -38,7 +41,7 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: node:10.14.2
+    type: node:12.13
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for the underlying image we are using.
