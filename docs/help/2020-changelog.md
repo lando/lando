@@ -2,6 +2,7 @@
 
 ## v3.0.0-aft.1 - March 13, 2020 (estimated release date)
 
+* Added support for `node` `12` and `13` [#1866](https://github.com/lando/lando/issues/1866)
 * Added support for new `node` `10` and `11` minor versions [#1981](https://github.com/lando/lando/issues/1981)
 * Added `json` and `table` formats to some `lando` commands [#1737](https://github.com/lando/lando/issues/1737)
 * Added compatibility for Docker Desktop `2.2.0.3` on macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
