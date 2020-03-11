@@ -1,4 +1,4 @@
-Pantheon Druapl 7 Example
+Pantheon Drupal 7 Example
 =========================
 
 This example exists primarily to test the following documentation:
