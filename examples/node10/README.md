@@ -1,5 +1,5 @@
-Node Example
-============
+Node 10 Example
+===============
 
 This example exists primarily to test the following documentation:
 

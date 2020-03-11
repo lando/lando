@@ -1,5 +1,5 @@
-Node Example
-============
+Node 12 Example
+===============
 
 This example exists primarily to test the following documentation:
 
@@ -29,7 +29,7 @@ lando ssh -s defaults -c "env | grep NODE_VERSION=12."
 lando ssh -s custom -c "env | grep NODE_VERSION=13."
 
 # Should use a user specified patch version if given
-lando ssh -s patch -c "env | grep NODE_VERSION=12.13.4"
+lando ssh -s patch -c "env | grep NODE_VERSION=12.13.1"
 
 # Should serve over port 80 by default
 lando ssh -s defaults -c "curl http://localhost | grep tune"
