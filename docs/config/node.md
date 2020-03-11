@@ -41,7 +41,7 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: node:10.14.2
+    type: node:12.13
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for the underlying image we are using.
