@@ -43,6 +43,10 @@ cd build/installer
 # Get our Lando dependencies
 cp -rf "../../build/cli/lando-osx-x64-v${LANDO_VERSION}" lando
 chmod +x lando
+# Sign lando if we can
+if [ "$PKG_SIGN" == "true" ]; then
+  codesign --force --options runtime -s "$TEAM_ID" lando
+fi
 
 # Get Docker for mac
 curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
