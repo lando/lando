@@ -170,7 +170,7 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 
 To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults. You will also need...
 
-* [the latest node 10](https://nodejs.org/en/download/)
+* [the latest node 12](https://nodejs.org/en/download/)
 * [the latest yarn](https://yarnpkg.com/lang/en/docs/install/)
 
 On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`.
@@ -213,4 +213,3 @@ Lando has tried to maintain backwards compatibility as best as possible on it's 
 * [3.0.0-rc.2](https://github.com/lando/lando/releases/tag/v3.0.0-rc.2)
 * [3.0.0-rc.1](https://github.com/lando/lando/releases/tag/v3.0.0-rc.1)
 * [3.0.0-beta.41](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41)
-
