@@ -64,7 +64,7 @@ export default {
       type: Array,
       default: () => ([
         {name: 'Patreon', url: 'https://www.patreon.com/devwithlando'},
-        {name: 'OpenCollective', url: 'https://opencollective.com/devwithlando'},
+        {name: 'OpenCollective', url: 'https://opencollective.com/lando'},
       ]),
     },
     price: {

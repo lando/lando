@@ -93,7 +93,7 @@
               <ul>
                 <li><a href="https://github.com/sponsors/lando" target="_blank">GitHub Sponsors</a></li>
                 <li><a href="https://www.patreon.com/join/devwithlando?" target="_blank">Patreon</a></li>
-                <li><a href="https://opencollective.com/devwithlando" target="_blank">OpenCollective</a></li>
+                <li><a href="https://opencollective.com/lando" target="_blank">OpenCollective</a></li>
               </ul>
             </div>
             <div class="footer-column-half">

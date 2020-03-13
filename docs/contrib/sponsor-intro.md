@@ -29,11 +29,11 @@ The gold standard of sponsoring creatives, [Patreon](https://patreon.com/devwith
 
 [Sponsor with Patreon Here](https://patreon.com/devwithlando)
 
-### [With Open Collective](https://opencollective.com/devwithlando)
+### [With Open Collective](https://opencollective.com/lando)
 
-[Open Collective](https://opencollective.com/devwithlando) has similar drawbacks to Patreon, _however_, it may allow us to redistribute funds to projects Lando relies upon and other contributors in the future. If you're a devotee to the Open Collective ethos, give here, otherwise, GitHub Sponsors!
+[Open Collective](https://opencollective.com/lando) has similar drawbacks to Patreon, _however_, it may allow us to redistribute funds to projects Lando relies upon and other contributors in the future. If you're a devotee to the Open Collective ethos, give here, otherwise, GitHub Sponsors!
 
-[Sponsor with Open Collective Here](https://opencollective.com/devwithlando)
+[Sponsor with Open Collective Here](https://opencollective.com/lando)
 
 ## Why Sponsor Lando
 
