@@ -167,7 +167,6 @@ jobs:
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
-        - PowerShell -NoProfile -ExecutionPolicy Bypass -Command scripts/build-win32.ps1
         - cp -rf dist/lando.exe release/lando-latest-dev.exe
         - cp -rf dist/lando.exe release/lando-$TRAVIS_COMMIT-dev.exe
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.exe release/lando-$TRAVIS_TAG.exe; fi
