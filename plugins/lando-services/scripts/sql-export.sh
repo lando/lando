@@ -48,7 +48,7 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      FILE="$(pwd)/$1"
+      FILE="$(pwd)/${$1//\\//}"
       shift
       ;;
   esac
