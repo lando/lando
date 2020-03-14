@@ -90,7 +90,7 @@ if (!([string]::IsNullOrEmpty($cert_data)) -and !([string]::IsNullOrEmpty($cert_
   }
   # Verify the cert and password are good
   Write-Output "Verifying certs are good to go..."
-  Import-PfxCertificate -FilePath "$cert_path" -Password $cert_secure_password -CertStoreLocation "Cert:\LocalMachine\My" -WhatIf
+  Import-PfxCertificate -FilePath "$cert_path" -Password $cert_secure_password -CertStoreLocation "Cert:\LocalMachine\My"
   # If we get this far we should be good!
   Write-Output "We can sign!"
   $can_sign = $true
