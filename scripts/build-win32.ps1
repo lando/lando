@@ -83,11 +83,11 @@ If (!(Test-Path $inno_bin)) {
 if (!([string]::IsNullOrEmpty($cert_data)) -and !([string]::IsNullOrEmpty($cert_password))) {
   Write-Output "Certs detected!"
   # Decode and dump to temp file
-  If (!(Test-Path $cert_path)) {
+  # If (!(Test-Path $cert_path)) {
     Write-Output "Dumping certs to $cert_path..."
     $bytes = [Convert]::FromBase64String($cert_data)
     [IO.File]::WriteAllBytes($cert_path, $bytes)
-  }
+  # }
   # Verify the cert and password are good
   Write-Output "Verifying certs are good to go..."
   Import-PfxCertificate -FilePath "$cert_path" -Password $cert_secure_password -CertStoreLocation "Cert:\LocalMachine\My"
