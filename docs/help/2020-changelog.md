@@ -7,6 +7,7 @@
 * Added support for `php` `7.4` [#1891](https://github.com/lando/lando/pull/1892)
 * Added `json` and `table` formats to some `lando` commands [#1737](https://github.com/lando/lando/issues/1737)
 * Added compatibility for Docker Desktop `2.2.0.3` on macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
+* Added path normalisation to SQL Import/Export scripts [#1823](https://github.com/lando/lando/issues/1823)
 * Fixed bug causing cli output colorization in non `TTY` contexts [#1789](https://github.com/lando/lando/issues/1789)
 * Fixed bug causing `memcached` to not boot up correctly [#1827](https://github.com/lando/lando/issues/1827)
 * Improved macOS and Windows Lando installers [#1975](https://github.com/lando/lando/issues/1975)
