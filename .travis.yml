@@ -15,7 +15,7 @@ stages:
   - name: deploy
     if: |
       type = push AND \
-      branch == "master" OR |
+      branch == "master" OR \
       tag IS present
 
 # Set some immportant things to help maximize our CI performance
