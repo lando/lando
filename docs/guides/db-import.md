@@ -1,9 +1,12 @@
 ---
 metaTitle: Importing SQL Databases | Lando
 description: Learn how to import your MySQL, MariaDB or Postgres databases to Lando.
+date: 2019-11-05
 ---
 
 # SQL Import
+
+<GuideHeader test="https://circleci.com/gh/lando/lando/tree/master"/>
 
 Lando ships with a helper `db-import` script that is available in all our `LAMP` and `LEMP` based recipes. Used in the recipe context it should import a database dump into the recipe-provided database by default but can be used on additional database services as well.
 
@@ -67,3 +70,7 @@ tooling:
         description: Do not destroy the existing database before an import
         boolean: true
 ```
+
+<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" repo="https://github.com/lando/lando/tree/master/examples/sql-import" />
+<Newsletter />
+

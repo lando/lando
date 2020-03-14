@@ -135,7 +135,10 @@ services:
     config:
       database: config/my-custom.cnf
 ```
+Your override file will get copied to `/opt/bitnami/mysql/conf/bitnami/my_custom.cnf` in the database container and an include will be added to the MySQL configuration file located at `/opt/bitnami/mysql/conf/my.cnf`.
 
 ## Getting information
 
 You can get connection and credential information about your mysql instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Databases"/>

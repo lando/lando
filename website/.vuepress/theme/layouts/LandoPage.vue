@@ -12,7 +12,7 @@
     </div>
     <div id="hs_form" v-if="form" slot="page-bottom">
       <div class="inner">
-        <HSForm :form="form" :height="formHeight" />
+        <HSForm :form="form" :formHeight="formHeight" />
       </div>
     </div>
     <div id="subscribe" v-else-if="Object.keys(subscribe).length > 0" slot="page-bottom">
@@ -46,7 +46,7 @@ export default {
     return {
       byline: '',
       form: '',
-      formHeight: 1000,
+      formHeight: '',
       subscribe: {},
       title: '',
     };

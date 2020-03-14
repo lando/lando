@@ -12,7 +12,6 @@ const cleanNetworks = lando => lando.engine.getNetworks()
       // Warn user about this action
       lando.log.warn('Lando has detected you are at Docker\'s network limit!');
       lando.log.warn('Give us a moment as we try to make space by cleaning up old networks...');
-
       // Go through lando containers and add in networks
       return lando.engine.list()
       .filter(container => container.kind === 'app')
@@ -43,23 +42,41 @@ const cleanNetworks = lando => lando.engine.getNetworks()
     }
   });
 
-
 module.exports = lando => {
   // Preemptively make sure we have enough networks and if we don't smartly prune some of them
   lando.events.on('pre-engine-start', 1, () => cleanNetworks(lando));
 
+  // Assess whether we need to upgrade the lando network or not
+  lando.events.on('pre-engine-start', 2, () => {
+    if (lando.versions.networking === 1) {
+      lando.log.warn('Version %s Landonet detected, attempting upgrade...', lando.versions.networking);
+      const landonet = lando.engine.getNetwork(lando.config.networkBridge);
+      // Remove the old network
+      return landonet.inspect()
+      .then(data => _.keys(data.Containers))
+      .each(id => landonet.disconnect({Container: id, Force: true}))
+      .then(() => landonet.remove())
+      .catch(err => {
+        lando.log.verbose('Error inspecting lando_bridge_network, probably does not exit yet');
+        lando.log.debug(err);
+      });
+    }
+  });
+
   // Make sure we have a lando bridge network
   // We do this here so we can take advantage of docker up assurancs in engine.js
   // and to make sure it covers all non-app services
-  lando.events.on('pre-engine-start', 2, () => {
+  lando.events.on('pre-engine-start', 3, () => {
     // Let's get a list of network
     return lando.engine.getNetworks()
     // Try to find our net
     .then(networks => _.some(networks, network => network.Name === lando.config.networkBridge))
-    // Create if needed
+    // Create if needed and set our network version number
     .then(exists => {
       if (!exists) {
-        return lando.engine.createNetwork(lando.config.networkBridge);
+        return lando.engine.createNetwork(lando.config.networkBridge).then(() => {
+          lando.cache.set('versions', _.merge({}, lando.versions, {networking: 2}), {persist: true});
+        });
       }
     });
   });

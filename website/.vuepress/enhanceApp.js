@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 /*
  * Use this file to augment vuepress with other vue-y things
  */
@@ -9,7 +10,7 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
         Object.defineProperties(Vue.prototype, {
           $api: {
             get() {
-              return (base = 'https://api.lando.dev') => axios.create({baseURL: base});
+              return axios.create({baseURL: process.env.LANDO_API});
             },
           },
         });

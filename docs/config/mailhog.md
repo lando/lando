@@ -85,3 +85,5 @@ Note that we will install the [mhsendmail](https://github.com/mailhog/mhsendmail
 ## Getting information
 
 You can get connection and credential information about your mailhog instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="MailHog"/>

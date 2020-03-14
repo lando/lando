@@ -1,0 +1,78 @@
+[
+  {
+    "title": "Databases",
+    "collapsable": false,
+    "children": [
+      "db-import",
+      "db-export"
+    ]
+  },
+  {
+    "title": "Drupal",
+    "collapsable": false,
+    "children": [
+      "drupal-7-landoize-an-extant-app"
+    ]
+  },
+  {
+    "title": "Frontend",
+    "collapsable": false,
+    "children": [
+      "frontend"
+    ]
+  },
+  {
+    "title": "General",
+    "collapsable": false,
+    "children": [
+      "how-do-i-configure-a-lando-recipe",
+      "lando-info"
+    ]
+  },
+  {
+    "title": "IDEs",
+    "collapsable": false,
+    "children": [
+      "lando-phpstorm",
+      "lando-with-vscode"
+    ]
+  },
+  {
+    "title": "Networking",
+    "collapsable": false,
+    "children": [
+      "external-access.md",
+      "access-by-other-devices",
+      "offline-dev"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
+    ]
+  },
+  {
+    "title": "Recreation",
+    "collapsable": false,
+    "children": [
+      [
+        "https://www.youtube.com/watch?v=tkBVDh7my9Q",
+        "Mountain climbing"
+      ]
+    ]
+  },
+  {
+    "title": "Solr",
+    "collapsable": false,
+    "children": []
+  },
+  {
+    "title": "Updating",
+    "collapsable": false,
+    "children": [
+      "updating-to-rc2"
+    ]
+  }
+]

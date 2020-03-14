@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [7.4](https://hub.docker.com/r/devwithlando/php)
 *   **[7.3](https://hub.docker.com/r/devwithlando/php)** **(default)**
 *   [7.2](https://hub.docker.com/r/devwithlando/php)
 *   [7.1](https://hub.docker.com/r/devwithlando/php)
@@ -124,7 +125,7 @@ The first part of a pathmap will be the location of your code in the container. 
 #### Troubleshooting Xdebug
 
 ::: tip Problems starting XDEBUG
-If you are visiting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_START_SESSION=LANDO` to your request and seeing if that does the trick.
+If you are visiting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_SESSION_START=LANDO` to your request and seeing if that does the trick.
 :::
 
 If you have set `xdebug: true` in your recipe or service config and run `lando rebuild` but are still having issues getting `xdebug` to work correctly we recommend that you remove `xdebug: true`, run `lando rebuild` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something like below.
@@ -229,65 +230,65 @@ This is useful to note if you are not using absolute paths in any [tooling route
 
 ## Installed Extensions
 
-|           | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 |
-| --        | --- | --- | --- | --- | --- | --- | --- | --- |
-| apc       |  X  |  X  |     |     |     |     |     |     |
-| apcu      |     |     |  X  |  X  |  X  |  X  |  X  |  X  |
-| bcmath    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| bz2       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| calendar  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| Core      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| ctype     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| curl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| date      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| dom       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| exif      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| fileinfo  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| filter    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| ftp       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| gd        |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| gettext   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| hash      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| iconv     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| imagick   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| imap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| intl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| json      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| ldap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| libxml    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| mbstring  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| mcrypt    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| memcached |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| mysqli    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| mysqlnd   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| OAuth     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| OPcache   |     |     |  X  |  X  |  X  |  X  |  X  |  X  |
-| openssl   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| pcntl     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| pcre      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| PDO       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| pdo_mysql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| pdo_pgsql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| pdo_sqlite|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| Phar      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| posix     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| redis     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| Reflection|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| session   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| SimpleXML |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| soap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| SPL       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| sqlite3   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| standard  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| tokenizer |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| xdebug    |     |     |     |     |     |     |     |     |
-| xml       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| xmlreader |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| xmlwriter |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| zip       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
-| zlib      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+|           | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 |7.4 |
+| --        | --- | --- | --- | --- | --- | --- | --- | --- |--- |
+| apc       |  X  |  X  |     |     |     |     |     |     |    |
+| apcu      |     |     |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| bcmath    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| bz2       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| calendar  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| Core      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| ctype     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| curl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| date      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| dom       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| exif      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| fileinfo  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| filter    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| ftp       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| gd        |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| gettext   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| hash      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| iconv     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| imagick   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| imap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| intl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| json      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| ldap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| libxml    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| mbstring  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| mcrypt    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| memcached |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| mysqli    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| mysqlnd   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| OAuth     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| OPcache   |     |     |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| openssl   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| pcntl     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| pcre      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| PDO       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| pdo_mysql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| pdo_pgsql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| pdo_sqlite|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| Phar      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| posix     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| redis     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| Reflection|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| session   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| SimpleXML |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| soap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| SPL       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| sqlite3   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| standard  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| tokenizer |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| xdebug    |     |     |     |     |     |     |     |     |    |
+| xml       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| xmlreader |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| xmlwriter |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| zip       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+| zlib      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
 
 Note that `xdebug` is off by default but you can enable it on by setting your `php` services config to `xdebug: true`. Read more about this in "Configuration" above.
 
@@ -313,3 +314,5 @@ services:
 ```
 
 Note the usage of `docker-php-ext-enable`. Our images extend the [official Docker php images](https://hub.docker.com/r/library/php) which ship with a bunch of [helpful utility scripts](https://github.com/docker-library/php) to manage php extensions.
+
+<RelatedGuides tag="PHP"/>

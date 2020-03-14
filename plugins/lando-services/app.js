@@ -64,7 +64,7 @@ module.exports = (app, lando) => {
     const buildServices = _.get(app, 'opts.services', app.services);
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
-      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps);
+      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
       return utils.runBuild(lando, preBuild, preLockfile);
     });
     app.events.on('post-start', 100, () => {

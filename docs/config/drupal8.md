@@ -200,10 +200,14 @@ lando drush uli
 
 This happens because it is actually a difficult problem for Lando to 100% know the canonical URL or service that is serving your application. However you can set up your environment so that commands like `lando drush uli` return the proper URL.
 
-Create or edit the relevant `settings.php` file and add these lines. Note that you may need to specify a port depending on your Lando installation. You can run `lando info` to see if your URLs use explicit ports or not.
+Set a specific local drush uri value by adding a setting for DRUSH_OPTIONS_URI in the relevant service. You will need to run `lando rebuild` after adding this setting. 
 
-```php
-$base_url = "http://mysite.lndo.site:PORT_IF_NEEDED"
+```
+services:
+  appserver:
+    overrides:
+      environment:
+        DRUSH_OPTIONS_URI: "https://mysite.lndo.site"
 ```
 
 #### Aliases
@@ -362,3 +366,5 @@ lando php -m
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+
+<RelatedGuides tag="Drupal"/>

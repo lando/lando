@@ -1,5 +1,8 @@
 <template>
-  <div id="hs_form_injector"></div>
+  <div>
+    <script src="//js.hsforms.net/forms/shell.js"></script>
+    <div id="hs_form_injector"></div>
+  </div>
 </template>
 
 <script>
@@ -114,7 +117,7 @@ export default {
       type: String,
       required: true,
     },
-    height: {
+    formHeight: {
       type: Number,
       default: 1100,
     },
@@ -131,29 +134,34 @@ export default {
       // Get and reset the element
       const hsFormInjector = document.getElementById('hs_form_injector');
       hsFormInjector.innerHTML = '';
-
-      // Add the new script tag
-      const injector = document.createElement('script');
-      injector.type = 'text/javascript';
-      injector.text = `hbspt.forms.create({
-        portalId: '${this.portal}',
-        formId: '${this.form}',
-      });`;
-      hsFormInjector.appendChild(injector);
-
       // Add a correction factor to height on smaller devices
-      let height = this.height;
+      let height = this.formHeight;
       if (window.screen.width < 800) {
         height = height + 830 - window.screen.width;
       }
 
-      // Attempt to style the form
+      // Attempt to load the form
       const iid = setInterval(() => {
-        if (document.getElementsByClassName('hs-form-iframe')[0] !== null) {
+        if (hbspt) {
+          // Add the new script tag
+          const injector = document.createElement('script');
+          injector.type = 'text/javascript';
+          injector.text = `hbspt.forms.create({
+            portalId: '${this.portal}',
+            formId: '${this.form}',
+          });`;
+          hsFormInjector.appendChild(injector);
+          window.clearInterval(iid);
+        }
+      }, this.delay);
+
+      // Attempt to style the form
+      const sid = setInterval(() => {
+        if (hbspt && document.getElementsByClassName('hs-form-iframe')[0] !== null) {
           const joinHTML = document.getElementsByClassName('hs-form-iframe')[0];
           joinHTML.contentDocument.body.innerHTML += `<style>${hscss}</style>`;
           joinHTML.style.height = `${height}px`;
-          window.clearInterval(iid);
+          window.clearInterval(sid);
         }
       }, this.delay);
     },

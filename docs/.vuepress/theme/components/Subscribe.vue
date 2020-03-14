@@ -1,5 +1,6 @@
 <template>
   <div :class="{ subscribe: true, 'subscribe-dark': theme === 'dark' }" :style="customStyles">
+    <script src="//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js"></script>
     <h3>{{ title }}</h3>
     <form id="subscribe-user" @submit.prevent="subscribe" class="subscribe-form">
       <div v-if="showAlliance" class="subscribe-alliance">
@@ -48,7 +49,7 @@
         :disabled="buttonDisabled"
         type="email"
         v-model="email"
-        placeholder="Email address"
+        placeholder="Email"
         name="email"
         :class="{ 'subscribe-input': true, disabled: buttonDisabled }" />
 
@@ -116,6 +117,7 @@ const sponsorRoles = {
 };
 
 export default {
+  name: 'Subscribe',
   props: {
     buttonLabel: {
       type: String,
