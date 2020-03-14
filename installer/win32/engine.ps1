@@ -30,4 +30,4 @@ $settings.checkForUpdates = $false
 
 # Dumping new settings
 Write-Output $settings
-$settings | ConvertTo-Json -depth 32| set-content "$docker_settings"
+$settings | ConvertTo-Json -depth 32 | set-content "$docker_settings"

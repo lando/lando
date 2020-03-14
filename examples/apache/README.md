@@ -40,7 +40,7 @@ lando ssh -s custom -c "curl http://localhost | grep WEBDIR"
 # Should serve from https when specified
 lando ssh -s custom -c "curl -k https://localhost | grep WEBDIR"
 
-# Should mount custom config to the correct locations
+# Should mount custom config to the correct locationz
 lando ssh -s custom -c "cat /opt/bitnami/apache/conf/httpd.conf | grep LANDOHTTPD"
 lando ssh -s custom -c "cat /opt/bitnami/apache/conf/vhosts/lando.conf | grep LANDOCUSTOM"
 

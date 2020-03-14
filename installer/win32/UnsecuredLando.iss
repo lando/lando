@@ -26,7 +26,6 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName=Lando
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
-SignTool=signtool
 SetupIconFile=lando.ico
 SetupLogging=yes
 SolidCompression=yes
@@ -59,7 +58,6 @@ Name: "Docker"; Description: "Docker Desktop {#DockerVersion}" ; Types: full cus
 
 [Files]
 Source: "{#lando}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Components: "Lando"
-Source: "{#lando}\bin\lando.exe"; DestDir: "{app}"; Flags: signonce; Components: "Lando"
 Source: "{#landoIco}"; DestDir: "{app}"; DestName: "Lando.ico"; Components: "Lando"
 Source: "{#engine}"; DestDir: "{app}"; DestName: "engine.ps1"; Components: "Lando"
 Source: "{#docker}"; DestDir: "{app}\installers\docker"; DestName: "docker.exe"; AfterInstall: RunInstallDocker(); Components: "Docker"

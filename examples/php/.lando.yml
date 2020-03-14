@@ -11,28 +11,6 @@ services:
   cliold:
     type: php:5.6
     via: cli
-  cli74:
-    type: php:7.4
-    via: cli
-  custom74:
-    type: php:7.4
-    via: nginx
-    ssl: true
-    xdebug: true
-    webroot: web
-    config:
-      php: config/php.ini
-    overrides:
-      image: devwithlando/php:7.4-fpm-2
-      environment:
-        DUALBLADE: maxim
-  custom74_apache:
-    type: php:7.4
-    via: apache
-    overrides:
-      image: devwithlando/php:7.4-apache-2
-      environment:
-        DUALBLADE: maxim
   custom:
     type: php:7.1
     via: nginx
@@ -45,6 +23,8 @@ services:
       image: devwithlando/php:7.1-fpm-2
       environment:
         DUALBLADE: maxim
+  custom74:
+    type: php:7.4
   composer:
     type: php:7.0
     composer:
