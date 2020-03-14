@@ -87,7 +87,8 @@ jobs:
       before_script: |
         if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then
           git config --global core.autocrlf true
-          choco install innosetup --version=6.0.3 --allow-empty-checksums
+          choco install -y innosetup --version=6.0.3 --allow-empty-checksums
+          choco install -y windows-sdk-10.0
         fi
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
@@ -159,7 +160,8 @@ jobs:
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
       before_script:
         - git config --global core.autocrlf true
-        - choco install innosetup --version=6.0.3 --allow-empty-checksums
+        - choco install -y innosetup --version=6.0.3 --allow-empty-checksums
+        - choco install -y windows-sdk-10.0
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
