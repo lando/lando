@@ -1,6 +1,6 @@
 # 2020
 
-## v3.0.0-aft.1 - March 13, 2020 (estimated release date)
+## v3.0.0-aft.1 - [March 13, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.1)
 
 * Added signed `windoze` installer and binary [#2037](https://github.com/lando/lando/issues/2037)
 * Added support for `node` `12` and `13` [#1866](https://github.com/lando/lando/issues/1866)
