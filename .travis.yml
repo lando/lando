@@ -104,6 +104,8 @@ jobs:
     - name: Test Build - Blog
       script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog; fi
     - name: Test Build - Documentation
+      # get below compatible with node 12?
+      node_js: 10
       script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs; fi
     - name: Test Build - Events
       script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events; fi
