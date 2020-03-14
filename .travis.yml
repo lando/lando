@@ -6,7 +6,7 @@ cache:
   directories:
     - node_modules
 stages:
-  - test
+  # - test
   - name: build
     if: |
       type = push AND \
