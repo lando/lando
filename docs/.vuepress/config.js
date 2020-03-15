@@ -144,7 +144,7 @@ module.exports = {
             'lamp',
             'lemp',
             'mean',
-            'pantheon',
+            'platformsh',
             'wordpress',
           ],
         },
