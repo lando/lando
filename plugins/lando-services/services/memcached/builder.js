@@ -10,6 +10,7 @@ module.exports = {
     version: '1',
     supported: ['1', '1.5.12', '1.5.x'],
     patchesSupported: true,
+    confSrc: __dirname,
     mem: 64,
     port: '11211',
   },
@@ -19,11 +20,13 @@ module.exports = {
       options = _.merge({}, config, options);
       const memcached = {
         image: `bitnami/memcached:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           MEMCACHED_CACHE_SIZE: options.mem,
-          LANDO_NEEDS_EXEC: 'DOEEET',
         },
+        volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
+        ],
       };
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, memcached)});

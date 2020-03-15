@@ -14,7 +14,7 @@ module.exports = {
     healthcheck: 'echo \'db.runCommand("ping").ok\' | mongo localhost:27017/test',
     port: '27017',
     remoteFiles: {
-      database: '/opt/bitnami/mongodb/conf/mongodb.conf',
+      database: '/bitnami/mongodb/conf/lando.conf',
     },
   },
   parent: '_service',
@@ -23,7 +23,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const mongo = {
         image: `bitnami/mongodb:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/entrypoint.sh /run.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           LANDO_NEEDS_EXEC: 'DOEEET',

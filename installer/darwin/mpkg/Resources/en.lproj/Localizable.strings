@@ -3,8 +3,8 @@
 'choiceLando_title' = 'Lando %LANDO_VERSION%';
 'choiceLando_msg' = 'Installs Lando into /usr/local/bin/';
 
-'choiceDocker_title' = 'Docker %DOCKER_VERSION%';
-'choiceDocker_msg' = 'Installs Docker into /Applications/';
+'choiceDocker_title' = 'Docker Desktop %DOCKER_VERSION%';
+'choiceDocker_msg' = 'Installs Docker Desktop into /Applications/';
 
 'UNSUPPORTED_HW_MACHINE_TLE' = "Unsupported hardware architecture detected!";
 'UNSUPPORTED_HW_MACHINE_MSG' = "The installer has detected an unsupported architecture. Lando only runs on the x64 and amd64 architectures.";
@@ -12,11 +12,11 @@
 'UNSUPPORTED_OS_TLE' = "Unsupported OS version detected!";
 'UNSUPPORTED_OS_MSG' = "The installer has detected an unsupported operation system. Please upgrade to Mac OS X 10.8 or later.";
 
-'DOCKER_INSTALLED_TLE' = "Docker installation detected!";
-'DOCKER_INSTALLED_MSG' = "The installer has detected that Docker for Mac is already installed!
+'DOCKER_INSTALLED_TLE' = "Docker Desktop installation detected!";
+'DOCKER_INSTALLED_MSG' = "The installer has detected that Docker Desktop is already installed!
 
-If you are using the Stable version make sure you close Docker before continuing this installation as Lando will install the latest version.
+Make sure you close Docker Desktop before continuing this installation as Lando will install the version it needs.
 
-If you wish to continue with your current version of Docker without upgrading make sure you customize your installation on the next step and choose to not install Docker.
+If you wish to continue with your current version of Docker Desktop without upgrading make sure you customize your installation on the next step and choose to not install Docker Desktop.
 
-Keeping your current version of Docker is not supported so YMMV.";
+Keeping your current version of Docker Desktop is not supported so YMMV.";

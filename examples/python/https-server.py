@@ -19,6 +19,6 @@ class myHandler(BaseHTTPRequestHandler):
 
 # https
 httpsd = HTTPServer(('0.0.0.0', 443), myHandler)
-httpsd.socket = ssl.wrap_socket(httpsd.socket, server_side=True, certfile='/certs/cert.crt', keyfile='/certs/cert.key', ssl_version=ssl.PROTOCOL_TLSv1)
+httpsd.socket = ssl.wrap_socket(httpsd.socket, server_side=True, certfile='/certs/cert.crt', keyfile='/certs/cert.key', ssl_version=ssl.PROTOCOL_TLS)
 print('starting https server...')
 httpsd.serve_forever()

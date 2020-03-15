@@ -1,16 +1,18 @@
-Landofile
-=========
+---
+description: The Landofile is at the heart of every Lando app but it itself can also be customized, learn how to set a base configuration or override it on a per user basis.
+---
+
+# Landofile
 
 A `.lando.yml` file is at the heart of every Lando app. It is needed to tell Lando what things your app needs for development. It usually will contain the services and tools needed to run and develop your app. This file should live in the root directory of your app's code repository and ideally be tracked in its version control system.
 
 If you make changes to your `.lando.yml` you will need to `lando rebuild` your app for those changes to be applied.
 
-> #### Hint::You're low, go high
->
-> This documentation is specifically about configuring the Landofile itself. If you are interested in a more high level view of what the Landofile can do and its purpose then check out our [Lando introduction](./../started.md)
+::: tip You're low, go high
+This documentation is specifically about configuring the Landofile itself. If you are interested in a more high level view of what the Landofile can do and its purpose then check out our [Lando introduction](./../basics/)
+:::
 
-Base File
----------
+## Base File
 
 If you are developing a project start state or have a set of Lando configurations you'd like to ship with all your projects you can use a "base" file with defaults that can then be overriden by your usual `.lando.yml`. By default Lando will detect any of the following files automatically and load them before your `.lando.yml`
 
@@ -20,8 +22,7 @@ If you are developing a project start state or have a set of Lando configuration
 .lando.upstream.yml
 ```
 
-Override File
--------------
+## Override File
 
 On the flip side you might have some user-specific configuration you'd like to use **on only your computer**. For these situations Lando similarly offers an "override" file that will be loaded **AFTER** all base files and your `.lando.yml`. Generally you will want to `.gitignore` this file.
 
@@ -29,10 +30,9 @@ On the flip side you might have some user-specific configuration you'd like to u
 .lando.local.yml
 ```
 
-Configuration
--------------
+## Configuration
 
-The base, override and Landofile itself are all configurable via the Lando [global config](./config.md). Here are the default values:
+The base, override and Landofile itself are all configurable via the Lando [global config](./global.md). Here are the default values:
 
 ```yaml
 landoFile: .lando.yml

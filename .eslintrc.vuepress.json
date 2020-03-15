@@ -1,0 +1,20 @@
+{
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 6
+  },
+  "extends": [
+    "plugin:vue/recommended",
+    "google"
+  ],
+  "rules": {
+    "linebreak-style": 0,
+    "arrow-parens": ["error",
+      "as-needed"
+    ],
+    "max-len": ["error", {
+      "code": 12000,
+      "ignoreComments": true
+    }]
+  }
+}

@@ -23,7 +23,7 @@ const getProxy = (domain, cert, key) => {
           '--web',
         ].join(' '),
         environment: {
-          LANDO_UPDATE: '6',
+          LANDO_UPDATE: '7',
         },
         labels: {
           'traefik.frontend.rule': `Host:mustachedmanwiththecape`,

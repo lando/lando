@@ -8,6 +8,17 @@ const Promise = require('./../../../lib/promise');
 const axios = require('axios');
 
 /*
+ * Helper to collect relevant error data
+ */
+const getErrorData = (err = {}) => ({
+  code: _.get(err, 'response.status', 200),
+  codeText: _.get(err, 'response.statusText'),
+  method: _.upperCase(_.get(err, 'response.config.method'), 'GET'),
+  path: _.get(err, 'response.config.url'),
+  response: _.get(err, 'response.data'),
+});
+
+/*
  * Helper to make requests to pantheon api
  */
 const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) => {
@@ -23,8 +34,12 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
       return response.data;
     })
     .catch(err => {
-      const error = _.has(err, 'response.data') ? new Error(err.response.data) : err;
-      return Promise.reject(error);
+      const data = getErrorData(err);
+      const msg = [
+        `${data.method} request to ${data.path} failed with code ${data.code}: ${data.codeText}.`,
+        `The server responded with the message ${data.response}.`,
+      ];
+      return Promise.reject(new Error(msg.join(' ')));
     }), {max: 2});
 };
 

@@ -1,11 +1,10 @@
-<a id="app"></a>
+<a name="app"></a>
 
-<h2 id="app" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app ⇒ <code>App</code></h2>
-<div class="api-body-header"></div>
-
+## app ⇒ <code>App</code>
 The class to instantiate a new App
 
+**Kind**: global variable  
+**Returns**: <code>App</code> - An App instance  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -14,8 +13,6 @@ The class to instantiate a new App
 | config | <code>Object</code> |  | Config for the app |
 | [lando] | <code>Object</code> | <code>{}</code> | A Lando instance |
 
-**Returns**: <code>App</code> - An App instance  
-<div class="api-body-footer"></div>
 
 * [app](#app) ⇒ <code>App</code>
     * [.config](#app.config)
@@ -31,62 +28,44 @@ The class to instantiate a new App
     * [.stop()](#app.stop) ⇒ <code>Promise</code>
     * [.uninstall(purge)](#app.uninstall) ⇒ <code>Promise</code>
 
-<a id="appconfig"></a>
+<a name="app.config"></a>
 
-<h2 id="appconfig" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.config</h2>
-<div class="api-body-header"></div>
-
+### app.config
 The apps configuration
 
+**Kind**: static property of [<code>app</code>](#app)  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="appevents"></a>
+<a name="app.events"></a>
 
-<h2 id="appevents" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.events</h2>
-<div class="api-body-header"></div>
-
+### app.events
 The apps event emitter
 
+**Kind**: static property of [<code>app</code>](#app)  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="appinfo"></a>
+<a name="app.info"></a>
 
-<h2 id="appinfo" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.info</h2>
-<div class="api-body-header"></div>
-
+### app.info
 Information about this app
 
+**Kind**: static property of [<code>app</code>](#app)  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="approot"></a>
+<a name="app.root"></a>
 
-<h2 id="approot" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.root</h2>
-<div class="api-body-header"></div>
-
+### app.root
 The apps root directory
 
+**Kind**: static property of [<code>app</code>](#app)  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="apptasks"></a>
+<a name="app.tasks"></a>
 
-<h2 id="apptasks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.tasks</h2>
-<div class="api-body-header"></div>
-
+### app.tasks
 Tasks and commands the app can run
 
+**Kind**: static property of [<code>app</code>](#app)  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="appdestroy"></a>
+<a name="app.destroy"></a>
 
-<h2 id="appdestroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.destroy() ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.destroy() ⇒ <code>Promise</code>
 Hard removes all app services, volumes, networks, etc.
 
 This differs from `uninstall` in that uninstall will only soft remove all app
@@ -94,51 +73,44 @@ services, while maintaining things like volumes, networks, etc.
 
 That said this DOES call both `stop` and `uninstall` under the hood.
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise  
 **Emits**: [<code>pre\_destroy</code>](#event_pre_destroy), [<code>pre\_stop</code>](#event_pre_stop), [<code>post\_stop</code>](#event_post_stop), [<code>pre\_uninstall</code>](#event_pre_uninstall), [<code>post\_uninstall</code>](#event_post_uninstall), [<code>post\_destroy</code>](#event_post_destroy)  
 **Since**: 3.0.0  
-**Returns**: <code>Promise</code> - A Promise  
-<div class="api-body-footer"></div>
-<a id="appinit"></a>
+<a name="app.init"></a>
 
-<h2 id="appinit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.init() ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.init() ⇒ <code>Promise</code>
 Initializes the app
 
 You will want to run this to get the app ready for lando.engine. This will
 load in relevant app plugins, build the docker compose files and get them ready to go
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>pre\_init</code>](#event_pre_init), [<code>post\_init</code>](#event_post_init), [<code>ready</code>](#event_ready)  
 **Since**: 3.0.0  
-**Returns**: <code>Promise</code> - A Promise.  
-<div class="api-body-footer"></div>
-<a id="apprebuild"></a>
+<a name="app.rebuild"></a>
 
-<h2 id="apprebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.rebuild() ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.rebuild() ⇒ <code>Promise</code>
 Rebuilds an app.
 
 This will stop an app, soft remove its services, rebuild those services and
 then, finally, start the app back up again. This is useful for developers who
 might want to tweak Dockerfiles or compose yamls.
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>pre\_stop</code>](#event_pre_stop), [<code>post\_stop</code>](#event_post_stop), [<code>pre\_rebuild</code>](#event_pre_rebuild), [<code>pre\_uninstall</code>](#event_pre_uninstall), [<code>post\_uninstall</code>](#event_post_uninstall), [<code>post\_rebuild</code>](#event_post_rebuild), [<code>pre\_start</code>](#event_pre_start), [<code>post\_start</code>](#event_post_start)  
 **Since**: 3.0.0  
-**Returns**: <code>Promise</code> - A Promise.  
-<div class="api-body-footer"></div>
-<a id="apprestart"></a>
+<a name="app.restart"></a>
 
-<h2 id="apprestart" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.restart(app) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.restart(app) ⇒ <code>Promise</code>
 Stops and then starts an app.
 
 This just runs `app.stop` and `app.start` in succession.
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>pre\_stop</code>](#event_pre_stop), [<code>post\_stop</code>](#event_post_stop), [<code>pre\_start</code>](#event_pre_start), [<code>post\_start</code>](#event_post_start)  
 **Since**: 3.0.0  
 
@@ -146,47 +118,38 @@ This just runs `app.stop` and `app.start` in succession.
 | --- | --- | --- |
 | app | <code>Object</code> | A fully instantiated app object |
 
-**Returns**: <code>Promise</code> - A Promise.  
-<div class="api-body-footer"></div>
-<a id="appstart"></a>
+<a name="app.start"></a>
 
-<h2 id="appstart" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.start() ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.start() ⇒ <code>Promise</code>
 Starts an app.
 
 This will start up all services/containers that have been defined for this app.
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>pre\_start</code>](#event_pre_start), [<code>post\_start</code>](#event_post_start)  
 **Since**: 3.0.0  
-**Returns**: <code>Promise</code> - A Promise.  
-<div class="api-body-footer"></div>
-<a id="appstop"></a>
+<a name="app.stop"></a>
 
-<h2 id="appstop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.stop() ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.stop() ⇒ <code>Promise</code>
 Stops an app.
 
 This will stop all services/containers that have been defined for this app.
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>pre\_stop</code>](#event_pre_stop), [<code>post\_stop</code>](#event_post_stop)  
 **Since**: 3.0.0  
-**Returns**: <code>Promise</code> - A Promise.  
-<div class="api-body-footer"></div>
-<a id="appuninstall"></a>
+<a name="app.uninstall"></a>
 
-<h2 id="appuninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  app.uninstall(purge) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+### app.uninstall(purge) ⇒ <code>Promise</code>
 Soft removes the apps services but maintains persistent data like app volumes.
 
 This differs from `destroy` in that destroy will hard remove all app services,
 volumes, networks, etc as well as remove the app from the appRegistry.
 
+**Kind**: static method of [<code>app</code>](#app)  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>pre\_uninstall</code>](#event_pre_uninstall), [<code>post\_uninstall</code>](#event_post_uninstall)  
 **Since**: 3.0.0  
 
@@ -194,40 +157,30 @@ volumes, networks, etc as well as remove the app from the appRegistry.
 | --- | --- | --- | --- |
 | purge | <code>Boolean</code> | <code>false</code> | A fully instantiated app object |
 
-**Returns**: <code>Promise</code> - A Promise.  
-<div class="api-body-footer"></div>
-<a id="event_pre_destroy"></a>
+<a name="event_pre_destroy"></a>
 
-<h2 id="event_pre_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_destroy"</h2>
-<div class="api-body-header"></div>
-
+## "pre_destroy"
 Event that runs before an app is destroyed.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_destroy"></a>
+<a name="event_post_destroy"></a>
 
-<h2 id="event_post_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_destroy"</h2>
-<div class="api-body-header"></div>
-
+## "post_destroy"
 Event that runs after an app is destroyed.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_init"></a>
+<a name="event_pre_init"></a>
 
-<h2 id="event_pre_init" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_init"</h2>
-<div class="api-body-header"></div>
-
+## "pre_init"
 Event that allows altering of the app object right before it is
 initialized.
 
 Note that this is a global event so it is invoked with `lando.events.on`
 not `app.events.on` See example below:
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
 **Properties**
 
@@ -235,16 +188,13 @@ not `app.events.on` See example below:
 | --- | --- | --- |
 | app | <code>App</code> | The app instance. |
 
-<div class="api-body-footer"></div>
-<a id="event_post_init"></a>
+<a name="event_post_init"></a>
 
-<h2 id="event_post_init" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_init"</h2>
-<div class="api-body-header"></div>
-
+## "post_init"
 Event that allows altering of the app object right after it has been
 full initialized and all its plugins have been loaded.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
 **Properties**
 
@@ -252,15 +202,12 @@ full initialized and all its plugins have been loaded.
 | --- | --- | --- |
 | app | <code>App</code> | The app instance. |
 
-<div class="api-body-footer"></div>
-<a id="event_ready"></a>
+<a name="event_ready"></a>
 
-<h2 id="event_ready" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "ready"</h2>
-<div class="api-body-header"></div>
-
+## "ready"
 Event that runs when the app is ready for action
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
 **Properties**
 
@@ -268,96 +215,71 @@ Event that runs when the app is ready for action
 | --- | --- | --- |
 | app | <code>App</code> | The app instance. |
 
-<div class="api-body-footer"></div>
-<a id="event_pre_rebuild"></a>
+<a name="event_pre_rebuild"></a>
 
-<h2 id="event_pre_rebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_rebuild"</h2>
-<div class="api-body-header"></div>
-
+## "pre_rebuild"
 Event that runs before an app is rebuilt.
 
-<div class="api-body-footer"></div>
-<a id="event_post_rebuild"></a>
+**Kind**: event emitted  
+<a name="event_post_rebuild"></a>
 
-<h2 id="event_post_rebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_rebuild"</h2>
-<div class="api-body-header"></div>
-
+## "post_rebuild"
 Event that runs after an app is rebuilt.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_start"></a>
+<a name="event_pre_start"></a>
 
-<h2 id="event_pre_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_start"</h2>
-<div class="api-body-header"></div>
-
+## "pre_start"
 Event that runs before an app starts up.
 
 This is useful if you want to start up any support services before an app
 stars.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_start"></a>
+<a name="event_post_start"></a>
 
-<h2 id="event_post_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_start"</h2>
-<div class="api-body-header"></div>
-
+## "post_start"
 Event that runs after an app is started.
 
 This is useful if you want to perform additional operations after an app
 starts such as running additional build commands.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_stop"></a>
+<a name="event_pre_stop"></a>
 
-<h2 id="event_pre_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_stop"</h2>
-<div class="api-body-header"></div>
-
+## "pre_stop"
 Event that runs before an app stops.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_stop"></a>
+<a name="event_post_stop"></a>
 
-<h2 id="event_post_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_stop"</h2>
-<div class="api-body-header"></div>
-
+## "post_stop"
 Event that runs after an app stop.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_uninstall"></a>
+<a name="event_pre_uninstall"></a>
 
-<h2 id="event_pre_uninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "pre_uninstall"</h2>
-<div class="api-body-header"></div>
-
+## "pre_uninstall"
 Event that runs before an app is uninstalled.
 
 This is useful if you want to add or remove parts of the uninstall process.
 For example, it might be nice to persist a container whose data you do not
 want to replace in a rebuild and that cannot persist easily with a volume.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_uninstall"></a>
+<a name="event_post_uninstall"></a>
 
-<h2 id="event_post_uninstall" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  "post_uninstall"</h2>
-<div class="api-body-header"></div>
-
+## "post_uninstall"
 Event that runs after an app is uninstalled.
 
 This is useful if you want to do some additional cleanup steps after an
 app is uninstalled such as invalidating any cached data.
 
+**Kind**: event emitted  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>

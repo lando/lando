@@ -4,6 +4,50 @@
 const _ = require('lodash');
 const utils = require('./../../lib/utils');
 
+// Constants
+const supportedVersions = [
+  '13',
+  '12',
+  '12.16',
+  '12.15',
+  '12.14',
+  '12.13',
+  '12.12',
+  '12.11',
+  '12.10',
+  '12.9',
+  '12.8',
+  '12.7',
+  '12.6',
+  '12.5',
+  '12.4',
+  '11',
+  '11.15',
+  '11.14',
+  '11.13',
+  '11.12',
+  '11.11',
+  '11.10',
+  '11.9',
+  '11.8',
+  '11.7',
+  '11.6',
+  '11.5',
+  '11.4',
+  '10',
+  '10.19',
+  '10.18',
+  '10.17',
+  '10.16',
+  '10.15',
+  '10.14',
+  '10.13',
+  '8',
+  '8.14',
+  '6',
+  '6.15',
+];
+
 /*
  * Helper to build a package string
  */
@@ -14,7 +58,7 @@ module.exports = {
   name: 'node',
   config: {
     version: '10',
-    supported: ['11', '11.4', '10', '10.14', '10.13', '8', '8.14', '6', '6.15'],
+    supported: supportedVersions,
     patchesSupported: true,
     legacy: ['8', '6'],
     command: 'tail -f /dev/null',

@@ -1,13 +1,12 @@
-<a id="landoeventson"></a>
+<a name="lando.events.on"></a>
 
-<h2 id="landoeventson" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.on(name, [priority], fn) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.events.on(name, [priority], fn) ⇒ <code>Promise</code>
 Our overriden event on method.
 
 This optionally allows a priority to be specified. Lower priorities run first.
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -16,7 +15,6 @@ This optionally allows a priority to be specified. Lower priorities run first.
 | [priority] | <code>Integer</code> | <code>5</code> | The priority the event should run in. |
 | fn | <code>function</code> |  | The function to call. Should get the args specified in the corresponding `emit` declaration. |
 
-**Returns**: <code>Promise</code> - A Promise  
 **Example**  
 ```js
 // Print out all our apps as they get instantiated and do it before other `post-instantiate-app` events
@@ -30,17 +28,15 @@ return app.events.on('post-start', () => {
   lando.log.info('App %s started', app.name);
 });
 ```
-<div class="api-body-footer"></div>
-<a id="landoeventsemit"></a>
+<a name="lando.events.emit"></a>
 
-<h2 id="landoeventsemit" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events.emit(name, [...args]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.events.emit(name, [...args]) ⇒ <code>Promise</code>
 Reimplements event emit method.
 
 This makes events blocking and promisified.
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -48,7 +44,6 @@ This makes events blocking and promisified.
 | name | <code>String</code> | The name of the event |
 | [...args] | <code>Any</code> | Options args to pass. |
 
-**Returns**: <code>Promise</code> - A Promise  
 **Example**  
 ```js
 // Emits a global event with a config arg
@@ -57,4 +52,3 @@ return lando.events.emit('wolf359', config);
 // Emits an app event with a config arg
 return app.events.emit('sector001', config);
 ```
-<div class="api-body-footer"></div>

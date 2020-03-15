@@ -53,6 +53,7 @@ module.exports = {
     ) {
       // Add custom to list of supported
       supported.push('custom');
+
       // If this version is not supported throw an error
       // @TODO: get this someplace else for unit tezting
       if (!_.includes(supported, version)) {

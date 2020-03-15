@@ -1,0 +1,216 @@
+// .vuepress/style.styl, your extra styles.
+.theme-default-content code
+  font-size: 1.1em
+p
+  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
+  font-size: 1.5em
+  word-spacing: 0.05em
+  line-height: 2
+h1, h2
+  color: #2c3e50;
+  font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
+  font-size: 4em
+  margin: 0
+  padding: 1.5em 0 0
+  border: 0
+  letter-spacing: -1px
+h3
+  color: lighten($landoPink, 18%)
+  font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
+  font-size: 2.4em
+  padding: .66em 0.24em 0
+  margin: 0
+  letter-spacing: -2px
+h4
+  color: $landoBlue
+  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
+  font-size: 1.33em
+  margin: 0
+a.button,
+  input.button
+    padding: 0.50em 2em
+    border: 0
+    border-radius: 2em
+    display: inline-block
+    color: #fff
+    background-color: lighten($landoPink, 33%)
+    transition: all .15s ease
+    box-sizing: border-box
+    &.has-icon
+      position: relative
+      text-indent: 1.4em
+      > svg
+        position: absolute
+        left: 0.4em
+        top: 0.3em
+        width: 2em
+    &.white
+      background-color: #fff
+      color: $landoPink
+    &.gray
+      background-color: #4e6e8e
+      color: $light
+    &.blue
+      background-color: lighten($landoBlue, 25%)
+      color: #ffffff
+    &.green
+      background-color: lighten($landoGreen, 25%)
+      color: #ffffff
+    &.pink
+      background-color: $landoPink
+      color: #ffffff
+    &.halfer
+      width: 45%
+      padding: 1em 1em
+      font-size: 1.5em
+    &.md
+      font-size: 2em
+      padding: 1em 1em
+    &.big
+      width: 75%
+      padding: 1em 1em
+header
+  height: 60px
+  padding: 10px 60px
+  position: relative
+  z-index: 100
+header.navbar
+  background-color: $landoPink
+  border: 0
+  .site-name
+    color: #ffffff
+  .links
+    background-color: $landoPink
+  .nav-links
+    a
+      color: #ffffff
+    a:hover
+      color: #ffffff
+      border-bottom: 2px solid lighten($landoPink, 75%)
+    a:active,
+    .nav-item > a:not(.external).router-link-active
+      color: #ffffff
+      border-bottom: 2px solid lighten($landoPink, 75%)
+    .icon.outbound
+      color: #ffffff
+.inner
+  max-width: 1260px
+  margin: 0 auto
+.liberation-manifesto
+  width: 80%
+  text-align: justify
+  margin: auto
+.hide-ender
+  margin-bottom: 0em
+  &:after
+    content: ""
+.seal-of-liberation
+  text-align: center
+.sidebar-button
+  color: #ffffff
+.smaller-inner
+  max-width: 900px
+  margin: 0 auto
+.step
+  padding-top: 3em
+  padding-bottom: 2em
+  text-align: center
+.step-half
+  display: inline-block
+  vertical-align: top
+  width: 45%
+  padding-left: 1em
+  padding-right: 1em
+.step-full
+  width: 80%
+  margin: auto
+.step-border
+  border-top: 1px solid lighten($landoBlue, 25%)
+.step-end
+  padding-bottom: 2em
+  &:after
+    content: "________"
+    color: $landoPink
+.step-number
+  margin: auto
+  font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
+  background-color: darken($landoBlue, 25%)
+  height: 8em
+  width: 8em
+  text-align: center
+  p
+    margin-top: 0.10em
+
+    font-size: 4em
+    font-weight: bold
+    font-family: "Poppins"
+    color: #ffffff
+.strikethrough
+  display: table
+  white-space: nowrap
+  &:before, &:after
+    border-top: 1px solid lighten($landoBlue, 5%)
+    content: ''
+    display: table-cell
+    position: relative
+    top: 0.6em
+    width: 45%
+  &:before
+    right: 2.5%
+  &:after
+    left: 2.5%
+.theme-default-content:not(.custom) > *:first-child
+  margin-top: 0;
+@media (max-width: $MQNarrow)
+  .step-half
+    vertical-align: top;
+    width: 80%
+@media (min-width: $MQMobile)
+  .nav-item-get-lando
+    text-transform: uppercase
+    padding: 0.2em 2em
+    border-radius: 2em
+    display: inline-block
+    background-color: lighten($landoBlue, 25%)
+    transition: all 0.15s ease
+    box-sizing: border-box
+    border: 1px solid #ee4e85
+  .nav-item-join-the
+    text-transform: uppercase
+    padding: 0.2em 2em
+    border-radius: 2em
+    display: inline-block
+    background-color: lighten($landoPink, 25%)
+    transition: all 0.15s ease
+    box-sizing: border-box
+    border: 1px solid #ee4e85
+  .nav-item-sponsor
+    text-transform: uppercase
+    padding: 0.2em 2em
+    border-radius: 2em
+    display: inline-block
+    background-color: lighten($landoPink, 25%)
+    transition: all 0.15s ease
+    box-sizing: border-box
+    border: 1px solid #ee4e85
+  .step-number
+    margin: auto
+  .strikethrough
+    display: table
+    white-space: nowrap
+    &:before, &:after
+      border-top: 1px solid lighten($landoBlue, 5%)
+      content: ''
+      display: table-cell
+      position: relative
+      top: 0.6em
+    &:before
+      right: 2.5%
+    &:after
+      left: 2.5%
+@media (max-width: $MQMobileNarrow)
+  h1, h2
+    font-size: 3em
+  .liberation-manifesto
+    width: 100%
+    font-size: .8em

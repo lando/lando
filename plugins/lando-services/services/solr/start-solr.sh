@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Errors and logz
+set -e
+echo "Executing $0" "$@"
+
 # Reporting
 echo "Booting solr with..."
 echo "CORE: $LANDO_SOLR_CORE"
@@ -26,9 +30,14 @@ mkdir -p /solrconf
 chown -R solr:solr /solrconf
 chown -R solr:solr /opt/solr
 
+. /opt/docker-solr/scripts/run-initdb
+
 # Go down to solr and run
 if [ "$LANDO_SOLR_CUSTOM" != "none" ]; then
-  gosu solr:solr docker-entrypoint.sh solr-precreate "$LANDO_SOLR_CORE" /solrconf
+  gosu solr:solr docker-entrypoint.sh precreate-core "$LANDO_SOLR_CORE" /solrconf
+  gosu solr:solr cp -a "/solrconf/conf/." "/opt/solr/server/solr/mycores/$LANDO_SOLR_CORE/conf/"
 else
-  gosu solr:solr docker-entrypoint.sh solr-precreate "$LANDO_SOLR_CORE"
+  gosu solr:solr docker-entrypoint.sh precreate-core "$LANDO_SOLR_CORE"
 fi
+
+gosu solr:solr solr -f
