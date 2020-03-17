@@ -76,6 +76,7 @@ module.exports = lando => {
       if (!exists) {
         return lando.engine.createNetwork(lando.config.networkBridge).then(() => {
           lando.cache.set('versions', _.merge({}, lando.versions, {networking: 2}), {persist: true});
+          lando.versions = lando.cache.get('versions');
         });
       }
     });
