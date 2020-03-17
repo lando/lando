@@ -58,7 +58,6 @@ module.exports = class PlatformshApiClient {
     this.baseURL = 'https://api.platform.sh/';
     this.request = null;
     this.accountsUrl = 'https://accounts.platform.sh/';
-    this.accountsRequest = null;
     this.log = log;
     this.token = token;
     // {access_token: 'abc123', expires_at': [unixtime seconds], 'headers': {'Authorization...':'123'}}
@@ -78,6 +77,8 @@ module.exports = class PlatformshApiClient {
       return platformshRequest(axios.create({baseURL: this.accountsUrl}), this.log, 'post', upath, data, options)
         .then(data => {
           return this.setSession(data);
+        })
+        .catch(data => {
         });
     }
     return new Promise(() => this.session);
@@ -107,11 +108,26 @@ module.exports = class PlatformshApiClient {
   getSites() {
     return platformshRequest(this.request, this.log, 'get', ['projects'])
       .then(res => res.projects)
-      .map(p => platformshRequest(
-        this.request,
-        this.log,
-        'get',
-        ['projects', p.id]));
+      .map(p => {
+        return platformshRequest(
+          this.request,
+          this.log,
+          'get',
+          ['projects', p.id])
+          // Add the subscription_id from the project collection value to the unique project request
+          .then(pp => {
+            pp.subscription_id = p.subscription_id;
+            return pp;
+          });
+      });
+  };
+
+  /*
+   * Get subscription
+   */
+  getSubscription(subid) {
+    const path = ['api', 'v1', 'subscriptions', subid];
+    return platformshRequest(this.accountsRequest, this.log, 'get', path);
   };
 
   /*

@@ -14,16 +14,6 @@ const platformshLandoKey = 'platformsh.lando.id_rsa';
 const platformshLandoKeyComment = 'lando@' + os.hostname();
 let platformshSites = [];
 
-// Helper to parse a platformsh site into a git url
-const getGitUrl = site => url.format({
-  auth: `codeserver.dev.${site.id}`,
-  protocol: 'ssh:',
-  slashes: true,
-  hostname: `codeserver.dev.${site.id}.drush.in`,
-  port: '2222',
-  pathname: '/~/repository.git',
-});
-
 // Helper to get tokens
 const getTokens = (home, tokens = []) => _(utils.sortTokens(utils.getPlatformshTokens(home), tokens))
   .map(token => ({name: token.email, value: token.token}))
@@ -141,21 +131,22 @@ module.exports = {
       },
     },
     build: (options, lando) => ([
-      {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
-      {name: 'post-key', func: (options, lando) => {
-        const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
-        const pubKey = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
-        return api.auth().then(() => api.postKey(pubKey));
-      }},
+      // {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
+      // {name: 'post-key', func: (options, lando) => {
+      //   console.log(options);
+      //   const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
+      //   const pubKey = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
+      //   return api.auth().then(() => api.postKey(pubKey));
+      // }},
       {name: 'get-git-url', func: (options, lando) => {
         const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
         return api.auth().then(() => api.getSites())
-        .filter(site => site.name === options['platformsh-site'])
+        .filter(site => site.id === options['platformsh-site'])
         .then(site => {
-          options['platformsh-git-url'] = getGitUrl(site[0]);
+          options['platformsh-git-url'] = site[0].repository.url;
         });
       }},
-      {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+      // {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
       {
         name: 'clone-repo',
         cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
@@ -166,32 +157,40 @@ module.exports = {
   build: (options, lando) => {
     const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
     // Get our sites and user
-    return api.auth().then(() => Promise.all([api.getSites(), api.getUser()]))
-    // Parse the dataz and set the things
-    .then(results => {
-      // Get our site and email
-      const site = _.head(_.filter(results[0], site => site.name === options['platformsh-site']));
-      const user = results[1];
+    // return api.auth().then(() => Promise.all([api.getSites()]))
+    return api.auth().then(() => api.getSites())
+    // Parse the data and set the things
+      .then(sites => {
+        return _.find(sites, site => site.id === options['platformsh-site']);
+      })
+      .then(site => {
+        // Parse the subscription ID from the project so we can get the framework from the sub
+        const pos = site.subscription.license_uri.lastIndexOf('/');
+        const subId = site.subscription.license_uri.substring(pos + 1);
+        return api.getSubscription(subId).then(sub => {
+          site.subscription = sub;
+          site.framework = sub.project_options.initialize.profile;
+          return site;
+        });
+      })
+      .then(site => {
+        if (_.isEmpty(site)) throw Error(`${site} does not appear to be a Platformsh site!`);
 
-      // Error if site doesn't exist
-      if (_.isEmpty(site)) throw Error(`${site} does not appear to be a Platformsh site!`);
+        // This is a good token, lets update our cache
+        const cache = {token: options['platformsh-auth'], date: _.toInteger(_.now() / 1000)};
 
-      // This is a good token, lets update our cache
-      const cache = {token: options['platformsh-auth'], email: user.email, date: _.toInteger(_.now() / 1000)};
+        // Update lando's store of platformsh machine tokens
+        const tokens = lando.cache.get(platformshTokenCache) || [];
+        lando.cache.set(platformshTokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
+        // Update app metdata
+        const metaData = lando.cache.get(`${options.name}.meta.cache`);
+        lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
 
-      // Update lando's store of platformsh machine tokens
-      const tokens = lando.cache.get(platformshTokenCache) || [];
-      lando.cache.set(platformshTokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
-      // Update app metdata
-      const metaData = lando.cache.get(`${options.name}.meta.cache`);
-      lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
-
-      // Add some stuff to our landofile
-      return {config: {
-        framework: _.get(site, 'framework', 'drupal'),
-        site: _.get(site, 'name', options.name),
-        id: _.get(site, 'id', 'lando'),
-      }};
-    });
+        return {config: {
+          framework: _.get(site, 'framework', 'Drupal 8'),
+          site: _.get(site, 'name', options.name),
+          id: _.get(site, 'id', 'lando'),
+        }};
+      });
   },
 };
