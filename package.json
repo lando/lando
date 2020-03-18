@@ -143,6 +143,7 @@
     "platformsh": "^1.0.0",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
+    "slack-notify": "^0.1.7",
     "version-bump-prompt": "^4.2.1",
     "vue-feather-icons": "^5.0.0",
     "vue2-google-maps": "^0.10.7",

@@ -35,6 +35,42 @@ const getLevelFromCents = (cents = 400) => {
   if (cents >= 177600) return 'patriot';
 };
 
+// Helper to notify on slack for success
+const slackSuccess = (data = {}) => ({
+  attachments: [
+    {
+      fallback: 'We good!',
+      author_name: data.name,
+      author_icon: data.pic,
+      text: `${data.username} ${data.action} a sponsorship at the ${data.level} level!`,
+      fields: [
+        {title: 'email', value: data.email, short: true},
+        {title: 'level', value: data.level, short: true},
+        {title: 'from', value: data.from, short: true},
+        {title: 'username', value: data.username, short: true},
+        {title: 'name', value: data.name, short: true},
+        {title: 'public', value: data.public, short: true},
+      ],
+    },
+  ],
+});
+
+// Helper to notify on slack for unvalidated requests
+const slackUnvalidated = (req = {}) => ({
+  text: 'Invalid request!',
+  fields: {
+    'headers': JSON.stringify(req.headers),
+    'body': JSON.stringify(req.body),
+  },
+});
+
+// Helper to notify on slack for unvalidated requests
+const slackNeedEmail = (data = {}) => {
+  const message = slackSuccess(data);
+  message.attachments[0].text = `${data.username} DOES NOT HAVE AN EMAIL!!!`;
+  return message;
+};
+
 // GitHub things
 // @TODO: get these in to their own files at some point
 const verifyGitHubSignature = (req = {}, secret = '') => {
@@ -53,6 +89,11 @@ const verifyGitHubSignature = (req = {}, secret = '') => {
  * Retrieve contributors
  */
 module.exports = (api, handler, config) => {
+  // Configure things as needed
+  const octokit = new Octokit({auth: config.LANDO_API_GITHUB_TOKEN});
+  const slack = require('slack-notify')(config.LANDO_API_SLACK_SPONSOR_WEBHOOK);
+  const slackNoEmail = require('slack-notify')(config.LANDO_API_SLACK_NOEMAIL_WEBHOOK);
+
   // Get all sponsors
   api.get('/v1/sponsors', handler((req, res) => {
     return utils.loadFile(sponsorsFile) || [];
@@ -84,7 +125,7 @@ module.exports = (api, handler, config) => {
 
     // If invalid response then let's send to slack and return right here
     if (!response.validated) {
-      // PUT SLACK ERROR LOG HERE
+      slack.alert(slackUnvalidated(req));
       const err = new Error(response.message);
       err.code = 403;
       return Promise.reject(err);
@@ -98,12 +139,12 @@ module.exports = (api, handler, config) => {
         response.level = getLevelFromCents(_.get(body, 'sponsorship.tier.monthly_price_in_cents', 400));
         response.username = _.get(body, 'sponsorship.sponsor.login', 'pirog');
         // Finally try to get the email
-        const octokit = new Octokit({auth: config.LANDO_API_GITHUB_TOKEN});
         return octokit.users.getByUsername({username: response.username})
         .then(raw => {
           // Try to get the email if its public
           response.email = _.get(raw, 'data.email', null);
           response.name = _.get(raw, 'data.name', null);
+          response.pic = _.get(raw, 'data.avatar_url', 'https://docs.lando.dev/images/hero-pink.png');
           // If it is then we are good!
           if (!_.isNil(response.email)) return response;
           // Otherwise we need to do more to try and get dat email
@@ -126,34 +167,10 @@ module.exports = (api, handler, config) => {
       }
     })
     .then(response => {
-      console.log(response);
-      // if no email then slack to admin
-      // send to slack as needed
-      // report success message
+      slack.alert(slackSuccess(response));
+      if (_.isNil(response.email)) {
+        slackNoEmail.alert(slackNeedEmail(response));
+      }
     });
-
-    // success, post and notify
-
-    // Determine source
-    /*
-    return Promise.resolve(req)
-
-    .then(req => {
-      // figure out the source
-    })
-    // report unhandled payloads to slack
-    .catch()
-    */
-    // normalize payload
-    /*
-      username: smutlord
-      public: true
-      level: price in cents
-      email: COMPUTE
-
-    */
-
-    console.log(response);
-    return {};
   }));
 };
