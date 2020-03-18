@@ -112,6 +112,7 @@
   },
   "devDependencies": {
     "@bugsnag/js": "^6.4.3",
+    "@octokit/rest": "^17.1.0",
     "@vuepress/plugin-blog": "^1.9.2",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
     "@vuepress/theme-blog": "^2.0.0",

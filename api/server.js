@@ -18,6 +18,8 @@ const defaultConfig = {
     /https?:\/\/([a-z0-9]+[.])*iaimrn624qfk6[.]us[.]platform[.]sh/,
   ],
   'LANDO_API_MAILCHIMP_KEY': null,
+  'LANDO_API_GITHUB_TOKEN': null,
+  'LANDO_API_GITHUB_SECRET': null,
 };
 
 // Get configuration
@@ -61,7 +63,7 @@ const handler = fn => {
     })
     // Handler failure.
     .catch(err => {
-      const code = err.statusCode || err.status || 500;
+      const code = err.statusCode || err.status || err.code || 500;
       const message = err.message || err.statusMessage || 'Unknown Error';
       res.status(code);
       res.send({code, message});
