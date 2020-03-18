@@ -167,10 +167,16 @@ module.exports = (api, handler, config) => {
       }
     })
     .then(response => {
+      // Do the slack alerts
       slack.alert(slackSuccess(response));
       if (_.isNil(response.email)) {
         slackNoEmail.alert(slackNeedEmail(response));
       }
+      // Actually to the automation
+      // Return
+      return {
+        message: 'succces',
+      };
     });
   }));
 };
