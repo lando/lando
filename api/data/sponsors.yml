@@ -65,9 +65,13 @@
   type: herald
   url: https://twitter.com/dustinleblanc
 - name: "Last Call Media"
-  type: agency
+  type: ally
   url: https://twitter.com/LastCallMedia
   logo: https://www.drupal.org/files/styles/grid-3/public/LCM.Log_.Red_.RGB_.Hi-Res.png?itok=E39WpGSK
+- name: "Amazee.io"
+  type: patriot
+  url: https://www.amazee.io/
+  logo: https://www.amazee.io/sites/default/files/2019-06/amazee_io_logo.pngK
  
   
 
