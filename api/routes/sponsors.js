@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const crypto = require('crypto');
 const path = require('path');
+const {addSubscriber} = require('./../lib/subscribe');
 const utils = require('./../lib/utils');
 const {Octokit} = require('@octokit/rest');
 const Promise = require('bluebird');
@@ -35,42 +36,6 @@ const getLevelFromCents = (cents = 400) => {
   if (cents >= 177600) return 'patriot';
 };
 
-// Helper to notify on slack for success
-const slackSuccess = (data = {}) => ({
-  attachments: [
-    {
-      fallback: 'We good!',
-      author_name: data.name,
-      author_icon: data.pic,
-      text: `${data.username} ${data.action} a sponsorship at the ${data.level} level!`,
-      fields: [
-        {title: 'email', value: data.email, short: true},
-        {title: 'level', value: data.level, short: true},
-        {title: 'from', value: data.from, short: true},
-        {title: 'username', value: data.username, short: true},
-        {title: 'name', value: data.name, short: true},
-        {title: 'public', value: data.public, short: true},
-      ],
-    },
-  ],
-});
-
-// Helper to notify on slack for unvalidated requests
-const slackUnvalidated = (req = {}) => ({
-  text: 'Invalid request!',
-  fields: {
-    'headers': JSON.stringify(req.headers),
-    'body': JSON.stringify(req.body),
-  },
-});
-
-// Helper to notify on slack for unvalidated requests
-const slackNeedEmail = (data = {}) => {
-  const message = slackSuccess(data);
-  message.attachments[0].text = `${data.username} DOES NOT HAVE AN EMAIL!!!`;
-  return message;
-};
-
 // GitHub things
 // @TODO: get these in to their own files at some point
 const verifyGitHubSignature = (req = {}, secret = '') => {
@@ -88,11 +53,9 @@ const verifyGitHubSignature = (req = {}, secret = '') => {
 /*
  * Retrieve contributors
  */
-module.exports = (api, handler, config) => {
+module.exports = (api, handler, {config, slack}) => {
   // Configure things as needed
   const octokit = new Octokit({auth: config.LANDO_API_GITHUB_TOKEN});
-  const slack = require('slack-notify')(config.LANDO_API_SLACK_SPONSOR_WEBHOOK);
-  const slackNoEmail = require('slack-notify')(config.LANDO_API_SLACK_NOEMAIL_WEBHOOK);
 
   // Get all sponsors
   api.get('/v1/sponsors', handler((req, res) => {
@@ -125,7 +88,7 @@ module.exports = (api, handler, config) => {
 
     // If invalid response then let's send to slack and return right here
     if (!response.validated) {
-      slack.alert(slackUnvalidated(req));
+      slack.unhandledSponsorshipRequest(req);
       const err = new Error(response.message);
       err.code = 403;
       return Promise.reject(err);
@@ -167,16 +130,29 @@ module.exports = (api, handler, config) => {
       }
     })
     .then(response => {
-      // Do the slack alerts
-      slack.alert(slackSuccess(response));
-      if (_.isNil(response.email)) {
-        slackNoEmail.alert(slackNeedEmail(response));
-      }
-      // Actually to the automation
-      // Return
-      return {
-        message: 'succces',
-      };
+      // Slack the things
+      slack.newSponsor(response);
+      // Try to add them to mailchimp if we have an email
+      return Promise.resolve().then(() => {
+        if (response.email) {
+          return addSubscriber(
+            config.LANDO_API_MAILCHIMP_KEY,
+            response.email,
+            ['NEWSLETTER', 'SPONSOR', _.toUpper(response.level)],
+            {
+              '36113a4526': false,
+              '2abe119d23': false,
+              'f020990e25': false,
+              '4a81e85359': false,
+              'f63decb94d': false,
+              '20270ed04e': false,
+              '8a2f0956f5': false,
+            }
+          );
+        }
+      })
+      // Finish up
+      .then(() => ({message: 'succcess!'}));
     });
   }));
 };

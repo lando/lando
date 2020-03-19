@@ -7,6 +7,7 @@ const fs = require('fs');
 const log = require('./lib/logger.js');
 const path = require('path');
 const Promise = require('bluebird');
+const SlackNotify = require('./lib/slack');
 
 // Define default config
 const defaultConfig = {
@@ -22,6 +23,7 @@ const defaultConfig = {
   'LANDO_API_MAILCHIMP_KEY': null,
   'LANDO_API_SLACK_SPONSOR_WEBHOOK': null,
   'LANDO_API_SLACK_NOEMAIL_WEBHOOK': null,
+  'LANDO_API_SLACK_API_WEBHOOK': null,
 };
 
 // Get configuration
@@ -42,6 +44,9 @@ api.use(compression());
 api.use(cors({origin: defaultConfig.LANDO_API_ALLOWED_ORIGINS}));
 api.use(bodyParser.urlencoded({extended: true}));
 api.use(bodyParser.json());
+
+// Instantiate helperz
+const slack = new SlackNotify(config.LANDO_API_SLACK_API_WEBHOOK, config.LANDO_API_SLACK_SPONSOR_WEBHOOK);
 
 /**
  * Handler function.
@@ -67,6 +72,7 @@ const handler = fn => {
     .catch(err => {
       const code = err.statusCode || err.status || err.code || 500;
       const message = err.message || err.statusMessage || 'Unknown Error';
+      slack.apiError({code, message, body: req.body});
       res.status(code);
       res.send({code, message});
       res.end();
@@ -82,7 +88,7 @@ Promise.fromNode(cb => {
 // Load our routes
 .then(() => {
   fs.readdirSync(path.join(__dirname, 'routes')).map(file => {
-    require(`./routes/${file}`)(api, handler, config);
+    require(`./routes/${file}`)(api, handler, {config, slack});
     log.info('Loaded route %s', file);
   });
   log.info('Listening on port: %s', config.LANDO_API_PORT);
