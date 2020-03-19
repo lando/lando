@@ -61,7 +61,7 @@ export default {
   .sponsor-patriot-block-image
     img
       margin: 0
-      width: 200px
+      height: 150px
 @media (max-width: $MQMobile)
   #patriots
     text-align: center
@@ -85,5 +85,5 @@ export default {
     .sponsor-patriot-block-image
       img
         margin: 0
-        width: 200px
+        height: 100px
 </style>
