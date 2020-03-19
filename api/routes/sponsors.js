@@ -81,9 +81,7 @@ module.exports = (api, handler, {config, slack}) => {
     if (response.from === 'github') {
       response.signature = verifyGitHubSignature(req, config.LANDO_API_GITHUB_SECRET);
       response.action = _.get(req, 'body.action', null);
-      // response.validated = response.signature && _.includes(['created'], response.action);
-      // @TODO: Ignore signature validattion above until we complete the backlog
-      response.validated = true && _.includes(['created'], response.action);
+      response.validated = response.signature && _.includes(['created'], response.action);
     }
 
     // If invalid response then let's send to slack and return right here
