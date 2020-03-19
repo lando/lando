@@ -25,7 +25,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const elasticsearch = {
         image: `bitnami/elasticsearch:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           ELASTICSEARCH_IS_DEDICATED_NODE: 'no',
           ELASTICSEARCH_CLUSTER_NAME: 'bespin',
@@ -36,6 +36,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.data}:/bitnami/elasticsearch/data`,
         ],
       };
