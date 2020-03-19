@@ -1,6 +1,6 @@
 - name: Tandem
   type: patriot
-  logo: https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/tandem-pink.png
+  logo: https://avatars3.githubusercontent.com/u/20853287?s=400&u=e12319da4212a4b58c6318bfa60cc12848cc2384&v=4
   url: https://thinktandem.io
 - name: OpenDevShop
   type: partner
@@ -72,6 +72,6 @@
   type: patriot
   url: https://www.amazee.io/
   logo: https://www.amazee.io/sites/default/files/2019-06/amazee_io_logo.png
- 
-  
+
+
 

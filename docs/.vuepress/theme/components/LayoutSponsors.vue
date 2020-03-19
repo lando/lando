@@ -50,7 +50,8 @@ export default {
   font-size .8em
   .special-sponsor-block
     img
-      width 150px
+      width 100px
+      padding-bottom 2em
 
 @media (max-width: 1300px)
   #special_sponsors
