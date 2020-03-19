@@ -32,7 +32,7 @@ module.exports = {
       // Build the default stuff here
       const mysql = {
         image: `bitnami/mysql:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           MYSQL_DATABASE: options.creds.database,
@@ -41,6 +41,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/mysql/data`,
         ],

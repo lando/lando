@@ -31,7 +31,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const postgres = {
         image: `bitnami/postgresql:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           POSTGRESQL_DATABASE: options.creds.database,
@@ -39,6 +39,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/postgresql`,
         ],
