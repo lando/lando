@@ -7,8 +7,8 @@ const _ = require('lodash');
 module.exports = {
   name: 'mariadb',
   config: {
-    version: '10.1',
-    supported: ['10.3', '10.2', '10.1'],
+    version: '10.3',
+    supported: ['10.4', '10.3', '10.2', '10.1'],
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
