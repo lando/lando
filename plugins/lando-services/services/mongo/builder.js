@@ -28,7 +28,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const mongo = {
         image: `bitnami/mongodb:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           LANDO_NEEDS_EXEC: 'DOEEET',

@@ -23,7 +23,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const memcached = {
         image: `bitnami/memcached:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh"',
         environment: {
           MEMCACHED_CACHE_SIZE: options.mem,
         },

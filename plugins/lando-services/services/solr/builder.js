@@ -87,7 +87,7 @@ module.exports = {
     supported: ['7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
     legacy: ['4.10', '4', '3.6', '3'],
     patchesSupported: true,
-    command: 'chmod +x /start-solr.sh && /start-solr.sh',
+    command: '/start-solr.sh',
     confSrc: __dirname,
     core: 'lando',
     dataDir: '/opt/solr/server/solr/mycores',

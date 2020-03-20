@@ -36,7 +36,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const postgres = {
         image: `bitnami/postgresql:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           POSTGRESQL_DATABASE: options.creds.database,

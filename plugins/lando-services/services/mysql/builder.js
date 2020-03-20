@@ -36,7 +36,7 @@ module.exports = {
       // Build the default stuff here
       const mysql = {
         image: `bitnami/mysql:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           MYSQL_DATABASE: options.creds.database,

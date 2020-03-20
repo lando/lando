@@ -29,7 +29,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const elasticsearch = {
         image: `bitnami/elasticsearch:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh',
         environment: {
           ELASTICSEARCH_IS_DEDICATED_NODE: 'no',
           ELASTICSEARCH_CLUSTER_NAME: 'bespin',

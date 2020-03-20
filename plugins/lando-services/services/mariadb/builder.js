@@ -37,7 +37,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const mariadb = {
         image: `bitnami/mariadb:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           // MARIADB_EXTRA_FLAGS for things like coallation?
