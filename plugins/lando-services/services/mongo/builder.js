@@ -9,6 +9,10 @@ module.exports = {
   config: {
     version: '4.0',
     supported: ['4.1', '4.0', '3.6'],
+    pinPairs: {
+      '4.0': '4.0-debian-10',
+      '3.6': '3.6-debian-10',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     healthcheck: 'echo \'db.runCommand("ping").ok\' | mongo localhost:27017/test',

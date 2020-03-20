@@ -9,6 +9,9 @@ module.exports = {
   config: {
     version: '2.4',
     supported: ['2.4'],
+    pinPairs: {
+      '2.4': 'bitnami/apache:2.4.41-debian-10-r52',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     defaultFiles: {

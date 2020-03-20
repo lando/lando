@@ -9,6 +9,10 @@ module.exports = {
   config: {
     version: '5.7',
     supported: ['8.0', '5.7'],
+    pinPairs: {
+      '8.0': '8.0.19-debian-10-r57',
+      '5.7': '5.7.29-debian-10-r51',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     creds: {

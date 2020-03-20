@@ -11,6 +11,11 @@ module.exports = {
   config: {
     version: '10',
     supported: ['11', '11.1', '11.0', '10', '10.6.0', '9.6'],
+    pinPairs: {
+      '11': '11.7.0-debian-10-r34',
+      '10': '10.12.0-debian-10-r36',
+      '9.6': '9.6.17-debian-10-r37',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     creds: {

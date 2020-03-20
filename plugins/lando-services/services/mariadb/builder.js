@@ -9,6 +9,12 @@ module.exports = {
   config: {
     version: '10.3',
     supported: ['10.4', '10.3', '10.2', '10.1'],
+    pinPairs: {
+      '10.4': '10.4.12-debian-10-r47',
+      '10.3': '10.3.22-debian-10-r52',
+      '10.2': '10.2.31-debian-10-r47',
+      '10.1': '10.1.44-debian-10-r48',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
@@ -24,14 +30,6 @@ module.exports = {
     remoteFiles: {
       database: '/opt/bitnami/mariadb/conf/my_custom.cnf',
     },
-    /*
-    pinPairs: {
-      '10.1': '10.1.44',
-      '10.2': '10.2.31',
-      '10.3': '10.3.22',
-      '10.4': '10.4.12',
-    },
-    */
   },
   parent: '_service',
   builder: (parent, config) => class LandoMariaDb extends parent {

@@ -9,6 +9,9 @@ module.exports = {
   config: {
     version: '1',
     supported: ['1', '1.5.12', '1.5.x'],
+    pinPairs: {
+      '1': '1.6.1-debian-10-r4',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     mem: 64,
