@@ -4,6 +4,7 @@
 
 * Added support for `mariadb` `10.4` [#2004](https://github.com/lando/lando/issues/2004)
 * Added patch version pinning to `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
+* Fixed bug causing prerelease version comparison produce unexpected results [#2049](https://github.com/lando/lando/issues/2049)
 * Fixed breaking upstream change in all `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
