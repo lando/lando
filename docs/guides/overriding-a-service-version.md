@@ -1,11 +1,11 @@
 ---
-title: Overriding a Service Version
+title: Overriding a Service Version or Imge
 metaTitle: Overriding a Service Version | Lando
-description: Modify the underling Docker images used by your Lando services so that you can custom tailor the container environment for your apps!
+description: Modify the underlying Docker images used by your Lando services so that you can custom tailor the container environment for your apps!
 summary: Modify the underling Docker images used by your Lando services so that you can custom tailor the container environment for your apps!
 date: 2020-03-19T19:59:04.806Z
-original: 
-repo: 
+original:
+repo:
 
 author:
   name: Dustin LeBlanc

@@ -4,8 +4,7 @@
     "collapsable": false,
     "children": [
       "db-export",
-      "db-import",
-      "overriding-a-service-version"
+      "db-import"
     ]
   },
   {
@@ -62,6 +61,13 @@
         "https://www.youtube.com/watch?v=tkBVDh7my9Q",
         "Mountain climbing"
       ]
+    ]
+  },
+  {
+    "title": "Services",
+    "collapsable": false,
+    "children": [
+      "overriding-a-service-version"
     ]
   },
   {
