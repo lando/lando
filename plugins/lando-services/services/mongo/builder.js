@@ -10,8 +10,9 @@ module.exports = {
     version: '4.0',
     supported: ['4.1', '4.0', '3.6'],
     pinPairs: {
-      '4.0': 'bitnami/mongodb:4.0-debian-10',
-      '3.6': 'bitnami/mongodb:3.6-debian-10',
+      '4.1': 'bitnami/mongodb:4.1.13-debian-9-r96',
+      '4.0': 'bitnami/mongodb:4.0.13-debian-9-r45',
+      '3.6': 'bitnami/mongodb:3.6.16-debian-9-r41',
     },
     patchesSupported: true,
     confSrc: __dirname,
