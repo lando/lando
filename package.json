@@ -86,7 +86,7 @@
     "clean-stacktrace": "^1.1.0",
     "cli-table": "^0.3.1",
     "cli-table3": "^0.5.1",
-    "copy-dir": "^0.4.0",
+    "copy-dir": "^1.2.0",
     "dockerode": "^2.4.2",
     "github": "^12.0.0",
     "glob": "^7.1.3",
