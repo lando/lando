@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [5.0](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   **[4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)** **(default)**
 *   [4.6](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   [custom](./../config/services.md#advanced)
