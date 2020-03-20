@@ -10,7 +10,7 @@ module.exports = {
     version: '1',
     supported: ['1', '1.5.12', '1.5.x'],
     pinPairs: {
-      '1': '1.6.1-debian-10-r4',
+      '1': 'bitnami/memcached:1.6.1-debian-10-r4',
     },
     patchesSupported: true,
     confSrc: __dirname,

@@ -3,6 +3,8 @@
 ## v3.0.0-aft.2 - [March 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.2)
 
 * Added support for `mariadb` `10.4` [#2004](https://github.com/lando/lando/issues/2004)
+* Added patch version pinning to `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
+* Fixed breaking upstream change in all `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 

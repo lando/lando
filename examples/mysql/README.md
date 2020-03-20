@@ -22,8 +22,8 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 5.7.x as the default version
-lando ssh -s defaults -c "mysql --version | grep 5.7"
+# Should use 5.7.29 as the default version
+lando ssh -s defaults -c "mysql --version | grep 5.7.29"
 
 # Should use the specfied version when set by the user
 lando ssh -s custom -c "mysql --version | grep 8.0"
