@@ -3,8 +3,9 @@
     "title": "Databases",
     "collapsable": false,
     "children": [
+      "db-export",
       "db-import",
-      "db-export"
+      "overriding-a-service-version"
     ]
   },
   {
