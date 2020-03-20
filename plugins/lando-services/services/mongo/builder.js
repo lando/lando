@@ -23,13 +23,14 @@ module.exports = {
       options = _.merge({}, config, options);
       const mongo = {
         image: `bitnami/mongodb:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           LANDO_NEEDS_EXEC: 'DOEEET',
           // MONGODB_EXTRA_FLAGS for things like coallation?
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.data}:/bitnami`,
         ],
       };
