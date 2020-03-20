@@ -2,6 +2,8 @@
 
 ## v3.0.0-aft.2 - [March 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.2)
 
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
 * Added support for `mariadb` `10.4` [#2004](https://github.com/lando/lando/issues/2004)
 * Added patch version pinning to `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
 * Added `rsync` to the `php:7.4` image [#2056](https://github.com/lando/lando/issues/2056)
@@ -12,6 +14,8 @@
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
 ## v3.0.0-aft.1 - [March 13, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added signed `windoze` installer and binary [#2037](https://github.com/lando/lando/issues/2037)
 * Added support for `node` `12` and `13` [#1866](https://github.com/lando/lando/issues/1866)
