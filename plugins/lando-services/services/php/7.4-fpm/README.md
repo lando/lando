@@ -45,6 +45,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     openssl \
     postgresql-client-10 \
     pv \
+    rsync \
     ssh \
     unzip \
     wget \
