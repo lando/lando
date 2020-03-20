@@ -1,5 +1,15 @@
 # 2020
 
+## v3.0.0-aft.2 - [March 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.2)
+
+* Added support for `mariadb` `10.4` [#2004](https://github.com/lando/lando/issues/2004)
+* Added patch version pinning to `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
+* Fixed bug causing `--secret-toggle` to break packaged `lando`s
+* Fixed bug causing prerelease version comparison produce unexpected results [#2049](https://github.com/lando/lando/issues/2049)
+* Fixed breaking upstream change in all `bitnami` based services [#2057](https://github.com/lando/lando/issues/2057)
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
 ## v3.0.0-aft.1 - [March 13, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.1)
 
 * Added signed `windoze` installer and binary [#2037](https://github.com/lando/lando/issues/2037)

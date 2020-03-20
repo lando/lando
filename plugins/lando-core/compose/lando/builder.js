@@ -36,6 +36,7 @@ module.exports = {
         legacy = [],
         meUser = 'www-data',
         patchesSupported = false,
+        pinPairs = {},
         ports = [],
         project = '',
         overrides = {},
@@ -129,6 +130,11 @@ module.exports = {
         services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, labels, ports, volumes}),
         volumes: namedVols,
       });
+
+      // Add a final source if we need to pin pair
+      if (_.includes(_.keys(pinPairs), version)) {
+        sources.push({services: _.set({}, name, {image: _.get(pinPairs, version, version)})});
+      }
 
       // Add our overrides at the end
       sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});

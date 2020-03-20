@@ -8,7 +8,11 @@ module.exports = {
   name: 'elasticsearch',
   config: {
     version: '6',
-    supported: ['7', '7.3', '7.3.x', '6', '6.5.x', '5', '5.6.x'],
+    supported: ['7', '7.6.x', '7.5.x', '7.4.x', '7.3.x', '6', '6.8.x', '6.7.x', '6.6.x', '6.5.x', '5', '5.6.x'],
+    pinPairs: {
+      '7': 'bitnami/elasticsearch:7.6.1-debian-10-r15',
+      '6': 'bitnami/elasticsearch:6.8.7-debian-10-r15',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     healthcheck: 'curl -XGET localhost:9200',
@@ -25,7 +29,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const elasticsearch = {
         image: `bitnami/elasticsearch:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
         environment: {
           ELASTICSEARCH_IS_DEDICATED_NODE: 'no',
           ELASTICSEARCH_CLUSTER_NAME: 'bespin',
@@ -36,6 +40,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.data}:/bitnami/elasticsearch/data`,
         ],
       };
