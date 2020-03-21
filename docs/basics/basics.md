@@ -89,7 +89,7 @@ There are various ways to craft your Landofile but we've found and observed a st
 3. Define more complex [tooling](./../config/tooling.md) and [events](./../config/events.md) to simplify difficult command patterns and automate common tasks.
 4. Add in some [build steps](./../config/services.md#build-steps) to further automate setting your services up or to mix in additional project dependencies.
 5. Define [custom services](./../config/compose.md) as a catch all for anything else you need.
-6. Create [custom recipes or services](./../contrib/plugins.md) to lock down your new power tools.
+6. Create [custom recipes or services](./../contrib-plugins.md) to lock down your new power tools.
 7. Rinse and repeat.
 
 ## You have some examples?
