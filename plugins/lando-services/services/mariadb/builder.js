@@ -10,7 +10,7 @@ module.exports = {
     version: '10.3',
     supported: ['10.4', '10.3', '10.2', '10.1'],
     pinPairs: {
-      '10.4': 'bitnami/mariadb:0.4.12-debian-10-r47',
+      '10.4': 'bitnami/mariadb:10.4.12-debian-10-r47',
       '10.3': 'bitnami/mariadb:10.3.22-debian-10-r52',
       '10.2': 'bitnami/mariadb:10.2.31-debian-10-r47',
       '10.1': 'bitnami/mariadb:10.1.44-debian-10-r48',
