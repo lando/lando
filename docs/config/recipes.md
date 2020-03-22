@@ -8,7 +8,7 @@ Recipes are Lando's highest level abstraction and they contain common combinatio
 
 ## Usage
 
-You can use the top-level `recipe` config in your [Landofile](./lando.md) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../contrib/plugins.md).
+You can use the top-level `recipe` config in your [Landofile](./lando.md) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../contrib-plugins.md).
 
 For example this will use the [Drupal 8](./drupal8.md) recipe.
 
