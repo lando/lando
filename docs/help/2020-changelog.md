@@ -1,5 +1,15 @@
 # 2020
 
+## v3.0.0-rrc.1 - [March 22, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Downgraded Docker Desktop for Windows to `2.2.0.3` because [#2052](https://github.com/lando/lando/issues/2052) [#2076](https://github.com/lando/lando/issues/2076)
+* Switched pre-release series because apparently linux cares [#2072](https://github.com/lando/lando/issues/2072)
+* Updated Docker Desktop for macOS installer to handle the 2.1 -> 2.2 upgrade better
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
 ## v3.0.0-aft.2 - [March 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-aft.2)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
