@@ -9,6 +9,9 @@ unset ${!DOCKER_*}
 PATH=$PATH:/usr/local/bin
 TERM=xterm
 
+# Kill docker if running
+killall Docker || true
+
 # Get the user originale
 declare -r console_user=$(stat -f '%Su' /dev/console)
 
@@ -22,6 +25,7 @@ sudo mkdir -p /Library/PrivilegedHelperTools
 sudo mkdir -p /usr/local/bin
 
 # Set up our VMNET things
+sudo launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist && sleep 10 || true
 sudo install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
 sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
 sudo plutil -insert Version -string 46 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
@@ -29,17 +33,6 @@ sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
 # Launch docker
 sudo -u ${console_user} open -a /Applications/Docker.app
-osascript <<EOD
-tell application "Docker"
-  activate
-end tell
-tell application "System Events"
-  repeat 10 times
-    keystroke return
-    delay (random number from 0.1 to 0.3)
-  end repeat
-end tell
-EOD
 
 # Disable autoupdates
 sudo -u ${console_user} sed -i -e 's/\"checkForUpdates\" : true,/\"checkForUpdates\" : false,/g' ~/Library/Group\ Containers/group.com.docker/settings.json
