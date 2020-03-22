@@ -3023,10 +3023,12 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
-copy-dir@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/copy-dir/-/copy-dir-1.2.0.tgz#d2634378186d8762769285b36efb307a7945964e"
-  integrity sha512-UeaUFUIHqGV4brjQ9bY2mHll/hoxyCak2emgmYG72LkGKABHBdBDKFw0H5nTKt5OzVBkBhkxCwnniJBAE7EGEw==
+copy-dir@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/copy-dir/-/copy-dir-0.4.0.tgz#bb7f603890ec20bf14678cbd6735fa46fc156be7"
+  integrity sha512-mIefrD97nE1XX2th570tR5UQvW6/92czEPGe+oTtrxPAJl+KOKLpzcRa+e38WEpmt/IUN1n65KvRMzPblR+fDQ==
+  dependencies:
+    mkdir-p "~0.0.4"
 
 copy-webpack-plugin@^5.0.2:
   version "5.0.4"
@@ -7088,6 +7090,11 @@ mixin-deep@^1.2.0:
   dependencies:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
+
+mkdir-p@~0.0.4:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/mkdir-p/-/mkdir-p-0.0.7.tgz#24c5dbe26da3a99ef158a1eef9a5c2dd9de5683c"
+  integrity sha1-JMXb4m2jqZ7xWKHu+aXC3Z3laDw=
 
 mkdirp2@^1.0.3:
   version "1.0.4"
