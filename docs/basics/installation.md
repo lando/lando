@@ -101,6 +101,7 @@ Note that you *may* also be able to just double click on the package and install
 ### Debian
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.deb
 sudo dpkg -i lando-stable.deb
 ```
 
