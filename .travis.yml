@@ -50,7 +50,7 @@ jobs:
     # Tests
     - name: Linting and Unit Tests - macOS
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode11.3
       before_script:
         - node --version
         - yarn --version
@@ -83,7 +83,7 @@ jobs:
     - stage: build
       name: Test Build - macOS packages
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode11.3
       env: APPLE_NO_NOTARIZE=notgonnadoit
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
@@ -139,7 +139,7 @@ jobs:
     - stage: Deploy
       name: macOS Packages
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode11.3
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
