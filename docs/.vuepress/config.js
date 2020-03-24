@@ -126,6 +126,7 @@ module.exports = {
             'env',
             'events',
             'networking',
+            'performance',
             'ssh',
             'security',
             'files',
