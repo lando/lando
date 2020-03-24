@@ -5,6 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Fixed bug causing crash on `macOS` if Docker is not installed first
+* Fixed bug causing CLI array data to vanish on Windows, thanks @rabauss! [#2063](https://github.com/lando/lando/issues/2063)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 

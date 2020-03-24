@@ -46,10 +46,10 @@ describe('table', () => {
       table.should.have.lengthOf(4);
     });
 
-    it('should join array values with os.EOL by default', () => {
+    it('should join array values with POSIX newline by default', () => {
       const table = new Table();
       table.add({members: ['crosby', 'stills', 'nash', 'young']});
-      table[0][1].should.equal(['crosby', 'stills', 'nash', 'young'].join(os.EOL));
+      table[0][1].should.equal(['crosby', 'stills', 'nash', 'young'].join('\n'));
     });
 
     it('should join array values with alternate opts.arrayJoiner if specified', () => {
