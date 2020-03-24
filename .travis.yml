@@ -54,6 +54,7 @@ jobs:
       before_script:
         - node --version
         - yarn --version
+        - mkdir -p "~/.lando/cache"
         - echo "true" > "~/.lando/cache/report_errors"
         - ls -lsa ~
         - pwd
