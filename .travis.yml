@@ -58,6 +58,8 @@ jobs:
         - echo "true" > "/Users/travis/.lando/cache/report_errors"
         - ls -lsa /Users/travis
         - pwd
+        - env
+        - id
         - node bin/lando.js config -vvv
         - node bin/lando.js version -vvv
       script:
