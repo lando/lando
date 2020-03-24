@@ -55,8 +55,8 @@ jobs:
         - node --version
         - yarn --version
         - mkdir -p "/Users/travis/.lando/cache"
-        - echo "true" > "~/.lando/cache/report_errors"
-        - ls -lsa /Users/travis/.lando/cache
+        - echo "true" > "/Users/travis/.lando/cache/report_errors"
+        - ls -lsa /Users/travis
         - pwd
         - node bin/lando.js config -vvv
         - node bin/lando.js version -vvv
