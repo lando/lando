@@ -1,5 +1,13 @@
 # 2020
 
+## v3.0.0-rrc.2 - [March 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.2)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing crash on `macOS` if Docker is not installed first
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
 ## v3.0.0-rrc.1 - [March 22, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.1)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
