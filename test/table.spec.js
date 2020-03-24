@@ -6,7 +6,6 @@
 'use strict';
 
 const chai = require('chai');
-const os = require('os');
 const Table = require('./../lib/table');
 chai.should();
 
@@ -18,7 +17,7 @@ describe('table', () => {
       table.options.head.should.be.empty;
       table.border.should.be.true;
       table.sort.should.be.false;
-      table.joiner.should.equal(os.EOL);
+      table.joiner.should.equal('\n');
       table.keyColor.should.equal('cyan');
       table.options.chars.should.have.property('bottom', '─');
     });
