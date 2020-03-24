@@ -7,6 +7,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added support for `.mjs` files in `nginx` [#1537](https://github.com/lando/lando/issues/1537)
 * Fixed bug causing crash on `macOS` if Docker is not installed first
 * Fixed bug causing CLI array data to vanish on Windows, thanks @rabauss! [#2063](https://github.com/lando/lando/issues/2063)
+* Officially document file performance `excludes` feature [#763](https://github.com/lando/lando/issues/763) [#1460](https://github.com/lando/lando/issues/1460)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
