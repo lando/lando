@@ -50,8 +50,16 @@ jobs:
     # Tests
     - name: Linting and Unit Tests - macOS
       os: osx
-      osx_image: xcode11.2
-      before_script: node bin/lando.js version
+      osx_image: xcode11.3
+      before_script:
+        - node --version
+        - yarn --version
+        - mkdir -p "~/.lando/cache"
+        - echo "true" > "~/.lando/cache/report_errors"
+        - ls -lsa ~
+        - pwd
+        - node bin/lando.js config -vvv
+        - node bin/lando.js version -vvv
       script:
         - yarn lint
         - yarn lint:sites
@@ -76,7 +84,7 @@ jobs:
     - stage: build
       name: Test Build - macOS packages
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode11.3
       env: APPLE_NO_NOTARIZE=notgonnadoit
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
@@ -132,7 +140,7 @@ jobs:
     - stage: Deploy
       name: macOS Packages
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode11.3
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
