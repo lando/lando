@@ -51,7 +51,11 @@ jobs:
     - name: Linting and Unit Tests - macOS
       os: osx
       osx_image: xcode11.2
-      before_script: node bin/lando.js version
+      before_script:
+        - node --version
+        - yarn --version
+        - echo "true" > "~/.lando/cache/report_errors"
+        - node bin/lando.js version -vvv
       script:
         - yarn lint
         - yarn lint:sites
