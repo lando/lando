@@ -55,6 +55,9 @@ jobs:
         - node --version
         - yarn --version
         - echo "true" > "~/.lando/cache/report_errors"
+        - ls -lsa ~
+        - pwd
+        - node bin/lando.js config -vvv
         - node bin/lando.js version -vvv
       script:
         - yarn lint
