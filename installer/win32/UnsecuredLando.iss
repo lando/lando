@@ -68,6 +68,9 @@ Filename: powershell.exe; Parameters: "-ExecutionPolicy Bypass -File ""{app}\eng
 [Registry]
 Root: HKCU; Subkey: "Environment"; ValueType:string; ValueName:"LANDO_INSTALL_PATH"; ValueData:"{app}" ; Flags: preservestringtype ;
 
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\installers\docker"
+
 [UninstallDelete]
 Type: filesandordirs; Name: "{userappdata}\..\.lando"
 
