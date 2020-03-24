@@ -32,14 +32,14 @@ describe('updates', () => {
     it('should understand the prerelease hierarchy', () => {
       updates.updateAvailable('3.0.0-alpha.1', '3.0.0-beta.1').should.be.true;
       updates.updateAvailable('3.0.0-alpha.1', '3.0.0-rc.1').should.be.true;
-      updates.updateAvailable('3.0.0-alpha.1', '3.0.0-aft.1').should.be.true;
+      updates.updateAvailable('3.0.0-alpha.1', '3.0.0-rrc.1').should.be.true;
       updates.updateAvailable('3.0.0-beta.1', '3.0.0-rc.1').should.be.true;
-      updates.updateAvailable('3.0.0-rc.1', '3.0.0-aft.1').should.be.true;
-      updates.updateAvailable('3.0.0-beta.1', '3.0.0-aft.1').should.be.true;
+      updates.updateAvailable('3.0.0-rc.1', '3.0.0-rrc.1').should.be.true;
+      updates.updateAvailable('3.0.0-beta.1', '3.0.0-rrc.1').should.be.true;
 
-      updates.updateAvailable('3.0.0-aft.1', '3.0.0-alpha.1').should.be.false;
-      updates.updateAvailable('3.0.0-aft.1', '3.0.0-beta.1').should.be.false;
-      updates.updateAvailable('3.0.0-aft.1', '3.0.0-rc.1').should.be.false;
+      updates.updateAvailable('3.0.0-rrc.1', '3.0.0-alpha.1').should.be.false;
+      updates.updateAvailable('3.0.0-rrc.1', '3.0.0-beta.1').should.be.false;
+      updates.updateAvailable('3.0.0-rrc.1', '3.0.0-rc.1').should.be.false;
       updates.updateAvailable('3.0.0-beta.1', '3.0.0-alpha.1').should.be.false;
       updates.updateAvailable('3.0.0-rc.1', '3.0.0-alpha.1').should.be.false;
       updates.updateAvailable('3.0.0-rc.1', '3.0.0-beta.1').should.be.false;
