@@ -10,7 +10,7 @@ module.exports = {
     version: '4.7',
     supported: ['5.0', '4.7', '4.6'],
     pinPairs: {
-      '5.0': 'phpmyadmin/phpmyadmin:5.0.1-fpm-alpine',
+      '5.0': 'phpmyadmin/phpmyadmin:5.0.2',
     },
     confSrc: __dirname,
     hosts: ['database'],

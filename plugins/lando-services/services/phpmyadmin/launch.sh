@@ -4,5 +4,5 @@
 set -e
 
 # Try the new entrypoint and then fallback to the older one
-/docker-entrypoint.sh php-fpm \
+/docker-entrypoint.sh apache2-foreground \
   || /run.sh phpmyadmin
