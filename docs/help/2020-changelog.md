@@ -4,12 +4,13 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added support for `phpmyadmin` `5.0` [#2062](https://github.com/lando/lando/issues/2062)
 * Added support for `solr` `8` [#1765](https://github.com/lando/lando/pull/1765)
 * Added new `solr` `7` minor versions [#1765](https://github.com/lando/lando/pull/1765)
 * Added support for `.mjs` files in `nginx` [#1537](https://github.com/lando/lando/issues/1537)
 * Fixed bug causing crash on `macOS` if Docker is not installed first
 * Fixed bug causing CLI array data to vanish on Windows, thanks @rabauss! [#2063](https://github.com/lando/lando/issues/2063)
-* Officially document file performance `excludes` feature [#763](https://github.com/lando/lando/issues/763) [#1460](https://github.com/lando/lando/issues/1460)
+* Officially documented file performance `excludes` feature [#763](https://github.com/lando/lando/issues/763) [#1460](https://github.com/lando/lando/issues/1460)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
