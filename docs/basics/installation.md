@@ -98,8 +98,7 @@ If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages y
 
 Note that you *may* also be able to just double click on the package and install via your distributions "Software Center" or equivalent.
 
-Make sure you have wget installed, or install it using:
-`sudo apt install wget`
+Make sure you have wget installed, or install it: `sudo apt install wget`
 
 ### Debian
 
