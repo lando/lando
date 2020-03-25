@@ -12,20 +12,25 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[8](https://hub.docker.com/r/_/solr/)** **(default)**
+*   [8](https://hub.docker.com/r/_/solr/)
+*   [8.4](https://hub.docker.com/r/_/solr/)
+*   [8.3](https://hub.docker.com/r/_/solr/)
 *   [8.2](https://hub.docker.com/r/_/solr/)
-*   [7](https://hub.docker.com/r/_/solr/)
+*   [8.1](https://hub.docker.com/r/_/solr/)
+*   [8.0](https://hub.docker.com/r/_/solr/)
+*   **[7](https://hub.docker.com/r/_/solr/)** **(default)**
+*   [7.7](https://hub.docker.com/r/_/solr/)
 *   [7.6](https://hub.docker.com/r/_/solr/)
-*   [6.6](https://hub.docker.com/r/_/solr/)
-*   [6](https://hub.docker.com/r/_/solr/)
-*   [5.5](https://hub.docker.com/r/_/solr/)
-*   [5](https://hub.docker.com/r/_/solr/)
 *   [custom](./../config/services.md#advanced)
 
 ## Legacy versions
 
 You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
 
+*   [6.6](https://hub.docker.com/r/_/solr/)
+*   [6](https://hub.docker.com/r/_/solr/)
+*   [5.5](https://hub.docker.com/r/_/solr/)
+*   [5](https://hub.docker.com/r/_/solr/)
 *   [4](https://hub.docker.com/r/actency/docker-solr)
 *   [4.10](https://hub.docker.com/r/actency/docker-solr)
 *   [3](https://hub.docker.com/r/actency/docker-solr)
