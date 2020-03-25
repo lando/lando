@@ -12,14 +12,17 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[1.11](https://hub.docker.com/_/golang/)** **(default)**
-*   [1.10](https://hub.docker.com/_/golang/)
+*   **[1.14](https://hub.docker.com/_/golang/)** **(default)**
+*   [1.13](https://hub.docker.com/_/golang/)
 *   [custom](./../config/services.md#advanced)
 
 ## Legacy versions
 
 You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
 
+*   [1.12](https://hub.docker.com/_/golang/)
+*   [1.11](https://hub.docker.com/_/golang/)
+*   [1.10](https://hub.docker.com/_/golang/)
 *   [1.9](https://hub.docker.com/_/golang/)
 *   [1.8](https://hub.docker.com/_/golang/)
 
@@ -34,7 +37,7 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: go:1.10.7
+    type: go:1.13.9
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/golang/tags/) for the underlying image we are using.
@@ -48,7 +51,7 @@ Also note that the below options are in addition to the [build steps](./../confi
 ```yaml
 services:
   my-service:
-    type: go:1.11
+    type: go:1.13
     ssl: false
     command: tail -f /dev/null
 ```
