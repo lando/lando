@@ -7,8 +7,11 @@ const _ = require('lodash');
 module.exports = {
   name: 'phpmyadmin',
   config: {
-    version: '4.7',
-    supported: ['4.7', '4.6'],
+    version: '5.0',
+    supported: ['5.0'],
+    pinPairs: {
+      '5.0': 'phpmyadmin/phpmyadmin:5.0.2',
+    },
     confSrc: __dirname,
     hosts: ['database'],
     remoteFiles: {
@@ -30,9 +33,10 @@ module.exports = {
           PMA_PORT: 3306,
           PMA_USER: 'root',
           PMA_PASSWORD: '',
+          UPLOAD_LIMIT: 'NOLIMITS!',
         },
         ports: ['80'],
-        command: '/run.sh phpmyadmin',
+        command: '/docker-entrypoint.sh apache2-foreground',
       };
       // Add some info
       options.info = {backends: options.hosts};

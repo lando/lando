@@ -40,6 +40,19 @@ services:
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/elasticsearch/tags) for the underlying image we are using.
 
+## Other requirements
+
+Elasticsearch requires you set the kernal property `vm.max_map_count` to at least `262144` in order to run correctly. Lando will attempt to set this on install if you use any of our official package installers for Windows, macOS, Debian, RPM or Pacman.
+
+However, if you are installing from source or via another pathway you will need to set this manually. Generally this can be accomplished with the following:
+
+```bash
+sysctl -w vm.max_map_count=262144
+```
+
+But we recommend you check out the following issue for more information:
+<https://github.com/lando/lando/issues/1967>
+
 ## Configuration
 
 Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.

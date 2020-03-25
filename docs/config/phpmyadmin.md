@@ -12,7 +12,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)** **(default)**
+*   **[5.0](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)** **(default)**
+*   [4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   [4.6](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   [custom](./../config/services.md#advanced)
 
@@ -29,7 +30,7 @@ Also note that the below options are in addition to the [build steps](./../confi
 ```yaml
 services:
   my-service:
-    type: phpmyadmin:4.7
+    type: phpmyadmin:5.0
     hosts: []
     config:
       config: SEE BELOW

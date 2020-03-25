@@ -27,15 +27,18 @@ fi
 
 # Chownage
 mkdir -p /solrconf
+mkdir -p /opt/solr
+mkdir -p /var/solr
 chown -R solr:solr /solrconf
 chown -R solr:solr /opt/solr
+chown -R solr:solr /var/solr
 
 . /opt/docker-solr/scripts/run-initdb
 
 # Go down to solr and run
 if [ "$LANDO_SOLR_CUSTOM" != "none" ]; then
   gosu solr:solr docker-entrypoint.sh precreate-core "$LANDO_SOLR_CORE" /solrconf
-  gosu solr:solr cp -a "/solrconf/conf/." "/opt/solr/server/solr/mycores/$LANDO_SOLR_CORE/conf/"
+  gosu solr:solr cp -a "/solrconf/conf/." "$LANDO_SOLR_DATADIR/$LANDO_SOLR_CORE/conf/"
 else
   gosu solr:solr docker-entrypoint.sh precreate-core "$LANDO_SOLR_CORE"
 fi
