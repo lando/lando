@@ -8,6 +8,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added support for `solr` `8` [#1765](https://github.com/lando/lando/pull/1765)
 * Added new `solr` `7` minor versions [#1765](https://github.com/lando/lando/pull/1765)
 * Added support for `.mjs` files in `nginx` [#1537](https://github.com/lando/lando/issues/1537)
+* Added documentation on how to set `vm.max_map_count` correctly if you cannot run `elasticsearch` correctly [#1967](https://github.com/lando/lando/issues/1967)
 * Fixed bug causing crash on `macOS` if Docker is not installed first
 * Fixed bug causing CLI array data to vanish on Windows, thanks @rabauss! [#2063](https://github.com/lando/lando/issues/2063)
 * Officially documented file performance `excludes` feature [#763](https://github.com/lando/lando/issues/763) [#1460](https://github.com/lando/lando/issues/1460)
