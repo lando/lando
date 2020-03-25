@@ -4,7 +4,7 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-* Added support for `phpmyadmin` `5.0` [#2062](https://github.com/lando/lando/issues/2062)
+* Added support for `phpmyadmin` `5.0`, set to default version [#2062](https://github.com/lando/lando/issues/2062)
 * Added support for `solr` `8` [#1765](https://github.com/lando/lando/pull/1765)
 * Added new `solr` `7` minor versions [#1765](https://github.com/lando/lando/pull/1765)
 * Added support for `.mjs` files in `nginx` [#1537](https://github.com/lando/lando/issues/1537)
