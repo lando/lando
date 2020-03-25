@@ -1,0 +1,5 @@
+name: "XYZ AFFAIR"
+services:
+  defaults:
+    type: apache
+
