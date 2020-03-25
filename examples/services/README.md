@@ -36,7 +36,7 @@ lando ssh -s appserver -c "env | grep CUSTOM=PIROG"
 # Should be able to rebuild without pulling local image
 lando rebuild -y
 
-# Should rerun build steps even if containers are manually removed
+# Should rerun build steps even if containers are manually removed and stuff
 lando destroy -y
 lando start -y
 docker rm -f landoservices_nginx_1
