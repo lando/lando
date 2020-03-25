@@ -9,6 +9,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added new `solr` `7` minor versions [#1765](https://github.com/lando/lando/pull/1765)
 * Added support for `.mjs` files in `nginx` [#1537](https://github.com/lando/lando/issues/1537)
 * Added documentation on how to set `vm.max_map_count` correctly if you cannot run `elasticsearch` correctly [#1967](https://github.com/lando/lando/issues/1967)
+* Fixed bug caused by setting `TERMINUS_VERSION` in Pantheon appserver images [#1872](https://github.com/lando/lando/issues/1872)
 * Fixed bug causing build steps to not run if app was manually removed [#2079](https://github.com/lando/lando/issues/2079)
 * Fixed bug with app name names containing spaces [#1767](https://github.com/lando/lando/issues/1767)
 * Fixed bug causing crash on `macOS` if Docker is not installed first
