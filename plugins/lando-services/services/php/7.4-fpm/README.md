@@ -57,7 +57,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install memcached \
   && pecl install oauth-2.0.4 \
   && pecl install redis-5.1.1 \
-  && pecl install xdebug-2.8.1 \
+  && pecl install xdebug \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
