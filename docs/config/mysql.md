@@ -135,6 +135,7 @@ services:
     config:
       database: config/my-custom.cnf
 ```
+Your override file will get copied to `/opt/bitnami/mysql/conf/bitnami/my_custom.cnf` in the database container and an include will be added to the MySQL configuration file located at `/opt/bitnami/mysql/conf/my.cnf`.
 
 ## Getting information
 

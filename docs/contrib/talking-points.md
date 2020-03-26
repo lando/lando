@@ -29,7 +29,7 @@ These are intended to try and convince a more-techincal audience to adopt Lando.
 
 * Lando is designed to run _any_ project you have
 * Lando has built in build steps and event automation
-* Lando has never raised money, and wont, so you know its grassroots shit
+* Lando has never raised money, and won't, so you know it's grassroots shit
 * Lando is the engine that powers other popular tools like Acquia's Dev Studio or Pantheon's Localdev
 * Lando is the culmination of over 10 years of expertise in this space
 

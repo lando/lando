@@ -10,7 +10,9 @@
   {
     "title": "Drupal",
     "collapsable": false,
-    "children": []
+    "children": [
+      "drupal-7-landoize-an-extant-app"
+    ]
   },
   {
     "title": "Frontend",
@@ -23,6 +25,7 @@
     "title": "General",
     "collapsable": false,
     "children": [
+      "how-do-i-configure-a-lando-recipe",
       "lando-info"
     ]
   },
@@ -41,6 +44,13 @@
       "external-access.md",
       "access-by-other-devices",
       "offline-dev"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
     ]
   },
   {

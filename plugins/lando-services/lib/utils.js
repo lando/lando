@@ -38,7 +38,7 @@ exports.getInstallCommands = (deps, pkger, prefix = []) => _(deps)
 /*
  * Filter and map build steps
  */
-exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
+exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= [], prestart = false) => {
   // Start collecting them
   const build = [];
   // Go through each service
@@ -57,6 +57,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
             project: app.project,
             opts: {
               mode: 'attach',
+              prestart,
               user: (_.includes(rootSteps, section)) ? 'root' : getUser(service, app.info),
               services: [service],
             },
@@ -65,7 +66,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
       }
     });
   });
-  // Let's silent run user-perm stuff
+  // Let's silent run user-perm stuff and add a "last" flag
   if (!_.isEmpty(build)) {
     _.forEach(_.uniq(_.map(build, 'id')), container => {
       build.unshift({
@@ -75,11 +76,15 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= []) => {
         project: app.project,
         opts: {
           mode: 'attach',
+          prestart,
           user: 'root',
           services: [container.split('_')[1]],
         },
       });
     });
+    // Denote the last step in the build if its happening before start
+    const last = _.last(build);
+    last.opts.last = prestart;
   }
   // Return
   return build;

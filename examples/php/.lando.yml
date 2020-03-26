@@ -23,6 +23,8 @@ services:
       image: devwithlando/php:7.1-fpm-2
       environment:
         DUALBLADE: maxim
+  custom74:
+    type: php:7.4
   composer:
     type: php:7.0
     composer:

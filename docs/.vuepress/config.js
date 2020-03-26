@@ -65,7 +65,7 @@ module.exports = {
     docsBranch: 'master',
     logo: '/images/logo-pink-small.png',
     editLinks: true,
-    editLinkText: 'Is this doc out of date? Is there something to make it better? Suggest a change!',
+    editLinkText: 'Is this doc out of date? Suggest a change!',
     lastUpdated: 'Last Updated',
     nav: [
       {text: 'Getting Started', link: '/basics/'},
@@ -77,6 +77,7 @@ module.exports = {
       {text: 'Blog', link: 'https://blog.lando.dev'},
       {text: 'Events & Meetups', link: 'https://events.lando.dev'},
     ],
+    repo: 'lando/lando',
     sidebar: {
       '/basics/': [
         {

@@ -47,7 +47,7 @@ You should be careful switching database `type`, `version` or `creds`.
 In the case of type and version the underlying database files between these things is likely not be compatible. In the case of credentials, these are set when the container is **initially created** so in order to change them you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
 
 
-**Ignoring this warning can cause your database service to not star**
+**Ignoring this warning can cause your database service to not start**
 :::
 
 ```yaml
@@ -113,8 +113,6 @@ lando destroy -y && lando start
 ```
 
 Also note that by default all `postgres` services have a passwordless `postgres` user with all permissions. **DO NOT ALTER THE PASSWORD OF THE POSTGRES USER.**
-
-Due to the way
 
 ### Using a custom postgres config file
 

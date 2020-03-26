@@ -25,8 +25,20 @@ Please also verify you meet the requirements needed to run our Docker engine bac
 ## Hardware Requirements
 
 ::: warning Not for the faint of heart!
-Note that Lando is basically a PaaS running on your computer and as such we don't recommend you use it [UNLESS YOU'VE GOT POWER!!!](https://www.youtube.com/watch?v=NowdrL6fvb4). Said another way this ain't your grandaddy's local dev environment.
+Note that Lando is basically a PaaS running on your computer and as such we don't recommend you use it [UNLESS YOU'VE GOT POWER!!!](https://www.youtube.com/watch?v=NowdrL6fvb4).
 :::
+
+### Minimum requirements
+
+You _can_ run Lando using the below but your experience may be less than ideal.
+
+*   2-core processor
+*   4GB+ RAM
+*   25GB+ of available disk space
+
+### Preferred
+
+We've found the below or better to deliver the best experience.
 
 *   8-core processor
 *   16GB+ RAM
@@ -45,13 +57,15 @@ Note that Lando is basically a PaaS running on your computer and as such we don'
 
 ## MacOS
 
+<YouTube url="https://www.youtube.com/embed/W8qIutOAe-0" />
+
 ::: tip Do not fear the package size!
 Note that our macOS installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages.
 
 When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
 :::
 
-### Install DMG via direct download
+### Install DMG via direct download (recommended)
 
 1.  Download the latest `.dmg` package from [GitHub](https://github.com/lando/lando/releases)
 2.  Mount the DMG by double-clicking it
@@ -59,9 +73,13 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 4.  Go through the setup workflow
 5.  Enter your username and password when prompted
 
-### Install via [HomeBrew](https://brew.sh/)
+### Install via [HomeBrew](https://brew.sh/) (third party)
 
-*Please note that the version installed via Homebrew is community-maintained and may not be the latest version as provided by the `.dmg` package from [GitHub](https://github.com/lando/lando/releases).*
+::: warning We do not maintain this!
+Please note that the versions of Lando and Docker installed via Homebrew are community-maintained and may not be the latest version as provided by the `.dmg` package from [GitHub](https://github.com/lando/lando/releases). **This also means that `brew` may install an unsupported version of Docker for you.**
+
+See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
+:::
 
 1. Ensure homebrew is installed and up-to-date.
 2. Add the lando cask: `brew cask install lando`
@@ -152,7 +170,7 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 
 To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults. You will also need...
 
-* [the latest node 10](https://nodejs.org/en/download/)
+* [the latest node 12](https://nodejs.org/en/download/)
 * [the latest yarn](https://yarnpkg.com/lang/en/docs/install/)
 
 On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`.
@@ -195,4 +213,3 @@ Lando has tried to maintain backwards compatibility as best as possible on it's 
 * [3.0.0-rc.2](https://github.com/lando/lando/releases/tag/v3.0.0-rc.2)
 * [3.0.0-rc.1](https://github.com/lando/lando/releases/tag/v3.0.0-rc.1)
 * [3.0.0-beta.41](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41)
-

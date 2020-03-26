@@ -12,11 +12,13 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [13](https://hub.docker.com/r/_/node/)
+*   [12.4 - 12.16](https://hub.docker.com/r/_/node/)
+*   [12](https://hub.docker.com/r/_/node/)
 *   [11](https://hub.docker.com/r/_/node/)
-*   [11.4](https://hub.docker.com/r/_/node/)
+*   [11.4 - 11.15](https://hub.docker.com/r/_/node/)
 *   **[10](https://hub.docker.com/r/_/node/)** **(default)**
-*   [10.14](https://hub.docker.com/r/_/node/)
-*   [10.13](https://hub.docker.com/r/_/node/)
+*   [10.14 - 10.19](https://hub.docker.com/r/_/node/)
 *   [custom](./../config/services.md#advanced)
 
 ## Legacy versions
@@ -39,7 +41,7 @@ To use a patch version you can do something like this:
 ```yaml
 services:
   my-service:
-    type: node:10.14.2
+    type: node:12.13
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for the underlying image we are using.
@@ -89,7 +91,7 @@ services:
 Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `node` snippet:
 
 ```js
-// Get our ket and cert
+// Get our key and cert
 const key = fs.readFileSync('/certs/cert.key')
 const cert = fs.readFileSync('/certs/cert.crt'),
 
