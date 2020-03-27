@@ -13,12 +13,12 @@ const task = {
   level: 'app',
   options: {
     'auth': {
-      describe: 'Pantheon machine token',
+      describe: 'Platformsh machine token',
       passthrough: true,
       string: true,
       interactive: {
         type: 'list',
-        message: 'Choose a Pantheon account',
+        message: 'Choose a Platformsh account',
         choices: [],
         when: () => false,
         weight: 100,
@@ -52,7 +52,7 @@ const task = {
 const getDefaults = (task, options) => {
   _.forEach(['env'], name => {
     task.options[name].interactive.choices = answers => {
-      return utils.getPantheonInquirerEnvs(
+      return utils.getPlatformshInquirerEnvs(
       answers.auth,
       options.id,
       ['test', 'live'],
@@ -66,6 +66,6 @@ const getDefaults = (task, options) => {
 /*
  * Helper to build a pull command
  */
-exports.getPantheonSwitch = (options, tokens = []) => {
+exports.getPlatformshSwitch = (options, tokens = []) => {
   return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, tokens)});
 };

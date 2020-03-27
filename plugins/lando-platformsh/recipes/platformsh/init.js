@@ -131,13 +131,15 @@ module.exports = {
       },
     },
     build: (options, lando) => ([
-      // {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
-      // {name: 'post-key', func: (options, lando) => {
-      //   console.log(options);
-      //   const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
-      //   const pubKey = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
-      //   return api.auth().then(() => api.postKey(pubKey));
-      // }},
+      {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
+      {name: 'post-key', func: (options, lando) => {
+        const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
+        const pubKey = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
+        return api.auth()
+          .then(() => api.getUser())
+          .then(user => api.postKey(pubKey, user.uuid))
+          .catch(e => {});
+      }},
       {name: 'get-git-url', func: (options, lando) => {
         const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
         return api.auth().then(() => api.getSites())

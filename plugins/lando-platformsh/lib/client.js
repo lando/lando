@@ -37,7 +37,7 @@ const platformshRequest = (request, log, verb, pathname = '', data = {}, options
     .catch(err => {
       const data = getErrorData(err);
       let msg = '';
-      if (data) {
+      if (data && data.response) {
         msg = [
           `${data.method} request to ${data.path} failed with code ${data.code}: ${data.codeText}.`,
           `The server responded with the message ${data.response.Message}.`,
@@ -146,12 +146,24 @@ module.exports = class PlatformshApiClient {
   };
 
   /*
+   * Get SSH Key
+   */
+  getKey(key) {
+    key = _.trim(fs.readFileSync(key, 'utf8'));
+    return platformshRequest(this.request, this.log, 'get', ['ssh_keys', key]);
+  };
+
+  /*
    * Post our key
    */
-  postKey(key) {
-    const postKey = ['users', _.get(this.session, 'user_id'), 'keys'];
-    const options = (this.mode === 'node') ? {headers: {'User-Agent': 'Terminus/Lando'}} : {};
-    const data = _.trim(fs.readFileSync(key, 'utf8'));
+  postKey(key, uuid) {
+    const postKey = ['ssh_keys'];
+    const options = (this.mode === 'node') ? {headers: {'User-Agent': 'Lando'}} : {};
+    const data = {
+      value: _.trim(fs.readFileSync(key, 'utf8')),
+      title: 'lando-auto-generated',
+      uuid: uuid,
+    };
     return platformshRequest(this.request, this.log, 'post', postKey, JSON.stringify(data), options);
   };
 };

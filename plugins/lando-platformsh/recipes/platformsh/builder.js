@@ -40,11 +40,17 @@ module.exports = {
   },
   builder: (parent, config) => class LandoPlatformsh extends parent {
     constructor(id, options = {}) {
+      const platformshConfig = utils.getPlatformshConfig([
+        path.join(options.root, '.platform.app.yaml'),
+        path.join(options.root, '.platform/services.yaml'),
+      ]);
+      console.log(platformshConfig);
+      console.log(options);
+      exit(1);
+
       // Merge in platformsh ymlz
-      options = _.merge({}, config, options, utils.getPlatformshConfig([
-        path.join(options.root, 'platformsh.upstream.yml'),
-        path.join(options.root, 'platformsh.yml'),
-      ]));
+      options = _.merge({}, config, options, platformshConfig);
+
       // Normalize because 7.0 right away gets handled strangely by js-yaml
       if (options.php === '7' || options.php === 7) options.php = '7.0';
       // Enforce certain options for platformsh parity

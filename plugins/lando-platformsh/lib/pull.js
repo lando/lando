@@ -8,17 +8,17 @@ const utils = require('./utils');
 // The non dynamic base of the task
 const task = {
   service: 'appserver',
-  description: 'Pull code, database and/or files from Pantheon',
+  description: 'Pull code, database and/or files from Platformsh',
   cmd: '/helpers/pull.sh',
   level: 'app',
   options: {
     auth: {
-      describe: 'Pantheon machine token',
+      describe: 'Platformsh machine token',
       passthrough: true,
       string: true,
       interactive: {
         type: 'list',
-        message: 'Choose a Pantheon account',
+        message: 'Choose a Platformsh account',
         choices: [],
         when: () => false,
         weight: 100,
@@ -67,7 +67,7 @@ const task = {
 const getDefaults = (task, options) => {
   _.forEach(['code', 'database', 'files'], name => {
     task.options[name].interactive.choices = answers => {
-      return utils.getPantheonInquirerEnvs(
+      return utils.getPlatformshInquirerEnvs(
       answers.auth,
       options.id,
       [],
@@ -81,6 +81,6 @@ const getDefaults = (task, options) => {
 /*
  * Helper to build a pull command
  */
-exports.getPantheonPull = (options, tokens = []) => {
+exports.getPlatformshPull = (options, tokens = []) => {
   return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, tokens)});
 };
