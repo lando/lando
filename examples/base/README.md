@@ -159,6 +159,33 @@ docker ps --filter label=com.docker.compose.project=landobase | grep landobase_w
 
 # Should have non-numeric keys in LANDO_INFO
 lando php info.php
+
+# Should clear the lando tasks cache
+lando version
+lando --clear
+ls -lsa ~/.lando/cache | grep _.tasks.cache || echo $? | grep 1
+
+# Should enable the lando-alliance plugin when secret-toggle is on
+lando --secret-toggle
+lando config | grep "alliance: true"
+lando config | grep "name: 'lando-alliance'"
+
+# Should disable the lando-alliance plugin when secret-toggle is off
+lando --secret-toggle
+lando config | grep "alliance: false"
+lando config | grep "disablePlugins" | grep "lando-alliance"
+
+# Should set the release channel as stable by default
+lando config | grep "channel" | grep "stable"
+
+# Should set the release channel based on the user option
+lando --channel edge
+lando config | grep "channel" | grep "edge"
+lando --channel stable
+lando config | grep "channel" | grep "stable"
+
+# Should not allow bogus relase channels
+lando --channel orange || echo $? | grep 1
 ```
 
 Destroy tests
