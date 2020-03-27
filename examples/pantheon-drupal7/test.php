@@ -1,1 +1,1 @@
-<?php var_export($_SERVER) ?>
+<?php var_export($_SERVER); ?>

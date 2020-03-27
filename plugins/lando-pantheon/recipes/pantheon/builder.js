@@ -58,6 +58,10 @@ module.exports = {
       // @TODO: this throws a weird DeprecationWarning: 'root' is deprecated, use 'global' for reasons not immediately clear
       // So we are doing this a little weirdly to avoid hat until we can track things down better
       options.services.appserver.overrides.volumes.push(`${options.confDest}/prepend.php:/srv/includes/prepend.php`);
+      // Mount our custom fastcgi_params file to inject Pantheon goodness into nginx.
+      options.services.appserver.overrides.volumes.push(
+        `${options.confDest}/fastcgi_params:/srv/includes/fastcgi_params`
+      );
       // Add in our environment
       options.services.appserver.overrides.environment = utils.getPantheonEnvironment(options);
       // Add in our pantheon script
