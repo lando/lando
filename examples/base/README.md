@@ -168,7 +168,7 @@ ls -lsa ~/.lando/cache | grep _.tasks.cache || echo $? | grep 1
 # Should enable the lando-alliance plugin when secret-toggle is on
 lando --secret-toggle
 lando config | grep "alliance: true"
-lando config | grep "name: 'lando-alliance'"
+lando config | grep "name: " | grep "lando-alliance"
 
 # Should disable the lando-alliance plugin when secret-toggle is off
 lando --secret-toggle
