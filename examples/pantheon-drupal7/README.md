@@ -87,7 +87,7 @@ lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
 # Should load proper nginx fastcgi params
 cp test.php drupal7
 cd drupal7
-lando ssh -s appserver -c "curl http://appserver_nginx/test.php" | grep "PATH_INFO"
+curl http://landobot-drupal7.lndo.site/test.php | grep "PATH_INFO"
 rm test.php
 
 # Should not set any 8983 perms
