@@ -4,6 +4,7 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Set `PATH_INFO` and `PATH_TRANSLATION` fastcgi params for Pantheon [#2105](https://github.com/lando/lando/pull/2105)
 * Added support for `go` versions `1.12-1.14`,
 * Added support for `solr` `8` [#1765](https://github.com/lando/lando/pull/1765)
 * Added new `solr` `7` minor versions [#1765](https://github.com/lando/lando/pull/1765)
