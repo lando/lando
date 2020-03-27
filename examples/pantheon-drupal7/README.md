@@ -27,6 +27,7 @@ lando start
 # Should pull down database and files for our drupal7 site
 cd drupal7
 lando pull --code none --database dev --files dev --rsync
+
 ```
 
 Verification commands
@@ -82,6 +83,12 @@ lando ssh -c "env" | grep PRESSFLOW_SETTINGS | grep pantheon
 lando ssh -c "env" | grep TERMINUS_ENV | grep dev
 lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal7
 lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
+
+# Should load proper nginx fastcgi params
+cp test.php drupal7
+cd drupal7
+lando ssh -s appserver -c "curl http://appserver_nginx/test.php/foo/bar.php | grep PATH_INFO"
+rm test.php
 
 # Should not set any 8983 perms
 cd drupal7
