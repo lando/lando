@@ -27,7 +27,6 @@ lando start
 # Should pull down database and files for our drupal7 site
 cd drupal7
 lando pull --code none --database dev --files dev --rsync
-
 ```
 
 Verification commands
