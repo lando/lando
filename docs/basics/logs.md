@@ -33,7 +33,6 @@ lando logs -s cache -s database
 Run `lando logs --help` to get a complete list of options defaults, choices, etc.
 
 ```bash
---clear           Clears the lando tasks cache
 --follow, -f      Follow the logs
 --help            Shows lando or delegated command help if applicable
 --services, -s    Show logs for the specified services only

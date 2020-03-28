@@ -24,7 +24,6 @@ lando share -u http://localhost:32785
 ## Options
 
 ```bash
---clear        Clears the lando tasks cache
 --help         Shows lando or delegated command help if applicable
 --url, -u      Url to share. Needs to be in the form http://localhost:port
 --verbose, -v  Runs with extra verbosity

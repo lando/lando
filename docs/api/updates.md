@@ -32,14 +32,15 @@ Determines whether we need to fetch updatest or not
 
 <a name="lando.updates.refresh"></a>
 
-## lando.updates.refresh(version) ⇒ <code>Object</code>
+## lando.updates.refresh(version, edge) ⇒ <code>Object</code>
 Get latest version info from github
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - Update data  
 **Since**: 3.0.0  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| version | <code>String</code> | Lando version to use as a fallback |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| version | <code>String</code> |  | Lando version to use as a fallback |
+| edge | <code>Boolean</code> | <code>false</code> | Whether to check for edge releases or not |
 
