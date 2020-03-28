@@ -58,12 +58,25 @@
   "pkg": {
     "scripts": [
       "bin/*.js",
+      "experimental/**/*.js",
       "lib/**/*.js",
       "plugins/**/*.js"
     ],
     "assets": [
       "config.yml",
       "package.json",
+      "experimental/plugins/**/fastcgi_params",
+      "experimental/plugins/**/*.cnf",
+      "experimental/plugins/**/*.conf",
+      "experimental/plugins/**/*.ini",
+      "experimental/plugins/**/*.json",
+      "experimental/plugins/**/*.php",
+      "experimental/plugins/**/*.sh",
+      "experimental/plugins/**/*.toml",
+      "experimental/plugins/**/*.tpl",
+      "experimental/plugins/**/*.vcl",
+      "experimental/plugins/**/*.xml",
+      "experimental/plugins/**/*.yml",
       "plugins/**/fastcgi_params",
       "plugins/**/*.cnf",
       "plugins/**/*.conf",

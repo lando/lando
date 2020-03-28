@@ -5,26 +5,27 @@ This example exists primarily to test the following documentation:
 
 **Basics**
 
-* [Landofiles](http://docs.devwithlando.io/config/lando.html)
-* [Environment](http://docs.devwithlando.io/config/env.html)
+* [Landofiles](http://docs.lando.dev/config/lando.html)
+* [Environment](http://docs.lando.dev/config/env.html)
 
 **CLI**
 
-* [`lando config`](http://docs.devwithlando.io/cli/config.html)
-* [`lando destroy`](http://docs.devwithlando.io/cli/destroy.html)
-* [`lando info`](http://docs.devwithlando.io/cli/info.html)
-* [`lando list`](http://docs.devwithlando.io/cli/list.html)
-* [`lando logs`](http://docs.devwithlando.io/cli/logs.html)
-* [`lando poweroff`](http://docs.devwithlando.io/cli/poweroff.html)
-* [`lando info`](http://docs.devwithlando.io/cli/info.html)
-* [`lando rebuild`](http://docs.devwithlando.io/cli/rebuild.html)
-* [`lando restart`](http://docs.devwithlando.io/cli/restart.html)
-* [`lando ssh`](http://docs.devwithlando.io/cli/ssh.html)
-* [`lando start`](http://docs.devwithlando.io/cli/start.html)
-* [`lando stop`](http://docs.devwithlando.io/cli/stop.html)
-* [`lando version`](http://docs.devwithlando.io/cli/version.html)
+* [CLI Usage](http://docs.lando.dev/basics/usage.html)
+* [`lando config`](http://docs.lando.dev/basics/config.html)
+* [`lando destroy`](http://docs.lando.dev/basics/destroy.html)
+* [`lando info`](http://docs.lando.dev/basics/info.html)
+* [`lando list`](http://docs.lando.dev/basics/list.html)
+* [`lando logs`](http://docs.lando.dev/basics/logs.html)
+* [`lando poweroff`](http://docs.lando.dev/basics/poweroff.html)
+* [`lando info`](http://docs.lando.dev/basics/info.html)
+* [`lando rebuild`](http://docs.lando.dev/basics/rebuild.html)
+* [`lando restart`](http://docs.lando.dev/basics/restart.html)
+* [`lando ssh`](http://docs.lando.dev/basics/ssh.html)
+* [`lando start`](http://docs.lando.dev/basics/start.html)
+* [`lando stop`](http://docs.lando.dev/basics/stop.html)
+* [`lando version`](http://docs.lando.dev/basics/version.html)
 
-See the [Landofiles](http://docs.devwithlando.io/config/lando.html) in this directory for the exact magicks.
+See the [Landofiles](http://docs.lando.dev/config/lando.html) in this directory for the exact magicks.
 
 Start up tests
 --------------
@@ -192,6 +193,9 @@ lando config | grep "channel" | grep "stable"
 
 # Should not allow bogus relase channels
 lando --channel orange || echo $? | grep 1
+
+# Should load experimental plugins by default in CI
+lando config | grep experimentalPluginLoadTest | grep true
 ```
 
 Destroy tests

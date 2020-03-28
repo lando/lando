@@ -125,6 +125,7 @@ module.exports = {
             'proxy',
             'env',
             'events',
+            'experimental',
             'networking',
             'performance',
             'releases',

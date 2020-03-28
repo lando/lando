@@ -146,7 +146,6 @@ lando init \
 Run `lando init --help` to get a complete list of options defaults, choices, recipes, sources etc.
 
 ```bash
---clear           Clears the lando tasks cache
 --full            Dump a lower level lando file
 --github-auth     A GitHub personal access token
 --github-repo     GitHub git url

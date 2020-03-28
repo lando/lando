@@ -40,9 +40,11 @@ Commands:
   lando version   Displays the lando version
 
 Options:
-  --clear        Clears the lando tasks cache
-  --help         Shows lando or delegated command help if applicable
-  --verbose, -v  Runs with extra verbosity
+  --channel       Sets the update channel
+  --clear         Clears the lando tasks cache
+  --experimental  Activates experimental features
+  --help          Shows lando or delegated command help if applicable
+  --verbose, -v   Runs with extra verbosity
 
 Examples:
   lando start            Run lando start
@@ -101,9 +103,11 @@ Commands:
   lando version           Displays the lando version
 
 Options:
-  --clear        Clears the lando tasks cache
-  --help         Shows lando or delegated command help if applicable
-  --verbose, -v  Runs with extra verbosity
+  --channel       Sets the update channel
+  --clear         Clears the lando tasks cache
+  --experimental  Activates experimental features
+  --help          Shows lando or delegated command help if applicable
+  --verbose, -v   Runs with extra verbosity
 
 Examples:
   lando start            Run lando start
