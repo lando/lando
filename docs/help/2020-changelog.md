@@ -1,8 +1,27 @@
 # 2020
 
-## v3.0.0-rrc.2 - [March 25, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.2)
+## v3.0.0-rrc.3 - April 3, 2020 (Estimated Release Date)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Added separate `edge` and `stable` release channels, [read more](https://docs.lando.dev/config/releases.html)
+* Added an `experimental` flag so users can access bleeding edge features, [read more](https://docs.lando.dev/config/experimental.html)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
+## v3.0.0-rrc.2 - [March 25, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.2)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
 * Added support for `go` versions `1.12-1.14`,
 * Added support for `solr` `8` [#1765](https://github.com/lando/lando/pull/1765)
@@ -18,6 +37,8 @@ Lando is **free** and **open source** software that relies on contributions from
 * Updated `go` to use `1.14` as the default version [#2009](https://github.com/lando/lando/issues/2009)
 * Updated `phpmyadmin` to use `5.0` as the default version [#2062](https://github.com/lando/lando/issues/2062)
 * Upgraded to `terminus` `2.3.0` [#2062](https://github.com/lando/lando/issues/2062)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
