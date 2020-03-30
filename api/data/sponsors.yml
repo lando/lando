@@ -71,7 +71,7 @@
 - name: "amazee.io"
   type: patriot
   url: https://www.amazee.io/
-  logo: https://www.amazee.io/sites/default/files/2019-06/amazee_io_logo.png
+  logo: https://lando.dev/images/amazee_io_logo.png
 - name: "Sean T. Walsh"
   type: herald
   url: https://www.crowdcg.com
