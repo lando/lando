@@ -29,7 +29,7 @@ feed:
 <GuideHeader test="" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
 <YouTube url="" />
 
-If you are hosted on a bare `metalish` server like Linode, Digital Ocean, AWS or the like you can still cook up a `lando pull` command to pull your database and/or 
+If you are hosted on a server like Linode, Digital Ocean, AWS or the like you can still cook up a `lando pull` command to pull your database and/or 
 file assets down from production.
 
 This will work for all Lando apps that extend from `laempy` recipes like: LAMP, LEMP, Dupal 6/7/8, Backdrop, Joomla, WordPress and Laravel.
