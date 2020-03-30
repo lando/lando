@@ -15,6 +15,13 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 *   **[5.0](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)** **(default)**
 *   [custom](./../config/services.md#advanced)
 
+## Legacy versions
+
+These version numbers are provided _only_ as a convenience so your Landofile does not break. They will actually install the latest default `5.0` version of `phpmyadmin` and not the `4.x` series. Please update your Landofiles accordingly.
+
+*   [4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+*   [4.6](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+
 ## Patch versions
 
 This service does not support patch versions but if you **really** need something like that you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
