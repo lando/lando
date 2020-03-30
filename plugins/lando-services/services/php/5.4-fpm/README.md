@@ -8,7 +8,7 @@ A decent cross purpose fpm based php 5.4 appserver.
 #
 # docker build -t devwithlando/php:5.4-fpm .
 
-FROM php:5.4-fpm
+FROM php:5.4.45-fpm
 
 # Install dependencies we need
 RUN sed -i '/jessie-updates/d' /etc/apt/sources.list \
