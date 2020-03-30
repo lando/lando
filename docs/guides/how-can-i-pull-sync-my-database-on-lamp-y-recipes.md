@@ -88,7 +88,7 @@ Create a file in the root of your app called `Envoy.blade.php` and add this to i
 
 @task('dump', ['on' => 'web'])
   mysqldump -u root -p{{ getenv('LP_DB_PWD') }} {{ getenv('LP_DB') }} > {{ getenv('LP_DB_BACK_PATH') }}
-  @endtask
+@endtask
 
 @task('getdb', ['on' => 'localhost'])
   scp {{ getenv('LP_SSH_CMD') }}:{{ getenv('LP_DB_BACK_PATH') }} db.sql
