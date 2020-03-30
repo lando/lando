@@ -40,6 +40,10 @@ services:
   nginx:
     type: nginx
     webroot: www
+    run_as_root:
+      - echo "$(id)" > /run_as_root.txt
+      - ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime
+      - echo "America/New_York" > /etc/timezone
     overrides:
       environment:
         THING: STUFF
