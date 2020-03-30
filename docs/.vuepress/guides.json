@@ -26,6 +26,7 @@
     "collapsable": false,
     "children": [
       "how-do-i-configure-a-lando-recipe",
+      "how-do-i-set-the-timezone-of-a-lando-service",
       "lando-info"
     ]
   },
