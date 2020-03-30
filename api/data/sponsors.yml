@@ -25,12 +25,12 @@
 - name: "@miromichalicka"
   type: herald
   url: https://twitter.com/miromichalicka
-- name: "@alphex"
+- name: Alphex
   type: herald
-  url: https://twitter.com/alphex
-- name: "@amklose"
+  url: https://www.alphex.com
+- name: "Tony Klose"
   type: herald
-  url: https://twitter.com/amklose
+  url: https://www.drupal.org/u/amklose
 - name: "Hawkeye Tenderwolf"
   type: herald
   url: https://www.drupal.org/u/hawkeyetwolf
@@ -58,7 +58,7 @@
 - name: "Bernhard Zürn"
   type: herald
   url: https://twitter.com/zuernBernhard
-- name: "Matt Cheney"
+- name: "@populist"
   type: herald
   url: https://pantheon.io/team/matt-cheney
 - name: "Dustin LeBlanc"
@@ -72,6 +72,21 @@
   type: patriot
   url: https://www.amazee.io/
   logo: https://www.amazee.io/sites/default/files/2019-06/amazee_io_logo.png
-
-
-
+- name: "Sean T. Walsh"
+  type: herald
+  url: https://www.crowdcg.com
+- name: ronaldmulero
+  type: herald
+  url: https://www.drupal.org/u/ronaldmulero
+- name: "John hoopes"
+  type: herald
+  url: https://github.com/jhoopes
+- name: "GE Tracker"
+  type: herald
+  url: https://www.ge-tracker.com
+- name: "@benjifisher"
+  type: herald
+  url: https://www.drupal.org/u/benjifisher
+- name: "Sarah German"
+  type: herald
+  url: https://sarahgerman.com
