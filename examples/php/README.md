@@ -50,11 +50,6 @@ lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
 # Should use specified php version if given
 lando ssh -s custom -c "php -v" | grep "PHP 7.1"
 
-# Should be able to set the timezone in a Lando service.
-# This tests the 'How do I set the timezone in a Lando service?' guide.
-# https://docs.lando.dev/guides/how-do-i-set-the-timezone-of-a-lando-service.html
-lando ssh -s cli -c "date" |grep -E "EST\|EDT"
-
 # Should serve via nginx if specified
 lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
 

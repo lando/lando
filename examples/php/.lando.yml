@@ -8,9 +8,6 @@ services:
   cli:
     type: php
     via: cli
-    run_as_root:
-      - ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime
-      - echo "America/New_York" > /etc/timezone
   cliold:
     type: php:5.6
     via: cli

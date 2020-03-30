@@ -4,29 +4,29 @@ metaTitle: How do I set the timezone of a Lando service? | Lando
 description: Set the timezone of a Lando service for testing time sensitive operations
 summary: Set the timezone of a Lando service for testing time sensitive operations
 date: 2020-03-27T22:30:09.777Z
-original: 
-repo: 
+original:
+repo:
 
 author:
-  name: Geoff St. Pierre
-  pic: https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9
-  link: https://twitter.com/serundeputy
+  name: Team Lando
+  pic: https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd
+  link: https://twitter.com/devwithlando
 
 feed:
   enable: true
   author:
-    - name: Geoff St. Pierre
+    - name: Team Lando
       email: alliance@lando.dev
-      link: https://twitter.com/serundeputy
+      link: https://twitter.com/devwithlando
   contributor:
-    - name: Geoff St. Pierre
+    - name: Team Lando
       email: alliance@lando.dev
-      link: https://twitter.com/serundeputy
+      link: https://twitter.com/devwithlando
 ---
 
 # How do I set the timezone of a Lando service?
 
-<GuideHeader test="https://github.com/lando/lando/blob/master/examples/php/README.md" name="Geoff St. Pierre" pic="https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9" link="https://twitter.com/serundeputy" />
+<GuideHeader test="https://github.com/lando/lando/tree/master/examples/services" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
 
 <YouTube url="https://www.youtube.com/embed/P8n2z4m0_s0" />
 
@@ -46,6 +46,10 @@ services:
 ```
 
 Just copy the `run_as_root` section into your `services` key for any service you need it for, i.e. `appserver`, `database`, or whatever service you need to set. Be sure to swap out `America/New_York` to the timezone that you need.
+
+::: warning Tested on Debian only
+Note that we test this on Debian flavored services so these instructions might differ slightly or be unapplicable for non-Debian services.
+:::
 
 Then run a rebuild:
 
