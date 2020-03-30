@@ -76,17 +76,6 @@ lando ssh -s appserver -c "which phpunit | grep /var/www/"
 cd lemp
 lando composer require phpunit/phpunit
 lando ssh -s appserver -c "/app/vendors/bin/phpunit --version"
-
-# Should be able to set the timezone in a container.
-# This tests the 'How do I set the timezone in container?' guide.
-# https://docs.lando.dev/guides/how-do-i-set-the-timezone-of-a-container.html
-cd lemp
-cp .lando.yml orig.lando.yml
-cp ../config.lando.yml .lando.yml
-lando rebuild -y
-lando ssh -c "date" |grep "EDT"
-lando poweroff
-mv orig.lando.yml .lando.yml
 ```
 
 Destroy tests
