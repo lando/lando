@@ -98,21 +98,26 @@ If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages y
 
 Note that you *may* also be able to just double click on the package and install via your distributions "Software Center" or equivalent.
 
+Make sure you have wget installed, or install it: `sudo apt install wget`
+
 ### Debian
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.deb
 sudo dpkg -i lando-stable.deb
 ```
 
 ### Fedora
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.rpm
 sudo dnf install lando-stable.rpm
 ```
 
 ### Arch
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.pacman
 sudo pacman -U lando-stable.pacman
 ```
 
