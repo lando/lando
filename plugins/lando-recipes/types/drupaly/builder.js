@@ -7,7 +7,7 @@ const semver = require('semver');
 const utils = require('./../../lib/utils');
 
 // "Constants"
-const DRUSH8 = '8.2.3';
+const DRUSH8 = '8.3.2';
 const DRUSH7 = '7.4.0';
 
 /*

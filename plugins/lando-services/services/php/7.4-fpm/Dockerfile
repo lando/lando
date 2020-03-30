@@ -46,7 +46,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install memcached \
   && pecl install oauth-2.0.4 \
   && pecl install redis-5.1.1 \
-  && pecl install xdebug-2.8.1 \
+  && pecl install xdebug \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
@@ -72,7 +72,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-install soap \
   && docker-php-ext-install zip \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.9.1 \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.10.1 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \
