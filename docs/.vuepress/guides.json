@@ -4,7 +4,8 @@
     "collapsable": false,
     "children": [
       "db-export",
-      "db-import"
+      "db-import",
+      "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
     ]
   },
   {
