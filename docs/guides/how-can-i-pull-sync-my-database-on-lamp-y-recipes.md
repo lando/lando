@@ -44,7 +44,7 @@ We'll need a few things to get this set up for our `laempy` apps. We need to req
 To get the `laravel/envoy` package just use `composer`:
 
 ```bash
-lando require laravel/envoy
+lando composer require laravel/envoy
 ```
 
 ## .env
