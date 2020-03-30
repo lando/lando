@@ -1,12 +1,5 @@
 [
   {
-    "title": "Contributing",
-    "collapsable": false,
-    "children": [
-      "how-do-i-run-lando-functional-tests-locally"
-    ]
-  },
-  {
     "title": "Databases",
     "collapsable": false,
     "children": [
