@@ -44,7 +44,11 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      FILE="$(pwd)/$1"
+      if [[ "$1" = /* ]]; then
+        FILE="$1"
+      else
+        FILE="$(pwd)/$1"
+      fi
       shift
       ;;
   esac

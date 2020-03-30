@@ -9,6 +9,9 @@ services:
     type: mysql
   database:
     type: mysql
+    overrides:
+      volumes:
+        - ./test.sql:/data/test.sql
   database2:
     type: postgres
 tooling:
