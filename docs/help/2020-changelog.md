@@ -12,6 +12,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added an `experimental` flag so users can access bleeding edge features, [read more](https://docs.lando.dev/config/experimental.html)
 * Added convenience non-breaking backwards compatibility for previous `phpmyadmin` `4.x` versions [#2062](https://github.com/lando/lando/pull/2062)
 * Fixed bug causing Windows path separators to cause SQL Import/Export scripts to fail [#1823](https://github.com/lando/lando/issues/1823)
+* Fixed bug causing `--host` flag using `=` to produce unexpected results on `db-import/export` [#2007](https://github.com/lando/lando/pull/2007)
 * Improved `lando db-import` and `lando db-export` to allow absolute paths [#1768](https://github.com/lando/lando/pull/1768)
 * Improved feedback from `lando db-import` and `lando db-export` commands [#2027](https://github.com/lando/lando/pull/2027)
 * Updated to `composer` version `1.10.1` [#2096](https://github.com/lando/lando/pull/2096)
