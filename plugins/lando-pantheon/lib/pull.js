@@ -11,6 +11,7 @@ const task = {
   description: 'Pull code, database and/or files from Pantheon',
   cmd: '/helpers/pull.sh',
   level: 'app',
+  stdio: ['inherit', 'pipe', 'pipe'],
   options: {
     auth: {
       describe: 'Pantheon machine token',

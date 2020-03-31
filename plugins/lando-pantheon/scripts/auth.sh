@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get the auth and site
 

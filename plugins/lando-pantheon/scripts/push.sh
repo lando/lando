@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -196,5 +197,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Push complete!${DEFAULT_COLOR}"
+printf "${GREEN}Push completed succesfully!${DEFAULT_COLOR}"
 echo ""
