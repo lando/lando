@@ -138,6 +138,7 @@ module.exports = {
         return api.auth()
           .then(() => api.getUser())
           .then(user => api.postKey(pubKey, user.uuid))
+          // This will catch if the key has already been uploaded.
           .catch(e => {});
       }},
       {name: 'get-git-url', func: (options, lando) => {
@@ -148,7 +149,7 @@ module.exports = {
           options['platformsh-git-url'] = site[0].repository.url;
         });
       }},
-      // {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+      {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
       {
         name: 'clone-repo',
         cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
