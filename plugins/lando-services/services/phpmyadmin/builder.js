@@ -8,9 +8,12 @@ module.exports = {
   name: 'phpmyadmin',
   config: {
     version: '5.0',
-    supported: ['5.0'],
+    supported: ['5.0', '4.7', '4.6'],
+    legacy: ['4.7', '4.6'],
     pinPairs: {
       '5.0': 'phpmyadmin/phpmyadmin:5.0.2',
+      '4.7': 'phpmyadmin/phpmyadmin:5.0.2',
+      '4.6': 'phpmyadmin/phpmyadmin:5.0.2',
     },
     confSrc: __dirname,
     hosts: ['database'],

@@ -24,6 +24,7 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # Should return 200 for the pma admin site
 lando ssh -s pma -c "curl -I localhost | grep 200 | grep OK"
+lando ssh -s pma_legacy -c "curl -I localhost | grep 200 | grep OK"
 
 # Should have databases that work correctly
 lando ssh -s database -c "mysql -umariadb -pmariadb database -e quit"
@@ -31,6 +32,7 @@ lando ssh -s database2 -c "mysql -umariadb -pmariadb database -e quit"
 
 # Verify our databases are hooked up to PMA
 lando ssh -s pma -c "env | grep PMA_HOSTS=database,database2"
+lando ssh -s pma_legacy -c "env | grep PMA_HOSTS=database,database2"
 ```
 
 Destroy tests

@@ -10,6 +10,10 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 
 * Added separate `edge` and `stable` release channels, [read more](https://docs.lando.dev/config/releases.html)
 * Added an `experimental` flag so users can access bleeding edge features, [read more](https://docs.lando.dev/config/experimental.html)
+* Added convenience non-breaking backwards compatibility for previous `phpmyadmin` `4.x` versions [#2062](https://github.com/lando/lando/pull/2062)
+* Fixed bug causing Windows path separators to cause SQL Import/Export scripts to fail [#1823](https://github.com/lando/lando/issues/1823)
+* Improved `lando db-import` and `lando db-export` to allow absolute paths [#1768](https://github.com/lando/lando/pull/1768)
+* Improved feedback from `lando db-import` and `lando db-export` commands [#2027](https://github.com/lando/lando/pull/2027)
 * Updated to `composer` version `1.10.1` [#2096](https://github.com/lando/lando/pull/2096)
 * Updated to latest `xdebug` in `php` version `7.4` [#2099](https://github.com/lando/lando/pull/2099)
 * Updated `drush 8` to `8.3.2` [#2097](https://github.com/lando/lando/pull/2097)
