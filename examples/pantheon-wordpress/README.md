@@ -111,6 +111,7 @@ lando push --code dev --database none --files none --message "Testing commit $(g
 
 # Should allow code pull from protected environments
 # https://github.com/lando/lando/issues/2021
+cd wordpress
 lando pull --code test --database none --files none
 lando pull --code live --database none --files none
 ```
