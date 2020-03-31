@@ -46,9 +46,9 @@ while (( "$#" )); do
       ;;
     *)
       if [[ "$1" = /* ]]; then
-        FILE="$1"
+        FILE="${1//\\//}"
       else
-        FILE="$(pwd)/$1"
+        FILE="$(pwd)/${1//\\//}"
       fi
       shift
       ;;
