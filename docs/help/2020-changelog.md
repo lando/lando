@@ -45,7 +45,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Officially documented file performance `excludes` feature [#763](https://github.com/lando/lando/issues/763) [#1460](https://github.com/lando/lando/issues/1460)
 * Updated `go` to use `1.14` as the default version [#2009](https://github.com/lando/lando/issues/2009)
 * Updated `phpmyadmin` to use `5.0` as the default version [#2062](https://github.com/lando/lando/issues/2062)
-* Upgraded to `terminus` `2.3.0` [#2062](https://github.com/lando/lando/issues/2062)
+* Upgraded to `terminus` `2.3.0` [#2082](https://github.com/lando/lando/issues/2082)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
