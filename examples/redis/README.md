@@ -23,7 +23,7 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should use 5.x as the default version
-lando ssh -s defaults -c "redis-server --version | grep v=5.0.3"
+lando ssh -s defaults -c "redis-server --version | grep v=5."
 
 # Should be able to connect to redis
 lando ssh -s defaults -c "redis-cli CONFIG GET databases"

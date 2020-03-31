@@ -62,9 +62,18 @@ module.exports = (app, lando) => {
   // Go through each service and run additional build commands as needed
   app.events.on('post-init', () => {
     const buildServices = _.get(app, 'opts.services', app.services);
+    // Make sure containers for this app exist, if they dont and we have build locks we need to kill them
+    app.events.on('pre-start', () => {
+      return lando.engine.list({project: app.project, all: true}).then(data => {
+        if (_.isEmpty(data)) {
+          lando.cache.remove(preLockfile);
+          lando.cache.remove(postLockfile);
+        }
+      });
+    });
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
-      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps);
+      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
       return utils.runBuild(lando, preBuild, preLockfile);
     });
     app.events.on('post-start', 100, () => {
@@ -76,7 +85,7 @@ module.exports = (app, lando) => {
   // Discover portforward true info
   app.events.on('ready', () => {
     const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
-    return lando.engine.list({app: app.project})
+    return lando.engine.list({project: app.project})
     .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
     .map(service => ({
       id: service.id,

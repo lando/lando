@@ -9,6 +9,9 @@ module.exports = {
   config: {
     version: '2.4',
     supported: ['2.4'],
+    pinPairs: {
+      '2.4': 'bitnami/apache:2.4.41-debian-10-r52',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     defaultFiles: {
@@ -16,8 +19,8 @@ module.exports = {
       vhosts: 'default.conf',
     },
     remoteFiles: {
-      server: '/bitnami/apache/conf/httpd.conf',
-      vhosts: '/bitnami/apache/conf/bitnami/bitnami.conf',
+      server: '/opt/bitnami/apache/conf/httpd.conf',
+      vhosts: '/opt/bitnami/apache/conf/vhosts/lando.conf',
     },
     ssl: false,
     webroot: '.',
@@ -31,7 +34,7 @@ module.exports = {
       // Build the default stuff here
       const apache = {
         image: `bitnami/apache:${options.version}`,
-        command: '/app-entrypoint.sh /run.sh',
+        command: '/launch.sh',
         environment: {
           APACHE_HTTP_PORT_NUMBER: '80',
           APACHE_HTTPS_PORT_NUMBER: '443',
@@ -42,6 +45,7 @@ module.exports = {
         ports: ['80'],
         user: 'root',
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
         ],

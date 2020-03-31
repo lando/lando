@@ -8,18 +8,19 @@ module.exports = {
   name: 'elasticsearch',
   config: {
     version: '6',
-    supported: ['6', '6.5.x', '5', '5.6.x'],
+    supported: ['7', '7.6.x', '7.5.x', '7.4.x', '7.3.x', '6', '6.8.x', '6.7.x', '6.6.x', '6.5.x', '5', '5.6.x'],
+    pinPairs: {
+      '7': 'bitnami/elasticsearch:7.6.1-debian-10-r15',
+      '6': 'bitnami/elasticsearch:6.8.7-debian-10-r15',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     healthcheck: 'curl -XGET localhost:9200',
     plugins: [],
     port: '9200',
     mem: '1025m',
-    defaultFiles: {
-      server: 'config.yml',
-    },
     remoteFiles: {
-      server: '/opt/bitnami/elasticsearch/config/elasticsearch_custom.yml',
+      server: '/opt/bitnami/elasticsearch/config/elasticsearch.yml',
     },
   },
   parent: '_service',
@@ -28,11 +29,10 @@ module.exports = {
       options = _.merge({}, config, options);
       const elasticsearch = {
         image: `bitnami/elasticsearch:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/launch.sh',
         environment: {
-          ELASTICSEARCH_IS_DEDICATED_NODE: 'yes',
+          ELASTICSEARCH_IS_DEDICATED_NODE: 'no',
           ELASTICSEARCH_CLUSTER_NAME: 'bespin',
-          ELASTICSEARCH_NODE_TYPE: 'master',
           ELASTICSEARCH_NODE_NAME: 'lando',
           ELASTICSEARCH_PORT_NUMBER: 9200,
           ELASTICSEARCH_PLUGINS: options.plugins.join(';'),
@@ -40,7 +40,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
-          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.data}:/bitnami/elasticsearch/data`,
         ],
       };

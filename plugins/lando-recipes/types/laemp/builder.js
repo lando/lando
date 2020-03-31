@@ -68,7 +68,7 @@ const getConfigDefaults = options => {
     }
   }
 
-  // Verify files exist and remove if it doesnt
+  // Verify files exist and remove if it doesn't
   _.forEach(options.defaultFiles, (file, type) => {
     if (!fs.existsSync(`${options.confDest}/${file}`)) {
       delete options.defaultFiles[type];

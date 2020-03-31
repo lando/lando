@@ -5,38 +5,6 @@ const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const url = require('url');
-const util = require('util');
-
-/*
- * A toggle to either start or restart
- */
-exports.appToggle = (app, toggle = 'start', table, header = '') => app[toggle]().then(() => {
-  // Header it
-  console.log(header);
-  // Inject start table into the table
-  _.forEach(exports.startTable(app), (value, key) => {
-    const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
-    table.add(_.toUpper(key), value, opts);
-  });
-  // Print the table
-  console.log(table.toString());
-  console.log('');
-});
-
-/*
- * Returns a normal default interactive confirm with custom message
- */
-exports.buildConfirm = (message = 'Are you sure?') => ({
-  describe: 'Auto answer yes to prompts',
-  alias: ['y'],
-  default: false,
-  boolean: true,
-  interactive: {
-    type: 'confirm',
-    default: false,
-    message: message,
-  },
-});
 
 /*
  * Helper method to get the host part of a volume
@@ -108,14 +76,12 @@ exports.normalizeOverrides = (overrides, volumes = {}) => {
  * Returns a CLI table with app start metadata info
  */
 exports.startTable = app => {
-  // Spin up collectors
-  const data = {};
+  const data = {
+    name: app.name,
+    location: app.root,
+    services: app.services.join(', '),
+  };
   const urls = {};
-
-  // Add generic data
-  data.name = app.name;
-  data.location = app.root;
-  data.services = app.services;
 
   // Categorize and colorize URLS if and as appropriate
   _.forEach(app.info, info => {
@@ -147,42 +113,3 @@ exports.stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
 exports.stripWild = versions => _(versions)
   .map(version => (version.split('.')[2] === 'x') ? _.slice(version.split('.'), 0, 2).join('.') : version)
   .value();
-
-
-exports.formattedOptions = {
-  format: {
-    describe: 'Output in given format: json',
-    string: true,
-  },
-  path: {
-    describe: 'Only return the value at the given path',
-    alias: ['p'],
-    default: null,
-    string: true,
-  },
-};
-
-exports.outputFormatted = (input, path = null, format = null) => {
-  const data = path && _.has(input, path) ?
-    _.get(input, path) :
-    input;
-
-  let output;
-
-  switch (format) {
-    case 'json':
-      output = JSON.stringify(data);
-      break;
-
-    // @TODO: Add CSV.
-
-    default:
-      output = util.inspect(data, {
-        colors: true,
-        depth: 10,
-        compact: false,
-      });
-  }
-
-  return console.log(output);
-};

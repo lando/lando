@@ -4,6 +4,7 @@
 FILE=""
 WIPE=true
 HOST=localhost
+SERVICE=$LANDO_SERVICE_NAME
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -23,10 +24,10 @@ fi
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
-    # This doesn't do anything anymore
+    # This option is now handled with landos built in dynamic options
     # we just keep it around for option validation
     -h|--host|--host=*)
-      if [ "${1##--database=}" != "$1" ]; then
+      if [ "${1##--host=}" != "$1" ]; then
         shift
       else
         shift 2
@@ -44,7 +45,11 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      FILE="$(pwd)/$1"
+      if [[ "$1" = /* ]]; then
+        FILE="${1//\\//}"
+      else
+        FILE="$(pwd)/${1//\\//}"
+      fi
       shift
       ;;
   esac
@@ -60,7 +65,7 @@ if [ ! -z "$FILE" ]; then
 
   # Validate we have a file
   if [ ! -f "$FILE" ]; then
-    echo "File $FILE not found!"
+    printf "${RED}File $FILE not found!${DEFAULT_COLOR}\n"
     exit 1;
   fi
 
@@ -82,7 +87,7 @@ else
 fi
 
 # Inform the user of things
-echo "Preparing to import $FILE into $DATABASE on $HOST:$PORT as $USER..."
+echo "Preparing to import $FILE into database '$DATABASE' on service '$SERVICE' as user $USER..."
 
 # Wipe the database if set
 if [ "$WIPE" == "true" ]; then

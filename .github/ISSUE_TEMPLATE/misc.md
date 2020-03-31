@@ -1,5 +1,5 @@
 ---
-name: Misc tasks and things
+name: Report other things
 about: Create basically every other kind of issue
 labels: task
 ---

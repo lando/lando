@@ -31,13 +31,6 @@ const docs = {
     user: ['./lib/user.js'],
     yaml: ['./lib/yaml.js'],
   },
-  helpers: [
-    './docs/helpers/helpers.js',
-  ],
-  partials: [
-    './docs/partials/header.hbs',
-    './docs/partials/body.hbs',
-  ],
 };
 
 // Clean up
@@ -58,8 +51,6 @@ return Promise.resolve(_.keys(docs.sections))
   .then(data => jsdoc2md.render({
     'data': data,
     'global-index-format': 'none',
-    'helper': docs.helpers,
-    'partial': docs.partials,
   }))
 
   // Report and collect errors

@@ -35,6 +35,22 @@ lando ssh -s appserver -c "env | grep CUSTOM=PIROG"
 
 # Should be able to rebuild without pulling local image
 lando rebuild -y
+
+# Should rerun build steps even if containers are manually removed and stuff
+lando destroy -y
+lando start -y
+docker rm -f landoservices_nginx_1
+docker rm -f landoservices_appserver_1
+lando start -y
+lando ssh -s appserver -c "vim --version"
+lando ssh -s appserver -c "cat /var/www/build.txt"
+lando ssh -s appserver -c "cat /run_as_root.txt"
+lando ssh -s appserver -c "cat /var/www/run.txt"
+
+# Should be able to set the timezone in a Lando service.
+# This tests the 'How do I set the timezone in a Lando service?' guide.
+# https://docs.lando.dev/guides/how-do-i-set-the-timezone-of-a-lando-service.html
+lando ssh -s nginx -c "date" | grep -E "EST|EDT"
 ```
 
 Destroy tests

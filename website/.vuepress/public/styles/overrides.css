@@ -1,0 +1,22 @@
+.theme-default-content blockquote {
+  margin: 0;
+  margin-bottom: 1.85em;
+  margin-top: 1.85em;
+  padding: 15px;
+  color: #D83A6F;
+  border-left: 11px solid #ed3f7a;
+}
+
+header.navbar .site-name {
+  position: relative;
+  bottom: 3px;
+  font-size: 2.0em;
+  line-height: 40px;
+  font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+}
+
+.theme-container .custom-block.tip {
+  background-color: #f3f5f7;
+  border-color: #ed3f7a;
+}

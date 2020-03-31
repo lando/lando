@@ -22,11 +22,11 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should return 2.4.x for the default version
-lando ssh -s defaults -c "apachectl -V | grep 2.4."
+# Should return 2.4.41 for the default version
+lando ssh -s defaults -c "apachectl -V | grep 2.4.41"
 
-# Should return 2.4.37 for the patch service
-lando ssh -s patch -c "apachectl -V | grep 2.4.37"
+# Should return 2.4.39 for the patch service
+lando ssh -s patch -c "apachectl -V | grep 2.4.39"
 
 # Should serve from the app root by default
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
@@ -40,9 +40,9 @@ lando ssh -s custom -c "curl http://localhost | grep WEBDIR"
 # Should serve from https when specified
 lando ssh -s custom -c "curl -k https://localhost | grep WEBDIR"
 
-# Should mount custom config to the correct locations
-lando ssh -s custom -c "cat /bitnami/apache/conf/httpd.conf | grep LANDOHTTPD"
-lando ssh -s custom -c "cat /bitnami/apache/conf/bitnami/bitnami.conf | grep LANDOCUSTOM"
+# Should mount custom config to the correct locationz
+lando ssh -s custom -c "cat /opt/bitnami/apache/conf/httpd.conf | grep LANDOHTTPD"
+lando ssh -s custom -c "cat /opt/bitnami/apache/conf/vhosts/lando.conf | grep LANDOCUSTOM"
 
 # Should use htaccess-lando if it exists
 lando ssh -s override -c "curl -I http://landoapache.lndo.site/folder1" | grep Location | grep http://landoapache.lndo.site/folder2/

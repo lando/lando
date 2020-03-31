@@ -1,0 +1,87 @@
+- name: Mike Pirog
+  role:
+    - Everything
+  bio: >-
+    I'm the inventor of Lando and a co-founder @ <a
+    href="https://thinktandem.io" target="_blank">Tandem</a>.
+  location: Undisclosed Location
+  github: pirog
+  twitter: pirogcommamike
+  title: Benevolent Dictator
+  pic: 'https://www.gravatar.com/avatar/dc1322b3ddd0ef682862d7f281c821bb'
+  id: 0374ef006c170c19a0fddcf006415d548058e1f7
+- name: Geoff St. Pierre
+  role:
+    - Everything
+  location: 'Springfield, MA'
+  github: serundeputy
+  twitter: serundeputy
+  title: Maintainer
+  pic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  id: 1b7e5dde94920e1eb0de98c51427373f1c522588
+- name: Dustin LeBlanc
+  role:
+    - Everything
+  location: 'Ithaca, NY'
+  github: dustinleblanc
+  twitter: DustinLeblanc
+  title: Maintainer
+  pic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
+  id: 433bd1bd859bb7eb64c7be9f0acd798692d49b62
+- name: Amy Helfman
+  role:
+    - Content
+    - Documentation
+    - Evangelism
+    - Guides and Tutorials
+  location: 'Cambridge, MA'
+  github: amyh
+  twitter: webczarina
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/2c6cdc36a10d55f3028f30625f16fb1d'
+  id: 76867213a544e4ee9b93caeb2857fccdc0c5efbf
+- name: Atilla Manyon
+  role:
+    - Code
+    - DevOps
+  bio: I shred code
+  location: Undisclosed
+  github: smutlord
+  title: Contributor
+  pic: 'https://s.gravatar.com/avatar/b94fb6501cf666caf2b8f47d4e4e3b1c'
+  id: 433bd1bd859bb74aa4c7be9f0acd798692d49b62
+- name: Aaron Feledy
+  role:
+    - Documentation
+    - Evangelism
+    - Events
+    - Issues
+    - Support
+  bio: >-
+    Aaron Feledy is a Drupal consultant, developer, and the owner of <a
+    href="http://arrow.one" target="_blank">Arrow One Solutions</a>.
+  location: 'Chicago, IL'
+  github: aaronfeledy
+  twitter: aaronfeledy
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  id: c04e9d90c77dfe1891cfdfafaff854a9106fd64e
+- name: Jason Purdy
+  role:
+    - Content
+    - Documentation
+    - Evangelism
+    - Events
+    - Guides and Tutorials
+    - Meetups
+    - Outreach
+    - Training
+  bio: >-
+    Disciple of Jesus, Husband, Father and Developer (Drupal, PHP, JS, HTML/CSS,
+    Web and Android) and home chef; that should cover it for now.
+  location: 'Apex, NC'
+  github: purdy
+  twitter: jason_purdy
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9'
+  id: 1a7cb15c9746209501ccf1491a103486c898d426

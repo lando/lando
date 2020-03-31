@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Versions and things
+LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
+DOCKER_COMPOSE_VERSION="1.25.4"
+
 # Checking to see that we have the correct core build dependencies
 if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
   echo "You do not have the correct dependencies installed to build Lando! Trying to install them..."
@@ -17,12 +21,6 @@ if [ ! $(type -p fpm) ]; then
   gem install --verbose fpm || sudo gem install --verbose fpm
 fi
 
-# Lando things
-LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-
-# Docker things
-DOCKER_COMPOSE_VERSION="1.23.2"
-
 # Start up our build directory and go into it
 mkdir -p build/installer
 mkdir -p build/installer/lando
@@ -39,7 +37,8 @@ curl -fsSL -o bin/docker-compose "https://github.com/docker/compose/releases/dow
 chmod +x bin/docker-compose
 
 # Copy our docs
-cp -rf ../../../docs/README.md docs/README.md
+cp -rf ../../../README.md docs/README.md
+cp -rf ../../../PRIVACY.md docs/PRIVACY.md
 cp -rf ../../../TERMS.md docs/TERMS.md
 cp -rf ../../../LICENSE.md docs/LICENSE.md
 

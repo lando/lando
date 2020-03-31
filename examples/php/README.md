@@ -25,6 +25,9 @@ Run the following commands to validate things are rolling as they should.
 # Should use 7.3 as the default php version
 lando ssh -s defaults -c "php -v" | grep "PHP 7.3"
 
+# Should use 10.x as the default postgresql-client version
+lando ssh -s defaults -c "psql -V | grep 10."
+
 # Should use apache 2.4 as the default webserver version
 lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
@@ -72,6 +75,9 @@ lando ssh -s cliold -c "php -v" | grep "PHP 5.6"
 
 # Should use specified php version if given
 lando ssh -s composer -c "php -v" | grep "PHP 7.0"
+
+# Should have rsync in php 7.4
+lando ssh -s custom74 -c "rsync --version"
 
 # Should install compose global dependencies if specified by user and have them available in PATH
 lando ssh -s composer -c "phpunit --version"

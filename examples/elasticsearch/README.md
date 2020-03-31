@@ -23,8 +23,8 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use version 6.x for the default version
-lando ssh -s defaults -c "curl -XGET localhost:9200" | grep "number" | grep "6."
+# Should use version 6.8.7 for the default version
+lando ssh -s defaults -c "curl -XGET localhost:9200" | grep "number" | grep "6.8.7"
 
 # Should use 1025m as the default heap size
 lando ssh -s defaults -c "env | grep ELASTICSEARCH_HEAP_SIZE=1025m"
@@ -32,8 +32,14 @@ lando ssh -s defaults -c "env | grep ELASTICSEARCH_HEAP_SIZE=1025m"
 # Should not portforward by default
 lando info -s defaults | grep "not forwarded"
 
+# Should be running as a data node
+lando ssh -s defaults -u root -c "cat /opt/bitnami/elasticsearch/config/elasticsearch.yml" | grep "data: true"
+
 # Should use version 5.6.14 for the patch service
-lando ssh -s patch -c "curl -XGET localhost:9200" | grep "number" | grep 5.6.14
+lando ssh -s patch -c "curl -XGET localhost:9200" | grep "number" | grep 5.6.15
+
+# Should use the custom version specified for custom
+lando ssh -s custom -c "curl -XGET localhost:9200" | grep "number" | grep "7."
 
 # Should portforward for custom
 lando info -s custom | grep "not forwarded" || echo $? | grep 1
@@ -42,8 +48,11 @@ lando info -s custom | grep "not forwarded" || echo $? | grep 1
 lando ssh -s custom -c "env | grep ELASTICSEARCH_HEAP_SIZE=1026m"
 
 # Should mount custom config to the correct locations
-lando ssh -s custom -c "cat /opt/bitnami/elasticsearch/config/elasticsearch_custom.yml | grep 311"
+lando ssh -s custom -u root -c "cat /opt/bitnami/elasticsearch/config/elasticsearch.yml" | grep "ingest: true"
 ```
+
+Should install any specified plugins successfully
+lando ssh -s custom -c "elasticsearch-plugin list" | grep analysis-icu
 
 Destroy tests
 -------------

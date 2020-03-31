@@ -15,6 +15,9 @@ events {
 
 http {
     include       mime.types;
+    types {
+      application/javascript mjs;
+    }
     default_type  application/octet-stream;
 
     fastcgi_buffers 16 16k;

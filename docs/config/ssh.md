@@ -1,5 +1,8 @@
-SSH Keys
-========
+---
+description: Lando injects your SSH keys so they are available, it also will create and post SSH keys for outside services like Pantheon and GitHub as needed.
+---
+
+# SSH Keys
 
 By default Lando will forward all the correctly formatted, owned, and permissioned `ssh` keys, including **PASSPHRASE PROTECTED** keys it finds in your `~/.ssh` and `lando.config.userConfRoot/keys` directories into each service. This means that you should be able to use your ssh keys like you were running commands natively on your machine.
 
@@ -29,5 +32,5 @@ lando logs -s appserver
 
 # Check the .ssh config for a given service
 # Obviously replace appserver with the service you are interested in
-lando ssh appserver -c "cat /etc/ssh/ssh_config"
+lando ssh -s appserver -c "cat /etc/ssh/ssh_config"
 ```
