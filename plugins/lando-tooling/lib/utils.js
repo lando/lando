@@ -127,9 +127,9 @@ exports.buildCommand = (app, command, service, user) => ({
 /*
  * Helper to build docker exec command
  */
-exports.dockerExec = (lando, datum = {}) => lando.shell.sh(
+exports.dockerExec = (lando, stdio, datum = {}) => lando.shell.sh(
   getExecOpts(lando.config.dockerBin, datum).concat(datum.cmd),
-  {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']}
+  {mode: 'attach', cstdio: stdio}
 );
 
 /*
@@ -170,6 +170,7 @@ exports.toolingDefaults = ({
   description = `Runs ${name} commands`,
   options = {},
   service = '',
+  stdio = ['inherit', 'inherit', 'ignore'],
   user = null} = {}) =>
   ({
     name,
@@ -178,5 +179,6 @@ exports.toolingDefaults = ({
     describe: description,
     options: options,
     service: service,
+    stdio: stdio,
     user: (user === null) ? getUser(service, app.info) : user,
   });

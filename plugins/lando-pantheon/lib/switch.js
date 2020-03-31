@@ -11,6 +11,7 @@ const task = {
   description: 'Switch to a different multidev environment',
   cmd: '/helpers/switch.sh',
   level: 'app',
+  stdio: ['inherit', 'pipe', 'pipe'],
   options: {
     'auth': {
       describe: 'Pantheon machine token',

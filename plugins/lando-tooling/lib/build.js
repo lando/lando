@@ -9,7 +9,7 @@ const utils = require('./utils');
  */
 module.exports = (config, lando) => {
   // Get our defaults and such
-  const {name, app, cmd, describe, options, service, user} = utils.toolingDefaults(config);
+  const {name, app, cmd, describe, options, service, stdio, user} = utils.toolingDefaults(config);
   // Handle dynamic services and passthrough options right away
   // Get the event name handler
   const eventName = name.split(' ')[0];
@@ -21,7 +21,7 @@ module.exports = (config, lando) => {
     // Build run objects
     .map(({command, service}) => utils.buildCommand(app, command, service, user))
     // Try to run the task quickly first and then fallback to compose launch
-    .each(runner => utils.dockerExec(lando, runner).catch(execError => {
+    .each(runner => utils.dockerExec(lando, stdio, runner).catch(execError => {
       return lando.engine.isRunning(runner.id).then(isRunning => {
         if (!isRunning) {
           return lando.engine.run(runner).catch(composeError => {

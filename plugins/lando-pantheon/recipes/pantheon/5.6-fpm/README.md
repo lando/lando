@@ -29,8 +29,8 @@ RUN mkdir -p /usr/share/man/man1 \
   && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
   && chown -R www-data:www-data /var/www /srv/bin \
-  && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
-  && php -d memory_limit=-1 installer.phar install --install-version=$LANDO_TERMINUS_VERSION \
+  && wget "https://github.com/pantheon-systems/terminus/releases/download/${LANDO_TERMINUS_VERSION}/terminus.phar" -O /usr/local/bin/terminus \
+  && chmod +x /usr/local/bin/terminus \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \
   && tar xJfv "wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" && cp -rf /tmp/wkhtmltox/bin/* /srv/bin \
   && cd /srv/bin \
