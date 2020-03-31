@@ -5,6 +5,11 @@ services:
     hosts:
       - database
       - database2
+  pma_legacy:
+    type: phpmyadmin:4.7
+    hosts:
+      - database
+      - database2
   database:
     type: mariadb
   database2:
