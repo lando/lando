@@ -115,13 +115,13 @@ if [ "$CODE" != "none" ]; then
 
 fi
 
+
 # Get the database
 if [ "$DATABASE" != "none" ]; then
-
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
-  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
-  echo "Destroying all current tables in database... "
+  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
+  echo "Destroying all current tables in database if needed... "
   for t in $TABLES; do
     echo "Dropping $t table from lando database..."
     mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "DROP TABLE $t"
