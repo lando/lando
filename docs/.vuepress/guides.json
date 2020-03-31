@@ -4,8 +4,7 @@
     "collapsable": false,
     "children": [
       "db-export",
-      "db-import",
-      "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
+      "db-import"
     ]
   },
   {
@@ -53,6 +52,13 @@
     "collapsable": false,
     "children": [
       "updating-local-pantheon-environments"
+    ]
+  },
+  {
+    "title": "PHP",
+    "collapsable": false,
+    "children": [
+      "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
     ]
   },
   {

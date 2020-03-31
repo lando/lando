@@ -1,43 +1,40 @@
 ---
-title: How can I pull/sync my database on LAMP/y recipes?
-metaTitle: How can I pull/sync my database on LAMP/y recipes? | Lando
+title: Importing a remote database and files into Lando using Laravel Envoy
 description: Add a pull command for LAMP, LEMP, Drupal, Backdrop, Laravel, PHP apps hosted on metal.
 summary: Add a pull command for LAMP, LEMP, Drupal, Backdrop, Laravel, PHP apps hosted on metal.
 date: 2020-03-30T19:23:00.720Z
-original: 
-repo: 
+original:
+repo:
 
 author:
-  name: Team Lando
-  pic: https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd
-  link: https://twitter.com/devwithlando
+  name: Geoff St. Pierre
+  pic: https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9
+  link: https://twitter.com/serundeputy
 
 feed:
   enable: true
   author:
-    - name: Team Lando
+    - name: Geoff St. Pierre
       email: alliance@lando.dev
-      link: https://twitter.com/devwithlando
+      link: https://twitter.com/serundeputy
   contributor:
-    - name: Team Lando
+    - name: Geoff St. Pierre
       email: alliance@lando.dev
-      link: https://twitter.com/devwithlando
+      link: https://twitter.com/serundeputy
 ---
 
-# How can I pull/sync my database on LAMP/y recipes?
+# Importing a remote database and files into Lando using Laravel Envoy
 
-<GuideHeader test="" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
+<GuideHeader name="Geoff St. Pierre" pic="https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9" link="https://twitter.com/serundeputy" />
 <YouTube url="" />
 
-If you are hosted on a server like Linode, Digital Ocean, AWS or the like you can still cook up a `lando pull` command to pull your database and/or 
-file assets down from production.
+If you are hosted on a server like Linode, Digital Ocean, AWS or the like you can still cook up a `lando pull` command to pull your database and/or file assets down from production using Laravel Envoy.
 
 This will work for all Lando apps that extend from `laempy` recipes like: LAMP, LEMP, Dupal 6/7/8, Backdrop, Joomla, WordPress and Laravel.
 
 ## Requirements
 
-We'll need a few things to get this set up for our `laempy` apps. We need to require the `laravel/envoy` php package in our app, configure a `.env` file, configure an `Envoy.blade.php` file to define our tasks, and configure some `tooling` in our `.lando.yml` file
-. Let's jump in.
+We'll need a few things to get this set up for our `laempy` apps. We need to require the `laravel/envoy` composer package in our app, configure a `.env` file, configure an `Envoy.blade.php` file to define our tasks, and configure some `tooling` in our `.lando.yml` file. Let's jump in.
 
 ## laravel/envoy
 
@@ -100,7 +97,7 @@ Create a file in the root of your app called `Envoy.blade.php` and add this to i
 
 @task('backupfiles', ['on' => 'web'])
   cd {{ getenv('LP_SITE_ROOT') }}
-  tar czf {{ getenv('LP_FILES_BACK_PATH') }} files 
+  tar czf {{ getenv('LP_FILES_BACK_PATH') }} files
 @endtask
 
 @task('getfiles', ['on' => 'localhost'])
@@ -149,14 +146,14 @@ tooling:
 
 ## Using the pull command
 
-Now to use your pull command you'll need to configure the `backups` directories as specified in `LP_DB_BACK_PATH` and `LP_FILES_BACK_PATH` 
+Now to use your pull command you'll need to configure the `backups` directories as specified in `LP_DB_BACK_PATH` and `LP_FILES_BACK_PATH`
 to exist on your server. Then just run:
 
 ```bash
 lando pull
 ```
 
-and that will backup your db and file assets and pull them down for you! Happy Lando travels folks. 
+and that will backup your db and file assets and pull them down for you! Happy Lando travels folks.
 
 <GuideFooter test="" original="" repo=""/>
 <Newsletter />
