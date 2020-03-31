@@ -65,7 +65,7 @@ if [ ! -z "$FILE" ]; then
 
   # Validate we have a file
   if [ ! -f "$FILE" ]; then
-    echo "File $FILE not found!"
+    printf "${RED}File $FILE not found!${DEFAULT_COLOR}\n"
     exit 1;
   fi
 
