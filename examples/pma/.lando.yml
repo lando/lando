@@ -1,7 +1,12 @@
 name: lando-pma
 services:
   pma:
-    type: phpmyadmin
+    type: phpmyadmin:5.0
+    hosts:
+      - database
+      - database2
+  pma_legacy:
+    type: phpmyadmin:4.7
     hosts:
       - database
       - database2

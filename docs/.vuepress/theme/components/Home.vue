@@ -186,13 +186,7 @@ export default {
       margin: 0
       color: lighten($landoGrey, 20%)
     .sponsor-patriot-block
-      padding: 0
-    .sponsor-patriot-block-image
-      img
-        filter: grayscale(.9)
-        width: 125px
-      img:hover
-        filter: grayscale(0)
+      padding: 2em 1em
   #features
     background-color: #fff
     padding-bottom: 1em

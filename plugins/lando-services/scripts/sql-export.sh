@@ -2,6 +2,7 @@
 
 # Set generic things
 HOST=localhost
+SERVICE=$LANDO_SERVICE_NAME
 STDOUT=false
 
 # colors
@@ -30,7 +31,7 @@ while (( "$#" )); do
     # This doesn't do anything anymore
     # we just keep it around for option validation
     -h|--host|--host=*)
-      if [ "${1##--database=}" != "$1" ]; then
+      if [ "${1##--host=}" != "$1" ]; then
         shift
       else
         shift 2
@@ -48,7 +49,11 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      FILE="$(pwd)/$1"
+      if [[ "$1" = /* ]]; then
+        FILE="${1//\\//}"
+      else
+        FILE="$(pwd)/${1//\\//}"
+      fi
       shift
       ;;
   esac
@@ -65,6 +70,9 @@ fi
 if [ "$STDOUT" == "true" ]; then
   $DUMPER
 else
+
+  # Inform the user of things
+  echo "Preparing to export $FILE from database '$DATABASE' on service '$SERVICE' as user $USER..."
 
   # Clean up last dump before we dump again
   unalias rm 2> /dev/null

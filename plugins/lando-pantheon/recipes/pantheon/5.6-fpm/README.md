@@ -14,7 +14,7 @@ FROM devwithlando/php:5.6-fpm-2
 ENV WKHTMLTOPDF_VERSION 0.12.3
 ENV PHANTOMJS_VERSION 2.1.1
 ENV PHANTOMJS_OLD_VERSION 1.7.0
-ENV TERMINUS_VERSION 2.0.1
+ENV LANDO_TERMINUS_VERSION 2.3.0
 ENV MAVEN_VERSION 3.5.4
 
 # Install the additional things that make the pantheon
@@ -30,7 +30,7 @@ RUN mkdir -p /usr/share/man/man1 \
   && mkdir -p /srv/bin \
   && chown -R www-data:www-data /var/www /srv/bin \
   && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
-  && php installer.phar install --install-version=$TERMINUS_VERSION \
+  && php -d memory_limit=-1 installer.phar install --install-version=$LANDO_TERMINUS_VERSION \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \
   && tar xJfv "wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" && cp -rf /tmp/wkhtmltox/bin/* /srv/bin \
   && cd /srv/bin \

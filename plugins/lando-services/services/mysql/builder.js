@@ -9,6 +9,10 @@ module.exports = {
   config: {
     version: '5.7',
     supported: ['8.0', '5.7'],
+    pinPairs: {
+      '8.0': 'bitnami/mysql:8.0.19-debian-10-r57',
+      '5.7': 'bitnami/mysql:5.7.29-debian-10-r51',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
@@ -32,7 +36,7 @@ module.exports = {
       // Build the default stuff here
       const mysql = {
         image: `bitnami/mysql:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           MYSQL_DATABASE: options.creds.database,
@@ -41,6 +45,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/mysql/data`,
         ],

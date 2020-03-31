@@ -54,9 +54,9 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd backdrop
 lando mysql -ubackdrop -pbackdrop backdrop -e quit
 
-# Should use drush 8.2.x by default
+# Should use drush 8.3.x by default
 cd backdrop
-lando drush version | grep 8.2
+lando drush version | grep 8.3
 
 # Should be able to install drupal
 cd backdrop/backdrop

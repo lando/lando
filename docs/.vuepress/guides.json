@@ -3,8 +3,8 @@
     "title": "Databases",
     "collapsable": false,
     "children": [
-      "db-import",
-      "db-export"
+      "db-export",
+      "db-import"
     ]
   },
   {
@@ -26,6 +26,7 @@
     "collapsable": false,
     "children": [
       "how-do-i-configure-a-lando-recipe",
+      "how-do-i-set-the-timezone-of-a-lando-service",
       "lando-info"
     ]
   },
@@ -61,6 +62,13 @@
         "https://www.youtube.com/watch?v=tkBVDh7my9Q",
         "Mountain climbing"
       ]
+    ]
+  },
+  {
+    "title": "Services",
+    "collapsable": false,
+    "children": [
+      "overriding-a-service-version"
     ]
   },
   {

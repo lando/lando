@@ -15,6 +15,7 @@ The admin will likely need some mix of the following things to assist. These are
 * Access to Lando's CRM
 * Access to Lando's [GitHub org and repos](https://github.com/lando)
 * Access to Lando's [Slack org](https://launchpass.com/devwithlando)
+* Access to Tandem's [Slack org](https://launchpass.com/devwithlando)
 * Invitation to any relevant internal documents or assets
 * Invitation to any relevant internal meetings
 * **Invitation to private Slack admin channel**

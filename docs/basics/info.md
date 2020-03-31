@@ -30,7 +30,6 @@ lando info --deep --format json
 ## Options
 
 ```bash
---clear        Clears the lando tasks cache
 --deep, -d     Get ALL the info
 --format       Output in given format: json
 --help         Shows lando or delegated command help if applicable

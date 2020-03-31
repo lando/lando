@@ -28,6 +28,15 @@ const parse4 = options => {
 };
 
 /*
+ * Helper to parse legacy solr 4 config
+ */
+const parse8 = options => {
+  options = parseElse(options);
+  options.dataDir = '/var/solr/data';
+  return options;
+};
+
+/*
  * Helper to parse generic solr config
  */
 const parseElse = options => {
@@ -75,6 +84,12 @@ const parseConfig = options => {
     case '3': return parse3(options);
     case '4.10': return parse4(options);
     case '4': return parse4(options);
+    case '8.4': return parse8(options);
+    case '8.3': return parse8(options);
+    case '8.2': return parse8(options);
+    case '8.1': return parse8(options);
+    case '8.0': return parse8(options);
+    case '8': return parse8(options);
     default: return parseElse(options);
   };
 };
@@ -84,10 +99,10 @@ module.exports = {
   name: 'solr',
   config: {
     version: '7',
-    supported: ['7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
+    supported: ['8.4', '8.3', '8.2', '8.1', '8.0', '8', '7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
     legacy: ['4.10', '4', '3.6', '3'],
     patchesSupported: true,
-    command: 'chmod +x /start-solr.sh && /start-solr.sh',
+    command: '/start-solr.sh',
     confSrc: __dirname,
     core: 'lando',
     dataDir: '/opt/solr/server/solr/mycores',

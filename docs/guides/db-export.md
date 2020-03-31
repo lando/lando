@@ -34,6 +34,10 @@ lando db-export --host db2
 
 # Dump the result to stdout
 lando db-export --stdout
+
+# Dump to an absolute path
+# NOTE: this is an absolute path in the target container, not on you host
+lando db-export /db/dump.zip
 ```
 
 ### Options

@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-aft.1",
+  "version": "3.0.0-rrc.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -58,12 +58,25 @@
   "pkg": {
     "scripts": [
       "bin/*.js",
+      "experimental/**/*.js",
       "lib/**/*.js",
       "plugins/**/*.js"
     ],
     "assets": [
       "config.yml",
       "package.json",
+      "experimental/plugins/**/fastcgi_params",
+      "experimental/plugins/**/*.cnf",
+      "experimental/plugins/**/*.conf",
+      "experimental/plugins/**/*.ini",
+      "experimental/plugins/**/*.json",
+      "experimental/plugins/**/*.php",
+      "experimental/plugins/**/*.sh",
+      "experimental/plugins/**/*.toml",
+      "experimental/plugins/**/*.tpl",
+      "experimental/plugins/**/*.vcl",
+      "experimental/plugins/**/*.xml",
+      "experimental/plugins/**/*.yml",
       "plugins/**/fastcgi_params",
       "plugins/**/*.cnf",
       "plugins/**/*.conf",
@@ -112,6 +125,7 @@
   },
   "devDependencies": {
     "@bugsnag/js": "^6.4.3",
+    "@octokit/rest": "^17.1.0",
     "@vuepress/plugin-blog": "^1.9.2",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
     "@vuepress/theme-blog": "^2.0.0",
@@ -142,6 +156,7 @@
     "platformsh": "^1.0.0",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",
+    "slack-notify": "^0.1.7",
     "version-bump-prompt": "^4.2.1",
     "vue-feather-icons": "^5.0.0",
     "vue2-google-maps": "^0.10.7",
