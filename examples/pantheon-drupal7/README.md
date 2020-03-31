@@ -122,6 +122,11 @@ lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/
 cd drupal7
 lando ssh -s appserver -c "git rev-parse HEAD > test.log"
 lando push --code dev --database none --files none --message "Testing commit $(git rev-parse HEAD)"
+
+# Should allow code pull from protected environments
+# https://github.com/lando/lando/issues/2021
+lando pull --code test --database none --files none
+lando pull --code live --database none --files none
 ```
 
 Destroy tests
