@@ -4,6 +4,7 @@
 FILE=""
 WIPE=true
 HOST=localhost
+SERVICE=$LANDO_SERVICE_NAME
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -26,7 +27,7 @@ while (( "$#" )); do
     # This option is now handled with landos built in dynamic options
     # we just keep it around for option validation
     -h|--host|--host=*)
-      if [ "${1##--database=}" != "$1" ]; then
+      if [ "${1##--host=}" != "$1" ]; then
         shift
       else
         shift 2
@@ -86,7 +87,7 @@ else
 fi
 
 # Inform the user of things
-echo "Preparing to import $FILE into $DATABASE on $HOST:$PORT as $USER..."
+echo "Preparing to import $FILE into database '$DATABASE' on service '$SERVICE' as user $USER..."
 
 # Wipe the database if set
 if [ "$WIPE" == "true" ]; then
