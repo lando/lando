@@ -40,6 +40,9 @@ lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
 # Should have a 1G php mem limit on appserver
 lando ssh -s defaults -c "curl http://localhost | grep memory_limit | grep 1G"
 
+# Should have COMPOSER_MEMORY_LIMIT set to -1
+lando ssh -s defaults -c "env" | grep "COMPOSER_MEMORY_LIMIT=-1"
+
 # Should have unlimited memory for php for CLI opts
 lando php -i | grep memory_limit | grep -e "-1"
 lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""

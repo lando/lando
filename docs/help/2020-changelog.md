@@ -17,6 +17,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Improved `lando db-import` and `lando db-export` to allow absolute paths [#1768](https://github.com/lando/lando/pull/1768)
 * Improved feedback from `lando db-import` and `lando db-export` commands [#2027](https://github.com/lando/lando/pull/2027)
 * Improved tooling `stdio` configurability and `stderr` discovery [#2021](https://github.com/lando/lando/pull/2021)
+* Set `COMPOSER_MEMORY_LIMIT` to '-1'
 * Updated to `composer` version `1.10.1` [#2096](https://github.com/lando/lando/pull/2096)
 * Updated to latest `xdebug` in `php` version `7.4` [#2099](https://github.com/lando/lando/pull/2099)
 * Updated `drush 8` to `8.3.2` [#2097](https://github.com/lando/lando/pull/2097)
