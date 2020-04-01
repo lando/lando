@@ -8,6 +8,40 @@ const push = require('./../../lib/push');
 const change = require('./../../lib/switch');
 const utils = require('./../../lib/utils');
 
+const overrideAppserver = options => {
+  // Use our custom pantheon images
+  options.services.appserver.overrides.image = `devwithlando/pantheon-appserver:${options.php}-2`;
+  // Add in the prepend.php
+  // @TODO: this throws a weird DeprecationWarning: 'root' is deprecated, use 'global' for reasons not immediately clear
+  // So we are doing this a little weirdly to avoid hat until we can track things down better
+  options.services.appserver.overrides.volumes.push(`${options.confDest}/prepend.php:/srv/includes/prepend.php`);
+  // Add in our environment
+  options.services.appserver.overrides.environment = utils.getPantheonEnvironment(options);
+  return options;
+};
+
+const setTooling = (options, tokens) => {
+  // Add in push/pull/switch
+  options.tooling.pull = pull.getPantheonPull(options, tokens);
+  options.tooling.push = push.getPantheonPush(options, tokens);
+  options.tooling.switch = change.getPantheonSwitch(options, tokens);
+  // Add in the framework-correct tooling
+  options.tooling = _.merge({}, options.tooling, utils.getPantheonTooling(options.framework));
+  return options;
+};
+
+const setBuildSteps = options => {
+  // Add in our pantheon script
+  // NOTE: We do this here instead of in /scripts because we need to guarantee
+  // it runs before the other build steps so it can reset our CA correctly
+  options.build = utils.getPantheonBuildSteps(options.framework).concat(options.build);
+  options.build_root.push('/helpers/pantheon.sh');
+  options.build.push('/helpers/auth.sh');
+  options.run_root.push('/helpers/binding.sh');
+  // Add in the framework-correct build steps
+  return options;
+};
+
 /*
  * Build Drupal 7
  */
@@ -52,20 +86,7 @@ module.exports = {
       options.database = 'mariadb:10.1';
       // Set correct things based on framework
       options.defaultFiles.vhosts = `${options.framework}.conf.tpl`;
-      // Use our custom pantheon images
-      options.services.appserver.overrides.image = `devwithlando/pantheon-appserver:${options.php}-2`;
-      // Add in the prepend.php
-      // @TODO: this throws a weird DeprecationWarning: 'root' is deprecated, use 'global' for reasons not immediately clear
-      // So we are doing this a little weirdly to avoid hat until we can track things down better
-      options.services.appserver.overrides.volumes.push(`${options.confDest}/prepend.php:/srv/includes/prepend.php`);
-      // Add in our environment
-      options.services.appserver.overrides.environment = utils.getPantheonEnvironment(options);
-      // Add in our pantheon script
-      // NOTE: We do this here instead of in /scripts because we need to guarantee
-      // it runs before the other build steps so it can reset our CA correctly
-      options.build_root.push('/helpers/pantheon.sh');
-      options.build.push('/helpers/auth.sh');
-      options.run_root.push('/helpers/binding.sh');
+      options = overrideAppserver(options);
       // Add in cache if applicable
       if (options.cache) options = _.merge({}, options, utils.getPantheonCache());
       // Add in edge if applicable
@@ -73,16 +94,9 @@ module.exports = {
       // Add in index if applicable
       if (options.index) options = _.merge({}, options, utils.getPantheonIndex());
 
-      // Add in the framework-correct tooling
-      options.tooling = _.merge({}, options.tooling, utils.getPantheonTooling(options.framework));
-      // Add in the framework-correct build steps
-      options.build = utils.getPantheonBuildSteps(options.framework).concat(options.build);
-
-      // Add in push/pull/switch
       const tokens = utils.sortTokens(options._app.pantheonTokens, options._app.terminusTokens);
-      options.tooling.pull = pull.getPantheonPull(options, tokens);
-      options.tooling.push = push.getPantheonPush(options, tokens);
-      options.tooling.switch = change.getPantheonSwitch(options, tokens);
+      options = setTooling(options, tokens);
+      options = setBuildSteps(options);
 
       // @TODO: do we still need a depends on for the index for certs shit?
       // Set the appserver to depend on index start up so we know our certs will be there
