@@ -47,6 +47,10 @@ lando ssh -s defaults -c "env" | grep "COMPOSER_MEMORY_LIMIT=-1"
 lando php -i | grep memory_limit | grep -e "-1"
 lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""
 
+# Should have a PATH_INFO and PATH_TRANSLATED SERVER vars
+lando ssh -s custom_nginx -c "curl https://localhost" | grep SERVER | grep PATH_INFO
+lando ssh -s custom_nginx -c "curl https://localhost" | grep SERVER | grep PATH_TRANSLATED
+
 # Should not enable xdebug by default
 lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
 
