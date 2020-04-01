@@ -7,6 +7,9 @@ const Log = require('./../../../lib/logger');
 const Promise = require('./../../../lib/promise');
 const axios = require('axios');
 
+// Set a limit on amount of sites
+const MAX_SITES = 5000;
+
 /*
  * Helper to collect relevant error data
  */
@@ -82,8 +85,8 @@ module.exports = class PantheonApiClient {
   getSites() {
     // Call to get user sites
     const pantheonUserSites = () => {
-      const getSites = ['users', _.get(this.session, 'user_id'), 'memberships', 'sites?limit=5000'];
-      return pantheonRequest(this.request, this.log, 'get', getSites)
+      const getSites = ['users', _.get(this.session, 'user_id'), 'memberships', 'sites'];
+      return pantheonRequest(this.request, this.log, 'get', getSites, {params: {limit: MAX_SITES}})
       .then(sites => _.map(sites, (site, id) => _.merge(site, site.site)));
     };
     // Call to get org sites
@@ -92,8 +95,8 @@ module.exports = class PantheonApiClient {
       return pantheonRequest(this.request, this.log, 'get', getOrgs)
       .map(org => {
         if (org.role !== 'unprivileged') {
-          return pantheonRequest(this.request, this.log, 'get',
-          ['organizations', org.id, 'memberships', 'sites?limit=5000'])
+          const getOrgsSites = ['organizations', org.id, 'memberships', 'sites'];
+          return pantheonRequest(this.request, this.log, 'get', getOrgsSites, {params: {limit: MAX_SITES}})
           .map(site => _.merge(site, site.site));
         }
       })
