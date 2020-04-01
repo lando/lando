@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 7 codebase
 rm -rf drupal7 && mkdir -p drupal7 && cd drupal7
-lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.59.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
+lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
 
 # Should start up successfully
 cd drupal7
