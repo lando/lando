@@ -65,7 +65,7 @@
     "title": "PhpMyAdmin",
     "collapsable": false,
     "children": [
-      "phpmyadmin-theme"
+      "phpmyadmin-themes"
     ]
   },
   {
