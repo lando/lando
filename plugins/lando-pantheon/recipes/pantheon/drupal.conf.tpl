@@ -149,7 +149,7 @@ server {
         fastcgi_intercept_errors on;
         fastcgi_pass fpm:9000;
         fastcgi_index index.php;
-        include fastcgi_params;
+        include /srv/includes/fastcgi_params;
         # Allow SimpleSamlPHP to work by settig PATH_INFO, etc
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
         fastcgi_param SCRIPT_FILENAME "{{LANDO_WEBROOT}}$fastcgi_script_name";
@@ -172,7 +172,7 @@ server {
         fastcgi_intercept_errors on;
         fastcgi_pass fpm:9000;
         fastcgi_index index.php;
-        include fastcgi_params;
+        include /srv/includes/fastcgi_params;
         # Allow SimpleSamlPHP to work by settig PATH_INFO, etc
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
         fastcgi_param SCRIPT_FILENAME "{{LANDO_WEBROOT}}$fastcgi_script_name";
