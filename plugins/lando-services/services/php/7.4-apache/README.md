@@ -7,9 +7,6 @@ A decent cross purpose apache based php 7.4 appserver.
 # Basic php-apache 7.4 appserver for Lando
 #
 # docker build -t devwithlando/php:7.4-apache .
-# Basic php-apache 7.4 appserver for Lando
-#
-# docker build -t devwithlando/php:7.4-apache .
 
 FROM php:7.4-apache-buster
 
@@ -37,6 +34,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libpng-dev \
     libpq-dev \
     libssl-dev \
+    libwebp-dev \
     libxml2-dev \
     libzip-dev \
     libonig-dev \
@@ -56,7 +54,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install oauth-2.0.4 \
   && pecl install redis-5.1.1 \
   && pecl install xdebug \
-  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
+  && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
   && docker-php-ext-enable imagick \
@@ -70,6 +69,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-install gd \
   && docker-php-ext-install gettext \
   && docker-php-ext-install intl \
+  && docker-php-ext-install imap \
   && docker-php-ext-install ldap \
   && docker-php-ext-install mbstring \
   && docker-php-ext-install mysqli \

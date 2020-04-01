@@ -24,8 +24,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libmagickwand-dev \
     libmemcached-dev \
     libpng-dev \
-    libwebp-dev \
     libpq-dev \
+    libwebp-dev \
     libxml2-dev \
     libicu-dev \
     mysql-client \
