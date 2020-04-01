@@ -83,12 +83,6 @@ lando ssh -c "env" | grep TERMINUS_ENV | grep dev
 lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal7
 lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
 
-# Should load proper nginx fastcgi params
-cp test.php drupal7
-cd drupal7
-curl http://landobot-drupal7.lndo.site/test.php | grep "PATH_INFO"
-rm test.php
-
 # Should not set any 8983 perms
 cd drupal7
 lando ssh -c "ls -ls /app" | grep "8983" || echo $? | grep 1
