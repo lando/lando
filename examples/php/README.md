@@ -96,6 +96,13 @@ lando ssh -s composer -c "phpunit --version"
 lando ssh -s composer -c "which phpunit | grep /app/vendor/bin/phpunit"
 lando ssh -s composer -c "composer remove phpunit/phpunit"
 lando ssh -s composer -c "which phpunit | grep /var/www/.composer/vendor/bin/phpunit"
+
+# Should have webp installed in php 7
+lando ssh -s defaults -c "php -i" | grep WebP | grep enabled
+lando ssh -s custom  -c "php -i" | grep WebP | grep enabled
+lando ssh -s custom74 -c "php -i" | grep WebP | grep enabled
+lando ssh -s cli -c "php -i" | grep WebP | grep enabled
+lando ssh -s composer -c "php -i" | grep WebP | grep enabled
 ```
 
 Destroy tests

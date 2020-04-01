@@ -18,9 +18,9 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     git-core \
     imagemagick \
     libbz2-dev \
-    libc-client2007e-dev \
+    libc-client-dev \
     libicu-dev \
-    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libkrb5-dev \
     libldap2-dev \
     libmagickwand-dev \
@@ -48,8 +48,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install oauth-2.0.4 \
   && pecl install redis-5.1.1 \
   && pecl install xdebug \
-  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
-  && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
   && docker-php-ext-enable imagick \
@@ -60,10 +58,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-install bz2 \
   && docker-php-ext-install calendar \
   && docker-php-ext-install exif \
-  && docker-php-ext-install gd \
   && docker-php-ext-install gettext \
   && docker-php-ext-install intl \
-  && docker-php-ext-install imap \
   && docker-php-ext-install ldap \
   && docker-php-ext-install mbstring \
   && docker-php-ext-install mysqli \
@@ -84,4 +80,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/* \
   && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-  && docker-php-ext-install imap
+  && docker-php-ext-install imap \
+  && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
+  && docker-php-ext-install gd
