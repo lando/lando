@@ -49,7 +49,7 @@ exports.parse2Info = (urls, ports) => _(urls)
   .map(url => exports.parseUrl(url))
   .flatMap(url => [
     `http://${url.host}${ports.http === '80' ? '' : `:${ports.http}`}${url.pathname}`,
-    `https://${url.host}${ports.http === '443' ? '' : `:${ports.https}`}${url.pathname}`,
+    `https://${url.host}${ports.https === '443' ? '' : `:${ports.https}`}${url.pathname}`,
   ])
   .value();
 
