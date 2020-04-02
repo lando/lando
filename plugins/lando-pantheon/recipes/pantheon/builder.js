@@ -31,10 +31,11 @@ const setTooling = (options, tokens) => {
 };
 
 const setBuildSteps = options => {
-  // Add in our pantheon script
+  // Get build steps
+  options.build = utils.getPantheonBuildSteps(options.framework, options.drush).concat(options.build);
+  // Add in our pantheon scripts
   // NOTE: We do this here instead of in /scripts because we need to guarantee
   // it runs before the other build steps so it can reset our CA correctly
-  options.build = utils.getPantheonBuildSteps(options.framework).concat(options.build);
   options.build_root.push('/helpers/pantheon.sh');
   options.build.push('/helpers/auth.sh');
   options.run_root.push('/helpers/binding.sh');

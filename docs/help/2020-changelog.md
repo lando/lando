@@ -13,6 +13,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added `PATH_INFO` and `PATH_TRANSLATED` to the default `nginx` `fastcgi_params` [#1987](https://github.com/lando/lando/pull/1987)
 * Added `webp` support to `php 7` images [#1715](https://github.com/lando/lando/pull/1715)
 * Added subdirectory support to the `proxy` [#1824](https://github.com/lando/lando/pull/1824)
+* Added support for `pantheon.yml`'s' `drush_version`
 * Increased limit on amount of sites we can get from the Pantheon API [#988](https://github.com/lando/lando/pull/988)
 * Fixed bug where `PATH_INFO` was not set in the `pantheon` recipe [#1987](https://github.com/lando/lando/pull/1987)
 * Fixed bug causing a silent error when trying to `lando pull --code test|live` using `pantheon` recipe [#2021](https://github.com/lando/lando/pull/2021)
