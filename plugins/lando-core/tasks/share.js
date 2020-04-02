@@ -1,63 +1,12 @@
 'use strict';
 
-const _ = require('lodash');
-const localtunnel = require('localtunnel');
-const u = require('url');
-
-/*
- * Helper to define options
- */
-const getOptions = () => ({
-  url: {
-    describe: 'Url to share. Needs to be in the form http://localhost:port',
-    alias: ['u'],
-    required: true,
-  },
-});
-
-/*
- * Helper to get localtunnel config
- */
-const parseConfig = (port = '80', host = 'localhost') => {
-  // Set port to 80 if null
-  if (_.isEmpty(port)) port = '80';
-  // Make sure we are at least 4 characters
-  if (_.size(host) < 4) host = host + 'xxxx';
-  // Makes sure we are at most 64 chars
-  if (_.size(host) >= 63) host = host.substring(0, 57);
-  return {port, host};
-};
-
-/*
- * Helper to manage the tunnel
- */
-const tunnelHandler = (tunnel, lando) => {
-  // the assigned public url for your tunnel
-  // i.e. https://abcdefgjhij.localtunnel.me
-  console.log(lando.cli.makeArt('tunnel', {url: tunnel.url, phase: 'post'}));
-  // Set stdin to the correct mode
-  // @todo: We will need to change this for better localdev gui usage
-  process.stdin.resume();
-  process.stdin.setEncoding('utf8');
-  process.stdin.setRawMode(true);
-  // Start the keypress listener for the process
-  process.stdin.on('data', () => {
-    tunnel.close();
-  });
-
-  // Close the process
-  tunnel.on('close', () => {
-    console.log(lando.cli.makeArt('tunnel', {phase: 'closed'}));
-    process.stdin.pause();
-  });
-};
-
 module.exports = lando => {
   return {
     command: 'share',
     describe: 'Shares your local site publicly',
-    options: getOptions(),
     run: options => {
+      console.log(lando.cli.makeArt('shareWait'));
+      /*
       if (u.parse(options.url).hostname !== 'localhost' || u.parse(options.url).protocol !== 'http:') {
         throw new Error('Need a url of the form http://localhost:port!');
       }
@@ -80,6 +29,7 @@ module.exports = lando => {
           });
         });
       }
+      */
     },
   };
 };
