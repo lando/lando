@@ -85,3 +85,14 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9'
   id: 1a7cb15c9746209501ccf1491a103486c898d426
+- name: Jace Bennest
+  role:
+    - Guides and Tutorials
+  bio: >-
+    Software Developer
+  location: 'Vancouver, BC'
+  github: thejacer87
+  twitter: thejacer87
+  title: Contributor
+  pic: 'https://avatars0.githubusercontent.com/u/6412919?s=460&u=b96d856896743523cec75bad1d9aec42a7f8a25e&v=4'
+  id: 7468656a616365723837

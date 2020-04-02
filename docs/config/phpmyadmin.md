@@ -17,8 +17,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-These version numbers are provided _only_ as a convenience so your Landofile does not break. They will actually install the latest default `5.0` version of `phpmyadmin` and not the `4.x` series. Please update your Landofiles accordingly.
-
+*   [4.9](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+*   [4.8](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   [4.7](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 *   [4.6](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 

@@ -10,9 +10,10 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 
 * Added separate `edge` and `stable` release channels, [read more](https://docs.lando.dev/config/releases.html)
 * Added an `experimental` flag so users can access bleeding edge features, [read more](https://docs.lando.dev/config/experimental.html)
-* Added convenience non-breaking backwards compatibility for previous `phpmyadmin` `4.x` versions [#2062](https://github.com/lando/lando/pull/2062)
 * Added `PATH_INFO` and `PATH_TRANSLATED` to the default `nginx` `fastcgi_params` [#1987](https://github.com/lando/lando/pull/1987)
 * Added `webp` support to `php 7` images [#1715](https://github.com/lando/lando/pull/1715)
+* Added subdirectory support to the `proxy` [#1824](https://github.com/lando/lando/pull/1824)
+* Added support for `pantheon.yml`'s' `drush_version`
 * Increased limit on amount of sites we can get from the Pantheon API [#988](https://github.com/lando/lando/pull/988)
 * Fixed bug where `PATH_INFO` was not set in the `pantheon` recipe [#1987](https://github.com/lando/lando/pull/1987)
 * Fixed bug causing a silent error when trying to `lando pull --code test|live` using `pantheon` recipe [#2021](https://github.com/lando/lando/pull/2021)
@@ -21,6 +22,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Improved `lando db-import` and `lando db-export` to allow absolute paths [#1768](https://github.com/lando/lando/pull/1768)
 * Improved feedback from `lando db-import` and `lando db-export` commands [#2027](https://github.com/lando/lando/pull/2027)
 * Improved tooling `stdio` configurability and `stderr` discovery [#2021](https://github.com/lando/lando/pull/2021)
+* Readded previous `phpmyadmin` `4.x` versions for better backwards compatibility [#2062](https://github.com/lando/lando/pull/2062)
 * Set `COMPOSER_MEMORY_LIMIT` to '-1'
 * Updated to `composer` version `1.10.1` [#2096](https://github.com/lando/lando/pull/2096)
 * Updated to latest `xdebug` in `php` version `7.4` [#2099](https://github.com/lando/lando/pull/2099)

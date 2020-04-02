@@ -62,6 +62,13 @@
     ]
   },
   {
+    "title": "PhpMyAdmin",
+    "collapsable": false,
+    "children": [
+      "phpmyadmin-themes"
+    ]
+  },
+  {
     "title": "Recreation",
     "collapsable": false,
     "children": [

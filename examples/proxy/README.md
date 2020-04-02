@@ -40,10 +40,19 @@ curl -s -o /dev/null -Ik -w "%{http_code}" https://another-way-to-eighty.lndo.si
 
 # Should route to a different port if specified
 curl -s -o /dev/null -I -w "%{http_code}" http://another-way-to-eighty.lndo.site | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://web3.lndo.site | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://lets.combine.really.lndo.site/everything/for-real | grep 200
+curl -s -o /dev/null -Ik -w "%{http_code}" https://lets.combine.things.lndo.site/everything/for-real | grep 200
 
 # Should handle wildcard entries
 curl -s -o /dev/null -I -w "%{http_code}" http://thiscouldbeanything-lando-proxy.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://wild.socouldthis.lando-proxy.lndo.site | grep 200
+
+# Should handle sites in subdirectories
+curl -s -o /dev/null -I -w "%{http_code}" http://lando-proxy.lndo.site/api | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://lets.see.what.happens.in.a.lndo.site/subdir | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://or.in.a.deeper.lndo.site/subdirectory/tree/ | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://lets.combine.really.lndo.site/everything/for-real | grep 200
 ```
 
 Destroy tests
