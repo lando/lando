@@ -1,6 +1,6 @@
 # 2020
 
-## v3.0.0-rrc.3 - April 3, 2020 (Estimated Release Date)
+## v3.0.0-rrc.3 - [April 2, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.3)
 
 ### This is an `edge` release.
 
