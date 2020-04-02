@@ -47,6 +47,16 @@ lando init --source cwd \
   --option port=3000 \
   --option command="yarn watch" \
   --name meanest-app-youve-ever-seen
+
+# Pull the latest Drupal 7 and set up drupal7 config to use mariadb instead of mysql
+lando init \
+  --source remote \
+  --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz \
+  --remote-options="--strip-components 1" \
+  --recipe drupal7 \
+  --webroot . \
+  --option database=mariadb \
+  --name my-first-drupal7-app
 ```
 
 ## Getting code from various sources
