@@ -27,6 +27,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Updated to `composer` version `1.10.1` [#2096](https://github.com/lando/lando/pull/2096)
 * Updated to latest `xdebug` in `php` version `7.4` [#2099](https://github.com/lando/lando/pull/2099)
 * Updated `drush 8` to `8.3.2` [#2097](https://github.com/lando/lando/pull/2097)
+* Updated to Docker Desktop `2.2.0.5` [#2052](https://github.com/lando/lando/pull/2052) [#2122](https://github.com/lando/lando/pull/2122)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
