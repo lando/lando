@@ -71,30 +71,42 @@ module.exports = (app, lando) => {
 
   // Add some logic that extends start until healthchecked containers report as healthy
   app.events.on('post-start', 1, () => lando.engine.list({project: app.project})
-    .map(container => lando.Promise.retry(() => {
+    // Filter out containers without a healthcheck
+    .filter(container => _.has(_.find(app.info, {service: container.service}), 'healthcheck'))
+    .map(container => _.find(app.info, {service: container.service}))
+    .map(info => lando.Promise.retry(() => {
       // Log that we are checking shit
-      console.log('Waiting until %s service is ready...', container.service);
-      lando.log.info('Waiting until %s service is ready...', container.service);
+      console.log('Waiting until %s service is ready...', info.service);
+      lando.log.info('Waiting until %s service is ready...', info.service);
 
       // Inspect the containers for healthcheck status
-      return lando.engine.scan({id: container.id}).then(data => {
-        if (!_.has(data, 'State.Health')) return {service: container.service, health: 'healthy'};
-        if (_.get(data, 'State.Health.Status', 'unhealthy') === 'healthy') {
-          return {service: container.service, health: 'healthy'};
-        } else {
-          return lando.Promise.reject();
-        }
+      return lando.engine.run({
+        id: `${app.project}_${info.service}_1`,
+        cmd: info.healthcheck,
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          user: 'root',
+          cstdio: 'inherit',
+          services: [info.service],
+        },
+      })
+      .catch(err => {
+        return lando.Promise.reject(err);
       });
-    }, {max: 25})
+    }, {max: 25}))
     // Set metadata if weve got a naught service
-    .catch(error => ({service: container.service, health: 'unhealthy'})))
+    // .catch(error => ({service: container.service, health: 'unhealthy'})))
     // Analyze and warn if needed
     .map(status => {
+      console.log(status);
+      /*
       if (status.health === 'unhealthy') {
         lando.log.warn('Service %s is unhealthy', status.service);
         lando.log.warn('Run "lando logs -s %s"', status.service);
       }
       lando.log.verbose('Healthcheck for %s = %j', app.name, status);
+      */
     }));
 
   // Scan urls
