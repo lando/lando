@@ -17,6 +17,16 @@ module.exports = lando => {
           console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'post'}));
           console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
+        })
+        .catch(err => {
+          lando.log.error(err);
+          console.log(lando.cli.makeArt('appRestart', {phase: 'error'}));
+          return app.rebuild().then(() => {
+            console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'post'}));
+            console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
+            console.log(lando.cli.makeArt('appRestart', {phase: 'recovered'}));
+            console.log('');
+          });
         });
       }
     },
