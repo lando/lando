@@ -1,6 +1,21 @@
 # 2020
 
-## v3.0.0-rrc.3 - April 3, 2020 (Estimated Release Date)
+## v3.0.0-rrc.5 - April 24, 2020 (Estimated Release Date)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Added a `lando rebuild` warning if app becomes out of sync with Lando [#2098](https://github.com/lando/lando/pull/2098)
+* Improved app start so it attempts to automatically repair broken apps [#2098](https://github.com/lando/lando/pull/2098)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
+## v3.0.0-rrc.3 - [April 2, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.3)
 
 ### This is an `edge` release.
 
@@ -27,6 +42,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Updated to `composer` version `1.10.1` [#2096](https://github.com/lando/lando/pull/2096)
 * Updated to latest `xdebug` in `php` version `7.4` [#2099](https://github.com/lando/lando/pull/2099)
 * Updated `drush 8` to `8.3.2` [#2097](https://github.com/lando/lando/pull/2097)
+* Updated to Docker Desktop `2.2.0.5` [#2052](https://github.com/lando/lando/pull/2052) [#2122](https://github.com/lando/lando/pull/2122)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
