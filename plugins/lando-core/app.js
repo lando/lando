@@ -79,10 +79,10 @@ module.exports = (app, lando) => {
   app.events.on('post-start', 1, () => lando.engine.list({project: app.project})
     // Filter out containers without a healthcheck
     .filter(container => _.has(_.find(app.info, {service: container.service}), 'healthcheck'))
+    // Map to info
     .map(container => _.find(app.info, {service: container.service}))
+    // Map to a retry of the healthcheck command
     .map(info => lando.Promise.retry(() => {
-      console.log(`waiting for ${info.service}`)
-      // Inspect the containers for healthcheck status
       return lando.engine.run({
         id: `${app.project}_${info.service}_1`,
         cmd: info.healthcheck,
@@ -97,16 +97,16 @@ module.exports = (app, lando) => {
         },
       })
       .catch(err => {
+        console.log('Waiting until %s service is ready...', info.service);
+        lando.log.verbose('Running healthcheck %s for %s until %s...', info.healthcheck, info.service);
+        lando.log.debug(err);
         return Promise.reject(info.service);
-      })
-    }, {max: 5})
-    .catch(err => {
-      console.log(err)
-    })))
-    // Set metadata if weve got a naught service
-    // .catch(error => ({service: container.service, health: 'unhealthy'})))
-    // Analyze and warn if needed
-
+      });
+    }, {max: 25})
+    .catch(service => {
+      lando.log.info('Service %s is unhealthy', service);
+      info.healthy = false;
+    })));
 
   // Scan urls
   app.events.on('post-start', 10, () => {

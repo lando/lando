@@ -2,12 +2,8 @@ name: lando-mysql
 services:
   defaults:
     type: mysql
-    overrides:
-      command: tail -f /dev/null
   patch:
     type: mysql:5.7.24
-    overrides:
-      command: tail -f /dev/null
   custom:
     type: mysql:8.0
     portforward: true

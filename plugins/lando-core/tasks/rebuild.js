@@ -40,7 +40,9 @@ module.exports = lando => {
         app.opts = handleOpts(options);
         console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'pre'}));
         return app.rebuild().then(() => {
-          console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'post'}));
+          const status = utils.getStatusChecks(app);
+          const type = !_.every(_.values(status)) ? 'report' : 'post';
+          console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: type}));
           console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
         });
