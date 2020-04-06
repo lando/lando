@@ -13,7 +13,8 @@ module.exports = lando => {
       if (app) {
         console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'pre'}));
         return app.start().then(() => {
-          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'post'}));
+          const type = (app.meta.builtAgainst !== app._config.version) ? 'update' : 'post';
+          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: type}));
           console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
         });

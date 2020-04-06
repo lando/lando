@@ -13,6 +13,12 @@ const getScannable = (app, scan = true) => _.filter(app.info, service => {
   return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
 });
 
+// Update built against
+const updateBuiltAgainst = (app, version = 'unknown') => {
+  app.meta = _.merge({}, app.meta, {builtAgainst: version});
+  return app.meta;
+};
+
 module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
@@ -112,6 +118,32 @@ module.exports = (app, lando) => {
         })));
       }
     });
+  });
+
+  // If the app already is installed but we cant determine the builtAgainst then set it to something bogus
+  app.events.on('pre-start', () => {
+    if (!_.has(app.meta, 'builtAgainst')) {
+      return lando.engine.list({project: app.project, all: true}).then(containers => {
+        if (!_.isEmpty(containers)) {
+          lando.cache.set(app.metaCache, updateBuiltAgainst(app), {persist: true});
+        }
+      });
+    }
+  });
+  // If we don't have a builtAgainst already then we must be spinning up for the first time and its safe to set this
+  app.events.on('post-start', () => {
+    if (!_.has(app.meta, 'builtAgainst')) {
+      lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
+    }
+  });
+  // Otherwise set on rebuilds
+  app.events.on('post-rebuild', () => {
+    lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
+  });
+
+  // Remove meta cache on uninstall
+  app.events.on('post-uninstall', () => {
+    lando.cache.remove(app.metaCache);
   });
 
   // REturn defualts
