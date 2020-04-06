@@ -112,12 +112,12 @@ exports.parseConfig = (config, app) => _(config)
 /*
  * Run build
  */
-exports.runBuild = (lando, steps, lockfile) => {
+exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS') => {
   if (!_.isEmpty(steps) && !lando.cache.get(lockfile)) {
     return lando.engine.run(steps)
     // Save the new hash if everything works out ok
     .then(() => {
-      lando.cache.set(lockfile, 'YOU SHALL NOT PASS', {persist: true});
+      lando.cache.set(lockfile, hash, {persist: true});
     })
     // Make sure we don't save a hash if our build fails
     .catch(error => {

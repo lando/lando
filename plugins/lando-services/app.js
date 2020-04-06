@@ -61,8 +61,11 @@ module.exports = (app, lando) => {
   // Handle build steps
   // Go through each service and run additional build commands as needed
   app.events.on('post-init', () => {
-    const buildServices = _.get(app, 'opts.services', app.services);
+    // Add in build hashes
+    app.meta.lastPreBuildHash = _.trim(lando.cache.get(preLockfile));
+    app.meta.lastPostBuildHash = _.trim(lando.cache.get(postLockfile));
     // Make sure containers for this app exist, if they dont and we have build locks we need to kill them
+    const buildServices = _.get(app, 'opts.services', app.services);
     app.events.on('pre-start', () => {
       return lando.engine.list({project: app.project, all: true}).then(data => {
         if (_.isEmpty(data)) {
@@ -74,11 +77,11 @@ module.exports = (app, lando) => {
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
       const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
-      return utils.runBuild(lando, preBuild, preLockfile);
+      return utils.runBuild(lando, preBuild, preLockfile, app.configHash);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(lando, postBuild, postLockfile);
+      return utils.runBuild(lando, postBuild, postLockfile, app.configHash);
     });
   });
 

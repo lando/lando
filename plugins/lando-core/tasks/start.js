@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
@@ -13,8 +14,9 @@ module.exports = lando => {
       if (app) {
         console.log(lando.cli.makeArt('appStart', {name: app.name, phase: 'pre'}));
         return app.start().then(() => {
-          const type = (app.meta.builtAgainst !== app._config.version) ? 'update' : 'post';
-          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: type}));
+          const status = utils.getStatusChecks(app);
+          const type = !_.every(_.values(status)) ? 'report' : 'post';
+          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: type, checks: status}));
           console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
         });
