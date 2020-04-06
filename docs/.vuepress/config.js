@@ -88,6 +88,7 @@ module.exports = {
             'basics',
             'installation',
             'first-app',
+            'updating',
             'uninstalling',
           ],
         },
@@ -189,6 +190,7 @@ module.exports = {
           children: [
             'logs',
             'wkbox',
+            'updating',
           ],
         },
         {

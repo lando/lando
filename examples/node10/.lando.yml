@@ -1,4 +1,4 @@
-name: lando-node
+name: lando-node-10
 services:
   defaults:
     type: node
