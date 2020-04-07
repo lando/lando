@@ -50,7 +50,8 @@ cd drupal8
 lando mysql -V | grep 8.0
 
 # Should be using the mysql_native_password authentication plugin by default
-lando mysql -u root -e "SELECT user,plugin FROM mysql.user;" | grep drupal8 | grep mysql_native_password
+cd drupal8
+lando mysql -e "SELECT user,plugin FROM mysql.user;" | grep drupal8 | grep mysql_native_password
 
 # Should not enable xdebug by default
 cd drupal8

@@ -66,14 +66,14 @@ lando ssh -c "env" | grep DB_PORT | grep 3306
 lando ssh -c "env" | grep DB_USER | grep pantheon
 lando ssh -c "env" | grep DB_PASSWORD | grep pantheon
 lando ssh -c "env" | grep DB_NAME | grep pantheon
-lando ssh -c "env" | grep FRAMEWORK | grep drupal
+lando ssh -c "env" | grep FRAMEWORK | grep drupal8
 lando ssh -c "env" | grep FILEMOUNT | grep "sites/default/files"
 lando ssh -c "env" | grep PANTHEON_ENVIRONMENT | grep lando
 lando ssh -c "env" | grep PANTHEON_INDEX_HOST | grep index
 lando ssh -c "env" | grep PANTHEON_INDEX_PORT | grep 449
-lando ssh -c "env" | grep PANTHEON_SITE | grep 6e8d4bb2-dd6f-4640-9d12-d95a942c34ca
+lando ssh -c "env" | grep PANTHEON_SITE | grep 0831109d-10e9-426a-845a-e8396554acfa
 lando ssh -c "env" | grep PANTHEON_SITE_NAME | grep landobot-drupal8
-lando ssh -c "env" | grep php_version | grep "7.2"
+lando ssh -c "env" | grep php_version | grep "7.3"
 lando ssh -c "env" | grep PRESSFLOW_SETTINGS | grep pantheon
 lando ssh -c "env" | grep TERMINUS_ENV | grep dev
 lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal8
