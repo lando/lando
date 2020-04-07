@@ -12,6 +12,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Improved "starty" UX to communicate warnings eg "a healthcheck failed" better [#1088](https://github.com/lando/lando/pull/1088)
 * Improved app start so it attempts to automatically repair broken apps [#2098](https://github.com/lando/lando/pull/2098)
 * Improved healthchecks so they no longer consume CPU while idle [#1088](https://github.com/lando/lando/pull/1088)
+* Improved `proxy` so it automatically recreates itself when Lando is updated
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
