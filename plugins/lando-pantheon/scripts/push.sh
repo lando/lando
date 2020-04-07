@@ -138,8 +138,12 @@ if [ "$CODE" != "none" ]; then
     GIT_BRANCH=master
   fi
 
+  # Set the git config if we need to
+  git config user.name "$(terminus auth:whoami --field='First Name') $(terminus auth:whoami --field='Last Name')"
+  git config user.email "$TERMINUS_USER"
+
   # Commit the goods
-  echo "Pushing code to $CODE..."
+  echo "Pushing code to $CODE as $(git config --local --get user.name) <$(git config --local --get user.email)> ..."
   git checkout $GIT_BRANCH
   git add --all
   git commit -m "$MESSAGE" --allow-empty
