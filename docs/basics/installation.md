@@ -196,6 +196,11 @@ git clone https://github.com/lando/lando.git
 # Install its dependencies
 cd lando && yarn
 
+# ON WINDOWS:
+# Run lando from source
+node bin/lando.js
+
+ON LINUX / MACOS:
 # Set up a symlink
 # NOTE: we use lando.dev as a convention
 # This allows you to run stable lando and source lando side by side
@@ -205,5 +210,4 @@ sudo ln -s /absolute/path/to/above/repo/bin/lando.js /usr/local/bin/lando.dev
 # Run lando from source
 lando.dev
 ```
-
 
