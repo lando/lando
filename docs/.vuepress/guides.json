@@ -19,7 +19,7 @@
     "collapsable": false,
     "children": [
       "frontend",
-      "streaming-scss-changes-with-browsersync-gulp"
+      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
     ]
   },
   {

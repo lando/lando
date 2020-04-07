@@ -1,6 +1,6 @@
 ---
-title: Streaming scss changes with Browsersync & Gulp
-metaTitle: Streaming scss changes with Browsersync & Gulp | Lando
+title: How to wire up Browsersync and Gulp in my Lando app
+metaTitle: How to wire up Browsersync and Gulp in my Lando app | Lando
 description: How to setup Lando with Browsersync & Gulp so that edits to scss files are reflected immediately in your browser.
 summary: How to setup Lando with Browsersync & Gulp so that edits to scss files are reflected immediately in your browser.
 date: 2020-04-07T14:05:33.088Z
@@ -24,12 +24,12 @@ feed:
       link: https://github.com/jonathanjfshaw
 ---
 
-# Streaming scss changes with Browsersync & Gulp
+# How to wire up Browsersync and Gulp in my Lando app
 
 <GuideHeader test="" name="Jonathan Shaw" pic="https://www.gravatar.com/avatar/ba46283b2033d3a0201f2042746f81e7" link="https://github.com/jonathanjfshaw" />
 <YouTube url="" />
 
-Browsersync (https://www.browsersync.io/) is a nodejs package that synchronizes website changes to the browser. 
+[Browsersync](https://www.browsersync.io) is a nodejs package that synchronizes website changes to the browser. 
 While it can be used for many things, this guide shows how to use it to push changes made to css files to the browser. 
 
 This guide also assumes you're using Gulp to automate your theming tasks, and are editing SASS/SCSS files that need compiling
@@ -139,7 +139,7 @@ gulp.task('watch', function () {
 
 * Run `lando rebuild -y` so your new proxy domain is exposed.
 * Verify that the output includes under 'NODE URLS' your new proxy https://bs.myproject.lndo.site, and it is green.
-* Run `lando logs -s node`. You should see something like:
+* Run `lando logs -s node -f` to continously stream the logs of the node service. You should see something like:
 ```
 Using gulpfile /app/path/to/my/theme/gulpfile.js
 Starting 'watch'...
@@ -151,9 +151,12 @@ Starting 'watch'...
 ```
 * Visit your browsersync url https://bs.myproject.lndo.site in your browser. It should load normally.
 * In the source of this page search for "browser-sync". You should see the browser-sync-client script has been injected into the page.
-* Run `lando logs -s node` again. You should see something like `[Browsersync] Browser Connected: Chrome, version: 80.0.3987.149`.
+* Look again at the streaming node logs; something like this should have appeared
+```
+[Browsersync] Browser Connected: Chrome, version: 80.0.3987.149
+```
 * In your IDE edit a style rule in an scss file, save if necessary, and wait a few seconds.
-* Run `lando logs -s node` again. You should see something like:
+* Look again at the logs; something like this should have appeared:
 ```
 Starting 'scss-compile'...
 [Browsersync] 2 files changed (style.css.map, style.css)
