@@ -8,8 +8,15 @@ Edge releases contain the newest bug fixes and features and *may* be less stable
 
 Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
+* Added support for `postgres:12` [#2133](https://github.com/lando/lando/pull/2133)
 * Added a `lando rebuild` warning if app becomes out of sync with Lando [#2098](https://github.com/lando/lando/pull/2098)
-* Improved app start so it attempts to automatically repair broken apps [#2098](https://github.com/lando/lando/pull/2098)
+* Added option to configure the `default-authentication-plugin` for `mysql:8` services [#2135](https://github.com/lando/lando/pull/2135)
+* Improved "starty" UX to communicate warnings eg "a healthcheck failed" better [#1088](https://github.com/lando/lando/pull/1088)
+* Improved app start so it throws helpful instructions when start fails [#2098](https://github.com/lando/lando/pull/2098)
+* Improved healthchecks so they no longer consume CPU while idle [#1088](https://github.com/lando/lando/pull/1088)
+* Improved `proxy` so it automatically recreates itself when Lando is updated
+* Fixed bug causing `lando push --code` to fail if `git` `user.name` or `user.email` are not set [#47](https://github.com/pantheon-systems/localdev-issues/issues/47)
+* Set `default-authentication-plugin` to `mysql_native_password` for LAMP MySQL 8 recipes [#2135](https://github.com/lando/lando/pull/2135)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
