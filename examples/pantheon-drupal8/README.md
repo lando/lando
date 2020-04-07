@@ -39,13 +39,9 @@ Run the following commands to validate things are rolling as they should.
 cd drupal8
 lando drush status | grep "Connected"
 
-# Should have 755 on pulled files
+# Should use the drush in pantheon.yml
 cd drupal8
-lando ssh -s appserver -c "stat sites/default/files/field/image/Lando-Calrissian-Cloud-City-Administrator.jpg" | grep "Access" | grep "0755"
-
-# Should have drush
-cd drupal8
-lando drush version
+lando drush version | grep 10.
 
 # Should have terminus
 cd drupal8
@@ -83,40 +79,24 @@ lando ssh -c "env" | grep TERMINUS_ENV | grep dev
 lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal8
 lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
 
-# Should not set any 8983 perms
-cd drupal8
-lando ssh -c "ls -ls /app" | grep "8983" || echo $? | grep 1
-
 # Should be running from the root directory by default
 cd drupal8
-lando ssh -s appserver -c "curl -kL https://edge_ssl" | grep "Drupal 7 for Lando"
-lando ssh -s appserver -c "curl -L http://edge" | grep "Drupal 7 for Lando"
+lando ssh -s appserver -c "curl -kL https://appserver_nginx" | grep "Welcome to Pantheon Drupal 8"
+lando ssh -s appserver -c "curl -L http://appserver_nginx" | grep "Welcome to Pantheon Drupal 8"
 lando ssh -s appserver -c "env" | grep "LANDO_WEBROOT=/app"
 
-# Should use php version 7.2 by default for drupal8 sites
+# Should use php version in pantheon.upstream.yml
 cd drupal8
-lando php -v | grep "PHP 7.2"
+lando php -v | grep "PHP 7.3"
 
 # Should have all pantheon services running and their tooling enabled by defaults
 docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_appserver_nginx_1
 docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_appserver_1
 docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_database_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_cache_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_index_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_edge_1
-docker ps --filter label=com.docker.compose.project=landobotdrupal8 | grep landobotdrupal8_edge_ssl_1
 
 # Should not have xdebug enabled by defaults
 cd drupal8
 lando php -m | grep xdebug || echo $? | grep 1
-
-# Should be serving via varnish on the proxy
-cd drupal8
-curl -LI http://landobot-drupal8.lndo.site | grep Via | grep varnish-v4
-
-# Should have a running solr instance
-cd drupal8
-lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/index/admin/"
 
 # Should be able to push commits to pantheon
 cd drupal8
