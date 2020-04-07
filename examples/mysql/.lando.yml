@@ -13,7 +13,17 @@ services:
       database: stuff
     config:
       database: my.cnf
+  custom_auth:
+    type: mysql:8.0
+    authentication: mysql_native_password
 tooling:
   mysql:
-    service: custom
-    cmd: mysql -uroot
+    cmd: mysql
+    service: :host
+    options:
+      host:
+        description: The database service to use
+        default: defaults
+        alias:
+          - h
+

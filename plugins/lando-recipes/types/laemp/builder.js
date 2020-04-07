@@ -97,6 +97,7 @@ const getServices = options => ({
   },
   database: {
     config: utils.getServiceConfig(options, ['database']),
+    authentication: 'mysql_native_password',
     type: options.database,
     portforward: true,
     creds: {
