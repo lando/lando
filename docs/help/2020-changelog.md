@@ -8,6 +8,7 @@ Edge releases contain the newest bug fixes and features and *may* be less stable
 
 Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
+* Added support for `postgres:12` [#2133](https://github.com/lando/lando/pull/2133)
 * Added a `lando rebuild` warning if app becomes out of sync with Lando [#2098](https://github.com/lando/lando/pull/2098)
 * Added option to configure the `default-authentication-plugin` for `mysql:8` services [#2135](https://github.com/lando/lando/pull/2135)
 * Improved "starty" UX to communicate warnings eg "a healthcheck failed" better [#1088](https://github.com/lando/lando/pull/1088)
