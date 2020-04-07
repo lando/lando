@@ -44,6 +44,7 @@ you are looking at this https://bs.myproject.lndo.site, not at the usual domain 
 Add your equivalent of this to your .lando.yml file:
 ```yaml
 proxy:
+  node:
     - bs.myproject.lndo.site:3000
 ```
 
@@ -55,7 +56,7 @@ If you had a gulp task called 'watch' then you'd put this in .lando.yml:
 services:
   node:
     type: node
-    command: cd /app/path/to/gulp/package/gulp watch
+    command: cd /app/path/to/gulpfile && node_modules/.bin/gulp watch
 ```
 
 ## Configuring Gulp to push scss
