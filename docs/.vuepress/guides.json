@@ -18,7 +18,8 @@
     "title": "Frontend",
     "collapsable": false,
     "children": [
-      "frontend"
+      "frontend",
+      "streaming-scss-changes-with-browsersync-gulp"
     ]
   },
   {
@@ -48,17 +49,17 @@
     ]
   },
   {
-    "title": "Pantheon",
-    "collapsable": false,
-    "children": [
-      "updating-local-pantheon-environments"
-    ]
-  },
-  {
     "title": "PHP",
     "collapsable": false,
     "children": [
       "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
     ]
   },
   {
