@@ -2,10 +2,11 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const PlatformshApiClient = require('./../../lib/client');
 const utils = require('./../../lib/utils');
+const PlatformshApiClient = require('platformsh-client').default;
 
 // Platformsh
 const platformshTokenCache = 'platformsh.tokens';
@@ -30,30 +31,16 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
   if (!_.isEmpty(platformshSites)) {
     return lando.Promise.resolve(platformshSites).filter(site => _.startsWith(site.name, input));
   } else {
-    const api = new PlatformshApiClient(answers['platformsh-auth'], lando.log);
-    return api.auth()
-      .then(() => api.getSites()
-      .map(site => ({name: site.title, value: site.id})))
-      .then(sites => {
-        platformshSites = sites;
-        return platformshSites;
+    const api = new PlatformshApiClient({api_token: _.trim(answers['platformsh-auth'])});
+    return api.getAccountInfo().then(me => {
+      platformshSites = _.map(me.projects, project => ({name: project.title, value: project.name}));
+      return platformshSites;
     });
   }
 };
 
-// Helper to get sites for autocomplete
-const getAutoCompleteEnvs = (answers, lando, input = null) => {
-  const api = new PlatformshApiClient(answers['platformsh-auth'], lando.log);
-  return api.auth()
-    .then(() => api.getSiteEnvs(answers['platformsh-site'])
-      .map(env => ({name: env.name, value: env.name})))
-    .then(platformshEnvs => {
-      return platformshEnvs;
-    });
-};
-
 /*
- * Init Lamp
+ * Init platform.sh
  */
 module.exports = {
   name: 'platformsh',
@@ -93,19 +80,6 @@ module.exports = {
         weight: 530,
       },
     },
-    'platformsh-env': {
-      describe: 'A Platform.sh environment',
-      string: true,
-      interactive: {
-        type: 'autocomplete',
-        message: 'Which environment?',
-        source: (answers, input) => {
-          return getAutoCompleteEnvs(answers, lando, input);
-        },
-        when: answers => answers.recipe === 'platformsh',
-        weight: 530,
-      },
-    },
   }),
   overrides: {
     name: {
@@ -129,34 +103,42 @@ module.exports = {
         },
       },
     },
-    build: (options, lando) => ([
-      {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
-      {name: 'post-key', func: (options, lando) => {
-        const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
-        const pubKey = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
-        return api.auth()
-          .then(() => api.getUser())
-          .then(user => api.postKey(pubKey, user.uuid))
-          // This will catch if the key has already been uploaded.
-          .catch(e => {});
-      }},
-      {name: 'get-git-url', func: (options, lando) => {
-        const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
-        return api.auth().then(() => api.getSites())
-        .filter(site => site.id === options['platformsh-site'])
-        .then(site => {
-          options['platformsh-git-url'] = site[0].repository.url;
-        });
-      }},
-      {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
-      {
-        name: 'clone-repo',
-        cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
-        remove: 'true',
-      },
-    ]),
+    build: (options, lando) => {
+      const api = new PlatformshApiClient({api_token: _.trim(options.platformshAuth)});
+      return [
+        {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
+        {name: 'post-key', func: (options, lando) => {
+          const pubKeyPath = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
+          const keyData = _.trim(fs.readFileSync(pubKeyPath, 'utf8'));
+          return api.getAccountInfo().then(me => {
+            const hasKey = !_.isEmpty(_(_.get(me, 'ssh_keys'))
+              .filter(key => key.value === keyData)
+              .value());
+            if (!hasKey) return api.addSshKey(keyData, 'Landokey');
+          });
+        }},
+        {name: 'get-git-url', func: (options, lando) => {
+          return api.getAccountInfo()
+          .then(me => {
+            const project = _.find(me.projects, {name: options.platformshSite});
+            return project.id;
+          })
+          .then(id => api.getProject(id))
+          .then(site => {
+            options['platformsh-git-url'] = site.repository.url;
+          });
+        }},
+        {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+        {
+          name: 'clone-repo',
+          cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
+          remove: 'true',
+        },
+      ];
+    },
   }],
   build: (options, lando) => {
+    console.log(process.exit(1));
     const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
     // Get our sites and user
     // return api.auth().then(() => Promise.all([api.getSites()]))

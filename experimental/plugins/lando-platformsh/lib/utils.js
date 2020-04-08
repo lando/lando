@@ -3,22 +3,7 @@
 // Modules
 const _ = require('lodash');
 const fs = require('fs');
-const PlatformshApiClient = require('./client');
 const path = require('path');
-
-/*
- * Helper to build index service
- */
-exports.getPlatformshInquirerEnvs = (token, site, nopes = [], log = console.log) => {
-  const api = new PlatformshApiClient(token, log);
-  return api.auth().then(() => api.getSiteEnvs(site)
-  .map(env => ({name: env.id, value: env.id}))
-  .filter(env => !_.includes(nopes, env.value))
-  .then(envs => _.flatten([envs, [{name: 'none', value: 'none'}]])))
-  .catch(err => {
-    throw (_.has(err, 'response.data')) ? new Error(err.response.data) : err;
-  });
-};
 
 /*
  * Helper to get terminus tokens
