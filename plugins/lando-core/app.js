@@ -102,10 +102,15 @@ module.exports = (app, lando) => {
         lando.log.debug(err);
         return Promise.reject(info.service);
       });
-    }, {max: 25})
+    }, {max: 5})
     .catch(service => {
       lando.log.info('Service %s is unhealthy', service);
       info.healthy = false;
+      app.warnings.push({
+        title: `The service "${service}" failed its healthcheck`,
+        detail: ['This may be ok but we recommend you run the command below to investigate:'],
+        command: `lando logs -s ${service}`,
+      });
     })));
 
   // Scan urls
@@ -139,6 +144,17 @@ module.exports = (app, lando) => {
   app.events.on('post-start', () => {
     if (!_.has(app.meta, 'builtAgainst')) {
       lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
+    }
+    if (app.meta.builtAgainst !== app._config.version) {
+      app.warnings.push({
+        title: 'This app was built on a different version of Lando.',
+        detail: [
+          'While it may not be neccessary we highly recommend you update the app.',
+          'This ensures your app is up to date with the version of Lando you are running.',
+          'You can do this with the below command:',
+        ],
+        command: 'lando rebuild',
+      });
     }
   });
   // Otherwise set on rebuilds

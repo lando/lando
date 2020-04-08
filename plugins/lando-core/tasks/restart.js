@@ -15,9 +15,8 @@ module.exports = lando => {
         console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'pre'}));
         // Normal
         return app.restart().then(() => {
-          const status = utils.getStatusChecks(app);
-          const type = !_.every(_.values(status)) ? 'report' : 'post';
-          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: type}));
+          const type = !_.isEmpty(app.warnings) ? 'report' : 'post';
+          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: type, warnings: app.warnings}));
           console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
         })
