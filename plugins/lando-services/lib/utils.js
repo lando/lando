@@ -112,7 +112,7 @@ exports.parseConfig = (config, app) => _(config)
 /*
  * Run build
  */
-exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS') => {
+exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS', warnings = []) => {
   if (!_.isEmpty(steps) && !lando.cache.get(lockfile)) {
     return lando.engine.run(steps)
     // Save the new hash if everything works out ok
@@ -121,10 +121,16 @@ exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS') => {
     })
     // Make sure we don't save a hash if our build fails
     .catch(error => {
-      lando.log.error('Looks like one of your build steps failed! with %s', error.stack);
-      lando.log.warn('This **MAY** prevent your app from working');
-      lando.log.warn('Check for errors above, fix them, and try again');
-      lando.log.debug('Build error %j', error);
+      warnings.push({
+        title: `One of your build steps failed`,
+        detail: [
+          'This **MAY** prevent your app from working.',
+          'Check for errors above, fix them in your Landofile, and try again by running:',
+        ],
+        command: 'lando rebuild',
+      });
+      lando.log.verbose('Build error message %s', error.message);
+      lando.log.debug('Build stack %s', error.stack);
     });
   }
 };

@@ -28,14 +28,6 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
   .value();
 
 /*
- * Helper to assess various status checks for the app
- */
-exports.getStatusChecks = app => ({
-  versionMatch: app.meta.builtAgainst === app._config.version,
-  heathchecksGood: _.every(_.map(app.info, info => info.healthy)),
-});
-
-/*
  * Helper method to normalize a path so that Lando overrides can be used as though
  * the docker-compose files were in the app root.
  */
