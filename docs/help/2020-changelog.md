@@ -15,6 +15,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Improved app start so it throws helpful instructions when start fails [#2098](https://github.com/lando/lando/pull/2098)
 * Improved healthchecks so they no longer consume CPU while idle [#1088](https://github.com/lando/lando/pull/1088)
 * Improved `proxy` so it automatically recreates itself when Lando is updated
+* Fixed bug causing recipes to not properly identify pullable and locally built services
 * Fixed bug causing `lando push --code` to fail if `git` `user.name` or `user.email` are not set [#47](https://github.com/pantheon-systems/localdev-issues/issues/47)
 * Set `default-authentication-plugin` to `mysql_native_password` for LAMP MySQL 8 recipes [#2135](https://github.com/lando/lando/pull/2135)
 
