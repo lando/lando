@@ -166,6 +166,11 @@ Finished 'scss-compile' after 1.88 s
 * Look at your open browser window again (without refreshing). You should see the impact of your scss edit.
 * Feel very excited!
 
+## Known issues
+
+* When submitting a form on https://bs.myproject.lndo.site you will be redirected to https://appserver_nginx (which is not a working url). 
+If you know a solution for this problem, please update this guide.
+
 
 <GuideFooter test="" original="" repo=""/>
 <Newsletter />
