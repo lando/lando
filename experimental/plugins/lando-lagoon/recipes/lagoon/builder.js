@@ -28,10 +28,10 @@ module.exports = {
 
       // Start by grabbing our dockercompose stuff
       const lagoonConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, '.lagoon.yml')));
-      const composeConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, lagoonConfig['docker-compose-yaml'])));
+      const cConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, lagoonConfig['docker-compose-yaml'])));
 
       // Prune things for now
-      const baselineConfig = _(composeConfig.services)
+      const baselineConfig = _(cConfig.services)
         // Map into arrays
         .map((value, key) => _.merge({}, value, {name: key}))
         // Filter out aux services
@@ -67,7 +67,8 @@ module.exports = {
       options.services.nginx.services.command = '/sbin/tini -- /lagoon/entrypoints.sh nginx -g "daemon off;"';
       options.services.nginx.services.ports = ['8080'];
       options.services.php.services.command = '/sbin/tini -- /lagoon/entrypoints.sh /usr/local/sbin/php-fpm -F -R';
-      options.services.redis.services.command = '/sbin/tini -- /lagoon/entrypoints.sh redis-server /etc/redis/redis.conf';
+      options.services.redis.services.command = '/sbin/tini -- /lagoon/entrypoints.sh ' +
+        'redis-server /etc/redis/redis.conf';
 
       // Set basic tooling things
       options.tooling = {
@@ -123,7 +124,7 @@ module.exports = {
       // Set a basic proxy thing
       options.proxy = {
         nginx: [
-          `${options.app}.${options._app._config.domain}:8080`
+          `${options.app}.${options._app._config.domain}:8080`,
         ],
       };
 
