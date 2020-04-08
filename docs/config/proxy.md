@@ -92,6 +92,20 @@ proxy:
     - "orthis.*.lndo.site"
 ```
 
+### Subdirectories
+
+You can also have a specific path on a domain route to a service.
+
+```yaml
+proxy:
+  appserver:
+    - name.lndo.site
+  api:
+    - name.lndo.site/api
+  admin:
+    - name.lndo.site/admin/portal
+```
+
 ### Sub subdomains
 
 While you can sub-sub-...-sub-subdomain to your hearts content we recommend you do not because the Lando CA only handles first level subdomains by default. This will cause sub-subdomains or deeper to produce browser warnings **even if you have [trusted our CA](./security.md#trusting-the-ca)**. We recommend you instead use hypenated "subdomains"
@@ -119,6 +133,18 @@ proxy:
 ```
 
 You can read more about this restriction [here](https://stackoverflow.com/questions/26744696/ssl-multilevel-subdomain-wildcard).
+
+### Combos
+
+You can also combine the settings above into a single, real nasty looking, but still valid config.
+
+```yaml
+proxy:
+  appserver:
+    - "*.lndo.site:8080/everything/for-real"
+```
+
+This is still valid proxy config!
 
 ## Configuration
 

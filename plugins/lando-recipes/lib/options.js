@@ -106,7 +106,7 @@ const webrootOpts = {
 };
 
 // Helper to get a base for our dynamic opts, eg things that will change based on source/recipe selection
-const auxOpts = recipes => ({name: nameOpts, recipe: recipeOpts(recipes), webroot: webrootOpts});
+const auxOpts = recipes => ({name: nameOpts, recipe: recipeOpts(_.orderBy(recipes)), webroot: webrootOpts});
 
 // Helper to get a good base of options
 exports.baseOpts = (recipes = [], sources = []) => _.merge(defaultOpts, coreOpts(sources), auxOpts(recipes));

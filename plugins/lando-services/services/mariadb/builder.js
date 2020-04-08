@@ -7,8 +7,14 @@ const _ = require('lodash');
 module.exports = {
   name: 'mariadb',
   config: {
-    version: '10.1',
-    supported: ['10.3', '10.2', '10.1'],
+    version: '10.3',
+    supported: ['10.4', '10.3', '10.2', '10.1'],
+    pinPairs: {
+      '10.4': 'bitnami/mariadb:10.4.12-debian-10-r48',
+      '10.3': 'bitnami/mariadb:10.3.22-debian-10-r52',
+      '10.2': 'bitnami/mariadb:10.2.31-debian-10-r47',
+      '10.1': 'bitnami/mariadb:10.1.44-debian-10-r48',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
@@ -31,7 +37,7 @@ module.exports = {
       options = _.merge({}, config, options);
       const mariadb = {
         image: `bitnami/mariadb:${options.version}`,
-        command: '/entrypoint.sh /run.sh',
+        command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
           // MARIADB_EXTRA_FLAGS for things like coallation?
@@ -42,6 +48,7 @@ module.exports = {
           LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.database}:${options.remoteFiles.database}`,
           `${options.data}:/bitnami/mariadb`,
         ],

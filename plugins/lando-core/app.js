@@ -13,6 +13,12 @@ const getScannable = (app, scan = true) => _.filter(app.info, service => {
   return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
 });
 
+// Update built against
+const updateBuiltAgainst = (app, version = 'unknown') => {
+  app.meta = _.merge({}, app.meta, {builtAgainst: version});
+  return app.meta;
+};
+
 module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
@@ -71,31 +77,41 @@ module.exports = (app, lando) => {
 
   // Add some logic that extends start until healthchecked containers report as healthy
   app.events.on('post-start', 1, () => lando.engine.list({project: app.project})
-    .map(container => lando.Promise.retry(() => {
-      // Log that we are checking shit
-      console.log('Waiting until %s service is ready...', container.service);
-      lando.log.info('Waiting until %s service is ready...', container.service);
-
-      // Inspect the containers for healthcheck status
-      return lando.engine.scan({id: container.id}).then(data => {
-        if (!_.has(data, 'State.Health')) return {service: container.service, health: 'healthy'};
-        if (_.get(data, 'State.Health.Status', 'unhealthy') === 'healthy') {
-          return {service: container.service, health: 'healthy'};
-        } else {
-          return lando.Promise.reject();
-        }
+    // Filter out containers without a healthcheck
+    .filter(container => _.has(_.find(app.info, {service: container.service}), 'healthcheck'))
+    // Map to info
+    .map(container => _.find(app.info, {service: container.service}))
+    // Map to a retry of the healthcheck command
+    .map(info => lando.Promise.retry(() => {
+      return lando.engine.run({
+        id: `${app.project}_${info.service}_1`,
+        cmd: info.healthcheck,
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          user: 'root',
+          cstdio: 'pipe',
+          silent: true,
+          noTTY: true,
+          services: [info.service],
+        },
+      })
+      .catch(err => {
+        console.log('Waiting until %s service is ready...', info.service);
+        lando.log.verbose('Running healthcheck %s for %s until %s...', info.healthcheck, info.service);
+        lando.log.debug(err);
+        return Promise.reject(info.service);
       });
     }, {max: 25})
-    // Set metadata if weve got a naught service
-    .catch(error => ({service: container.service, health: 'unhealthy'})))
-    // Analyze and warn if needed
-    .map(status => {
-      if (status.health === 'unhealthy') {
-        lando.log.warn('Service %s is unhealthy', status.service);
-        lando.log.warn('Run "lando logs -s %s"', status.service);
-      }
-      lando.log.verbose('Healthcheck for %s = %j', app.name, status);
-    }));
+    .catch(service => {
+      lando.log.info('Service %s is unhealthy', service);
+      info.healthy = false;
+      app.warnings.push({
+        title: `The service "${service}" failed its healthcheck`,
+        detail: ['This may be ok but we recommend you run the command below to investigate:'],
+        command: `lando logs -s ${service}`,
+      });
+    })));
 
   // Scan urls
   app.events.on('post-start', 10, () => {
@@ -112,6 +128,43 @@ module.exports = (app, lando) => {
         })));
       }
     });
+  });
+
+  // If the app already is installed but we cant determine the builtAgainst then set it to something bogus
+  app.events.on('pre-start', () => {
+    if (!_.has(app.meta, 'builtAgainst')) {
+      return lando.engine.list({project: app.project, all: true}).then(containers => {
+        if (!_.isEmpty(containers)) {
+          lando.cache.set(app.metaCache, updateBuiltAgainst(app), {persist: true});
+        }
+      });
+    }
+  });
+  // If we don't have a builtAgainst already then we must be spinning up for the first time and its safe to set this
+  app.events.on('post-start', () => {
+    if (!_.has(app.meta, 'builtAgainst')) {
+      lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
+    }
+    if (app.meta.builtAgainst !== app._config.version) {
+      app.warnings.push({
+        title: 'This app was built on a different version of Lando.',
+        detail: [
+          'While it may not be neccessary we highly recommend you update the app.',
+          'This ensures your app is up to date with the version of Lando you are running.',
+          'You can do this with the below command:',
+        ],
+        command: 'lando rebuild',
+      });
+    }
+  });
+  // Otherwise set on rebuilds
+  app.events.on('post-rebuild', () => {
+    lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
+  });
+
+  // Remove meta cache on uninstall
+  app.events.on('post-uninstall', () => {
+    lando.cache.remove(app.metaCache);
   });
 
   // REturn defualts

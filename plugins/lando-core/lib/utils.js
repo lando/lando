@@ -79,7 +79,10 @@ exports.startTable = app => {
   const data = {
     name: app.name,
     location: app.root,
-    services: app.services.join(', '),
+    services: _(app.info)
+      .map(info => (info.healthy) ? chalk.green(info.service) : chalk.yellow(info.service))
+      .values()
+      .join(', '),
   };
   const urls = {};
 

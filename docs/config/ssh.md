@@ -32,5 +32,5 @@ lando logs -s appserver
 
 # Check the .ssh config for a given service
 # Obviously replace appserver with the service you are interested in
-lando ssh appserver -c "cat /etc/ssh/ssh_config"
+lando ssh -s appserver -c "cat /etc/ssh/ssh_config"
 ```

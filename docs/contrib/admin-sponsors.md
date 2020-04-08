@@ -17,13 +17,15 @@ The general flow for adding a new sponsor is...
 
 You'll receive an email from one of our sponsor platforms (GitHub, Patreon or OpenCollective) when a new person sponsors the project.
 
-**2. Register Sponsor on Admin Portal**
+**2. Add sponsor to newsletter**
 
-Open a new incognito browser window and enter the sponsors email, sponsor level and auth code into our sponsor admin portal. This will enroll the sponsor and ask them to fill out some other details so we can complete their sponsorship. The incognito window is necessary to make sure your form submission doesn't merge the new subscriber's information into an existing record.
+The next step is to add the sponsor's email to the newsletter with their sponsorship level. This will enroll them in an automated workflow so they can complete their sponsorship. Specifically, it will ask them to fill out a form with the additional information we need to fufill their sponsorship.
 
-::: tip Ask about the admin portal
-For security reasons we cannot expose the admin portal url or auth code, best bet is to ping another admin for the info!
-:::
+Currently, _most_ new sponsors from GitHub are automatically enrolled but some are not because their emails are not discoverable. Patreon and OpenCollective sponsors are also not currently autoenrolled.
+
+The best way to keep tabs on who has an email and gets autoenrolled is to join the API log channels in Slack.
+
+If they are not automatically enrolled you will need to discover their email and then manually enroll them. Information on how to do this is in our internal docs.
 
 **3. Sponsor Provides Onboarding Info**
 
@@ -36,7 +38,6 @@ You will want to use the onboarding information to add the sponsor [here](https:
 **5. Send Sponsor Benefits** (Herald Tier and Above)
 
 Depending on the sponsorship level these will vary; see the guide below.
-
 
 ### Removing a sponsor
 

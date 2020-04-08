@@ -11,6 +11,9 @@ services:
       database: trouble
     config:
       database: config/mythings.conf
+  custom12:
+    type: postgres:12
+    portforward: true
   mimicarecipe:
     type: postgres
     creds:
@@ -24,6 +27,9 @@ tooling:
   verifycustom:
     service: custom
     cmd: psql -U postgres trouble -c \dt
+  verifycustom12:
+    service: custom12
+    cmd: psql -U postgres database -c \dt
   showmax:
     user: root
     service: custom

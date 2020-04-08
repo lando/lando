@@ -24,7 +24,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 # Initialize a drupal7 recipe using the latest drupal 7 version
 lando init \
   --source remote \
-  --remote-url https://ftp.drupal.org/files/projects/drupal-7.61.tar.gz \
+  --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz \
   --remote-options="--strip-components 1" \
   --recipe drupal7 \
   --webroot . \

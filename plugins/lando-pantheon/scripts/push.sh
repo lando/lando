@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -137,8 +138,12 @@ if [ "$CODE" != "none" ]; then
     GIT_BRANCH=master
   fi
 
+  # Set the git config if we need to
+  git config user.name "$(terminus auth:whoami --field='First Name') $(terminus auth:whoami --field='Last Name')"
+  git config user.email "$TERMINUS_USER"
+
   # Commit the goods
-  echo "Pushing code to $CODE..."
+  echo "Pushing code to $CODE as $(git config --local --get user.name) <$(git config --local --get user.email)> ..."
   git checkout $GIT_BRANCH
   git add --all
   git commit -m "$MESSAGE" --allow-empty
@@ -196,5 +201,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Push complete!${DEFAULT_COLOR}"
+printf "${GREEN}Push completed succesfully!${DEFAULT_COLOR}"
 echo ""

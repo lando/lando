@@ -11,6 +11,12 @@ services:
     portforward: true
     config:
       dir: '7.x'
+  custom8:
+    type: solr:8
+    portforward: true
+    core: levon
+    config:
+      dir: '7.x'
   legacy3:
     portforward: true
     type: solr:3
@@ -28,6 +34,9 @@ tooling:
   post-record-custom:
     cmd: "curl http://custom:8983/solr/freedom/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
     service: custom
+  post-record-custom8:
+    cmd: "curl http://custom8:8983/solr/levon/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
+    service: custom8
   post-record-defaults:
     cmd: "curl http://defaults:8983/solr/lando/update -H 'Content-Type: text/xml' -T '/app/test.xml' -X POST"
     service: helper

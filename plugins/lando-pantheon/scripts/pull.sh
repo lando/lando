@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -101,8 +102,10 @@ if [ "$CODE" != "none" ]; then
   # Make sure we are in the git root
   cd $LANDO_MOUNT
 
+  # On Pantheon this matches a protected multidev env, which only uses branch `master`
+  PROTECTED_ENV=("dev" "test" "live")
   # Fetch the origin if this is a new branch and set the branch
-  if [ "$CODE" != "dev" ]; then
+  if ! [[ $(printf "_[%s]_" "${PROTECTED_ENV[@]}") =~ .*_\[$CODE\]_.* ]]; then
     git fetch --all
     GIT_BRANCH=$CODE
   fi
@@ -114,13 +117,13 @@ if [ "$CODE" != "none" ]; then
 
 fi
 
+
 # Get the database
 if [ "$DATABASE" != "none" ]; then
-
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
-  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
-  echo "Destroying all current tables in database... "
+  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
+  echo "Destroying all current tables in database if needed... "
   for t in $TABLES; do
     echo "Dropping $t table from lando database..."
     mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "DROP TABLE $t"
@@ -229,5 +232,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Pull complete!${DEFAULT_COLOR}"
+printf "${GREEN}Pull completed sucessfully!${DEFAULT_COLOR}"
 echo ""

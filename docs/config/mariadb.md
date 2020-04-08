@@ -12,9 +12,10 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   [10.3](https://hub.docker.com/r/bitnami/mariadb)
+*   [10.4](https://hub.docker.com/r/bitnami/mariadb)
+*   **[10.3](https://hub.docker.com/r/bitnami/mariadb)** **(default)**
 *   [10.2](https://hub.docker.com/r/bitnami/mariadb)
-*   **[10.1](https://hub.docker.com/r/bitnami/mariadb)** **(default)**
+*   [10.1](https://hub.docker.com/r/bitnami/mariadb)
 *   [custom](./../config/services.md#advanced)
 
 ## Patch versions

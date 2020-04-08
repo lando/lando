@@ -11,7 +11,7 @@ const nginxCommand = vhost => [
   'render-template',
   `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
   '&&',
-  '/entrypoint.sh /run.sh"',
+  '/launch.sh"',
 ].join(' ');
 
 // Builder
@@ -55,6 +55,7 @@ module.exports = {
         ports: ['80'],
         user: 'root',
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.params}:${options.remoteFiles.params}`,
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,

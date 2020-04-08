@@ -36,7 +36,6 @@ lando list --path "my-app.[0].service"
 ```bash
 --all, -a      Show all containers, even those not running
 --app          Show containers for only a particular app
---clear        Clears the lando tasks cache
 --filter, -f   Filter by "key=value"
 --format       Output in given format: json
 --help         Shows lando or delegated command help if applicable

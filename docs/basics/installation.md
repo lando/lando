@@ -86,35 +86,43 @@ See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
 
 ## Linux
 
+### Install DMG via direct download (recommended)
+
 1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 17.06.1-ce)**
 2. Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
-3. Run the required package installation command for your os eg `sudo dpkg -i lando-stable.deb`, See below for defatails on each
+3. Double click on the package and install via your distributions "Software Center" or equivalent.
 4. Make sure you look at the caveats below and follow them appropriately
-
 
 ::: tip Install from source for other Linux distros
 If your Linux distro does not support our `.deb`, `.pacman` or `.rpm` packages you can [install from source](#from-source)
 :::
 
-Note that you *may* also be able to just double click on the package and install via your distributions "Software Center" or equivalent.
+### Install via CLI
+
+Make sure you have `wget` installed.
 
 ### Debian
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.deb
 sudo dpkg -i lando-stable.deb
 ```
 
 ### Fedora
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.rpm
 sudo dnf install lando-stable.rpm
 ```
 
 ### Arch
 
 ```bash
+wget https://files.devwithlando.io/lando-stable.pacman
 sudo pacman -U lando-stable.pacman
 ```
+
+Make sure you look at the caveats below and follow them appropriately as well.
 
 ### Caveats
 
@@ -151,7 +159,7 @@ Because each Linux distribution handles things differently, these considerations
 ## Windows
 
 ::: warning YOU MUST HAVE HYPER-V ENABLED
-Make sure that [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install) or lando will not work!
+Make sure that [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install) or Lando will not work!
 :::
 
 ::: tip Do not fear the package size!
@@ -198,18 +206,4 @@ sudo ln -s /absolute/path/to/above/repo/bin/lando.js /usr/local/bin/lando.dev
 lando.dev
 ```
 
-## Updating
 
-Updating is fairly simple.
-
-1.  Shutdown Lando eg `lando poweroff` and kill any running Lando processes.
-2.  Turn off Docker.
-3.  Follow the normal installation steps with the new version.
-
-### Caveats
-
-Lando has tried to maintain backwards compatibility as best as possible on it's road to a stable `3.0.0` release. However it has introduced breaking changes in a few Lando version. For these versions you will likely want to [uninstall](./uninstalling.md) and consult the relevant release notes for the breaking versions.
-
-* [3.0.0-rc.2](https://github.com/lando/lando/releases/tag/v3.0.0-rc.2)
-* [3.0.0-rc.1](https://github.com/lando/lando/releases/tag/v3.0.0-rc.1)
-* [3.0.0-beta.41](https://github.com/lando/lando/releases/tag/v3.0.0-beta.41)

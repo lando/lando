@@ -66,6 +66,7 @@ jobs:
             sudo mv dist/cli/* /usr/local/bin/lando
             ls -lsa /usr/local/bin
             lando version
+            lando --experimental
       - run:
           name: Run func test
           command: |

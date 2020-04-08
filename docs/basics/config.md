@@ -25,7 +25,6 @@ lando config --format json
 ## Options
 
 ```bash
---clear        Clears the lando tasks cache
 --format       Output in given format: json
 --help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity

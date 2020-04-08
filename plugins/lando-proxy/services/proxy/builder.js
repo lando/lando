@@ -6,7 +6,7 @@ const _ = require('lodash');
 /*
  * Helper to get core proxy service
  */
-const getProxy = (domain, cert, key) => {
+const getProxy = (domain, cert, key, version = 'unknown') => {
   const certs = [cert, key].join(',');
   return {
     services: {
@@ -23,7 +23,7 @@ const getProxy = (domain, cert, key) => {
           '--web',
         ].join(' '),
         environment: {
-          LANDO_UPDATE: '7',
+          LANDO_VERSION: version,
         },
         labels: {
           'traefik.frontend.rule': `Host:mustachedmanwiththecape`,
@@ -74,7 +74,7 @@ module.exports = {
   // @TODO: ssl=true here currently exposes two ports into 443, should we separate ssl/addcerts?
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
-      const proxy = getProxy(options.proxyDomain, options.proxyCert, options.proxyKey);
+      const proxy = getProxy(options.proxyDomain, options.proxyCert, options.proxyKey, options.version);
       const ports = getPorts(http, https, options.proxyDash);
       const augment = {
         env: _.cloneDeep(options.appEnv),

@@ -105,6 +105,7 @@ module.exports = {
     },
     environment: {
       COMPOSER_ALLOW_SUPERUSER: 1,
+      COMPOSER_MEMORY_LIMIT: '-1',
       PHP_MEMORY_LIMIT: '1G',
     },
     remoteFiles: {

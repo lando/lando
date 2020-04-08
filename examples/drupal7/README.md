@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 7 codebase
 rm -rf drupal7 && mkdir -p drupal7 && cd drupal7
-lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.59.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
+lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
 
 # Should start up successfully
 cd drupal7
@@ -54,9 +54,9 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal7
 lando mysql -udrupal7 -pdrupal7 drupal7 -e quit
 
-# Should use drush 8.2.x by default
+# Should use drush 8.3.x by default
 cd drupal7
-lando drush version | grep 8.2
+lando drush version | grep 8.3
 
 # Should be able to install drupal
 cd drupal7

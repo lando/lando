@@ -7,9 +7,6 @@ A decent cross purpose apache based php 7.4 appserver.
 # Basic php-apache 7.4 appserver for Lando
 #
 # docker build -t devwithlando/php:7.4-apache .
-# Basic php-apache 7.4 appserver for Lando
-#
-# docker build -t devwithlando/php:7.4-apache .
 
 FROM php:7.4-apache-buster
 
@@ -27,9 +24,9 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     git-core \
     imagemagick \
     libbz2-dev \
-    libc-client2007e-dev \
+    libc-client-dev \
     libicu-dev \
-    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libkrb5-dev \
     libldap2-dev \
     libmagickwand-dev \
@@ -37,12 +34,14 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libpng-dev \
     libpq-dev \
     libssl-dev \
+    libwebp-dev \
     libxml2-dev \
     libzip-dev \
     libonig-dev \
     openssl \
     postgresql-client-10 \
     pv \
+    rsync \
     ssh \
     unzip \
     wget \
@@ -54,8 +53,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install memcached \
   && pecl install oauth-2.0.4 \
   && pecl install redis-5.1.1 \
-  && pecl install xdebug-2.8.1 \
-  && docker-php-ext-configure gd --with-freetype --with-jpeg \
+  && pecl install xdebug \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
   && docker-php-ext-enable imagick \
@@ -66,7 +64,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-install bz2 \
   && docker-php-ext-install calendar \
   && docker-php-ext-install exif \
-  && docker-php-ext-install gd \
   && docker-php-ext-install gettext \
   && docker-php-ext-install intl \
   && docker-php-ext-install ldap \
@@ -80,7 +77,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-install soap \
   && docker-php-ext-install zip \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.9.1 \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.10.1 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \
@@ -89,5 +86,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/* \
   && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-  && docker-php-ext-install imap
+  && docker-php-ext-install imap \
+  && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
+  && docker-php-ext-install gd
 ```

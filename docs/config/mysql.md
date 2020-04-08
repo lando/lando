@@ -58,6 +58,8 @@ services:
       database: database
     config:
       database: SEE BELOW
+    # This setting only works on mysql:8.0
+    authentication: caching_sha2_password
 ```
 
 ### Portforwarding
