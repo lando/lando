@@ -102,7 +102,7 @@ module.exports = (app, lando) => {
         lando.log.debug(err);
         return Promise.reject(info.service);
       });
-    }, {max: 5})
+    }, {max: 25})
     .catch(service => {
       lando.log.info('Service %s is unhealthy', service);
       info.healthy = false;

@@ -1,6 +1,7 @@
 'use strict';
 
 // Modules
+const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 
@@ -11,8 +12,12 @@ module.exports = {
   name: 'lagoon',
   options: lando => ({}),
   overrides: {
+    // Set a temporary name that we override later
     name: {
-      when: () => false,
+      when: answers => {
+        answers.name = _.uniqueId('lagooninit');
+        return false;
+      },
     },
     webroot: {
       when: () => false,
