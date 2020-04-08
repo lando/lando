@@ -6,7 +6,6 @@ const os = require('os');
 const path = require('path');
 const PlatformshApiClient = require('./../../lib/client');
 const utils = require('./../../lib/utils');
-const url = require('url');
 
 // Platformsh
 const platformshTokenCache = 'platformsh.tokens';

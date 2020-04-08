@@ -3,9 +3,6 @@
 // Modules
 const _ = require('lodash');
 const path = require('path');
-const pull = require('./../../lib/pull');
-const push = require('./../../lib/push');
-const change = require('./../../lib/switch');
 const utils = require('./../../lib/utils');
 
 /*
@@ -84,17 +81,6 @@ module.exports = {
       options.tooling = _.merge({}, options.tooling, utils.getPlatformshTooling(options.framework));
       // Add in the framework-correct build steps
       options.build = utils.getPlatformshBuildSteps(options.framework).concat(options.build);
-
-      // Add in push/pull/switch
-      const tokens = utils.sortTokens(options._app.platformshTokens, options._app.terminusTokens);
-      // options.tooling.pull = pull.getPlatformshPull(options, tokens);
-      // options.tooling.push = push.getPlatformshPush(options, tokens);
-      // options.tooling.switch = change.getPlatformshSwitch(options, tokens);
-
-      // @TODO: do we still need a depends on for the index for certs shit?
-      // Set the appserver to depend on index start up so we know our certs will be there
-      // const dependsPath = 'services.appserver.overrides.services.depends_on';
-      // _.set(build, dependsPath, ['index']);
 
       // Send downstream
       super(id, options);
