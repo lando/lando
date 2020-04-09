@@ -121,7 +121,6 @@ module.exports = {
         {name: 'get-git-url', func: (options, lando) => {
           return api.getAccountInfo()
           .then(me => {
-            console.log(me);
             const project = _.find(me.projects, {name: options['platformsh-site']});
             return project.id;
           })
