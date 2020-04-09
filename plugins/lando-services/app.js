@@ -77,11 +77,11 @@ module.exports = (app, lando) => {
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
       const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
-      return utils.runBuild(lando, preBuild, preLockfile, app.configHash);
+      return utils.runBuild(lando, preBuild, preLockfile, app.configHash, app.warnings);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(lando, postBuild, postLockfile, app.configHash);
+      return utils.runBuild(lando, postBuild, postLockfile, app.configHash, app.warnings);
     });
   });
 
@@ -102,6 +102,20 @@ module.exports = (app, lando) => {
         _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
       }
     }));
+  });
+
+  // Determine pullable and locally built images
+  app.events.on('pre-rebuild', () => {
+    // Determine local vs pullable services
+    const whereats = _(_.get(app, 'config.services', {}))
+      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build') || _.has(data, 'services.build')}))
+      .value();
+
+    // Set local and pullys for downstream concerns
+    app.opts = _.merge({}, app.opts, {
+      pullable: _(whereats).filter(service => !service.isLocal).map('service').value(),
+      local: _(whereats).filter(service => service.isLocal).map('service').value(),
+    });
   });
 
   // Remove build locks on an uninstall
