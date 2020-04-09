@@ -1,5 +1,5 @@
 ---
-title: How to wire up Browsersync and Gulp in my Lando app
+title: How do I wire up Browsersync and Gulp in my Lando app?
 metaTitle: How to wire up Browsersync and Gulp in my Lando app | Lando
 description: How to setup Lando with Browsersync & Gulp so that edits to scss files are reflected immediately in your browser.
 summary: How to setup Lando with Browsersync & Gulp so that edits to scss files are reflected immediately in your browser.
@@ -24,7 +24,7 @@ feed:
       link: https://github.com/jonathanjfshaw
 ---
 
-# How to wire up Browsersync and Gulp in my Lando app
+# How do I wire up Browsersync and Gulp in my Lando app?
 
 <GuideHeader test="" name="Jonathan Shaw" pic="https://www.gravatar.com/avatar/ba46283b2033d3a0201f2042746f81e7" link="https://github.com/jonathanjfshaw" />
 <YouTube url="" />
@@ -170,6 +170,7 @@ Finished 'scss-compile' after 1.88 s
 
 * When submitting a form on https://bs.myproject.lndo.site you will be redirected to https://appserver_nginx (which is not a working url). 
 If you know a solution for this problem, please update this guide.
+* So to use the forms on a site use the non-browsersync URL, i.e. https://myproject.lndo.site.
 
 
 <GuideFooter test="" original="" repo=""/>
