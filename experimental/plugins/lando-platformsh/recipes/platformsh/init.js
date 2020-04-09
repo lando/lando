@@ -28,14 +28,15 @@ const showTokenEntry = (data, answer, tokens = []) => data === 'platformsh' && (
 
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (answers, lando, input = null) => {
+  const api = new PlatformshApiClient({api_token: _.trim(answers['platformsh-auth'])});
   if (!_.isEmpty(platformshSites)) {
     return lando.Promise.resolve(platformshSites).filter(site => _.startsWith(site.name, input));
   } else {
-    const api = new PlatformshApiClient({api_token: _.trim(answers['platformsh-auth'])});
     return api.getAccountInfo().then(me => {
       platformshSites = _.map(me.projects, project => ({name: project.title, value: project.name}));
       return platformshSites;
-    });
+    })
+    .catch(err => lando.Promise.reject(Error(err.error_description)));
   }
 };
 
@@ -104,7 +105,7 @@ module.exports = {
       },
     },
     build: (options, lando) => {
-      const api = new PlatformshApiClient({api_token: _.trim(options.platformshAuth)});
+      const api = new PlatformshApiClient({api_token: _.trim(options['platformsh-auth'])});
       return [
         {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
         {name: 'post-key', func: (options, lando) => {
@@ -120,7 +121,8 @@ module.exports = {
         {name: 'get-git-url', func: (options, lando) => {
           return api.getAccountInfo()
           .then(me => {
-            const project = _.find(me.projects, {name: options.platformshSite});
+            console.log(me);
+            const project = _.find(me.projects, {name: options['platformsh-site']});
             return project.id;
           })
           .then(id => api.getProject(id))
@@ -138,43 +140,27 @@ module.exports = {
     },
   }],
   build: (options, lando) => {
-    console.log(process.exit(1));
-    const api = new PlatformshApiClient(options['platformsh-auth'], lando.log);
+    // API TIME
+    const api = new PlatformshApiClient({api_token: _.trim(options['platformsh-auth'])});
     // Get our sites and user
-    // return api.auth().then(() => Promise.all([api.getSites()]))
-    return api.auth().then(() => api.getSites())
-    // Parse the data and set the things
-      .then(sites => {
-        return _.find(sites, site => site.id === options['platformsh-site']);
-      })
-      .then(site => {
-        // Parse the subscription ID from the project so we can get the framework from the sub
-        const pos = site.subscription.license_uri.lastIndexOf('/');
-        const subId = site.subscription.license_uri.substring(pos + 1);
-        return api.getSubscription(subId).then(sub => {
-          site.subscription = sub;
-          site.framework = sub.project_options.initialize.profile;
-          return site;
-        });
-      })
-      .then(site => {
-        if (_.isEmpty(site)) throw Error(`${site} does not appear to be a Platformsh site!`);
+    return api.getAccountInfo().then(me => {
+      // Get the project
+      const project = _.find(me.projects, {name: options['platformsh-site']});
+      // Or error if there is no spoon
+      if (_.isEmpty(project)) throw Error(`${options['platformsh-site']} does not appear to be a platform.sh site!`);
 
-        // This is a good token, lets update our cache
-        const cache = {token: options['platformsh-auth'], date: _.toInteger(_.now() / 1000)};
+      // This is a good token, lets update our cache
+      const cache = {token: options['platformsh-auth'], email: me.mail, date: _.toInteger(_.now() / 1000)};
+      // Update lando's store of platformsh machine tokens
+      const tokens = lando.cache.get(platformshTokenCache) || [];
+      lando.cache.set(platformshTokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
+      // Update app metdata
+      const metaData = lando.cache.get(`${options.name}.meta.cache`);
+      lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
 
-        // Update lando's store of platformsh machine tokens
-        const tokens = lando.cache.get(platformshTokenCache) || [];
-        lando.cache.set(platformshTokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
-        // Update app metdata
-        const metaData = lando.cache.get(`${options.name}.meta.cache`);
-        lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
-
-        return {config: {
-          framework: _.get(site, 'framework', 'Drupal 8'),
-          site: _.get(site, 'name', options.name),
-          id: _.get(site, 'id', 'lando'),
-        }};
-      });
+      return {config: {
+        id: _.get(project, 'id', 'lando'),
+      }};
+    });
   },
 };
