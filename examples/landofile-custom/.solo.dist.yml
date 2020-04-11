@@ -1,0 +1,7 @@
+name: solo-base
+services:
+  node:
+    type: node:12
+tooling:
+  node:
+    service: node
