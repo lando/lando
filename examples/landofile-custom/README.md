@@ -39,4 +39,5 @@ lando poweroff
 
 # Should remove custom config.yml and restore old one if applicable
 bash ./restore-config.sh
+true
 ```
