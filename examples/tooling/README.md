@@ -55,6 +55,11 @@ lando dynamic --service web2
 
 # Should not run twice on failed commands
 lando busted | grep "i-do-not-exist" | wc -l | grep 1
+
+# Should know how to handle pipes and carrots
+lando pipesandstuff
+cat pipe.txt | grep LANDO_
+cat pipe.txt | grep more
 ```
 
 Destroy tests

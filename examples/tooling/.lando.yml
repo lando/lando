@@ -29,6 +29,11 @@ tooling:
     service: node
     cmd: whoami
     user: www-data
+  pipesandstuff:
+    service: node
+    cmd:
+      - env | grep LANDO_ > pipe.txt
+      - echo "more" >> pipe.txt
   test:
     service: php
     cmd:
