@@ -45,13 +45,13 @@ exports.normalizePath = (local, base = '.', excludes = []) => {
 /*
  * Helper to normalize overrides
  */
-exports.normalizeOverrides = (overrides, volumes = {}) => {
+exports.normalizeOverrides = (overrides, base = '.', volumes = {}) => {
   // Normalize any build paths
   if (_.has(overrides, 'build')) {
     if (_.isObject(overrides.build) && _.has(overrides, 'build.context')) {
-      overrides.build.context = exports.normalizePath(overrides.build.context, '.');
+      overrides.build.context = exports.normalizePath(overrides.build.context, base);
     } else {
-      overrides.build = exports.normalizePath(overrides.build, '.');
+      overrides.build = exports.normalizePath(overrides.build, base);
     }
   }
   // Normalize any volumes
@@ -64,7 +64,7 @@ exports.normalizeOverrides = (overrides, volumes = {}) => {
         const remote = _.last(volume.split(':'));
         // @TODO: I don't think below does anything?
         const excludes = _.keys(volumes).concat(_.keys(volumes));
-        const host = exports.normalizePath(local, '.', excludes);
+        const host = exports.normalizePath(local, base, excludes);
         return [host, remote].join(':');
       }
     });

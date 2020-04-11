@@ -50,6 +50,12 @@ lando ssh -s custom-database -u root -c "echo things > /var/lib/postgresql/data/
 # Should be able to rebuild without pulling local image and named volumes should work
 lando rebuild -y
 lando ssh -s custom-database -u root -c "cat /var/lib/postgresql/data/stuff | grep things"
+
+# Should be able to rebuild with success from a subdirectory when using custom dockerfile
+# https://github.com/lando/lando/issues/2102
+cd custom
+lando rebuild -y
+lando ssh -s custom-service2 -c "cat /tmp/monkeysee.txt" | grep CHAOS
 ```
 
 Destroy tests

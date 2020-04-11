@@ -137,7 +137,7 @@ module.exports = {
       }
 
       // Add our overrides at the end
-      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});
+      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides, root))});
 
       // Add some info basics
       info.config = config;
