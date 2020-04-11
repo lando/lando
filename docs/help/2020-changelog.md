@@ -15,6 +15,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Improved app start so it throws helpful instructions when start fails [#2098](https://github.com/lando/lando/pull/2098)
 * Improved healthchecks so they no longer consume CPU while idle [#1088](https://github.com/lando/lando/pull/1088)
 * Improved `proxy` so it automatically recreates itself when Lando is updated
+* Improved `external_connection.host` so it uses `127.0.0.1` instead of `localhost`, this helps situations where the user has `mysql` running over a socket on their host
 * Fixed bug causing all multicommand tooling to run as `www-data` instead of the `meUser` eg `node` for node services [#1877](https://github.com/lando/lando/pull/1088)
 * Fixed bug causing services built from local Dockerfiles to error when run from subdirectories [#2102](https://github.com/lando/lando/pull/1877)
 * Fixed bug causing recipes to not properly identify pullable and locally built services
