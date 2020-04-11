@@ -25,7 +25,7 @@ const backdropSettings = () => JSON.stringify({
 /*
  * Helper to return backdrush download url
  */
-const backdrushUrl = version => `https://github.com/backdrop-contrib/drush/archive/${version}.tar.gz`;
+const backdrushUrl = version => `https://github.com/backdrop-contrib/backdrop-drush-extension/archive/${version}.tar.gz`;
 
 
 /*
