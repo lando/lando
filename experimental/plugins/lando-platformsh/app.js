@@ -10,6 +10,5 @@ module.exports = (app, lando) => {
     // Add tokens and other meta to our app
     app.platformshTokenCache = 'platformsh.tokens';
     app.platformshTokens = lando.cache.get(app.platformshTokenCache) || [];
-    app.terminusTokens = utils.getPlatformshTokens(lando.config.home);
   }
 };
