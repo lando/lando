@@ -27,12 +27,15 @@ lando php -v
 lando php -m
 lando php -r "phpinfo();"
 
+# Should run as meUser by default
+lando whoami | grep www-data
+lando nodeme | grep node
+lando stillme | grep node
+
 # Should run as the specified user
 lando iamroot
 lando ssh -s php -c "cat /whoami | grep root"
-
-# Should run as meUser by default
-lando whoami | grep www-data
+lando notme | grep www-data
 
 # Should be able to run multiple commands on one service
 lando test

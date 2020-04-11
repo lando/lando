@@ -1,6 +1,12 @@
 name: lando-tooling
 compose:
   - compose.yml
+events:
+  post-start:
+    - node: whoami | grep node
+services:
+  node:
+    type: node:12
 tooling:
   php:
     service: php
@@ -13,6 +19,16 @@ tooling:
   whoami:
     service: php
     cmd: id
+  nodeme:
+    service: node
+    cmd: whoami
+  stillme:
+    cmd:
+      - node: whoami
+  notme:
+    service: node
+    cmd: whoami
+    user: www-data
   test:
     service: php
     cmd:
