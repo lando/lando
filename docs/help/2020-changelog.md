@@ -1,6 +1,6 @@
 # 2020
 
-## v3.0.0-rrc.5 - April 24, 2020 (Estimated Release Date)
+## v3.0.0-rrc.4 - [April 11, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.4)
 
 ### This is an `edge` release.
 
@@ -15,6 +15,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Improved app start so it throws helpful instructions when start fails [#2098](https://github.com/lando/lando/pull/2098)
 * Improved healthchecks so they no longer consume CPU while idle [#1088](https://github.com/lando/lando/pull/1088)
 * Improved `proxy` so it automatically recreates itself when Lando is updated
+* Fixed bug causing services built from local Dockerfiles to error when run from subdirectories [#2102](https://github.com/lando/lando/pull/2102)
 * Fixed bug causing recipes to not properly identify pullable and locally built services
 * Fixed bug causing `lando push --code` to fail if `git` `user.name` or `user.email` are not set [#47](https://github.com/pantheon-systems/localdev-issues/issues/47)
 * Set `default-authentication-plugin` to `mysql_native_password` for LAMP MySQL 8 recipes [#2135](https://github.com/lando/lando/pull/2135)
@@ -25,11 +26,7 @@ Lando is **free** and **open source** software that relies on contributions from
 
 ## v3.0.0-rrc.3 - [April 2, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.3)
 
-### This is an `edge` release.
-
-Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
-
-Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added separate `edge` and `stable` release channels, [read more](https://docs.lando.dev/config/releases.html)
 * Added an `experimental` flag so users can access bleeding edge features, [read more](https://docs.lando.dev/config/experimental.html)
@@ -51,8 +48,6 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Updated to latest `xdebug` in `php` version `7.4` [#2099](https://github.com/lando/lando/pull/2099)
 * Updated `drush 8` to `8.3.2` [#2097](https://github.com/lando/lando/pull/2097)
 * Updated to Docker Desktop `2.2.0.5` [#2052](https://github.com/lando/lando/pull/2052) [#2122](https://github.com/lando/lando/pull/2122)
-
-Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
 
