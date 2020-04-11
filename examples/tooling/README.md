@@ -43,6 +43,7 @@ lando test
 # Should be able to define and pass down options to a script
 lando word --word bird | grep "bird is the word"
 lando word -w gird | grep "gird is the word"
+lando word --word "this is actually a phrase" | grep "this is actually a phrase"
 
 # Should be able to run multiple commands on multiple services
 lando env
