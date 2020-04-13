@@ -13,6 +13,12 @@ const getScannable = (app, scan = true) => _.filter(app.info, service => {
   return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
 });
 
+// Helper to set the LANDO_LOAD_KEYS var
+const getKeys = (keys = true) => {
+  if (_.isArray(keys)) return keys.join(' ');
+  return keys.toString();
+};
+
 // Update built against
 const updateBuiltAgainst = (app, version = 'unknown') => {
   app.meta = _.merge({}, app.meta, {builtAgainst: version});
@@ -174,7 +180,7 @@ module.exports = (app, lando) => {
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
       LANDO_APP_ROOT_BIND: app.root,
-      // @todo: do we want to set the below based on the lando verbose level?
+      LANDO_LOAD_KEYS: getKeys(_.get(app, 'config.keys')),
       BITNAMI_DEBUG: 'true',
     },
     labels: {

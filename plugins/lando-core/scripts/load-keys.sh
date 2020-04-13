@@ -1,10 +1,9 @@
 #!/bin/bash
 
-set -e
-
 # Set up our things
 SSH_CONF="/etc/ssh"
-SSH_DIRS=( "/lando/keys" "/user/.ssh" "/var/www/.ssh" )
+SSH_DIRS=( "/lando/keys" "/var/www/.ssh" )
+SSH_CANDIDATES=()
 SSH_KEYS=()
 SSH_IDENTITIES=()
 
@@ -12,10 +11,17 @@ SSH_IDENTITIES=()
 : ${LANDO_WEBROOT_USER:='www-data'}
 : ${LANDO_WEBROOT_GROUP:='www-data'}
 : ${LANDO_HOST_USER:=$LANDO_WEBROOT_USER}
+: ${LANDO_LOAD_KEYS:='true'}
 GROUP=$(getent group "$LANDO_HOST_GID" | cut -d: -f1)
 
 # Make sure we have the system wide confdir
 mkdir -p $SSH_CONF
+
+# Also scan the users ssh key dir if specified
+# this is the default
+if [ "$LANDO_LOAD_KEYS" = "true" ]; then
+  SSH_DIRS=( "${SSH_DIRS[@]}" "/user/.ssh" )
+fi
 
 # Ensure directories exists
 for SSH_DIR in "${SSH_DIRS[@]}"; do
@@ -42,27 +48,42 @@ fi
 # Scan the following directories for keys and filter out non-private keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   echo "Scanning $SSH_DIR for keys..."
-  readarray -t SSH_CANDIDATES < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f)
-  echo "Found keys ${SSH_CANDIDATES[@]}"
-  for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
-    echo "Ensuring permissions and ownership of $SSH_CANDIDATE..."
-    chown -R $LANDO_WEBROOT_USER:$GROUP "$SSH_CANDIDATE"
-    chmod 700 "$SSH_CANDIDATE"
-    chmod 644 "$SSH_CANDIDATE.pub" || true
-    echo "Checking whether $SSH_CANDIDATE is a private key..."
-    if grep -L "PRIVATE KEY" "$SSH_CANDIDATE" &> /dev/null; then
-      if command -v ssh-keygen >/dev/null 2>&1; then
-        echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
-        if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
-          SSH_KEYS+=("$SSH_CANDIDATE")
-          SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
-        fi
-      else
-        SSH_KEYS+=($SSH_CANDIDATE)
+  readarray -t RAW_LIST < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f)
+  for RAW_KEY in "${RAW_LIST[@]}"; do
+    SSH_CANDIDATES+=("$RAW_KEY")
+  done
+done
+
+
+# Add in user specified keys if they are provided
+if [ "$LANDO_LOAD_KEYS" != "true" ] && [ "$LANDO_LOAD_KEYS" != "false" ]; then
+  RAW_LIST=($LANDO_LOAD_KEYS)
+  for RAW_KEY in "${RAW_LIST[@]}"; do
+    SSH_CANDIDATES+=("/user/.ssh/$RAW_KEY")
+  done
+fi
+
+echo "Found keys ${SSH_CANDIDATES[@]}"
+
+# Go through and validate our candidates
+for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
+  echo "Ensuring permissions and ownership of $SSH_CANDIDATE..."
+  chown -R $LANDO_WEBROOT_USER:$GROUP "$SSH_CANDIDATE"
+  chmod 700 "$SSH_CANDIDATE"
+  # chmod 644 "$SSH_CANDIDATE.pub" || true
+  echo "Checking whether $SSH_CANDIDATE is a private key..."
+  if grep -L "PRIVATE KEY" "$SSH_CANDIDATE" &> /dev/null; then
+    if command -v ssh-keygen >/dev/null 2>&1; then
+      echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
+      if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
+        SSH_KEYS+=("$SSH_CANDIDATE")
         SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
       fi
+    else
+      SSH_KEYS+=($SSH_CANDIDATE)
+      SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
     fi
-  done
+  fi
 done
 
 # Log
