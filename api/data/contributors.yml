@@ -106,3 +106,26 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/ba46283b2033d3a0201f2042746f81e7'
   id: 2ce47e11022bb050f0a5108b762727f7d1d61ff9
+- name: Ed Reel
+  role:
+    - Code
+    - Content
+    - DevOps
+    - Documentation
+    - Evangelism
+    - Events
+    - Guides and Tutorials
+    - Issues
+    - Meetups
+    - Outreach
+    - Support
+    - Training
+  bio: >-
+    I'm an aspiring digital nomad.  My interests include Drupal development,
+    DevOps, Open Source and Raspberry PI.  I usually hack before I RTFM.
+  location: 'Georgetown, TX'
+  github: uberhacker
+  twitter: twittedreel
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/f497380919da21a23b0fbfc3e432bd7c'
+  id: 63f68148475e08669c982e3a5c99b7ed0b948918
