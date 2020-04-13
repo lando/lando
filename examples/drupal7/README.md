@@ -62,9 +62,14 @@ lando drush version | grep 8.3
 cd drupal7
 lando drush si --db-url=mysql://drupal7:drupal7@database/drupal7 -y
 
-# Verify that drush has infinite memory
+# Should have infinite memory for drush
 cd drupal7
 lando drush eval "phpinfo();" | grep memory_limit | grep -e "-1"
+
+# Should have SIMPLETEST envvars set correctly
+cd drupal7
+lando ssh -s appserver -c "env" | grep SIMPLETEST_BASE_URL | grep "https://appserver"
+lando ssh -s appserver -c "env" | grep SIMPLETEST_DB | grep "mysql://drupal7:drupal7@database/drupal7"
 ```
 
 Destroy tests
