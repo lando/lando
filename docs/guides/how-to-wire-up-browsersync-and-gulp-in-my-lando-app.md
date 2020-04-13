@@ -142,7 +142,7 @@ gulp.task('watch', function () {
 
 * Run `lando rebuild -y` so your new proxy domain is exposed.
 * Verify that the output includes under `NODE URLS` your new proxy `https://bs.myproject.lndo.site`, and it is green.
-* Run `lando logs -s node -f` to continously stream the logs of the node service. You should see something like:
+* Run `lando logs -s node -f` to continuously stream the logs of the node service. You should see something like:
 
 ```bash
 Using gulpfile /app/path/to/my/theme/gulpfile.js

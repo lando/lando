@@ -64,7 +64,7 @@ module.exports = (app, lando) => {
     // Add in build hashes
     app.meta.lastPreBuildHash = _.trim(lando.cache.get(preLockfile));
     app.meta.lastPostBuildHash = _.trim(lando.cache.get(postLockfile));
-    // Make sure containers for this app exist, if they dont and we have build locks we need to kill them
+    // Make sure containers for this app exist; if they don't and we have build locks, we need to kill them
     const buildServices = _.get(app, 'opts.services', app.services);
     app.events.on('pre-start', () => {
       return lando.engine.list({project: app.project, all: true}).then(data => {
