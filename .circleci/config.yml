@@ -20,7 +20,7 @@ jobs:
             fi
             # Print some helpful things
             echo "Operating on commit range: $COMMIT_RANGE"
-            # Check if we need to run tests and bail if we dont
+            # Check if we need to run tests and bail if we don't
             LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
             echo "The following files have changed: $LANDO_CHANGED_FILES"
             LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)

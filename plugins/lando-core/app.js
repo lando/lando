@@ -130,7 +130,7 @@ module.exports = (app, lando) => {
     });
   });
 
-  // If the app already is installed but we cant determine the builtAgainst then set it to something bogus
+  // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
   app.events.on('pre-start', () => {
     if (!_.has(app.meta, 'builtAgainst')) {
       return lando.engine.list({project: app.project, all: true}).then(containers => {
@@ -149,9 +149,9 @@ module.exports = (app, lando) => {
       app.warnings.push({
         title: 'This app was built on a different version of Lando.',
         detail: [
-          'While it may not be neccessary we highly recommend you update the app.',
-          'This ensures your app is up to date with the version of Lando you are running.',
-          'You can do this with the below command:',
+          'While it may not be necessary, we highly recommend you update the app.',
+          'This ensures your app is up to date with your current Lando version.',
+          'You can do this with the command below:',
         ],
         command: 'lando rebuild',
       });

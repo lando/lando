@@ -201,5 +201,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Push completed succesfully!${DEFAULT_COLOR}"
+printf "${GREEN}Push completed successfully!${DEFAULT_COLOR}"
 echo ""

@@ -37,8 +37,8 @@ true
 # lando composer install
 
 # Should be able to site install via drush
-# NOTE: we TRUE for now because the installer fails trying to send email
-# and we cant disable that settings in the usual way, we inspect success in the next command
+# NOTE: We TRUE for now because the installer fails trying to send email
+# and since we can't disable that setting in the usual way, we inspect success in the next command
 true
 # cd drupal
 # lando drush site-install config_installer -y || true
