@@ -15,7 +15,7 @@
     ]
   },
   {
-    "title": "Frontend",
+    "title": "Node",
     "collapsable": false,
     "children": [
       "frontend",
