@@ -55,11 +55,11 @@ for SSH_DIR in "${SSH_DIRS[@]}"; do
         echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
         if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
           SSH_KEYS+=("$SSH_CANDIDATE")
-          SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+          SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
         fi
       else
         SSH_KEYS+=($SSH_CANDIDATE)
-        SSH_IDENTITIES+=("  IdentityFile $SSH_CANDIDATE")
+        SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
       fi
     fi
   done
@@ -73,7 +73,7 @@ OLDIFS="${IFS}"
 IFS=$'\n'
 cat > $SSH_CONF/ssh_config <<EOF
 Host *
-  User ${LANDO_HOST_USER}
+  User "${LANDO_HOST_USER}"
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel=ERROR

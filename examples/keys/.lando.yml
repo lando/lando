@@ -18,3 +18,9 @@ services:
         - "./ppkey:/lando/keys/key with space"
         - "./ppkey.pub:/lando/keys/key with space.pub"
         - ./index.html:/tmp/things
+  edgecases:
+    type: php
+    via: cli
+    overrides:
+      environment:
+        LANDO_HOST_USER: Han Solo

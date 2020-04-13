@@ -26,6 +26,10 @@ Run the following commands to verify things work as expected
 lando ssh -s cli -u root -c "cat /etc/ssh/ssh_config | grep /lando/keys/badbadkey"
 lando ssh -s cli2 -u root -c "cat /etc/ssh/ssh_config | grep /lando/keys/ppkey"
 lando ssh -s cli2 -u root -c "cat /etc/ssh/ssh_config | grep /lando/keys/key | grep with | grep space"
+
+# Should be cool with usernames and keys with or without spaces
+lando ssh -s edgecases -c "ssh -T -o 'PubkeyAuthentication no' git@github.com" | grep "Permission denied"
+lando ssh -s cli2 -c "ssh -T -o 'PubkeyAuthentication no' git@github.com" | grep "Permission denied"
 ```
 
 Destroy tests
