@@ -197,12 +197,16 @@ git clone https://github.com/lando/lando.git
 cd lando && yarn
 
 # ON WINDOWS:
-# Run lando from source
-node bin/lando.js
+# Add /path/to/source/bin to PATH
+# See: https://www.computerhope.com/issues/ch000549.htm
+# Remember to relaunch your shell so the PATH changes take effect
+lando.js
+# Or invoke directly
+node /path/to/source/bin/lando.js
 
-ON LINUX / MACOS:
+# ON POSIX:
 # Set up a symlink
-# NOTE: we use lando.dev as a convention
+# NOTE: we use lando.dev as a convention but you can name it whatever
 # This allows you to run stable lando and source lando side by side
 sudo mkdir -p /usr/local/bin
 sudo ln -s /absolute/path/to/above/repo/bin/lando.js /usr/local/bin/lando.dev
