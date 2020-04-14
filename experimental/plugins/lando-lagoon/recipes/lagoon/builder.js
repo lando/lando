@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const tooling = require('./../../lib/tooling');
 const yaml = require('js-yaml');
 
 /*
@@ -60,64 +61,12 @@ module.exports = {
       });
 
       // Set basic tooling things
-      /*
-      options.tooling = {
-        'composer': {
-          service: 'cli',
-          cmd: '/usr/local/bin/composer --ansi',
-          user: options.services.cli.services.user,
-        },
-        'db-import <file>': {
-          service: ':host',
-          description: 'Imports a dump file into a database service',
-          cmd: '/helpers/sql-import.sh',
-          options: {
-            'host': {
-              description: 'The database service to use',
-              default: 'mariadb',
-              alias: ['h'],
-            },
-            'no-wipe': {
-              description: 'Do not destroy the existing database before an import',
-              boolean: true,
-            },
-          },
-        },
-        'db-export [file]': {
-          service: ':host',
-          description: 'Exports database from a database service to a file',
-          cmd: '/helpers/sql-export.sh',
-          user: 'root',
-          options: {
-            host: {
-              description: 'The database service to use',
-              default: 'mariadb',
-              alias: ['h'],
-            },
-            stdout: {
-              description: 'Dump database to stdout',
-            },
-          },
-        },
-        'drush': {
-          service: 'cli',
-          cmd: '/usr/local/bin/drush',
-          user: options.services.cli.services.user,
-        },
-        'php': {
-          service: 'cli',
-          cmd: '/usr/local/bin/php',
-          user: options.services.cli.services.user,
-        },
-      };
-      */
+      options.tooling = tooling.get();
 
       // Set a basic proxy thing
-      options.proxy = {
-        nginx: [
-          `${options.app}.${options._app._config.domain}:8080`,
-        ],
-      };
+      options.proxy = {nginx: [
+        `${options.app}.${options._app._config.domain}:8080`,
+      ]};
 
       // Send downstream
       super(id, options);

@@ -13,15 +13,20 @@ module.exports = {
   builder: parent => class LandoAppserver extends parent {
     constructor(id, options = {}, ...sources) {
       // Strip out lagoon stuff we dont need
-      const lagoon = _.omit(options.lagoon, ['volumes', 'volumes_from', 'networks']);
+      const lagoon = _.omit(options.lagoon, ['volumes', 'volumes_from', 'networks', 'user']);
 
-      // Swap the user if needed
-      if (lagoon.user === 1000) lagoon.user = options._app._config.uid;
       // Normalize the dockerfile situation
       // We need to do this again since this isnt technically an override
       if (_.has(lagoon, 'build.context')) lagoon.build.context = path.join(options.root);
-      // Add in some helpful lando things
-      lagoon.environment.LANDO_SERVICE_TYPE = 'lagoon';
+      // Set up lando user perm handling
+      options.meUser = 'user';
+      lagoon.environment = _.merge({}, {
+        LANDO_SERVICE_TYPE: 'lagoon',
+        LANDO_WEBROOT_USER: 'user',
+        LANDO_WEBROOT_GROUP: 'root',
+        LANDO_WEBROOT_UID: '1000',
+        LANDO_WEBROOT_GID: '0',
+      }, lagoon.environment);
 
       // Push the lagoon config on top of Landos
       sources.push({services: _.set({}, options.name, lagoon)});
