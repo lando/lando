@@ -1,3 +1,16 @@
+- id: 375b8dd30b5ba5a9e309e1c4e830dd8aceca23c6
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: CMS Philly 2020
+  date: '2020-05-01'
+  summary: >-
+    CMS Philly is Philly Tech Week's newest premiere digital content management
+    event brought to you from the organizers of past Drupaldelphia events, and
+    members of the Philly WordPress, BackDrop, and ApostropheCMS communities!
+  type: camp
+  location: 'Philadelphia, PA'
+  url: 'https://cmsphilly.org/talks/inroduction-lando'
 - name: MidCamp 2020
   id: wahteverf
   date: '2020-03-18'
@@ -38,7 +51,7 @@
   presenter: Dustin LeBlanc
   presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
   presenterLink: 'https://twitter.com/DustinLeblanc'
-  name: 'Cornell DrupalCamp'
+  name: Cornell DrupalCamp
   date: '2019-09-27'
   summary: >-
     While Lando is a pretty great tool to get you up and running with Drupal and
@@ -109,7 +122,7 @@
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
   presenterLink: 'https://twitter.com/serundeputy'
-  name: 'DrupalCon Nashville 2018'
+  name: DrupalCon Nashville 2018
   date: '2018-04-11'
   summary: >-
     We often think of DevOps in a super siloed context (eg one project at a
@@ -147,7 +160,7 @@
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
   presenterLink: 'https://twitter.com/serundeputy'
-  name: 'NERD Summit 2017'
+  name: NERD Summit 2017
   date: '2017-03-19'
   summary: >-
     With Kalabox, GitFlow, Continuous Integration (CI), and Continuous
