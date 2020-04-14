@@ -45,12 +45,12 @@ module.exports = {
         options.composer['drush/drush'] = options.drush;
       }
       // Set legacy envars
-      options.services = {appserver: {overrides: {
+      options.services = _.merge({}, options.services, {appserver: {overrides: {
         environment: {
           SIMPLETEST_BASE_URL: (options.via === 'nginx') ? 'https://appserver_nginx' : 'https://appserver',
           SIMPLETEST_DB: `mysql://${options.recipe}:${options.recipe}@database/${options.recipe}`,
         },
-      }}};
+      }}});
       // Send downstream
       super(id, options);
     };

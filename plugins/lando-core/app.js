@@ -2,6 +2,8 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
@@ -12,6 +14,12 @@ const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]',
 const getScannable = (app, scan = true) => _.filter(app.info, service => {
   return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
 });
+
+// Helper to set the LANDO_LOAD_KEYS var
+const getKeys = (keys = true) => {
+  if (_.isArray(keys)) return keys.join(' ');
+  return keys.toString();
+};
 
 // Update built against
 const updateBuiltAgainst = (app, version = 'unknown') => {
@@ -113,6 +121,28 @@ module.exports = (app, lando) => {
       });
     })));
 
+  // Assess our key situation so we can warn users who may have too many
+  app.events.on('post-init', () => {
+    const sshDir = path.resolve(lando.config.home, '.ssh');
+    const keys = _(fs.readdirSync(sshDir))
+      .filter(file => !_.includes(['config', 'known_hosts'], file))
+      .filter(file => path.extname(file) !== '.pub')
+      .value();
+
+    // Add a warning if we have more keys than the warning level
+    if (_.size(keys) > lando.config.maxKeyWarning) {
+      app.warnings.push({
+        title: 'You have a lot of keys.',
+        detail: [
+          'Lando has detected you have a lot of ssh keys.',
+          'This may cause "Too many authentication failures" errors.',
+          'We recommend you limit your keys. See below for more details:',
+        ],
+        url: 'https://docs.lando.dev/config/ssh.html#customizing',
+      });
+    }
+  });
+
   // Scan urls
   app.events.on('post-start', 10, () => {
     // Filter out any services where the scanner might be disabled
@@ -174,7 +204,7 @@ module.exports = (app, lando) => {
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
       LANDO_APP_ROOT_BIND: app.root,
-      // @todo: do we want to set the below based on the lando verbose level?
+      LANDO_LOAD_KEYS: getKeys(_.get(app, 'config.keys')),
       BITNAMI_DEBUG: 'true',
     },
     labels: {

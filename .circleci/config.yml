@@ -52,11 +52,11 @@ jobs:
       - run:
           name: Disable usage and error reporting
           command: |
-            # Disable usage reporting
-            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             # Disable error reporting
             mkdir -p ~/.lando/cache
             echo false > ~/.lando/cache/report_errors
+            # Set CI specific config like disabling usage reports
+            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
       - run:
           name: Switch lando over to binary built from source
           command: |
