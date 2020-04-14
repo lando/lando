@@ -1,3 +1,23 @@
+product: lando
+domain: lndo.site
+mode: cli
+channel: stable
+
+dockerSupported:
+  dockerCompose: '1.23-1.25'
+  dockerDesktop: '2.1.0.0-2.2.0.5'
+  dockerEngine: '19'
+dockerTolerance: patch
+
+landoFile: .lando.yml
+preLandoFiles:
+  - .lando.base.yml
+  - .lando.dist.yml
+  - .lando.upstream.yml
+postLandoFiles:
+  - .lando.local.yml
+
+# Overrides
 stats:
   - report: false
     url: https://metrics.lando.dev
