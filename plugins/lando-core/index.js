@@ -106,5 +106,6 @@ module.exports = lando => {
     caDomain,
     caKey,
     caProject,
+    maxKeyWarning: 10,
   }});
 };

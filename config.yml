@@ -1,8 +1,25 @@
-stats:
-  - report: true
-    url: https://metrics.lando.dev
+channel: stable
+
 dockerSupported:
   dockerCompose: '1.23-1.25'
   dockerDesktop: '2.1.0.0-2.2.0.5'
   dockerEngine: '19'
 dockerTolerance: patch
+
+domain: lndo.site
+
+mode: cli
+
+landoFile: .lando.yml
+preLandoFiles:
+  - .lando.base.yml
+  - .lando.dist.yml
+  - .lando.upstream.yml
+postLandoFiles:
+  - .lando.local.yml
+
+product: lando
+
+stats:
+  - report: true
+    url: https://metrics.lando.dev

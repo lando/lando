@@ -28,10 +28,6 @@ lando ssh -s cli2 -u root -c "cat /etc/ssh/ssh_config" | grep "/lando/keys/ppkey
 lando ssh -s cli2 -u root -c "cat /etc/ssh/ssh_config" | grep "/lando/keys/key with space"
 lando ssh -s thesekeys -u root -c "cat /etc/ssh/ssh_config" | grep "/user/.ssh/mykey3"
 
-# Should be cool with usernames and keys with or without spaces
-lando ssh -s cli2 -c "ssh -T -o 'PubkeyAuthentication no' git@github.com" | grep "Permission denied"
-lando ssh -s thesekeys -c "ssh -T -o 'PubkeyAuthentication no' git@github.com" | grep "Permission denied"
-
 # Should have the LANDO_LOAD_KEYS envvar set correctly by default
 lando ssh -s cli -c "env" | grep LANDO_LOAD_KEYS | grep true
 
@@ -44,10 +40,10 @@ lando ssh -s cli -c "/etc/ssh/ssh_config" | grep "/user/.ssh" || echo "$?" | gre
 # Should load only user keys specified by user
 cp -f .lando.local.yml.thesekeys .lando.local.yml
 lando rebuild -y
-lando ssh -s cli -c "env" | grep LANDO_LOAD_KEYS | grep "mykey mykey2"
-lando ssh -s cli -c "/etc/ssh/ssh_config" | grep "/user/.ssh/mykey"
-lando ssh -s cli -c "/etc/ssh/ssh_config" | grep "/user/.ssh/mykey2"
-lando ssh -s cli -c "/etc/ssh/ssh_config" | grep "/user/.ssh/mykey3" || echo "$?" | grep 1
+lando ssh -s thesekeys -c "env" | grep LANDO_LOAD_KEYS | grep "mykey mykey2"
+lando ssh -s thesekeys -c "/etc/ssh/ssh_config" | grep "/user/.ssh/mykey"
+lando ssh -s thesekeys -c "/etc/ssh/ssh_config" | grep "/user/.ssh/mykey2"
+lando ssh -s thesekeys -c "/etc/ssh/ssh_config" | grep "/user/.ssh/mykey3" || echo "$?" | grep 1
 ```
 
 Destroy tests

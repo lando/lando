@@ -2,6 +2,8 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
@@ -118,6 +120,28 @@ module.exports = (app, lando) => {
         command: `lando logs -s ${service}`,
       });
     })));
+
+  // Assess our key situation so we can warn users who may have too many
+  app.events.on('post-init', () => {
+    const sshDir = path.resolve(lando.config.home, '.ssh');
+    const keys = _(fs.readdirSync(sshDir))
+      .filter(file => !_.includes(['config', 'known_hosts'], file))
+      .filter(file => path.extname(file) !== '.pub')
+      .value();
+
+    // Add a warning if we have more keys than the warning level
+    if (_.size(keys) > lando.config.maxKeyWarning) {
+      app.warnings.push({
+        title: 'You have a lot of keys.',
+        detail: [
+          'Lando has detected you have a lot of ssh keys.',
+          'This may cause "Too many authentication failures" errors.',
+          'We recommend you limit your keys. See below for more details:',
+        ],
+        url: 'https://docs.lando.dev/config/ssh.html#customizing',
+      });
+    }
+  });
 
   // Scan urls
   app.events.on('post-start', 10, () => {
