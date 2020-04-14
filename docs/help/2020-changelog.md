@@ -12,6 +12,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added ability for users to control which host `ssh` keys Lando uses [#2031](https://github.com/lando/lando/pull/2031)
 * Fixed bug causing `ssh` to fail when username or keypaths had spaces in them [#2031](https://github.com/lando/lando/pull/2031)
 * Improved spelling and grammar in docs, code and comments, thanks @uberhacker!
+* Add How to tokenize all your Pantheon projects guide
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 

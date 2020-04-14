@@ -15,14 +15,6 @@
     ]
   },
   {
-    "title": "Node",
-    "collapsable": false,
-    "children": [
-      "frontend",
-      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
-    ]
-  },
-  {
     "title": "General",
     "collapsable": false,
     "children": [
@@ -49,6 +41,14 @@
     ]
   },
   {
+    "title": "Node",
+    "collapsable": false,
+    "children": [
+      "frontend",
+      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
+    ]
+  },
+  {
     "title": "PHP",
     "collapsable": false,
     "children": [
@@ -59,6 +59,7 @@
     "title": "Pantheon",
     "collapsable": false,
     "children": [
+      "how-to-tokenize-all-pantheon-projects",
       "updating-local-pantheon-environments"
     ]
   },
