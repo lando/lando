@@ -22,6 +22,13 @@ const getLandoService = name => {
 };
 
 /*
+ * Helper to get a lagoon envvar with a fallback based on flavor
+ */
+const getLagoonEnv = (service, key, fallback) => {
+  return _.get(service, `lagoon.environment.${key}`, fallback);
+};
+
+/*
  * Build Lagoon
  */
 module.exports = {
@@ -29,12 +36,9 @@ module.exports = {
   parent: '_recipe',
   config: {
     confSrc: __dirname,
-    flavor: 'drupal',
-    xdebug: false,
-    webroot: '.',
-    proxy: {},
+    flavor: 'lagoon',
+    build: [],
     services: {},
-    tooling: {},
   },
   builder: (parent, config) => class LandoLagoon extends parent {
     constructor(id, options = {}) {
@@ -60,10 +64,29 @@ module.exports = {
         }
       });
 
-      // Set basic tooling things
-      options.tooling = tooling.get();
+      // @NOTE: below currently assumes
+      //    1. drupal php
+      //    2. mariadb backend
+      // @TODO: we probably want to pass the lagoon config into getSerivices, getTooling and getProxy
+      // and have relevant results returned
 
-      // Set a basic proxy thing
+      // Add in locally defined build steps
+      if (!_.isEmpty(options.build) && _.has(options, 'services.cli')) {
+        options.services.cli.build_internal = options.build;
+      }
+
+      // Add database credentials
+      if (_.has(options, 'services.mariadb')) {
+        options.services.mariadb.creds = {
+          user: getLagoonEnv(options.services.mariadb, 'MARIADB_USER', options.flavor),
+          password: getLagoonEnv(options.services.mariadb, 'MARIADB_PASSWORD', options.flavor),
+          database: getLagoonEnv(options.services.mariadb, 'MARIADB_DATABASE', options.flavor),
+        };
+      };
+
+      // Get tooling
+      options.tooling = tooling.get();
+      // Set proxy
       options.proxy = {nginx: [
         `${options.app}.${options._app._config.domain}:8080`,
       ]};

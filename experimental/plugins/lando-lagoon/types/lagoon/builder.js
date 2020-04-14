@@ -19,7 +19,7 @@ module.exports = {
       // We need to do this again since this isnt technically an override
       if (_.has(lagoon, 'build.context')) lagoon.build.context = path.join(options.root);
       // Set up lando user perm handling
-      options.meUser = 'user';
+      options.meUser = (options.meUser) ? options.meUser : 'user';
       lagoon.environment = _.merge({}, {
         LANDO_SERVICE_TYPE: 'lagoon',
         LANDO_WEBROOT_USER: 'user',
@@ -28,7 +28,7 @@ module.exports = {
         LANDO_WEBROOT_GID: '0',
       }, lagoon.environment);
 
-      // Push the lagoon config on top of Landos
+      // Push the lagoon config on top of Landos, this allows the user
       sources.push({services: _.set({}, options.name, lagoon)});
 
       // ADD IN OTHER LANDO STUFF? info? etc?

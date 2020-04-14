@@ -42,8 +42,33 @@ exports.get = () => ({
     service: 'cli',
     cmd: 'drush',
   },
+  'mysql': {
+    service: ':host',
+    description: 'Drops into a MySQL shell on a database service',
+    cmd: 'mysql -uroot -pLag00n',
+    user: 'root',
+    options: {
+      host: {
+        description: 'The database service to use',
+        default: 'mariadb',
+        alias: ['h'],
+      },
+    },
+  },
+  'node': {
+    service: 'cli',
+    cmd: 'node',
+  },
+  'npm': {
+    service: 'cli',
+    cmd: 'npm',
+  },
   'php': {
     service: 'cli',
     cmd: '/usr/local/bin/php',
+  },
+  'yarn': {
+    service: 'cli',
+    cmd: 'yarn',
   },
 });

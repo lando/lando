@@ -20,7 +20,6 @@ module.exports = {
     ],
     confSrc: __dirname,
     command: '/sbin/tini -- /lagoon/entrypoints.sh /usr/local/sbin/php-fpm -F -R',
-    user: 'user',
     volumes: ['/usr/local/bin'],
   },
   parent: '_lagoon',

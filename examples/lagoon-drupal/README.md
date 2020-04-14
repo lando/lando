@@ -29,10 +29,6 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should be able to composer install
-cd drupal
-lando composer install
-
 # Should be able to site install via drush
 # NOTE: We TRUE for now because the installer fails trying to send email
 # and since we can't disable that setting in the usual way, we inspect success in the next command
