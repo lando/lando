@@ -1,7 +1,7 @@
 product: lando
+channel: stable
 domain: lndo.site
 mode: cli
-channel: stable
 
 dockerSupported:
   dockerCompose: '1.23-1.25'
@@ -10,12 +10,6 @@ dockerSupported:
 dockerTolerance: patch
 
 landoFile: .lando.yml
-preLandoFiles:
-  - .lando.base.yml
-  - .lando.dist.yml
-  - .lando.upstream.yml
-postLandoFiles:
-  - .lando.local.yml
 
 # Overrides
 stats:

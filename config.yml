@@ -10,13 +10,6 @@ dockerSupported:
 dockerTolerance: patch
 
 landoFile: .lando.yml
-preLandoFiles:
-  - .lando.base.yml
-  - .lando.dist.yml
-  - .lando.upstream.yml
-postLandoFiles:
-  - .lando.local.yml
-
 stats:
   - report: true
     url: https://metrics.lando.dev
