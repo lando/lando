@@ -48,8 +48,13 @@ exports.normalizePath = (local, base = '.', excludes = []) => {
 exports.normalizeOverrides = (overrides, base = '.', volumes = {}) => {
   // Normalize any build paths
   if (_.has(overrides, 'build')) {
-    if (_.isObject(overrides.build) && _.has(overrides, 'build.context')) {
-      overrides.build.context = exports.normalizePath(overrides.build.context, base);
+    if (_.isObject(overrides.build)) {
+      if (_.has(overrides, 'build.context')) {
+        overrides.build.context = exports.normalizePath(overrides.build.context, base);
+      }
+      if (_.has(overrides, 'build.dockerfile')) {
+        overrides.build.dockerfile = exports.normalizePath(overrides.build.dockerfile, base);
+      }
     } else {
       overrides.build = exports.normalizePath(overrides.build, base);
     }

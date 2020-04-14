@@ -7,6 +7,20 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 /*
+ * Helper to map lagoon type data to a lando service
+ */
+const getLandoService = name => {
+  switch (name) {
+    case 'cli': return 'lagoon-php';
+    case 'nginx': return 'lagoon-nginx';
+    case 'mariadb': return 'lagoon-mariadb';
+    case 'php': return 'lagoon-php';
+    case 'redis': return 'lagoon-redis';
+    default: return false;
+  };
+};
+
+/*
  * Build Lagoon
  */
 module.exports = {
@@ -26,51 +40,27 @@ module.exports = {
       // Get our options
       options = _.merge({}, config, options);
 
-      // Start by grabbing our dockercompose stuff
+      // Error if we don't have a lagoon.yml
+      if (!fs.existsSync(path.join(options.root, '.lagoon.yml'))) {
+        throw Error(`Could not detect a .lagoon.yml at ${options.root}`);
+      }
       const lagoonConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, '.lagoon.yml')));
+
+      // Error if we don't have a docker compose
+       if (!fs.existsSync(path.join(options.root, lagoonConfig['docker-compose-yaml']))) {
+        throw Error(`Could not detect a ${lagoonConfig['docker-compose-yaml']} at ${options.root}`);
+      }
       const cConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, lagoonConfig['docker-compose-yaml'])));
 
-      // Prune things for now
-      const baselineConfig = _(cConfig.services)
-        // Map into arrays
-        .map((value, key) => _.merge({}, value, {name: key}))
-        // Filter out aux services
-        // @TODO: progressively add these back in
-        .filter(service => _.includes(['cli', 'nginx', 'php', 'redis', 'mariadb'], service.name))
-        // Remove things that lando will set on its own
-        .map(service => _.omit(service, ['volumes', 'volumes_from', 'networks']))
-        .value();
-
-      // Loop through and make some changes
-      _.forEach(baselineConfig, service => {
-        // Set the dockerfile to an absolute path
-        if (_.has(service, 'build.dockerfile')) {
-          service.build.dockerfile = path.join(options.root, service.build.dockerfile);
+      // Start by injecting the lagoon docker compose config into the corresponding lando services
+      _.forEach(cConfig.services, (config, name) => {
+        if (getLandoService(name) !== false) {
+          options.services[name] = {type: getLandoService(name), lagoon: config};
         }
-        // Replace with the users UID
-        if (service.user === '1000') {
-          service.user = options._app._config.uid;
-        }
-
-        // Translate into lando compose services
-        const name = service.name;
-        delete service.name;
-        options.services[name] = {
-          type: 'compose',
-          services: service,
-        };
       });
 
-      // Set amazee commands on top of landos
-      options.services.cli.services.command = '/sbin/tini -- /lagoon/entrypoints.sh /bin/docker-sleep';
-      options.services.mariadb.services.command = '/sbin/tini -- /lagoon/entrypoints.bash mysqld';
-      options.services.nginx.services.command = '/sbin/tini -- /lagoon/entrypoints.sh nginx -g "daemon off;"';
-      options.services.nginx.services.ports = ['8080'];
-      options.services.php.services.command = '/sbin/tini -- /lagoon/entrypoints.sh /usr/local/sbin/php-fpm -F -R';
-      options.services.redis.services.command = '/sbin/tini -- /lagoon/entrypoints.sh ' +
-        'redis-server /etc/redis/redis.conf';
-
       // Set basic tooling things
+      /*
       options.tooling = {
         'composer': {
           service: 'cli',
@@ -120,6 +110,7 @@ module.exports = {
           user: options.services.cli.services.user,
         },
       };
+      */
 
       // Set a basic proxy thing
       options.proxy = {
@@ -127,9 +118,6 @@ module.exports = {
           `${options.app}.${options._app._config.domain}:8080`,
         ],
       };
-
-      // console.log(JSON.stringify(options.services, null, 2));
-      // process.exit(1)
 
       // Send downstream
       super(id, options);
