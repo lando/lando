@@ -77,7 +77,7 @@ else
   if [[ ${POSTGRES_DB} != '' ]]; then
     CMD="psql postgresql://$USER@$HOST:$PORT/$DATABASE"
   else
-    CMD="mysql -h $HOST -P $PORT -u $USER"
+    CMD="mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS}"
   fi
 
   # Read stdin into DB
@@ -109,7 +109,7 @@ if [ "$WIPE" == "true" ]; then
   else
 
     # Build the SQL prefix
-    SQLSTART="mysql -h $HOST -P $PORT -u $USER $DATABASE"
+    SQLSTART="mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS} $DATABASE"
 
     # Gather and destroy tables
     TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
@@ -150,7 +150,7 @@ fi
 if [[ ${POSTGRES_DB} != '' ]]; then
   CMD="$CMD | psql postgresql://$USER@$HOST:$PORT/$DATABASE"
 else
-  CMD="$CMD | mysql -h $HOST -P $PORT -u $USER $DATABASE"
+  CMD="$CMD | mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS} $DATABASE"
 fi
 
 # Import

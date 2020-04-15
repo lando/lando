@@ -14,15 +14,18 @@ Run the following commands to get up and running with this example.
 # Should poweroff
 lando poweroff
 
+# Should be running in experimental mode
+lando config | grep experimental | grep true || lando --experimental
+lando config | grep experimental | grep true
+lando config | grep experimentalPluginLoadTest | grep true
+
 # Should initialize the lagoon drupal example
-true
-# rm -rf drupal && mkdir -p drupal && cd drupal
-# lando init --source remote --remote-url https://github.com/amazeeio/drupal-example.git --recipe lagoon
+rm -rf drupal && mkdir -p drupal && cd drupal
+lando init --source remote --remote-url git://github.com/amazeeio/drupal-example.git --recipe lagoon
 
 # Should start up our lagoon drupal 8 site successfully
-true
-# cd drupal
-# lando start
+cd drupal
+lando start
 ```
 
 Verification commands
@@ -31,24 +34,65 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should be able to composer install
-true
-# cd drupal
-# lando composer install
-
 # Should be able to site install via drush
-# NOTE: We TRUE for now because the installer fails trying to send email
-# and since we can't disable that setting in the usual way, we inspect success in the next command
-true
-# cd drupal
-# lando drush site-install config_installer -y || true
-# lando drush status | grep "Drupal bootstrap" | grep "Successful"
-# lando drush cr
+# NOTE: The steps to get to a clean install here are sorta weird
+cd drupal
+lando drush site-install config_installer -y || true
+cd web
+lando drush status || true
+lando drush cr
+lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
-# Should have a running drupal 8 site
-true
-# cd drupal
-# lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Site-Install"
+# Should have all the services we expect
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_nginx_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_redis_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mariadb_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_solr_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
+
+# Should have composer
+cd drupal
+lando composer --version
+
+# Should have php cli
+cd drupal
+lando php --version
+
+# Should have drush
+cd drupal
+lando drush --version
+
+# Should have npm
+cd drupal
+lando npm --version
+
+# Should have node
+cd drupal
+lando node --version
+
+# Should have yarn
+cd drupal
+lando yarn --version
+
+# Should have a running drupal 8 site served by nginx on port 8080
+cd drupal
+lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Site-Install"
+
+# Should be able to db-export and db-import the database
+cd drupal
+lando db-export test.sql
+lando db-import test.sql.gz
+
+# Should be able to show the drupal tables
+cd drupal
+lando mysql drupal -e "show tables;" | grep users
+
+# Shoud be able to rebuild and persist the database
+cd drupal
+lando rebuild -y
+lando mysql drupal -e "show tables;" | grep users
 ```
 
 Destroy tests
@@ -58,8 +102,7 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be able to destroy our drupal7 site with success
-true
-# cd drupal
-# lando destroy -y
-# lando poweroff
+cd drupal
+lando destroy -y
+lando poweroff
 ```

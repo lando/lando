@@ -63,7 +63,7 @@ done
 if [[ ${POSTGRES_DB} != '' ]]; then
   DUMPER="pg_dump postgresql://$USER@localhost:$PORT/$DATABASE"
 else
-  DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
+  DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${LANDO_EXTRA_DB_EXPORT_ARGS} ${DATABASE}"
 fi
 
 # Do the dump to stdout
