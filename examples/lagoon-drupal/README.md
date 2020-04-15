@@ -21,7 +21,7 @@ lando config | grep experimentalPluginLoadTest | grep true
 
 # Should initialize the lagoon drupal example
 rm -rf drupal && mkdir -p drupal && cd drupal
-lando init --source remote --remote-url https://github.com/amazeeio/drupal-example.git --recipe lagoon
+lando init --source remote --remote-url git://github.com/amazeeio/drupal-example.git --recipe lagoon
 
 # Should start up our lagoon drupal 8 site successfully
 cd drupal
