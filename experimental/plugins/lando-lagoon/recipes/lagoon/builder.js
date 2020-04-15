@@ -4,7 +4,6 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const tooling = require('./../../lib/tooling');
 const yaml = require('js-yaml');
 
 /*
@@ -17,6 +16,7 @@ const getLandoService = name => {
     case 'mariadb': return 'lagoon-mariadb';
     case 'php': return 'lagoon-php';
     case 'redis': return 'lagoon-redis';
+    case 'solr': return 'lagoon-solr';
     default: return false;
   };
 };
@@ -38,7 +38,9 @@ module.exports = {
     confSrc: __dirname,
     flavor: 'lagoon',
     build: [],
+    proxy: {},
     services: {},
+    tooling: {},
   },
   builder: (parent, config) => class LandoLagoon extends parent {
     constructor(id, options = {}) {
@@ -64,37 +66,105 @@ module.exports = {
         }
       });
 
-      // @NOTE: below currently assumes
-      //    1. drupal php
-      //    2. mariadb backend
-      // @TODO: we probably want to pass the lagoon config into getSerivices, getTooling and getProxy
-      // and have relevant results returned
-
-      // Add in locally defined build steps
-      if (!_.isEmpty(options.build) && _.has(options, 'services.cli')) {
-        options.services.cli.build_internal = options.build;
+      // Add nginx stuff as needed
+      if (_.includes(_.keys(options.services), 'nginx')) {
+        options.proxy.nginx = [`${options.app}.${options._app._config.domain}:8080`];
       }
 
-      // Add database credentials
-      if (_.has(options, 'services.mariadb')) {
+      // Add the php stuff like mailhog service
+      // @NOTE: is this only applicable if we have a php service? we assume so for now
+      if (_.includes(_.keys(options.services), 'php')) {
+        options.services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: ['php']};
+        options.proxy.mailhog = [`inbox-${options.app}.${options._app._config.domain}`];
+      }
+
+      // Add cli stuff as needed
+      if (_.includes(_.keys(options.services), 'cli')) {
+        // Build steps
+        options.services.cli.build_internal = options.build;
+        // Composer
+        options.tooling.composer = {
+          service: 'cli',
+          cmd: '/usr/local/bin/composer --ansi',
+        };
+        // Php
+        options.tooling.php = {
+          service: 'cli',
+          cmd: '/usr/local/bin/php',
+        };
+        // Others that can PATH float
+        _.forEach(['drush', 'node', 'npm', 'yarn'], thing => {
+          options.tooling[thing] = {
+            service: 'cli',
+            cmd: thing,
+          };
+        });
+      }
+
+      // Add cli stuff as needed
+      if (_.includes(_.keys(options.services), 'mariadb')) {
+        // Set creds we can use downstream
         options.services.mariadb.creds = {
           user: getLagoonEnv(options.services.mariadb, 'MARIADB_USER', options.flavor),
           password: getLagoonEnv(options.services.mariadb, 'MARIADB_PASSWORD', options.flavor),
           database: getLagoonEnv(options.services.mariadb, 'MARIADB_DATABASE', options.flavor),
           rootpass: getLagoonEnv(options.services.mariadb, 'MARIADB_ROOT_PASSWORD', 'Lag00n'),
         };
+        // MYSQL
+        options.tooling.mysql = {
+          service: ':host',
+          description: 'Drops into a MySQL shell on a database service',
+          cmd: `mysql -uroot -p${_.get(options, 'services.mariadb.creds.rootpass', 'Lag00n')}`,
+          user: 'root',
+          options: {
+            host: {
+              description: 'The database service to use',
+              default: 'mariadb',
+              alias: ['h'],
+            },
+          },
+        };
+        // DB import
+        // @TODO: eventually this should be added separately if we have EITHER postgres or mariadb
+        options.tooling['db-import <file>'] = {
+          service: ':host',
+          description: 'Imports a dump file into a database service',
+          cmd: '/helpers/sql-import.sh',
+          options: {
+            'host': {
+              description: 'The database service to use',
+              default: 'mariadb',
+              alias: ['h'],
+            },
+            'no-wipe': {
+              description: 'Do not destroy the existing database before an import',
+              boolean: true,
+            },
+          },
+        };
+        // DB export
+        // @TODO: eventually this should be added separately if we have EITHER postgres or mariadb
+        options.tooling['db-export [file]'] = {
+          service: ':host',
+          description: 'Exports database from a database service to a file',
+          cmd: '/helpers/sql-export.sh',
+          user: 'root',
+          options: {
+            host: {
+              description: 'The database service to use',
+              default: 'mariadb',
+              alias: ['h'],
+            },
+            stdout: {
+              description: 'Dump database to stdout',
+            },
+          },
+        };
       };
 
-      // Get tooling
-      options.tooling = tooling.get(options);
-      // Set proxy
-      options.proxy = {nginx: [`${options.app}.${options._app._config.domain}:8080`]};
-
-      // Add the mailhog service
-      // @NOTE: is this only applicable if we have a php service? we assume so for now
-      if (_.includes(_.keys(options.services), 'php')) {
-        options.services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: ['php']};
-        options.proxy.mailhog = [`inbox-${options.app}.${options._app._config.domain}`];
+      // Add a proxy setting for solr if we have it
+      if (_.includes(_.keys(options.services), 'solr')) {
+        options.proxy.solr = [`solradmin-${options.app}.${options._app._config.domain}:8983`];
       }
 
       // Send downstream

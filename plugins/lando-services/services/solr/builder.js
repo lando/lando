@@ -124,7 +124,6 @@ module.exports = {
         volumes: [
           `${options.confDest}/${options.startScript}:/start-solr.sh`,
         ],
-        user: 'root',
       };
       // Add in persistent datadir
       if (!_.isEmpty(options.dataDir)) solr.volumes.push(`${options.data}:${options.dataDir}`);

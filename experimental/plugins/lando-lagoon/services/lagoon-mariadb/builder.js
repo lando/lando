@@ -23,7 +23,7 @@ module.exports = {
   builder: (parent, config) => class LandoLagoonMariaDb extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
-      options.meUser = 'root';
+      options.meUser = 'mysql';
       const mariadb = {
         command: options.command,
         environment: {
@@ -32,7 +32,7 @@ module.exports = {
           LANDO_EXTRA_DB_EXPORT_ARGS: `-p${options.creds.rootpass}`,
           LANDO_EXTRA_DB_IMPORT_ARGS: `-p${options.creds.rootpass}`,
         },
-        ports: ['3306'],
+        ports: [options.port],
         volumes: [
           `${options.data}:/var/lib/mysql`,
         ],
