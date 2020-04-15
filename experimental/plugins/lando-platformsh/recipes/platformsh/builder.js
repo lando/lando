@@ -2,9 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
 
 /*
  * Build Lagoon
@@ -17,28 +14,27 @@ module.exports = {
     xdebug: false,
     webroot: 'web',
     database: 'mariadb:10.4',
-    run_root: [
-      '/etc/platform/commands/open < /tmp/open.json',
-      'chmod 777 -Rv /tmp/log/',
-      'chmod 777 -Rv /run',
-    ],
     services: {
       appserver: {
         meUser: 'web',
         scanner: false,
+        build_as_root_internal: [
+          '/helpers/boot-psh.sh',
+          '/etc/platform/boot',
+        ],
         overrides: {
           privileged: true,
           image: 'docker.registry.platform.sh/php-7.4',
-          user: 'root',
-          command: 'tail -f /dev/null',
+          command: 'init',
           environment: {
             LANDO_WEBROOT_USER: 'web',
             LANDO_WEBROOT_GROUP: 'web',
             LANDO_WEBROOT_UID: '10000',
             LANDO_WEBROOT_GID: '10000',
-          }
-        }
-      }
+            LANDO_NEEDS_EXEC: 'DOEEET',
+          },
+        },
+      },
     },
   },
   builder: (parent, config) => class LandoPlatform extends parent {

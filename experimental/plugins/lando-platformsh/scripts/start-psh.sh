@@ -1,31 +1,19 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "PLATFORM BOOT IS HAPPENING!"
+echo "PLATFORM START IS HAPPENING!"
 
-id
+# @NOTE: not clear why we need to do the below again
+if [ ! -f "/run/shared/agent.sock" ]; then
+  python /app/fake-rpc.py &> /tmp/fake-rpc.log &
+  # Wait a bit before we try to start
+  # TODO: Add a more sophisticated check then sleeping a bit?
+  sleep 1
+fi
 
-# Unmount
-umount /etc/hosts
-umount /etc/resolv.conf
+# START. IT. UP!
+/etc/platform/start
 
-# Safe to do all the time
-mkdir -p /run/shared /run/rpc_pipefs/nfs
-
-# BOOT
-# Weak check for exploratory purposes
-python /app/fake-rpc.py &> /tmp/fake-rpc.log &
-runsvdir -P /etc/service &> /tmp/runsvdir.log &
-/etc/platform/boot
-exec init
-
-echo "DOES THIS HAPPNE?"
-
-# START
-# /etc/platform/start
-
-# echo "DOES THIS HAPPNE?"
-
-# OPEN
-# /etc/platform/commands/open < /tmp/open.json
-# chmod -Rv 777 /tmp/log
-# chmod -Rv 777 /run
+# @TODO: Def need better guidance on the below but this is probably
+# an acceptbale workaround for local for now
+chmod -Rv 777 /tmp/log
+chmod -Rv 777 /run

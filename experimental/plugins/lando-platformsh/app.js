@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const utils = require('./lib/utils');
 
 module.exports = (app, lando) => {
   // Only do this on platformsh recipes
