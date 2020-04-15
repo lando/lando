@@ -66,18 +66,6 @@ module.exports = {
         }
       });
 
-      // Add nginx stuff as needed
-      if (_.includes(_.keys(options.services), 'nginx')) {
-        options.proxy.nginx = [`${options.app}.${options._app._config.domain}:8080`];
-      }
-
-      // Add the php stuff like mailhog service
-      // @NOTE: is this only applicable if we have a php service? we assume so for now
-      if (_.includes(_.keys(options.services), 'php')) {
-        options.services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: ['php']};
-        options.proxy.mailhog = [`inbox-${options.app}.${options._app._config.domain}`];
-      }
-
       // Add cli stuff as needed
       if (_.includes(_.keys(options.services), 'cli')) {
         // Build steps
@@ -99,6 +87,18 @@ module.exports = {
             cmd: thing,
           };
         });
+      }
+
+      // Add nginx stuff as needed
+      if (_.includes(_.keys(options.services), 'nginx')) {
+        options.proxy.nginx = [`${options.app}.${options._app._config.domain}:8080`];
+      }
+
+      // Add the php stuff like mailhog service
+      // @NOTE: is this only applicable if we have a php service? we assume so for now
+      if (_.includes(_.keys(options.services), 'php')) {
+        options.services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: ['php']};
+        options.proxy.mailhog = [`inbox-${options.app}.${options._app._config.domain}`];
       }
 
       // Add cli stuff as needed

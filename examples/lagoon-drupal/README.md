@@ -30,16 +30,64 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should be able to site install via drush
-# NOTE: We TRUE for now because the installer fails trying to send email
-# and since we can't disable that setting in the usual way, we inspect success in the next command
+# NOTE: The steps to get to a clean install here are sorta weird
 cd drupal
 lando drush site-install config_installer -y || true
-lando drush status | grep "Drupal bootstrap" | grep "Successful"
+cd web
+lando drush status || true
 lando drush cr
+lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
-# Should have a running drupal 8 site
+# Should have all the services we expect
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_nginx_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_redis_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mariadb_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_solr_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
+
+# Should have composer
+cd drupal
+lando composer --version
+
+# Should have php cli
+cd drupal
+lando php --version
+
+# Should have drush
+cd drupal
+lando drush --version
+
+# Should have npm
+cd drupal
+lando npm --version
+
+# Should have node
+cd drupal
+lando node --version
+
+# Should have yarn
+cd drupal
+lando yarn --version
+
+# Should have a running drupal 8 site served by nginx on port 8080
 cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Site-Install"
+
+# Should be able to db-export and db-import the database
+cd drupal
+lando db-export test.sql
+lando db-import test.sql.gz
+
+# Should be able to show the drupal tables
+cd drupal
+lando mysql drupal -e "show tables;" | grep users
+
+# Shoud be able to rebuild and persist the database
+cd drupal
+lando rebuild -y
+lando mysql drupal -e "show tables;" | grep users
 ```
 
 Destroy tests
