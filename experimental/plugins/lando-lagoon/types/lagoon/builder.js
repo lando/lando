@@ -25,9 +25,9 @@ module.exports = {
       lagoon.environment = _.merge({}, {
         LANDO_SERVICE_TYPE: 'lagoon',
         LANDO_WEBROOT_USER: 'user',
-        LANDO_WEBROOT_GROUP: 'root',
+        LANDO_WEBROOT_GROUP: 'user',
         LANDO_WEBROOT_UID: '1000',
-        LANDO_WEBROOT_GID: '0',
+        LANDO_WEBROOT_GID: '1000',
       }, lagoon.environment);
 
       // Push the lagoon config on top of Landos, this allows the user
