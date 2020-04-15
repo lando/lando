@@ -232,5 +232,5 @@ fi
 
 # Finish up!
 echo ""
-printf "${GREEN}Pull completed sucessfully!${DEFAULT_COLOR}"
+printf "${GREEN}Pull completed successfully!${DEFAULT_COLOR}"
 echo ""

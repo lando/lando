@@ -15,10 +15,11 @@
     ]
   },
   {
-    "title": "Frontend",
+    "title": "Node",
     "collapsable": false,
     "children": [
-      "frontend"
+      "frontend",
+      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
     ]
   },
   {
@@ -48,17 +49,17 @@
     ]
   },
   {
-    "title": "Pantheon",
-    "collapsable": false,
-    "children": [
-      "updating-local-pantheon-environments"
-    ]
-  },
-  {
     "title": "PHP",
     "collapsable": false,
     "children": [
       "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
     ]
   },
   {

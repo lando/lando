@@ -19,7 +19,7 @@ You'll receive an email from one of our sponsor platforms (GitHub, Patreon or Op
 
 **2. Add sponsor to newsletter**
 
-The next step is to add the sponsor's email to the newsletter with their sponsorship level. This will enroll them in an automated workflow so they can complete their sponsorship. Specifically, it will ask them to fill out a form with the additional information we need to fufill their sponsorship.
+The next step is to add the sponsor's email to the newsletter with their sponsorship level. This will enroll them in an automated workflow so they can complete their sponsorship. Specifically, it will ask them to fill out a form with the additional information we need to fulfill their sponsorship.
 
 Currently, _most_ new sponsors from GitHub are automatically enrolled but some are not because their emails are not discoverable. Patreon and OpenCollective sponsors are also not currently autoenrolled.
 

@@ -34,3 +34,50 @@ lando logs -s appserver
 # Obviously replace appserver with the service you are interested in
 lando ssh -s appserver -c "cat /etc/ssh/ssh_config"
 ```
+
+## Customizing
+
+Starting with Lando [3.0.0-rrc.5](./../help/2020-changelog.md#_2020) users can customize the behavior of key loading. This provides the flexibility for users to handle some edge cases in the ways that make the most sense for them.
+
+Generally we expect that users put these customizations inside their [Lando Override File](lando.md#override-file) because they are likely going to be user specific.
+
+### Disable key loading
+
+The below will completely disable user `ssh` key loading. Note that this will only disable loading keys from your host `~/.ssh` directory. It will continue to load Lando managed keys.
+
+```yaml
+keys: false
+```
+
+### Loading specific keys
+
+If you have a lot of keys you may run into the problem expressed [here](https://github.com/lando/lando/issues/2031) and [here](https://github.com/lando/lando/issues/1956). To make sure that Lando tries an actionable key before the `Too many authentication failures` error you can enumerate the specific keys to use on a given project. Note that these keys **must** live in `~/.ssh`.
+
+```yaml
+keys:
+  - id_rsa
+  - some_other_key
+```
+
+### Using a custom `ssh` config file
+
+If you want complete control over the `ssh` config Lando is using on your project you should `keys: false` and also inject a custom `ssh` config into the services that need it.
+
+```yaml
+keys: false
+services:
+  appserver:
+    overrides:
+      volumes:
+        - ./config:/var/www/.ssh/config
+```
+
+In the above `.lando.local.yml` example we are disabling key loading for the project and using a custom `ssh` config for the service named `appserver`.
+
+This assumes your custom file exists in the app root and is named `config`. Also note that you will want to mount at the _user_ `ssh` config location and not the _system_ level one. This file will generally live at `$HOME/.ssh/config` which resolves to `/var/www/.ssh/config` for many, but not all, Lando services.
+
+If you are unsure how to to get `$HOME` you can discover it by running the following command or watching either [this](https://www.youtube.com/watch?v=JVj61ZX_8Cs) or [this](https://www.youtube.com/watch?v=1vrEljMfXYo) video tutorial.
+
+```bash
+lando -s SERVICE -c "env | grep HOME"
+```

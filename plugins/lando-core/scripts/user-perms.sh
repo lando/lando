@@ -83,5 +83,5 @@ if [ $(id -u) = 0 ]; then
 
   # Make sure we set the ownership of the mount and HOME when we start a service
   echo_maybe "And here. we. go."
-  perm_sweep $LANDO_WEBROOT_USER $(getent group "$LANDO_HOST_GID" | cut -d: -f1)
+  perm_sweep $LANDO_WEBROOT_USER $(getent group "$LANDO_HOST_GID" | cut -d: -f1) $LANDO_RESET_DIR
 fi

@@ -33,7 +33,7 @@ module.exports = {
           port: options.port,
         },
         external_connection: {
-          host: 'localhost',
+          host: '127.0.0.1',
           port: _.get(options, 'portforward', 'not forwarded'),
         },
       });

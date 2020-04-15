@@ -51,6 +51,11 @@ lando ssh -s appserver -c "cat /var/www/run.txt"
 # This tests the 'How do I set the timezone in a Lando service?' guide.
 # https://docs.lando.dev/guides/how-do-i-set-the-timezone-of-a-lando-service.html
 lando ssh -s nginx -c "date" | grep -E "EST|EDT"
+
+# Should be able to handle running things from different directories when building from local dockerfile
+# https://github.com/lando/lando/issues/2102
+cd php
+lando ssh -s appserver -c "true"
 ```
 
 Destroy tests

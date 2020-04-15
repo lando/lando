@@ -2,6 +2,8 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
 
@@ -12,6 +14,12 @@ const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]',
 const getScannable = (app, scan = true) => _.filter(app.info, service => {
   return _.get(app, `config.services.${service.service}.scanner`, true) === scan;
 });
+
+// Helper to set the LANDO_LOAD_KEYS var
+const getKeys = (keys = true) => {
+  if (_.isArray(keys)) return keys.join(' ');
+  return keys.toString();
+};
 
 // Update built against
 const updateBuiltAgainst = (app, version = 'unknown') => {
@@ -113,6 +121,28 @@ module.exports = (app, lando) => {
       });
     })));
 
+  // Assess our key situation so we can warn users who may have too many
+  app.events.on('post-init', () => {
+    const sshDir = path.resolve(lando.config.home, '.ssh');
+    const keys = _(fs.readdirSync(sshDir))
+      .filter(file => !_.includes(['config', 'known_hosts'], file))
+      .filter(file => path.extname(file) !== '.pub')
+      .value();
+
+    // Add a warning if we have more keys than the warning level
+    if (_.size(keys) > lando.config.maxKeyWarning) {
+      app.warnings.push({
+        title: 'You have a lot of keys.',
+        detail: [
+          'Lando has detected you have a lot of ssh keys.',
+          'This may cause "Too many authentication failures" errors.',
+          'We recommend you limit your keys. See below for more details:',
+        ],
+        url: 'https://docs.lando.dev/config/ssh.html#customizing',
+      });
+    }
+  });
+
   // Scan urls
   app.events.on('post-start', 10, () => {
     // Filter out any services where the scanner might be disabled
@@ -130,7 +160,7 @@ module.exports = (app, lando) => {
     });
   });
 
-  // If the app already is installed but we cant determine the builtAgainst then set it to something bogus
+  // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
   app.events.on('pre-start', () => {
     if (!_.has(app.meta, 'builtAgainst')) {
       return lando.engine.list({project: app.project, all: true}).then(containers => {
@@ -149,9 +179,9 @@ module.exports = (app, lando) => {
       app.warnings.push({
         title: 'This app was built on a different version of Lando.',
         detail: [
-          'While it may not be neccessary we highly recommend you update the app.',
-          'This ensures your app is up to date with the version of Lando you are running.',
-          'You can do this with the below command:',
+          'While it may not be necessary, we highly recommend you update the app.',
+          'This ensures your app is up to date with your current Lando version.',
+          'You can do this with the command below:',
         ],
         command: 'lando rebuild',
       });
@@ -174,7 +204,7 @@ module.exports = (app, lando) => {
       LANDO_APP_NAME: app.name,
       LANDO_APP_ROOT: app.root,
       LANDO_APP_ROOT_BIND: app.root,
-      // @todo: do we want to set the below based on the lando verbose level?
+      LANDO_LOAD_KEYS: getKeys(_.get(app, 'config.keys')),
       BITNAMI_DEBUG: 'true',
     },
     labels: {

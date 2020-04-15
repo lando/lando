@@ -26,10 +26,12 @@ const USERCONFROOT = process.env.LANDO_CORE_USERCONFROOT;
 const Cli = require('./../lib/cli');
 const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
 
-// Get an array of the lando files we need to load in
-const landoFile = cli.defaultConfig().landoFile;
-const preLandoFiles = cli.defaultConfig().preLandoFiles;
-const postLandoFiles = cli.defaultConfig().postLandoFiles;
+// Assemble the lando config here so we have correct knowledge of things
+// like the landofile names
+const landoConfig = bootstrap.buildConfig(cli.defaultConfig());
+const landoFile = landoConfig.landoFile;
+const preLandoFiles = landoConfig.preLandoFiles;
+const postLandoFiles = landoConfig.postLandoFiles;
 const landoFiles = bootstrap.getLandoFiles(_.flatten([preLandoFiles, [landoFile], postLandoFiles], process.cwd()));
 const config = (!_.isEmpty(landoFiles)) ? bootstrap.getApp(landoFiles, cli.defaultConfig().userConfRoot) : {};
 const bsLevel = (_.has(config, 'recipe')) ? 'APP' : 'TASKS';

@@ -81,7 +81,7 @@ exports.parseRoutes = urls => {
  */
 exports.parseUrl = string => {
   // We add the protocol ourselves, so it can be parsed. We also change all *
-  // occurences for our magic word __wildcard__, because otherwise the url parser
+  // occurrences for our magic word __wildcard__, because otherwise the url parser
   // won't parse wildcards in the hostname correctly.
   const parsedUrl = url.parse(`http://${string}`.replace(/\*/g, '__wildcard__'));
 

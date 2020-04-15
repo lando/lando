@@ -117,7 +117,7 @@ exports.buildCommand = (app, command, service, user) => ({
     environment: getCliEnvironment(),
     mode: 'attach',
     workdir: getContainerPath(app.root),
-    user: user,
+    user: (user === null) ? getUser(service, app.info) : user,
     services: _.compact([service]),
     hijack: false,
     autoRemove: true,
@@ -180,5 +180,5 @@ exports.toolingDefaults = ({
     options: options,
     service: service,
     stdio: stdio,
-    user: (user === null) ? getUser(service, app.info) : user,
+    user,
   });
