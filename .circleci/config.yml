@@ -40,6 +40,9 @@ jobs:
             # Spoof the public key
             ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
             mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
+            # Install bc
+            sudo apt-get update -y
+            sudo apt-get install -y bc
             # Hyperdrive
             curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.6.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive

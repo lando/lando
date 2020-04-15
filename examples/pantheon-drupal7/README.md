@@ -93,7 +93,7 @@ lando ssh -s appserver -c "curl -kL https://edge_ssl" | grep "Drupal 7 for Lando
 lando ssh -s appserver -c "curl -L http://edge" | grep "Drupal 7 for Lando"
 lando ssh -s appserver -c "env" | grep "LANDO_WEBROOT=/app"
 
-# Should use php version 7.2 by default for drupal7 sites and stuff
+# Should use php version 7.2 by default for drupal7 sites
 cd drupal7
 lando php -v | grep "PHP 7.2"
 
