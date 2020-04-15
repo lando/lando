@@ -16,6 +16,7 @@ module.exports = {
       user: 'lagoon',
       password: 'lagoon',
       database: 'lagoon',
+      rootpass: 'Lag00n',
     },
   },
   parent: '_lagoon',
@@ -26,10 +27,15 @@ module.exports = {
       const mariadb = {
         command: options.command,
         environment: {
-          // We set this for compatibility with the db-import and db-export scripts
-          MYSQL_DATABASE: options.database,
+          // We set these for compatibility with the db-import and db-export scripts
+          MYSQL_DATABASE: options.creds.database,
+          LANDO_EXTRA_DB_EXPORT_ARGS: `-p${options.creds.rootpass}`,
+          LANDO_EXTRA_DB_IMPORT_ARGS: `-p${options.creds.rootpass}`,
         },
         ports: ['3306'],
+        volumes: [
+          `${options.data}:/var/lib/mysql`,
+        ],
       };
       // Add some lando info
       options.info = _.merge({}, options.info, {

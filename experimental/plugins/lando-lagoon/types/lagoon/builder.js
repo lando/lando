@@ -18,6 +18,8 @@ module.exports = {
       // Normalize the dockerfile situation
       // We need to do this again since this isnt technically an override
       if (_.has(lagoon, 'build.context')) lagoon.build.context = path.join(options.root);
+      // Refactor the lagoon route for lando
+      lagoon.environment.LAGOON_ROUTE = `https://${options.app}.${options._app._config.domain}`;
       // Set up lando user perm handling
       options.meUser = (options.meUser) ? options.meUser : 'user';
       lagoon.environment = _.merge({}, {

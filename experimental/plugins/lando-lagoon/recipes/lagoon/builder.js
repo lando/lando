@@ -81,15 +81,21 @@ module.exports = {
           user: getLagoonEnv(options.services.mariadb, 'MARIADB_USER', options.flavor),
           password: getLagoonEnv(options.services.mariadb, 'MARIADB_PASSWORD', options.flavor),
           database: getLagoonEnv(options.services.mariadb, 'MARIADB_DATABASE', options.flavor),
+          rootpass: getLagoonEnv(options.services.mariadb, 'MARIADB_ROOT_PASSWORD', 'Lag00n'),
         };
       };
 
       // Get tooling
-      options.tooling = tooling.get();
+      options.tooling = tooling.get(options);
       // Set proxy
-      options.proxy = {nginx: [
-        `${options.app}.${options._app._config.domain}:8080`,
-      ]};
+      options.proxy = {nginx: [`${options.app}.${options._app._config.domain}:8080`]};
+
+      // Add the mailhog service
+      // @NOTE: is this only applicable if we have a php service? we assume so for now
+      if (_.includes(_.keys(options.services), 'php')) {
+        options.services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: ['php']};
+        options.proxy.mailhog = [`inbox-${options.app}.${options._app._config.domain}`];
+      }
 
       // Send downstream
       super(id, options);

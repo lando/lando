@@ -1,7 +1,10 @@
 'use strict';
 
+// Modules
+const _ = require('lodash');
+
 // Helper to get a build array of run thingz
-exports.get = () => ({
+exports.get = options => ({
   'composer': {
     service: 'cli',
     cmd: '/usr/local/bin/composer --ansi',
@@ -45,7 +48,7 @@ exports.get = () => ({
   'mysql': {
     service: ':host',
     description: 'Drops into a MySQL shell on a database service',
-    cmd: 'mysql -uroot -pLag00n',
+    cmd: `mysql -uroot -p${_.get(options, 'services.mariadb.creds.rootpass', 'Lag00n')}`,
     user: 'root',
     options: {
       host: {
