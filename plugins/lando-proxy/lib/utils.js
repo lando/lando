@@ -69,7 +69,7 @@ exports.parseRoutes = urls => {
     const hostRegex = parsedUrl.host.replace(new RegExp('\\*', 'g'), '{wildcard:[a-z0-9-]+}');
     labels[`traefik.${i}.frontend.rule`] = `HostRegexp:${hostRegex}`;
     labels[`traefik.${i}.port`] = parsedUrl.port;
-    if (parsedUrl.pathname) {
+    if (parsedUrl.pathname.length > 1) {
       labels[`traefik.${i}.frontend.rule`] += `;PathPrefixStrip:${parsedUrl.pathname}`;
     }
   });
