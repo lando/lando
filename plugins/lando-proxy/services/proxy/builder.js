@@ -6,8 +6,8 @@ const _ = require('lodash');
 /*
  * Helper to get core proxy service
  */
-const getProxy = ({domain, cert, key, version = 'unknown'} = {}) => {
-  const certs = [cert, key].join(',');
+const getProxy = ({proxyDomain, proxyCert, proxyKey, version = 'unknown'} = {}) => {
+  const certs = [proxyCert, proxyKey].join(',');
   return {
     services: {
       proxy: {
@@ -16,7 +16,7 @@ const getProxy = ({domain, cert, key, version = 'unknown'} = {}) => {
           '/entrypoint.sh',
           '--defaultEntryPoints=https,http',
           '--docker',
-          `--docker.domain=${domain}`,
+          `--docker.domain=${proxyDomain}`,
           '--entryPoints="Name:http Address::80"',
           `--entrypoints="Name:https Address::443 TLS:${certs}"`,
           '--logLevel=DEBUG',
@@ -46,13 +46,13 @@ const getProxy = ({domain, cert, key, version = 'unknown'} = {}) => {
 /*
  * Helper to get proxy ports service
  */
-const getPorts = (http, https, dash) => ({
+const getPorts = (http, https, {dash, bindAddress = '127.0.0.1'} = {}) => ({
   services: {
     proxy: {
       ports: [
-        [http, '80'].join(':'),
-        [https, '443'].join(':'),
-        [dash, '8080'].join(':'),
+        [bindAddress, http, '80'].join(':'),
+        [bindAddress, https, '443'].join(':'),
+        [bindAddress, dash, '8080'].join(':'),
       ],
     },
   },
@@ -69,13 +69,14 @@ module.exports = {
     type: 'traefix',
     name: 'proxy',
     ssl: true,
+    sslExpose: false,
     refreshCerts: true,
   },
   // @TODO: ssl=true here currently exposes two ports into 443, should we separate ssl/addcerts?
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
       const proxy = getProxy(options);
-      const ports = getPorts(http, https, options.proxyDash);
+      const ports = getPorts(http, https, {options});
       const augment = {
         env: _.cloneDeep(options.appEnv),
         labels: _.cloneDeep(options.appLabels),

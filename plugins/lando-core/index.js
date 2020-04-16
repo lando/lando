@@ -102,6 +102,7 @@ module.exports = lando => {
     appLabels: {
       'io.lando.id': lando.config.instance,
     },
+    bindAddress: '127.0.0.1',
     caCert,
     caDomain,
     caKey,

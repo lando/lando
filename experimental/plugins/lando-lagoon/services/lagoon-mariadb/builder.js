@@ -45,7 +45,7 @@ module.exports = {
           port: options.port,
         },
         external_connection: {
-          host: '127.0.0.1',
+          host: options._app._config.bindAddress,
           port: _.get(options, 'portforward', 'not forwarded'),
         },
       });

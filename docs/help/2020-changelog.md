@@ -11,6 +11,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added _extremely experimental_, for-testing-purposes-only support for Lagoon Drupal 8 projects, [read more](https://docs.lando.dev/config/lagoon.html)
 * Added legacy `SIMPLETEST_` envvars to Drupaly recipes [#1269](https://github.com/lando/lando/pull/1269)
 * Added ability for users to control which host `ssh` keys Lando uses [#2031](https://github.com/lando/lando/pull/2031)
+* Changed the default bind address to `127.0.0.1` and made `bindAddress` globally configurable [#2035](https://github.com/lando/lando/pull/2035)
 * Fixed bug causing `ssh` to fail when username or keypaths had spaces in them [#2031](https://github.com/lando/lando/pull/2031)
 * Improved spelling and grammar in docs, code and comments, thanks @uberhacker!
 

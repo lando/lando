@@ -21,6 +21,20 @@ const getKeys = (keys = true) => {
   return keys.toString();
 };
 
+// Helper to bind exposed ports to the correct address
+const normalizeBind = (bind, address = '127.0.0.1') => {
+  const pieces = _.toString(bind).split(':');
+  // If we have three pieces then honor the users choice
+  if (_.size(pieces) === 3) return bind;
+  // Unshift the address to the front and return
+  else if (_.size(pieces) === 2) {
+    pieces.unshift(address);
+    return pieces.join(':');
+  };
+  // Otherwise we can just return the address prefixed to the bind
+  return `${address}::${bind}`;
+};
+
 // Update built against
 const updateBuiltAgainst = (app, version = 'unknown') => {
   app.meta = _.merge({}, app.meta, {builtAgainst: version});
@@ -39,7 +53,7 @@ module.exports = (app, lando) => {
       // Inspect each and add new URLS
       .map(container => app.engine.scan(container))
       // Scan all the http ports
-      .map(data => utils.getUrls(data, getHttpPorts(data)))
+      .map(data => utils.getUrls(data, getHttpPorts(data), lando.config.bindAddress))
       .map(data => _.find(app.info, {service: data.service}).urls = data.urls);
     });
   });
@@ -68,59 +82,6 @@ module.exports = (app, lando) => {
     }));
   });
 
-  // Collect info so we can inject LANDO_INFO
-  //
-  // @TODO: this is not currently the full lando info because a lot of it requires
-  // the app to be on
-  app.events.on('post-init', 10, () => {
-    const info = toObject(_.map(app.info, 'service'), {});
-    _.forEach(info, (value, key) => {
-      info[key] = _.find(app.info, {service: key});
-    });
-    app.env.LANDO_INFO = JSON.stringify(info);
-  });
-
-  // Reset app info on a stop, this helps prevent wrong/duplicate information being reported on a restart
-  app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
-
-  // Add some logic that extends start until healthchecked containers report as healthy
-  app.events.on('post-start', 1, () => lando.engine.list({project: app.project})
-    // Filter out containers without a healthcheck
-    .filter(container => _.has(_.find(app.info, {service: container.service}), 'healthcheck'))
-    // Map to info
-    .map(container => _.find(app.info, {service: container.service}))
-    // Map to a retry of the healthcheck command
-    .map(info => lando.Promise.retry(() => {
-      return lando.engine.run({
-        id: `${app.project}_${info.service}_1`,
-        cmd: info.healthcheck,
-        compose: app.compose,
-        project: app.project,
-        opts: {
-          user: 'root',
-          cstdio: 'pipe',
-          silent: true,
-          noTTY: true,
-          services: [info.service],
-        },
-      })
-      .catch(err => {
-        console.log('Waiting until %s service is ready...', info.service);
-        lando.log.verbose('Running healthcheck %s for %s until %s...', info.healthcheck, info.service);
-        lando.log.debug(err);
-        return Promise.reject(info.service);
-      });
-    }, {max: 25})
-    .catch(service => {
-      lando.log.info('Service %s is unhealthy', service);
-      info.healthy = false;
-      app.warnings.push({
-        title: `The service "${service}" failed its healthcheck`,
-        detail: ['This may be ok but we recommend you run the command below to investigate:'],
-        command: `lando logs -s ${service}`,
-      });
-    })));
-
   // Assess our key situation so we can warn users who may have too many
   app.events.on('post-init', () => {
     const sshDir = path.resolve(lando.config.home, '.ssh');
@@ -143,20 +104,30 @@ module.exports = (app, lando) => {
     }
   });
 
-  // Scan urls
-  app.events.on('post-start', 10, () => {
-    // Filter out any services where the scanner might be disabled
-    return lando.scanUrls(_.flatMap(getScannable(app), 'urls'), {max: 16}).then(urls => {
-      // Get data about our scanned urls
-      app.urls = urls;
-      // Add in unscannable ones if we have them
-      if (!_.isEmpty(getScannable(app, false))) {
-        app.urls = app.urls.concat(_.map(_.flatMap(getScannable(app, false), 'urls'), url => ({
-          url,
-          status: true,
-          color: 'yellow',
-        })));
-      }
+  // Collect info so we can inject LANDO_INFO
+  //
+  // @TODO: this is not currently the full lando info because a lot of it requires
+  // the app to be on
+  app.events.on('post-init', 10, () => {
+    const info = toObject(_.map(app.info, 'service'), {});
+    _.forEach(info, (value, key) => {
+      info[key] = _.find(app.info, {service: key});
+    });
+    app.env.LANDO_INFO = JSON.stringify(info);
+  });
+
+  // Analyze an apps compose files so we can set the default bind address
+  // correctly
+  // @TODO: i feel like there has to be a better way to do this than this mega loop right?
+  app.events.on('post-init', 9999, () => {
+    _.forEach(app.composeData, service => {
+      _.forEach(service.data, datum => {
+        _.forEach(datum.services, props => {
+          if (!_.isEmpty(props.ports)) {
+            props.ports = _(props.ports).map(port => normalizeBind(port, lando.config.bindAddress)).value();
+          }
+        });
+      });
     });
   });
 
@@ -170,6 +141,7 @@ module.exports = (app, lando) => {
       });
     }
   });
+
   // If we don't have a builtAgainst already then we must be spinning up for the first time and its safe to set this
   app.events.on('post-start', () => {
     if (!_.has(app.meta, 'builtAgainst')) {
@@ -187,6 +159,27 @@ module.exports = (app, lando) => {
       });
     }
   });
+
+  // Scan urls
+  app.events.on('post-start', 10, () => {
+    // Filter out any services where the scanner might be disabled
+    return lando.scanUrls(_.flatMap(getScannable(app), 'urls'), {max: 16}).then(urls => {
+      // Get data about our scanned urls
+      app.urls = urls;
+      // Add in unscannable ones if we have them
+      if (!_.isEmpty(getScannable(app, false))) {
+        app.urls = app.urls.concat(_.map(_.flatMap(getScannable(app, false), 'urls'), url => ({
+          url,
+          status: true,
+          color: 'yellow',
+        })));
+      }
+    });
+  });
+
+  // Reset app info on a stop, this helps prevent wrong/duplicate information being reported on a restart
+  app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
+
   // Otherwise set on rebuilds
   app.events.on('post-rebuild', () => {
     lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
