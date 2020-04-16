@@ -131,6 +131,44 @@ module.exports = (app, lando) => {
     });
   });
 
+ // Add some logic that extends start until healthchecked containers report as healthy
+  app.events.on('post-start', 1, () => lando.engine.list({project: app.project})
+    // Filter out containers without a healthcheck
+    .filter(container => _.has(_.find(app.info, {service: container.service}), 'healthcheck'))
+    // Map to info
+    .map(container => _.find(app.info, {service: container.service}))
+    // Map to a retry of the healthcheck command
+    .map(info => lando.Promise.retry(() => {
+      return lando.engine.run({
+        id: `${app.project}_${info.service}_1`,
+        cmd: info.healthcheck,
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          user: 'root',
+          cstdio: 'pipe',
+          silent: true,
+          noTTY: true,
+          services: [info.service],
+        },
+      })
+      .catch(err => {
+        console.log('Waiting until %s service is ready...', info.service);
+        lando.log.verbose('Running healthcheck %s for %s until %s...', info.healthcheck, info.service);
+        lando.log.debug(err);
+        return Promise.reject(info.service);
+      });
+    }, {max: 25})
+    .catch(service => {
+      lando.log.info('Service %s is unhealthy', service);
+      info.healthy = false;
+      app.warnings.push({
+        title: `The service "${service}" failed its healthcheck`,
+        detail: ['This may be ok but we recommend you run the command below to investigate:'],
+        command: `lando logs -s ${service}`,
+      });
+    })));
+
   // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
   app.events.on('pre-start', () => {
     if (!_.has(app.meta, 'builtAgainst')) {
