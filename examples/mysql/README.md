@@ -49,6 +49,10 @@ lando mysql -u root -h custom -e "show variables;" | grep table_open_cache | gre
 # Should still run even after a restart
 lando restart
 lando ssh -s defaults -c "mysql -umysql -pmysql database -e quit"
+
+# Should allow user to override the log settings
+docker inspect landomysql_custom_1 | grep max-file | grep 5
+docker inspect landomysql_custom_1 | grep max-size | grep 5m
 ```
 
 Destroy tests

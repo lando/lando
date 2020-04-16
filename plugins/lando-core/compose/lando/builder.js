@@ -121,13 +121,22 @@ module.exports = {
       const environment = {LANDO_SERVICE_NAME: name, LANDO_SERVICE_TYPE: type};
       // Handle http ports
       const labels = {'io.lando.http-ports': _.uniq(['80', '443'].concat(moreHttpPorts)).join(',')};
+      // Set a reasonable log size
+      const logging = {driver: 'json-file', options: {'max-file': '3', 'max-size': '10m'}};
 
       // Add named volumes and other thingz into our primary service
       const namedVols = {};
       _.set(namedVols, data, {});
       _.set(namedVols, dataHome, {});
       sources.push({
-        services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, labels, ports, volumes}),
+        services: _.set({}, name, {
+          entrypoint: '/lando-entrypoint.sh',
+          environment,
+          labels,
+          logging,
+          ports,
+          volumes,
+        }),
         volumes: namedVols,
       });
 
