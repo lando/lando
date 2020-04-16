@@ -79,12 +79,6 @@ lando ssh -c "env" | grep TERMINUS_ENV | grep dev
 lando ssh -c "env" | grep TERMINUS_SITE | grep landobot-drupal8
 lando ssh -c "env" | grep TERMINUS_USER | grep landobot@devwithlando.io
 
-# Should be running from the root directory by default
-cd drupal8
-lando ssh -s appserver -c "curl -kL https://appserver_nginx" | grep "Welcome to Pantheon Drupal 8"
-lando ssh -s appserver -c "curl -L http://appserver_nginx" | grep "Welcome to Pantheon Drupal 8"
-lando ssh -s appserver -c "env" | grep "LANDO_WEBROOT=/app"
-
 # Should use php version in pantheon.upstream.yml
 cd drupal8
 lando php -v | grep "PHP 7.3"
