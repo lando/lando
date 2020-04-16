@@ -41,7 +41,7 @@ export default {
           benefits: [
             {value: 'advertise', key: 'get your logo featured anywhere we list sponsors'},
             {value: 'market', key: 'get on demand retweets of your content and an initial twitter shoutout'},
-            {value: 'early access', key: 'get exclusive early accesss to new features'},
+            {value: 'early access', key: 'get exclusive early access to new features'},
             {value: 'surveys', key: 'participate in quarterly surveys to help us prioritize new features and bugs'},
             {value: '', key: 'hide-1'},
             {value: '', key: 'hide-2'},

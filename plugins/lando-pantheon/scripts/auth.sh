@@ -15,7 +15,7 @@ if [ ! -z "$AUTH" ]; then
 
   # Do some basic validation to make sure we can access the site correctly
   if [ ! -z "$SITE" ]; then
-    echo "Verifying that you have accesss to $SITE..."
+    echo "Verifying that you have access to $SITE..."
     terminus site:info $SITE || exit 1
 
     # LOCKR integration
