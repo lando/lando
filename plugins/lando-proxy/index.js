@@ -24,8 +24,8 @@ module.exports = lando => {
     config.proxyNet = `${config.proxyName}_edge`;
     config.proxyHttpPorts = _.flatten([config.proxyHttpPort, config.proxyHttpFallbacks]);
     config.proxyHttpsPorts = _.flatten([config.proxyHttpsPort, config.proxyHttpsFallbacks]);
-    config.proxyScanHttp = utils.ports2Urls(config.proxyHttpPorts, false, config.proxyIp);
-    config.proxyScanHttps = utils.ports2Urls(config.proxyHttpsPorts, true, config.proxyIp);
+    config.proxyScanHttp = utils.ports2Urls(config.proxyHttpPorts, false, config.proxyBindAddress);
+    config.proxyScanHttps = utils.ports2Urls(config.proxyHttpsPorts, true, config.proxyBindAddress);
     config.proxyCurrentPorts = {http: config.proxyHttpPort, https: config.proxyHttpsPort};
     config.proxyLastPorts = lando.cache.get(lando.config.proxyCache);
     config.proxyContainer = `${lando.config.proxyName}_proxy_1`;
@@ -33,6 +33,7 @@ module.exports = lando => {
   // Return config defaults to rebase
   return {
     config: _.merge({}, defaultConfig, {
+      proxyBindAddress: _.get(lando, 'config.bindAddress', '127.0.0.1'),
       proxyDomain: lando.config.domain,
       proxyIp: _.get(lando.config, 'engineConfig.host', '127.0.0.1'),
     }),

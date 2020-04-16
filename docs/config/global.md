@@ -59,7 +59,7 @@ lando start SOMEAPP
 
 ### Set a bunch of custom stuff using a yaml file
 
-Place this `yaml` file in at `~/.lando/config.yml`
+Place this `yaml` file in at `~/.lando/config.yml`. Here is an example of a few things you can modify.
 
 ```yaml
 # Use a different docker daemon
@@ -77,6 +77,10 @@ logLevelConsole: silly
 # NOTE: Not a good idea
 disablePlugins:
   - lando-core
+
+# Change the default bind address to 0.0.0.0
+# Note that this has security implications
+bindAddress: "0.0.0.0"
 ```
 
 ### Set a config value through an ENVVAR

@@ -14,11 +14,12 @@ exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
 /*
  * Takes inspect data and extracts all the exposed ports
  */
-exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
+exports.getUrls = (data, scan = ['80, 443'], bindAddress = '127.0.0.1') => {
+  return _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
   .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '443/tcp') ? 'https' : 'http'}))
   .filter(exposed => _.includes(scan, exposed.port))
   .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
-  .filter(ports => ports.HostIp === '0.0.0.0')
+  .filter(ports => _.includes([bindAddress, '0.0.0.0'], ports.HostIp))
   .map(ports => url.format({
     protocol: ports.protocol,
     hostname: 'localhost',
@@ -26,6 +27,7 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
   }))
   .thru(urls => ({service: data.Config.Labels['com.docker.compose.service'], urls}))
   .value();
+};
 
 /*
  * Helper method to normalize a path so that Lando overrides can be used as though
