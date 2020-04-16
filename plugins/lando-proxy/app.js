@@ -19,14 +19,20 @@ const findProxyPorts = (lando, status) => lando.Promise.try(() => {
 });
 
 /*
- * Helper for when the proxy is all blowed up
+ * Helper to get all ports
  */
-const proxyErrorHandler = (lando, error) => {
-  lando.log.warn('Something is wrong with the proxy! %s', error);
-  lando.log.debug('Proxy error! %s', error.stack);
-  lando.log.warn('Trying to take corrective action...');
-  return lando.engine.destroy({id: `${lando.config.proxyName}_proxy_1`, opts: {force: true}})
-  .then(() => lando.Promise.reject());
+const getAllPorts = (noHttp = false, noHttps = false, config) => {
+  const {proxyHttpPort, proxyHttpsPort, proxyHttpFallbacks, proxyHttpsFallbacks} = config;
+  const ports = [];
+  if (noHttp) {
+    ports.push(proxyHttpPort);
+    ports.push(proxyHttpFallbacks);
+  }
+  if (noHttps) {
+    ports.push(proxyHttpsPort);
+    ports.push(proxyHttpsFallbacks);
+  }
+  return _.flatten(ports).join(', ');
 };
 
 /*
@@ -59,7 +65,12 @@ module.exports = (app, lando) => {
   if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
     app.events.on('pre-start', 1, () => findProxyPorts(lando, protocolStatus)
       // Make sure the proxy is running with the correct settings
-      .then(ports => lando.Promise.retry(() => {
+      .then(ports => {
+        // Fail immediately with a warning if we dont have the ports we need
+        if (_.isEmpty(ports.http) || _.isEmpty(ports.https)) {
+          const allPorts = getAllPorts(_.isEmpty(ports.http), _.isEmpty(ports.https), lando.config);
+          return Promise.reject(`Lando could not detect an open port amongst: ${allPorts}`);
+        }
         // Build the proxy
         const proxyData = new LandoProxy(ports.http, ports.https, lando.config);
         const proxyFiles = lando.utils.dumpComposeData(proxyData, path.join(lando.config.userConfRoot, 'proxy'));
@@ -67,10 +78,8 @@ module.exports = (app, lando) => {
         return lando.engine.start(utils.getProxyRunner(lando.config.proxyName, proxyFiles)).then(() => {
           lando.cache.set(lando.config.proxyCache, ports, {persist: true});
           return ports;
-        })
-        // If there is an error let's destroy and try to recreate
-        .catch(error => proxyErrorHandler(lando, error));
-      }))
+        });
+      })
 
       // Parse the proxy config to get traefix labels
       .then(() => {
@@ -107,22 +116,35 @@ module.exports = (app, lando) => {
         const proxyFiles = lando.utils.dumpComposeData(proxyData, app._dir);
         app.compose = app.compose.concat(proxyFiles);
         lando.log.verbose('App %s has proxy compose files %j', app.name, proxyFiles);
-      }));
 
-    // Add proxy URLS to our app info
-    _.forEach(['post-start', 'post-init'], event => {
-      app.events.on(event, () => {
-        // Get last known ports
-        const ports = lando.cache.get(lando.config.proxyCache);
-        // Map to protocol and add portz
-        // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
-        if (ports) {
-          _(app.info)
-            .filter(service => _.has(app, `config.proxy.${service.service}`))
-            .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports))))
-            .value();
-        }
-      });
-    });
+        // Add proxy URLS to our app info
+        _.forEach(['post-start', 'post-init'], event => {
+          app.events.on(event, () => {
+            // Get last known ports
+            const ports = lando.cache.get(lando.config.proxyCache);
+            // Map to protocol and add portz
+            // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
+            if (ports) {
+              _(app.info)
+                .filter(service => _.has(app, `config.proxy.${service.service}`))
+                .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports))))
+                .value();
+            }
+          });
+        });
+      })
+
+      // Warn the user if this fails
+      .catch(error => {
+        app.warnings.push({
+          title: 'Lando was not able to start the proxy',
+          detail: [
+            `${error}`,
+            'The proxy has been disabled for now so you can continue to work.',
+            'Check out the docs below, resolve your issue and build this app',
+          ],
+          url: 'https://docs.lando.dev/config/proxy.htm',
+        });
+      }));
   }
 };

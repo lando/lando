@@ -155,6 +155,9 @@ Various parts of the proxy are configurable via the Lando [global config](./glob
 ```yml
 # Set to anything else to disable
 proxy: ON
+# For security reasons we bind the proxy to localhost
+# If unset this will default to the `bindAddress` value
+proxyBindAddress: "127.0.0.1"
 # Legacy, use the "domain" setting below instead
 proxyDomain: lndo.site
 proxyHttpPort: 80
