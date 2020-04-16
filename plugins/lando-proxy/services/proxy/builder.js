@@ -6,7 +6,7 @@ const _ = require('lodash');
 /*
  * Helper to get core proxy service
  */
-const getProxy = (domain, cert, key, version = 'unknown') => {
+const getProxy = ({domain, cert, key, version = 'unknown'} = {}) => {
   const certs = [cert, key].join(',');
   return {
     services: {
@@ -74,7 +74,7 @@ module.exports = {
   // @TODO: ssl=true here currently exposes two ports into 443, should we separate ssl/addcerts?
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
-      const proxy = getProxy(options.proxyDomain, options.proxyCert, options.proxyKey, options.version);
+      const proxy = getProxy(options);
       const ports = getPorts(http, https, options.proxyDash);
       const augment = {
         env: _.cloneDeep(options.appEnv),
