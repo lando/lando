@@ -1,5 +1,9 @@
 #!/bin/bash
+
 set -e
+
+# Load message helpers
+. /helpers/messages.sh
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -25,8 +29,6 @@ FILE_DUMP="/tmp/files.tar.gz"
 PV=""
 PULL_DB=""
 PULL_FILES=""
-GREEN='\033[0;32m'
-DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -95,6 +97,10 @@ fi
 
 # Get the codez
 if [ "$CODE" != "none" ]; then
+  # Validate before we begin
+  status_info "Validating you can pull code from $CODE..."
+  terminus env:info $SITE.$CODE
+  status_good "Confirmed!"
 
   # Get the git branch
   GIT_BRANCH=master
@@ -111,15 +117,18 @@ if [ "$CODE" != "none" ]; then
   fi
 
   # Checkout and pull
-  echo "Pulling code from $CODE..."
   git checkout $GIT_BRANCH
   git pull -Xtheirs --no-edit origin $GIT_BRANCH
-
 fi
 
 
 # Get the database
 if [ "$DATABASE" != "none" ]; then
+  # Validate before we begin
+  status_info "Validating you can pull the database from $DATABASE..."
+  terminus env:info $SITE.$DATABASE
+  status_good "Confirmed!"
+
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
   TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
@@ -135,14 +144,12 @@ if [ "$DATABASE" != "none" ]; then
 
   # Switch to drushy pull if we can
   if [ "$FRAMEWORK" != "wordpress" ]; then
-
     # Get drush aliases
     echo "Downloading drush aliases..."
     terminus aliases
 
     # Use drush if we can (this is always faster for some reason)
     if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
-
       # If we aint pulling the live DB then lets clear caches to minimize the DL time
       if [ "$DATABASE" != "live" ]; then
         echo "Clearing remote cache to shrink db size"
@@ -152,12 +159,9 @@ if [ "$DATABASE" != "none" ]; then
           drush @pantheon.$SITE.$DATABASE cc all --strict=0
         fi
       fi
-
       # Build the DB command
       PULL_DB="drush @pantheon.$SITE.$DATABASE sql-dump"
-
     fi
-
   fi
 
   # Wake up the database so we can actually connect
@@ -170,7 +174,6 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
   # Importing database
-  echo "Pulling database from $DATABASE..."
   eval "$PULL_DB"
 
   # Do some post DB things on WP
@@ -178,11 +181,14 @@ if [ "$DATABASE" != "none" ]; then
     echo "Doing the ole post-migration search-replace on WordPress..."
     cd /app && wp search-replace "$ENV-$SITE.pantheonsite.io" "${LANDO_APP_NAME}.${LANDO_DOMAIN}"
   fi
-
 fi
 
 # Get the files
 if [ "$FILES" != "none" ]; then
+  # Validate before we begin
+  status_info "Validating you can pull files from $FILES..."
+  terminus env:info $SITE.$FILES
+  status_good "Confirmed!"
 
   # Make sure the filemount actually exists
   mkdir -p $LANDO_WEBROOT/$FILEMOUNT
@@ -226,11 +232,8 @@ if [ "$FILES" != "none" ]; then
   PULL_FILES="$PULL_FILES $RSYNC_CMD"
 
   # Importing files
-  echo "Pulling files from $FILES..."
   eval "$PULL_FILES"
 fi
 
 # Finish up!
-echo ""
-printf "${GREEN}Pull completed successfully!${DEFAULT_COLOR}"
-echo ""
+status_good "Pull completed successfully!"
