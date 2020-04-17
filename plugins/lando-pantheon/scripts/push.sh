@@ -1,5 +1,9 @@
 #!/bin/bash
+
 set -e
+
+# Load message helpers
+. /helpers/messages.sh
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -23,8 +27,6 @@ ENV=${TERMINUS_ENV:-dev}
 PV=""
 PUSH_DB=""
 PUSH_FILES=""
-GREEN='\033[0;32m'
-DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -89,15 +91,15 @@ done
 
 # Do some basic valdiation on test/live pushing
 if [ "$CODE" == "test" ] || [ "$CODE" == "live" ]; then
-  echo "Cannot push the code to the test or live environments"
+  error "Cannot push the code to the test or live environments"
   exit 3
 fi
 if [ "$DATABASE" == "test" ] || [ "$DATABASE" == "live" ]; then
-  echo "Cannot push the database to the test or live environments"
+  error "Cannot push the database to the test or live environments"
   exit 3
 fi
 if [ "$FILES" == "test" ] || [ "$FILES" == "live" ]; then
-  echo "Cannot push the files to the test or live environments"
+  error "Cannot push the files to the test or live environments"
   exit 3
 fi
 
@@ -106,26 +108,28 @@ fi
 
 # Push the codez
 if [ "$CODE" != "none" ]; then
+  # Validate before we begin
+  status_info "Validating you can push code to $CODE..."
+  terminus env:info $SITE.$CODE
+  status_good "Confirmed!"
 
   # Get connection mode
-  echo "Checking connection mode"
-  CONNECTION_MODE=$(terminus env:info $SITE.$ENV --field=connection_mode)
-
+  status_info "Checking connection mode"
+  CONNECTION_MODE=$(terminus env:info $SITE.$CODE --field=connection_mode)
   # If we are not in git mode lets check for uncommited changes
   if [ "$CONNECTION_MODE" != "git" ]; then
-
     # Get the code diff
-    CODE_DIFF=$(terminus env:diffstat $SITE.$ENV --format=json)
+    CODE_DIFF=$(terminus env:diffstat $SITE.$CODE --format=json)
     if [ "$CODE_DIFF" != "[]" ]; then
-      echo "Lando has detected you have uncommitted changes on Pantheon."
-      echo "Please login to your Pantheon dashboard, commit those changes and then try lando push again."
+      status_warn "Lando has detected you have uncommitted changes on Pantheon."
+      status_warn "Please login to your Pantheon dashboard, commit those changes and then try lando push again."
       exit 5
     else
-      echo "Changing connection mode to git for the pushy push"
-      terminus connection:set $SITE.$ENV git
+      status_warn "Changing connection mode to git for the pushy push"
+      terminus connection:set $SITE.$CODE git
     fi
-
   fi
+  status_good "Connected with git"
 
   # Switch to git root
   cd $LANDO_MOUNT
@@ -152,27 +156,35 @@ if [ "$CODE" != "none" ]; then
   # Set the mode back to what it was before because we are responsible denizens
   if [ "$CONNECTION_MODE" != "git" ]; then
     echo "Changing connection mode back to $CONNECTION_MODE"
-    terminus connection:set $SITE.$ENV $CONNECTION_MODE
+    terminus connection:set $SITE.$CODE $CONNECTION_MODE
   fi
 fi
 
 # Push the database
 if [ "$DATABASE" != "none" ]; then
+  # Validate before we begin
+  status_info "Validating you can push data to $DATABASE..."
+  terminus env:info $SITE.$DATABASE
+  status_good "Confirmed!"
 
   # Wake up the site so we can actually connect
-  echo "Making sure your database is awake!"
-  terminus env:wake $SITE.$ENV
+  status_info "Making sure your database is awake!"
+  terminus env:wake $SITE.$DATABASE
+  status_good "Awake!"
 
   # And push
-  echo "Pushing database to $DATABASE..."
-  REMOTE_CONNECTION="$(terminus connection:info $SITE.$ENV --field=mysql_command)"
+  echo "Pushing your database... This miiiiight take a minute"
+  REMOTE_CONNECTION="$(terminus connection:info $SITE.$DATABASE --field=mysql_command)"
   PUSH_DB="mysqldump -u pantheon -ppantheon -h database --no-autocommit --single-transaction --opt -Q pantheon | $REMOTE_CONNECTION"
   eval "$PUSH_DB"
-
 fi
 
 # Push the files
 if [ "$FILES" != "none" ]; then
+  # Validate before we begin
+  status_info "Validating you can push files to $FILES..."
+  terminus env:info $SITE.$FILES
+  status_good "Confirmed!"
 
   # Build the rsync command
   PUSH_FILES="rsync -rLvz \
@@ -194,12 +206,8 @@ if [ "$FILES" != "none" ]; then
     $FILES.$PANTHEON_SITE@appserver.$FILES.$PANTHEON_SITE.drush.in:files/"
 
   # Pushing files
-  echo "Pushing files to $FILES..."
   eval "$PUSH_FILES"
-
 fi
 
 # Finish up!
-echo ""
-printf "${GREEN}Push completed successfully!${DEFAULT_COLOR}"
-echo ""
+status_good "Push completed successfully!"
