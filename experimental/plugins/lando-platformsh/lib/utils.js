@@ -6,6 +6,26 @@ const fs = require('fs');
 const path = require('path');
 
 /*
+ * Helper to return the php appserver recipe config
+ */
+const getPhpAppserver = (config = {}) => ({
+  // CAN WE MAKE THE BELOW QUIET?
+  build_as_root_internal: [
+    '/helpers/boot-psh.sh',
+    '/etc/platform/boot',
+  ],
+});
+
+/*
+ * Helper to get terminus tokens
+ */
+exports.getAppserver = (type, config = {}) => {
+  switch (type) {
+    case 'php': return getPhpAppserver(config);
+  };
+};
+
+/*
  * Helper to get terminus tokens
  */
 exports.getPlatformshTokens = home => {
