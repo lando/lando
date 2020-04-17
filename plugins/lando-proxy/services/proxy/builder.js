@@ -11,27 +11,22 @@ const getProxy = ({proxyDomain, proxyCert, proxyKey, version = 'unknown'} = {}) 
   return {
     services: {
       proxy: {
-        image: 'traefik:1.6.3-alpine',
+        image: 'traefik:2.2.0',
         command: [
           '/entrypoint.sh',
-          '--defaultEntryPoints=https,http',
-          '--docker',
-          `--docker.domain=${proxyDomain}`,
-          '--entryPoints="Name:http Address::80"',
-          `--entrypoints="Name:https Address::443 TLS:${certs}"`,
-          '--logLevel=DEBUG',
-          '--web',
+          '--log.level=DEBUG',
+          '--api.insecure=true',
+          '--providers.docker=true',
+          '--entrypoints.https.address=:443',
+          '--entrypoints.http.address=:80',
+          '--providers.docker.exposedbydefault=false',
         ].join(' '),
         environment: {
           LANDO_VERSION: version,
         },
-        labels: {
-          'traefik.frontend.rule': `Host:mustachedmanwiththecape`,
-        },
         networks: ['edge'],
         volumes: [
           '/var/run/docker.sock:/var/run/docker.sock',
-          '/dev/null:/traefik.toml',
         ],
       },
     },
@@ -52,7 +47,7 @@ const getPorts = (http, https, {dash, bindAddress = '127.0.0.1'} = {}) => ({
       ports: [
         [bindAddress, http, '80'].join(':'),
         [bindAddress, https, '443'].join(':'),
-        [bindAddress, dash, '8080'].join(':'),
+        [bindAddress, '8080', '8080'].join(':'),
       ],
     },
   },

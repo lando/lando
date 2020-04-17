@@ -98,6 +98,7 @@ module.exports = (app, lando) => {
           lando.log.warn('Try running `lando info` and using one of the services listed there.');
           return {};
         }
+        service.labels['traefik.enable'] = true;
         service.labels['traefik.docker.network'] = lando.config.proxyNet;
         return {
           services: _.set({}, service.name, {

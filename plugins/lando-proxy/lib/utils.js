@@ -66,12 +66,33 @@ exports.parseConfig = config => _(config)
 exports.parseRoutes = urls => {
   const labels = {};
   _.uniq(urls).map(exports.parseUrl).forEach((parsedUrl, i) => {
+    console.log(parsedUrl, i);
     const hostRegex = parsedUrl.host.replace(new RegExp('\\*', 'g'), '{wildcard:[a-z0-9-]+}');
-    labels[`traefik.${i}.frontend.rule`] = `HostRegexp:${hostRegex}`;
-    labels[`traefik.${i}.port`] = parsedUrl.port;
+    console.log(hostRegex);
+    // http here
+    labels['traefik.http.routers.custom.entrypoints'] = 'http';
+    labels['traefik.http.routers.custom.rule'] = `HostRegexp(\`${hostRegex}\`)`;
+    labels['traefik.tcp.services.custom.loadbalancer.server.port'] = parsedUrl.port;
+
+    // https terminated at traefix
+    labels['traefik.http.routers.custom-secured.entrypoints'] = 'https';
+    labels['traefik.http.routers.custom-secured.rule'] = `HostRegexp(\`${hostRegex}\`)`;
+    labels['traefik.http.routers.custom-secured.tls'] = true;
+    labels['traefik.tcp.services.custom-secured.loadbalancer.server.port'] = parsedUrl.port;
+
+    // here starts the tls passthrough ops
+    // labels['traefik.tcp.routers.custom-secured.entrypoints'] = 'https';
+    // labels['traefik.tcp.routers.custom-secured.rule'] = `HostSNI(\`${parsedUrl.host}\`)`;
+    // labels['traefik.tcp.routers.custom-secured.service'] = 'custom2';
+    // labels['traefik.tcp.routers.custom-secured.tls'] = true;
+    // labels['traefik.tcp.routers.custom-secured.tls.passthrough'] = true;
+    // labels['traefik.tcp.services.custom2.loadbalancer.server.port'] = 443;
+
+    /*
     if (parsedUrl.pathname.length > 1) {
       labels[`traefik.${i}.frontend.rule`] += `;PathPrefixStrip:${parsedUrl.pathname}`;
     }
+    */
   });
   return labels;
 };
