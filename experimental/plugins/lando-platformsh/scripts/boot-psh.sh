@@ -7,8 +7,8 @@ umount /etc/hosts
 umount /etc/resolv.conf
 
 # Safe to do all the time
-mkdir -p /run/shared /run/rpc_pipefs/nfs
+mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
 
 # BOOT
-python /app/fake-rpc.py &> /tmp/fake-rpc.log &
+python /helpers/fake-rpc.py &> /tmp/fake-rpc.log &
 runsvdir -P /etc/service &> /tmp/runsvdir.log &

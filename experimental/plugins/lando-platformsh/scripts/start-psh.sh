@@ -4,7 +4,7 @@ echo "PLATFORM START IS HAPPENING!"
 
 # @NOTE: not clear why we need to do the below again
 if [ ! -f "/run/shared/agent.sock" ]; then
-  python /app/fake-rpc.py &> /tmp/fake-rpc.log &
+  python /helpers/fake-rpc.py &> /tmp/fake-rpc.log &
   # Wait a bit before we try to start
   # TODO: Add a more sophisticated check then sleeping a bit?
   sleep 1

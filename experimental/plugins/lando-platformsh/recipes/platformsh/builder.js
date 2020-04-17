@@ -52,11 +52,31 @@ module.exports = {
         scanner: false,
         build_as_root_internal: [
           '/helpers/boot-psh.sh',
-          '/etc/platform/boot',
+          '/etc/platform/boot &> /dev/null',
         ],
         overrides: {
           privileged: true,
           image: 'docker.registry.platform.sh/php-7.4',
+          command: 'init',
+          environment: {
+            LANDO_WEBROOT_USER: 'web',
+            LANDO_WEBROOT_GROUP: 'web',
+            LANDO_WEBROOT_UID: '10000',
+            LANDO_WEBROOT_GID: '10000',
+            LANDO_NEEDS_EXEC: 'DOEEET',
+          },
+        },
+      },
+      database: {
+        meUser: 'web',
+        scanner: false,
+        build_as_root_internal: [
+          '/helpers/boot-psh.sh',
+          '/etc/platform/boot &> /dev/null',
+        ],
+        overrides: {
+          privileged: true,
+          image: 'docker.registry.platform.sh/mariadb-10.4',
           command: 'init',
           environment: {
             LANDO_WEBROOT_USER: 'web',
