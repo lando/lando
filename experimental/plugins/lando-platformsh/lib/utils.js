@@ -10,6 +10,7 @@ const path = require('path');
  */
 const getPhpAppserver = (config = {}) => ({
   // CAN WE MAKE THE BELOW QUIET?
+  // @TODO: this needs to be on all services right?
   build_as_root_internal: [
     '/helpers/boot-psh.sh',
     '/etc/platform/boot',

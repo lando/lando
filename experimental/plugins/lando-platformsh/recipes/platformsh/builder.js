@@ -2,15 +2,7 @@
 
 // Modules
 const _ = require('lodash');
-const fs = require('fs');
-const path = require('path');
 const utils = require('./../../lib/utils');
-const yaml = require('js-yaml');
-
-// Consts
-const pshConfigFile = '.platform.app.yaml';
-// const pshRoutesFile = path.join('.platform', 'routes.yaml');
-// const pshServicesFile = path.join('.platform', 'services.yaml');
 
 /*
  * Helper to map lagoon type data to a lando service
@@ -47,16 +39,11 @@ module.exports = {
     constructor(id, options = {}) {
       // Get our options
       options = _.merge({}, config, options);
-
-      // Error if we don't have a platform.yml
-      if (!fs.existsSync(path.join(options.root, pshConfigFile))) {
-        throw Error(`Could not detect a ${pshConfigFile} at ${options.root}`);
-      }
-      const platformConfig = [yaml.safeLoad(fs.readFileSync(path.join(options.root, pshConfigFile)))];
+      const platformConfig = _.get(options, '_app.config.platformsh', {});
 
       // Loop through and build our appservers
       // @TODO: We loop here because at some point platformConfig could contain a multiapp setup
-      _.forEach(platformConfig, config => {
+      _.forEach(platformConfig.apps, config => {
         // Get info about the appserver
         const {name, type, version} = getAppserverType(config);
         // Add it as a lando service if its supported
@@ -74,7 +61,7 @@ module.exports = {
       // Throw an error (warning?) if we have no appservers, this likely is because we dont support
       // the application type yet
       if (_.isEmpty(options.services)) {
-        const types = _(platformConfig)
+        const types = _(platformConfig.apps)
           .map(service => getAppserverType(service))
           .map(service => service.type)
           .value()

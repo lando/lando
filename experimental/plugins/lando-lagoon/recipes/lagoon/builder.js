@@ -48,6 +48,8 @@ module.exports = {
       options = _.merge({}, config, options);
 
       // Error if we don't have a lagoon.yml
+      // @TODO: move this over to the same pattern we have for platform.sh
+      // which loads stuff in an init event so its all ready by here
       if (!fs.existsSync(path.join(options.root, '.lagoon.yml'))) {
         throw Error(`Could not detect a .lagoon.yml at ${options.root}`);
       }
