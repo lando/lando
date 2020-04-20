@@ -13,8 +13,11 @@ module.exports = {
     constructor(id, options = {}, ...sources) {
       // The appserver uses the "web" user
       options.meUser = 'web';
+      // Get the /run/config.json file location
+      const configPath = _.get(options, '_app.config.platformsh.configPath');
 
       // Set the docker things we need for all appservers
+      // @TODO: merge in our applications platform variables
       sources.push({services: _.set({}, options.name, {
         command: 'init',
         environment: {
@@ -31,6 +34,11 @@ module.exports = {
         // @TODO: would be great to not need the below but
         // its required if we want to unmount /etc/hosts /etc/resolv.conf
         privileged: true,
+        volumes: [
+          // @NOTE: there is some risk here because this actually gets generated
+          // AFTER this code runs, eg we assume everything after this works correctly
+          `${configPath}/${options.name}.json:/run/config.json`,
+        ],
       })});
 
       // Pass down

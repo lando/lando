@@ -35,8 +35,8 @@ const postBuildSteps = [
  */
 module.exports = (app, lando) => {
   // Build step locl files
-  const preLockfile = app.name + '.build.lock';
-  const postLockfile = app.name + '.post-build.lock';
+  app.preLockfile = `${app.name}.build.lock`;
+  app.postLockfile = `${app.name}.post-build.lock`;
 
   // Init this early on but not before our recipes
   app.events.on('pre-init', () => {
@@ -62,26 +62,26 @@ module.exports = (app, lando) => {
   // Go through each service and run additional build commands as needed
   app.events.on('post-init', () => {
     // Add in build hashes
-    app.meta.lastPreBuildHash = _.trim(lando.cache.get(preLockfile));
-    app.meta.lastPostBuildHash = _.trim(lando.cache.get(postLockfile));
+    app.meta.lastPreBuildHash = _.trim(lando.cache.get(app.preLockfile));
+    app.meta.lastPostBuildHash = _.trim(lando.cache.get(app.postLockfile));
     // Make sure containers for this app exist; if they don't and we have build locks, we need to kill them
     const buildServices = _.get(app, 'opts.services', app.services);
     app.events.on('pre-start', () => {
       return lando.engine.list({project: app.project, all: true}).then(data => {
         if (_.isEmpty(data)) {
-          lando.cache.remove(preLockfile);
-          lando.cache.remove(postLockfile);
+          lando.cache.remove(app.preLockfile);
+          lando.cache.remove(app.postLockfile);
         }
       });
     });
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
       const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
-      return utils.runBuild(lando, preBuild, preLockfile, app.configHash, app.warnings);
+      return utils.runBuild(lando, preBuild, app.preLockfile, app.configHash, app.warnings);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(lando, postBuild, postLockfile, app.configHash, app.warnings);
+      return utils.runBuild(lando, postBuild, app.postLockfile, app.configHash, app.warnings);
     });
   });
 
@@ -120,7 +120,7 @@ module.exports = (app, lando) => {
 
   // Remove build locks on an uninstall
   app.events.on('post-uninstall', () => {
-    lando.cache.remove(preLockfile);
-    lando.cache.remove(postLockfile);
+    lando.cache.remove(app.preLockfile);
+    lando.cache.remove(app.postLockfile);
   });
 };
