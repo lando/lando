@@ -86,7 +86,7 @@ lando update-deps
 
 ### Multi-command tooling
 
-`cmd` can also be an array. This allows you to chain an indefinate amount of commands together.
+`cmd` can also be an array. This allows you to chain an indefinite amount of commands together.
 
 ```yaml
 tooling:
