@@ -39,20 +39,21 @@ module.exports = {
     constructor(id, options = {}) {
       // Get our options
       options = _.merge({}, config, options);
-      const platformConfig = _.get(options, '_app.config.platformsh', {});
+      // Get the platformConfig weve loaded and parsed
+      const platformConfig = _.get(options, '_app.platformsh', {});
 
       // Loop through and build our appservers
-      // @TODO: We loop here because at some point platformConfig could contain a multiapp setup
-      _.forEach(platformConfig.apps, config => {
+      _.forEach(platformConfig.applications, application => {
         // Get info about the appserver
-        const {name, type, version} = getAppserverType(config);
+        const {name, type, version} = getAppserverType(application.configuration);
         // Add it as a lando service if its supported
         if (getLandoService(type) !== false) {
           options.services[name] = _.merge({}, utils.getAppserver(type, config), {
             appserver: true,
             id: options.id,
             type: getLandoService(type),
-            platformsh: config,
+            platformsh: application.configuration,
+            runConfig: _.find(platformConfig.runConfig, {service: name}),
             version,
           });
         }

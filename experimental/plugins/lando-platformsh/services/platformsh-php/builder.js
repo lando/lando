@@ -34,7 +34,6 @@ module.exports = {
         image: `docker.registry.platform.sh/php-${options.version}`,
         environment: {PATH: options.path.join(':')},
         volumes: options.volumes,
-        // @TODO: whats the situation with SSL?
         ports: ['80'],
       };
       // Add in the php service and push downstream
