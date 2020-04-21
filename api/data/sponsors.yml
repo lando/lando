@@ -96,4 +96,7 @@
 - name: Eelke Blok
   type: herald
   url: https://blokspeed.net
-
+- name: "Platform.sh"
+  type: patriot
+  url: https://platform.sh
+  logo: https://lando.dev/images/platform_sh_logo.png
