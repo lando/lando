@@ -7,49 +7,24 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-mariadb',
   config: {
-    version: 'custom',
+    version: '10.4',
+    supported: ['10.4', '10.3', '10.2', '10.1', '10.0', '5.5'],
+    legacy: [],
     confSrc: __dirname,
-    command: '/sbin/tini -- /lagoon/entrypoints.bash mysqld',
     port: '3306',
-    portforward: true,
-    creds: {
-      user: 'lagoon',
-      password: 'lagoon',
-      database: 'lagoon',
-      rootpass: 'Lag00n',
-    },
   },
   parent: '_platformsh_service',
-  builder: (parent, config) => class LandoLagoonMariaDb extends parent {
+  builder: (parent, config) => class LandoPlatformshPhp extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
-      options.meUser = 'mysql';
+      // Add 5.5 to the legacy key if this coming from mysql
+      if (options.platformsh.type === 'mysql') options.legacy.push('5.5');
+      // Build the mariadb
       const mariadb = {
-        command: options.command,
-        environment: {
-          // We set these for compatibility with the db-import and db-export scripts
-          MYSQL_DATABASE: options.creds.database,
-          LANDO_EXTRA_DB_EXPORT_ARGS: `-p${options.creds.rootpass}`,
-          LANDO_EXTRA_DB_IMPORT_ARGS: `-p${options.creds.rootpass}`,
-        },
+        image: `docker.registry.platform.sh/mariadb-${options.version}`,
         ports: [options.port],
-        volumes: [
-          `${options.data}:/var/lib/mysql`,
-        ],
       };
-      // Add some lando info
-      options.info = _.merge({}, options.info, {
-        creds: options.creds,
-        internal_connection: {
-          host: options.name,
-          port: options.port,
-        },
-        external_connection: {
-          host: options._app._config.bindAddress,
-          port: _.get(options, 'portforward', 'not forwarded'),
-        },
-      });
-      // Send it downstream
+      // Add in the mariadb service and push downstream
       super(id, options, {services: _.set({}, options.name, mariadb)});
     };
   },

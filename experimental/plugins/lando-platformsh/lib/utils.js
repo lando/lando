@@ -57,18 +57,6 @@ const getPlatformVariables = application => {
 };
 
 /*
- * Helper to return the php appserver recipe config
- */
-const getPhpAppserver = (config = {}) => ({
-  // CAN WE MAKE THE BELOW QUIET?
-  // @TODO: this needs to be on all services right?
-  build_as_root_internal: [
-    '/helpers/boot-psh.sh',
-    '/etc/platform/boot',
-  ],
-});
-
-/*
  * Helper to build the service configurations
  */
 const getServiceConfig = ({id, configuration, name}) => _.merge({}, configuration, {
@@ -157,11 +145,14 @@ exports.getApplicationConfig = (application, platformConfig) => {
 };
 
 /*
- * Helper to get terminus tokens
+ * Helper to get common config needed for services
  */
-exports.getAppserver = (type, config = {}) => {
-  switch (type) {
-    case 'php': return getPhpAppserver(config);
+exports.getServiceDefaults = () => {
+  return {
+    build_as_root_internal: [
+      '/helpers/boot-psh.sh',
+      '/etc/platform/boot',
+    ],
   };
 };
 

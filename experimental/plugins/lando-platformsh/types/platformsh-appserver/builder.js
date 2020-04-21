@@ -15,7 +15,7 @@ module.exports = {
       const environment = _.get(options, 'platformsh.variables', {});
       const runConfigPath = _.get(options, 'runConfig.file');
 
-      // The appserver uses the "web" user
+      // A appserver uses the "web" user
       options.meUser = 'web';
 
       // Set the docker things we need for all appservers
