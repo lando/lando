@@ -118,6 +118,7 @@ module.exports = (app, lando) => {
 
   // Analyze an apps compose files so we can set the default bind address
   // correctly
+  //
   // @TODO: i feel like there has to be a better way to do this than this mega loop right?
   app.events.on('post-init', 9999, () => {
     _.forEach(app.composeData, service => {

@@ -104,6 +104,7 @@ module.exports = (app, lando) => {
           services: _.set({}, service.name, {
             networks: {'lando_proxyedge': {}},
             labels: service.labels,
+            environment: service.environment,
           }),
           networks: {'lando_proxyedge': {external: {name: lando.config.proxyNet}}},
         };

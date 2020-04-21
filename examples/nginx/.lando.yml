@@ -1,4 +1,13 @@
 name: lando-nginx
+proxy:
+  custom:
+    - nginx.lndo.site
+    - nginx.lndo.site/api
+    - www.nginx.lndo.site
+    - "*-nginx.lndo.site"
+    - "wild.*.nginx.lndo.site"
+    - "*.sub.nginx.lndo.site"
+    - "lets.combine.*.lndo.site:80/everything/for-real"
 services:
   defaults:
     type: nginx

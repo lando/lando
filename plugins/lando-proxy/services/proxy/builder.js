@@ -6,8 +6,7 @@ const _ = require('lodash');
 /*
  * Helper to get core proxy service
  */
-const getProxy = ({proxyDomain, proxyCert, proxyKey, version = 'unknown'} = {}) => {
-  const certs = [proxyCert, proxyKey].join(',');
+const getProxy = ({version = 'unknown'} = {}) => {
   return {
     services: {
       proxy: {
