@@ -1,5 +1,11 @@
-Updating to 3.0.0-rc.2+
-=======================
+---
+description: Learn how to update Lando from beta to rc and beyond.
+date: 2019-11-05
+---
+
+# Updating to 3.0.0-rc.2+
+
+<GuideHeader />
 
 Before you begin here we *highly recommend* you check out the [RC2 Release Blog Post](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) to get a higher level understanding on whats changed and why its changed in `3.0.0-rc.2`. After that you should be ready to get into the nitty gritty of what has changed.
 
@@ -7,10 +13,9 @@ Before you begin here we *highly recommend* you check out the [RC2 Release Blog 
 
 Here are the various things that have changed to your [Landofiles](./../config/lando.md) syntax. We've tried to order them from the most common or most breaking config to the least. Note that this guide might not be an exhaustive list of all breaking changes and you are still *highly encouraged* to check out the other docs if you are running into an error running your older Landofiles on `3.0.0-rc.2` or higher.
 
-<!-- toc -->
+[[toc]]
 
-New Images
-----------
+## New Images
 
 We've rebased a lot our services on [Bitnamis](https://github.com/bitnami) which means it's **highly likely** you will need to `lando destroy` your app and then `lando start` it again. It's worth trying to see if things "just work" but if you run into an error using RC2 holla at this
 
@@ -28,18 +33,16 @@ lando start
 lando db-import dump.sql.gz
 ```
 
-Removing `~/.lando`
--------------------
+## Removing `~/.lando`
 
-While most updates do not require the removal of `~/.lando` there are some circumstances where this seems neccessary. If you are running into any of the below known issues, or things don't seem _quite right_ we recommend a quick `rm -rf ~/.lando` and then trying again.
+While most updates do not require the removal of `~/.lando` there are some circumstances where this seems necessary. If you are running into any of the below known issues, or things don't seem _quite right_ we recommend a quick `rm -rf ~/.lando` and then trying again.
 
 * [Database doesn't start or reports as unhealthy](https://github.com/lando/lando/issues/1486)
 * [`lndo.site` sites are not accessible](https://github.com/lando/lando/issues/1490)
 
 If you are running into an issue that is resolved by removing `~/.lando` please [submit a ticket](https://github.com/lando/lando/issues/new/choose) so we can add it to the above list.
 
-Overrides
----------
+## Overrides
 
 We've slightly changed the syntax of [service overrides](./../config/services.md#overrides) to make things more readable. All you need to do is move things up one level
 
@@ -112,8 +115,7 @@ services:
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new override syntax.
 
-Internal Service Name Changes
------------------------------
+## Internal Service Name Changes
 
 Lando still manages some services internally such as an [nginx](./../tutorials/nginx.md) service when you use `ssl` with [varnish](./../tutorials/varnish.md) or set `via: nginx` with [php](./../tutorials/php.md) however we've changed the default names of these services so they are namespaced better.
 
@@ -184,8 +186,7 @@ services:
         BASEURL: https://myapp.lndo.site
 ```
 
-Hyphens in project names
-------------------------
+## Hyphens in project names
 
 If you have a `.lando.yml` that starts with
 
@@ -213,8 +214,7 @@ This does not really break anything, but you may want to update the following:
 - If any of your projects have affected `.lando.yml` files, then update the URLs in related README files or other documentation.
 - If you are bothered by cruft, then see [Removing lingering Lando configuration](https://docs.devwithlando.io/installation/uninstalling.html#removing-lingering-lando-configuration). You can remove files and directories based on the old hyphenless names in the Lando configuration directory and its subdirectories.
 
-Tooling
--------
+## Tooling
 
 We've altered our [tooling](./../config/tooling.md) so that it is more in line with our [events](./../config/events.md) syntax. That means you will likely want to alter two of the following scenarios.
 
@@ -278,8 +278,7 @@ tooling:
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/tooling) which is tested on every build for some examples of new tooling syntax.
 
-Build Steps
------------
+## Build Steps
 
 While we've maintained decent backwards compatibility with previous build step names we recommend you update to the [new syntax](./../config/services.md#build-steps) and be mindful that build steps can now run **before** and **after** your application starts.
 
@@ -345,9 +344,7 @@ run:
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new build step syntax.
 
-
-Global Environment Variables
-----------------------------
+## Global Environment Variables
 
 Lando no longer sets its [default environment variables](./../config/env.md) on your host machine. They are now **service only**. While this usage has actually been deprecated for quite some time you may still be doing stuff like this.
 
@@ -420,36 +417,34 @@ events:
     - cd /app/landoservices && do-something
 ```
 
-Service Versions
-----------------
+## Service Versions
 
 Most service versions have stayed the same but a few have changed. If you try to run a now-unsupported service version Lando will throw a nice red error. If this happens to you check out the supported version documented for each service and either choose the closest one to what you have **OR** remove the version completely and use the default.
 
-*   ####[apache](./../tutorials/apache.md)
-*   ####[custom](./../tutorials/compose.md)
-*   ####[dotnet](./../tutorials/dotnet.md)
-*   ####[elasticsearch](./../tutorials/elasticsearch.md)
-*   ####[go](./../tutorials/go.md)
-*   ####[mailhog](./../tutorials/mailhog.md)
-*   ####[mariadb](./../tutorials/mariadb.md)
-*   ####[memcached](./../tutorials/memcached.md)
-*   ####[mongo](./../tutorials/mongo.md)
-*   ####[mssql](./../tutorials/mssql.md)
-*   ####[mysql](./../tutorials/mysql.md)
-*   ####[nginx](./../tutorials/nginx.md)
-*   ####[node](./../tutorials/node.md)
-*   ####[php](./../tutorials/php.md)
-*   ####[phpmyadmin](./../tutorials/phpmyadmin.md)
-*   ####[postgres](./../tutorials/postgres.md)
-*   ####[python](./../tutorials/python.md)
-*   ####[redis](./../tutorials/redis.md)
-*   ####[ruby](./../tutorials/ruby.md)
-*   ####[solr](./../tutorials/solr.md)
-*   ####[tomcat](./../tutorials/tomcat.md)
-*   ####[varnish](./../tutorials/varnish.md)
+*   ### [apache](./../config/apache.md)
+*   ### [custom](./../config/compose.md)
+*   ### [dotnet](./../config/dotnet.md)
+*   ### [elasticsearch](./../config/elasticsearch.md)
+*   ### [go](./../config/go.md)
+*   ### [mailhog](./../config/mailhog.md)
+*   ### [mariadb](./../config/mariadb.md)
+*   ### [memcached](./../config/memcached.md)
+*   ### [mongo](./../config/mongo.md)
+*   ### [mssql](./../config/mssql.md)
+*   ### [mysql](./../config/mysql.md)
+*   ### [nginx](./../config/nginx.md)
+*   ### [node](./../config/node.md)
+*   ### [php](./../config/php.md)
+*   ### [phpmyadmin](./../config/phpmyadmin.md)
+*   ### [postgres](./../config/postgres.md)
+*   ### [python](./../config/python.md)
+*   ### [redis](./../config/redis.md)
+*   ### [ruby](./../config/ruby.md)
+*   ### [solr](./../tutorials/solr.md)
+*   ### [tomcat](./../config/tomcat.md)
+*   ### [varnish](./../config/varnish.md)
 
-Environment Files
------------------
+## Environment Files
 
 You now have to explicitly set the top level [`env_file`](./../config/env.md#environment-files) if you want to load a `env` file.
 
@@ -482,8 +477,7 @@ WP_SITEURL=http://wpb4.test/wp
 
 Check out [this example](https://github.com/lando/lando/tree/master/examples/base) which is tested on every build for some examples of the new environment file syntax.
 
-Drush Handling
---------------
+## Drush Handling
 
 We've vastly simplified our [Drush handling](./../tutorials/drupal8.md#using-drush). You can now only set `drush` to a particular version for global installation. If you've installed `drush` via `composer` then Lando will use that version instead of the one in your Landofile.
 
@@ -519,8 +513,7 @@ config:
   drush: 8.1.15
 ```
 
-Rebuild vs. Restart
--------------------
+## Rebuild vs. Restart
 
 If you change your Landofiles you now need to explicitly [`lando rebuild`](./../cli/rebuild.md) instead of running [`lando restart`](./../cli/rebuild.md). This helps to provide stability between restarts until you explicitly ask for things to change and vastly speeds up stops and starts.
 
@@ -540,8 +533,7 @@ lando restart
 lando rebuild -y
 ```
 
-Lando Init
-----------
+## Lando Init
 
 We've completely reworked [`lando init`](./../cli/init.md) to be more modular and intuitive. This means if you've got scripts relying on `lando init` you will likely need to make some changes. While there are many changes the biggest are the removal of the "init method" in favor of the `--source` option.
 
@@ -560,8 +552,7 @@ lando init --source pantheon
 
 **sources** are places where Lando can get your code and **recipes** are the kinds of applications that exists at **source**.
 
-Global Options
---------------
+## Global Options
 
 Lando no longer uses [`--`](https://github.com/lando/lando/blob/v3.0.0-rc.1/docs/cli/usage.md#global-options) to differentiate between its options and tooling options.
 
@@ -601,8 +592,7 @@ lando terminus remote:drush "$SITE.$ENV" -- cr --all -y
 lando php -r "phpinfo();"
 ```
 
-Global Envvars
---------------
+## Global Envvars
 
 There is no longer a `containerGlobalEnv` option in the Lando [global config](./../config/config.md). But you can now use `appEnv` to the same effect. **Note that this is for the Lando `config.yml` and NOT for a Landofile**.
 
@@ -620,8 +610,7 @@ appEnv:
   PARTY: USA
 ```
 
-App Registry
-------------
+## App Registry
 
 There is no longer a register of apps stored at `~/.lando/cache/registry`. As a consequence you can no longer do things like `lando start MYAPP`
 
@@ -636,8 +625,7 @@ cd /path/to/MYAPP
 lando start
 ```
 
-Plugins
--------
+## Plugins
 
 If you have written your own custom plugins
 
@@ -646,8 +634,5 @@ If you have written your own custom plugins
 
 We've finally locked down a [Plugin System](./../dev/plugins.md) that uses the [Lando](./../api/lando.md) and [App](./../api/app.md) APIs and while we still don't have a great way to manage the installation and management of these plugins it is going to be the defining feature of `3.1.0`.
 
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}
-
+<GuideFooter />
+<Newsletter />

@@ -1,20 +1,22 @@
-Proxy
-=====
+---
+description: The Lando proxy layer allows you to specify HTTP or HTTPS eg TLS/SSL routes to specific services in a few lines of config. You can also customize the domain and certificates used.
+---
+
+# Proxy
 
 By default Lando runs a [traefik](https://traefik.io/) reverse proxy when needed so that users' apps can route stable, predictable and "nice" URLS to various ports inside of various services.
 
 While you can [configure](#configuration) the default `domain` of this proxy we *highly recommend* you do not alter the default behavior unless you have a fairly compelling reason to do so. A compelling reason to *not* change them are that the default `lndo.site` domain works "out of the box" while custom domains require [additional setup](#working-offline-or-using-custom-domains).
 
-Specifically, `*.lando.site` is an actual *ON THE INTERNET* wildcard DNS entry that points all `*.lndo.site` subdomains to `localhost/127.0.0.1`. This means that if you lose your internet connection, you will not be able to visit your app at these addresses. However, you can [take steps](#working-offline-or-using-custom-domains) to work around this restriction or use your own [custom domain](#configuration) and handle the DNS yourself with `dnsmasq` or some other solution.
+Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry that points all `*.lndo.site` subdomains to `localhost/127.0.0.1`. This means that if you lose your internet connection, you will not be able to visit your app at these addresses. However, you can [take steps](#working-offline-or-using-custom-domains) to work around this restriction or use your own [custom domain](#configuration) and handle the DNS yourself with `dnsmasq` or some other solution.
 
-> #### Info::Proxying is not required
->
-> As long as your containers or services expose ports `80` and/or `443`, Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
+::: tip Proxying is not required
+As long as your containers or services expose ports `80` and/or `443`, Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
+:::
 
-There is also a [known issue](./../issues/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
+There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
 
-Automatic Port Assignment
--------------------------
+## Automatic Port Assignment
 
 By default Lando will attempt to bind the proxy to your host machines port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
 
@@ -29,8 +31,7 @@ sudo lsof -n -i :443 | grep LISTEN
 sudo kill -9 $PID
 ```
 
-Usage
------
+## Usage
 
 You can add routing to various services and their ports using the top-level `proxy` config in your [Landofile](./lando.md). Because our proxy also benefits from our [automatic certificate and CA setup](./security.md) all proxy entries will automatically be available over both `http` and `https`.
 
@@ -60,9 +61,9 @@ proxy:
 
 You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution and any relevant cert handling. See the configuration section below for more details.
 
-> #### Info::Pro Tip: Add custom domains to your `hosts` file.
->
-> If your custom domain does not end in `lndo.site` and you unsure about how to handle DNS resolution using something like DNSMasq then you are going to need to add it to your `hosts` file so that it points to `127.0.0.1`.
+::: tip
+If your custom domain does not end in `lndo.site` and you unsure about how to handle DNS resolution using something like DNSMasq then you are going to need to add it to your `hosts` file so that it points to `127.0.0.1`.
+::::
 
 ```yaml
 proxy:
@@ -79,10 +80,9 @@ If a service is able to listen to multiple domain names following a common patte
 
 To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example use `*.myapp.lndo.site` or `*.*.lndo.site`.
 
-> #### Info::Wildcard domains need to be encapsulated in quotations
->
-> If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
-
+::: tip Wildcard domains need to be encapsulated in quotations
+If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
+:::
 
 ```yaml
 proxy:
@@ -90,6 +90,20 @@ proxy:
     - another.lndo.site
     - "*.mysite.lndo.site"
     - "orthis.*.lndo.site"
+```
+
+### Subdirectories
+
+You can also have a specific path on a domain route to a service.
+
+```yaml
+proxy:
+  appserver:
+    - name.lndo.site
+  api:
+    - name.lndo.site/api
+  admin:
+    - name.lndo.site/admin/portal
 ```
 
 ### Sub subdomains
@@ -120,16 +134,30 @@ proxy:
 
 You can read more about this restriction [here](https://stackoverflow.com/questions/26744696/ssl-multilevel-subdomain-wildcard).
 
-Configuration
--------------
+### Combos
 
-Various parts of the proxy are configurable via the Lando [global config](./config.md).
+You can also combine the settings above into a single, real nasty looking, but still valid config.
+
+```yaml
+proxy:
+  appserver:
+    - "*.lndo.site:8080/everything/for-real"
+```
+
+This is still valid proxy config!
+
+## Configuration
+
+Various parts of the proxy are configurable via the Lando [global config](./global.md).
 
 **Again, you REALLY REALLY REALLY should not change these settings unless you have a good reason and know what you are doing!**
 
 ```yml
 # Set to anything else to disable
 proxy: ON
+# For security reasons we bind the proxy to localhost
+# If unset this will default to the `bindAddress` value
+proxyBindAddress: "127.0.0.1"
 # Legacy, use the "domain" setting below instead
 proxyDomain: lndo.site
 proxyHttpPort: 80
@@ -153,8 +181,7 @@ You will need to do a `lando poweroff` to apply these changes.
 
 Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example if you set `domain` to a top level domain such as `test` you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
 
-Working Offline or Using Custom Domains
----------------------------------------
+## Working Offline or Using Custom Domains
 
 If you are working offline and/or have added custom domains and want to get them to work, you will need to edit your `hosts` file. Generally, this file is located at `/etc/hosts` on Linux and macOS and `C:\Windows\System32\Drivers\etc\host` on Windows. You will need administrative privileges to edit this file.
 
@@ -171,3 +198,5 @@ Here is an example:
 ```
 
 For a more comprehensive doc on this please check out our [Working Offline Guide](./../guides/offline-dev.md).
+
+<RelatedGuides tag="Proxy"/>

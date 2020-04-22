@@ -1,120 +1,89 @@
-<a id="event_pre_engine_build"></a>
+<a name="event_pre_engine_build"></a>
 
-<h2 id="event_pre_engine_build" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-engine-build()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-engine-build()
 Event that allows you to do some things before a `compose` object's containers are
 built
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_engine_build"></a>
+<a name="event_post_engine_build"></a>
 
-<h2 id="event_post_engine_build" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-engine-build()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-engine-build()
 Event that allows you to do some things after a `compose` object's containers are
 built
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_engine_destroy"></a>
+<a name="event_pre_engine_destroy"></a>
 
-<h2 id="event_pre_engine_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-engine-destroy()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-engine-destroy()
 Event that allows you to do some things before some containers are destroyed.
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_engine_destroy"></a>
+<a name="event_post_engine_destroy"></a>
 
-<h2 id="event_post_engine_destroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-engine-destroy()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-engine-destroy()
 Event that allows you to do some things after some containers are destroyed.
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_engine_run"></a>
+<a name="event_pre_engine_run"></a>
 
-<h2 id="event_pre_engine_run" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-engine-run()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-engine-run()
 Event that allows you to do some things before a command is run on a particular
 container.
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_engine_run"></a>
+<a name="event_post_engine_run"></a>
 
-<h2 id="event_post_engine_run" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-engine-run()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-engine-run()
 Event that allows you to do some things after a command is run on a particular
 container.
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_engine_start"></a>
+<a name="event_pre_engine_start"></a>
 
-<h2 id="event_pre_engine_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-engine-start()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-engine-start()
 Event that allows you to do some things before a `compose` Objects containers are
 started
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_engine_start"></a>
+<a name="event_post_engine_start"></a>
 
-<h2 id="event_post_engine_start" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-engine-start()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-engine-start()
 Event that allows you to do some things after a `compose` Objects containers are
 started
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_pre_engine_stop"></a>
+<a name="event_pre_engine_stop"></a>
 
-<h2 id="event_pre_engine_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:pre-engine-stop()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:pre-engine-stop()
 Event that allows you to do some things before some containers are stopped.
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="event_post_engine_stop"></a>
+<a name="event_post_engine_stop"></a>
 
-<h2 id="event_post_engine_stop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.events:post-engine-stop()</h2>
-<div class="api-body-header"></div>
-
+## lando.events:post-engine-stop()
 Event that allows you to do some things after some containers are stopped.
 
+**Kind**: global function  
 **Since**: 3.0.0  
-<div class="api-body-footer"></div>
-<a id="landoenginebuild"></a>
+<a name="lando.engine.build"></a>
 
-<h2 id="landoenginebuild" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.build(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.build(data) ⇒ <code>Promise</code>
 Tries to pull the services for a `compose` object, and then tries to build them if they are found
 locally. This is a wrapper around `docker pull` and `docker build`.
 
 **NOTE:** Generally an instantiated `App` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>lando.events:pre-engine-build</code>](#event_pre_engine_build), [<code>lando.events:post-engine-build</code>](#event_post_engine_build)  
 **Since**: 3.0.0  
 
@@ -128,20 +97,17 @@ locally. This is a wrapper around `docker pull` and `docker build`.
 | [data.opts.nocache] | <code>Boolean</code> | <code>true</code> | Ignore the build cache. |
 | [data.opts.pull] | <code>Boolean</code> | <code>true</code> | Try to pull first. |
 
-**Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
 return lando.engine.build(app);
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginecreatenetwork"></a>
+<a name="lando.engine.createNetwork"></a>
 
-<h2 id="landoenginecreatenetwork" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.createNetwork(name) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.createNetwork(name) ⇒ <code>Promise</code>
 Creates a Docker network
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with inspect data.  
 **See**: [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.  
 **Since**: 3.0.0.  
 
@@ -149,18 +115,13 @@ Creates a Docker network
 | --- | --- | --- |
 | name | <code>String</code> | The name of the networks |
 
-**Returns**: <code>Promise</code> - A Promise with inspect data.  
 **Example**  
 ```js
 return lando.engine.createNetwork('mynetwork')
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginedestroy"></a>
+<a name="lando.engine.destroy"></a>
 
-<h2 id="landoenginedestroy" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.destroy(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.destroy(data) ⇒ <code>Promise</code>
 Removes containers for a `compose` object or a particular container.
 
 There are two ways to remove containers:
@@ -172,6 +133,8 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `App` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>lando.events:pre-engine-destroy</code>](#event_pre_engine_destroy), [<code>lando.events:post-engine-destroy</code>](#event_post_engine_destroy)  
 **Since**: 3.0.0  
 
@@ -187,18 +150,13 @@ These are detailed more below.
 | [data.opts.force] | <code>Boolean</code> | <code>false</code> | Force remove the containers. |
 | [data.opts.purge] | <code>Boolean</code> | <code>false</code> | Implies `volumes` and `force`. |
 
-**Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
 return lando.engine.destroy(app);
 ```
-<div class="api-body-footer"></div>
-<a id="landoengineexists"></a>
+<a name="lando.engine.exists"></a>
 
-<h2 id="landoengineexists" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.exists(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.exists(data) ⇒ <code>Promise</code>
 Checks whether a specific service exists or not.
 
 There are two ways to check whether a container exists:
@@ -210,6 +168,8 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with a Boolean of whether the service exists or not.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -221,40 +181,34 @@ These are detailed more below.
 | data.opts | <code>Object</code> | Options on what service to check |
 | data.opts.services | <code>Array</code> | An Array of services to check |
 
-**Returns**: <code>Promise</code> - A Promise with a Boolean of whether the service exists or not.  
 **Example**  
 ```js
 return lando.engine.exists(compose);
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginegetnetwork"></a>
+<a name="lando.engine.getNetwork"></a>
 
-<h2 id="landoenginegetnetwork" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.getNetwork(id) ⇒ <code>Object</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.getNetwork(id) ⇒ <code>Object</code>
 Gets a Docker network
 
+**Kind**: global function  
+**Returns**: <code>Object</code> - A Dockerode Network object .  
 **Since**: 3.0.0.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>String</code> | The id of the network |
 
-**Returns**: <code>Object</code> - A Dockerode Network object .  
 **Example**  
 ```js
 const network = lando.engine.getNetwork('mynetwork')
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginegetnetworks"></a>
+<a name="lando.engine.getNetworks"></a>
 
-<h2 id="landoenginegetnetworks" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.getNetworks([opts]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.getNetworks([opts]) ⇒ <code>Promise</code>
 Gets the docker networks.
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with an array of network objects.  
 **See**: [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.  
 **Since**: 3.0.0  
 
@@ -263,23 +217,19 @@ Gets the docker networks.
 | [opts] | <code>Object</code> | Options to pass into the docker networks call |
 | [opts.filters] | <code>Object</code> | Filters options |
 
-**Returns**: <code>Promise</code> - A Promise with an array of network objects.  
-<div class="api-body-footer"></div>
-<a id="landoengineisrunning"></a>
+<a name="lando.engine.isRunning"></a>
 
-<h2 id="landoengineisrunning" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.isRunning(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.isRunning(data) ⇒ <code>Promise</code>
 Determines whether a container is running or not
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with a boolean of whether the container is running or not  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>String</code> | An ID that docker can recognize such as the container id or name. |
 
-**Returns**: <code>Promise</code> - A Promise with a boolean of whether the container is running or not  
 **Example**  
 ```js
 // Check to see if our app's web service is running
@@ -287,15 +237,13 @@ return lando.engine.isRunning('myapp_web_1').then(isRunning) {
   lando.log.info('Container %s is running: %s', 'myapp_web_1', isRunning);
 });
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginelist"></a>
+<a name="lando.engine.list"></a>
 
-<h2 id="landoenginelist" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.list([options]) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.list([options]) ⇒ <code>Promise</code>
 Lists all the Lando containers. Optionally filter by app name.
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with an Array of container Objects.  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -305,24 +253,21 @@ Lists all the Lando containers. Optionally filter by app name.
 | [options.app] | <code>String</code> |  | Show containers for only a certain app |
 | [options.filter] | <code>Array</code> |  | Filter by additional key=value pairs |
 
-**Returns**: <code>Promise</code> - A Promise with an Array of container Objects.  
 **Example**  
 ```js
 return lando.engine.list().each(function(container) {
   lando.log.info(container);
 });
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginelogs"></a>
+<a name="lando.engine.logs"></a>
 
-<h2 id="landoenginelogs" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.logs(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.logs(data) ⇒ <code>Promise</code>
 Returns logs for a given `compose` object
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise.  
 **Since**: 3.0.0  
 
 | Param | Type | Default | Description |
@@ -334,25 +279,22 @@ Returns logs for a given `compose` object
 | [data.opts.follow] | <code>Boolean</code> | <code>false</code> | Whether to follow the log. Works like `tail -f`. |
 | [data.opts.timestamps] | <code>Boolean</code> | <code>true</code> | Show timestamps in log. |
 
-**Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
 // Get logs for an app
 return lando.engine.logs(app);
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginerun"></a>
+<a name="lando.engine.run"></a>
 
-<h2 id="landoenginerun" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.run(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.run(data) ⇒ <code>Promise</code>
 Runs a command on a given service/container. This is a wrapper around `docker exec`.
 
 UNTIL the resolution of https://github.com/apocas/docker-modem/issues/83 data needs to also be or be an
 array of compose objects for this to work correctly on Windows as well. See some of the other engine
 documentation for what a compose object looks like.
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with a string containing the command's output.  
 **Emits**: [<code>lando.events:pre-engine-run</code>](#event_pre_engine_run), [<code>lando.events:post-engine-run</code>](#event_post_engine_run)  
 **Since**: 3.0.0  
 
@@ -369,7 +311,6 @@ documentation for what a compose object looks like.
 | [data.opts.detach] | <code>String</code> | <code>false</code> | Run the process in the background |
 | [data.opts.autoRemove] | <code>String</code> | <code>false</code> | Automatically removes the container |
 
-**Returns**: <code>Promise</code> - A Promise with a string containing the command's output.  
 **Example**  
 ```js
 // Run composer install on the appserver container for an app called myapp
@@ -384,13 +325,9 @@ return lando.engine.run({
   }
 });
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginescan"></a>
+<a name="lando.engine.scan"></a>
 
-<h2 id="landoenginescan" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.scan(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.scan(data) ⇒ <code>Promise</code>
 Returns comprehensive service metadata. This is a wrapper around `docker inspect`.
 
 There are two ways to get container metadata:
@@ -402,6 +339,8 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise with an Object of service metadata.  
 **Since**: 3.0.0  
 
 | Param | Type | Description |
@@ -413,7 +352,6 @@ These are detailed more below.
 | data.opts | <code>Object</code> | Options on what service to scan |
 | data.opts.services | <code>Array</code> | An Array of services to scan. |
 
-**Returns**: <code>Promise</code> - A Promise with an Object of service metadata.  
 **Example**  
 ```js
 // Log scan data using an id
@@ -421,17 +359,15 @@ return lando.engine.scan({id: '146d321f212d'}).then(function(data) {
   lando.log.info('Container data is %j', data);
 });
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginestart"></a>
+<a name="lando.engine.start"></a>
 
-<h2 id="landoenginestart" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.start(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.start(data) ⇒ <code>Promise</code>
 Starts the containers/services for the specified `compose` object.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>lando.events:pre-engine-start</code>](#event_pre_engine_start), [<code>lando.events:post-engine-start</code>](#event_post_engine_start)  
 **Since**: 3.0.0  
 
@@ -446,18 +382,13 @@ Starts the containers/services for the specified `compose` object.
 | [data.opts.recreate] | <code>Boolean</code> | <code>false</code> | Recreate the services. |
 | [data.opts.removeOrphans] | <code>Boolean</code> | <code>true</code> | Remove orphaned containers. |
 
-**Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
 return lando.engine.start(app);
 ```
-<div class="api-body-footer"></div>
-<a id="landoenginestop"></a>
+<a name="lando.engine.stop"></a>
 
-<h2 id="landoenginestop" style="color: #ED3F7A; margin: 10px 0px; border-width: 2px 0px; padding: 25px 0px; border-color: #664b9d; border-style: solid;">
-  lando.engine.stop(data) ⇒ <code>Promise</code></h2>
-<div class="api-body-header"></div>
-
+## lando.engine.stop(data) ⇒ <code>Promise</code>
 Stops containers for a `compose` object or a particular container.
 
 There are two ways to stop containers:
@@ -469,6 +400,8 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A Promise.  
 **Emits**: [<code>lando.events:pre-engine-stop</code>](#event_pre_engine_stop), [<code>lando.events:post-engine-stop</code>](#event_post_engine_stop)  
 **Since**: 3.0.0  
 
@@ -481,9 +414,7 @@ These are detailed more below.
 | [data.opts] | <code>Object</code> |  | Options on what services to setop |
 | [data.opts.services] | <code>Array</code> | <code>&#x27;all services&#x27;</code> | An Array of services to stop. |
 
-**Returns**: <code>Promise</code> - A Promise.  
 **Example**  
 ```js
 return lando.engine.stop(app);
 ```
-<div class="api-body-footer"></div>

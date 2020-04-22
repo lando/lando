@@ -26,6 +26,7 @@ const files = {
   cli: {
     buildSrc: [
       path.resolve('bin'),
+      path.resolve('experimental'),
       path.resolve('lib'),
       path.resolve('plugins'),
       path.resolve('config.yml'),

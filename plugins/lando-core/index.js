@@ -77,6 +77,16 @@ module.exports = lando => {
     }
   });
 
+  // Let's also make a copy of caCert with the standarized .crt ending for better linux compat
+  // See: https://github.com/lando/lando/issues/1550
+  lando.events.on('pre-engine-start', 3, data => {
+    const caNormalizedCert = path.join(caDir, `${caDomain}.crt`);
+    if (fs.existsSync(caCert) && !fs.existsSync(caNormalizedCert)) {
+      // @NOTE: we need to use pre node 8.x-isms because pld roles with node 7.9 currently
+      fs.writeFileSync(caNormalizedCert, fs.readFileSync(caCert));
+    }
+  });
+
   // Return some default things
   return _.merge({}, defaults, uc(lando.user.getUid(), lando.user.getGid(), lando.user.getUsername()), {config: {
     appEnv: {
@@ -92,9 +102,11 @@ module.exports = lando => {
     appLabels: {
       'io.lando.id': lando.config.instance,
     },
+    bindAddress: '127.0.0.1',
     caCert,
     caDomain,
     caKey,
     caProject,
+    maxKeyWarning: 10,
   }});
 };

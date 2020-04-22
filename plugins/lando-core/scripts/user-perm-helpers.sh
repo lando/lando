@@ -67,12 +67,18 @@ reset_user() {
 perm_sweep() {
   local USER=$1
   local GROUP=$2
+  local OTHER_DIR=$3
 
   # Start with the directories that are likely blockers
   chown -R $USER:$GROUP /usr/local/bin
   chown $USER:$GROUP /var/www
   chown $USER:$GROUP /app
   chmod 755 /var/www
+
+  # Do other dirs first if we have them
+  if [ ! -z "$OTHER_DIR" ]; then
+    chown -R $USER:$GROUP $OTHER_DIR >/dev/null 2>&1 &
+  fi
 
   # Do a background sweep
   nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &

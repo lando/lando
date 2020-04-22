@@ -7,7 +7,7 @@ const semver = require('semver');
 const utils = require('./../../lib/utils');
 
 // "Constants"
-const DRUSH8 = '8.1.18';
+const DRUSH8 = '8.3.2';
 const DRUSH7 = '7.4.0';
 
 /*
@@ -44,6 +44,13 @@ module.exports = {
       } else if (options.drush !== false) {
         options.composer['drush/drush'] = options.drush;
       }
+      // Set legacy envars
+      options.services = _.merge({}, options.services, {appserver: {overrides: {
+        environment: {
+          SIMPLETEST_BASE_URL: (options.via === 'nginx') ? 'https://appserver_nginx' : 'https://appserver',
+          SIMPLETEST_DB: `mysql://${options.recipe}:${options.recipe}@database/${options.recipe}`,
+        },
+      }}});
       // Send downstream
       super(id, options);
     };

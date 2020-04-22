@@ -68,7 +68,7 @@ const getConfigDefaults = options => {
     }
   }
 
-  // Verify files exist and remove if it doesnt
+  // Verify files exist and remove if it doesn't
   _.forEach(options.defaultFiles, (file, type) => {
     if (!fs.existsSync(`${options.confDest}/${file}`)) {
       delete options.defaultFiles[type];
@@ -97,6 +97,7 @@ const getServices = options => ({
   },
   database: {
     config: utils.getServiceConfig(options, ['database']),
+    authentication: 'mysql_native_password',
     type: options.database,
     portforward: true,
     creds: {

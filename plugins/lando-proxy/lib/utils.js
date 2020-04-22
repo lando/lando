@@ -46,10 +46,11 @@ exports.getUrlsCounts = config => _(config)
  * Parse config into urls we can merge to app.info
  */
 exports.parse2Info = (urls, ports) => _(urls)
-  .map(url => exports.parseUrl(url).host)
-  .flatMap(url => [`http://${url}`, `https://${url}`])
-  .map(url => (_.startsWith(url, 'http://') && ports.http !== '80') ? `${url}:${ports.http}` : url)
-  .map(url => (_.startsWith(url, 'https://') && ports.https !== '443') ? `${url}:${ports.https}` : url)
+  .map(url => exports.parseUrl(url))
+  .flatMap(url => [
+    `http://${url.host}${ports.http === '80' ? '' : `:${ports.http}`}${url.pathname}`,
+    `https://${url.host}${ports.https === '443' ? '' : `:${ports.https}`}${url.pathname}`,
+  ])
   .value();
 
 /*
@@ -60,31 +61,36 @@ exports.parseConfig = config => _(config)
   .value();
 
 /*
- * Parse hosts for traefik
- */
-exports.parseHosts = hosts => hosts.join(',').replace(new RegExp('\\*', 'g'), '{wildcard:[a-z0-9-]+}');
-
-/*
  * Helper to parse the routes
  */
-exports.parseRoutes = urls => _(urls)
-  .uniq()
-  .map(url => exports.parseUrl(url))
-  .groupBy('port')
-  .map((urls, port) => ({
-    [`traefik.${port}.frontend.rule`]: 'HostRegexp:' + exports.parseHosts(_.map(urls, 'host')),
-    [`traefik.${port}.port`]: _.toString(port),
-  }))
-  .thru(labels => _.reduce(labels, (sum, label) => _.merge(sum, label), {}))
-  .value();
+exports.parseRoutes = urls => {
+  const labels = {};
+  _.uniq(urls).map(exports.parseUrl).forEach((parsedUrl, i) => {
+    const hostRegex = parsedUrl.host.replace(new RegExp('\\*', 'g'), '{wildcard:[a-z0-9-]+}');
+    labels[`traefik.${i}.frontend.rule`] = `HostRegexp:${hostRegex}`;
+    labels[`traefik.${i}.port`] = parsedUrl.port;
+    if (parsedUrl.pathname.length > 1) {
+      labels[`traefik.${i}.frontend.rule`] += `;PathPrefixStrip:${parsedUrl.pathname}`;
+    }
+  });
+  return labels;
+};
 
 /*
  * Helper to parse a url
  */
-exports.parseUrl = url => ({
-  host: _.head(url.split(':')),
-  port: (_.size(url.split(':')) === 2) ? _.last(url.split(':')) : '80',
-});
+exports.parseUrl = string => {
+  // We add the protocol ourselves, so it can be parsed. We also change all *
+  // occurrences for our magic word __wildcard__, because otherwise the url parser
+  // won't parse wildcards in the hostname correctly.
+  const parsedUrl = url.parse(`http://${string}`.replace(/\*/g, '__wildcard__'));
+
+  return {
+    host: parsedUrl.hostname.replace(/__wildcard__/g, '*'),
+    port: parsedUrl.port || '80',
+    pathname: parsedUrl.pathname || '',
+  };
+};
 
 /*
  * Maps ports to urls

@@ -2,13 +2,31 @@ version: 2
 jobs:
   build:
     machine:
-      image: circleci/classic:201710-01
+      image: ubuntu-1604:201903-01
       # @TODO:: once we have more tests running lets buy the below and
       # set up max parallelism
       # docker_layer_caching: true
-    parallelism: 8
+    parallelism: 16
     steps:
       - checkout
+      - run:
+          name: Assess needs or bail
+          command: |
+            # Extract commit range (or single commit)
+            COMMIT_RANGE=$(echo "${CIRCLE_COMPARE_URL}" | cut -d/ -f7)
+            # Fix single commit, unfortunately we don't always get a commit range from Circle CI
+            if [[ $COMMIT_RANGE != *"..."* ]]; then
+              COMMIT_RANGE="${COMMIT_RANGE}...${COMMIT_RANGE}"
+            fi
+            # Print some helpful things
+            echo "Operating on commit range: $COMMIT_RANGE"
+            # Check if we need to run tests and bail if we don't
+            LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
+            echo "The following files have changed: $LANDO_CHANGED_FILES"
+            LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e .circleci -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
+            if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
+              circleci-agent step halt
+            fi
       - restore_cache:
           keys:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
@@ -22,8 +40,11 @@ jobs:
             # Spoof the public key
             ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
             mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
+            # Install bc
+            sudo apt-get update -y
+            sudo apt-get install -y bc
             # Hyperdrive
-            curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.5.1/hyperdrive > /tmp/hyperdrive
+            curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.6.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
             /tmp/hyperdrive -y --name "Lando System" --email landobot@devwithlando.io
             # @TODO: anyway hyperdrive can assert dominance here?
@@ -32,15 +53,23 @@ jobs:
           name: Install node modules
           command: yarn
       - run:
+          name: Disable usage and error reporting
+          command: |
+            # Disable error reporting
+            mkdir -p ~/.lando/cache
+            echo false > ~/.lando/cache/report_errors
+            # Set CI specific config like disabling usage reports
+            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
+      - run:
           name: Switch lando over to binary built from source
           command: |
-            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             sudo mv -f /usr/local/bin/lando /usr/local/bin/lando.stable
             # sudo ln -sf ~/project/bin/lando.js /usr/local/bin/lando
             yarn pkg:cli
             sudo mv dist/cli/* /usr/local/bin/lando
             ls -lsa /usr/local/bin
             lando version
+            lando --experimental
       - run:
           name: Run func test
           command: |

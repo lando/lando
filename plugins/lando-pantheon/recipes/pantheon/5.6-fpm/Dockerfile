@@ -5,16 +5,17 @@
 FROM devwithlando/php:5.6-fpm-2
 
 # Version information
-ENV WKHTMLTOPDF_VERSION 0.12.2
+ENV WKHTMLTOPDF_VERSION 0.12.3
 ENV PHANTOMJS_VERSION 2.1.1
 ENV PHANTOMJS_OLD_VERSION 1.7.0
-ENV TERMINUS_VERSION 1.9.0
+ENV LANDO_TERMINUS_VERSION 2.3.0
 ENV MAVEN_VERSION 3.5.4
 
 # Install the additional things that make the pantheon
-RUN apt-get update && apt-get install -y \
-    openjdk-7-jre-headless \
-    openjdk-7-jdk \
+RUN mkdir -p /usr/share/man/man1 \
+  && apt-get update && apt-get install -y \
+    openjdk-8-jre-headless \
+    openjdk-8-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
@@ -22,11 +23,10 @@ RUN apt-get update && apt-get install -y \
   && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
   && chown -R www-data:www-data /var/www /srv/bin \
-  && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
-  && php installer.phar install --install-version=$TERMINUS_VERSION \
-  && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
-  && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
-  && mkdir -p /srv/bin && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \
+  && wget "https://github.com/pantheon-systems/terminus/releases/download/${LANDO_TERMINUS_VERSION}/terminus.phar" -O /usr/local/bin/terminus \
+  && chmod +x /usr/local/bin/terminus \
+  && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" \
+  && tar xJfv "wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz" && cp -rf /tmp/wkhtmltox/bin/* /srv/bin \
   && cd /srv/bin \
   && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v${PHANTOMJS_VERSION}/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2" | tar -xjv \
   && mv phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs-${PHANTOMJS_VERSION} \

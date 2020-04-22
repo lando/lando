@@ -36,6 +36,7 @@ module.exports = {
         legacy = [],
         meUser = 'www-data',
         patchesSupported = false,
+        pinPairs = {},
         ports = [],
         project = '',
         overrides = {},
@@ -53,6 +54,7 @@ module.exports = {
     ) {
       // Add custom to list of supported
       supported.push('custom');
+
       // If this version is not supported throw an error
       // @TODO: get this someplace else for unit tezting
       if (!_.includes(supported, version)) {
@@ -119,18 +121,32 @@ module.exports = {
       const environment = {LANDO_SERVICE_NAME: name, LANDO_SERVICE_TYPE: type};
       // Handle http ports
       const labels = {'io.lando.http-ports': _.uniq(['80', '443'].concat(moreHttpPorts)).join(',')};
+      // Set a reasonable log size
+      const logging = {driver: 'json-file', options: {'max-file': '3', 'max-size': '10m'}};
 
       // Add named volumes and other thingz into our primary service
       const namedVols = {};
       _.set(namedVols, data, {});
       _.set(namedVols, dataHome, {});
       sources.push({
-        services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, labels, ports, volumes}),
+        services: _.set({}, name, {
+          entrypoint: '/lando-entrypoint.sh',
+          environment,
+          labels,
+          logging,
+          ports,
+          volumes,
+        }),
         volumes: namedVols,
       });
 
+      // Add a final source if we need to pin pair
+      if (_.includes(_.keys(pinPairs), version)) {
+        sources.push({services: _.set({}, name, {image: _.get(pinPairs, version, version)})});
+      }
+
       // Add our overrides at the end
-      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});
+      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides, root))});
 
       // Add some info basics
       info.config = config;

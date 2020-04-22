@@ -13,7 +13,7 @@ module.exports = (app, lando) => {
     // We assume the lando net exists at this point
     const landonet = lando.engine.getNetwork(lando.config.networkBridge);
     // List all our app containers
-    return lando.engine.list({app: app.name})
+    return lando.engine.list({project: app.project})
     // Go through each container
     .map(container => {
       // Grab from the proxy if we have them
@@ -21,7 +21,7 @@ module.exports = (app, lando) => {
       // And add in our default alias
       aliases.push(`${container.service}.${container.app}.internal`);
       // Sometimes you need to disconnect before you reconnect
-      return landonet.disconnect({Container: container.id, EndpointConfig: {Aliases: aliases}})
+      return landonet.disconnect({Container: container.id, Force: true})
       // Only throw non not connected errors
       .catch(error => {
         if (!_.includes(error.message, 'is not connected to network lando')) throw error;

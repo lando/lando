@@ -22,19 +22,23 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 10.x as the default version
-lando ssh -s defaults -c "psql -V | grep 10."
+# Should use 10.12 as the default version
+lando ssh -s defaults -c "psql -V | grep 10.12"
 
 # Should use the specfied version when set by the user
 lando ssh -s custom -c "psql -V | grep 11."
 
+# Should use the specfied version when set by the user part 2
+lando ssh -s custom12 -c "psql -V | grep 12."
+
 # Should use the patch version when set by the user
-lando ssh -s patch -c "psql -V | grep 9.6.1"
+lando ssh -s patch -c "psql -V | grep 9.6.14"
 
 # Should use the correct default user pass db
 lando verifydefaults
+lando verifycustom12
 
-# Should use the correct default user pass db
+# Should use the correct custom user pass db
 lando verifycustom
 
 # Should use a custom config file if specified

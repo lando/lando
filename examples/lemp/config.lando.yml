@@ -1,0 +1,10 @@
+name: timezone
+recipe: lemp
+config:
+  webroot: .
+
+services:
+  appserver:
+    run_as_root:
+      - ln -snf /usr/share/zoneinfo/America/New_York /etc/localtime
+      - echo "America/New_York" > /etc/timezone

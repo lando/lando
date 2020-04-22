@@ -2,8 +2,11 @@
 
 set -e
 
+# Load message helpers
+. /helpers/messages.sh
+
 # Kick it off
-echo "Pantheon pre-run scripting"
+status_info "Pantheon pre-run scripting"
 
 /helpers/add-cert.sh
 

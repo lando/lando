@@ -23,10 +23,13 @@ node_modules
 # lando config
 env.yaml
 env.yml
+lando.env
 
-# gitbooks
-_books
-_book
+# docs
+_blog
+_docs
+_events
+_site
 docs/examples
 
 # Build dirs

@@ -44,12 +44,18 @@ lando ssh -s custom-service2 -c "env | grep SPICE=GIRLS"
 # Should have built custom database 2 from local relative path
 lando ssh -s custom-database2 -c "env | grep BRITNEY=SPEARS"
 
-# Should be able to add named volume data persistance
+# Should be able to add named volume data persistence
 lando ssh -s custom-database -u root -c "echo things > /var/lib/postgresql/data/stuff"
 
 # Should be able to rebuild without pulling local image and named volumes should work
 lando rebuild -y
 lando ssh -s custom-database -u root -c "cat /var/lib/postgresql/data/stuff | grep things"
+
+# Should be able to rebuild with success from a subdirectory when using custom dockerfile
+# https://github.com/lando/lando/issues/2102
+cd custom
+lando rebuild -y
+lando ssh -s custom-service2 -c "cat /tmp/monkeysee.txt" | grep CHAOS
 ```
 
 Destroy tests

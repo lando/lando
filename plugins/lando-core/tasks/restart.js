@@ -1,21 +1,30 @@
 'use strict';
 
-const chalk = require('chalk');
+const _ = require('lodash');
 const utils = require('./../lib/utils');
 
 module.exports = lando => {
-  const table = lando.cli.makeTable();
   return {
     command: 'restart',
     describe: 'Restarts your app',
     run: options => {
-      // Message
       // Try to get our app
       const app = lando.getApp(options._app.root);
       // Restart it if we can!
       if (app) {
-        console.log(chalk.green('Stopping your app... just so we can start it up again ¯\\_(ツ)_/¯'));
-        return utils.appToggle(app, 'restart', table, lando.cli.makeArt());
+        console.log(lando.cli.makeArt('appRestart', {name: app.name, phase: 'pre'}));
+        // Normal
+        return app.restart().then(() => {
+          const type = !_.isEmpty(app.warnings) ? 'report' : 'post';
+          console.log(lando.cli.makeArt('appStart', {name: app.name, phase: type, warnings: app.warnings}));
+          console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
+          console.log('');
+        })
+        // Provide help if there is an error
+        .catch(err => {
+          lando.log.debug(err);
+          console.log(lando.cli.makeArt('appStart', {phase: 'error'}));
+        });
       }
     },
   };

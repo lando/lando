@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Declare
-# declare -r lando_bundle_dir=/Applications/Lando.app/Contents/MacOS
-
 # Unset some possibly bad things
 unset DYLD_LIBRARY_PATH
 unset LD_LIBRARY_PATH
 
-# Ensure app perms
-# chmod -R 755 /Applications/Lando.app/
-
-# Symlink the lando binary
+# After installation we need to move our installed binary elsewhere
+#
+# This is needed until we can do proper signing of the lando binary pkg which
+# causes notarization to fail
+#
+# See: https://github.com/zeit/pkg/issues/128
 mkdir -p /usr/local/bin
-# ln -sF ${lando_bundle_dir}/bin/lando /usr/local/bin/lando
+mv -f /usr/local/bin/lando.txt /usr/local/bin/lando
+chmod +x /usr/local/bin/lando
 
 # Fin

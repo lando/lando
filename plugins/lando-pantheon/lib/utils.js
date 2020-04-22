@@ -11,8 +11,8 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 // Constants
-const DRUSH_VERSION = '8.1.18';
-const BACKDRUSH_VERSION = '0.0.6';
+const DRUSH_VERSION = '8.3.2';
+const BACKDRUSH_VERSION = '1.2.0';
 const PANTHEON_CACHE_HOST = 'cache';
 const PANTHEON_CACHE_PORT = '6379';
 const PANTHEON_CACHE_PASSWORD = '';
@@ -104,10 +104,15 @@ const getPantheonSettings = options => ({
 /*
  * Helper to get build steps
  */
-exports.getPantheonBuildSteps = framework => {
+exports.getPantheonBuildSteps = (framework, drush = 8) => {
   if (framework === 'wordpress') return [getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck)];
   else {
-    const build = [getDrush(DRUSH_VERSION, ['drush', '--version'])];
+    const build = [];
+    // Figure out drush
+    if (drush > 8) build.push(['composer', 'global', 'require', `drush/drush:^${drush}`]);
+    else build.push(getDrush(DRUSH_VERSION));
+    build.push(['drush', '--version']);
+    // And then hit up other framework specific stuff
     if (framework === 'drupal8') {
       build.push(getPhar(
         'https://drupalconsole.com/installer',
@@ -151,6 +156,10 @@ exports.getPantheonConfig = (files = ['pantheon.upstream.yml', 'pantheon.yml']) 
     data.php = _.toString(_.get(data, 'php_version', '5.6'));
     // Set the webroot
     data.webroot = (_.get(data, 'web_docroot', false)) ? 'web' : '.';
+    // Set the drush version
+    data.drush = _.toString(_.get(data, 'drush_version', '8'));
+    // if drush version is less than 8, use 8 anyway
+    if (data.drush < 8) data.drush = 8;
     // return
     return data;
   })
@@ -207,6 +216,7 @@ exports.getPantheonEnvironment = options => ({
   php_version: options.php_version,
   PRESSFLOW_SETTINGS: JSON.stringify(getPantheonSettings(options)),
   TERMINUS_ENV: 'dev',
+  TERMINUS_HIDE_UPDATE_MESSAGE: 1,
   // TERMINUS_ORG: ''
   TERMINUS_SITE: options.site,
   TERMINUS_TOKEN: _.get(options, '_app.meta.token'),

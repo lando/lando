@@ -61,22 +61,34 @@ module.exports = (app, lando) => {
   // Handle build steps
   // Go through each service and run additional build commands as needed
   app.events.on('post-init', () => {
+    // Add in build hashes
+    app.meta.lastPreBuildHash = _.trim(lando.cache.get(preLockfile));
+    app.meta.lastPostBuildHash = _.trim(lando.cache.get(postLockfile));
+    // Make sure containers for this app exist; if they don't and we have build locks, we need to kill them
     const buildServices = _.get(app, 'opts.services', app.services);
+    app.events.on('pre-start', () => {
+      return lando.engine.list({project: app.project, all: true}).then(data => {
+        if (_.isEmpty(data)) {
+          lando.cache.remove(preLockfile);
+          lando.cache.remove(postLockfile);
+        }
+      });
+    });
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
-      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps);
-      return utils.runBuild(lando, preBuild, preLockfile);
+      const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
+      return utils.runBuild(lando, preBuild, preLockfile, app.configHash, app.warnings);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(lando, postBuild, postLockfile);
+      return utils.runBuild(lando, postBuild, postLockfile, app.configHash, app.warnings);
     });
   });
 
   // Discover portforward true info
   app.events.on('ready', () => {
     const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
-    return lando.engine.list({app: app.project})
+    return lando.engine.list({project: app.project})
     .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
     .map(service => ({
       id: service.id,
@@ -85,11 +97,25 @@ module.exports = (app, lando) => {
     }))
     .map(service => lando.engine.scan(service).then(data => {
       const key = `NetworkSettings.Ports.${service.internal}/tcp`;
-      const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
+      const port = _.filter(_.get(data, key, []), forward => forward.HostIp === lando.config.bindAddress);
       if (_.has(port[0], 'HostPort')) {
         _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
       }
     }));
+  });
+
+  // Determine pullable and locally built images
+  app.events.on('pre-rebuild', () => {
+    // Determine local vs pullable services
+    const whereats = _(_.get(app, 'config.services', {}))
+      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build') || _.has(data, 'services.build')}))
+      .value();
+
+    // Set local and pullys for downstream concerns
+    app.opts = _.merge({}, app.opts, {
+      pullable: _(whereats).filter(service => !service.isLocal).map('service').value(),
+      local: _(whereats).filter(service => service.isLocal).map('service').value(),
+    });
   });
 
   // Remove build locks on an uninstall

@@ -1,12 +1,14 @@
-Environment
-===========
+---
+description: Lando sets a bunch of useful environment variables in each service by default, or you can inject your own by configurating your Landofile or using a custom environment file.
+---
+
+# Environment
 
 Lando will both inject a bunch of helpful environment variables into each service and allow the user to inject their own either by [file](#environment-files) or [configuration](#environment-configuration). Note that these variables are only available **inside** each service and **not on your host machine.**
 
-Default Environment Variables
------------------------------
+## Default Environment Variables
 
-While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./config.md) value.
+While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./global.md) value.
 
 ```bash
 lando ssh -s appserver -c env | grep LANDO_
@@ -41,8 +43,7 @@ LANDO_SERVICE_NAME=appserver
 
 **NOTE:** See [this tutorial](./../guides/lando-info.md) for more information on how to properly use `$LANDO_INFO`.
 
-Environment Files
------------------
+## Environment Files
 
 You can tell Lando to inject additional environment variables into every service in your app using environment files. This is particularly useful if you want to:
 
@@ -50,7 +51,7 @@ You can tell Lando to inject additional environment variables into every service
 2. Store credentials in a `.gitignored` file that is not committed to the repo
 3. Set config on a per environment basis
 
-You can accomplish this using the `env_file` top level config in your [Landofile](./lando.yml).
+You can accomplish this using the `env_file` top level config in your [Landofile](./lando.md).
 
 ```yaml
 env_file:
@@ -84,13 +85,14 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=http://wpb4.test/wp
 ```
 
-> #### Warning::This ONLY injects directly into the container environment.
->
-> We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.
->
-> For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
+If you add or change the `env_file` config, or alter the contents of any env files being used in this config, you will need to run `lando rebuild` for your changes to take effect.
 
-Environment Configuration
--------------------------
+::: warning This ONLY injects directly into the container environment!
+We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on the application side to grab them.
+
+For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
+:::
+
+## Environment Configuration
 
 If you'd like to avoid broad strokes and only inject certain environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).

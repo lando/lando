@@ -9,15 +9,13 @@ const path = require('path');
 // Helper for init display
 const showInit = (lando, options) => {
   console.log(lando.cli.makeArt('init'));
-  // Grab a new cli table
-  const table = lando.cli.makeTable();
-  // Add data
-  table.add('NAME', options.name);
-  table.add('LOCATION', options.destination);
-  table.add('RECIPE', options.recipe);
-  table.add('DOCS', `https://docs.devwithlando.io/tutorials/${options.recipe}.html`);
   // Print the table
-  console.log(table.toString());
+  console.log(lando.cli.formatData({
+    name: options.name,
+    location: options.destination,
+    recipe: options.recipe,
+    docs: `https://docs.lando.dev/config/${options.recipe}.html`,
+  }, {format: 'table'}, {border: false}));
   // Space it
   console.log('');
 };

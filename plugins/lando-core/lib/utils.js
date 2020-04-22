@@ -5,38 +5,6 @@ const _ = require('lodash');
 const chalk = require('chalk');
 const path = require('path');
 const url = require('url');
-const util = require('util');
-
-/*
- * A toggle to either start or restart
- */
-exports.appToggle = (app, toggle = 'start', table, header = '') => app[toggle]().then(() => {
-  // Header it
-  console.log(header);
-  // Inject start table into the table
-  _.forEach(exports.startTable(app), (value, key) => {
-    const opts = (_.includes(key, 'urls')) ? {arrayJoiner: '\n'} : {};
-    table.add(_.toUpper(key), value, opts);
-  });
-  // Print the table
-  console.log(table.toString());
-  console.log('');
-});
-
-/*
- * Returns a normal default interactive confirm with custom message
- */
-exports.buildConfirm = (message = 'Are you sure?') => ({
-  describe: 'Auto answer yes to prompts',
-  alias: ['y'],
-  default: false,
-  boolean: true,
-  interactive: {
-    type: 'confirm',
-    default: false,
-    message: message,
-  },
-});
 
 /*
  * Helper method to get the host part of a volume
@@ -46,11 +14,12 @@ exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
 /*
  * Takes inspect data and extracts all the exposed ports
  */
-exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
+exports.getUrls = (data, scan = ['80, 443'], bindAddress = '127.0.0.1') => {
+  return _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
   .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '443/tcp') ? 'https' : 'http'}))
   .filter(exposed => _.includes(scan, exposed.port))
   .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
-  .filter(ports => ports.HostIp === '0.0.0.0')
+  .filter(ports => _.includes([bindAddress, '0.0.0.0'], ports.HostIp))
   .map(ports => url.format({
     protocol: ports.protocol,
     hostname: 'localhost',
@@ -58,6 +27,7 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
   }))
   .thru(urls => ({service: data.Config.Labels['com.docker.compose.service'], urls}))
   .value();
+};
 
 /*
  * Helper method to normalize a path so that Lando overrides can be used as though
@@ -77,13 +47,13 @@ exports.normalizePath = (local, base = '.', excludes = []) => {
 /*
  * Helper to normalize overrides
  */
-exports.normalizeOverrides = (overrides, volumes = {}) => {
+exports.normalizeOverrides = (overrides, base = '.', volumes = {}) => {
   // Normalize any build paths
   if (_.has(overrides, 'build')) {
     if (_.isObject(overrides.build) && _.has(overrides, 'build.context')) {
-      overrides.build.context = exports.normalizePath(overrides.build.context, '.');
+      overrides.build.context = exports.normalizePath(overrides.build.context, base);
     } else {
-      overrides.build = exports.normalizePath(overrides.build, '.');
+      overrides.build = exports.normalizePath(overrides.build, base);
     }
   }
   // Normalize any volumes
@@ -96,7 +66,7 @@ exports.normalizeOverrides = (overrides, volumes = {}) => {
         const remote = _.last(volume.split(':'));
         // @TODO: I don't think below does anything?
         const excludes = _.keys(volumes).concat(_.keys(volumes));
-        const host = exports.normalizePath(local, '.', excludes);
+        const host = exports.normalizePath(local, base, excludes);
         return [host, remote].join(':');
       }
     });
@@ -108,14 +78,15 @@ exports.normalizeOverrides = (overrides, volumes = {}) => {
  * Returns a CLI table with app start metadata info
  */
 exports.startTable = app => {
-  // Spin up collectors
-  const data = {};
+  const data = {
+    name: app.name,
+    location: app.root,
+    services: _(app.info)
+      .map(info => (info.healthy) ? chalk.green(info.service) : chalk.yellow(info.service))
+      .values()
+      .join(', '),
+  };
   const urls = {};
-
-  // Add generic data
-  data.name = app.name;
-  data.location = app.root;
-  data.services = app.services;
 
   // Categorize and colorize URLS if and as appropriate
   _.forEach(app.info, info => {
@@ -147,42 +118,3 @@ exports.stripPatch = version => _.slice(version.split('.'), 0, 2).join('.');
 exports.stripWild = versions => _(versions)
   .map(version => (version.split('.')[2] === 'x') ? _.slice(version.split('.'), 0, 2).join('.') : version)
   .value();
-
-
-exports.formattedOptions = {
-  format: {
-    describe: 'Output in given format: json',
-    string: true,
-  },
-  path: {
-    describe: 'Only return the value at the given path',
-    alias: ['p'],
-    default: null,
-    string: true,
-  },
-};
-
-exports.outputFormatted = (input, path = null, format = null) => {
-  const data = path && _.has(input, path) ?
-    _.get(input, path) :
-    input;
-
-  let output;
-
-  switch (format) {
-    case 'json':
-      output = JSON.stringify(data);
-      break;
-
-    // @TODO: Add CSV.
-
-    default:
-      output = util.inspect(data, {
-        colors: true,
-        depth: 10,
-        compact: false,
-      });
-  }
-
-  return console.log(output);
-};
