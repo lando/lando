@@ -179,7 +179,7 @@ module.exports = (app, lando) => {
         const proxyData = new app.ComposeService('proxy', {}, ...result);
         const proxyFiles = lando.utils.dumpComposeData(proxyData, app._dir);
         app.compose = app.compose.concat(proxyFiles);
-        lando.log.verbose('App %s has proxy compose files %j', app.name, proxyFiles);
+        app.log.debug('app has proxy compose files', proxyFiles);
 
         // Add proxy URLS to our app info
         _.forEach(['post-start', 'post-init'], event => {

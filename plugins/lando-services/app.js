@@ -48,7 +48,7 @@ module.exports = (app, lando) => {
         lando.log.warn('%s is not a supported service type.', service.type);
       }
       // Log da things
-      lando.log.verbose('Building %s %s named %s', service.type, service.version, service.name);
+      app.log.debug('building %s %s named %s', service.type, service.version, service.name);
       // Build da things
       // @NOTE: this also gathers app.info and build steps
       const Service = lando.factory.get(service.type);

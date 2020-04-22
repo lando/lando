@@ -29,7 +29,7 @@ module.exports = (app, lando) => {
       // Connect
       .then(() => {
         landonet.connect({Container: container.id, EndpointConfig: {Aliases: aliases}});
-        lando.log.info('Connected %s to the landonet', container.name);
+        app.log.debug('connected %s to the landonet', container.name);
       });
     });
   });
