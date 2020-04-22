@@ -76,6 +76,7 @@
       "experimental/plugins/**/*.tpl",
       "experimental/plugins/**/*.vcl",
       "experimental/plugins/**/*.xml",
+      "experimental/plugins/**/*.yaml",
       "experimental/plugins/**/*.yml",
       "plugins/**/fastcgi_params",
       "plugins/**/*.cnf",
@@ -88,6 +89,7 @@
       "plugins/**/*.tpl",
       "plugins/**/*.vcl",
       "plugins/**/*.xml",
+      "plugins/**/*.yaml",
       "plugins/**/*.yml",
       "node_modules/figlet/fonts/Small Slant.flf",
       "node_modules/figlet/fonts/ANSI Shadow.flf"

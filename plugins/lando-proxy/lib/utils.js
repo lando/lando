@@ -6,6 +6,20 @@ const hasher = require('object-hash');
 const url = require('url');
 
 /*
+ * Helper to get URLs for app info and scanning purposes
+ */
+const getInfoUrls = (url, ports, hasCerts = false) => {
+  // Start with the default
+  const urls = [`http://${url.host}${ports.http === '80' ? '' : `:${ports.http}`}${url.pathname}`];
+  // Add https if we can
+  if (hasCerts) {
+    urls.push(`https://${url.host}${ports.https === '443' ? '' : `:${ports.https}`}${url.pathname}`);
+  }
+  // Return
+  return urls;
+};
+
+/*
  * Reduces urls to first open port
  */
 exports.getFirstOpenPort = (scanner, urls = []) => scanner(urls, {max: 1, waitCodes: []})
@@ -58,12 +72,9 @@ exports.getUrlsCounts = config => _(config)
 /*
  * Parse config into urls we can merge to app.info
  */
-exports.parse2Info = (urls, ports) => _(urls)
+exports.parse2Info = (urls, ports, hasCerts = false) => _(urls)
   .map(url => exports.parseUrl(url))
-  .flatMap(url => [
-    `http://${url.host}${ports.http === '80' ? '' : `:${ports.http}`}${url.pathname}`,
-    // `https://${url.host}${ports.https === '443' ? '' : `:${ports.https}`}${url.pathname}`,
-  ])
+  .flatMap(url => getInfoUrls(url, ports, hasCerts))
   .value();
 
 /*
@@ -77,19 +88,19 @@ exports.parse2Sans = urls => _(urls)
 /*
  * Parse hosts for traefik
  */
-exports.parseConfig = config => _(config)
+exports.parseConfig = (config, sslReady = []) => _(config)
   .map((urls, service) => ({
     environment: {
       LANDO_PROXY_NAMES: exports.parse2Sans(urls),
     },
     name: service,
-    labels: exports.parseRoutes(service, urls)}))
+    labels: exports.parseRoutes(service, urls, sslReady)}))
   .value();
 
 /*
  * Helper to parse the routes
  */
-exports.parseRoutes = (service, urls = [], labels = {}) => {
+exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
   // Prepare our URLs for traefik
   const parsedUrls = _(urls)
     .map(url => exports.parseUrl(url))
@@ -111,35 +122,18 @@ exports.parseRoutes = (service, urls = [], labels = {}) => {
       labels[`traefik.http.middlewares.${rule.id}-stripprefix.stripprefix.prefixes`] = rule.pathname;
     }
 
-    console.log(labels);
-
-
-    // we need
-    // http here
-    // labels['traefik.http.routers.custom.rule'] = `HostRegexp(\`${hostRegex}\`)`;
-    // @TODO FOR TESTING NEW CERT STUCC
-
-    // https terminated at traefix
-    // labels['traefik.http.routers.custom-secured.entrypoints'] = 'https';
-    // labels['traefik.http.routers.custom-secured.rule'] = `HostRegexp(\`${hostRegex}\`)`;
-    // labels['traefik.http.routers.custom-secured.tls'] = true;
-    // labels['traefik.tcp.services.custom-secured.loadbalancer.server.port'] = parsedUrl.port;
-    // labels['traefik.http.routers.custom-secured.rule'] = 'Host(`nginx.lndo.site`, `www.nginx.lndo.site`)';
-
-    // here starts the tls passthrough ops
-    // labels['traefik.tcp.routers.custom-secured.entrypoints'] = 'https';
-    // labels['traefik.tcp.routers.custom-secured.rule'] = `HostSNI(\`${parsedUrl.host}\`)`;
-    // labels['traefik.tcp.routers.custom-secured.rule'] = 'HostSNI(`nginx.lndo.site`, `www.nginx.lndo.site`)';
-    // labels['traefik.tcp.routers.custom-secured.service'] = 'custom2';
-    // labels['traefik.tcp.routers.custom-secured.tls'] = true;
-    // labels['traefik.tcp.routers.custom-secured.tls.passthrough'] = true;
-    // labels['traefik.tcp.services.custom2.loadbalancer.server.port'] = 443;
-
-    /*
-    if (parsedUrl.pathname.length > 1) {
-      labels[`traefik.${i}.frontend.rule`] += `;PathPrefixStrip:${parsedUrl.pathname}`;
+    // Add https if we can
+    if (_.includes(sslReady, service)) {
+      labels['io.lando.proxy.has-certs'] = true;
+      labels[`traefik.http.routers.${rule.id}-secured.entrypoints`] = 'https';
+      labels[`traefik.http.routers.${rule.id}-secured.rule`] = exports.getRule(rule);
+      labels[`traefik.http.routers.${rule.id}-secured.tls`] = true;
+      labels[`traefik.tcp.services.${rule.id}-secured.loadbalancer.server.port`] = rule.port;
+      if (rule.pathname.length > 1) {
+        labels[`traefik.http.routers.${rule.id}-secured.middlewares`] = `${rule.id}-stripprefix-secured`;
+        labels[`traefik.http.middlewares.${rule.id}-stripprefix-secured.stripprefix.prefixes`] = rule.pathname;
+      }
     }
-    */
   });
   return labels;
 };
@@ -152,7 +146,6 @@ exports.parseUrl = string => {
   // occurrences for our magic word __wildcard__, because otherwise the url parser
   // won't parse wildcards in the hostname correctly.
   const parsedUrl = url.parse(`http://${string}`.replace(/\*/g, '__wildcard__'));
-
   return {
     host: parsedUrl.hostname.replace(/__wildcard__/g, '*'),
     port: parsedUrl.port || '80',

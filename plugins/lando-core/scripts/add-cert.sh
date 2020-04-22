@@ -69,7 +69,12 @@ openssl x509 \
   -days 825 \
   -sha256 \
   -extfile /certs/cert.ext
+
+# Pemify
 cat /certs/cert.crt /certs/cert.key > /certs/cert.pem
+# Also copy to our persistent cert volume
+cp -f /certs/cert.crt "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"
+cp -f /certs/cert.key "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"
 # This is a weird hack to handle recent changes to bitnami's apache image without causing
 # breaking changes
 cp -f /certs/cert.crt /certs/server.crt

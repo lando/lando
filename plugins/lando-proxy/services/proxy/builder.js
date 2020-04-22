@@ -6,22 +6,16 @@ const _ = require('lodash');
 /*
  * Helper to get core proxy service
  */
-const getProxy = ({version = 'unknown'} = {}) => {
+const getProxy = ({proxyCommand, proxyDomain, userConfRoot, version = 'unknown'} = {}) => {
   return {
     services: {
       proxy: {
         image: 'traefik:2.2.0',
-        command: [
-          '/entrypoint.sh',
-          '--log.level=DEBUG',
-          '--api.insecure=true',
-          '--providers.docker=true',
-          '--entrypoints.https.address=:443',
-          '--entrypoints.http.address=:80',
-          '--providers.docker.exposedbydefault=false',
-        ].join(' '),
+        command: proxyCommand.join(' '),
         environment: {
           LANDO_VERSION: version,
+          LANDO_APP_PROJECT: '_lando_',
+          LANDO_EXTRA_NAMES: `DNS.100 = *.${proxyDomain}`,
         },
         networks: ['edge'],
         volumes: [
@@ -66,7 +60,6 @@ module.exports = {
     sslExpose: false,
     refreshCerts: true,
   },
-  // @TODO: ssl=true here currently exposes two ports into 443, should we separate ssl/addcerts?
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
       const proxy = getProxy(options);

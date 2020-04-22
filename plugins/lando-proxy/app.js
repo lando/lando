@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const mkdirp = require('mkdirp');
 const path = require('path');
 const utils = require('./lib/utils');
 
@@ -60,20 +61,68 @@ module.exports = (app, lando) => {
   const LandoProxy = lando.factory.get('_proxy');
   // Determine what ports we need to discover
   const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
+  // Path to some things
+  const proxyDir = path.join(lando.config.userConfRoot, 'proxy');
+  const proxyConfigDir = path.join(proxyDir, 'config');
+
   // Only do things if the proxy is enabled
   // @TODO: below is nasty and probably isn't precise enough
   if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
+    // Dump cert files as needed, this has to happen AFTER the proxy and the certs have been created
+    app.events.on('post-start', 999, () => {
+      // Start with the default cert
+      const files = [{
+        path: path.join(proxyConfigDir, 'default-certs.yaml'),
+        data: {tls: {stores: {default: {defaultCertificate: {
+          certFile: lando.config.proxyDefaultCert,
+          keyFile: lando.config.proxyDefaultKey,
+        }}}}},
+      }];
+
+      // Add the certs for the service
+      files.push({
+        path: path.join(proxyConfigDir, `${app.project}.yaml`),
+        data: {
+          tls: {
+            certificates: _(_.get(app, 'config.services', {}))
+              .map((data, name) => _.merge({}, data, {name}))
+              .filter(data => data.ssl)
+              .map(data => ({
+                certFile: `/lando/certs/${data.name}.${app.project}.crt`,
+                keyFile: `/lando/certs/${data.name}.${app.project}.key`,
+              }))
+              .value(),
+          },
+        },
+      });
+
+      // Finally add in custom config if we have it
+      if (!_.isEmpty(lando.config.proxyCustom)) {
+        files.push({
+          path: path.join(proxyConfigDir, 'user-custom.yaml'),
+          data: lando.config.proxyCustom,
+        });
+      }
+
+      // Dump all the files
+      _.forEach(files, file => lando.yaml.dump(file.path, file.data));
+    });
+
+    // Start and setup the proxy and services
     app.events.on('pre-start', 1, () => findProxyPorts(lando, protocolStatus)
-      // Make sure the proxy is running with the correct settings
       .then(ports => {
         // Fail immediately with a warning if we dont have the ports we need
         if (_.isEmpty(ports.http) || _.isEmpty(ports.https)) {
           const allPorts = getAllPorts(_.isEmpty(ports.http), _.isEmpty(ports.https), lando.config);
           return Promise.reject(`Lando could not detect an open port amongst: ${allPorts}`);
         }
+
+        // Do some setup
+        mkdirp.sync(proxyConfigDir);
         // Build the proxy
         const proxyData = new LandoProxy(ports.http, ports.https, lando.config);
         const proxyFiles = lando.utils.dumpComposeData(proxyData, path.join(lando.config.userConfRoot, 'proxy'));
+
         // Start the proxy
         return lando.engine.start(utils.getProxyRunner(lando.config.proxyName, proxyFiles)).then(() => {
           lando.cache.set(lando.config.proxyCache, ports, {persist: true});
@@ -87,7 +136,16 @@ module.exports = (app, lando) => {
         if (_.max(_.values(urlCounts)) > 1) {
           lando.log.error('You cannot assign url %s to more than one service!', _.findKey(urlCounts, c => c > 1));
         }
-        return utils.parseConfig(app.config.proxy);
+
+        // Get list of services that *should* have certs for SSL
+        const sslReady = _(_.get(app, 'config.services', {}))
+          .map((data, name) => _.merge({}, data, {name}))
+          .filter(data => data.ssl)
+          .map(data => data.name)
+          .value();
+
+        // Parse config
+        return utils.parseConfig(app.config.proxy, sslReady);
       })
 
       // Map to docker compose things
@@ -98,6 +156,8 @@ module.exports = (app, lando) => {
           lando.log.warn('Try running `lando info` and using one of the services listed there.');
           return {};
         }
+
+        // Build out the docker compose augment and return
         service.labels['traefik.enable'] = true;
         service.labels['traefik.docker.network'] = lando.config.proxyNet;
         return {
@@ -129,7 +189,11 @@ module.exports = (app, lando) => {
             if (ports) {
               _(app.info)
                 .filter(service => _.has(app, `config.proxy.${service.service}`))
-                .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(app.config.proxy[s.service], ports))))
+                .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(
+                  app.config.proxy[s.service],
+                  ports,
+                  _.get(s, 'hasCerts', false)
+                ))))
                 .value();
             }
           });
