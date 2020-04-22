@@ -27,6 +27,7 @@ const defaultConfig = {
   proxyHttpsPort: '443',
   proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
   proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
+  proxyPassThru: true,
 };
 
 module.exports = lando => {

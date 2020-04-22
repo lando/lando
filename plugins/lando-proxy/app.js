@@ -80,21 +80,23 @@ module.exports = (app, lando) => {
       }];
 
       // Add the certs for the service
-      files.push({
-        path: path.join(proxyConfigDir, `${app.project}.yaml`),
-        data: {
-          tls: {
-            certificates: _(_.get(app, 'config.services', {}))
-              .map((data, name) => _.merge({}, data, {name}))
-              .filter(data => data.ssl)
-              .map(data => ({
-                certFile: `/lando/certs/${data.name}.${app.project}.crt`,
-                keyFile: `/lando/certs/${data.name}.${app.project}.key`,
-              }))
-              .value(),
+      if (lando.config.proxyPassThru) {
+        files.push({
+          path: path.join(proxyConfigDir, `${app.project}.yaml`),
+          data: {
+            tls: {
+              certificates: _(_.get(app, 'config.services', {}))
+                .map((data, name) => _.merge({}, data, {name}))
+                .filter(data => data.ssl)
+                .map(data => ({
+                  certFile: `/lando/certs/${data.name}.${app.project}.crt`,
+                  keyFile: `/lando/certs/${data.name}.${app.project}.key`,
+                }))
+                .value(),
+            },
           },
-        },
-      });
+        });
+      }
 
       // Finally add in custom config if we have it
       if (!_.isEmpty(lando.config.proxyCustom)) {
