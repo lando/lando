@@ -8,13 +8,9 @@ const _ = require('lodash');
  */
 const recommendedRedis = () => {
   return {
-    // Refer to redis 4.0 to keep Lando from complaining about our preferred 3.2
-    type: 'redis:4.0',
+    type: 'redis:5.0',
     portforward: true,
     persist: true,
-    overrides: {
-      image: 'redis:3.2',
-    },
   };
 };
 
@@ -75,10 +71,37 @@ const buildTooling = options => {
       `&& ${magentoCli} cache:flush`,
     ].join(' '),
   };
+
   options.tooling.magerun = {
     description: 'netz98 magerun CLI tools for Magento 2',
     service: 'appserver',
     cmd: `n98-magerun2`,
+  };
+
+  options.tooling['magento:create-project:community'] = {
+    description: 'Create new Magento project in current directory',
+    service: 'appserver',
+    cmd: [
+      'rm -f /var/www/.composer/auth.json',
+      'rm -rf /tmp/magento',
+      'composer create-project --repository=https://repo.magento.com/' +
+      ' magento/project-community-edition /tmp/magento --no-install',
+      'rsync -apv /tmp/magento/ .',
+      'composer install',
+    ],
+  };
+
+  options.tooling['magento:create-project:enterprise'] = {
+    description: 'Create new Magento project in current directory',
+    service: 'appserver',
+    cmd: [
+      'rm -f /var/www/.composer/auth.json',
+      'rm -rf /tmp/magento',
+      'composer create-project --repository=https://repo.magento.com/' +
+      ' magento/project-enterprise-edition /tmp/magento --no-install',
+      'rsync -apv /tmp/magento/ .',
+      'composer install',
+    ],
   };
 };
 
@@ -97,37 +120,24 @@ module.exports = {
     defaultFiles: {
       php: 'php.ini',
     },
-    environment: {
-      // Magento Recommended Limit
-      PHP_MEMORY_LIMIT: '2G',
-    },
-    php: '7.2',
-    services: {
-      appserver: {
-        overrides: {
-          environment: {
-            APP_LOG: 'errorlog',
-          },
-        },
-      },
-    },
+    php: '7.3',
+    services: {appserver: {overrides: {environment: {
+      APP_LOG: 'errorlog',
+    }}}},
     tooling: {magento: {service: 'appserver'}},
     via: 'nginx',
     webroot: 'pub',
     xdebug: false,
+    environment: {PHP_MEMORY_LIMIT: '2G'},
   },
   builder: (parent, config) => class LandoMagento extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-
       // Apply default service options
       options.services = _.merge({}, getServiceDefaults(options), options.services);
-
       // Add the magento cli installer command
       options.composer['n98/magerun2'] = '*';
-
       buildTooling(options);
-
       // Default to Magento-recommended cache service
       options.services.cache = recommendedRedis();
       // Default to Magento-recommended cache service

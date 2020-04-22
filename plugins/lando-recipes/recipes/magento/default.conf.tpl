@@ -18,10 +18,11 @@ server {
     port_in_redirect off;
     client_max_body_size 100M;
 
-    set $MAGE_ROOT /app;
-
     root "{{LANDO_WEBROOT}}";
-    index index.php index.html index.htm;
+    index index.php;
+
+    set $MAGE_ROOT /app/pub;
+
     autoindex off;
     charset UTF-8;
     error_page 404 403 = /errors/404.php;
@@ -96,13 +97,13 @@ server {
             rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
         }
 
-        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2|json)$ {
             add_header Cache-Control "public";
             add_header X-Frame-Options "SAMEORIGIN";
             expires +1y;
 
             if (!-f $request_filename) {
-                rewrite ^/static/?(.*)$ /static.php?resource=$1 last;
+                rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
             }
         }
         location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
@@ -111,11 +112,11 @@ server {
             expires    off;
 
             if (!-f $request_filename) {
-               rewrite ^/static/?(.*)$ /static.php?resource=$1 last;
+                rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
             }
         }
         if (!-f $request_filename) {
-            rewrite ^/static/?(.*)$ /static.php?resource=$1 last;
+            rewrite ^/static/?(.*)$ /static.php?resource=$2 last;
         }
         add_header X-Frame-Options "SAMEORIGIN";
     }
@@ -154,22 +155,11 @@ server {
         deny all;
     }
 
-    location ~* ^/dev/tests/functional/utils($|/) {
-      root $MAGE_ROOT;
-      location ~ ^/dev/tests/functional/utils/command.php {
-          fastcgi_pass fpm:9000;
-
-          fastcgi_param  PHP_FLAG  "session.auto_start=off \n suhosin.session.cryptua=off";
-          fastcgi_param  PHP_VALUE "memory_limit=756M \n max_execution_time=600";
-          fastcgi_read_timeout 600s;
-          fastcgi_connect_timeout 600s;
-
-          fastcgi_index  index.php;
-          fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-          include        fastcgi_params;
-      }
+    location /errors/ {
+        location ~* \.xml$ {
+            deny all;
+        }
     }
-
     location ~* ^/dev/tests/functional/utils($|/) {
       root $MAGE_ROOT;
       location ~ ^/dev/tests/functional/utils/website.php {
@@ -187,7 +177,7 @@ server {
     }
 
     # PHP entry point for main application
-    location ~ (index|get|static|report|404|503|health_check)\.php$ {
+    location ~ ^/(index|get|static|errors/report|errors/404|errors/503|health_check)\.php$ {
         try_files $uri =404;
         fastcgi_pass   fpm:9000;
         fastcgi_buffers 1024 4k;
@@ -224,7 +214,7 @@ server {
     gzip_vary on;
 
     # Banned locations (only reached if the earlier PHP entry point regexes don't match)
-    location ~* (\.php$|\.htaccess$|\.git) {
+    location ~* (\.php$|\.phtml$|\.htaccess$|\.git) {
         deny all;
     }
 

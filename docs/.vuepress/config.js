@@ -149,6 +149,7 @@ module.exports = {
             'laravel',
             'lamp',
             'lemp',
+            'magento',
             'mean',
             'pantheon',
             'wordpress',

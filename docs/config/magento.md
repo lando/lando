@@ -1,45 +1,47 @@
-Magento
-=======
+---
+description: Magento LEMP stack on Lando for local development; powered by Docker and Docker Compose, learn how to config php and nginx version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and exports databases.
+---
+
+# Magento
 
 Magento 2, a cutting-edge, feature-rich eCommerce solution that gets results.
 
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [Magento](https://magento.com/products/magento-commerce) apps.
 
-<!-- toc -->
+[[toc]]
 
-Getting Started
----------------
+## Getting Started
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../installation/system-requirements.md) and gotten familar with [its basics](./../started.md)
-2. [Initialized](./../cli/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
+2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Magento.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) here is an example of using the LEMP recipe to run the older [CakePHP 2.0](https://cakephp.org/) project. Note that CakePHP could be any other [php framework](https://www.dotcominfoway.com/blog/top-5-must-have-php-frameworks-2018) or your own custom php thing.
 
 ```bash
 # Initialize a Magento recipe
 lando init \
   --source cwd \
   --recipe magento \
-  --webroot app/pub \
+  --webroot pub \
   --name my-first-magento-app
-
-# Install Magento
-lando ssh -c "composer create-project --repository=https://repo.magento.com/ magento/project-community-edition app"
-
-# Or, to install Magento without Magento Credentials, @see: https://store.fooman.co.nz/blog/no-authentication-needed-magento-2-mirror.html
 
 # Start it up
 lando start
+
+# If project is empty, install Magento Community Edition
+lando magento:create-project:community
+
+# Or, Install Magento Enterprise Edition
+lando magento:create-project:enterprise
 
 # List information about this app.
 lando info
 ```
 
-Configuration
--------------
+## Configuration
 
 While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
 
@@ -48,15 +50,15 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: magento
 config:
-  php: 7.2
+  php: '7.3'
   via: nginx
   webroot: pub
   database: mariadb:10.2
   xdebug: false
   config:
-    database: SEE BELOW
-    php: SEE BELOW
     server: SEE BELOW
+    php: SEE BELOW
+    database: SEE BELOW
     vhosts: SEE BELOW
 ```
 
@@ -64,29 +66,29 @@ Note that if the above config options are not enough all Lando recipes can be fu
 
 ### Choosing a php version
 
-You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Magento requirements](https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.html) to make sure that version is actually supported by Magento itself.
+You can set `php` to any version that is available in our [php service](./php.md). However, you should make sure that whatever framework or custom code you write is designed to work with your choice.
 
 Here is the [recipe config](./../config/recipes.md#config) to set the Magento recipe to use `php` version `7.1`
 
 ```yaml
 recipe: magento
 config:
-  php: 7.1
+  php: '7.1'
 ```
 
 ### Webserver
 
-This Magento recipe currently only supports NGINX. Apache support may be provided in future releases.
+This Magento recipe only supports NGINX. Apache support may become available in future releases.
 
 ### Choosing a database backend
 
-By default this recipe will use the latest Magento-supported version of [mariadb](./mariadb.md) service as the database backend but you can also switch this to use [`mysql`](./mysql.md). Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+By default this recipe will use the latest Magento-supported version of [mariadb](./mariadb.md) service as the database backend but you can also switch this to use [`mysql`](./mysql.md). Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb`.
 
 If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Magento requirements](https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.html) to make sure the `database` and `version` you select is actually supported by Magento itself.
+You should consult the [Magento requirements](https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements-tech.html) to ensure that the Lando configuration you've chosen is compatible with your version of Magento.
 
-** Using MariaDB (default) **
+#### Using MariaDB (default)
 
 ```yaml
 recipe: magento
@@ -94,7 +96,7 @@ config:
   database: mariadb:10.2
 ```
 
-** Using MySQL **
+#### Using MySQL
 
 ```yaml
 recipe: magento
@@ -104,11 +106,11 @@ config:
 
 ### Choosing a caching and session backend
 
-By default this recipe will spin up a Redis cache and session service at the Magento-recommended version of 3.2
+By default, this recipe will spin up a Redis cache and session service at the Magento-recommended version of 5.0
 
 However, you can disable or [override the service version](../config/services.md#overrides) as needed.
 
-** Disabling default Redis services **
+#### Disabling Redis
 
 ```yaml
 recipe: magento
@@ -119,7 +121,7 @@ config:
 
 This recipe comes with a helpful command to auto-configure Redis sessions and cache services for Magento.
 
-** Auto-Configure Redis for Magento **
+#### Auto-Configure Redis for Magento
 
 ```bash
 lanado magento:env:apply
@@ -144,7 +146,7 @@ You may need to override our [default Magento config](https://github.com/lando/l
 
 If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
 
-Note that the default files may change based on how you set both `ssl`. 
+Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be explicitly for `nginx`. We *highly recommend* you check out the [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
 **A hypothetical project**
 
@@ -155,6 +157,7 @@ Note that you can put your configuration files anywhere inside your application 
 |-- config
    |-- default.conf
    |-- my-custom.cnf
+   |-- nginx.conf
    |-- php.ini
 |-- index.php
 |-- .lando.yml
@@ -170,6 +173,12 @@ config:
     php: config/php.ini
     vhosts: config/default.conf
 ```
+
+## Connecting to your database
+
+Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+
+Here are is the default database connection information for a LEMP site. Note that the `host` is not `localhost` but `database`.
 
 Environment File
 ----------------
@@ -234,8 +243,7 @@ port: 6379
 
 You can get also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
 
-Importing Your Database
------------------------
+## Importing Your Database
 
 Once you've started up your Magento site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
@@ -296,25 +304,19 @@ lando magento:env:apply
 # Destroys your database, installs composer dependencies, and installs a brand new Magento!
 lando magento:fresh
 
-# Run composer install
-lando composer install
+# Download a dependency with drush
+lando composer require phpunit/phpunit --dev
+
+# Run composer tests
+lando db-import dump.sql.gz
 
 # Drop into a mysql shell
 lando mysql
 
-# Check the app's php version
-lando php -v
+# Check the app's installed php extensions
+lando php -m
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above.
+You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
-Example
--------
-
-If you are interested in a working example of this recipe that we test on every Lando build then check out
-[https://github.com/lando/lando/tree/master/examples/magento](https://github.com/lando/lando/tree/master/examples/magento)
-
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}
+<RelatedGuides tag="LEMP"/>
