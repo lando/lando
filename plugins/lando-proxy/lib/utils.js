@@ -81,7 +81,8 @@ exports.parse2Info = (urls, ports, hasCerts = false) => _(urls)
  * Parse urls into SANS
  */
 exports.parse2Sans = urls => _(urls)
-  .map((url, index) => `DNS.${index+10} = ${url}`)
+  .map(url => exports.parseUrl(url).host)
+  .map((host, index) => `DNS.${10+index} = ${host}`)
   .value()
   .join('\n');
 
