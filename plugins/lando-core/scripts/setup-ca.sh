@@ -2,14 +2,12 @@
 
 set -e
 
-# LANDO DOMAINS
-# FILE FOR  THINGS
-# @TODO: Do we actually need a CA per LANDO_DOMAIN?
+# Default CAs
 : ${LANDO_CA_CERT:='/certs/lndo.site.pem'}
 : ${LANDO_CA_KEY:='/certs/lndo.site.key'}
 
 # Let's log some helpful things
-echo "Looks like you do not have a Lando CA for $LANDO_DOMAIN yet! Let's set one up!"
+echo "Looks like you do not have a Lando CA yet! Let's set one up!"
 echo "Trying to setup root CA with..."
 echo "LANDO_CA_CERT: $LANDO_CA_CERT"
 echo "LANDO_CA_KEY: $LANDO_CA_KEY"
@@ -38,7 +36,7 @@ if [ ! -f "$LANDO_CA_CERT" ]; then
     -sha256 \
     -days 8675 \
     -out $LANDO_CA_CERT \
-    -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=Bespin/CN=Lando Local CA for $LANDO_DOMAIN"
+    -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=Bespin/CN=Lando Local CA"
   # log
   echo "CA generated at $LANDO_CA_CERT"
 fi

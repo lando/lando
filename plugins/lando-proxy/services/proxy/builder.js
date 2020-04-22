@@ -40,7 +40,6 @@ const getPorts = (http, https, {dash, bindAddress = '127.0.0.1'} = {}) => ({
       ports: [
         [bindAddress, http, '80'].join(':'),
         [bindAddress, https, '443'].join(':'),
-        [bindAddress, '8080', '8080'].join(':'),
       ],
     },
   },
