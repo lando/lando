@@ -147,8 +147,23 @@ module.exports = (app, lando) => {
           .map(data => data.name)
           .value();
 
+        // Make sure we augment ssl ready if we have served by candidates
+        // and also add to their info eg hasCerts
+        // find served_by candidates
+        const servedBy = _(app.info)
+          .filter(info => _.includes(sslReady, info.service))
+          .filter(info => _.has(info, 'served_by') || _.has(info, 'ssl_served_by'))
+          .map(info => info.served_by || info.ssl_served_by)
+          .value();
+
+        // Add hasCerts to servedBys
+        _.forEach(servedBy, name => {
+          const service = _.find(app.info, {service: name});
+          service.hasCerts = true;
+        });
+
         // Parse config
-        return utils.parseConfig(app.config.proxy, sslReady);
+        return utils.parseConfig(app.config.proxy, _.compact(_.flatten([sslReady, servedBy])));
       })
 
       // Map to docker compose things

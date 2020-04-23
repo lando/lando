@@ -33,6 +33,16 @@ ${LANDO_PROXY_NAMES}
 ${LANDO_EXTRA_NAMES}
 EOF
 
+# Enable SSL on apache if we have to
+#
+# @NOTE: Once we decouple the php container from apache like we do for nginx we can
+# move this to the apache service
+if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
+  echo "Enabling apache ssl modz"
+  cp -rf /etc/apache2/mods-available/ssl* /etc/apache2/mods-enabled || true
+  cp -rf /etc/apache2/mods-available/socache_shmcb* /etc/apache2/mods-enabled || true
+fi
+
 # Check if openssl is installed, if not install it
 if ! [ -x "$(command -v openssl)" ]; then
   echo "Installing openssl..."
