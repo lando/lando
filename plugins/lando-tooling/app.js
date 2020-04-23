@@ -16,7 +16,8 @@ module.exports = (app, lando) => {
       // Add the tasks after we init the app
       _.forEach(utils.getToolingTasks(app.config.tooling, app), task => {
         app.log.debug('adding app cli task %s', task.name);
-        app.tasks.push(buildTask(task));
+        const injectable = _.has(app, 'engine') ? app : lando;
+        app.tasks.push(buildTask(task, injectable));
       });
     }
   });
