@@ -234,7 +234,7 @@ module.exports = (app, lando) => {
 
   // Remove meta cache on uninstall
   app.events.on('post-uninstall', () => {
-    lando.log.debug('removing metadata cache...');
+    app.log.debug('removing metadata cache...');
     lando.cache.remove(app.metaCache);
   });
 

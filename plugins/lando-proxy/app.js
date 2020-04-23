@@ -68,6 +68,7 @@ module.exports = (app, lando) => {
   // Only do things if the proxy is enabled
   // @TODO: below is nasty and probably isn't precise enough
   if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
+    app.log.verbose('proxy settings detected.');
     // Dump cert files as needed, this has to happen AFTER the proxy and the certs have been created
     app.events.on('post-start', 999, () => {
       // Start with the default cert
@@ -136,7 +137,7 @@ module.exports = (app, lando) => {
       .then(() => {
         const urlCounts = utils.getUrlsCounts(app.config.proxy);
         if (_.max(_.values(urlCounts)) > 1) {
-          lando.log.error('You cannot assign url %s to more than one service!', _.findKey(urlCounts, c => c > 1));
+          app.log.error('You cannot assign url %s to more than one service!', _.findKey(urlCounts, c => c > 1));
         }
 
         // Get list of services that *should* have certs for SSL
@@ -154,8 +155,8 @@ module.exports = (app, lando) => {
       .map(service => {
         // Throw error but proceed if we don't have the service
         if (!_.includes(app.services, service.name)) {
-          lando.log.error(`${service.name} is a service that does not exist in your app!!!`);
-          lando.log.warn('Try running `lando info` and using one of the services listed there.');
+          app.log.error(`${service.name} is a service that does not exist in your app!!!`);
+          app.log.warn('Try running `lando info` and using one of the services listed there.');
           return {};
         }
 

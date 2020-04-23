@@ -112,12 +112,14 @@ exports.parseConfig = (config, app) => _(config)
 /*
  * Run build
  */
-exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS', warnings = []) => {
-  if (!_.isEmpty(steps) && !lando.cache.get(lockfile)) {
-    return lando.engine.run(steps)
+exports.runBuild = (app, steps, lockfile, hash = 'YOU SHALL NOT PASS', warnings = []) => {
+  if (!_.isEmpty(steps) && !app._lando.cache.get(lockfile)) {
+    app.log.info('running build steps...');
+    return app.engine.run(steps)
     // Save the new hash if everything works out ok
     .then(() => {
-      lando.cache.set(lockfile, hash, {persist: true});
+      app._lando.cache.set(lockfile, hash, {persist: true});
+      app.log.verbose('build steps completed. and locked with %s', lockfile);
     })
     // Make sure we don't save a hash if our build fails
     .catch(error => {
@@ -129,8 +131,8 @@ exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS', warning
         ],
         command: 'lando rebuild',
       });
-      lando.log.verbose('Build error message %s', error.message);
-      lando.log.debug('Build stack %s', error.stack);
+      app.log.verbose('Build error message %s', error.message);
+      app.log.debug('Build stack %s', error.stack);
     });
   }
 };

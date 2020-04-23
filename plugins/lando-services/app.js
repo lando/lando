@@ -45,10 +45,10 @@ module.exports = (app, lando) => {
     _.forEach(services, service => {
       // Throw a warning if service is not supported
       if (_.isEmpty(_.find(lando.factory.get(), {name: service.type}))) {
-        lando.log.warn('%s is not a supported service type.', service.type);
+        app.log.warn('%s is not a supported service type.', service.type);
       }
       // Log da things
-      app.log.debug('building %s %s named %s', service.type, service.version, service.name);
+      app.log.verbose('building %s service %s', service.type, service.name);
       // Build da things
       // @NOTE: this also gathers app.info and build steps
       const Service = lando.factory.get(service.type);
@@ -77,16 +77,17 @@ module.exports = (app, lando) => {
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
       const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
-      return utils.runBuild(lando, preBuild, preLockfile, app.configHash, app.warnings);
+      return utils.runBuild(app, preBuild, preLockfile, app.configHash, app.warnings);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(lando, postBuild, postLockfile, app.configHash, app.warnings);
+      return utils.runBuild(app, postBuild, postLockfile, app.configHash, app.warnings);
     });
   });
 
   // Discover portforward true info
   app.events.on('ready', () => {
+    app.log.verbose('discovering dynamic portforward info...');
     const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
     return lando.engine.list({project: app.project})
     .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
@@ -106,12 +107,14 @@ module.exports = (app, lando) => {
 
   // Determine pullable and locally built images
   app.events.on('pre-rebuild', () => {
+    app.log.verbose('determining pullable services...');
     // Determine local vs pullable services
     const whereats = _(_.get(app, 'config.services', {}))
       .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build') || _.has(data, 'services.build')}))
       .value();
 
     // Set local and pullys for downstream concerns
+    app.log.debug('determined pullable services', whereats);
     app.opts = _.merge({}, app.opts, {
       pullable: _(whereats).filter(service => !service.isLocal).map('service').value(),
       local: _(whereats).filter(service => service.isLocal).map('service').value(),
