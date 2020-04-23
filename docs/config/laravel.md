@@ -142,7 +142,7 @@ However, you can specify one using the `cache` recipe config and setting it to u
 
 If you are unsure about how to configure the `cache` we *highly recommend* you check out our [redis](./redis.md) and [memcached](./memcached.md)) docs as well as the [Laravel ones](https://laravel.com/docs/5.7/cache#configuration).
 
-** Using redis (recommended) **
+#### Using redis (recommended)
 
 ```yaml
 recipe: laravel
@@ -150,7 +150,7 @@ config:
   cache: redis
 ```
 
-** Using Memcached **
+#### Using Memcached
 
 ```yaml
 recipe: laravel
@@ -187,7 +187,7 @@ If you do this you must use files that exists inside your applicaton and express
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
-**A hypothetical project**
+#### A hypothetical project
 
 Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
 
@@ -202,7 +202,7 @@ Note that you can put your configuration files anywhere inside your application 
 |-- .lando.yml
 ```
 
-**Landofile using custom laravel config**
+#### Landofile using custom laravel config
 
 ```yaml
 recipe: laravel
@@ -326,7 +326,7 @@ lando mysql             Drops into a MySQL shell on a database service
 lando php               Runs php commands
 ```
 
-**Usage examples**
+### Usage examples
 
 ```bash
 # Do a basic laravel gut check with artisan
