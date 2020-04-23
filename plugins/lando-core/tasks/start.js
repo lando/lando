@@ -22,7 +22,7 @@ module.exports = lando => {
         })
         // Provide help if there is an error
         .catch(err => {
-          lando.log.debug(err);
+          app.log.debug(err);
           console.log(lando.cli.makeArt('appStart', {phase: 'error'}));
         });
       }

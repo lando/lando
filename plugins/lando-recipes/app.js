@@ -16,10 +16,10 @@ module.exports = (app, lando) => {
     if (_.has(app, 'config.recipe')) {
       // Throw a warning if recipe is not supported
       if (_.isEmpty(_.find(lando.factory.get(), {name: app.config.recipe}))) {
-        lando.log.warn('%s is not a supported recipe type.', app.config.recipe);
+        app.log.warn('%s is not a supported recipe type.', app.config.recipe);
       }
       // Log da things
-      lando.log.verbose('Building %s named %s', app.config.recipe, app.name);
+      app.log.verbose('building %s named %s', app.config.recipe, app.name);
       // Build da things
       // @NOTE: this also gathers app.info and build steps
       const Recipe = lando.factory.get(app.config.recipe);

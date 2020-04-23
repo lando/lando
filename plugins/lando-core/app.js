@@ -45,6 +45,7 @@ module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
     app.events.on(event, () => {
+      app.log.verbose('attempting to find open services...');
       return app.engine.list({project: app.project})
       // Return running containers
       .filter(container => app.engine.isRunning(container.id))
@@ -61,8 +62,9 @@ module.exports = (app, lando) => {
   // Refresh all our certs
   app.events.on('post-init', () => {
     const buildServices = _.get(app, 'opts.services', app.services);
+    app.log.verbose('refreshing certificates...', buildServices);
     app.events.on('post-start', 9999, () => lando.Promise.each(buildServices, service => {
-      return lando.engine.run({
+      return app.engine.run({
         id: `${app.project}_${service}_1`,
         cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
         compose: app.compose,
@@ -75,9 +77,9 @@ module.exports = (app, lando) => {
         },
       })
       .catch(err => {
-        lando.log.error('Looks like %s is not running! It should be so this is a problem.', service);
-        lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', service);
-        lando.log.debug(err.stack);
+        app.log.error('Looks like %s is not running! It should be so this is a problem.', service);
+        app.log.warn('Try running `lando logs -s %s` to help locate the problem!', service);
+        app.log.debug(err.stack);
       });
     }));
   });
@@ -90,6 +92,8 @@ module.exports = (app, lando) => {
       .filter(file => path.extname(file) !== '.pub')
       .value();
 
+    app.log.verbose('analyzing user ssh keys...');
+    app.log.silly('keys', keys);
     // Add a warning if we have more keys than the warning level
     if (_.size(keys) > lando.config.maxKeyWarning) {
       app.warnings.push({
@@ -113,6 +117,7 @@ module.exports = (app, lando) => {
     _.forEach(info, (value, key) => {
       info[key] = _.find(app.info, {service: key});
     });
+    app.log.verbose('setting LANDO_INFO...');
     app.env.LANDO_INFO = JSON.stringify(info);
   });
 
@@ -125,6 +130,7 @@ module.exports = (app, lando) => {
       _.forEach(service.data, datum => {
         _.forEach(datum.services, props => {
           if (!_.isEmpty(props.ports)) {
+            app.log.debug('ensuring exposed ports on %s are bound to %s', service.id, lando.config.bindAddress);
             props.ports = _(props.ports).map(port => normalizeBind(port, lando.config.bindAddress)).value();
           }
         });
@@ -140,7 +146,7 @@ module.exports = (app, lando) => {
     .map(container => _.find(app.info, {service: container.service}))
     // Map to a retry of the healthcheck command
     .map(info => lando.Promise.retry(() => {
-      return lando.engine.run({
+      return app.engine.run({
         id: `${app.project}_${info.service}_1`,
         cmd: info.healthcheck,
         compose: app.compose,
@@ -155,13 +161,13 @@ module.exports = (app, lando) => {
       })
       .catch(err => {
         console.log('Waiting until %s service is ready...', info.service);
-        lando.log.verbose('Running healthcheck %s for %s until %s...', info.healthcheck, info.service);
-        lando.log.debug(err);
+        app.log.debug('running healthcheck %s for %s...', info.healthcheck, info.service);
+        // app.log.silly(err);
         return Promise.reject(info.service);
       });
-    }, {max: 25})
+    }, {max: 25, backoff: 1000})
     .catch(service => {
-      lando.log.info('Service %s is unhealthy', service);
+      app.log.info('service %s is unhealthy', service);
       info.healthy = false;
       app.warnings.push({
         title: `The service "${service}" failed its healthcheck`,
@@ -228,6 +234,7 @@ module.exports = (app, lando) => {
 
   // Remove meta cache on uninstall
   app.events.on('post-uninstall', () => {
+    lando.log.debug('removing metadata cache...');
     lando.cache.remove(app.metaCache);
   });
 
