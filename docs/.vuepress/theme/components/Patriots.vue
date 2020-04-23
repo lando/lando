@@ -48,7 +48,7 @@ export default {
     padding: 2em 1em
     flex: 3
     align-items: center
-    margin: 2em
+    justify-content: center
   .sponsor-patriot-block-header
     display: block
     margin: auto
@@ -65,7 +65,7 @@ export default {
   .sponsor-patriot-block-image
     img
       margin: 0
-      width: 100%
+      max-height: 150px
 @media (max-width: $MQMobile)
   #patriots
     text-align: center
