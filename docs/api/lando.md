@@ -9,15 +9,15 @@ interface.
 Check out `./bin/lando.js` in this repository for an example of how we instantiate
 `lando` for usage in a CLI.
 
-**Kind**: global variable  
-**Returns**: [<code>Lando</code>](#Lando) - An initialized Lando instance  
-**Since**: 3.0.0  
+**Kind**: global variable
+**Returns**: [<code>Lando</code>](#Lando) - An initialized Lando instance
+**Since**: 3.0.0
 
 | Param | Type | Description |
 | --- | --- | --- |
 | [options] | <code>Object</code> | Options to initialize a Lando object with |
 
-**Example**  
+**Example**
 ```js
 // Get a new lando instance
 const Lando = require('lando');
@@ -35,15 +35,15 @@ const lando = new Lando({
 ## lando.events:pre-bootstrap-config()
 Event that runs before we bootstrap config.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('pre-bootstrap-config', lando => {
   // My codes
@@ -54,15 +54,15 @@ lando.events.on('pre-bootstrap-config', lando => {
 ## lando.events:pre-bootstrap-tasks()
 Event that runs before we bootstrap tasks.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('pre-bootstrap-tasks', lando => {
   // My codes
@@ -73,15 +73,15 @@ lando.events.on('pre-bootstrap-tasks', lando => {
 ## lando.events:pre-bootstrap-engine()
 Event that runs before we bootstrap the engine.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('pre-bootstrap-engine', lando => {
   // My codes
@@ -92,15 +92,15 @@ lando.events.on('pre-bootstrap-engine', lando => {
 ## lando.events:pre-bootstrap-app()
 Event that runs before we bootstrap the app.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('pre-bootstrap-app', lando => {
   // My codes
@@ -111,15 +111,15 @@ lando.events.on('pre-bootstrap-app', lando => {
 ## lando.events:post-bootstrap-config()
 Event that runs after we bootstrap config
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The Lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('post-bootstrap-config', lando => {
   // My codes
@@ -130,15 +130,15 @@ lando.events.on('post-bootstrap-config', lando => {
 ## lando.events:post-bootstrap-tasks()
 Event that runs after we bootstrap tasks
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The Lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('post-bootstrap-tasks', lando => {
   // My codes
@@ -149,15 +149,15 @@ lando.events.on('post-bootstrap-tasks', lando => {
 ## lando.events:post-bootstrap-engine()
 Event that runs after we bootstrap the engine
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The Lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('post-bootstrap-engine', lando => {
   // My codes
@@ -168,15 +168,15 @@ lando.events.on('post-bootstrap-engine', lando => {
 ## lando.events:post-bootstrap-app()
 Event that runs after we bootstrap the app
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
 | lando | [<code>Lando</code>](#Lando) | The Lando object |
 
-**Example**  
+**Example**
 ```js
 lando.events.on('post-bootstrap-app', lando => {
   // My codes
@@ -207,19 +207,19 @@ the order presented.
      app        Autodetects and loads in any `services` and `recipes` and also adds `yaml
                 and `factory` to the lando instance.
 
-Check out `./bin/lando.js` in this repository for an example of bootstraping
+Check out `./bin/lando.js` in this repository for an example of bootstrapping
 `lando` for usage in a CLI.
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise  
-**Emits**: [<code>lando.events:pre-bootstrap-config</code>](#event_pre_bootstrap_config), [<code>lando.events:pre-bootstrap-tasks</code>](#event_pre_bootstrap_tasks), [<code>lando.events:pre-bootstrap-engine</code>](#event_pre_bootstrap_engine), [<code>lando.events:pre-bootstrap-app</code>](#event_pre_bootstrap_app), [<code>lando.events:post-bootstrap-config</code>](#event_post_bootstrap_config), [<code>lando.events:post-bootstrap-tasks</code>](#event_post_bootstrap_tasks), [<code>lando.events:post-bootstrap-engine</code>](#event_post_bootstrap_engine), [<code>lando.events:post-bootstrap-app</code>](#event_post_bootstrap_app)  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise
+**Emits**: [<code>lando.events:pre-bootstrap-config</code>](#event_pre_bootstrap_config), [<code>lando.events:pre-bootstrap-tasks</code>](#event_pre_bootstrap_tasks), [<code>lando.events:pre-bootstrap-engine</code>](#event_pre_bootstrap_engine), [<code>lando.events:pre-bootstrap-app</code>](#event_pre_bootstrap_app), [<code>lando.events:post-bootstrap-config</code>](#event_post_bootstrap_config), [<code>lando.events:post-bootstrap-tasks</code>](#event_post_bootstrap_tasks), [<code>lando.events:post-bootstrap-engine</code>](#event_post_bootstrap_engine), [<code>lando.events:post-bootstrap-app</code>](#event_post_bootstrap_app)
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [level] | <code>String</code> | <code>app</code> | Level with which to bootstrap Lando |
 
-**Example**  
+**Example**
 ```js
 // Bootstrap lando at default level and then exit
 lando.bootstrap().then(() => process.exit(0))l
@@ -231,16 +231,16 @@ Gets a fully instantiated App instance.
 
 Lando will also scan parent directories if no app is found in `startFrom`
 
-**Kind**: global function  
-**Returns**: <code>App</code> - Returns an instantiated App instandce.  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>App</code> - Returns an instantiated App instance.
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [startFrom] | <code>String</code> | <code>process.cwd()</code> | The directory to start looking for an app |
 | [warn] | <code>Boolean</code> | <code>true</code> | Show a warning if we can't find an app |
 
-**Example**  
+**Example**
 ```js
 const app = lando.getApp('/path/to/my/app')
 ```

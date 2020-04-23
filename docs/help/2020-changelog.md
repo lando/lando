@@ -19,6 +19,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Fixed bug causing app start to fail if proxy was unable to locate suitable ports [#1857](https://github.com/lando/lando/pull/1857)
 * Fixed bug causing `ssh` to fail when username or keypaths had spaces in them [#2031](https://github.com/lando/lando/pull/2031)
 * Improved spelling and grammar in docs, code and comments, thanks @uberhacker!
+* Spell check docs/api/*.md
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
@@ -143,7 +144,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Improved macOS and Windows Lando installers [#1975](https://github.com/lando/lando/issues/1975)
 * Improved build step and restart performance [#2013](https://github.com/lando/lando/issues/2013)
 * Rebased `lando` on `node` `12` for MOAR SPEEDS [#2037](https://github.com/lando/lando/issues/2037)
-* Removed lingering reference to `Git for Windows` in Windoze intaller [#1865](https://github.com/lando/lando/issues/1865)
+* Removed lingering reference to `Git for Windows` in Windoze installer [#1865](https://github.com/lando/lando/issues/1865)
 * Updated to `docker-compose` `1.25.4` [#1975](https://github.com/lando/lando/issues/1975)
 * Updated to Docker Desktop `2.2.0.4` for macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
 * Updated `xdebug` to latest in `php` `7.2` and `7.3`

@@ -4,76 +4,76 @@
 Event that allows you to do some things before a `compose` object's containers are
 built
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_post_engine_build"></a>
 
 ## lando.events:post-engine-build()
 Event that allows you to do some things after a `compose` object's containers are
 built
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_pre_engine_destroy"></a>
 
 ## lando.events:pre-engine-destroy()
 Event that allows you to do some things before some containers are destroyed.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_post_engine_destroy"></a>
 
 ## lando.events:post-engine-destroy()
 Event that allows you to do some things after some containers are destroyed.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_pre_engine_run"></a>
 
 ## lando.events:pre-engine-run()
 Event that allows you to do some things before a command is run on a particular
 container.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_post_engine_run"></a>
 
 ## lando.events:post-engine-run()
 Event that allows you to do some things after a command is run on a particular
 container.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_pre_engine_start"></a>
 
 ## lando.events:pre-engine-start()
 Event that allows you to do some things before a `compose` Objects containers are
 started
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_post_engine_start"></a>
 
 ## lando.events:post-engine-start()
 Event that allows you to do some things after a `compose` Objects containers are
 started
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_pre_engine_stop"></a>
 
 ## lando.events:pre-engine-stop()
 Event that allows you to do some things before some containers are stopped.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="event_post_engine_stop"></a>
 
 ## lando.events:post-engine-stop()
 Event that allows you to do some things after some containers are stopped.
 
-**Kind**: global function  
-**Since**: 3.0.0  
+**Kind**: global function
+**Since**: 3.0.0
 <a name="lando.engine.build"></a>
 
 ## lando.engine.build(data) ⇒ <code>Promise</code>
@@ -82,10 +82,10 @@ locally. This is a wrapper around `docker pull` and `docker build`.
 
 **NOTE:** Generally an instantiated `App` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: [<code>lando.events:pre-engine-build</code>](#event_pre_engine_build), [<code>lando.events:post-engine-build</code>](#event_post_engine_build)  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise.
+**Emits**: [<code>lando.events:pre-engine-build</code>](#event_pre_engine_build), [<code>lando.events:post-engine-build</code>](#event_post_engine_build)
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -97,7 +97,7 @@ locally. This is a wrapper around `docker pull` and `docker build`.
 | [data.opts.nocache] | <code>Boolean</code> | <code>true</code> | Ignore the build cache. |
 | [data.opts.pull] | <code>Boolean</code> | <code>true</code> | Try to pull first. |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.build(app);
 ```
@@ -106,16 +106,16 @@ return lando.engine.build(app);
 ## lando.engine.createNetwork(name) ⇒ <code>Promise</code>
 Creates a Docker network
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with inspect data.  
-**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.  
-**Since**: 3.0.0.  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with inspect data.
+**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.35/#operation/NetworkCreate) for info on opts.
+**Since**: 3.0.0.
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>String</code> | The name of the networks |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.createNetwork('mynetwork')
 ```
@@ -133,14 +133,14 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `App` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: [<code>lando.events:pre-engine-destroy</code>](#event_pre_engine_destroy), [<code>lando.events:post-engine-destroy</code>](#event_post_engine_destroy)  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise.
+**Emits**: [<code>lando.events:pre-engine-destroy</code>](#event_pre_engine_destroy), [<code>lando.events:post-engine-destroy</code>](#event_post_engine_destroy)
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| data | <code>Object</code> |  | Remove criteria, Need eithers an ID or a service within a compose context |
+| data | <code>Object</code> |  | Remove criteria, Need either an ID or a service within a compose context |
 | data.id | <code>String</code> |  | An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`. |
 | data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
 | data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
@@ -150,7 +150,7 @@ These are detailed more below.
 | [data.opts.force] | <code>Boolean</code> | <code>false</code> | Force remove the containers. |
 | [data.opts.purge] | <code>Boolean</code> | <code>false</code> | Implies `volumes` and `force`. |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.destroy(app);
 ```
@@ -168,20 +168,20 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with a Boolean of whether the service exists or not.  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with a Boolean of whether the service exists or not.
+**Since**: 3.0.0
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>Object</code> | Search criteria, Need eithers an ID or a service within a compose context |
-| data.id | <code>String</code> | An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`. |
+| data | <code>Object</code> | Search criteria, Need either an ID or a service within a compose context |
+| data.id | <code>String</code> | An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`. |
 | data.compose | <code>Array</code> | An Array of paths to Docker compose files |
 | data.project | <code>String</code> | A String of the project name (Usually this is the same as the app name) |
 | data.opts | <code>Object</code> | Options on what service to check |
 | data.opts.services | <code>Array</code> | An Array of services to check |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.exists(compose);
 ```
@@ -190,15 +190,15 @@ return lando.engine.exists(compose);
 ## lando.engine.getNetwork(id) ⇒ <code>Object</code>
 Gets a Docker network
 
-**Kind**: global function  
-**Returns**: <code>Object</code> - A Dockerode Network object .  
-**Since**: 3.0.0.  
+**Kind**: global function
+**Returns**: <code>Object</code> - A Dockerode Network object .
+**Since**: 3.0.0.
 
 | Param | Type | Description |
 | --- | --- | --- |
 | id | <code>String</code> | The id of the network |
 
-**Example**  
+**Example**
 ```js
 const network = lando.engine.getNetwork('mynetwork')
 ```
@@ -207,10 +207,10 @@ const network = lando.engine.getNetwork('mynetwork')
 ## lando.engine.getNetworks([opts]) ⇒ <code>Promise</code>
 Gets the docker networks.
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with an array of network objects.  
-**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with an array of network objects.
+**See**: [docker api network docs](https://docs.docker.com/engine/api/v1.27/#operation/NetworkList) for info on filters option.
+**Since**: 3.0.0
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -222,15 +222,15 @@ Gets the docker networks.
 ## lando.engine.isRunning(data) ⇒ <code>Promise</code>
 Determines whether a container is running or not
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with a boolean of whether the container is running or not  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with a boolean of whether the container is running or not
+**Since**: 3.0.0
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>String</code> | An ID that docker can recognize such as the container id or name. |
 
-**Example**  
+**Example**
 ```js
 // Check to see if our app's web service is running
 return lando.engine.isRunning('myapp_web_1').then(isRunning) {
@@ -242,9 +242,9 @@ return lando.engine.isRunning('myapp_web_1').then(isRunning) {
 ## lando.engine.list([options]) ⇒ <code>Promise</code>
 Lists all the Lando containers. Optionally filter by app name.
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with an Array of container Objects.  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with an Array of container Objects.
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -253,7 +253,7 @@ Lists all the Lando containers. Optionally filter by app name.
 | [options.app] | <code>String</code> |  | Show containers for only a certain app |
 | [options.filter] | <code>Array</code> |  | Filter by additional key=value pairs |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.list().each(function(container) {
   lando.log.info(container);
@@ -266,9 +266,9 @@ Returns logs for a given `compose` object
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise.  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise.
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -279,7 +279,7 @@ Returns logs for a given `compose` object
 | [data.opts.follow] | <code>Boolean</code> | <code>false</code> | Whether to follow the log. Works like `tail -f`. |
 | [data.opts.timestamps] | <code>Boolean</code> | <code>true</code> | Show timestamps in log. |
 
-**Example**  
+**Example**
 ```js
 // Get logs for an app
 return lando.engine.logs(app);
@@ -293,14 +293,14 @@ UNTIL the resolution of https://github.com/apocas/docker-modem/issues/83 data ne
 array of compose objects for this to work correctly on Windows as well. See some of the other engine
 documentation for what a compose object looks like.
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with a string containing the command's output.  
-**Emits**: [<code>lando.events:pre-engine-run</code>](#event_pre_engine_run), [<code>lando.events:post-engine-run</code>](#event_post_engine_run)  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with a string containing the command's output.
+**Emits**: [<code>lando.events:pre-engine-run</code>](#event_pre_engine_run), [<code>lando.events:post-engine-run</code>](#event_post_engine_run)
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| data | <code>Object</code> |  | A run Object or an Array of run Objects if you want to run more tha one command. |
+| data | <code>Object</code> |  | A run Object or an Array of run Objects if you want to run more than one command. |
 | data.id | <code>String</code> |  | The container to run the command on. Must be an id that docker can recognize such as a container hash or name. |
 | data.cmd | <code>String</code> |  | A String of a command or an Array whose elements are the parts of the command. |
 | [data.opts] | <code>Object</code> |  | Options on how to run the command. |
@@ -311,12 +311,12 @@ documentation for what a compose object looks like.
 | [data.opts.detach] | <code>String</code> | <code>false</code> | Run the process in the background |
 | [data.opts.autoRemove] | <code>String</code> | <code>false</code> | Automatically removes the container |
 
-**Example**  
+**Example**
 ```js
 // Run composer install on the appserver container for an app called myapp
 return lando.engine.run({id: 'myapp_appserver_1', cmd: ['composer', 'install']});
 
-// Drop into an interactive bash shell on the database continer for an app called myapp
+// Drop into an interactive bash shell on the database container for an app called myapp
 return lando.engine.run({
   id: 'myapp_database_1',
   cmd: ['bash'],
@@ -339,20 +339,20 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise with an Object of service metadata.  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise with an Object of service metadata.
+**Since**: 3.0.0
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>Object</code> | Search criteria, Need eithers an ID or a service within a compose context |
-| data.id | <code>String</code> | An id that docker can recognize such as a conatainer hash or name. Can also use `data.name` or `data.cid`. |
+| data | <code>Object</code> | Search criteria, Need either an ID or a service within a compose context |
+| data.id | <code>String</code> | An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`. |
 | data.compose | <code>Array</code> | An Array of paths to Docker compose files |
 | data.project | <code>String</code> | A String of the project name (Usually this is the same as the app name) |
 | data.opts | <code>Object</code> | Options on what service to scan |
 | data.opts.services | <code>Array</code> | An Array of services to scan. |
 
-**Example**  
+**Example**
 ```js
 // Log scan data using an id
 return lando.engine.scan({id: '146d321f212d'}).then(function(data) {
@@ -366,10 +366,10 @@ Starts the containers/services for the specified `compose` object.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: [<code>lando.events:pre-engine-start</code>](#event_pre_engine_start), [<code>lando.events:post-engine-start</code>](#event_post_engine_start)  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise.
+**Emits**: [<code>lando.events:pre-engine-start</code>](#event_pre_engine_start), [<code>lando.events:post-engine-start</code>](#event_post_engine_start)
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -382,7 +382,7 @@ Starts the containers/services for the specified `compose` object.
 | [data.opts.recreate] | <code>Boolean</code> | <code>false</code> | Recreate the services. |
 | [data.opts.removeOrphans] | <code>Boolean</code> | <code>true</code> | Remove orphaned containers. |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.start(app);
 ```
@@ -400,21 +400,21 @@ These are detailed more below.
 
 **NOTE:** Generally an instantiated `app` instance is a valid `compose` object
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A Promise.  
-**Emits**: [<code>lando.events:pre-engine-stop</code>](#event_pre_engine_stop), [<code>lando.events:post-engine-stop</code>](#event_post_engine_stop)  
-**Since**: 3.0.0  
+**Kind**: global function
+**Returns**: <code>Promise</code> - A Promise.
+**Emits**: [<code>lando.events:pre-engine-stop</code>](#event_pre_engine_stop), [<code>lando.events:post-engine-stop</code>](#event_post_engine_stop)
+**Since**: 3.0.0
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| data | <code>Object</code> |  | Stop criteria, Need eithers an ID or a service within a compose context |
+| data | <code>Object</code> |  | Stop criteria, Need either an ID or a service within a compose context |
 | data.id | <code>String</code> |  | An id that docker can recognize such as a container hash or name. Can also use `data.name` or `data.cid`. |
 | data.compose | <code>Array</code> |  | An Array of paths to Docker compose files |
 | data.project | <code>String</code> |  | A String of the project name (Usually this is the same as the app name) |
-| [data.opts] | <code>Object</code> |  | Options on what services to setop |
+| [data.opts] | <code>Object</code> |  | Options on what services to setup |
 | [data.opts.services] | <code>Array</code> | <code>&#x27;all services&#x27;</code> | An Array of services to stop. |
 
-**Example**  
+**Example**
 ```js
 return lando.engine.stop(app);
 ```
