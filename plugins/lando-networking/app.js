@@ -41,6 +41,6 @@ module.exports = (app, lando) => {
       data.hostnames = _.get(data, 'hostnames', []);
       data.hostnames.push([data.service, app.project, 'internal'].join('.'));
     });
-    app.log.debug('hostnames added.', data.hostnames);
+    app.log.debug('hostnames added.', app.hostnames);
   });
 };
