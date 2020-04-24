@@ -149,7 +149,6 @@ module.exports = (app, lando) => {
 
         // Make sure we augment ssl ready if we have served by candidates
         // and also add to their info eg hasCerts
-        // find served_by candidates
         const servedBy = _(app.info)
           .filter(info => _.includes(sslReady, info.service))
           .filter(info => _.has(info, 'served_by') || _.has(info, 'ssl_served_by'))
@@ -196,26 +195,6 @@ module.exports = (app, lando) => {
         const proxyFiles = lando.utils.dumpComposeData(proxyData, app._dir);
         app.compose = app.compose.concat(proxyFiles);
         app.log.debug('app has proxy compose files', proxyFiles);
-
-        // Add proxy URLS to our app info
-        _.forEach(['post-start', 'post-init'], event => {
-          app.events.on(event, () => {
-            // Get last known ports
-            const ports = lando.cache.get(lando.config.proxyCache);
-            // Map to protocol and add portz
-            // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
-            if (ports) {
-              _(app.info)
-                .filter(service => _.has(app, `config.proxy.${service.service}`))
-                .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(
-                  app.config.proxy[s.service],
-                  ports,
-                  _.get(s, 'hasCerts', false)
-                ))))
-                .value();
-            }
-          });
-        });
       })
 
       // Warn the user if this fails
@@ -230,5 +209,25 @@ module.exports = (app, lando) => {
           url: 'https://docs.lando.dev/config/proxy.htm',
         });
       }));
+
+    // Add proxy URLS to our app info
+    _.forEach(['post-start', 'post-init'], event => {
+      app.events.on(event, () => {
+        // Get last known ports
+        const ports = lando.cache.get(lando.config.proxyCache);
+        // Map to protocol and add portz
+        // @TODO: do something more meaningful below like logging?, obviously starting to not GAS
+        if (ports) {
+          _(app.info)
+            .filter(service => _.has(app, `config.proxy.${service.service}`))
+            .flatMap(s => s.urls = _.uniq(s.urls.concat(utils.parse2Info(
+              app.config.proxy[s.service],
+              ports,
+              _.get(s, 'hasCerts', false)
+            ))))
+            .value();
+        }
+      });
+    });
   }
 };
