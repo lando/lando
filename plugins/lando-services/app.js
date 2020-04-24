@@ -77,11 +77,11 @@ module.exports = (app, lando) => {
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
       const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
-      return utils.runBuild(app, preBuild, preLockfile, app.configHash, app.warnings);
+      return utils.runBuild(app, preBuild, preLockfile, app.configHash);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(app, postBuild, postLockfile, app.configHash, app.warnings);
+      return utils.runBuild(app, postBuild, postLockfile, app.configHash);
     });
   });
 

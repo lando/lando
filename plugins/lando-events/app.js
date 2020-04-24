@@ -28,15 +28,13 @@ module.exports = (app, lando) => {
           });
         }
         return app.engine.run(eventCommands).catch(err => {
-          app.warnings.push({
+          app.addWarning({
             title: `One of your events failed`,
             detail: [
               'This **MAY** prevent your app from working.',
               'Check for errors above, fix them in your Landofile, and run the command again:',
             ],
-          });
-          app.log.warn('One of your event commands has failed! This may prevent your app from working correctly');
-          app.log.debug('Event failed with code %s', err);
+          }, err);
         });
       });
     });

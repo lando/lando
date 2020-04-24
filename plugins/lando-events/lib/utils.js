@@ -47,6 +47,7 @@ exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
     compose: app.compose,
     project: app.project,
     opts: {
+      cstdio: ['inherit', 'pipe', 'pipe'],
       mode: 'attach',
       user: getUser(service, app.info),
       services: [service],

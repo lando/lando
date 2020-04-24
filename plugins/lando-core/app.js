@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
+const warnings = require('./lib/warnings');
 
 // Helper to get http ports
 const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
@@ -96,15 +97,7 @@ module.exports = (app, lando) => {
     app.log.silly('keys', keys);
     // Add a warning if we have more keys than the warning level
     if (_.size(keys) > lando.config.maxKeyWarning) {
-      app.warnings.push({
-        title: 'You have a lot of keys.',
-        detail: [
-          'Lando has detected you have a lot of ssh keys.',
-          'This may cause "Too many authentication failures" errors.',
-          'We recommend you limit your keys. See below for more details:',
-        ],
-        url: 'https://docs.lando.dev/config/ssh.html#customizing',
-      });
+      app.addWarning(warnings.maxKeyWarning());
     }
   });
 
@@ -167,13 +160,8 @@ module.exports = (app, lando) => {
       });
     }, {max: 25, backoff: 1000})
     .catch(service => {
-      app.log.info('service %s is unhealthy', service);
       info.healthy = false;
-      app.warnings.push({
-        title: `The service "${service}" failed its healthcheck`,
-        detail: ['This may be ok but we recommend you run the command below to investigate:'],
-        command: `lando logs -s ${service}`,
-      });
+      app.addWarning(warnings.serviceUnhealthyWarning(service));
     })));
 
   // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
@@ -193,15 +181,7 @@ module.exports = (app, lando) => {
       lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
     }
     if (app.meta.builtAgainst !== app._config.version) {
-      app.warnings.push({
-        title: 'This app was built on a different version of Lando.',
-        detail: [
-          'While it may not be necessary, we highly recommend you update the app.',
-          'This ensures your app is up to date with your current Lando version.',
-          'You can do this with the command below:',
-        ],
-        command: 'lando rebuild',
-      });
+      app.addWarning(warnings.rebuildWarning());
     }
   });
 

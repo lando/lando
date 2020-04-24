@@ -5,6 +5,7 @@ const _ = require('lodash');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const utils = require('./lib/utils');
+const warnings = require('./lib/warnings');
 
 /*
  * Helper to find the ports we need for the proxy
@@ -169,8 +170,7 @@ module.exports = (app, lando) => {
       .map(service => {
         // Throw error but proceed if we don't have the service
         if (!_.includes(app.services, service.name)) {
-          app.log.error(`${service.name} is a service that does not exist in your app!!!`);
-          app.log.warn('Try running `lando info` and using one of the services listed there.');
+          app.addWarning(warnings.unknownServiceWarning(service.name));
           return {};
         }
 
@@ -198,17 +198,7 @@ module.exports = (app, lando) => {
       })
 
       // Warn the user if this fails
-      .catch(error => {
-        app.warnings.push({
-          title: 'Lando was not able to start the proxy',
-          detail: [
-            `${error}`,
-            'The proxy has been disabled for now so you can continue to work.',
-            'Check out the docs below, resolve your issue and build this app',
-          ],
-          url: 'https://docs.lando.dev/config/proxy.htm',
-        });
-      }));
+      .catch(error => app.addWarning(warnings.cannotStartProxyWarning(error), error)));
 
     // Add proxy URLS to our app info
     _.forEach(['post-start', 'post-init'], event => {

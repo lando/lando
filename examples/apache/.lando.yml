@@ -2,6 +2,9 @@ name: lando-apache
 proxy:
   custom:
     - landoapache.lndo.site
+events:
+  post-start:
+    - custom: fuck off
 services:
   defaults:
     type: apache
