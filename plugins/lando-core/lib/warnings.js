@@ -1,11 +1,5 @@
 'use strict';
 
-exports.serviceUnhealthyWarning = service => ({
-  title: `The service "${service}" failed its healthcheck`,
-  detail: ['This may be ok but we recommend you run the command below to investigate:'],
-  command: `lando logs -s ${service}`,
-});
-
 exports.maxKeyWarning = () => ({
   title: 'You have a lot of keys!',
   detail: [
@@ -24,4 +18,16 @@ exports.rebuildWarning = () => ({
     'You can do this with the command below:',
   ],
   command: 'lando rebuild',
+});
+
+exports.serviceNotRunningWarning = service => ({
+  title: `The service "${service}" is not running!`,
+  detail: ['This is likely a critical problem and we recommend you run the command below to investigate'],
+  command: `lando logs -s ${service}`,
+});
+
+exports.serviceUnhealthyWarning = service => ({
+  title: `The service "${service}" failed its healthcheck`,
+  detail: ['This may be ok but we recommend you run the command below to investigate:'],
+  command: `lando logs -s ${service}`,
 });

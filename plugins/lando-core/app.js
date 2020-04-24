@@ -78,9 +78,7 @@ module.exports = (app, lando) => {
         },
       })
       .catch(err => {
-        app.log.error('Looks like %s is not running! It should be so this is a problem.', service);
-        app.log.warn('Try running `lando logs -s %s` to help locate the problem!', service);
-        app.log.debug(err.stack);
+        app.addWarning(warnings.serviceNotRunningWarning(service), err);
       });
     }));
   });
