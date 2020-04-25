@@ -10,7 +10,11 @@ if [ -f "/etc/apache2/mods-available/ssl.load" ]; then
   cp -rf /etc/apache2/mods-available/socache_shmcb* /etc/apache2/mods-enabled || true
 fi
 
-# Try the new entrypoint and then fallback to the older one
-/opt/bitnami/scripts/apache/entrypoint.sh /opt/bitnami/scripts/apache/run.sh \
-  || /entrypoint.sh /run.sh \
-  || /app-entrypoint.sh httpd -f /opt/bitnami/apache/conf/httpd.conf -DFOREGROUND
+# Detect and run the correct entrypoint script. THANKS BITNAMI!
+if [ -f "/opt/bitnami/scripts/apache/entrypoint.sh" ]; then
+  /opt/bitnami/scripts/apache/entrypoint.sh /opt/bitnami/scripts/apache/run.sh
+elif [ -f "/entrypoint.sh" ]; then
+  /entrypoint.sh /run.sh
+else
+  /app-entrypoint.sh httpd -f /opt/bitnami/apache/conf/httpd.conf -DFOREGROUND
+fi

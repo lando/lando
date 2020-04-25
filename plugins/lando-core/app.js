@@ -67,7 +67,7 @@ module.exports = (app, lando) => {
     app.events.on('post-start', 9999, () => lando.Promise.each(buildServices, service => {
       return app.engine.run({
         id: `${app.project}_${service}_1`,
-        cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
+        cmd: 'mkdir -p /certs && /helpers/refresh-certs.sh > /certs/refresh.log',
         compose: app.compose,
         project: app.project,
         opts: {
