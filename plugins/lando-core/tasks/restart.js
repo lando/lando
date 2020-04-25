@@ -24,6 +24,7 @@ module.exports = lando => {
         .catch(err => {
           app.log.error(err.message, err);
           console.log(lando.cli.makeArt('appStart', {phase: 'error'}));
+          return lando.Promise.reject(err);
         });
       }
     },
