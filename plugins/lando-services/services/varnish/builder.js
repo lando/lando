@@ -86,10 +86,11 @@ module.exports = {
       options.info = {backends: options.backends};
       // Set the varnish
       options.sources.push({services: _.set({}, options.name, varnish)});
-      // Spin up an nginx bomb as well
+
+      // Spin up an nginx bomb if we need ssl termination
       if (options.ssl) {
         // Set the opts for this custom swill
-        const sslOpts = _.merge(_.cloneDeep(options), {
+        const sslOpts = _.assign(_.cloneDeep(options), {
           name: `${options.name}_ssl`,
           type: 'nginx',
           version: 'custom',
@@ -100,6 +101,7 @@ module.exports = {
           ssl: true,
           sslExpose: true,
         });
+
         // Set another lando service we can pass down the stream
         const LandoCompose = factory.get('_lando');
         const nginx = {services: _.set({}, sslOpts.name, varnishSsl(options))};
@@ -110,6 +112,7 @@ module.exports = {
         // Indicate the relationship on the primary service
         options.info.ssl_served_by = sslOpts.name;
       }
+
       // Send it downstream
       super(id, options, ..._.flatten(options.sources));
     };

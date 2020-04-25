@@ -23,6 +23,8 @@ proxy:
 services:
   web3:
     type: compose
+    ssl: true
+    sslExpose: false
     services:
       image: bitnami/nginx
       command: /opt/bitnami/scripts/nginx/entrypoint.sh /opt/bitnami/scripts/nginx/run.sh

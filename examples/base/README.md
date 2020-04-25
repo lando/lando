@@ -74,10 +74,9 @@ lando config --lando | grep verbose
 lando version | grep 3.0.0
 
 # Should run with specified verbosity
-lando config -v | grep info
-lando config -vv | grep verbose
-lando config -vvv | grep debug
-lando config -vvvv | grep silly
+lando info -v | grep INFO
+lando info -vv | grep VERBOSE
+lando info -vvvv | grep SILLY
 
 # Should run lando config without error
 lando config

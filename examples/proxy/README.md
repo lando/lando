@@ -29,20 +29,20 @@ docker ps | grep landoproxyhyperion5000gandalfedition
 curl -s -o /dev/null -I -w "%{http_code}" idonotexist.lndo.site | grep 404
 
 # Should return 200 for all proxied domains
+curl -s -o /dev/null -I -w "%{http_code}" http://web3.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://lando-proxy.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://sub.lando-proxy.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://another-way-to-eighty.lndo.site | grep 200
 
-# Should also work over https
-curl -s -o /dev/null -Ik -w "%{http_code}" https://lando-proxy.lndo.site | grep 200
-curl -s -o /dev/null -Ik -w "%{http_code}" https://sub.lando-proxy.lndo.site | grep 200
-curl -s -o /dev/null -Ik -w "%{http_code}" https://another-way-to-eighty.lndo.site | grep 200
+# Should also work over https if ssl is true and we have certs
+curl -s -o /dev/null -Ik -w "%{http_code}" https://web3.lndo.site | grep 200
+lando info -s web3 | grep hasCerts | grep true
 
 # Should route to a different port if specified
 curl -s -o /dev/null -I -w "%{http_code}" http://another-way-to-eighty.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://web3.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://lets.combine.really.lndo.site/everything/for-real | grep 200
-curl -s -o /dev/null -Ik -w "%{http_code}" https://lets.combine.things.lndo.site/everything/for-real | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://lets.combine.things.lndo.site/everything/for-real | grep 200
 
 # Should handle wildcard entries
 curl -s -o /dev/null -I -w "%{http_code}" http://thiscouldbeanything-lando-proxy.lndo.site | grep 200
