@@ -27,16 +27,19 @@ module.exports = (app, lando) => {
             });
           });
         }
-        return lando.engine.run(eventCommands).catch(err => {
-          app.warnings.push({
-            title: `One of your events failed`,
-            detail: [
-              'This **MAY** prevent your app from working.',
-              'Check for errors above, fix them in your Landofile, and run the command again:',
-            ],
-          });
-          lando.log.warn('One of your event commands has failed! This may prevent your app from working correctly');
-          lando.log.debug('Event failed with code %s', err);
+        const injectable = _.has(app, 'engine') ? app : lando;
+        return injectable.engine.run(eventCommands).catch(err => {
+          if (app.addWarning) {
+            app.addWarning({
+              title: `One of your events failed`,
+              detail: [
+                'This **MAY** prevent your app from working.',
+                'Check for errors above, fix them in your Landofile, and run the command again:',
+              ],
+            }, err);
+          } else {
+            lando.exitCode = 12;
+          }
         });
       });
     });

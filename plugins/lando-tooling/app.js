@@ -12,11 +12,12 @@ module.exports = (app, lando) => {
   // If we have an app with a tooling section let's do this
   app.events.on('post-init', () => {
     if (!_.isEmpty(_.get(app, 'config.tooling', {}))) {
-      lando.log.verbose('Additional tooling detected for app %s', app.name);
+      app.log.verbose('additional tooling detected');
       // Add the tasks after we init the app
       _.forEach(utils.getToolingTasks(app.config.tooling, app), task => {
-        lando.log.verbose('Adding app cli task %s', task.name);
-        app.tasks.push(buildTask(task, lando));
+        app.log.debug('adding app cli task %s', task.name);
+        const injectable = _.has(app, 'engine') ? app : lando;
+        app.tasks.push(buildTask(task, injectable));
       });
     }
   });

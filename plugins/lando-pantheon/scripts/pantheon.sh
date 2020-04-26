@@ -1,14 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-# Load message helpers
-. /helpers/messages.sh
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="pantheon"
 
 # Kick it off
-status_info "Pantheon pre-run scripting"
+lando_pink "Pantheon pre-run scripting"
 
-/helpers/add-cert.sh
+/helpers/add-cert.sh --silent
 
 # Set up some new dirs
 mkdir -p /var/www/certs

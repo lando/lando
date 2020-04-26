@@ -1,14 +1,16 @@
 #!/bin/bash
 
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="sqlimport"
+
 # Set generic config
 FILE=""
 WIPE=true
 HOST=localhost
 SERVICE=$LANDO_SERVICE_NAME
-
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-DEFAULT_COLOR='\033[0;0m'
 
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
@@ -62,17 +64,14 @@ CMD=""
 
 # Use file or stdin
 if [ ! -z "$FILE" ]; then
-
   # Validate we have a file
   if [ ! -f "$FILE" ]; then
-    printf "${RED}File $FILE not found!${DEFAULT_COLOR}\n"
+    lando_red "File $FILE not found!"
     exit 1;
   fi
 
   CMD="$FILE"
-
 else
-
   # Build DB specific connection string
   if [[ ${POSTGRES_DB} != '' ]]; then
     CMD="psql postgresql://$USER@$HOST:$PORT/$DATABASE"
@@ -83,7 +82,6 @@ else
   # Read stdin into DB
   $CMD #>/dev/null
   exit 0;
-
 fi
 
 # Inform the user of things
@@ -91,23 +89,20 @@ echo "Preparing to import $FILE into database '$DATABASE' on service '$SERVICE' 
 
 # Wipe the database if set
 if [ "$WIPE" == "true" ]; then
-
+  echo ""
   echo "Destroying all current tables in $DATABASE... "
-  echo "NOTE: See the --no-wipe flag to avoid this step!"
-
+  lando_yellow "NOTE: See the --no-wipe flag to avoid this step!"
+  echo ""
 
   # DO db specific wiping
   if [[ ${POSTGRES_DB} != '' ]]; then
-
     # Drop and recreate database
-    printf "\t\t${GREEN}Dropping database ...\n\n${DEFAULT_COLOR}"
+    lando_yellow "\t\tDropping database ...\n\n"
     psql postgresql://$USER@$HOST:$PORT/postgres -c "drop database $DATABASE"
 
-    printf "\t\t${GREEN}Creating database ...\n\n${DEFAULT_COLOR}"
+    lando_green "\t\tCreating database ...\n\n"
     psql postgresql://$USER@$HOST:$PORT/postgres -c "create database $DATABASE"
-
   else
-
     # Build the SQL prefix
     SQLSTART="mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS} $DATABASE"
 
@@ -119,7 +114,6 @@ if [ "$WIPE" == "true" ]; then
       echo "Dropping $t table from $DATABASE database..."
       $SQLSTART -e "DROP TABLE $t"
     done
-
   fi
 fi
 
@@ -154,7 +148,7 @@ else
 fi
 
 # Import
-echo "Importing $FILE..."
+lando_pink "Importing $FILE..."
 if command eval "$CMD"; then
   STATUS=$?
 else
@@ -163,12 +157,8 @@ fi
 
 # Finish up!
 if [ $STATUS -eq 0 ]; then
-  echo ""
-  printf "${GREEN}Import complete!${DEFAULT_COLOR}"
-  echo ""
+  lando_green "Import complete!"
 else
-  echo ""
-  printf "${RED}Import failed.${DEFAULT_COLOR}"
+  lando_red "Import failed."
   exit $STATUS
-  echo ""
 fi

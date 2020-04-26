@@ -73,6 +73,7 @@ module.exports = lando => {
       const labels = _.cloneDeep(lando.config.appLabels);
       const caData = new LandoCa(lando.config.userConfRoot, env, labels);
       const caFiles = lando.utils.dumpComposeData(caData, caDir);
+      lando.log.debug('setting up Lando Local CA at %s', caCert);
       return lando.engine.run(getCaRunner(caProject, caFiles));
     }
   });

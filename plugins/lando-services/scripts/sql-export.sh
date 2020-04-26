@@ -1,14 +1,15 @@
 #!/bin/bash
 
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="sqlexport"
+
 # Set generic things
 HOST=localhost
 SERVICE=$LANDO_SERVICE_NAME
 STDOUT=false
-
-# colors
-GREEN='\033[0;32m'
-RED='\033[31m'
-DEFAULT_COLOR='\033[0;0m'
 
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
@@ -70,7 +71,6 @@ fi
 if [ "$STDOUT" == "true" ]; then
   $DUMPER
 else
-
   # Inform the user of things
   echo "Preparing to export $FILE from database '$DATABASE' on service '$SERVICE' as user $USER..."
 
@@ -82,7 +82,7 @@ else
   # Show the user the result
   if [ $? -ne 0 ]; then
     rm ${FILE}
-    echo -e "${RED}Failed ${DEFAULT_COLOR}to create file: ${FILE}"
+    lando_red "Failed to create file: ${FILE}"
     exit 1
   else
     # Gzip the mysql database dump file
@@ -92,6 +92,6 @@ else
       chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
     fi
     # Report
-    echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
+    lando_green "Success ${FILE}.gz was created!"
   fi
 fi

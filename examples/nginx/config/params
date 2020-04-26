@@ -26,5 +26,3 @@ fastcgi_param  SERVER_NAME            $server_name;
 fastcgi_param  REDIRECT_STATUS        200;
 fastcgi_param  HOLLA                  atchaboi;
 fastcgi_param HTTP_PROXY "";
-fastcgi_param HTTP_PROXY "";
-fastcgi_param HTTP_PROXY "";

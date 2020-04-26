@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Source da helpas
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="userperms"
+
 # Adding user if needed
 add_user() {
   local USER=$1
@@ -56,7 +62,7 @@ reset_user() {
   fi;
   # If this mapping is incorrect lets abort here
   if [ "$(id -u $USER)" != "$HOST_UID" ]; then
-    echo "Looks like host/container user mapping was not possible! aborting..."
+    lando_warn "Looks like host/container user mapping was not possible! aborting..."
     exit 0
   fi
 }

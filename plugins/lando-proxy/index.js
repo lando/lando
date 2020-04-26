@@ -7,20 +7,34 @@ const utils = require('./lib/utils');
 // Default config values
 const defaultConfig = {
   proxy: 'ON',
-  proxyCert: '/certs/cert.crt',
-  proxyKey: '/certs/cert.key',
   proxyName: 'landoproxyhyperion5000gandalfedition',
-  proxyDash: '58087',
   proxyCache: 'proxyCache',
+  proxyCommand: [
+    '/entrypoint.sh',
+    '--log.level=DEBUG',
+    '--api.insecure=true',
+    '--api.dashboard=false',
+    '--providers.docker=true',
+    '--entrypoints.https.address=:443',
+    '--entrypoints.http.address=:80',
+    '--providers.docker.exposedbydefault=false',
+    '--providers.file.directory=/lando/proxy/config',
+    '--providers.file.watch=true',
+  ],
+  proxyCustom: {},
+  proxyDefaultCert: '/certs/cert.crt',
+  proxyDefaultKey: '/certs/cert.key',
   proxyHttpPort: '80',
   proxyHttpsPort: '443',
   proxyHttpFallbacks: ['8000', '8080', '8888', '8008'],
   proxyHttpsFallbacks: ['444', '4433', '4444', '4443'],
+  proxyPassThru: true,
 };
 
 module.exports = lando => {
   // Add in some computed config eg things after our config has been settled
   lando.events.on('post-bootstrap-config', ({config}) => {
+    lando.log.verbose('building proxy config...');
     config.proxyNet = `${config.proxyName}_edge`;
     config.proxyHttpPorts = _.flatten([config.proxyHttpPort, config.proxyHttpFallbacks]);
     config.proxyHttpsPorts = _.flatten([config.proxyHttpsPort, config.proxyHttpsFallbacks]);

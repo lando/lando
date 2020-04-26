@@ -26,14 +26,14 @@ const getErrorData = (err = {}) => ({
  */
 const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) => {
   // Log the actual request we are about to make
-  log.info('Making %s request to %s', verb, pathname);
-  log.debug('Request data: %j', data);
-  log.debug('Request options: %j.', options);
+  log.verbose('making %s request to %s', verb, `${_.get(request, 'defaults.baseURL')}${pathname.join('/')}`);
+  log.debug('request sent data with %j', options, _.clone(data));
 
   // Attempt the request and retry a few times
   return Promise.retry(() => request[verb](pathname.join('/'), data, options)
     .then(response => {
-      log.verbose('Response received: %j.', response.data);
+      log.verbose('response recieved: %s with code %s', response.statusText, response.status);
+      log.silly('response data', response.data);
       return response.data;
     })
     .catch(err => {

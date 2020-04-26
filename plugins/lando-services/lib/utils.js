@@ -57,6 +57,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= [], prest
             project: app.project,
             opts: {
               mode: 'attach',
+              cstdio: ['inherit', 'pipe', 'pipe'],
               prestart,
               user: (_.includes(rootSteps, section)) ? 'root' : getUser(service, app.info),
               services: [service],
@@ -112,25 +113,25 @@ exports.parseConfig = (config, app) => _(config)
 /*
  * Run build
  */
-exports.runBuild = (lando, steps, lockfile, hash = 'YOU SHALL NOT PASS', warnings = []) => {
-  if (!_.isEmpty(steps) && !lando.cache.get(lockfile)) {
-    return lando.engine.run(steps)
+exports.runBuild = (app, steps, lockfile, hash = 'YOU SHALL NOT PASS') => {
+  if (!_.isEmpty(steps) && !app._lando.cache.get(lockfile)) {
+    app.log.info('running build steps...');
+    return app.engine.run(steps)
     // Save the new hash if everything works out ok
     .then(() => {
-      lando.cache.set(lockfile, hash, {persist: true});
+      app._lando.cache.set(lockfile, hash, {persist: true});
+      app.log.info('build steps completed. and locked with %s', lockfile);
     })
     // Make sure we don't save a hash if our build fails
     .catch(error => {
-      warnings.push({
+      app.addWarning({
         title: `One of your build steps failed`,
         detail: [
           'This **MAY** prevent your app from working.',
           'Check for errors above, fix them in your Landofile, and try again by running:',
         ],
         command: 'lando rebuild',
-      });
-      lando.log.verbose('Build error message %s', error.message);
-      lando.log.debug('Build stack %s', error.stack);
+      }, error);
     });
   }
 };

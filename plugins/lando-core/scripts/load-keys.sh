@@ -1,5 +1,25 @@
 #!/bin/bash
 
+# Set defaults
+: ${SILENT:=$1}
+
+# Echo helper to recognize silence
+if [ "$SILENT" = "--silent" ]; then
+  LANDO_QUIET="yes"
+fi
+
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="loadkeys"
+
+# Bail if we are not root
+if [ $(id -u) != 0 ]; then
+  lando_warn "We are not root so bailing on key loading! This is probably ok..."
+  exit 0
+fi
+
 # Set up our things
 SSH_CONF="/etc/ssh"
 SSH_DIRS=( "/lando/keys" "/var/www/.ssh" )
@@ -31,12 +51,12 @@ done
 # We need to do some different magic on Windows because file sharing on windows
 # does not let you chmod files that are mounted
 if [ "$LANDO_HOST_OS" = "win32" ]; then
-  echo "Creating a special not-mounted key directory for Windows"
+  lando_warn "Creating a special not-mounted key directory for Windows"
   mkdir -p /lando_keys
   for SSH_DIR in "${SSH_DIRS[@]}"; do
     readarray -t SSH_KEYS < <(find "$SSH_DIR" -maxdepth 1 -not -name 'known_hosts' -type f)
     for SSH_KEY in "${SSH_KEYS[@]}"; do
-      echo "Copying $SSH_KEY from $SSH_DIR to /lando_keys"
+      lando_debug "Copying $SSH_KEY from $SSH_DIR to /lando_keys"
       cp -rfp "$SSH_KEY" /lando_keys
     done
   done
@@ -47,13 +67,12 @@ fi
 
 # Scan the following directories for keys and filter out non-private keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
-  echo "Scanning $SSH_DIR for keys..."
+  lando_info "Scanning $SSH_DIR for keys..."
   readarray -t RAW_LIST < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f)
   for RAW_KEY in "${RAW_LIST[@]}"; do
     SSH_CANDIDATES+=("$RAW_KEY")
   done
 done
-
 
 # Add in user specified keys if they are provided
 if [ "$LANDO_LOAD_KEYS" != "true" ] && [ "$LANDO_LOAD_KEYS" != "false" ]; then
@@ -63,18 +82,18 @@ if [ "$LANDO_LOAD_KEYS" != "true" ] && [ "$LANDO_LOAD_KEYS" != "false" ]; then
   done
 fi
 
-echo "Found keys ${SSH_CANDIDATES[@]}"
+lando_info "Found keys ${SSH_CANDIDATES[*]}"
 
 # Go through and validate our candidates
 for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
-  echo "Ensuring permissions and ownership of $SSH_CANDIDATE..."
+  lando_debug "Ensuring permissions and ownership of $SSH_CANDIDATE..."
   chown -R $LANDO_WEBROOT_USER:$GROUP "$SSH_CANDIDATE"
   chmod 700 "$SSH_CANDIDATE"
   # chmod 644 "$SSH_CANDIDATE.pub" || true
-  echo "Checking whether $SSH_CANDIDATE is a private key..."
+  lando_debug "Checking whether $SSH_CANDIDATE is a private key..."
   if grep -L "PRIVATE KEY" "$SSH_CANDIDATE" &> /dev/null; then
     if command -v ssh-keygen >/dev/null 2>&1; then
-      echo "Checking whether $SSH_CANDIDATE is formatted correctly..."
+      lando_debug "Checking whether $SSH_CANDIDATE is formatted correctly..."
       if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
         SSH_KEYS+=("$SSH_CANDIDATE")
         SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
@@ -87,7 +106,7 @@ for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
 done
 
 # Log
-echo "Using the following keys: ${SSH_KEYS[@]}"
+lando_info "Using the following keys: ${SSH_KEYS[*]}"
 
 # Construct the ssh_config
 OLDIFS="${IFS}"

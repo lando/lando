@@ -16,7 +16,7 @@ const utils = require('./../../lib/utils');
 module.exports = {
   name: '_lando',
   parent: '_compose',
-  builder: parent => class LandoService extends parent {
+  builder: parent => class LandoCompose extends parent {
     constructor(
       id,
       {
@@ -154,6 +154,7 @@ module.exports = {
       info.type = type;
       info.version = version;
       info.meUser = meUser;
+      info.hasCerts = ssl;
 
       // Pass it down
       super(id, info, ...sources);

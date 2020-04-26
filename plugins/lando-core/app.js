@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const toObject = require('./../../lib/utils').toObject;
 const utils = require('./lib/utils');
+const warnings = require('./lib/warnings');
 
 // Helper to get http ports
 const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
@@ -45,6 +46,7 @@ module.exports = (app, lando) => {
   // Add localhost info to our containers if they are up
   _.forEach(['post-init', 'post-start'], event => {
     app.events.on(event, () => {
+      app.log.verbose('attempting to find open services...');
       return app.engine.list({project: app.project})
       // Return running containers
       .filter(container => app.engine.isRunning(container.id))
@@ -61,10 +63,11 @@ module.exports = (app, lando) => {
   // Refresh all our certs
   app.events.on('post-init', () => {
     const buildServices = _.get(app, 'opts.services', app.services);
+    app.log.verbose('refreshing certificates...', buildServices);
     app.events.on('post-start', 9999, () => lando.Promise.each(buildServices, service => {
-      return lando.engine.run({
+      return app.engine.run({
         id: `${app.project}_${service}_1`,
-        cmd: '/helpers/refresh-certs.sh > /cert-log.txt',
+        cmd: 'mkdir -p /certs && /helpers/refresh-certs.sh > /certs/refresh.log',
         compose: app.compose,
         project: app.project,
         opts: {
@@ -75,9 +78,7 @@ module.exports = (app, lando) => {
         },
       })
       .catch(err => {
-        lando.log.error('Looks like %s is not running! It should be so this is a problem.', service);
-        lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', service);
-        lando.log.debug(err.stack);
+        app.addWarning(warnings.serviceNotRunningWarning(service), err);
       });
     }));
   });
@@ -90,17 +91,11 @@ module.exports = (app, lando) => {
       .filter(file => path.extname(file) !== '.pub')
       .value();
 
+    app.log.verbose('analyzing user ssh keys...');
+    app.log.silly('keys', keys);
     // Add a warning if we have more keys than the warning level
     if (_.size(keys) > lando.config.maxKeyWarning) {
-      app.warnings.push({
-        title: 'You have a lot of keys.',
-        detail: [
-          'Lando has detected you have a lot of ssh keys.',
-          'This may cause "Too many authentication failures" errors.',
-          'We recommend you limit your keys. See below for more details:',
-        ],
-        url: 'https://docs.lando.dev/config/ssh.html#customizing',
-      });
+      app.addWarning(warnings.maxKeyWarning());
     }
   });
 
@@ -113,17 +108,20 @@ module.exports = (app, lando) => {
     _.forEach(info, (value, key) => {
       info[key] = _.find(app.info, {service: key});
     });
+    app.log.verbose('setting LANDO_INFO...');
     app.env.LANDO_INFO = JSON.stringify(info);
   });
 
   // Analyze an apps compose files so we can set the default bind address
   // correctly
+  //
   // @TODO: i feel like there has to be a better way to do this than this mega loop right?
   app.events.on('post-init', 9999, () => {
     _.forEach(app.composeData, service => {
       _.forEach(service.data, datum => {
         _.forEach(datum.services, props => {
           if (!_.isEmpty(props.ports)) {
+            app.log.debug('ensuring exposed ports on %s are bound to %s', service.id, lando.config.bindAddress);
             props.ports = _(props.ports).map(port => normalizeBind(port, lando.config.bindAddress)).value();
           }
         });
@@ -139,7 +137,7 @@ module.exports = (app, lando) => {
     .map(container => _.find(app.info, {service: container.service}))
     // Map to a retry of the healthcheck command
     .map(info => lando.Promise.retry(() => {
-      return lando.engine.run({
+      return app.engine.run({
         id: `${app.project}_${info.service}_1`,
         cmd: info.healthcheck,
         compose: app.compose,
@@ -154,19 +152,14 @@ module.exports = (app, lando) => {
       })
       .catch(err => {
         console.log('Waiting until %s service is ready...', info.service);
-        lando.log.verbose('Running healthcheck %s for %s until %s...', info.healthcheck, info.service);
-        lando.log.debug(err);
+        app.log.debug('running healthcheck %s for %s...', info.healthcheck, info.service);
+        // app.log.silly(err);
         return Promise.reject(info.service);
       });
-    }, {max: 25})
+    }, {max: 25, backoff: 1000})
     .catch(service => {
-      lando.log.info('Service %s is unhealthy', service);
       info.healthy = false;
-      app.warnings.push({
-        title: `The service "${service}" failed its healthcheck`,
-        detail: ['This may be ok but we recommend you run the command below to investigate:'],
-        command: `lando logs -s ${service}`,
-      });
+      app.addWarning(warnings.serviceUnhealthyWarning(service));
     })));
 
   // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
@@ -186,22 +179,16 @@ module.exports = (app, lando) => {
       lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
     }
     if (app.meta.builtAgainst !== app._config.version) {
-      app.warnings.push({
-        title: 'This app was built on a different version of Lando.',
-        detail: [
-          'While it may not be necessary, we highly recommend you update the app.',
-          'This ensures your app is up to date with your current Lando version.',
-          'You can do this with the command below:',
-        ],
-        command: 'lando rebuild',
-      });
+      app.addWarning(warnings.rebuildWarning());
     }
   });
 
   // Scan urls
   app.events.on('post-start', 10, () => {
+    // Message to let the user know it could take a bit
+    console.log('Scanning to determine which services are ready... Please standby...');
     // Filter out any services where the scanner might be disabled
-    return lando.scanUrls(_.flatMap(getScannable(app), 'urls'), {max: 16}).then(urls => {
+    return app.scanUrls(_.flatMap(getScannable(app), 'urls'), {max: 16}).then(urls => {
       // Get data about our scanned urls
       app.urls = urls;
       // Add in unscannable ones if we have them
@@ -225,6 +212,7 @@ module.exports = (app, lando) => {
 
   // Remove meta cache on uninstall
   app.events.on('post-uninstall', () => {
+    app.log.debug('removing metadata cache...');
     lando.cache.remove(app.metaCache);
   });
 

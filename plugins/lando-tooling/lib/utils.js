@@ -127,10 +127,13 @@ exports.buildCommand = (app, command, service, user) => ({
 /*
  * Helper to build docker exec command
  */
-exports.dockerExec = (lando, stdio, datum = {}) => lando.shell.sh(
-  getExecOpts(lando.config.dockerBin, datum).concat(datum.cmd),
-  {mode: 'attach', cstdio: stdio}
-);
+exports.dockerExec = (injected, stdio, datum = {}) => {
+  // Depending on whether injected is the app or lando
+  const dockerBin = injected.config.dockerBin || injected._config.dockerBin;
+  const opts = {mode: 'attach', cstdio: stdio};
+  // Run run run
+  return injected.shell.sh(getExecOpts(dockerBin, datum).concat(datum.cmd), opts);
+};
 
 /*
  * Helper to get tts
