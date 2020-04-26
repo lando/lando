@@ -24,7 +24,7 @@ lando init
 # Spit out a full Drupal 7 Landofile using code from your current working directory
 lando init --source cwd --recipe drupal7 --name d7-hotsauce --webroot . --full
 
-# Pull code from github and set it up as a mean recipe
+# Pull code from GitHub and set it up as a mean recipe
 lando init \
   --source github \
   --recipe mean \
@@ -136,7 +136,7 @@ Note that Lando will automatically create and post a SSH key to GitHub for you i
 # Let Lando walk you through it
 lando init --source github
 
-# Pull git@github.com:lando/lando.git from github and set it up as a pantheon recipe
+# Pull git@github.com:lando/lando.git from GitHub and set it up as a pantheon recipe
 lando init \
   --source github \
   --github-auth "$MY_GITHUB_TOKEN" \
