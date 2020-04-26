@@ -13,8 +13,8 @@ fi
 # Detect and run the correct entrypoint script. THANKS BITNAMI!
 if [ -f "/opt/bitnami/scripts/apache/entrypoint.sh" ]; then
   /opt/bitnami/scripts/apache/entrypoint.sh /opt/bitnami/scripts/apache/run.sh
-elif [ -f "/entrypoint.sh" ]; then
-  /entrypoint.sh /run.sh
-else
+elif [ -f "/app-entrypoint.sh" ]; then
   /app-entrypoint.sh httpd -f /opt/bitnami/apache/conf/httpd.conf -DFOREGROUND
+else
+  /entrypoint.sh /run.sh
 fi
