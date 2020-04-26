@@ -12,6 +12,8 @@ Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry th
 
 ::: tip Proxying is not required
 As long as your containers or services expose ports `80` and/or `443`, Lando will smartly allocate `localhost` addresses for them. Proxying is meant to augment how your app is accessed with additional domains.
+
+You can also tell Lando to scan additional ports with the [moreHttpPorts](./services.md) key available in every service.
 :::
 
 There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
@@ -19,6 +21,12 @@ There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding prot
 ## Automatic Port Assignment
 
 By default, Lando will attempt to bind the proxy to your host machines port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
+
+::: warning Will bind to 127.0.0.1 by default
+For security reasons Lando will force bind your ports to `127.0.0.1` unless you have either explicitly set the Lando [global config](./global.md) option `bindAddress` to something else **OR** you have overridden a service and set the bind.
+
+For more information check out the [security docs.](./security.md)
+:::
 
 If you want to use port `80` and `443` but cannot for the life of you figure out what is already using them you can do a bit of discovery using `lsof` or by visiting `localhost` in your browser and seeing if you recognize what loads.
 
@@ -33,7 +41,9 @@ sudo kill -9 $PID
 
 ## Usage
 
-You can add routing to various services and their ports using the top-level `proxy` config in your [Landofile](./lando.md). Because our proxy also benefits from our [automatic certificate and CA setup](./security.md) all proxy entries will automatically be available over both `http` and `https`.
+You can add routing to various services and their ports using the top-level `proxy` config in your [Landofile](./lando.md).
+
+Because our proxy also benefits from our [automatic certificate and CA setup](./security.md) if you have a service with `ssl: true` then it will also be available over `https`. Note that many of our recipes will configure this for you automatically.
 
 ### Routing to port 80
 
@@ -108,9 +118,7 @@ proxy:
 
 ### Sub subdomains
 
-While you can sub-sub-...-sub-subdomain to your hearts content we recommend you do not because the Lando CA only handles first level subdomains by default. This will cause sub-subdomains or deeper to produce browser warnings **even if you have [trusted our CA](./security.md#trusting-the-ca)**. We recommend you instead use hyphenated "subdomains".
-
-**Works but not recommended**
+You can also `sub-sub-...-sub-subdomain` to your hearts content.
 
 ```yaml
 proxy:
@@ -118,21 +126,8 @@ proxy:
     - admin.mysite.lndo.site
     - better.admin.mysite.lndo.site
     - mailhog.mysite.lndo.site
-    - pma.mysite.lndo.site
+    - omg.how.log.can.you.go.pma.mysite.lndo.site
 ```
-
-**Works AND recommended!**
-
-```yaml
-proxy:
-  web2:
-    - admin-mysite.lndo.site
-    - better-admin-mysite.lndo.site
-    - mailhog-mysite.lndo.site
-    - pma-mysite.lndo.site
-```
-
-You can read more about this restriction [here](https://stackoverflow.com/questions/26744696/ssl-multilevel-subdomain-wildcard).
 
 ### Combos
 
@@ -152,14 +147,14 @@ Various parts of the proxy are configurable via the Lando [global config](./glob
 
 **Again, you REALLY REALLY REALLY should not change these settings unless you have a good reason and know what you are doing!**
 
+Here are the defaults and what they are good for:
+
 ```yml
 # Set to anything else to disable
-proxy: ON
-# For security reasons we bind the proxy to localhost
-# If unset this will default to the `bindAddress` value
-proxyBindAddress: "127.0.0.1"
-# Legacy, use the "domain" setting below instead
-proxyDomain: lndo.site
+proxy: "ON"
+# Set to rename the proxy container
+proxyName: "landoproxyhyperion5000gandalfedition"
+# Configure the ports and fallbacks
 proxyHttpPort: 80
 proxyHttpsPort: 443
 proxyHttpFallbacks:
@@ -172,6 +167,37 @@ proxyHttpsFallbacks:
   - 4433
   - 4444
   - 4443
+# Specify different fallback default certs
+# NOTE: these paths are path INSIDE the proxy container
+proxyDefaultCert: '/certs/cert.crt'
+proxyDefaultKey: '/certs/cert.key'
+
+# This is an advanced option but allows you to alter the proxy container boot up
+# configuration
+proxyCommand:
+  - "/entrypoint.sh"
+  - "--log.level=DEBUG"
+  - "--api.insecure=true"
+  - "--api.dashboard=false"
+  - "--providers.docker=true"
+  - "--entrypoints.https.address=:443"
+  - "--entrypoints.http.address=:80"
+  - "--providers.docker.exposedbydefault=false"
+  - "--providers.file.directory=/lando/proxy/config"
+  - "--providers.file.watch=true"
+# This is an object you can use to configure dynamic traefik 2 config
+# NOTE: that it must be in YAML format
+proxyCustom: {}
+# Disable this and traefik will not try to use the certs generated by services
+# This is useful in combination with proxyCustom so you can use your own certs
+proxyPassThru: true
+
+# For security reasons we bind the proxy to 127.0.0.1
+# If unset this will default to the `bindAddress` value
+proxyBindAddress: "127.0.0.1"
+# Legacy, use the "domain" setting below instead
+proxyDomain: lndo.site
+
 # Editing the domain will also generate a new Lando CA
 # See the Security docs for more info on that
 domain: lndo.site

@@ -1,6 +1,21 @@
 # 2020
 
-## v3.0.0-rrc.5 - April 17, 2020 (Estimated Release Date)
+## v3.0.0 - May 4, 2020 (Estimated Release Date)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Silenced `loadkeys` on `inits` that required loading keys
+* Spell check and grammar changes to docs/config/*.md
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.0-rrc.5 - [April 25, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.5)
 
 ### This is an `edge` release.
 
@@ -12,17 +27,21 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added legacy `SIMPLETEST_` envvars to Drupaly recipes [#1269](https://github.com/lando/lando/pull/1269)
 * Added ability for users to control which host `ssh` keys Lando uses [#2031](https://github.com/lando/lando/pull/2031)
 * Added reasonable `max-file` and `max-size` limits to services so logs don't grow indefinitely [#1774](https://github.com/lando/lando/pull/1774)
+* Added `proxy` support for any level of subdomains [#1819](https://github.com/lando/lando/pull/1819)
 * Changed the default bind address to `127.0.0.1` and made `bindAddress` globally configurable [#2035](https://github.com/lando/lando/pull/2035)
+* Fixed regression causing weird newlines on some console output [#2178](https://github.com/lando/lando/pull/2178)
 * Fixed bug causing Pantheon `pull` and `push` to fail when checked out to branch that wasnt also a multidev env [#2153](https://github.com/lando/lando/pull/2153)
 * Fixed bug causing Pantheon `lando push` to push to unexpected environments [#2153](https://github.com/lando/lando/pull/2153)
 * Fixed bug causing `ERR_INVALID_REDIRECT` for some proxied servives [#2149](https://github.com/lando/lando/pull/2149)
 * Fixed bug causing app start to fail if proxy was unable to locate suitable ports [#1857](https://github.com/lando/lando/pull/1857)
 * Fixed bug causing `ssh` to fail when username or keypaths had spaces in them [#2031](https://github.com/lando/lando/pull/2031)
-* Improved spelling and grammar in docs, code and comments, thanks @uberhacker!
+* Improved logging and error handling
+* Improved spelling and grammar in docs, code and comments, thanks [@uberhacker](https://github.com/uberhacker)!
+* Upgraded to `traefik` 2.2 [#1819](https://github.com/lando/lando/pull/1819)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 
 ## v3.0.0-rrc.4 - [April 11, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.4)
 
