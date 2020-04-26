@@ -6,7 +6,7 @@ description: The best local development option for Drupal 7, Drupal 8 or WordPre
 
 [Pantheon](https://pantheon.io) is a web development hosting platform for open-source Drupal and WordPress websites. It is an app-specific PaaS provider, sold on a monthly subscription basis, with several support tiers available.
 
-Lando provides a snazy integration that
+Lando provides a snazzy integration that
 
 * Closely mimics Pantheon's [stack, versions](https://pantheon.io/docs/platform/) and [environment](https://pantheon.io/docs/read-environment-config/) locally
 * Allows you to easily `pull` your Pantheon site down locally
@@ -23,7 +23,7 @@ You should also check out Pantheon's [local dev](https://pantheon.io/docs/local-
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
+1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/)
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
@@ -103,7 +103,7 @@ web_docroot: true
 
 ### Customizing the stack
 
-By default Lando will spin up a **very close** approximation of the Pantheon stack
+By default, Lando will spin up a **very close** approximation of the Pantheon stack
 
 * [php appserver served by nginx](https://pantheon.io/docs/application-containers/)
 * [mariadb database](https://pantheon.io/blog/using-mariadb-mysql-replacement)
@@ -135,7 +135,7 @@ config:
   cache: false
 ```
 
-Note that if your application code depends on one of these services and you disable them you should expect an error. Also note that Lando does not track what services you are using on your Pantheon site eg these settings are "decoupled".
+Note that if your application code depends on one of these services and you disable them you should expect an error. Also note that Lando does not track what services you are using on your Pantheon site (e.g. these settings are "decoupled").
 
 ### Using xdebug
 
@@ -272,9 +272,9 @@ You can alternatively download the backup and manually extract it to the correct
 
 ## Pushing Your Changes
 
-While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility comand for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally.
+While a best practices workflow suggests you put all your changes in code and push those changes with `git`, Lando provides a utility command for `pantheon` recipes called `lando push` that pushes up any code, database or files changes you have made locally.
 
-**By default we set `--database` or `--files` to `none` since this is the suggested best practice**.
+**By default, we set `--database` or `--files` to `none` since this is the suggested best practice**.
 
 Note that if Lando cannot find a [Pantheon machine token](https://pantheon.io/docs/machine-tokens/) associated with your site it will prompt you for one. You can also switch to a different machine token by using the  `--auth` option.
 
@@ -314,7 +314,7 @@ lando push --auth "$PANTHEON_MACHINE_TOKEN" --database=none
 
 ## Working With Multidev
 
-Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kickstart an advanced dev workflow for teams. By default `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
+Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) way to kick-start an advanced dev workflow for teams. By default, `lando` will pull down your `dev` environment but you can use `lando switch <env>` to switch your local copy over to a Pantheon multidev environment.
 
 ### Usage
 
@@ -322,7 +322,7 @@ Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) wa
 # Switch to the env called "feature-1"
 lando switch feature-1
 
-# Swtich to the env called "feature-1" but ignore grabbing that env's files and database
+# Switch to the env called "feature-1" but ignore grabbing that env's files and database
 # Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
 lando switch feature-1 --no-db --no-files
 ```
@@ -338,16 +338,16 @@ lando switch feature-1 --no-db --no-files
 
 ### Environment Variables
 
-Like Pantheon, Lando will also [inject variables](https://pantheon.io/docs/read-environment-config/) into your runtime container so that you have useful information stored about your app. These are stored directly in the environment (eg accessible via [`getenv()`](http://php.net/manual/en/function.getenv.php)), `$_ENV`, `$_SERVER` or as defined `php` constants.
+Like Pantheon, Lando will also [inject variables](https://pantheon.io/docs/read-environment-config/) into your runtime container so that you have useful information stored about your app. These are stored directly in the environment (e.g. accessible via [`getenv()`](http://php.net/manual/en/function.getenv.php)), `$_ENV`, `$_SERVER` or as defined `php` constants.
 
-Here is a non-exhuastive list of some of the most commonly used config.
+A non-exhaustive list of some of the most commonly used config is shown below:
 
 ```bash
 # Site info
 PANTHEON_BINDING: lando
 PANTHEON_ENVIRONMENT: lando
 PANTHEON_SITE_NAME: Your Pantheon site name
-PANTHEON_SITE: Your Panthen UUID
+PANTHEON_SITE: Your Pantheon UUID
 FILEMOUNT: The location of your files directory
 DOCROOT: /
 FRAMEWORK: Either drupal, drupal8, backdrop, or wordpress
@@ -424,7 +424,7 @@ If you are using `web_docroot` in your `pantheon.yml` you will need to remember 
 
 If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
 
-**Note that hardcoding the `root` like this may have unforseen and bad consequences for some `drush` commands such as `drush scr`.**
+**Note that hard coding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
 
 ```yaml
 tooling:
@@ -452,13 +452,13 @@ $options['uri'] = "http://mysite.lndo.site";
 
 ## Using Terminus
 
-You should be able to use `terminus` commands in the exact same way by prefixing them with `lando` eg `lando terminus auth:whoami`.
+You should be able to use `terminus` commands in the exact same way by prefixing them with `lando` (e.g. `lando terminus auth:whoami`).
 
 ### Terminus Plugins
 
-By default Lando will only install `terminus` proper but you can add [Terminus Plugins](https://pantheon.io/docs/terminus/plugins/directory/) to your Landofile with a [build step](./../config/services.md#build-steps).
+By default, Lando will only install `terminus` proper but you can add [Terminus Plugins](https://pantheon.io/docs/terminus/plugins/directory/) to your Landofile with a [build step](./../config/services.md#build-steps).
 
-You will want to consult the relevant install instructions for each plugin but here is an example that installs the [Terminus Build Tools](https://github.com/pantheon-systems/terminus-build-tools-plugin) plugin.
+You will want to consult the relevant install instructions for each plugin but an example that installs the [Terminus Build Tools](https://github.com/pantheon-systems/terminus-build-tools-plugin) plugin is shown below:
 
 ```yml
 services:

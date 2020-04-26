@@ -30,7 +30,7 @@ To access this feature you will need:
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
+1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/)
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
@@ -87,7 +87,7 @@ This is not configurable. Lando only support Drupal 8 projects currently.
 
 ### Build steps
 
-If you have steps you need to run to get your site into a workable place you can put them in the `build` key of your recipes `config`. By default we will run `composer install` but you may wish to augment that with any front end compilation tasks you may have as in the below example:
+If you have steps you need to run to get your site into a workable place you can put them in the `build` key of your recipes `config`. By default, we will run `composer install` but you may wish to augment that with any front end compilation tasks you may have as in the example below:
 
 ```yaml
 recipe: lagoon

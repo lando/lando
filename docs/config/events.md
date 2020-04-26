@@ -1,5 +1,5 @@
 ---
-description: Lando events let you run aribitrary commands before or after certain parts of the Lando runtime; clear caches after a database import or run a script before deployment.
+description: Lando events let you run arbitrary commands before or after certain parts of the Lando runtime; clear caches after a database import or run a script before deployment.
 ---
 
 # Events
@@ -98,7 +98,7 @@ In the above scenario, `some-command` will run on `web2` by default.
 
 ### Service commands
 
-While the defaults above are good to know we *highly recommend* you just explicitly define which commands should run on which services by keying the command with a service as below.
+While the defaults above are good to know we *highly recommend* you just explicitly define which commands should run on which services by keying the command with a service as shown below:
 
 ```yaml
 events:

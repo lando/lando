@@ -20,11 +20,11 @@ services:
     scanner: true
 ```
 
-`myservice` in the example above can actully be set to anything the user wants but common conventions are things like `appserver`, `index`, `cache`, `database` or `kanye`.
+`myservice` in the example above can actually be set to anything the user wants but common conventions are things like `appserver`, `index`, `cache`, `database` or `kanye`.
 
 Note that you will need to set the `type` and its optional `version` to be either one of the [supported services](#supported-services) below or as defined in one you [create your own](./../contrib-plugins.md).
 
-Each service also contains a bunch of its own configuartion options. As such we *highly recommend* you check out the documentation for each service. For example here are some of the configuration options available to the `php` service.
+Each service also contains a bunch of its own configuration options. As such we *highly recommend* you check out the documentation for each service. For example, here are some of the configuration options available to the `php` service.
 
 ```yaml
 service:
@@ -115,7 +115,7 @@ As you can likely surmise from the above each step is intended for a pretty spec
 * Use `run` to install application dependencies or run build steps that require your application be started first
 * Use `run_as_root` for any other post-start `root` level one-time setup commands.
 
-Of course these steps must make sense within the context of the container you are running them in. For example, you will not be able to run `dnf` inside of a `debian` flavored container. Also note that the default working directory that the commands run in inside the container is `/app`.
+Of course, these steps must make sense within the context of the container you are running them in. For example, you will not be able to run `dnf` inside of a `debian` flavored container. Also note that the default working directory that the commands run in inside the container is `/app`.
 
 Another potential consideration is "dependent commands". Each line of a build step runs in a separate subshell so if COMMAND B is dependent on something provided by COMMAND A such as `sourcing` a file you should combine the commands with `&&` and put them on a single line
 
@@ -193,7 +193,7 @@ We give you access to the Docker Compose layer with the `overrides` key.
 Overrides you specify get merged and injected directly into the `services` config used by Docker Compose. This means that you cannot use overrides to alter *top level* `networks` or `volumes`. If you are looking for that kind of **POWER** we suggest you look at the [custom](./compose.md) service.
 :::
 
-Here is an example of an overriden `apache` service that uses a custom image and injects some additional environment variables. However, you can put anything into `overrides` that you can put into the `services` config of a Docker Compose file. Note that if you change the image your success in running with that image is directly correlated to how close that image is to the ones we use by default. For that reason it is **highly recommended** your custom images are extended from ours so your chance of doing this with great success is maximized.
+Here is an example of an overridden `apache` service that uses a custom image and injects some additional environment variables. However, you can put anything into `overrides` that you can put into the `services` config of a Docker Compose file. Note that if you change the image your success in running with that image is directly correlated to how close that image is to the ones we use by default. For that reason it is **highly recommended** your custom images are extended from ours so your chance of doing this with great success is maximized.
 
 If you are looking to use a *completely different* image then we recommend you a [custom compose service](./compose.md).
 
@@ -212,7 +212,7 @@ services:
 
 ### Localhost Assignment
 
-Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default this is most of our services. An exception is the [`compose`](./compose.md) service which requires the user manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
+Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default, this is most of our services. An exception is the [`compose`](./compose.md) service which requires the user manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
 
 ```yaml
 services:

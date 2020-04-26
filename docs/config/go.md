@@ -18,7 +18,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [1.12](https://hub.docker.com/_/golang/)
 *   [1.11](https://hub.docker.com/_/golang/)
@@ -58,9 +58,9 @@ services:
 
 ### Specifying a command
 
-Note that if you *do not* define a `command` for this service it will effectively be a "cli" container eg it will not serve or run an application by default but will be available to run `go` commands against.
+Note that if you *do not* define a `command` for this service it will effectively be a "cli" container (e.g. it will not serve or run an application by default but will be available to run `go` commands against).
 
-If you want to actually launch a `go` application consider setting the `command` to something like:
+If you want to actually launch a `go` application, consider setting the `command` to something like below:
 
 ```yaml
 services:

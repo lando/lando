@@ -126,7 +126,7 @@ All of the directories you exclude cannot be removed with a `rm -rf /path/to/exc
 
 ## Roadmap
 
-Ultimately we will offer some "exclude" syncing strategies so that your app can run super fast and you don't have to sacrifice code editability from your host. However, we'd like to get more feedback and lock down the stability of the exclude feature first.
+Ultimately we will offer some "exclude" syncing strategies so that your app can run super fast and you don't have to sacrifice code edit-ability from your host. However, we'd like to get more feedback and lock down the stability of the exclude feature first.
 
 Strategies under consideration:
 

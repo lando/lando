@@ -30,7 +30,7 @@ This service does not support patch versions but if you **really** need somethin
 
 Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
 
 ```yaml
 services:
@@ -47,11 +47,11 @@ services:
 
 You will need to list the database services you want to be able to access via `phpmyadmin`. Note that the services in this list should be other MySQLy services in your application. They can be discovered by running [lando info](./../cli/info.md).
 
-::: warning Note that PhpMyAdmin is designed specifically for MySql and MariaDB type databases!
+::: warning Note that PhpMyAdmin is designed specifically for MySQL and MariaDB type databases!
 You will likely be sad if you try to use a non-MySQL-ish database.
 :::
 
-Here is an example of a Landofile's `services` config that connects to two `mysql` database backends called `mysql57` and `mysql8`.
+An example of a Landofile's `services` config that connects to two `mysql` database backends called `mysql57` and `mysql8` is shown below:
 
 ```yaml
 services:
@@ -68,7 +68,7 @@ services:
 
 ### Using custom phpmyadmin config file
 
-You can override the default `phpmyadmin` config by setting a custom [phpMyAdmin config file](https://docs.phpmyadmin.net/en/latest/config.html) as below.
+You can override the default `phpmyadmin` config by setting a custom [phpMyAdmin config file](https://docs.phpmyadmin.net/en/latest/config.html) as shown below:
 
 **A hypothetical project**
 
@@ -93,9 +93,9 @@ services:
 
 ### Advanced
 
-There are also [serveral various envvars](https://hub.docker.com/r/phpmyadmin/phpmyadmin/) exposed by the underlying image we use that you can set to further customize how your PhpMyAdmin works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then YMMV.
+There are also [several various envvars](https://hub.docker.com/r/phpmyadmin/phpmyadmin/) exposed by the underlying image we use that you can set to further customize how your PhpMyAdmin works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then YMMV.
 
-That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them like so:
+That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them like below:
 
 ```yaml
 my-service:

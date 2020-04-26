@@ -14,7 +14,7 @@ This documentation is specifically about configuring the Landofile itself. If yo
 
 ## Base File
 
-If you are developing a project start state or have a set of Lando configurations you'd like to ship with all your projects you can use a "base" file with defaults that can then be overriden by your usual `.lando.yml`. By default Lando will detect any of the following files automatically and load them before your `.lando.yml`
+If you are developing a project start state or have a set of Lando configurations you'd like to ship with all your projects you can use a "base" file with defaults that can then be overridden by your usual `.lando.yml`. By default, Lando will detect any of the following files automatically and load them before your `.lando.yml`
 
 ```bash
 .lando.base.yml

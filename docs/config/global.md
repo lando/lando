@@ -36,10 +36,10 @@ You can also override any global config value using environment variables of the
 export LANDO_MODE=mymode
 ```
 
-For more complex config eg an object or array you can set the envvar to a `JSON` string and Lando will parse it for you. Note that Lando keys that are `camelCase` will be separated as envvars with `_`. For example `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
+For more complex config (e.g. an object or array), you can set the envvar to a `JSON` string and Lando will parse it for you. Note that Lando keys that are `camelCase` will be separated as envvars with `_`. For example, `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
 
 ::: tip What is my `envPrefix`?
-By default this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
+By default, this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
 :::
 
 ## Examples

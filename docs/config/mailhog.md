@@ -33,7 +33,7 @@ services:
     hogfrom: []
 ```
 
-### Portforwarding
+### Port forwarding
 
 `portforward` will allow you to access this service externally by given you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 

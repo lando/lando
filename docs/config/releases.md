@@ -8,10 +8,10 @@ Starting with [3.0.0-rrc.3](https://docs.lndo.site/help/2020-changelog.html) Lan
 
 The default `stable` channel will prompt you to update when there is a new release [on GitHub](https://github.com/lando/lando/releases) that has been tagged `Latest Release`. These releases undergo a more rigorous vetting process and generally will provide the most stability. This is the best option for most users.
 
-In addition to the updates from the `stable` channel, `edge` will also include all releases on Githib that are tagged as `Pre-release`. These releases are best suited for intrepid users looking to sacrifice a bit of stability to try out the latest and greatest. They are also suited for users who want to help our team find bugs so we can accelerate the the `stable` release cycle.
+In addition to the updates from the `stable` channel, `edge` will also include all releases on GitHub that are tagged as `Pre-release`. These releases are best suited for intrepid users looking to sacrifice a bit of stability to try out the latest and greatest. They are also suited for users who want to help our team find bugs so we can accelerate the the `stable` release cycle.
 
 ::: half
-![Edge releass](/images/edgerelease.png)
+![Edge release](/images/edgerelease.png)
 :::
 ::: half
 ![Stable releases](/images/stablerelease.png)

@@ -1,5 +1,5 @@
 ---
-description: Add a highly configurable apache solr service to Lando for local development with all the power of Docker and Docker Compose.
+description: Add a highly configurable Apache Solr service to Lando for local development with all the power of Docker and Docker Compose.
 ---
 
 # Solr
@@ -25,7 +25,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [6.6](https://hub.docker.com/r/_/solr/)
 *   [6](https://hub.docker.com/r/_/solr/)
@@ -42,7 +42,7 @@ You can still run these versions with Lando but for all intents and purposes the
 While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV. Also note that patch versions are not available for Solr 3.x and 4.x
 :::
 
-To use a patch version you can do something like this:
+To use a patch version you can do something like below:
 
 ```yaml
 services:
@@ -54,9 +54,9 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that the options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
 
 ```yaml
 services:
@@ -68,7 +68,7 @@ services:
       dir: SEE BELOW
 ```
 
-### Portforwarding
+### Port forwarding
 
 `portforward` will allow you to access this service externally by giving you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 

@@ -20,7 +20,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [2.7](https://hub.docker.com/r/_/python/)
 
@@ -30,7 +30,7 @@ You can still run these versions with Lando but for all intents and purposes the
 While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
 :::
 
-To use a patch version you can do something like this:
+To use a patch version you can do something like below:
 
 ```yaml
 services:
@@ -42,9 +42,9 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that the options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
 
 ```yaml
 services:
@@ -57,9 +57,9 @@ services:
 
 ### Specifying a command
 
-Note that if you *do not* define a `command` for this service it will effectively be a "cli" container eg it will not serve or run an application by default but will be available to run `python` commands against.
+Note that if you *do not* define a `command` for this service it will effectively be a "cli" container (e.g. it will not serve or run an application by default but will be available to run `python` commands against).
 
-If you want to actually launch a `python` application consider setting the `command` to something like:
+If you want to actually launch a `python` application, consider setting the `command` to something like below:
 
 ```yaml
 services:
@@ -81,7 +81,7 @@ services:
 
 ### Using SSL
 
-Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md). It is up to user to use the certs and secure port correctly in their application like as in this `python` snippet:
+Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md). It is up to user to use the certs and secure port correctly in their application like as in the `python` snippet below:
 
 ```yaml
 services:
@@ -101,7 +101,7 @@ httpsd.serve_forever()
 
 ## Path Considerations
 
-Lando will set the following `PATH` hierarchy for this service.
+Lando will set the `PATH` hierarchy for this service as follows:
 
 ```js
 [

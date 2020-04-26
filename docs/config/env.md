@@ -1,5 +1,5 @@
 ---
-description: Lando sets a bunch of useful environment variables in each service by default, or you can inject your own by configurating your Landofile or using a custom environment file.
+description: Lando sets a bunch of useful environment variables in each service by default, or you can inject your own by configuring your Landofile or using a custom environment file.
 ---
 
 # Environment
@@ -48,7 +48,7 @@ LANDO_SERVICE_NAME=appserver
 You can tell Lando to inject additional environment variables into every service in your app using environment files. This is particularly useful if you want to:
 
 1. Inject sensitive credentials into the environment a la the 12-factor app model
-2. Store credentials in a `.gitignored` file that is not committed to the repo
+2. Store credentials in a `.gitignore` file that is not committed to the repo
 3. Set config on a per environment basis
 
 You can accomplish this using the `env_file` top level config in your [Landofile](./lando.md).
@@ -77,7 +77,7 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=${WP_HOME}/wp
 ```
 
-Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like:
+Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like below:
 
 ```bash
 WP_ENV=development

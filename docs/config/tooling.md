@@ -123,7 +123,7 @@ tooling:
 
 You can also omit the `service` and define `cmd` as an array of objects where the `key` is the service and the `value` is the command. This can allow you to consolidate complex testing and build steps that need to happen across many different services.
 
-It also allows you to reuse a common interface across many different Landofiles eg `lando test` may differ from project to project but it's always what we use to run our tests.
+It also allows you to reuse a common interface across many different Landofiles (e.g. `lando test` may differ from project to project but it's always what we use to run our tests).
 
 ```yaml
 tooling:
@@ -146,7 +146,7 @@ lando test && lando build
 
 ### Dynamic service commands
 
-Sometimes you have, need or want a single command that can be used on a user-specified service. In these situations you can tell Lando to set the service with an option.
+Sometimes you have, need or want a single command that can be used on a user-specified service. In these situations, you can tell Lando to set the service with an option.
 
 Note that the `:` prefix is what tells Lando to use an option instead of a literal string. Also note that you should be careful to avoid collisions between options *you* specify and options the *underlying command* does.
 
@@ -191,7 +191,7 @@ tooling:
 
 You can also define your own options for use in tooling. These options follow the same spec as [Lando tasks](./../contrib-plugins.md#tasks) and are generally used in combination with an underlying script.
 
-Note that the options interface just provides a way to define and then inject options into a given command. It is up to the user to make sure the underlying command or script knows what to do with such options. Note that if you use interactive options you need to set `level: app` as below.
+Note that the options interface just provides a way to define and then inject options into a given command. It is up to the user to make sure the underlying command or script knows what to do with such options. Note that if you use interactive options you need to set `level: app` as shown below:
 
 ```yaml
 tooling:
@@ -247,7 +247,7 @@ lando ssh -s appserver -c "ls -lsa /"
 
 You can override tooling provided by Lando recipes or upstream Landofiles by redefining the tooling command in your Landofile.
 
-For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory and always uses the `drush` you installed via `composer` you could do the below.
+For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory and always uses the `drush` you installed via `composer`, you could do as shown below:
 
 ```yml
 tooling:
@@ -259,7 +259,7 @@ tooling:
 
 You can also use "tooling overrides" to disable any other predefined or upstream tooling by setting the command to a non-object value in your Lando file.
 
-While any value will do it's customary to use `disabled` as in the below.
+While any value will do it's customary to use `disabled` as shown below:
 
 ```yml
 tooling:
@@ -268,7 +268,7 @@ tooling:
 
 ## Directory Mapping
 
-Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container. Consider
+Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally (e.g. not in a container). Consider the example below:
 
 ```bash
 cd /path/to/my/app

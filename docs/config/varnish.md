@@ -97,7 +97,7 @@ services:
 
 ### Advanced
 
-There are also [serveral various envvars](https://hub.docker.com/r/eeacms/varnish/) exposed by the underlying image we use that you can set to further customize how your Varnish works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then YMMV.
+There are also [several various envvars](https://hub.docker.com/r/eeacms/varnish/) exposed by the underlying image we use that you can set to further customize how your Varnish works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then YMMV.
 
 That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them like so:
 

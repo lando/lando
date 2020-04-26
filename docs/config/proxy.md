@@ -1,12 +1,12 @@
 ---
-description: The Lando proxy layer allows you to specify HTTP or HTTPS eg TLS/SSL routes to specific services in a few lines of config. You can also customize the domain and certificates used.
+description: The Lando proxy layer allows you to specify HTTP or HTTPS (e.g. TLS/SSL routes to specific services in a few lines of config). You can also customize the domain and certificates used.
 ---
 
 # Proxy
 
-By default Lando runs a [traefik](https://traefik.io/) reverse proxy when needed so that users' apps can route stable, predictable and "nice" URLS to various ports inside of various services.
+By default, Lando runs a [traefik](https://traefik.io/) reverse proxy when needed so that users' apps can route stable, predictable and "nice" URLS to various ports inside of various services.
 
-While you can [configure](#configuration) the default `domain` of this proxy we *highly recommend* you do not alter the default behavior unless you have a fairly compelling reason to do so. A compelling reason to *not* change them are that the default `lndo.site` domain works "out of the box" while custom domains require [additional setup](#working-offline-or-using-custom-domains).
+While you can [configure](#configuration) the default `domain` of this proxy, we *highly recommend* you do not alter the default behavior unless you have a fairly compelling reason to do so. A compelling reason to *not* change them are that the default `lndo.site` domain works "out of the box" while custom domains require [additional setup](#working-offline-or-using-custom-domains).
 
 Specifically, `*.lndo.site` is an actual *ON THE INTERNET* wildcard DNS entry that points all `*.lndo.site` subdomains to `localhost/127.0.0.1`. This means that if you lose your internet connection, you will not be able to visit your app at these addresses. However, you can [take steps](#working-offline-or-using-custom-domains) to work around this restriction or use your own [custom domain](#configuration) and handle the DNS yourself with `dnsmasq` or some other solution.
 
@@ -18,7 +18,7 @@ There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding prot
 
 ## Automatic Port Assignment
 
-By default Lando will attempt to bind the proxy to your host machines port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
+By default, Lando will attempt to bind the proxy to your host machines port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
 
 If you want to use port `80` and `443` but cannot for the life of you figure out what is already using them you can do a bit of discovery using `lsof` or by visiting `localhost` in your browser and seeing if you recognize what loads.
 
@@ -108,7 +108,7 @@ proxy:
 
 ### Sub subdomains
 
-While you can sub-sub-...-sub-subdomain to your hearts content we recommend you do not because the Lando CA only handles first level subdomains by default. This will cause sub-subdomains or deeper to produce browser warnings **even if you have [trusted our CA](./security.md#trusting-the-ca)**. We recommend you instead use hypenated "subdomains"
+While you can sub-sub-...-sub-subdomain to your hearts content we recommend you do not because the Lando CA only handles first level subdomains by default. This will cause sub-subdomains or deeper to produce browser warnings **even if you have [trusted our CA](./security.md#trusting-the-ca)**. We recommend you instead use hyphenated "subdomains".
 
 **Works but not recommended**
 
@@ -179,7 +179,7 @@ domain: lndo.site
 
 You will need to do a `lando poweroff` to apply these changes.
 
-Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example if you set `domain` to a top level domain such as `test` you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
+Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example, if you set `domain` to a top level domain such as `test` you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
 
 ## Working Offline or Using Custom Domains
 

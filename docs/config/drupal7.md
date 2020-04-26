@@ -1,10 +1,10 @@
 ---
-description: Use Drupal 7 on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
+description: Use Drupal 7 on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or web server, use composer, drush, xdebug and custom config files, oh and also import and export databases.
 ---
 
 # Drupal 7
 
-Drupal is a free and open source content management framework written in PHP and distributed under the GNU General Public License. Drupal provides a back-end framework for at least 2.3% of all web sites worldwide – ranging from personal blogs to corporate, political, and government sites.
+Drupal is a free and open source content management framework written in PHP and distributed under the GNU General Public License. Drupal provides a backend framework for at least 2.3% of all web sites worldwide – ranging from personal blogs to corporate, political, and government sites.
 
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [Drupal 7](https://drupal.org/) apps.
 
@@ -21,7 +21,7 @@ Before you get started with this recipe, we assume that you have:
 However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Drupal 7.
 
 ```bash
-# Initialize a drupal7 recipe using the latest drupal 7 version
+# Initialize a drupal7 recipe using the latest Drupal 7 version
 lando init \
   --source remote \
   --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz \
@@ -73,7 +73,7 @@ config:
   php: '7.0'
 ```
 
-### Choosing a webserver
+### Choosing a web server
 
 By default, this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
@@ -236,7 +236,7 @@ If you are using a webroot besides `.` you will need to remember to `cd` into th
 
 If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
 
-**Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
+**Note that hard coding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
 
 ```yaml
 tooling:
@@ -262,7 +262,7 @@ However, for more information we recommend you consult the [php service document
 
 You may need to override our [default Drupal 7 config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/drupal7) with your own.
 
-If you do this you must use files that exist inside your application and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
@@ -362,6 +362,6 @@ lando mysql
 lando php -m
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
 <RelatedGuides tag="Drupal"/>

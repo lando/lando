@@ -42,7 +42,7 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Other requirements
 
-Elasticsearch requires you set the kernal property `vm.max_map_count` to at least `262144` in order to run correctly. Lando will attempt to set this on install if you use any of our official package installers for Windows, macOS, Debian, RPM or Pacman.
+Elasticsearch requires you set the kernel property `vm.max_map_count` to at least `262144` in order to run correctly. Lando will attempt to set this on install if you use any of our official package installers for Windows, macOS, Debian, RPM or Pacman.
 
 However, if you are installing from source or via another pathway you will need to set this manually. Generally this can be accomplished with the following:
 
@@ -70,7 +70,7 @@ services:
       server: SEE BELOW
 ```
 
-### Portforwarding
+### Port forwarding
 
 `portforward` will allow you to access this service externally by given you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 
@@ -100,7 +100,7 @@ services:
 
 You may need to override the default config with your own [elasticsearch config file](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html#settings). Note that [according to the underlying upstream image](https://github.com/bitnami/bitnami-docker-elasticsearch#configuration-file) this will _completely_ replace the default config. Further note that by default our elasticsearch services start as `data` nodes. If you want to activate your node to also be an `ingest` node then check out [this example](https://github.com/lando/lando/tree/master/examples/elasticsearch).
 
-If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
+If you do this, you must use a file that exists inside your application and express it relative to your project root as shown below:
 
 **A hypothetical project**
 

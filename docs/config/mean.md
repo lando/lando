@@ -14,7 +14,7 @@ Lando offers a configurable [recipe](./../config/recipes.md) for developing [MEA
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
+1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/)
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
@@ -92,7 +92,7 @@ Note that a good rule of thumb is that `build` should install whatever **node** 
 
 ### Setting a command
 
-By default your MEAN recipe will attempt to start the `node` service by running `npm start`. You can easily change this any other command.
+By default, your MEAN recipe will attempt to start the `node` service by running `npm start`. You can easily change this any other command.
 
 **Running a node script directly**
 
@@ -114,7 +114,7 @@ Note that whatever `command` you specify you will want to make `build` is also s
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mongo](./mongo.md) service as the database backend but you can also switch this to use [`mysql`](./mysql.md), [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead.
+By default, this recipe will use the default version of our [mongo](./mongo.md) service as the database backend but you can also switch this to use [`mysql`](./mysql.md), [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead.
 
 Note that you can also specify a version *as long as it is a version available for use with lando* for either `mongo`, `mysql`, `mariadb` or `postgres`.
 
@@ -178,7 +178,7 @@ See [install global node dependencies](./node.md#installing-global-dependencies)
 Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `node` snippet:
 
 ```js
-// Get our ket and cert
+// Get our key and cert
 const key = fs.readFileSync('/certs/cert.key')
 const cert = fs.readFileSync('/certs/cert.crt'),
 
@@ -207,7 +207,7 @@ config:
 
 You may need to override our [default MEAN config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/mean) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exists inside your application and express them relative to your project root as shown below:
 
 **A hypothetical project**
 
@@ -280,7 +280,7 @@ You can learn more about the `db-import` command [over here](./../guides/db-impo
 
 ## Tooling
 
-By default each Lando MEAN recipe will also ship with helpful dev utilities.
+By default, each Lando MEAN recipe will also ship with helpful dev utilities.
 
 This means you can use things like `yarn`, `npm`, `mongo` and `node` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
@@ -307,6 +307,6 @@ lando mongo
 lando node --version
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mongo`.
+You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mongo`.
 
 <RelatedGuides tag="MEAN"/>

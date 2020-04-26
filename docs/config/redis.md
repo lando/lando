@@ -55,7 +55,7 @@ services:
 
 This option is pretty straightforward. Use `persist: true` to persist the cache's data between restarts and rebuilds.
 
-### Portforwarding
+### Port forwarding
 
 `portforward` will allow you to access this service externally by given you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 
@@ -85,7 +85,7 @@ services:
 
 You may need to override our [default redis server config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/redis) with your own [custom redis config file](https://redis.io/topics/config).
 
-If you do this you must use a file that exists inside your applicaton and express it relative to your project root as below.
+If you do this, you must use a file that exists inside your application and express it relative to your project root as shown below:
 
 **A hypothetical project**
 

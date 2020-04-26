@@ -4,7 +4,7 @@ description: Lando injects your SSH keys so they are available, it also will cre
 
 # SSH Keys
 
-By default Lando will forward all the correctly formatted, owned, and permissioned `ssh` keys, including **PASSPHRASE PROTECTED** keys it finds in your `~/.ssh` and `lando.config.userConfRoot/keys` directories into each service. This means that you should be able to use your ssh keys like you were running commands natively on your machine.
+By default, Lando will forward all the correctly formatted, owned, and permissioned `ssh` keys, including **PASSPHRASE PROTECTED** keys it finds in your `~/.ssh` and `lando.config.userConfRoot/keys` directories into each service. This means that you should be able to use your ssh keys like you were running commands natively on your machine.
 
 Additionally Lando will set the default SSH user inside your services to whatever your host username is. You can also make use of the following ENVVARS which are injected into ever service.
 
