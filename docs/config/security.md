@@ -2,7 +2,50 @@
 description: Lando uses its own, or a configurable, certificate authority to SSL/TLS secure all its local traffic, removing the need of local cert bypass flags or annoying browser warnings.
 ---
 
-# SSL/TLS
+# Security
+
+Lando tries to find the fine line between good security and good user experience. **SPOILER ALERT:** It ain't easy.
+
+Here are the things we do by default and how you can modify them to your needs.
+
+## Exposure
+
+As of `3.0.0-rrc.5` Lando will bind all exposed services to `127.0.0.1` for security reasons. This means your services are *only* available to your machine. You can alter this behavior in one of two ways.
+
+### 1. Changing the bind address
+
+You can modify the Lando [global config](./global.md) to change the default bind address:
+
+```yaml
+# Bind my exposes services to all intefaces
+bindAddress: "0.0.0.0"
+```
+
+```yaml
+# Bind my exposes services to a single IP
+bindAddress: "10.0.1.1"
+```
+
+You will then need to `lando rebuild` your service for the changes to take effect.
+
+### 2. Overridding a particular service
+
+If you [override](./services.md#overrides) a particular service and specify the external IP then Lando will honor that choice and note force override with the `bindAddress`.
+
+```yaml
+# This will find a random port on 0.0.0.0
+# and route it to port 80 on your appsrver service
+services:
+  appserver:
+    overrides:
+      ports:
+        - "0.0.0.0::80"
+```
+
+
+Note that there are security implications to both of the above and it is not recommended you do this.
+
+## Certificates
 
 Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our [internal Lando network](./networking.md). They should live inside every service at `/certs`.
 
@@ -14,6 +57,10 @@ Lando uses its own Certificate Authority to sign the certs for each service and 
 |-- cert.key
 |-- cert.pem
 ```
+
+However for reasons detailed in [this blog post](https://httptoolkit.tech/blog/debugging-https-without-global-root-ca-certs) we do not trust this CA on your system automatically. Instead we require you to opt-in manually as a security precaution.
+
+**This means that by default you will receive browser warnings** when accessing `https` proxy routes.
 
 ## Trusting the CA
 
@@ -73,5 +120,9 @@ Firefox users may still see browser warnings after performing the steps above. F
 * Search for `security.enterprise_roots.enabled`
 * Set the value to `true`
 :::
+
+## SSH Keys
+
+We also will inject SSH keys into each service but this is [highly configurable](./ssh.md)
 
 <RelatedGuides tag="Security"/>
