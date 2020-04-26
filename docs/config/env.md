@@ -8,7 +8,7 @@ Lando will both inject a bunch of helpful environment variables into each servic
 
 ## Default Environment Variables
 
-While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./global.md) value.
+While the default variables are more or less the same between services, we recommend you run the following command to get the most up-to-date and relevant list of envvars for your service. Note, this assumes you have not changed the `envPrefix` [global config](./global.md) value.
 
 ```bash
 lando ssh -s appserver -c env | grep LANDO_
