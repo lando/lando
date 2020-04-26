@@ -109,7 +109,7 @@ Note that these will run the _first time_ you run `lando start`. You will need t
 We _think_ most of the customizations below _should_ work but they have been very minimally tested. If you try one and it doesn't work, please [report an issue]((https://github.com/lando/lando/issues/new/choose)).
 :::
 
-Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented. Run a `lando rebuild` and see the changes. The services we currently support with links to their associated Lagoon docs is shown below:
+Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented, run a `lando rebuild` and see the changes. The services we currently support with links to their associated Lagoon docs is shown below:
 
 * [MariaDB](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/mariadb/)
 * [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)

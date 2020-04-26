@@ -6,7 +6,7 @@ description: Lando services are a curated set of Docker containers like php, apa
 
 Lando services are our distillation of Docker containers into their most important options combined with some *special sauce* to setup good [networking](./networking.md), [certificates](./security.md) and [SSH keys](./ssh.md) as well as options to run [build steps](#build-steps) and provide low level [overrides](#overrides).
 
-You can use the top-level `services` config in your [Landofile](./lando.md) to define and configure a service. The various options you can specify in any service regardless of the service type is shown below:
+You can use the top-level `services` config in your [Landofile](./lando.md) to define and configure a service. The various options you can specify in any service regardless of the service type are shown below:
 ```yaml
 services:
   myservice:
@@ -24,7 +24,7 @@ services:
 
 Note that you will need to set the `type` and its optional `version` to be either one of the [supported services](#supported-services) below or as defined in one you [create your own](./../contrib-plugins.md).
 
-Each service also contains a bunch of its own configuration options. As such, we *highly recommend* you check out the documentation for each service. For example, some of the configuration options available to the `php` service is shown below:
+Each service also contains a bunch of its own configuration options. As such, we *highly recommend* you check out the documentation for each service. For example, some of the configuration options available to the `php` service are shown below:
 
 ```yaml
 service:
@@ -270,7 +270,7 @@ services:
 
 ##### Dockerfile
 
-This lives inside of the `./php` directory referenced in `build` above:
+This lives inside of the `./php` directory referenced in the `build` above.
 
 ```bash
 FROM devwithlando/php:7.1-fpm
