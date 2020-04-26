@@ -9,8 +9,8 @@ description: The best local development option for Lagoon a Docker Build and Dep
 This is currently a _very experimental_ integration that has the following _serious caveats_:
 
 * This _only_ supports Drupal 8 flavored Lagoon projects
-* This _only_ supports Lagoons `php`, `nginx`, `cli`, `mariadb`, `redis` and `solr` containers
-* If your project is not based on Amazee.io's [Drupal 8 Example Repo](https://github.com/amazeeio/drupal-example) YMMV
+* This _only_ supports Lagoon's `php`, `nginx`, `cli`, `mariadb`, `redis` and `solr` containers
+* If your project is not based on Amazee.io's [Drupal 8 Example Repo](https://github.com/amazeeio/drupal-example), YMMV
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
@@ -34,7 +34,7 @@ Before you get started with this recipe we assume that you have:
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe against the Amazee.io [Drupal 8 Example](https://github.com/amazeeio/drupal-example).
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe against the Amazee.io [Drupal 8 Example](https://github.com/amazeeio/drupal-example).
 
 ```bash
 # Get the D8 example rolling
@@ -65,7 +65,7 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
 Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
@@ -77,9 +77,9 @@ config:
     - composer install
 ```
 
-If you do not already have a [Landofile](./../config/lando.md) for your Lagoon site we highly recommend you use [`lando init`](./../basics/init.md) to get one as that will automatically populate the above defaults for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
+If you do not already have a [Landofile](./../config/lando.md) for your Lagoon site, we highly recommend you use [`lando init`](./../basics/init.md) to get one as that will automatically populate the above defaults for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Flavor
 
@@ -106,10 +106,10 @@ Note that these will run the _first time_ you run `lando start`. You will need t
 ### Customizing the stack
 
 :::warning Customizations not fully tested
-We _think_ most of the customizations below _should_ work but they have been very minimally tested. If you try one and it doesn't work please [report an issue]((https://github.com/lando/lando/issues/new/choose)).
+We _think_ most of the customizations below _should_ work but they have been very minimally tested. If you try one and it doesn't work, please [report an issue]((https://github.com/lando/lando/issues/new/choose)).
 :::
 
-Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented, run a `lando rebuild` and see the changes. Here are the services we currently support with links to their associated Lagoon docs.
+Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented. Run a `lando rebuild` and see the changes. The services we currently support with links to their associated Lagoon docs is shown below:
 
 * [MariaDB](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/mariadb/)
 * [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)
@@ -122,11 +122,11 @@ Note that we are testing against the "Drupal" variants of the above but it's _po
 
 ## External access
 
-If you would like to connect to your database, or some other service, from your host using a GUI client like SequelPro you can run [`lando info`](./../cli/info.md) and use the `external_connection` information and any relevant `creds` for the service you want to connect to.
+If you would like to connect to your database, or some other service, from your host using a GUI client like SequelPro, you can run [`lando info`](./../cli/info.md) and use the `external_connection` information and any relevant `creds` for the service you want to connect to.
 
-You can also check out the environment variable called [`LANDO INFO`](./../guides/lando-info.md), which is available in every Lando container, as it contains useful information about how your application can access other Lando services.
+You can also check out the environment variable [`LANDO INFO`](./../guides/lando-info.md), which is available in every Lando container, as it contains useful information about how your application can access other Lando services.
 
-Here is some example connection info for the `mariadb` and `solr` services.
+Some example connection info for the `mariadb` and `solr` services is shown below:
 
 ```bash
 lando info --service mariadb --service solr --format default

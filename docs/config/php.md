@@ -1,10 +1,10 @@
 ---
-description: Add a highly configurable php service to Lando for local development with all the power of Docker and Docker Compose; comes with composer and xdebug and multiple versions for lols.
+description: Add a highly configurable php service to Lando for local development with all the power of Docker and Docker Compose; comes with composer, xdebug and multiple versions for lols.
 ---
 
 # PHP
 
-[PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md)
+[PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md).
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
 
@@ -23,7 +23,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 ## Legacy versions
 
 ::: warning Using Unsupported PHP Versions!
-While you can currently use some [EOL php version](http://php.net/supported-versions.php) with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
+While you can currently use some [EOL php version](http://php.net/supported-versions.php) with Lando, it's worth noting that we also do not support such versions, so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
 :::
 
 You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
@@ -34,15 +34,15 @@ You can still run these versions with Lando but for all intents and purposes the
 
 ## Patch versions
 
-Because we use our own custom images for `php` specifying a patch version is not currently supported.
+Because we use our own custom images for `php`, specifying a patch version is not currently supported.
 
-If you **really** need to lock down to a patch version you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
+If you **really** need to lock down to a patch version, you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
@@ -96,15 +96,15 @@ services:
 
 You can enable the `xdebug` extension by setting `xdebug: true`. Lando will also automatically configure `xdebug.remote_enable` and `xdebug.remote_host` for you. This means that `xdebug` should be *ready to receive connections* out of the box.
 
-Note that unlike in previous versions of Lando `xdebug: false` will now disable the `xdebug` extension instead of just disabling `xdebug.remote_enable`
+Note that unlike in previous versions of Lando, `xdebug: false` will now disable the `xdebug` extension instead of just disabling `xdebug.remote_enable`.
 
 #### Setting up your IDE for XDEBUG
 
-While Lando will handle the server side configuration for you, there is often a considerable amount of pain lurking in the client side configuration. To that end here is some helpful info about a few popular clients.
+While Lando will handle the server side configuration for you, there is often a considerable amount of pain lurking in the client side configuration. To that end, some helpful info about a few popular clients is shown below:
 
 **ATOM**
 
-Here is some example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin:
+An example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin is shown below:
 
 ```
 "php-debug":
@@ -128,7 +128,7 @@ The first part of a pathmap will be the location of your code in the container. 
 If you are visiting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_SESSION_START=LANDO` to your request and seeing if that does the trick.
 :::
 
-If you have set `xdebug: true` in your recipe or service config and run `lando rebuild` but are still having issues getting `xdebug` to work correctly we recommend that you remove `xdebug: true`, run `lando rebuild` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something like below:
+If you have set `xdebug: true` in your recipe or service config and run `lando rebuild` but are still having issues getting `xdebug` to work correctly, we recommend that you remove `xdebug: true`, run `lando rebuild` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something as shown below:
 
 ```yaml
 xdebug.max_nesting_level = 256
@@ -145,12 +145,12 @@ You can use `lando info --deep | grep IPAddress` to help discover the correct ho
 You can also use the `composer` key if you need to require any [global composer dependenices](https://getcomposer.org/doc/03-cli.md#require). This follows the same syntax as your normal [`composer.json`](https://getcomposer.org/doc/01-basic-usage.md#composer-json-project-setup) except written as YAML instead of JSON.
 
 ::: tip Use composer.json if you can
-While there are some legitimate use cases to globally install a composer dependency it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+While there are some legitimate use cases to globally install a composer dependency, it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
 
-Note that both `lando composer` is not provided out of the box by the `php` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
+Note that `lando composer` is not provided out of the box by the `php` service and needs to be manually added by configuring your app's [tooling](./../config/tooling.md).
 :::
 
-Here is an example of globally installing `phpunit/phpunit` `^6.5`
+An example of globally installing `phpunit/phpunit` `^6.5` is shown below:
 
 ```yaml
 services:
@@ -208,7 +208,7 @@ services:
 
 ## Path Considerations
 
-Lando will set the following `PATH` hierarchy for this service.
+Lando will set the `PATH` hierarchy for this service as follows:
 
 ```js
 [
@@ -290,17 +290,17 @@ This is useful to note if you are not using absolute paths in any [tooling route
 | zip       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
 | zlib      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
 
-Note that `xdebug` is off by default but you can enable it on by setting your `php` services config to `xdebug: true`. Read more about this in "Configuration" above.
+Note that `xdebug` is off by default but you can enable it by setting your `php` services config to `xdebug: true`. Read more about this in "Configuration" above.
 
 ### Adding or removing extensions
 
-There are a few ways you can extend or modify our php images:
+There are a few ways you can extend or modify our php images below:
 
-* Using [build steps](./../config/services.md#build-steps)
-* Using your own image with [service overrides](./../config/services.md#overrides)
-* Building from your own local Dockerfile [service overrides](./../config/services.md#using-dockerfiles)
+* Using [build steps](./../config/services.md#build-steps).
+* Using your own image with [service overrides](./../config/services.md#overrides).
+* Building from your own local Dockerfile [service overrides](./../config/services.md#using-dockerfiles).
 
-Consider the following example that uses [build steps](./../config/services.md#build-steps) to install the `memcached` php extension.
+Consider the example that uses [build steps](./../config/services.md#build-steps) to install the `memcached` php extension as follows:
 
 ```yaml
 services:

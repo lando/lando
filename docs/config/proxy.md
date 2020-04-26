@@ -20,15 +20,15 @@ There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding prot
 
 ## Automatic Port Assignment
 
-By default, Lando will attempt to bind the proxy to your host machines port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
+By default, Lando will attempt to bind the proxy to your host machine's port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running, it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
 
 ::: warning Will bind to 127.0.0.1 by default
-For security reasons Lando will force bind your ports to `127.0.0.1` unless you have either explicitly set the Lando [global config](./global.md) option `bindAddress` to something else **OR** you have overridden a service and set the bind.
+For security reasons, Lando will force bind your ports to `127.0.0.1` unless you have either explicitly set the Lando [global config](./global.md) option `bindAddress` to something else **OR** you have overridden a service and set the bind.
 
-For more information check out the [security docs.](./security.md)
+For more information, check out the [security docs.](./security.md)
 :::
 
-If you want to use port `80` and `443` but cannot for the life of you figure out what is already using them you can do a bit of discovery using `lsof` or by visiting `localhost` in your browser and seeing if you recognize what loads.
+If you want to use port `80` and `443` but cannot for the life of you figure out what is already using them, you can do a bit of discovery using `lsof` or by visiting `localhost` in your browser and seeing if you recognize what loads.
 
 ```bash
 # Find out if any service listens on those ports.
@@ -43,11 +43,11 @@ sudo kill -9 $PID
 
 You can add routing to various services and their ports using the top-level `proxy` config in your [Landofile](./lando.md).
 
-Because our proxy also benefits from our [automatic certificate and CA setup](./security.md) if you have a service with `ssl: true` then it will also be available over `https`. Note that many of our recipes will configure this for you automatically.
+Because our proxy also benefits from our [automatic certificate and CA setup](./security.md), if you have a service with `ssl: true` then it will also be available over `https`. Note that many of our recipes will configure this for you automatically.
 
 ### Routing to port 80
 
-Note that `web` and `web2` are the names of some of your [services](./services.md). If you are unsure about the names of your services run `lando info`.
+Note that `web` and `web2` are the names of some of your [services](./services.md). If you are unsure about the names of your services, run `lando info`.
 
 ```yaml
 proxy:
@@ -59,7 +59,7 @@ proxy:
 
 ### Routing to a different port
 
-You can suffix the domain with `:PORT` to change the default `port` from `80` to `PORT`. Note that this is the port that your service exposes from within Lando and not an external port. In the below example this means that `appserver` exposes port `8888` and we want `myapp.lndo.site` to route our request into Lando at `appserver:8888`.
+You can suffix the domain with `:PORT` to change the default `port` from `80` to `PORT`. Note that this is the port that your service exposes from within Lando and not an external port. In the below example, this means that `appserver` exposes port `8888` and we want `myapp.lndo.site` to route our request into Lando at `appserver:8888`.
 
 ```yaml
 proxy:
@@ -72,7 +72,7 @@ proxy:
 You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution and any relevant cert handling. See the configuration section below for more details.
 
 ::: tip
-If your custom domain does not end in `lndo.site` and you unsure about how to handle DNS resolution using something like DNSMasq then you are going to need to add it to your `hosts` file so that it points to `127.0.0.1`.
+If your custom domain does not end in `lndo.site` and you are unsure about how to handle DNS resolution, use something like DNSMasq. Then you need to add the domain to your `hosts` file so that it points to `127.0.0.1`.
 ::::
 
 ```yaml
@@ -86,12 +86,12 @@ proxy:
 
 ### Wildcard domains
 
-If a service is able to listen to multiple domain names following a common pattern you can use the `*` wildcard character to match any amount of alphanumeric characters and hyphens/dashes (`-`).
+If a service is able to listen to multiple domain names following a common pattern, you can use the `*` wildcard character to match any amount of alphanumeric characters and hyphens/dashes (`-`).
 
-To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example use `*.myapp.lndo.site` or `*.*.lndo.site`.
+To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site`, you can, for example, use `*.myapp.lndo.site` or `*.*.lndo.site`.
 
 ::: tip Wildcard domains need to be encapsulated in quotations
-If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
+If you are using a wildcard domain, you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this, you should expect a `yaml` parse error.
 :::
 
 ```yaml
@@ -118,7 +118,7 @@ proxy:
 
 ### Sub subdomains
 
-You can also `sub-sub-...-sub-subdomain` to your hearts content.
+You can also `sub-sub-...-sub-subdomain` to your heart's content.
 
 ```yaml
 proxy:
@@ -139,15 +139,15 @@ proxy:
     - "*.lndo.site:8080/everything/for-real"
 ```
 
-This is still valid proxy config!
+This is still a valid proxy config!
 
 ## Configuration
 
 Various parts of the proxy are configurable via the Lando [global config](./global.md).
 
-**Again, you REALLY REALLY REALLY should not change these settings unless you have a good reason and know what you are doing!**
+**Again, you REALLY, REALLY, REALLY should not change these settings unless you have a good reason and know what you are doing!**
 
-Here are the defaults and what they are good for:
+The defaults and what they are good for is shown below:
 
 ```yml
 # Set to anything else to disable
@@ -205,7 +205,7 @@ domain: lndo.site
 
 You will need to do a `lando poweroff` to apply these changes.
 
-Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example, if you set `domain` to a top level domain such as `test` you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
+Note that we generate a [Certificate Authority](./security.md) based on the `domain` and use this CA to sign wildcard certs for each service. This means that we are inherently bound to [certain restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) governing wildcard certificates. For example, if you set `domain` to a top level domain such as `test`, you should not expect our wildcard certs to work correctly. It is recommended you use a first level subdomain such as `me.test` or `local.test`.
 
 ## Working Offline or Using Custom Domains
 
@@ -213,7 +213,7 @@ If you are working offline and/or have added custom domains and want to get them
 
 Here is a [good read](http://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/) if you are not very familiar with the `hosts` file, how to edit it and how it works.
 
-Here is an example:
+An example is shown below:
 
 ```bash
 # Get my `lndo.site` domain to work offline
@@ -223,6 +223,6 @@ Here is an example:
 127.0.0.1 billy.dee.williams
 ```
 
-For a more comprehensive doc on this please check out our [Working Offline Guide](./../guides/offline-dev.md).
+For a more comprehensive doc on this, please check out our [Working Offline Guide](./../guides/offline-dev.md).
 
 <RelatedGuides tag="Proxy"/>

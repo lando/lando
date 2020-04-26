@@ -12,13 +12,13 @@ Lando offers a configurable [recipe](./../config/recipes.md) for developing [Dru
 
 ## Getting Started
 
-Before you get started with this recipe we assume that you have:
+Before you get started with this recipe, we assume that you have:
 
 1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/)
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Drupal 8.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also try out this recipe with a vanilla install of Drupal 8 using the commands as follows:
 
 ```bash
 # Initialize a drupal8 recipe using the latest Drupal 8 version
@@ -39,7 +39,7 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
 Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
@@ -59,7 +59,7 @@ config:
     vhosts: SEE BELOW
 ```
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Choosing a php version
 
@@ -97,9 +97,9 @@ config:
 
 By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
 
-If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Drupal 8 requirements](https://www.drupal.org/docs/8/system-requirements/database-server) to make sure the `database` and `version` you select is actually supported by Drupal 8 itself.
+Also note that like the configuration of the `php` version, you should consult the [Drupal 8 requirements](https://www.drupal.org/docs/8/system-requirements/database-server) to make sure the `database` and `version` you select is actually supported by Drupal 8 itself.
 
 #### Using MySQL (default)
 
@@ -165,11 +165,11 @@ config:
 
 #### Using a site-local Drush
 
-While Lando will globally install Drush for you it is increasingly common and in some cases a straight-up best practice to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
+While Lando will globally install Drush for you, it is increasingly common and in some cases a straight-up best practice to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
 
-Because of how Lando's [php service](./php.md) sets up its [`PATH`](./php.md#path-considerations) this means that if you have indeed installed Drush on your own via `composer` Lando will use yours over its own. Said more explicitly: **if you've required `drush` via `composer` in your application then this recipe will use your `drush` and not the one you've specified in this recipes config.**
+Because of how Lando's [php service](./php.md) sets up its [`PATH`](./php.md#path-considerations), this means that if you have indeed installed Drush on your own via `composer` Lando will use yours over its own. Said more explicitly: **if you've required `drush` via `composer` in your application then this recipe will use your `drush` and not the one you've specified in this recipes config.**
 
-If you are using a site-local Drush it is also recommended to configure a [build step](./../config/services.md#build-steps) to automatically install Drush before your app starts up. This can prevent weird version mismatches and other issues if you are using Drush in other Lando automation like [events](./../config/events.md).
+If you are using a site-local Drush, it is also recommended to configure a [build step](./../config/services.md#build-steps) to automatically install Drush before your app starts up. This can prevent weird version mismatches and other issues if you are using Drush in other Lando automation like [events](./../config/events.md).
 
 **Automatically composer install before my app starts**
 
@@ -181,7 +181,7 @@ services:
       - composer install
 ```
 
-If you find that Lando is not using your `drush` as expected, which can happen if you've modified `composer` to install in a different directory than its normal `vendor` you can take advantage of Lando's [tooling overrides](./../config/tooling.md#overriding) and specify an absolute path to your Drush.
+If you find that Lando is not using your `drush` as expected, which can happen if you've modified `composer` to install in a different directory than its normal `vendor`, you can take advantage of Lando's [tooling overrides](./../config/tooling.md#overriding) and specify an absolute path to your Drush.
 
 ```yaml
 tooling:
@@ -214,7 +214,7 @@ services:
 
 You can also use `drush` aliases with command like `lando drush @sitealias cc all` by following the instructions below.
 
-Make sure the alias file exists within the drush folder in your app. An example could be the files structure below.
+Make sure the alias file exists within the drush folder in your app. An example could be the files structure below:
 
 ```bash
 |-- app
@@ -222,7 +222,7 @@ Make sure the alias file exists within the drush folder in your app. An example 
       |-- yoursite.aliases.drushrc.php
 ```
 
-For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
+For info on how to setup your alias, please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
 
 Then configure the following [build step](./../config/services.md#build-steps) in your [Landofile](./../config/lando.md) and `lando rebuild`.
 
@@ -236,9 +236,9 @@ services:
 
 #### Configuring your root directory
 
-If you are using a webroot besides `.` you will need to remember to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
+If you are using a webroot besides `.`, you will need to remember to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
 
-If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
+If you are annoyed by having to `cd` into that directory every time you run a `drush` command, you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
 
 **Note that hard coding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
 
@@ -268,11 +268,11 @@ You may need to override our [default Drupal 8 config](https://github.com/lando/
 
 If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
-Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
+Note that the default, files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -299,9 +299,11 @@ config:
 
 ## Connecting to your database
 
-Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+Lando will automatically set up a database with a user and password and also set an environment variable called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
-Here is the default database connection information for a Drupal 8 site. Note that the `host` is not `localhost` but `database`.
+The default database connection information for a Drupal 8 site is shown below:
+
+Note that the `host` is not `localhost` but `database`.
 
 ```yaml
 database: drupal8
@@ -318,7 +320,7 @@ You can get also get the above information, and more, by using the [`lando info`
 
 ## Importing Your Database
 
-Once you've started up your Drupal 8 site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+Once you've started up your Drupal 8 site, you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
 # Grab your database dump
@@ -365,6 +367,6 @@ lando mysql
 lando php -m
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+You can also run `lando` from inside your app directory for a complete list of commands. This is always advisable as your list of commands may not be 100% the same as above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
 <RelatedGuides tag="Drupal"/>

@@ -33,10 +33,10 @@ You can still run these versions with Lando but for all intents and purposes the
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV.
 :::
 
-To use a patch version, you can do something like below:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
@@ -44,13 +44,13 @@ services:
     type: node:12.13
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for our underlying image.
 
 ## Configuration
 
 Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
@@ -66,7 +66,7 @@ services:
 
 Note that if you *do not* define a `command` for this service, it will effectively be a "cli" container (e.g. it will not serve or run an application by default but will be available to run `node` commands against).
 
-If you want to actually launch a `node` application, consider setting the `command` to something like below:
+If you want to actually launch a `node` application, consider setting the `command` to something as shown below:
 
 ```yaml
 services:
@@ -77,7 +77,7 @@ services:
 
 ### Setting a port
 
-While we assume your `node` service is running on port `80` we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
+While we assume your `node` service is running on port `80`, we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
 
 ```yaml
 services:
@@ -88,7 +88,7 @@ services:
 
 ### Using SSL
 
-Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `node` snippet:
+Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to the user to use the certs and secure port correctly in their application like the `node` snippet below:
 
 ```js
 // Get our key and cert
@@ -121,12 +121,12 @@ services:
 You can also use the `globals` key if you need to install any [global node dependenices](https://docs.npmjs.com/cli/install). This follows the same syntax as your normal [`package.json`](https://docs.npmjs.com/files/package.json) except written as YAML instead of JSON.
 
 ::: tip Use package.json if you can!
-While there are some legitimate use cases to globally install a node dependency it is almost always preferred to install using your applications normal `package.json` and then running either `lando npm` or `lando yarn` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+While there are some legitimate use cases to globally install a node dependency, it is almost always preferred to install using your applications normal `package.json` and then running either `lando npm` or `lando yarn` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
 
 Note that both `lando yarn` and `lando npm` are not provided out of the box by the `node` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
 :::
 
-Here is an example of globally installing the `latest` `gulp-cli`.
+An example of globally installing the `latest` `gulp-cli` is shown below:
 
 ```yaml
 services:
@@ -137,7 +137,7 @@ services:
     command: npm start
 ```
 
-Here is an example of using a [build step](./../config/services.md#build-steps) to automatically `yarn install` your dependencies before your app invokes `yarn start-app`.
+An example of using a [build step](./../config/services.md#build-steps) to automatically `yarn install` your dependencies before your app invokes `yarn start-app` is shown below:
 
 ```yaml
 services:
@@ -150,7 +150,7 @@ services:
 
 ## Path Considerations
 
-Lando will set the following `PATH` hierarchy for this service.
+Lando will set the `PATH` hierarchy for this service as follows:
 
 ```js
 [

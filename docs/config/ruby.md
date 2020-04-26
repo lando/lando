@@ -27,10 +27,10 @@ You can still run these versions with Lando but for all intents and purposes the
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV.
 :::
 
-To use a patch version you can do something like below:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
@@ -38,13 +38,13 @@ services:
     type: ruby:2.5.3
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/ruby/tags/) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/ruby/tags/) for our underlying image.
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
+Also note that the options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
@@ -58,7 +58,7 @@ services:
 
 Note that if you *do not* define a `command` for this service, it will effectively be a "cli" container (e.g. it will not serve or run an application by default but will be available to run `ruby` commands against).
 
-If you want to actually launch a `ruby` application consider setting the `command` to something like below:
+If you want to actually launch a `ruby` application, consider setting the `command` to something as shown below:
 
 ```yaml
 services:
@@ -69,7 +69,7 @@ services:
 
 ### Setting a port
 
-While we assume your `ruby` service is running on port `80` we recognize that many `ruby` app's also run on port `8080` or otherwise. You can easily change our default to match whatever your app needs.
+While we assume your `ruby` service is running on port `80`, we recognize that many `ruby` apps also run on port `8080` or otherwise. You can easily change our default to match whatever your app needs.
 
 ```yaml
 services:
@@ -80,8 +80,7 @@ services:
 
 ## Path Considerations
 
-Lando will set the following `PATH` hierarchy for this service.
-
+Lando will set the `PATH` hierarchy for this service as follows:
 ```js
 [
   '/usr/local/sbin',

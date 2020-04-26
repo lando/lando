@@ -14,7 +14,7 @@ While the default variables are more or less the same between services, we recom
 lando ssh -s appserver -c env | grep LANDO_
 ```
 
-For reference here is an example of the default container envvars inside of the [LAMP](https://github.com/lando/lando/tree/master/examples/lamp) recipe/example.
+For reference, an example of the default container envvars inside of the [LAMP](https://github.com/lando/lando/tree/master/examples/lamp) recipe/example is shown below:
 
 ```bash
 LANDO_WEBROOT_USER=www-data
@@ -69,7 +69,7 @@ DB_USER=root
 DB_PASS=s1mpl3
 ```
 
-By happenstance you could previously use the following *unsupported* syntax in your `env` files.
+By happenstance, you could previously use the *unsupported* syntax in your `env` files as follows:
 
 ```bash
 WP_ENV=development
@@ -77,7 +77,7 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=${WP_HOME}/wp
 ```
 
-Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like below:
+Because we now directly use Docker Compose's `env_file` directive under the hood, this syntax no longer works. So you will have to do something as shown below:
 
 ```bash
 WP_ENV=development
@@ -95,4 +95,4 @@ For example, in `php` you will want to use something like the [`getenv()`](http:
 
 ## Environment Configuration
 
-If you'd like to avoid broad strokes and only inject certain environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).
+If you'd like to avoid broad strokes and only inject certain environment variables into particular services, we recommend you make use of [service overrides](./services.md#overrides).

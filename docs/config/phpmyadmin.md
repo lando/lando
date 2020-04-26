@@ -24,13 +24,13 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Patch versions
 
-This service does not support patch versions but if you **really** need something like that you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
+This service does not support patch versions but if you **really** need something like that, you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
@@ -45,7 +45,7 @@ services:
 
 ### Connecting to database services
 
-You will need to list the database services you want to be able to access via `phpmyadmin`. Note that the services in this list should be other MySQLy services in your application. They can be discovered by running [lando info](./../cli/info.md).
+You will need to list the database services you want to be able to access via `phpmyadmin`. Note that the services in this list should be other MySQL-y services in your application. They can be discovered by running [lando info](./../cli/info.md).
 
 ::: warning Note that PhpMyAdmin is designed specifically for MySQL and MariaDB type databases!
 You will likely be sad if you try to use a non-MySQL-ish database.
@@ -72,7 +72,7 @@ You can override the default `phpmyadmin` config by setting a custom [phpMyAdmin
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -93,9 +93,9 @@ services:
 
 ### Advanced
 
-There are also [several various envvars](https://hub.docker.com/r/phpmyadmin/phpmyadmin/) exposed by the underlying image we use that you can set to further customize how your PhpMyAdmin works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then YMMV.
+There are also [several various envvars](https://hub.docker.com/r/phpmyadmin/phpmyadmin/) exposed by the underlying image we use that you can set to further customize how your PhpMyAdmin works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then, YMMV.
 
-That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them like below:
+That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them as shown below:
 
 ```yaml
 my-service:

@@ -39,10 +39,10 @@ You can still run these versions with Lando but for all intents and purposes the
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV. Also note that patch versions are not available for Solr 3.x and 4.x
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV. Also note that patch versions are not available for Solr 3.x and 4.x.
 :::
 
-To use a patch version you can do something like below:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
@@ -50,13 +50,13 @@ services:
     type: solr:5.5.5
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/solr/tags/) for the underlying image we are using.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/solr/tags/) for our underlying image.
 
 ## Configuration
 
 Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service as shown below:
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
@@ -70,7 +70,7 @@ services:
 
 ### Port forwarding
 
-`portforward` will allow you to access this service externally by giving you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
+`portforward` will allow you to access this service externally by assigning a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 
 `portforward: true` will prevent inevitable port collisions and provide greater reliability and stability across Lando apps. That said, one downside of `portforward: true` is that Docker will assign a different port every time you restart your application. You can read more about accessing services externally [over here](./../guides/external-access.md).
 
@@ -96,7 +96,7 @@ services:
 
 ### Using a custom core
 
-You can easily set up a different core name with the `core` cofig value
+You can easily set up a different core name with the `core` config value.
 
 ```yaml
 services:
@@ -106,18 +106,18 @@ services:
 ```
 
 ::: warning Solr 5+ only!
-The `core` config value does not work for Solr 3.x or 4.x
+The `core` config value does not work for Solr 3.x or 4.x.
 :::
 
 ### Using custom solr config
 
 You will almost certainly need to utilize your own custom Solr config. You can do that by telling Lando to inject solr config from a directory inside of your application.
 
-Consider the below example of a Drupal 8 application injecting the Solr 7.x config directly from the `search_api_solr` module.
+Consider a Drupal 8 application injecting the Solr 7.x config directly from the `search_api_solr` module as shown in the example below:
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
