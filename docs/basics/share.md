@@ -5,6 +5,12 @@ description: lando share exposes your local site to the world with a publicly ac
 
 # share
 
+::: danger OFFLINE!
+This command is no longer functional as of version 3.0.0-rrc.3
+
+See the [blog post](https://blog.lando.dev/2020/04/03/whats-new-in-lando-3-0-0-rrc-3/#_3-the-sun-sets-on-lando-share-for-now) about the 3.0.0-rrc.3 release for more information.
+:::
+
 Shares your local site publicly.
 
 This is useful for sharing work with clients or testing your local site on multiple devices. The user is *required* to specify the `url` they want to share using the `--url` or `-u` flag. This `url` must be of the form `http://localhost:port`.
