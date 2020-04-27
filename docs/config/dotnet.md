@@ -36,7 +36,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: dotnet:2.0
     ssl: false
     command: tail -f /dev/null
@@ -51,7 +51,7 @@ If you want to actually launch a `dotnet` application, consider setting the `com
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: dotnet
     command: dotnet run
 ```
@@ -66,7 +66,7 @@ While we assume your `dotnet` service is running on port `80`, we recognize that
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: dotnet
     port: 8888
 ```

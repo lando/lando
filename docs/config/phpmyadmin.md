@@ -34,7 +34,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: phpmyadmin:5.0
     hosts: []
     config:
@@ -55,7 +55,7 @@ An example of a Landofile's `services` config that connects to two `mysql` datab
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: phpmyadmin
     hosts:
       - mysql57
@@ -85,7 +85,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: phpmyadmin
     config:
       config: config/config.user.inc.php
@@ -98,7 +98,7 @@ There are also [several various envvars](https://hub.docker.com/r/phpmyadmin/php
 That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them as shown below:
 
 ```yaml
-my-service:
+myservice:
   type: phpmyadmin
   hosts:
     - database

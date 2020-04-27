@@ -46,11 +46,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr:5.5.5
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/solr/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/solr/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -60,7 +60,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr:7
     portforward: false
     core: lando
@@ -80,7 +80,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     portforward: true
 ```
@@ -89,7 +89,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     portforward: 8983
 ```
@@ -100,7 +100,7 @@ You can easily set up a different core name with the `core` config value.
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     core: my-core
 ```
@@ -142,7 +142,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     config:
       dir: sites/all/modules/search_api_solr/solr-conf/7.x

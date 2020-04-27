@@ -216,7 +216,7 @@ Lando will attempt to assign `localhost` addresses to any service that has ports
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache
     moreHttpPorts:
       - '8888'
@@ -244,7 +244,7 @@ That said, we do realize there are legitimate use cases where you may not want t
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache
     scanner: false
 ```

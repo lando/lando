@@ -34,11 +34,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: elasticsearch:5.6.15
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/elasticsearch/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/elasticsearch/tags) for the underlying image we are using.
 
 ## Other requirements
 
@@ -61,7 +61,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: elasticsearch:6
     portforward: false
     mem: 1025m
@@ -82,7 +82,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: elasticsearch
     portforward: true
 ```
@@ -91,7 +91,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: elasticsearch
     portforward: 9200
 ```
@@ -117,7 +117,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: elasticsearch
     config:
       server: config/elasticsearch.yml

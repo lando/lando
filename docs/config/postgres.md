@@ -30,11 +30,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: postgres:9.6.11
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/postgresql/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/postgresql/tags) for the underlying image we are using.
 
 ## Configuration
 
@@ -53,7 +53,7 @@ In the case of type and version, the underlying database files between these thi
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: postgres:10
     portforward: false
     creds:
@@ -79,7 +79,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: postgres
     portforward: true
 ```
@@ -88,7 +88,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: postgres
     portforward: 5432
 ```
@@ -103,7 +103,7 @@ This means that if you change any of the `creds`, you need to `lando destroy` an
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: postgres
     creds:
       database: database -> db7
@@ -136,7 +136,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: postgres
     config:
       database: config/my-custom.conf

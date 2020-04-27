@@ -23,11 +23,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache:2.4.33
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/apache/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/apache/tags) for the underlying image we are using.
 
 ## Configuration
 
@@ -37,7 +37,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache:2.4
     webroot: .
     ssl: false
@@ -70,7 +70,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache
     webroot: docroot
     config:

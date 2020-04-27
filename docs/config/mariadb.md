@@ -28,11 +28,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mariadb:10.2.21
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/mariadb/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/mariadb/tags) for the underlying image we are using.
 
 ## Configuration
 
@@ -51,7 +51,7 @@ In the case of type and version, the underlying database files between these thi
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mariadb:10.1
     portforward: false
     creds:
@@ -74,7 +74,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mariadb
     portforward: true
 ```
@@ -83,7 +83,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mariadb
     portforward: 3600
 ```
@@ -96,7 +96,7 @@ This means that if you change any of the `creds`, you need to `lando destroy` an
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mariadb
     creds:
       user: mariadb -> myuser
@@ -131,7 +131,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mariadb
     config:
       database: config/my-custom.cnf

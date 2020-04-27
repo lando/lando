@@ -35,11 +35,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: tomcat:7.0.91
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/tomcat/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/tomcat/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -49,7 +49,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: tomcat:8
     webroot: .
     ssl: false
@@ -87,7 +87,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: tomcat
     config:
       server: config/server.xml

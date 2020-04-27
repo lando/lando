@@ -40,11 +40,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node:12.13
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -54,7 +54,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node:10
     ssl: false
     command: tail -f /dev/null
@@ -70,7 +70,7 @@ If you want to actually launch a `node` application, consider setting the `comma
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     command: npm start
 ```
@@ -81,7 +81,7 @@ While we assume your `node` service is running on port `80`, we recognize that m
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     port: 3000
 ```
@@ -110,7 +110,7 @@ You can also set `ssl` to a specific port. This will do the same thing as `ssl: 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     port: 3000
     ssl: 4444
@@ -130,7 +130,7 @@ An example of globally installing the `latest` `gulp-cli` is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     globals:
       gulp-cli: latest
@@ -141,7 +141,7 @@ An example of using a [build step](./../config/services.md#build-steps) to autom
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     build:
       - yarn install

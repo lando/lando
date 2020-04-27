@@ -29,11 +29,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: redis:4.0.12
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/redis/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/redis/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -43,7 +43,7 @@ Also note that the below options are in addition to the [build steps](./../confi
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: redis:5
     persist: false
     portforward: false
@@ -67,7 +67,7 @@ This option is pretty straightforward. Use `persist: true` to persist the cache'
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: redis
     portforward: true
 ```
@@ -76,7 +76,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: redis
     portforward: 6379
 ```
@@ -102,7 +102,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: redis
     config:
       server: config/redis.conf

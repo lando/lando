@@ -36,7 +36,7 @@ In the case of type and version, the underlying database files between these thi
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mssql
     portforward: false
     creds:
@@ -55,7 +55,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mssql
     portforward: true
 ```
@@ -64,7 +64,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mssql
     portforward: 1433
 ```
@@ -77,7 +77,7 @@ This means that if you change any of the `creds`, you need to `lando destroy` an
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mssql
     creds:
       user: he11oTHERE -> 1337PASSword

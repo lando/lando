@@ -46,7 +46,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php:7.3
     via: apache:2.4
     ssl: false
@@ -69,7 +69,7 @@ Like with `apache`, `nginx` will use the the default version of our [nginx](./ng
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     via: apache
 ```
@@ -78,7 +78,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     via: nginx
 ```
@@ -87,7 +87,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     via: cli
 ```
@@ -154,7 +154,7 @@ An example of globally installing `phpunit/phpunit` `^6.5` is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     composer:
       phpunit/phpunit: ^6.5
@@ -164,7 +164,7 @@ An example of using a [build step](./../config/services.md#build-steps) to autom
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     build:
       - composer install
@@ -198,7 +198,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     config:
       php: config/php.ini
@@ -304,7 +304,7 @@ Consider the example that uses [build steps](./../config/services.md#build-steps
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     build_as_root:
       - apt-get update -y

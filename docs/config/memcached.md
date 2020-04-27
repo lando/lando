@@ -27,11 +27,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: memcached:1.5.11
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/memcached/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/memcached/tags) for the underlying image we are using.
 
 ## Configuration
 
@@ -41,7 +41,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: memcached:1
     portforward: false
     mem: 64
@@ -59,7 +59,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: memcached
     portforward: true
 ```
@@ -68,7 +68,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: memcached
     portforward: 11211
 ```

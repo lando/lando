@@ -36,11 +36,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: go:1.13.9
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/golang/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/golang/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -50,7 +50,7 @@ Also note that options in addition to the [build steps](./../config/services.md#
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: go:1.13
     ssl: false
     command: tail -f /dev/null
@@ -64,7 +64,7 @@ If you want to actually launch a `go` application, consider setting the `command
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: go
     command: run /app/my-server.go
 ```

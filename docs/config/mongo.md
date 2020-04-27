@@ -25,11 +25,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mongo:4.1.4
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/mongodb/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/mongodb/tags) for the underlying image we are using.
 
 ## Configuration
 
@@ -39,7 +39,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mongo:4.0
     portforward: false
     config:
@@ -58,7 +58,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mongo
     portforward: true
 ```
@@ -67,7 +67,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mongo
     portforward: 27018
 ```
@@ -93,7 +93,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mongo
     config:
       database: config/custom.conf

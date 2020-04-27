@@ -34,11 +34,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: python:3.5.6
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/python/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/python/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -48,7 +48,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: python:3.7
     port: 80
     ssl: false
@@ -63,7 +63,7 @@ If you want to actually launch a `python` application, consider setting the `com
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: python
     command: /app/my-server.py
 ```
@@ -74,7 +74,7 @@ While we assume your `python` service is running on port `80`, we recognize that
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: python
     port: 8000
 ```
@@ -85,7 +85,7 @@ Also note that `ssl: true` will only generate certs in the [default locations](.
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: python
     ssl: true
     port: 443

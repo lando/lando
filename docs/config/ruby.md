@@ -34,11 +34,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: ruby:2.5.3
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/ruby/tags/) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/ruby/tags/) for the underlying image we are using.
 
 ## Configuration
 
@@ -48,7 +48,7 @@ Also note that the options, in addition to the [build steps](./../config/service
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: ruby:2.5
     port: 80
     command: tail -f /dev/null
@@ -62,7 +62,7 @@ If you want to actually launch a `ruby` application, consider setting the `comma
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: ruby
     command: ruby /app/my-server.rb
 ```
@@ -73,7 +73,7 @@ While we assume your `ruby` service is running on port `80`, we recognize that m
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: ruby
     port: 8080
 ```

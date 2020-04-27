@@ -27,7 +27,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: varnish:4.1
     backends:
       - appserver
@@ -47,7 +47,7 @@ An example of a Landofile's `services` config that connects to a `nginx` backend
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: varnish
     backends:
       - web1
@@ -61,7 +61,7 @@ While we assume your `varnish` service is running on port `80`, we recognize tha
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: varnish
     backend_port: 8080
 ```
@@ -89,7 +89,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: varnish
     config:
       vcl: config/custom.vcl
@@ -102,7 +102,7 @@ There are also [several various envvars](https://hub.docker.com/r/eeacms/varnish
 That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them as shown below:
 
 ```yaml
-my-service:
+myservice:
   type: varnish
   hosts:
     - database

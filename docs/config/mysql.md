@@ -26,11 +26,11 @@ To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mysql:5.7.24
 ```
 
-But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/mysql/tags) for our underlying image.
+But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/mysql/tags) for the underlying image we are using.
 
 ## Configuration
 
@@ -49,7 +49,7 @@ In the case of type and version, the underlying database files between these thi
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mysql:5.7
     portforward: false
     creds:
@@ -74,7 +74,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mysql
     portforward: true
 ```
@@ -83,7 +83,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mysql
     portforward: 3600
 ```
@@ -96,7 +96,7 @@ This means that if you change any of the `creds`, you need to `lando destroy` an
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mysql
     creds:
       user: mysql -> myuser
@@ -132,7 +132,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mysql
     config:
       database: config/my-custom.cnf

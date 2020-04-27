@@ -66,12 +66,12 @@ Alternatively, you can install a text editor like `vim` inside one of your conta
 ```yaml
 name: my-app
 services:
-  my-service:
+  myservice:
     build_as_root:
       - apt update -y && apt install vim -y
 tooling:
   vim:
-    service: my-service
+    service: myservice
 ```
 
 ### Installing dependencies

@@ -27,7 +27,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog:v1.0.0
     portforward: false
     hogfrom: []
@@ -45,7 +45,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog
     portforward: true
 ```
@@ -54,7 +54,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog
     portforward: 1025
 ```
@@ -71,7 +71,7 @@ An example of a Landofile's `services` config that hogfroms a `php` service call
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog:v1.0.0
     portforward: false
     hogfrom:
