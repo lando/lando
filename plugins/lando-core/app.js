@@ -159,7 +159,7 @@ module.exports = (app, lando) => {
     }, {max: 25, backoff: 1000})
     .catch(service => {
       info.healthy = false;
-      app.addWarning(warnings.serviceUnhealthyWarning(service));
+      app.addWarning(warnings.serviceUnhealthyWarning(service), Error(`${service} reported as unhealthy.`));
     })));
 
   // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
