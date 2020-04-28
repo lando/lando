@@ -113,8 +113,9 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
   _.forEach(parsedUrls, rule => {
     // Set the http entrypoint
     labels[`traefik.http.routers.${rule.id}.entrypoints`] = 'http';
+    labels[`traefik.http.routers.${rule.id}.service`] = `${rule.id}-service`;
     // Rules are grouped by port so the port for any rule should be fine
-    labels[`traefik.tcp.services.${rule.id}.loadbalancer.server.port`] = rule.port;
+    labels[`traefik.http.services.${rule.id}-service.loadbalancer.server.port`] = rule.port;
     // Set the route rules
     labels[`traefik.http.routers.${rule.id}.rule`] = exports.getRule(rule);
     // Add in any path stripping middleware we need it
@@ -127,9 +128,10 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
     if (_.includes(sslReady, service)) {
       labels['io.lando.proxy.has-certs'] = true;
       labels[`traefik.http.routers.${rule.id}-secured.entrypoints`] = 'https';
+      labels[`traefik.http.routers.${rule.id}-secured.service`] = `${rule.id}-secured-service`;
       labels[`traefik.http.routers.${rule.id}-secured.rule`] = exports.getRule(rule);
       labels[`traefik.http.routers.${rule.id}-secured.tls`] = true;
-      labels[`traefik.tcp.services.${rule.id}-secured.loadbalancer.server.port`] = rule.port;
+      labels[`traefik.http.services.${rule.id}-secured-service.loadbalancer.server.port`] = rule.port;
       if (rule.pathname.length > 1) {
         labels[`traefik.http.routers.${rule.id}-secured.middlewares`] = `${rule.id}-stripprefix-secured`;
         labels[`traefik.http.middlewares.${rule.id}-stripprefix-secured.stripprefix.prefixes`] = rule.pathname;
