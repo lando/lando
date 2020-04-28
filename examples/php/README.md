@@ -32,7 +32,7 @@ lando ssh -s defaults -c "psql -V | grep 10."
 lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
 # Should only serve over http by default
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should serve from the app root by default
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
@@ -61,7 +61,7 @@ lando ssh -s custom -c "php -v" | grep "PHP 7.1"
 lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
 
 # Should serve via https if specified
-lando ssh -s custom_nginx -c "curl -k https://localhost | grep WEBDIR"
+lando ssh -s custom_nginx -c "curl https://localhost | grep WEBDIR"
 
 # Should enable xdebug if specified
 lando ssh -s custom -c "php -m | grep xdebug"

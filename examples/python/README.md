@@ -35,7 +35,7 @@ lando ssh -s patch -c "python --version | grep 3.5.6"
 lando ssh -s custom -c "curl http://localhost:8000 | grep CUSTOMZ"
 
 # Should run over ssl when specified
-lando ssh -s customssl -c "curl -k https://localhost:443 | grep ANDTHEFUTURETO"
+lando ssh -s customssl -c "curl https://localhost:443 | grep ANDTHEFUTURETO"
 
 # Should run on port 80 by default
 lando ssh -s defaults -c "curl http://localhost | grep OPENTHEPASTANDPRESENT"

@@ -32,13 +32,13 @@ lando ssh -s patch -c "nginx -v 2>&1 | grep 1.14.1"
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
 
 # Should only serve over http by default
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should serve from webroot if specified
 lando ssh -s custom -c "curl http://localhost | grep WWWDIR"
 
 # Should serve from https when specified
-lando ssh -s custom -c "curl -k https://localhost | grep WWWDIR"
+lando ssh -s custom -c "curl https://localhost | grep WWWDIR"
 
 # Should mount custom config to the correct locations
 lando ssh -s custom -c "cat /opt/bitnami/extra/nginx/templates/nginx.conf.tpl | grep LANDOSERVER"
