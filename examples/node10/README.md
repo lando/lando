@@ -50,13 +50,13 @@ lando ssh -s custom -c "curl https://localhost | grep tune"
 lando ssh -s custom2 -c "curl https://localhost:4444 | grep DANCING"
 
 # Should run as root if it needs to
-lando ssh -s defaults -c "top -n 1 -u root -c" | grep "node src/app-http.js"
+lando ssh -s defaults -c "ps -a -u root" | grep "node" | wc -l | grep 2
 lando ssh -s defaults -c "ls -lsa /certs" | grep "root root" | wc -l | grep 10
-lando ssh -s custom -c "top -n 1 -u root -c" | grep "node src/app-https.js"
+lando ssh -s custom -c "ps -a -u root" | grep "node" | wc -l | grep 2
 lando ssh -s custom -c "ls -lsa /certs" | grep "root root" | wc -l | grep 10
 
 # Should run as node if it can
-lando ssh -s custom2 -c "top -n 1 -u node -c" | grep "node src/app-custom.js"
+lando ssh -s custom2 -c "ps -a -u node" | grep "node" | wc -l | grep 2
 lando ssh -s custom2 -c "ls -lsa /certs" | grep "node" | wc -l | grep 8
 
 # Should install global dependencies if specified by user and have them available in PATH
