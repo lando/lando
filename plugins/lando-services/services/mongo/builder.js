@@ -16,7 +16,7 @@ module.exports = {
     },
     patchesSupported: true,
     confSrc: __dirname,
-    healthcheck: 'echo \'db.runCommand("ping").ok\' | mongo localhost:27017/test',
+    healthcheck: ['mongo', 'tests', '--eval', 'db.runCommand("ping").ok'],
     port: '27017',
     remoteFiles: {
       database: '/bitnami/mongodb/conf/lando.conf',
