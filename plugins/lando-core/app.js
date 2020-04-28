@@ -10,6 +10,7 @@ const warnings = require('./lib/warnings');
 
 // Helper to get http ports
 const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
+const getHttpsPorts = data => _.get(data, 'Config.Labels["io.lando.https-ports"]', '443').split(',');
 
 // Helper to get scannable or not scannable services
 const getScannable = (app, scan = true) => _.filter(app.info, service => {
@@ -55,7 +56,7 @@ module.exports = (app, lando) => {
       // Inspect each and add new URLS
       .map(container => app.engine.scan(container))
       // Scan all the http ports
-      .map(data => utils.getUrls(data, getHttpPorts(data), lando.config.bindAddress))
+      .map(data => utils.getUrls(data, getHttpPorts(data), getHttpsPorts(data), lando.config.bindAddress))
       .map(data => _.find(app.info, {service: data.service}).urls = data.urls);
     });
   });
