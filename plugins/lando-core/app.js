@@ -211,12 +211,16 @@ module.exports = (app, lando) => {
   app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
 
   // Otherwise set on rebuilds
-  app.events.on('post-rebuild', () => {
+  // NOTE: We set this pre-rebuild because post-rebuild runs after post-start because you would need to
+  // do two rebuilds to remove the warning since appWarning is already set by the time we get here.
+  // Running pre-rebuild ensures the warning goes away but concedes a possible warning tradeoff between
+  // this and a build step failure
+  app.events.on('pre-rebuild', () => {
     lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
   });
 
-  // Remove meta cache on uninstall
-  app.events.on('post-uninstall', () => {
+  // Remove meta cache on destroy
+  app.events.on('post-destroy', () => {
     app.log.debug('removing metadata cache...');
     lando.cache.remove(app.metaCache);
   });
