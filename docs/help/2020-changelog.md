@@ -10,6 +10,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 
 * Silenced `loadkeys` on `inits` that require key loading
 * Improved `node` service so it uses the `node` user if it does not use privileged ports
+* Improved app reporting so it doesnt hang the process if reporting node is spinning
 * Fixed bug where `proxy` was not finding the correct port for multi-port proxied services
 * Fixed bug where `node` services using a custom `ssl` port do not get assigned a `https://localhost:PORT` address correctly
 * Fixed bug where failed `healthchecks` were not sending correct error code
