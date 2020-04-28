@@ -6,6 +6,9 @@ const PantheonApiClient = require('./lib/client');
 const utils = require('./lib/utils');
 
 module.exports = (app, lando) => {
+  // Add additional things to cleanse
+  app.log.alsoSanitize('pantheon-auth');
+
   // Only do this on pantheon recipes
   if (_.get(app, 'config.recipe') === 'pantheon') {
     // Set the app caches, validate tokens and update token cache

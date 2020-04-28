@@ -16,7 +16,7 @@ lando poweroff
 
 # Initialize an empty mean recipe
 rm -rf mean && mkdir -p mean && cd mean
-lando init --source cwd --recipe mean --option port=2368 --option command="su - node -c \'/var/www/.npm-global/bin/ghost run -d /app/src -D\'" --name lando-mean
+lando init --source cwd --recipe mean --option port=2368 --option command="/var/www/.npm-global/bin/ghost run -d /app/src -D" --name lando-mean
 
 # Should install the ghost cli and install a new ghost app
 cd mean

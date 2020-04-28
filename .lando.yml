@@ -19,6 +19,8 @@ services:
     build:
       - yarn install
     scanner: false
+    ssl: true
+    sslExpose: false
     overrides:
       environment:
         LANDO_API: https://api.lndo.site
@@ -34,6 +36,8 @@ services:
       environment:
         LANDO_API_PORT: 8011
     port: 8011
+    ssl: true
+    sslExpose: false
   metrics:
     type: node:10
     command: yarn run dev:metrics
@@ -41,6 +45,8 @@ services:
       environment:
         LANDO_METRICS_PORT: 8010
     port: 8010
+    ssl: true
+    sslExpose: false
   platform:
     type: php:7.3
     via: cli

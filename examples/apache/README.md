@@ -32,13 +32,13 @@ lando ssh -s patch -c "apachectl -V | grep 2.4.39"
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
 
 # Should only serve over http by default
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should serve from webroot if specified
 lando ssh -s custom -c "curl http://localhost | grep WEBDIR"
 
 # Should serve from https when specified
-lando ssh -s custom -c "curl -k https://localhost | grep WEBDIR"
+lando ssh -s custom -c "curl https://localhost | grep WEBDIR"
 
 # Should mount custom config to the correct locationz
 lando ssh -s custom -c "cat /opt/bitnami/apache/conf/httpd.conf | grep LANDOHTTPD"

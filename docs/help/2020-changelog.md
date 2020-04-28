@@ -1,6 +1,6 @@
 # 2020
 
-## v3.0.0 - May 4, 2020 (Estimated Release Date)
+## v3.0.0-rrc.6 - [April 28, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.6)
 
 ### This is an `edge` release.
 
@@ -8,7 +8,15 @@ Edge releases contain the newest bug fixes and features and *may* be less stable
 
 Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
-* Silenced `loadkeys` on `inits` that required loading keys
+* Silenced `loadkeys` on `inits` that require key loading
+* Improved `node` service so it uses the `node` user if it does not use privileged ports
+* Improved app reporting so it doesnt hang the process if reporting node is spinning
+* Fixed bug where you needed to run `lando rebuild` twice to clear the "This app was built on a different version of Lando" warning
+* Fixed bug where `proxy` was not finding the correct port for multi-port proxied services
+* Fixed bug where `node` services using a custom `ssl` port do not get assigned a `https://localhost:PORT` address correctly
+* Fixed bug where failed `healthchecks` were not sending correct error code
+* Fixed bug causing `mongodb` services to fail healthchecks
+* Fixed bug causing `maxKeyWarning` to continue showing even after user has taken action [#2186](https://github.com/lando/lando/pull/2186)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 

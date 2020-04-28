@@ -79,6 +79,8 @@ services:
 
 While we assume your `node` service is running on port `80` we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
 
+Note that if you set either `port` or `ssl` to a value less than `1024` then Lando will run the `command` as `root` otherwise it will run as the `node` user which for all intents and purposes is `you`.
+
 ```yaml
 services:
   my-service:

@@ -10,6 +10,7 @@ const warnings = require('./lib/warnings');
 
 // Helper to get http ports
 const getHttpPorts = data => _.get(data, 'Config.Labels["io.lando.http-ports"]', '80,443').split(',');
+const getHttpsPorts = data => _.get(data, 'Config.Labels["io.lando.https-ports"]', '443').split(',');
 
 // Helper to get scannable or not scannable services
 const getScannable = (app, scan = true) => _.filter(app.info, service => {
@@ -55,7 +56,7 @@ module.exports = (app, lando) => {
       // Inspect each and add new URLS
       .map(container => app.engine.scan(container))
       // Scan all the http ports
-      .map(data => utils.getUrls(data, getHttpPorts(data), lando.config.bindAddress))
+      .map(data => utils.getUrls(data, getHttpPorts(data), getHttpsPorts(data), lando.config.bindAddress))
       .map(data => _.find(app.info, {service: data.service}).urls = data.urls);
     });
   });
@@ -85,16 +86,20 @@ module.exports = (app, lando) => {
 
   // Assess our key situation so we can warn users who may have too many
   app.events.on('post-init', () => {
+    // Get keys on host
     const sshDir = path.resolve(lando.config.home, '.ssh');
     const keys = _(fs.readdirSync(sshDir))
       .filter(file => !_.includes(['config', 'known_hosts'], file))
       .filter(file => path.extname(file) !== '.pub')
       .value();
 
-    app.log.verbose('analyzing user ssh keys...');
-    app.log.silly('keys', keys);
+    // Determine the key size
+    const keySize = _.size(_.get(app, 'config.keys', keys));
+    app.log.verbose('analyzing user ssh keys... using %s of %s', keySize, _.size(keys));
+    app.log.debug('key config... ', _.get(app, 'config.keys', 'none'));
+    app.log.silly('users keys', keys);
     // Add a warning if we have more keys than the warning level
-    if (_.size(keys) > lando.config.maxKeyWarning) {
+    if (keySize > lando.config.maxKeyWarning) {
       app.addWarning(warnings.maxKeyWarning());
     }
   });
@@ -159,7 +164,7 @@ module.exports = (app, lando) => {
     }, {max: 25, backoff: 1000})
     .catch(service => {
       info.healthy = false;
-      app.addWarning(warnings.serviceUnhealthyWarning(service));
+      app.addWarning(warnings.serviceUnhealthyWarning(service), Error(`${service} reported as unhealthy.`));
     })));
 
   // If the app already is installed but we can't determine the builtAgainst, then set it to something bogus
@@ -206,12 +211,16 @@ module.exports = (app, lando) => {
   app.events.on('post-stop', () => lando.utils.getInfoDefaults(app));
 
   // Otherwise set on rebuilds
-  app.events.on('post-rebuild', () => {
+  // NOTE: We set this pre-rebuild because post-rebuild runs after post-start because you would need to
+  // do two rebuilds to remove the warning since appWarning is already set by the time we get here.
+  // Running pre-rebuild ensures the warning goes away but concedes a possible warning tradeoff between
+  // this and a build step failure
+  app.events.on('pre-rebuild', () => {
     lando.cache.set(app.metaCache, updateBuiltAgainst(app, app._config.version), {persist: true});
   });
 
-  // Remove meta cache on uninstall
-  app.events.on('post-uninstall', () => {
+  // Remove meta cache on destroy
+  app.events.on('post-destroy', () => {
     app.log.debug('removing metadata cache...');
     lando.cache.remove(app.metaCache);
   });

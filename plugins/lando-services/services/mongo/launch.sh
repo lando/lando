@@ -4,8 +4,8 @@
 set -e
 
 # Detect and run the correct entrypoint script. THANKS BITNAMI!
-if [ -f "/opt/bitnami/scripts/memcached/entrypoint.sh" ]; then
-  /opt/bitnami/scripts/memcached/entrypoint.sh /opt/bitnami/scripts/memcached/run.sh
+if [ -f "/opt/bitnami/scripts/mongodb/entrypoint.sh" ]; then
+  /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
 else
   /entrypoint.sh /run.sh
 fi
