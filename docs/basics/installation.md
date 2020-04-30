@@ -10,7 +10,7 @@ Lando is designed to work on a wide range of computers. Here are some basic guid
 
 ### Operating System
 
-*   macOS 10.14 or newest
+*   macOS 10.13 or later
 *   Windows 10 Pro+ or equivalent (eg Windows 10 Enterprise) [**with Hyper-V running**](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install)
 *   Linux with kernel version 4.x or higher
 
