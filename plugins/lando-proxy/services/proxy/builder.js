@@ -34,12 +34,12 @@ const getProxy = ({proxyCommand, proxyDomain, userConfRoot, version = 'unknown'}
 /*
  * Helper to get proxy ports service
  */
-const getPorts = (http, https, {dash, bindAddress = '127.0.0.1'} = {}) => ({
+const getPorts = (http, https, {proxyBindAddress = '127.0.0.1'} = {}) => ({
   services: {
     proxy: {
       ports: [
-        [bindAddress, http, '80'].join(':'),
-        [bindAddress, https, '443'].join(':'),
+        [proxyBindAddress, http, '80'].join(':'),
+        [proxyBindAddress, https, '443'].join(':'),
         '8080',
       ],
     },
@@ -63,7 +63,7 @@ module.exports = {
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
       const proxy = getProxy(options);
-      const ports = getPorts(http, https, {options});
+      const ports = getPorts(http, https, options);
       const augment = {
         env: _.cloneDeep(options.appEnv),
         labels: _.cloneDeep(options.appLabels),
