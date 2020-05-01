@@ -177,6 +177,7 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
   # Importing database
+  echo "Pulling your database... This miiiiight take a minute"
   eval "$PULL_DB"
 
   # Do some post DB things on WP
