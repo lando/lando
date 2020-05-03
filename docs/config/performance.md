@@ -6,7 +6,7 @@ Similarly, since Lando is built on top of these technologies you likely have exp
 
 The good news is that as of Lando 3.0.0-rc.13 we can offer an _experimental_, opt-in, performance optimization pathway to users. The `tl;dr` is that users can now `exclude` certain directories from being shared. Depending on the amount of files you exclude this can bring your application from [_ugh fml_ to _pretty close_](https://github.com/lando/lando/issues/1460#issuecomment-467126103) to native speed.
 
-The downside of this approach is that all "exluded" directories are decoupled from your host, meaning that you can no longer edit their contents from your host machine. As a result we recommend you only exclude directories containing code you don't need to modify such as `vendor` or `node_modules`.
+The downside of this approach is that all "excluded" directories are decoupled from your host, meaning that you can no longer edit their contents from your host machine. As a result we recommend you only exclude directories containing code you don't need to modify such as `vendor` or `node_modules`.
 
 We also have a roadmap to address this specific "syncing" concern but wanted to roll out this option first since it is pretty useful by itself.
 
