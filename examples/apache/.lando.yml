@@ -17,7 +17,3 @@ services:
   override:
     type: apache
     webroot: web
-tooling:
-  thing:
-    service: defaults
-    cmd: "echo hello"
