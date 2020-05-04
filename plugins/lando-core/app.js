@@ -188,6 +188,13 @@ module.exports = (app, lando) => {
     }
   });
 
+  // Check for docker compat warnings and surface them nicely as well
+  app.events.on('post-start', () => {
+    _.forEach(_(lando.versions).filter(version => version.dockerVersion).value(), thing => {
+      if (!thing.satisfied) app.addWarning(warnings.unsupportedVersionWarning(thing));
+    });
+  });
+
   // Scan urls
   app.events.on('post-start', 10, () => {
     // Message to let the user know it could take a bit

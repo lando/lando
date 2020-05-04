@@ -1,5 +1,8 @@
 'use strict';
 
+// Modules
+const _ = require('lodash');
+
 exports.maxKeyWarning = () => ({
   title: 'You have a lot of keys!',
   detail: [
@@ -30,4 +33,15 @@ exports.serviceUnhealthyWarning = service => ({
   title: `The service "${service}" failed its healthcheck`,
   detail: ['This may be ok but we recommend you run the command below to investigate:'],
   command: `lando logs -s ${service}`,
+});
+
+exports.unsupportedVersionWarning = ({name, version, wants, link}) => ({
+  title: `Using an unsupported version of DOCKER ${_.upperCase(name)}`,
+  detail: [
+    `You have version ${version} but Lando wants something in the ${wants} range.`,
+    'If you have purposefully installed an unsupported version and know what you are doing',
+    'you can probably ignore this warning. If not we recommend you use a supported version',
+    'as this ensures we can provide the best support and stability.',
+  ],
+  url: link,
 });
