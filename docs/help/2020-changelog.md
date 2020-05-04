@@ -8,6 +8,7 @@ Edge releases contain the newest bug fixes and features and *may* be less stable
 
 Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
+* Added ability to customize or disable the `app_mount` on a per-service basis [#2029](https://github.com/lando/lando/issues/2029) [#1487](https://github.com/lando/lando/issues/1487)
 * Fixed bug not allowing build steps on Lando managed services eg `appserver_nginx` [#1990](https://github.com/lando/lando/pull/1990)
 * Fixed bug not allowing user overrides on Lando managed services eg `appserver_nginx` [#1990](https://github.com/lando/lando/pull/1990)
 * Fixed bug causing `PATH_INFO` and `PATH_TRANSLATED` to not be set by default on `php` services served by `nginx` [#2192](https://github.com/lando/lando/pull/2192)

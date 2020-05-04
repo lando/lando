@@ -1,9 +1,9 @@
 Badname Example
 ===============
 
-This example exists primarily to test the following issue:
+This example exists primarily to test the following:
 
-* [BadNamez](https://github.com/lando/lando/issues/1767)
+* [Issue #1767](https://github.com/lando/lando/issues/1767)
 
 Start up tests
 --------------
