@@ -13,6 +13,7 @@
     <a href="https://docs.lando.dev/basics/#wait-doesn-t-docker-compose-do-this">wait, doesn't docker compose do this?</a>
   </strong>
 </p>
+<br />
 
 <h2 align="center">Support Lando</h2>
 <p align="center">Lando is and always will be FREE and OPEN SOURCE. As such it relies on generous contributions from its community to fund its development. Join our list of list of <a href="https://lando.dev/sponsor/">great sponsors!</a> by contributing.
@@ -22,15 +23,16 @@
   <a href="https://www.patreon.com/devwithlando">Patreon</a> |
   <a href="https://opencollective.com/lando">OpenCollective</a>
 </p>
+<br />
 
 <h2 align="center">Documentation</h2>
-<h3 align="center">Getting Started</a>
+<h3 align="center">Getting Started</h3>
 <p align="center">
   <a href="https://docs.lando.dev/basics/">Introduction</a> |
   <a href="https://docs.lando.dev/basics/usage.html">CLI Usage</a> |
   <a href="https://docs.lando.dev/basics/installation.html">Installation</a>
 </p>
-<h3 align="center">Recipes</a>
+<h3 align="center">Recipes</h3>
 <p align="center">
   <a href="https://docs.lando.dev/config/backdrop.html">Backdrop</a> |
   <a href="https://docs.lando.dev/config/drupal6.html">Drupal 6</a> |
@@ -45,7 +47,7 @@
   <a href="https://docs.lando.dev/config/pantheon.html">Pantheon</a> |
   <a href="https://docs.lando.dev/config/wordpress.html">WordPress</a>
 </p>
-<h3 align="center">Services</a>
+<h3 align="center">Services</h3>
 <p align="center">
   <a href="https://docs.lando.dev/config/apache.html" target="_blank">Apache</a> |
   <a href="https://docs.lando.dev/config/compose.html" target="_blank">Compose</a> |
@@ -68,7 +70,7 @@
   <a href="https://docs.lando.dev/config/tomcat.html" target="_blank">Tomcat</a> |
   <a href="https://docs.lando.dev/config/varnish.html" target="_blank">Varnish</a>
 </p>
-<h3 align="center">Advanced Configuration</a>
+<h3 align="center">Advanced Configuration</h3>
 <p align="center">
   <a href="https://docs.lando.dev/config/lando.html" target="_blank">Landofile</a> |
   <a href="https://docs.lando.dev/config/recipes.html" target="_blank">Recipes</a> |
@@ -84,6 +86,7 @@
   <a href="https://docs.lando.dev/config/ssh.html" target="_blank">SSh Keys</a> |
   <a href="https://docs.lando.dev/config/global.html" target="_blank">Global Config</a>
 </p>
+<br />
 
 <h2 align="center">Help, Troubleshooting & Support</h2>
 <p align="center">
@@ -95,6 +98,7 @@
   <a href="https://launchpass.com/devwithlando" target="_blank">Slack Channel</a> |
   <a href="https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg" target="_blank">YouTube Videos</a>
 </p>
+<br />
 
 <h2 align="center">Engage</h2>
 <p align="center">
@@ -104,6 +108,7 @@
   <a href="https://blog.lando.dev" target="_blank">Blog</a> |
   <a href="https://twitter.com/devwithlando" target="_blank">Follow on Twitter</a>
 </p>
+<br />
 
 Security Issues
 ---------------
