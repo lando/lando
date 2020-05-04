@@ -4,7 +4,7 @@ description: Learn about Lando's amazing plugin structure.
 
 # Plugins
 
-Lando has an advanced plugin system that allows developers to add and extend Lando's core functionality. Here are a few examples of things you can do with plugins:
+Lando has an advanced plugin system that allows developers to add and extend Lando's core functionality. A few examples of things you can do with plugins are shown below:
 
 1.  Create tasks and CLI commands like `lando danceparty`
 2.  Create services like `solr`, `redis` or `ruby`
@@ -21,9 +21,9 @@ In fact, almost all of Lando's core functionality is provided via plugins. This 
 
 ## Plugin Loading
 
-Lando will search in the `plugins` directory for any path listed in `lando.config.pluginDirs` and automatically load in any plugins that it finds. By default, these directories are the Lando source directory and `~/.lando` but note that they are configurable via the Lando [global config](./../config/config.md). In order for Lando to successfully identify and automatically load your plugin, you need to have a directory named after your plugin, eg. `my-plugin`, in one of the directories mentioned above and it needs to include an `index.js`.
+Lando will search in the `plugins` directory for any path listed in `lando.config.pluginDirs` and automatically load in any plugins that it finds. By default, these directories are the Lando source directory and `~/.lando` but note that they are configurable via the Lando [global config](./../config/config.md). In order for Lando to successfully identify and automatically load your plugin, you need to have a directory named after your plugin, e.g. `my-plugin`, in one of the directories mentioned above and it needs to include an `index.js`.
 
-If there are multiple occurrences of the same-named plugin, Lando will use the last one it finds. This means that `lando` will priortize user plugins over core plugins by default.
+If there are multiple occurrences of the same-named plugin, Lando will use the last one it finds. This means that `lando` will prioritize user plugins over core plugins by default.
 
 **A powerful corollary to this is that individual user apps can implement plugins that override or replace core plugin behavior.**
 
@@ -40,13 +40,13 @@ At the bare minimum, your plugin needs to have the following structure to be rec
 |-- index.js
 ```
 
-However, Lando will also look for other folders and files and automatically load in those as well. These "special" paths are:
+However, Lando will also look for other folders and files and automatically load in those as well. These "special" paths are shown below:
 
 ```bash
 ./
 |-- compose         Services that get autoloaded first
 |-- lib             Unit testable libraries that do not require the `lando` object
-|-- recipes         Recipes that get autoladed
+|-- recipes         Recipes that get autoloaded
 |-- scripts         BASH or SH scripts that get injected into every container
 |-- services        Services that get autoloaded last
 |-- sources         Initialization sources that get autoloaded
@@ -61,7 +61,7 @@ Let's go into more depth about each special file below:
 
 ### index.js
 
-This file is required to exist in every Lando plugin, even if it doesn't do anything. **If you do not have this file then your plugin will not be detected and loaded.**
+This file is required to exist in every Lando plugin, even if it doesn't do anything. **If you do not have this file, then your plugin will not be detected and loaded.**
 
 `index.js` will get required when your plugin is initially loaded. Generally, you will use this file to hook into Lando's event layer and modify the `lando` object itself.
 
@@ -91,7 +91,7 @@ module.exports = (app, lando) => {
 
 ### app.js
 
-`app.js` will get loaded when a Lando app is initialized, eg. `app.init()` is invoked. Generally, you will use this file to hook into the app's event layer and to modify the app object itself.
+`app.js` will get loaded when a Lando app is initialized, e.g. `app.init()` is invoked. Generally, you will use this file to hook into the app's event layer and to modify the app object itself.
 
 It takes the form of a function that gives you access to both the [App](./../api/app.md) and [Lando](./../api/lando.md) APIs. Its `return` value is mixed directly into the `app` object, however, only the `config`, `composeData`, `env`, `labels` can be modified.
 
@@ -125,11 +125,11 @@ module.exports = (app, lando) => {
 
 ### scripts
 
-Nothing too fancy here. Drop a bunch of scripts ending in `.sh`, eg. `myscript.sh`, into this directory and they will get mounted at `/helpers` in every Lando service.
+Nothing too fancy here. Drop a bunch of scripts ending in `.sh`, e.g. `myscript.sh`, into this directory and they will get mounted at `/helpers` in every Lando service.
 
 ### tasks
 
-Lando will try to load any `.js` file dropped into this directory as a "task" which in the CLI is manifested as a command. Generally, you will want to name the file the same as the task that should be invoked, eg. `env.js` will give you a `lando env` command.
+Lando will try to load any `.js` file dropped into this directory as a "task" which in the CLI is manifested as a command. Generally, you will want to name the file the same as the task that should be invoked, e.g. `env.js` will give you a `lando env` command.
 
 Every task has a common interface as follows:
 
@@ -196,7 +196,7 @@ The only difference between `compose`, `types` and `services` is that builders l
 
 The builder interface is fairly straightforward, although it's often necessary to proceed up the family tree and see how parent builders treat the various options and settings as these can vastly differ from builder to builder. This definitely involves a bit of a learning curve but once learned, it enables the construction of other powerful builders extremely quickly.
 
-Below is an example of the `builder` interface being implemented to give Lando an `apache` service.
+An example of the `builder` interface being implemented to give Lando an `apache` service is shown below:
 
 ```js
 'use strict';
@@ -254,7 +254,9 @@ module.exports = {
 };
 ```
 
-Below are some more details about each key. **They are all required.**
+Some more details about each key are shown below:
+
+**They are all required.**
 
 **name** - A unique string identifier.
 
@@ -262,7 +264,7 @@ Below are some more details about each key. **They are all required.**
 
 **parent** - The `name` of a builder that this builder extends.
 
-**builder** - This is **THE MAIN EVENT**, eg. the actual `class` definition for your builder. It is a function that gets whatever you defined above in `config` and should only contain a `constructor`. `id` and `options` generally come from the user's Landofile. The contents of the `constructor` are up to you but it ultimately needs to call `super` with arguments that make sense to the `parent`.
+**builder** - This is **THE MAIN EVENT**, e.g. the actual `class` definition for your builder. It is a function that gets whatever you defined above in `config` and should only contain a `constructor`. `id` and `options` generally come from the user's Landofile. The contents of the `constructor` are up to you but it ultimately needs to call `super` with arguments that make sense to the `parent`.
 
 ### recipes
 
@@ -276,7 +278,7 @@ As in the section above, `recipes` implements a similar autoload structure with 
         |-- init.js                An optional file that implements the lando init interface
 ```
 
-Below is an example of a recipe builder with helper methods removed for brevity.
+An example of a recipe builder with helper methods removed for brevity is shown below:
 
 ```js
 'use strict';
@@ -314,7 +316,9 @@ module.exports = {
 
 ```
 
-Below is an example of the `init` interface. The `sources` property is intentionally left blank but you can check the section below for more details on that.
+An example of the `init` interface is shown below:
+
+The `sources` property is intentionally left blank but you can check the section below for more details on that.
 
 ```js
 module.exports = {
@@ -348,7 +352,7 @@ module.exports = {
 };
 ```
 
-**name** - **Required.** This *should* but doesn't necessarily need to match up with the name of the recipe.
+**name** - **Required.** This *should*, but doesn't necessarily need to, match up with the name of the recipe.
 
 **overrides** - Allows you to override any of the aux options in `lando init`. This can allow you to automatically set certain options like `recipe` and prevent them from being displayed to the user. For example, the `pantheon` source automatically sets the `recipe` to also be `pantheon`.
 
@@ -397,7 +401,7 @@ module.exports = {
   }],
 ```
 
-Below are some more details about each key.
+Some more details about each key are shown below:
 
 **name** - **Required.** A unique string identifier.
 

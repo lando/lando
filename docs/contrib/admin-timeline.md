@@ -12,7 +12,7 @@ metaTitle: Learn how to help onboard Lando admins | Lando
 ## Daily
 
 * On or offboard new sponsors
-* Look for new content on Slack to queue up in twitter
+* Look for new content on Slack to queue up in Twitter
 * Queue up any co-marketing tweets from our sponsors
 
 ## Weekly

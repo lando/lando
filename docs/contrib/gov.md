@@ -10,7 +10,7 @@ That is, the community actively contributes to the day-to-day maintenance of the
 
 In turn, it is the community’s job to guide the decisions of the benevolent dictator through active engagement and contribution.
 
-Governance of the project is simple and straightforward:
+Governance of the project is simple and straightforward as listed below:
 
   * [Maintainers](./roles.md#maintainers) make consensus driven decisions about the project.
-  * The [Benevolent Dictator](./roles.md#benevolent-dictator) has the final say on all decisions but generally only exercises this power on an as-needed basis, most usually when the maintainers cannot reach consensus.
+  * The [Benevolent Dictator](./roles.md#benevolent-dictator) has the final say on all decisions but generally only exercises this power on an as-needed basis; most usually when the maintainers cannot reach consensus.
