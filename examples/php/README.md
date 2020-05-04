@@ -5,6 +5,7 @@ This example exists primarily to test the following documentation:
 
 * [PHP Service](https://docs.devwithlando.io/tutorials/php.html)
 * [Issue #1990](https://github.com/lando/lando/issues/1990)
+* [Issue #2192](https://github.com/lando/lando/issues/2192)
 
 Start up tests
 --------------
@@ -113,6 +114,15 @@ lando ssh -s custom_nginx -c "cat /app/test/managed_build_step"
 # https://github.com/lando/lando/issues/1990
 lando ssh -s custom_nginx -c "env | grep OTHER | grep stuff"
 lando ssh -s custom_nginx -c "env | grep MORE | grep things"
+
+# Should set PATH_INFO and PATH_TRANSLATED if appropriate
+# https://github.com/lando/lando/issues/2192
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/web/a/b.php"
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/a/b.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
 ```
 
 Destroy tests
