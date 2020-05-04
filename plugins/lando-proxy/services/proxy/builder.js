@@ -40,7 +40,7 @@ const getPorts = (http, https, {proxyBindAddress = '127.0.0.1'} = {}) => ({
       ports: [
         [proxyBindAddress, http, '80'].join(':'),
         [proxyBindAddress, https, '443'].join(':'),
-        '8080',
+        `${proxyBindAddress}::8080`,
       ],
     },
   },

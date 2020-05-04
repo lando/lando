@@ -16,7 +16,7 @@ dockerSupportedVersions:
       darwin: https://docs.docker.com/docker-for-mac/release-notes/
       win32: https://docs.docker.com/docker-for-windows/release-notes/
   engine:
-    min: "19.03.1"
+    min: "18.09.3"
     max: "19.04.0"
     link:
       linux: https://docs.docker.com/engine/install/

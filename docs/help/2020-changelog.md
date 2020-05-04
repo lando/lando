@@ -1,5 +1,21 @@
 # 2020
 
+## v3.0.0-rrc.8 - [May 3, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.8)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Added warnings if user is using unsupported Docker versions [#678](https://github.com/lando/lando/pull/678)
+* Improved Lando update check to be non-blocking
+* Improved warnings if needed Docker dependencies are not installed [#1901](https://github.com/lando/lando/pull/1901)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
 ## v3.0.0-rrc.7 - [April 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.7)
 
 ### This is an `edge` release.
