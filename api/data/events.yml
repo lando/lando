@@ -1,3 +1,16 @@
+- id: 8f1a13fa5280f4f54b1f32cf57b5d73f4aceaa3d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'SFDUG - June 25, 2020'
+  date: '2020-06-25'
+  summary: >-
+    San Francisco Drupal Users Group ~ Using Lando for Drupal core and contrib
+    contributions.
+  type: meetup
+  location: San Francisco
+  url: >-
+    https://www.meetup.com/SFDUG-San-Francisco-Drupal-Users-group/events/270298015/
 - id: 375b8dd30b5ba5a9e309e1c4e830dd8aceca23c6
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
