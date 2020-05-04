@@ -1,7 +1,9 @@
 Lando
 =====
 
-![screenshot](https://raw.githubusercontent.com/lando/lando/master/docs/.vuepress/public/images/lando-screenshot.png)
+<p align="center"><a href="https://lando.dev" target="_blank"><img width=250" src="https://docs.lando.dev/images/hero-pink.png" alt="Lando logo"></a></p>
+
+<h1 align="center">Lando</h1>
 
 Lando is for developers who want to:
 
