@@ -4,6 +4,7 @@ PHP Example
 This example exists primarily to test the following documentation:
 
 * [PHP Service](https://docs.devwithlando.io/tutorials/php.html)
+* [Issue #1990](https://github.com/lando/lando/issues/1990)
 
 Start up tests
 --------------
@@ -103,6 +104,15 @@ lando ssh -s custom  -c "php -i" | grep WebP | grep enabled
 lando ssh -s custom74 -c "php -i" | grep WebP | grep enabled
 lando ssh -s cli -c "php -i" | grep WebP | grep enabled
 lando ssh -s composer -c "php -i" | grep WebP | grep enabled
+
+# Should be able to run build steps on lando managed nginx service
+# https://github.com/lando/lando/issues/1990
+lando ssh -s custom_nginx -c "cat /app/test/managed_build_step"
+
+# Should be able to override lando managed nginx service
+# https://github.com/lando/lando/issues/1990
+lando ssh -s custom_nginx -c "env | grep OTHER | grep stuff"
+lando ssh -s custom_nginx -c "env | grep MORE | grep things"
 ```
 
 Destroy tests
