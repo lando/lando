@@ -173,7 +173,7 @@ exports.toolingDefaults = ({
   description = `Runs ${name} commands`,
   options = {},
   service = '',
-  stdio = ['inherit', 'inherit', 'ignore'],
+  stdio = ['inherit', 'pipe', 'pipe'],
   user = null} = {}) =>
   ({
     name,
