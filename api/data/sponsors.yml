@@ -100,3 +100,9 @@
   type: patriot
   url: https://platform.sh
   logo: https://lando.dev/images/platform_sh_logo.png
+- name: "UC Berkeley Web Platform Services"
+  type: herald
+  url: https://web.berkeley.edu/home
+- name: "Fredric Mitchell"
+  type: herald
+  url: http://www.brightplum.com
