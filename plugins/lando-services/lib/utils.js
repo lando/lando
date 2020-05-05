@@ -95,7 +95,13 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= [], prest
  * Parse config into raw materials for our factory
  */
 exports.parseConfig = (config, app) => _(config)
+  // Arrayify
   .map((service, name) => _.merge({}, service, {name}))
+  // Filter out any services without a type, this implicitly assumes these
+  // services are "managed" by lando eg their type/version details are provided
+  // by another service
+  .filter(service => _.has(service, 'type'))
+  // Build the config
   .map(service => _.merge({}, service, {
     _app: app,
     data: `data_${service.name}`,

@@ -30,6 +30,7 @@ Unlike other services, `compose` does not require a `version`, instead it allows
 services:
   custom-service:
     type: compose
+    app_mount: delegated
     services:
       image: drupal:8
       # Required. See Below
@@ -42,8 +43,46 @@ services:
       my-network:
 ```
 
-Note that while `compose` services also get the same Lando *secret sauce* but there is a notable difference here. By default Lando will hijack the Docker containers `entrypoint`. This means if your custom container set's its own entrypoint you will need to remove that entrypoint and set it as the first argument in the `command`.
+### Setting the app mount
+
+Many Docker images will put code in `/app`. This directly conflicts with Lando's default codebase mount point. If you are running into a problem because of this collision we recommend you [disable](./services.md#app-mount) the `app_mount` by setting it to `false` or `disabled`.
+
+This will prevent Lando from mounting your codebase to `/app` so the Docker image can use its own code at `/app`.
+
+```yaml
+services:
+  pghero:
+    type: compose
+    app_mount: false
+    services:
+      image: ankane/pghero
+      command: puma -C config/puma.rb
+```
+
+
+### Setting the command
+
+Note that while `compose` services also get the same Lando *secret sauce* there is a notable difference. By default Lando will hijack the Docker containers `entrypoint`. This means if your custom container set's its own entrypoint you will need to remove that entrypoint and set it as the first argument in the `command`.
+
+```yaml
+services:
+  custom-service:
+    type: compose
+    app_mount: delegated
+    services:
+      image: drupal:8
+      # Required. See Below
+      command: docker-php-entrypoint apache2-foreground
+      ports:
+        - '80'
+    volumes:
+      my-volume:
+    networks:
+      my-network:
+```
 
 In the example above `docker-php-entrypoint` is the default `entrypoint` for the `drupal:8` image but we have moved it so that it is the first argument of `command`. This both allows the container to run as expected and allows Lando to do its thing.
+
+
 
 <RelatedGuides tag="Compose"/>
