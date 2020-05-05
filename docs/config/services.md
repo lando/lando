@@ -10,6 +10,7 @@ You can use the top-level `services` config in your [Landofile](./lando.md) to d
 ```yaml
 services:
   myservice:
+    app_mount: delegated
     type: some-service:with-optional-version
     overrides:
     build:
@@ -208,6 +209,38 @@ services:
       image: pirog/myapache:2
       volumes:
         - ./mythings:/tmp/mythings
+```
+
+### App Mount
+
+Lando will automatically mount your codebase in every container at `/app` using the `:delegated` performance optimization flag. However, you can change the mount flag on a per-service basis or disable the mount entirely if you so choose.
+
+**Do not mount my application code**
+
+Set `app_mount` to either `false` or `disabled`.
+
+```yaml
+services:
+  my-service:
+    type: apache
+    app_mount: false
+  my-service2:
+    type: nginx
+    app_mount: disabled
+```
+
+**Mount with a different flag**
+
+Set `app_mount` to any valid Docker bind mount [third field](https://docs.docker.com/storage/bind-mounts/).
+
+```yaml
+services:
+  my-service:
+    type: apache
+    app_mount: ro
+  my-service2:
+    type: nginx
+    app_mount: cached
 ```
 
 ### Localhost Assignment

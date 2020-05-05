@@ -23,6 +23,14 @@ services:
       image: devwithlando/php:7.1-fpm-2
       environment:
         DUALBLADE: maxim
+        OTHER: thing
+  custom_nginx:
+    build_as_root:
+      - mkdir -p /app/test && touch /app/test/managed_build_step
+    overrides:
+      environment:
+        MORE: things
+        OTHER: stuff
   custom74:
     type: php:7.4
   composer:

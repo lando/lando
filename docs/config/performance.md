@@ -1,8 +1,8 @@
 # Performance
 
-If you've ever tried to run a site with a shload of files using Docker Desktop on Windows or macOS then you've likely experienced some of the [very well documented](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076/89) performance issues associated with doing so. Usually, these performance issues manifest themselves in slow page load times, or exceptionally long cli operations like installing a dependency or clearing an application's cache.
+If you've ever tried to run a site with a shload of files using Docker Desktop for Windows or macOS then you've likely experienced some of the [very well documented](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076/89) performance issues associated with doing so. Usually, these performance issues manifest themselves in slow page load times, or exceptionally long cli operations like installing a dependency or clearing an application's cache.
 
-Similarly, since Lando is built on top of these technologies, you likely have experienced them while running big sites on Lando as well; despite the fact that we already [optimize our volume mounts](https://docs.docker.com/docker-for-mac/osxfs-caching/).
+Similarly, since Lando is built on top of these technologies, you likely have experienced them while running big sites on Lando as well; despite the fact that we already [optimize our app mounts](./services.md#app-mount).
 
 The good news is that as of Lando 3.0.0-rc.13, we can offer an _experimental_, opt-in, performance optimization pathway to users. The `tl;dr` is that users can now `exclude` certain directories from being shared. Depending on the amount of files you exclude, this can bring your application from [_ugh fml_ to _pretty close_](https://github.com/lando/lando/issues/1460#issuecomment-467126103) to native speed.
 

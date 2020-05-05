@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.0-rrc.8",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -118,7 +118,7 @@
     "object-hash": "^1.1.8",
     "semver": "^7.3.2",
     "shelljs": "0.7.8",
-    "string-argv": "^0.1.1",
+    "string-argv": "0.1.1",
     "sudo-block": "^2.0.0",
     "uuid": "^3.2.1",
     "valid-url": "^1.0.9",

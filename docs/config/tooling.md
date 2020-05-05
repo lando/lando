@@ -255,6 +255,22 @@ tooling:
     cmd: "/app/vendor/bin/drush --root=/app/web"
 ```
 
+Note that if your upstream tooling has interactive options you will need to either disable those options completely or set appropriate defaults to bypass them.
+
+```yaml
+tooling:
+  # Remove upstream options altogether
+  pull:
+    cmd: echo "Yah right imma gonna let you run this command"
+    options:
+  # Modify upstream options
+  push:
+    cmd: /helpers/my-special-push.sh
+    options:
+      code:
+        default: none
+```
+
 ## Disabling
 
 You can also use "tooling overrides" to disable any other predefined or upstream tooling by setting the command to a non-object value in your Lando file.
