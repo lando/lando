@@ -22,8 +22,6 @@ Lando is **free** and **open source** software that relies on contributions from
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 
-## v3.0.0-rrc.7 - [April 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.7)
-
 ## v3.0.0-rrc.8 - [May 3, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.8)
 
 ### This is an `edge` release.

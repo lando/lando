@@ -1,7 +1,7 @@
 Pantheon Drupal 8 Example
 =========================
 
-This example exists primarily to test the following documentation:
+This example exists primarily to test the following:
 
 * [Pantheon Recipe - Drupal 8](https://docs.devwithlando.io/tutorials/pantheon.html)
 
