@@ -14,6 +14,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Fixed bug not allowing user overrides on Lando managed services eg `appserver_nginx` [#1990](https://github.com/lando/lando/pull/1990)
 * Fixed bug causing `PATH_INFO` and `PATH_TRANSLATED` to not be set by default on `php` services served by `nginx` [#2192](https://github.com/lando/lando/pull/2192)
 * Fixed bug causing `PATH_INFO` and `PATH_TRANSLATED` to not be set by default on the `lemp` recipe [#2192](https://github.com/lando/lando/pull/2192)
+* Fixed bug causing Lando to pass through the quotes on build steps or events that contained options like `--option="some thing"` [#1926](https://github.com/lando/lando/pull/1926)
 * Improved overridability of `pantheon` `push|pull|switch` commands [#2166](https://github.com/lando/lando/pull/2166)
 * Blasted this thing straight out of Mos Eisley [#6](https://www.youtube.com/watch?v=d9Am7nUiIyU)
 

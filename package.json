@@ -118,7 +118,7 @@
     "object-hash": "^1.1.8",
     "semver": "^7.3.2",
     "shelljs": "0.7.8",
-    "string-argv": "^0.1.1",
+    "string-argv": "^0.3.1",
     "sudo-block": "^2.0.0",
     "uuid": "^3.2.1",
     "valid-url": "^1.0.9",
