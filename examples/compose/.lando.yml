@@ -1,5 +1,17 @@
 name: lando-compose
 services:
+  pghero2:
+    type: compose
+    app_mount: false
+    services:
+      image: ankane/pghero
+      command: puma -C config/puma.rb
+  pghero:
+    type: compose
+    app_mount: disabled
+    services:
+      image: ankane/pghero
+      command: puma -C config/puma.rb
   custom-service:
     type: compose
     services:
