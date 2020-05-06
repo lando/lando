@@ -1,6 +1,6 @@
 name: lando-apache
 proxy:
-  custom:
+  defaults:
     - landoapache.lndo.site
 services:
   defaults:
