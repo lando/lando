@@ -159,16 +159,19 @@ module.exports = (app, lando) => {
         service.labels['traefik.enable'] = true;
         service.labels['traefik.docker.network'] = lando.config.proxyNet;
         service.environment.LANDO_PROXY_PASSTHRU = _.toString(lando.config.proxyPassThru);
+        const proxyVolume = `${lando.config.proxyName}_proxy_config`;
         return {
           services: _.set({}, service.name, {
             networks: {'lando_proxyedge': {}},
             labels: service.labels,
             environment: service.environment,
             volumes: [
+              `${proxyVolume}:/proxy_config`,
               `${lando.config.userConfRoot}/scripts/proxy-certs.sh:/scripts/100-proxy-certs`,
             ],
           }),
           networks: {'lando_proxyedge': {external: {name: lando.config.proxyNet}}},
+          volumes: _.set({}, proxyVolume, {external: true}),
         };
       })
 

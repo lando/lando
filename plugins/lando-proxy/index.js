@@ -19,7 +19,7 @@ const defaultConfig = {
     '--entrypoints.https.address=:443',
     '--entrypoints.http.address=:80',
     '--providers.docker.exposedbydefault=false',
-    '--providers.file.directory=/lando/proxy/config',
+    '--providers.file.directory=/proxy_config',
     '--providers.file.watch=true',
   ],
   proxyCustom: {},

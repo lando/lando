@@ -19,9 +19,14 @@ LANDO_MODULE="proxycerts"
 : ${LANDO_PROXY_PASSTHRU:="false"}
 : ${LANDO_PROXY_CERT:="/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"}
 : ${LANDO_PROXY_KEY:="/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"}
-: ${LANDO_PROXY_CONFIG_FILE:="/lando/proxy/config/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.yaml"}
+: ${LANDO_PROXY_CONFIG_FILE:="/proxy_config/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.yaml"}
 
-# Bail immediately if proxypassthru is off
+# Move over any global config set by lando
+if [ -d "/lando/proxy/config" ]; then
+  cp -rf /lando/proxy/config/* /proxy_config/
+fi
+
+# Bail if proxypassthru is off
 if [ "$LANDO_PROXY_PASSTHRU" != "true" ]; then
   lando_info "Proxy passthru is off so exiting..."
   exit 0
