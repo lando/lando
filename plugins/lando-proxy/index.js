@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const path = require('path');
 const utils = require('./lib/utils');
 
 // Default config values
@@ -35,15 +36,20 @@ module.exports = lando => {
   // Add in some computed config eg things after our config has been settled
   lando.events.on('post-bootstrap-config', ({config}) => {
     lando.log.verbose('building proxy config...');
-    config.proxyNet = `${config.proxyName}_edge`;
+    // Set some non dependent things
+    config.proxyContainer = `${lando.config.proxyName}_proxy_1`;
+    config.proxyCurrentPorts = {http: config.proxyHttpPort, https: config.proxyHttpsPort};
+    config.proxyDir = path.join(lando.config.userConfRoot, 'proxy');
     config.proxyHttpPorts = _.flatten([config.proxyHttpPort, config.proxyHttpFallbacks]);
     config.proxyHttpsPorts = _.flatten([config.proxyHttpsPort, config.proxyHttpsFallbacks]);
+    config.proxyLastPorts = lando.cache.get(lando.config.proxyCache);
+    config.proxyNet = `${config.proxyName}_edge`;
     config.proxyScanHttp = utils.ports2Urls(config.proxyHttpPorts, false, config.proxyBindAddress);
     config.proxyScanHttps = utils.ports2Urls(config.proxyHttpsPorts, true, config.proxyBindAddress);
-    config.proxyCurrentPorts = {http: config.proxyHttpPort, https: config.proxyHttpsPort};
-    config.proxyLastPorts = lando.cache.get(lando.config.proxyCache);
-    config.proxyContainer = `${lando.config.proxyName}_proxy_1`;
+    // And dependent things
+    config.proxyConfigDir = path.join(config.proxyDir, 'config');
   });
+
   // Return config defaults to rebase
   return {
     config: _.merge({}, defaultConfig, {

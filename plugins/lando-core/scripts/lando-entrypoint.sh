@@ -39,9 +39,13 @@ fi;
 
 # Run any scripts that we've loaded into the mix for autorun
 if [ -d "/scripts" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
-  lando_debug "Running $(ls /scripts)"
   chmod +x /scripts/* || true
-  find /scripts/ -type f -exec {} \;
+  # Use run-parts if we can
+  if [ -x "$(command -v run-parts)" ]; then
+    run-parts /scripts
+  fi
+  # Keep this for backwards compat and fallback opts
+  find /scripts/ -type f -name "*.sh" -exec {} \;
 fi;
 
 # Run the COMMAND

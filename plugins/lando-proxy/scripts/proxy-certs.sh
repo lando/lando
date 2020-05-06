@@ -1,0 +1,54 @@
+#!/bin/sh
+set -e
+
+# Set defaults
+: ${SILENT:=$1}
+
+# Echo helper to recognize silence
+if [ "$SILENT" = "--silent" ]; then
+  LANDO_QUIET="yes"
+fi
+
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="proxycerts"
+
+# Vars and defaults
+: ${LANDO_PROXY_PASSTHRU:="false"}
+: ${LANDO_PROXY_CERT:="/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"}
+: ${LANDO_PROXY_KEY:="/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"}
+: ${LANDO_PROXY_CONFIG_FILE:="/lando/proxy/config/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.yaml"}
+
+# Bail immediately if proxypassthru is off
+if [ "$LANDO_PROXY_PASSTHRU" != "true" ]; then
+  lando_info "Proxy passthru is off so exiting..."
+  exit 0
+fi
+
+# If we have certs then lets add the proxy config
+# We do this here instead of in the plugin code because it avoids a race condition
+# where the proxy config file exists before the certs
+if [ -f "$LANDO_PROXY_CERT" ] && [ -f "$LANDO_PROXY_KEY" ]; then
+  lando_info "We have proxy certs!"
+
+  # Remove older config if its there
+  # We need to do this so traefik recognizes new certs and loads them
+  if [ -f "$LANDO_PROXY_CONFIG_FILE" ]; then
+    lando_debug "Removing older config"
+    rm -f "$LANDO_PROXY_CONFIG_FILE"
+  fi
+
+  # Dump the yaml
+  cat > "$LANDO_PROXY_CONFIG_FILE" <<EOF
+tls:
+  certificates:
+    - certFile: "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"
+      keyFile: "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"
+EOF
+
+  # Log
+  lando_info "Dumped config to ${LANDO_PROXY_CONFIG_FILE}"
+  lando_debug $(cat $LANDO_PROXY_CONFIG_FILE)
+fi

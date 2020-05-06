@@ -1,6 +1,7 @@
 name: lando-apache
 proxy:
-  override:
+  custom:
+    - sub4.landoapache.lndo.site
     - landoapache.lndo.site
 services:
   defaults:
