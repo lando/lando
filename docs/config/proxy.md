@@ -94,6 +94,8 @@ To match `site1.myapp.lndo.site` and `site2.myapp.lndo.site` you can for example
 If you are using a wildcard domain you will need to write it as `"*.myapp.lndo.site"` and not `*.myapp.lndo.site` due to the way `yaml` parses files. If you do not do this you should expect a `yaml` parse error.
 :::
 
+Note that only single left-most wildcards eg `*.my.other.domain` will benefit from our automatic SSL cert generation. This is a restriction imposed on us directly by the [SAN rules](https://security.stackexchange.com/questions/158332/what-are-wildcard-certificate-limitations-in-san-extension).
+
 ```yaml
 proxy:
   web2:
@@ -128,6 +130,8 @@ proxy:
     - mailhog.mysite.lndo.site
     - omg.how.log.can.you.go.pma.mysite.lndo.site
 ```
+
+However, if your service does not boot up as `root` then Lando will not be able to generate a certificate for the service. In this situation the service will fall back to the global wildcard certificate for the `proxyDomain` which is `*.lndo.site` by default.
 
 ### Combos
 
