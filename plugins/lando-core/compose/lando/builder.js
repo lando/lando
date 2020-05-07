@@ -76,7 +76,6 @@ module.exports = {
       const entrypoint = path.join(scriptsDir, 'lando-entrypoint.sh');
       const addCertsScript = path.join(scriptsDir, 'add-cert.sh');
       const refreshCertsScript = path.join(scriptsDir, 'refresh-certs.sh');
-      const loadKeysScript = path.join(scriptsDir, 'load-keys.sh');
 
       // Handle volumes
       const volumes = [

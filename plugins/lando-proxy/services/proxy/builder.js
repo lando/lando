@@ -15,7 +15,7 @@ const getProxy = ({proxyCommand, proxyPassThru, proxyDomain, userConfRoot, versi
         environment: {
           LANDO_APP_PROJECT: '_lando_',
           LANDO_EXTRA_NAMES: `DNS.100 = *.${proxyDomain}`,
-          LANDO_PROXY_CONFIG_FILE: '/lando/proxy/config/proxy.yaml',
+          LANDO_PROXY_CONFIG_FILE: '/proxy_config/proxy.yaml',
           LANDO_PROXY_PASSTHRU: _.toString(proxyPassThru),
           LANDO_VERSION: version,
         },

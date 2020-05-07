@@ -15,6 +15,13 @@ fi
 # Set the module
 LANDO_MODULE="proxycerts"
 
+# Bail if we are not root
+if [ $(id -u) != 0 ]; then
+  lando_warn "Only the root user can set up proxy certs!"
+  lando_warn "This may prevent some SSL proxy routes from working correctly"
+  exit 0
+fi
+
 # Vars and defaults
 : ${LANDO_PROXY_PASSTHRU:="false"}
 : ${LANDO_PROXY_CERT:="/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"}
