@@ -109,7 +109,7 @@ exports.getPantheonBuildSteps = (framework, drush = 8) => {
   else {
     const build = [];
     // Figure out drush
-    if (drush > 8) build.push(`composer global require drush/drush:^${drush}`);
+    if (drush > 8) build.push(['composer', 'global', 'require', `drush/drush:^${drush}`]);
     else build.push(getDrush(DRUSH_VERSION));
     build.push('drush --version');
     // And then hit up other framework specific stuff
