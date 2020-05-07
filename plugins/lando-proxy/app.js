@@ -62,55 +62,38 @@ module.exports = (app, lando) => {
   const LandoProxy = lando.factory.get('_proxy');
   // Determine what ports we need to discover
   const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
-  // Path to some things
-  const proxyDir = path.join(lando.config.userConfRoot, 'proxy');
-  const proxyConfigDir = path.join(proxyDir, 'config');
 
   // Only do things if the proxy is enabled
-  // @TODO: below is nasty and probably isn't precise enough
   if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
     app.log.verbose('proxy settings detected.');
-    // Dump cert files as needed, this has to happen AFTER the proxy and the certs have been created
-    app.events.on('post-start', 999, () => {
-      // Start with the default cert
+    // If the proxy is on lets immediately dump the default certs and all of that
+    app.events.on('pre-init', () => {
+      lando.log.verbose('proxy is ON.');
+      lando.log.verbose('Setting the default proxy certificate %s', lando.config.proxyDefaultCert);
+      // Create needed directories
+      mkdirp.sync(lando.config.proxyConfigDir);
       const files = [{
-        path: path.join(proxyConfigDir, 'default-certs.yaml'),
+        path: path.join(lando.config.proxyConfigDir, 'default-certs.yaml'),
         data: {tls: {stores: {default: {defaultCertificate: {
           certFile: lando.config.proxyDefaultCert,
           keyFile: lando.config.proxyDefaultKey,
         }}}}},
       }];
 
-      // Add the certs for the service
-      if (lando.config.proxyPassThru) {
-        files.push({
-          path: path.join(proxyConfigDir, `${app.project}.yaml`),
-          data: {
-            tls: {
-              certificates: _(_.get(app, 'config.services', {}))
-                .map((data, name) => _.merge({}, data, {name}))
-                .filter(data => data.ssl)
-                .map(data => ({
-                  certFile: `/lando/certs/${data.name}.${app.project}.crt`,
-                  keyFile: `/lando/certs/${data.name}.${app.project}.key`,
-                }))
-                .value(),
-            },
-          },
-        });
-      }
-
       // Finally add in custom config if we have it
       if (!_.isEmpty(lando.config.proxyCustom)) {
+        lando.log.verbose('adding custom proxy config');
+        lando.log.debug('custom proxy config', lando.config.proxyCustom);
         files.push({
-          path: path.join(proxyConfigDir, 'user-custom.yaml'),
+          path: path.join(lando.config.proxyConfigDir, 'user-custom.yaml'),
           data: lando.config.proxyCustom,
         });
       }
 
-      // Dump all the files
+      // Remove and redump all the files
       _.forEach(files, file => lando.yaml.dump(file.path, file.data));
     });
+
 
     // Start and setup the proxy and services
     app.events.on('pre-start', 1, () => findProxyPorts(lando, protocolStatus)
@@ -121,8 +104,6 @@ module.exports = (app, lando) => {
           return Promise.reject(`Lando could not detect an open port amongst: ${allPorts}`);
         }
 
-        // Do some setup
-        mkdirp.sync(proxyConfigDir);
         // Build the proxy
         const proxyData = new LandoProxy(ports.http, ports.https, lando.config);
         const proxyFiles = lando.utils.dumpComposeData(proxyData, path.join(lando.config.userConfRoot, 'proxy'));
@@ -177,13 +158,20 @@ module.exports = (app, lando) => {
         // Build out the docker compose augment and return
         service.labels['traefik.enable'] = true;
         service.labels['traefik.docker.network'] = lando.config.proxyNet;
+        service.environment.LANDO_PROXY_PASSTHRU = _.toString(lando.config.proxyPassThru);
+        const proxyVolume = `${lando.config.proxyName}_proxy_config`;
         return {
           services: _.set({}, service.name, {
             networks: {'lando_proxyedge': {}},
             labels: service.labels,
             environment: service.environment,
+            volumes: [
+              `${proxyVolume}:/proxy_config`,
+              `${lando.config.userConfRoot}/scripts/proxy-certs.sh:/scripts/100-proxy-certs`,
+            ],
           }),
           networks: {'lando_proxyedge': {external: {name: lando.config.proxyNet}}},
+          volumes: _.set({}, proxyVolume, {external: true}),
         };
       })
 

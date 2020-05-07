@@ -19,7 +19,9 @@ proxy:
     - "wild.*.lando-proxy.lndo.site"
   web3:
     - "lets.combine.*.lndo.site:8080/everything/for-real"
+    - "*.more.web3.lndo.site:8080"
     - web3.lndo.site:8080
+    - web4.lndo.site:8080
 services:
   web3:
     type: compose
@@ -32,3 +34,4 @@ services:
         - "./:/app"
       ports:
         - "8080"
+      user: root

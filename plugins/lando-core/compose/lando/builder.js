@@ -76,7 +76,6 @@ module.exports = {
       const entrypoint = path.join(scriptsDir, 'lando-entrypoint.sh');
       const addCertsScript = path.join(scriptsDir, 'add-cert.sh');
       const refreshCertsScript = path.join(scriptsDir, 'refresh-certs.sh');
-      const loadKeysScript = path.join(scriptsDir, 'load-keys.sh');
 
       // Handle volumes
       const volumes = [
@@ -86,11 +85,18 @@ module.exports = {
         `${dataHome}:/var/www`,
       ];
 
-      // Add in some more dirz if it makes sense
-      if (home) {
-        volumes.push(`${home}:/user:delegated`);
-        volumes.push(`${loadKeysScript}:/scripts/load-keys.sh`);
+      // Handle ssl
+      if (ssl) {
+        volumes.push(`${addCertsScript}:/scripts/000-add-cert`);
+        if (sslExpose) ports.push(sport);
       }
+
+      // Add in some more dirz if it makes sense
+      if (home) volumes.push(`${home}:/user:delegated`);
+
+      // Handle cert refresh
+      // @TODO: this might only be relevant to the proxy, if so let's move it there
+      if (refreshCerts) volumes.push(`${refreshCertsScript}:/scripts/999-refresh-certs`);
 
       // Add in any custom pre-runscripts
       _.forEach(scripts, script => {
@@ -108,15 +114,6 @@ module.exports = {
         }
       });
 
-      // Handle ssl
-      if (ssl) {
-        volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
-        if (sslExpose) ports.push(sport);
-      }
-
-      // Handle cert refresh
-      // @TODO: this might only be relevant to the proxy, if so let's move it there
-      if (refreshCerts) volumes.push(`${refreshCertsScript}:/scripts/refresh-certs.sh`);
       // Handle Environment
       const environment = {LANDO_SERVICE_NAME: name, LANDO_SERVICE_TYPE: type};
       // Handle http/https ports

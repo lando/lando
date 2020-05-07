@@ -16,6 +16,13 @@ fi
 # Set the module
 LANDO_MODULE="addcert"
 
+# Bail if we are not root
+if [ $(id -u) != 0 ]; then
+  lando_warn "Only the root user can add certs!"
+  lando_warn "This may prevent some hostnames from working correctly when served over https"
+  exit 0
+fi
+
 # Vars and defaults
 : ${LANDO_DOMAIN:="lndo.site"}
 : ${LANDO_CA_CERT:="/lando/certs/lndo.site.pem"}
