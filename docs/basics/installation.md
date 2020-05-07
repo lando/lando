@@ -86,7 +86,7 @@ See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
 
 ## Linux
 
-### Install DMG via direct download (recommended)
+### Install package via direct download (recommended)
 
 1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 19.03.1-ce)**
 2. Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
