@@ -93,7 +93,9 @@ Many non-Lando containers do not run as the `root` user by default. This is OK b
 
 Also note that containers that do not have `bash` installed, like some `alpine` ones, will similarly not be able to load up SSH keys.
 
-These factors _may_ or _may not_ be relevant depending on what you are doing so they are here just as a warning. If you are using a container that **cannot** run as `root` you can doing something like below.
+These factors _may_ or _may not_ be relevant depending on what you are doing so they are here just as a FYI.
+
+If you are using a container that **cannot** run as `root` but still want that Lando magic you can try something like below.
 
 ```yaml
 services:
@@ -114,6 +116,8 @@ services:
       my-network:
 ```
 
-The relevant pieces here are setting `user: root` and then the environment variable `LANDO_DROP_USER` to whatever user the container is suppose to run as. In this example the container will boot as `root` do the Lando things it needs to do and then run the `command`, `docker-php-entrypoint apache2-foreground` in this case as `LANDO_DROP_USER`.
+The relevant pieces here are setting `user: root` and then the environment variable `LANDO_DROP_USER` to whatever user the container is suppose to run as.
+
+In this example the container will boot as `root` do the Lando things it needs to do and then run `docker-php-entrypoint apache2-foreground` as `otheruser`.
 
 <RelatedGuides tag="Compose"/>
