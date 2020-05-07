@@ -52,7 +52,7 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= [], prest
           const container = `${app.project}_${service}_1`;
           build.push({
             id: container,
-            cmd: cmd,
+            cmd: ['/bin/sh', '-c', cmd],
             compose: app.compose,
             project: app.project,
             opts: {
