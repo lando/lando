@@ -111,7 +111,7 @@ exports.getPantheonBuildSteps = (framework, drush = 8) => {
     // Figure out drush
     if (drush > 8) build.push(['composer', 'global', 'require', `drush/drush:^${drush}`]);
     else build.push(getDrush(DRUSH_VERSION));
-    build.push('drush --version');
+    build.push(['drush', '--version']);
     // And then hit up other framework specific stuff
     if (framework === 'drupal8') {
       build.push(getPhar(
