@@ -93,10 +93,7 @@ module.exports = {
       }
 
       // Add in some more dirz if it makes sense
-      if (home) {
-        volumes.push(`${home}:/user:delegated`);
-        volumes.push(`${loadKeysScript}:/scripts/001-load-keys`);
-      }
+      if (home) volumes.push(`${home}:/user:delegated`);
 
       // Handle cert refresh
       // @TODO: this might only be relevant to the proxy, if so let's move it there

@@ -32,21 +32,42 @@ if [ -d "/helpers" ]; then
   chmod +x /helpers/* || true
 fi;
 
+# Run user perm setup unless explicitly disabled
 if [ -f "/helpers/user-perms.sh" ] && [ -z ${LANDO_NO_USER_PERMS+x} ]; then
-  chmod +x /helpers/user-perms.sh || true
   /helpers/user-perms.sh
 fi;
 
-# Run any scripts that we've loaded into the mix for autorun
+# Run user load keys if we can, this requires bash right now so not
+# all services will get keys, however generally if the service needs the keys
+# its going to have bash
+#
+# TODO: would be awesome to make this POSIX compliant at some point
+if [ -f "/helpers/load-keys.sh" ] && [ -x "$(command -v bash)" ]; then
+  /helpers/load-keys.sh
+fi;
+
+# Run any sh scripts that we've loaded into the mix for autorun unless we've
+# explictly disabled
+#
+# NOTE: these all need to be /bin/sh COMPLIANT, if they arent see the /bash-scripts
+#
 if [ -d "/scripts" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
-  chmod +x /scripts/* || true
-  # Use run-parts if we can
   if [ -x "$(command -v run-parts)" ]; then
     run-parts /scripts
   fi
+
   # Keep this for backwards compat and fallback opts
+  chmod +x /scripts/* || true
   find /scripts/ -type f -name "*.sh" -exec {} \;
 fi;
+
+# Run any bash scripts that we've loaded into the mix for autorun unless we've
+# explictly disabled
+if [ -d "/bash-scripts" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
+  if [ -x "$(command -v run-parts)" ] && [ -x "$(command -v bash)" ]; then
+    run-parts /bash-scripts
+  fi
+fi
 
 # Run the COMMAND
 # @TODO: We should def figure out whether we can get away with running everything through exec at some point
