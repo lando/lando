@@ -14,7 +14,7 @@ events:
     - cat /var/www/run_internal.txt | grep www-data
     - cat /run_as_root.txt | grep root
     - cat /var/www/run.txt | grep www-data
-    - /bin/bash -c 'echo "$LANDO_APP_PROJECT" | grep landoservices'
+    - /bin/sh -c 'echo "$LANDO_APP_PROJECT" | grep landoservices'
 services:
   appserver:
     type: php:custom
