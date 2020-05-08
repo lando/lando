@@ -120,6 +120,7 @@
     "shelljs": "0.7.8",
     "string-argv": "0.1.1",
     "sudo-block": "^2.0.0",
+    "through": "^2.3.8",
     "uuid": "^3.2.1",
     "valid-url": "^1.0.9",
     "winston": "^2.2.0",

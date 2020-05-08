@@ -60,8 +60,6 @@ const scanPorts = (lando, status = {http: true, https: true}) => {
 module.exports = (app, lando) => {
   // Get proxy builder
   const LandoProxy = lando.factory.get('_proxy');
-  // Determine what ports we need to discover
-  const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
 
   // Only do things if the proxy is enabled
   if (lando.config.proxy === 'ON' && (!_.isEmpty(app.config.proxy) || !_.isEmpty(app.config.recipe))) {
@@ -96,8 +94,11 @@ module.exports = (app, lando) => {
 
 
     // Start and setup the proxy and services
-    app.events.on('pre-start', 1, () => findProxyPorts(lando, protocolStatus)
-      .then(ports => {
+    app.events.on('pre-start', 1, () => {
+      // Determine what ports we need to discover
+      const protocolStatus = utils.needsProtocolScan(lando.config.proxyCurrentPorts, lando.config.proxyLastPorts);
+      // And then discover!
+      return findProxyPorts(lando, protocolStatus).then(ports => {
         // Fail immediately with a warning if we dont have the ports we need
         if (_.isEmpty(ports.http) || _.isEmpty(ports.https)) {
           const allPorts = getAllPorts(_.isEmpty(ports.http), _.isEmpty(ports.https), lando.config);
@@ -186,7 +187,8 @@ module.exports = (app, lando) => {
       })
 
       // Warn the user if this fails
-      .catch(error => app.addWarning(warnings.cannotStartProxyWarning(error), error)));
+      .catch(error => app.addWarning(warnings.cannotStartProxyWarning(error), error));
+    });
 
     // Add proxy URLS to our app info
     _.forEach(['post-start', 'post-init'], event => {
