@@ -51,7 +51,6 @@ config:
   via: apache:2.4
   webroot: .
   database: mysql:5.7
-  cache: none
   xdebug: false
   config:
     database: SEE BELOW
