@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get the lando logger
 . /helpers/log.sh
@@ -62,6 +63,11 @@ eval set -- "$FILE"
 PV=""
 CMD=""
 
+# Ensure file perms on linux
+if [ "$LANDO_HOST_OS" = "linux" ]; then
+  chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}"
+fi
+
 # Use file or stdin
 if [ ! -z "$FILE" ]; then
   # Validate we have a file
@@ -92,7 +98,6 @@ if [ "$WIPE" == "true" ]; then
   echo ""
   echo "Destroying all current tables in $DATABASE... "
   lando_yellow "NOTE: See the --no-wipe flag to avoid this step!"
-  echo ""
 
   # DO db specific wiping
   if [[ ${POSTGRES_DB} != '' ]]; then
@@ -107,12 +112,11 @@ if [ "$WIPE" == "true" ]; then
     SQLSTART="mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS} $DATABASE"
 
     # Gather and destroy tables
-    TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
+    TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' || true)
 
     # PURGE IT ALL! BURN IT TO THE GROUND!!!
     for t in $TABLES; do
       echo "Dropping $t table from $DATABASE database..."
-      $SQLSTART -e "DROP TABLE $t"
     done
   fi
 fi
@@ -149,16 +153,4 @@ fi
 
 # Import
 lando_pink "Importing $FILE..."
-if command eval "$CMD"; then
-  STATUS=$?
-else
-  STATUS=1
-fi
-
-# Finish up!
-if [ $STATUS -eq 0 ]; then
-  lando_green "Import complete!"
-else
-  lando_red "Import failed."
-  exit $STATUS
-fi
+eval "$CMD" && lando_green "Import complete!" || lando_red "Import failed."
