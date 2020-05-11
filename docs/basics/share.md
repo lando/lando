@@ -1,4 +1,4 @@
---
+---
 metaTitle: lando share | Lando
 description: lando share exposes your local site to the world with a publicly accessible URL.
 ---
@@ -8,7 +8,7 @@ description: lando share exposes your local site to the world with a publicly ac
 ::: danger OFFLINE!
 This command is no longer functional as of version 3.0.0-rrc.3
 
-See the [blog post](https://blog.lando.dev/2020/04/03/whats-new-in-lando-3-0-0-rrc-3/#_3-the-sun-sets-on-lando-share-for-now) about the 3.0.0-rrc.3 release for more information.
+See the [blog post](https://blog.lando.dev/2020/04/03/whats-new-in-lando-3-0-0-rrc-3/#_3-the-sun-sets-on-lando-share-for-now) about the 3.0.0-rrc.3 release for more information about the future of this command.
 :::
 
 Shares your local site publicly.
