@@ -8,7 +8,7 @@ Edge releases contain the newest bug fixes and features and *may* be less stable
 
 Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
-* Fixed regression in `build` and `event` quote passthrough logic causing other commands to not parse correctly [#1926](https://github.com/lando/lando/pull/1926)
+* Fixed bug causing some Docker Engine versions on Linux to incorrectly throw an incompatibility warning [#2239](https://github.com/lando/lando/pull/2239)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
