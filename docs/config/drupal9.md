@@ -8,7 +8,7 @@ Drupal is a free and open source content-management framework written in PHP and
 
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [Drupal 9](https://drupal.org/) apps.
 
-:::warn This is a new recipe!
+::: warning This is a new recipe!
 This is a relatively new recipe and Drupal 9 is still in development. As such this recipe should be consider **beta** quality.
 :::
 
@@ -134,7 +134,7 @@ config:
 ```yaml
 recipe: drupal9
 config:
-  database: postgres:9.6
+  database: mariadb:10.4
 ```
 
 ### Using Drush
@@ -168,6 +168,8 @@ config:
 ```
 
 #### Using a site-local Drush
+
+must have !!
 
 While Lando will globally install Drush for you it is increasingly common and in some cases a straight-up best practice to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
 
