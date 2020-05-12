@@ -27,6 +27,8 @@ $settings = Get-Content "$docker_settings" -raw | ConvertFrom-Json
 # Disabling automatic update checking
 Write-Output "Disabling automatic update checking..."
 $settings.checkForUpdates = $false
+Write-Output "Disabling first run tutorial..."
+$settings.displayedTutorial = $true
 
 # Dumping new settings
 Write-Output $settings
