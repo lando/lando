@@ -43,7 +43,7 @@ sudo kill -9 $PID
 
 You can add routing to various services and their ports using the top-level `proxy` config in your [Landofile](./lando.md).
 
-Because our proxy also benefits from our [automatic certificate and CA setup](./security.md), if you have a service with `ssl: true` then it will also be available over `https`. Note that many of our recipes will configure this for you automatically.
+Because our proxy also benefits from our [automatic certificate and CA setup](./security.md), if you have a service with `ssl: true` then it will also be available over `https`. Note that many of our recipes will configure this for you automatically. There are also some caveats to this that you can read more about [below](#using-https).
 
 ### Routing to port 80
 
@@ -69,7 +69,7 @@ proxy:
 
 ### Using a non `lndo.site` domain
 
-You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution and any relevant cert handling. See the configuration section below for more details.
+You can actually use *any* domain in your proxy settings but you will be responsible for their DNS resolution. See the configuration section below for more details.
 
 ::: tip
 If your custom domain does not end in `lndo.site` and you are unsure about how to handle DNS resolution, use something like DNSMasq. Then you need to add the domain to your `hosts` file so that it points to `127.0.0.1`.
@@ -102,6 +102,8 @@ proxy:
     - "orthis.*.lndo.site"
 ```
 
+Note that only single left-most wildcards eg `*.my.other.domain` will benefit from our automatic SSL cert generation. This is a restriction imposed on us directly by the [SAN rules](https://security.stackexchange.com/questions/158332/what-are-wildcard-certificate-limitations-in-san-extension).
+
 ### Subdirectories
 
 You can also have a specific path on a domain route to a service.
@@ -118,7 +120,7 @@ proxy:
 
 ### Sub subdomains
 
-You can also `sub-sub-...-sub-subdomain` to your heart's content.
+You can also `sub.sub...sub.sub.domain.tld` to your heart's content.
 
 ```yaml
 proxy:
@@ -140,6 +142,38 @@ proxy:
 ```
 
 This is still a valid proxy config!
+
+### Using https
+
+The below assumes that you've read the [Security Documentation](./security.md) and whitelisted our CA. **If you have not done this then you will need to manually handle any browser warnings you get.**
+
+If Lando detects that a service has a cert available it will automatically configure an additional `https` proxy route for each. You can, however, manually trigger this by configuring the `ssl` and `sslExpose` options on each service.
+
+```yaml
+services:
+  web:
+    ssl: true
+    sslExpose: true
+```
+
+The `ssl: true` choice implies `sslExpose: true` unless you explicitly set `sslExpose: false`.
+
+The former will tell the service to attempt to generate a certificate.
+
+The latter will expose the secure port (usually 443) for the service and assign a `localhost:someport` address to the service. This means that if your service does not actually plan to serve https by itself you may experience a hang as Lando tries to health scan a `localhost` https address that doesn't actually serve https. In these scenarios its best to tell Lando you just want a cert.
+
+**just generate a cert**
+
+```yaml
+services:
+  web:
+    ssl: true
+    sslExpose: false
+```
+
+In some rare scenarios a service does not boot up as `root`. This is especially true for the `compose` service. In these situations Lando will be unable to generate a cert and will fall back to the global wildcard certificate for the `proxyDomain` which is `*.lndo.site` by default.
+
+This means that subdomains like `sub.mysite.lndo.site` will likely produce a browser warning. However, domains like `sub-mysite.lndo.site` will continue to work since they are covered by the global wildcard cert.
 
 ## Configuration
 
