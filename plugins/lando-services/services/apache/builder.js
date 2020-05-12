@@ -47,7 +47,7 @@ module.exports = {
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
+          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}:ro`,
         ],
       };
       // Send it downstream
