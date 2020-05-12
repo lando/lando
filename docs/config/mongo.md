@@ -10,6 +10,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [4.2](https://hub.docker.com/r/bitnami/mongodb)
 *   [4.1](https://hub.docker.com/r/bitnami/mongodb)
 *   **[4.0](https://hub.docker.com/r/bitnami/mongodb)** **(default)**
 *   [3.6](https://hub.docker.com/r/bitnami/mongodb)

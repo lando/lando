@@ -11,6 +11,7 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added `none` as a Release Channel option [#1894](https://github.com/lando/lando/pull/1894) [#1906](https://github.com/lando/lando/pull/1906) [#2201](https://github.com/lando/lando/pull/2201) [#2240](https://github.com/lando/lando/pull/2240)
 * Added a [guide](https://docs.lando.dev/guides/installing-php-extensions-on-lando.html) on how to install `php` extensions [#2218](https://github.com/lando/lando/pull/2218)
 * Added a [guide](https://docs.lando.dev/guides/guides/installing-node-in-your-lando-php-service.html) on how to install `node` directly in a PHP service for things like PatternLab or Emulsify [#2196](https://github.com/lando/lando/pull/2196)
+* Added support for `mongodb` `4.2` [#2246](https://github.com/lando/lando/pull/2247)
 * Fixed bug where `cache: none` in the Laravel recipe config caused a start error [#2236](https://github.com/lando/lando/pull/2236)
 * Fixed bug causing `nginx` and `apache` to sometimes fail on a rebuild [#1986](https://github.com/lando/lando/pull/1986)
 * Fixed bug causing `db-import` to not recognize some dumps from `db-export` [#2170](https://github.com/lando/lando/pull/2170)
