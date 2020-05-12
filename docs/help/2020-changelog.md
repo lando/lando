@@ -14,6 +14,8 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Fixed bug causing `db-import` to not recognize some dumps from `db-export` [#2170](https://github.com/lando/lando/pull/2170)
 * Fixed bug causing `db-export` to report success even when it had been cancelled on `gzip` overwrite [#2231](https://github.com/lando/lando/pull/2231)
 * Fixed bug causing some Docker Engine versions on Linux to incorrectly throw an incompatibility warning [#2239](https://github.com/lando/lando/pull/2239)
+* Updated to and added support to Docker Desktop `2.3.0.2`
+* Updated to and added support for `docker-compose` `1.25.5` on Linux
 * Many more spelling and grammar fixes in docs, code and comments, thanks [@uberhacker](https://github.com/uberhacker)!
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
