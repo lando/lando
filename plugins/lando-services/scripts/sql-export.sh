@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get the lando logger
 . /helpers/log.sh
@@ -75,23 +76,16 @@ else
   echo "Preparing to export $FILE from database '$DATABASE' on service '$SERVICE' as user $USER..."
 
   # Clean up last dump before we dump again
-  unalias rm 2> /dev/null
-  rm ${FILE} 2> /dev/null
-  $DUMPER > ${FILE}
+  unalias rm 2> /dev/null || true
+  rm -f ${FILE} 2> /dev/null
+  $DUMPER > ${FILE} || { rm -f ${FILE}; lando_red "Failed to create file: ${FILE}"; exit 1; }
 
-  # Show the user the result
-  if [ $? -ne 0 ]; then
-    rm ${FILE}
-    lando_red "Failed to create file: ${FILE}"
-    exit 1
-  else
-    # Gzip the mysql database dump file
-    gzip $FILE
-    # Reset perms on linux
-    if [ "$LANDO_HOST_OS" = "linux" ]; then
-      chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
-    fi
-    # Report
-    lando_green "Success ${FILE}.gz was created!"
+  # Gzip the mysql database dump file
+  gzip $FILE
+  # Reset perms on linux
+  if [ "$LANDO_HOST_OS" = "linux" ]; then
+    chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
   fi
+  # Report
+  lando_green "Success ${FILE}.gz was created!"
 fi

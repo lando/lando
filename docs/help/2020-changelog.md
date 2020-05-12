@@ -1,5 +1,23 @@
 # 2020
 
+## v3.0.2 - In Development
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Added `none` as a Release Channel option [#2218](https://github.com/lando/lando/pull/2218)
+* Fixed bug causing `nginx` and `apache` to sometimes fail on a rebuild [#1986](https://github.com/lando/lando/pull/1986)
+* Fixed bug causing `db-import` to not recognize some dumps from `db-export` [#2170](https://github.com/lando/lando/pull/2170)
+* Fixed bug causing `db-export` to report success even when it had been cancelled on `gzip` overwrite [#2231](https://github.com/lando/lando/pull/2231)
+* Fixed bug causing some Docker Engine versions on Linux to incorrectly throw an incompatibility warning [#2239](https://github.com/lando/lando/pull/2239)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
 ## v3.0.1 - [May 7, 2020](https://github.com/lando/lando/releases/tag/v3.0.1)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

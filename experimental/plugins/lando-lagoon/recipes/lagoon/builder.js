@@ -130,6 +130,7 @@ module.exports = {
           service: ':host',
           description: 'Imports a dump file into a database service',
           cmd: '/helpers/sql-import.sh',
+          user: 'root',
           options: {
             'host': {
               description: 'The database service to use',

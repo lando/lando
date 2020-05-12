@@ -37,6 +37,9 @@ jobs:
           environment:
             TERM: xterm
           command: |
+            # Update needed keys
+            curl https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+            curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
             # Spoof the public key
             ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
             mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
