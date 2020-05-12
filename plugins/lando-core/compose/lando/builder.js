@@ -63,7 +63,7 @@ module.exports = {
         }
       }
       if (_.includes(legacy, version)) {
-        console.log(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
+        console.error(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
       }
 
       // Move our config into the userconfroot if we have some
