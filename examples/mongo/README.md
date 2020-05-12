@@ -22,14 +22,14 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 4.0.13 as the default version
-lando ssh -s defaults -c "mongo --version | grep v4.0.13"
+# Should use 4.2.6 as the default version
+lando ssh -s defaults -c "mongo --version" | grep v4.2.6
 
 # Should use the user specified version if given
-lando ssh -s custom -c "mongo --version | grep v3.6"
+lando ssh -s custom -c "mongo --version" | grep v3.6
 
 # Should use the user specified patch version if given
-lando ssh -s patch -c "mongo --version | grep v4.1.13"
+lando ssh -s patch -c "mongo --version" | grep v4.0.12
 
 # Should add a new collection
 lando mongo test --eval "printjson(db.createCollection(\'lando\'))"

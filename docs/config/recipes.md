@@ -47,6 +47,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ### [Drupal 6](./drupal6.md)
 *   ### [Drupal 7](./drupal7.md)
 *   ### [Drupal 8](./drupal8.md)
+*   ### [Drupal 9](./drupal9.md) **(BETA)**
 *   ### [Joomla](./joomla.md)
 *   ### [Lagoon](./lagoon.md) **(EXPERIMENTAL)**
 *   ### [Laravel](./laravel.md)

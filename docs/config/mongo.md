@@ -10,10 +10,16 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   [4.1](https://hub.docker.com/r/bitnami/mongodb)
-*   **[4.0](https://hub.docker.com/r/bitnami/mongodb)** **(default)**
+*   **[4.2](https://hub.docker.com/r/bitnami/mongodb)**  **(default)**
+*   [4.0](https://hub.docker.com/r/bitnami/mongodb)
 *   [3.6](https://hub.docker.com/r/bitnami/mongodb)
 *   [custom](./../config/services.md#advanced)
+
+## Legacy versions
+
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
+
+*   [4.1](https://hub.docker.com/r/bitnami/mongodb)
 
 ## Patch versions
 

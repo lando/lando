@@ -41,9 +41,9 @@ lando ssh -s appserver -c "curl -L localhost:2368" | grep "Ghost"
 cd mean
 lando node -v | grep v10.
 
-# Should be running mongo 4.0 by default
+# Should be running mongo 4.2 by default
 cd mean
-lando ssh -s database -c "mongo --version | grep v4.0"
+lando ssh -s database -c "mongo --version | grep v4.2"
 
 # Should have yarn available
 cd mean

@@ -354,8 +354,8 @@ lando php               Runs php commands
 **Usage examples**
 
 ```bash
-# Download a dependency with drush
-lando drush dl views
+# Doing a drush site install
+lando drush si --db-url=mysql://drupal8:drupal8@database/drupal8 -y
 
 # Run composer tests
 lando composer test
