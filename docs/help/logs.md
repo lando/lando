@@ -21,7 +21,7 @@ If you encounter an error during runtime, check out the runtime logs at...
 *   **macOS/LINUX** - `~/.lando/logs`
 *   **Windows** - `C:\Users\{ME}\.lando\logs`
 
-There should be an `error.log` and a more robust `lando.log`.
+There should be core lando logs called `lando-error.log` and a more robust `lando.log`. There should also be error and verbose logs associated with each of your applications eg `myapp.log` and `myapp-error.log`.
 
 ::: tip
 Run the failing command again in verbose mode. You can pass in `-v`, `-vv`, `-vvv` or `-vvvv` to toggle the level of verbosity. You can also [edit your global config](./../config/global.html) to set the default console log level.

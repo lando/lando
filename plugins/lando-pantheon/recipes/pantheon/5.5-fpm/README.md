@@ -14,7 +14,7 @@ FROM devwithlando/php:5.5-fpm-2
 ENV WKHTMLTOPDF_VERSION 0.12.2
 ENV PHANTOMJS_VERSION 2.1.1
 ENV PHANTOMJS_OLD_VERSION 1.7.0
-ENV TERMINUS_VERSION 2.0.1
+ENV LANDO_TERMINUS_VERSION 2.3.0
 ENV MAVEN_VERSION 3.5.4
 
 # Install the additional things that make the pantheon
@@ -28,8 +28,8 @@ RUN apt-get update && apt-get install -y \
   && mkdir -p /var/www/.drupal \
   && mkdir -p /srv/bin \
   && chown -R www-data:www-data /var/www /srv/bin \
-  && curl -O "https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar" \
-  && php installer.phar install --install-version=$TERMINUS_VERSION \
+  && wget "https://github.com/pantheon-systems/terminus/releases/download/${LANDO_TERMINUS_VERSION}/terminus.phar" -O /usr/local/bin/terminus \
+  && chmod +x /usr/local/bin/terminus \
   && cd /tmp && curl -OL "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb" \
   && dpkg -i /tmp/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-jessie-amd64.deb \
   && mkdir -p /srv/bin && ln -s /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \

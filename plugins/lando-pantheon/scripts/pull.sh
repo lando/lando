@@ -1,5 +1,13 @@
 #!/bin/bash
 
+set -e
+
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="pantheon"
+
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 
@@ -24,8 +32,6 @@ FILE_DUMP="/tmp/files.tar.gz"
 PV=""
 PULL_DB=""
 PULL_FILES=""
-GREEN='\033[0;32m'
-DEFAULT_COLOR='\033[0;0m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -94,6 +100,10 @@ fi
 
 # Get the codez
 if [ "$CODE" != "none" ]; then
+  # Validate before we begin
+  lando_pink "Validating you can pull code from $CODE..."
+  terminus env:info $SITE.$CODE
+  lando_green "Confirmed!"
 
   # Get the git branch
   GIT_BRANCH=master
@@ -101,26 +111,31 @@ if [ "$CODE" != "none" ]; then
   # Make sure we are in the git root
   cd $LANDO_MOUNT
 
+  # On Pantheon this matches a protected multidev env, which only uses branch `master`
+  PROTECTED_ENV=("dev" "test" "live")
   # Fetch the origin if this is a new branch and set the branch
-  if [ "$CODE" != "dev" ]; then
+  if ! [[ $(printf "_[%s]_" "${PROTECTED_ENV[@]}") =~ .*_\[$CODE\]_.* ]]; then
     git fetch --all
     GIT_BRANCH=$CODE
   fi
 
   # Checkout and pull
-  echo "Pulling code from $CODE..."
   git checkout $GIT_BRANCH
   git pull -Xtheirs --no-edit origin $GIT_BRANCH
-
 fi
+
 
 # Get the database
 if [ "$DATABASE" != "none" ]; then
+  # Validate before we begin
+  lando_pink "Validating you can pull the database from $DATABASE..."
+  terminus env:info $SITE.$DATABASE
+  lando_green "Confirmed!"
 
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
-  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
-  echo "Destroying all current tables in database... "
+  TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
+  echo "Destroying all current tables in database if needed... "
   for t in $TABLES; do
     echo "Dropping $t table from lando database..."
     mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "DROP TABLE $t"
@@ -132,14 +147,12 @@ if [ "$DATABASE" != "none" ]; then
 
   # Switch to drushy pull if we can
   if [ "$FRAMEWORK" != "wordpress" ]; then
-
     # Get drush aliases
     echo "Downloading drush aliases..."
     terminus aliases
 
     # Use drush if we can (this is always faster for some reason)
     if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
-
       # If we aint pulling the live DB then lets clear caches to minimize the DL time
       if [ "$DATABASE" != "live" ]; then
         echo "Clearing remote cache to shrink db size"
@@ -149,12 +162,9 @@ if [ "$DATABASE" != "none" ]; then
           drush @pantheon.$SITE.$DATABASE cc all --strict=0
         fi
       fi
-
       # Build the DB command
       PULL_DB="drush @pantheon.$SITE.$DATABASE sql-dump"
-
     fi
-
   fi
 
   # Wake up the database so we can actually connect
@@ -167,7 +177,7 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
   # Importing database
-  echo "Pulling database from $DATABASE..."
+  echo "Pulling your database... This miiiiight take a minute"
   eval "$PULL_DB"
 
   # Do some post DB things on WP
@@ -175,11 +185,14 @@ if [ "$DATABASE" != "none" ]; then
     echo "Doing the ole post-migration search-replace on WordPress..."
     cd /app && wp search-replace "$ENV-$SITE.pantheonsite.io" "${LANDO_APP_NAME}.${LANDO_DOMAIN}"
   fi
-
 fi
 
 # Get the files
 if [ "$FILES" != "none" ]; then
+  # Validate before we begin
+  lando_pink "Validating you can pull files from $FILES..."
+  terminus env:info $SITE.$FILES
+  lando_green "Confirmed!"
 
   # Make sure the filemount actually exists
   mkdir -p $LANDO_WEBROOT/$FILEMOUNT
@@ -223,11 +236,8 @@ if [ "$FILES" != "none" ]; then
   PULL_FILES="$PULL_FILES $RSYNC_CMD"
 
   # Importing files
-  echo "Pulling files from $FILES..."
   eval "$PULL_FILES"
 fi
 
 # Finish up!
-echo ""
-printf "${GREEN}Pull complete!${DEFAULT_COLOR}"
-echo ""
+lando_green "Pull completed successfully!"

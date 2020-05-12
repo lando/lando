@@ -37,6 +37,13 @@ lando db-import dump.zip --host db2
 # Import without destroying the target database
 lando db-import dump.zip --no-wipe
 
+# Import using an absolute path
+# NOTE: this is an absolute path in the target container, not on you host
+lando db-import /db/dump.zip
+
+# Import from a subdirectory
+lando db-import subdir/test.sql
+
 # Pipe stdout into db-import
 # NOTE: this is a bit finicky right now
 cat dump.sql | lando db-import
@@ -60,6 +67,7 @@ tooling:
     service: :host
     description: Imports a dump file into a database service
     cmd: /helpers/sql-import.sh
+    user: root
     options:
       host:
         description: The database service to use

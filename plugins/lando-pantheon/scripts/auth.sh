@@ -1,21 +1,29 @@
 #!/bin/bash
 
-# Get the auth and site
+set -e
 
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="pantheon"
+
+# Args
 AUTH=${1:-${TERMINUS_TOKEN}}
 SITE=${2:-${PANTHEON_SITE}}
 ENV=${3:-${TERMINUS_ENV}}
 
 # Attempting various logins
 if [ ! -z "$AUTH" ]; then
-  echo "Attempting to login via terminus..."
+  lando_pink "Attempting to login via terminus..."
   terminus auth:login --machine-token="$AUTH" || terminus auth:login --email="$TERMINUS_USER" || terminus auth:login || exit 1
-  echo "Logged in as `terminus auth:whoami`"
+  lando_green "Logged in as `terminus auth:whoami`"
 
   # Do some basic validation to make sure we can access the site correctly
   if [ ! -z "$SITE" ]; then
-    echo "Verifying that you have accesss to $SITE..."
+    lando_pink "Verifying that you have access to $SITE..."
     terminus site:info $SITE || exit 1
+    lando_green "Access confirmed!"
 
     # LOCKR integration
     # If we don't have our dev cert already let's get it
@@ -27,16 +35,10 @@ if [ ! -z "$AUTH" ]; then
 
     # Lets also check to see if we should refresh our cert
     if openssl x509 -checkend 86400 -noout -in /var/www/certs/binding.pem; then
-      echo "Cert is good!"
+      lando_green "Cert is good!"
     else
       rm -f /var/www/certs/binding.pem
       $(terminus connection:info $SITE.dev --field=sftp_command):certs/binding.pem /var/www/certs/binding.pem
     fi
-  fi
-
-  # Validate this environment
-  if [ ! -z "$SITE" ] && [ ! -z "$ENV" ]; then
-    echo "Validating whether $ENV is a valid environment and that you have access to it"
-    terminus env:list $SITE | grep $ENV || exit 1
   fi
 fi

@@ -1,11 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-# Kick it off
-echo "Pantheon pre-run scripting"
+# Get the lando logger
+. /helpers/log.sh
 
-/helpers/add-cert.sh
+# Set the module
+LANDO_MODULE="pantheon"
+
+# Kick it off
+lando_pink "Pantheon pre-run scripting"
+
+/helpers/add-cert.sh --silent
 
 # Set up some new dirs
 mkdir -p /var/www/certs

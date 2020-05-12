@@ -1,3 +1,29 @@
+- id: 8f1a13fa5280f4f54b1f32cf57b5d73f4aceaa3d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'SFDUG - June 25, 2020'
+  date: '2020-06-25'
+  summary: >-
+    San Francisco Drupal Users Group ~ Using Lando for Drupal core and contrib
+    contributions.
+  type: meetup
+  location: San Francisco
+  url: >-
+    https://www.meetup.com/SFDUG-San-Francisco-Drupal-Users-group/events/270298015/
+- id: 375b8dd30b5ba5a9e309e1c4e830dd8aceca23c6
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: CMS Philly 2020
+  date: '2020-05-01'
+  summary: >-
+    CMS Philly is Philly Tech Week's newest premiere digital content management
+    event brought to you from the organizers of past Drupaldelphia events, and
+    members of the Philly WordPress, BackDrop, and ApostropheCMS communities!
+  type: camp
+  location: 'Philadelphia, PA'
+  url: 'https://cmsphilly.org/talks/inroduction-lando'
 - name: MidCamp 2020
   id: wahteverf
   date: '2020-03-18'
@@ -10,6 +36,16 @@
   summary: >-
     Come hang out with Lando project lead Mike Pirog and hear what we've got in
     store for you in 2020! There isn't a session but we will buy you a beer!
+- id: e2c0016f145808994387446642aa177f14fc5f82
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Bay Area Drupal Camp 2019
+  date: '2019-10-05'
+  summary: Aaron Feledy presents "Level Up Your Development Experience with Lando"
+  type: camp
+  location: 'Berkeley, CA'
+  url: 'https://2019.badcamp.org/session/level-your-development-experience-lando'
 - id: f29513bc14a05f97b3f7910c975c24a6b8e0f324
   presenter: Dustin LeBlanc
   presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
@@ -28,7 +64,7 @@
   presenter: Dustin LeBlanc
   presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
   presenterLink: 'https://twitter.com/DustinLeblanc'
-  name: 'Cornell DrupalCamp'
+  name: Cornell DrupalCamp
   date: '2019-09-27'
   summary: >-
     While Lando is a pretty great tool to get you up and running with Drupal and
@@ -38,6 +74,28 @@
   location: 'Ithaca, NY'
   url: >-
     https://camp.drupal.cornell.edu/sessions/advanced-local-development-workflows-lando
+- id: d8c181610dfef81616ed73a3bc784075eb38189a
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Drupal Camp Chattanooga 2019
+  date: '2019-06-08'
+  summary: Aaron Feledy presents "Level Up Your Development Experience with Lando"
+  type: camp
+  location: 'Chattanooga, TN'
+  url: >-
+    https://www.drupalcampchattanooga.com/events/drupalcamp/drupal-camp-chattanooga-2019
+- id: a9d05cbc3e916ed881cbd370b765d9ab531ebeb3
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: MidCamp 2019
+  date: '2019-03-22'
+  summary: Aaron Feledy presents "Level Up Your Development Experience with Lando"
+  type: camp
+  location: 'Chicago, IL'
+  url: >-
+    https://www.midcamp.org/2019/topic-proposal/level-your-development-experience-lando
 - id: cc41ea67c39f3e3c0172c02429bf8fe37bf3bac9
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
@@ -63,11 +121,21 @@
   location: 'Bethesda, MD'
   url: >-
     https://drupal.tv/external-video/2018-08-23/horizontal-devops-scale-your-team-and-tools-across-projects
+- id: eeaf3ca0447bac3ab8a0df00a89ccff5cf012115
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Drupal Camp Asheville 2018
+  date: '2018-07-14'
+  summary: Aaron Feledy presents "Make Local Dev Great with Lando!"
+  type: camp
+  location: 'Asheville, NC'
+  url: 'https://www.drupalasheville.com/2018/session/make-local-dev-great-lando'
 - id: d249a527cd49d3441d35c55add89a43da0efde6d
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
   presenterLink: 'https://twitter.com/serundeputy'
-  name: 'DrupalCon Nashville 2018'
+  name: DrupalCon Nashville 2018
   date: '2018-04-11'
   summary: >-
     We often think of DevOps in a super siloed context (eg one project at a
@@ -105,7 +173,7 @@
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
   presenterLink: 'https://twitter.com/serundeputy'
-  name: 'NERD Summit 2017'
+  name: NERD Summit 2017
   date: '2017-03-19'
   summary: >-
     With Kalabox, GitFlow, Continuous Integration (CI), and Continuous

@@ -3,8 +3,8 @@
     "title": "Databases",
     "collapsable": false,
     "children": [
-      "db-import",
-      "db-export"
+      "db-export",
+      "db-import"
     ]
   },
   {
@@ -15,10 +15,11 @@
     ]
   },
   {
-    "title": "Frontend",
+    "title": "Node",
     "collapsable": false,
     "children": [
-      "frontend"
+      "frontend",
+      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
     ]
   },
   {
@@ -26,6 +27,7 @@
     "collapsable": false,
     "children": [
       "how-do-i-configure-a-lando-recipe",
+      "how-do-i-set-the-timezone-of-a-lando-service",
       "lando-info"
     ]
   },
@@ -47,6 +49,27 @@
     ]
   },
   {
+    "title": "PHP",
+    "collapsable": false,
+    "children": [
+      "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
+    ]
+  },
+  {
+    "title": "Pantheon",
+    "collapsable": false,
+    "children": [
+      "updating-local-pantheon-environments"
+    ]
+  },
+  {
+    "title": "PhpMyAdmin",
+    "collapsable": false,
+    "children": [
+      "phpmyadmin-themes"
+    ]
+  },
+  {
     "title": "Recreation",
     "collapsable": false,
     "children": [
@@ -54,6 +77,13 @@
         "https://www.youtube.com/watch?v=tkBVDh7my9Q",
         "Mountain climbing"
       ]
+    ]
+  },
+  {
+    "title": "Services",
+    "collapsable": false,
+    "children": [
+      "overriding-a-service-version"
     ]
   },
   {

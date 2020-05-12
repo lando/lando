@@ -9,6 +9,9 @@ module.exports = {
   config: {
     version: '2.4',
     supported: ['2.4'],
+    pinPairs: {
+      '2.4': 'bitnami/apache:2.4.41-debian-10-r52',
+    },
     patchesSupported: true,
     confSrc: __dirname,
     defaultFiles: {
@@ -31,7 +34,7 @@ module.exports = {
       // Build the default stuff here
       const apache = {
         image: `bitnami/apache:${options.version}`,
-        command: '/bin/sh -c "chmod +x /launch.sh && /launch.sh"',
+        command: '/launch.sh',
         environment: {
           APACHE_HTTP_PORT_NUMBER: '80',
           APACHE_HTTPS_PORT_NUMBER: '443',
@@ -44,7 +47,7 @@ module.exports = {
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
+          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}:ro`,
         ],
       };
       // Send it downstream

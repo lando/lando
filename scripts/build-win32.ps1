@@ -7,24 +7,36 @@
 #
 $ErrorActionPreference = "Stop"
 
+# Lando version information
+$lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
+$lando_version = $lando_pkg.version
+$docker_version = "2.2.0.5"
+$docker_build = "43884"
+
 # Get some ENV things
 $temp_dir = $env:TMP
+$cert_data = $env:WINDOZE_CERTS_DATA
+$cert_password = $env:WINDOZE_CERTS_PASSWORD
+$cert_secure_password = $null
+
+# Installer things
 $base_dir = "$pwd\build\installer"
 $bundle_dir = "$base_dir\bundle"
 $gui_dir = "$bundle_dir\gui"
 $docs_dir = "$bundle_dir\docs"
 $bin_dir = "$bundle_dir\bin"
 $plugins_dir = "$bundle_dir\plugins"
+$installer_args = "/DMyAppVersion=$lando_version /DDockerVersion=$docker_version"
 
 # Build dependencies
 $inno_url = "http://www.jrsoftware.org/download.php/is.exe"
 $inno_dest = "$temp_dir\inno-installer.exe"
-$inno_bin = "C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
+$inno_bin = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
 
-# Lando version information
-$lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
-$lando_version = $lando_pkg.version
-$docker_version = "40693"
+# Cert factors
+$can_sign = $false
+$cert_path = "$temp_dir\lando.windoze.p12"
+$signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\bin\x64\signtool.exe"
 
 # Unzip helper
 function Unzip($file, $destination)
@@ -60,11 +72,29 @@ function Download($url, $destination)
   Write-Output "Downloaded."
 }
 
-# Make sure our dependencies are metadatas
+# Make sure our dependencies are installed
 If (!(Test-Path $inno_bin)) {
   Write-Output "Grabbing and installing some needed dependencies..."
   Download -Url $inno_url -Destination $inno_dest
   InstallExe -File $inno_dest
+}
+
+# If cert data and pw exist then dump to temp file
+if (!([string]::IsNullOrEmpty($cert_data)) -and !([string]::IsNullOrEmpty($cert_password))) {
+  Write-Output "Certs detected!"
+  # Decode and dump to temp file
+  If (!(Test-Path $cert_path)) {
+    Write-Output "Dumping certs to $cert_path..."
+    $bytes = [Convert]::FromBase64String($cert_data)
+    [IO.File]::WriteAllBytes($cert_path, $bytes)
+  }
+  # Verify the cert and password are good
+  Write-Output "Verifying certs are good to go..."
+  $cert_secure_password = ConvertTo-SecureString $cert_password -AsPlainText -Force
+  Import-PfxCertificate -FilePath "$cert_path" -Password $cert_secure_password -CertStoreLocation "Cert:\LocalMachine\My"
+  # If we get this far we should be good!
+  Write-Output "We can sign!"
+  $can_sign = $true
 }
 
 # Get the things we need
@@ -73,9 +103,15 @@ Write-Output "Grabbing the files we need..."
 
 # Lando things
 Copy-Item "build\cli\lando-win32-x64-v$lando_version.exe" "$bin_dir\lando.exe" -force
+if ($can_sign) {
+  Write-Output "Trying to sign the Lando binary with $signtool..."
+  & $signtool sign -f "$cert_path" -p "$cert_password" -fd sha256 -tr "http://timestamp.comodoca.com/?td=sha256" -td sha256 -as -v "$bin_dir\lando.exe"
+  Write-Output "Verifying Lando binary has been signed with the signtool..."
+  & $signtool verify -pa -v "$bin_dir\lando.exe"
+}
 
 # Docker Desktop
-Download -Url "https://download.docker.com/win/stable/$docker_version/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
+Download -Url "https://download.docker.com/win/stable/$docker_build/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
 
 # Copy over some other assets
 Write-Output "Copying over static assets..."
@@ -87,4 +123,9 @@ Copy-Item "$pwd\LICENSE.md" "$docs_dir\LICENSE.md" -force
 
 # Create our inno-installer
 Write-Output "Creating our package..."
-Start-Process -Wait "$inno_bin" -ArgumentList "$base_dir\Lando.iss /DMyAppVersion=$lando_version"
+if ($can_sign) {
+  $signer = "$signtool sign /f $cert_path /p $cert_password /fd sha256 /tr http://timestamp.comodoca.com/?td=sha256 /td sha256 `$f"
+  & iscc /DMyAppVersion=$lando_version /DDockerVersion=$docker_version /Ssigntool=$signer "$base_dir\Lando.iss"
+} else {
+  & iscc /DMyAppVersion=$lando_version /DDockerVersion=$docker_version "$base_dir\UnsecuredLando.iss"
+}

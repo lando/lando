@@ -9,9 +9,7 @@
 const chai = require('chai');
 chai.use(require('chai-events'));
 chai.should();
-const expect = chai.expect;
 // const sinon = require('sinon');
-const filesystem = require('mock-fs');
 
 const Daemon = require('./../lib/daemon');
 const env = require('./../lib/env');
@@ -107,14 +105,7 @@ describe('daemon', () => {
 
   describe('#isUp', () => {
     // @note: mock-fs is probably the way to go here
-    it('should throw an error if this.docker is not in the PATH somewhere', () => {
-      const daemon = new Daemon();
-      filesystem();
-      const ohNo = function() {
-        return daemon.isUp();
-      };
-      expect(ohNo).to.throw();
-      filesystem.restore();
-    });
+    it('Should return true if docker is running');
+    it('Should return false if docker is not running');
   });
 });

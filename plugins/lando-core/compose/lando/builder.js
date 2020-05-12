@@ -16,7 +16,7 @@ const utils = require('./../../lib/utils');
 module.exports = {
   name: '_lando',
   parent: '_compose',
-  builder: parent => class LandoService extends parent {
+  builder: parent => class LandoCompose extends parent {
     constructor(
       id,
       {
@@ -36,6 +36,7 @@ module.exports = {
         legacy = [],
         meUser = 'www-data',
         patchesSupported = false,
+        pinPairs = {},
         ports = [],
         project = '',
         overrides = {},
@@ -62,7 +63,7 @@ module.exports = {
         }
       }
       if (_.includes(legacy, version)) {
-        console.log(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
+        console.error(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
       }
 
       // Move our config into the userconfroot if we have some
@@ -75,7 +76,6 @@ module.exports = {
       const entrypoint = path.join(scriptsDir, 'lando-entrypoint.sh');
       const addCertsScript = path.join(scriptsDir, 'add-cert.sh');
       const refreshCertsScript = path.join(scriptsDir, 'refresh-certs.sh');
-      const loadKeysScript = path.join(scriptsDir, 'load-keys.sh');
 
       // Handle volumes
       const volumes = [
@@ -85,11 +85,18 @@ module.exports = {
         `${dataHome}:/var/www`,
       ];
 
-      // Add in some more dirz if it makes sense
-      if (home) {
-        volumes.push(`${home}:/user:delegated`);
-        volumes.push(`${loadKeysScript}:/scripts/load-keys.sh`);
+      // Handle ssl
+      if (ssl) {
+        volumes.push(`${addCertsScript}:/scripts/000-add-cert`);
+        if (sslExpose) ports.push(sport);
       }
+
+      // Add in some more dirz if it makes sense
+      if (home) volumes.push(`${home}:/user:delegated`);
+
+      // Handle cert refresh
+      // @TODO: this might only be relevant to the proxy, if so let's move it there
+      if (refreshCerts) volumes.push(`${refreshCertsScript}:/scripts/999-refresh-certs`);
 
       // Add in any custom pre-runscripts
       _.forEach(scripts, script => {
@@ -107,31 +114,39 @@ module.exports = {
         }
       });
 
-      // Handle ssl
-      if (ssl) {
-        volumes.push(`${addCertsScript}:/scripts/add-cert.sh`);
-        if (sslExpose) ports.push(sport);
-      }
-
-      // Handle cert refresh
-      // @TODO: this might only be relevant to the proxy, if so let's move it there
-      if (refreshCerts) volumes.push(`${refreshCertsScript}:/scripts/refresh-certs.sh`);
       // Handle Environment
       const environment = {LANDO_SERVICE_NAME: name, LANDO_SERVICE_TYPE: type};
-      // Handle http ports
-      const labels = {'io.lando.http-ports': _.uniq(['80', '443'].concat(moreHttpPorts)).join(',')};
+      // Handle http/https ports
+      const labels = {
+        'io.lando.http-ports': _.uniq(['80', '443'].concat(moreHttpPorts)).join(','),
+        'io.lando.https-ports': _.uniq(['443'].concat([sport])).join(','),
+      };
+      // Set a reasonable log size
+      const logging = {driver: 'json-file', options: {'max-file': '3', 'max-size': '10m'}};
 
       // Add named volumes and other thingz into our primary service
       const namedVols = {};
       _.set(namedVols, data, {});
       _.set(namedVols, dataHome, {});
       sources.push({
-        services: _.set({}, name, {entrypoint: '/lando-entrypoint.sh', environment, labels, ports, volumes}),
+        services: _.set({}, name, {
+          entrypoint: '/lando-entrypoint.sh',
+          environment,
+          labels,
+          logging,
+          ports,
+          volumes,
+        }),
         volumes: namedVols,
       });
 
+      // Add a final source if we need to pin pair
+      if (_.includes(_.keys(pinPairs), version)) {
+        sources.push({services: _.set({}, name, {image: _.get(pinPairs, version, version)})});
+      }
+
       // Add our overrides at the end
-      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides))});
+      sources.push({services: _.set({}, name, utils.normalizeOverrides(overrides, root))});
 
       // Add some info basics
       info.config = config;
@@ -139,6 +154,7 @@ module.exports = {
       info.type = type;
       info.version = version;
       info.meUser = meUser;
+      info.hasCerts = ssl;
 
       // Pass it down
       super(id, info, ...sources);

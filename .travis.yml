@@ -1,5 +1,5 @@
 language: node_js
-node_js: 10
+node_js: 12
 dist: xenial
 cache:
   yarn: true
@@ -15,7 +15,8 @@ stages:
   - name: deploy
     if: |
       type = push AND \
-      branch == "master"
+      branch == "master" OR \
+      tag IS present
 
 # Set some immportant things to help maximize our CI performance
 before_install:
@@ -87,7 +88,8 @@ jobs:
       before_script: |
         if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then
           git config --global core.autocrlf true
-          choco install innosetup --version=5.5.9 --allow-empty-checksums
+          choco install -y innosetup --version=6.0.3 --allow-empty-checksums
+          choco install -y windows-sdk-10.1
         fi
       script:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
@@ -103,6 +105,8 @@ jobs:
     - name: Test Build - Blog
       script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog; fi
     - name: Test Build - Documentation
+      # get below compatible with node 12?
+      node_js: 10
       script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs; fi
     - name: Test Build - Events
       script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events; fi
@@ -127,8 +131,6 @@ jobs:
     # Build and deploy macOS
     - stage: Deploy
       name: macOS Packages
-      # @TODO: WE NED TO REMOVE THE BELOW BEFORE THE NEXT RELEASE
-      env: APPLE_NO_NOTARIZE=notgonnadoit
       os: osx
       osx_image: xcode11.2
       script:
@@ -148,6 +150,9 @@ jobs:
           acl: public_read
           region: us-west-2
           skip_cleanup: true
+          on:
+            repo: lando/lando
+            all_branches: true
         - provider: releases
           api_key:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
@@ -161,7 +166,8 @@ jobs:
       env: YARN_GPG=no GRADLE_OPTS=-Dorg.gradle.daemon=false
       before_script:
         - git config --global core.autocrlf true
-        - choco install innosetup --version=5.5.9 --allow-empty-checksums
+        - choco install -y innosetup --version=6.0.3 --allow-empty-checksums
+        - choco install -y windows-sdk-10.1
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
@@ -179,6 +185,9 @@ jobs:
           acl: public_read
           region: us-west-2
           skip_cleanup: true
+          on:
+            repo: lando/lando
+            all_branches: true
         - provider: releases
           api_key:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
@@ -216,6 +225,9 @@ jobs:
           acl: public_read
           region: us-west-2
           skip_cleanup: true
+          on:
+            repo: lando/lando
+            all_branches: true
         - provider: releases
           api_key:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=

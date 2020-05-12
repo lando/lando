@@ -1,10 +1,10 @@
 ---
-description: Add an Apache webserver service to your Lando config for local development with all the power of Docker and Docker Compose; learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
+description: Add an Apache web server service to your Lando config for local development with all the power of Docker and Docker Compose; learn how to change version, setup SSL, use a custom webroot or custom Apache config.
 ---
 
 # Apache
 
-[Apache](https://www.apache.org/) is a very common webserver which you can easily add to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
+[Apache](https://www.apache.org/) is a very common web server which you can easily add to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
 
 [[toc]]
 
@@ -16,14 +16,14 @@ description: Add an Apache webserver service to your Lando config for local deve
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV.
 :::
 
-To use a patch version you can do something like this:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache:2.4.33
 ```
 
@@ -31,13 +31,13 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache:2.4
     webroot: .
     ssl: false
@@ -50,11 +50,11 @@ services:
 
 The default `config` files depend on how you have set `ssl` but are all available [here](https://github.com/lando/lando/tree/master/plugins/lando-services/services/apache).
 
-Note that if you set `config` to use your own files then those files should exist inside your applicaton and be expressed relative to your project root as below.
+Note that if you set `config` to use your own files then those files should exist inside your application and be expressed relative to your project root as shown below:
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -70,7 +70,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: apache
     webroot: docroot
     config:

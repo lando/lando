@@ -22,8 +22,8 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 4.0.x as the default version
-lando ssh -s defaults -c "mongo --version | grep v4.0."
+# Should use 4.0.13 as the default version
+lando ssh -s defaults -c "mongo --version | grep v4.0.13"
 
 # Should use the user specified version if given
 lando ssh -s custom -c "mongo --version | grep v3.6"

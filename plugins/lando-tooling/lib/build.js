@@ -7,13 +7,13 @@ const utils = require('./utils');
 /*
  * Helper to build tasks from metadata
  */
-module.exports = (config, lando) => {
+module.exports = (config, injected) => {
   // Get our defaults and such
-  const {name, app, cmd, describe, options, service, user} = utils.toolingDefaults(config);
+  const {name, app, cmd, describe, options, service, stdio, user} = utils.toolingDefaults(config);
   // Handle dynamic services and passthrough options right away
   // Get the event name handler
   const eventName = name.split(' ')[0];
-  const run = answers => lando.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
+  const run = answers => injected.Promise.try(() => (_.isEmpty(app.compose)) ? app.init() : true)
     // Kick off the pre event wrappers
     .then(() => app.events.emit(`pre-${eventName}`, config, answers))
     // Get an interable of our commandz
@@ -21,10 +21,10 @@ module.exports = (config, lando) => {
     // Build run objects
     .map(({command, service}) => utils.buildCommand(app, command, service, user))
     // Try to run the task quickly first and then fallback to compose launch
-    .each(runner => utils.dockerExec(lando, runner).catch(execError => {
-      return lando.engine.isRunning(runner.id).then(isRunning => {
+    .each(runner => utils.dockerExec(injected, stdio, runner).catch(execError => {
+      return injected.engine.isRunning(runner.id).then(isRunning => {
         if (!isRunning) {
-          return lando.engine.run(runner).catch(composeError => {
+          return injected.engine.run(runner).catch(composeError => {
             composeError.hide = true;
             throw composeError;
           });

@@ -9,9 +9,10 @@ While Lando is actually a library that can be implemented various ways it ships 
 
 **If you do not run most of these commands in a directory that contains a Landofile you will likely not get the expected result.**
 
-::: warning Windows users must use CMD.exe or POWERSHELL
-This is an upstream "restriction" imposed on us by NodeJS. Other shells besides `cmd.exe` and `ps.exe` may work but have not been tested. If your shell does not work you will likely see an error message like `the input device is not a TTY.`
+::: warning Windows users must use a real, non-emulated, TTY
+This is an upstream "restriction" imposed on us by NodeJS and python. We recommend using the shell shipped with [Git for Windows](https://gitforwindows.org/) but only the `cmd.exe` variant NOT the one powered by `minTTY`. That said your safest bet is to use `cmd.exe` or `PowerShell`. Other shells may work but have not been tested.
 
+If your shell does not work you will likely see an error message like `the input device is not a TTY.`
 See [https://github.com/nodejs/node/issues/3006](https://github.com/nodejs/node/issues/3006)
 :::
 
@@ -39,9 +40,11 @@ Commands:
   lando version   Displays the lando version
 
 Options:
-  --clear        Clears the lando tasks cache
-  --help         Shows lando or delegated command help if applicable
-  --verbose, -v  Runs with extra verbosity
+  --channel       Sets the update channel
+  --clear         Clears the lando tasks cache
+  --experimental  Activates experimental features
+  --help          Shows lando or delegated command help if applicable
+  --verbose, -v   Runs with extra verbosity
 
 Examples:
   lando start            Run lando start
@@ -100,9 +103,11 @@ Commands:
   lando version           Displays the lando version
 
 Options:
-  --clear        Clears the lando tasks cache
-  --help         Shows lando or delegated command help if applicable
-  --verbose, -v  Runs with extra verbosity
+  --channel       Sets the update channel
+  --clear         Clears the lando tasks cache
+  --experimental  Activates experimental features
+  --help          Shows lando or delegated command help if applicable
+  --verbose, -v   Runs with extra verbosity
 
 Examples:
   lando start            Run lando start

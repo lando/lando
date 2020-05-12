@@ -117,7 +117,7 @@ exports.buildCommand = (app, command, service, user) => ({
     environment: getCliEnvironment(),
     mode: 'attach',
     workdir: getContainerPath(app.root),
-    user: user,
+    user: (user === null) ? getUser(service, app.info) : user,
     services: _.compact([service]),
     hijack: false,
     autoRemove: true,
@@ -127,10 +127,13 @@ exports.buildCommand = (app, command, service, user) => ({
 /*
  * Helper to build docker exec command
  */
-exports.dockerExec = (lando, datum = {}) => lando.shell.sh(
-  getExecOpts(lando.config.dockerBin, datum).concat(datum.cmd),
-  {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']}
-);
+exports.dockerExec = (injected, stdio, datum = {}) => {
+  // Depending on whether injected is the app or lando
+  const dockerBin = injected.config.dockerBin || injected._config.dockerBin;
+  const opts = {mode: 'attach', cstdio: stdio};
+  // Run run run
+  return injected.shell.sh(getExecOpts(dockerBin, datum).concat(datum.cmd), opts);
+};
 
 /*
  * Helper to get tts
@@ -170,6 +173,7 @@ exports.toolingDefaults = ({
   description = `Runs ${name} commands`,
   options = {},
   service = '',
+  stdio = ['inherit', 'pipe', 'pipe'],
   user = null} = {}) =>
   ({
     name,
@@ -178,5 +182,6 @@ exports.toolingDefaults = ({
     describe: description,
     options: options,
     service: service,
-    user: (user === null) ? getUser(service, app.info) : user,
+    stdio: stdio,
+    user,
   });

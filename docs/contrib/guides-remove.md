@@ -19,7 +19,9 @@ rm -f name-of-guide.md
 
 ## 2. Remove from the sidebar
 
-Load up `docs/.vuepress/guides.json` in your favorite text editor. Here is a snippet of the aforementioned `guides.json`. We've highlighted the guide we want to remove.
+Load up `docs/.vuepress/guides.json` in your favorite text editor. A snippet of the aforementioned `guides.json` is shown below:
+
+We've highlighted the guide we want to remove.
 
 ```json{6}
 [

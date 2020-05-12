@@ -30,6 +30,9 @@ module.exports = (config = {}) => {
     config.LANDO_API_PORT = pconfig.port;
   }
 
+  // Map legacy things
+  config.LANDO_API_SLACK_API_WEBHOOK = config.LANDO_API_SLACK_API_WEBHOOK || config.LANDO_API_SLACK_NOEMAIL_WEBHOOK;
+
   // Return config
   return config;
 };

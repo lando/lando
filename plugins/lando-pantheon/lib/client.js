@@ -7,6 +7,9 @@ const Log = require('./../../../lib/logger');
 const Promise = require('./../../../lib/promise');
 const axios = require('axios');
 
+// Set a limit on amount of sites
+const MAX_SITES = 5000;
+
 /*
  * Helper to collect relevant error data
  */
@@ -23,14 +26,14 @@ const getErrorData = (err = {}) => ({
  */
 const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) => {
   // Log the actual request we are about to make
-  log.info('Making %s request to %s', verb, pathname);
-  log.debug('Request data: %j', data);
-  log.debug('Request options: %j.', options);
+  log.verbose('making %s request to %s', verb, `${_.get(request, 'defaults.baseURL')}${pathname.join('/')}`);
+  log.debug('request sent data with %j', options, _.clone(data));
 
   // Attempt the request and retry a few times
   return Promise.retry(() => request[verb](pathname.join('/'), data, options)
     .then(response => {
-      log.verbose('Response received: %j.', response.data);
+      log.verbose('response recieved: %s with code %s', response.statusText, response.status);
+      log.silly('response data', response.data);
       return response.data;
     })
     .catch(err => {
@@ -83,7 +86,7 @@ module.exports = class PantheonApiClient {
     // Call to get user sites
     const pantheonUserSites = () => {
       const getSites = ['users', _.get(this.session, 'user_id'), 'memberships', 'sites'];
-      return pantheonRequest(this.request, this.log, 'get', getSites)
+      return pantheonRequest(this.request, this.log, 'get', getSites, {params: {limit: MAX_SITES}})
       .then(sites => _.map(sites, (site, id) => _.merge(site, site.site)));
     };
     // Call to get org sites
@@ -92,7 +95,8 @@ module.exports = class PantheonApiClient {
       return pantheonRequest(this.request, this.log, 'get', getOrgs)
       .map(org => {
         if (org.role !== 'unprivileged') {
-          return pantheonRequest(this.request, this.log, 'get', ['organizations', org.id, 'memberships', 'sites'])
+          const getOrgsSites = ['organizations', org.id, 'memberships', 'sites'];
+          return pantheonRequest(this.request, this.log, 'get', getOrgsSites, {params: {limit: MAX_SITES}})
           .map(site => _.merge(site, site.site));
         }
       })

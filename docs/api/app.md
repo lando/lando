@@ -15,8 +15,8 @@ The class to instantiate a new App
 
 
 * [app](#app) ⇒ <code>App</code>
+    * [.shell](#app.shell)
     * [.config](#app.config)
-    * [.events](#app.events)
     * [.info](#app.info)
     * [.root](#app.root)
     * [.tasks](#app.tasks)
@@ -28,17 +28,17 @@ The class to instantiate a new App
     * [.stop()](#app.stop) ⇒ <code>Promise</code>
     * [.uninstall(purge)](#app.uninstall) ⇒ <code>Promise</code>
 
+<a name="app.shell"></a>
+
+### app.shell
+The apps shell
+
+**Kind**: static property of [<code>app</code>](#app)  
+**Since**: 3.0.0  
 <a name="app.config"></a>
 
 ### app.config
 The apps configuration
-
-**Kind**: static property of [<code>app</code>](#app)  
-**Since**: 3.0.0  
-<a name="app.events"></a>
-
-### app.events
-The apps event emitter
 
 **Kind**: static property of [<code>app</code>](#app)  
 **Since**: 3.0.0  
