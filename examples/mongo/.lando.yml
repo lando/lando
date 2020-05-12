@@ -9,6 +9,8 @@ services:
       database: custom.conf
   patch:
     type: mongo:4.1.13
+  latest:
+      type: mongo:4.2.6
 tooling:
   mongo:
     service: defaults
