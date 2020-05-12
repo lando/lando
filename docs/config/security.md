@@ -6,11 +6,11 @@ description: Lando uses its own, or a configurable, certificate authority to SSL
 
 Lando tries to find the fine line between good security and good user experience. **SPOILER ALERT:** It ain't easy.
 
-Here are the things we do by default and how you can modify them to your needs.
+The things we do by default and how you can modify them to your needs are shown below:
 
 ## Exposure
 
-As of `3.0.0-rrc.5` Lando will bind all exposed services to `127.0.0.1` for security reasons. This means your services are *only* available to your machine. You can alter this behavior in one of two ways.
+As of `3.0.0-rrc.5`, Lando will bind all exposed services to `127.0.0.1` for security reasons. This means your services are *only* available to your machine. You can alter this behavior in one of two ways.
 
 ### 1. Changing the bind address
 
@@ -30,7 +30,7 @@ You will then need to `lando rebuild` your service for the changes to take effec
 
 ### 2. Overridding a particular service
 
-If you [override](./services.md#overrides) a particular service and specify the external IP then Lando will honor that choice and note force override with the `bindAddress`.
+If you [override](./services.md#overrides) a particular service and specify the external IP then Lando will honor that choice and not force override with the `bindAddress`.
 
 ```yaml
 # This will find a random port on 0.0.0.0
@@ -41,7 +41,6 @@ services:
       ports:
         - "0.0.0.0::80"
 ```
-
 
 Note that there are security implications to both of the above and it is not recommended you do this.
 
@@ -58,25 +57,25 @@ Lando uses its own Certificate Authority to sign the certs for each service and 
 |-- cert.pem
 ```
 
-However for reasons detailed in [this blog post](https://httptoolkit.tech/blog/debugging-https-without-global-root-ca-certs) we do not trust this CA on your system automatically. Instead we require you to opt-in manually as a security precaution.
+However, for reasons detailed in [this blog post](https://httptoolkit.tech/blog/debugging-https-without-global-root-ca-certs), we do not trust this CA on your system automatically. Instead, we require you to opt-in manually as a security precaution.
 
 **This means that by default you will receive browser warnings** when accessing `https` proxy routes.
 
 ## Trusting the CA
 
-While Lando will automatically trust this CA internally it is up to you to trust it on your host machine. Doing so will alleviate browser warnings regarding certs we issue.
+While Lando will automatically trust this CA internally, it is up to you to trust it on your host machine. Doing so will alleviate browser warnings regarding certs we issue.
 
 ::: warning You may need to destroy the proxy container and rebuild your app!
 If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
 :::
 
-The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app as this will generate the CA if its not already there. Note that if you change the Lando `domain` in the [global config](./global.md) you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate correctly.
+The default Lando CA should be located at `~/.lando/certs/lndo.site.pem`. If you don't see the cert there, try starting up an app as this will generate the CA if its not already there. Note that if you change the Lando `domain` in the [global config](./global.md), you will have differently named certs and you will likely need to trust these new certs and rebuild your apps for them to propagate correctly.
 
-Also note that in accordance with the [restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) on wildcard certs changing the `domain` may result in unexpected behavior depending on how you set it. For example, setting `domain` to a top level domain such as `test` will not work while `local.test` will.
+Also note that in accordance with the [restrictions](https://en.wikipedia.org/wiki/Wildcard_certificate#Limitations) on wildcard certs, changing the `domain` may result in unexpected behavior depending on how you set it. For example, setting `domain` to a top level domain such as `test` will not work while `local.test` will.
 
-Also note that we produce a duplicate `crt` file that you can use for systems that have stricter rules around how the certs are named. This means that by default you will also end up with a file called `~/.lando/certs/lndo.site.crt` in addition to `~/.lando/certs/lndo.site.pem`.
+Also note that we produce a duplicate `crt` file that you can use for systems that have stricter rules around how the certs are named. This means that by default, you will also end up with a file called `~/.lando/certs/lndo.site.crt` in addition to `~/.lando/certs/lndo.site.pem`.
 
-That all said, once you've located the correct cert you can add or remove it with the relevant commands below.
+That all said, once you've located the correct cert, you can add or remove it with the relevant commands below.
 
 ### macOS
 
@@ -123,6 +122,6 @@ Firefox users may still see browser warnings after performing the steps above. F
 
 ## SSH Keys
 
-We also will inject SSH keys into each service but this is [highly configurable](./ssh.md)
+We also will inject SSH keys into each service but this is [highly configurable](./ssh.md).
 
 <RelatedGuides tag="Security"/>
