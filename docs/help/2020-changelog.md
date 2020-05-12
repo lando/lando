@@ -2,6 +2,15 @@
 
 * Spell check and grammar changes to docs/contrib/*.md
 
+## v3.0.1 - [May 7, 2020](https://github.com/lando/lando/releases/tag/v3.0.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed regression in `build` and `event` quote passthrough logic causing other commands to not parse correctly [#1926](https://github.com/lando/lando/pull/1926)
+* Fixed race condition causing proxy certs to not refresh consistently on proxy changes
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
 ## v3.0.0 - [May 4, 2020](https://github.com/lando/lando/releases/tag/v3.0.0)
 
 ### This is an `edge` release.

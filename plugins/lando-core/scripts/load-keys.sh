@@ -16,16 +16,9 @@ LANDO_MODULE="loadkeys"
 
 # Bail if we are not root
 if [ $(id -u) != 0 ]; then
-  lando_warn "We are not root so bailing on key loading! This is probably ok..."
+  lando_warn "Only the root user can load ssh keys! This is probably ok though..."
   exit 0
 fi
-
-# Set up our things
-SSH_CONF="/etc/ssh"
-SSH_DIRS=( "/lando/keys" "/var/www/.ssh" )
-SSH_CANDIDATES=()
-SSH_KEYS=()
-SSH_IDENTITIES=()
 
 # Set defaults
 : ${LANDO_WEBROOT_USER:='www-data'}
@@ -33,6 +26,13 @@ SSH_IDENTITIES=()
 : ${LANDO_HOST_USER:=$LANDO_WEBROOT_USER}
 : ${LANDO_LOAD_KEYS:='true'}
 GROUP=$(getent group "$LANDO_HOST_GID" | cut -d: -f1)
+
+# Set up our things
+SSH_CONF="/etc/ssh"
+SSH_DIRS=( "/lando/keys" "/var/www/.ssh" )
+SSH_CANDIDATES=()
+SSH_KEYS=()
+SSH_IDENTITIES=()
 
 # Make sure we have the system wide confdir
 mkdir -p $SSH_CONF
