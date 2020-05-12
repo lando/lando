@@ -45,7 +45,7 @@ services:
 
 ### Setting the app mount
 
-Many Docker images will put code in `/app`. This directly conflicts with Lando's default codebase mount point. If you are running into a problem because of this collision we recommend you [disable](./services.md#app-mount) the `app_mount` by setting it to `false` or `disabled`.
+Many Docker images will put code in `/app`. This directly conflicts with Lando's default codebase mount point. If you are running into a problem because of this collision, we recommend you [disable](./services.md#app-mount) the `app_mount` by setting it to `false` or `disabled`.
 
 This will prevent Lando from mounting your codebase to `/app` so the Docker image can use its own code at `/app`.
 
@@ -62,7 +62,7 @@ services:
 
 ### Setting the command
 
-Note that while `compose` services also get the same Lando *secret sauce* there is a notable difference. By default Lando will hijack the Docker containers `entrypoint`. This means if your custom container set's its own entrypoint you will need to remove that entrypoint and set it as the first argument in the `command`.
+Note that while `compose` services also get the same Lando *secret sauce*, there is a notable difference. By default, Lando will hijack the Docker containers `entrypoint`. This means if your custom container sets its own entrypoint, you will need to remove that entrypoint and set it as the first argument in the `command`.
 
 ```yaml
 services:
@@ -81,7 +81,7 @@ services:
       my-network:
 ```
 
-In the example above `docker-php-entrypoint` is the default `entrypoint` for the `drupal:8` image but we have moved it so that it is the first argument of `command`. This both allows the container to run as expected and allows Lando to do its thing.
+In the example above, `docker-php-entrypoint` is the default `entrypoint` for the `drupal:8` image but we have moved it so that it is the first argument of `command`. This both allows the container to run as expected and allows Lando to do its thing.
 
 ### Choosing the user
 
