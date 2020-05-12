@@ -1,5 +1,5 @@
 ---
-description: Use Drupal 9 on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, drupal console, xdebug and custom config files, oh and also import and exports databases.
+description: Use Drupal 9 on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
 ---
 
 # Drupal 9 (beta)
@@ -139,43 +139,19 @@ config:
 
 ### Using Drush
 
-By default our Drupal 9 recipe will globally install the [latest version of Drush 10](http://docs.drush.org/en/master/install/). This means that you should be able to use `lando drush` out of the box.
-
-That said you can configure this recipe to use any version of Drush to which there is a resolvable package available via `composer`. That means that the following are all valid.
-
-#### Use the latest version of Drush
-
-```yaml
-recipe: drupal9
-config:
-  drush: "*"
-```
-
-#### Use the latest version of Drush 10
-
-```yaml
-recipe: drupal9
-config:
-  drush: ^10
-```
-
-#### Use a specific version of Drush 10
-
-```yaml
-recipe: drupal9
-config:
-  drush: 10.2.1
-```
+By default our Drupal 9 recipe will globally install the [latest version of Drush 10](http://docs.drush.org/en/master/install/). However, on Drupal 9 this is not really supported anymore, so we _highly recommend_ you install a site-local Drush so that things work as expected.
 
 #### Using a site-local Drush
 
-must have !!
+You will want to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
 
-While Lando will globally install Drush for you it is increasingly common and in some cases a straight-up best practice to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
+```bash
+lando composer require drush/drush
+```
 
-Because of how Lando's [php service](./php.md) sets up its [`PATH`](./php.md#path-considerations) this means that if you have indeed installed Drush on your own via `composer` Lando will use yours over its own. Said more explicitly: **if you've required `drush` via `composer` in your application then this recipe will use your `drush` and not the one you've specified in this recipes config.**
+Once you do, Lando will use the site-local one instead of the default global one.
 
-If you are using a site-local Drush it is also recommended to configure a [build step](./../config/services.md#build-steps) to automatically install Drush before your app starts up. This can prevent weird version mismatches and other issues if you are using Drush in other Lando automation like [events](./../config/events.md).
+It is also recommended to configure a [build step](./../config/services.md#build-steps) to automatically install Drush before your app starts up. This can prevent weird version mismatches and other issues if you are using Drush in other Lando automation like [events](./../config/events.md).
 
 **Automatically composer install before my app starts**
 
@@ -206,10 +182,14 @@ lando drush uli
 
 This happens because it is actually a difficult problem for Lando to 100% know the canonical URL or service that is serving your application. However you can set up your environment so that commands like `lando drush uli` return the proper URL.
 
-Create or edit the relevant `settings.php` file and add these lines. Note that you may need to specify a port depending on your Lando installation. You can run `lando info` to see if your URLs use explicit ports or not.
+Set a specific local drush uri value by adding a setting for DRUSH_OPTIONS_URI in the relevant service. You will need to run `lando rebuild` after adding this setting.
 
-```php
-$base_url = "http://mysite.lndo.site:PORT_IF_NEEDED"
+```yaml
+services:
+  appserver:
+    overrides:
+      environment:
+        DRUSH_OPTIONS_URI: "https://mysite.lndo.site"
 ```
 
 #### Aliases
@@ -345,7 +325,6 @@ This means you can use things like `drush`, `composer` and `php` via Lando and a
 lando composer          Runs composer commands
 lando db-export [file]  Exports database from a service into a file
 lando db-import <file>  Imports a dump file into database service
-lando drupal            Runs drupal console commands
 lando drush             Runs drush commands
 lando mysql             Drops into a MySQL shell on a database service
 lando php               Runs php commands
@@ -354,8 +333,8 @@ lando php               Runs php commands
 **Usage examples**
 
 ```bash
-# Download a dependency with drush
-lando drush dl views
+# Doing a drush site install
+lando drush si --db-url=mysql://drupal9:drupal9@database/drupal9 -y
 
 # Run composer tests
 lando composer test
