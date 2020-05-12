@@ -247,20 +247,61 @@ lando php -i
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
-## Changes to wp-config.php ##
+## wp-config.php
 
-Add the following lines to the top of your wp-config.php file to make it work with Lando:
+If you are setting up an existing WordPress site you _probably_ need to modify the `wp-config.php` so that Lando can connect to your database.
+
+::: tip Your DB connection info may differ
+Note that your database credentials may differ from below since they are customizable. If you have done this we recommend you run `lando info` first and use the `internal_connection` information to populate the below values.
+:::
+
+Here are a few ways you can modify `wp-config.php` for usage with Lando. You will want to make sure these go at the _TOP_ of `wp-config.php`.
+
+**1. Hardcode the values**
+
+```php
+/** This will ensure these are only loaded on Lando  */
+if (getenv('LANDO')) {
+  /** The name of the database for WordPress */
+  define('DB_NAME', 'wordpress');
+  /** MySQL database username */
+  define('DB_USER', 'wordpress');
+  /** MySQL database password */
+  define('DB_PASSWORD', 'wordpress');
+  /** MySQL hostname */
+  define('DB_HOST', 'database');
+
+  /** URL routing (Optional, may not be necessary) */
+  // define('WP_HOME','http://mysite.lndo.site');
+  // define('WP_SITEURL','http://mysite.lndo.site');
+}
 ```
-define('WP_HOME','http://mysite.lndo.site'); define('WP_SITEURL','http://mysite.lndo.site');
 
-define('DB_NAME', 'wordpress');
-/** MySQL database username */
-define('DB_USER', 'wordpress');
-/** MySQL database password */
-define('DB_PASSWORD', 'wordpress');
-/** MySQL hostname */
-define('DB_HOST', 'database:3306');
+**2. Use LANDO_INFO**
 
+```php
+/** This will ensure these are only loaded on Lando */
+if (getenv('LANDO_INFO')) {
+  /**  Parse the LANDO INFO  */
+  $lando_info = json_decode(getenv('LANDO_INFO'));
+
+  /** Get the database config */
+  $database_config = $lando_info->database;
+  /** The name of the database for WordPress */
+  define('DB_NAME', $database_config->creds->database);
+  /** MySQL database username */
+  define('DB_USER', $database_config->creds->user);
+  /** MySQL database password */
+  define('DB_PASSWORD', $database_config->creds->password);
+  /** MySQL hostname */
+  define('DB_HOST', $database_config->internal_connection->host);
+
+  /** URL routing (Optional, may not be necessary) */
+  // define('WP_HOME','http://mysite.lndo.site');
+  // define('WP_SITEURL','http://mysite.lndo.site');
+}
 ```
+
+We also recommend you check out [this helpful doc](https://wordpress.org/support/article/editing-wp-config-php/) on the `wp-config.php` file.
 
 <RelatedGuides tag="WordPress"/>
