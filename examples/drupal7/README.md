@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 7 codebase
 rm -rf drupal7 && mkdir -p drupal7 && cd drupal7
-lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.59.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
+lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz --remote-options="--strip-components 1" --recipe drupal7 --webroot . --name lando-drupal7
 
 # Should start up successfully
 cd drupal7
@@ -54,17 +54,22 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal7
 lando mysql -udrupal7 -pdrupal7 drupal7 -e quit
 
-# Should use drush 8.2.x by default
+# Should use drush 8.3.x by default
 cd drupal7
-lando drush version | grep 8.2
+lando drush version | grep 8.3
 
 # Should be able to install drupal
 cd drupal7
 lando drush si --db-url=mysql://drupal7:drupal7@database/drupal7 -y
 
-# Verify that drush has infinite memory
+# Should have infinite memory for drush
 cd drupal7
 lando drush eval "phpinfo();" | grep memory_limit | grep -e "-1"
+
+# Should have SIMPLETEST envvars set correctly
+cd drupal7
+lando ssh -s appserver -c "env" | grep SIMPLETEST_BASE_URL | grep "https://appserver"
+lando ssh -s appserver -c "env" | grep SIMPLETEST_DB | grep "mysql://drupal7:drupal7@database/drupal7"
 ```
 
 Destroy tests

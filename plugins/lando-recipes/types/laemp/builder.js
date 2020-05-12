@@ -15,6 +15,7 @@ const toolingDefaults = {
     service: ':host',
     description: 'Imports a dump file into a database service',
     cmd: '/helpers/sql-import.sh',
+    user: 'root',
     options: {
       'host': {
         description: 'The database service to use',
@@ -86,17 +87,18 @@ const getServices = options => ({
   appserver: {
     build_as_root_internal: options.build_root,
     build_internal: options.build,
-    run_as_root_internal: options.run_root,
     composer: options.composer,
     config: utils.getServiceConfig(options),
+    run_as_root_internal: options.run_root,
+    ssl: true,
     type: `php:${options.php}`,
     via: options.via,
-    ssl: true,
     xdebug: options.xdebug,
     webroot: options.webroot,
   },
   database: {
     config: utils.getServiceConfig(options, ['database']),
+    authentication: 'mysql_native_password',
     type: options.database,
     portforward: true,
     creds: {

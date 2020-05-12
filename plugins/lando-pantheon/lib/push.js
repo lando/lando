@@ -11,6 +11,7 @@ const task = {
   description: 'Push code, database and/or files to Pantheon',
   cmd: '/helpers/push.sh',
   level: 'app',
+  stdio: ['inherit', 'pipe', 'pipe'],
   options: {
     auth: {
       describe: 'Pantheon machine token',

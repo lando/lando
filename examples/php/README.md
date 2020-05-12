@@ -4,6 +4,8 @@ PHP Example
 This example exists primarily to test the following documentation:
 
 * [PHP Service](https://docs.devwithlando.io/tutorials/php.html)
+* [Issue #1990](https://github.com/lando/lando/issues/1990)
+* [Issue #2192](https://github.com/lando/lando/issues/2192)
 
 Start up tests
 --------------
@@ -32,7 +34,7 @@ lando ssh -s defaults -c "psql -V | grep 10."
 lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
 # Should only serve over http by default
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should serve from the app root by default
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
@@ -40,9 +42,16 @@ lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
 # Should have a 1G php mem limit on appserver
 lando ssh -s defaults -c "curl http://localhost | grep memory_limit | grep 1G"
 
+# Should have COMPOSER_MEMORY_LIMIT set to -1
+lando ssh -s defaults -c "env" | grep "COMPOSER_MEMORY_LIMIT=-1"
+
 # Should have unlimited memory for php for CLI opts
 lando php -i | grep memory_limit | grep -e "-1"
 lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""
+
+# Should have a PATH_INFO and PATH_TRANSLATED SERVER vars
+lando ssh -s custom_nginx -c "curl https://localhost" | grep SERVER | grep PATH_INFO
+lando ssh -s custom_nginx -c "curl https://localhost" | grep SERVER | grep PATH_TRANSLATED
 
 # Should not enable xdebug by default
 lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
@@ -54,7 +63,7 @@ lando ssh -s custom -c "php -v" | grep "PHP 7.1"
 lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
 
 # Should serve via https if specified
-lando ssh -s custom_nginx -c "curl -k https://localhost | grep WEBDIR"
+lando ssh -s custom_nginx -c "curl https://localhost | grep WEBDIR"
 
 # Should enable xdebug if specified
 lando ssh -s custom -c "php -m | grep xdebug"
@@ -76,6 +85,9 @@ lando ssh -s cliold -c "php -v" | grep "PHP 5.6"
 # Should use specified php version if given
 lando ssh -s composer -c "php -v" | grep "PHP 7.0"
 
+# Should have rsync in php 7.4
+lando ssh -s custom74 -c "rsync --version"
+
 # Should install compose global dependencies if specified by user and have them available in PATH
 lando ssh -s composer -c "phpunit --version"
 lando ssh -s composer -c "which phpunit | grep /var/www/.composer/vendor/bin/phpunit"
@@ -86,6 +98,31 @@ lando ssh -s composer -c "phpunit --version"
 lando ssh -s composer -c "which phpunit | grep /app/vendor/bin/phpunit"
 lando ssh -s composer -c "composer remove phpunit/phpunit"
 lando ssh -s composer -c "which phpunit | grep /var/www/.composer/vendor/bin/phpunit"
+
+# Should have webp installed in php 7
+lando ssh -s defaults -c "php -i" | grep WebP | grep enabled
+lando ssh -s custom  -c "php -i" | grep WebP | grep enabled
+lando ssh -s custom74 -c "php -i" | grep WebP | grep enabled
+lando ssh -s cli -c "php -i" | grep WebP | grep enabled
+lando ssh -s composer -c "php -i" | grep WebP | grep enabled
+
+# Should be able to run build steps on lando managed nginx service
+# https://github.com/lando/lando/issues/1990
+lando ssh -s custom_nginx -c "cat /app/test/managed_build_step"
+
+# Should be able to override lando managed nginx service
+# https://github.com/lando/lando/issues/1990
+lando ssh -s custom_nginx -c "env | grep OTHER | grep stuff"
+lando ssh -s custom_nginx -c "env | grep MORE | grep things"
+
+# Should set PATH_INFO and PATH_TRANSLATED if appropriate
+# https://github.com/lando/lando/issues/2192
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/web/a/b.php"
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/a/b.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
 ```
 
 Destroy tests

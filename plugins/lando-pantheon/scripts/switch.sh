@@ -1,4 +1,11 @@
 #!/bin/bash
+set -e
+
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="pantheon"
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -16,7 +23,6 @@ FRAMEWORK=${FRAMEWORK:-drupal}
 SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
 SWITCH_ENV=""
-GREEN='\033[0;32m'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -68,7 +74,7 @@ DATABASE=${NO_DB:-${ENV:-dev}}
 /helpers/auth.sh "$AUTH" "$SITE" "$ENV"
 
 # LOGZ
-echo "Switching to $ENV..."
+lando_pink "Switching to $ENV..."
 
 # Stash the .lando.yml in case the branch we switched to does not have one
 CURRENT_LANDO_YML="$LANDO_MOUNT/.lando.yml"
@@ -85,6 +91,4 @@ if [ ! -f "$CURRENT_LANDO_YML" ]; then
 fi
 
 # Finish up!
-echo ""
-printf "${GREEN}Switch complete!"
-echo ""
+lando_green "Switch completed!"

@@ -60,6 +60,7 @@
                 <li><a href="https://docs.lando.dev/config/drupal8.html" target="_blank">Drupal 8</a></li>
                 <li><a href="https://docs.lando.dev/config/drupal9.html" target="_blank">Drupal 9</a></li>
                 <li><a href="https://docs.lando.dev/config/joomla.html" target="_blank">Joomla</a></li>
+                <li><a href="https://docs.lando.dev/config/lagoon.html" target="_blank">Lagoon</a></li>
                 <li><a href="https://docs.lando.dev/config/laravel.html" target="_blank">Laravel</a></li>
                 <li><a href="https://docs.lando.dev/config/lamp.html" target="_blank">LAMP</a></li>
                 <li><a href="https://docs.lando.dev/config/lemp.html" target="_blank">LEMP</a></li>
@@ -94,7 +95,7 @@
               <ul>
                 <li><a href="https://github.com/sponsors/lando" target="_blank">GitHub Sponsors</a></li>
                 <li><a href="https://www.patreon.com/join/devwithlando?" target="_blank">Patreon</a></li>
-                <li><a href="https://opencollective.com/devwithlando" target="_blank">OpenCollective</a></li>
+                <li><a href="https://opencollective.com/lando" target="_blank">OpenCollective</a></li>
               </ul>
             </div>
             <div class="footer-column-half">

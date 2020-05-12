@@ -24,7 +24,7 @@ lando init
 # Spit out a full Drupal 7 Landofile using code from your current working directory
 lando init --source cwd --recipe drupal7 --name d7-hotsauce --webroot . --full
 
-# Pull code from github and set it up as a mean recipe
+# Pull code from GitHub and set it up as a mean recipe
 lando init \
   --source github \
   --recipe mean \
@@ -47,6 +47,16 @@ lando init --source cwd \
   --option port=3000 \
   --option command="yarn watch" \
   --name meanest-app-youve-ever-seen
+
+# Pull the latest Drupal 7 and set up drupal7 config to use mariadb instead of mysql
+lando init \
+  --source remote \
+  --remote-url https://ftp.drupal.org/files/projects/drupal-7.69.tar.gz \
+  --remote-options="--strip-components 1" \
+  --recipe drupal7 \
+  --webroot . \
+  --option database=mariadb \
+  --name my-first-drupal7-app
 ```
 
 ## Getting code from various sources
@@ -126,7 +136,7 @@ Note that Lando will automatically create and post a SSH key to GitHub for you i
 # Let Lando walk you through it
 lando init --source github
 
-# Pull git@github.com:lando/lando.git from github and set it up as a pantheon recipe
+# Pull git@github.com:lando/lando.git from GitHub and set it up as a pantheon recipe
 lando init \
   --source github \
   --github-auth "$MY_GITHUB_TOKEN" \
@@ -146,7 +156,6 @@ lando init \
 Run `lando init --help` to get a complete list of options defaults, choices, recipes, sources etc.
 
 ```bash
---clear           Clears the lando tasks cache
 --full            Dump a lower level lando file
 --github-auth     A GitHub personal access token
 --github-repo     GitHub git url

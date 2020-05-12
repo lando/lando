@@ -42,6 +42,7 @@ module.exports = {
     confSrc: __dirname,
     backend_port: '80',
     ssl: false,
+    sslExpose: false,
     sources: [],
     defaultFiles: {
       ssl: 'ssl-termination.conf.tpl',
@@ -85,20 +86,33 @@ module.exports = {
       options.info = {backends: options.backends};
       // Set the varnish
       options.sources.push({services: _.set({}, options.name, varnish)});
-      // Spin up an nginx bomb as well
+
+      // Spin up an nginx bomb if we need ssl termination
       if (options.ssl) {
-        // Sort of copy our options
-        const sslOpts = _.cloneDeep(options);
-        sslOpts.overrides = utils.cloneOverrides(options.overrides);
-        sslOpts.name = `${options.name}_ssl`;
+        // Set the opts for this custom swill
+        const sslOpts = _.assign(_.cloneDeep(options), {
+          name: `${options.name}_ssl`,
+          type: 'nginx',
+          version: 'custom',
+          config: `${options.confDest}/${options.defaultFiles.ssl}`,
+          info: {backend: 'edge', managed: true},
+          meUser: 'www-data',
+          overrides: utils.cloneOverrides(options.overrides),
+          ssl: true,
+          sslExpose: true,
+        });
+
         // Set another lando service we can pass down the stream
-        const LandoService = factory.get('_lando');
+        const LandoCompose = factory.get('_lando');
         const nginx = {services: _.set({}, sslOpts.name, varnishSsl(options))};
-        options.sources.push(new LandoService(sslOpts.name, sslOpts, nginx).data);
+        const data = new LandoCompose(sslOpts.name, sslOpts, nginx);
+        // This is a trick to basically replicate what happens upstream
+        options._app.add(data);
+        options._app.info.push(data.info);
+        // Indicate the relationship on the primary service
         options.info.ssl_served_by = sslOpts.name;
       }
-      // Set SSL false for downstream because we've already handled it above
-      options.ssl = false;
+
       // Send it downstream
       super(id, options, ..._.flatten(options.sources));
     };

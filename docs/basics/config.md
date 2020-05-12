@@ -7,7 +7,7 @@ description: lando config displays the lando configuration.
 
 Displays the lando configuration.
 
-You can also use `--field` to only display a single config value. *Almost all* of these options can be overriden via the Lando global `config.yml`. See the [config system](../config/config.md) for more info.
+You can also use `--field` to only display a single config value. *Almost all* of these options can be overridden via the Lando global `config.yml`. See the [config system](../config/config.md) for more info.
 
 ## Usage
 
@@ -25,7 +25,6 @@ lando config --format json
 ## Options
 
 ```bash
---clear        Clears the lando tasks cache
 --format       Output in given format: json
 --help         Shows lando or delegated command help if applicable
 --verbose, -v  Runs with extra verbosity

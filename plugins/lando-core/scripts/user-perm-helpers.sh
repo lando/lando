@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Source da helpas
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="userperms"
+
 # Adding user if needed
 add_user() {
   local USER=$1
@@ -56,7 +62,7 @@ reset_user() {
   fi;
   # If this mapping is incorrect lets abort here
   if [ "$(id -u $USER)" != "$HOST_UID" ]; then
-    echo "Looks like host/container user mapping was not possible! aborting..."
+    lando_warn "Looks like host/container user mapping was not possible! aborting..."
     exit 0
   fi
 }
@@ -67,12 +73,18 @@ reset_user() {
 perm_sweep() {
   local USER=$1
   local GROUP=$2
+  local OTHER_DIR=$3
 
   # Start with the directories that are likely blockers
   chown -R $USER:$GROUP /usr/local/bin
   chown $USER:$GROUP /var/www
   chown $USER:$GROUP /app
   chmod 755 /var/www
+
+  # Do other dirs first if we have them
+  if [ ! -z "$OTHER_DIR" ]; then
+    chown -R $USER:$GROUP $OTHER_DIR >/dev/null 2>&1 &
+  fi
 
   # Do a background sweep
   nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &

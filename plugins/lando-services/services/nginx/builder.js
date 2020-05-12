@@ -3,17 +3,6 @@
 // Modules
 const _ = require('lodash');
 
-// Helper to builder nginx command
-const nginxCommand = vhost => [
-  '/bin/bash -c',
-  '"mkdir -p /opt/bitnami/nginx/conf/vhosts',
-  '&&',
-  'render-template',
-  `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
-  '&&',
-  '/entrypoint.sh /run.sh"',
-].join(' ');
-
 // Builder
 module.exports = {
   name: 'nginx',
@@ -44,7 +33,7 @@ module.exports = {
       // Build the default stuff here
       const nginx = {
         image: `bitnami/nginx:${options.version}`,
-        command: nginxCommand(options.remoteFiles.vhosts),
+        command: `/launch.sh ${options.remoteFiles.vhosts}`,
         environment: {
           NGINX_HTTP_PORT_NUMBER: '80',
           // @TODO: switching this to non-root seems problematic
@@ -55,9 +44,10 @@ module.exports = {
         ports: ['80'],
         user: 'root',
         volumes: [
+          `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.params}:${options.remoteFiles.params}`,
-          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
-          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}:ro`,
+          `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}:ro`,
         ],
       };
       // Send it downstream

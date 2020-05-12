@@ -14,11 +14,15 @@ exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
 /*
  * Takes inspect data and extracts all the exposed ports
  */
-exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
-  .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '443/tcp') ? 'https' : 'http'}))
+exports.getUrls = (data, scan = ['80, 443'], secured = ['443'], bindAddress = '127.0.0.1') => {
+  return _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
+  .map((value, port) => ({
+    port: _.head(port.split('/')),
+    protocol: (_.includes(secured, port.split('/')[0])) ? 'https' : 'http'}
+  ))
   .filter(exposed => _.includes(scan, exposed.port))
   .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
-  .filter(ports => ports.HostIp === '0.0.0.0')
+  .filter(ports => _.includes([bindAddress, '0.0.0.0'], ports.HostIp))
   .map(ports => url.format({
     protocol: ports.protocol,
     hostname: 'localhost',
@@ -26,6 +30,7 @@ exports.getUrls = (data, scan = ['80, 443']) => _(_.merge(_.get(data, 'Config.Ex
   }))
   .thru(urls => ({service: data.Config.Labels['com.docker.compose.service'], urls}))
   .value();
+};
 
 /*
  * Helper method to normalize a path so that Lando overrides can be used as though
@@ -45,13 +50,13 @@ exports.normalizePath = (local, base = '.', excludes = []) => {
 /*
  * Helper to normalize overrides
  */
-exports.normalizeOverrides = (overrides, volumes = {}) => {
+exports.normalizeOverrides = (overrides, base = '.', volumes = {}) => {
   // Normalize any build paths
   if (_.has(overrides, 'build')) {
     if (_.isObject(overrides.build) && _.has(overrides, 'build.context')) {
-      overrides.build.context = exports.normalizePath(overrides.build.context, '.');
+      overrides.build.context = exports.normalizePath(overrides.build.context, base);
     } else {
-      overrides.build = exports.normalizePath(overrides.build, '.');
+      overrides.build = exports.normalizePath(overrides.build, base);
     }
   }
   // Normalize any volumes
@@ -64,7 +69,7 @@ exports.normalizeOverrides = (overrides, volumes = {}) => {
         const remote = _.last(volume.split(':'));
         // @TODO: I don't think below does anything?
         const excludes = _.keys(volumes).concat(_.keys(volumes));
-        const host = exports.normalizePath(local, '.', excludes);
+        const host = exports.normalizePath(local, base, excludes);
         return [host, remote].join(':');
       }
     });
@@ -79,7 +84,10 @@ exports.startTable = app => {
   const data = {
     name: app.name,
     location: app.root,
-    services: app.services.join(', '),
+    services: _(app.info)
+      .map(info => (info.healthy) ? chalk.green(info.service) : chalk.yellow(info.service))
+      .values()
+      .join(', '),
   };
   const urls = {};
 

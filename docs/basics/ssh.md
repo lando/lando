@@ -1,6 +1,6 @@
 ---
 metaTitle: lando ssh | Lando
-description: lando ssh docker execs into a Lando service, dropping you into a shell by default or running specific comands as a given user.
+description: lando ssh docker execs into a Lando service, dropping you into a shell by default or running specific commands as a given user.
 ---
 
 # ssh
@@ -34,7 +34,6 @@ lando ssh --service appserver --user root --command "apt-get update && apt insta
 Run `lando ssh --help` to get a complete list of options defaults, choices, etc.
 
 ```bash
---clear        Clears the lando tasks cache
 --command, -c  Run a command in the service
 --help         Shows lando or delegated command help if applicable
 --service, -s  SSH into this service

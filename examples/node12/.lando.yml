@@ -1,12 +1,12 @@
-name: lando-node
+name: lando-node-12
 services:
   defaults:
-    type: node
+    type: node:12
     build:
       - yarn
     command: /app/node_modules/.bin/nodemon src/app-http.js --watch src --ignore *.test.js
   custom:
-    type: node:11
+    type: node:13
     ssl: true
     globals:
       gulp-cli: latest
@@ -15,13 +15,13 @@ services:
       - yarn
     command: /app/node_modules/.bin/nodemon src/app-https.js --watch src --ignore *.test.js
   custom2:
-    type: node:11
+    type: node:12.4
     ssl: 4444
     port: 3000
     build:
       - yarn
     command: /app/node_modules/.bin/nodemon src/app-custom.js --watch src --ignore *.test.js
   patch:
-    type: node:10.14.2
+    type: node:12.13.1
   cli:
     type: node

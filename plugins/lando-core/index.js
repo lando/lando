@@ -73,6 +73,7 @@ module.exports = lando => {
       const labels = _.cloneDeep(lando.config.appLabels);
       const caData = new LandoCa(lando.config.userConfRoot, env, labels);
       const caFiles = lando.utils.dumpComposeData(caData, caDir);
+      lando.log.debug('setting up Lando Local CA at %s', caCert);
       return lando.engine.run(getCaRunner(caProject, caFiles));
     }
   });
@@ -102,9 +103,11 @@ module.exports = lando => {
     appLabels: {
       'io.lando.id': lando.config.instance,
     },
+    bindAddress: '127.0.0.1',
     caCert,
     caDomain,
     caKey,
     caProject,
+    maxKeyWarning: 10,
   }});
 };

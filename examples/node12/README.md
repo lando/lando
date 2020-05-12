@@ -1,9 +1,9 @@
-Node Example
-============
+Node 12 Example
+===============
 
 This example exists primarily to test the following documentation:
 
-* [Node Service](https://docs.devwithlando.io/tutorials/node.html)
+* [Node 12-13 Service](https://docs.devwithlando.io/tutorials/node.html)
 
 Start up tests
 --------------
@@ -22,14 +22,14 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 10.x as the default version
-lando ssh -s defaults -c "env | grep NODE_VERSION=10."
+# Should use 12.x as the default version
+lando ssh -s defaults -c "env | grep NODE_VERSION=12."
 
 # Should use a user specified version if given
-lando ssh -s custom -c "env | grep NODE_VERSION=11."
+lando ssh -s custom -c "env | grep NODE_VERSION=13."
 
 # Should use a user specified patch version if given
-lando ssh -s patch -c "env | grep NODE_VERSION=10.14.2"
+lando ssh -s patch -c "env | grep NODE_VERSION=12.13.1"
 
 # Should serve over port 80 by default
 lando ssh -s defaults -c "curl http://localhost | grep tune"
@@ -38,16 +38,26 @@ lando ssh -s defaults -c "curl http://localhost | grep tune"
 lando ssh -s defaults -c \'env | grep NODE_EXTRA_CA_CERTS | grep "$LANDO_CA_CERT"\'
 
 # Should only serve over http by default
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should serve over specified ports if given
 lando ssh -s custom -c "curl http://localhost:3000 | grep tune"
 
 # Should serve over https is ssl is set by user
-lando ssh -s custom -c "curl -k https://localhost | grep tune"
+lando ssh -s custom -c "curl https://localhost | grep tune"
 
 # Should servce over a custom https port if ssl is set to a specific port
-lando ssh -s custom2 -c "curl -k https://localhost:4444 | grep DANCING"
+lando ssh -s custom2 -c "curl https://localhost:4444 | grep DANCING"
+
+# Should run as root if it needs to
+lando ssh -s defaults -c "ps -a -u root" | grep "node" | wc -l | grep 2
+lando ssh -s defaults -c "ls -lsa /certs" | grep "root root" | wc -l | grep 10
+lando ssh -s custom -c "ps -a -u root" | grep "node" | wc -l | grep 2
+lando ssh -s custom -c "ls -lsa /certs" | grep "root root" | wc -l | grep 10
+
+# Should run as node if it can
+lando ssh -s custom2 -c "ps -a -u node" | grep "node" | wc -l | grep 2
+lando ssh -s custom2 -c "ls -lsa /certs" | grep "node" | wc -l | grep 8
 
 # Should install global dependencies if specified by user and have them available in PATH
 lando ssh -s custom -c "gulp -v"
