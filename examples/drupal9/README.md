@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 9 codebase
 rm -rf drupal9 && mkdir -p drupal9 && cd drupal9
-lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-9.0.0-alpha1.tar.gz --remote-options="--strip-components 1" --recipe drupal9 --webroot . --name lando-drupal9
+lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-9.0.0-beta2.tar.gz --remote-options="--strip-components 1" --recipe drupal9 --webroot . --name lando-drupal9
 
 # Should copy in the .lando.local.yml
 cp -f .lando.local.yml drupal9/.lando.local.yml
