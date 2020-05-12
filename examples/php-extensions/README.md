@@ -1,9 +1,13 @@
 PHP Extensions Example
 ======================
 
-This example exists primarily to test the following guide:
+This example exists primarily to test the following:
 
 * [Installing PHP Extensions on Lando](https://docs.lando.devguides/installing-php-extensions-on-lando.html)
+* [Issue #1894](https://github.com/lando/lando/pull/1894)
+* [Issue #1906](https://github.com/lando/lando/pull/1906)
+* [Issue #2201](https://github.com/lando/lando/pull/2201)
+* [Issue #2240](https://github.com/lando/lando/pull/2240)
 
 Start up tests
 --------------
