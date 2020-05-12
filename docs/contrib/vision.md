@@ -81,7 +81,7 @@ Writing unit and functional tests should be done whenever possible.
 
 ### 10. Fun
 
-You are working on a project named after a Star Wars character! Try to keep code comments, docs and other things fun!
+You are working on a project named after a fucking Star Wars character! Try to keep code comments, docs and other things fun!
 
 ## Audience
 

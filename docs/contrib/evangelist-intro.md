@@ -10,7 +10,7 @@ Because Lando is a free and open source project without :unicorn: money, we rely
 
 ## How do I evangelize?
 
-While you should _be yourself_ and evangelize in the way that best suits you, some things of our more successful advocates do as follows:
+While you should _do you_ and evangelize in the way that best suits you, here are some things our more successful advocates do:
 
 * Present, talk or train about Lando or Lando-adjacent materials at conference, camps, meetups, etc and to post those events at <https://events.lando.dev>.
 * Retweet Lando content, tweet directly at [@devwithlando](https://twitter.com/devwithlando) or engage in local dev or DevOps related Twitter threads.
