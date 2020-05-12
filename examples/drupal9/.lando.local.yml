@@ -1,0 +1,7 @@
+excludes:
+  - core
+  - vendor
+events:
+  post-start:
+    - appserver: env | grep "PATH" | grep "/app/vendor/bin"
+    - appserver: /app/vendor/bin/drush status || drush status
