@@ -247,4 +247,20 @@ lando php -i
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
+## Changes to wp-config.php ##
+
+Add the following lines to the top of your wp-config.php file to make it work with Lando:
+```
+define('WP_HOME','http://mysite.lndo.site'); define('WP_SITEURL','http://mysite.lndo.site');
+
+define('DB_NAME', 'wordpress');
+/** MySQL database username */
+define('DB_USER', 'wordpress');
+/** MySQL database password */
+define('DB_PASSWORD', 'wordpress');
+/** MySQL hostname */
+define('DB_HOST', 'database:3306');
+
+```
+
 <RelatedGuides tag="WordPress"/>
