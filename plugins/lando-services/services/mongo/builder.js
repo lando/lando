@@ -7,16 +7,18 @@ const _ = require('lodash');
 module.exports = {
   name: 'mongo',
   config: {
-    version: '4.0',
-    supported: ['4.1', '4.0', '3.6'],
+    version: '4.2',
+    supported: ['4.2', '4.1', '4.0', '3.6'],
+    legacy: ['4.1'],
     pinPairs: {
+      '4.2': 'bitnami/mongodb:4.2.6-debian-10-r33',
       '4.1': 'bitnami/mongodb:4.1.13-debian-9-r96',
       '4.0': 'bitnami/mongodb:4.0.13-debian-9-r45',
       '3.6': 'bitnami/mongodb:3.6.16-debian-9-r41',
     },
     patchesSupported: true,
     confSrc: __dirname,
-    healthcheck: 'echo \'db.runCommand("ping").ok\' | mongo localhost:27017/test',
+    healthcheck: ['mongo', 'tests', '--eval', 'db.runCommand("ping").ok'],
     port: '27017',
     remoteFiles: {
       database: '/bitnami/mongodb/conf/lando.conf',

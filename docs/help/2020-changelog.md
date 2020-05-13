@@ -1,6 +1,121 @@
 # 2020
 
-## v3.0.0-rrc.5 - April 17, 2020 (Estimated Release Date)
+## v3.0.3 - In Development
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added a [guide](https://docs.lando.dev/guides/using-compass-on-a-lando-node-service.html) on how to use `compass` in `node` service [#2039](https://github.com/lando/lando/pull/2039)
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.2 - [May 12, 2020](https://github.com/lando/lando/releases/tag/v3.0.2)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added `none` as a Release Channel option
+* Added a [guide](https://docs.lando.dev/guides/installing-php-extensions-on-lando.html) on how to install `php` extensions [#1894](https://github.com/lando/lando/pull/1894) [#1906](https://github.com/lando/lando/pull/1906) [#2201](https://github.com/lando/lando/pull/2201) [#2240](https://github.com/lando/lando/pull/2240)
+* Added a [guide](https://docs.lando.dev/guides/installing-node-in-your-lando-php-service.html) on how to install `node` directly in a PHP service for things like PatternLab or Emulsify [#2196](https://github.com/lando/lando/pull/2196)
+* Added support for `mongo` `4.2` [#2246](https://github.com/lando/lando/pull/2246)
+* Added a `drupal9` **(beta)** recipe [#1993](https://github.com/lando/lando/pull/1993)
+* Added `none` as a Release Channel option [#2218](https://github.com/lando/lando/pull/2218)
+* Deprecated `mongo` version `4.1` [#2246](https://github.com/lando/lando/pull/2246)
+* Fixed bug where `cache: none` in the Laravel recipe config caused a start error [#2236](https://github.com/lando/lando/pull/2236)
+* Fixed bug causing `nginx` and `apache` to sometimes fail on a rebuild [#1986](https://github.com/lando/lando/pull/1986)
+* Fixed bug causing `db-import` to not recognize some dumps from `db-export` [#2170](https://github.com/lando/lando/pull/2170)
+* Fixed bug causing `db-export` to report success even when it had been cancelled on `gzip` overwrite [#2231](https://github.com/lando/lando/pull/2231)
+* Fixed bug causing some Docker Engine versions on Linux to incorrectly throw an incompatibility warning [#2239](https://github.com/lando/lando/pull/2239)
+* Updated default `mongo` version to `4.2` [#2246](https://github.com/lando/lando/pull/2246)
+* Updated to and added support to Docker Desktop `2.3.0.2`
+* Updated to and added support for `docker-compose` `1.25.5` on Linux
+* Many more spelling and grammar fixes in docs, code and comments, thanks [@uberhacker](https://github.com/uberhacker)!
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.1 - [May 7, 2020](https://github.com/lando/lando/releases/tag/v3.0.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed regression in `build` and `event` quote passthrough logic causing other commands to not parse correctly [#1926](https://github.com/lando/lando/pull/1926)
+* Fixed race condition causing proxy certs to not refresh consistently on proxy changes
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.0 - [May 4, 2020](https://github.com/lando/lando/releases/tag/v3.0.0)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Added ability to customize or disable the `app_mount` on a per-service basis [#2029](https://github.com/lando/lando/issues/2029) [#1487](https://github.com/lando/lando/issues/1487)
+* Fixed bug preventing recipe provided tooling from being `disabled` [#472](https://github.com/lando/lando/pull/472)
+* Fixed bug not allowing build steps on Lando managed services eg `appserver_nginx` [#1990](https://github.com/lando/lando/pull/1990)
+* Fixed bug not allowing user overrides on Lando managed services eg `appserver_nginx` [#1990](https://github.com/lando/lando/pull/1990)
+* Fixed bug causing `PATH_INFO` and `PATH_TRANSLATED` to not be set by default on `php` services served by `nginx` [#2192](https://github.com/lando/lando/pull/2192)
+* Fixed bug causing `PATH_INFO` and `PATH_TRANSLATED` to not be set by default on the `lemp` recipe [#2192](https://github.com/lando/lando/pull/2192)
+* Fixed bug causing Lando to pass through the quotes on build steps or events that contained options like `--option="some thing"` [#1926](https://github.com/lando/lando/pull/1926)
+* Improved overridability of `pantheon` `push|pull|switch` commands [#2166](https://github.com/lando/lando/pull/2166)
+* Blasted this thing straight out of Mos Eisley [#6](https://www.youtube.com/watch?v=d9Am7nUiIyU)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.0-rrc.8 - [May 3, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.8)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Added warnings if user is using unsupported Docker versions [#678](https://github.com/lando/lando/pull/678)
+* Improved Lando update check to be non-blocking
+* Improved warnings if needed Docker dependencies are not installed [#1901](https://github.com/lando/lando/pull/1901)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.0-rrc.7 - [April 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.7)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Fixed bug where `proxy` was not honoring new `bindAddress` or `proxyBindAddress` settings [#2200](https://github.com/lando/lando/pull/2200)
+* Fixed bug causing Lando to not install on versions of macOS it actually supports [#2203](https://github.com/lando/lando/pull/2203)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.0-rrc.6 - [April 28, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.6)
+
+### This is an `edge` release.
+
+Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+
+Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+
+* Silenced `loadkeys` on `inits` that require key loading
+* Improved `node` service so it uses the `node` user if it does not use privileged ports
+* Improved app reporting so it doesnt hang the process if reporting node is spinning
+* Fixed bug where you needed to run `lando rebuild` twice to clear the "This app was built on a different version of Lando" warning
+* Fixed bug where `proxy` was not finding the correct port for multi-port proxied services
+* Fixed bug where `node` services using a custom `ssl` port do not get assigned a `https://localhost:PORT` address correctly
+* Fixed bug where failed `healthchecks` were not sending correct error code
+* Fixed bug causing `mongodb` services to fail healthchecks
+* Fixed bug causing `maxKeyWarning` to continue showing even after user has taken action [#2186](https://github.com/lando/lando/pull/2186)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.0-rrc.5 - [April 25, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.5)
 
 ### This is an `edge` release.
 
@@ -12,17 +127,21 @@ Otherwise, scroll down and use the first release that has the green `Latest Rele
 * Added legacy `SIMPLETEST_` envvars to Drupaly recipes [#1269](https://github.com/lando/lando/pull/1269)
 * Added ability for users to control which host `ssh` keys Lando uses [#2031](https://github.com/lando/lando/pull/2031)
 * Added reasonable `max-file` and `max-size` limits to services so logs don't grow indefinitely [#1774](https://github.com/lando/lando/pull/1774)
+* Added `proxy` support for any level of subdomains [#1819](https://github.com/lando/lando/pull/1819)
 * Changed the default bind address to `127.0.0.1` and made `bindAddress` globally configurable [#2035](https://github.com/lando/lando/pull/2035)
+* Fixed regression causing weird newlines on some console output [#2178](https://github.com/lando/lando/pull/2178)
 * Fixed bug causing Pantheon `pull` and `push` to fail when checked out to branch that wasnt also a multidev env [#2153](https://github.com/lando/lando/pull/2153)
 * Fixed bug causing Pantheon `lando push` to push to unexpected environments [#2153](https://github.com/lando/lando/pull/2153)
 * Fixed bug causing `ERR_INVALID_REDIRECT` for some proxied servives [#2149](https://github.com/lando/lando/pull/2149)
 * Fixed bug causing app start to fail if proxy was unable to locate suitable ports [#1857](https://github.com/lando/lando/pull/1857)
 * Fixed bug causing `ssh` to fail when username or keypaths had spaces in them [#2031](https://github.com/lando/lando/pull/2031)
-* Improved spelling and grammar in docs, code and comments, thanks @uberhacker!
+* Improved logging and error handling
+* Improved spelling and grammar in docs, code and comments, thanks [@uberhacker](https://github.com/uberhacker)!
+* Upgraded to `traefik` 2.2 [#1819](https://github.com/lando/lando/pull/1819)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 
 ## v3.0.0-rrc.4 - [April 11, 2020](https://github.com/lando/lando/releases/tag/v3.0.0-rrc.4)
 
@@ -143,7 +262,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Improved macOS and Windows Lando installers [#1975](https://github.com/lando/lando/issues/1975)
 * Improved build step and restart performance [#2013](https://github.com/lando/lando/issues/2013)
 * Rebased `lando` on `node` `12` for MOAR SPEEDS [#2037](https://github.com/lando/lando/issues/2037)
-* Removed lingering reference to `Git for Windows` in Windoze intaller [#1865](https://github.com/lando/lando/issues/1865)
+* Removed lingering reference to `Git for Windows` in Windoze installer [#1865](https://github.com/lando/lando/issues/1865)
 * Updated to `docker-compose` `1.25.4` [#1975](https://github.com/lando/lando/issues/1975)
 * Updated to Docker Desktop `2.2.0.4` for macOS and Windows [#1975](https://github.com/lando/lando/issues/1975)
 * Updated `xdebug` to latest in `php` `7.2` and `7.3`

@@ -2,8 +2,11 @@
 
 set -e
 
-# Load message helpers
-. /helpers/messages.sh
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="pantheon"
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -98,9 +101,9 @@ fi
 # Get the codez
 if [ "$CODE" != "none" ]; then
   # Validate before we begin
-  status_info "Validating you can pull code from $CODE..."
+  lando_pink "Validating you can pull code from $CODE..."
   terminus env:info $SITE.$CODE
-  status_good "Confirmed!"
+  lando_green "Confirmed!"
 
   # Get the git branch
   GIT_BRANCH=master
@@ -125,9 +128,9 @@ fi
 # Get the database
 if [ "$DATABASE" != "none" ]; then
   # Validate before we begin
-  status_info "Validating you can pull the database from $DATABASE..."
+  lando_pink "Validating you can pull the database from $DATABASE..."
   terminus env:info $SITE.$DATABASE
-  status_good "Confirmed!"
+  lando_green "Confirmed!"
 
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
@@ -174,6 +177,7 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB="$PULL_DB | mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
   # Importing database
+  echo "Pulling your database... This miiiiight take a minute"
   eval "$PULL_DB"
 
   # Do some post DB things on WP
@@ -186,9 +190,9 @@ fi
 # Get the files
 if [ "$FILES" != "none" ]; then
   # Validate before we begin
-  status_info "Validating you can pull files from $FILES..."
+  lando_pink "Validating you can pull files from $FILES..."
   terminus env:info $SITE.$FILES
-  status_good "Confirmed!"
+  lando_green "Confirmed!"
 
   # Make sure the filemount actually exists
   mkdir -p $LANDO_WEBROOT/$FILEMOUNT
@@ -236,4 +240,4 @@ if [ "$FILES" != "none" ]; then
 fi
 
 # Finish up!
-status_good "Pull completed successfully!"
+lando_green "Pull completed successfully!"

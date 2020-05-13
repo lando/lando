@@ -5,19 +5,19 @@ metaTitle: Make your first contribution | Lando
 
 # 5. Make First Contribution
 
-Now that you are all setup it's time to make your first contribution. Follow the sections below to add yourself to the [team](./team.html) and learn our workflow.
+Now that you are all set up, it's time to make your first contribution. Follow the sections below to add yourself to the [team](./team.html) and learn our workflow.
 
 ## Recommended workflow
 
 ### Create a new branch
 
-Lando uses a modified [GitHub Flow](https://guides.github.com/introduction/flow/) development model. You can read more about this process in the aforementioned link but the general codeflow is:
+Lando uses a modified [GitHub Flow](https://guides.github.com/introduction/flow/) development model. You can read more about this process in the aforementioned link but the general code flow is as follows:
 
 ```bash
 # Make sure you are in the lando source repo
 cd /path/to/cloned/lando/source
 
-# Make sure you are on an updated maser
+# Make sure you are on an updated master
 git checkout master
 git pull origin master
 
@@ -50,13 +50,13 @@ git push origin addContribMe
 
 ## Manual workflow
 
-If the recommended workflow above is not working for you then you still have a few options. **We definitely don't prefer these since they require work on our end.**
+If the recommended workflow above is not working for you, then you still have a few options. **We definitely don't prefer these since they require work on our end.**
 
 ### Directly edit
 
 Try editing the [contributor database](https://github.com/lando/lando/blob/master/api/data/contributors.yml) directly. If you are not sure how to do that then consult [these docs](https://help.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository).
 
-You will want to add an entry like this:
+You will want to add an entry like below:
 
 ```yaml
 - name: Mike Pirog
@@ -76,5 +76,5 @@ You will want to add an entry like this:
 
 ### Submit an issue
 
-If even the above is not sufficient then [open an issue](https://github.com/lando/lando/issues/new/choose) on GitHub.
+If even the above is not sufficient, then [open an issue](https://github.com/lando/lando/issues/new/choose) on GitHub.
 

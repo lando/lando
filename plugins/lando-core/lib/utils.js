@@ -14,9 +14,12 @@ exports.getHostPath = mount => _.dropRight(mount.split(':')).join(':');
 /*
  * Takes inspect data and extracts all the exposed ports
  */
-exports.getUrls = (data, scan = ['80, 443'], bindAddress = '127.0.0.1') => {
+exports.getUrls = (data, scan = ['80, 443'], secured = ['443'], bindAddress = '127.0.0.1') => {
   return _(_.merge(_.get(data, 'Config.ExposedPorts', []), {'443/tcp': {}}))
-  .map((value, port) => ({port: _.head(port.split('/')), protocol: (port === '443/tcp') ? 'https' : 'http'}))
+  .map((value, port) => ({
+    port: _.head(port.split('/')),
+    protocol: (_.includes(secured, port.split('/')[0])) ? 'https' : 'http'}
+  ))
   .filter(exposed => _.includes(scan, exposed.port))
   .flatMap(ports => _.map(_.get(data, `NetworkSettings.Ports.${ports.port}/tcp`, []), i => _.merge({}, ports, i)))
   .filter(ports => _.includes([bindAddress, '0.0.0.0'], ports.HostIp))

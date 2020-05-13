@@ -58,6 +58,7 @@ If you had a gulp task called 'watch' then you'd put this in .lando.yml:
 services:
   node:
     type: node
+    ssl: true
     command: cd /app/path/to/gulpfile && node_modules/.bin/gulp watch
 ```
 

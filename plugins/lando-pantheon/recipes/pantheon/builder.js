@@ -95,14 +95,10 @@ module.exports = {
       // Add in index if applicable
       if (options.index) options = _.merge({}, options, utils.getPantheonIndex());
 
+      // Handle other stuff
       const tokens = utils.sortTokens(options._app.pantheonTokens, options._app.terminusTokens);
       options = setTooling(options, tokens);
       options = setBuildSteps(options);
-
-      // @TODO: do we still need a depends on for the index for certs shit?
-      // Set the appserver to depend on index start up so we know our certs will be there
-      // const dependsPath = 'services.appserver.overrides.services.depends_on';
-      // _.set(build, dependsPath, ['index']);
 
       // Send downstream
       super(id, options);

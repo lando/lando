@@ -1,0 +1,37 @@
+FROM devwithlando/php:7.2-apache-2
+
+# Oracle Things
+RUN mkdir /opt/oracle \
+  # Fetch binaries directly from Oracle (!)
+  && curl https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-basic-linux.x64-19.6.0.0.0dbru.zip > /opt/oracle/instantclient-basic.zip \
+  && curl https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-sdk-linux.x64-19.6.0.0.0dbru.zip > /opt/oracle/instantclient-sdk.zip \
+  # Unzip and delete
+  && unzip /opt/oracle/instantclient-basic.zip -d /opt/oracle \
+  && unzip /opt/oracle/instantclient-sdk.zip -d /opt/oracle \
+  && rm /opt/oracle/instantclient-basic.zip \
+  && rm /opt/oracle/instantclient-sdk.zip \
+  # Make OS aware of newly installed libraries
+  && echo /opt/oracle/instantclient_19_6 > /etc/ld.so.conf.d/oracle-instantclient.conf \
+  && ldconfig -v \
+  # Install and enable OCI8
+  && echo "instantclient,/opt/oracle/instantclient_19_6" | pecl install oci8 \
+  && docker-php-ext-enable oci8
+
+# Microsoft SQL Server Prerequisites
+ENV ACCEPT_EULA=Y
+RUN apt-get update -y \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/debian/9/prod.list \
+        > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get install -y --no-install-recommends \
+        locales \
+        apt-transport-https \
+    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+    && locale-gen \
+    && apt-get update \
+    && apt-get -y --no-install-recommends install \
+        unixodbc-dev \
+        msodbcsql17 \
+    && docker-php-ext-install mbstring pdo pdo_mysql \
+    && pecl install sqlsrv pdo_sqlsrv \
+    && docker-php-ext-enable sqlsrv pdo_sqlsrv

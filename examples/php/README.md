@@ -4,6 +4,9 @@ PHP Example
 This example exists primarily to test the following documentation:
 
 * [PHP Service](https://docs.devwithlando.io/tutorials/php.html)
+* [Installing Node in a PHP Service](https://docs.lando.dev/guides/guides/installing-node-in-your-lando-php-service.html)
+* [Issue #1990](https://github.com/lando/lando/issues/1990)
+* [Issue #2192](https://github.com/lando/lando/issues/2192)
 
 Start up tests
 --------------
@@ -32,7 +35,7 @@ lando ssh -s defaults -c "psql -V | grep 10."
 lando ssh -s defaults -c "apachectl -V | grep 2.4."
 
 # Should only serve over http by default
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should serve from the app root by default
 lando ssh -s defaults -c "curl http://localhost | grep ROOTDIR"
@@ -61,7 +64,7 @@ lando ssh -s custom -c "php -v" | grep "PHP 7.1"
 lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
 
 # Should serve via https if specified
-lando ssh -s custom_nginx -c "curl -k https://localhost | grep WEBDIR"
+lando ssh -s custom_nginx -c "curl https://localhost | grep WEBDIR"
 
 # Should enable xdebug if specified
 lando ssh -s custom -c "php -m | grep xdebug"
@@ -103,6 +106,30 @@ lando ssh -s custom  -c "php -i" | grep WebP | grep enabled
 lando ssh -s custom74 -c "php -i" | grep WebP | grep enabled
 lando ssh -s cli -c "php -i" | grep WebP | grep enabled
 lando ssh -s composer -c "php -i" | grep WebP | grep enabled
+
+# Should have node12 installed in withnode service
+lando node -v -h withnode | grep v12.
+
+# Should have node14 installed in cli service
+lando node -v | grep v14.
+
+# Should be able to run build steps on lando managed nginx service
+# https://github.com/lando/lando/issues/1990
+lando ssh -s custom_nginx -c "cat /app/test/managed_build_step"
+
+# Should be able to override lando managed nginx service
+# https://github.com/lando/lando/issues/1990
+lando ssh -s custom_nginx -c "env | grep OTHER | grep stuff"
+lando ssh -s custom_nginx -c "env | grep MORE | grep things"
+
+# Should set PATH_INFO and PATH_TRANSLATED if appropriate
+# https://github.com/lando/lando/issues/2192
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/web/a/b.php"
+lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/a/b.php"
+lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
 ```
 
 Destroy tests

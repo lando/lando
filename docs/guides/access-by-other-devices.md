@@ -15,11 +15,13 @@ You may want to use another device (e.g., a smartphone or tablet) to test your L
 
 ## lando share (Testing over the Internet)
 
-The fastest way to do this is to use the [lando share](../cli/share.html) command.  This will provide you with a URL that you can use to access your app via the Internet.  You can close the connection at any time by pressing a key in the terminal on your local machine.
+The fastest way to do this is to use the [lando share](./../basics/share.html) command.  This will provide you with a URL that you can use to access your app via the Internet.  You can close the connection at any time by pressing a key in the terminal on your local machine.
 
-## Testing Only Locally
+## Changing the Bind
 
-If you would rather test only on your local network and not over the Internet, you can do the following.
+If you would rather test only on your local network and not over the Internet, you first need to change the `bindAddress` to expose your services on the LAN. Note that there are security implications to this and it is not recommended. Please consult the [Security Docs](./../config/security.md).
+
+Once you've done that you can ...
 
 ### 1. First, get the IP address of the machine running lando.
 
@@ -35,7 +37,7 @@ Open System Preferences, Network, and then choose the network adapter you are us
 
 Open a command prompt and enter the command `hostname -I | cut -d' ' -f1`.
 
-### 2. Next, get the port of your lando app.  
+### 2. Next, get the port of your lando app.
 
 You can do this by running `lando info` from a command prompt and looking for the URL to your site, which should look something like this: `http://localhost:33333`.  In this case, `33333` is the port number.
 

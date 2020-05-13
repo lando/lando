@@ -10,7 +10,7 @@ Lando is designed to work on a wide range of computers. Here are some basic guid
 
 ### Operating System
 
-*   macOS 10.14 or newest
+*   macOS 10.13 or later
 *   Windows 10 Pro+ or equivalent (eg Windows 10 Enterprise) [**with Hyper-V running**](https://msdn.microsoft.com/en-us/virtualization/hyperv_on_windows/quick_start/walkthrough_install)
 *   Linux with kernel version 4.x or higher
 
@@ -86,9 +86,9 @@ See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
 
 ## Linux
 
-### Install DMG via direct download (recommended)
+### Install package via direct download (recommended)
 
-1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 17.06.1-ce)**
+1. Install the [Docker Community Edition](https://docs.docker.com/engine/installation/) for your Linux version. Visit [https://get.docker.com](https://get.docker.com/) for the "quick & easy install" script. **(at least version 19.03.1-ce)**
 2. Download the latest `.deb`, `.pacman` or `.rpm` package from [GitHub](https://github.com/lando/lando/releases)
 3. Double click on the package and install via your distributions "Software Center" or equivalent.
 4. Make sure you look at the caveats below and follow them appropriately
@@ -176,18 +176,18 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 
 ## From source
 
-To install from source you need to first make sure you've [installed the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system and that it is using the factory defaults. You will also need...
+To install from source you need to first make sure you've manually installed the below dependencies:
 
+* [the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system, set to its **factory defaults**.
 * [the latest node 12](https://nodejs.org/en/download/)
 * [the latest yarn](https://yarnpkg.com/lang/en/docs/install/)
-
-On Linux you will also want to [download the latest stable docker compose binary](https://github.com/docker/compose/releases), make it executable and place it into `/usr/share/lando/bin`.
+* **(linux only)** [the latest stable docker compose binary](https://github.com/docker/compose/releases) downloaded and placed at `/usr/share/lando/bin` and make executable.
 
 ::: tip Or take things to lightspeed
 If you are using macOS or a Debian flavored linux distro you can easily install Lando's dev requirements using [hyperdrive](https://github.com/lando/hyperdrive)
 :::
 
-Then do the following:
+Once you've completed the above then do the following:
 
 ```bash
 # Clone the Lando source

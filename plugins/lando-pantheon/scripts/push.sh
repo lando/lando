@@ -2,8 +2,11 @@
 
 set -e
 
-# Load message helpers
-. /helpers/messages.sh
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="pantheon"
 
 # Set the default terminus environment to the currently checked out branch
 TERMINUS_ENV=$(cd $LANDO_MOUNT && git branch | sed -n -e 's/^\* \(.*\)/\1/p')
@@ -109,27 +112,27 @@ fi
 # Push the codez
 if [ "$CODE" != "none" ]; then
   # Validate before we begin
-  status_info "Validating you can push code to $CODE..."
+  lando_pink "Validating you can push code to $CODE..."
   terminus env:info $SITE.$CODE
-  status_good "Confirmed!"
+  lando_green "Confirmed!"
 
   # Get connection mode
-  status_info "Checking connection mode"
+  lando_pink "Checking connection mode"
   CONNECTION_MODE=$(terminus env:info $SITE.$CODE --field=connection_mode)
   # If we are not in git mode lets check for uncommited changes
   if [ "$CONNECTION_MODE" != "git" ]; then
     # Get the code diff
     CODE_DIFF=$(terminus env:diffstat $SITE.$CODE --format=json)
     if [ "$CODE_DIFF" != "[]" ]; then
-      status_warn "Lando has detected you have uncommitted changes on Pantheon."
-      status_warn "Please login to your Pantheon dashboard, commit those changes and then try lando push again."
+      lando_yellow "Lando has detected you have uncommitted changes on Pantheon."
+      lando_yellow "Please login to your Pantheon dashboard, commit those changes and then try lando push again."
       exit 5
     else
-      status_warn "Changing connection mode to git for the pushy push"
+      lando_yellow "Changing connection mode to git for the pushy push"
       terminus connection:set $SITE.$CODE git
     fi
   fi
-  status_good "Connected with git"
+  lando_green "Connected with git"
 
   # Switch to git root
   cd $LANDO_MOUNT
@@ -144,7 +147,7 @@ if [ "$CODE" != "none" ]; then
 
   # Set the git config if we need to
   git config user.name "$(terminus auth:whoami --field='First Name') $(terminus auth:whoami --field='Last Name')"
-  git config user.email "$TERMINUS_USER"
+  git config user.email "$(terminus auth:whoami --field='Email')"
 
   # Commit the goods
   echo "Pushing code to $CODE as $(git config --local --get user.name) <$(git config --local --get user.email)> ..."
@@ -163,14 +166,14 @@ fi
 # Push the database
 if [ "$DATABASE" != "none" ]; then
   # Validate before we begin
-  status_info "Validating you can push data to $DATABASE..."
+  lando_pink "Validating you can push data to $DATABASE..."
   terminus env:info $SITE.$DATABASE
-  status_good "Confirmed!"
+  lando_green "Confirmed!"
 
   # Wake up the site so we can actually connect
-  status_info "Making sure your database is awake!"
+  lando_pink "Making sure your database is awake!"
   terminus env:wake $SITE.$DATABASE
-  status_good "Awake!"
+  lando_green "Awake!"
 
   # And push
   echo "Pushing your database... This miiiiight take a minute"
@@ -182,9 +185,9 @@ fi
 # Push the files
 if [ "$FILES" != "none" ]; then
   # Validate before we begin
-  status_info "Validating you can push files to $FILES..."
+  lando_pink "Validating you can push files to $FILES..."
   terminus env:info $SITE.$FILES
-  status_good "Confirmed!"
+  lando_green "Confirmed!"
 
   # Build the rsync command
   PUSH_FILES="rsync -rLvz \
@@ -210,4 +213,4 @@ if [ "$FILES" != "none" ]; then
 fi
 
 # Finish up!
-status_good "Push completed successfully!"
+lando_green "Push completed successfully!"

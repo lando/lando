@@ -3,6 +3,9 @@
 # Errors and logz
 set -e
 
-# Try the new entrypoint and then fallback to the older one
-/opt/bitnami/scripts/postgresql/entrypoint.sh /opt/bitnami/scripts/postgresql/run.sh \
-  || /entrypoint.sh /run.sh
+# Detect and run the correct entrypoint script. THANKS BITNAMI!
+if [ -f "/opt/bitnami/scripts/postgresql/entrypoint.sh" ]; then
+  /opt/bitnami/scripts/postgresql/entrypoint.sh /opt/bitnami/scripts/postgresql/run.sh
+else
+  /entrypoint.sh /run.sh
+fi

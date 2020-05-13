@@ -6,32 +6,24 @@ const _ = require('lodash');
 /*
  * Helper to get core proxy service
  */
-const getProxy = ({proxyDomain, proxyCert, proxyKey, version = 'unknown'} = {}) => {
-  const certs = [proxyCert, proxyKey].join(',');
+const getProxy = ({proxyCommand, proxyPassThru, proxyDomain, userConfRoot, version = 'unknown'} = {}) => {
   return {
     services: {
       proxy: {
-        image: 'traefik:1.6.3-alpine',
-        command: [
-          '/entrypoint.sh',
-          '--defaultEntryPoints=https,http',
-          '--docker',
-          `--docker.domain=${proxyDomain}`,
-          '--entryPoints="Name:http Address::80"',
-          `--entrypoints="Name:https Address::443 TLS:${certs}"`,
-          '--logLevel=DEBUG',
-          '--web',
-        ].join(' '),
+        image: 'traefik:2.2.0',
+        command: proxyCommand.join(' '),
         environment: {
+          LANDO_APP_PROJECT: '_lando_',
+          LANDO_EXTRA_NAMES: `DNS.100 = *.${proxyDomain}`,
+          LANDO_PROXY_CONFIG_FILE: '/proxy_config/proxy.yaml',
+          LANDO_PROXY_PASSTHRU: _.toString(proxyPassThru),
           LANDO_VERSION: version,
-        },
-        labels: {
-          'traefik.frontend.rule': `Host:mustachedmanwiththecape`,
         },
         networks: ['edge'],
         volumes: [
           '/var/run/docker.sock:/var/run/docker.sock',
-          '/dev/null:/traefik.toml',
+          `${userConfRoot}/scripts/proxy-certs.sh:/scripts/100-proxy-certs`,
+          'proxy_config:/proxy_config',
         ],
       },
     },
@@ -40,19 +32,22 @@ const getProxy = ({proxyDomain, proxyCert, proxyKey, version = 'unknown'} = {}) 
         driver: 'bridge',
       },
     },
+    volumes: {
+      proxy_config: {},
+    },
   };
 };
 
 /*
  * Helper to get proxy ports service
  */
-const getPorts = (http, https, {dash, bindAddress = '127.0.0.1'} = {}) => ({
+const getPorts = (http, https, {proxyBindAddress = '127.0.0.1'} = {}) => ({
   services: {
     proxy: {
       ports: [
-        [bindAddress, http, '80'].join(':'),
-        [bindAddress, https, '443'].join(':'),
-        [bindAddress, dash, '8080'].join(':'),
+        [proxyBindAddress, http, '80'].join(':'),
+        [proxyBindAddress, https, '443'].join(':'),
+        `${proxyBindAddress}::8080`,
       ],
     },
   },
@@ -72,11 +67,10 @@ module.exports = {
     sslExpose: false,
     refreshCerts: true,
   },
-  // @TODO: ssl=true here currently exposes two ports into 443, should we separate ssl/addcerts?
   builder: (parent, config) => class LandoProxy extends parent {
     constructor(http, https, options) {
       const proxy = getProxy(options);
-      const ports = getPorts(http, https, {options});
+      const ports = getPorts(http, https, options);
       const augment = {
         env: _.cloneDeep(options.appEnv),
         labels: _.cloneDeep(options.appLabels),

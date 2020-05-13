@@ -1,14 +1,16 @@
 #!/bin/bash
+set -e
+
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="sqlexport"
 
 # Set generic things
 HOST=localhost
 SERVICE=$LANDO_SERVICE_NAME
 STDOUT=false
-
-# colors
-GREEN='\033[0;32m'
-RED='\033[31m'
-DEFAULT_COLOR='\033[0;0m'
 
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
@@ -70,28 +72,20 @@ fi
 if [ "$STDOUT" == "true" ]; then
   $DUMPER
 else
-
   # Inform the user of things
   echo "Preparing to export $FILE from database '$DATABASE' on service '$SERVICE' as user $USER..."
 
   # Clean up last dump before we dump again
-  unalias rm 2> /dev/null
-  rm ${FILE} 2> /dev/null
-  $DUMPER > ${FILE}
+  unalias rm 2> /dev/null || true
+  rm -f ${FILE} 2> /dev/null
+  $DUMPER > ${FILE} || { rm -f ${FILE}; lando_red "Failed to create file: ${FILE}"; exit 1; }
 
-  # Show the user the result
-  if [ $? -ne 0 ]; then
-    rm ${FILE}
-    echo -e "${RED}Failed ${DEFAULT_COLOR}to create file: ${FILE}"
-    exit 1
-  else
-    # Gzip the mysql database dump file
-    gzip $FILE
-    # Reset perms on linux
-    if [ "$LANDO_HOST_OS" = "linux" ]; then
-      chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
-    fi
-    # Report
-    echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
+  # Gzip the mysql database dump file
+  gzip $FILE
+  # Reset perms on linux
+  if [ "$LANDO_HOST_OS" = "linux" ]; then
+    chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
   fi
+  # Report
+  lando_green "Success ${FILE}.gz was created!"
 fi

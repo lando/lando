@@ -15,14 +15,6 @@
     ]
   },
   {
-    "title": "Node",
-    "collapsable": false,
-    "children": [
-      "frontend",
-      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
-    ]
-  },
-  {
     "title": "General",
     "collapsable": false,
     "children": [
@@ -49,10 +41,21 @@
     ]
   },
   {
+    "title": "Node",
+    "collapsable": false,
+    "children": [
+      "frontend",
+      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app",
+      "using-compass-on-a-lando-node-service"
+    ]
+  },
+  {
     "title": "PHP",
     "collapsable": false,
     "children": [
-      "how-can-i-pull-sync-my-database-on-lamp-y-recipes"
+      "how-can-i-pull-sync-my-database-on-lamp-y-recipes",
+      "installing-node-in-your-lando-php-service",
+      "installing-php-extensions-on-lando"
     ]
   },
   {

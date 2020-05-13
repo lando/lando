@@ -52,6 +52,7 @@
   id: 433bd1bd859bb74aa4c7be9f0acd798692d49b62
 - name: Aaron Feledy
   role:
+    - Code
     - Documentation
     - Evangelism
     - Events
@@ -129,3 +130,21 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/f497380919da21a23b0fbfc3e432bd7c'
   id: 63f68148475e08669c982e3a5c99b7ed0b948918
+- name: Christopher Martin
+  role:
+    - Code
+    - Documentation
+    - Evangelism
+    - Issues
+    - Meetups
+    - Support
+    - Training
+  bio: >-
+    Engineer at Four Kitchens, I spread the love of lando to all developers who
+    are willing to listen.
+  location: 'Round Rock, TX'
+  github: ccjjmartin
+  twitter: ccjjmartin
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/c5d9dad14053873b6a14a7ac7578fa07'
+  id: 955b2adfdf4e3a35f8266a2e209f88853bdd5047

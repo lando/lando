@@ -23,19 +23,19 @@ This service does not support patch versions but if you **really** need somethin
 
 Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog:v1.0.0
     portforward: false
     hogfrom: []
 ```
 
-### Portforwarding
+### Port forwarding
 
-`portforward` will allow you to access this service externally by given you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
+`portforward` will allow you to access this service externally by assigning a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 
 `portforward: true` will prevent inevitable port collisions and provide greater reliability and stability across Lando apps. That said, one downside of `portforward: true` is that Docker will assign a different port every time you restart your application. You can read more about accessing services externally [over here](./../guides/external-access.md).
 
@@ -45,7 +45,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog
     portforward: true
 ```
@@ -54,7 +54,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog
     portforward: 1025
 ```
@@ -64,14 +64,14 @@ services:
 You will need to list the services the wish to hog mail from using the `hogfrom` config key. Note that the services in the list should be other services in your application. They can be discovered by running [lando info](./../cli/info.md).
 
 ::: warning Config may differ!
-While we will automatically configure the underlying `mail` binary for any `php` service you choose to `hogfrom` you may need to consult the documentation for the specific type of service you are choosing to hogfrom.
+While we will automatically configure the underlying `mail` binary for any `php` service you choose to `hogfrom`, you may need to consult the documentation for the specific type of service you are choosing to hogfrom.
 :::
 
-Here is an example of a Landofile's `services` config that hogfroms a `php` service called `appserver`.
+An example of a Landofile's `services` config that hogfroms a `php` service called `appserver` is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: mailhog:v1.0.0
     portforward: false
     hogfrom:
