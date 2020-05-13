@@ -1,12 +1,20 @@
 # 2020
 
+## v3.0.3 - In Development
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added a [guide](https://docs.lando.dev/guides/using-compass-on-a-lando-node-service.html) on how to use `compass` in `node` service [#2039](https://github.com/lando/lando/pull/2039)
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
 ## v3.0.2 - [May 12, 2020](https://github.com/lando/lando/releases/tag/v3.0.2)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added `none` as a Release Channel option
 * Added a [guide](https://docs.lando.dev/guides/installing-php-extensions-on-lando.html) on how to install `php` extensions [#1894](https://github.com/lando/lando/pull/1894) [#1906](https://github.com/lando/lando/pull/1906) [#2201](https://github.com/lando/lando/pull/2201) [#2240](https://github.com/lando/lando/pull/2240)
-* Added a [guide](https://docs.lando.dev/guides/guides/installing-node-in-your-lando-php-service.html) on how to install `node` directly in a PHP service for things like PatternLab or Emulsify [#2196](https://github.com/lando/lando/pull/2196)
+* Added a [guide](https://docs.lando.dev/guides/installing-node-in-your-lando-php-service.html) on how to install `node` directly in a PHP service for things like PatternLab or Emulsify [#2196](https://github.com/lando/lando/pull/2196)
 * Added support for `mongo` `4.2` [#2246](https://github.com/lando/lando/pull/2246)
 * Added a `drupal9` **(beta)** recipe [#1993](https://github.com/lando/lando/pull/1993)
 * Added `none` as a Release Channel option [#2218](https://github.com/lando/lando/pull/2218)
