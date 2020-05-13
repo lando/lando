@@ -45,7 +45,8 @@
     "collapsable": false,
     "children": [
       "frontend",
-      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app"
+      "how-to-wire-up-browsersync-and-gulp-in-my-lando-app",
+      "using-compass-on-a-lando-node-service"
     ]
   },
   {

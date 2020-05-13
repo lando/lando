@@ -510,6 +510,57 @@ lando composer require "drupal/search_api_pantheon ~1.0" --prefer-dist
 lando drush dl webform
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands.
+## Customizing Pantheon tooling
+
+If you would like to customize `lando pull`, `lando push` or `lando switch` you can do so using [tooling](./tooling.md#tooling) or [tooling overrides](./tooling.md#overriding) directly to achieve your specific use case. This should allow you to:
+
+* Disable Pantheon tooling
+* Provide additional `pull`, `push` or `switch` use cases
+* Override the default `pull`, `push` or `switch` functionality
+* Remove interactive choices
+
+**disable all commands that interact with Pantheon**
+
+```yaml
+tooling:
+  pull: disabled
+  push: disabled
+  switch: disabled
+```
+
+**add a custom, non-interactive command that only gets files and database from live**
+
+```yaml
+tooling:
+  pull-live-data:
+    service: appserver
+    cmd: /helpers/pull.sh --code=none --database=live --files=live
+```
+
+**override the default lando pull command so it never pull code**
+
+```yaml
+tooling:
+  pull:
+    description: Pull things except code
+    options:
+      code:
+        default: none
+```
+
+**override the default lando push command so it never pushes the database**
+
+::: tip This is a good idea
+Putting database config into code via `features` or `cmi` and pushing that is consider a best practice so this is a good override for professionals.
+:::
+
+```yaml
+tooling:
+  push:
+    description: Pro push
+    options:
+      database:
+        default: none
+```
 
 <RelatedGuides tag="Pantheon"/>
