@@ -122,6 +122,9 @@ services:
     config:
       server: config/elasticsearch.yml
 ```
+## Using the Drupal 8 Elasticsearch Connector Module for Local Development
+
+The Drupal 8 Elasticsearch Connector is a set of modules designed to build a full Elasticsearch eco system in Drupal and is frequently used along with the Search API module. If you are using the Elasticsearch Connector for local development with Lando, you will need to add a local Elasticsearch Cluster that uses the local Lando elasticsearch service. When adding your 'Server URL' for a local Cluster, use the internal hostname and port of the elasticsearch service provided in your Landofile. This will match the key of your elasticsearch service - e.g. `myservice` for the above configuration and port `9200` or `http://localhost:9200`.  Note that the default help text on the Elasticsearch Connector's Server URL field is misleading - `http://localhost:9200` will not work for an internal connection. Use `lando info` to be certain of your elasticsearches settings.
 
 ## Getting information
 
