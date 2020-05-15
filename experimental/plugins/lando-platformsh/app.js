@@ -92,14 +92,43 @@ module.exports = (app, lando) => {
     // Open application servers up before we scan URLS
     app.events.on('post-init', () => {
       app.events.on('post-start', 8, () => {
-        // Get appservers
+        // Get appservers and services
+        /*
         const appservers = _(_.get(app, 'config.services', {}))
           .map((data, name) => _.merge({}, data, {name}))
           .filter(service => service.appserver)
           .map(service => service.name)
           .value();
+        */
+        // Get services
+        const services = _(_.get(app, 'config.services', {}))
+          .map((data, name) => _.merge({}, data, {name}))
+          .filter(service => !service.appserver)
+          .map(service => service.name)
+          .value();
+
+
+        // Open the services first
+        return lando.Promise.map(services, service => lando.engine.run({
+          id: `${app.project}_${service}_1`,
+          cmd: 'sleep 1 && /helpers/open-psh.sh',
+          compose: app.compose,
+          project: app.project,
+          opts: {
+            mode: 'attach',
+            hijack: true,
+            services: [service],
+            user: 'root',
+            cstdio: ['inherit', 'pipe', 'pipe'],
+            silent: true,
+          },
+        }))
+        .then(results => {
+          console.log(_.flatten(results));
+        });
 
         // Open them
+        /*
         return lando.Promise.each(appservers, appserver => lando.engine.run({
           id: `${app.project}_${appserver}_1`,
           cmd: 'sleep 1 && /helpers/open-psh.sh',
@@ -118,6 +147,7 @@ module.exports = (app, lando) => {
           lando.log.debug(err.stack);
           return lando.Promise.reject(err);
         }));
+        */
       });
     });
   }

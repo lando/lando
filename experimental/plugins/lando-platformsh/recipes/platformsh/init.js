@@ -129,7 +129,7 @@ module.exports = {
             options['platformsh-git-url'] = site.repository.url;
           });
         }},
-        {name: 'reload-keys', cmd: '/helpers/load-keys.sh', user: 'root'},
+        {name: 'reload-keys', cmd: '/helpers/load-keys.sh --silent', user: 'root'},
         {
           name: 'clone-repo',
           cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
