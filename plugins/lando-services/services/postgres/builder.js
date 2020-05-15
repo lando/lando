@@ -35,6 +35,12 @@ module.exports = {
   builder: (parent, config) => class LandoPostgres extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+      // The Bitnami Postgres container is particular about the user/pass.
+      options.creds.user = 'postgres';
+      options.creds.password = '';
+      // Ensure the non-root backup perm sweep runs
+      options._app.nonRoot.push(options.name);
+
       const postgres = {
         image: `bitnami/postgresql:${options.version}`,
         command: '/launch.sh',
@@ -50,9 +56,6 @@ module.exports = {
           `${options.data}:/bitnami/postgresql`,
         ],
       };
-      // The Bitnami Postgres container is particular about the user/pass.
-      options.creds.user = 'postgres';
-      options.creds.password = '';
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, postgres)});
     };

@@ -35,6 +35,9 @@ module.exports = {
   builder: (parent, config) => class LandoMariaDb extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+      // Ensure the non-root backup perm sweep runs
+      options._app.nonRoot.push(options.name);
+
       const mariadb = {
         image: `bitnami/mariadb:${options.version}`,
         command: '/launch.sh',

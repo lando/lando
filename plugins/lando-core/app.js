@@ -84,6 +84,30 @@ module.exports = (app, lando) => {
     }));
   });
 
+  // Run a secondary user perm sweep on services that cannot run as root eg mysql
+  app.events.on('post-init', () => {
+    if (!_.isEmpty(app.nonRoot)) {
+      app.log.verbose('perm sweeping flagged non-root containers ...', app.nonRoot);
+      app.events.on('post-start', 1, () => lando.Promise.each(app.nonRoot, service => {
+        return app.engine.run({
+          id: `${app.project}_${service}_1`,
+          cmd: '/helpers/user-perms.sh --silent',
+          compose: app.compose,
+          project: app.project,
+          opts: {
+            detach: true,
+            mode: 'attach',
+            user: 'root',
+            services: [service],
+          },
+        })
+        .catch(err => {
+          app.addWarning(warnings.serviceNotRunningWarning(service), err);
+        });
+      }));
+    }
+  });
+
   // Assess our key situation so we can warn users who may have too many
   app.events.on('post-init', () => {
     // Get keys on host

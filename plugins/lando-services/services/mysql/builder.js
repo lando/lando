@@ -42,6 +42,8 @@ module.exports = {
       if (_.includes(['8.0', '5.7'], options.version)) {
         options.healthcheck = 'bash -c "[ -f /bitnami/mysql/.mysql_initialized ]"';
       }
+      // Ensure the non-root backup perm sweep runs
+      options._app.nonRoot.push(options.name);
 
       // Build the default stuff here
       const mysql = {
