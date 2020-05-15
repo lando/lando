@@ -43,7 +43,7 @@ if [ "$LANDO_LOAD_KEYS" = "true" ]; then
   SSH_DIRS=( "${SSH_DIRS[@]}" "/user/.ssh" )
 fi
 
-# Ensure directories exists
+# Ensure directories exists and with the right permissions
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   mkdir -p "$SSH_DIR"
 done
@@ -88,8 +88,7 @@ lando_info "Found keys ${SSH_CANDIDATES[*]}"
 for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
   lando_debug "Ensuring permissions and ownership of $SSH_CANDIDATE..."
   chown -R $LANDO_WEBROOT_USER:$GROUP "$SSH_CANDIDATE"
-  chmod 700 "$SSH_CANDIDATE"
-  # chmod 644 "$SSH_CANDIDATE.pub" || true
+  chmod 600 "$SSH_CANDIDATE"
   lando_debug "Checking whether $SSH_CANDIDATE is a private key..."
   if grep -L "PRIVATE KEY" "$SSH_CANDIDATE" &> /dev/null; then
     if command -v ssh-keygen >/dev/null 2>&1; then
