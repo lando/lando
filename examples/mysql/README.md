@@ -46,7 +46,7 @@ lando ssh -s custom -c "mysql -upirog -ppassword stuff -e quit"
 # Should use a custom config file if specified
 lando mysql -u root -h custom -e "show variables;" | grep table_open_cache | grep 513
 
-# Should still run even after a restart
+# Should still be running even after a restart
 lando restart
 lando ssh -s defaults -c "mysql -umysql -pmysql database -e quit"
 

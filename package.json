@@ -37,7 +37,7 @@
     "build:events": "vuepress build events -d _events",
     "build:site": "vuepress build website -d _site",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "generate-tests": "leia \"examples/**/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
+    "generate-tests": "leia \"examples/mysql/README.md\" test -r 6 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file",
     "lint": "eslint --quiet --no-ignore api bin experimental lib plugins scripts test metrics",
     "lint:sites": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json blog/.vuepress docs/.vuepress events/.vuepress website/.vuepress",
     "pkg:cli": "node ./scripts/pkg.js",
