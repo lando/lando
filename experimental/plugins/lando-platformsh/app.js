@@ -93,13 +93,11 @@ module.exports = (app, lando) => {
     app.events.on('post-init', () => {
       app.events.on('post-start', 8, () => {
         // Get appservers and services
-        /*
         const appservers = _(_.get(app, 'config.services', {}))
           .map((data, name) => _.merge({}, data, {name}))
           .filter(service => service.appserver)
           .map(service => service.name)
           .value();
-        */
         // Get services
         const services = _(_.get(app, 'config.services', {}))
           .map((data, name) => _.merge({}, data, {name}))
@@ -107,11 +105,11 @@ module.exports = (app, lando) => {
           .map(service => service.name)
           .value();
 
-
         // Open the services first
-        return lando.Promise.map(services, service => lando.engine.run({
+        // @TODO: we need to retry the runs until they succeed
+        return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
           id: `${app.project}_${service}_1`,
-          cmd: 'sleep 1 && /helpers/open-psh.sh',
+          cmd: ['/helpers/open-psh.sh', '{"relationships": {}}'],
           compose: app.compose,
           project: app.project,
           opts: {
@@ -123,8 +121,39 @@ module.exports = (app, lando) => {
             silent: true,
           },
         }))
-        .then(results => {
-          console.log(_.flatten(results));
+        // Modify the data a bit so we can inject it better
+        // @TODO: We need to handle failure way better
+        // @TODO: probably util to handle all the crazy here
+        .then(data => {
+          const open = _([JSON.parse(data)])
+            .map(datum => _.merge({}, datum, {host: service}))
+            .value();
+          console.log(open);
+          return [service, open];
+        }))
+        // Inject it into each appserver
+        .then(relationships => {
+          // console.log(JSON.stringify({relationships: relationships[0]}, null, 2));
+          return lando.Promise.map(appservers, appserver => lando.engine.run({
+            id: `${app.project}_${appserver}_1`,
+            cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: _.fromPairs(relationships)})],
+            compose: app.compose,
+            project: app.project,
+            opts: {
+              hijack: false,
+              services: [appserver],
+              user: 'root',
+            },
+          }));
+        })
+
+        .catch(err => {
+          // @TODO: make this a warning
+          // lando.log.error('Looks like %s is not running! It should be so this is a problem.', appserver);
+          // lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', appserver);
+          // lando.log.debug(err.stack);
+          console.error(err);
+          return lando.Promise.reject(err);
         });
 
         // Open them
