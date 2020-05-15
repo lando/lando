@@ -59,7 +59,6 @@ module.exports = {
           MYSQL_USER: options.creds.user,
           LANDO_NEEDS_EXEC: 'DOEEET',
           LANDO_WEBROOT_USER: 'mysql',
-          LANDO_WEBROOT_GROUP: 'mysql',
         },
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,
