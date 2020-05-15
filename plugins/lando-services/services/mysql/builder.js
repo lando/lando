@@ -44,6 +44,8 @@ module.exports = {
       }
       // Ensure the non-root backup perm sweep runs
       options._app.nonRoot.push(options.name);
+      // Ensure the non-root backup perm sweep runs
+      options.meUser = 'mysql';
 
       // Build the default stuff here
       const mysql = {
@@ -56,6 +58,8 @@ module.exports = {
           MYSQL_PASSWORD: options.creds.password,
           MYSQL_USER: options.creds.user,
           LANDO_NEEDS_EXEC: 'DOEEET',
+          LANDO_WEBROOT_USER: 'mysql',
+          LANDO_WEBROOT_GROUP: 'mysql',
         },
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,
