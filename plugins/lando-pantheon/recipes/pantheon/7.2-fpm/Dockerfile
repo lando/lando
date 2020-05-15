@@ -10,6 +10,7 @@ ENV PHANTOMJS_VERSION 2.1.1
 ENV PHANTOMJS_OLD_VERSION 1.7.0
 ENV LANDO_TERMINUS_VERSION 2.3.0
 ENV MAVEN_VERSION 3.5.4
+ENV TIKA_VERSION 1.18
 
 # Install the additional things that make the pantheon
 RUN mkdir -p /usr/share/man/man1 \
@@ -42,6 +43,8 @@ RUN mkdir -p /usr/share/man/man1 \
   && rm /tmp/apache-tika-1.1-src.zip \
   && cd /tmp/apache-tika-1.1 && /tmp/apache-maven-${MAVEN_VERSION}/bin/mvn install \
   && cp -rf /tmp/apache-tika-1.1/tika-app/target/tika-app-1.1.jar /srv/bin/tika-app-1.1.jar \
+  && wget "http://archive.apache.org/dist/tika/tika-app-${TIKA_VERSION}.jar" -O /srv/bin/tika-app-${TIKA_VERSION}.jar \
+  && chmod +x /srv/bin/tika-app-${TIKA_VERSION}.jar \
   && apt-get -y remove openjdk-8-jdk \
   && apt-get -y clean \
   && apt-get -y autoclean \
