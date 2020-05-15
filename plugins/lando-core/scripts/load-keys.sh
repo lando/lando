@@ -43,7 +43,7 @@ if [ "$LANDO_LOAD_KEYS" = "true" ]; then
   SSH_DIRS=( "${SSH_DIRS[@]}" "/user/.ssh" )
 fi
 
-# Ensure directories exists and with the right permissions
+# Ensure directories exists
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   mkdir -p "$SSH_DIR"
 done
