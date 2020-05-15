@@ -1,10 +1,15 @@
 # 2020
 
-## v3.0.3 - In Development
+## v3.0.3 - [May 15, 2020](https://github.com/lando/lando/releases/tag/v3.0.3)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added a [guide](https://docs.lando.dev/guides/using-compass-on-a-lando-node-service.html) on how to use `compass` in `node` service [#2039](https://github.com/lando/lando/pull/2039)
+* Added support for `php` `7.4` to `pantheon` recipes [#2259](https://github.com/lando/lando/pull/2259)
+* Added support for `apache` `tika` `1.18` to supported Pantheon `appservers`
+* Fixed bug causing `Operation not permitted` for some `db-import|export` commands [#2255](https://github.com/lando/lando/pull/2255)
+* Fixed bug causing `ssh` keys to be incorrectly set to `700` [#2260](https://github.com/lando/lando/pull/2260)
+* Fixed bug causing overridden `ports` expressed as objects to error [#2256](https://github.com/lando/lando/pull/2256)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 
