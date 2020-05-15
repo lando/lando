@@ -64,7 +64,7 @@ PV=""
 CMD=""
 
 # Ensure file perms on linux
-if [ "$LANDO_HOST_OS" = "linux" ]; then
+if [ "$LANDO_HOST_OS" = "linux" ] && [ $(id -u) = 0 ]; then
   chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}"
 fi
 

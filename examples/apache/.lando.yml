@@ -17,3 +17,9 @@ services:
   override:
     type: apache
     webroot: web
+    overrides:
+      ports:
+        - target: 80
+          published: 8080
+          protocol: tcp
+          mode: host

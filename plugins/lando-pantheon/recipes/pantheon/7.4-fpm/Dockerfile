@@ -1,14 +1,8 @@
-Lando Pantheon appserver
-========================
-
-A container that approximates the appserver used on Pantheon.
-
-```
-# Pantheon php 7.3 fpm appserver for Lando
+# Pantheon php 7.4 fpm appserver for Lando
 #
-# docker build -t devwithlando/pantheon-appserver:7.3-2 .
+# docker build -t devwithlando/pantheon-appserver:7.4-2 .
 
-FROM devwithlando/php:7.3-fpm-2
+FROM devwithlando/php:7.4-fpm-2
 
 # Version information
 ENV WKHTMLTOPDF_VERSION 0.12.3
@@ -21,8 +15,8 @@ ENV TIKA_VERSION 1.18
 # Install the additional things that make the pantheon
 RUN mkdir -p /usr/share/man/man1 \
   && apt-get update && apt-get install -y \
-    openjdk-8-jre-headless \
-    openjdk-8-jdk \
+    openjdk-11-jre-headless \
+    openjdk-11-jdk \
   && rm -f /usr/local/etc/php/conf.d/*-memcached.ini \
   && mkdir -p /var/www/.drush \
   && mkdir -p /var/www/.backdrush \
@@ -43,17 +37,10 @@ RUN mkdir -p /usr/share/man/man1 \
   && mv phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64/bin/phantomjs /srv/bin/phantomjs \
   && rm -rf phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64 && rm -f phantomjs-${PHANTOMJS_OLD_VERSION}-linux-x86_64.tar.bz2 \
   && chmod +x /srv/bin/phantomjs \
-  && curl -fsSL "http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" | tar -xz -C /tmp \
-  && cd /tmp && curl -OL "http://archive.apache.org/dist/tika/apache-tika-1.1-src.zip" \
-  && unzip /tmp/apache-tika-1.1-src.zip \
-  && rm /tmp/apache-tika-1.1-src.zip \
-  && cd /tmp/apache-tika-1.1 && /tmp/apache-maven-${MAVEN_VERSION}/bin/mvn install \
-  && cp -rf /tmp/apache-tika-1.1/tika-app/target/tika-app-1.1.jar /srv/bin/tika-app-1.1.jar \
   && wget "http://archive.apache.org/dist/tika/tika-app-${TIKA_VERSION}.jar" -O /srv/bin/tika-app-${TIKA_VERSION}.jar \
   && chmod +x /srv/bin/tika-app-${TIKA_VERSION}.jar \
-  && apt-get -y remove openjdk-8-jdk \
+  && apt-get -y remove openjdk-11-jdk \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
-```
