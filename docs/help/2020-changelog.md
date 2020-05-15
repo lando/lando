@@ -1,10 +1,11 @@
 # 2020
 
-## v3.0.3 - In Development
+## v3.0.3 - [May 15, 2020](https://github.com/lando/lando/releases/tag/v3.0.3)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added a [guide](https://docs.lando.dev/guides/using-compass-on-a-lando-node-service.html) on how to use `compass` in `node` service [#2039](https://github.com/lando/lando/pull/2039)
+* Fixed bug causing `Operation not permitted` for some `db-import|export` commands [#2255](https://github.com/lando/lando/pull/2255)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 
