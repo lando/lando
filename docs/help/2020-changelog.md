@@ -9,6 +9,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added support for `apache` `tika` `1.18` to supported Pantheon `appservers`
 * Fixed bug causing `Operation not permitted` for some `db-import|export` commands [#2255](https://github.com/lando/lando/pull/2255)
 * Fixed bug causing `ssh` keys to be incorrectly set to `700` [#2260](https://github.com/lando/lando/pull/2260)
+* Fixed bug causing overridden `ports` expressed as objects to error [#2256](https://github.com/lando/lando/pull/2256)
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 

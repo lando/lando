@@ -25,6 +25,10 @@ const getKeys = (keys = true) => {
 
 // Helper to bind exposed ports to the correct address
 const normalizeBind = (bind, address = '127.0.0.1') => {
+  // If bind is not a string, return right away
+  if (!_.isString(bind)) return bind;
+
+  // Otherwise attempt to do stuff
   const pieces = _.toString(bind).split(':');
   // If we have three pieces then honor the users choice
   if (_.size(pieces) === 3) return bind;
