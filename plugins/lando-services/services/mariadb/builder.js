@@ -36,7 +36,9 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       // Ensure the non-root backup perm sweep runs
-      options._app.nonRoot.push(options.name);
+      // NOTE: we guard against cases where the UID is the same as the bitnami non-root user
+      // because this messes things up on circle ci and presumably elsewhere and _should_ be unncessary
+      if (_.get(options, '_app._config.uid', 1000) !== 1001) options._app.nonRoot.push(options.name);
 
       const mariadb = {
         image: `bitnami/mariadb:${options.version}`,

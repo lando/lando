@@ -43,9 +43,9 @@ module.exports = {
         options.healthcheck = 'bash -c "[ -f /bitnami/mysql/.mysql_initialized ]"';
       }
       // Ensure the non-root backup perm sweep runs
-      options._app.nonRoot.push(options.name);
-      // Ensure the non-root backup perm sweep runs
-      options.meUser = 'mysql';
+      // NOTE: we guard against cases where the UID is the same as the bitnami non-root user
+      // because this messes things up on circle ci and presumably elsewhere and _should_ be unncessary
+      if (_.get(options, '_app._config.uid', 1000) !== 1001) options._app.nonRoot.push(options.name);
 
       // Build the default stuff here
       const mysql = {
@@ -58,7 +58,6 @@ module.exports = {
           MYSQL_PASSWORD: options.creds.password,
           MYSQL_USER: options.creds.user,
           LANDO_NEEDS_EXEC: 'DOEEET',
-          LANDO_WEBROOT_USER: 'mysql',
         },
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,
