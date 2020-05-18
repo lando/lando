@@ -111,6 +111,18 @@ sudo rm -f /usr/local/share/ca-certificates/lndo.site.crt
 sudo update-ca-certificates --fresh
 ```
 
+### Arch
+
+```bash
+# Add the Lando CA
+sudo trust anchor ~/.lando/certs/lndo.site.pem
+sudo trust anchor ~/.lando/certs/lndo.site.crt
+
+# Remove Lando CA
+sudo trust anchor --remove ~/.lando/certs/lndo.site.pem
+sudo trust anchor --remove ~/.lando/certs/lndo.site.crt
+```
+
 ::: warning Firefox maintains its own certificate store!
 Firefox users may still see browser warnings after performing the steps above. Firefox maintains its own certificate store and does not, by default, use the operating system's certificate store. To allow Firefox to use the operating system's certificate store, the **security.enterprise_roots.enabled** setting must be set to **true**.
 
