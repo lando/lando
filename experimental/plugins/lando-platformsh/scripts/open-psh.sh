@@ -11,5 +11,3 @@ LANDO_MODULE="platformsh-open"
 
 # Open
 echo "$DATA" | /etc/platform/commands/open
-
-# @TODO: EXTRA

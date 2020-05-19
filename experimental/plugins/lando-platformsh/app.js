@@ -106,23 +106,14 @@ module.exports = (app, lando) => {
 
     // Handle the platform OPEN lifecycle event
     app.events.on('post-init', () => {
-      // @TODO: util to get containers
-      // @TODO: util for an "open" run
-      // Get all containers
-      const containers = _(_.get(app, 'config.services', {}))
-        .map((data, name) => ({name, appserver: data.appserver}))
-        .value();
-      // Get service containers
-      const services = _(containers)
-        .filter(service => !service.appserver)
-        .map(service => service.name)
-        .value();
-      // Get application containers
-      const appservers = _(containers)
-        .filter(service => service.appserver)
-        .map(service => service.name)
-        .value();
+      // Get containers by type
+      const appservers = utils.getContainersByType(app);
+      const services = utils.getContainersByType(app, false);
+      app.log.verbose('preparing to OPEN up platformsh containers...');
+      app.log.debug('found platformsh appservers', appservers);
+      app.log.debug('found platformsh services', services);
 
+      // Open up services and collect their output
       app.events.on('post-start', 8, () => {
         return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
            id: `${app.project}_${service}_1`,
@@ -139,34 +130,33 @@ module.exports = (app, lando) => {
            },
         }))
         // Modify the data a bit so we can inject it better
-        // @TODO: We need to handle failure way better
-        // @TODO: probably util to handle all the crazy here
-        // @TODO: need to merge more stuff into data eg host
         .then(data => {
-          // LOG things better
-          console.log(data);
-          const openJSON = _.last(data[0].split(os.EOL));
-          return [service, JSON.parse(openJSON)];
+          const cleanedData = _.last(data[0].split(os.EOL));
+          app.log.verbose(`received data when opening ${service}`, cleanedData);
+          try {
+            return [service, JSON.parse(cleanedData)];
+          } catch (e) {
+            // @TODO: make this better
+            app.log.warn('could not parse json', e, cleanedData);
+          }
         }))
         // Inject it into each appserver
         .then(data => {
           // Mutate the data into something easier to use
-          const relationships = _.fromPairs(data);
+          const serviceData = _.fromPairs(data);
+          app.log.debug('collected open data from platform services', serviceData);
+
           // Open all the appservers
           return lando.Promise.map(appservers, appserver => {
-            const appserverConfig = _.find(app.platformsh.runConfig, {service: appserver});
-            const relationshipConfig = _.find(appserverConfig.data.applications, application => {
-              return application.configuration.name = appserver;
-            });
-            const openData = {};
-            _.forEach(relationshipConfig.configuration.relationships, (value, name) => {
-              const service = value.split(':')[0];
-              const endpoint = value.split(':')[1];
-              openData[name] = [_.merge({}, relationships[service][endpoint], {host: `${service}.internal`})];
-            });
+            const appserverRelationships = utils.getApplicationRelationships(app, appserver);
+            const openPayload = utils.generateOpenPayload(appserverRelationships, serviceData);
+            app.log.verbose(`${appserver} has relationship config`, appserverRelationships);
+            app.log.verbose(`generated open payload for ${appserver}`, openPayload);
+
+            // OPEN
             return lando.engine.run({
               id: `${app.project}_${appserver}_1`,
-              cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: openData})],
+              cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: openPayload})],
               compose: app.compose,
               project: app.project,
               opts: {
@@ -178,15 +168,6 @@ module.exports = (app, lando) => {
               },
             });
           });
-        })
-
-        .catch(err => {
-          // @TODO: make this a warning
-          // lando.log.error('Looks like %s is not running! It should be so this is a problem.', appserver);
-          // lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', appserver);
-          // lando.log.debug(err.stack);
-          console.error(err);
-          return lando.Promise.reject(err);
         });
       });
     });
