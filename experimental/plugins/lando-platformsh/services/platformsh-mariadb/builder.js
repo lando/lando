@@ -23,7 +23,6 @@ module.exports = {
       const mariadb = {
         image: `docker.registry.platform.sh/mariadb-${options.version}`,
         ports: [options.port],
-        networks: {default: {aliases: ['database']}},
       };
       // Add in the mariadb service and push downstream
       super(id, options, {services: _.set({}, options.name, mariadb)});

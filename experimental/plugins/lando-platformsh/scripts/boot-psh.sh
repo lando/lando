@@ -15,9 +15,9 @@ lando_info "Ensuring needed files are unmounted..."
 if mount | grep "/etc/hosts"; then
   umount /etc/hosts && lando_info "unmounted /etc/hosts"
 fi
-if mount | grep "/etc/resolv.conf"; then
-  umount /etc/resolv.conf && lando_info "unmounted /etc/resolv.conf"
-fi
+# if mount | grep "/etc/resolv.conf"; then
+  # umount /etc/resolv.conf && lando_info "unmounted /etc/resolv.conf"
+# fi
 
 # Safe to do every time
 lando_info "Ensuring needed directories exist..."

@@ -181,7 +181,7 @@ exports.generateOpenPayload = (appserverRelationships, serviceData) => _.fromPai
     const endpoint = value.split(':')[1];
     return [
       name,
-      [_.merge({}, _.get(serviceData, `${service}.${endpoint}`), {host: `${service}.internal`})],
+      [_.merge({}, _.get(serviceData, `${service}.${endpoint}`), {host: service, ip: null})],
     ];
   })
   .value());
