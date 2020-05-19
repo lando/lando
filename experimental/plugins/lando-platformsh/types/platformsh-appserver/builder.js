@@ -23,8 +23,8 @@ module.exports = {
       // Set the docker things we need for all appservers
       sources.push({services: _.set({}, options.name, {
         // @TODO: below throws an RPC socket error
-        // command: 'exec /etc/platform/start',
         command: 'exec init',
+        // command: 'exec init',
         environment: _.merge({}, environment, {
           LANDO_SERVICE_TYPE: '_platformsh_appserver',
           LANDO_WEBROOT_USER: 'web',
