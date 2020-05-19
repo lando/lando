@@ -21,15 +21,11 @@ module.exports = {
 
       // Set the docker things we need for all appservers
       sources.push({services: _.set({}, options.name, {
-        // @TODO: below throws an RPC socket error
         command: 'exec init',
-        // command: 'exec init',
         environment: {
           LANDO_SERVICE_TYPE: '_platformsh_appserver',
           LANDO_WEBROOT_USER: 'app',
           LANDO_WEBROOT_GROUP: 'app',
-          LANDO_WEBROOT_UID: '1000',
-          LANDO_WEBROOT_GID: '1000',
         },
         // @TODO: would be great to not need the below but
         // its required if we want to unmount /etc/hosts /etc/resolv.conf

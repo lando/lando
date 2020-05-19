@@ -22,7 +22,7 @@ add_user() {
   fi;
 }
 
-# Veridy user
+# Verify user
 verify_user() {
   local USER=$1
   local GROUP=$2

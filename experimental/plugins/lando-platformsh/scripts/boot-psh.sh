@@ -22,6 +22,7 @@ fi
 # Safe to do every time
 lando_info "Ensuring needed directories exist..."
 mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
+chmod 777 /run
 
 # Stuff
 runsvdir -P /etc/service &> /tmp/runsvdir.log

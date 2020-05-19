@@ -108,7 +108,6 @@ module.exports = (app, lando) => {
     app.events.on('post-init', () => {
       // @TODO: util to get containers
       // @TODO: util for an "open" run
-      /*
       // Get all containers
       const containers = _(_.get(app, 'config.services', {}))
         .map((data, name) => ({name, appserver: data.appserver}))
@@ -124,20 +123,7 @@ module.exports = (app, lando) => {
         .map(service => service.name)
         .value();
 
-      // Run pre-open steps first
-      app.events.on('post-start', 7, () => lando.Promise.map(_.map(containers, 'name'), service => lando.engine.run({
-        id: `${app.project}_${service}_1`,
-        cmd: '/helpers/pre-open-psh.sh > /proc/self/fd/1',
-        compose: app.compose,
-        project: app.project,
-        opts: {
-          services: [service],
-          user: 'root',
-          silent: true,
-        },
-      })));
-
-      app.events.on('post-start', 7, () => {
+      app.events.on('post-start', 8, () => {
         return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
            id: `${app.project}_${service}_1`,
            cmd: ['/helpers/open-psh.sh', '{"relationships": {}}'],
@@ -145,10 +131,10 @@ module.exports = (app, lando) => {
            project: app.project,
            opts: {
              mode: 'attach',
-             hijack: false,
              services: [service],
              user: 'root',
-             cstdio: ['inherit', 'pipe', 'pipe'],
+             noTTY: true,
+             cstdio: ['ignore', 'pipe', 'ignore'],
              silent: true,
            },
         }))
@@ -158,6 +144,7 @@ module.exports = (app, lando) => {
         // @TODO: need to merge more stuff into data eg host
         .then(data => {
           // LOG things better
+          console.log(data);
           const openJSON = _.last(data[0].split(os.EOL));
           return [service, JSON.parse(openJSON)];
         }))
@@ -202,7 +189,6 @@ module.exports = (app, lando) => {
           return lando.Promise.reject(err);
         });
       });
-      */
     });
   }
 };

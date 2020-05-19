@@ -174,7 +174,7 @@ exports.getPlatformConfig = (app, service = {}) => {
       },
       'external ip': externalIP,
     },
-    log_file: '/dev/stdout',
+    log_file: '/dev/stderr',
     name: app.name,
     service: service.name,
     cluster: 'bespin',
