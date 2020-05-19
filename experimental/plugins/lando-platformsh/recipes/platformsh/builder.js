@@ -83,25 +83,3 @@ module.exports = {
     };
   },
 };
-
-/*
-    services: {
-      database: {
-        meUser: 'web',
-        scanner: false,
-        overrides: {
-          privileged: true,
-          image: 'docker.registry.platform.sh/mariadb-10.4',
-          command: 'init',
-          environment: {
-            LANDO_WEBROOT_USER: 'web',
-            LANDO_WEBROOT_GROUP: 'web',
-            LANDO_WEBROOT_UID: '10000',
-            LANDO_WEBROOT_GID: '10000',
-            LANDO_NEEDS_EXEC: 'DOEEET',
-          },
-        },
-      },
-    },
-  },
-*/

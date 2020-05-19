@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const os = require('os');
 const path = require('path');
 const utils = require('./lib/utils');
 
@@ -18,6 +19,7 @@ module.exports = (app, lando) => {
     // Get paths to platform files
     const routesFile = path.join(app.root, '.platform', 'routes.yaml');
     const servicesFile = path.join(app.root, '.platform', 'services.yaml');
+    app.log.verbose('identified a platformsh app');
 
     // Add tokens and other meta to our app, at this point we are not parsing anything
     // we are just loading things as is
@@ -38,6 +40,7 @@ module.exports = (app, lando) => {
       tokenCache: platformshTokenCache,
       tokens: lando.cache.get(platformshTokenCache) || [],
     };
+    app.log.silly('loaded platform config', app.platformsh);
 
     // Grab platform config right away and add it to the apps config
     app.events.on('pre-init', 1, () => {
@@ -48,17 +51,26 @@ module.exports = (app, lando) => {
 
       // Parse the routes config and add it
       app.platformsh.routes = utils.parseRoutes(app.platformsh.config.routes, `${app.name}.${app._config.domain}`);
+      app.log.verbose('parsed platformsh routes');
+      app.log.silly('platformsh routes are', app.platformsh.routes);
+
       // Just pass the services through
       app.platformsh.services = app.platformsh.config.services;
+      app.log.verbose('parsed platformsh services');
+      app.log.silly('platformsh services ares', app.platformsh.services);
+
       // Parse the applications and add those as well
       app.platformsh.applications = _(app.platformsh.config.applications)
         .map(data => utils.getApplicationConfig(data, app.platformsh))
         .value();
+      app.log.verbose('parsed platformsh applications');
+      app.log.silly('platformsh applications are', app.platformsh.applications);
 
       // Get the default config in there
       const configPath = path.join(app._config.userConfRoot, 'config', app.name);
       // Make sure the config directory exists if it doesnt already
       if (!fs.existsSync(configPath)) mkdirp.sync(configPath);
+      app.log.debug(`ensured ${configPath} exists`);
 
       // Go through our platform config and generate an array of configuration files for each
       // container so we can inject /run/config.json
@@ -76,75 +88,109 @@ module.exports = (app, lando) => {
         }))
         // Return
         .value();
+      app.log.verbose('built platformsh config jsons');
+      app.log.silly('generated platformsh runtime config is', app.platformsh.runConfig);
     });
 
-    // Dump the run config JSON for the services on "rebuildy" events
+    // Handle the platform BOOT lifecycle event
     app.events.on('post-init', () => {
       app.events.on('pre-start', 1, () => {
         if (!lando.cache.get(app.preLockfile)) {
           _.forEach(app.platformsh.runConfig, service => {
             fs.writeFileSync(service.file, JSON.stringify(service.data));
+            app.log.debug(`dumped platform config file for ${service.service} to ${service.file}`);
           });
         }
       });
     });
 
-    // Open application servers up before we scan URLS
+    // Handle the platform OPEN lifecycle event
     app.events.on('post-init', () => {
-      app.events.on('post-start', 8, () => {
-        // Get appservers and services
-        const appservers = _(_.get(app, 'config.services', {}))
-          .map((data, name) => _.merge({}, data, {name}))
-          .filter(service => service.appserver)
-          .map(service => service.name)
-          .value();
-        // Get services
-        const services = _(_.get(app, 'config.services', {}))
-          .map((data, name) => _.merge({}, data, {name}))
-          .filter(service => !service.appserver)
-          .map(service => service.name)
-          .value();
+      // @TODO: util to get containers
+      // @TODO: util for an "open" run
+      /*
+      // Get all containers
+      const containers = _(_.get(app, 'config.services', {}))
+        .map((data, name) => ({name, appserver: data.appserver}))
+        .value();
+      // Get service containers
+      const services = _(containers)
+        .filter(service => !service.appserver)
+        .map(service => service.name)
+        .value();
+      // Get application containers
+      const appservers = _(containers)
+        .filter(service => service.appserver)
+        .map(service => service.name)
+        .value();
 
-        // Open the services first
-        // @TODO: we need to retry the runs until they succeed
+      // Run pre-open steps first
+      app.events.on('post-start', 7, () => lando.Promise.map(_.map(containers, 'name'), service => lando.engine.run({
+        id: `${app.project}_${service}_1`,
+        cmd: '/helpers/pre-open-psh.sh > /proc/self/fd/1',
+        compose: app.compose,
+        project: app.project,
+        opts: {
+          services: [service],
+          user: 'root',
+          silent: true,
+        },
+      })));
+
+      app.events.on('post-start', 7, () => {
         return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
-          id: `${app.project}_${service}_1`,
-          cmd: ['/helpers/open-psh.sh', '{"relationships": {}}'],
-          compose: app.compose,
-          project: app.project,
-          opts: {
-            mode: 'attach',
-            hijack: true,
-            services: [service],
-            user: 'root',
-            cstdio: ['inherit', 'pipe', 'pipe'],
-            silent: true,
-          },
+           id: `${app.project}_${service}_1`,
+           cmd: ['/helpers/open-psh.sh', '{"relationships": {}}'],
+           compose: app.compose,
+           project: app.project,
+           opts: {
+             mode: 'attach',
+             hijack: false,
+             services: [service],
+             user: 'root',
+             cstdio: ['inherit', 'pipe', 'pipe'],
+             silent: true,
+           },
         }))
         // Modify the data a bit so we can inject it better
         // @TODO: We need to handle failure way better
         // @TODO: probably util to handle all the crazy here
+        // @TODO: need to merge more stuff into data eg host
         .then(data => {
-          const open = _([JSON.parse(data)])
-            .map(datum => _.merge({}, datum, {host: service}))
-            .value();
-          console.log(open);
-          return [service, open];
+          // LOG things better
+          const openJSON = _.last(data[0].split(os.EOL));
+          return [service, JSON.parse(openJSON)];
         }))
         // Inject it into each appserver
-        .then(relationships => {
-          // console.log(JSON.stringify({relationships: relationships[0]}, null, 2));
-          return lando.Promise.map(appservers, appserver => lando.engine.run({
-            id: `${app.project}_${appserver}_1`,
-            cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: _.fromPairs(relationships)})],
-            compose: app.compose,
-            project: app.project,
-            opts: {
-              hijack: false,
-              services: [appserver],
-              user: 'root',
-            },
-          }));
+        .then(data => {
+          // Mutate the data into something easier to use
+          const relationships = _.fromPairs(data);
+          // Open all the appservers
+          return lando.Promise.map(appservers, appserver => {
+            const appserverConfig = _.find(app.platformsh.runConfig, {service: appserver});
+            const relationshipConfig = _.find(appserverConfig.data.applications, application => {
+              return application.configuration.name = appserver;
+            });
+            const openData = {};
+            _.forEach(relationshipConfig.configuration.relationships, (value, name) => {
+              const service = value.split(':')[0];
+              const endpoint = value.split(':')[1];
+              openData[name] = [_.merge({}, relationships[service][endpoint], {host: `${service}.internal`})];
+            });
+            return lando.engine.run({
+              id: `${app.project}_${appserver}_1`,
+              cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: openData})],
+              compose: app.compose,
+              project: app.project,
+              opts: {
+                hijack: false,
+                services: [appserver],
+                user: 'root',
+                cstdio: ['inherit', 'pipe', 'pipe'],
+                silent: true,
+              },
+            });
+          });
         })
 
         .catch(err => {
@@ -155,29 +201,8 @@ module.exports = (app, lando) => {
           console.error(err);
           return lando.Promise.reject(err);
         });
-
-        // Open them
-        /*
-        return lando.Promise.each(appservers, appserver => lando.engine.run({
-          id: `${app.project}_${appserver}_1`,
-          cmd: 'sleep 1 && /helpers/open-psh.sh',
-          compose: app.compose,
-          project: app.project,
-          opts: {
-            hijack: false,
-            services: [appserver],
-            user: 'root',
-          },
-        })
-        .catch(err => {
-          // @TODO: make this a warning
-          lando.log.error('Looks like %s is not running! It should be so this is a problem.', appserver);
-          lando.log.warn('Try running `lando logs -s %s` to help locate the problem!', appserver);
-          lando.log.debug(err.stack);
-          return lando.Promise.reject(err);
-        }));
-        */
       });
+      */
     });
   }
 };

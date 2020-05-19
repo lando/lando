@@ -148,12 +148,7 @@ exports.getApplicationConfig = (application, platformConfig) => {
  * Helper to get common config needed for services
  */
 exports.getServiceDefaults = () => {
-  return {
-    build_as_root_internal: [
-      '/helpers/boot-psh.sh',
-      '/etc/platform/boot',
-    ],
-  };
+  return {};
 };
 
 /*
@@ -179,8 +174,7 @@ exports.getPlatformConfig = (app, service = {}) => {
       },
       'external ip': externalIP,
     },
-    // this adds extra stuff when we echo into open
-    // log_file: '/dev/stdout',
+    log_file: '/dev/stderr',
     name: app.name,
     service: service.name,
     cluster: 'bespin',
