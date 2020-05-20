@@ -27,13 +27,6 @@ exports.getApplicationRelationships = (app, name = 'app') => _(app.platformsh.ru
   .value();
 
 /*
- * Helper to get common config needed for services
- */
-exports.getServiceDefaults = () => {
-  return {};
-};
-
-/*
  * Helper to get the application service hostname
  */
 exports.generateOpenPayload = (appserverRelationships, serviceData) => _.fromPairs(_(appserverRelationships)
