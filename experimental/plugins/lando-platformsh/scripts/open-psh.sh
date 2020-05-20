@@ -10,4 +10,5 @@ LANDO_MODULE="platformsh-open"
 : ${DATA:=$1}
 
 # Open
+chown web:web -R /tmp/log || true
 echo "$DATA" | /etc/platform/commands/open

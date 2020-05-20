@@ -69,6 +69,7 @@ module.exports = {
             appserver: true,
             id: options.id,
             type: getLandoService(type),
+            build_as_root_internal: ['/helpers/recreate-users.sh'],
             build_internal: getLandoBuildStep(_.get(application, 'configuration.build.flavor')),
             platformsh: application.configuration,
             runConfig: _.find(platformConfig.runConfig, {service: name}),
