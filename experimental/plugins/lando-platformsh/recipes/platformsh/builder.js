@@ -60,6 +60,7 @@ module.exports = {
       const platformConfig = _.get(options, '_app.platformsh', {});
 
       // Loop through and build our appservers
+      // options.servces = _.fromPairs(applications.toLandoAppServices())
       _.forEach(platformConfig.applications, application => {
         // Get info about the appserver
         const {name, type, version} = getServiceType(application.configuration);

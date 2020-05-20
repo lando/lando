@@ -6,93 +6,79 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const os = require('os');
 const path = require('path');
+const pshconf = require('./lib/config');
+const runconf = require('./lib/run');
 const utils = require('./lib/utils');
 
-// Constants
-const platformshTokenCache = 'platformsh.tokens';
-
+// Only do this on platformsh recipes
 module.exports = (app, lando) => {
-  // Only do this on platformsh recipes
   if (_.get(app, 'config.recipe') === 'platformsh') {
     // Reset the ID if we can
     app.id = _.get(app, 'config.config.id', app.id);
-    // Get paths to platform files
-    const routesFile = path.join(app.root, '.platform', 'routes.yaml');
-    const servicesFile = path.join(app.root, '.platform', 'services.yaml');
     app.log.verbose('identified a platformsh app');
+    app.log.debug('reset app id to %s', app.id);
 
-    // Add tokens and other meta to our app, at this point we are not parsing anything
-    // we are just loading things as is
-    app.platformsh = {
-      config: {
-        applications: _(fs.readdirSync(app.root, {withFileTypes: true}))
-          .filter(dirent => dirent.isDirectory())
-          .map(dirent => dirent.name)
-          .concat('.')
-          .map(directory => path.resolve(app.root, directory, '.platform.app.yaml'))
-          .filter(file => fs.existsSync(file))
-          .map(file => lando.yaml.load(file))
-          .value(),
-        routes: (fs.existsSync(routesFile)) ? lando.yaml.load(routesFile) : {},
-        services: (fs.existsSync(servicesFile)) ? lando.yaml.load(servicesFile) : {},
-      },
-      id: app.id,
-      tokenCache: platformshTokenCache,
-      tokens: lando.cache.get(platformshTokenCache) || [],
-    };
-    app.log.silly('loaded platform config', app.platformsh);
+    // Explicitly add a path for config and make sure it exists
+    app.configPath = path.join(app._config.userConfRoot, 'config', app.name);
+    if (!fs.existsSync(app.configPath)) mkdirp.sync(app.configPath);
+    app.log.debug(`ensured ${app.configPath} exists`);
 
-    // Grab platform config right away and add it to the apps config
+    // Start by loading in all the platform files we can
+    app.platformsh = {config: pshconf.loadConfigFiles(app.root)};
+    // And then augment with a few other things
+    app.platformsh.domain = `${app.name}.${app._config.domain}`;
+    app.platformsh.id = app.id;
+    app.platformsh.tokenCache = 'platformsh.tokens';
+    app.platformsh.tokens = lando.cache.get(app.platformsh.tokenCache) || [];
+    app.log.silly('loaded platform config files', app.platformsh);
+
+    /*
+     * This event is intended to parse and interpret the platform config files
+     * loaded above into things we can use elsewhere, eg if there is any useful
+     * non-trivial data mutation that needs to happen ANYWHERE else in the
+     * recipe it probably should happen here
+     */
     app.events.on('pre-init', 1, () => {
       // Error if we don't have at least one .platform.app.yml
       if (_.isEmpty(app.platformsh.config.applications)) {
         lando.log.error(`Could not detect any valid .platform.app.yaml files in ${app.root} or its subdirs!`);
       }
 
-      // Parse the routes config and add it
-      app.platformsh.routes = utils.parseRoutes(app.platformsh.config.routes, `${app.name}.${app._config.domain}`);
+      // Get the platform raw platform config
+      const platformConfig = app.platformsh.config;
+
+      // Add the parsed routes config
+      app.platformsh.routes = pshconf.parseRoutes(platformConfig.routes, app.platformsh.domain);
       app.log.verbose('parsed platformsh routes');
       app.log.silly('platformsh routes are', app.platformsh.routes);
 
-      // Just pass the services through
-      app.platformsh.services = app.platformsh.config.services;
-      app.log.verbose('parsed platformsh services');
-      app.log.silly('platformsh services ares', app.platformsh.services);
-
-      // Parse the applications and add those as well
-      app.platformsh.applications = _(app.platformsh.config.applications)
-        .map(data => utils.getApplicationConfig(data, app.platformsh))
-        .value();
+      // Add the parsed applications config
+      // @TODO: the parsing here should happen
+      app.platformsh.applications = pshconf.parseApps(platformConfig.applications);
       app.log.verbose('parsed platformsh applications');
       app.log.silly('platformsh applications are', app.platformsh.applications);
 
-      // Get the default config in there
-      const configPath = path.join(app._config.userConfRoot, 'config', app.name);
-      // Make sure the config directory exists if it doesnt already
-      if (!fs.existsSync(configPath)) mkdirp.sync(configPath);
-      app.log.debug(`ensured ${configPath} exists`);
+      // Add relationships keyed by the service name
+      app.platformsh.relationships = pshconf.parseRelationships(platformConfig.applications);
+      app.log.verbose('determined platformsh relationships');
+      app.log.silly('platformsh relationships are', app.platformsh.relationships);
+
+      // Add the parsed services config
+      app.platformsh.services = pshconf.parseServices(platformConfig.services, app.platformsh.relationships);
+      app.log.verbose('parsed platformsh services');
+      app.log.silly('platformsh services ares', app.platformsh.services);
 
       // Go through our platform config and generate an array of configuration files for each
       // container so we can inject /run/config.json
-      app.platformsh.runConfig = _(_.get(app, 'platformsh.config.applications', []))
-        // Add some indicator that this is an app
-        .map(app => _.merge({}, app, {application: true}))
-        // Arrayify and merge in our services
-        .concat(_(_.get(app, 'platformsh.config.services', {})).map((data, name) => _.merge({}, data, {name})).value())
-        // Map into the full blown config
-        .map(service => ({
-          service: service.name,
-          application: service.application === true,
-          file: path.join(configPath, `${service.name}.json`),
-          data: utils.getPlatformConfig(app, service),
-        }))
-        // Return
-        .value();
+      app.platformsh.runConfig = runconf.buildRunConfig(app);
       app.log.verbose('built platformsh config jsons');
       app.log.silly('generated platformsh runtime config is', app.platformsh.runConfig);
     });
 
-    // Handle the platform BOOT lifecycle event
+    /*
+     * This just makes sure we refresh the config we inject into /run/config.json when a first
+     * start/rebuild happens
+     */
     app.events.on('post-init', () => {
       app.events.on('pre-start', 1, () => {
         if (!lando.cache.get(app.preLockfile)) {
