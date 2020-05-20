@@ -5,7 +5,6 @@ const _ = require('lodash');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const open = require('./lib/open');
-const os = require('os');
 const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
@@ -92,7 +91,7 @@ module.exports = (app, lando) => {
 
     /*
      * This event makes sure we collect any information that is only available once the service is on
-     * like the IP address
+     * like the IP address, we use docker inspect under the hood
      */
     app.events.on('post-init', () => {
       // Get service containers
@@ -106,34 +105,43 @@ module.exports = (app, lando) => {
         serviceConfig.platformsh.openMerge = {
           cluster: 'bespin',
           fragment: null,
+          host: `${serviceConfig.name}.internal`,
           hostname: `${app.name}.${serviceConfig.name}.service._.lndo.site`,
           ip: open.getIPAddress(data, `${app.project}_default`),
           rel: serviceConfig.platformsh.hostname,
-          type: [serviceConfig.type, serviceConfig.version].join(':'),
+          service: serviceConfig.name,
+          type: [serviceConfig.platformsh.type, serviceConfig.version].join(':'),
         };
       })));
     });
 
-    // Handle the platform OPEN lifecycle event
+    /*
+     * This event handles the platform OPEN lifecycle event. This collects information we get on stdout
+     * when we run /etc/platform/commands/open on non-application conatiners, parses it, mixes in other information
+     * we got previously like the IP address and then uses that to do the same open command on each application
+     * container
+     *
+     * This is required to expose the application container to the world, eg it starts up nginx/fpm on exposed ports
+     * and to set the PLATFORM_RELATIONSHIPS envvar.
+     */
     app.events.on('post-init', () => {
-      // Get containers by type
-      /*
-      const appservers = utils.getContainersByType(app);
-      const services = utils.getContainersByType(app, false);
+      // Get lists of application and services
+      const services = open.getNonApplicationServices(app.config.services);
+      const appservers = open.getApplicationServices(app.config.services);
       app.log.verbose('preparing to OPEN up platformsh containers...');
-      app.log.debug('found platformsh appservers', appservers);
-      app.log.debug('found platformsh services', services);
+      app.log.debug('found platformsh services to open', _.map(services, 'name'));
+      app.log.debug('found platformsh appservers to open', _.map(appservers, 'name'));
 
       // Open up services and collect their output
       app.events.on('post-start', 8, () => {
         return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
-           id: `${app.project}_${service}_1`,
-           cmd: ['/helpers/open-psh.sh', '{"relationships": {}}'],
+           id: `${app.project}_${service.name}_1`,
+           cmd: ['/helpers/open-psh.sh', service.platformsh.opener],
            compose: app.compose,
            project: app.project,
            opts: {
              mode: 'attach',
-             services: [service],
+             services: [service.name],
              user: 'root',
              noTTY: true,
              cstdio: ['ignore', 'pipe', 'ignore'],
@@ -142,13 +150,17 @@ module.exports = (app, lando) => {
         }))
         // Modify the data a bit so we can inject it better
         .then(data => {
-          const cleanedData = _.last(data[0].split(os.EOL));
-          app.log.verbose(`received data when opening ${service}`, cleanedData);
           try {
-            return [service, JSON.parse(cleanedData)];
+            // Try to get the data
+            const parsedData = open.parseOpenData(data);
+            // Merge in other open data
+            _.forEach(parsedData, endpoint => _.merge(endpoint, service.platformsh.openMerge));
+            // And return
+            return [service.name, parsedData];
+          // TODO: We probably need a better error message, fallback, etc here
           } catch (e) {
-            // @TODO: make this better
-            app.log.warn('could not parse json', e, cleanedData);
+            app.log.error('could not parse json', e, data);
+            return;
           }
         }))
         // Inject it into each appserver
@@ -159,20 +171,20 @@ module.exports = (app, lando) => {
 
           // Open all the appservers
           return lando.Promise.map(appservers, appserver => {
-            const appserverRelationships = utils.getApplicationRelationships(app, appserver);
-            const openPayload = utils.generateOpenPayload(appserverRelationships, serviceData);
-            app.log.verbose(`${appserver} has relationship config`, appserverRelationships);
-            app.log.verbose(`generated open payload for ${appserver}`, openPayload);
+            const relationships = open.parseRelationships(appserver.platformsh.relationships);
+            const openPayload = open.generateOpenPayload(serviceData, relationships);
+            app.log.verbose(`${appserver} has relationship config`, relationships);
+            app.log.verbose(`generated open payload for ${appserver.name}`, openPayload);
 
             // OPEN
             return lando.engine.run({
-              id: `${app.project}_${appserver}_1`,
+              id: `${app.project}_${appserver.name}_1`,
               cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: openPayload})],
               compose: app.compose,
               project: app.project,
               opts: {
                 hijack: false,
-                services: [appserver],
+                services: [appserver.name],
                 user: 'root',
                 cstdio: ['inherit', 'pipe', 'pipe'],
                 silent: true,
@@ -181,7 +193,6 @@ module.exports = (app, lando) => {
           });
         });
       });
-        */
     });
   }
 };
