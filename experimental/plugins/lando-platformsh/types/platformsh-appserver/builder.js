@@ -18,15 +18,16 @@ module.exports = {
       const bootScript = path.join(options.userConfRoot, 'scripts', 'boot-psh.sh');
 
       // A appserver uses the "web" user
-      options.meUser = 'web';
+      options.meUser = 'app';
 
       // Set the docker things we need for all appservers
       sources.push({services: _.set({}, options.name, {
         command: 'exec init',
         environment: _.merge({}, environment, {
-          LANDO_NO_USER_PERMS: 'NOTGONNADOIT',
           LANDO_SERVICE_TYPE: '_platformsh_appserver',
           PLATFORMSH_CLI_TOKEN: _.get(options, '_app.meta.token'),
+          LANDO_WEBROOT_USER: 'app',
+          LANDO_WEBROOT_GROUP: 'app',
         }),
         // @TODO: would be great to not need the below but
         // its required if we want to unmount /etc/hosts /etc/resolv.conf
@@ -35,6 +36,7 @@ module.exports = {
           `${runConfigPath}:/run/config.json`,
           `${bootScript}:/scripts/001-boot-platformsh`,
         ],
+        working_dir: '/app',
       })});
 
       // Pass down

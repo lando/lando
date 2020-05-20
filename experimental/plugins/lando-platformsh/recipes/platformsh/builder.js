@@ -17,6 +17,21 @@ const getLandoService = type => {
 };
 
 /*
+ * Helper to map lagoon type data to a lando service
+ */
+const getLandoBuildStep = (flavor = 'none') => {
+  switch (flavor) {
+    case 'none': return [];
+    case 'composer': return [
+      'composer --no-interaction install --no-progress --prefer-dist --optimize-autoloader',
+    ];
+    case 'default': return ['npm prune --userconfig .npmrc && npm install --userconfig .npmrc '];
+    case 'drupal': return ['drush make'];
+    default: return [];
+  };
+};
+
+/*
  * Helper to return a type and version from platform data
  */
 const getServiceType = ({name = 'appserver', type} = {}) => ({
@@ -54,6 +69,7 @@ module.exports = {
             appserver: true,
             id: options.id,
             type: getLandoService(type),
+            build_internal: getLandoBuildStep(_.get(application, 'configuration.build.flavor')),
             platformsh: application.configuration,
             runConfig: _.find(platformConfig.runConfig, {service: name}),
             version,

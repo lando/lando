@@ -16,7 +16,12 @@ const encode = data => {
 /*
  * Helper to get the application service hostname
  */
-const getAppHostname = (name, apps = []) => `app.${_.findIndex(apps, {name})}`;
+const getAppHostname = (name, apps = []) => {
+  const applicationNumber = _.findIndex(apps, app => {
+    return app.configuration.name === name;
+  });
+  return `app.${applicationNumber}`;
+};
 
 /*
  * Helper to get the applications doc root
