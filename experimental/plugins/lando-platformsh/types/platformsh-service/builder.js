@@ -20,7 +20,7 @@ module.exports = {
       options.meUser = 'app';
 
       // Set the docker things we need for all appservers
-      sources.push({services: _.set({}, options.name, {
+      const service = {
         command: 'exec init',
         environment: {
           LANDO_SERVICE_TYPE: '_platformsh_appserver',
@@ -34,9 +34,19 @@ module.exports = {
           `${runConfigPath}:/run/config.json`,
           `${bootScript}:/scripts/001-boot-platformsh`,
         ],
-      })});
+      };
+
+      // Add in aliases if we have them
+      if (!_.isEmpty(options.platformsh.aliases)) {
+        service.networks = {default: {
+          aliases: _(options.platformsh.aliases)
+            .map(alias => `${alias}.internal`)
+            .value(),
+        }};
+      }
 
       // ADD IN OTHER LANDO STUFF? info? etc?
+      sources.push({services: _.set({}, options.name, service)});
       super(id, options, ...sources);
     };
   },
