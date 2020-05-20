@@ -29,7 +29,10 @@ exports.getNonApplicationServices = (services = []) => _(services)
  * Helper to get the application service hostname
  */
 exports.generateOpenPayload = (data, relationships) => _.fromPairs(_(relationships)
-  .map(relationship => ([relationship.alias, [_.get(data, relationship.path)]]))
+  .map(relationship => ([
+    relationship.alias,
+    [_.merge({}, _.get(data, relationship.path), {host: `${relationship.alias}.internal`})]
+  ]))
   .value());
 
 /*

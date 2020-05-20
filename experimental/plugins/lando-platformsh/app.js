@@ -105,7 +105,6 @@ module.exports = (app, lando) => {
         serviceConfig.platformsh.openMerge = {
           cluster: 'bespin',
           fragment: null,
-          host: `${serviceConfig.name}.internal`,
           hostname: `${app.name}.${serviceConfig.name}.service._.lndo.site`,
           ip: open.getIPAddress(data, `${app.project}_default`),
           rel: serviceConfig.platformsh.hostname,
