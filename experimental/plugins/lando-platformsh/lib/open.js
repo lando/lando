@@ -4,6 +4,20 @@
 const _ = require('lodash');
 
 /*
+ * Get service IP address by network
+ */
+exports.getIPAddress = (data, network = 'lando_bridge_network') => {
+  return _.get(data, `NetworkSettings.Networks.${network}.IPAddress`, '127.0.0.1');
+};
+
+/*
+ * Helper to filter out services from application containers
+ */
+exports.getNonApplicationServices = (services = []) => _(services)
+  .filter(service => !service.platformsh.application)
+  .value();
+
+/*
  * Helper to get the application service hostname
  */
 exports.getContainersByType = (app, appserver = true) => _(_.get(app, 'config.services', {}))

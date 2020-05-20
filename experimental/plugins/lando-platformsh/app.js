@@ -4,11 +4,11 @@
 const _ = require('lodash');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const open = require('./lib/open');
 const os = require('os');
 const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
-const utils = require('./lib/utils');
 
 // Only do this on platformsh recipes
 module.exports = (app, lando) => {
@@ -76,7 +76,7 @@ module.exports = (app, lando) => {
     });
 
     /*
-     * This just makes sure we refresh the config we inject into /run/config.json when a first
+     * This event makes sure we refresh the config we inject into /run/config.json when a first
      * start/rebuild happens
      */
     app.events.on('post-init', () => {
@@ -90,9 +90,34 @@ module.exports = (app, lando) => {
       });
     });
 
+    /*
+     * This event makes sure we collect any information that is only available once the service is on
+     * like the IP address
+     */
+    app.events.on('post-init', () => {
+      // Get service containers
+      const services = open.getNonApplicationServices(app.config.services);
+      app.events.on('post-start', 1, () => lando.Promise.resolve(services)
+      .map(service => app.engine.scan({id: `${app.project}_${service.name}_1`}).then(data => {
+        // Find the config for this service
+        const serviceConfig = _.find(app.config.services, {name: service.name});
+        // Add some helpful things to augment our applicaiton OPENER
+        // @TODO: is this a good list?
+        serviceConfig.platformsh.openMerge = {
+          cluster: 'bespin',
+          fragment: null,
+          hostname: `${app.name}.${serviceConfig.name}.service._.lndo.site`,
+          ip: open.getIPAddress(data, `${app.project}_default`),
+          rel: serviceConfig.platformsh.hostname,
+          type: [serviceConfig.type, serviceConfig.version].join(':'),
+        };
+      })));
+    });
+
     // Handle the platform OPEN lifecycle event
     app.events.on('post-init', () => {
       // Get containers by type
+      /*
       const appservers = utils.getContainersByType(app);
       const services = utils.getContainersByType(app, false);
       app.log.verbose('preparing to OPEN up platformsh containers...');
@@ -156,6 +181,7 @@ module.exports = (app, lando) => {
           });
         });
       });
+        */
     });
   }
 };
