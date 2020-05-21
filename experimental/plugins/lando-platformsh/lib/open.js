@@ -31,7 +31,7 @@ exports.getNonApplicationServices = (services = []) => _(services)
 exports.generateOpenPayload = (data, relationships) => _.fromPairs(_(relationships)
   .map(relationship => ([
     relationship.alias,
-    [_.merge({}, _.get(data, relationship.path), {host: `${relationship.alias}.internal`})]
+    [_.merge({}, _.get(data, relationship.path), {host: `${relationship.alias}.internal`})],
   ]))
   .value());
 

@@ -28,8 +28,16 @@ module.exports = {
       // Map into lando services
       options.services = utils.getLandoServices(services, platformConfig.runConfig);
 
-      // Hardcode from proxy domains for now
+      // Map into lando proxy routes
       // options.proxy = {app: ['lando-d8.lndo.site']};
+
+      // Map into lando tooling routes
+
+      // Do a final pass so we wrap all build steps/tooling/etc in /helpers/execute.sh
+      // @TODO: try out custom build step/tooling
+      options.tooling = {
+        node: {service: 'app'},
+      };
 
       // Send downstream
       super(id, options);

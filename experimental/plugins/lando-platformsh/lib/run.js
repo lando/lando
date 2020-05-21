@@ -40,9 +40,9 @@ const encode = data => {
 /*
  * Helper to get the applications doc root
  */
-const getDocRoot = app => {
-  if (_.has(app, 'web.locations./.root')) {
-    return `/app/${app.web.locations['/'].root}`;
+const getDocRoot = appConfig => {
+  if (_.has(appConfig, 'web.locations./.root')) {
+    return `/app/${appConfig.web.locations['/'].root}`;
   }
   return '/app';
 };
@@ -50,7 +50,7 @@ const getDocRoot = app => {
 /*
  * Helper to get the applications environment variables
  */
-const getEnvironmentVariables = app => _(_.get(app, 'variables.env', {}))
+const getEnvironmentVariables = appConfig => _(_.get(appConfig, 'variables.env', {}))
   .map((value, key) => ([key, (_.isObject(value)) ? JSON.stringify(value) : value]))
   .fromPairs()
   .value();
@@ -98,7 +98,7 @@ const getApplicationsConfig = (apps, config) => _(apps)
   // Start by just getting the basic config
   .map(app => getApplicationConfig(app, config))
   // Then augment it with the variables
-  .map(app => _.merge({}, app, {configuration: getApplicationEnvironment(app, config)}))
+  .map(app => _.merge({}, app, {configuration: getApplicationEnvironment(app.configuration, config)}))
   // and return
   .value();
 
@@ -108,19 +108,25 @@ const getApplicationsConfig = (apps, config) => _(apps)
  * Handle the variables with the exception of PLATFORM_RELATIONSHIPS
  * which is special and needs to be handled separately
  */
-const getApplicationEnvironment = (app, config) => ({
-  variables: _.merge({}, getEnvironmentVariables(app), {
-    PLATFORM_DOCUMENT_ROOT: getDocRoot(app),
+const getApplicationEnvironment = (appConfig, config) => ({
+  variables: _.merge({}, getEnvironmentVariables(appConfig), {
+    PLATFORM_DOCUMENT_ROOT: getDocRoot(appConfig),
     PLATFORM_APPLICATION: encode(config),
+    // @NOTE: PLATFORM_APP_DIR is normally set to /app but this is problematic locally
+    // eg on Drupal this puts the /tmp and /private at /app/tmp and /app/private and
+    // we probably dont want these things ending up in git
+    //
+    // That said changing this could def be problematic for other reasons
+    // PLATFORM_APP_DIR: '/var/www',
     PLATFORM_ENVIRONMENT: 'lando',
-    PLATFORM_APPLICATION_NAME: app.configuration.name,
+    PLATFORM_APPLICATION_NAME: appConfig.name,
     PLATFORM_PROJECT: config.id,
     PLATFORM_DIR: '/app',
     PLATFORM_PROJECT_ENTROPY: 'heatdeath',
     PLATFORM_BRANCH: 'master',
-    PLATFORM_TREE_ID: `${config.id}-${app.configuration.name}`,
+    PLATFORM_TREE_ID: `${config.id}-${appConfig.name}`,
     PLATFORM_ROUTES: encode(config.routes),
-    PLATFORM_VARIABLES: getPlatformVariables(app),
+    PLATFORM_VARIABLES: getPlatformVariables(appConfig),
   }),
 });
 
