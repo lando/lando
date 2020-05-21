@@ -24,6 +24,10 @@ lando_info "Ensuring needed directories exist..."
 mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
 chmod 777 /run
 
+# We are using this as our mock $HOME directory for commands right now
+chown $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www
+nohup chown -R $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www >/dev/null 2>&1 &
+
 # Stuff
 runsvdir -P /etc/service &> /tmp/runsvdir.log
 
