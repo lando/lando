@@ -28,6 +28,9 @@ module.exports = {
       // Map into lando services
       options.services = utils.getLandoServices(services, platformConfig.runConfig);
 
+      // Hardcode from proxy domains for now
+      // options.proxy = {app: ['lando-d8.lndo.site']};
+
       // Send downstream
       super(id, options);
     };
