@@ -33,6 +33,7 @@ module.exports = {
         volumes: [
           `${runConfigPath}:/run/config.json`,
           `${bootScript}:/scripts/001-boot-platformsh`,
+          `${options.data}:/mnt/data`,
         ],
       };
 
