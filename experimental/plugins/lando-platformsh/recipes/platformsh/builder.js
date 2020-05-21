@@ -2,7 +2,8 @@
 
 // Modules
 const _ = require('lodash');
-const utils = require('./../../lib/services');
+const {getLandoServices} = require('./../../lib/services');
+const {getLandoProxyRoutes} = require('./../../lib/proxy');
 
 /*
  * Build Platformsh
@@ -26,10 +27,9 @@ module.exports = {
       const services = _.flatten([platformConfig.applications, platformConfig.services]);
 
       // Map into lando services
-      options.services = utils.getLandoServices(services, platformConfig.runConfig);
-
+      options.services = getLandoServices(services, platformConfig.runConfig);
       // Map into lando proxy routes
-      // options.proxy = {app: ['lando-d8.lndo.site']};
+      options.proxy = getLandoProxyRoutes(platformConfig.routes);
 
       // Map into lando tooling routes
 
