@@ -26,7 +26,7 @@ HTTP_PROXY=http://my_proxy:80
 HTTPS_PROXY=https://my_proxy:443
 ```
 
-It is also a good practice to `.gitinore` the `env` file so you can set `proxy` settings that are relevant to you without forcing those settings on other users and environments.
+It is also a good practice to `.gitignore` the `env` file so you can set `proxy` settings that are relevant to you without forcing those settings on other users and environments.
 
 ## Potential Docker driven solutions
 
