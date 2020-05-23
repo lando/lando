@@ -46,13 +46,6 @@ if [ -f "/helpers/load-keys.sh" ] && [ -x "$(command -v bash)" ]; then
   /helpers/load-keys.sh
 fi;
 
-# If any pre-start build steps have not completed yet we need to pause the container here
-# so it doesn't fail
-if [ ! -f "/lando/cache/$LANDO_APP_NAME.build.lock" ]; then
-  lando_warn "Pausing service start until Lando detects that pre-start build steps are completed..."
-  sleep infinity
-fi
-
 # Run any sh scripts that we've loaded into the mix for autorun unless we've
 # explictly disabled
 #
@@ -74,6 +67,13 @@ if [ -d "/bash-scripts" ] && [ -z ${LANDO_NO_SCRIPTS+x} ]; then
   if [ -x "$(command -v run-parts)" ] && [ -x "$(command -v bash)" ]; then
     run-parts /bash-scripts
   fi
+fi
+
+# If any pre-start build steps have not completed yet we need to pause the container here
+# so it doesn't fail
+if [ ! -f "/lando/cache/$LANDO_APP_NAME.build.lock" ]; then
+  lando_warn "Pausing service start until Lando detects that pre-start build steps are completed..."
+  sleep infinity
 fi
 
 # Run the COMMAND
