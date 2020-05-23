@@ -11,7 +11,7 @@ module.exports = {
     supported: ['2.6', '2.5', '2.4', '2.3', '1.9'],
     patchesSupported: true,
     legacy: ['1.9'],
-    command: 'sleep infinity',
+    command: 'tail -f /dev/null',
     moreHttpPorts: [],
     path: [
       '/usr/local/sbin',
@@ -44,7 +44,7 @@ module.exports = {
         environment: {
           PATH: options.path.join(':'),
         },
-        ports: (options.command !== 'sleep infinity') ? [options.port] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };

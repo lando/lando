@@ -61,7 +61,7 @@ module.exports = {
     supported: supportedVersions,
     patchesSupported: true,
     legacy: ['8', '6'],
-    command: 'sleep infinity',
+    command: 'tail -f /dev/null',
     moreHttpPorts: [],
     path: [
       '/app/node_modules/.bin',
@@ -96,7 +96,7 @@ module.exports = {
           LANDO_WEBROOT_UID: '1000',
           LANDO_WEBROOT_GID: '1000',
         },
-        ports: (options.command !== 'sleep infinity') ? [options.port] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };

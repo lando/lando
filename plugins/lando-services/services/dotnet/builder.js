@@ -11,7 +11,7 @@ module.exports = {
     supported: ['2', '2.0', '1', '1.1', '1.0'],
     patchesSupported: false,
     legacy: ['1', '1.1', '1.0'],
-    command: 'sleep infinity',
+    command: 'tail -f /dev/null',
     path: [
       '/usr/local/sbin',
       '/usr/local/bin',
@@ -42,7 +42,7 @@ module.exports = {
           PATH: options.path.join(':'),
           ASPNETCORE_URLS: `http://+:${options.port}`,
         },
-        ports: (options.command !== 'sleep infinity') ? [options.port] : [],
+        ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };

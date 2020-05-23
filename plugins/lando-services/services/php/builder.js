@@ -47,7 +47,7 @@ const parseApache = options => {
  * Helper to parse cli config
  */
 const parseCli = options => {
-  options.command = ['sleep infinity'];
+  options.command = ['tail -f /dev/null'];
   return options;
 };
 

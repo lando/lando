@@ -20,7 +20,7 @@ module.exports = {
       const mountService = {
         services: {
           mounter: {
-            command: 'sleep infinity',
+            command: 'tail -f /dev/null',
             image: 'devwithlando/util:2',
             environment: {
               LANDO_HOST_UID: uid,

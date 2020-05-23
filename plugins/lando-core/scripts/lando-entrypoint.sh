@@ -73,7 +73,7 @@ fi
 # so it doesn't fail
 if [ ! -f "/lando/cache/$LANDO_APP_NAME.build.lock" ]; then
   lando_warn "Pausing service start until Lando detects that pre-start build steps are completed..."
-  sleep infinity
+  tail -f /dev/null
 fi
 
 # Run the COMMAND

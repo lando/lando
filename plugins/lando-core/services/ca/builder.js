@@ -25,7 +25,7 @@ module.exports = {
       const caService = {
         services: {
           ca: {
-            command: 'sleep infinity',
+            command: 'tail -f /dev/null',
             image: 'devwithlando/util:stable',
             environment: {
               LANDO_SERVICE_TYPE: 'ca',
