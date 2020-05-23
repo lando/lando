@@ -11,7 +11,7 @@ module.exports = {
     supported: ['3', '3.7', '3.6', '3.5', '2.7'],
     patchesSupported: true,
     legacy: ['2.7'],
-    command: 'tail -f /dev/null',
+    command: 'sleep infinity',
     moreHttpPorts: [],
     path: [
       '/var/www/.local/bin',
@@ -46,7 +46,7 @@ module.exports = {
           PIP_USER: 'true',
           PYTHONUSERBASE: '/var/www/.local',
         },
-        ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
+        ports: (options.command !== 'sleep infinity') ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };

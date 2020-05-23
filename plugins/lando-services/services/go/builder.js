@@ -11,7 +11,7 @@ module.exports = {
     supported: ['1.14', '1.13'],
     patchesSupported: true,
     legacy: ['1.12', '1.11', '1.10', '1.9', '1.8'],
-    command: 'tail -f /dev/null',
+    command: 'sleep infinity',
     ssl: false,
   },
   parent: '_appserver',
@@ -24,7 +24,7 @@ module.exports = {
       // Build the goz
       const go = {
         image: `golang:${options.version}`,
-        ports: (options.command !== 'tail -f /dev/null') ? ['80'] : [],
+        ports: (options.command !== 'sleep infinity') ? ['80'] : [],
         command: `/bin/sh -c "${options.command}"`,
       };
       // Send it downstream

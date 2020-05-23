@@ -38,13 +38,20 @@ if [ -f "/helpers/user-perms.sh" ] && [ -z ${LANDO_NO_USER_PERMS+x} ]; then
 fi;
 
 # Run user load keys if we can, this requires bash right now so not
-# all services will get keys, however generally if the service needs the keys
+# all services will get keys, however, generally if the service needs the keys
 # its going to have bash
 #
 # TODO: would be awesome to make this POSIX compliant at some point
 if [ -f "/helpers/load-keys.sh" ] && [ -x "$(command -v bash)" ]; then
   /helpers/load-keys.sh
 fi;
+
+# If any pre-start build steps have not completed yet we need to pause the container here
+# so it doesn't fail
+if [ ! -f "/lando/cache/$LANDO_APP_NAME.build.lock" ]; then
+  lando_warn "Pausing service start until Lando detects that pre-start build steps are completed..."
+  sleep infinity
+fi
 
 # Run any sh scripts that we've loaded into the mix for autorun unless we've
 # explictly disabled
@@ -76,10 +83,8 @@ lando_info "Lando handing off to: $@"
 # Try to DROP DOWN to anotehr user if we can
 if [ ! -z ${LANDO_DROP_USER+x} ]; then
   lando_debug "Running command as ${LANDO_DROP_USER}..."
-  su ${LANDO_DROP_USER} -c "$@" || tail -f /dev/null
+  su ${LANDO_DROP_USER} -c "$@"
 fi
 
 # Otherwise do the normal
-lando_debug "Running command with exec..."
-exec "$@" || tail -f /dev/null
-
+exec "$@"

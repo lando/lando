@@ -3,22 +3,34 @@ services:
   pghero2:
     type: compose
     app_mount: false
+    moreHttpPorts:
+      - "8080"
     services:
       image: ankane/pghero
       command: puma -C config/puma.rb
+      environment:
+        DATABASE_URL: postgres://postgres:password@custom-database2:5432/test
+      ports:
+        - "8080"
   pghero:
     type: compose
     app_mount: disabled
+    moreHttpPorts:
+      - "8080"
     services:
       image: ankane/pghero
       command: puma -C config/puma.rb
+      environment:
+        DATABASE_URL: postgres://postgres:password@custom-database:5432/test
+      ports:
+        - "8080"
   custom-service:
     type: compose
     services:
       image: drupal:8
       command: docker-php-entrypoint apache2-foreground
       ports:
-        - '80'
+        - "80"
     volumes:
       my-volume:
     networks:
@@ -38,6 +50,9 @@ services:
     services:
       image: postgres:9.4
       command: docker-entrypoint.sh postgres
+      environment:
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: test
       volumes:
         - data_volume:/var/lib/postgresql/data
     volumes:
@@ -50,3 +65,6 @@ services:
         context: ./custom
         dockerfile: Dockerfile-database
       command: docker-entrypoint.sh postgres
+      environment:
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: test
