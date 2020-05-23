@@ -76,10 +76,9 @@ lando_info "Lando handing off to: $@"
 # Try to DROP DOWN to anotehr user if we can
 if [ ! -z ${LANDO_DROP_USER+x} ]; then
   lando_debug "Running command as ${LANDO_DROP_USER}..."
-  su ${LANDO_DROP_USER} -c "$@" || tail -f /dev/null
+  su ${LANDO_DROP_USER} -c "$@"
 fi
 
 # Otherwise do the normal
-lando_debug "Running command with exec..."
-exec "$@" || tail -f /dev/null
+exec "$@"
 
