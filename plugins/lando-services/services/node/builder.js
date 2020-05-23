@@ -98,7 +98,7 @@ module.exports = {
         },
         ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
-        command: `/bin/sh -c "${options.command}"`,
+        command: `options.command`,
       };
       // Change the me user
       options.meUser = 'node';

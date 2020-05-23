@@ -44,7 +44,7 @@ module.exports = {
         },
         ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
-        command: `/bin/sh -c "${options.command}"`,
+        command: `options.command`,
       };
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, dotnet)});

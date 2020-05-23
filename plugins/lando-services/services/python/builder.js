@@ -48,7 +48,7 @@ module.exports = {
         },
         ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
         volumes: options.volumes,
-        command: `/bin/sh -c "${options.command}"`,
+        command: options.command,
       };
       // Add port to "moreHttpsPorts"
       options.moreHttpPorts.push(options.port);

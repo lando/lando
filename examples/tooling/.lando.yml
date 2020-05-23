@@ -8,23 +8,30 @@ services:
   node:
     type: node:12
 tooling:
-  php:
-    service: php
-    description: Run php commands
-    cmd: php
+  busted:
+    service: web
+    cmd: i-do-not-exist
+  dynamic:
+    cmd: env
+    service: :service
+    options:
+      service:
+        default: web
+        alias:
+          - s
+        describe: Run a different service
+  env:
+    cmd:
+      - php: env
+      - web: env
+    description: Print environment variables for a few things
   iamroot:
     service: php
     cmd: echo "$HOME" && echo "$(id)" > /whoami
     user: root
-  whoami:
-    service: php
-    cmd: id
   nodeme:
     service: node
     cmd: whoami
-  stillme:
-    cmd:
-      - node: whoami
   notme:
     service: node
     cmd: whoami
@@ -34,12 +41,22 @@ tooling:
     cmd:
       - env | grep LANDO_ > pipe.txt
       - echo "more" >> pipe.txt
+  php:
+    service: php
+    description: Run php commands
+    cmd: php
+  stillme:
+    cmd:
+      - node: whoami
   test:
     service: php
     cmd:
       - php -v
       - php -m
     description: Run all the tests
+  whoami:
+    service: php
+    cmd: id
   word:
     service: web
     cmd: /app/word.sh
@@ -55,20 +72,7 @@ tooling:
           message: What is the word?
           default: bird
           weight: 600
-  dynamic:
-    cmd: env
-    service: :service
-    options:
-      service:
-        default: web
-        alias:
-          - s
-        describe: Run a different service
-  env:
-    cmd:
-      - php: env
-      - web: env
-    description: Print environment variables for a few things
-  busted:
+  wraptest:
     service: web
-    cmd: i-do-not-exist
+    user: root
+    cmd: echo "$(ls -lsa /*)"

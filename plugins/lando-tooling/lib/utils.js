@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const escape = require('./../../../lib/utils').shellEscape;
 const getUser = require('./../../../lib/utils').getUser;
 const getCliEnvironment = require('./../../../lib/utils').getCliEnvironment;
 const path = require('path');
@@ -84,6 +83,8 @@ const handleDynamic = (config, options = {}, answers = {}) => {
 const handleOpts = (config, argopts = process.argv.slice(3)) => {
   // If this is not a CLI then we can pass right back
   if (process.lando !== 'node') return config;
+  // Ensure that command is an array still
+  if (!_.isArray(config.command)) config.command = [config.command];
   // Return
   return _.merge({}, config, {command: config.command.concat(argopts)});
 };
@@ -151,15 +152,13 @@ exports.parseConfig = (cmd, service, options = {}, answers = {}) => _(cmd)
   .map(cmd => parseCommand(cmd, service))
   // Handle dynamic services
   .map(config => handleDynamic(config, options, answers))
-  // Parse the cmds into something more usable for shell.sh
-  .map(config => _.merge({}, config, {command: escape(config.command)}))
   // Add in any argv extras if they've been passed in
   .map(config => handleOpts(config))
   // Append passthru options so that interactive responses are permitted
   // @TODO: this will double add opts that are already passed in non-interactively, is that a problem?
   .map(config => _.merge({}, config, {command: config.command.concat(handlePassthruOpts(options, answers))}))
-  // Wrap the command in /bin/sh if that makes sense
-  .map(config => _.merge({}, config, {command: escape(config.command, true)}))
+  // Wrap the command in /bin/sh
+  .map(config => _.merge({}, config, {command: ['/bin/sh', '-c', config.command.join(' ')]}))
   // Put into an object
   .value();
 

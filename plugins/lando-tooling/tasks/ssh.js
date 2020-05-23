@@ -6,7 +6,7 @@ const getUser = require('./../../../lib/utils').getUser;
 const utils = require('./../lib/utils');
 
 // Other things
-const bashme = ['/bin/sh', '-c', 'if ! type bash > /dev/null; then sh; else bash; fi'];
+const bashme = 'if ! type bash > /dev/null; then sh; else bash; fi';
 const task = {
   command: 'ssh',
   describe: 'Drops into a shell on a service, runs commands',

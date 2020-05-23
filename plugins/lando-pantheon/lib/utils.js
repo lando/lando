@@ -235,7 +235,7 @@ exports.getPantheonIndex = () => ({
       overrides: {
         image: 'devwithlando/pantheon-index:3.6-3',
         ports: ['449'],
-        command: '/bin/bash -c "/helpers/add-cert.sh && /start.sh"',
+        command: '/helpers/add-cert.sh && /start.sh',
         environment: {
           LANDO_NO_USER_PERMS: 'NOTGONNAGOIT',
         },

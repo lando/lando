@@ -119,7 +119,7 @@ module.exports = {
       options = parseConfig(_.merge({}, config, options));
       const solr = {
         image: options.image,
-        command: `/bin/sh -c "${options.command}"`,
+        command: options.command,
         environment: getEnvironment(options),
         volumes: [
           `${options.confDest}/${options.startScript}:/start-solr.sh`,

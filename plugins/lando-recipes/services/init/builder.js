@@ -20,7 +20,7 @@ module.exports = {
       const initService = {
         services: {
           init: {
-            command: '/bin/sh -c "/helpers/user-perms.sh --silent && tail -f /dev/null"',
+            command: '/helpers/user-perms.sh --silent && tail -f /dev/null',
             image: 'devwithlando/util:2',
             environment: env,
             labels: labels,

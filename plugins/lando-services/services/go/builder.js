@@ -25,7 +25,7 @@ module.exports = {
       const go = {
         image: `golang:${options.version}`,
         ports: (options.command !== 'tail -f /dev/null') ? ['80'] : [],
-        command: `/bin/sh -c "${options.command}"`,
+        command: `options.command`,
       };
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, go)});

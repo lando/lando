@@ -6,13 +6,12 @@ const utils = require('./../../lib/utils');
 
 // Helper to builder nginx command
 const nginxCommand = vhost => [
-  '/bin/bash -c',
-  '"mkdir -p /opt/bitnami/nginx/conf/vhosts',
+  'mkdir -p /opt/bitnami/nginx/conf/vhosts',
   '&&',
   'render-template',
   `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
   '&&',
-  '/entrypoint.sh /run.sh"',
+  '/entrypoint.sh /run.sh',
 ].join(' ');
 
 // Helper to get varnsh ssl nginx

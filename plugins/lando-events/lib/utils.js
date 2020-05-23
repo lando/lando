@@ -44,7 +44,7 @@ exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
   // Add the build command
   return {
     id: `${app.project}_${service}_1`,
-    cmd: ['/bin/sh', '-c', _.isArray(command) ? command.join(' ') : command],
+    cmd: _.isArray(command) ? command.join(' ') : command,
     compose: app.compose,
     project: app.project,
     opts: {
