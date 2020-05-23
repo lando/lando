@@ -40,7 +40,7 @@ lando notme | grep www-data
 # Should be able to run multiple commands on one service
 lando test
 
-# Should be able to define and pass down options to a script
+# Should be able to define and pass down options to a scripts
 lando word --word bird | grep "bird is the word"
 lando word -w gird | grep "gird is the word"
 lando word --word "this is actually a phrase" | grep "this is actually a phrase"
