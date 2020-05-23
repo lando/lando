@@ -37,7 +37,6 @@ module.exports = {
           ELASTICSEARCH_PORT_NUMBER: 9200,
           ELASTICSEARCH_PLUGINS: options.plugins.join(';'),
           ELASTICSEARCH_HEAP_SIZE: options.mem,
-          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,

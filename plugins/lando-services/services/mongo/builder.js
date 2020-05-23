@@ -33,7 +33,6 @@ module.exports = {
         command: '/launch.sh',
         environment: {
           ALLOW_EMPTY_PASSWORD: 'yes',
-          LANDO_NEEDS_EXEC: 'DOEEET',
           // MONGODB_EXTRA_FLAGS for things like coallation?
         },
         volumes: [

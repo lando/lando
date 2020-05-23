@@ -77,11 +77,9 @@ lando_info "Lando handing off to: $@"
 if [ ! -z ${LANDO_DROP_USER+x} ]; then
   lando_debug "Running command as ${LANDO_DROP_USER}..."
   su ${LANDO_DROP_USER} -c "$@" || tail -f /dev/null
-# Try using EXEC
-elif [ ! -z ${LANDO_NEEDS_EXEC+x} ]; then
-  lando_debug "Running command with exec..."
-  exec "$@" || tail -f /dev/null
-# Otherwise just run
-else
- "$@" || tail -f /dev/null
-fi;
+fi
+
+# Otherwise do the normal
+lando_debug "Running command with exec..."
+exec "$@" || tail -f /dev/null
+

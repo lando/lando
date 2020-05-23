@@ -50,7 +50,6 @@ module.exports = {
           MYSQL_DATABASE: options.creds.database,
           MARIADB_PASSWORD: options.creds.password,
           MARIADB_USER: options.creds.user,
-          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,

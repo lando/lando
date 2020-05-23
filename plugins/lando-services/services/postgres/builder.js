@@ -50,7 +50,6 @@ module.exports = {
           ALLOW_EMPTY_PASSWORD: 'yes',
           POSTGRESQL_DATABASE: options.creds.database,
           POSTGRES_DB: options.creds.database,
-          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,

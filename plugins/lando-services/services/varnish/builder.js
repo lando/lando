@@ -24,7 +24,6 @@ const varnishSsl = options => ({
     NGINX_DAEMON_USER: 'root',
     NGINX_DAEMON_GROUP: 'root',
     LANDO_VARNISH_ALIAS: `${options.name}_varnish`,
-    LANDO_NEEDS_EXEC: 'DOEEET',
   },
   user: 'root',
   volumes: [

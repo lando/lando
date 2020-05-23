@@ -40,7 +40,6 @@ module.exports = {
           APACHE_HTTPS_PORT_NUMBER: '443',
           APACHE_USER: 'www-data',
           APACHE_GROUP: 'www-data',
-          LANDO_NEEDS_EXEC: 'DOEEET',
         },
         ports: ['80'],
         user: 'root',
