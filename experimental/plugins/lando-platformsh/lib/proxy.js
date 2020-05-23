@@ -30,7 +30,7 @@ const getUpstream = (route, routes) => {
 /*
  * Helper to map parsed platform config into related Lando things
  */
-exports.getLandoProxyRoutes = (routes = {}) => _(normalizeRoutes(routes))
+exports.getLandoProxyRoutes = (routes = {}, supported = []) => _(normalizeRoutes(routes))
   // Map redirects to upstreams
   .map(route => getUpstream(route, normalizeRoutes(routes)))
   // Remove blank entries
@@ -40,6 +40,8 @@ exports.getLandoProxyRoutes = (routes = {}) => _(normalizeRoutes(routes))
     service: route.upstream.split(':')[0],
     href: url.parse(route.key).hostname,
   }))
+  // Filter unsupported upstreams
+  .filter(route => _.includes(supported, route.service))
   // Group by service
   .groupBy('service')
   // Map to lando proxy config

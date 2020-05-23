@@ -53,10 +53,14 @@ const getLandoService = platform => {
 
   // If this is an application then we need some more juice
   if (platform.application) {
+    // Add more stuff
     lando.build_as_root_internal = ['/helpers/recreate-users.sh'];
     lando.build_internal = getBuildFlavorBuildStep(_.get(platform, 'build.flavor'));
     lando.ssl = true;
     lando.sslExpose = false;
+
+    // Install the platform CLI
+    lando.build_internal.unshift('/helpers/execute.sh curl -sS https://platform.sh/cli/installer | php || true');
   }
 
   // Return

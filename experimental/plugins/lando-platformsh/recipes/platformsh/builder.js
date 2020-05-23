@@ -4,6 +4,8 @@
 const _ = require('lodash');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
+const {getLandoTooling} = require('./../../lib/tooling');
+
 
 /*
  * Build Platformsh
@@ -29,14 +31,21 @@ module.exports = {
       // Map into lando services
       options.services = getLandoServices(services, platformConfig.runConfig);
       // Map into lando proxy routes
-      options.proxy = getLandoProxyRoutes(platformConfig.routes);
+      options.proxy = getLandoProxyRoutes(platformConfig.routes, _.map(services, 'name'));
+      // Map into lando tooling
+      // @TODO: map dependencies? eg grunt-cli, drush, etc?
+      // @TODO: should we surface all commands available by default? eg python, node, npm?
+      // options.tooling = getLandoTooling(options.services);
+      // console.log(options.tooling);
+      // process.exit(1);
+      // Add php tooling
 
-      // Map into lando tooling routes
-
-      // Do a final pass so we wrap all build steps/tooling/etc in /helpers/execute.sh
-      // @TODO: try out custom build step/tooling
+      // @TODO: wrap all tooling/buildsteps woth /helpers/exeute
       options.tooling = {
-        node: {service: 'app'},
+        platform: {
+          service: 'app',
+          cmd: '/app/.platformsh/bin/platform',
+        },
       };
 
       // Send downstream
