@@ -81,5 +81,4 @@ fi
 
 # Otherwise do the normal
 lando_debug "Running command with exec..."
-exec "$@" || tail -f /dev/null
-
+exec "$@" || exec tail -f /dev/null
