@@ -33,7 +33,7 @@ const getService = (cmd, data = {}) => {
  * Translate events into run objects
  */
 exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
-  // Discover the service
+  // Discover the service and command
   const command = getCommand(cmd);
   const service = getService(cmd, data);
   // Validate the service if we can
@@ -44,7 +44,7 @@ exports.events2Runz = (cmds, app, data = {}) => _.map(cmds, cmd => {
   // Add the build command
   return {
     id: `${app.project}_${service}_1`,
-    cmd: _.isArray(command) ? command.join(' ') : command,
+    cmd: command,
     compose: app.compose,
     project: app.project,
     opts: {

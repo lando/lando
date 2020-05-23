@@ -67,7 +67,7 @@ lando drush version | grep 10.2.1
 
 # Should be able to install drupal
 cd drupal8
-lando drush site:install --db-url=mysql://drupal8:drupal8@database/drupal8 -y
+lando drush site:install --site-name="Hello there" --db-url=mysql://drupal8:drupal8@database/drupal8 -y
 
 # Should install drupal console
 # cd drupal8
