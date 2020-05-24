@@ -1,5 +1,13 @@
 # 2020
 
+## v3.0.3 - In Development
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Improved consistency of tooling `/bin/sh -c` wrapping [#2279](https://github.com/lando/lando/pull/2279) [#2280](https://github.com/lando/lando/pull/2280)
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
 ## v3.0.3 - [May 15, 2020](https://github.com/lando/lando/releases/tag/v3.0.3)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

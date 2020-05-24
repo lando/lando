@@ -40,3 +40,6 @@ Run `lando ssh --help` to get a complete list of options defaults, choices, etc.
 --user, -u     Run as a specific user
 --verbose, -v  Runs with extra verbosity
 ```
+
+## Caveats
+
