@@ -12,20 +12,6 @@ exports.getIPAddress = (data, network = 'lando_bridge_network') => {
 };
 
 /*
- * Helper to filter out services from application containers
- */
-exports.getApplicationServices = (services = []) => _(services)
-  .filter(service => service.platformsh.application)
-  .value();
-
-/*
- * Helper to filter out services from application containers
- */
-exports.getNonApplicationServices = (services = []) => _(services)
-  .filter(service => !service.platformsh.application)
-  .value();
-
-/*
  * Helper to get the application service hostname
  */
 exports.generateOpenPayload = (data, relationships) => _.fromPairs(_(relationships)

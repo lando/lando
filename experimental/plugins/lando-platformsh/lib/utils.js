@@ -6,6 +6,20 @@ const fs = require('fs');
 const path = require('path');
 
 /*
+ * Helper to filter out services from application containers
+ */
+exports.getApplicationServices = (services = []) => _(services)
+  .filter(service => service.platformsh.application)
+  .value();
+
+/*
+ * Helper to filter out services from application containers
+ */
+exports.getNonApplicationServices = (services = []) => _(services)
+  .filter(service => !service.platformsh.application)
+  .value();
+
+/*
  * Helper to get terminus tokens
  */
 exports.getPlatformshTokens = home => {

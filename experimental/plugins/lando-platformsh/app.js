@@ -8,6 +8,7 @@ const open = require('./lib/open');
 const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
+const utils = require('./lib/utils');
 
 // Only do this on platformsh recipes
 module.exports = (app, lando) => {
@@ -90,12 +91,22 @@ module.exports = (app, lando) => {
     });
 
     /*
+     * This event makes sure that all USER-PROVIDED build steps/events and ALL tooling commands that are run against an app container
+     * are run through /helpers/psh-exec.sh first so they get the needed envvars eg HOME, USER, and PLATFORM_* set
+     */
+    app.events.on('post-init', 999, () => {
+      // const appservers = utils.getApplicationServices(app.config.services);
+      // console.log(appservers);
+      // process.exit(1)
+    });
+
+    /*
      * This event makes sure we collect any information that is only available once the service is on
      * like the IP address, we use docker inspect under the hood
      */
     app.events.on('post-init', () => {
       // Get service containers
-      const services = open.getNonApplicationServices(app.config.services);
+      const services = utils.getNonApplicationServices(app.config.services);
       app.events.on('post-start', 1, () => lando.Promise.resolve(services)
       .map(service => app.engine.scan({id: `${app.project}_${service.name}_1`}).then(data => {
         // Find the config for this service
@@ -125,8 +136,8 @@ module.exports = (app, lando) => {
      */
     app.events.on('post-init', () => {
       // Get lists of application and services
-      const services = open.getNonApplicationServices(app.config.services);
-      const appservers = open.getApplicationServices(app.config.services);
+      const services = utils.getNonApplicationServices(app.config.services);
+      const appservers = utils.getApplicationServices(app.config.services);
       app.log.verbose('preparing to OPEN up platformsh containers...');
       app.log.debug('found platformsh services to open', _.map(services, 'name'));
       app.log.debug('found platformsh appservers to open', _.map(appservers, 'name'));
@@ -135,7 +146,7 @@ module.exports = (app, lando) => {
       app.events.on('post-start', 8, () => {
         return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
            id: `${app.project}_${service.name}_1`,
-           cmd: ['/helpers/open-psh.sh', service.platformsh.opener],
+           cmd: ['/helpers/psh-open.sh', service.platformsh.opener],
            compose: app.compose,
            project: app.project,
            opts: {
@@ -178,7 +189,7 @@ module.exports = (app, lando) => {
             // OPEN
             return lando.engine.run({
               id: `${app.project}_${appserver.name}_1`,
-              cmd: ['/helpers/open-psh.sh', JSON.stringify({relationships: openPayload})],
+              cmd: ['/helpers/psh-open.sh', JSON.stringify({relationships: openPayload})],
               compose: app.compose,
               project: app.project,
               opts: {

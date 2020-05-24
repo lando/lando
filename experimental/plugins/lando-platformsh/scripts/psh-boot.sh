@@ -33,7 +33,7 @@ runsvdir -P /etc/service &> /tmp/runsvdir.log
 
 # Handle the socket setup
 rm -f /run/shared/agent.sock
-python /helpers/fake-rpc.py &> /tmp/fake-rpc.log
+python /helpers/psh-fake-rpc.py &> /tmp/fake-rpc.log
 
 # Do the right thing depending on whether this is a first run or not
 if [ -f "$LANDO_PSH_INIT_FILE" ]; then

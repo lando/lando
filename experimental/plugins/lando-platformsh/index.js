@@ -20,8 +20,8 @@ module.exports = lando => {
         data.options.command = 'if ! type bash > /dev/null; then sh; else bash; fi';
       }
 
-      // Wrap commands in /helpers/execute.sh
-      data.options.command = ['/helpers/execute.sh', '/bin/sh', '-c', data.options.command];
+      // Wrap commands in /helpers/psh-exec.sh
+      data.options.command = ['/helpers/psh-exec.sh', '/bin/sh', '-c', data.options.command];
     }
   });
 };

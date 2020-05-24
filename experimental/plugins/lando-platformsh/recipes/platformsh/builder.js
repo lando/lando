@@ -4,7 +4,7 @@
 const _ = require('lodash');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
-const {getLandoTooling} = require('./../../lib/tooling');
+// const {getLandoTooling} = require('./../../lib/tooling');
 
 
 /*
@@ -41,10 +41,12 @@ module.exports = {
       // Add php tooling
 
       // @TODO: wrap all tooling/buildsteps woth /helpers/exeute
+      // @TODO: in a multistep scenario lets set the service to be whatever is in the first .platform.yaml we find
+      // when we traverse back
       options.tooling = {
-        platform: {
+        drush: {
+          cmd: '/helpers/psh-exec.sh drush',
           service: 'app',
-          cmd: '/app/.platformsh/bin/platform',
         },
       };
 

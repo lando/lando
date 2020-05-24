@@ -6,21 +6,6 @@ const _ = require('lodash');
 /*
  * Helper to map lagoon type data to a lando service
  */
-const getBuildFlavorBuildStep = (flavor = 'none') => {
-  switch (flavor) {
-    case 'none': return [];
-    case 'composer': return [
-      'composer --no-interaction install --no-progress --prefer-dist --optimize-autoloader',
-    ];
-    case 'default': return ['npm prune --userconfig .npmrc && npm install --userconfig .npmrc '];
-    case 'drupal': return ['drush make'];
-    default: return [];
-  };
-};
-
-/*
- * Helper to map lagoon type data to a lando service
- */
 const getLandoServiceType = type => {
   switch (type) {
     case 'php': return 'platformsh-php';
@@ -53,14 +38,13 @@ const getLandoService = platform => {
 
   // If this is an application then we need some more juice
   if (platform.application) {
-    // Add more stuff
-    lando.build_as_root_internal = ['/helpers/recreate-users.sh'];
-    lando.build_internal = getBuildFlavorBuildStep(_.get(platform, 'build.flavor'));
+    // Add some magic to reset the web/app user
+    lando.build_as_root_internal = ['/helpers/psh-recreate-users.sh'];
+    // Add in the build wrapper
+    lando.build_internal = ['/helpers/psh-build.sh'];
+    // Generate certs for proxy purposes but dont expose things
     lando.ssl = true;
     lando.sslExpose = false;
-
-    // Install the platform CLI
-    lando.build_internal.unshift('/helpers/execute.sh curl -sS https://platform.sh/cli/installer | php || true');
   }
 
   // Return

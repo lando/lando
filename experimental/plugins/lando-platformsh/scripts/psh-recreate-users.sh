@@ -8,8 +8,10 @@ set -e
 LANDO_MODULE="platformsh-webuser"
 
 # Recreate the web user so it has the uid/gid of the host user
-# NOTE: for some reason the usual resetting we do in user-perms.sh
+# @NOTE: for some reason the usual resetting we do in user-perms.sh
 # is very slow and produces weird results for
+#
+# @TODO: we need to get the appropriate guards in here so we dont have to || true things
 deluser app > /dev/null || true
 deluser web > /dev/null || true
 useradd \
@@ -19,10 +21,10 @@ useradd \
   --non-unique \
   --shell /bin/bash \
   -M \
-  web > /dev/null
+  web > /dev/null || true
 useradd \
   --user-group \
   --home /mnt \
   --shell /bin/false \
   -M \
-  app > /dev/null
+  app > /dev/null || true

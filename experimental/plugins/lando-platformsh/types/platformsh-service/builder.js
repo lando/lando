@@ -14,7 +14,7 @@ module.exports = {
     constructor(id, options = {}, ...sources) {
       // Get some stuff from our parsed platform config
       const runConfigPath = _.get(options, 'runConfig.file');
-      const bootScript = path.join(options.userConfRoot, 'scripts', 'boot-psh.sh');
+      const bootScript = path.join(options.userConfRoot, 'scripts', 'psh-boot.sh');
 
       // A service uses the "app" user
       options.meUser = 'app';
