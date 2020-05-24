@@ -6,7 +6,7 @@ const getUser = require('./../../../lib/utils').getUser;
 const utils = require('./../lib/utils');
 
 // Other things
-const bashme = ['/bin/sh', '-c', 'if ! type bash > /dev/null; then sh; else bash; fi'];
+const bashme = 'if ! type bash > /dev/null; then sh; else bash; fi';
 const task = {
   command: 'ssh',
   describe: 'Drops into a shell on a service, runs commands',
@@ -35,7 +35,7 @@ module.exports = lando => {
     if (app) {
       return app.init().then(() => {
         if (_.isNull(user)) user = getUser(service, app.info);
-        return lando.engine.run(utils.buildCommand(app, command, service, user)).catch(error => {
+        return lando.engine.run(utils.buildCommand(app, ['/bin/sh', '-c', command], service, user)).catch(error => {
           error.hide = true;
           throw error;
         });

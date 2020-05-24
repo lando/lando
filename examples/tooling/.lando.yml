@@ -72,3 +72,6 @@ tooling:
   busted:
     service: web
     cmd: i-do-not-exist
+  wraptest:
+    service: web
+    cmd: echo "$HOME" && echo "$HOME"
