@@ -16,8 +16,15 @@ fi
 # Set the module
 LANDO_MODULE="refreshcerts"
 
+# Make sure /certs exists
+if [ ! -d "/certs" ]; then
+  lando_debug "Could not detect directory /certs so creating it..."
+  mkdir -p /certs
+fi
+
 # Run add certs if we need to
 if [ ! -f "/certs/cert.pem" ]; then
+  lando_debug "Could not detect certs so creating them..."
   /helpers/add-cert.sh
 fi
 
