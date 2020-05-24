@@ -15,6 +15,7 @@ const LANDO_PATH = [
   '/bin',
   // GLOBAL things
   '/var/www/.platform/bin',
+  '/var/www/.platformsh/bin',
   '/var/www/.composer/vendor/bin',
   // BUILD deps
   '/app/.platform/local/deps/nodejs/node_modules/.bin',

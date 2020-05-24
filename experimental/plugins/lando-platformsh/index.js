@@ -2,15 +2,35 @@
 
 // Modules
 const _ = require('lodash');
-const path = require('path');
+const utils = require('./lib/config');
 
 module.exports = lando => {
-  // Switch the default service for the ssh command if its used
+  /*
+   * This event makes sure that ALL tooling commands that are run against an app container
+   * are run through /helpers/psh-exec.sh first so they get the needed envvars eg HOME, USER, and PLATFORM_* set
+   */
+  lando.events.on('pre-engine-runner', app => {
+    if (_.get(app, 'config.recipe') === 'platformsh') {
+      // This is a cheap way to get the list of appservers
+      const appservers = _(app.info).filter(info => info.meUser === 'web').map('service').value();
+      // Loop through and do the vampire
+      _.forEach(app.config.tooling, (tooling, name) => {
+        if (_.includes(appservers, tooling.service)) {
+          const cmd = tooling.cmd ? tooling.cmd : tooling.name;
+          tooling.cmd = `/helpers/psh-exec.sh ${cmd}`;
+        }
+      });
+    }
+  });
+
+  /*
+   * Same as above but we do something special for SSH
+   */
   lando.events.on('cli-ssh-run', data => {
     if (_.get(data, 'options._app.recipe') === 'platformsh' && data.options.service === 'appserver') {
-      // Reset the default service from appserver to whatever the first app name is
-      // @TODO: This needs to handle multiapp at some point
-      const pshConfig = lando.yaml.load(path.join(data.options._app.root, '.platform.app.yaml'));
+      // Reset the default service from appserver to whatever the closest application service is
+      const closestAppConfigFile = utils.findClosestApplication();
+      const pshConfig = lando.yaml.load(closestAppConfigFile);
       const defaultSshService = _.get(pshConfig, 'name', 'app');
       data.options.service = defaultSshService;
       data.options.s = defaultSshService;

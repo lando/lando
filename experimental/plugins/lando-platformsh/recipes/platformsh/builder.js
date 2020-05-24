@@ -4,8 +4,8 @@
 const _ = require('lodash');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
-// const {getLandoTooling} = require('./../../lib/tooling');
-
+const {getAppTooling} = require('./../../lib/tooling');
+const {findClosestApplication} = require('./../../lib/config');
 
 /*
  * Build Platformsh
@@ -32,23 +32,19 @@ module.exports = {
       options.services = getLandoServices(services, platformConfig.runConfig);
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(platformConfig.routes, _.map(services, 'name'));
-      // Map into lando tooling
-      // @TODO: map dependencies? eg grunt-cli, drush, etc?
-      // @TODO: should we surface all commands available by default? eg python, node, npm?
-      // options.tooling = getLandoTooling(options.services);
-      // console.log(options.tooling);
-      // process.exit(1);
-      // Add php tooling
 
-      // @TODO: wrap all tooling/buildsteps woth /helpers/exeute
-      // @TODO: in a multistep scenario lets set the service to be whatever is in the first .platform.yaml we find
-      // when we traverse back
-      options.tooling = {
-        drush: {
-          cmd: '/helpers/psh-exec.sh drush',
-          service: 'app',
-        },
-      };
+      // Map into lando tooling commands for the "closest" app
+      const closestAppConfigFile = findClosestApplication();
+      const closestApp = _.find(options.services, service => {
+        return service.platformsh.configFile === closestAppConfigFile;
+      });
+      const applicationTooling = getAppTooling(closestApp);
+
+      // @TODO: Also
+      // const serviceTooling =
+
+      // Merge and set the lando tooling
+      options.tooling = _.merge({}, applicationTooling);
 
       // Send downstream
       super(id, options);

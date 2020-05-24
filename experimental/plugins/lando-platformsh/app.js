@@ -91,16 +91,6 @@ module.exports = (app, lando) => {
     });
 
     /*
-     * This event makes sure that all USER-PROVIDED build steps/events and ALL tooling commands that are run against an app container
-     * are run through /helpers/psh-exec.sh first so they get the needed envvars eg HOME, USER, and PLATFORM_* set
-     */
-    app.events.on('post-init', 999, () => {
-      // const appservers = utils.getApplicationServices(app.config.services);
-      // console.log(appservers);
-      // process.exit(1)
-    });
-
-    /*
      * This event makes sure we collect any information that is only available once the service is on
      * like the IP address, we use docker inspect under the hood
      */

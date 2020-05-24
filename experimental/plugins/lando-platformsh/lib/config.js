@@ -7,6 +7,21 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 /*
+ * Helper to locate the "closest" platform yaml
+ */
+exports.findClosestApplication = (startFrom = process.cwd()) => {
+  const file = path.resolve(startFrom, '.platform.app.yaml');
+  return _(_.range(path.dirname(file).split(path.sep).length))
+    .map(end => _.dropRight(path.dirname(file).split(path.sep), end).join(path.sep))
+    .map(dir => path.join(dir, path.basename(file)))
+    .sortBy()
+    .reverse()
+    .filter(file => fs.existsSync(file) && path.isAbsolute(file))
+    .thru(files => files[0])
+    .value();
+};
+
+/*
  * Helper to load all the platform config files we can find
  */
 exports.loadConfigFiles = baseDir => {
@@ -28,7 +43,7 @@ exports.loadConfigFiles = baseDir => {
       .map(directory => path.resolve(baseDir, directory, '.platform.app.yaml'))
       .filter(file => fs.existsSync(file))
       .map(file => ({data: yaml.safeLoad(fs.readFileSync(file)), file}))
-      .map(data => ({name: data.data.name, dir: path.dirname(data.file)}))
+      .map(data => ({name: data.data.name, file: data.file, dir: path.dirname(data.file)}))
       .value() || [],
     routes: (fs.existsSync(routesFile)) ? yaml.safeLoad(fs.readFileSync(routesFile)) : {},
     services: (fs.existsSync(servicesFile)) ? yaml.safeLoad(fs.readFileSync(servicesFile)) : {},
@@ -41,13 +56,17 @@ exports.loadConfigFiles = baseDir => {
 exports.parseApps = (apps = [], files = []) => _(apps)
   .map(app => _.merge({}, app, {
     application: true,
-    // @TODO: can we assume the 0? is this an index value?
-    // @NOTE: probably not relevant until we officially support multiapp
-    hostname: `${app.name}.0`,
     appMountDir: _(files)
       .filter(file => file.name === app.name)
       .thru(file => file[0].dir)
       .value(),
+    configFile: _(files)
+      .filter(file => file.name === app.name)
+      .thru(file => file[0].file)
+      .value(),
+    // @TODO: can we assume the 0? is this an index value?
+    // @NOTE: probably not relevant until we officially support multiapp?
+    hostname: `${app.name}.0`,
   }))
   .value();
 
