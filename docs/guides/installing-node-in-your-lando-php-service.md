@@ -29,7 +29,7 @@ feed:
 <GuideHeader test="https://circleci.com/gh/lando/lando/tree/master" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
 <YouTube url="" />
 
-Some frontend tooling kits like [Emulsify](https://www.drupal.org/project/emulsify) or [Pattern Lab](https://patternlab.io/) _may_ assume that `composer/php` can invoke `yarn/npm/node` and vice-versa. This pattern, sadly, is fundamentally at odds with Lando's one-thing-per-container model.
+Some frontend tooling kits like [Emulsify](https://www.drupal.org/project/emulsify_drupal) or [Pattern Lab](https://patternlab.io/) _may_ assume that `composer/php` can invoke `yarn/npm/node` and vice-versa. This pattern, sadly, is fundamentally at odds with Lando's one-thing-per-container model.
 
 You can, however, get around it by installing the needed dependencies directly in the service that requires them.
 
