@@ -54,7 +54,7 @@ module.exports = (app, lando) => {
 
       // Add the parsed applications config
       // @TODO: the parsing here should happen
-      app.platformsh.applications = pshconf.parseApps(platformConfig.applications);
+      app.platformsh.applications = pshconf.parseApps(platformConfig.applications, platformConfig.applicationFiles);
       app.log.verbose('parsed platformsh applications');
       app.log.silly('platformsh applications are', app.platformsh.applications);
 

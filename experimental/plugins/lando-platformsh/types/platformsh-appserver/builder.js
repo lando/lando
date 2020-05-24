@@ -37,6 +37,9 @@ module.exports = {
 
       // A appserver uses the "web" user
       options.meUser = 'web';
+      // Remove the normal lando mount so we can handle multiapp
+      // mounts which mount subdirs of rootDir in /app
+      options.app_mount = false;
 
       // Set the docker things we need for all appservers
       sources.push({services: _.set({}, options.name, {
@@ -59,6 +62,7 @@ module.exports = {
         volumes: [
           `${runConfigPath}:/run/config.json`,
           `${bootScript}:/scripts/001-boot-platformsh`,
+          `${options.platformsh.appMountDir}:/app:delegated`,
         ],
         working_dir: '/app',
       })});

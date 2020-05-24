@@ -21,6 +21,15 @@ exports.loadConfigFiles = baseDir => {
       .filter(file => fs.existsSync(file))
       .map(file => yaml.safeLoad(fs.readFileSync(file)))
       .value() || [],
+    applicationFiles: _(fs.readdirSync(baseDir, {withFileTypes: true}))
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name)
+      .concat('.')
+      .map(directory => path.resolve(baseDir, directory, '.platform.app.yaml'))
+      .filter(file => fs.existsSync(file))
+      .map(file => ({data: yaml.safeLoad(fs.readFileSync(file)), file}))
+      .map(data => ({name: data.data.name, dir: path.dirname(data.file)}))
+      .value() || [],
     routes: (fs.existsSync(routesFile)) ? yaml.safeLoad(fs.readFileSync(routesFile)) : {},
     services: (fs.existsSync(servicesFile)) ? yaml.safeLoad(fs.readFileSync(servicesFile)) : {},
   };
@@ -29,12 +38,16 @@ exports.loadConfigFiles = baseDir => {
 /*
  * Helper to parse the platformsh config files
  */
-exports.parseApps = apps => _(apps)
+exports.parseApps = (apps = [], files = []) => _(apps)
   .map(app => _.merge({}, app, {
     application: true,
     // @TODO: can we assume the 0? is this an index value?
     // @NOTE: probably not relevant until we officially support multiapp
     hostname: `${app.name}.0`,
+    appMountDir: _(files)
+      .filter(file => file.name === app.name)
+      .thru(file => file[0].dir)
+      .value(),
   }))
   .value();
 
