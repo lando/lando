@@ -4,13 +4,21 @@
 const _ = require('lodash');
 
 /*
+ * Helper to build mysq connect string
+ */
+const buildMysqlConnectString = ({username, service, password = null} = {}) => {
+  if (password) return `mysql -u${username} -h${service} -p${password}`;
+  else return `mysql -u${username} -h${service}`;
+};
+
+/*
  * Helper to get php related tooling commands
  */
 const getMySqlTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
-    cmd: service.password ? `mysql -u${service.username} -p${service.password}` : `mysql -u${service.username}`,
+    cmd: buildMysqlConnectString(service),
     service: service.service,
     level: 'app',
   }))
