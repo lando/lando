@@ -60,6 +60,7 @@ const getEnvironmentVariables = appConfig => _(_.get(appConfig, 'variables.env',
  */
 const getPlatformVariables = app => {
   const strippedVars = _.omit(_.get(app, 'variables', {}), ['env']);
+
   // Loop through and try to build things out
   const vars = {};
   _.forEach(strippedVars, (value, key) => {
@@ -72,6 +73,14 @@ const getPlatformVariables = app => {
       vars[key] = value;
     }
   });
+
+  // Override things for local purposes
+  // DRUPAL8
+  vars['d8config:system.file:path:temporary'] = '/tmp';
+  vars['d8settings:file_private_path'] = '/tmp/private';
+  vars['d8settings:php_storage:default:directory'] = vars['d8settings:file_private_path'];
+  vars['d8settings:php_storage:twig:directory'] = vars['d8settings:file_private_path'];
+
   return encode(vars);
 };
 
