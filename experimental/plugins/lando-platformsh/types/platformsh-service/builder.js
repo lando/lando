@@ -18,7 +18,7 @@ module.exports = {
 
       // Figure out the info situation
       options.portforward = true;
-      // @TODO: Add in credential info
+      // @TODO: Add in info
       /*
       // Add in relevant info
       options.info = _.merge({}, options.info, {

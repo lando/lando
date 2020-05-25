@@ -27,6 +27,20 @@ const getMySqlTooling = services => _(services)
 /*
  * Helper to get php related tooling commands
  */
+const getsPostgresTooling = services => _(services)
+  .map(service => ({
+    name: service.relationship,
+    description: `Connects to the ${service.relationship} relationship`,
+    cmd: `psql -U${service.username} -h${service.service}`,
+    env: {PGPASSWORD: service.password},
+    service: service.service,
+    level: 'app',
+  }))
+  .value();
+
+/*
+ * Helper to get php related tooling commands
+ */
 const getRedisTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
@@ -59,6 +73,7 @@ const getServiceToolingByType = ({type, services} = {}) => {
   switch (type) {
     case 'mariadb': return getMySqlTooling(services);
     case 'mysql': return getMySqlTooling(services);
+    case 'postgresql': return getsPostgresTooling(services);
     case 'redis': return getRedisTooling(services);
     case 'redis-persistent': return getRedisTooling(services);
     default: return {};
@@ -101,6 +116,7 @@ exports.getServiceTooling = (services, relationships) => {
   return _(parsedServices)
     .map(service => getServiceToolingByType(service))
     .flatten()
+    .filter(service => service.name)
     .map(service => ([service.name, _.omit(service, 'name')]))
     .fromPairs()
     .value();

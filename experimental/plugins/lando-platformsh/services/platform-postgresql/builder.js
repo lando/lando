@@ -17,10 +17,23 @@ module.exports = {
   builder: (parent, config) => class LandoPlatformshMariaDB extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
+      // Set the meUser
+      options.meUser = 'postgres';
+
       // Build the postgresql
       const postgresql = {
         image: `docker.registry.platform.sh/postgresql-${options.version}`,
         ports: [options.port],
+        environment: {
+          LANDO_WEBROOT_USER: options.meUser,
+          LANDO_WEBROOT_GROUP: options.meUser,
+        },
+        // @TODO: get persistent data over rebuild
+        /*
+        volumes: [
+          `${options.data}:/mnt/data`,
+        ],
+        */
       };
       // Add in the postgresql service and push downstream
       super(id, options, {services: _.set({}, options.name, postgresql)});
