@@ -8,6 +8,7 @@ const _ = require('lodash');
  */
 const getLandoServiceType = type => {
   switch (type) {
+    case 'elasticsearch': return 'platformsh-elasticsearch';
     case 'mariadb': return 'platformsh-mariadb';
     case 'memcached': return 'platformsh-memcached';
     case 'mongodb': return 'platformsh-mongodb';
