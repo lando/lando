@@ -4,8 +4,8 @@
 const _ = require('lodash');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
-const {getAppTooling} = require('./../../lib/tooling');
 const {findClosestApplication} = require('./../../lib/config');
+const tooling = require('./../../lib/tooling');
 
 /*
  * Build Platformsh
@@ -33,18 +33,25 @@ module.exports = {
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(platformConfig.routes, _.map(services, 'name'));
 
-      // Map into lando tooling commands for the "closest" app
+      // Get the closest application
       const closestAppConfigFile = findClosestApplication();
       const closestApp = _.find(options.services, service => {
         return service.platformsh.configFile === closestAppConfigFile;
       });
-      const applicationTooling = getAppTooling(closestApp);
 
-      // @TODO: Also
-      // const serviceTooling =
+      // Get the app tooling
+      const applicationTooling = tooling.getAppTooling(closestApp);
+      // Get relatable services
+      const openData = options._app._lando.cache.get(`${options._app.name}.${closestApp.name}.open.cache`);
+      const relatableServices = tooling.getRelatableServices(openData);
+      const serviceContainers = _(options.services)
+        .filter(service => _.includes(relatableServices, service.name))
+        .map(service => service)
+        .value();
+      const serviceTooling = tooling.getServiceTooling(serviceContainers, openData);
 
       // Merge and set the lando tooling
-      options.tooling = _.merge({}, applicationTooling);
+      options.tooling = _.merge({}, applicationTooling, serviceTooling);
 
       // Send downstream
       super(id, options);

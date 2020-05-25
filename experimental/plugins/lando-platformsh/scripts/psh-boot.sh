@@ -35,6 +35,10 @@ runsvdir -P /etc/service &> /tmp/runsvdir.log
 rm -f /run/shared/agent.sock
 python /helpers/psh-fake-rpc.py &> /tmp/fake-rpc.log
 
+# @NOTE: this is just temporary until we figure out the composer rebuild problem
+# looks like this might be solved upstream
+chmod -R 777 /app/web/sites/default
+
 # Do the right thing depending on whether this is a first run or not
 if [ -f "$LANDO_PSH_INIT_FILE" ]; then
   exec /etc/platform/start

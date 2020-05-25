@@ -173,8 +173,11 @@ module.exports = (app, lando) => {
           return lando.Promise.map(appservers, appserver => {
             const relationships = open.parseRelationships(appserver.platformsh.relationships);
             const openPayload = open.generateOpenPayload(serviceData, relationships);
+            const openCache = `${app.name}.${appserver.name}.open.cache`;
             app.log.verbose(`${appserver} has relationship config`, relationships);
             app.log.verbose(`generated open payload for ${appserver.name}`, openPayload);
+            lando.cache.set(openCache, openPayload, {persist: true});
+            app.log.debug(`cached open payload data to ${openCache}`);
 
             // OPEN
             return lando.engine.run({

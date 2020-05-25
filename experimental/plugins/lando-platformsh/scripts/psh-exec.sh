@@ -9,6 +9,8 @@ for script in /etc/profile.d/*.sh ; do
   fi
 done
 
+# Load helpful lando envvars
+
 # Add standard variables.
 export HOME="/var/www"
 export USER="web"
