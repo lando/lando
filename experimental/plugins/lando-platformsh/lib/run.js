@@ -77,7 +77,7 @@ const getPlatformVariables = app => {
   // Override things for local purposes
   // DRUPAL8
   vars['d8config:system.file:path:temporary'] = '/tmp';
-  vars['d8settings:file_private_path'] = '/tmp/private';
+  vars['d8settings:file_private_path'] = '/tmp';
   vars['d8settings:php_storage:default:directory'] = vars['d8settings:file_private_path'];
   vars['d8settings:php_storage:twig:directory'] = vars['d8settings:file_private_path'];
 

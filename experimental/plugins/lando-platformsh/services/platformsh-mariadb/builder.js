@@ -14,7 +14,7 @@ module.exports = {
     port: '3306',
   },
   parent: '_platformsh_service',
-  builder: (parent, config) => class LandoPlatformshPhp extends parent {
+  builder: (parent, config) => class LandoPlatformshMariaDB extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
       // Add 5.5 to the legacy key if this coming from mysql

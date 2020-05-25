@@ -27,6 +27,19 @@ const getMySqlTooling = services => _(services)
 /*
  * Helper to get php related tooling commands
  */
+const getRedisTooling = services => _(services)
+  .map(service => ({
+    name: service.relationship,
+    description: `Connects to the ${service.relationship} relationship`,
+    cmd: 'redis-cli',
+    service: service.service,
+    level: 'app',
+  }))
+  .value();
+
+/*
+ * Helper to get php related tooling commands
+ */
 const getPhpTooling = (service = 'app') => ({composer: {service}, php: {service}});
 
 /*
@@ -46,6 +59,8 @@ const getServiceToolingByType = ({type, services} = {}) => {
   switch (type) {
     case 'mariadb': return getMySqlTooling(services);
     case 'mysql': return getMySqlTooling(services);
+    case 'redis': return getRedisTooling(services);
+    case 'redis-persistent': return getRedisTooling(services);
     default: return {};
   };
 };
