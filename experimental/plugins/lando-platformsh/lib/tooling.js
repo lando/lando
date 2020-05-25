@@ -14,6 +14,19 @@ const buildMysqlConnectString = ({username, service, password = null} = {}) => {
 /*
  * Helper to get php related tooling commands
  */
+const getMemcachedTooling = (services, app = 'app') => _(services)
+  .map(service => ({
+    name: service.relationship,
+    description: `Connects to the ${service.relationship} relationship`,
+    cmd: `netcat ${service.service} ${service.port}`,
+    service: app,
+    level: 'app',
+  }))
+  .value();
+
+/*
+ * Helper to get php related tooling commands
+ */
 const getMySqlTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
@@ -69,9 +82,10 @@ const getAppToolingByType = app => {
 /*
  * Helper to map lagoon type data to a lando service
  */
-const getServiceToolingByType = ({type, services} = {}) => {
+const getServiceToolingByType = ({type, services} = {}, app = 'app') => {
   switch (type) {
     case 'mariadb': return getMySqlTooling(services);
+    case 'memcached': return getMemcachedTooling(services, app);
     case 'mysql': return getMySqlTooling(services);
     case 'postgresql': return getsPostgresTooling(services);
     case 'redis': return getRedisTooling(services);
@@ -98,7 +112,7 @@ exports.getRelatableServices = (relationships = {}) => _(relationships)
 /*
  * Maps parsed platform config into related Lando things
  */
-exports.getServiceTooling = (services, relationships) => {
+exports.getServiceTooling = (services, relationships, app = 'app') => {
   // Group the relationships by the service
   const parsedRelationships = _(relationships)
     .map((relationship, name) => _.merge({}, relationship[0], {relationship: name}))
@@ -114,7 +128,7 @@ exports.getServiceTooling = (services, relationships) => {
 
   // Build the tooling array
   return _(parsedServices)
-    .map(service => getServiceToolingByType(service))
+    .map(service => getServiceToolingByType(service, app))
     .flatten()
     .filter(service => service.name)
     .map(service => ([service.name, _.omit(service, 'name')]))

@@ -48,7 +48,7 @@ module.exports = {
         .filter(service => _.includes(relatableServices, service.name))
         .map(service => service)
         .value();
-      const serviceTooling = tooling.getServiceTooling(serviceContainers, openData);
+      const serviceTooling = tooling.getServiceTooling(serviceContainers, openData, closestApp.name);
 
       // Merge and set the lando tooling
       options.tooling = _.merge({}, applicationTooling, serviceTooling);

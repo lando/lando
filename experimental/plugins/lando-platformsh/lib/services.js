@@ -9,6 +9,7 @@ const _ = require('lodash');
 const getLandoServiceType = type => {
   switch (type) {
     case 'mariadb': return 'platformsh-mariadb';
+    case 'memcached': return 'platformsh-memcached';
     case 'mysql': return 'platformsh-mariadb';
     case 'php': return 'platformsh-php';
     case 'postgresql': return 'platformsh-postgresql';

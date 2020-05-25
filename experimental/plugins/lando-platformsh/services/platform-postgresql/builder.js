@@ -14,7 +14,7 @@ module.exports = {
     port: '5432',
   },
   parent: '_platformsh_service',
-  builder: (parent, config) => class LandoPlatformshMariaDB extends parent {
+  builder: (parent, config) => class LandoPlatformshPostgres extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
       // Set the meUser
