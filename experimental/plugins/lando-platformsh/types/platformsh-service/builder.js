@@ -16,24 +16,33 @@ module.exports = {
       const runConfigPath = _.get(options, 'runConfig.file');
       const bootScript = path.join(options.userConfRoot, 'scripts', 'psh-boot.sh');
 
-      // A service uses the "app" user
-      options.meUser = 'app';
+      // Figure out the info situation
+      options.portforward = true;
+      // @TODO: Add in credential info
+      /*
+      // Add in relevant info
+      options.info = _.merge({}, options.info, {
+        internal_connection: {
+          host: options.name,
+          port: options.port,
+        },
+        external_connection: {
+          host: options._app._config.bindAddress,
+          port: _.get(options, 'portforward', 'not forwarded'),
+        },
+      });
+      */
 
       // Set the docker things we need for all appservers
       const service = {
         command: 'exec init',
-        environment: {
-          LANDO_SERVICE_TYPE: '_platformsh_appserver',
-          LANDO_WEBROOT_USER: 'app',
-          LANDO_WEBROOT_GROUP: 'app',
-        },
+        environment: {LANDO_SERVICE_TYPE: '_platformsh_appserver'},
         // @TODO: would be great to not need the below but
         // its required if we want to unmount /etc/hosts /etc/resolv.conf
         privileged: true,
         volumes: [
           `${runConfigPath}:/run/config.json`,
           `${bootScript}:/scripts/001-boot-platformsh`,
-          `${options.data}:/mnt/data`,
         ],
       };
 
