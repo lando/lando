@@ -15,6 +15,7 @@ const getLandoServiceType = type => {
     case 'postgresql': return 'platformsh-postgresql';
     case 'redis': return 'platformsh-redis';
     case 'redis-persistent': return 'platformsh-redis';
+    case 'solr': return 'platformsh-solr';
     default: return false;
   };
 };
