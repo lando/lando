@@ -29,7 +29,7 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should return the drupal installation page by default
+# Should return the Backdrop installation page by default
 cd backdrop
 lando ssh -s appserver -c "curl -L localhost" | grep "Backdrop CMS 1"
 
@@ -54,13 +54,13 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd backdrop
 lando mysql -ubackdrop -pbackdrop backdrop -e quit
 
-# Should use drush 8.3.x by default
-cd backdrop
-lando drush version | grep 8.3
-
-# Should be able to install drupal
+# Should be able to install Backdrop
 cd backdrop/backdrop
 lando drush si --db-url=mysql://backdrop:backdrop@database/backdrop -y
+
+# Should use drush 8.3.x by default
+cd backdrop/backdrop
+lando drush version | grep 8.3
 ```
 
 Destroy tests
