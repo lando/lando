@@ -5,7 +5,7 @@ description: Learn about Lando's project and directory structure.
 # Project Structure
 
 A general breakdown of where things live inside the Lando repo is shown below:
-
+https://docs.lando.dev/contrib/contrib-plugins.html#plugins
 ```bash
 ./
 |-- .circleci       CircleCi config to run our generated functional tests
