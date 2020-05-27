@@ -46,6 +46,7 @@
   <a href="https://docs.lando.dev/config/lemp.html">LEMP</a> |
   <a href="https://docs.lando.dev/config/mean.html">MEAN</a> |
   <a href="https://docs.lando.dev/config/pantheon.html">Pantheon</a> |
+  <a href="https://docs.lando.dev/config/platformsh.html">Platform.sh</a> |
   <a href="https://docs.lando.dev/config/wordpress.html">WordPress</a>
 </p>
 <h3 align="center">Services</h3>

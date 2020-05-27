@@ -55,6 +55,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ### [LEMP](./lemp.md)
 *   ### [MEAN](./mean.md)
 *   ### [Pantheon](./pantheon.md)
+*   ### [Platform.sh](./platformsh.md) **(EXPERIMENTAL)**
 *   ### [WordPress](./wordpress.md)
 
 ## Extending and Overriding Recipes

@@ -89,6 +89,7 @@ perm_sweep() {
 
   # Do a background sweep
   nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &
+  # nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
   nohup chown -R $USER:$GROUP /var/www/.ssh >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /user/.ssh >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /var/www >/dev/null 2>&1 &
