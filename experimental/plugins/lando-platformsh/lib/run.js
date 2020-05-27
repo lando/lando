@@ -144,6 +144,8 @@ const getApplicationEnvironment = (appConfig, config) => ({
  */
 const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
   const externalIP = _.get(_config, 'appEnv.LANDO_HOST_IP');
+  const uid = _.toInteger(_.get(_config, 'uid', 1000));
+  const gid = _.toInteger(_.get(_config, 'gid', 1000));
   return {
     primary_ip: '127.0.0.1',
     features: [],
@@ -162,6 +164,8 @@ const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
       'external ip': externalIP,
     },
     log_file: '/dev/stderr',
+    log_gid: gid,
+    log_uid: uid,
     name: name,
     service: service.name,
     cluster: 'bespin',
@@ -169,6 +173,8 @@ const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
     hostname: service.hostname,
     instance: _.get(_config, 'instance', 'lando'),
     nameserver: '127.0.0.11',
+    web_gid: gid,
+    web_uid: uid,
   };
 };
 
