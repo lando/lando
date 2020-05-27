@@ -30,16 +30,5 @@ fi
 # Make sure platform things are sourced for this script
 . "$HOME/.bashrc"
 
-# Validate auth
-# @TODO: handle automatic login and warning if not authenticated
-lando_pink "Verifying you are authenticated against platform.sh..."
-platform auth:info
-
-# Validate project
-lando_pink "Verifying your current project..."
-lando_green "Verified project id: $(platform project:info id)"
-
 # Attempting to run build
 platform local:build
-
-# Run the user perm sweeper to recover our root ops

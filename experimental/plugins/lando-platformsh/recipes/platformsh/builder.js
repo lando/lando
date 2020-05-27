@@ -2,9 +2,10 @@
 
 // Modules
 const _ = require('lodash');
+const {findClosestApplication} = require('./../../lib/config');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
-const {findClosestApplication} = require('./../../lib/config');
+const {getPlatformPull} = require('./../../lib/pull');
 const tooling = require('./../../lib/tooling');
 
 /*
@@ -52,6 +53,14 @@ module.exports = {
 
       // Merge and set the lando tooling
       options.tooling = _.merge({}, applicationTooling, serviceTooling);
+
+      // Add in the pull/push scripts
+      options.tooling.pull = getPlatformPull(closestApp.name);
+      // Add in relationship envvars
+      options.tooling.pull.env = _(serviceTooling)
+        .map((data, name) => ([_.toUpper(`LANDO_CONNECT_${name}`), data.cmd]))
+        .fromPairs()
+        .value();
 
       // Send downstream
       super(id, options);
