@@ -29,7 +29,7 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should return the drupal installation page by default
+# Should return the Backdrop installation page by default
 cd backdrop
 lando ssh -s appserver -c "curl -L localhost" | grep "Backdrop CMS 1"
 
