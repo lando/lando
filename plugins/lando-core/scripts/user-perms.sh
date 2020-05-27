@@ -26,6 +26,7 @@ fi
 : ${LANDO_WEBROOT_GROUP:='www-data'}
 : ${LANDO_WEBROOT_UID:=$(id -u $LANDO_WEBROOT_USER)}
 : ${LANDO_WEBROOT_GID:=$(id -g $LANDO_WEBROOT_GROUP)}
+: ${LANDO_ADDUSER_EXTRAS:='-M -N'}
 
 # Get the linux flavor
 if [ -f /etc/os-release ]; then
@@ -46,21 +47,6 @@ else
   FLAVOR="debian"
 fi
 
-# Let's log some helpful things
-lando_info "This is a $ID container"
-lando_info "user-perms.sh kicking off as user $(id)"
-lando_debug "Lando ENVVARS set at"
-lando_debug ""
-lando_debug "========================================"
-lando_debug "LANDO_WEBROOT_USER      : $LANDO_WEBROOT_USER"
-lando_debug "LANDO_WEBROOT_GROUP     : $LANDO_WEBROOT_GROUP"
-lando_debug "LANDO_WEBROOT_UID       : $LANDO_WEBROOT_UID"
-lando_debug "LANDO_WEBROOT_GID       : $LANDO_WEBROOT_GID"
-lando_debug "LANDO_HOST_UID          : $LANDO_HOST_UID"
-lando_debug "LANDO_HOST_GID          : $LANDO_HOST_GID"
-lando_debug "========================================"
-lando_debug ""
-
 # Make things
 mkdir -p /var/www/.ssh
 mkdir -p /user/.ssh
@@ -80,9 +66,29 @@ if [ -f "/user/.ssh/known_hosts" ]; then
   lando_info "Symlinked users known_hosts"
 fi
 
+if [ ! -z ${LANDO_NO_USER_PERMS+x} ]; then
+  lando_info "Skipping user perm sweep at because LANDO_NO_USER_PERMS is set"
+  exit 0
+fi
+
+# Let's log some helpful things
+lando_info "This is a $ID container"
+lando_info "user-perms.sh kicking off as user $(id)"
+lando_debug "Lando ENVVARS set at"
+lando_debug ""
+lando_debug "========================================"
+lando_debug "LANDO_WEBROOT_USER      : $LANDO_WEBROOT_USER"
+lando_debug "LANDO_WEBROOT_GROUP     : $LANDO_WEBROOT_GROUP"
+lando_debug "LANDO_WEBROOT_UID       : $LANDO_WEBROOT_UID"
+lando_debug "LANDO_WEBROOT_GID       : $LANDO_WEBROOT_GID"
+lando_debug "LANDO_HOST_UID          : $LANDO_HOST_UID"
+lando_debug "LANDO_HOST_GID          : $LANDO_HOST_GID"
+lando_debug "========================================"
+lando_debug ""
+
 # Adding user if needed
 lando_info "Making sure correct user:group ($LANDO_WEBROOT_USER:$LANDO_WEBROOT_GROUP) exists..."
-add_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_WEBROOT_UID $LANDO_WEBROOT_GID $FLAVOR
+add_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $LANDO_WEBROOT_UID $LANDO_WEBROOT_GID $FLAVOR "$LANDO_ADDUSER_EXTRAS"
 verify_user $LANDO_WEBROOT_USER $LANDO_WEBROOT_GROUP $FLAVOR
 
 # Correctly map users

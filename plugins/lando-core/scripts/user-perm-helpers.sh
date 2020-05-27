@@ -13,16 +13,17 @@ add_user() {
   local UID=$3
   local GID=$4
   local DISTRO=$5
+  local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
     groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
     id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
   else
     groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER" 2>/dev/null
+    id -u "$GROUP" > /dev/null || useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null
   fi;
 }
 
-# Veridy user
+# Verify user
 verify_user() {
   local USER=$1
   local GROUP=$2
@@ -88,6 +89,7 @@ perm_sweep() {
 
   # Do a background sweep
   nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &
+  # nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
   nohup chown -R $USER:$GROUP /var/www/.ssh >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /user/.ssh >/dev/null 2>&1 &
   nohup chown -R $USER:$GROUP /var/www >/dev/null 2>&1 &
