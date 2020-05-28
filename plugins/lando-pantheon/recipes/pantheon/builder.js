@@ -83,7 +83,7 @@ module.exports = {
       // Normalize because 7.0 right away gets handled strangely by js-yaml
       if (options.php === '7' || options.php === 7) options.php = '7.0';
       // Enforce certain options for pantheon parity
-      options.via = 'nginx:1.14';
+      options.via = 'nginx:1.16';
       options.database = 'mariadb:10.1';
       // Set correct things based on framework
       options.defaultFiles.vhosts = `${options.framework}.conf.tpl`;
