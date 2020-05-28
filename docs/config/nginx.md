@@ -12,8 +12,16 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[1.14](https://hub.docker.com/r/bitnami/nginx)** **(default)**
+*   [1.18](https://hub.docker.com/r/bitnami/nginx)
+*   **[1.17](https://hub.docker.com/r/bitnami/nginx)** **(default)**
+*   [1.16](https://hub.docker.com/r/bitnami/nginx)
 *   [custom](./../config/services.md#advanced)
+
+## Legacy versions
+
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
+
+*   [1.14](https://hub.docker.com/r/bitnami/nginx)
 
 ## Patch versions
 
@@ -26,7 +34,7 @@ To use a patch version, you can do something as shown below:
 ```yaml
 services:
   myservice:
-    type: nginx:1.14.2
+    type: nginx:1.16.1
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/bitnami/nginx) for the underlying image we are using.
@@ -40,7 +48,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 ```yaml
 services:
   myservice:
-    type: nginx:1.14
+    type: nginx:1.18
     webroot: .
     ssl: false
     config:
