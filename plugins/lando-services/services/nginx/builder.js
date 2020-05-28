@@ -20,7 +20,7 @@ module.exports = {
     confSrc: __dirname,
     defaultFiles: {
       params: 'fastcgi_params',
-      server: 'nginx.conf.tpl',
+      server: 'nginx.conf',
       vhosts: 'default.conf.tpl',
     },
     remoteFiles: {
@@ -45,6 +45,7 @@ module.exports = {
           server: '/opt/bitnami/extra/nginx/templates/nginx.conf.tpl',
           vhosts: '/opt/bitnami/extra/nginx/templates/default.conf.tpl',
         });
+        options.defaultFiles = _.merge({}, options.defaultFiles, {server: 'nginx.conf.tpl'});
       }
 
       // Build the default stuff here
@@ -63,13 +64,9 @@ module.exports = {
           `${options.confDest}/launch.sh:/launch.sh`,
           `${options.confDest}/${options.defaultFiles.params}:${options.remoteFiles.params}`,
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}:ro`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
         ],
       };
-
-      // 1.14 also includes an extra default volume
-      if (options.version === '1.14') {
-        nginx.volumes.push(`${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}:ro`);
-      }
 
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, nginx)});
