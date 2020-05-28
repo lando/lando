@@ -7,7 +7,7 @@ exports.cannotStartProxyWarning = message => ({
     'The proxy has been disabled for now so you can continue to work.',
     'Check out the docs below, resolve your issue and build this app',
   ],
-  url: 'https://docs.lando.dev/config/proxy.htm',
+  url: 'https://docs.lando.dev/config/proxy.html',
 });
 
 exports.unknownServiceWarning = service => ({
