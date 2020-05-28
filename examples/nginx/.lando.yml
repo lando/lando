@@ -3,9 +3,18 @@ services:
   defaults:
     type: nginx
   patch:
-    type: nginx:1.14.1
+    type: nginx:1.16.1
+    webroot: www
   custom:
-    type: nginx
+    type: nginx:1.17
+    ssl: true
+    webroot: www
+    config:
+      server: config/server2.conf
+      vhosts: config/custom.conf
+      params: config/params
+  custom_legacy:
+    type: nginx:1.14
     ssl: true
     webroot: www
     config:

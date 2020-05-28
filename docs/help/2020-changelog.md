@@ -1,5 +1,18 @@
 # 2020
 
+## v3.0.4 - [May 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.4)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added an app warning for installing Drush `10+` globally
+* Added support for `nginx` `1.16`, `1.17` and `1.18`
+* Added support for Docker Desktop `2.3.0.3`
+* Changed default `nginx` version to `1.17`
+* Deprecated `nginx` version `1.14`
+* Updated to Docker Desktop `2.3.0.3`
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
 ## v3.0.3 - [May 15, 2020](https://github.com/lando/lando/releases/tag/v3.0.3)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

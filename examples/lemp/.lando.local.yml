@@ -4,4 +4,3 @@ config:
   webroot: .
   config:
     vhosts: config/default.conf.tpl
-    server: config/server.conf.tpl

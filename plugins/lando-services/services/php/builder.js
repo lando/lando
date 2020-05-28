@@ -24,7 +24,7 @@ const nginxConfig = options => ({
   ssl: options.nginxSsl,
   type: 'nginx',
   userConfRoot: options.userConfRoot,
-  version: '1.14',
+  version: '1.17',
   webroot: options.webroot,
 });
 
@@ -57,7 +57,7 @@ const parseCli = options => {
 const parseNginx = options => {
   options.command = (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'];
   options.image = 'fpm';
-  options.remoteFiles.vhosts = '/opt/bitnami/extra/nginx/templates/default.conf.tpl';
+  options.remoteFiles.vhosts = '/opt/bitnami/nginx/conf/lando.conf';
   options.defaultFiles.vhosts = (options.ssl) ? 'default-ssl.conf.tpl' : 'default.conf.tpl';
   options.nginxSsl = options.ssl;
   options.ssl = false;
