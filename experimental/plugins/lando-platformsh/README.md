@@ -116,9 +116,9 @@ These are all expected to be delivered at `rc` level quality eg the 95/5 rule fo
 
 TBD
 
-# Project Structure
+## Project Structure
 
-This plugin follows the same structure as any [Lando plugin](https://docs.lando.dev/contrib/contrib-plugins.html#plugins) but here is an explicity breakdown:
+This plugin follows the same structure as any [Lando plugin](https://docs.lando.dev/contrib/contrib-plugins.html#plugins) but here is an explicit breakdown:
 
 ```bash
 ./
@@ -212,7 +212,7 @@ OPEN is the step that most diverges from what Lando expects in that it requires 
 
 Once this has completed each application container will be "open for business" and ready to handle requests. This is also required to set `PLATFORM_RELATIONSHIPS` which is very important so applications can easily connect to services.
 
-Behind the scenes we use the helper script `scripts/psh-open.sh`.
+Behind the scenes we use the helper script `scripts/psh-open.sh`. We also do the open logic in `app.js` in a `post-start` event.
 
 ## Services and Types
 
@@ -227,23 +227,38 @@ If you want to add support for a new platform service or application container s
 Also note that you will likely need to add it to `getLandoServiceType` which maps a `platform` `type `to a `lando` `type`.
 https://github.com/lando/lando/blob/abf0648701b960e49f09bf9e569c83aca727666a/experimental/plugins/lando-platformsh/lib/services.js#L8
 
-
 ## Other considerations
 
-1. HOME and psh-exec
-2. lando logs
+Here are a few other useful things to know.
+
+Also recommend reviewing the [Known issues and caveats](https://docs.lando.dev/config/platformsh.html#caveats-and-known-issues) in the user documentation.
+
+### `lando ssh`
+
+In `index.js` you will see that `lando` is overriding the core `lando ssh` command. This serves two main purposes:
+
+1. To select the default `service` to run on. The default service will be set to the closest `.platform.app.yaml` Lando can find. The `name`of the application in that file is also the name of the service.
+2. To make sure all `lando ssh` commands are prefixed with `/helpers/psh-exec.sh`
+
+`/helpers/psh-exec.sh` is a helper script that makes sure the user environment is set correctly before commands are run. Primarily this makes sure that `$HOME` is not set to `/app` and that the `PLATFORM_` variables are set before the command is run.
+
+### Application tooling
+
+Similarly in `index.js` all tooling commands are prefixed by `/helpers/psh-exec.sh`
 
 ## Contribution
 
-PR per issue
-update docs
-etc
+WIP but outline is
 
-
+1. GitHub flow as normal eg branch for an issue -> PR -> merge
+2. Lets review all platformsh PRs together for awhile: this should keep us on the same page and also force knowledge transfer
+3. Lets definitely be updating the user docs/dev docs
+4. Once we have the d8 and kitchen sink example func tests lets also be adding tests on every commit
+5. Lets wait on unit tests until things settle down a bit but a good rule of thumb is try to put things we would want to unit tests in `lib` somewhere.
 
 ## Testing
 
-TBD but outline is
+WIP but outline is
 
 1. Currently no unit tests but they can live in `test` and should test the stuff in `lib`
 2. Uses `leia` for functional tests and these live in `examples`
@@ -253,10 +268,4 @@ TBD but outline is
     * Uses a multiapp setup with each application type
     * Has each service type using some more complex configuration for each
     * Each application should run a trivial example that exists to test connecting to each service and veryfying their config eg the code examples in the platform.sh docs themselves https://docs.platform.sh/languages/php.html#accessing-services
-
-## Adding Services
-
-## Adding
-
-## Contributing code
 
