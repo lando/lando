@@ -72,8 +72,8 @@ Note that you can put your configuration files anywhere inside your application 
 ```bash
 ./
 |-- config
-   |-- default.conf.tpl
-   |-- nginx.conf.tpl
+   |-- default.conf
+   |-- nginx.conf
    |-- fastcgi_params
 |-- index.html
 |-- .lando.yml
@@ -86,8 +86,8 @@ services:
   myservice:
     type: nginx
     config:
-      server: config/nginx.conf.tpl
-      vhosts: config/default.conf.tpl
+      server: config/nginx.conf
+      vhosts: config/default.conf
       param: config/fastcgi_params
 ```
 

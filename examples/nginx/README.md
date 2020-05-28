@@ -43,8 +43,8 @@ lando ssh -s custom_legacy -c "curl https://localhost | grep WWWDIR"
 lando ssh -s custom -c "curl https://localhost | grep WWWDIR"
 
 # Should mount custom config to the correct locations
-lando ssh -s custom -c "cat /opt/bitnami/extra/nginx/templates/nginx.conf.tpl | grep LANDOSERVER"
-lando ssh -s custom -c "cat /opt/bitnami/extra/nginx/templates/default.conf.tpl | grep LANDOVHOSTS"
+lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/nginx.conf | grep LANDOSERVER"
+lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/vhosts/lando.conf | grep LANDOVHOSTS"
 lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/fastcgi_params | grep LANDOPARAMS"
 lando ssh -s custom_legacy -c "cat /opt/bitnami/extra/nginx/templates/nginx.conf.tpl | grep LANDOSERVER"
 lando ssh -s custom_legacy -c "cat /opt/bitnami/extra/nginx/templates/default.conf.tpl | grep LANDOVHOSTS"
