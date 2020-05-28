@@ -7,10 +7,11 @@ After reading through it the developer should understand:
 * The high level goals of the integration
 * The general features roadmap
 * How the plugin is structured
-* How the plugin modifies the usual lando runtime
-* How the project is tested
+* How the plugin emulates the platform.sh lifecycle
+* How the plugin deviates from the platform.sh lifecycle
 * How additional services/application containers are added
 * How additional tooling is added
+* How the project is tested
 * Where framework level overrides live
 * Contributing code
 
@@ -117,34 +118,120 @@ TBD
 
 # Project Structure
 
-A general breakdown of where things live inside the Lando repo is shown below:
+This plugin follows the same structure as any [Lando plugin](https://docs.lando.dev/contrib/contrib-plugins.html#plugins) but here is an explicity breakdown:
 
 ```bash
 ./
-|-- .circleci       CircleCi config to run our generated functional tests
-|-- .github         Helpful GitHub templates
-|-- .platform       Platform.sh config to run our docs site
-|-- api             Our express API
-|-- bin             CLI entrypoint script
-|-- blog            Vuepress blog and its content
-|-- docs            Vuepress docs site and its content
-|-- events          Vuepress events listing and its content
-|-- examples        Examples user in this documentation and to generate functional tests
-|-- installer       Installer packages and helpers
-|-- lib             Core libraries
-|-- metrics         Express metrics server
-|-- plugins         Core plugins
-|-- scripts         Scripts to help with build, test and deploy automation
-|-- test            Unit and functional tests
-|-- website         Vuepress marketing site and its content
-|-- .lando.yml      The Landofile for Lando
-|-- .travis.yml     Travis CI config for POSIX unit tests, build and deploy
-|-- config.yml      Default Lando global config
-|-- package.json    Lando node dependencies
+|-- lib             Utilities and helpers, things that can easily be unit tested
+|-- recipes
+    |-- platformsh  The files to define the `platformsh` recipe and its `init` command
+|-- scripts         Helpers scripts that end up /helpers/ inside each container
+|-- services        Defines each platform.sh service eg `redis` or `php`
+|-- types           Defines the type/parent each above service can be
+|-- app.js          Modifications to the app runtime
+|-- index.js        Modifications to the Lando runtime
 ```
-https://docs.lando.dev/contrib/contrib-plugins.html#plugins
 
-## Flow
+## Platform.sh container lifecycle
+
+Normally Lando expects containers to undergo a lifecycle like:
+
+1. Pre-start build steps run if applicable
+2. Container starts
+
+In `docker-compose` terms this is generally something like:
+
+```bash
+# If there are build steps
+docker-compose up
+docker-compose exec appserver command1
+...
+docker-compose exec database command3
+docker-compose kill
+
+# Start the app
+docker-compose up
+```
+
+Platform.sh containers have a more complex lifecycle
+
+1. The container is BOOTed
+2. The container undergoes a BUILD
+3. The container is STARTed
+4. The containers are OPENed
+
+There are other assumptions these containers have that are provided by platform.sh's actual orchestration layer. As we do not have that layer available locally we seek to "spoof" some of those things.
+
+Most of these things are handled by a `python` utility called the `platformsh.agent`. There are also useful wrapper scripts, utilities, templates etc that can be found in `/etc/platform` inside each platform.sh container.
+
+Here are some key things to know about each step and what Lando does to change them.
+
+### BOOT
+
+1. BOOT unmounts `/etc/hosts` and `/etc/resolv.conf`. This stops Docker from controlling them so platform can
+2. BOOT will setup and prepare any needed directories
+3. BOOT will run `runsvdir` on `/etc/services/`
+4. BOOT will send a ping to a spoofed RPC agent to mimic what platform expects
+5. BOOT will finish by running `/etc/platform/boot`
+
+Lando puts all this logic in `scripts/psh-boot.sh` and uses it for both the `BOOT` and `START` phases by putting it into `/scripts` inside of each container. Lando's entrypoint script will run anything it finds in this directory before it hands off to the "main" process/command. Also note that `/etc/platform/boot` will finish by handing off to `/etc/platform/start`.
+
+Additionally, Lando will run `scripts/psh-recreate-users.sh` before anything else. This script handles host:container permission mapping.
+
+On platform.sh application containers run as `web:x:10000:10000::/app:/bin/bash` and _most_ services run as `app:x:1000:1000::/app:/bin/bash`. However locally we need whatever user is running process 1 to match the host (eg yours) uid and groupid.
+
+## BUILD
+
+The platform.sh BUILD step uses an internal Lando `build` step behind the scenes. This means it:
+
+1. Only runs on the initial `lando start` and subsequent `lando rebuilds`
+2. Runs _before_ the container STARTS and before any user-defined build steps
+
+The BUILD step will use `scripts/psh-build.sh`. This has a few differences from Platform
+
+1. BUILD will set `$HOME` to `/var/www` instead of `/app` so build artifacts/caches dont potentially in your git repo
+2. BUILD will install the platform CLI first if it needs to
+3. BUILD will use `platform local:build` (for now) instead of the underlying `/etc/platform/build`
+
+## START
+
+Start has a similar lifecycle to `BOOT` except that it ends by running `/etc/platform/start` instead of `/etc/platform/boot`.
+
+Once `/etc/platform/start` finishes the main process/command is run. This is `exec init` for all containers. At this point each container should have a main process running and that process shuold be controlling a bunch of other processes eg `php-fpm` and `nginx` in the case of a `php` container.
+
+However, these containers are all "living in the dark" and need to be OPENed so they can both talk to one another and handle requests.
+
+## OPEN
+
+OPEN is the step that most diverges from what Lando expects in that it requires Lando do additional things AFTER an app has started. Usually once an app has started Lando expects its ready to go. This is not the case for platform. Generally the flow that needs to happen here is:
+
+1. Lando needs to OPEN each platform service eg non-application containers
+2. Lando needs to collect the output from all these commands together
+3. Lando needs to merge in additional data its previously collected such as the IP addresses of services
+4. Lando then needs to inject this payload when it OPENs the application containers
+
+Once this has completed each application container will be "open for business" and ready to handle requests. This is also required to set `PLATFORM_RELATIONSHIPS` which is very important so applications can easily connect to services.
+
+Behind the scenes we use the helper script `scripts/psh-open.sh`.
+
+## Services and Types
+
+Inside of the `services` folder you will see where we define the Lando service that corresponds to each platform application container and service. Each service can either be a `platform-appserver` or a `plaform-service` and each of these are defined in the `types` folder.
+
+A `platform-appserver` means it is an applicaton container eg a supported platform "langauge" eg a `type` you can define in a `.platform.app.yaml` file.
+
+A `platform-service` means it something that goes in the `services.yaml`
+
+If you want to add support for a new platform service or application container simply add a new one into the `services` folder and make sure you set the `parent` to either `_platformsh_service` or `_platformsh_appserver` as appropriate.
+
+Also note that you will likely need to add it to `getLandoServiceType` which maps a `platform` `type `to a `lando` `type`.
+https://github.com/lando/lando/blob/abf0648701b960e49f09bf9e569c83aca727666a/experimental/plugins/lando-platformsh/lib/services.js#L8
+
+
+## Other considerations
+
+1. HOME and psh-exec
+2. lando logs
 
 ## Contribution
 
@@ -152,7 +239,20 @@ PR per issue
 update docs
 etc
 
+
+
 ## Testing
+
+TBD but outline is
+
+1. Currently no unit tests but they can live in `test` and should test the stuff in `lib`
+2. Uses `leia` for functional tests and these live in `examples`
+  * Should be a `platform-drupal` example
+  * Should eventually be a `platform-kitchensink` example that
+    * Serves to validate platform.sh's won docs
+    * Uses a multiapp setup with each application type
+    * Has each service type using some more complex configuration for each
+    * Each application should run a trivial example that exists to test connecting to each service and veryfying their config eg the code examples in the platform.sh docs themselves https://docs.platform.sh/languages/php.html#accessing-services
 
 ## Adding Services
 
