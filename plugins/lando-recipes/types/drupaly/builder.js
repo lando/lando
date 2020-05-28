@@ -5,6 +5,7 @@ const _ = require('lodash');
 const LandoLaemp = require('./../laemp/builder.js');
 const semver = require('semver');
 const utils = require('./../../lib/utils');
+const warnings = require('./../../lib/warnings');
 
 // "Constants"
 const DRUSH8 = '8.3.2';
@@ -44,6 +45,11 @@ module.exports = {
       } else if (options.drush !== false) {
         options.composer['drush/drush'] = options.drush;
       }
+      // Throw a warning to indicate site install pref for drush 10
+      if (semver.gte(semver.valid(semver.coerce(options.drush)), '10.0.0')) {
+        options._app.addWarning(warnings.drushWarn(options.drush));
+      }
+
       // Set legacy envars
       options.services = _.merge({}, options.services, {appserver: {overrides: {
         environment: {

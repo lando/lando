@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 8 codebase
 rm -rf drupal8 && mkdir -p drupal8 && cd drupal8
-lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz --remote-options="--strip-components 1" --recipe drupal8 --webroot . --name lando-drupal8 --option database=mysql:8.0 --option drush=10.2.1
+lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz --remote-options="--strip-components 1" --recipe drupal8 --webroot . --name lando-drupal8 --option database=mysql:8.0
 
 # Should copy in the .lando.local.yml
 cp -f .lando.local.yml drupal8/.lando.local.yml
