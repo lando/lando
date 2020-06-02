@@ -11,6 +11,19 @@
   location: San Francisco
   url: >-
     https://www.meetup.com/SFDUG-San-Francisco-Drupal-Users-group/events/270298015/
+- id: d0e708c562649d2a0f82f90227c7a3bdd507205d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: SFDUG Lando + Drupal Contributions
+  date: '2020-06-25'
+  summary: >-
+    Leverage the power of Lando to quickly spin up Drupal contribution
+    environments.
+  type: meetup
+  location: San Francisco
+  url: >-
+    https://www.meetup.com/SFDUG-San-Francisco-Drupal-Users-group/events/270298015/
 - id: 375b8dd30b5ba5a9e309e1c4e830dd8aceca23c6
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
