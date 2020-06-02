@@ -146,7 +146,7 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
 
   # Switch to drushy pull if we can
-  if [ "$FRAMEWORK" != "wordpress" ]; then
+  if [ "$FRAMEWORK" != "wordpress" && "$FRAMEWORK" != "wordpress_network" ]; then
     # Get drush aliases
     echo "Downloading drush aliases..."
     terminus aliases
