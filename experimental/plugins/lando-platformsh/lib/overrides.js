@@ -1,6 +1,6 @@
 'use strict';
 
-var overrides = {};
+const overrides = {};
 
 // DRUPAL 8
 overrides['d8config:system.file:path:temporary'] = '/tmp';
