@@ -13,8 +13,7 @@ module.exports = {
   builder: parent => class LandoAppserver extends parent {
     constructor(id, options = {}, ...sources) {
       // Strip out lagoon stuff we dont need
-      const lagoon = _.omit(options.lagoon, ['volumes', 'volumes_from', 'networks', 'user']);
-
+      const lagoon = options.lagoon;
       // Normalize the dockerfile situation
       // We need to do this again since this isnt technically an override
       if (_.has(lagoon, 'build.context')) lagoon.build.context = path.join(options.root);

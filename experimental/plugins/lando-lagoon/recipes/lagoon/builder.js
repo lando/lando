@@ -2,31 +2,7 @@
 
 // Modules
 const _ = require('lodash');
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
-
-/*
- * Helper to map lagoon type data to a lando service
- */
-const getLandoService = name => {
-  switch (name) {
-    case 'cli': return 'lagoon-php';
-    case 'nginx': return 'lagoon-nginx';
-    case 'mariadb': return 'lagoon-mariadb';
-    case 'php': return 'lagoon-php';
-    case 'redis': return 'lagoon-redis';
-    case 'solr': return 'lagoon-solr';
-    default: return false;
-  };
-};
-
-/*
- * Helper to get a lagoon envvar with a fallback based on flavor
- */
-const getLagoonEnv = (service, key, fallback) => {
-  return _.get(service, `lagoon.environment.${key}`, fallback);
-};
+const {getLandoServices} = require('./../../lib/services');
 
 /*
  * Build Lagoon
@@ -46,29 +22,17 @@ module.exports = {
     constructor(id, options = {}) {
       // Get our options
       options = _.merge({}, config, options);
+      // Get the lagoon config weve loaded and parsed
+      const lagoonConfig = _.get(options, '_app.lagoon', {});
 
-      // Error if we don't have a lagoon.yml
-      // @TODO: move this over to the same pattern we have for platform.sh
-      // which loads stuff in an init event so its all ready by here
-      if (!fs.existsSync(path.join(options.root, '.lagoon.yml'))) {
-        throw Error(`Could not detect a .lagoon.yml at ${options.root}`);
-      }
-      const lagoonConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, '.lagoon.yml')));
+      // Map into lando services
+      options.services = getLandoServices(lagoonConfig.services);
 
-      // Error if we don't have a docker compose
-       if (!fs.existsSync(path.join(options.root, lagoonConfig['docker-compose-yaml']))) {
-        throw Error(`Could not detect a ${lagoonConfig['docker-compose-yaml']} at ${options.root}`);
-      }
-      const cConfig = yaml.safeLoad(fs.readFileSync(path.join(options.root, lagoonConfig['docker-compose-yaml'])));
-
-      // Start by injecting the lagoon docker compose config into the corresponding lando services
-      _.forEach(cConfig.services, (config, name) => {
-        if (getLandoService(name) !== false) {
-          options.services[name] = {type: getLandoService(name), lagoon: config};
-        }
-      });
+      // BUILD STEP
+      // DB CREDS
 
       // Add cli stuff as needed
+      /*
       if (_.includes(_.keys(options.services), 'cli')) {
         // Build steps
         options.services.cli.build_internal = options.build;
@@ -169,6 +133,7 @@ module.exports = {
       if (_.includes(_.keys(options.services), 'solr')) {
         options.proxy.solr = [`solradmin-${options.app}.${options._app._config.domain}:8983`];
       }
+      */
 
       // Send downstream
       super(id, options);

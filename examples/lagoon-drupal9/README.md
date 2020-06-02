@@ -1,9 +1,9 @@
-Lagoon Drupal 8 Example
+Lagoon Drupal 9 Example
 =======================
 
 This example exists primarily to test the following documentation:
 
-* [Lagoon Recipe - Drupal 8](https://docs.lando.dev/config/lagoon.html)
+* [Lagoon Recipe - Drupal 9](https://docs.lando.dev/config/lagoon.html)
 
 Start up tests
 --------------
@@ -21,9 +21,9 @@ lando config | grep experimentalPluginLoadTest | grep true
 
 # Should initialize the lagoon drupal example
 rm -rf drupal && mkdir -p drupal && cd drupal
-lando init --source remote --remote-url git://github.com/amazeeio/drupal-example.git --recipe lagoon
+lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x" --recipe lagoon
 
-# Should start up our lagoon drupal 8 site successfully
+# Should start up our lagoon drupal 9 site successfully
 cd drupal
 lando start
 ```
@@ -76,7 +76,7 @@ lando node --version
 cd drupal
 lando yarn --version
 
-# Should have a running drupal 8 site served by nginx on port 8080
+# Should have a running drupal 9 site served by nginx on port 8080
 cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Site-Install"
 
