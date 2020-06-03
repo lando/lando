@@ -96,7 +96,7 @@ and the `web` directory should be populated with the Drupal source code.
 
 ## Testing Drupal Patches
 
-Now we are ready to find a Drupal issue. Search the issue queue for an `8.x` issue that you want to test. Grap the URL of the latest patch and apply it to our `drupal-contributions` environment.
+Now we are ready to find a Drupal issue. Search the issue queue for an `8.x` issue that you want to test. Grab the URL of the latest patch and apply it to our `drupal-contributions` environment.
 
 For example if you choose this issue: https://www.drupal.org/project/drupal/issues/2962649, the latest corresponding patch (as of 3 June 2020) is https://www.drupal.org/files/issues/2019-09-12/2962649-10.patch. To apply this patch:
 
