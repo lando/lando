@@ -1,22 +1,51 @@
 # 2020
 
-## v3.0.2 - In Development
+## v3.0.4 - [May 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.4)
 
-### This is an `edge` release.
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-Edge releases contain the newest bug fixes and features and *may* be less stable as a result. If you are an intrepid developer who wants to try the latest and greatest and/or wants to help report bugs then try this release out.
+* Added an app warning for installing Drush `10+` globally
+* Added support for `nginx` `1.16`, `1.17` and `1.18`
+* Added support for Docker Desktop `2.3.0.3`
+* Changed default `nginx` version to `1.17`
+* Deprecated `nginx` version `1.14`
+* Updated to Docker Desktop `2.3.0.3`
 
-Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 
+## v3.0.3 - [May 15, 2020](https://github.com/lando/lando/releases/tag/v3.0.3)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added a [guide](https://docs.lando.dev/guides/using-compass-on-a-lando-node-service.html) on how to use `compass` in `node` service [#2039](https://github.com/lando/lando/pull/2039)
+* Added support for `php` `7.4` to `pantheon` recipes [#2259](https://github.com/lando/lando/pull/2259)
+* Added support for `apache` `tika` `1.18` to supported Pantheon `appservers`
+* Fixed bug causing `Operation not permitted` for some `db-import|export` commands [#2255](https://github.com/lando/lando/pull/2255)
+* Fixed bug causing `ssh` keys to be incorrectly set to `700` [#2260](https://github.com/lando/lando/pull/2260)
+* Fixed bug causing overridden `ports` expressed as objects to error [#2256](https://github.com/lando/lando/pull/2256)
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
+
+## v3.0.2 - [May 12, 2020](https://github.com/lando/lando/releases/tag/v3.0.2)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added `none` as a Release Channel option
+* Added a [guide](https://docs.lando.dev/guides/installing-php-extensions-on-lando.html) on how to install `php` extensions [#1894](https://github.com/lando/lando/pull/1894) [#1906](https://github.com/lando/lando/pull/1906) [#2201](https://github.com/lando/lando/pull/2201) [#2240](https://github.com/lando/lando/pull/2240)
+* Added a [guide](https://docs.lando.dev/guides/installing-node-in-your-lando-php-service.html) on how to install `node` directly in a PHP service for things like PatternLab or Emulsify [#2196](https://github.com/lando/lando/pull/2196)
+* Added support for `mongo` `4.2` [#2246](https://github.com/lando/lando/pull/2246)
+* Added a `drupal9` **(beta)** recipe [#1993](https://github.com/lando/lando/pull/1993)
 * Added `none` as a Release Channel option [#2218](https://github.com/lando/lando/pull/2218)
+* Deprecated `mongo` version `4.1` [#2246](https://github.com/lando/lando/pull/2246)
 * Fixed bug where `cache: none` in the Laravel recipe config caused a start error [#2236](https://github.com/lando/lando/pull/2236)
 * Fixed bug causing `nginx` and `apache` to sometimes fail on a rebuild [#1986](https://github.com/lando/lando/pull/1986)
 * Fixed bug causing `db-import` to not recognize some dumps from `db-export` [#2170](https://github.com/lando/lando/pull/2170)
 * Fixed bug causing `db-export` to report success even when it had been cancelled on `gzip` overwrite [#2231](https://github.com/lando/lando/pull/2231)
 * Fixed bug causing some Docker Engine versions on Linux to incorrectly throw an incompatibility warning [#2239](https://github.com/lando/lando/pull/2239)
+* Updated default `mongo` version to `4.2` [#2246](https://github.com/lando/lando/pull/2246)
+* Updated to and added support to Docker Desktop `2.3.0.2`
+* Updated to and added support for `docker-compose` `1.25.5` on Linux
 * Many more spelling and grammar fixes in docs, code and comments, thanks [@uberhacker](https://github.com/uberhacker)!
-
-Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: <https://docs.lando.dev/>**
 

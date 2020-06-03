@@ -32,12 +32,14 @@ module.exports = {
     }
     // Parse the Lagoon config
     const lagoonConfig = lando.yaml.load(lagoonFile);
+    // Set this so it shows correctly after init
+    options.name = lagoonConfig.project;
 
     // @TODO: eventually we need a "flavor" option that will decide the config below
     // for now we assume a "drupal" flavor eg Drupal 8
     // Set the name and other things
     return {
-      name: lagoonConfig.project,
+      name: options.name,
       config: {
         flavor: 'drupal',
         build: ['composer install'],

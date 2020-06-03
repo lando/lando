@@ -52,6 +52,7 @@
   id: 433bd1bd859bb74aa4c7be9f0acd798692d49b62
 - name: Aaron Feledy
   role:
+    - Code
     - Documentation
     - Evangelism
     - Events

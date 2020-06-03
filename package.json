@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.1",
+  "version": "3.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -71,6 +71,7 @@
       "experimental/plugins/**/*.ini",
       "experimental/plugins/**/*.json",
       "experimental/plugins/**/*.php",
+      "experimental/plugins/**/*.py",
       "experimental/plugins/**/*.sh",
       "experimental/plugins/**/*.toml",
       "experimental/plugins/**/*.tpl",
@@ -84,6 +85,7 @@
       "plugins/**/*.ini",
       "plugins/**/*.json",
       "plugins/**/*.php",
+      "plugins/**/*.py",
       "plugins/**/*.sh",
       "plugins/**/*.toml",
       "plugins/**/*.tpl",
@@ -116,6 +118,7 @@
     "mkdirp": "^0.5.1",
     "node-cache": "^4.1.1",
     "object-hash": "^1.1.8",
+    "platformsh-client": "^0.1.112",
     "semver": "^7.3.2",
     "shelljs": "0.7.8",
     "string-argv": "0.1.1",

@@ -1,12 +1,9 @@
-
-{{#if NGINX_DAEMON_USER}}{{#if NGINX_DAEMON_GROUP}}
-user {{NGINX_DAEMON_USER}} {{NGINX_DAEMON_GROUP}};
-{{/if}}{{/if}}
+user              root root;  ## Default: nobody
 
 worker_processes  auto;
 
-error_log  "{{NGINX_LOGDIR}}/error.log warn";
-pid        "{{NGINX_TMPDIR}}/nginx.pid";
+error_log         "/opt/bitnami/nginx/logs/error.log";
+pid               "/opt/bitnami/nginx/tmp/nginx.pid";
 
 events {
     worker_connections  1024;
@@ -28,7 +25,7 @@ http {
                            '"$http_referer" "$http_user_agent" $request_time '
                            '"$http_x_forwarded_for"';
 
-  access_log  "{{NGINX_LOGDIR}}/access.log time_combined buffer=2k";
+  access_log    "/opt/bitnami/nginx/logs/access.log";
 
   server_tokens off;
 
@@ -73,6 +70,6 @@ http {
     https ON;
   }
 
-  include "{{NGINX_CONFDIR}}/vhosts/*.conf";
+  include  "/opt/bitnami/nginx/conf/vhosts/*.conf";
 
 }

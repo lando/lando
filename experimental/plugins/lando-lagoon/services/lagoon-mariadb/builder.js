@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const {getLagoonEnv} = require('./../../lib/services');
 
 // Builder
 module.exports = {
@@ -23,7 +24,21 @@ module.exports = {
   builder: (parent, config) => class LandoLagoonMariaDb extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
+
+      // Set the meUser
       options.meUser = 'mysql';
+
+      // Make sure we set the creds correctly
+      // this is tricky because the user can modify this in their lagoon docker-compose.yaml
+      const flavor = _.get(options._app, 'config.config.flavor', 'lagoon');
+      options.creds = {
+        user: getLagoonEnv(options, 'MARIADB_USER', flavor),
+        password: getLagoonEnv(options, 'MARIADB_PASSWORD', flavor),
+        database: getLagoonEnv(options, 'MARIADB_DATABASE', flavor),
+        rootpass: getLagoonEnv(options, 'MARIADB_ROOT_PASSWORD', 'Lag00n'),
+      };
+
+      // Build the service
       const mariadb = {
         command: options.command,
         environment: {
@@ -37,6 +52,7 @@ module.exports = {
           `${options.data}:/var/lib/mysql`,
         ],
       };
+
       // Add some lando info
       options.info = _.merge({}, options.info, {
         creds: options.creds,
@@ -49,6 +65,7 @@ module.exports = {
           port: _.get(options, 'portforward', 'not forwarded'),
         },
       });
+
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, mariadb)});
     };

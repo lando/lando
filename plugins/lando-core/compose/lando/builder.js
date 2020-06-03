@@ -30,6 +30,7 @@ module.exports = {
         config = {},
         data = `data_${name}`,
         dataHome = `home_${name}`,
+        entrypoint = '/lando-entrypoint.sh',
         home = '',
         moreHttpPorts = [],
         info = {},
@@ -73,7 +74,7 @@ module.exports = {
 
       // Get some basic locations
       const scriptsDir = path.join(userConfRoot, 'scripts');
-      const entrypoint = path.join(scriptsDir, 'lando-entrypoint.sh');
+      const entrypointScript = path.join(scriptsDir, 'lando-entrypoint.sh');
       const addCertsScript = path.join(scriptsDir, 'add-cert.sh');
       const refreshCertsScript = path.join(scriptsDir, 'refresh-certs.sh');
 
@@ -81,7 +82,7 @@ module.exports = {
       const volumes = [
         `${userConfRoot}:/lando:delegated`,
         `${scriptsDir}:/helpers`,
-        `${entrypoint}:/lando-entrypoint.sh`,
+        `${entrypointScript}:/lando-entrypoint.sh`,
         `${dataHome}:/var/www`,
       ];
 
@@ -130,7 +131,7 @@ module.exports = {
       _.set(namedVols, dataHome, {});
       sources.push({
         services: _.set({}, name, {
-          entrypoint: '/lando-entrypoint.sh',
+          entrypoint,
           environment,
           labels,
           logging,

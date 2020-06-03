@@ -13,15 +13,28 @@ module.exports = {
   builder: parent => class LandoAppserver extends parent {
     constructor(id, options = {}, ...sources) {
       // Strip out lagoon stuff we dont need
-      const lagoon = _.omit(options.lagoon, ['volumes', 'volumes_from', 'networks', 'user']);
+      const lagoon = options.lagoon;
+      // Just get all hostnames for now
+      // @TODO: eventually this should just the internal docker hostname
+      // for whatever container is serving the app
+      const hostnames = _.get(options, '_app.lagoon.containers', []);
 
       // Normalize the dockerfile situation
       // We need to do this again since this isnt technically an override
       if (_.has(lagoon, 'build.context')) lagoon.build.context = path.join(options.root);
-      // Refactor the lagoon route for lando
+
+      // Refactor the lagoon routes for lando
       lagoon.environment.LAGOON_ROUTE = `https://${options.app}.${options._app._config.domain}`;
+      lagoon.environment.LAGOON_LOCALDEV_URL = `https://${options.app}.${options._app._config.domain}`;
+      lagoon.environment.LAGOON_ROUTES = hostnames.concat([
+        `${options.app}.${options._app._config.domain}`,
+        'localhost',
+      ]).join(',');
+
       // Set up lando user perm handling
       options.meUser = (options.meUser) ? options.meUser : 'user';
+
+      // Merge in the usual envvars but make sure user set ones take priority
       lagoon.environment = _.merge({}, {
         LANDO_SERVICE_TYPE: 'lagoon',
         LANDO_WEBROOT_USER: 'user',

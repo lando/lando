@@ -16,6 +16,7 @@ module.exports = {
       '/usr/bin',
       '/sbin',
       '/bin',
+      // @todo: need to figure out where home is on lagoon?
       '/var/www/.composer/vendor/bin',
     ],
     confSrc: __dirname,
@@ -35,12 +36,6 @@ module.exports = {
         volumes: options.volumes,
         command: options.command,
       };
-
-      // Override some things if this is a cli container
-      if (options.lagoon.labels['lagoon.type'] === 'cli-persistent') {
-        php.command = '/sbin/tini -- /lagoon/entrypoints.sh /bin/docker-sleep';
-        php.environment.LANDO_RESET_DIR = '/home';
-      }
 
       // Add in the php service and push downstream
       super(id, options, {services: _.set({}, options.name, php)});

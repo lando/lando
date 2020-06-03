@@ -38,6 +38,7 @@
   <a href="https://docs.lando.dev/config/drupal6.html">Drupal 6</a> |
   <a href="https://docs.lando.dev/config/drupal7.html">Drupal 7</a> |
   <a href="https://docs.lando.dev/config/drupal8.html">Drupal 8</a> |
+  <a href="https://docs.lando.dev/config/drupal9.html">Drupal 9</a> |
   <a href="https://docs.lando.dev/config/joomla.html">Joomla</a> |
   <a href="https://docs.lando.dev/config/lagoon.html">Lagoon</a> |
   <a href="https://docs.lando.dev/config/laravel.html">Laravel</a> |
@@ -45,6 +46,7 @@
   <a href="https://docs.lando.dev/config/lemp.html">LEMP</a> |
   <a href="https://docs.lando.dev/config/mean.html">MEAN</a> |
   <a href="https://docs.lando.dev/config/pantheon.html">Pantheon</a> |
+  <a href="https://docs.lando.dev/config/platformsh.html">Platform.sh</a> |
   <a href="https://docs.lando.dev/config/wordpress.html">WordPress</a>
 </p>
 <h3 align="center">Services</h3>
