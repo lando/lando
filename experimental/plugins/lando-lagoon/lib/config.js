@@ -27,12 +27,13 @@ exports.loadConfigFiles = baseDir => {
 /*
  * Helper to parse the lagoon docker-compose file
  */
-exports.parseServices = services => _(services)
+exports.parseServices = (services, recipeConfig) => _(services)
   // Remove unneeded things from the docker config and determine the type of the service
   .map((config, name) => _.merge({}, {
     name,
     type: _.get(config.labels, 'lando.type'),
-    config: _.omit(config, ['volumes', 'volumes_from', 'networks', 'user']),
+    compose: _.omit(config, ['volumes', 'volumes_from', 'networks', 'user']),
+    config: recipeConfig,
   }))
   // Return
   .value();

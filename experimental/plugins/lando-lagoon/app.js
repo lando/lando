@@ -33,7 +33,7 @@ module.exports = (app, lando) => {
       const lagoonConfig = app.lagoon.config;
 
       // Add the parsed services config
-      app.lagoon.services = lagoonConf.parseServices(lagoonConfig.compose.services);
+      app.lagoon.services = lagoonConf.parseServices(lagoonConfig.compose.services, app.config);
       app.log.verbose('parsed lagoon services');
       app.log.silly('lagoon services ares', app.lagoon.services);
     });

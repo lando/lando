@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 // Builder
 module.exports = {
-  name: 'lagoon-php-cli',
+  name: 'lagoon-php-cli-drupal',
   config: {
     version: 'custom',
     path: [
