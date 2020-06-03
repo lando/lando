@@ -14,6 +14,12 @@ Run the following commands to get up and running with this example.
 # Should poweroff
 lando poweroff
 
+# Should be running in experimental mode
+true
+# lando config | grep experimental | grep true || lando --experimental
+# lando config | grep experimental | grep true
+# lando config | grep experimentalPluginLoadTest | grep true
+
 # Should initialize the lagoon drupal example
 true
 # rm -rf drupal && mkdir -p drupal && cd drupal
