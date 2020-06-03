@@ -24,7 +24,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 # Initialize a drupal8 recipe using the latest Drupal 8 version
 lando init \
   --source remote \
-  --remote-url https://www.drupal.org/download-latest/tar.gz \
+  --remote-url https://ftp.drupal.org/files/projects/drupal-8.9.0.tar.gz \
   --remote-options="--strip-components 1" \
   --recipe drupal8 \
   --webroot . \
