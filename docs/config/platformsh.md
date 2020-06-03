@@ -416,11 +416,9 @@ lando logs -s app
 lando start
 ```
 
-### PostgreSQL and persistence across rebuilds
+### Persistence across rebuilds
 
-We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL service. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
-
-We do know for a fact that data _does not_ currently persist across a Lando rebuild for the `postgresql` service.
+We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL and PostgreSQL services. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
 
 ## Development
 
