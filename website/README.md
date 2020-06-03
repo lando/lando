@@ -151,7 +151,7 @@ lando init --source pantheon
 ```bash
 lando init \
   --source remote \
-  --remote-url https://ftp.drupal.org/files/projects/drupal-7.59.tar.gz \
+  --remote-url https://ftp.drupal.org/files/projects/drupal-7.71.tar.gz \
   --remote-options="--strip-components 1" \
   --recipe drupal7 --webroot . \
   --name hello-drupal7

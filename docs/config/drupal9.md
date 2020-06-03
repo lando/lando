@@ -28,7 +28,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 # Initialize a drupal9 recipe using the latest drupal 9 version
 lando init \
   --source remote \
-  --remote-url https://ftp.drupal.org/files/projects/drupal-9.0.0-rc1.tar.gz \
+  --remote-url https://www.drupal.org/download-latest/tar.gz \
   --remote-options="--strip-components 1" \
   --recipe drupal9 \
   --webroot . \
