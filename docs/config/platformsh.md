@@ -311,7 +311,7 @@ Then you'd expect to see the following commands and usage:
 
 ```bash
 lando database  Connects to the database relationship
-lando redis  Connects to the database relationship
+lando redis     Connects to the database relationship
 ```
 
 ```bash
@@ -388,6 +388,14 @@ if ($config->environment === 'lando') {
 ```
 
 Note that the above is simply meant to be illustrative.
+
+### Local considerations
+
+There are some application settings and configuration that platform.sh will automatically set if your project is based on one of their boilerplates. While most of these settings are fine for local development, some are not. If these settings need to be altered for your site to work as expected locally then Lando will modify them.
+
+For example if your project is based on the [Drupal 8 Template](https://github.com/platformsh-templates/drupal8) then Lando will set the `tmp` directory and set `skip_permissions_hardening` to `TRUE`.
+
+Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/experimental/plugins/lando-platformsh/lib/overrides.js).
 
 ### platformsh.agent errors
 
