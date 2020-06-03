@@ -9,8 +9,9 @@ LANDO_MODULE="platformsh-prepare"
 
 # Defaults
 : ${LANDO_PSH_INIT_FILE:='/run/lando_init'}
+: ${LANDO_PSH_AGENT_SOCKET:='/run/shared/agent.sock'}
 
-# Unmount if we need to
+# Unmount things platform.sh needs if we need to
 lando_info "Ensuring needed files are unmounted..."
 if mount | grep "/etc/hosts"; then
   umount /etc/hosts && lando_info "unmounted /etc/hosts"
@@ -19,7 +20,7 @@ if mount | grep "/etc/resolv.conf"; then
   umount /etc/resolv.conf && lando_info "unmounted /etc/resolv.conf"
 fi
 
-# Safe to do every time
+# Prepare needed dirs, this is safe to do every time
 lando_info "Ensuring needed directories exist..."
 mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
 chmod 777 /run
@@ -28,16 +29,20 @@ chmod 777 /run
 chown $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www
 nohup chown -R $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www >/dev/null 2>&1 &
 
-# Stuff
+# Prepare the services
 runsvdir -P /etc/service &> /tmp/runsvdir.log
 
-# Handle the socket setup
-rm -f /run/shared/agent.sock
-python /helpers/psh-fake-rpc.py &> /tmp/fake-rpc.log
+# Remove our mock socket if it still exists for whatever reason
+if [ -S "$LANDO_PSH_AGENT_SOCKET" ]; then
+  rm -f "$LANDO_PSH_AGENT_SOCKET"
+fi
 
-# @NOTE: this is just temporary until we figure out the composer rebuild problem
-# looks like this might be solved upstream
-chmod -R 777 /app/web/sites/default
+# Start the mock socket and wait until its ready to accept connections
+python /helpers/psh-fake-rpc.py &> /tmp/fake-rpc.log
+while [ ! -S  "$LANDO_PSH_AGENT_SOCKET" ]; do
+  lando_debug "Waiting for $LANDO_PSH_AGENT_SOCKET to be ready..."
+  sleep 1
+done
 
 # Do the right thing depending on whether this is a first run or not
 if [ -f "$LANDO_PSH_INIT_FILE" ]; then
