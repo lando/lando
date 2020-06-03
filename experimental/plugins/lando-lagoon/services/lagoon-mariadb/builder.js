@@ -6,7 +6,7 @@ const {getLagoonEnv} = require('./../../lib/services');
 
 // Builder
 module.exports = {
-  name: 'lagoon-mariadb-drupal',
+  name: 'lagoon-mariadb',
   config: {
     version: 'custom',
     confSrc: __dirname,

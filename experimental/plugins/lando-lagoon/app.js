@@ -48,7 +48,9 @@ module.exports = (app, lando) => {
       const allServices = _.map(app.lagoon.services, 'name');
       const supportedServices = _.map(getLandoServices(app.lagoon.services), 'name');
       const unsupportedServices = _.difference(allServices, supportedServices);
-      app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+      if (!_.isEmpty(unsupportedServices)) {
+        app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+      }
     });
 
     // Fix pullable/local services for lagoon things

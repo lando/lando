@@ -7,7 +7,7 @@ const _ = require('lodash');
  * Helper to find containers that serve
  */
 const getServingContainers = services => _(services)
-  .filter(service => service.type === 'lagoon-nginx-drupal' || service.type === 'lagoon-nginx')
+  .filter(service => service.type === 'lagoon-nginx')
   .map('name')
   .value();
 
@@ -18,7 +18,8 @@ exports.getLandoProxyRoutes = (services, domain, proxy = {}) => {
   // Find the primary serving container
   const server = _.first(getServingContainers(services));
   // Add the primary domain to this if it exists
-  if (server) proxy[server] = [domain];
+  // @NOTE: can we assume nginx is always served from 8080?
+  if (server) proxy[server] = [`${domain}:8080`];
 
   // Add mailhog if its there
   if (_.includes(_.keys(services), 'mailhog')) {

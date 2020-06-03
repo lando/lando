@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 // Builder
 module.exports = {
-  name: 'lagoon-nginx-drupal',
+  name: 'lagoon-nginx',
   config: {
     version: 'custom',
     confSrc: __dirname,

@@ -4,16 +4,19 @@
 const _ = require('lodash');
 
 // Services that support SSL
-const sslServices = ['nginx-drupal'];
+const sslServices = ['nginx', 'nginx-drupal'];
 
 /*
  * Helper to map lagoon type data to a lando service
  */
 const getLandoServiceType = type => {
   switch (type) {
-    case 'nginx-drupal': return 'lagoon-nginx-drupal';
-    case 'mariadb-drupal': return 'lagoon-mariadb-drupal';
-    case 'php-cli-drupal': return 'lagoon-php-cli-drupal';
+    case 'nginx': return 'lagoon-nginx';
+    case 'nginx-drupal': return 'lagoon-nginx';
+    case 'mariadb': return 'lagoon-mariadb';
+    case 'mariadb-drupal': return 'lagoon-mariadb';
+    case 'php-cli': return 'lagoon-php-cli';
+    case 'php-cli-drupal': return 'lagoon-php-cli';
     case 'php-fpm': return 'lagoon-php';
     default: return false;
   };
@@ -33,8 +36,8 @@ const getLandoService = lagoon => {
     config: _.get(lagoon, 'config.config', {}),
   };
 
-  // If this is a php-cli-drupal service then add in the build steps
-  if (lando.type === 'lagoon-php-cli-drupal') {
+  // If this is a php-cli service then add in the build steps
+  if (lando.type === 'lagoon-php-cli') {
     lando.build_internal = _.get(lagoon, 'config.config.build', []);
   }
 

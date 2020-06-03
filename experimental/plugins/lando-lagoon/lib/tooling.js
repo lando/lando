@@ -64,22 +64,32 @@ const getMariaDBTooling = service => {
 /*
  * Helper to get php related tooling commands
  */
-const getPhpCliDrupalTooling = service => ({
-  composer: {service, cmd: '/usr/local/bin/composer --ansi'},
-  drush: {service},
-  node: {service},
-  npm: {service},
-  php: {service, cmd: '/usr/local/bin/php'},
-  yarn: {service},
-});
+const getPhpCliDrupalTooling = (service, flavor = null) => {
+  // Things we need for all php flavors
+  const tooling = {
+    composer: {service, cmd: '/usr/local/bin/composer --ansi'},
+    node: {service},
+    npm: {service},
+    php: {service, cmd: '/usr/local/bin/php'},
+    yarn: {service},
+  };
+
+  // Add more based on service
+  if (flavor === 'drupal') {
+    tooling.drush = {service};
+  }
+
+  // Return
+  return tooling;
+};
 
 /*
  * Helper to map lagoon type data to a lando service
  */
 const getServiceToolingByType = service => {
   switch (service.type) {
-    case 'lagoon-mariadb-drupal': return getMariaDBTooling(service);
-    case 'lagoon-php-cli-drupal': return getPhpCliDrupalTooling(service.name);
+    case 'lagoon-mariadb': return getMariaDBTooling(service);
+    case 'lagoon-php-cli': return getPhpCliDrupalTooling(service.name, service.config.flavor);
     default: return {};
   };
 };
