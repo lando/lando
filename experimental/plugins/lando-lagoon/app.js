@@ -41,7 +41,7 @@ module.exports = (app, lando) => {
     });
 
     /*
-     * @TODO: warn user of unsupported services
+     * Warn user of unsupported services
      * This event exists to
      */
     app.events.on('post-start', 9, () => {

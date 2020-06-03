@@ -4,6 +4,8 @@
 const _ = require('lodash');
 const {getLandoAuxServices, getLandoServices} = require('./../../lib/services');
 const {getLandoTooling} = require('./../../lib/tooling');
+const {getLandoProxyRoutes} = require('./../../lib/proxy');
+
 
 /*
  * Build Lagoon
@@ -34,15 +36,8 @@ module.exports = {
       // Map into lando tooling commands
       options.tooling = getLandoTooling(options.services);
 
-      // Map into proxy routes
-      // Add nginx stuff as needed
-      if (_.includes(_.keys(options.services), 'nginx')) {
-        options.proxy.nginx = [`${options.app}.${options._app._config.domain}:8080`];
-      }
-      // Add the php stuff like mailhog service
-      if (_.includes(_.keys(options.services), 'php')) {
-        options.proxy.mailhog = [`inbox-${options.app}.${options._app._config.domain}`];
-      }
+      // Map into lando proxy routes
+      options.proxy = getLandoProxyRoutes(options.services, _.get(options, '_app.lagoon.domain'));
 
       // Send downstream
       super(id, options);
