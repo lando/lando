@@ -3,6 +3,8 @@
 // Modules
 const _ = require('lodash');
 const lagoonConf = require('./lib/config');
+const warnings = require('./lib/warnings');
+const {getLandoServices} = require('./lib/services');
 
 // Only do this on lagoon recipes
 module.exports = (app, lando) => {
@@ -42,6 +44,12 @@ module.exports = (app, lando) => {
      * @TODO: warn user of unsupported services
      * This event exists to
      */
+    app.events.on('post-start', 9, () => {
+      const allServices = _.map(app.lagoon.services, 'name');
+      const supportedServices = _.map(getLandoServices(app.lagoon.services), 'name');
+      const unsupportedServices = _.difference(allServices, supportedServices);
+      app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+    });
 
     // Fix pullable/local services for lagoon things
     app.events.on('pre-rebuild', 9, () => {
