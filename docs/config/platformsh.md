@@ -347,6 +347,9 @@ lando pull -r database -m web/sites/default/files
 
 # Import multiple relationships and mounts
 lando pull -r database -r migrate -r readonly -m tmp -m private
+
+# You can also specify a target for a given mount using -m SOURCE:TARGET
+lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
 ```
 
 ## Caveats and known issues

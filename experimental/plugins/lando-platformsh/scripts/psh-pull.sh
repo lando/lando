@@ -107,7 +107,7 @@ else
     PLATFORM_MOUNT_TARGET="${PLATFORM_MOUNT_PARTS[1]}"
     # If PLATFORM_MOUNT_TARGET is still empty lets set it from the source
     if [ -z "$PLATFORM_MOUNT_TARGET" ]; then
-      PLATFORM_MOUNT_TARGET="/app$PLATFORM_MOUNT_SOURCE"
+      PLATFORM_MOUNT_TARGET="/app/$PLATFORM_MOUNT_SOURCE"
     fi
     lando_pink "Downloading files from the $PLATFORM_MOUNT_SOURCE mount into $PLATFORM_MOUNT_TARGET"
     platform mount:download --mount $PLATFORM_MOUNT_SOURCE --target "$PLATFORM_MOUNT_TARGET" -y
