@@ -3,6 +3,9 @@
 // Modules
 const _ = require('lodash');
 
+// Services that support SSL
+const sslServices = ['nginx-drupal'];
+
 /*
  * Helper to map lagoon type data to a lando service
  */
@@ -24,6 +27,8 @@ const getLandoService = lagoon => {
   const lando = {
     name: lagoon.name,
     type: getLandoServiceType(lagoon.type),
+    ssl: _.includes(sslServices, lagoon.type),
+    sslExpose: false,
     lagoon: lagoon.compose,
     config: _.get(lagoon, 'config.config', {}),
   };
