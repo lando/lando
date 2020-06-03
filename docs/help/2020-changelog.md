@@ -1,4 +1,9 @@
 # 2020
+## v3.0.5 - [DATE](https://github.com/lando/lando/releases/tag/v3.0.4)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added _experimental_ support for WordPress Site Networks (Multisite) to Pantheon recipe.
 
 ## v3.0.4 - [May 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.4)
 
@@ -141,7 +146,6 @@ Edge releases contain the newest bug fixes and features and *may* be less stable
 
 Otherwise, scroll down and use the first release that has the green `Latest Release` tag. For more information about the Lando release cycle check out [this](https://docs.lando.dev/config/releases.html).
 
-* Added support for WordPress Site Networks (Multisite) to Pantheon recipe.
 * Added _extremely experimental_, for-testing-purposes-only support for Lagoon Drupal 8 projects, [read more](https://docs.lando.dev/config/lagoon.html)
 * Added legacy `SIMPLETEST_` envvars to Drupaly recipes [#1269](https://github.com/lando/lando/pull/1269)
 * Added ability for users to control which host `ssh` keys Lando uses [#2031](https://github.com/lando/lando/pull/2031)
