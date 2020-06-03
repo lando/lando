@@ -80,7 +80,7 @@ lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
 # If there are no relationships specified then indicate that
-if [ ! -z $PLATFORM_PULL_RELATIONSHIPS ]; then
+if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any relationships!"
   lando_info "That is not a problem. However here is a list of available relationships you can try next time!"
   platform relationships --refresh
@@ -92,12 +92,12 @@ else
     # print useful message
     # we need a database target
     lando_pink "Importing data from the $PLATFORM_RELATIONSHIP relationship..."
-    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LANDO_CONNECT_DATABASE main
+    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LANDO_CONNECT_DATABASE
   done
 fi
 
 # If there are no mounts specified then indicate that
-if [ ! -z $PLATFORM_PULL_MOUNTS ]; then
+if [ ${#PLATFORM_PULL_MOUNTS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any mounts!"
   lando_info "That is not a problem. However here is a list of available mounts you can try next time!"
   platform mounts --refresh

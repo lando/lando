@@ -26,13 +26,11 @@ const task = service => ({
     },
     relationship: {
       description: 'A relationship to import',
-      passthrough: true,
       alias: ['r'],
       array: true,
     },
     mount: {
       description: 'A mount to download',
-      passthrough: true,
       alias: ['m'],
       array: true,
     },
