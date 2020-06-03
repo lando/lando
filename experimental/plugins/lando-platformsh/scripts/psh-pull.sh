@@ -74,32 +74,44 @@ done
 export PLATFORMSH_CLI_TOKEN="$PLATFORM_AUTH"
 lando_pink "Verifying you are authenticated against platform.sh..."
 platform auth:info
+
 # Validate project
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
-# TODO: handle when relationships/mounts are not set?
-# use platform cli?
 
-# Loop through our relationships and import them
-for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
-  # TODO:
-  # verify relationship
-  # print useful message
-  # we need a database target
-  lando_pink "Importing data from the $PLATFORM_RELATIONSHIP relationship..."
-  platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LANDO_CONNECT_DATABASE main
-done
+# If there are no relationships specified then indicate that
+if [ ! -z $PLATFORM_PULL_RELATIONSHIPS ]; then
+  lando_warn "Looks like you did not pass in any relationships!"
+  lando_info "That is not a problem. However here is a list of available relationships you can try next time!"
+  platform relationships --refresh
+# Otherwise loop through our relationships and import them
+else
+  for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
+    # TODO:
+    # verify relationship
+    # print useful message
+    # we need a database target
+    lando_pink "Importing data from the $PLATFORM_RELATIONSHIP relationship..."
+    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LANDO_CONNECT_DATABASE main
+  done
+fi
 
-# Loop through our relationships and import them
-for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
-  # TODO:
-  # verify mount
-  # print useful message
-  # we need a database target
-  lando_pink "Downloading files from the $PLATFORM_MOUNT relationship..."
-  platform mount:download --mount $PLATFORM_MOUNT --target "/app/$PLATFORM_MOUNT" -y
-done
-
+# If there are no mounts specified then indicate that
+if [ ! -z $PLATFORM_PULL_MOUNTS ]; then
+  lando_warn "Looks like you did not pass in any mounts!"
+  lando_info "That is not a problem. However here is a list of available mounts you can try next time!"
+  platform mounts --refresh
+# Otherwise loop through our mounts and download them them
+else
+  for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
+    # TODO:
+    # verify mount
+    # print useful message
+    # we need a database target
+    lando_pink "Downloading files from the $PLATFORM_MOUNT relationship..."
+    platform mount:download --mount $PLATFORM_MOUNT --target "/app/$PLATFORM_MOUNT" -y
+  done
+fi
 
 # Finish up!
 lando_green "Pull completed successfully!"
