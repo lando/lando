@@ -27,13 +27,11 @@ module.exports = {
         environment: {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
+          LANDO_RESET_DIR: '/mnt',
         },
-        // @TODO: get persistent data over rebuild
-        /*
         volumes: [
-          `${options.data}:/mnt/data`,
+          `${options.data}:/mnt`,
         ],
-        */
       };
       // Add in the postgresql service and push downstream
       super(id, options, {services: _.set({}, options.name, postgresql)});
