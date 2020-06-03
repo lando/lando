@@ -54,8 +54,8 @@ module.exports = {
       // Merge and set the lando tooling
       options.tooling = _.merge({}, applicationTooling, serviceTooling);
 
-      // Add in the pull/push scripts
-      options.tooling.pull = getPlatformPull(closestApp.name);
+      // Add in the pull scripts
+      options.tooling.pull = getPlatformPull(closestApp.name, options._app);
       // Add in relationship envvars
       options.tooling.pull.env = _(serviceTooling)
         .map((data, name) => ([_.toUpper(`LANDO_CONNECT_${name}`), data.cmd]))

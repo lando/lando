@@ -23,10 +23,20 @@ unset $PLATFORM_APPLICATION
 # Collect mounts and relationships
 PLATFORM_PULL_MOUNTS=()
 PLATFORM_PULL_RELATIONSHIPS=()
+PLATFORM_AUTH=${PLATFORMSH_CLI_TOKEN}
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
+    --auth|--auth=*)
+      if [ "${1##--auth=}" != "$1" ]; then
+        PLATFORM_AUTH="${1##--auth=}"
+        shift
+      else
+        PLATFORM_AUTH=$2
+        shift 2
+      fi
+      ;;
     -r|--relationship|--relationship=*)
       if [ "${1##--relationship=}" != "$1" ]; then
         PLATFORM_PULL_RELATIONSHIPS=($(echo "${1##--relationship=}" | sed -r 's/[,]+/ /g'))
@@ -59,12 +69,14 @@ while (( "$#" )); do
 done
 
 # Validate auth
+# We re-export in this script just in case PLATFORMSH_CLI_TOKEN has been lost
+# which can happen if you destroy and start without reinitializing
+export PLATFORMSH_CLI_TOKEN="$PLATFORM_AUTH"
 lando_pink "Verifying you are authenticated against platform.sh..."
 platform auth:info
 # Validate project
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
-
 # TODO: handle when relationships/mounts are not set?
 # use platform cli?
 
