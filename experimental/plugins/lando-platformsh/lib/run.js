@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const overrides = require('./overrides');
 const path = require('path');
 
 // Constants
@@ -74,14 +75,8 @@ const getPlatformVariables = app => {
     }
   });
 
-  // Override things for local purposes
-  // DRUPAL8
-  vars['d8config:system.file:path:temporary'] = '/tmp';
-  vars['d8settings:file_private_path'] = '/tmp';
-  vars['d8settings:php_storage:default:directory'] = vars['d8settings:file_private_path'];
-  vars['d8settings:php_storage:twig:directory'] = vars['d8settings:file_private_path'];
-
-  return encode(vars);
+  // Merge in needed local overrides and encode
+  return encode(_.merge({}, vars, overrides));
 };
 
 /*
