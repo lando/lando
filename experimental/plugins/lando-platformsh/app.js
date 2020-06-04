@@ -32,6 +32,7 @@ module.exports = (app, lando) => {
     app.platformsh.tokens = lando.cache.get(app.platformsh.tokenCache) || [];
     app.log.silly('loaded platform config files', app.platformsh);
 
+
     /*
      * This event is intended to parse and interpret the platform config files
      * loaded above into things we can use elsewhere, eg if there is any useful
@@ -58,8 +59,14 @@ module.exports = (app, lando) => {
       app.log.verbose('parsed platformsh applications');
       app.log.silly('platformsh applications are', app.platformsh.applications);
 
+      // Find the closest application
+      app.platformsh.closestApp = _.find(app.platformsh.applications, {configFile: pshconf.findClosestApplication()});
+      app.platformsh.closestOpenCache = lando.cache.get(`${app.name}.${app.platformsh.closestApp.name}.open.cache`);
+      app.log.verbose('the closest platform app is at %s', app.platformsh.closestApp.configFile);
+      app.log.verbose('the closest open cache is %s', app.platformsh.closestOpenCache);
+
       // Add relationships keyed by the service name
-      app.platformsh.relationships = pshconf.parseRelationships(platformConfig.applications);
+      app.platformsh.relationships = pshconf.parseRelationships(platformConfig.applications, app.platformsh.closestOpenCache);
       app.log.verbose('determined platformsh relationships');
       app.log.silly('platformsh relationships are', app.platformsh.relationships);
 

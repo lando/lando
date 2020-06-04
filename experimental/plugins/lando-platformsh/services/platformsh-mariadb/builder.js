@@ -35,6 +35,7 @@ module.exports = {
           `${options.data}:/mnt/data`,
         ],
       };
+
       // Add in the mariadb service and push downstream
       super(id, options, {services: _.set({}, options.name, mariadb)});
     };
