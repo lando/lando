@@ -57,8 +57,6 @@ module.exports = {
           PLATFORMSH_CLI_TOKEN: _.get(options, '_app.meta.token'),
           PLATFORMSH_CLI_SHELL_CONFIG_FILE: '/var/www/.bashrc',
         },
-        // @TODO: would be great to not need the below but
-        // its required if we want to unmount /etc/hosts /etc/resolv.conf
         privileged: true,
         volumes: [
           `${runConfigPath}:/run/config.json`,
