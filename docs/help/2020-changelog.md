@@ -8,6 +8,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added `/app/bin` into the `php` service `PATH` [#2328](https://github.com/lando/lando/pull/2328)
 * Fixed bug causing "command" output to be unreadable on some terminals [#2302](https://github.com/lando/lando/pull/2302)
 * Fixed bug causing `stdin` to not be read correctly for some tooling commands eg `lando drush sql-cli < dump.sql` [#1918](https://github.com/lando/lando/pull/1918)
+* Fixed regression in `db-import` causing tables to not be dropped correctly
 
 ## v3.0.4 - [May 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.4)
 
