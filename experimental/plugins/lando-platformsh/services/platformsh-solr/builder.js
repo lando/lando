@@ -19,6 +19,7 @@ module.exports = {
 
       // Set the meUser
       options.meUser = 'app';
+      // Make sure we get a localhost assignment for 8080
       options.moreHttpPorts = ['8080'];
 
       // Build the solr
@@ -30,6 +31,7 @@ module.exports = {
           LANDO_WEBROOT_GROUP: options.meUser,
         },
       };
+
       // Add in the solr service and push downstream
       super(id, options, {services: _.set({}, options.name, solr)});
     };

@@ -17,6 +17,7 @@ module.exports = {
   builder: (parent, config) => class LandoPlatformshPostgres extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
+
       // Set the meUser
       options.meUser = 'postgres';
 
@@ -33,6 +34,7 @@ module.exports = {
           `${options.data}:/mnt`,
         ],
       };
+
       // Add in the postgresql service and push downstream
       super(id, options, {services: _.set({}, options.name, postgresql)});
     };
