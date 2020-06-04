@@ -64,45 +64,12 @@ cd wordpress
 lando ssh -c "env" | grep FRAMEWORK | grep wordpress
 lando ssh -c "env" | grep FILEMOUNT | grep "wp-content/uploads"
 
-# Should still be logged in even after a rebuild
-cd wordpress
-lando terminus auth:whoami | grep landobot@devwithlando.io
-lando rebuild -y
-lando terminus auth:whoami | grep landobot@devwithlando.io
-
 # Should serve proxy from nginx
 cd wordpress
 curl -LI http://landobot-network-folder.lndo.site | grep Via || echo $? | grep 1
 
-# Should have phantomjs 2.1.1 installed at /srv/bin/phantomjs-2.1.1
-cd wordpress
-lando ssh -s appserver -c "/srv/bin/phantomjs-2.1.1 --version" | grep "2.1.1"
-
-# Should have phantomjs 1.7.0 installed at /srv/bin/phantomjs
-cd wordpress
-lando ssh -s appserver -c "/srv/bin/phantomjs --version" | grep "1.7.0"
-
-# Should have apache tika1.18 installed /srv/bin/tika-app-1.18.jar
-cd wordpress
-lando ssh -s appserver -c "java -jar /srv/bin/tika-app-1.1.jar --version" | grep "Apache Tika 1.1"
-
-# Should have wkhtmltopdf installed at /srv/bin/wkhtmltopdf
-cd wordpress
-lando ssh -s appserver -c "/srv/bin/wkhtmltopdf --version"
-
-# Should be able to push commits to pantheon
-cd wordpress
-lando ssh -s appserver -c "git rev-parse HEAD > test.log"
-lando push --code dev --database none --files none --message "Testing commit $(git rev-parse HEAD)"
-
-# Should allow code pull from protected environments
-# https://github.com/lando/lando/issues/2021
-cd wordpress
-lando pull --code test --database none --files none
-lando pull --code live --database none --files none
-
 # Should serve subsites
-curl -L http://landobot-network-folder.lndo.site/site1 | grep site1 || echo $? | grep 1 
+curl -L http://landobot-network-folder.lndo.site/site1 | grep site1 || echo $? | grep 1
 ```
 
 Destroy tests

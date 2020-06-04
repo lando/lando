@@ -70,6 +70,14 @@ lando drush eval "phpinfo();" | grep memory_limit | grep -e "-1"
 cd drupal7
 lando ssh -s appserver -c "env" | grep SIMPLETEST_BASE_URL | grep "https://appserver"
 lando ssh -s appserver -c "env" | grep SIMPLETEST_DB | grep "mysql://drupal7:drupal7@database/drupal7"
+
+# Should be able to pipe data directly into lando drush sql-cli
+cd drupal7
+lando db-export --stdout > dump.sql
+lando destroy -y
+lando start
+lando drush sql-cli < dump.sql
+lando mysql drupal7 -e "show tables;" | grep user
 ```
 
 Destroy tests

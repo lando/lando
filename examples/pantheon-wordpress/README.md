@@ -106,6 +106,7 @@ lando ssh -s appserver -c "/srv/bin/wkhtmltopdf --version"
 
 # Should be able to push commits to pantheon
 cd wordpress
+lando pull --code dev --database none --files none
 lando ssh -s appserver -c "git rev-parse HEAD > test.log"
 lando push --code dev --database none --files none --message "Testing commit $(git rev-parse HEAD)"
 

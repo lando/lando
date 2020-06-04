@@ -26,11 +26,10 @@ const getContainerPath = appRoot => {
  */
 const getExecOpts = (docker, datum) => {
   const exec = [docker, 'exec'];
-  // Should use interactive if we arent running this in leia
-  if (process.stdin.isTTY) {
-    exec.push('--tty');
-    exec.push('--interactive');
-  }
+  // Should only use this if we have to
+  if (process.stdin.isTTY) exec.push('--tty');
+  // Should only set interactive in node mode
+  if (process.lando === 'node') exec.push('--interactive');
   // Add user and workdir
   exec.push('--user');
   exec.push(datum.opts.user);
