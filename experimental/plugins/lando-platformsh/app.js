@@ -9,6 +9,7 @@ const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
 const utils = require('./lib/utils');
+const PlatformshApiClient = require('platformsh-client').default;
 
 // Only do this on platformsh recipes
 module.exports = (app, lando) => {
@@ -17,6 +18,8 @@ module.exports = (app, lando) => {
     app.id = _.get(app, 'config.config.id', app.id);
     app.log.verbose('identified a platformsh app');
     app.log.debug('reset app id to %s', app.id);
+    // Sanitize any platformsh auth
+    app.log.alsoSanitize('platformsh-auth');
 
     // Explicitly add a path for config and make sure it exists
     app.configPath = path.join(app._config.userConfRoot, 'config', app.name);
@@ -73,6 +76,30 @@ module.exports = (app, lando) => {
       app.platformsh.runConfig = runconf.buildRunConfig(app);
       app.log.verbose('built platformsh config jsons');
       app.log.silly('generated platformsh runtime config is', app.platformsh.runConfig);
+    });
+
+    /*
+     * This event is intended to make sure we reset the active token and cache when it is passed in
+     * via the lando pull or lando push commands
+     */
+    _.forEach(['pull', 'push'], command => {
+      app.events.on(`post-${command}`, (config, answers) => {
+        // Only run if answer.auth is set, this allows these commands to all be
+        // overriden without causing a failure here
+        if (answers.auth) {
+          const api = new PlatformshApiClient({api_token: answers.auth});
+          return api.getAccountInfo().then(me => {
+            // This is a good token, lets update our cache
+            const cache = {token: answers.auth, email: me.mail, date: _.toInteger(_.now() / 1000)};
+            // Update lando's store of platformsh machine tokens
+            const tokens = lando.cache.get(app.platformsh.tokenCache) || [];
+            lando.cache.set(app.platformsh.tokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
+            // Update app metdata
+            const metaData = lando.cache.get(`${app.name}.meta.cache`);
+            lando.cache.set(`${app.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
+          });
+        }
+      });
     });
 
     /*
