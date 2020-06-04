@@ -66,7 +66,10 @@ module.exports = (app, lando) => {
       app.log.verbose('the closest open cache is %s', app.platformsh.closestOpenCache);
 
       // Add relationships keyed by the service name
-      app.platformsh.relationships = pshconf.parseRelationships(platformConfig.applications, app.platformsh.closestOpenCache);
+      app.platformsh.relationships = pshconf.parseRelationships(
+        platformConfig.applications,
+        app.platformsh.closestOpenCache
+      );
       app.log.verbose('determined platformsh relationships');
       app.log.silly('platformsh relationships are', app.platformsh.relationships);
 
