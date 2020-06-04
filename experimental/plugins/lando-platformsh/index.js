@@ -30,13 +30,16 @@ module.exports = lando => {
    * Same as above but we do something special for SSH
    */
   lando.events.on('cli-ssh-run', data => {
-    if (_.get(data, 'options._app.recipe') === 'platformsh' && data.options.service === 'appserver') {
-      // Reset the default service from appserver to whatever the closest application service is
-      const closestAppConfigFile = utils.findClosestApplication();
-      const pshConfig = lando.yaml.load(closestAppConfigFile);
-      const defaultSshService = _.get(pshConfig, 'name', 'app');
-      data.options.service = defaultSshService;
-      data.options.s = defaultSshService;
+    if (_.get(data, 'options._app.recipe') === 'platformsh') {
+      // Reset the default from appserver to the closest app
+      if (data.options.service === 'appserver') {
+        // Reset the default service from appserver to whatever the closest application service is
+        const closestAppConfigFile = utils.findClosestApplication();
+        const pshConfig = lando.yaml.load(closestAppConfigFile);
+        const defaultSshService = _.get(pshConfig, 'name', 'app');
+        data.options.service = defaultSshService;
+        data.options.s = defaultSshService;
+      }
 
       // Reset the default command if needed
       if (!_.has(data, 'options.command')) {

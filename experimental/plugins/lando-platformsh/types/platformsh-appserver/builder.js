@@ -34,6 +34,9 @@ module.exports = {
     constructor(id, options = {}, ...sources) {
       // Get some stuff from our parsed platform config
       const runConfigPath = _.get(options, 'runConfig.file');
+      const runConfig = _.find(options.runConfig.data.applications, app => {
+        return app.configuration.name === options.name;
+      });
       const bootScript = path.join(options.userConfRoot, 'scripts', 'psh-boot.sh');
 
       // A appserver uses the "web" user
@@ -41,11 +44,14 @@ module.exports = {
       // Remove the normal lando mount so we can handle multiapp
       // mounts which mount subdirs of rootDir in /app
       options.app_mount = false;
+      // Find the envvars we need to set
+      // We also set these here so SOME of them are available during build
+      const environment = _.get(runConfig, 'configuration.variables', {});
 
       // Set the docker things we need for all appservers
       sources.push({services: _.set({}, options.name, {
         command: 'exec init',
-        environment: {
+        environment: _.merge({}, environment, {
           CLICOLOR_FORCE: 1,
           COMPOSER_HOME: '/var/www/.composer',
           LANDO_NO_USER_PERMS: 'NOTGONNADOIT',
@@ -56,7 +62,7 @@ module.exports = {
           PLATFORMSH_CLI_HOME: '/var/www',
           PLATFORMSH_CLI_TOKEN: _.get(options, '_app.meta.token'),
           PLATFORMSH_CLI_SHELL_CONFIG_FILE: '/var/www/.bashrc',
-        },
+        }),
         privileged: true,
         volumes: [
           `${runConfigPath}:/run/config.json`,
