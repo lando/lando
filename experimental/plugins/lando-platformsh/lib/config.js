@@ -73,7 +73,7 @@ exports.parseApps = (apps = [], files = []) => _(apps)
 /*
  * Helper to parse the platformsh config files
  */
-exports.parseRelationships = apps => _(apps)
+exports.parseRelationships = (apps, open = {}) => _(apps)
   .map(app => app.relationships || [])
   .flatten()
   .thru(relationships => relationships[0])
@@ -81,6 +81,7 @@ exports.parseRelationships = apps => _(apps)
     alias,
     service: relationship.split(':')[0],
     endpoint: relationship.split(':')[1],
+    creds: _.get(open, alias, {}),
   }))
   .groupBy('service')
   .value();
@@ -97,6 +98,10 @@ exports.parseServices = (services, relationships = {}) => _(services)
   .map((config, name) => _.merge({}, config, {
     aliases: _.has(relationships, name) ? _.map(relationships[name], 'alias') : [],
     application: false,
+    creds: _(_.get(relationships, name, {}))
+      .map('creds')
+      .flatten()
+      .value(),
     hostname: name,
     name,
     opener: '{"relationships": {}}',

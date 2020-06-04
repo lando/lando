@@ -54,11 +54,18 @@ module.exports = {
       // Merge and set the lando tooling
       options.tooling = _.merge({}, applicationTooling, serviceTooling);
 
-      // Add in the pull/push scripts
-      options.tooling.pull = getPlatformPull(closestApp.name);
+      // Add in the pull scripts
+      options.tooling.pull = getPlatformPull(closestApp.name, options._app);
       // Add in relationship envvars
       options.tooling.pull.env = _(serviceTooling)
-        .map((data, name) => ([_.toUpper(`LANDO_CONNECT_${name}`), data.cmd]))
+        // Get connect strings and merge with any env set by the command eg PG_PASS
+        .map((data, name) => ([
+          [[_.toUpper(`LANDO_CONNECT_${name}`), `${data.cmd} ${data.database}`]],
+          _.toPairs(data.env),
+        ]))
+        // Level it all off and convert back to object
+        .flatten()
+        .flatten()
         .fromPairs()
         .value();
 

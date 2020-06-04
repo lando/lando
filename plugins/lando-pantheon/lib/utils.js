@@ -54,6 +54,10 @@ const pantheonDatabases = {
   },
 };
 
+const isWordPressy = framework => {
+  return ['wordpress', 'wordpress_network'].includes(framework);
+};
+
 /*
  * Helper to get filemount by framework
  */
@@ -62,10 +66,13 @@ const getFilemount = framework => {
     case 'backdrop': return 'files';
     case 'drupal': return 'sites/default/files';
     case 'drupal8': return 'sites/default/files';
-    case 'wordpress': return 'wp-content/uploads';
+    case 'wordpress':
+    case 'wordpress_network':
+      return 'wp-content/uploads';
     default: return 'sites/default/files';
   }
 };
+
 
 /*
  * Hash helper
@@ -105,8 +112,9 @@ const getPantheonSettings = options => ({
  * Helper to get build steps
  */
 exports.getPantheonBuildSteps = (framework, drush = 8) => {
-  if (framework === 'wordpress') return [getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck)];
-  else {
+  if (isWordPressy(framework)) {
+    return [getPhar(wpCliUrl, '/tmp/wp-cli.phar', '/usr/local/bin/wp', wpStatusCheck)];
+  } else {
     const build = [];
     // Figure out drush
     if (drush > 8) build.push(['composer', 'global', 'require', `drush/drush:^${drush}`]);
@@ -262,7 +270,7 @@ exports.getPantheonInquirerEnvs = (token, site, nopes = [], log = console.log) =
  * Helper to get tooling
  */
 exports.getPantheonTooling = framework => {
-  if (framework === 'wordpress') return {wp: {service: 'appserver'}};
+  if (isWordPressy(framework)) return {wp: {service: 'appserver'}};
   else {
     const tooling = {drush: {service: 'appserver'}};
     if (framework === 'drupal8') {

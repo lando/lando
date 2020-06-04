@@ -296,7 +296,6 @@ Also note that Lando tooling is hyper-powerful so you might want to [check out](
 
 Lando will also set up tooling commands so you can directly access the `relationships` specified in your `.platform.app.yaml`.
 
-
 These are contextual so they will connect via the tool that makes the most sense eg `mysql` for `mariadb` and `redis-cli` for `redis`.
 
 As an example say you have the following relationships in your `.platform.app.yaml`.
@@ -324,6 +323,70 @@ lando redis
 
 Note that some services eg `solr` provide `web` based interfaces. In these cases Lando will provide a `localhost` address you can use to access that interface.
 
+## External access
+
+If you would instead like to connect to your database, or some other service, from your host using a GUI client like SequelPro, instead of via the Lando CLI you can run [`lando info`](./../cli/info.md) and use the `external_connection` information and any relevant `creds` for the service you want to connect to.
+
+Here is example connection info for a multi-endpoint `mariadb` service called `db` below:
+
+```bash
+lando info --service db --format default
+
+  { service: 'db',
+    urls: [],
+    type: 'platformsh-mariadb',
+    healthy: true,
+    creds:
+     [ { internal_hostname: 'database2.internal',
+         password: '3ac01938c66f0ce06304a6357da17c34',
+         path: 'main',
+         port: 3306,
+         user: 'admin' },
+       { internal_hostname: 'reports.internal',
+         password: 'd0c99f580a0d646d62904568573f5012',
+         port: 3306,
+         user: 'reporter' },
+       { internal_hostname: 'imports.internal',
+         password: 'a6bf5826a81f7e9a3fa42baa790207ef',
+         path: 'legacy',
+         port: 3306,
+         user: 'importer' } ],
+    internal_connection: { host: 'db', port: '3306' },
+    external_connection: { host: '127.0.0.1', port: '32915' },
+    config: {},
+    version: '10.4',
+    meUser: 'app',
+    hasCerts: false,
+    hostnames: [ 'db.landod8.internal' ] },
+```
+
+Note that you _must_ have a relationship from your app to a given service in order for it to have credentials.
+
+Also note that this is slightly different than the normal output from `lando info` because `platformsh` services work slightly different. While you _can_ use the `internal_connection:host` and `internal_connection:port` for internal connections we recommend you use the `host` and `port` indicated for the relevant `cred` you want to connect to instead.
+
+So if you wanted to connect to the `main` db you would use the following depending on whether you are connecting externally or internally:
+
+**external creds**
+
+```yaml
+host: 127.0.0.1
+port: 32915
+user: admin
+password: 3ac01938c66f0ce06304a6357da17c34
+database: main
+```
+
+**internal creds**
+
+```yaml
+host: database2.internal
+port: 3306
+user: admin
+password: 3ac01938c66f0ce06304a6357da17c34
+database: main
+```
+
+Of course, it is always preferrable to just use `PLATFORM_RELATIONSHIPS` for all your internal connections anyway.
 
 ## Pulling relationships and mounts
 
@@ -347,6 +410,9 @@ lando pull -r database -m web/sites/default/files
 
 # Import multiple relationships and mounts
 lando pull -r database -r migrate -r readonly -m tmp -m private
+
+# You can also specify a target for a given mount using -m SOURCE:TARGET
+lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
 ```
 
 ## Caveats and known issues
@@ -416,11 +482,9 @@ lando logs -s app
 lando start
 ```
 
-### PostgreSQL and persistence across rebuilds
+### Persistence across rebuilds
 
-We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL service. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
-
-We do know for a fact that data _does not_ currently persist across a Lando rebuild for the `postgresql` service.
+We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL and PostgreSQL services. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
 
 ## Development
 

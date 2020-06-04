@@ -32,6 +32,7 @@ const getMySqlTooling = services => _(services)
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
     cmd: buildMysqlConnectString(service),
+    database: service.path,
     service: service.service,
     level: 'app',
   }))
@@ -45,6 +46,7 @@ const getsPostgresTooling = services => _(services)
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
     cmd: `psql -U${service.username} -h${service.service}`,
+    database: 'main',
     env: {PGPASSWORD: service.password},
     service: service.service,
     level: 'app',
