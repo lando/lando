@@ -88,6 +88,7 @@ module.exports = {
     legacy: ['5.5', '5.4', '5.3'],
     path: [
       '/app/vendor/bin',
+      '/app/bin',
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
