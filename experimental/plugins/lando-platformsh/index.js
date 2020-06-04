@@ -5,6 +5,9 @@ const _ = require('lodash');
 const utils = require('./lib/config');
 
 module.exports = lando => {
+  // Sanitize any platformsh auth
+  lando.log.alsoSanitize('platformsh-auth');
+
   /*
    * This event makes sure that ALL tooling commands that are run against an app container
    * are run through /helpers/psh-exec.sh first so they get the needed envvars eg HOME, USER, and PLATFORM_* set
