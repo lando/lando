@@ -9,6 +9,9 @@ const path = require('path');
  * Helper to filter out services from application containers
  */
 exports.getApplicationServices = (services = []) => _(services)
+  // Filter out non psh containers
+  .filter(service => !_.isEmpty(service.platformsh))
+  // Filter out psh services
   .filter(service => service.platformsh.application)
   .value();
 
@@ -16,6 +19,9 @@ exports.getApplicationServices = (services = []) => _(services)
  * Helper to filter out services from application containers
  */
 exports.getNonApplicationServices = (services = []) => _(services)
+  // Filter out non psh containers
+  .filter(service => !_.isEmpty(service.platformsh))
+  // Filter out psh application containers
   .filter(service => !service.platformsh.application)
   .value();
 

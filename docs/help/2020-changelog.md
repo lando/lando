@@ -1,9 +1,10 @@
 # 2020
-## v3.0.5 - [DATE](https://github.com/lando/lando/releases/tag/v3.0.4)
+
+## v3.0.5 - [June 5, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-* Added _experimental_ support for WordPress Site Networks (Multisite) to Pantheon recipe.
+* Added _experimental_ support for WordPress Site Networks (Multisite) to Pantheon recipe [#1425](https://github.com/lando/lando/pull/1425)
 
 ## v3.0.4 - [May 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.4)
 

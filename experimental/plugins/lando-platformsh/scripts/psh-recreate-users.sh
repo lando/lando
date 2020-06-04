@@ -1,6 +1,6 @@
+#!/bin/bash
 # This script assures there is a `web` and `app` user
 # and that the `web` user is assigned the uid of $LANDO_HOST_UID.
-#!/bin/sh
 set -e
 
 # Get the lando logger
