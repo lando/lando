@@ -4,21 +4,10 @@
 const _ = require('lodash');
 const utils = require('./../../lib/utils');
 
-// Helper to builder nginx command
-const nginxCommand = vhost => [
-  '/bin/bash -c',
-  '"mkdir -p /opt/bitnami/nginx/conf/vhosts',
-  '&&',
-  'render-template',
-  `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
-  '&&',
-  '/entrypoint.sh /run.sh"',
-].join(' ');
-
 // Helper to get varnsh ssl nginx
 const varnishSsl = options => ({
-  command: nginxCommand('/opt/bitnami/extra/nginx/templates/default.conf.tpl'),
-  image: 'bitnami/nginx:1.14.2',
+  command: `/launch.sh /opt/bitnami/nginx/conf/lando.conf`,
+  image: 'bitnami/nginx:1.17.10-debian-10-r52',
   depends_on: [options.name],
   environment: {
     NGINX_DAEMON_USER: 'root',
@@ -28,7 +17,8 @@ const varnishSsl = options => ({
   },
   user: 'root',
   volumes: [
-    `${options.confDest}/${options.defaultFiles.ssl}:/opt/bitnami/extra/nginx/templates/default.conf.tpl`,
+    `${options.confDest}/launch.sh:/launch.sh`,
+    `${options.confDest}/${options.defaultFiles.ssl}:/opt/bitnami/nginx/conf/lando.conf`,
   ],
 });
 
