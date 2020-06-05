@@ -88,19 +88,19 @@ perm_sweep() {
   fi
 
   # Do a background sweep
-  nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /var/www/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /user/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /var/www -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /usr/local/bin -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
+  nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /user/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/bin -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
   nohup chmod -R 755 /var/www >/dev/null 2>&1 &
 
   # Lets also make some /usr/locals chowned
-  nohup find /usr/local/lib -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /usr/local/share -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /usr/local -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
+  nohup find /usr/local/lib -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/share -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 
   # Make sure we chown the $USER home directory
-  nohup find $(getent passwd $USER | cut -d : -f 6) -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup find /lando -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
+  nohup find $(getent passwd $USER | cut -d : -f 6) -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /lando -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 }

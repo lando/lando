@@ -24,8 +24,8 @@ const nginxConfig = options => ({
   ssl: options.nginxSsl,
   type: 'nginx',
   userConfRoot: options.userConfRoot,
-  version: '1.17',
   webroot: options.webroot,
+  version: options.via.split(':')[1],
 });
 
 /*
