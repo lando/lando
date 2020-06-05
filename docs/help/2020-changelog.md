@@ -9,6 +9,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing "command" output to be unreadable on some terminals [#2302](https://github.com/lando/lando/pull/2302)
 * Fixed bug causing `stdin` to not be read correctly for some tooling commands eg `lando drush sql-cli < dump.sql` [#1918](https://github.com/lando/lando/pull/1918)
 * Fixed regression in `db-import` causing tables to not be dropped correctly
+* Fixed regression causing the version in `via: nginx:1.16` to not be picked up correctly
 * Improved performance of user permisson `host:container` mapping
 * Improved `lando ssh` so that it now uses the first defined service as the default if `appserver` does not exist
 
