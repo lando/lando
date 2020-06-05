@@ -9,7 +9,9 @@ const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
 const utils = require('./lib/utils');
+const warnings = require('./lib/warnings');
 const PlatformshApiClient = require('platformsh-client').default;
+const {getLandoServices} = require('./lib/services');
 
 // Only do this on platformsh recipes
 module.exports = (app, lando) => {
@@ -47,6 +49,20 @@ module.exports = (app, lando) => {
       if (_.isEmpty(app.platformsh.config.applications)) {
         lando.log.error(`Could not detect any valid .platform.app.yaml files in ${app.root} or its subdirs!`);
       }
+
+    /*
+     * Warn user of unsupported services
+     * This event exists to
+     */
+      app.events.on('post-start', 9, () => {
+        const allServices = _.map(app.platformsh.services, 'name');
+        const supportedServices = _.map(getLandoServices(app.platformsh.services), 'name');
+        const unsupportedServices = _.difference(allServices, supportedServices);
+        if (!_.isEmpty(unsupportedServices)) {
+          app.log.warn();
+          app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+        }
+      });
 
       // Get the platform raw platform config
       const platformConfig = app.platformsh.config;
