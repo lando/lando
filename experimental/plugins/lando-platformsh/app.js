@@ -59,7 +59,6 @@ module.exports = (app, lando) => {
         const supportedServices = _.map(getLandoServices(app.platformsh.services), 'name');
         const unsupportedServices = _.difference(allServices, supportedServices);
         if (!_.isEmpty(unsupportedServices)) {
-          app.log.warn();
           app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
         }
       });
