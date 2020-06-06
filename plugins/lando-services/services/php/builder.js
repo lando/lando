@@ -24,8 +24,8 @@ const nginxConfig = options => ({
   ssl: options.nginxSsl,
   type: 'nginx',
   userConfRoot: options.userConfRoot,
-  version: '1.17',
   webroot: options.webroot,
+  version: options.via.split(':')[1],
 });
 
 /*
@@ -88,6 +88,7 @@ module.exports = {
     legacy: ['5.5', '5.4', '5.3'],
     path: [
       '/app/vendor/bin',
+      '/app/bin',
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',

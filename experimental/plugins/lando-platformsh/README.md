@@ -166,6 +166,14 @@ Most of these things are handled by a `python` utility called the `platformsh.ag
 
 Here are some key things to know about each step and what Lando does to change them.
 
+### Troubleshooting Python Source in Platform.sh Containers
+
+When viewing container logs, you may see references to python files like `config.py`.
+
+You will find the python source code in the following directories:
+- `/etc/platform`
+- `/usr/lib/python2.7/dist-packages/platformsh`
+
 ### BOOT
 
 1. BOOT unmounts `/etc/hosts` and `/etc/resolv.conf`. This stops Docker from controlling them so platform can

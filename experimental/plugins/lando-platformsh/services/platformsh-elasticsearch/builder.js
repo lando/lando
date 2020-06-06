@@ -17,6 +17,7 @@ module.exports = {
   builder: (parent, config) => class LandoPlatformsElasticsearch extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
+
       // Set the meUser
       options.meUser = 'elasticsearch';
 
@@ -29,6 +30,7 @@ module.exports = {
           LANDO_WEBROOT_GROUP: options.meUser,
         },
       };
+
       // Add in the elasticsearch service and push downstream
       super(id, options, {services: _.set({}, options.name, elasticsearch)});
     };

@@ -117,6 +117,7 @@ if [ "$WIPE" == "true" ]; then
     # PURGE IT ALL! BURN IT TO THE GROUND!!!
     for t in $TABLES; do
       echo "Dropping $t table from $DATABASE database..."
+      $SQLSTART -e "DROP TABLE $t"
     done
   fi
 fi

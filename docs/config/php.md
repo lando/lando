@@ -214,6 +214,7 @@ Lando will set the `PATH` hierarchy for this service as follows:
 [
   # The line below should be where your app's composer.json binaries live
   '/app/vendor/bin',
+  '/app/bin',
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',
