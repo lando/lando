@@ -49,6 +49,9 @@ Using this repo gives you a `.lando.yml` file configured for Drupal contribution
 
 ## How?
 
+Prefer video:
+<YouTube url="https://www.youtube.com/embed/P8n2z4m0_s0" />
+
 Let's step through how to spin up your contribution workflow. First clone down this repo:
 
 ```bash
