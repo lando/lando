@@ -88,7 +88,8 @@ if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then
 else
   for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
     lando_pink "Importing data from the $PLATFORM_RELATIONSHIP relationship..."
-    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LANDO_CONNECT_DATABASE
+    eval "LCD=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP^^}"
+    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LCD
   done
 fi
 
