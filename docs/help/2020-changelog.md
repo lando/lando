@@ -1,5 +1,11 @@
 # 2020
 
+## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing non-semantic `drush` versions like `*` and `false` to throw errors [#2372](https://github.com/lando/lando/pull/2372)
+
 ## v3.0.5 - [June 5, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
