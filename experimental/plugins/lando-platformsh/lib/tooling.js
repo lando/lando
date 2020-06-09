@@ -72,7 +72,7 @@ const getRedisTooling = services => _(services)
 const getPhpTooling = (service = 'app') => ({
   composer: {service},
   php: {service},
-  psysh: {service}
+  psysh: {service},
 });
 
 /*
