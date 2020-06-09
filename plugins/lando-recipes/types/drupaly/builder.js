@@ -44,7 +44,7 @@ module.exports = {
       const drushVersion = semver.valid(semver.coerce(options.drush));
 
       // Add the drush install command
-      if (!_.isNull(drushVersion) && semver.major(options.drush) === 8) {
+      if (!_.isNull(drushVersion) && semver.major(drushVersion) === 8) {
         options.build.unshift(utils.getDrush(options.drush, ['drush', '--version']));
       } else if (options.drush !== false) {
         options.composer['drush/drush'] = options.drush;
