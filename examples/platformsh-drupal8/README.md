@@ -21,7 +21,7 @@ lando config | grep experimentalPluginLoadTest | grep true
 
 # Should initialize the platformsh lando-d8 example
 rm -rf drupal && mkdir -p drupal && cd drupal
-lando init --source platformsh --platformsh-auth "$PLATFORMSH_CLI_TOKEN" --platformsh-site lando-d8 --platformsh-key-name LANDOBOT_TEST_KEY
+lando init --source platformsh --platformsh-auth "$PLATFORMSH_CLI_TOKEN" --platformsh-site lando-d8 --platformsh-key-name "$CIRCLE_SHA1"
 
 # Should start up our platformsh drupal 8 site successfully
 cd drupal
@@ -120,7 +120,7 @@ Run the following commands to trash this app like nothing ever happened.
 # Should be able to remove our platformsh ssh keys
 cp -r remove-keys.sh drupal/remove-keys.sh
 cd drupal
-lando ssh -s appserver -c "/app/remove-keys.sh LANDOBOT_TEST_KEY"
+lando ssh -s appserver -c "/app/remove-keys.sh $CIRCLE_SHA1"
 cd ..
 rm -rf drupal/remove-keys.sh
 

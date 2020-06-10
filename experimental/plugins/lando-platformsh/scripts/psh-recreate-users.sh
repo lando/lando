@@ -13,7 +13,7 @@ APP_USERNAME=app
 WEB_USERNAME=web
 
 addWebuser() {
-    useradd \
+  useradd \
     --uid "$LANDO_HOST_UID" \
     --user-group \
     --home /app \
@@ -25,12 +25,12 @@ addWebuser() {
 
 addAppUserIfNotExists() {
   if [[ $(getent passwd $APP_USERNAME) = "" ]]; then
-        useradd \
-        --user-group \
-        --home /mnt \
-        --shell /bin/false \
-        -M \
-        app
+    useradd \
+      --user-group \
+      --home /mnt \
+      --shell /bin/false \
+      -M \
+      app
   fi
 }
 
@@ -56,10 +56,6 @@ if id -u $WEB_USERNAME >/dev/null 2>&1; then
   # Delete so we can add it with the proper UID
   deluser $WEB_USERNAME
 fi
-
-# Make sure there is a group that has $LANDO_HOST_GID
-# This is rare but can happen if the host gid is different than the uid
-groupadd --gid $LANDO_HOST_GID lando -f
 
 # At this point there is no "web" user and no user with the LANDO_HOST_UID
 # Add the web user

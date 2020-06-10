@@ -25,6 +25,10 @@ lando_info "Ensuring needed directories exist..."
 mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
 chmod 777 /run
 
+# Make sure there is a group that has $LANDO_HOST_GID
+# This is rare but can happen if the host gid is different than the uid
+groupadd --gid $LANDO_HOST_GID lando -f
+
 # We are using this as our mock $HOME directory for commands right now
 chown $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www
 nohup chown -R $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www >/dev/null 2>&1 &
