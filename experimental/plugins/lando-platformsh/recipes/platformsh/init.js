@@ -124,20 +124,25 @@ module.exports = {
           });
         }},
         {name: 'get-git-url', func: (options, lando) => {
+          // Get the account info
           return api.getAccountInfo()
+          // Find and return the project id
           .then(me => {
             const project = _.find(me.projects, {name: options['platformsh-site']});
             return project.id;
           })
+          // Get information about the project itself
           .then(id => api.getProject(id))
+          // Set the git stuff
           .then(site => {
             options['platformsh-git-url'] = site.repository.url;
+            options['platformsh-git-ssh'] = site.repository.url.split(':')[0];
           });
         }},
         {name: 'reload-keys', cmd: '/helpers/load-keys.sh --silent', user: 'root'},
         {
           name: 'clone-repo',
-          cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
+          cmd: options => `/helpers/psh-clone.sh ${options['platformsh-git-url']} ${options['platformsh-git-ssh']}`,
           remove: 'true',
         },
       ];
