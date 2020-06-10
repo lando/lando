@@ -19,14 +19,12 @@ URL=$1
 CONNECT=$2
 KEY="/lando/keys/platformsh.lando.id_rsa"
 
-# Attempt to retry until the key is ready
-# NOTE: we use -F /dev/null so the keys set up in the global ssh config are not
-# used when this fails
-#
-# TODO: set a max retry limit?
+# Set expectations
 echo "Validating SSH keys... sometimes this can take a few minutes..."
 
 # Do an initial check on JUST the platformsh key
+# NOTE: we use -F /dev/null so the keys set up in the global ssh config are not
+# used when this fails
 if ssh -T -F /dev/null -o "StrictHostKeyChecking no" -i $KEY $CONNECT 2>&1 | grep "Permission denied" > /dev/null; then
   # Try other keys so we can just move on right away if thats possible
   if ! ssh -T -o "StrictHostKeyChecking no" $CONNECT 2>&1 | grep "Permission denied" > /dev/null; then
@@ -34,7 +32,8 @@ if ssh -T -F /dev/null -o "StrictHostKeyChecking no" -i $KEY $CONNECT 2>&1 | gre
     exit 0
   fi
 
-  # Otherwise we gotta wait
+  # Otherwise we gotta attempt to retry until the key is ready
+  # TODO: set a max retry limit?
   while ssh -T -F /dev/null -o "StrictHostKeyChecking no" -i $KEY $CONNECT 2>&1 | grep "Permission denied" > /dev/null; do
     sleep 10
   done

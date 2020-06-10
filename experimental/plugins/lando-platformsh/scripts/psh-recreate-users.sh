@@ -57,6 +57,10 @@ if id -u $WEB_USERNAME >/dev/null 2>&1; then
   deluser $WEB_USERNAME
 fi
 
+# Make sure there is a group that has $LANDO_HOST_GID
+# This is rare but can happen if the host gid is different than the uid
+groupadd --gid $LANDO_HOST_GID lando -f
+
 # At this point there is no "web" user and no user with the LANDO_HOST_UID
 # Add the web user
 addWebuser
