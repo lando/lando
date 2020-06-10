@@ -39,14 +39,18 @@ module.exports = {
       options = _.merge({}, config, options);
       // Set the default drush version if we don't have it
       if (!_.has(options, 'drush')) options.drush = (options.php === '5.3') ? DRUSH7 : DRUSH8;
+
+      // Attempt to suss out the drush version
+      const drushVersion = semver.valid(semver.coerce(options.drush));
+
       // Add the drush install command
-      if (!_.isNull(semver.valid(options.drush)) && semver.major(options.drush) === 8) {
+      if (!_.isNull(drushVersion) && semver.major(drushVersion) === 8) {
         options.build.unshift(utils.getDrush(options.drush, ['drush', '--version']));
       } else if (options.drush !== false) {
         options.composer['drush/drush'] = options.drush;
       }
       // Throw a warning to indicate site install pref for drush 10
-      if (semver.gte(semver.valid(semver.coerce(options.drush)), '10.0.0')) {
+      if (!_.isNull(drushVersion) && semver.gte(drushVersion, '10.0.0')) {
         options._app.addWarning(warnings.drushWarn(options.drush));
       }
 
