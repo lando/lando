@@ -81,6 +81,12 @@ module.exports = {
         weight: 530,
       },
     },
+    'platformsh-key-name': {
+      describe: 'A hidden field mostly for easy testing and key removal',
+      string: true,
+      hidden: true,
+      default: 'Landokey',
+    },
   }),
   overrides: {
     name: {
@@ -105,34 +111,38 @@ module.exports = {
       },
     },
     build: (options, lando) => {
+      // Get the api client with the passed in auth
       const api = new PlatformshApiClient({api_token: _.trim(options['platformsh-auth'])});
       return [
         {name: 'generate-key', cmd: `/helpers/generate-key.sh ${platformshLandoKey} ${platformshLandoKeyComment}`},
         {name: 'post-key', func: (options, lando) => {
           const pubKeyPath = path.join(lando.config.userConfRoot, 'keys', `${platformshLandoKey}.pub`);
-          const keyData = _.trim(fs.readFileSync(pubKeyPath, 'utf8'));
-          return api.getAccountInfo().then(me => {
-            const hasKey = !_.isEmpty(_(_.get(me, 'ssh_keys'))
-              .filter(key => key.value === keyData)
-              .value());
-            if (!hasKey) return api.addSshKey(keyData, 'Landokey');
+          const pubKeyData = _.trim(fs.readFileSync(pubKeyPath, 'utf8'));
+          const keyName = options['platformsh-key-name'];
+          return api.addSshKey(pubKeyData, keyName).catch(err => {
+            lando.log.verbose('Could not post key %s', keyName, err);
           });
         }},
         {name: 'get-git-url', func: (options, lando) => {
+          // Get the account info
           return api.getAccountInfo()
+          // Find and return the project id
           .then(me => {
             const project = _.find(me.projects, {name: options['platformsh-site']});
             return project.id;
           })
+          // Get information about the project itself
           .then(id => api.getProject(id))
+          // Set the git stuff
           .then(site => {
             options['platformsh-git-url'] = site.repository.url;
+            options['platformsh-git-ssh'] = site.repository.url.split(':')[0];
           });
         }},
         {name: 'reload-keys', cmd: '/helpers/load-keys.sh --silent', user: 'root'},
         {
           name: 'clone-repo',
-          cmd: options => `/helpers/get-remote-url.sh ${options['platformsh-git-url']}`,
+          cmd: options => `/helpers/psh-clone.sh ${options['platformsh-git-url']} ${options['platformsh-git-ssh']}`,
           remove: 'true',
         },
       ];
