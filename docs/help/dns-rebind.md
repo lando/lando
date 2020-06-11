@@ -12,7 +12,7 @@ If you are seeing red URLs after you start your app and you are unable to look u
 nslookup <sitename>.lndo.site
 ```
 
-If this check fails we recommend you consult your router documentation or system administrator to whitelist `*.lndo.site` domains.
+If this check fails we recommend you consult your router documentation or system administrator to allowlist `*.lndo.site` domains.
 
 If you can't or don't want to remove this protection, you can alternatively:
 
