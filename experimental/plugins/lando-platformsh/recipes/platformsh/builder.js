@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const {findClosestApplication} = require('./../../lib/config');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
 const {getPlatformPull} = require('./../../lib/pull');
@@ -35,10 +34,9 @@ module.exports = {
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(platformConfig.routes, _.map(services, 'name'));
 
-      // Get the closest application
-      const closestAppConfigFile = findClosestApplication();
+      // Get the service version of our closest application
       const closestApp = _.find(options.services, service => {
-        return service.platformsh.configFile === closestAppConfigFile;
+        return service.name === platformConfig.closestApp.name;
       });
 
       // Get the app tooling

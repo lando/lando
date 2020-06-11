@@ -73,12 +73,12 @@ module.exports = (app, lando) => {
 
       // Add the parsed applications config
       // @TODO: the parsing here should happen
-      app.platformsh.applications = pshconf.parseApps(platformConfig.applications, platformConfig.applicationFiles);
+      app.platformsh.applications = pshconf.parseApps(platformConfig, app.root);
       app.log.verbose('parsed platformsh applications');
       app.log.silly('platformsh applications are', app.platformsh.applications);
 
       // Find the closest application
-      app.platformsh.closestApp = _.find(app.platformsh.applications, {configFile: pshconf.findClosestApplication()});
+      app.platformsh.closestApp = pshconf.findClosestApplication(app.platformsh.applications);
       app.platformsh.closestOpenCache = lando.cache.get(`${app.name}.${app.platformsh.closestApp.name}.open.cache`);
       app.log.verbose('the closest platform app is at %s', app.platformsh.closestApp.configFile);
       app.log.verbose('the closest open cache is %s', app.platformsh.closestOpenCache);
