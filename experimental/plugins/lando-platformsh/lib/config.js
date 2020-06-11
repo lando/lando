@@ -10,11 +10,16 @@ const yaml = require('js-yaml');
  * Helper to get appMount
  */
 const getAppMount = (app, base, files) => {
-  if (_.has(app, 'source.root')) return path.join(base, app.source.root);
-  return _(files)
+  // Try to find the platform yaml
+  const platformAppYaml = _(files)
     .filter(file => file.name === app.name)
-    .thru(file => file[0].dir)
+    .thru(files => !_.isEmpty(files) ? files[0].dir : null)
     .value();
+
+  // If we dont have a platform yaml its because this is using .platform/applications
+  // in which case we need to just just use the app.root
+  if (_.isEmpty(platformAppYaml)) return base;
+  else return platformAppYaml;
 };
 
 /*
@@ -83,6 +88,7 @@ exports.parseApps = ({applications, applicationFiles}, appRoot) => _(application
     // @TODO: can we assume the 0? is this an index value?
     // @NOTE: probably not relevant until we officially support multiapp?
     hostname: `${app.name}.0`,
+    sourceDir: _.has(app, 'source.root') ? path.join('/app', app.source.root) : '/app',
   }))
   .value();
 

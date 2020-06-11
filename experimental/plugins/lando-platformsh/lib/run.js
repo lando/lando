@@ -142,12 +142,22 @@ const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
   const externalIP = _.get(_config, 'appEnv.LANDO_HOST_IP');
   const uid = _.toInteger(_.get(_config, 'uid', 1000));
   const gid = _.toInteger(_.get(_config, 'gid', 1000));
+
+  // Start with all the application
+  let applications = platformsh.config.applications;
+  // But if its application service lets only use that one
+  if (service.application) {
+    applications = _(applications)
+      .filter(application => application.name === service.name)
+      .value();
+  }
+
   return {
     primary_ip: '127.0.0.1',
     features: [],
     domainname: `${name}.${service.name}.service._.lndo.site`,
     host_ip: externalIP,
-    applications: getApplicationsConfig(platformsh.config.applications, platformsh),
+    applications: getApplicationsConfig(applications, platformsh),
     configuration: _.merge({}, getServiceConfig(id, name), service.configuration),
     info: {
       'mail_relay_host': null,

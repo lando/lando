@@ -31,4 +31,4 @@ fi
 . "$HOME/.bashrc"
 
 # Attempting to run build
-platform local:build
+platform local:build $PLATFORM_APPLICATION_NAME
