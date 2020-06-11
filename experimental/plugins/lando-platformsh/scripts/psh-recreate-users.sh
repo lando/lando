@@ -13,7 +13,7 @@ APP_USERNAME=app
 WEB_USERNAME=web
 
 addWebuser() {
-    useradd \
+  useradd \
     --uid "$LANDO_HOST_UID" \
     --user-group \
     --home /app \
@@ -25,12 +25,12 @@ addWebuser() {
 
 addAppUserIfNotExists() {
   if [[ $(getent passwd $APP_USERNAME) = "" ]]; then
-        useradd \
-        --user-group \
-        --home /mnt \
-        --shell /bin/false \
-        -M \
-        app
+    useradd \
+      --user-group \
+      --home /mnt \
+      --shell /bin/false \
+      -M \
+      app
   fi
 }
 
