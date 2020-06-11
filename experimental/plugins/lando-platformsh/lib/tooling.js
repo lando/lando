@@ -31,7 +31,8 @@ const getMySqlTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
-    connect: buildMysqlString('mysql', service),
+    cmd: buildMysqlString('mysql', service),
+    connect: `${buildMysqlString('mysql', service)} ${service.path}`,
     dump: `${buildMysqlString('mysqldump', service)} ${service.path}`,
     database: service.path,
     service: service.service,
@@ -46,7 +47,8 @@ const getsPostgresTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
-    connect: `psql -U${service.username} -h${service.service}`,
+    cmd: `psql -U${service.username} -h${service.service}`,
+    connect: `psql -U${service.username} -h${service.service} main`,
     dump: `pg_dump postgresql://${service.username}@${service.service}:5432/main`,
     database: 'main',
     env: {PGPASSWORD: service.password},
