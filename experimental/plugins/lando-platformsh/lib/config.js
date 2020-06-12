@@ -17,7 +17,6 @@ const getAppMount = (app, base, files) => {
     .value();
 };
 
-
 /*
  * Helper to locate the "closest" platform yaml
  */
@@ -77,6 +76,7 @@ exports.loadConfigFiles = baseDir => {
  * Helper to parse the platformsh config files
  */
 exports.parseApps = ({applications, applicationFiles}, appRoot) => _(applications)
+  // Get the basics
   .map(app => _.merge({}, app, {
     application: true,
     appMountDir: getAppMount(app, appRoot, applicationFiles),
@@ -86,6 +86,11 @@ exports.parseApps = ({applications, applicationFiles}, appRoot) => _(application
     hostname: `${app.name}.0`,
     sourceDir: _.has(app, 'source.root') ? path.join('/app', app.source.root) : '/app',
   }))
+  // And the webPrefix
+  .map(app => _.merge({}, app, {
+    webPrefix: _.difference(app.appMountDir.split(path.sep), appRoot.split(path.sep)).join(path.sep),
+  }))
+  // Return
   .value();
 
 /*

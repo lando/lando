@@ -101,9 +101,22 @@ const getApplicationConfig = (app, {id}) => ({
 const getApplicationsConfig = (apps, config) => _(apps)
   // Start by just getting the basic config
   .map(app => getApplicationConfig(app, config))
-  // Then reset the variables
+  // Then fix some things up we need for platform
   .map(app => {
+    // Reset the variables
     app.configuration.variables = getApplicationEnvironment(app.configuration, config);
+
+    // Find the web prefix
+    const appName = _.get(app, 'configuration.name');
+    const appConfig = _.find(config.applications, {name: appName});
+    const webPrefix = appConfig.webPrefix;
+
+    // Go through the web location and prefix the root if we need to
+    _.forEach(_.get(app, 'configuration.web.locations'), block => {
+      if (_.has(block, 'root')) block.root = path.join(webPrefix, block.root);
+    });
+
+    // app.configuration.web.locations['/'].root = 'php/web';
     return app;
   })
   // and return
