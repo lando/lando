@@ -60,6 +60,7 @@ module.exports = {
           PLATFORMSH_CLI_HOME: '/var/www',
           PLATFORMSH_CLI_TOKEN: _.get(options, '_app.meta.token'),
           PLATFORMSH_CLI_SHELL_CONFIG_FILE: '/var/www/.bashrc',
+          PLATFORMSH_CLI_UPDATES_CHECK: 0,
         }),
         privileged: true,
         volumes: [

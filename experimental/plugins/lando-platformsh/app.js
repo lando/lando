@@ -3,21 +3,24 @@
 // Modules
 const _ = require('lodash');
 const fs = require('fs');
+const {getLandoServices} = require('./lib/services');
 const mkdirp = require('mkdirp');
 const open = require('./lib/open');
 const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
+const tooling = require('./lib/tooling');
 const utils = require('./lib/utils');
 const warnings = require('./lib/warnings');
+
 const PlatformshApiClient = require('platformsh-client').default;
-const {getLandoServices} = require('./lib/services');
 
 // Only do this on platformsh recipes
 module.exports = (app, lando) => {
   if (_.get(app, 'config.recipe') === 'platformsh') {
     // Reset the ID if we can
     app.id = _.get(app, 'config.config.id', app.id);
+    app.toolingRouterCache = `${app.name}.tooling.router`;
     app.log.verbose('identified a platformsh app');
     app.log.debug('reset app id to %s', app.id);
     // Sanitize any platformsh auth
@@ -36,7 +39,6 @@ module.exports = (app, lando) => {
     app.platformsh.tokenCache = 'platformsh.tokens';
     app.platformsh.tokens = lando.cache.get(app.platformsh.tokenCache) || [];
     app.log.silly('loaded platform config files', app.platformsh);
-
 
     /*
      * This event is intended to parse and interpret the platform config files
@@ -165,6 +167,55 @@ module.exports = (app, lando) => {
           type: [serviceConfig.platformsh.type, serviceConfig.version].join(':'),
         };
       })));
+    });
+
+    /*
+     * This event makes user of the new tooling.router so that we can load the correct tooling
+     * based on the closest route
+     */
+    app.events.on('post-start', 9, () => {
+      const toolingRouter = _(app.config.services)
+        // Filter out non platform services
+        .filter(service => _.has(service, 'platformsh'))
+        // Filter out non application containers
+        .filter(service => service.platformsh.application)
+        // Get the application tooling
+        .map(application => ({
+          route: application.platformsh.appMountDir,
+          appTooling: tooling.getAppTooling(application),
+          openData: lando.cache.get(`${app.name}.${application.name}.open.cache`),
+        }))
+        // Get the services containers
+        .map(application => _.merge({}, application, {
+          serviceContainers: _(app.config.services)
+            .filter(service => _.includes(tooling.getRelatableServices(application.openData), service.name))
+            .map(service => service)
+            .value(),
+        }))
+        // Get the service tooling
+        .map(application => _.merge({}, application, {
+          serviceTooling: tooling.getServiceTooling(
+            application.serviceContainers,
+            application.openData,
+            application.name
+          ),
+        }))
+        // Merge it all together
+        .map(application => ({
+          route: application.route,
+          tooling: _.merge({}, application.appTooling, application.serviceTooling),
+        }))
+        // Return
+        .value();
+
+      // Dump the tooling router
+      lando.cache.set(app.toolingRouterCache, JSON.stringify(toolingRouter), {persist: true});
+    });
+
+    // Remove tooling router on uninstall
+    app.events.on('post-uninstall', () => {
+      app.log.verbose('removing tooling router...');
+      lando.cache.remove(app.toolingRouterCache);
     });
 
     /*

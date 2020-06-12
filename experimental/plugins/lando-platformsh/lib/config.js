@@ -10,17 +10,13 @@ const yaml = require('js-yaml');
  * Helper to get appMount
  */
 const getAppMount = (app, base, files) => {
-  // Try to find the platform yaml
-  const platformAppYaml = _(files)
+  if (_.has(app, 'source.root')) return path.join(base, app.source.root);
+  return _(files)
     .filter(file => file.name === app.name)
-    .thru(files => !_.isEmpty(files) ? files[0].dir : null)
+    .thru(file => file[0].dir)
     .value();
-
-  // If we dont have a platform yaml its because this is using .platform/applications
-  // in which case we need to just just use the app.root
-  if (_.isEmpty(platformAppYaml)) return base;
-  else return platformAppYaml;
 };
+
 
 /*
  * Helper to locate the "closest" platform yaml
