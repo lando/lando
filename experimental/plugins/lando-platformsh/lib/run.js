@@ -148,7 +148,7 @@ const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
     domainname: `${name}.${service.name}.service._.lndo.site`,
     host_ip: externalIP,
     applications: getApplicationsConfig(platformsh.config.applications, platformsh),
-    configuration: _.merge({}, getServiceConfig(id, name), service.configuration),
+    configuration: _.merge({application_size: 536}, getServiceConfig(id, name), service.configuration),
     info: {
       'mail_relay_host': null,
       'mail_relay_host_v2': null,

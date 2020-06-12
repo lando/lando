@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const path = require('path');
 
 // Builder
 module.exports = {
@@ -20,6 +21,7 @@ module.exports = {
 
       // Set the meUser
       options.meUser = 'elasticsearch';
+      const configScript = path.join(options.userConfRoot, 'scripts', 'psh-es-config.sh');
 
       // Build the elasticsearch
       const elasticsearch = {
@@ -29,6 +31,9 @@ module.exports = {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
         },
+        volumes: [
+          `${configScript}:/scripts/100-es-config`,
+        ],
       };
 
       // Add in the elasticsearch service and push downstream
