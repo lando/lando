@@ -167,13 +167,28 @@ We currently only support the below langauges and we _highly recommend_ you cons
 
 Also note that you will need to run a `lando rebuild` for configuration changes to manifest in the same way you normally would for config changes to your Landofile.
 
-### Other considerations
+### Multiple applications
 
-#### Multiapp
+Lando _should_ support Platform's [multiple applications configurations](https://docs.platform.sh/configuration/app/multi-app.html) although they are not extensively tested at this point so YMMV.
 
-Multiapp configurations _should theoretically_ work but are not currently supported.
+If you have a multiple application setup then you will need to navigate into either the directory that contains the `.platform.app.yaml`  or the `source.root` specified in your `.platform/applications.yaml` file to access the relevant tooling for that app.
 
-#### Environment variables
+This is how tooling works for our [multiapp example](https://github.com/lando/lando/tree/master/examples/platformsh-kitchensink).
+
+```bash
+# Get access to tooling for the "base" application
+lando
+
+# Access tooling for the "discreet" application
+cd discreet
+lando
+
+# Access tooling for the "php" application
+cd ../php
+lando
+```
+
+### Environment variables
 
 Application containers running on Lando will also set up the same [platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on platform.sh with these variables _should_ also automatically work on Lando.
 
@@ -230,8 +245,7 @@ lando ssh
 lando ssh -s db
 ```
 
-Note that Lando will surface commands for the _closest application_ it finds. Generally, this will be the `.platform.app.yaml` located in your project root but if you've `cd multiappsubdir` then it would use that instead.
-
+Note that Lando will surface commands for the _closest application_ it finds. Generally, this will be the `.platform.app.yaml` located in your project root but if you've `cd multiappsubdir` then it will use that instead.
 
 ### Adding additional tooling
 
@@ -485,6 +499,23 @@ lando start
 ### Persistence across rebuilds
 
 We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL and PostgreSQL services. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
+
+### Multiapp
+
+If you are using `.platform/applications.yaml` to configure multiple applications and you have two apps with the same `source.root` then Lando will currently use the _first_ application for tooling.
+
+As a workaround you can use `lando ssh` with the `-s` option to access tooling for other applications with that `source.root`.
+
+In the below example, assume there are three `php` applications with the same `source.route`.
+
+```bash
+# Go into a directory that has many apps with that same source.route
+# See the php version of the first app with source.root at this directory
+lando php -v
+
+# Access another app with same source.root
+lando -s app2 -c "php -v"
+```
 
 ## Development
 
