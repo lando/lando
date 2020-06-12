@@ -112,6 +112,8 @@ const getApplicationsConfig = (apps, config) => _(apps)
     const webPrefix = appConfig.webPrefix;
 
     // Go through the web location and prefix the root if we need to
+    // @NOTE: We do this because for multiapp we still mount the ENTIRE
+    // application into /app, not just the source.root
     _.forEach(_.get(app, 'configuration.web.locations'), block => {
       if (_.has(block, 'root')) block.root = path.join(webPrefix, block.root);
     });
