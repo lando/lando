@@ -20,6 +20,7 @@ module.exports = (app, lando) => {
   if (_.get(app, 'config.recipe') === 'platformsh') {
     // Reset the ID if we can
     app.id = _.get(app, 'config.config.id', app.id);
+    app.toolingCache = `${app.name}.tooling.cache`;
     app.toolingRouterCache = `${app.name}.tooling.router`;
     app.log.verbose('identified a platformsh app');
     app.log.debug('reset app id to %s', app.id);
@@ -173,7 +174,10 @@ module.exports = (app, lando) => {
      * This event makes user of the new tooling.router so that we can load the correct tooling
      * based on the closest route
      */
-    app.events.on('post-start', 9, () => {
+    app.events.on('post-init', 9, () => {
+      // Get global tooling commands
+      const globalTooling = _.pick(app.config.tooling, ['pull', 'push']);
+      // Build the tooling router
       const toolingRouter = _(app.config.services)
         // Filter out non platform services
         .filter(service => _.has(service, 'platformsh'))
@@ -203,7 +207,7 @@ module.exports = (app, lando) => {
         // Merge it all together
         .map(application => ({
           route: application.route,
-          tooling: _.merge({}, application.appTooling, application.serviceTooling),
+          tooling: _.merge({}, globalTooling, application.appTooling, application.serviceTooling),
         }))
         // Return
         .value();

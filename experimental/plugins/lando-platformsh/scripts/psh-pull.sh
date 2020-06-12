@@ -83,7 +83,7 @@ lando_green "Verified project id: $(platform project:info id)"
 if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any relationships!"
   lando_info "That is not a problem. However here is a list of available relationships you can try next time!"
-  platform relationships --refresh
+  platform relationships --refresh || true
 # Otherwise loop through our relationships and import them
 else
   for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
@@ -97,7 +97,7 @@ fi
 if [ ${#PLATFORM_PULL_MOUNTS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any mounts!"
   lando_info "That is not a problem. However here is a list of available mounts you can try next time!"
-  platform mounts --refresh
+  platform mounts --refresh || true
 # Otherwise loop through our mounts and download them them
 else
   for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
