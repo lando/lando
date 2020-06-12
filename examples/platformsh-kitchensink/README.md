@@ -80,6 +80,11 @@ lando ssh -s php -c "platform -V"
 # Should be logged in
 cd sink
 lando platform auth:info | grep landobot@lando.dev
+
+# Should have custom mysql relationships
+cd sink/php
+lando admin main -e "show tables"
+lando imports legacy -e "show tables"
 ```
 
 Destroy tests
