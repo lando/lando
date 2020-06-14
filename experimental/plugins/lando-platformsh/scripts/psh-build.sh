@@ -21,6 +21,7 @@ export HOME="/var/www"
 export USER="web"
 export SHELL="/bin/dash"
 export LANG="C.UTF-8"
+export PLATFORM_CACHE_DIR="/var/www"
 
 # Install the platform-cli if we need it
 if [ ! -f "$HOME/.platformsh/bin/platform" ]; then

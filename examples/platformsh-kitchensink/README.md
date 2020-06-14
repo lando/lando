@@ -8,6 +8,31 @@ This example exists primarily to test the following documentation:
 In particular its designed to test all the services, application containers, relationship
 and various multiapp setups.
 
+Here are some general guidelines for adding and testing a services:
+
+### 1. Add the service
+
+Add a service to `.platform/services.yaml`. Try to use one of the more complex configurations from the platform.sh docs.
+
+### 2. Update the application config
+
+Add any needed `extensions` or `relationships` to the applications, currently just `php`, in `.platform.yaml/applications.yaml`.
+
+### 3. Add a testing script
+
+Add a script that tests the service from the given application eg `php/web/redis.php` for the `php` application. The testing scripts here are taken almost verbatim from the platform.sh docs. For example: https://docs.platform.sh/configuration/services/redis.html#usage-example.
+
+### 4. Add tests below
+
+There is a repeatable pattern for application containers and services below. Generally these should include things like:
+
+1. Is it runnning the right version?
+2. Can I connect to it using the `lando <RELATIONSHIPNAME>` command?
+3. Is its custom configuration being set correctly?
+4. Does its data persist across a rebuild if needed?
+5. Can I connect to it from a given application container?
+6. Can I pull/push the relationship?
+
 Start up tests
 --------------
 
@@ -90,6 +115,10 @@ lando ssh -s php -c "platform -V"
 cd sink
 lando platform auth:info | grep landobot@lando.dev
 
+# Should have the custom redis extension installed
+cd sink/php
+lando php -m | grep redis
+
 # Should be running the correct mariadb version
 cd sink
 lando ssh -s db -c "mysql -V" | grep 10.2.
@@ -113,6 +142,10 @@ docker top landokitchensink_memcache_1 | grep /usr/bin/memcached | grep 11211
 cd sink
 lando ssh -s memcache -c "id" | grep app
 
+# Should be able to connect to memcache from the application containers
+cd sink
+lando ssh -c "curl -I localhost/memcached.php" | grep HTTP/1.1 | grep "200 OK"
+
 # Should be running the correct version of mysql
 cd sink
 lando ssh -s mysql -c "mysql -V" | grep 10.4.
@@ -127,18 +160,28 @@ lando imports legacy -e "show tables"
 cd sink
 lando ssh -s mysql -c "id" | grep app
 
+# Should be able to connect to mysql from the application containers
+cd sink/php
+lando ssh -c "curl -I localhost/mysql.php" | grep HTTP/1.1 | grep "200 OK"
+
 # Should be running the correct postgres version
 cd sink
 lando ssh -s postgres -c "/usr/lib/postgresql/11/bin/postgres -V" | grep 11.
 
 # Should be able to connect to all postgres relationships
 cd sink/php
-lando postgres -c "\dt"
+true
+# lando postgres -c "\dt"
 
 # Should have the correct postgres extensions installed
 cd sink
-lando postgres -c "\dx" | grep hstore
-lando postgres -c "\dx" | grep pg_trgm
+true
+# lando postgres -c "\dx" | grep hstore
+# lando postgres -c "\dx" | grep pg_trgm
+
+# Should be able to connect to postgres from the application containers
+cd sink/php
+lando ssh -c "curl -I localhost/postgres.php" | grep HTTP/1.1 | grep "200 OK"
 
 # Should be running postgres with the correct user
 cd sink
@@ -159,6 +202,10 @@ lando ssh -s redis -c "cat /etc/redis/redis.conf" | grep maxmemory-policy | grep
 # Should run redis as the correct user
 cd sink
 lando ssh -s redis -c "id" | grep app
+
+# Should be able to connect to redis from the application containers
+cd sink/php
+lando ssh -c "curl -I localhost/redis.php" | grep HTTP/1.1 | grep "200 OK"
 ```
 
 Destroy tests
