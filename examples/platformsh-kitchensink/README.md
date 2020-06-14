@@ -170,14 +170,12 @@ lando ssh -s postgres -c "/usr/lib/postgresql/11/bin/postgres -V" | grep 11.
 
 # Should be able to connect to all postgres relationships
 cd sink/php
-true
-# lando postgres -c "\dt"
+lando postgres -c "\\dt"
 
 # Should have the correct postgres extensions installed
 cd sink
-true
-# lando postgres -c "\dx" | grep hstore
-# lando postgres -c "\dx" | grep pg_trgm
+lando postgres -c "\\dx" | grep hstore
+lando postgres -c "\\dx" | grep pg_trgm
 
 # Should be able to connect to postgres from the application containers
 cd sink/php
