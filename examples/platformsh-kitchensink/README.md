@@ -5,8 +5,13 @@ This example exists primarily to test the following documentation:
 
 * [Platform.sh Recipe](https://docs.lando.dev/config/platformsh.html)
 
-In particular its designed to test all the services, application containers, relationship
-and various multiapp setups.
+In particular its designed to test:
+
+* Multiapplication configuration
+* All the services and their config
+* All application containers and their config
+* Using application `relationships` from `lando` and the applications themselves
+* The platform.sh documentation on how to connect from an application to a service via a `relationship`
 
 Here are some general guidelines for adding and testing a services:
 
