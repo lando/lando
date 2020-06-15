@@ -74,14 +74,14 @@ docker ps --filter label=com.docker.compose.project=landokitchensink | grep dock
 
 # Should use tooling based on the closest application
 cd sink
-lando php -v | grep "PHP 7.3"
+lando php -v | grep "PHP 7.4"
 lando composer -v
 lando database main -e "show tables"
 cd discreet
 lando php -v | grep "PHP 7.2"
 lando composer -v
 cd ../php
-lando php -v | grep "PHP 7.4"
+lando php -v | grep "PHP 7.3"
 lando composer -v
 lando maria main -e "show tables"
 
@@ -173,7 +173,7 @@ cd sink/php
 lando postgres -c "\\dt"
 
 # Should have the correct postgres extensions installed
-cd sink
+cd sink/php
 lando postgres -c "\\dx" | grep hstore
 lando postgres -c "\\dx" | grep pg_trgm
 
