@@ -21,8 +21,8 @@ unset PLATFORM_RELATIONSHIPS
 unset PLATFORM_APPLICATION
 
 # Collect mounts and relationships
-PLATFORM_PULL_MOUNTS=()
-PLATFORM_PULL_RELATIONSHIPS=()
+PLATFORM_PUSH_MOUNTS=()
+PLATFORM_PUSH_RELATIONSHIPS=()
 PLATFORM_AUTH=${PLATFORMSH_CLI_TOKEN}
 
 # PARSE THE ARGZZ
@@ -39,19 +39,19 @@ while (( "$#" )); do
       ;;
     -r|--relationship|--relationship=*)
       if [ "${1##--relationship=}" != "$1" ]; then
-        PLATFORM_PULL_RELATIONSHIPS=($(echo "${1##--relationship=}" | sed -r 's/[,]+/ /g'))
+        PLATFORM_PUSH_RELATIONSHIPS=($(echo "${1##--relationship=}" | sed -r 's/[,]+/ /g'))
         shift
       else
-        PLATFORM_PULL_RELATIONSHIPS=($(echo "$2" | sed -r 's/[,]+/ /g'))
+        PLATFORM_PUSH_RELATIONSHIPS=($(echo "$2" | sed -r 's/[,]+/ /g'))
         shift 2
       fi
       ;;
     -m|--mount|--mount=*)
       if [ "${1##--mount=}" != "$1" ]; then
-        PLATFORM_PULL_MOUNTS=($(echo "${1##--mount=}" | sed -r 's/[,]+/ /g'))
+        PLATFORM_PUSH_MOUNTS=($(echo "${1##--mount=}" | sed -r 's/[,]+/ /g'))
         shift
       else
-        PLATFORM_PULL_MOUNTS=($(echo "$2" | sed -r 's/[,]+/ /g'))
+        PLATFORM_PUSH_MOUNTS=($(echo "$2" | sed -r 's/[,]+/ /g'))
         shift 2
       fi
       ;;
@@ -80,27 +80,27 @@ lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
 # If there are no relationships specified then indicate that
-if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then
+if [ ${#PLATFORM_PUSH_RELATIONSHIPS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any relationships!"
   lando_info "That is not a problem. However here is a list of available relationships you can try next time!"
   platform relationships --refresh
 # Otherwise loop through our relationships and import them
 else
-  for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
-    lando_pink "Importing data from the $PLATFORM_RELATIONSHIP relationship..."
-    eval "LCD=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP^^}"
-    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LCD
+  for PLATFORM_RELATIONSHIP in "${PLATFORM_PUSH_RELATIONSHIPS[@]}"; do
+    lando_pink "Exporting local data into the $PLATFORM_RELATIONSHIP relationship..."
+    eval "LD=\$LANDO_DUMP_${PLATFORM_RELATIONSHIP^^}"
+    $LD | platform db:sql -e master -r $PLATFORM_RELATIONSHIP
   done
 fi
 
 # If there are no mounts specified then indicate that
-if [ ${#PLATFORM_PULL_MOUNTS[@]} -eq 0 ]; then
+if [ ${#PLATFORM_PUSH_MOUNTS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any mounts!"
   lando_info "That is not a problem. However here is a list of available mounts you can try next time!"
   platform mounts --refresh
 # Otherwise loop through our mounts and download them them
 else
-  for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
+  for PLATFORM_MOUNT in "${PLATFORM_PUSH_MOUNTS[@]}"; do
     # Try to split PLATFORM_MOUNT
     IFS=':' read -r -a PLATFORM_MOUNT_PARTS <<< "$PLATFORM_MOUNT"
     # Set the source and target
@@ -108,12 +108,12 @@ else
     PLATFORM_MOUNT_TARGET="${PLATFORM_MOUNT_PARTS[1]}"
     # If PLATFORM_MOUNT_TARGET is still empty lets set it from the source
     if [ -z "$PLATFORM_MOUNT_TARGET" ]; then
-      PLATFORM_MOUNT_TARGET="/app/$PLATFORM_MOUNT_SOURCE"
+      PLATFORM_MOUNT_TARGET="$PLATFORM_MOUNT_SOURCE"
     fi
-    lando_pink "Downloading files from the $PLATFORM_MOUNT_SOURCE mount into $PLATFORM_MOUNT_TARGET"
-    platform mount:download --mount $PLATFORM_MOUNT_SOURCE --target "$PLATFORM_MOUNT_TARGET" -y
+    lando_pink "Uploading local files from $PLATFORM_MOUNT_SOURCE into the remote $PLATFORM_MOUNT_TARGET mount"
+    platform mount:upload --mount $PLATFORM_MOUNT_TARGET --source "$PLATFORM_MOUNT_SOURCE" -y
   done
 fi
 
 # Finish up!
-lando_green "Pull completed successfully!"
+lando_green "Push completed successfully!"

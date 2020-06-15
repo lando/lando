@@ -127,6 +127,7 @@ This plugin follows the same structure as any [Lando plugin](https://docs.lando.
     |-- platformsh  The files to define the `platformsh` recipe and its `init` command
 |-- scripts         Helpers scripts that end up /helpers/ inside each container
 |-- services        Defines each platform.sh service eg `redis` or `php`
+|-- test            Unit tests
 |-- types           Defines the type/parent each above service can be
 |-- app.js          Modifications to the app runtime
 |-- index.js        Modifications to the Lando runtime
@@ -180,7 +181,7 @@ Additionally, Lando will run `scripts/psh-recreate-users.sh` before anything els
 
 On platform.sh application containers run as `web:x:10000:10000::/app:/bin/bash` and _most_ services run as `app:x:1000:1000::/app:/bin/bash`. However locally we need whatever user is running process 1 to match the host (eg yours) uid and groupid.
 
-## BUILD
+### BUILD
 
 The platform.sh BUILD step uses an internal Lando `build` step behind the scenes. This means it:
 
@@ -193,7 +194,7 @@ The BUILD step will use `scripts/psh-build.sh`. This has a few differences from 
 2. BUILD will install the platform CLI first if it needs to
 3. BUILD will use `platform local:build` (for now) instead of the underlying `/etc/platform/build`
 
-## START
+### START
 
 Start has a similar lifecycle to `BOOT` except that it ends by running `/etc/platform/start` instead of `/etc/platform/boot`.
 
@@ -201,7 +202,7 @@ Once `/etc/platform/start` finishes the main process/command is run. This is `ex
 
 However, these containers are all "living in the dark" and need to be OPENed so they can both talk to one another and handle requests.
 
-## OPEN
+### OPEN
 
 OPEN is the step that most diverges from what Lando expects in that it requires Lando do additional things AFTER an app has started. Usually once an app has started Lando expects its ready to go. This is not the case for platform. Generally the flow that needs to happen here is:
 
@@ -213,6 +214,12 @@ OPEN is the step that most diverges from what Lando expects in that it requires 
 Once this has completed each application container will be "open for business" and ready to handle requests. This is also required to set `PLATFORM_RELATIONSHIPS` which is very important so applications can easily connect to services.
 
 Behind the scenes we use the helper script `scripts/psh-open.sh`. We also do the open logic in `app.js` in a `post-start` event.
+
+## /run/config.json
+
+Most of the platform.sh magic comes from a configuration file located in every service at `/run/config.json`. Lando generates and injects this file into each platform.sh container.
+
+It is constructed by combined the platform.sh configuration files eg `.platform.app.yaml`, `services.yaml` etc and some extra things.
 
 ## Services and Types
 
@@ -226,6 +233,17 @@ If you want to add support for a new platform service or application container s
 
 Also note that you will likely need to add it to `getLandoServiceType` which maps a `platform` `type `to a `lando` `type`.
 https://github.com/lando/lando/blob/abf0648701b960e49f09bf9e569c83aca727666a/experimental/plugins/lando-platformsh/lib/services.js#L8
+
+## Getting started
+
+It's easiest to develop by spinnning up one of our platform.sh examples:
+
+* [Drupal 8](https://github.com/lando/lando/tree/master/examples/platformsh-drupal8)
+* [Kitchen Sink](https://github.com/lando/lando/tree/master/examples/platformsh-kitchensink)
+
+The Drupal 8 example is a good for deving non-services related things eg the stuff Lando provides on top of platform. The Kitchen Sink example is great if you are working on adding support for new application containers and services.
+
+An added benefit of using these examples is you can simultanesouly add functional tests in their README. See the [#testing](Testing) section below for more details.
 
 ## Other considerations
 
@@ -246,6 +264,50 @@ In `index.js` you will see that `lando` is overriding the core `lando ssh` comma
 
 Similarly in `index.js` all tooling commands are prefixed by `/helpers/psh-exec.sh`
 
+### Troubleshooting Python Source in Platform.sh Containers
+
+When viewing container logs, you may see references to python files like `config.py`.
+
+You will find the python source code in the following directories:
+- `/etc/platform`
+- `/usr/lib/python2.7/dist-packages/platformsh`
+
+## Testing
+
+Its best to familiarize yourself with how Lando [does testing](https://docs.lando.dev/contrib/contrib-testing.html) in general before proceeding.
+
+### Unit Tests
+
+Generally, unit testable code should be placed in `lib` and then the associated test in `tests` in the form `FILE-BEING-TESTED.spec.js`. Here is an example:
+
+
+```bash
+./
+|-- lib
+    |-- stuff.js
+|-- test
+    |-- stuff.spec.js
+```
+
+These tests can then be run with `yarn test:unit`.
+
+### Func Tests
+
+Func tests are made by just adding more entries to each examples README. This uses our made-just-for-Lando testing framework [Leia](https://github.com/lando/leia). See below for our current platform.sh tests:
+
+* [Drupal 8](https://github.com/lando/lando/tree/master/examples/platformsh-drupal8)
+* [Kitchen Sink](https://github.com/lando/lando/tree/master/examples/platformsh-kitchensink)
+
+These are then run by CircleCI. While you _can_ run all the func test locally this can take a LONG time. If you decide you want to do that we recommend you generate the test files and then invoke the tests for just one example.
+
+```bash
+# Generate tests
+yarn generate-tests
+
+# Run a single examples tests
+yarn mocha --timeout 900000 test/platform-sh-drupal-8-example.func.js
+```
+
 ## Contribution
 
 WIP but outline is
@@ -255,17 +317,3 @@ WIP but outline is
 3. Lets definitely be updating the user docs/dev docs
 4. Once we have the d8 and kitchen sink example func tests lets also be adding tests on every commit
 5. Lets wait on unit tests until things settle down a bit but a good rule of thumb is try to put things we would want to unit tests in `lib` somewhere.
-
-## Testing
-
-WIP but outline is
-
-1. Currently no unit tests but they can live in `test` and should test the stuff in `lib`
-2. Uses `leia` for functional tests and these live in `examples`
-  * Should be a `platform-drupal` example
-  * Should eventually be a `platform-kitchensink` example that
-    * Serves to validate platform.sh's won docs
-    * Uses a multiapp setup with each application type
-    * Has each service type using some more complex configuration for each
-    * Each application should run a trivial example that exists to test connecting to each service and veryfying their config eg the code examples in the platform.sh docs themselves https://docs.platform.sh/languages/php.html#accessing-services
-

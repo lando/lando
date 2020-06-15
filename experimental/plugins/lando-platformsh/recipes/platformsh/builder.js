@@ -6,6 +6,7 @@ const {findClosestApplication} = require('./../../lib/config');
 const {getLandoServices} = require('./../../lib/services');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
 const {getPlatformPull} = require('./../../lib/pull');
+const {getPlatformPush} = require('./../../lib/push');
 const tooling = require('./../../lib/tooling');
 
 /*
@@ -54,11 +55,33 @@ module.exports = {
       // Merge and set the lando tooling
       options.tooling = _.merge({}, applicationTooling, serviceTooling);
 
-      // Add in the pull/push scripts
-      options.tooling.pull = getPlatformPull(closestApp.name);
+      // Add in the pull scripts
+      options.tooling.pull = getPlatformPull(closestApp.name, options._app);
       // Add in relationship envvars
       options.tooling.pull.env = _(serviceTooling)
-        .map((data, name) => ([_.toUpper(`LANDO_CONNECT_${name}`), data.cmd]))
+        // Get connect strings and merge with any env set by the command eg PG_PASS
+        .map((data, name) => ([
+          [[_.toUpper(`LANDO_CONNECT_${name}`), data.connect]],
+          _.toPairs(data.env),
+        ]))
+        // Level it all off and convert back to object
+        .flatten()
+        .flatten()
+        .fromPairs()
+        .value();
+
+      // Add in the pull scripts
+      options.tooling.push = getPlatformPush(closestApp.name, options._app);
+      // Add in relationship envvars
+      options.tooling.push.env = _(serviceTooling)
+        // Get connect strings and merge with any env set by the command eg PG_PASS
+        .map((data, name) => ([
+          [[_.toUpper(`LANDO_DUMP_${name}`), data.dump]],
+          _.toPairs(data.env),
+        ]))
+        // Level it all off and convert back to object
+        .flatten()
+        .flatten()
         .fromPairs()
         .value();
 

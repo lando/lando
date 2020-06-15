@@ -33,6 +33,7 @@ module.exports = {
           `${options.data}:/mnt/data`,
         ],
       };
+
       // Add in the redis service and push downstream
       super(id, options, {services: _.set({}, options.name, redis)});
     };

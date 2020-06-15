@@ -29,6 +29,7 @@ module.exports = {
           LANDO_WEBROOT_GROUP: options.meUser,
         },
       };
+
       // Add in the memcached service and push downstream
       super(id, options, {services: _.set({}, options.name, memcached)});
     };

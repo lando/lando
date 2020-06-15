@@ -9,6 +9,9 @@ const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
 const utils = require('./lib/utils');
+const warnings = require('./lib/warnings');
+const PlatformshApiClient = require('platformsh-client').default;
+const {getLandoServices} = require('./lib/services');
 
 // Only do this on platformsh recipes
 module.exports = (app, lando) => {
@@ -17,6 +20,8 @@ module.exports = (app, lando) => {
     app.id = _.get(app, 'config.config.id', app.id);
     app.log.verbose('identified a platformsh app');
     app.log.debug('reset app id to %s', app.id);
+    // Sanitize any platformsh auth
+    app.log.alsoSanitize('platformsh-auth');
 
     // Explicitly add a path for config and make sure it exists
     app.configPath = path.join(app._config.userConfRoot, 'config', app.name);
@@ -32,6 +37,7 @@ module.exports = (app, lando) => {
     app.platformsh.tokens = lando.cache.get(app.platformsh.tokenCache) || [];
     app.log.silly('loaded platform config files', app.platformsh);
 
+
     /*
      * This event is intended to parse and interpret the platform config files
      * loaded above into things we can use elsewhere, eg if there is any useful
@@ -43,6 +49,19 @@ module.exports = (app, lando) => {
       if (_.isEmpty(app.platformsh.config.applications)) {
         lando.log.error(`Could not detect any valid .platform.app.yaml files in ${app.root} or its subdirs!`);
       }
+
+    /*
+     * Warn user of unsupported services
+     * This event exists to
+     */
+      app.events.on('post-start', 9, () => {
+        const allServices = _.map(app.platformsh.services, 'name');
+        const supportedServices = _.map(getLandoServices(app.platformsh.services), 'name');
+        const unsupportedServices = _.difference(allServices, supportedServices);
+        if (!_.isEmpty(unsupportedServices)) {
+          app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+        }
+      });
 
       // Get the platform raw platform config
       const platformConfig = app.platformsh.config;
@@ -58,8 +77,17 @@ module.exports = (app, lando) => {
       app.log.verbose('parsed platformsh applications');
       app.log.silly('platformsh applications are', app.platformsh.applications);
 
+      // Find the closest application
+      app.platformsh.closestApp = _.find(app.platformsh.applications, {configFile: pshconf.findClosestApplication()});
+      app.platformsh.closestOpenCache = lando.cache.get(`${app.name}.${app.platformsh.closestApp.name}.open.cache`);
+      app.log.verbose('the closest platform app is at %s', app.platformsh.closestApp.configFile);
+      app.log.verbose('the closest open cache is %s', app.platformsh.closestOpenCache);
+
       // Add relationships keyed by the service name
-      app.platformsh.relationships = pshconf.parseRelationships(platformConfig.applications);
+      app.platformsh.relationships = pshconf.parseRelationships(
+        platformConfig.applications,
+        app.platformsh.closestOpenCache
+      );
       app.log.verbose('determined platformsh relationships');
       app.log.silly('platformsh relationships are', app.platformsh.relationships);
 
@@ -73,6 +101,30 @@ module.exports = (app, lando) => {
       app.platformsh.runConfig = runconf.buildRunConfig(app);
       app.log.verbose('built platformsh config jsons');
       app.log.silly('generated platformsh runtime config is', app.platformsh.runConfig);
+    });
+
+    /*
+     * This event is intended to make sure we reset the active token and cache when it is passed in
+     * via the lando pull or lando push commands
+     */
+    _.forEach(['pull', 'push'], command => {
+      app.events.on(`post-${command}`, (config, answers) => {
+        // Only run if answer.auth is set, this allows these commands to all be
+        // overriden without causing a failure here
+        if (answers.auth) {
+          const api = new PlatformshApiClient({api_token: answers.auth});
+          return api.getAccountInfo().then(me => {
+            // This is a good token, lets update our cache
+            const cache = {token: answers.auth, email: me.mail, date: _.toInteger(_.now() / 1000)};
+            // Update lando's store of platformsh machine tokens
+            const tokens = lando.cache.get(app.platformsh.tokenCache) || [];
+            lando.cache.set(app.platformsh.tokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
+            // Update app metdata
+            const metaData = lando.cache.get(`${app.name}.meta.cache`);
+            lando.cache.set(`${app.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
+          });
+        }
+      });
     });
 
     /*

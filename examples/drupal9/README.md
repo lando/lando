@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 9 codebase
 rm -rf drupal9 && mkdir -p drupal9 && cd drupal9
-lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-9.0.0-beta2.tar.gz --remote-options="--strip-components 1" --recipe drupal9 --webroot . --name lando-drupal9
+lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz --remote-options="--strip-components 1" --recipe drupal9 --webroot . --name lando-drupal9
 
 # Should start up successfully
 cd drupal9

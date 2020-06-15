@@ -16,6 +16,7 @@ module.exports = {
   builder: (parent, config) => class LandoPlatformsMongoDB extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
+
       // Set the meUser
       options.meUser = 'mongodb';
 
@@ -28,6 +29,7 @@ module.exports = {
           LANDO_WEBROOT_GROUP: options.meUser,
         },
       };
+
       // Add in the mongodb service and push downstream
       super(id, options, {services: _.set({}, options.name, mongodb)});
     };

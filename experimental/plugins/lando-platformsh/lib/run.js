@@ -101,8 +101,11 @@ const getApplicationConfig = (app, {id}) => ({
 const getApplicationsConfig = (apps, config) => _(apps)
   // Start by just getting the basic config
   .map(app => getApplicationConfig(app, config))
-  // Then augment it with the variables
-  .map(app => _.merge({}, app, {configuration: getApplicationEnvironment(app.configuration, config)}))
+  // Then reset the variables
+  .map(app => {
+    app.configuration.variables = getApplicationEnvironment(app.configuration, config);
+    return app;
+  })
   // and return
   .value();
 
@@ -112,26 +115,24 @@ const getApplicationsConfig = (apps, config) => _(apps)
  * Handle the variables with the exception of PLATFORM_RELATIONSHIPS
  * which is special and needs to be handled separately
  */
-const getApplicationEnvironment = (appConfig, config) => ({
-  variables: _.merge({}, getEnvironmentVariables(appConfig), {
-    PLATFORM_DOCUMENT_ROOT: getDocRoot(appConfig),
-    PLATFORM_APPLICATION: encode(config),
-    // @NOTE: PLATFORM_APP_DIR is normally set to /app but this is problematic locally
-    // eg on Drupal this puts the /tmp and /private at /app/tmp and /app/private and
-    // we probably dont want these things ending up in git
-    //
-    // That said changing this could def be problematic for other reasons
-    // PLATFORM_APP_DIR: '/var/www',
-    PLATFORM_ENVIRONMENT: 'lando',
-    PLATFORM_APPLICATION_NAME: appConfig.name,
-    PLATFORM_PROJECT: config.id,
-    PLATFORM_DIR: '/app',
-    PLATFORM_PROJECT_ENTROPY: 'heatdeath',
-    PLATFORM_BRANCH: 'master',
-    PLATFORM_TREE_ID: `${config.id}-${appConfig.name}`,
-    PLATFORM_ROUTES: encode(config.routes),
-    PLATFORM_VARIABLES: getPlatformVariables(appConfig),
-  }),
+const getApplicationEnvironment = (appConfig, config) => _.merge({}, getEnvironmentVariables(appConfig), {
+  PLATFORM_DOCUMENT_ROOT: getDocRoot(appConfig),
+  PLATFORM_APPLICATION: encode(config),
+  // @NOTE: PLATFORM_APP_DIR is normally set to /app but this is problematic locally
+  // eg on Drupal this puts the /tmp and /private at /app/tmp and /app/private and
+  // we probably dont want these things ending up in git
+  //
+  // That said changing this could def be problematic for other reasons
+  // PLATFORM_APP_DIR: '/var/www',
+  PLATFORM_ENVIRONMENT: 'lando',
+  PLATFORM_APPLICATION_NAME: appConfig.name,
+  PLATFORM_PROJECT: config.id,
+  PLATFORM_DIR: '/app',
+  PLATFORM_PROJECT_ENTROPY: 'heatdeath',
+  PLATFORM_BRANCH: 'master',
+  PLATFORM_TREE_ID: `${config.id}-${appConfig.name}`,
+  PLATFORM_ROUTES: encode(config.routes),
+  PLATFORM_VARIABLES: getPlatformVariables(appConfig),
 });
 
 /*

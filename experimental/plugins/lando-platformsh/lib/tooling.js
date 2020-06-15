@@ -4,11 +4,11 @@
 const _ = require('lodash');
 
 /*
- * Helper to build mysq connect string
+ * Helper to build mysql command strings
  */
-const buildMysqlConnectString = ({username, service, password = null} = {}) => {
-  if (password) return `mysql -u${username} -h${service} -p${password}`;
-  else return `mysql -u${username} -h${service}`;
+const buildMysqlString = (cmd, {username, service, password = null} = {}) => {
+  if (password) return `${cmd} -u${username} -h${service} -p${password}`;
+  else return `${cmd} -u${username} -h${service}`;
 };
 
 /*
@@ -31,7 +31,10 @@ const getMySqlTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
-    cmd: buildMysqlConnectString(service),
+    cmd: buildMysqlString('mysql', service),
+    connect: `${buildMysqlString('mysql', service)} ${service.path}`,
+    dump: `${buildMysqlString('mysqldump', service)} ${service.path}`,
+    database: service.path,
     service: service.service,
     level: 'app',
   }))
@@ -45,6 +48,9 @@ const getsPostgresTooling = services => _(services)
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
     cmd: `psql -U${service.username} -h${service.service}`,
+    connect: `psql -U${service.username} -h${service.service} main`,
+    dump: `pg_dump postgresql://${service.username}@${service.service}:5432/main`,
+    database: 'main',
     env: {PGPASSWORD: service.password},
     service: service.service,
     level: 'app',
