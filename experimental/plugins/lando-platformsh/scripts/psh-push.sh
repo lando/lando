@@ -79,6 +79,14 @@ platform auth:info
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
+# Validate ssh keys are good
+lando_pink "Verifying your ssh keys work are deployed to the project..."
+if ! platform ssh "true" 2>/dev/null; then
+ echo "Could not connect over SSH correctly..."
+ lando_info "Redeploying environment to reload keys..."
+ platform redeploy -y
+fi
+
 # If there are no relationships specified then indicate that
 if [ ${#PLATFORM_PUSH_RELATIONSHIPS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any relationships!"
