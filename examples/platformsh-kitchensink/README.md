@@ -168,12 +168,6 @@ lando admin main -e "show tables;"
 lando admin legacy -e "show tables;"
 lando imports legacy -e "show tables;"
 
-# Should be able to pull a mysql relationships
-cd sink/php
-lando pull -r admin -r admin:legacy
-lando admin main -e "show tables;" | grep users
-lando imports legacy -e "show tables;" | grep users
-
 # Should be running mysql with the correct user
 cd sink/php
 lando ssh -s mysql -c "id" | grep app
@@ -189,11 +183,6 @@ lando ssh -s postgres -c "/usr/lib/postgresql/11/bin/postgres -V" | grep 11.
 # Should be able to connect to all postgres relationships
 cd sink/php
 lando postgres -c "\\dt"
-
-# Should be able to pull a postgres relationships
-cd sink/php
-lando pull -r postgres
-lando postgres -c "\\dt" | grep users
 
 # Should have the correct postgres extensions installed
 cd sink/php
@@ -227,14 +216,6 @@ lando ssh -s redis -c "id" | grep app
 # Should be able to connect to redis from the application containers
 cd sink/php
 lando ssh -c "curl -I localhost/redis.php" | grep HTTP/1.1 | grep "200 OK"
-
-# Should be able to persist data across a rebuild
-# We consolidate the logic here basically just to speed things up
-cd sink/php
-lando rebuild -y
-lando admin main -e "show tables;" | grep users
-lando imports legacy -e "show tables;" | grep users
-lando postgres -c "\\dt" | grep users
 ```
 
 Destroy tests
