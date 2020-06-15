@@ -59,7 +59,10 @@ module.exports = {
       options.tooling.pull.env = _(serviceTooling)
         // Get connect strings and merge with any env set by the command eg PG_PASS
         .map((data, name) => ([
-          [[_.toUpper(`LANDO_CONNECT_${name}`), data.connect]],
+          [
+            [_.toUpper(`LANDO_CONNECT_${name}`), data.connect],
+            [_.toUpper(`LANDO_CONNECT_${name}_DEFAULT_SCHEMA`), data.default],
+          ],
           _.toPairs(data.env),
         ]))
         // Level it all off and convert back to object
@@ -74,7 +77,10 @@ module.exports = {
       options.tooling.push.env = _(serviceTooling)
         // Get connect strings and merge with any env set by the command eg PG_PASS
         .map((data, name) => ([
-          [[_.toUpper(`LANDO_DUMP_${name}`), data.dump]],
+          [
+            [_.toUpper(`LANDO_DUMP_${name}`), data.dump],
+            [_.toUpper(`LANDO_CONNECT_${name}_DEFAULT_SCHEMA`), data.default],
+          ],
           _.toPairs(data.env),
         ]))
         // Level it all off and convert back to object

@@ -87,9 +87,18 @@ if [ ${#PLATFORM_PUSH_RELATIONSHIPS[@]} -eq 0 ]; then
 # Otherwise loop through our relationships and import them
 else
   for PLATFORM_RELATIONSHIP in "${PLATFORM_PUSH_RELATIONSHIPS[@]}"; do
-    lando_pink "Exporting local data into the $PLATFORM_RELATIONSHIP relationship..."
-    eval "LD=\$LANDO_DUMP_${PLATFORM_RELATIONSHIP^^}"
-    $LD | platform db:sql -e master -r $PLATFORM_RELATIONSHIP
+    # Try to split PLATFORM_RELATIONSHIP
+    IFS=':' read -r -a PLATFORM_RELATIONSHIP_PARTS <<< "$PLATFORM_RELATIONSHIP"
+    # Set the source and target
+    PLATFORM_RELATIONSHIP_RELATIONSHIP="${PLATFORM_RELATIONSHIP_PARTS[0]}"
+    PLATFORM_RELATIONSHIP_SCHEMA="${PLATFORM_RELATIONSHIP_PARTS[1]}"
+    # If PLATFORM_RELATIONSHIP_SCHEMA is still empty lets set it to the default schema: usually main
+    if [ -z "$PLATFORM_RELATIONSHIP_SCHEMA" ]; then
+      eval "PLATFORM_RELATIONSHIP_SCHEMA=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}_DEFAULT_SCHEMA"
+    fi
+    lando_pink "Exporting local data into the remote $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship $PLATFORM_RELATIONSHIP_SCHEMA schema..."
+    eval "LD=\$LANDO_DUMP_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}"
+    $LD $PLATFORM_RELATIONSHIP_SCHEMA | platform db:sql -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA
   done
 fi
 
@@ -110,8 +119,8 @@ else
     if [ -z "$PLATFORM_MOUNT_TARGET" ]; then
       PLATFORM_MOUNT_TARGET="$PLATFORM_MOUNT_SOURCE"
     fi
-    lando_pink "Uploading local files from $PLATFORM_MOUNT_SOURCE into the remote $PLATFORM_MOUNT_TARGET mount"
-    platform mount:upload --mount $PLATFORM_MOUNT_TARGET --source "$PLATFORM_MOUNT_SOURCE" -y
+    lando_pink "Uploading local files from $LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE into the remote $PLATFORM_MOUNT_TARGET mount"
+    platform mount:upload --mount $PLATFORM_MOUNT_TARGET --source "$LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE" -y
   done
 fi
 

@@ -63,9 +63,9 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should have the expected platformsh containers and images
-docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/php-7.3 | grep landokitchensink_base_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/php-7.4 | grep landokitchensink_base_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/php-7.2 | grep landokitchensink_discreet_1
-docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/php-7.4 | grep landokitchensink_php_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/php-7.3 | grep landokitchensink_php_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/mariadb-10.2 | grep landokitchensink_db_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/memcached-1.6 | grep landokitchensink_memcache_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/mariadb-10.4 | grep landokitchensink_mysql_1
@@ -119,8 +119,20 @@ lando platform auth:info | grep landobot@lando.dev
 cd sink/php
 lando php -m | grep redis
 
+# Should honor SOURCE:MOUNT and RELATIONSHIP:SCHEMA syntax for lando pull
+cd sink/php
+lando pull -r admin -r admin:legacy -m web/files -m web/files:/var/www
+lando ssh -c "cat /app/php/web/files/test.txt"
+lando ssh -c "cat /var/www/test.txt"
+lando admin main -e "show tables;" | grep users
+lando imports legacy -e "show tables;" | grep users
+
+# Should honor SOURCE:MOUNT and RELATIONSHIP:SCHEMA syntax for lando push
+cd sink/php
+lando push -r admin -r admin:legacy -m web/files -m web/files:/web/files
+
 # Should be running the correct mariadb version
-cd sink
+cd sink/php
 lando ssh -s db -c "mysql -V" | grep 10.2.
 
 # Should be able to connect to all mariadb relationships
@@ -128,36 +140,42 @@ cd sink/php
 lando maria main -e "show tables"
 
 # Should be running mariadb with the correct user
-cd sink
+cd sink/php
 lando ssh -s db -c "id" | grep app
 
 # Should be running the correct memcache version
-cd sink
+cd sink/php
 lando ssh -s memcache -c "memcached -V" | grep 1.6.
 
 # Should be running memcache on the correct port
 docker top landokitchensink_memcache_1 | grep /usr/bin/memcached | grep 11211
 
 # Should be running memcache with the correct user
-cd sink
+cd sink/php
 lando ssh -s memcache -c "id" | grep app
 
 # Should be able to connect to memcache from the application containers
-cd sink
+cd sink/php
 lando ssh -c "curl -I localhost/memcached.php" | grep HTTP/1.1 | grep "200 OK"
 
 # Should be running the correct version of mysql
-cd sink
+cd sink/php
 lando ssh -s mysql -c "mysql -V" | grep 10.4.
 
 # Should be able to connect to all mysql relationships
 cd sink/php
-lando admin main -e "show tables"
-lando admin legacy -e "show tables"
-lando imports legacy -e "show tables"
+lando admin main -e "show tables;"
+lando admin legacy -e "show tables;"
+lando imports legacy -e "show tables;"
+
+# Should be able to pull a mysql relationships
+cd sink/php
+lando pull -r admin -r admin:legacy
+lando admin main -e "show tables;" | grep users
+lando imports legacy -e "show tables;" | grep users
 
 # Should be running mysql with the correct user
-cd sink
+cd sink/php
 lando ssh -s mysql -c "id" | grep app
 
 # Should be able to connect to mysql from the application containers
@@ -165,12 +183,17 @@ cd sink/php
 lando ssh -c "curl -I localhost/mysql.php" | grep HTTP/1.1 | grep "200 OK"
 
 # Should be running the correct postgres version
-cd sink
+cd sink/php
 lando ssh -s postgres -c "/usr/lib/postgresql/11/bin/postgres -V" | grep 11.
 
 # Should be able to connect to all postgres relationships
 cd sink/php
 lando postgres -c "\\dt"
+
+# Should be able to pull a postgres relationships
+cd sink/php
+lando pull -r postgres
+lando postgres -c "\\dt" | grep users
 
 # Should have the correct postgres extensions installed
 cd sink/php
@@ -182,28 +205,36 @@ cd sink/php
 lando ssh -c "curl -I localhost/postgres.php" | grep HTTP/1.1 | grep "200 OK"
 
 # Should be running postgres with the correct user
-cd sink
+cd sink/php
 lando ssh -s postgres -c "id" | grep postgres
 
 # Should run the correct version of redis
-cd sink
+cd sink/php
 lando ssh -s redis -c "redis-server --version" | grep v=5.0.
 
 # Should be able to connect to all redis relationships
-cd sink
+cd sink/php
 lando redis ping
 
 # Should have the correct eviction policy
-cd sink
+cd sink/php
 lando ssh -s redis -c "cat /etc/redis/redis.conf" | grep maxmemory-policy | grep noeviction
 
 # Should run redis as the correct user
-cd sink
+cd sink/php
 lando ssh -s redis -c "id" | grep app
 
 # Should be able to connect to redis from the application containers
 cd sink/php
 lando ssh -c "curl -I localhost/redis.php" | grep HTTP/1.1 | grep "200 OK"
+
+# Should be able to persist data across a rebuild
+# We consolidate the logic here basically just to speed things up
+cd sink/php
+lando rebuild -y
+lando admin main -e "show tables;" | grep users
+lando imports legacy -e "show tables;" | grep users
+lando postgres -c "\\dt" | grep users
 ```
 
 Destroy tests

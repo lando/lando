@@ -402,9 +402,11 @@ database: main
 
 Of course, it is always preferrable to just use `PLATFORM_RELATIONSHIPS` for all your internal connections anyway.
 
-## Pulling relationships and mounts
+## Pulling and pushing relationships and mounts
 
-Lando also provides a _currently rudimentary_ wrapper command called `lando pull` that you can use to import data and download files from your remote platform.sh site.
+Lando also provides _currently rudimentary_ wrapper commands called `lando pull` and `lando push`.
+
+With `lando pull` you can import data and download files from your remote platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote platform.sh site.
 
 ```bash
 lando pull
@@ -414,8 +416,36 @@ Pull relationships and/or mounts from platform.sh
 Options:
   --help              Shows lando or delegated command help if applicable
   --verbose, -v       Runs with extra verbosity
+  --auth              Platform.sh API token
   --mount, -m         A mount to download
   --relationship, -r  A relationship to import
+```
+
+```bash
+# Import the remote database relationship and drupal files mount
+lando pull -r database -m web/sites/default/files
+
+# Import multiple relationships and mounts
+lando pull -r database -r migrate -r readonly -m tmp -m private
+
+# You can also specify a target for a given mount using -m SOURCE:TARGET
+lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
+
+# You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
+lando pull -r admin:legacy
+```
+
+```bash
+lando push
+
+Push relationships and/or mounts to platform.sh
+
+Options:
+  --help              Shows lando or delegated command help if applicable
+  --verbose, -v       Runs with extra verbosity
+  --auth              Platform.sh API token
+  --mount, -m         A mount to push up
+  --relationship, -r  A relationship to push up
 ```
 
 ```bash
