@@ -124,18 +124,6 @@ lando platform auth:info | grep landobot@lando.dev
 cd sink/php
 lando php -m | grep redis
 
-# Should honor SOURCE:MOUNT and RELATIONSHIP:SCHEMA syntax for lando pull
-cd sink/php
-lando pull -r admin -r admin:legacy -m web/files -m web/files:/var/www
-lando ssh -c "cat /app/php/web/files/test.txt"
-lando ssh -c "cat /var/www/test.txt"
-lando admin main -e "show tables;" | grep users
-lando imports legacy -e "show tables;" | grep users
-
-# Should honor SOURCE:MOUNT and RELATIONSHIP:SCHEMA syntax for lando push
-cd sink/php
-lando push -r admin -r admin:legacy -m web/files -m web/files:/web/files
-
 # Should be running the correct mariadb version
 cd sink/php
 lando ssh -s db -c "mysql -V" | grep 10.2.
