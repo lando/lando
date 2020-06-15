@@ -230,12 +230,11 @@ lando ssh -c "curl -I localhost/redis.php" | grep HTTP/1.1 | grep "200 OK"
 
 # Should be able to persist data across a rebuild
 # We consolidate the logic here basically just to speed things up
-true
-# cd sink/php
-# lando rebuild -y
-# lando admin main -e "show tables;" | grep users
-# lando imports legacy -e "show tables;" | grep users
-# lando postgres -c "\\dt" | grep users
+cd sink/php
+lando rebuild -y
+lando admin main -e "show tables;" | grep users
+lando imports legacy -e "show tables;" | grep users
+lando postgres -c "\\dt" | grep users
 ```
 
 Destroy tests
