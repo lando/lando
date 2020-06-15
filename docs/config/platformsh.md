@@ -450,13 +450,25 @@ Options:
 
 ```bash
 # Import the remote database relationship and drupal files mount
-lando pull -r database -m web/sites/default/files
+lando push -r database -m web/sites/default/files
 
 # Import multiple relationships and mounts
-lando pull -r database -r migrate -r readonly -m tmp -m private
+lando push -r database -r migrate -r readonly -m tmp -m private
 
 # You can also specify a target for a given mount using -m SOURCE:TARGET
-lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
+lando push -m tmp:/var/www/tmp -m /private:/somewhere/else
+
+# You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
+lando push -r admin:legacy -r admin:main
+```
+
+## Importing databases
+
+If you have data that exists outside platform.sh eg a `dump.sql` file you'd like to import you can leverage the special `lando` commands we give you to access each `relationship`. You will need to make sure that the relationship you connect with has the appropriate permissions needed to import your dump file.
+
+```bash
+# Import to the main schema using the database relationships
+lando database main < dump.sql
 ```
 
 ## Caveats and known issues
