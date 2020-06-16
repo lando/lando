@@ -92,7 +92,7 @@ const handleOpts = (config, argopts = process.argv.slice(3)) => {
  */
 const handlePassthruOpts = (options = {}, answers = {}) => _(options)
   .map((value, key) => _.merge({}, {name: key}, value))
-  .filter(value => value.passthrough === true)
+  .filter(value => value.passthrough === true && !_.isNil(answers[value.name]))
   .map(value => `--${value.name}=${answers[value.name]}`)
   .value();
 

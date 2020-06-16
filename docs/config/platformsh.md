@@ -167,13 +167,28 @@ We currently only support the below langauges and we _highly recommend_ you cons
 
 Also note that you will need to run a `lando rebuild` for configuration changes to manifest in the same way you normally would for config changes to your Landofile.
 
-### Other considerations
+### Multiple applications
 
-#### Multiapp
+Lando _should_ support Platform's [multiple applications configurations](https://docs.platform.sh/configuration/app/multi-app.html) although they are not extensively tested at this point so YMMV.
 
-Multiapp configurations _should theoretically_ work but are not currently supported.
+If you have a multiple application setup then you will need to navigate into either the directory that contains the `.platform.app.yaml`  or the `source.root` specified in your `.platform/applications.yaml` file to access the relevant tooling for that app.
 
-#### Environment variables
+This is how tooling works for our [multiapp example](https://github.com/lando/lando/tree/master/examples/platformsh-kitchensink).
+
+```bash
+# Get access to tooling for the "base" application
+lando
+
+# Access tooling for the "discreet" application
+cd discreet
+lando
+
+# Access tooling for the "php" application
+cd ../php
+lando
+```
+
+### Environment variables
 
 Application containers running on Lando will also set up the same [platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on platform.sh with these variables _should_ also automatically work on Lando.
 
@@ -230,8 +245,7 @@ lando ssh
 lando ssh -s db
 ```
 
-Note that Lando will surface commands for the _closest application_ it finds. Generally, this will be the `.platform.app.yaml` located in your project root but if you've `cd multiappsubdir` then it would use that instead.
-
+Note that Lando will surface commands for the _closest application_ it finds. Generally, this will be the `.platform.app.yaml` located in your project root but if you've `cd multiappsubdir` then it will use that instead.
 
 ### Adding additional tooling
 
@@ -388,9 +402,11 @@ database: main
 
 Of course, it is always preferrable to just use `PLATFORM_RELATIONSHIPS` for all your internal connections anyway.
 
-## Pulling relationships and mounts
+## Pulling and pushing relationships and mounts
 
-Lando also provides a _currently rudimentary_ wrapper command called `lando pull` that you can use to import data and download files from your remote platform.sh site.
+Lando also provides _currently rudimentary_ wrapper commands called `lando pull` and `lando push`.
+
+With `lando pull` you can import data and download files from your remote platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote platform.sh site.
 
 ```bash
 lando pull
@@ -400,6 +416,7 @@ Pull relationships and/or mounts from platform.sh
 Options:
   --help              Shows lando or delegated command help if applicable
   --verbose, -v       Runs with extra verbosity
+  --auth              Platform.sh API token
   --mount, -m         A mount to download
   --relationship, -r  A relationship to import
 ```
@@ -413,6 +430,45 @@ lando pull -r database -r migrate -r readonly -m tmp -m private
 
 # You can also specify a target for a given mount using -m SOURCE:TARGET
 lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
+
+# You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
+lando pull -r admin:legacy
+```
+
+```bash
+lando push
+
+Push relationships and/or mounts to platform.sh
+
+Options:
+  --help              Shows lando or delegated command help if applicable
+  --verbose, -v       Runs with extra verbosity
+  --auth              Platform.sh API token
+  --mount, -m         A mount to push up
+  --relationship, -r  A relationship to push up
+```
+
+```bash
+# Import the remote database relationship and drupal files mount
+lando push -r database -m web/sites/default/files
+
+# Import multiple relationships and mounts
+lando push -r database -r migrate -r readonly -m tmp -m private
+
+# You can also specify a target for a given mount using -m SOURCE:TARGET
+lando push -m tmp:/var/www/tmp -m /private:/somewhere/else
+
+# You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
+lando push -r admin:legacy -r admin:main
+```
+
+## Importing databases
+
+If you have data that exists outside platform.sh eg a `dump.sql` file you'd like to import you can leverage the special `lando` commands we give you to access each `relationship`. You will need to make sure that the relationship you connect with has the appropriate permissions needed to import your dump file.
+
+```bash
+# Import to the main schema using the database relationships
+lando database main < dump.sql
 ```
 
 ## Caveats and known issues
@@ -485,6 +541,23 @@ lando start
 ### Persistence across rebuilds
 
 We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL and PostgreSQL services. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
+
+### Multiapp
+
+If you are using `.platform/applications.yaml` to configure multiple applications and you have two apps with the same `source.root` then Lando will currently use the _first_ application for tooling.
+
+As a workaround you can use `lando ssh` with the `-s` option to access tooling for other applications with that `source.root`.
+
+In the below example, assume there are three `php` applications with the same `source.route`.
+
+```bash
+# Go into a directory that has many apps with that same source.route
+# See the php version of the first app with source.root at this directory
+lando php -v
+
+# Access another app with same source.root
+lando -s app2 -c "php -v"
+```
 
 ## Development
 

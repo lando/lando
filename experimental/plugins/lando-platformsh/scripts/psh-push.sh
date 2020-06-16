@@ -79,17 +79,34 @@ platform auth:info
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
+# Validate ssh keys are good
+lando_pink "Verifying your ssh keys work are deployed to the project..."
+if ! platform ssh "true" 2>/dev/null; then
+ echo "Could not connect over SSH correctly..."
+ lando_info "Redeploying environment to reload keys..."
+ platform redeploy -y
+fi
+
 # If there are no relationships specified then indicate that
 if [ ${#PLATFORM_PUSH_RELATIONSHIPS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any relationships!"
   lando_info "That is not a problem. However here is a list of available relationships you can try next time!"
-  platform relationships --refresh
+  platform relationships --refresh || true
 # Otherwise loop through our relationships and import them
 else
   for PLATFORM_RELATIONSHIP in "${PLATFORM_PUSH_RELATIONSHIPS[@]}"; do
-    lando_pink "Exporting local data into the $PLATFORM_RELATIONSHIP relationship..."
-    eval "LD=\$LANDO_DUMP_${PLATFORM_RELATIONSHIP^^}"
-    $LD | platform db:sql -e master -r $PLATFORM_RELATIONSHIP
+    # Try to split PLATFORM_RELATIONSHIP
+    IFS=':' read -r -a PLATFORM_RELATIONSHIP_PARTS <<< "$PLATFORM_RELATIONSHIP"
+    # Set the source and target
+    PLATFORM_RELATIONSHIP_RELATIONSHIP="${PLATFORM_RELATIONSHIP_PARTS[0]}"
+    PLATFORM_RELATIONSHIP_SCHEMA="${PLATFORM_RELATIONSHIP_PARTS[1]}"
+    # If PLATFORM_RELATIONSHIP_SCHEMA is still empty lets set it to the default schema: usually main
+    if [ -z "$PLATFORM_RELATIONSHIP_SCHEMA" ]; then
+      eval "PLATFORM_RELATIONSHIP_SCHEMA=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}_DEFAULT_SCHEMA"
+    fi
+    lando_pink "Exporting local data into the remote $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship $PLATFORM_RELATIONSHIP_SCHEMA schema..."
+    eval "LD=\$LANDO_DUMP_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}"
+    $LD $PLATFORM_RELATIONSHIP_SCHEMA | platform db:sql -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA
   done
 fi
 
@@ -97,7 +114,7 @@ fi
 if [ ${#PLATFORM_PUSH_MOUNTS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any mounts!"
   lando_info "That is not a problem. However here is a list of available mounts you can try next time!"
-  platform mounts --refresh
+  platform mounts --refresh || true
 # Otherwise loop through our mounts and download them them
 else
   for PLATFORM_MOUNT in "${PLATFORM_PUSH_MOUNTS[@]}"; do
@@ -110,8 +127,8 @@ else
     if [ -z "$PLATFORM_MOUNT_TARGET" ]; then
       PLATFORM_MOUNT_TARGET="$PLATFORM_MOUNT_SOURCE"
     fi
-    lando_pink "Uploading local files from $PLATFORM_MOUNT_SOURCE into the remote $PLATFORM_MOUNT_TARGET mount"
-    platform mount:upload --mount $PLATFORM_MOUNT_TARGET --source "$PLATFORM_MOUNT_SOURCE" -y
+    lando_pink "Uploading local files from $LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE into the remote $PLATFORM_MOUNT_TARGET mount"
+    platform mount:upload --mount $PLATFORM_MOUNT_TARGET --source "$LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE" -y
   done
 fi
 
