@@ -101,9 +101,24 @@ const getApplicationConfig = (app, {id}) => ({
 const getApplicationsConfig = (apps, config) => _(apps)
   // Start by just getting the basic config
   .map(app => getApplicationConfig(app, config))
-  // Then reset the variables
+  // Then fix some things up we need for platform
   .map(app => {
+    // Reset the variables
     app.configuration.variables = getApplicationEnvironment(app.configuration, config);
+
+    // Find the web prefix
+    const appName = _.get(app, 'configuration.name');
+    const appConfig = _.find(config.applications, {name: appName});
+    const webPrefix = appConfig.webPrefix;
+
+    // Go through the web location and prefix the root if we need to
+    // @NOTE: We do this because for multiapp we still mount the ENTIRE
+    // application into /app, not just the source.root
+    _.forEach(_.get(app, 'configuration.web.locations'), block => {
+      if (_.has(block, 'root')) block.root = path.join(webPrefix, block.root);
+    });
+
+    // app.configuration.web.locations['/'].root = 'php/web';
     return app;
   })
   // and return
@@ -142,6 +157,16 @@ const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
   const externalIP = _.get(_config, 'appEnv.LANDO_HOST_IP');
   const uid = _.toInteger(_.get(_config, 'uid', 1000));
   const gid = _.toInteger(_.get(_config, 'gid', 1000));
+
+  // Start with all the application
+  let applications = platformsh.config.applications;
+  // But if its application service lets only use that one
+  if (service.application) {
+    applications = _(applications)
+      .filter(application => application.name === service.name)
+      .value();
+  }
+
   return {
     primary_ip: '127.0.0.1',
     features: [],

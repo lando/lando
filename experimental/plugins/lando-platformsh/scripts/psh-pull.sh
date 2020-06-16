@@ -79,17 +79,34 @@ platform auth:info
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
+# Validate ssh keys are good
+lando_pink "Verifying your ssh keys work are deployed to the project..."
+if ! platform ssh "true" 2>/dev/null; then
+ echo "Could not connect over SSH correctly..."
+ lando_info "Redeploying environment to reload keys..."
+ platform redeploy -y
+fi
+
 # If there are no relationships specified then indicate that
 if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any relationships!"
   lando_info "That is not a problem. However here is a list of available relationships you can try next time!"
-  platform relationships --refresh
+  platform relationships --refresh || true
 # Otherwise loop through our relationships and import them
 else
   for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
-    lando_pink "Importing data from the $PLATFORM_RELATIONSHIP relationship..."
-    eval "LCD=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP^^}"
-    platform db:dump -r $PLATFORM_RELATIONSHIP -o | $LCD
+    # Try to split PLATFORM_RELATIONSHIP
+    IFS=':' read -r -a PLATFORM_RELATIONSHIP_PARTS <<< "$PLATFORM_RELATIONSHIP"
+    # Set the source and target
+    PLATFORM_RELATIONSHIP_RELATIONSHIP="${PLATFORM_RELATIONSHIP_PARTS[0]}"
+    PLATFORM_RELATIONSHIP_SCHEMA="${PLATFORM_RELATIONSHIP_PARTS[1]}"
+    # If PLATFORM_RELATIONSHIP_SCHEMA is still empty lets set it to main
+    if [ -z "$PLATFORM_RELATIONSHIP_SCHEMA" ]; then
+      eval "PLATFORM_RELATIONSHIP_SCHEMA=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}_DEFAULT_SCHEMA"
+    fi
+    lando_pink "Importing data from the $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship into the $PLATFORM_RELATIONSHIP_SCHEMA schema..."
+    eval "LCD=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}"
+    platform db:dump -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA -o | $LCD $PLATFORM_RELATIONSHIP_SCHEMA
   done
 fi
 
@@ -97,7 +114,7 @@ fi
 if [ ${#PLATFORM_PULL_MOUNTS[@]} -eq 0 ]; then
   lando_warn "Looks like you did not pass in any mounts!"
   lando_info "That is not a problem. However here is a list of available mounts you can try next time!"
-  platform mounts --refresh
+  platform mounts --refresh || true
 # Otherwise loop through our mounts and download them them
 else
   for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
@@ -108,7 +125,7 @@ else
     PLATFORM_MOUNT_TARGET="${PLATFORM_MOUNT_PARTS[1]}"
     # If PLATFORM_MOUNT_TARGET is still empty lets set it from the source
     if [ -z "$PLATFORM_MOUNT_TARGET" ]; then
-      PLATFORM_MOUNT_TARGET="/app/$PLATFORM_MOUNT_SOURCE"
+      PLATFORM_MOUNT_TARGET="$LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE"
     fi
     lando_pink "Downloading files from the $PLATFORM_MOUNT_SOURCE mount into $PLATFORM_MOUNT_TARGET"
     platform mount:download --mount $PLATFORM_MOUNT_SOURCE --target "$PLATFORM_MOUNT_TARGET" -y
