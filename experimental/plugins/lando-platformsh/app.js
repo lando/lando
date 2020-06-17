@@ -163,7 +163,7 @@ module.exports = (app, lando) => {
           fragment: null,
           hostname: `${app.name}.${serviceConfig.name}.service._.lndo.site`,
           ip: open.getIPAddress(data, `${app.project}_default`),
-          rel: serviceConfig.platformsh.hostname,
+          rel: serviceConfig.name,
           service: serviceConfig.name,
           type: [serviceConfig.platformsh.type, serviceConfig.version].join(':'),
         };
