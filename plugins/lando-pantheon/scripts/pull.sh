@@ -30,7 +30,6 @@ SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
 ENV=${TERMINUS_ENV:-dev}
 FILE_DUMP="/tmp/files.tar.gz"
 PV=""
-PULL_DB=""
 PULL_FILES=""
 
 # PARSE THE ARGZZ
@@ -93,6 +92,11 @@ while (( "$#" )); do
   esac
 done
 
+# Holla at @uberhacker for this fu
+# Start with this by default
+DEFAULT_PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
+PULL_DB=${DB_PULL_COMMAND:-${DEFAULT_PULL_DB}}
+
 # Go through the auth procedure
 if [ "$NO_AUTH" == "false" ]; then
   /helpers/auth.sh "$AUTH" "$SITE"
@@ -140,33 +144,6 @@ if [ "$DATABASE" != "none" ]; then
     echo "Dropping $t table from lando database..."
     mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "DROP TABLE $t"
   done
-
-  # Holla at @uberhacker for this fu
-  # Start with this by default
-  PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
-
-  # Switch to drushy pull if we can
-  if [ "$FRAMEWORK" != "wordpress" ] && [ "$FRAMEWORK" != "wordpress_network" ]; then
-
-    # Get drush aliases
-    echo "Downloading drush aliases..."
-    terminus aliases
-
-    # Use drush if we can (this is always faster for some reason)
-    if drush sa | grep @pantheon.$SITE.$DATABASE 2>&1; then
-      # If we aint pulling the live DB then lets clear caches to minimize the DL time
-      if [ "$DATABASE" != "live" ]; then
-        echo "Clearing remote cache to shrink db size"
-        if [ "$FRAMEWORK" == "drupal8" ]; then
-          drush @pantheon.$SITE.$DATABASE cr all --strict=0
-        else
-          drush @pantheon.$SITE.$DATABASE cc all --strict=0
-        fi
-      fi
-      # Build the DB command
-      PULL_DB="drush @pantheon.$SITE.$DATABASE sql-dump"
-    fi
-  fi
 
   # Wake up the database so we can actually connect
   terminus env:wake $SITE.$DATABASE

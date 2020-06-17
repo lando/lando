@@ -78,10 +78,29 @@ const getDefaults = (task, options) => {
   });
   return task;
 };
-
+const buildDbPullCommand = ({_app}, tokens) => {
+  const drupaly = 'terminus drush -- sql-dump --extra=--column-statistics=0';
+  const pressy = 'terminus wp -- db export -';
+  const commands = {
+    drupal: drupaly,
+    drupal8: drupaly,
+    wordpress: pressy,
+    wordpress_network: pressy,
+  };
+  return commands[_app.config.config.framework] || '';
+};
 /*
  * Helper to build a pull command
  */
 exports.getPantheonPull = (options, tokens = []) => {
-  return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, tokens)});
+  return _.merge(
+    {},
+    getDefaults(task, options),
+    {options: auth.getAuthOptions(options._app.meta, tokens)},
+    {
+      env: {
+        DB_PULL_COMMAND: buildDbPullCommand(options, tokens),
+      },
+    }
+  );
 };
