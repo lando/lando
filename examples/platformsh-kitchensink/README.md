@@ -216,7 +216,7 @@ lando ssh -s searchelastic -c "curl localhost:9200" | grep "7.7"
 
 # Should have an elasticsearch cluster status of green
 cd sink/php
-lando ssh -s searchelastic -c "curl localhost:9200/_cluster/health?pretty" |grep green
+lando ssh -s searchelastic -c "curl localhost:9200/_cluster/health?pretty" | grep green
 
 # Should run elasticsearch as the correct user
 cd sink/php
@@ -228,7 +228,7 @@ lando ssh -c "curl -I localhost/elasticsearch.php" | grep "Barbara Liskov"
 
 # Should run the correct version of solr
 cd sink/php
-lando ssh -s searchsolr -c "curl localhost:8080/solr/admin/info/system?wt=json" | grep '"solr-spec-version":"8.4'
+lando ssh -s searchsolr -c "curl localhost:8080/solr/admin/info/system?wt=json" | grep solr-spec-version | grep "8.4"
 
 # Should run php solr commands successfully
 cd sink/php
