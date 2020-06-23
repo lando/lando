@@ -39,7 +39,7 @@ module.exports = {
       // Use different default for ssl
       if (options.ssl) options.defaultFiles.vhosts = 'default-ssl.conf.tpl';
 
-      // If we are using the older 1.14 version we need different remote locations
+      // If we are using the older 1.14 version we need different locations
       if (options.version === '1.14') {
         options.remoteFiles = _.merge({}, options.remoteFiles, {
           server: '/opt/bitnami/extra/nginx/templates/nginx.conf.tpl',
