@@ -144,9 +144,10 @@ db2:
 
 We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
 
+* [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
+* [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [Memcached](https://docs.platform.sh/configuration/services/memcached.html)
 * [MongoDB](https://docs.platform.sh/configuration/services/mongodb.html)
-* [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [PostgreSQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [Redis](https://docs.platform.sh/configuration/services/redis.html)
 * [Solr](https://docs.platform.sh/configuration/services/solr.html)
