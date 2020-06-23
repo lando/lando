@@ -233,6 +233,10 @@ lando ssh -s searchsolr -c "curl localhost:8080/solr/admin/info/system?wt=json" 
 # Should run php solr commands successfully
 cd sink/php
 lando ssh -c "curl localhost/solr.php" | grep "Result" | grep "OK"
+
+# Should run php mongodb commands successfully
+cd sink/php
+lando ssh -c "curl localhost/mongodb.php" | grep "Result" | grep "OK"
 ```
 
 Destroy tests
