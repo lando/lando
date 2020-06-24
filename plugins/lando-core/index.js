@@ -70,7 +70,7 @@ module.exports = lando => {
   // first thing a user does after they install lando is a non-start engine command
   // eg lando composer install
   _.forEach(['pre-engine-runner', 'pre-engine-start'], event => {
-    lando.events.on('pre-engine-start', 2, data => {
+    lando.events.on(event, 2, data => {
       if (!fs.existsSync(caCert) && data.project !== caProject) {
         const LandoCa = lando.factory.get('_casetup');
         const env = _.cloneDeep(lando.config.appEnv);

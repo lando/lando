@@ -71,7 +71,7 @@ if ! [ -x "$(command -v openssl)" ]; then
 fi
 
 # Make sure the LANDO_CA_CERT exists
-if [ ! $LANDO_CA_CERT ]; then
+if [ ! -f $LANDO_CA_CERT ]; then
   ./helpers/setup-ca.sh
 fi
 
