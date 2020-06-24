@@ -9,6 +9,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing non-semantic `drush` versions like `*` and `^` to throw errors [#2386](https://github.com/lando/lando/pull/2386)
 * Fixed bug causing custom config files in `nginx` service to be modified unexpectedly [#2383](https://github.com/lando/lando/pull/2383)
 * Fixed bug causing first touch non-start engine commands to fail
+* Improved `/bin/sh` wrapping of tooling commands [#2279](https://github.com/lando/lando/pull/2279) [#2280](https://github.com/lando/lando/pull/2280)
 * Removed excessively frequent `WARN` messages [#2389](https://github.com/lando/lando/pull/2389)
 
 ## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
