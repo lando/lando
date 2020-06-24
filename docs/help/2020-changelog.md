@@ -4,9 +4,10 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added ability to configure `USER` and `PORT` for `sql-import` and `sql-export` scripts with envvars
 * Fixed bug causing non-semantic `drush` versions like `*` and `^` to throw errors [#2386](https://github.com/lando/lando/pull/2386)
 * Fixed bug causing custom config files in `nginx` service to be modified unexpectedly [#2383](https://github.com/lando/lando/pull/2383)
-* Fixed bug causing first non-start engine commands to fail CA does not exist yet
+* Fixed bug causing first touch non-start engine commands to fail
 * Removed excessively frequent `WARN` messages [#2389](https://github.com/lando/lando/pull/2389)
 
 ## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
