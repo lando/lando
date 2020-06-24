@@ -83,3 +83,8 @@ tooling:
   cmdsub:
     service: web
     cmd: echo "`ls -lsa /app/*`"
+  oneliner:
+    service: web
+    cmd: if [ ! -z "$SPECIAL" ]; then echo "$SPECIAL"; fi
+    env:
+      SPECIAL: HOLLA
