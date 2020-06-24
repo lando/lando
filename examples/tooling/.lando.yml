@@ -74,7 +74,17 @@ tooling:
     cmd: i-do-not-exist
   envvar:
     service: web
-    cmd: sh -c 'echo "$TAYLOR"'
+    cmd: echo "$TAYLOR"
     env:
       TAYLOR: swift
-
+  listfiles:
+    service: web
+    cmd: ls -lsa /app/*
+  cmdsub:
+    service: web
+    cmd: echo "`ls -lsa /app/*`"
+  oneliner:
+    service: web
+    cmd: if [ ! -z "$SPECIAL" ]; then echo "$SPECIAL"; fi
+    env:
+      SPECIAL: HOLLA
