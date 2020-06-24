@@ -11,8 +11,6 @@ module.exports = {
     confSrc: __dirname,
     command: '/sbin/tini -- /lagoon/entrypoints.sh redis-server /etc/redis/redis.conf',
     port: '6379',
-    portforward: true,
-    moreHttpPorts: ['6379'],
   },
   parent: '_lagoon',
   builder: (parent, config) => class LandoLagoonRedis extends parent {
