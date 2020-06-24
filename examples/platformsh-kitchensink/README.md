@@ -224,11 +224,11 @@ lando ssh -s searchelastic -c "id" | grep elasticsearch
 
 # Should be able to connect to work with elasticsearch indices from php
 cd sink/php
-lando ssh -c "curl -I localhost/elasticsearch.php" | grep "Barbara Liskov"
+lando ssh -c "curl localhost/elasticsearch.php" | grep "Barbara Liskov"
 
 # Should run the correct version of solr
 cd sink/php
-lando ssh -s searchsolr -c "curl localhost:8080/solr/admin/info/system?wt=json" | grep solr-spec-version | grep "8.4"
+lando ssh -s search -c "curl localhost:8080/solr/admin/info/system?wt=json" | grep solr-spec-version | grep "8.0"
 
 # Should run php solr commands successfully
 cd sink/php
