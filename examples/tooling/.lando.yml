@@ -72,3 +72,9 @@ tooling:
   busted:
     service: web
     cmd: i-do-not-exist
+  envvar:
+    service: web
+    cmd: sh -c 'echo "$TAYLOR"'
+    env:
+      TAYLOR: swift
+
