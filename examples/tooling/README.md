@@ -63,6 +63,12 @@ cat pipe.txt | grep more
 
 # Should be able to set envvars
 lando envvar | grep swift
+
+# Should be able to use *
+lando listfiles | grep /app/README.md
+
+# Should be able to use command substitution
+lando cmdsub | grep /app/README.md
 ```
 
 Destroy tests
