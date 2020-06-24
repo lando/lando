@@ -1,5 +1,7 @@
 # 2020
 
+* Update Terminus to `2.4.0` [#2417](https://github.com/lando/lando/issues/2417)
+
 ## v3.0.7 - In Development
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
