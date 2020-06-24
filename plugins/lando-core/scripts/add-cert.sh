@@ -72,7 +72,7 @@ fi
 
 # Make sure the LANDO_CA_CERT exists
 if [ ! -f $LANDO_CA_CERT ]; then
-  ./helpers/setup-ca.sh
+  /helpers/setup-ca.sh
 fi
 
 # Validate the certs against the root CA
