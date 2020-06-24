@@ -1,7 +1,5 @@
 # 2020
 
-* Update Terminus to `2.4.0` [#2417](https://github.com/lando/lando/issues/2417)
-
 ## v3.0.7 - In Development
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
@@ -14,6 +12,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Improved `/bin/sh` wrapping of tooling commands [#2279](https://github.com/lando/lando/pull/2279) [#2280](https://github.com/lando/lando/pull/2280)
 * Loosened key add restrictions to improve key loading on `macOS` High Sierra [#2415](https://github.com/lando/lando/pull/2415)
 * Removed excessively frequent `WARN` messages [#2389](https://github.com/lando/lando/pull/2389)
+* Updated Terminus to `2.4.0` [#2417](https://github.com/lando/lando/issues/2417)
 
 ## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
 
