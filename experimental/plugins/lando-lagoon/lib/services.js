@@ -18,6 +18,8 @@ const getLandoServiceType = type => {
     case 'php-cli': return 'lagoon-php-cli';
     case 'php-cli-drupal': return 'lagoon-php-cli';
     case 'php-fpm': return 'lagoon-php';
+    case 'redis': return 'lagoon-redis';
+    case 'solr-drupal': return 'lagoon-solr';
     default: return false;
   };
 };
