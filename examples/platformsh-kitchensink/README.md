@@ -209,6 +209,34 @@ lando ssh -s redis -c "id" | grep app
 # Should be able to connect to redis from the application containers
 cd sink/php
 lando ssh -c "curl -I localhost/redis.php" | grep HTTP/1.1 | grep "200 OK"
+
+# Should run the correct version of elasticsearch
+cd sink/php
+lando ssh -s searchelastic -c "curl localhost:9200" | grep "7.7"
+
+# Should have an elasticsearch cluster status of green
+cd sink/php
+lando ssh -s searchelastic -c "curl localhost:9200/_cluster/health?pretty" | grep green
+
+# Should run elasticsearch as the correct user
+cd sink/php
+lando ssh -s searchelastic -c "id" | grep elasticsearch
+
+# Should be able to connect to work with elasticsearch indices from php
+cd sink/php
+lando ssh -c "curl localhost/elasticsearch.php" | grep "Barbara Liskov"
+
+# Should run the correct version of solr
+cd sink/php
+lando ssh -s search -c "curl localhost:8080/solr/admin/info/system?wt=json" | grep solr-spec-version | grep "8.0"
+
+# Should run php solr commands successfully
+cd sink/php
+lando ssh -c "curl localhost/solr.php" | grep "Result" | grep "OK"
+
+# Should run php mongodb commands successfully
+cd sink/php
+lando ssh -c "curl localhost/mongodb.php" | grep "Result" | grep "OK"
 ```
 
 Destroy tests

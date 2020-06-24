@@ -241,6 +241,10 @@ module.exports = (app, lando) => {
 
       // Open up services and collect their output
       app.events.on('post-start', 8, () => {
+        // Note this may take a bit
+        console.log('Opening platform.sh containers... this may take a bit...');
+
+        // Open everything
         return lando.Promise.map(services, service => lando.Promise.retry(() => lando.engine.run({
            id: `${app.project}_${service.name}_1`,
            cmd: ['/helpers/psh-open.sh', service.platformsh.opener],

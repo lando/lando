@@ -60,6 +60,9 @@ lando busted | grep "i-do-not-exist" | wc -l | grep 1
 lando pipesandstuff
 cat pipe.txt | grep LANDO_
 cat pipe.txt | grep more
+
+# Should be able to set envvars
+lando envvar | grep swift
 ```
 
 Destroy tests

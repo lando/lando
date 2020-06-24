@@ -34,6 +34,7 @@ tooling:
     cmd: mycommand
     user: you
     options:
+    env:
 ```
 
 ::: tip Tooling routes are cached!
@@ -142,6 +143,19 @@ tooling:
 
 ```bash
 lando test && lando build
+```
+
+### Using environment variables
+
+You can also set environment variables that will ONLY be available for a given tooling command.
+
+```yaml
+tooling:
+  deploy:
+    service: appserver
+    cmd: deploy.sh
+    env:
+      TARGET: production
 ```
 
 ### Dynamic service commands

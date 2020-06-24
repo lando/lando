@@ -48,6 +48,12 @@ while [ ! -S  "$LANDO_PSH_AGENT_SOCKET" ]; do
   sleep 1
 done
 
+# This is workaround to get ES working on linux/circleci
+# NOTE: eventually we should have better handling around this
+if [ -f "/etc/default/elasticsearch" ]; then
+  chmod 777 /etc/default/elasticsearch
+fi
+
 # Do the right thing depending on whether this is a first run or not
 if [ -f "$LANDO_PSH_INIT_FILE" ]; then
   exec /etc/platform/start
