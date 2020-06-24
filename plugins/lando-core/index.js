@@ -66,21 +66,16 @@ module.exports = lando => {
 
   // Make sure we have a host-exposed root ca if we don't already
   // NOTE: we don't run this on the caProject otherwise infinite loop happens!
-  // NOTE: we also run this on pre-engine-runner to cover the rare case where the
-  // first thing a user does after they install lando is a non-start engine command
-  // eg lando composer install
-  _.forEach(['pre-engine-runner', 'pre-engine-start'], event => {
-    lando.events.on(event, 2, data => {
-      if (!fs.existsSync(caCert) && data.project !== caProject) {
-        const LandoCa = lando.factory.get('_casetup');
-        const env = _.cloneDeep(lando.config.appEnv);
-        const labels = _.cloneDeep(lando.config.appLabels);
-        const caData = new LandoCa(lando.config.userConfRoot, env, labels);
-        const caFiles = lando.utils.dumpComposeData(caData, caDir);
-        lando.log.debug('setting up Lando Local CA at %s', caCert);
-        return lando.engine.run(getCaRunner(caProject, caFiles));
-      }
-    });
+  lando.events.on('pre-engine-start', 2, data => {
+    if (!fs.existsSync(caCert) && data.project !== caProject) {
+      const LandoCa = lando.factory.get('_casetup');
+      const env = _.cloneDeep(lando.config.appEnv);
+      const labels = _.cloneDeep(lando.config.appLabels);
+      const caData = new LandoCa(lando.config.userConfRoot, env, labels);
+      const caFiles = lando.utils.dumpComposeData(caData, caDir);
+      lando.log.debug('setting up Lando Local CA at %s', caCert);
+      return lando.engine.run(getCaRunner(caProject, caFiles));
+    }
   });
 
   // Let's also make a copy of caCert with the standarized .crt ending for better linux compat
