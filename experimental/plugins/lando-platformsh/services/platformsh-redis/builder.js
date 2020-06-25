@@ -7,11 +7,10 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-redis',
   config: {
-    version: '5.0',
-    supported: ['5.0', '4.0', '3.2', '3.0', '2.8'],
-    legacy: ['3.0', '2.8'],
     confSrc: __dirname,
+    legacy: ['3.0', '2.8'],
     port: '6379',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformshRedis extends parent {
