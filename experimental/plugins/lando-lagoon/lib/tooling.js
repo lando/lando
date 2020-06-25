@@ -80,19 +80,7 @@ const getPostgreSQLTooling = service => {
     'psqlverify': {
       service: ':host',
       user: 'root',
-      cmd: `psql -U drupal -c '\\dt'`,
-      options: {
-        host: {
-          description: 'The database service to use',
-          default: service.name,
-          alias: ['h'],
-        },
-      },
-    },
-    'pgusercreate': {
-      service: ':host',
-      user: 'root',
-      cmd: `psql -U drupal -c 'CREATE ROLE postgres WITH SUPERUSER LOGIN;'`,
+      cmd: `psql -U drupal -c '\\conninfo'`,
       options: {
         host: {
           description: 'The database service to use',

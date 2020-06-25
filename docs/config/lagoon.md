@@ -110,6 +110,7 @@ The services we currently support with links to their associated Lagoon docs is 
 * [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)
 * [PHP CLI](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli/)
 * [PHP-FPM](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-fpm/)
+* [PostgreSQL](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/postgres/)
 
 Note that we are testing against the "Drupal" variants of the above but it's _possible_ the base services work as well.
 
