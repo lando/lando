@@ -262,6 +262,8 @@ module.exports = {
             ['team', 'Current Team'],
             'roles',
             ['opensource', 'Resources'],
+            ['https://docs.google.com/document/d/1aHcpAYIC50X82ul0_zZpvkprl97ZxsM-LXjq-zUK29Q/edit?usp=sharing', 'Minutes'],
+            'roadmap',
           ],
         },
         {

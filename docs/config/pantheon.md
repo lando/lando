@@ -466,8 +466,8 @@ You will want to consult the relevant install instructions for each plugin but a
 services:
   appserver:
     build:
-      - /bin/sh -c "mkdir -p ~/.terminus/plugins"
-      - /bin/sh -c "composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1"
+      - mkdir -p ~/.terminus/plugins
+      - composer create-project -d ~/.terminus/plugins pantheon-systems/terminus-build-tools-plugin:~1
 ```
 
 ## Tooling

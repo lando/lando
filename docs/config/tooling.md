@@ -34,6 +34,7 @@ tooling:
     cmd: mycommand
     user: you
     options:
+    env:
 ```
 
 ::: tip Tooling routes are cached!
@@ -144,6 +145,19 @@ tooling:
 lando test && lando build
 ```
 
+### Using environment variables
+
+You can also set environment variables that will ONLY be available for a given tooling command.
+
+```yaml
+tooling:
+  deploy:
+    service: appserver
+    cmd: deploy.sh
+    env:
+      TARGET: production
+```
+
 ### Dynamic service commands
 
 Sometimes you have, need or want a single command that can be used on a user-specified service. In these situations, you can tell Lando to set the service with an option.
@@ -218,29 +232,6 @@ lando word
 
 # This will not
 lando word --word=fox
-```
-
-## Pipes, Carrots and Ampersands OH MY!
-
-If Lando sees any combination of `|`, `<`, `>`, or `&` in any of the defined commands, it will automatically wrap the entire command in `/bin/sh -c "<command>"`. This means that if you pipe or carrot commands they are all happening *INSIDE* the service and not going from the container to host or vice-versa.
-
-In most situations, you will not notice this distinction but not in all situations. Consider the following:
-
-```bash
-# Go into the app root
-cd /path/to/my/app
-
-# Export a database
-lando db-export --stdout > dump.sql
-ls -lsa
-# See the database dump in the filesystem
-
-# Export someplace else and assume you can write to /
-lando db-export --stdout > /dump.sql
-ls -lsa /
-# Do not see the database dump
-lando ssh -s appserver -c "ls -lsa /"
-# See the database dump
 ```
 
 ## Overriding

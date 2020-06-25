@@ -7,8 +7,8 @@ const {getAuthOptions} = require('./auth');
 // The non dynamic base of the task
 const task = service => ({
   service,
-  description: 'Pull relationships and/or mounts from platform.sh',
-  cmd: '/helpers/psh-pull.sh',
+  description: 'Push relationships and/or mounts to platform.sh',
+  cmd: '/helpers/psh-push.sh',
   level: 'app',
   stdio: ['inherit', 'pipe', 'pipe'],
   options: {
@@ -25,13 +25,13 @@ const task = service => ({
       },
     },
     relationship: {
-      description: 'A relationship to import',
+      description: 'A relationship to push up',
       passthrough: true,
       alias: ['r'],
       array: true,
     },
     mount: {
-      description: 'A mount to download',
+      description: 'A mount to push up',
       passthrough: true,
       alias: ['m'],
       array: true,
@@ -42,6 +42,6 @@ const task = service => ({
 /*
  * Helper to build a pull command
  */
-exports.getPlatformPull = (service, {meta, platformsh}) => {
+exports.getPlatformPush = (service, {meta, platformsh}) => {
   return _.merge({}, task(service), {options: getAuthOptions(meta, platformsh.tokens)});
 };

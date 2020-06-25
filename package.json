@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -49,9 +49,9 @@
     "dev:events": "vuepress dev --temp /tmp/lando-events --cache /tmp/lando-events-cache --port 8006 events",
     "dev:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
     "dev:site": "vuepress dev --temp /tmp/lando-site --cache /tmp/lando-site-cache --port 8009 website",
-    "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js plugins/**/test/**/*.spec.js",
+    "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 experimental/plugins/**/test/*.spec.js test/**/*.spec.js plugins/**/test/**/*.spec.js",
     "test:unit:core": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js",
-    "test:unit:plugins": "nyc --reporter=html --reporter=text mocha --timeout 5000 plugins/**/test/**/*.spec.js",
+    "test:unit:plugins": "nyc --reporter=html --reporter=text mocha --timeout 5000 experimental/plugins/**/test/*.spec.js plugins/**/test/**/*.spec.js",
     "test:functional": "mocha --timeout 900000 test/**/*.func.js",
     "test": "yarn lint && yarn test:unit"
   },

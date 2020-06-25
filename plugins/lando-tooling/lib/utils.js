@@ -81,6 +81,8 @@ const handleDynamic = (config, options = {}, answers = {}) => {
  * Check to see if we have global lando opts and remove them if we do
  */
 const handleOpts = (config, argopts = process.argv.slice(3)) => {
+  // If we have no args then just return right away
+  if (_.isEmpty(argopts)) return config;
   // If this is not a CLI then we can pass right back
   if (process.lando !== 'node') return config;
   // Return
@@ -92,7 +94,7 @@ const handleOpts = (config, argopts = process.argv.slice(3)) => {
  */
 const handlePassthruOpts = (options = {}, answers = {}) => _(options)
   .map((value, key) => _.merge({}, {name: key}, value))
-  .filter(value => value.passthrough === true)
+  .filter(value => value.passthrough === true && !_.isNil(answers[value.name]))
   .map(value => `--${value.name}=${answers[value.name]}`)
   .value();
 

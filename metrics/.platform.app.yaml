@@ -22,7 +22,7 @@ web:
 mounts:
   "/run": "shared:files/run"
 
-disk: 2500
+disk: 3500
 
 hooks:
   build: |

@@ -8,7 +8,7 @@ module.exports = {
   name: 'platformsh-elasticsearch',
   config: {
     version: '7.2',
-    supported: ['7.2', '6.5', '5.4', '5.2', '2.4', '1.7', '1.4', '0.9'],
+    supported: ['7.2', '7.7', '6.5', '5.4', '5.2', '2.4', '1.7', '1.4', '0.9'],
     legacy: ['5.4', '5.2', '2.4', '1.7', '1.4', '0.9'],
     confSrc: __dirname,
     port: '9200',
@@ -20,7 +20,6 @@ module.exports = {
 
       // Set the meUser
       options.meUser = 'elasticsearch';
-
       // Build the elasticsearch
       const elasticsearch = {
         image: `docker.registry.platform.sh/elasticsearch-${options.version}`,
