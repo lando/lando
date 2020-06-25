@@ -61,6 +61,82 @@ const getMariaDBTooling = service => {
   };
 };
 
+const getPostgreSQLTooling = service => {
+  // Return the stuff
+  return {
+    'postgres': {
+      service: ':host',
+      description: 'Drops into a PostgreSQL shell on a database service',
+      cmd: `psql -U drupal`,
+      user: 'root',
+      options: {
+        host: {
+          description: 'The database service to use',
+          default: service.name,
+          alias: ['h'],
+        },
+      },
+    },
+    'psqlverify': {
+      service: ':host',
+      user: 'root',
+      cmd: `psql -U drupal -c '\\dt'`,
+      options: {
+        host: {
+          description: 'The database service to use',
+          default: service.name,
+          alias: ['h'],
+        },
+      },
+    },
+    'pgusercreate': {
+      service: ':host',
+      user: 'root',
+      cmd: `psql -U drupal -c 'CREATE ROLE postgres WITH SUPERUSER LOGIN;'`,
+      options: {
+        host: {
+          description: 'The database service to use',
+          default: service.name,
+          alias: ['h'],
+        },
+      },
+    },
+    'db-import <file>': {
+      service: ':host',
+      description: 'Imports a dump file into a database service',
+      cmd: '/helpers/sql-import.sh',
+      user: 'root',
+      options: {
+        'host': {
+          description: 'The database service to use',
+          default: service.name,
+          alias: ['h'],
+        },
+        'no-wipe': {
+          description: 'Do not destroy the existing database before an import',
+          boolean: true,
+        },
+      },
+    },
+    'db-export [file]': {
+      service: ':host',
+      description: 'Exports database from a database service to a file',
+      cmd: '/helpers/sql-export.sh',
+      user: 'root',
+      options: {
+        host: {
+          description: 'The database service to use',
+          default: service.name,
+          alias: ['h'],
+        },
+        stdout: {
+          description: 'Dump database to stdout',
+        },
+      },
+    },
+  };
+};
+
 /*
  * Helper to get php related tooling commands
  */
@@ -89,6 +165,7 @@ const getPhpCliDrupalTooling = (service, flavor = null) => {
 const getServiceToolingByType = service => {
   switch (service.type) {
     case 'lagoon-mariadb': return getMariaDBTooling(service);
+    case 'lagoon-postgres': return getPostgreSQLTooling(service);
     case 'lagoon-php-cli': return getPhpCliDrupalTooling(service.name, service.config.flavor);
     default: return {};
   };
