@@ -5,7 +5,9 @@ const _ = require('lodash');
 const fs = require('fs');
 const Log = require('./../../../../lib/logger');
 const path = require('path');
+const tar = require('tar');
 const yaml = require('js-yaml');
+const {base64} = require('./utils');
 
 /*
  * Creates a new yaml instance.
@@ -28,8 +30,14 @@ module.exports = class PlatformYaml {
         const fullPath = path.join(this.base, '.platform', data);
         const files = _.map(fs.readdirSync(fullPath), file => path.join(fullPath, file));
         // if we have files do something?
-        console.log(files);
-        return fullPath;
+        const thing = tar.c({gzip: false, sync: true}, files);
+        let content;
+        thing.on('data', data => {
+          content += String(data);
+        });
+        thing.on('end', () => {
+          return base64(content);
+        });
       },
     });
 

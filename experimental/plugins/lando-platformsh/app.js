@@ -34,8 +34,6 @@ module.exports = (app, lando) => {
 
     // Start by loading in all the platform files we can
     app.platformsh = {config: pshconf.loadConfigFiles(app.root)};
-    console.log(app.platformsh.config.services.search.configuration.cores.maincore);
-    process.exit(1);
     // And then augment with a few other things
     app.platformsh.domain = `${app.name}.${app._config.domain}`;
     app.platformsh.id = app.id;
