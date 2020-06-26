@@ -248,6 +248,10 @@ lando ssh -s rabbitmq -c "curl localhost:15672" | grep "RabbitMQ Management"
 # Should run php rabbitmq php commands successfully
 cd sink/php
 lando ssh -c "curl localhost/rabbitmq.php" | grep "Result" | grep "OK"
+
+# Should show influxdb process running as the app user
+cd sink/php
+lando ssh -u root -s influxdb -c "ps aux|grep influxdb"|grep '^app'
 ```
 
 Destroy tests
