@@ -6,14 +6,6 @@ const fs = require('fs');
 const path = require('path');
 
 /*
- * Helper to encode into a base64 string
- */
-exports.base64 = data => {
-  if (_.isObject(data)) data = JSON.stringify(data);
-  return Buffer.from(data).toString('base64');
-};
-
-/*
  * Helper to filter out services from application containers
  */
 exports.getApplicationServices = (services = []) => _(services)
