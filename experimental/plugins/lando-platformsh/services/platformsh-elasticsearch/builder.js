@@ -7,11 +7,10 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-elasticsearch',
   config: {
-    version: '7.2',
-    supported: ['7.2', '7.7', '6.5', '5.4', '5.2', '2.4', '1.7', '1.4', '0.9'],
-    legacy: ['5.4', '5.2', '2.4', '1.7', '1.4', '0.9'],
     confSrc: __dirname,
+    legacy: ['5.4', '5.2', '2.4', '1.7', '1.4', '0.9'],
     port: '9200',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformsElasticsearch extends parent {

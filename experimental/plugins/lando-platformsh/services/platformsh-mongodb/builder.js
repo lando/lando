@@ -7,10 +7,9 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-mongodb',
   config: {
-    version: '3.6',
-    supported: ['3.6', '3.4', '3.2', '3.0'],
     confSrc: __dirname,
     port: '27017',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformsMongoDB extends parent {

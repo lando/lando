@@ -7,11 +7,10 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-postgresql',
   config: {
-    version: '11',
-    supported: ['12', '11', '10', '9.6', '9.3'],
-    legacy: ['9.3'],
     confSrc: __dirname,
+    legacy: ['9.3'],
     port: '5432',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformshPostgres extends parent {
