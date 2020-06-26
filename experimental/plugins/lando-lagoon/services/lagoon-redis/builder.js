@@ -16,6 +16,7 @@ module.exports = {
   builder: (parent, config) => class LandoLagoonRedis extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
+      options.meUser = 'redis';
       const redis = {
         command: options.command,
         ports: [options.port],
