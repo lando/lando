@@ -237,6 +237,17 @@ lando ssh -c "curl localhost/solr.php" | grep "Result" | grep "OK"
 # Should run php mongodb commands successfully
 cd sink/php
 lando ssh -c "curl localhost/mongodb.php" | grep "Result" | grep "OK"
+
+# Should have OS Pid when running rabbitmqctl status
+lando ssh -u root -s rabbitmq -c "rabbitmqctl status" | egrep "OS PID: [0-9]+"
+
+# Should load rabbitmq management page
+cd sink/php
+lando ssh -s rabbitmq -c "curl localhost:15672" | grep "RabbitMQ Management"
+
+# Should run php rabbitmq php commands successfully
+cd sink/php
+lando ssh -c "curl localhost/rabbitmq.php" | grep "Result" | grep "OK"
 ```
 
 Destroy tests

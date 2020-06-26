@@ -15,6 +15,7 @@ const getLandoServiceType = type => {
     case 'mysql': return 'platformsh-mariadb';
     case 'php': return 'platformsh-php';
     case 'postgresql': return 'platformsh-postgresql';
+    case 'rabbitmq': return 'platformsh-rabbitmq';
     case 'redis': return 'platformsh-redis';
     case 'redis-persistent': return 'platformsh-redis';
     case 'solr': return 'platformsh-solr';
