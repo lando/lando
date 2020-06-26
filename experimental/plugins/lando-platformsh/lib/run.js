@@ -132,7 +132,7 @@ const getApplicationsConfig = (apps, config) => _(apps)
  */
 const getApplicationEnvironment = (appConfig, config) => _.merge({}, getEnvironmentVariables(appConfig), {
   PLATFORM_DOCUMENT_ROOT: getDocRoot(appConfig),
-  PLATFORM_APPLICATION: encode(config),
+  PLATFORM_APPLICATION: encode(appConfig),
   // @NOTE: PLATFORM_APP_DIR is normally set to /app but this is problematic locally
   // eg on Drupal this puts the /tmp and /private at /app/tmp and /app/private and
   // we probably dont want these things ending up in git
