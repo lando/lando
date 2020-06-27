@@ -37,15 +37,15 @@ Run the following commands to validate things are rolling as they should.
 # Should be able to site install via drush
 cd drupal/web
 lando drush si -y
-lando drush cr -y || lando drush cr -y
+lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_nginx_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_postgres_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_mailhog_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_php_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_cli_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_nginx_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_postgres_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
 
 # Should ssh against the cli container by default
 cd drupal/web
