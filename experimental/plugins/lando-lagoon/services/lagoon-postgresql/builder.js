@@ -42,11 +42,10 @@ module.exports = {
         command: options.command,
         environment: {
           // We set these for compatibility with the db-import and db-export scripts
-          POSTGRESQL_DATABASE: options.creds.database,
-          LANDO_EXTRA_DB_EXPORT_ARGS: `-p${options.creds.rootpass}`,
-          LANDO_EXTRA_DB_IMPORT_ARGS: `-p${options.creds.rootpass}`,
           LANDO_DB_IMPORT_USER: `${options.creds.user}`,
           LANDO_DB_EXPORT_USER: `${options.creds.user}`,
+          PGPASSWORD: options.creds.password,
+          POSTGRESQL_DATABASE: options.creds.database,
         },
         ports: [options.port],
         volumes: [

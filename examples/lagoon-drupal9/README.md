@@ -41,11 +41,11 @@ lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupalexample_nginx_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupalexample_mariadb_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupalexample_mailhog_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupalexample_php_1
-docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupalexample_cli_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_nginx_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_mariadb_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_php_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_cli_1
 
 # Should ssh against the cli container by default
 cd drupal

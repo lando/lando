@@ -35,77 +35,77 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should be able to site install via drush
-cd drupal
+cd drupal/web
 lando drush si -y
-lando drush cr -y
+lando drush cr -y || lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_nginx_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_postgres_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_nginx_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_postgres_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_php_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimplelando | grep Up | grep drupal9examplesimplelando_cli_1
 
 # Should ssh against the cli container by default
-cd drupal
+cd drupal/web
 lando ssh -c "env | grep LAGOON=" | grep cli-drupal
 
 # Should have the correct environment set
-cd drupal
+cd drupal/web
 lando ssh -c "env" | grep LAGOON_PROJECT | grep drupal9-example-simple
 lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal-example.lndo.site
 lando ssh -c "env" | grep LAGOON_ENVIRONMENT_TYPE | grep development
 
 # Should have composer
-cd drupal
+cd drupal/web
 lando composer --version
 
 # Should have php cli
-cd drupal
+cd drupal/web
 lando php --version
 
 # Should have drush
-cd drupal
+cd drupal/web
 lando drush --version
 
 # Should have npm
-cd drupal
+cd drupal/web
 lando npm --version
 
 # Should have node
-cd drupal
+cd drupal/web
 lando node --version
 
 # Should have yarn
-cd drupal
+cd drupal/web
 lando yarn --version
 
 # Should have a running drupal 9 site served by nginx on port 8080
-cd drupal
+cd drupal/web
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Drush Site-Install"
 
 # Check PostgreSQL version is 11.*
-cd drupal
-lando ssh -s postgres -c "psql -V | grep 11."
+cd drupal/web
+lando psql -V
 
 # Should be able to show the database connection info
-cd drupal
-lando postgres drupal -c "\\conninfo" | grep drupal | grep 5432
+cd drupal/web
+lando psql drupal -c "\\conninfo" | grep drupal | grep 5432
 
 # Should be able to show the drupal tables
-cd drupal
-lando postgres drupal -P pager=off -c "\\dt" | grep users
+cd drupal/web
+lando psql drupal -P pager=off -c "\\dt" | grep users
 
 # Should be able to db-export and db-import the database
-cd drupal
+cd drupal/web
 lando db-export test.sql
 lando db-import test.sql.gz
 
 # Shoud be able to rebuild and persist the database
-cd drupal
+cd drupal/web
 lando rebuild -y
-lando postgres drupal -P pager=off -c "\\dt" | grep users
+lando psql drupal -P pager=off -c "\\dt" | grep users
 ```
 
 Destroy tests

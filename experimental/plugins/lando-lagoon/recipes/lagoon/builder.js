@@ -2,8 +2,8 @@
 
 // Modules
 const _ = require('lodash');
-const {getLandoAuxServices, getLandoServices} = require('./../../lib/services');
-const {getLandoTooling} = require('./../../lib/tooling');
+const {getLandoAuxServices, getLandoServices, getSQLServices} = require('./../../lib/services');
+const {getLandoTooling, getDBUtils} = require('./../../lib/tooling');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
 
 
@@ -35,6 +35,12 @@ module.exports = {
 
       // Map into lando tooling commands
       options.tooling = getLandoTooling(options.services);
+      // If we have a SQL service then add in the db import/export commands
+      const sqlServices = getSQLServices(options.services);
+      if (!_.isEmpty(sqlServices)) {
+        const firstDbService = _.first(sqlServices);
+        options.tooling = _.merge({}, options.tooling, getDBUtils(firstDbService.name));
+      }
 
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(options.services, _.get(options, '_app.lagoon.domain'));
