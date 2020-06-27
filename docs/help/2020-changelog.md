@@ -6,6 +6,7 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Added ability to configure `USER` and `PORT` for `sql-import` and `sql-export` scripts with envvars
 * Added ability to set environment variables for tooling commands [#2128](https://github.com/lando/lando/pull/2128)
+* Changed `/user` and `/lando` mounting to use `:cached` in preperation for Mutagen
 * Fixed bug causing non-semantic `drush` versions like `*` and `^` to throw errors [#2386](https://github.com/lando/lando/pull/2386)
 * Fixed bug causing custom config files in `nginx` service to be modified unexpectedly [#2383](https://github.com/lando/lando/pull/2383)
 * Fixed bug causing first touch non-start engine commands to fail
