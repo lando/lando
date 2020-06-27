@@ -9,7 +9,7 @@ description: The best local development option for Lagoon a Docker Build and Dep
 This is currently a _very experimental_ integration that has the following _serious caveats_:
 
 * This _only_ supports projects based on or extended from [this example](https://github.com/amazeeio/drupal-example-simple)
-* This _only_ supports Lagoon's `php-fpm`, `nginx`, `php-cli`, and `mariadb` containers.
+* This _only_ supports Lagoon's `php-fpm`, `php-cli`, `nginx`, `solr`, `redis`  and `mariadb` containers.
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
@@ -32,11 +32,12 @@ Before you get started with this recipe we assume that you have:
 1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/)
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
+4. Temporarily stopped (`pygmy stop`) the [Pygmy](https://pygmy.readthedocs.io/en/master/) tool to avoid any port conflicts
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe against the Amazee.io [Drupal 8 Example](https://github.com/amazeeio/drupal-example-simple).
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe against the amazee.io [Drupal Example](https://github.com/amazeeio/drupal-example-simple).
 
 ```bash
-# Get the D9 example rolling
+# Get the D9 example rolling (or use the 8.x branch for D8)
 lando init \
   --source remote \
   --remote-url git://github.com/amazeeio/drupal-example-simple.git \
@@ -102,14 +103,16 @@ Note that these will run the _first time_ you run `lando start`. You will need t
 We _think_ most of the customizations below _should_ work but they have been very minimally tested. If you try one and it doesn't work, please [report an issue]((https://github.com/lando/lando/issues/new/choose)).
 :::
 
-Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented, run a `lando rebuild` and see the changes.
+Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented, run a `lando rebuild` and see the changes.  Lando reads the `lando.type` labels from the docker-compose file to ensure that the correct image is used for a service.
 
 The services we currently support with links to their associated Lagoon docs is shown below:
 
-* [MariaDB](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/mariadb/)
-* [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)
-* [PHP CLI](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli/)
 * [PHP-FPM](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-fpm/)
+* [PHP CLI](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli/)
+* [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)
+* [MariaDB](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/mariadb/)
+* [Solr](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/solr/)
+* [Redis](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/redis/)
 
 Note that we are testing against the "Drupal" variants of the above but it's _possible_ the base services work as well.
 
