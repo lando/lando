@@ -6,6 +6,9 @@ const _ = require('lodash');
 // Services that support SSL
 const sslServices = ['nginx', 'nginx-drupal'];
 
+// SQL services
+const SQLServices = ['lagoon-mariadb', 'lagoon-postgres'];
+
 /*
  * Helper to map lagoon type data to a lando service
  */
@@ -18,6 +21,10 @@ const getLandoServiceType = type => {
     case 'php-cli': return 'lagoon-php-cli';
     case 'php-cli-drupal': return 'lagoon-php-cli';
     case 'php-fpm': return 'lagoon-php';
+    case 'redis': return 'lagoon-redis';
+    case 'solr-drupal': return 'lagoon-solr';
+    case 'postgres': return 'lagoon-postgres';
+    case 'postgres-drupal': return 'lagoon-postgres';
     default: return false;
   };
 };
@@ -84,3 +91,11 @@ exports.getLandoServices = (services = []) => _(services)
   // Finally map to an object
   .map(service => ([service.name, service])).fromPairs()
   .value();
+
+/*
+ * Returns SQL services
+ */
+exports.getSQLServices = (services = []) => _(services)
+  .filter(service => _.includes(SQLServices, service.type))
+  .value();
+

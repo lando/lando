@@ -16,7 +16,6 @@ module.exports = {
       '/usr/bin',
       '/sbin',
       '/bin',
-      // @todo: need to figure out where home is on lagoon?
       '/var/www/.composer/vendor/bin',
     ],
     confSrc: __dirname,
