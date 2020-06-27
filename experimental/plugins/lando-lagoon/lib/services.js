@@ -20,6 +20,8 @@ const getLandoServiceType = type => {
     case 'php-fpm': return 'lagoon-php';
     case 'redis': return 'lagoon-redis';
     case 'solr-drupal': return 'lagoon-solr';
+    case 'postgres': return 'lagoon-postgres';
+    case 'postgres-drupal': return 'lagoon-postgres';
     default: return false;
   };
 };

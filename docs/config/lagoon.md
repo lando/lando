@@ -9,7 +9,7 @@ description: The best local development option for Lagoon a Docker Build and Dep
 This is currently a _very experimental_ integration that has the following _serious caveats_:
 
 * This _only_ supports projects based on or extended from [this example](https://github.com/amazeeio/drupal-example-simple)
-* This _only_ supports Lagoon's `php-fpm`, `php-cli`, `nginx`, `solr`, `redis`  and `mariadb` containers.
+* This _only_ supports Lagoon's `php-fpm`, `php-cli`, `nginx`, `solr`, `redis`, `mariadb` and `postgres` containers.
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
@@ -111,8 +111,9 @@ The services we currently support with links to their associated Lagoon docs is 
 * [PHP CLI](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli/)
 * [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)
 * [MariaDB](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/mariadb/)
-* [Solr](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/solr/)
+* [PostgreSQL](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/postgres/)
 * [Redis](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/redis/)
+* [Solr](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/solr/)
 
 Note that we are testing against the "Drupal" variants of the above but it's _possible_ the base services work as well.
 
