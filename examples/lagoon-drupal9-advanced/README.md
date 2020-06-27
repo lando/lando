@@ -35,9 +35,9 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should be able to site install via drush
-cd drupal/web
+cd drupal
 lando drush si -y
-lando drush cr -y || lando drush cr -y
+lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
 # Should have all the services we expect
@@ -50,78 +50,78 @@ docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | gr
 docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_solr_1
 
 # Should ssh against the cli container by default
-cd drupal/web
+cd drupal
 lando ssh -c "env | grep LAGOON=" | grep cli-drupal
 
 # Should have the correct environment set
-cd drupal/web
+cd drupal
 lando ssh -c "env" | grep LAGOON_PROJECT | grep drupal9-example-simple
 lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal-example.lndo.site
 lando ssh -c "env" | grep LAGOON_ENVIRONMENT_TYPE | grep development
 
 # Should have composer
-cd drupal/web
+cd drupal
 lando composer --version
 
 # Should have php cli
-cd drupal/web
+cd drupal
 lando php --version
 
 # Should have drush
-cd drupal/web
+cd drupal
 lando drush --version
 
 # Should have npm
-cd drupal/web
+cd drupal
 lando npm --version
 
 # Should have node
-cd drupal/web
+cd drupal
 lando node --version
 
 # Should have yarn
-cd drupal/web
+cd drupal
 lando yarn --version
 
 # Should have a running Drupal 9 site served by nginx on port 8080
-cd drupal/web
+cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Drush Site-Install"
 
 # Should be running Redis v5.0
-cd drupal/web
+cd drupal
 lando ssh -s redis -c "redis-server --version | grep v=5."
 
 # Should be able to see Redis databases
-cd drupal/web
+cd drupal
 lando ssh -s redis -c "redis-cli CONFIG GET databases"
 
 # Redis databases should be initialized
-cd drupal/web
+cd drupal
 lando ssh -s redis -c "redis-cli dbsize"
 
 # Should have a "drupal" Solr core
-cd drupal/web
+cd drupal
 lando ssh -s cli -c "curl solr:8983/solr/admin/cores?action=STATUS&core=drupal"
 
 # Should be able to reload "drupal" Solr core
-cd drupal/web
+cd drupal
 lando ssh -s cli -c "curl solr:8983/solr/admin/cores?action=RELOAD&core=drupal"
 
 # Check Solr has 7.x config in "drupal" core
-cd drupal/web
+cd drupal
 lando ssh -s solr -c "cat /opt/solr/server/solr/mycores/drupal/conf/schema.xml | grep solr-7.x"
 
 # Should be able to db-export and db-import the database
-cd drupal/web
+cd drupal
 lando db-export test.sql
 lando db-import test.sql.gz
 
 # Should be able to show the drupal tables
-cd drupal/web
+cd drupal
 lando mysql drupal -e "show tables;" | grep users
 
 # Shoud be able to rebuild and persist the database
-cd drupal/web
+cd drupal
 lando rebuild -y
 lando mysql drupal -e "show tables;" | grep users
 ```

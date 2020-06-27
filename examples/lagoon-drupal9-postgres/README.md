@@ -35,7 +35,7 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should be able to site install via drush
-cd drupal/web
+cd drupal
 lando drush si -y
 lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
@@ -48,62 +48,62 @@ docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | gr
 docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
 
 # Should ssh against the cli container by default
-cd drupal/web
+cd drupal
 lando ssh -c "env | grep LAGOON=" | grep cli-drupal
 
 # Should have the correct environment set
-cd drupal/web
+cd drupal
 lando ssh -c "env" | grep LAGOON_PROJECT | grep drupal9-example-simple
 lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal-example.lndo.site
 lando ssh -c "env" | grep LAGOON_ENVIRONMENT_TYPE | grep development
 
 # Should have composer
-cd drupal/web
+cd drupal
 lando composer --version
 
 # Should have php cli
-cd drupal/web
+cd drupal
 lando php --version
 
 # Should have drush
-cd drupal/web
+cd drupal
 lando drush --version
 
 # Should have npm
-cd drupal/web
+cd drupal
 lando npm --version
 
 # Should have node
-cd drupal/web
+cd drupal
 lando node --version
 
 # Should have yarn
-cd drupal/web
+cd drupal
 lando yarn --version
 
 # Should have a running drupal 9 site served by nginx on port 8080
-cd drupal/web
+cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Drush Site-Install"
 
 # Check PostgreSQL version is 11.*
-cd drupal/web
+cd drupal
 lando psql -V
 
 # Should be able to show the database connection info
-cd drupal/web
+cd drupal
 lando psql drupal -c "\\conninfo" | grep drupal | grep 5432
 
 # Should be able to show the drupal tables
-cd drupal/web
+cd drupal
 lando psql drupal -P pager=off -c "\\dt" | grep users
 
 # Should be able to db-export and db-import the database
-cd drupal/web
+cd drupal
 lando db-export test.sql
 lando db-import test.sql.gz
 
 # Shoud be able to rebuild and persist the database
-cd drupal/web
+cd drupal
 lando rebuild -y
 lando psql drupal -P pager=off -c "\\dt" | grep users
 ```
