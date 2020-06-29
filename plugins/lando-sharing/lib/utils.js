@@ -27,6 +27,6 @@ exports.getServiceVolumes = (excludes = [], base = '/tmp') => _(excludes)
 
 // Get directories to include
 exports.getIncludeVolumes = (excludes = [], base = '/app') => _(excludes)
-  .map(exclude => `${base}/${exclude}:/app/${exclude}:delegated`)
+  .map(exclude => `${base}/${exclude}:/app/${exclude}:cached`)
   .value();
 
