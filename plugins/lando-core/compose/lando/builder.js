@@ -81,7 +81,7 @@ module.exports = {
 
       // Handle volumes
       const volumes = [
-        `${userConfRoot}:/lando:delegated`,
+        `${userConfRoot}:/lando:cached`,
         `${scriptsDir}:/helpers`,
         `${entrypointScript}:/lando-entrypoint.sh`,
         `${dataHome}:/var/www`,
@@ -94,7 +94,7 @@ module.exports = {
       }
 
       // Add in some more dirz if it makes sense
-      if (home) volumes.push(`${home}:/user:delegated`);
+      if (home) volumes.push(`${home}:/user:cached`);
 
       // Handle cert refresh
       // @TODO: this might only be relevant to the proxy, if so let's move it there

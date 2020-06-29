@@ -158,3 +158,15 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/210f5d93d1ab748f8f8e065403bfdbd4'
   id: 227467db7bcdb7dd20095193fe69b92891a0be86
+- name: 'Toby Bellwood'
+  role:
+    - Code
+    - Content
+    - Documentation
+  bio: Product Lead at amazee.io
+  location: 'Canberra, Australia'
+  github: tobybellwood
+  twitter: tobybellwood
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/ac97d5db7a7ff475b9f17bf18de38357'
+  id: 9af69d664d66a66aef96174630ddbfce7b98c73a

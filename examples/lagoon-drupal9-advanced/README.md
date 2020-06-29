@@ -1,5 +1,5 @@
-Lagoon Drupal 9 Example
-=======================
+Lagoon Drupal 9 Example - with Redis and Solr
+=============================================
 
 This example exists primarily to test the following documentation:
 
@@ -21,9 +21,9 @@ lando config | grep experimentalPluginLoadTest | grep true
 
 # Should initialize the lagoon drupal example
 rm -rf drupal && mkdir -p drupal && cd drupal
-lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x" --recipe lagoon
+lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x-advanced" --recipe lagoon
 
-# Should start up our lagoon drupal 9 site successfully
+# Should start up our lagoon Drupal 9 site successfully
 cd drupal
 lando start
 ```
@@ -46,6 +46,8 @@ docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | gr
 docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
 docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
 docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_redis_1
+docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_solr_1
 
 # Should ssh against the cli container by default
 cd drupal
@@ -81,9 +83,33 @@ lando node --version
 cd drupal
 lando yarn --version
 
-# Should have a running drupal 9 site served by nginx on port 8080
+# Should have a running Drupal 9 site served by nginx on port 8080
 cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Drush Site-Install"
+
+# Should be running Redis v5.0
+cd drupal
+lando ssh -s redis -c "redis-server --version | grep v=5."
+
+# Should be able to see Redis databases
+cd drupal
+lando ssh -s redis -c "redis-cli CONFIG GET databases"
+
+# Redis databases should be initialized
+cd drupal
+lando ssh -s redis -c "redis-cli dbsize"
+
+# Should have a "drupal" Solr core
+cd drupal
+lando ssh -s cli -c "curl solr:8983/solr/admin/cores?action=STATUS&core=drupal"
+
+# Should be able to reload "drupal" Solr core
+cd drupal
+lando ssh -s cli -c "curl solr:8983/solr/admin/cores?action=RELOAD&core=drupal"
+
+# Check Solr has 7.x config in "drupal" core
+cd drupal
+lando ssh -s solr -c "cat /opt/solr/server/solr/mycores/drupal/conf/schema.xml | grep solr-7.x"
 
 # Should be able to db-export and db-import the database
 cd drupal
