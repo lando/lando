@@ -1,11 +1,12 @@
 # 2020
 
-## v3.0.7 - In Development
+## v3.0.7 - [June 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.7)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added ability to configure `USER` and `PORT` for `sql-import` and `sql-export` scripts with envvars
 * Added ability to set environment variables for tooling commands [#2128](https://github.com/lando/lando/pull/2128)
+* Changed `/user` and `/lando` mounting to use `:cached` in preperation for Mutagen
 * Fixed bug causing non-semantic `drush` versions like `*` and `^` to throw errors [#2386](https://github.com/lando/lando/pull/2386)
 * Fixed bug causing custom config files in `nginx` service to be modified unexpectedly [#2383](https://github.com/lando/lando/pull/2383)
 * Fixed bug causing first touch non-start engine commands to fail
@@ -14,7 +15,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Removed excessively frequent `WARN` messages [#2389](https://github.com/lando/lando/pull/2389)
 * Updated Terminus to `2.4.0` [#2417](https://github.com/lando/lando/issues/2417)
 
-## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
+## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.6)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 

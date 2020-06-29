@@ -37,10 +37,9 @@ module.exports = {
       // Merge in the usual envvars but make sure user set ones take priority
       lagoon.environment = _.merge({}, {
         LANDO_SERVICE_TYPE: 'lagoon',
-        LANDO_WEBROOT_USER: 'user',
-        LANDO_WEBROOT_GROUP: 'user',
-        LANDO_WEBROOT_UID: '1000',
-        LANDO_WEBROOT_GID: '1000',
+        LANDO_WEBROOT_USER: options.meUser,
+        LANDO_WEBROOT_GROUP: options.meUser,
+        LANDO_RESET_DIR: '/home',
       }, lagoon.environment);
 
       // Push the lagoon config on top of Landos, this allows the user

@@ -48,6 +48,7 @@ module.exports = {
         ssl = false,
         sslExpose = true,
         supported = ['custom'],
+        supportedIgnore = false,
         root = '',
         webroot = '/app',
       } = {},
@@ -58,7 +59,7 @@ module.exports = {
 
       // If this version is not supported throw an error
       // @TODO: get this someplace else for unit tezting
-      if (!_.includes(supported, version)) {
+      if (!supportedIgnore && !_.includes(supported, version)) {
         if (!patchesSupported || !_.includes(utils.stripWild(supported), utils.stripPatch(version))) {
           throw Error(`${type} version ${version} is not supported`);
         }
@@ -80,7 +81,7 @@ module.exports = {
 
       // Handle volumes
       const volumes = [
-        `${userConfRoot}:/lando:delegated`,
+        `${userConfRoot}:/lando:cached`,
         `${scriptsDir}:/helpers`,
         `${entrypointScript}:/lando-entrypoint.sh`,
         `${dataHome}:/var/www`,
@@ -93,7 +94,7 @@ module.exports = {
       }
 
       // Add in some more dirz if it makes sense
-      if (home) volumes.push(`${home}:/user:delegated`);
+      if (home) volumes.push(`${home}:/user:cached`);
 
       // Handle cert refresh
       // @TODO: this might only be relevant to the proxy, if so let's move it there

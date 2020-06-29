@@ -7,10 +7,9 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-php',
   config: {
-    version: '7.4',
-    supported: ['7.4', '7.3', '7.2', '7.1', '7.0', '5.6', '5.5', '5.4'],
-    legacy: ['7.1', '7.0', '5.5', '5.4', '5.3'],
     confSrc: __dirname,
+    legacy: ['7.1', '7.0', '5.5', '5.4', '5.3'],
+    supportedIgnore: true,
     volumes: ['/usr/local/bin'],
   },
   parent: '_platformsh_appserver',

@@ -7,11 +7,10 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-mariadb',
   config: {
-    version: '10.4',
-    supported: ['10.4', '10.3', '10.2', '10.1', '10.0', '5.5'],
-    legacy: [],
     confSrc: __dirname,
+    legacy: [],
     port: '3306',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformshMariaDB extends parent {

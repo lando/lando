@@ -25,36 +25,25 @@ const getMariaDBTooling = service => {
         },
       },
     },
-    'db-import <file>': {
+  };
+};
+
+const getPostgreSQLTooling = service => {
+  // Get the root password
+  const type = _.get(service, `lagoon.labels['lando.type']`, 'postgres');
+  const user = (type === 'postgres') ? 'lagoon' : 'drupal';
+  // Return the stuff
+  return {
+    'psql': {
       service: ':host',
-      description: 'Imports a dump file into a database service',
-      cmd: '/helpers/sql-import.sh',
-      user: 'root',
-      options: {
-        'host': {
-          description: 'The database service to use',
-          default: service.name,
-          alias: ['h'],
-        },
-        'no-wipe': {
-          description: 'Do not destroy the existing database before an import',
-          boolean: true,
-        },
-      },
-    },
-    'db-export [file]': {
-      service: ':host',
-      description: 'Exports database from a database service to a file',
-      cmd: '/helpers/sql-export.sh',
+      description: 'Drops into a PostgreSQL shell on a database service',
+      cmd: `psql -U ${user}`,
       user: 'root',
       options: {
         host: {
           description: 'The database service to use',
           default: service.name,
           alias: ['h'],
-        },
-        stdout: {
-          description: 'Dump database to stdout',
         },
       },
     },
@@ -89,10 +78,50 @@ const getPhpCliDrupalTooling = (service, flavor = null) => {
 const getServiceToolingByType = service => {
   switch (service.type) {
     case 'lagoon-mariadb': return getMariaDBTooling(service);
+    case 'lagoon-postgres': return getPostgreSQLTooling(service);
     case 'lagoon-php-cli': return getPhpCliDrupalTooling(service.name, service.config.flavor);
     default: return {};
   };
 };
+
+/*
+ * Adds in DB import/export commands
+ */
+exports.getDBUtils = service => ({
+  'db-import <file>': {
+    service: ':host',
+    description: 'Imports a dump file into a database service',
+    cmd: '/helpers/sql-import.sh',
+    user: 'root',
+    options: {
+      'host': {
+        description: 'The database service to use',
+        default: service,
+        alias: ['h'],
+      },
+      'no-wipe': {
+        description: 'Do not destroy the existing database before an import',
+        boolean: true,
+      },
+    },
+  },
+  'db-export [file]': {
+    service: ':host',
+    description: 'Exports database from a database service to a file',
+    cmd: '/helpers/sql-export.sh',
+    user: 'root',
+    options: {
+      host: {
+        description: 'The database service to use',
+        default: service,
+        alias: ['h'],
+      },
+      stdout: {
+        description: 'Dump database to stdout',
+      },
+    },
+  },
+});
 
 /*
  * Maps parsed platform config into related Lando things
