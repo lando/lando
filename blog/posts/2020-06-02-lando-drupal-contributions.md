@@ -2,7 +2,7 @@
 title: Lando + Drupal Contributions
 metaTitle: Lando + Drupal Contributions | Lando
 description: Using lando to facilitate Drupal core and contrib contributions of code, testing, and reviews.
-date: 2020-06-02
+date: 2020-06-30
 original: 
 
 author: Geoff St. Pierre
@@ -50,7 +50,7 @@ Using this repo gives you a `.lando.yml` file configured for Drupal contribution
 ## How?
 
 Prefer video:
-<YouTube url="https://www.youtube.com/embed/P8n2z4m0_s0" />
+<YouTube url="https://www.youtube.com/embed/vVpKCQZKNtM?feature=youtu.be&start=589" />
 
 Let's step through how to spin up your contribution workflow. First clone down this repo:
 
@@ -101,7 +101,7 @@ and the `web` directory should be populated with the Drupal source code.
 
 Now we are ready to find a Drupal issue. Search the issue queue for an `8.x` issue that you want to test. Grab the URL of the latest patch and apply it to our `drupal-contributions` environment.
 
-For example if you choose this issue: https://www.drupal.org/project/drupal/issues/2962649, the latest corresponding patch (as of 3 June 2020) is https://www.drupal.org/files/issues/2019-09-12/2962649-10.patch. To apply this patch:
+For example if you choose this issue: https://www.drupal.org/project/drupal/issues/2962649, the latest corresponding patch (as of 25 June 2020) is https://www.drupal.org/files/issues/2019-09-12/2962649-10.patch. To apply this patch:
 
 ```bash
 lando patch https://www.drupal.org/files/issues/2019-09-12/2962649-10.patch
