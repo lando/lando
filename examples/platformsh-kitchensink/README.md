@@ -239,6 +239,7 @@ cd sink/php
 lando ssh -c "curl localhost/mongodb.php" | grep "Result" | grep "OK"
 
 # Should have OS Pid when running rabbitmqctl status
+cd sink/php
 lando ssh -u root -s rabbitmq -c "rabbitmqctl status" | egrep "OS PID: [0-9]+"
 
 # Should load rabbitmq management page
@@ -255,6 +256,7 @@ lando ssh -c "curl localhost/rabbitmq.php" | grep "Result" | grep "OK"
 
 # Should show kafka process running
 # Temporarily commented out until kafka issues are resolved.
+# cd sink/php
 # lando ssh -u root -s kafka -c "ps aux|grep '\srunsv kafka'"
 ```
 
