@@ -7,7 +7,6 @@ jobs:
       # set up max parallelism
       docker_layer_caching: true
     parallelism: 20
-    resource_class: large
     steps:
       - checkout
       - run:
