@@ -239,16 +239,16 @@ cd sink/php
 lando ssh -c "curl localhost/mongodb.php" | grep "Result" | grep "OK"
 
 # Should have OS Pid when running rabbitmqctl status
-cd sink/php
-lando ssh -u root -s rabbitmq -c "rabbitmqctl status" | egrep "OS PID: [0-9]+"
+#cd sink/php
+#lando ssh -u root -s rabbitmq -c "rabbitmqctl status" | egrep "OS PID: [0-9]+"
 
 # Should load rabbitmq management page
-cd sink/php
-lando ssh -s rabbitmq -c "curl localhost:15672" | grep "RabbitMQ Management"
+#cd sink/php
+#lando ssh -s rabbitmq -c "curl localhost:15672" | grep "RabbitMQ Management"
 
 # Should run php rabbitmq php commands successfully
-cd sink/php
-lando ssh -c "curl localhost/rabbitmq.php" | grep "Result" | grep "OK"
+#cd sink/php
+#lando ssh -c "curl localhost/rabbitmq.php" | grep "Result" | grep "OK"
 
 # Should show influxdb process running as the app user
 #cd sink/php
