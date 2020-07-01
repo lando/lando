@@ -106,7 +106,7 @@ Destroy tests
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Should be able to destroy our drupal7 site with success
+# Should be able to destroy our drupal9 site with success
 cd drupal
 lando destroy -y
 lando poweroff

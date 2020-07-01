@@ -16,12 +16,12 @@ SERVICE=$LANDO_SERVICE_NAME
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
   DATABASE=${POSTGRES_DB:-database}
-  PORT=5432
-  USER=postgres
+  PORT=${LANDO_DB_IMPORT_PORT:-5432}
+  USER=${LANDO_DB_IMPORT_USER:-postgres}
 else
   DATABASE=${MYSQL_DATABASE:-database}
-  PORT=3306
-  USER=root
+  PORT=${LANDO_DB_IMPORT_PORT:-3306}
+  USER=${LANDO_DB_IMPORT_USER:-root}
 fi
 
 # PARSE THE ARGZZ

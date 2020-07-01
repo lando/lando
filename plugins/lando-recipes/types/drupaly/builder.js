@@ -8,7 +8,7 @@ const utils = require('./../../lib/utils');
 const warnings = require('./../../lib/warnings');
 
 // "Constants"
-const DRUSH8 = '8.3.2';
+const DRUSH8 = '8.3.5';
 const DRUSH7 = '7.4.0';
 
 /*
@@ -40,18 +40,20 @@ module.exports = {
       // Set the default drush version if we don't have it
       if (!_.has(options, 'drush')) options.drush = (options.php === '5.3') ? DRUSH7 : DRUSH8;
 
-      // Attempt to suss out the drush version
-      const drushVersion = semver.valid(semver.coerce(options.drush));
-
-      // Add the drush install command
-      if (!_.isNull(drushVersion) && semver.major(drushVersion) === 8) {
-        options.build.unshift(utils.getDrush(options.drush, ['drush', '--version']));
-      } else if (options.drush !== false) {
+      // Figure out the drush situation
+      if (options.drush !== false) {
+        // Start by assuming a composer based install
         options.composer['drush/drush'] = options.drush;
-      }
-      // Throw a warning to indicate site install pref for drush 10
-      if (!_.isNull(drushVersion) && semver.gte(drushVersion, '10.0.0')) {
-        options._app.addWarning(warnings.drushWarn(options.drush));
+        // Switch to phar based install if we can
+        if (semver.valid(options.drush) && semver.major(options.drush) === 8) {
+          delete options.composer['drush/drush'];
+          options.build.unshift(utils.getDrush(options.drush, ['drush', '--version']));
+        }
+        // Attempt to set a warning if possible
+        const coercedDrushVersion = semver.valid(semver.coerce(options.drush));
+        if (!_.isNull(coercedDrushVersion) && semver.gte(coercedDrushVersion, '10.0.0')) {
+          options._app.addWarning(warnings.drushWarn(options.drush));
+        }
       }
 
       // Set legacy envars

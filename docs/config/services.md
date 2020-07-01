@@ -127,12 +127,10 @@ While the following example *can* work, please note that it is **NOT SUPPORTED.*
 ```yaml
 run:
   - |
-    /bin/sh -c "
     if [ ! -z $LANDO_MOUNT ]; then
       do something
       some other command
     fi
-    "
 ```
 
 In these situations, it is **highly recommended** you create a script and reference that instead. This keeps things cleaner and more portable.
@@ -148,32 +146,6 @@ fi
 ```yaml
 run:
   - /app/my-script.sh
-```
-
-An exception to this rule is the "one-liner" which may be favorable to a separate script. Note that you will need to wrap the command in the correct `shell` for it work correctly. Also, `~` will resolve only if you wrap it in bash.
-
-**Will not work**
-
-```yaml
-run:
-  - if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi
-```
-
-```yaml
-build:
-  - mkdir -p ~/.drush/site-aliases
-```
-
-**Will work**
-
-```yaml
-run:
-  - /bin/sh -c "if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi"
-```
-
-```yaml
-build:
-  - /bin/sh -c "mkdir -p ~/.drush/site-aliases"
 ```
 
 ## Advanced
@@ -213,7 +185,7 @@ services:
 
 ### App Mount
 
-Lando will automatically mount your codebase in every container at `/app` using the `:delegated` performance optimization flag. However, you can change the mount flag on a per-service basis or disable the mount entirely if you so choose.
+Lando will automatically mount your codebase in every container at `/app` using the `:cached` performance optimization flag. However, you can change the mount flag on a per-service basis or disable the mount entirely if you so choose.
 
 **Do not mount my application code**
 
@@ -240,7 +212,7 @@ services:
     app_mount: ro
   my-service2:
     type: nginx
-    app_mount: cached
+    app_mount: delegated
 ```
 
 ### Localhost Assignment

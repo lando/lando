@@ -47,7 +47,7 @@ lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/nginx.conf | grep LANDOSERVE
 lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/vhosts/lando.conf | grep LANDOVHOSTS"
 lando ssh -s custom -c "cat /opt/bitnami/nginx/conf/fastcgi_params | grep LANDOPARAMS"
 lando ssh -s custom_legacy -c "cat /opt/bitnami/extra/nginx/templates/nginx.conf.tpl | grep LANDOSERVER"
-lando ssh -s custom_legacy -c "cat /opt/bitnami/extra/nginx/templates/default.conf.tpl | grep LANDOVHOSTS"
+lando ssh -s custom_legacy -c "cat /opt/bitnami/nginx/conf/vhosts/lando.conf | grep LANDOVHOSTS"
 lando ssh -s custom_legacy -c "cat /opt/bitnami/nginx/conf/fastcgi_params | grep LANDOPARAMS"
 ```
 

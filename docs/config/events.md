@@ -82,7 +82,7 @@ In the above scenario, `some-command` will run on the `web` service by default i
 events:
   post-dynamic:
     - some-command
-tooling
+tooling:
   dynamic:
     cmd: env
     service: :host

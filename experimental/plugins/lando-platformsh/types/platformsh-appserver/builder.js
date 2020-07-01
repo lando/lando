@@ -41,9 +41,6 @@ module.exports = {
 
       // A appserver uses the "web" user
       options.meUser = 'web';
-      // Remove the normal lando mount so we can handle multiapp
-      // mounts which mount subdirs of rootDir in /app
-      options.app_mount = false;
       // Find the envvars we need to set
       // We also set these here so SOME of them are available during build
       const environment = _.get(runConfig, 'configuration.variables', {});
@@ -56,18 +53,19 @@ module.exports = {
           COMPOSER_HOME: '/var/www/.composer',
           LANDO_NO_USER_PERMS: 'NOTGONNADOIT',
           LANDO_SERVICE_TYPE: '_platformsh_appserver',
+          LANDO_SOURCE_DIR: options.platformsh.sourceDir,
           LANDO_WEBROOT_USER: 'web',
           LANDO_WEBROOT_GROUP: 'web',
           PATH: LANDO_PATH.join(':'),
           PLATFORMSH_CLI_HOME: '/var/www',
           PLATFORMSH_CLI_TOKEN: _.get(options, '_app.meta.token'),
           PLATFORMSH_CLI_SHELL_CONFIG_FILE: '/var/www/.bashrc',
+          PLATFORMSH_CLI_UPDATES_CHECK: 0,
         }),
         privileged: true,
         volumes: [
           `${runConfigPath}:/run/config.json`,
           `${bootScript}:/scripts/001-boot-platformsh`,
-          `${options.platformsh.appMountDir}:/app:delegated`,
         ],
         working_dir: '/app',
       })});

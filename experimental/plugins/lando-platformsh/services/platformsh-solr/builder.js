@@ -7,10 +7,9 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-solr',
   config: {
-    version: '8.4',
-    supported: ['8.4', '8.0', '7.7', '7.6', '6.6', '6.3', '4.1', '3.6'],
     confSrc: __dirname,
     port: '8080',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformshSolr extends parent {
@@ -30,6 +29,9 @@ module.exports = {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
         },
+        volumes: [
+          `${options.data}:/mnt`,
+        ],
       };
 
       // Add in the solr service and push downstream

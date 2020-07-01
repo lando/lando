@@ -16,8 +16,7 @@ module.exports = {
       '/usr/bin',
       '/sbin',
       '/bin',
-      // @todo: need to figure out where home is on lagoon?
-      '/var/www/.composer/vendor/bin',
+      '/home/.composer/vendor/bin',
     ],
     confSrc: __dirname,
     command: '/sbin/tini -- /lagoon/entrypoints.sh /bin/docker-sleep',
@@ -32,7 +31,6 @@ module.exports = {
       const cli = {
         environment: _.merge({}, options.environment, {
           PATH: options.path.join(':'),
-          LANDO_RESET_DIR: '/home',
         }),
         volumes: options.volumes,
         command: options.command,

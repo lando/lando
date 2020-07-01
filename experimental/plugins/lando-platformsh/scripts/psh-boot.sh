@@ -25,6 +25,10 @@ lando_info "Ensuring needed directories exist..."
 mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
 chmod 777 /run
 
+# Make sure there is a group that has $LANDO_HOST_GID
+# This is rare but can happen if the host gid is different than the uid
+groupadd --gid $LANDO_HOST_GID lando -f
+
 # We are using this as our mock $HOME directory for commands right now
 chown $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www
 nohup chown -R $LANDO_HOST_UID:$(getent group "$LANDO_HOST_GID" | cut -d: -f1) /var/www >/dev/null 2>&1 &
@@ -43,6 +47,12 @@ while [ ! -S  "$LANDO_PSH_AGENT_SOCKET" ]; do
   lando_debug "Waiting for $LANDO_PSH_AGENT_SOCKET to be ready..."
   sleep 1
 done
+
+# This is workaround to get ES working on linux/circleci
+# NOTE: eventually we should have better handling around this
+if [ -f "/etc/default/elasticsearch" ]; then
+  chmod 777 /etc/default/elasticsearch
+fi
 
 # Do the right thing depending on whether this is a first run or not
 if [ -f "$LANDO_PSH_INIT_FILE" ]; then

@@ -7,10 +7,9 @@ const _ = require('lodash');
 module.exports = {
   name: 'platformsh-memcached',
   config: {
-    version: '1.6',
-    supported: ['1.6', '1.5', '1.4'],
     confSrc: __dirname,
     port: '11211',
+    supportedIgnore: true,
   },
   parent: '_platformsh_service',
   builder: (parent, config) => class LandoPlatformshMemcached extends parent {

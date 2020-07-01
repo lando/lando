@@ -2,7 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const utils = require('./lib/config');
 
 module.exports = lando => {
   // Sanitize any platformsh auth
@@ -34,9 +33,8 @@ module.exports = lando => {
       // Reset the default from appserver to the closest app
       if (data.options.service === 'appserver') {
         // Reset the default service from appserver to whatever the closest application service is
-        const closestAppConfigFile = utils.findClosestApplication();
-        const pshConfig = lando.yaml.load(closestAppConfigFile);
-        const defaultSshService = _.get(pshConfig, 'name', 'app');
+        const app = _.get(data, 'options._app', {});
+        const defaultSshService = _.get(app, 'tooling.platform.service', 'app');
         data.options.service = defaultSshService;
         data.options.s = defaultSshService;
       }
