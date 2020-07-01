@@ -26,7 +26,7 @@ This section is designed for people who want to contribute `code things` to Land
 
 ## What do I need to get started?
 
-You will need to go through all the steps in our [Getting Involved](contributing) section if you have not done so already. This will get you rolling for contribution. All the steps from the aforementioned section for completeness are shown below:
+You will need to go through all the steps in our [Getting Involved](contributing.md) section if you have not done so already. This will get you rolling for contribution. All the steps from the aforementioned section for completeness are shown below:
 
 1. [Join the alliance](./join.md) as a contributor
 2. [Join the comms](./comms.md)
