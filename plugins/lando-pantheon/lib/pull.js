@@ -78,7 +78,8 @@ const getDefaults = (task, options) => {
   });
   return task;
 };
-const buildDbPullCommand = ({_app}, tokens) => {
+
+const buildDbPullCommand = (framework = 'drupal8') => {
   const drupaly = 'terminus drush -- sql-dump --extra=--column-statistics=0';
   const pressy = 'terminus wp -- db export -';
   const commands = {
@@ -87,7 +88,7 @@ const buildDbPullCommand = ({_app}, tokens) => {
     wordpress: pressy,
     wordpress_network: pressy,
   };
-  return commands[_app.config.config.framework] || '';
+  return commands[framework] || '';
 };
 /*
  * Helper to build a pull command
@@ -99,7 +100,7 @@ exports.getPantheonPull = (options, tokens = []) => {
     {options: auth.getAuthOptions(options._app.meta, tokens)},
     {
       env: {
-        DB_PULL_COMMAND: buildDbPullCommand(options, tokens),
+        DB_PULL_COMMAND: buildDbPullCommand(options._app.config.config.framework),
       },
     }
   );
