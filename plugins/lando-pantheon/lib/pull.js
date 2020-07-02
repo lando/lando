@@ -80,7 +80,7 @@ const getDefaults = (task, options) => {
 };
 
 const buildDbPullCommand = (framework = 'drupal8') => {
-  const drupaly = 'terminus drush -- sql-dump --extra=--column-statistics=0';
+  const drupaly = 'terminus drush -- sql-dump --structure-tables-list=cache,cache_* --extra=--column-statistics=0';
   const pressy = 'terminus wp -- db export -';
   const commands = {
     drupal: drupaly,
