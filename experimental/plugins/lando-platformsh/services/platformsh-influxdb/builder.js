@@ -24,11 +24,6 @@ module.exports = {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
         },
-        networks: {
-          default: {
-            aliases: ['influxdb'],
-          },
-        },
       };
 
       // Add in the influxdb service and push downstream

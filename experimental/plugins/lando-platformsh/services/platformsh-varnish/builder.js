@@ -24,11 +24,6 @@ module.exports = {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
         },
-        networks: {
-          default: {
-            aliases: ['varnish'],
-          },
-        },
       };
 
       // Add in the varnish service and push downstream

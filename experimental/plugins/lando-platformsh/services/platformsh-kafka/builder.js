@@ -27,11 +27,6 @@ module.exports = {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
         },
-        networks: {
-          default: {
-            aliases: ['kafka'],
-          },
-        },
       };
 
       // Add in the kafka service and push downstream
