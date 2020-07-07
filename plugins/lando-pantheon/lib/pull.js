@@ -64,21 +64,12 @@ const task = {
   },
 };
 
-// Helper to populate interactive opts
-const getDefaults = (task, options) => {
-  _.forEach(['code', 'database', 'files'], name => {
-    task.options[name].interactive.choices = answers => {
-      return utils.getPantheonInquirerEnvs(
-      answers.auth,
-      options.id,
-      [],
-      options._app.log);
-    };
-    task.options[name].interactive.default = options.env;
-  });
-  return task;
+const frameworkType = (framework = 'drupal8') => {
+  if (_.startsWith(framework, 'wordpress')) return 'pressy';
+  else return 'drupaly';
 };
 
+// Helper to build db pull command
 const buildDbPullCommand = (framework = 'drupal8') => {
   const drupaly = 'terminus drush -- sql-dump --structure-tables-list=cache,cache_* --extra=--column-statistics=0';
   const pressy = 'terminus wp -- db export -';
@@ -90,18 +81,35 @@ const buildDbPullCommand = (framework = 'drupal8') => {
   };
   return commands[framework] || '';
 };
+
+// Helper to populate defaults
+const getDefaults = (task, options) => {
+  // Set interactive options
+  _.forEach(['code', 'database', 'files'], name => {
+    task.options[name].interactive.choices = answers => {
+      return utils.getPantheonInquirerEnvs(
+      answers.auth,
+      options.id,
+      [],
+      options._app.log);
+    };
+    task.options[name].interactive.default = options.env;
+  });
+
+  // Get the framework flavor
+  const flavor = frameworkType(options.framework);
+  // Set envvars
+  task.env = {
+    LANDO_DB_PULL_COMMAND: buildDbPullCommand(options._app.config.config.framework),
+    LANDO_DB_USER_TABLE: flavor === 'pressy' ? 'wp_users' : 'users',
+  };
+
+  return task;
+};
+
 /*
  * Helper to build a pull command
  */
 exports.getPantheonPull = (options, tokens = []) => {
-  return _.merge(
-    {},
-    getDefaults(task, options),
-    {options: auth.getAuthOptions(options._app.meta, tokens)},
-    {
-      env: {
-        DB_PULL_COMMAND: buildDbPullCommand(options._app.config.config.framework),
-      },
-    }
-  );
+  return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, tokens)});
 };
