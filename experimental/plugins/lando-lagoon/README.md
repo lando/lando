@@ -69,7 +69,7 @@ The tentative roadmap for acheiving the above is
 * An alpha quality release that covers sections 1. and 2. in the overview.
 * This release is scheduled to be an "internal alpha" but it may be ok to cast a wider net as long as the alpha part is understood.
 * A user should be able to `lando init` a cloned down `lagoon` Drupal 8/9 git repo that is properly configured for use with Lando and get it running
-* Popular Drupal services like `mariadb`, `mysql`, `memcached`, `redis`, `solr`, `postgresql` and `elasticsearch` are expected to work
+* Popular Drupal services like `mariadb`, `mysql`, `memcached`, `redis`, `solr`, `postgresql` and `varnish` are expected to work
 
 These are all expected to be delivered at `alpha` level quality eg the 80/20 rule for use case coverage is probably a good quality threshold.
 
@@ -94,7 +94,7 @@ This plugin follows the same structure as any [Lando plugin](https://docs.lando.
 |-- lib             Utilities and helpers, things that can easily be unit tested
 |-- recipes
     |-- lagoon      The files to define the `lagoon` recipe and its `init` command
-|-- services        Defines each platform.sh service eg `redis` or `php`
+|-- services        Defines each Lagoon service eg `solr` or `php`
 |-- test            Unit tests
 |-- types           Defines the type/parent each above service can be
 |-- app.js          Modifications to the app runtime

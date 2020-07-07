@@ -22,9 +22,12 @@ const getLandoServiceType = type => {
     case 'php-cli-drupal': return 'lagoon-php-cli';
     case 'php-fpm': return 'lagoon-php';
     case 'redis': return 'lagoon-redis';
+    case 'solr': return 'lagoon-solr';    
     case 'solr-drupal': return 'lagoon-solr';
     case 'postgres': return 'lagoon-postgres';
     case 'postgres-drupal': return 'lagoon-postgres';
+    case 'varnish': return 'lagoon-varnish';
+    case 'varnish-drupal': return 'lagoon-varnish';
     default: return false;
   };
 };
