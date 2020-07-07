@@ -151,8 +151,7 @@ if [ "$DATABASE" != "none" ]; then
 
   # Importing database
   echo "Pulling your database... This miiiiight take a minute"
-  echo "$PULL_DB" > /tmp/got.log
-  # $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
+  eval "$PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING"
 
   # Weak check that we got tables
   lando_pink "Checking db pull for expected tables..."
