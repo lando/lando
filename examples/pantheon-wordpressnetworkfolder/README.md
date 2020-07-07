@@ -26,7 +26,7 @@ lando start
 
 # Should pull down database and files for our wordpress site
 cd wordpress
-lando pull --code none --database dev --files dev --auth "$PANTHEON_MACHINE_TOKEN"
+lando pull --code none --database dev --files dev
 ```
 
 Verification commands
