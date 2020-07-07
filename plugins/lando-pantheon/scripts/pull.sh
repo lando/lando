@@ -150,8 +150,14 @@ if [ "$DATABASE" != "none" ]; then
   terminus env:wake $SITE.$DATABASE
 
   # Importing database
+  # NOTE: for some reason $PULL_DB hangs when -t 0 is false, this has only been observed on CIRCLECI thus far
+  # but may also be a problem on LOCALDEV
   echo "Pulling your database... This miiiiight take a minute"
-  eval "$PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING"
+  if [ -t 0 ]; then
+    $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
+  fi
+    $FALLBACK_PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
+  else
 
   # Weak check that we got tables
   lando_pink "Checking db pull for expected tables..."
