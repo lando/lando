@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const auth = require('./auth');
+const semver = require('semver');
 const utils = require('./utils');
 
 // The non dynamic base of the task
@@ -70,16 +71,21 @@ const frameworkType = (framework = 'drupal8') => {
 };
 
 // Helper to build db pull command
-const buildDbPullCommand = (framework = 'drupal8') => {
-  const drupaly = 'terminus drush -- sql-dump --structure-tables-list=cache,cache_* --extra=--column-statistics=0';
-  const pressy = 'terminus wp -- db export -';
-  const commands = {
-    drupal: drupaly,
-    drupal8: drupaly,
-    wordpress: pressy,
-    wordpress_network: pressy,
-  };
-  return commands[framework] || '';
+const buildDbPullCommand = ({framework = 'drupal8', drush_version = 8} = {}) => {
+  // Wordpress things are easy
+  if (frameworkType(framework) === 'pressy') {
+    return 'terminus wp -- db export -';
+  }
+
+  // Drupal requires some drush version logic, which is extremely annoying
+  // the key difference here is the --extra/--extra-dump flag
+  const coercedDrushVersion = semver.valid(semver.coerce(drush_version));
+  const drushDump = 'terminus drush -- sql-dump --structure-tables-list="cache,cache_*"';
+  if (!_.isNull(coercedDrushVersion) && semver.gte(coercedDrushVersion, '9.0.0')) {
+    return `${drushDump} --extra-dump=--column-statistics=0`;
+  } else {
+    return `${drushDump} --extra=--column-statistics=0`;
+  }
 };
 
 // Helper to populate defaults
@@ -100,7 +106,7 @@ const getDefaults = (task, options) => {
   const flavor = frameworkType(options.framework);
   // Set envvars
   task.env = {
-    LANDO_DB_PULL_COMMAND: buildDbPullCommand(options._app.config.config.framework),
+    LANDO_DB_PULL_COMMAND: buildDbPullCommand(options),
     LANDO_DB_USER_TABLE: flavor === 'pressy' ? 'wp_users' : 'users',
   };
 
