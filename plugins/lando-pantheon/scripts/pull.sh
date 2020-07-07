@@ -1,5 +1,5 @@
 #!/bin/bash
-exit 0
+
 set -e
 
 # Get the lando logger
@@ -151,13 +151,14 @@ if [ "$DATABASE" != "none" ]; then
 
   # Importing database
   echo "Pulling your database... This miiiiight take a minute"
-  $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING;
+  echo "$PULL_DB" > /tmp/got.log
+  # $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
 
   # Weak check that we got tables
   lando_pink "Checking db pull for expected tables..."
   if ! mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "SHOW TABLES;" | grep $PULL_DB_CHECK_TABLE; then
     lando_red "Database pull failed... trying backup pull command"
-    $FALLBACK_PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING;
+    $FALLBACK_PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
   fi
 
   # Do some post DB things on WP
@@ -175,6 +176,7 @@ fi
 # Get the files
 if [ "$FILES" != "none" ]; then
   PULL_FILES=""
+
   # Validate before we begin
   lando_pink "Validating you can pull files from $FILES..."
   terminus env:info $SITE.$FILES
