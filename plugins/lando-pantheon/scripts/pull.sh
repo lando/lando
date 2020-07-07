@@ -1,5 +1,5 @@
 #!/bin/bash
-
+exit 0
 set -e
 
 # Get the lando logger
@@ -91,14 +91,6 @@ while (( "$#" )); do
 done
 
 
-# Handle opts dependent vars
-# Holla at @uberhacker for this fu
-FALLBACK_PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
-LOCAL_MYSQL_CONNECT_STRING="mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
-PULL_DB=${LANDO_DB_PULL_COMMAND:-${FALLBACK_PULL_DB}}
-PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
-PULL_FILES=""
-
 # Go through the auth procedure
 if [ "$NO_AUTH" == "false" ]; then
   /helpers/auth.sh "$AUTH" "$SITE"
@@ -133,6 +125,12 @@ fi
 
 # Get the database
 if [ "$DATABASE" != "none" ]; then
+  # Holla at @uberhacker for this fu
+  FALLBACK_PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
+  LOCAL_MYSQL_CONNECT_STRING="mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
+  PULL_DB=${LANDO_DB_PULL_COMMAND:-${FALLBACK_PULL_DB}}
+  PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
+
   # Validate before we begin
   lando_pink "Validating you can pull the database from $DATABASE..."
   terminus env:info $SITE.$DATABASE
@@ -176,6 +174,7 @@ fi
 
 # Get the files
 if [ "$FILES" != "none" ]; then
+  PULL_FILES=""
   # Validate before we begin
   lando_pink "Validating you can pull files from $FILES..."
   terminus env:info $SITE.$FILES
