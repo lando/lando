@@ -78,7 +78,8 @@ jobs:
           no_output_timeout: 30m
           command: |
             yarn generate-tests
-            yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
+            # yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
+            fail
       - save_cache:
           paths:
             - ~/.cache/yarn
