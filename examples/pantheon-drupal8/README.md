@@ -26,7 +26,7 @@ lando start
 
 # Should pull down database and files for our drupal8 site
 cd drupal8
-lando pull --code none --database dev --files dev --rsync
+lando pull --code none --database dev --files dev --auth "$PANTHEON_MACHINE_TOKEN" --rsync
 ```
 
 Verification commands

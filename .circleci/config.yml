@@ -5,7 +5,7 @@ jobs:
       image: ubuntu-1604:201903-01
       # @TODO:: once we have more tests running lets buy the below and
       # set up max parallelism
-      # docker_layer_caching: true
+      docker_layer_caching: true
     parallelism: 20
     steps:
       - checkout
