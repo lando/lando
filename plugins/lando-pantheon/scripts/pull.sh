@@ -131,6 +131,11 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB=${LANDO_DB_PULL_COMMAND:-${FALLBACK_PULL_DB}}
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
 
+  # For some reason terminus remote:thing commands do not return when run through LEIA so we are hacking this for now
+  if [ $LANDO_LEIA == 1 ]; then
+    PULL_DB="$FALLBACK_PULL_DB"
+  fi
+
   # Validate before we begin
   lando_pink "Validating you can pull the database from $DATABASE..."
   terminus env:info $SITE.$DATABASE
@@ -150,14 +155,8 @@ if [ "$DATABASE" != "none" ]; then
   terminus env:wake $SITE.$DATABASE
 
   # Importing database
-  # NOTE: for some reason $PULL_DB hangs when -t 0 is false, this has only been observed on CIRCLECI thus far
-  # but may also be a problem on LOCALDEV. we think this is a bug in terminus but we are not 100% sure
   echo "Pulling your database... This miiiiight take a minute"
-  if [ -t 0 ]; then
-    $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
-  fi
-    $FALLBACK_PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
-  else
+  $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
 
   # Weak check that we got tables
   lando_pink "Checking db pull for expected tables..."
