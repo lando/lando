@@ -3,8 +3,8 @@ jobs:
   build:
     machine:
       image: ubuntu-1604:201903-01
-      docker_layer_caching: true
-    parallelism: 20
+      # docker_layer_caching: true
+    parallelism: 10
     steps:
       - checkout
       - run:
