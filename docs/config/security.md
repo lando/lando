@@ -111,6 +111,10 @@ sudo rm -f /usr/local/share/ca-certificates/lndo.site.crt
 sudo update-ca-certificates --fresh
 ```
 
+### Ubuntu with Firefox
+
+Import the `~/.lando/certs/lndo.site.pem` CA certificate in Firefox by going to `about:preferences#privacy` > `View Certificates` > `Authorities` > `Import`, enabling **Trust this CA to identify websites.**.
+
 ### Arch
 
 ```bash
