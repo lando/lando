@@ -4,6 +4,7 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Improved database pull performance for the `pantheon` recipe [#2402](https://github.com/lando/lando/pull/2402)
 * Switched all usage of `:delegated` to `:cached` in preperation of Mutagen syncing
 * Updated default `drupal8` recipe `php` version to `7.3` [#2427](https://github.com/lando/lando/pull/2427)
 
