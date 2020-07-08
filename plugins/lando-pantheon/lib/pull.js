@@ -108,7 +108,7 @@ const getDefaults = (task, options) => {
   task.env = {
     LANDO_DB_PULL_COMMAND: buildDbPullCommand(options),
     LANDO_DB_USER_TABLE: flavor === 'pressy' ? 'wp_users' : 'users',
-    LANDO_LEIA: _.toInteger(options._app._config.leia)
+    LANDO_LEIA: _.toInteger(options._app._config.leia),
   };
 
   return task;
