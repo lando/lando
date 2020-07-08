@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
 const path = require('path');
 const pull = require('./../../lib/pull');
 const push = require('./../../lib/push');
@@ -80,8 +81,17 @@ module.exports = {
         path.join(options.root, 'pantheon.upstream.yml'),
         path.join(options.root, 'pantheon.yml'),
       ]));
+
       // Normalize because 7.0 right away gets handled strangely by js-yaml
       if (options.php === '7' || options.php === 7) options.php = '7.0';
+
+      // Reset the drush version if we have a composer.json entry
+      const composerFile = path.join(options.root, 'composer.json');
+      if (fs.existsSync(composerFile)) {
+        const composerConfig = require(composerFile);
+        options.drush_version = _.get(composerConfig, `require['drush/drush']`, options.drush);
+      }
+
       // Enforce certain options for pantheon parity
       options.via = 'nginx:1.16';
       options.database = 'mariadb:10.1';
