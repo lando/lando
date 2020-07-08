@@ -12,7 +12,7 @@ const buildMysqlString = (cmd, {username, service, password = null} = {}) => {
 };
 
 /*
- * Helper to get php related tooling commands
+ * Helper to get memcached related tooling commands
  */
 const getMemcachedTooling = (services, app = 'app') => _(services)
   .map(service => ({
@@ -25,7 +25,7 @@ const getMemcachedTooling = (services, app = 'app') => _(services)
   .value();
 
 /*
- * Helper to get php related tooling commands
+ * Helper to get mysql related tooling commands
  */
 const getMySqlTooling = services => _(services)
   .map(service => ({
@@ -41,9 +41,9 @@ const getMySqlTooling = services => _(services)
   .value();
 
 /*
- * Helper to get php related tooling commands
+ * Helper to get postgres related tooling commands
  */
-const getsPostgresTooling = services => _(services)
+const getPostgresTooling = services => _(services)
   .map(service => ({
     name: service.relationship,
     description: `Connects to the ${service.relationship} relationship`,
@@ -58,7 +58,17 @@ const getsPostgresTooling = services => _(services)
   .value();
 
 /*
+ * Helper to get platform cli related tooling commands
+ */
+const getPlatformCliTooling = (service = 'app') => ({platform: {service}});
+
+/*
  * Helper to get php related tooling commands
+ */
+const getPhpTooling = (service = 'app') => ({composer: {service}, php: {service}});
+
+/*
+ * Helper to get redis related tooling commands
  */
 const getRedisTooling = services => _(services)
   .map(service => ({
@@ -69,11 +79,6 @@ const getRedisTooling = services => _(services)
     level: 'app',
   }))
   .value();
-
-/*
- * Helper to get php related tooling commands
- */
-const getPhpTooling = (service = 'app') => ({composer: {service}, php: {service}});
 
 /*
  * Helper to map lagoon type data to a lando service
@@ -93,7 +98,7 @@ const getServiceToolingByType = ({type, services} = {}, app = 'app') => {
     case 'mariadb': return getMySqlTooling(services);
     case 'memcached': return getMemcachedTooling(services, app);
     case 'mysql': return getMySqlTooling(services);
-    case 'postgresql': return getsPostgresTooling(services);
+    case 'postgresql': return getPostgresTooling(services);
     case 'redis': return getRedisTooling(services);
     case 'redis-persistent': return getRedisTooling(services);
     default: return {};
@@ -103,7 +108,7 @@ const getServiceToolingByType = ({type, services} = {}, app = 'app') => {
 /*
  * Maps parsed platform config into related Lando things
  */
-exports.getAppTooling = app => _.merge({}, {platform: {service: app.name}}, getAppToolingByType(app));
+exports.getAppTooling = app => _.merge({}, getPlatformCliTooling(app.name), getAppToolingByType(app));
 
 /*
  * Helper to get relatable services eg services for which the closest app has a relationship
