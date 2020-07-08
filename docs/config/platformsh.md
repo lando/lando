@@ -2,30 +2,29 @@
 description: The best local development environment option for platform.sh, the fastest way to build modern web apps.
 ---
 
-# Platform.sh **(experimental)**
+# Platform.sh **(alpha)**
 
 [Platform.sh](https://platform.sh/) is the end-to-end web platform for agile teams. with it you can build, evolve, and scale your website fleet—with zero infrastructure management investment. Get hosting, CI/CD, automated updates, global 24x7 support. And much more.
 
-This is currently a _very experimental_ integration that has the following _serious caveats_:
+This integration is currently in development and as such it has the following _serious caveats_:
 
-* This should be considered at an `alpha` level of readiness or below
-* This has _only_ been tested for sites built on top of the [platform.sh Drupal 8 Template](https://github.com/platformsh-templates/drupal8)
+* This should be considered at an `alpha` level of readiness
+* This has _only_ been minimally tested on a few vanilla `php` projects and templates
 * This currently _only_ supports platform.sh's `php` application container
-* this currently _only_ supports platform.sh's `memcached`, `mongodb`, `mariadb`, `mysql`, `postgresql`, `redis` and `solr` service containers
 * It's not yet clear how much customization to your project is currently supported
 
-However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
+However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue. You can also read about some more caveats [here](#caveats-and-known-issues).
 
-You can report any issues or feedback [over here](https://github.com/lando/lando/issues/new/choose).
+You can report any issues or feedback [over here](https://github.com/lando/lando/issues/new/choose) or check out
 
 [[toc]]
 
 ## Getting Started
 
-:::warning EXPERIMENTAL FEATURE
+:::warning ALPHA FEATURE
 To access this feature you will need:
 
-  * [Lando 3.0.5](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
+  * [Lando 3.0.8](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
   * [Experimental mode](./experimental.md) turned on
 :::
 
@@ -145,10 +144,13 @@ db2:
 We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
 
 * [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
+* [InfluxDB](https://docs.platform.sh/configuration/services/influxdb.html)
+* [Kafka](https://docs.platform.sh/configuration/services/kafka.html)
 * [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [Memcached](https://docs.platform.sh/configuration/services/memcached.html)
 * [MongoDB](https://docs.platform.sh/configuration/services/mongodb.html)
 * [PostgreSQL](https://docs.platform.sh/configuration/services/mysql.html)
+* [RabbitMQ](https://docs.platform.sh/configuration/services/rabbitmq.html)
 * [Redis](https://docs.platform.sh/configuration/services/redis.html)
 * [Solr](https://docs.platform.sh/configuration/services/solr.html)
 
@@ -474,7 +476,7 @@ lando database main < dump.sql
 
 ## Caveats and known issues
 
-Since this is a currently a pre-alpha level recipe there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
+Since this is a currently an `alpha` release there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
 ).
 
 We also _highly encourage_ you to [post an issue](https://github.com/lando/lando/issues/new/choose) if you see a problem that doesn't already have an issue.
@@ -559,6 +561,13 @@ lando php -v
 # Access another app with same source.root
 lando -s app2 -c "php -v"
 ```
+
+### Unsupported things
+
+There are a few things that are currently unsupported at this time, athough we hope to add support in the future.
+
+* Non `php` application containers. Support for `node` will be added before `beta` is reached. [#2368](https://github.com/lando/lando/issues/2368)
+* `workers` and the `network_storage` service [#2393](https://github.com/lando/lando/issues/2393)
 
 ## Development
 
