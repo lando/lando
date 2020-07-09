@@ -29,7 +29,7 @@ feed:
 <GuideHeader test="https://github.com/lando/lando/blob/master/examples/lando-101/README.md" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
 <YouTube url="" />
 
-The `lando init` command follows the pattern of `git init` or `npm init`. Where `lando init` will prompt you with some questions and prepare a `.lando.yml` configuration file for you. You can run `lando init` from an empty directory or from an extant codebase.
+The `lando init` command follows the pattern of `git init` or `npm init`. Where `lando init` will prompt you with some questions and prepares a `.lando.yml` configuration file for you. You can run `lando init` from an empty directory or from an extant codebase.
 
 Let's step through the questions that `lando init` prompts us with:
 
@@ -60,7 +60,7 @@ The next question is `? What recipe do you want to use?`. Recipes are pre-config
 (Move up and down to reveal more choices)
 ```
 
-Next up Lando prompts us for the webroot of the application: `? Where is your webroot relative to the init destination?` the webroot can be nested or it can be in the same location as the `.lando.yml` file the project root. For this course we'll leave the defualt `.` for the current working directory.
+Next up Lando prompts us for the webroot of the application: `? Where is your webroot relative to the init destination?` The webroot can be nested or it can be in the same location as the `.lando.yml` file the project root. For this course we'll leave the default `.` for the current working directory.
 
 ```bash
 ? Where is your webroot relative to the init destination? (.)

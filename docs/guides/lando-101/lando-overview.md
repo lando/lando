@@ -29,11 +29,11 @@ feed:
 <GuideHeader test="https://github.com/lando/lando/blob/master/examples/lando-101/README.md" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
 <YouTube url="" />
 
-Lando can isolate all your dev needs on a per app basis. This course will walk you through some examples of what can be accomplished with Lando development environments. If you have not installed Lando yet head over to [installing](/basics/installation) first.
+Lando can isolate all your dev needs on a per app basis. This course will walk you through some examples of what can be accomplished with Lando development environments. If you have not installed Lando yet head over to [installing](/basics/installation.html) first.
 
 Here is the outline of content the Lando 101 course will cover:
 
-* [Init](/guides/lando-101/lando-init)
+* [Init](/guides/lando-101/lando-init.html)
 * Start
 * Configure
 * Add a Service
