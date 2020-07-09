@@ -101,6 +101,10 @@ docker ps --filter label=com.docker.compose.project=landod8 | grep docker.regist
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-5.0
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.2
 
+# Should connect to remote platform environment and not local
+cd drupal
+lando platform relationships | grep hostname | grep platformsh.site
+
 # Should be able to persist the drupal database after a rebuild
 cd drupal
 lando rebuild -y
