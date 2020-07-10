@@ -1,0 +1,4 @@
+name: lando-101
+recipe: lamp
+config:
+  php: 7.4
