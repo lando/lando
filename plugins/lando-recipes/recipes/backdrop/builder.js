@@ -49,7 +49,7 @@ module.exports = {
     build: [],
     confSrc: __dirname,
     defaultFiles: {},
-    drush: '8.3.2',
+    drush: '8.3.5',
     php: '7.2',
     services: {appserver: {overrides: {
       environment: {
