@@ -62,3 +62,8 @@ If the requester is looking for the answer to a specific technical question like
 In some instances, the user might actually have more subject matter expertise than the contributor team. In the example above, using Behat and Chromedriver, asking the user to describe how they have possibly setup this workflow outside of Lando might be a clue that helps someone eventually contribute the guide that will help with this request in the future. 
 
 It also may be helpful to provide links to existing documentation that provides some building blocks for the ultimate use case being described (for example, giving the Behat user above a link to our compose documentation, service overrides documentation, and tooling documentation). Doing this can provide the raw materials they need to forge the solution so they can come back and write the guide themselves.
+
+
+## Extra Credit
+
+We use an application called [Zenhub](https://zenhub.com) to help track and schedule Lando issues. Zenhub is free and if you register, you can see the current state of any issues. We use a fairly standard set of swim lanes to schedule work. If you are curious about the state of an issue, you can get more details here.
