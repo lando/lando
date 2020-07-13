@@ -10,7 +10,7 @@ module.exports = {
     confSrc: __dirname,
     legacy: ['7.1', '7.0', '5.5', '5.4', '5.3'],
     supportedIgnore: true,
-    volumes: ['/usr/local/bin'],
+    volumes: ['/usr/local/bin', '/mnt'],
   },
   parent: '_platformsh_appserver',
   builder: (parent, config) => class LandoPlatformshPhp extends parent {

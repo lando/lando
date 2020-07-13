@@ -24,6 +24,9 @@ module.exports = {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
         },
+        volumes: [
+          `${options.data}:/mnt`,
+        ],
       };
 
       // Add in the influxdb service and push downstream
