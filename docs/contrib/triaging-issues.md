@@ -15,8 +15,7 @@ Now that you're equipped with the laser sword of empathy and the armor of respec
 ## Requirements
 
 1. A Github account
-2. A [Zenhub](https://www.zenhub.com) account (install the chrome extension to make it easier to use inline in Github!)
-3. [Install Lando](/basics/installation.html) (So you can reproduce issues)
+2. [Install Lando](/basics/installation.html) (So you can reproduce issues)
 
 ## Classify the Issue
 
@@ -36,9 +35,9 @@ The most important thing we need for a good bug report are reliable steps to rep
 
 If you do nothing else, this is the most valuable thing you can do for Lando maintainers. It can sometimes be time consuming, but making sure we can replicate a bug saves massive amounts of time for the intrepid developer who attempts to fix the bug. It helps us to write clear functional tests and spend less time fixing the bug.
 
-Once steps to reproduce have been ironed out, the issue should be tagged as `triaged` and moved into the backlog in Zenhub if you can. 
+Once steps to reproduce have been ironed out, the issue should be tagged as `triaged`. 
 
-If you can't reproduce the issue, tag it with `can not replicate` and let the user know that you are unable to replicate the issue. If you can think of additional information that might be helpful, request it in your comment. Non-reproducable issues will remain in the 'new issues' swim lane in Zenhub until they are closed by a maintainer or stalebot.
+If you can't reproduce the issue, tag it with `can not replicate` and let the user know that you are unable to replicate the issue. If you can think of additional information that might be helpful, request it in your comment. Non-reproducable issues will remain unscheduled until they are closed by a maintainer or stalebot.
 
 ## Feature Requests
 
