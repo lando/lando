@@ -5,23 +5,20 @@ const _ = require('lodash');
 
 // Builder
 module.exports = {
-  name: 'platformsh-mongodb',
+  name: 'platformsh-influxdb',
   config: {
     confSrc: __dirname,
-    port: '27017',
+    port: '8086',
     supportedIgnore: true,
   },
   parent: '_platformsh_service',
-  builder: (parent, config) => class LandoPlatformsMongoDB extends parent {
+  builder: (parent, config) => class LandoPlatformshInfluxdb extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
 
-      // Set the meUser
-      options.meUser = 'mongodb';
-
-      // Build the mongodb
-      const mongodb = {
-        image: `docker.registry.platform.sh/mongodb-${options.version}`,
+      // Build influxdb
+      const influxdb = {
+        image: `docker.registry.platform.sh/influxdb-${options.version}`,
         ports: [options.port],
         environment: {
           LANDO_WEBROOT_USER: options.meUser,
@@ -32,8 +29,8 @@ module.exports = {
         ],
       };
 
-      // Add in the mongodb service and push downstream
-      super(id, options, {services: _.set({}, options.name, mongodb)});
+      // Add in the influxdb service and push downstream
+      super(id, options, {services: _.set({}, options.name, influxdb)});
     };
   },
 };
