@@ -8,6 +8,8 @@ Lando tries to find the fine line between good security and good user experience
 
 The things we do by default and how you can modify them to your needs are shown below:
 
+[[toc]]
+
 ## Exposure
 
 As of `3.0.0-rrc.5`, Lando will bind all exposed services to `127.0.0.1` for security reasons. This means your services are *only* available to your machine. You can alter this behavior in one of two ways.

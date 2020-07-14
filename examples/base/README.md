@@ -195,6 +195,9 @@ lando --channel orange || echo $? | grep 1
 
 # Should load experimental plugins by default in CI
 lando config | grep experimentalPluginLoadTest | grep true
+
+# Should load plugins from pluginDirs
+lando stuff | grep "I WORKED"
 ```
 
 Destroy tests

@@ -6,6 +6,8 @@ description: Lando sets a bunch of useful environment variables in each service 
 
 Lando will both inject a bunch of helpful environment variables into each service and allow the user to inject their own either by [file](#environment-files) or [configuration](#environment-configuration). Note that these variables are only available **inside** each service and **not on your host machine.**
 
+[[toc]]
+
 ## Default Environment Variables
 
 While the default variables are more or less the same between services, we recommend you run the following command to get the most up-to-date and relevant list of envvars for your service. Note, this assumes you have not changed the `envPrefix` [global config](./global.md) value.

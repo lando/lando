@@ -18,6 +18,8 @@ You can also tell Lando to scan additional ports with the [moreHttpPorts](./serv
 
 There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
 
+[[toc]]
+
 ## Automatic Port Assignment
 
 By default, Lando will attempt to bind the proxy to your host machine's port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running, it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
