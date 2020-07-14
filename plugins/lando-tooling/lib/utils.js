@@ -157,8 +157,21 @@ exports.parseConfig = (cmd, service, options = {}, answers = {}) => _(cmd)
   // Add in any argv extras if they've been passed in
   .map(config => handleOpts(config))
   // Append passthru options so that interactive responses are permitted
-  // @TODO: this will double add opts that are already passed in non-interactively, is that a problem?
-  .map(config => _.merge({}, config, {command: config.command.concat(handlePassthruOpts(options, answers))}))
+  .map(config => {
+    // Try to get the passthru opts
+    const passThruOpts = handlePassthruOpts(options, answers);
+    // If we have some then lets augment our command
+    // @NOTE: This logic if a bit convulated, it would be better if we could somehow
+    // set these options above but this seems like the safest change
+    if (!_.isEmpty(passThruOpts)) {
+      if (config.command[0] === '/bin/sh') {
+        config.command[2] = [config.command[2], passThruOpts.join(' ')].join(' ');
+      } else {
+        config.command = config.command.concat(passThruOpts);
+      }
+    }
+    return _.merge({}, config, {command: config.command});
+  })
   // Wrap the command in /bin/sh if that makes sense
   .map(config => _.merge({}, config, {command: escape(config.command, true)}))
   // Put into an object
