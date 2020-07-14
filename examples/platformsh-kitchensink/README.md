@@ -250,9 +250,8 @@ cd sink/php
 lando ssh -u root -s influxdb -c "ps aux|grep influxdb" | grep "^app"
 
 # Should show kafka process running
-# Temporarily commented out until kafka issues are resolved.
-# cd sink/php
-# lando ssh -u root -s kafka -c "ps aux|grep '\srunsv kafka'"
+cd sink/php
+lando ssh -u root -s kafka -c "ps aux|grep '\srunsv kafka'"
 ```
 
 Destroy tests

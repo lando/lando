@@ -11,8 +11,9 @@ const getLandoServiceType = type => {
     case 'elasticsearch': return 'platformsh-elasticsearch';
     case 'influxdb': return 'platformsh-influxdb';
     case 'kafka': return 'platformsh-kafka';
-    case 'varnish': return 'platformsh-varnish';
-    case 'headless-chrome': return 'platformsh-headless-chrome';
+    // @NOTE @mikemilano once we've the two below working we need to uncomment
+    // case 'varnish': return 'platformsh-varnish';
+    // case 'headless-chrome': return 'platformsh-headless-chrome';
     case 'mariadb': return 'platformsh-mariadb';
     case 'memcached': return 'platformsh-memcached';
     case 'mongodb': return 'platformsh-mongodb';
