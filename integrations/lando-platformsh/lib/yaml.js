@@ -3,7 +3,7 @@
 // Modules
 const _ = require('lodash');
 const fs = require('fs');
-const Log = require('./../../../lib/logger');
+const Log = require('./../../../../lib/logger');
 const path = require('path');
 const tar = require('tar');
 const yaml = require('js-yaml');
@@ -36,8 +36,23 @@ module.exports = class PlatformYaml {
       },
     });
 
+    // Include tag
+    this.IncludeYamlType = new yaml.Type('!include', {
+      kind: 'mapping',
+      resolve: data => {
+        // Kill immediately if we have to
+        if (!_.isString(data.path)) return false;
+        // Otherwise make sure this is dir that exists
+        return fs.existsSync(path.join(this.base, '.platform', data.path));
+      },
+      construct: data => {
+        const filePath = path.join(this.base, '.platform', data.path);
+        return fs.readFileSync(filePath, {encoding: 'utf8'});
+      },
+    });
+
     // The new schema
-    this.PLATFORM_SCHEMA = yaml.Schema.create([this.ArchiveYamlType]);
+    this.PLATFORM_SCHEMA = yaml.Schema.create([this.ArchiveYamlType, this.IncludeYamlType]);
   };
 
   load(data) {
