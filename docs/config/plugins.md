@@ -8,7 +8,7 @@ As of Lando `3.0.8` you can now load plugins from inside your application using 
 
 ```yaml
 name: my-app
-pluginsDirs:
+pluginDirs:
   - plugins
   - someplace/else
 ```
