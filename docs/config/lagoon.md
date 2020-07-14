@@ -9,7 +9,8 @@ description: The best local development option for Lagoon a Docker Build and Dep
 This is currently a _alpha_ level integration that has the following _serious caveats_:
 
 * This _only_ supports projects based on or extended from [this example](https://github.com/amazeeio/drupal-example-simple)
-* This _only_ supports Lagoon's `php-fpm`, `php-cli`, `nginx`, `solr`, `redis`, `mariadb` and `postgres` containers.
+* This _does not_ support Lagoon's `elasticsearch`, `mongodb`, or `rabbitmq` containers yet
+* This _does not_ fully interact with the Amazee.io Lagoon API yet
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
@@ -107,6 +108,7 @@ The services we currently support with links to their associated Lagoon docs is 
 * [PostgreSQL](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/postgres/)
 * [Redis](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/redis/)
 * [Solr](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/solr/)
+* [Varnish](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/varnish/)
 
 Note that we are testing against the "Drupal" variants of the above but it's _possible_ the base services work as well.
 
