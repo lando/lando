@@ -41,6 +41,9 @@ process.lando = 'node';
 process.landoTaskCacheName = '_.tasks.cache';
 process.landoTaskCacheFile = path.join(cli.defaultConfig().userConfRoot, 'cache', process.landoTaskCacheName);
 process.landoAppTaskCacheFile = !_.isEmpty(config) ? config.toolingCache : undefined;
+process.landoAppPluginDirs = _(_.get(config, 'pluginDirs', []))
+  .map(dir => ({path: path.join(config.root, dir), subdir: '.'}))
+  .value();
 
 // Check for sudo usage
 cli.checkPerms();

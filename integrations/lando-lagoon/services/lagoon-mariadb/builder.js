@@ -34,11 +34,10 @@ module.exports = {
 
       // Make sure we set the creds correctly
       // this is tricky because the user can modify this in their lagoon docker-compose.yaml
-      const flavor = _.get(options._app, 'config.config.flavor', 'lagoon');
       options.creds = {
-        user: getLagoonEnv(options, 'MARIADB_USER', flavor),
-        password: getLagoonEnv(options, 'MARIADB_PASSWORD', flavor),
-        database: getLagoonEnv(options, 'MARIADB_DATABASE', flavor),
+        user: getLagoonEnv(options, 'MARIADB_USER', options.flavor),
+        password: getLagoonEnv(options, 'MARIADB_PASSWORD', options.flavor),
+        database: getLagoonEnv(options, 'MARIADB_DATABASE', options.flavor),
         rootpass: getLagoonEnv(options, 'MARIADB_ROOT_PASSWORD', 'Lag00n'),
       };
 

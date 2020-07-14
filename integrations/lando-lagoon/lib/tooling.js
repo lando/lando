@@ -79,7 +79,7 @@ const getServiceToolingByType = service => {
   switch (service.type) {
     case 'lagoon-mariadb': return getMariaDBTooling(service);
     case 'lagoon-postgres': return getPostgreSQLTooling(service);
-    case 'lagoon-php-cli': return getPhpCliDrupalTooling(service.name, service.config.flavor);
+    case 'lagoon-php-cli': return getPhpCliDrupalTooling(service.name, service.flavor);
     default: return {};
   };
 };

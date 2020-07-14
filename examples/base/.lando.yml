@@ -6,3 +6,5 @@ compose:
 tooling:
   php:
     service: log
+pluginDirs:
+  - plugins

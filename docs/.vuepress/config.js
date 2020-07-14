@@ -70,7 +70,7 @@ module.exports = {
     nav: [
       {text: 'Getting Started', link: '/basics/'},
       {text: 'Config', link: '/config/lando.md'},
-      {text: 'Guides', link: '/guides/lando-info/'},
+      {text: 'Guides', link: '/guides/lando-101/lando-overview'},
       {text: 'Help and Support', link: '/help/logs/'},
       {text: 'Contributing', link: '/contrib/contributing/'},
       {text: 'API', link: '/api/app.md'},
@@ -129,6 +129,7 @@ module.exports = {
             'experimental',
             'networking',
             'performance',
+            'plugins',
             'releases',
             'ssh',
             'security',

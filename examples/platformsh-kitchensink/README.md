@@ -47,11 +47,6 @@ Run the following commands to get up and running with this example.
 # Should poweroff
 lando poweroff
 
-# Should be running in experimental mode
-lando config | grep experimental | grep true || lando --experimental
-lando config | grep experimental | grep true
-lando config | grep experimentalPluginLoadTest | grep true
-
 # Should initialize the platformsh lando-kitchensink example
 rm -rf sink && mkdir -p sink && cd sink
 lando init --source platformsh --platformsh-auth "$PLATFORMSH_CLI_TOKEN" --platformsh-site lando-kitchensink --platformsh-key-name "$CIRCLE_SHA1"
