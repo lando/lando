@@ -30,7 +30,7 @@ module.exports = {
       // Map into lando services
       options.services = getLandoServices(lagoonConfig.services);
       // Add in any additional dev services eg mailhog we need
-      options.services = getLandoAuxServices(options.services);
+      options.services = getLandoAuxServices(options.services, options._app._config);
 
       // Map into lando tooling commands
       options.tooling = getLandoTooling(options.services);
@@ -39,6 +39,10 @@ module.exports = {
       if (!_.isEmpty(sqlServices)) {
         const firstDbService = _.first(sqlServices);
         options.tooling = _.merge({}, options.tooling, getDBUtils(firstDbService.name));
+      }
+      // If we have the lagoong cli then add that in as well
+      if (_.has(options, 'services.lagooncli')) {
+        options.tooling.lagoon = {service: 'lagooncli', cmd: '/lagoon', user: 'root'};
       }
 
       // Map into lando proxy routes

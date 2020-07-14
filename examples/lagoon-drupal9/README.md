@@ -75,6 +75,10 @@ lando node --version
 cd drupal
 lando yarn --version
 
+# Should have lagoon cli
+cd drupal
+lando lagoon --version | grep lagoon
+
 # Should have a running drupal 9 site served by nginx on port 8080
 cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Drush Site-Install"

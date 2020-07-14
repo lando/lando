@@ -86,11 +86,23 @@ exports.getLagoonEnv = (service, key, fallback = 'lagoon') => {
 /*
  * Determines if we need to add extra services
  */
-exports.getLandoAuxServices = (services = {}) => {
+exports.getLandoAuxServices = (services = {}, config) => {
   // If we can add mailhog, lets add it
   if (!_.isEmpty(getServicesByType(services, 'lagoon-php'))) {
     services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: getServicesByType(services, 'lagoon-php')};
   }
+  // Add in lagoon CLI
+  // @TODO: do we want a legit lagoon service for this or is compose sufficient?
+  services.lagooncli = {
+    type: 'compose',
+    services: {
+      image: 'amazeeio/lagoon-cli',
+      command: 'tail -f /dev/null',
+      volumes: [
+        `${config.home}:/root`,
+      ],
+    },
+  };
 
   // Return it all
   return services;

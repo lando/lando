@@ -145,6 +145,7 @@ lando composer          Runs composer commands
 lando db-export [file]  Exports database from a database service to a file
 lando db-import <file>  Imports a dump file into a database service
 lando drush             Runs drush commands
+lando lagoon            Runs lagoon commands
 lando mysql             Drops into a MySQL shell on a database service
 lando node              Runs node commands
 lando npm               Runs npm commands
@@ -153,6 +154,8 @@ lando yarn              Runs yarn commands
 ```
 
 Note that you can define your own commands by using out [tooling framework](tooling.md). Also check out the guides for the powerful [DB Export](./../guides/db-export.md) and [DB Import](./../guides/db-import.md) commands.
+
+Also, check out the [Lagoon CLI Docs](https://amazeeio.github.io/lagoon-cli/commands/lagoon/) for more information on using `lando lagoon`.
 
 ### Mailhog
 
