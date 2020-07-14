@@ -22,10 +22,27 @@ const getLandoServiceType = type => {
     case 'php-cli-drupal': return 'lagoon-php-cli';
     case 'php-fpm': return 'lagoon-php';
     case 'redis': return 'lagoon-redis';
+    case 'solr': return 'lagoon-solr';
     case 'solr-drupal': return 'lagoon-solr';
     case 'postgres': return 'lagoon-postgres';
     case 'postgres-drupal': return 'lagoon-postgres';
+    case 'varnish': return 'lagoon-varnish';
+    case 'varnish-drupal': return 'lagoon-varnish';
     default: return false;
+  };
+};
+
+/*
+ * Helper to map lagoon type data to a flavor eg drupal
+ */
+const getFlavor = type => {
+  switch (type) {
+    case 'nginx-drupal': return 'drupal';
+    case 'mariadb-drupal': return 'drupal';
+    case 'php-cli-drupal': return 'drupal';
+    case 'solr-drupal': return 'drupal';
+    case 'postgres-drupal': return 'drupal';
+    default: return 'lagoon';
   };
 };
 
@@ -36,6 +53,8 @@ const getLandoService = lagoon => {
   // Start with the defaults
   const lando = {
     name: lagoon.name,
+    image: lagoon.type,
+    flavor: getFlavor(lagoon.type),
     type: getLandoServiceType(lagoon.type),
     ssl: _.includes(sslServices, lagoon.type),
     sslExpose: false,
@@ -70,11 +89,23 @@ exports.getLagoonEnv = (service, key, fallback = 'lagoon') => {
 /*
  * Determines if we need to add extra services
  */
-exports.getLandoAuxServices = (services = {}) => {
+exports.getLandoAuxServices = (services = {}, config) => {
   // If we can add mailhog, lets add it
   if (!_.isEmpty(getServicesByType(services, 'lagoon-php'))) {
     services.mailhog = {type: 'mailhog:v1.0.0', hogfrom: getServicesByType(services, 'lagoon-php')};
   }
+  // Add in lagoon CLI
+  // @TODO: do we want a legit lagoon service for this or is compose sufficient?
+  services.lagooncli = {
+    type: 'compose',
+    services: {
+      image: 'amazeeio/lagoon-cli',
+      command: 'tail -f /dev/null',
+      volumes: [
+        `${config.home}:/root`,
+      ],
+    },
+  };
 
   // Return it all
   return services;

@@ -8,6 +8,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Bumped `platformsh` recipe to `alpha` status [#2444](https://github.com/lando/lando/pull/2444)
 * Bumped `lagoon` recipe to `alpha` status [#2451](https://github.com/lando/lando/pull/2451)
 * Improved database pull performance for the `pantheon` recipe [#2402](https://github.com/lando/lando/pull/2402)
+* Improved error message if host-side `terminus` token caches contain invalid `JSON` [#2428](https://github.com/lando/lando/pull/2428)
 * Switched all usage of `:delegated` to `:cached` in preperation of `mutagen` syncing [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
 * Updated default `drupal8` recipe `php` version to `7.3` [#2427](https://github.com/lando/lando/pull/2427)
 * Updated `excludes` to use `mutagen` if its available [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
