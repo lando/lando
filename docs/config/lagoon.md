@@ -65,7 +65,6 @@ Here are the configuration options, set to the default values, for this recipe's
 ```yaml
 recipe: lagoon
 config:
-  flavor: drupal
   build:
     - composer install
 ```
@@ -74,10 +73,6 @@ If you do not already have a [Landofile](./../config/lando.md) for your Lagoon s
 
 Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
-### Flavor
-
-This is not configurable. Lando only support Drupal projects currently.
-
 ### Build steps
 
 If you have steps you need to run to get your site into a workable place you can put them in the `build` key of your recipes `config`. By default, we will run `composer install` but you may wish to augment that with any front end compilation tasks you may have as in the example below:
@@ -85,7 +80,6 @@ If you have steps you need to run to get your site into a workable place you can
 ```yaml
 recipe: lagoon
 config:
-  flavor: drupal
   build:
     - composer install
     - yarn run compile:sass

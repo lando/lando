@@ -34,11 +34,10 @@ module.exports = {
 
       // Make sure we set the creds correctly
       // this is tricky because the user can modify this in their lagoon docker-compose.yaml
-      const flavor = _.get(options._app, 'config.config.flavor', 'lagoon');
       options.creds = {
-        user: getLagoonEnv(options, 'POSTGRES_USER', flavor),
-        password: getLagoonEnv(options, 'POSTGRES_PASSWORD', flavor),
-        database: getLagoonEnv(options, 'POSTGRES_DB', flavor),
+        user: getLagoonEnv(options, 'POSTGRES_USER', options.flavor),
+        password: getLagoonEnv(options, 'POSTGRES_PASSWORD', options.flavor),
+        database: getLagoonEnv(options, 'POSTGRES_DB', options.flavor),
       };
 
       // Build the service

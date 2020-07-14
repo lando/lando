@@ -26,8 +26,6 @@ This allow users to run their Lagoon projects locally using the same images, bui
 ```yaml
 name: lando-d8
 recipe: lagoon
-config:
-  flavor: drupal
 ```
 
 The implication here is that Lando will instead look and use the `lagoon` configuration files, including its `docker-compose` files instead of its own mechanisms. You can, however, still use the Landofile for additional power you may need exclusively in the local context.

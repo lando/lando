@@ -50,7 +50,6 @@ lando ssh -c "env | grep LAGOON=" | grep cli-drupal
 
 # Should have the correct environment set
 cd drupal
-lando ssh -c "env" | grep LAGOON_PROJECT | grep drupal9-example-simple
 lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal-example.lndo.site
 lando ssh -c "env" | grep LAGOON_ENVIRONMENT_TYPE | grep development
 

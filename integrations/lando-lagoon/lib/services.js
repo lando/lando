@@ -30,12 +30,28 @@ const getLandoServiceType = type => {
 };
 
 /*
+ * Helper to map lagoon type data to a flavor eg drupal
+ */
+const getFlavor = type => {
+  switch (type) {
+    case 'nginx-drupal': return 'drupal';
+    case 'mariadb-drupal': return 'drupal';
+    case 'php-cli-drupal': return 'drupal';
+    case 'solr-drupal': return 'drupal';
+    case 'postgres-drupal': return 'drupal';
+    default: return 'lagoon';
+  };
+};
+
+/*
  * Helper to map into a lando service
  */
 const getLandoService = lagoon => {
   // Start with the defaults
   const lando = {
     name: lagoon.name,
+    image: lagoon.type,
+    flavor: getFlavor(lagoon.type),
     type: getLandoServiceType(lagoon.type),
     ssl: _.includes(sslServices, lagoon.type),
     sslExpose: false,

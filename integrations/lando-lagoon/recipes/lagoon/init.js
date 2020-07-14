@@ -32,18 +32,18 @@ module.exports = {
     }
     // Parse the Lagoon config
     const lagoonConfig = lando.yaml.load(lagoonFile);
+
+    // Throw an error if there is no project set
+    if (!_.has(lagoonConfig, 'project')) {
+      throw Error('Lando currently requires that a project be set in your .lagoon.yml!');
+    }
+
     // Set this so it shows correctly after init
     options.name = lagoonConfig.project;
-
-    // @TODO: eventually we need a "flavor" option that will decide the config below
-    // for now we assume a "drupal" flavor eg Drupal 8
-    // Set the name and other things
+    // Always reset the name based on the lagoon project
     return {
       name: options.name,
-      config: {
-        flavor: 'drupal',
-        build: ['composer install'],
-      },
+      config: {build: ['composer install']},
     };
   },
 };

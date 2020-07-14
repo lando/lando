@@ -15,7 +15,6 @@ module.exports = {
   parent: '_recipe',
   config: {
     confSrc: __dirname,
-    flavor: 'lagoon',
     build: [],
     proxy: {},
     services: {},

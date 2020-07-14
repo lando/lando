@@ -33,6 +33,8 @@ module.exports = (app, lando) => {
 
       // Get the raw lagoon config
       const lagoonConfig = app.lagoon.config;
+      // Reset the lando app name to be the project name
+      app.name = _.get(lagoonConfig, 'lagoon.project', app.name);
 
       // Add the parsed services config
       app.lagoon.services = lagoonConf.parseServices(lagoonConfig.compose.services, app.config);
