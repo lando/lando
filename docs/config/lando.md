@@ -12,6 +12,8 @@ If you make changes to your `.lando.yml`, you will need to `lando rebuild` your 
 This documentation is specifically about configuring the Landofile itself. If you are interested in a more high level view of what the Landofile can do and its purpose then check out our [Lando introduction](./../basics/).
 :::
 
+[[toc]]
+
 ## Base File
 
 If you are developing a project start state or have a set of Lando configurations you'd like to ship with all your projects, you can use a "base" file with defaults that can then be overridden by your usual `.lando.yml`. By default, Lando will detect automatically and load before your `.lando.yml` any of the files as follows:

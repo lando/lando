@@ -14,11 +14,6 @@ Run the following commands to get up and running with this example.
 # Should poweroff
 lando poweroff
 
-# Should be running in experimental mode
-lando config | grep experimental | grep true || lando --experimental
-lando config | grep experimental | grep true
-lando config | grep experimentalPluginLoadTest | grep true
-
 # Should initialize the lagoon drupal example
 rm -rf drupal && mkdir -p drupal && cd drupal
 lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x-postgres" --recipe lagoon

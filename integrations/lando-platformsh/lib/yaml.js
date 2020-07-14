@@ -3,7 +3,7 @@
 // Modules
 const _ = require('lodash');
 const fs = require('fs');
-const Log = require('./../../../../lib/logger');
+const Log = require('./../../../lib/logger');
 const path = require('path');
 const tar = require('tar');
 const yaml = require('js-yaml');

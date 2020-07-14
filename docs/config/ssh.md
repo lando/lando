@@ -35,6 +35,8 @@ lando logs -s appserver
 lando ssh -s appserver -c "cat /etc/ssh/ssh_config"
 ```
 
+[[toc]]
+
 ## Customizing
 
 Starting with Lando [3.0.0-rrc.5](./../help/2020-changelog.md#_2020), users can customize the behavior of key loading. This provides the flexibility for users to handle some edge cases in the ways that make the most sense for them.
