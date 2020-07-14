@@ -7,6 +7,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added support for loading `plugins` from your application repo [#2434](https://github.com/lando/lando/pull/2434)
 * Bumped `platformsh` recipe to `alpha` status [#2444](https://github.com/lando/lando/pull/2444)
 * Bumped `lagoon` recipe to `alpha` status [#2451](https://github.com/lando/lando/pull/2451)
+* Fixed bug causing some interactive options to not be passed through correctly [#2456](https://github.com/lando/lando/pull/2456) [#2471](https://github.com/lando/lando/pull/2471)
 * Improved database pull performance for the `pantheon` recipe [#2402](https://github.com/lando/lando/pull/2402)
 * Improved error message if host-side `terminus` token caches contain invalid `JSON` [#2428](https://github.com/lando/lando/pull/2428)
 * Switched all usage of `:delegated` to `:cached` in preperation of `mutagen` syncing [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
