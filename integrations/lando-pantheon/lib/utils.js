@@ -287,7 +287,13 @@ exports.getTerminusTokens = home => {
   if (fs.existsSync(path.join(home, '.terminus', 'cache', 'tokens'))) {
     return _(fs.readdirSync(path.join(home, '.terminus', 'cache', 'tokens')))
       .map(tokenFile => path.join(home, '.terminus', 'cache', 'tokens', tokenFile))
-      .map(file => JSON.parse(fs.readFileSync(file, 'utf8')))
+      .map(file => {
+        try {
+          return JSON.parse(fs.readFileSync(file, 'utf8'));
+        } catch (error) {
+          throw Error(`The file ${file} is not valid JSON`);
+        }
+      })
       .value();
   } else {
     return [];
