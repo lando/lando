@@ -29,6 +29,24 @@ const traverseUp = (startFrom = process.cwd()) => {
 };
 
 /*
+ * Helper to parse service relationships
+ */
+const parseServiceRelationships = ({relationships = {}}) => {
+  // This is most things
+  if (_.isEmpty(relationships)) return {};
+
+  // Otherwise
+  return _(relationships)
+    .map((config, name) => ([name, [{
+      service: config.split(':')[0],
+      host: config.split(':')[0],
+      port: 80,
+    }]]))
+    .fromPairs()
+    .value();
+};
+
+/*
  * Helper to find closest app
  */
 exports.findClosestApplication = (apps = []) => _(apps)
@@ -128,6 +146,6 @@ exports.parseServices = (services, relationships = {}) => _(services)
       .value(),
     hostname: name,
     name,
-    opener: '{"relationships": {}}',
+    opener: JSON.stringify({relationships: parseServiceRelationships(config)}),
   }))
   .value();

@@ -8,7 +8,7 @@ module.exports = {
   name: 'platformsh-varnish',
   config: {
     confSrc: __dirname,
-    port: '8086',
+    moreHttpPorts: ['8080', '8081'],
     supportedIgnore: true,
   },
   parent: '_platformsh_service',
@@ -19,7 +19,7 @@ module.exports = {
       // Build varnish
       const varnish = {
         image: `docker.registry.platform.sh/varnish-${options.version}`,
-        ports: [options.port],
+        ports: options.moreHttpPorts,
         environment: {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,

@@ -11,8 +11,8 @@ const getLandoServiceType = type => {
     case 'elasticsearch': return 'platformsh-elasticsearch';
     case 'influxdb': return 'platformsh-influxdb';
     case 'kafka': return 'platformsh-kafka';
-    // @NOTE @mikemilano once we've the two below working we need to uncomment
-    // case 'varnish': return 'platformsh-varnish';
+    case 'varnish': return 'platformsh-varnish';
+    // @NOTE @mikemilano once we've got the below working we need to uncomment
     // case 'headless-chrome': return 'platformsh-headless-chrome';
     case 'mariadb': return 'platformsh-mariadb';
     case 'memcached': return 'platformsh-memcached';
@@ -25,7 +25,7 @@ const getLandoServiceType = type => {
     case 'redis-persistent': return 'platformsh-redis';
     case 'solr': return 'platformsh-solr';
     default: return false;
-  };
+  }
 };
 
 /*
@@ -68,7 +68,11 @@ const getLandoService = platform => {
     // Generate certs for proxy purposes but dont expose things
     lando.ssl = true;
     lando.sslExpose = false;
+    lando.proxyPort = 80;
   }
+
+  // Set the varnish port if applicable
+  if (lando.type === 'platformsh-varnish') lando.proxyPort = 8080;
 
   // Return
   return lando;
