@@ -71,6 +71,13 @@ docker ps --filter label=com.docker.compose.project=landokitchensink | grep dock
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/mariadb-10.4 | grep landokitchensink_mysql_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/postgresql-11| grep landokitchensink_postgres_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/redis-5.0 | grep landokitchensink_redis_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/kafka-2.4 | grep landokitchensink_kafka_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/varnish-6.0 | grep landokitchensink_varnish_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/mongodb-3.6 | grep landokitchensink_dbmongo_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/influxdb-1.7 | grep landokitchensink_influxdb_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/elasticsearch-7.7 | grep landokitchensink_searchelastic_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/rabbitmq-3.8 | grep landokitchensink_rabbitmq_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/solr-8.0 | grep landokitchensink_search_1
 
 # Should use tooling based on the closest application
 cd sink
@@ -252,6 +259,15 @@ lando ssh -u root -s influxdb -c "ps aux|grep influxdb" | grep "^app"
 # Should show kafka process running
 cd sink/php
 lando ssh -u root -s kafka -c "ps aux" | grep runsv | grep kafka
+
+# Should connect to the correct backend from varnish
+cd sink/php
+lando ssh -s varnish -c "curl localhost:8080" | grep discreet
+
+# Should be able to connect to varnish stats endpoint
+cd sink/php
+lando ssh -s varnish -c "curl localhost:8081/config" | grep backend | grep test_1
+lando ssh -s varnish -c "curl localhost:8081/config" | grep "req.backend_hint" | grep "test.backend()"
 ```
 
 Destroy tests
