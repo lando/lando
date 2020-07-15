@@ -151,6 +151,31 @@ const getApplicationEnvironment = (appConfig, config) => _.merge({}, getEnvironm
 });
 
 /*
+ * Helper to build the service configurations
+ */
+const getServiceConfig = (id, name) => ({
+  access: {},
+  project_info: {
+    name: id,
+    settings: {
+      variables_prefix: 'PLATFORM_',
+      crons_in_git: false,
+      product_code: 'platformsh',
+      product_name: 'Platform.sh',
+      enforce_mfa: false,
+      // @NOTE: we kept this because it was flagged by @ralt as SUPER IMPORTANT ;)
+      bot_email: 'bot@platform.sh',
+    },
+  },
+  environment_info: {
+    is_production: false,
+    machine_name: name,
+    name: id,
+    is_main: true,
+  },
+});
+
+/*
  * Helper to generate our platform JSON
  */
 const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
@@ -198,31 +223,6 @@ const getPlatformConfig = ({id, name, platformsh, _config}, service = {}) => {
     web_uid: uid,
   };
 };
-
-/*
- * Helper to build the service configurations
- */
-const getServiceConfig = (id, name) => ({
-  access: {},
-  project_info: {
-    name: id,
-    settings: {
-      variables_prefix: 'PLATFORM_',
-      crons_in_git: false,
-      product_code: 'platformsh',
-      product_name: 'Platform.sh',
-      enforce_mfa: false,
-      // @NOTE: we kept this because it was flagged by @ralt as SUPER IMPORTANT ;)
-      bot_email: 'bot@platform.sh',
-    },
-  },
-  environment_info: {
-    is_production: false,
-    machine_name: name,
-    name: id,
-    is_main: true,
-  },
-});
 
 /*
  * Helper to build the /run/config.json for each service

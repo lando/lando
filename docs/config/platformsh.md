@@ -152,6 +152,7 @@ We currently only support the below services and we _highly recommend_ you consu
 * [RabbitMQ](https://docs.platform.sh/configuration/services/rabbitmq.html)
 * [Redis](https://docs.platform.sh/configuration/services/redis.html)
 * [Solr](https://docs.platform.sh/configuration/services/solr.html)
+* [Varnish](https://docs.platform.sh/configuration/services/varnish.html)
 
 Also note that you will need to run a `lando rebuild` for configuration changes to manifest in the same way you normally would for config changes to your Landofile.
 

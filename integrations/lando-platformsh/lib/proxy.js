@@ -41,7 +41,11 @@ exports.getLandoProxyRoutes = (routes = {}, supported = []) => _(normalizeRoutes
     href: url.parse(route.key).hostname,
   }))
   // Filter unsupported upstreams
-  .filter(route => _.includes(supported, route.service))
+  .filter(route => _.includes(_.map(supported, 'name'), route.service))
+  // Merge in port data
+  .map(route => _.merge({}, route, _.find(supported, {name: route.service})))
+  // Add port to data
+  .map(route => ({service: route.service, href: `${route.href}:${route.port}`}))
   // Group by service
   .groupBy('service')
   // Map to lando proxy config
