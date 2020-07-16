@@ -47,7 +47,7 @@ const parseApache = options => {
  * Helper to parse cli config
  */
 const parseCli = options => {
-  options.command = ['tail -f /dev/null'];
+  options.command = [_.get(options, 'command', 'tail -f /dev/null')];
   return options;
 };
 
