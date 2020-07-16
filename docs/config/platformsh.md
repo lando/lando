@@ -143,6 +143,7 @@ db2:
 We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
 
 * [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
+* [Headless Chrome](https://docs.platform.sh/configuration/services/headless-chrome.html)
 * [InfluxDB](https://docs.platform.sh/configuration/services/influxdb.html)
 * [Kafka](https://docs.platform.sh/configuration/services/kafka.html)
 * [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
@@ -520,7 +521,7 @@ There are some application settings and configuration that platform.sh will auto
 
 For example if your project is based on the [Drupal 8 Template](https://github.com/platformsh-templates/drupal8) then Lando will set the `tmp` directory and set `skip_permissions_hardening` to `TRUE`.
 
-Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/integrationsf/lando-platformsh/lib/overrides.js).
+Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/integrations/lando-platformsh/lib/overrides.js).
 
 ### platformsh.agent errors
 

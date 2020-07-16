@@ -268,6 +268,14 @@ lando ssh -s varnish -c "curl localhost:8080" | grep discreet
 cd sink/php
 lando ssh -s varnish -c "curl localhost:8081/config" | grep backend | grep test_1
 lando ssh -s varnish -c "curl localhost:8081/config" | grep "req.backend_hint" | grep "test.backend()"
+
+# Should find chromium service
+cd sink/php
+lando ssh -s chromium -c "ps -aux" | grep "chromium-headless"
+
+# Should run chromium php page
+cd sink/php
+lando ssh -c "curl localhost/chromium.php" | grep "Result" | grep "OK"
 ```
 
 Destroy tests

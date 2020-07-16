@@ -8,7 +8,7 @@ module.exports = {
   name: 'platformsh-chrome-headless',
   config: {
     confSrc: __dirname,
-    // port: '9092',
+    port: '9222',
     supportedIgnore: true,
   },
   parent: '_platformsh_service',
@@ -16,13 +16,10 @@ module.exports = {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
 
-      // Set the meUser
-      options.meUser = 'app';
-
       // Build chrome-headless
       const chromeHeadless = {
         image: `docker.registry.platform.sh/chrome-headless-${options.version}`,
-        // ports: [options.port],
+        ports: [options.port],
         environment: {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,
