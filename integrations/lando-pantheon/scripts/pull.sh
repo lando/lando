@@ -146,8 +146,11 @@ if [ "$DATABASE" != "none" ]; then
   TABLES=$(mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
   echo "Destroying all current tables in database if needed... "
   for t in $TABLES; do
-    echo "Dropping $t table from lando database..."
-    mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "DROP TABLE $t"
+    echo "Dropping $t table from local pantheon database..."
+    mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 <<-EOF
+      SET FOREIGN_KEY_CHECKS=0;
+      DROP TABLE $t
+EOF
   done
 
   # Wake up the database so we can actually connect

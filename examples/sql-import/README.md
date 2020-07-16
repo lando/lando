@@ -44,6 +44,10 @@ lando psqlverify | grep users
 
 # Should be able to handle absolute paths if given
 lando db-import /data/test.sql
+
+# Should be able to dump tables with foreign key constraints
+lando db-import test-foreign-keys.sql
+lando db-import test-foreign-keys.sql
 ```
 
 Destroy tests

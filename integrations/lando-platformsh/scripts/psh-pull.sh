@@ -104,8 +104,20 @@ else
     if [ -z "$PLATFORM_RELATIONSHIP_SCHEMA" ]; then
       eval "PLATFORM_RELATIONSHIP_SCHEMA=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}_DEFAULT_SCHEMA"
     fi
-    lando_pink "Importing data from the $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship into the $PLATFORM_RELATIONSHIP_SCHEMA schema..."
+    # Build out the connection string
     eval "LCD=\$LANDO_CONNECT_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}"
+    # Dump tables if we need to
+    TABLES=$($LCD $PLATFORM_RELATIONSHIP_SCHEMA -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
+    echo "Destroying all current tables in database if needed... "
+    for t in $TABLES; do
+      echo "Dropping $t table from local $PLATFORM_RELATIONSHIP_SCHEMA database..."
+      $LCD $PLATFORM_RELATIONSHIP_SCHEMA <<-EOF
+        SET FOREIGN_KEY_CHECKS=0;
+        DROP TABLE $t
+EOF
+    done
+    # Import the DB
+    lando_pink "Importing data from the $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship into the $PLATFORM_RELATIONSHIP_SCHEMA schema..."
     platform db:dump -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA -o | $LCD $PLATFORM_RELATIONSHIP_SCHEMA
   done
 fi

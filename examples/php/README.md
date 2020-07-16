@@ -130,6 +130,9 @@ lando ssh -s custom_nginx -c "curl http://localhost/path_info.php/a/b.php" | gre
 lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_INFO | grep "/a/b.php"
 lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep PATH_TRANSLATED | grep "/app/a/b.php"
 lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep SCRIPT_NAME | grep "/path_info.php"
+
+# Should allow cli services to specify a boot up command
+lando info -s cliworker --deep | grep Cmd | grep sleep | grep infinity
 ```
 
 Destroy tests
