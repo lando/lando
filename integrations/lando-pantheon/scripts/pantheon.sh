@@ -22,6 +22,7 @@ chown -R www-data:www-data /var/www/certs /srv/bindings
 ln -sfn /var/www /srv/bindings/lando
 ln -sfn /tmp /srv/bindings/lando/tmp
 ln -sfn /app /srv/bindings/lando/code
+ln -sfn /app /code
 
 # Hook up a custom wp-cli.yml file to help with auto search-replace
 # See: https://github.com/lando/lando/issues/1409
