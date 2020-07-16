@@ -5,6 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added `command` support for `php` cli services [#2479](https://github.com/lando/lando/pull/2479)
+* Added symlink from `/code -> /app` for `pantheon` apps [#2421](https://github.com/lando/lando/pull/2421)
 * Improved `db-import` and `lando pull` to handle foreign key constraints [#1850](https://github.com/lando/lando/pull/1850) [#2391](https://github.com/lando/lando/pull/2391)
 * And various documentation improvements
 
