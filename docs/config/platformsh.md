@@ -143,6 +143,7 @@ db2:
 We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
 
 * [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
+* [Headless Chrome](https://docs.platform.sh/configuration/services/headless-chrome.html)
 * [InfluxDB](https://docs.platform.sh/configuration/services/influxdb.html)
 * [Kafka](https://docs.platform.sh/configuration/services/kafka.html)
 * [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
