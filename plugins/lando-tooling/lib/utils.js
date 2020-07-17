@@ -157,7 +157,7 @@ exports.parseConfig = (cmd, service, options = {}, answers = {}) => _(cmd)
   // Add in any argv extras if they've been passed in
   .map(config => handleOpts(config, handlePassthruOpts(options, answers)))
   // Wrap the command in /bin/sh if that makes sense
-  .map(config =>  _.merge({}, config, {command: escape(config.command, true, config.args)}))
+  .map(config => _.merge({}, config, {command: escape(config.command, true, config.args)}))
   // Add any args to the command and compact to remove undefined
   .map(config => _.merge({}, config, {command: _.compact(config.command.concat(config.args))}))
   // Put into an object
