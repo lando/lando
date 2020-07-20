@@ -1,4 +1,4 @@
-# Getting started
+# Getting Started
 
 Welcome intrepid Lando contributor! Thank you for joining the alliance and jumping on the front lines to triage issues!
 

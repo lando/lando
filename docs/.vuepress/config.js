@@ -311,7 +311,6 @@ module.exports = {
           collapsable: false,
           children: [
             'contrib-intro',
-            'triaging-issues',
             'contrib-structure',
             'contrib-plugins',
             'contrib-testing',
