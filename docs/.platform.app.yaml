@@ -5,7 +5,7 @@
 name: docs
 
 # The toolstack used to build the application.
-type: nodejs:12
+type: nodejs:10
 build:
   flavor: none
 
@@ -59,7 +59,7 @@ hooks:
     set -e
     yarn install
     yarn build
-    # curl -sS https://platform.sh/cli/installer | php
+    curl -sS https://platform.sh/cli/installer | php
 
 # The configuration of scheduled execution.
 crons:
