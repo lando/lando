@@ -45,11 +45,11 @@ exports.getLandoProxyRoutes = (routes = {}, supported = []) => _(normalizeRoutes
   // Merge in port data
   .map(route => _.merge({}, route, _.find(supported, {name: route.service})))
   // Add port to data
-  .map(route => ({service: route.service, href: `${route.href}:${route.port}`}))
+  .map(route => ({service: route.service, config: {hostname: route.href, port: route.port}}))
   // Group by service
   .groupBy('service')
   // Map to lando proxy config
-  .map((entries, service) => ([service, _.map(entries, 'href')]))
+  .map((entries, service) => ([service, _.map(entries, 'config')]))
   // objectify
   .fromPairs()
   // Return

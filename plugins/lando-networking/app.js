@@ -17,8 +17,10 @@ module.exports = (app, lando) => {
     // Go through each container
     .map(container => {
       // Grab from the proxy if we have them
-      const aliases = _.compact(_.get(app, `config.proxy.${container.service}`, []));
-      // And add in our default alias
+      const aliases = _(_.get(app, `config.proxy.${container.service}`, []))
+        .map(entry => _.isString(entry) ? entry : entry.host)
+        .compact()
+        .value();
       aliases.push(`${container.service}.${container.app}.internal`);
       // Sometimes you need to disconnect before you reconnect
       return landonet.disconnect({Container: container.id, Force: true})
