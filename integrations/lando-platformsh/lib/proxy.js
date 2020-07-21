@@ -28,6 +28,26 @@ const getUpstream = (route, routes) => {
 };
 
 /*
+ * Helper to map a route to a lando proxy
+ */
+const getProxyMiddlewares = route => {
+  // Let's add in some middleware
+  route.middlewares = [
+    {name: 'platform', key: 'headers.customrequestheaders.X-Client-IP', value: 'host.docker.internal'},
+    {name: 'platform', key: 'headers.customrequestheaders.X-Original-Route', value: route.href},
+  ];
+  // And special ones just for https
+  if (route.protocol === 'https:') {
+    route.middlewares.push({
+      name: 'platform-secured',
+      key: 'headers.customrequestheaders.X-Client-SSL',
+      value: 'on',
+    });
+  }
+  return route;
+};
+
+/*
  * Helper to map parsed platform config into related Lando things
  */
 exports.getLandoProxyRoutes = (routes = {}, supported = []) => _(normalizeRoutes(routes))
@@ -36,20 +56,17 @@ exports.getLandoProxyRoutes = (routes = {}, supported = []) => _(normalizeRoutes
   // Remove blank entries
   .compact()
   // Parse to lando things
-  .map(route => ({
-    service: route.upstream.split(':')[0],
-    href: url.parse(route.key).hostname,
-  }))
+  .map(route => _.merge({}, url.parse(route.key), {service: route.upstream.split(':')[0]}))
   // Filter unsupported upstreams
   .filter(route => _.includes(_.map(supported, 'name'), route.service))
   // Merge in port data
   .map(route => _.merge({}, route, _.find(supported, {name: route.service})))
   // Add port to data
-  .map(route => ({service: route.service, href: `${route.href}:${route.port}`}))
+  .map(route => ({service: route.service, config: getProxyMiddlewares(route)}))
   // Group by service
   .groupBy('service')
   // Map to lando proxy config
-  .map((entries, service) => ([service, _.map(entries, 'href')]))
+  .map((entries, service) => ([service, _.map(entries, 'config')]))
   // objectify
   .fromPairs()
   // Return

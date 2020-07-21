@@ -48,11 +48,25 @@ curl -s -o /dev/null -I -w "%{http_code}" http://lets.combine.things.lndo.site/e
 curl -s -o /dev/null -I -w "%{http_code}" http://thiscouldbeanything-lando-proxy.lndo.site | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://wild.socouldthis.lando-proxy.lndo.site | grep 200
 
+# Should handle object proxy format
+curl -s -o /dev/null -I -w "%{http_code}" http://web5.lndo.site | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://object-format.lndo.site | grep 200
+curl -s -o /dev/null -I -w "%{http_code}" http://object-format.lndo.site/test | grep 200
+
 # Should handle sites in subdirectories
 curl -s -o /dev/null -I -w "%{http_code}" http://lando-proxy.lndo.site/api | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://lets.see.what.happens.in.a.lndo.site/subdir | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://or.in.a.deeper.lndo.site/subdirectory/tree/ | grep 200
 curl -s -o /dev/null -I -w "%{http_code}" http://lets.combine.really.lndo.site/everything/for-real | grep 200
+
+# Should load in custom middleware if specificed
+curl http://object-format.lndo.site | grep X-Lando-Test | grep on
+curl -k https://object-format.lndo.site | grep X-Lando-Test | grep on
+curl -k https://object-format.lndo.site | grep X-Lando-Test-Ssl | grep on
+
+# Should only load secure middleware for https
+curl http://object-format.lndo.site | grep X-Lando-Test-Ssl || echo $? | grep 1
+curl -k https://object-format.lndo.site | grep X-Lando-Test-Ssl | grep on
 
 # Should generate a default certs config file and put it in the right place
 docker exec landoproxyhyperion5000gandalfedition_proxy_1 cat /proxy_config/default-certs.yaml | grep certFile | grep /certs/cert.crt
