@@ -16,6 +16,11 @@ mounts:
     source: local
     source_path: run
 
+# Platform CLI needs this now
+runtime:
+  extensions:
+      - mbstring
+
 # The configuration of app when it is exposed to the web.
 web:
   commands:
