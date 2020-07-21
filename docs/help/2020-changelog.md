@@ -4,7 +4,9 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-* Added ability to configure the [proxy] middleware layer [#2507](https://github.com/lando/lando/pull/2507)
+* Added ability to configure the `proxy` middleware layer [#2507](https://github.com/lando/lando/pull/2507)
+* Added `platformsh` specific headers to the `platformsh` recipe [#2507](https://github.com/lando/lando/pull/2507)
+* Fixed bug causing `HTTPS` to not be set correctly on `platformsh` recipes [#2507](https://github.com/lando/lando/pull/2507)
 * Improved handling of `primary` route in `platformsh` recipe [#2508](https://github.com/lando/lando/pull/2508)
 
 [What does pre-release mean?](https://docs.lando.dev/config/releases.html)
