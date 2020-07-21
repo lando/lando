@@ -515,11 +515,11 @@ if ($config->environment === 'lando') {
 
 Note that the above is simply meant to be illustrative.
 
-### Redirect
+### Redirects
 
 Lando will currently not perform redirects specified in your `routes.yaml`. Instead it will provide separate `http` and `https` routes.
 
-Adding redirect support is being discussed in this ticket: https://github.com/lando/lando/issues/2509.
+Adding redirect support is being discussed in this ticket: <https://github.com/lando/lando/issues/2509>.
 
 ### Local considerations
 

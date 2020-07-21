@@ -47,6 +47,21 @@ const parseServiceRelationships = ({relationships = {}}) => {
 };
 
 /*
+ * Helper to set primary route if needed
+ */
+const setPrimaryRoute = (routes = []) => {
+  // If we dont have a primary then set one
+  if (!_.some(routes, 'primary')) {
+    const firstUpstream = _.find(routes, {type: 'upstream'});
+    firstUpstream.primary = true;
+  }
+
+  // Return
+  return routes;
+};
+
+
+/*
  * Helper to find closest app
  */
 exports.findClosestApplication = (apps = []) => _(apps)
@@ -131,7 +146,12 @@ exports.parseRelationships = (apps, open = {}) => _(apps)
 /*
  * Helper to parse the platformsh routes file eg replace DEFAULT in the routes.yml
  */
-exports.parseRoutes = (routes, domain) => JSON.parse(JSON.stringify(routes).replace(/{default}/g, domain));
+exports.parseRoutes = (routes, domain) => _(routes)
+  .map((config, url) => ([url, _.merge({primary: false}, config)]))
+  .fromPairs()
+  .thru(routes => JSON.parse(JSON.stringify(routes).replace(/{default}/g, domain)))
+  .thru(routes => setPrimaryRoute(routes))
+  .value();
 
 /*
  * Helper to parse the platformsh services file
