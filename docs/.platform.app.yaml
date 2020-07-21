@@ -16,6 +16,11 @@ mounts:
     source: local
     source_path: run
 
+# Platform CLI needs this now
+runtime:
+  extensions:
+      - mbstring
+
 # The configuration of app when it is exposed to the web.
 web:
   commands:
@@ -59,11 +64,7 @@ hooks:
     set -e
     yarn install
     yarn build
-    # We do the below instead of the usual install script to avoid the mbstring check which fails right now
-    # Hopefully we can switch back to the below commented out thing at some point
     # curl -sS https://platform.sh/cli/installer | php
-    curl -fsSL -o /app/.platformsh/bin/platform "https://github.com/platformsh/platformsh-cli/releases/download/v3.59.1/platform.phar"
-    chmod +x /app/.platformsh/bin/platform
 
 # The configuration of scheduled execution.
 crons:

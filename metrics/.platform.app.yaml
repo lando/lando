@@ -1,5 +1,5 @@
 name: metrics
-type: nodejs:12
+type: nodejs:10
 
 dependencies:
   nodejs:
@@ -28,11 +28,7 @@ hooks:
   build: |
     set -e
     yarn install
-    # We do the below instead of the usual install script to avoid the mbstring check which fails right now
-    # Hopefully we can switch back to the below commented out thing at some point
-    # curl -sS https://platform.sh/cli/installer | php
-    curl -fsSL -o /app/.platformsh/bin/platform "https://github.com/platformsh/platformsh-cli/releases/download/v3.59.1/platform.phar"
-    chmod +x /app/.platformsh/bin/platform
+    curl -sS https://platform.sh/cli/installer | php
 
 crons:
   snapshot:
