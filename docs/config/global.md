@@ -18,6 +18,8 @@ You can also configure how Lando itself works using a file called `config.yml`. 
 
 Note that there are some configuration options **THAT MUST** be set during the bootstrap of the `lando` object. For more information about how to bootstrap your own custom `lando` object, please consult the [Lando API](./../api/lando.html#lando).
 
+[[toc]]
+
 ## config.yml
 
 This file specifies the core configuration options for Lando. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. **PLEASE NOTE THAT THIS FILE IS DIFFERENT THAN YOUR LANDOFILE!** If you add any of these settings to your Landofile, the expected result should be "nothing happens".

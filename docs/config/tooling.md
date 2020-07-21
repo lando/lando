@@ -22,6 +22,8 @@ This allows you to:
 You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./services.md#build-steps) or our [`ssh`](./../basics/ssh.md) command.
 :::
 
+[[toc]]
+
 ## Usage
 
 It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. All the options you can use for a given tooling route and their default values are shown below:

@@ -1,12 +1,28 @@
 # 2020
 
-## v3.0.8 - In development
+## v3.0.9 - [July 17, 2020](https://github.com/lando/lando/releases/tag/v3.0.9)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added `command` support for `php` cli services [#2479](https://github.com/lando/lando/pull/2479)
+* Added symlink from `/code -> /app` for `pantheon` apps [#2421](https://github.com/lando/lando/pull/2421)
+* Fixed bug causing `lando push` commit message to get truncated to first word [#2492](https://github.com/lando/lando/pull/2492)
+* Improved `db-import` and `lando pull` to handle foreign key constraints [#1850](https://github.com/lando/lando/pull/1850) [#2391](https://github.com/lando/lando/pull/2391)
+* And various documentation improvements
+
+## v3.0.8 - [July 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.8)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added support for loading `plugins` from your application repo [#2434](https://github.com/lando/lando/pull/2434)
+* Bumped `platformsh` recipe to `alpha` status [#2444](https://github.com/lando/lando/pull/2444)
+* Bumped `lagoon` recipe to `alpha` status [#2451](https://github.com/lando/lando/pull/2451)
+* Fixed bug causing some interactive options to not be passed through correctly [#2456](https://github.com/lando/lando/pull/2456) [#2471](https://github.com/lando/lando/pull/2471)
 * Improved database pull performance for the `pantheon` recipe [#2402](https://github.com/lando/lando/pull/2402)
-* Switched all usage of `:delegated` to `:cached` in preperation of Mutagen syncing
+* Improved error message if host-side `terminus` token caches contain invalid `JSON` [#2428](https://github.com/lando/lando/pull/2428)
+* Switched all usage of `:delegated` to `:cached` in preperation of `mutagen` syncing [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
 * Updated default `drupal8` recipe `php` version to `7.3` [#2427](https://github.com/lando/lando/pull/2427)
+* Updated `excludes` to use `mutagen` if its available [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
 
 ## v3.0.7 - [June 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.7)
 

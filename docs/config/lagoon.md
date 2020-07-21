@@ -2,14 +2,15 @@
 description: The best local development option for Lagoon a Docker Build and Deploy System for OpenShift & Kubernetes
 ---
 
-# Lagoon **(experimental)**
+# Lagoon **(alpha)**
 
 [Lagoon](https://lagoon.readthedocs.io/en/latest/) solves what developers are dreaming about: A system that allows developers to locally develop their code and their services with Docker and run the exact same system in production. The same Docker images, the same service configurations and the same code.
 
-This is currently a _very experimental_ integration that has the following _serious caveats_:
+This is currently a _alpha_ level integration that has the following _serious caveats_:
 
 * This _only_ supports projects based on or extended from [this example](https://github.com/amazeeio/drupal-example-simple)
-* This _only_ supports Lagoon's `php-fpm`, `php-cli`, `nginx`, `solr`, `redis`, `mariadb` and `postgres` containers.
+* This _does not_ support Lagoon's `elasticsearch`, `mongodb`, or `rabbitmq` containers yet
+* This _does not_ fully interact with the Amazee.io Lagoon API yet
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
@@ -20,11 +21,10 @@ You can report any issues or feedback [over here](https://github.com/lando/lando
 
 ## Getting Started
 
-:::warning EXPERIMENTAL FEATURE
+:::warning ALPHA FEATURE
 To access this feature you will need:
 
-  * [Lando 3.0.5](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
-  * [Experimental mode](./experimental.md) turned on
+  * [Lando 3.0.8](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
 :::
 
 Before you get started with this recipe we assume that you have:
@@ -66,7 +66,6 @@ Here are the configuration options, set to the default values, for this recipe's
 ```yaml
 recipe: lagoon
 config:
-  flavor: drupal
   build:
     - composer install
 ```
@@ -75,10 +74,6 @@ If you do not already have a [Landofile](./../config/lando.md) for your Lagoon s
 
 Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
-### Flavor
-
-This is not configurable. Lando only support Drupal projects currently.
-
 ### Build steps
 
 If you have steps you need to run to get your site into a workable place you can put them in the `build` key of your recipes `config`. By default, we will run `composer install` but you may wish to augment that with any front end compilation tasks you may have as in the example below:
@@ -86,7 +81,6 @@ If you have steps you need to run to get your site into a workable place you can
 ```yaml
 recipe: lagoon
 config:
-  flavor: drupal
   build:
     - composer install
     - yarn run compile:sass
@@ -114,6 +108,7 @@ The services we currently support with links to their associated Lagoon docs is 
 * [PostgreSQL](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/postgres/)
 * [Redis](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/redis/)
 * [Solr](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/solr/)
+* [Varnish](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/varnish/)
 
 Note that we are testing against the "Drupal" variants of the above but it's _possible_ the base services work as well.
 
@@ -152,6 +147,7 @@ lando composer          Runs composer commands
 lando db-export [file]  Exports database from a database service to a file
 lando db-import <file>  Imports a dump file into a database service
 lando drush             Runs drush commands
+lando lagoon            Runs lagoon commands
 lando mysql             Drops into a MySQL shell on a database service
 lando node              Runs node commands
 lando npm               Runs npm commands
@@ -160,6 +156,8 @@ lando yarn              Runs yarn commands
 ```
 
 Note that you can define your own commands by using out [tooling framework](tooling.md). Also check out the guides for the powerful [DB Export](./../guides/db-export.md) and [DB Import](./../guides/db-import.md) commands.
+
+Also, check out the [Lagoon CLI Docs](https://amazeeio.github.io/lagoon-cli/commands/lagoon/) for more information on using `lando lagoon`.
 
 ### Mailhog
 

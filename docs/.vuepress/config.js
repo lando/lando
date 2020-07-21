@@ -129,6 +129,7 @@ module.exports = {
             'experimental',
             'networking',
             'performance',
+            'plugins',
             'releases',
             'ssh',
             'security',

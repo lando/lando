@@ -47,11 +47,6 @@ Run the following commands to get up and running with this example.
 # Should poweroff
 lando poweroff
 
-# Should be running in experimental mode
-lando config | grep experimental | grep true || lando --experimental
-lando config | grep experimental | grep true
-lando config | grep experimentalPluginLoadTest | grep true
-
 # Should initialize the platformsh lando-kitchensink example
 rm -rf sink && mkdir -p sink && cd sink
 lando init --source platformsh --platformsh-auth "$PLATFORMSH_CLI_TOKEN" --platformsh-site lando-kitchensink --platformsh-key-name "$CIRCLE_SHA1"
@@ -76,6 +71,13 @@ docker ps --filter label=com.docker.compose.project=landokitchensink | grep dock
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/mariadb-10.4 | grep landokitchensink_mysql_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/postgresql-11| grep landokitchensink_postgres_1
 docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/redis-5.0 | grep landokitchensink_redis_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/kafka-2.4 | grep landokitchensink_kafka_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/varnish-6.0 | grep landokitchensink_varnish_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/mongodb-3.6 | grep landokitchensink_dbmongo_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/influxdb-1.7 | grep landokitchensink_influxdb_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/elasticsearch-7.7 | grep landokitchensink_searchelastic_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/rabbitmq-3.8 | grep landokitchensink_rabbitmq_1
+docker ps --filter label=com.docker.compose.project=landokitchensink | grep docker.registry.platform.sh/solr-8.0 | grep landokitchensink_search_1
 
 # Should use tooling based on the closest application
 cd sink
@@ -237,6 +239,43 @@ lando ssh -c "curl localhost/solr.php" | grep "Result" | grep "OK"
 # Should run php mongodb commands successfully
 cd sink/php
 lando ssh -c "curl localhost/mongodb.php" | grep "Result" | grep "OK"
+
+# Should have OS Pid when running rabbitmqctl status
+cd sink/php
+lando ssh -u root -s rabbitmq -c "rabbitmqctl status" | egrep "OS PID: [0-9]+"
+
+# Should load rabbitmq management page
+cd sink/php
+lando ssh -s rabbitmq -c "curl localhost:15672" | grep "RabbitMQ Management"
+
+# Should run php rabbitmq php commands successfully
+cd sink/php
+lando ssh -c "curl localhost/rabbitmq.php" | grep "Result" | grep "OK"
+
+# Should show influxdb process running as the app user
+cd sink/php
+lando ssh -u root -s influxdb -c "ps aux|grep influxdb" | grep "^app"
+
+# Should show kafka process running
+cd sink/php
+lando ssh -u root -s kafka -c "ps aux" | grep runsv | grep kafka
+
+# Should connect to the correct backend from varnish
+cd sink/php
+lando ssh -s varnish -c "curl localhost:8080" | grep discreet
+
+# Should be able to connect to varnish stats endpoint
+cd sink/php
+lando ssh -s varnish -c "curl localhost:8081/config" | grep backend | grep test_1
+lando ssh -s varnish -c "curl localhost:8081/config" | grep "req.backend_hint" | grep "test.backend()"
+
+# Should find chromium service
+cd sink/php
+lando ssh -s chromium -c "ps -aux" | grep "chromium-headless"
+
+# Should run chromium php page
+cd sink/php
+lando ssh -c "curl localhost/chromium.php" | grep "Result" | grep "OK"
 ```
 
 Destroy tests

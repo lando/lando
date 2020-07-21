@@ -25,7 +25,6 @@ You can report any issues or feedback [over here](https://github.com/lando/lando
 To access this feature you will need:
 
   * [Lando 3.0.8](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
-  * [Experimental mode](./experimental.md) turned on
 :::
 
 Before you get started with this recipe we assume that you have:
@@ -144,6 +143,7 @@ db2:
 We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
 
 * [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
+* [Headless Chrome](https://docs.platform.sh/configuration/services/headless-chrome.html)
 * [InfluxDB](https://docs.platform.sh/configuration/services/influxdb.html)
 * [Kafka](https://docs.platform.sh/configuration/services/kafka.html)
 * [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
@@ -153,6 +153,7 @@ We currently only support the below services and we _highly recommend_ you consu
 * [RabbitMQ](https://docs.platform.sh/configuration/services/rabbitmq.html)
 * [Redis](https://docs.platform.sh/configuration/services/redis.html)
 * [Solr](https://docs.platform.sh/configuration/services/solr.html)
+* [Varnish](https://docs.platform.sh/configuration/services/varnish.html)
 
 Also note that you will need to run a `lando rebuild` for configuration changes to manifest in the same way you normally would for config changes to your Landofile.
 
@@ -520,7 +521,7 @@ There are some application settings and configuration that platform.sh will auto
 
 For example if your project is based on the [Drupal 8 Template](https://github.com/platformsh-templates/drupal8) then Lando will set the `tmp` directory and set `skip_permissions_hardening` to `TRUE`.
 
-Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/experimental/plugins/lando-platformsh/lib/overrides.js).
+Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/integrations/lando-platformsh/lib/overrides.js).
 
 ### platformsh.agent errors
 
@@ -574,6 +575,6 @@ There are a few things that are currently unsupported at this time, athough we h
 If you are interested in working on the development of this recipe we recommend you check out:
 
 * The Lando [contrib docs](./../contrib/contributing.md)
-* The [Dev Docs](https://github.com/lando/lando/tree/master/experimental/plugins/lando-platformsh) for this recipe
+* The [Dev Docs](https://github.com/lando/lando/tree/master/integrations/lando-platformsh) for this recipe
 
 <RelatedGuides tag="Platformsh"/>

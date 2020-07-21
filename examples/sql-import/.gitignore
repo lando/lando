@@ -3,3 +3,4 @@
 *.zip
 !test.sql
 !test2.sql
+!test-foreign-keys.sql

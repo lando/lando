@@ -10,7 +10,7 @@ You can use the top-level `services` config in your [Landofile](./lando.md) to d
 ```yaml
 services:
   myservice:
-    app_mount: delegated
+    app_mount: cached
     type: some-service:with-optional-version
     overrides:
     build:
@@ -42,6 +42,8 @@ service:
 ::: warning Docker compose files are loaded first!
 If you want to load Docker compose files **and** use services, you should note that compose files are loaded first. This means that depending on how you name things, your services could override things set in your compose files.
 :::
+
+[[toc]]
 
 ## Supported Services
 

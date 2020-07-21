@@ -80,13 +80,15 @@ const handleDynamic = (config, options = {}, answers = {}) => {
  * the first three assuming they are [node, lando.js, options.name]'
  * Check to see if we have global lando opts and remove them if we do
  */
-const handleOpts = (config, argopts = process.argv.slice(3)) => {
+const handleOpts = (config, argopts = []) => {
+  // Append any user specificed opts
+  argopts = argopts.concat(process.argv.slice(3));
   // If we have no args then just return right away
   if (_.isEmpty(argopts)) return config;
   // If this is not a CLI then we can pass right back
   if (process.lando !== 'node') return config;
   // Return
-  return _.merge({}, config, {command: config.command.concat(argopts)});
+  return _.merge({}, config, {args: argopts});
 };
 
 /*
@@ -152,15 +154,12 @@ exports.parseConfig = (cmd, service, options = {}, answers = {}) => _(cmd)
   .map(cmd => parseCommand(cmd, service))
   // Handle dynamic services
   .map(config => handleDynamic(config, options, answers))
-  // Parse the cmds into something more usable for shell.sh
-  .map(config => _.merge({}, config, {command: escape(config.command)}))
   // Add in any argv extras if they've been passed in
-  .map(config => handleOpts(config))
-  // Append passthru options so that interactive responses are permitted
-  // @TODO: this will double add opts that are already passed in non-interactively, is that a problem?
-  .map(config => _.merge({}, config, {command: config.command.concat(handlePassthruOpts(options, answers))}))
+  .map(config => handleOpts(config, handlePassthruOpts(options, answers)))
   // Wrap the command in /bin/sh if that makes sense
-  .map(config => _.merge({}, config, {command: escape(config.command, true)}))
+  .map(config => _.merge({}, config, {command: escape(config.command, true, config.args)}))
+  // Add any args to the command and compact to remove undefined
+  .map(config => _.merge({}, config, {command: _.compact(config.command.concat(config.args))}))
   // Put into an object
   .value();
 

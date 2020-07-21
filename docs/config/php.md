@@ -53,6 +53,8 @@ services:
     webroot: .
     xdebug: false
     composer: []
+    # Below only valid for via: cli
+    command: tail -f /dev/null
     config:
       php: SEE BELOW
       server: SEE BELOW
@@ -83,13 +85,23 @@ services:
     via: nginx
 ```
 
-** As CLI **
+#### As CLI
 
 ```yaml
 services:
   myservice:
     type: php
     via: cli
+```
+
+In CLI mode you can optionally tell the php cli service to boot up with an arbitrary command, this is good for php worker services like queues.
+
+```yaml
+services:
+  myservice:
+    type: php
+    via: cli
+    command: php /app/src/artisan horizon
 ```
 
 ### Toggling xdebug
