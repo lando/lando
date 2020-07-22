@@ -47,7 +47,7 @@ exports.setPshExec = (cmds = [], fallback = 'app', needsPrefix = []) => _(cmds)
   .map(cmd => _.isString(cmd) ? _.set({}, fallback, cmd) : cmd)
   // Extract the service data
   .map(cmd => _.map(cmd, (cmd, service) => ([service, cmd])))
-  // Flatten
+  // Flatten the thing
   .flatten()
   // Prefix if needed
   .map(data => {
