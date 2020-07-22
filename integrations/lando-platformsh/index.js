@@ -21,6 +21,7 @@ module.exports = lando => {
       // @TODO: will node, python, etc appserver still use `web`?
       const appCache = lando.cache.get(`${app.name}.compose.cache`) || {};
       const appservers = _(appCache.info).filter(info => info.meUser === 'web').map('service').value();
+
       // Loop through the tooling
       _.forEach(app.config.tooling, (tooling, name) => {
         // Standardize and arrayify tooling
@@ -32,7 +33,6 @@ module.exports = lando => {
 
       // Loop through the events
       _.forEach(app.config.events, (event, name) => {
-        // @TODO: better default than app?
         app.config.events[name] = utils.setPshExec(event, 'app', appservers);
       });
     }
