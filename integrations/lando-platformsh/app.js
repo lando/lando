@@ -53,10 +53,10 @@ module.exports = (app, lando) => {
         lando.log.error(`Could not detect any valid .platform.app.yaml files in ${app.root} or its subdirs!`);
       }
 
-    /*
-     * Warn user of unsupported services
-     * This event exists to
-     */
+      /*
+       * Warn user of unsupported services
+       * This event exists to
+       */
       app.events.on('post-start', 9, () => {
         const allServices = _.map(app.platformsh.services, 'name');
         const supportedServices = _.map(getLandoServices(app.platformsh.services), 'name');
