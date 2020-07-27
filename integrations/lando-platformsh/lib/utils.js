@@ -40,6 +40,24 @@ exports.getPlatformshTokens = home => {
 };
 
 /*
+ * Helper to prefix commands
+ */
+exports.setPshExec = (cmds = [], fallback = 'app', needsPrefix = []) => _(cmds)
+  // Set service if needed
+  .map(cmd => _.isString(cmd) ? _.set({}, fallback, cmd) : cmd)
+  // Extract the service data
+  .map(cmd => _.map(cmd, (cmd, service) => ([service, cmd])))
+  // Flatten the thing
+  .flatten()
+  // Prefix if needed
+  .map(data => {
+    if (_.includes(needsPrefix, data[0])) data[1] = `/helpers/psh-exec.sh ${data[1]}`;
+    return _.set({}, data[0], data[1]);
+  })
+  // Return
+  .value();
+
+/*
  * Helper to return most recent tokens
  */
 exports.sortTokens = (...sources) => _(_.flatten([...sources]))

@@ -1,6 +1,6 @@
 # 2020
 
-## v3.0.10 - In development
+## v3.0.10 - [July 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.10)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
@@ -8,6 +8,8 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added `platformsh` specific headers to the `platformsh` recipe [#2507](https://github.com/lando/lando/pull/2507)
 * Fixed bug causing `HTTPS` to not be set correctly on `platformsh` recipes [#2507](https://github.com/lando/lando/pull/2507)
 * Fixed bug causing `lando` to fail if `~/.ssh` doesn't exist [#2501](https://github.com/lando/lando/pull/2501)
+* Fixed bug causing `events` for `platformsh` recipes to not run with correct env
+* Fixed bug causing multicommand tooling for `platformsh` recipes to not run correctly
 * Improved handling of `primary` route in `platformsh` recipe [#2508](https://github.com/lando/lando/pull/2508)
 
 [What does pre-release mean?](https://docs.lando.dev/config/releases.html)
