@@ -2,25 +2,38 @@
 
 // Modules
 const _ = require('lodash');
+const utils = require('./lib/utils');
 
+/*
+ * Stuff
+ */
 module.exports = lando => {
   // Sanitize any platformsh auth
   lando.log.alsoSanitize('platformsh-auth');
 
   /*
-   * This event makes sure that ALL tooling commands that are run against an app container
+   * This event makes sure that tooling and event commands that are run against an app container
    * are run through /helpers/psh-exec.sh first so they get the needed envvars eg HOME, USER, and PLATFORM_* set
    */
-  lando.events.on('pre-engine-runner', app => {
+  lando.events.on('pre-command-runner', app => {
     if (_.get(app, 'config.recipe') === 'platformsh') {
-      // This is a cheap way to get the list of appservers
-      const appservers = _(app.info).filter(info => info.meUser === 'web').map('service').value();
-      // Loop through and do the vampire
+      // This is a cheap way to get the list of platform appservers
+      // @TODO: will node, python, etc appserver still use `web`?
+      const appCache = lando.cache.get(`${app.name}.compose.cache`) || {};
+      const appservers = _(appCache.info).filter(info => info.meUser === 'web').map('service').value();
+
+      // Loop through the tooling
       _.forEach(app.config.tooling, (tooling, name) => {
-        if (_.includes(appservers, tooling.service)) {
-          const cmd = tooling.cmd ? tooling.cmd : tooling.name;
-          tooling.cmd = `/helpers/psh-exec.sh ${cmd}`;
-        }
+        // Standardize and arrayify tooling
+        const cmd = tooling.cmd ? tooling.cmd : tooling.name;
+        const cmds = (!_.isArray(cmd)) ? [cmd] : cmd;
+        // Reset tooling
+        tooling.cmd = utils.setPshExec(cmds, tooling.service, appservers);
+      });
+
+      // Loop through the events
+      _.forEach(app.config.events, (event, name) => {
+        app.config.events[name] = utils.setPshExec(event, 'app', appservers);
       });
     }
   });

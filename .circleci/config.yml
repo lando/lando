@@ -21,7 +21,7 @@ jobs:
             # Check if we need to run tests and bail if we don't
             LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
             echo "The following files have changed: $LANDO_CHANGED_FILES"
-            LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e .circleci -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
+            LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e .circleci -e bin/ -e lib/ -e plugins/ -e integrations/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
             if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
               circleci-agent step halt
             fi
