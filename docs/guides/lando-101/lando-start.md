@@ -3,7 +3,7 @@ title: Lando Start
 metaTitle: Lando Start | Lando
 description: Start a Lando app and some vocabulary to help us talk about Lando.
 summary: Lando start command and some vocabulary to help us understand the Lando ecosystem.
-date: 2020-07-23T14:38:22.169Z
+date: 2020-07-27T14:38:22.169Z
 original: 
 repo: 
 
