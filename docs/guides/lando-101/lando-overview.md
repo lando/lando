@@ -34,7 +34,7 @@ Lando can isolate all your dev needs on a per app basis. This course will walk y
 Here is the outline of content the Lando 101 course will cover:
 
 * [Init](/guides/lando-101/lando-init.html)
-* Start
+* [Start](/guides/lando-101/lando-start.html)
 * Configure
 * Add a Service
 * Add a Proxy URL
