@@ -177,6 +177,27 @@ In some rare scenarios a service does not boot up as `root`. This is especially 
 
 This means that subdomains like `sub.mysite.lndo.site` will likely produce a browser warning. However, domains like `sub-mysite.lndo.site` will continue to work since they are covered by the global wildcard cert.
 
+### Advanced
+
+For advanced usage like setting custom headers and redirects you can access traefik's [middleware layer](https://docs.traefik.io/middlewares/overview/) using the following config:
+
+```yaml
+proxy:
+  appserver:
+    - hostname: object-format.lndo.site
+      port: 80
+      pathname: /
+      middlewares:
+        - name: test
+          key: headers.customrequestheaders.X-Lando-Test
+          value: on
+        - name: test-secured
+          key: headers.customrequestheaders.X-Lando-Test-SSL
+          value: on
+```
+
+Note that while `name` is arbitrary if it ends in `-secured` it will _only_ be applied to `https` routes. Please consult the [traefik documentation](https://docs.traefik.io/middlewares/overview/) for the exact Docker label based syntax.
+
 ## Configuration
 
 Various parts of the proxy are configurable via the Lando [global config](./global.md).

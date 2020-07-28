@@ -1,5 +1,19 @@
 # 2020
 
+## v3.0.10 - [July 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.10)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added ability to configure the `proxy` middleware layer [#2507](https://github.com/lando/lando/pull/2507)
+* Added `platformsh` specific headers to the `platformsh` recipe [#2507](https://github.com/lando/lando/pull/2507)
+* Fixed bug causing `HTTPS` to not be set correctly on `platformsh` recipes [#2507](https://github.com/lando/lando/pull/2507)
+* Fixed bug causing `lando` to fail if `~/.ssh` doesn't exist [#2501](https://github.com/lando/lando/pull/2501)
+* Fixed bug causing `events` for `platformsh` recipes to not run with correct env
+* Fixed bug causing multicommand tooling for `platformsh` recipes to not run correctly
+* Improved handling of `primary` route in `platformsh` recipe [#2508](https://github.com/lando/lando/pull/2508)
+
+[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
+
 ## v3.0.9 - [July 17, 2020](https://github.com/lando/lando/releases/tag/v3.0.9)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
@@ -9,6 +23,8 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing `lando push` commit message to get truncated to first word [#2492](https://github.com/lando/lando/pull/2492)
 * Improved `db-import` and `lando pull` to handle foreign key constraints [#1850](https://github.com/lando/lando/pull/1850) [#2391](https://github.com/lando/lando/pull/2391)
 * And various documentation improvements
+
+[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
 
 ## v3.0.8 - [July 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.8)
 

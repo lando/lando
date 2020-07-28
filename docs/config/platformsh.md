@@ -515,6 +515,12 @@ if ($config->environment === 'lando') {
 
 Note that the above is simply meant to be illustrative.
 
+### Redirects
+
+Lando will currently not perform redirects specified in your `routes.yaml`. Instead it will provide separate `http` and `https` routes.
+
+Adding redirect support is being discussed in this ticket: <https://github.com/lando/lando/issues/2509>.
+
 ### Local considerations
 
 There are some application settings and configuration that platform.sh will automatically set if your project is based on one of their boilerplates. While most of these settings are fine for local development, some are not. If these settings need to be altered for your site to work as expected locally then Lando will modify them.

@@ -133,3 +133,8 @@
 - name: "@samaphp"
   type: herald
   url: https://github.com/samaphp
+# July 22, 2020
+- name: "Sagetree"
+  type: ally
+  url: https://www.sagetree.com
+  logo: https://lando.dev/images/sagetree_logo.png
