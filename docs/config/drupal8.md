@@ -230,8 +230,8 @@ Then configure the following [build step](./../config/services.md#build-steps) i
 services:
   appserver:
     build:
-      - /bin/sh -c "mkdir -p ~/.drush/site-aliases"
-      - /bin/sh -c "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
+      - mkdir -p ~/.drush/site-aliases
+      - ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php
 ```
 
 #### Configuring your root directory

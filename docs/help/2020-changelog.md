@@ -1,5 +1,80 @@
 # 2020
 
+## v3.0.10 - [July 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.10)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added ability to configure the `proxy` middleware layer [#2507](https://github.com/lando/lando/pull/2507)
+* Added `platformsh` specific headers to the `platformsh` recipe [#2507](https://github.com/lando/lando/pull/2507)
+* Fixed bug causing `HTTPS` to not be set correctly on `platformsh` recipes [#2507](https://github.com/lando/lando/pull/2507)
+* Fixed bug causing `lando` to fail if `~/.ssh` doesn't exist [#2501](https://github.com/lando/lando/pull/2501)
+* Fixed bug causing `events` for `platformsh` recipes to not run with correct env
+* Fixed bug causing multicommand tooling for `platformsh` recipes to not run correctly
+* Improved handling of `primary` route in `platformsh` recipe [#2508](https://github.com/lando/lando/pull/2508)
+
+[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
+
+## v3.0.9 - [July 17, 2020](https://github.com/lando/lando/releases/tag/v3.0.9)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added `command` support for `php` cli services [#2479](https://github.com/lando/lando/pull/2479)
+* Added symlink from `/code -> /app` for `pantheon` apps [#2421](https://github.com/lando/lando/pull/2421)
+* Fixed bug causing `lando push` commit message to get truncated to first word [#2492](https://github.com/lando/lando/pull/2492)
+* Improved `db-import` and `lando pull` to handle foreign key constraints [#1850](https://github.com/lando/lando/pull/1850) [#2391](https://github.com/lando/lando/pull/2391)
+* And various documentation improvements
+
+[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
+
+## v3.0.8 - [July 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.8)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added support for loading `plugins` from your application repo [#2434](https://github.com/lando/lando/pull/2434)
+* Bumped `platformsh` recipe to `alpha` status [#2444](https://github.com/lando/lando/pull/2444)
+* Bumped `lagoon` recipe to `alpha` status [#2451](https://github.com/lando/lando/pull/2451)
+* Fixed bug causing some interactive options to not be passed through correctly [#2456](https://github.com/lando/lando/pull/2456) [#2471](https://github.com/lando/lando/pull/2471)
+* Improved database pull performance for the `pantheon` recipe [#2402](https://github.com/lando/lando/pull/2402)
+* Improved error message if host-side `terminus` token caches contain invalid `JSON` [#2428](https://github.com/lando/lando/pull/2428)
+* Switched all usage of `:delegated` to `:cached` in preperation of `mutagen` syncing [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
+* Updated default `drupal8` recipe `php` version to `7.3` [#2427](https://github.com/lando/lando/pull/2427)
+* Updated `excludes` to use `mutagen` if its available [#763](https://github.com/lando/lando/pull/763) [#2354](https://github.com/lando/lando/pull/2354)
+
+## v3.0.7 - [June 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.7)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added ability to configure `USER` and `PORT` for `sql-import` and `sql-export` scripts with envvars
+* Added ability to set environment variables for tooling commands [#2128](https://github.com/lando/lando/pull/2128)
+* Changed `/user` and `/lando` mounting to use `:cached` in preperation for Mutagen
+* Fixed bug causing non-semantic `drush` versions like `*` and `^` to throw errors [#2386](https://github.com/lando/lando/pull/2386)
+* Fixed bug causing custom config files in `nginx` service to be modified unexpectedly [#2383](https://github.com/lando/lando/pull/2383)
+* Fixed bug causing first touch non-start engine commands to fail
+* Improved `/bin/sh` wrapping of tooling commands [#2279](https://github.com/lando/lando/pull/2279) [#2280](https://github.com/lando/lando/pull/2280)
+* Loosened key add restrictions to improve key loading on `macOS` High Sierra [#2415](https://github.com/lando/lando/pull/2415)
+* Removed excessively frequent `WARN` messages [#2389](https://github.com/lando/lando/pull/2389)
+* Updated Terminus to `2.4.0` [#2417](https://github.com/lando/lando/issues/2417)
+
+## v3.0.6 - [June 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.6)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing non-semantic `drush` versions like `*` and `false` to throw errors [#2372](https://github.com/lando/lando/pull/2372)
+
+## v3.0.5 - [June 5, 2020](https://github.com/lando/lando/releases/tag/v3.0.5)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added _experimental_ support for WordPress Site Networks (Multisite) to Pantheon recipe [#1425](https://github.com/lando/lando/pull/1425)
+* Added `/app/bin` into the `php` service `PATH` [#2328](https://github.com/lando/lando/pull/2328)
+* Fixed bug causing "command" output to be unreadable on some terminals [#2302](https://github.com/lando/lando/pull/2302)
+* Fixed bug causing `stdin` to not be read correctly for some tooling commands eg `lando drush sql-cli < dump.sql` [#1918](https://github.com/lando/lando/pull/1918)
+* Fixed regression in `db-import` causing tables to not be dropped correctly
+* Fixed regression causing the version in `via: nginx:1.16` to not be picked up correctly [#2300](https://github.com/lando/lando/pull/2300)
+* Improved performance of user permisson `host:container` mapping [#2300](https://github.com/lando/lando/pull/2300)
+* Improved `lando ssh` so that it now uses the first defined service as the default if `appserver` does not exist [#2300](https://github.com/lando/lando/pull/2300)
+* Updated `varnish` ssl termination to use `nginx` `1.17` [#2300](https://github.com/lando/lando/pull/2300)
+
 ## v3.0.4 - [May 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.4)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

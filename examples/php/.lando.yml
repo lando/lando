@@ -11,6 +11,10 @@ services:
     build_as_root:
       - curl -sL https://deb.nodesource.com/setup_14.x | bash -
       - apt-get install -y nodejs
+  cliworker:
+    type: php
+    via: cli
+    command: sleep infinity
   cliold:
     type: php:5.6
     via: cli

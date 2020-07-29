@@ -36,9 +36,9 @@ Run the following commands to validate things are rolling as they should.
 cd drupal8
 lando ssh -s appserver -c "curl -L localhost" | grep "Drupal 8"
 
-# Should use 7.2 as the default php version
+# Should use 7.3 as the default php version
 cd drupal8
-lando php -v | grep "PHP 7.2"
+lando php -v | grep "PHP 7.3"
 
 # Should be running apache 2.4 by default
 cd drupal8

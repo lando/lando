@@ -68,7 +68,7 @@ fi
 # Scan the following directories for keys and filter out non-private keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   lando_info "Scanning $SSH_DIR for keys..."
-  readarray -t RAW_LIST < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f)
+  readarray -t RAW_LIST < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -type f)
   for RAW_KEY in "${RAW_LIST[@]}"; do
     SSH_CANDIDATES+=("$RAW_KEY")
   done

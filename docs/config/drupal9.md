@@ -182,7 +182,7 @@ lando drush uli
 
 This happens because it is actually a difficult problem for Lando to 100% know the canonical URL or service that is serving your application. However you can set up your environment so that commands like `lando drush uli` return the proper URL.
 
-Set a specific local drush uri value by adding a setting for DRUSH_OPTIONS_URI in the relevant service. You will need to run `lando rebuild` after adding this setting.
+Set a specific local drush uri value by adding a setting for `DRUSH_OPTIONS_URI` in the relevant service. You will need to run `lando rebuild` after adding this setting.
 
 ```yaml
 services:
@@ -194,27 +194,7 @@ services:
 
 #### Aliases
 
-You can also use `drush` aliases with command like `lando drush @sitealias cc all` by following the instructions below.
-
-Make sure the alias file exists within the drush folder in your app. An example could be the files structure below.
-
-```bash
-|-- app
-   |-- drush
-      |-- yoursite.aliases.drushrc.php
-```
-
-For info on how to setup your alias please refer to the following [link](https://www.drupal.org/node/1401522) or see this [example](https://raw.githubusercontent.com/drush-ops/drush/master/examples/example.aliases.yml).
-
-Then configure the following [build step](./../config/services.md#build-steps) in your [Landofile](./../config/lando.md) and `lando rebuild`.
-
-```yml
-services:
-  appserver:
-    build:
-      - /bin/sh -c "mkdir -p ~/.drush/site-aliases"
-      - /bin/sh -c "ln -sf /app/drush/yoursite.aliases.drushrc.php ~/.drush/site-aliases/yoursite.drushrc.php"
-```
+You can also use Drush site aliases with command like `lando drush @sitealias cr` by following the [site aliases documentation](https://docs.drush.org/en/stable/usage/#site-aliases).
 
 #### Configuring your root directory
 

@@ -12,6 +12,8 @@ Specifically, every Lando service, even those added via the `compose` top level 
 If you want a service in App A to talk to a service in App B then you need to make sure you've started up both apps!
 :::
 
+[[toc]]
+
 ## Automatic Hostnames
 
 By default, every service will get and be accessible at a hostname of the form `<service>.<app>.internal`. For example, if you have an app called `labouche` and a service called `redis`, it should be accessible from any other container using `redis.labouche.internal`.

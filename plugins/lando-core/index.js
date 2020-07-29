@@ -61,8 +61,9 @@ module.exports = lando => {
   const caCert = path.join(caDir, `${caDomain}.pem`);
   const caKey = path.join(caDir, `${caDomain}.key`);
   const caProject = `landocasetupkenobi38ahsoka${lando.config.instance}`;
-  // @TODO: below might not be needed
-  mkdirp.sync(caDir);
+  const sshDir = path.join(lando.config.home, '.ssh');
+  // Ensure some dirs exist before we start
+  _.forEach([caDir, sshDir], dir => mkdirp.sync(dir));
 
   // Make sure we have a host-exposed root ca if we don't already
   // NOTE: we don't run this on the caProject otherwise infinite loop happens!
@@ -98,6 +99,7 @@ module.exports = lando => {
       LANDO_HOST_HOME: lando.config.home,
       LANDO_HOST_OS: lando.config.os.platform,
       LANDO_HOST_IP: (process.platform === 'linux') ? ip.address() : 'host.docker.internal',
+      LANDO_LEIA: _.toInteger(lando.config.leia),
       LANDO_MOUNT: '/app',
     },
     appLabels: {

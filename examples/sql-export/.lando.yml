@@ -11,7 +11,7 @@ tooling:
   psqlverify:
     service: database2
     user: root
-    cmd: psql -U postgres database -c \dt
+    cmd: psql -U postgres database -c "\dt"
   'db-export [file]':
     service: :host
     description: Exports database from a database service to a file

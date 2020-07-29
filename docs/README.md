@@ -22,6 +22,4 @@ Lando is and always will be _**free**_ and _**open source**_.
 
 That said, it takes a considerable amount of time to maintain, support and grow Lando as well as pay for needed infrastructure. If you like Lando and think it's valuable we'd _highly encourage_ you to [join _The Lando Alliance_](https://lando.dev/join/) and return some of that value to help support our movement to liberate developers everywhere.
 
-_**We're down to keep solving DevOps for everyone and with your support: we can.**_
-
-.
+_**We're down to keep solving DevOps for everyone and with your support: we can!**_

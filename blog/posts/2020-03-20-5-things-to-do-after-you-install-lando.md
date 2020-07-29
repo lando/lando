@@ -26,7 +26,7 @@ feed:
       link: https://github.com/smutlord
 ---
 
-## 1. Whitelist the Lando CA for no SSL warnings
+## 1. Allowlist the Lando CA for no SSL warnings
 
 Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our internal Lando network. However, while Lando will automatically trust this CA internally it is up to you to trust it on your host machine. Doing so will alleviate browser warnings regarding the certs we issue.
 

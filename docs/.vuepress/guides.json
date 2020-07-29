@@ -1,5 +1,20 @@
 [
   {
+    "title": "Lando Courses",
+    "collapsable": false,
+    "children": [
+      {
+        "title": "Lando 101",
+        "collapsable": true,
+        "children": [
+          "lando-101/lando-overview",
+          "lando-101/lando-init",
+          "lando-101/lando-start"
+        ]
+      }
+    ]
+  },
+  {
     "title": "Databases",
     "collapsable": false,
     "children": [

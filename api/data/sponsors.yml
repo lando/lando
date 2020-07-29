@@ -112,3 +112,29 @@
 - name: "Bud Manz"
   type: herald
   url: https://www.manzwebdesigns.com
+- name: "Sitecrafting"
+  type: ally
+  url: https://www.sitecrafting.com
+  logo: https://lando.dev/images/sitecrafting_logo.png
+
+# July 20, 2020
+- name: "@ellytronic"
+  type: herald
+  url: https://ellytronic.media
+- name: "@skylennard"
+  type: herald
+  url: https://github.com/skylennard
+- name: "@webdaemontx"
+  type: herald
+  url: https://github.com/webdaemontx
+- name: "@generalredneck"
+  type: herald
+  url: https://github.com/generalredneck
+- name: "@samaphp"
+  type: herald
+  url: https://github.com/samaphp
+# July 22, 2020
+- name: "Sagetree"
+  type: ally
+  url: https://www.sagetree.com
+  logo: https://lando.dev/images/sagetree_logo.png

@@ -18,6 +18,8 @@ You can also tell Lando to scan additional ports with the [moreHttpPorts](./serv
 
 There is also a [known issue](./../help/dns-rebind.md) called DNS rebinding protection which blocks this functionality.
 
+[[toc]]
+
 ## Automatic Port Assignment
 
 By default, Lando will attempt to bind the proxy to your host machine's port `80` and `443`. If it cannot bind to these addresses, which is usually the case if something else like a local `apache` service is running, it will fallback to other commonly used ports such as `8888` and `444`. The default and fallback ports Lando uses are all [configurable](#configuration).
@@ -174,6 +176,27 @@ services:
 In some rare scenarios a service does not boot up as `root`. This is especially true for the `compose` service. In these situations Lando will be unable to generate a cert and will fall back to the global wildcard certificate for the `proxyDomain` which is `*.lndo.site` by default.
 
 This means that subdomains like `sub.mysite.lndo.site` will likely produce a browser warning. However, domains like `sub-mysite.lndo.site` will continue to work since they are covered by the global wildcard cert.
+
+### Advanced
+
+For advanced usage like setting custom headers and redirects you can access traefik's [middleware layer](https://docs.traefik.io/middlewares/overview/) using the following config:
+
+```yaml
+proxy:
+  appserver:
+    - hostname: object-format.lndo.site
+      port: 80
+      pathname: /
+      middlewares:
+        - name: test
+          key: headers.customrequestheaders.X-Lando-Test
+          value: on
+        - name: test-secured
+          key: headers.customrequestheaders.X-Lando-Test-SSL
+          value: on
+```
+
+Note that while `name` is arbitrary if it ends in `-secured` it will _only_ be applied to `https` routes. Please consult the [traefik documentation](https://docs.traefik.io/middlewares/overview/) for the exact Docker label based syntax.
 
 ## Configuration
 

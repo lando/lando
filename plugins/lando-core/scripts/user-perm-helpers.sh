@@ -88,20 +88,19 @@ perm_sweep() {
   fi
 
   # Do a background sweep
-  nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &
-  # nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ 2>&1 &
-  nohup chown -R $USER:$GROUP /var/www/.ssh >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /user/.ssh >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /var/www >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local/bin >/dev/null 2>&1 &
+  nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /user/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/bin -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
   nohup chmod -R 755 /var/www >/dev/null 2>&1 &
 
   # Lets also make some /usr/locals chowned
-  nohup chown -R $USER:$GROUP /usr/local/lib >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local/share >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local >/dev/null 2>&1 &
+  nohup find /usr/local/lib -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/share -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 
   # Make sure we chown the $USER home directory
-  nohup chown -R $USER:$GROUP $(getent passwd $USER | cut -d : -f 6) >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /lando >/dev/null 2>&1 &
+  nohup find $(getent passwd $USER | cut -d : -f 6) -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /lando -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 }

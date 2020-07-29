@@ -1,3 +1,17 @@
+- id: 27ffaa28e7a1c6228754e2053c9e9488b0f747b0
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Deploy to Mars with Lando
+  date: '2020-07-11'
+  summary: >-
+    You thought Lando was just a flight simulator. A tool to be used on the
+    ground, safely replicating the real-world environment you and your team face
+    in production. What if I told you that Lando is also your production
+    facility, your launchpad, and your mission control?
+  type: camp
+  location: Asheville, NC
+  url: 'https://www.drupalasheville.com/2020/session/deploy-mars-lando'
 - id: 8f1a13fa5280f4f54b1f32cf57b5d73f4aceaa3d
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'

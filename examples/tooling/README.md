@@ -53,13 +53,22 @@ lando dynamic --service web
 lando dynamic -s php
 lando dynamic --service web2
 
-# Should not run twice on failed commands
-lando busted | grep "i-do-not-exist" | wc -l | grep 1
-
 # Should know how to handle pipes and carrots
 lando pipesandstuff
 cat pipe.txt | grep LANDO_
 cat pipe.txt | grep more
+
+# Should be able to set envvars
+lando envvar | grep swift
+
+# Should be able to use *
+lando listfiles | grep /app/README.md
+
+# Should be able to use command substitution
+lando cmdsub | grep /app/README.md
+
+# Should be able to run bash oneliners
+lando oneliner | grep HOLLA
 ```
 
 Destroy tests

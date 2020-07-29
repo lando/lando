@@ -21,6 +21,8 @@ Above is what an `edge` and `stable` release look like on GitHub.
 
 You can also choose to opt-out of updates altogether with the `none` channel but we _highly discourage_ this as we generally cannot provide support for older versions.
 
+[[toc]]
+
 ## Toggling channels
 
 Toggling the release channel is fairly straightforward. Note that you will need to be on `3.0.0-rrc.3` or later to do this.

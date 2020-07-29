@@ -15,12 +15,12 @@ STDOUT=false
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
   DATABASE=${POSTGRES_DB:-database}
-  PORT=5432
-  USER=postgres
+  PORT=${LANDO_DB_EXPORT_PORT:-5432}
+  USER=${LANDO_DB_EXPORT_USER:-postgres}
 else
   DATABASE=${MYSQL_DATABASE:-database}
-  PORT=3306
-  USER=root
+  PORT=${LANDO_DB_EXPORT_PORT:-3306}
+  USER=${LANDO_DB_EXPORT_USER:-root}
 fi
 
 # Set the default filename

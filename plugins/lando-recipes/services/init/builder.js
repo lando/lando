@@ -25,7 +25,7 @@ module.exports = {
             environment: env,
             labels: labels,
             volumes: [
-              `${app}:/app:delegated`,
+              `${app}:/app:cached`,
             ],
           },
         },

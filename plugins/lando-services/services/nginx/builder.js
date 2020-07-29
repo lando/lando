@@ -23,10 +23,15 @@ module.exports = {
       server: 'nginx.conf',
       vhosts: 'default.conf.tpl',
     },
-    remoteFiles: {
+    finalFiles: {
       params: '/opt/bitnami/nginx/conf/fastcgi_params',
       server: '/opt/bitnami/nginx/conf/nginx.conf',
       vhosts: '/opt/bitnami/nginx/conf/lando.conf',
+    },
+    remoteFiles: {
+      params: '/tmp/fastcgi_params.lando',
+      server: '/tmp/server.conf.lando',
+      vhosts: '/tmp/vhosts.conf.lando',
     },
     ssl: false,
     webroot: '.',
@@ -39,19 +44,25 @@ module.exports = {
       // Use different default for ssl
       if (options.ssl) options.defaultFiles.vhosts = 'default-ssl.conf.tpl';
 
-      // If we are using the older 1.14 version we need different remote locations
+      // If we are using the older 1.14 version we need different locations
       if (options.version === '1.14') {
-        options.remoteFiles = _.merge({}, options.remoteFiles, {
+        options.finalFiles = _.merge({}, options.finalFiles, {
           server: '/opt/bitnami/extra/nginx/templates/nginx.conf.tpl',
           vhosts: '/opt/bitnami/extra/nginx/templates/default.conf.tpl',
         });
         options.defaultFiles = _.merge({}, options.defaultFiles, {server: 'nginx.conf.tpl'});
       }
 
+      // Get the config files final destination
+      // @TODO: we cp the files instead of directly mounting them to
+      // prevent unexpected edits to this files
+      // See: https://github.com/lando/lando/issues/2383
+      const {params, server, vhosts} = options.finalFiles;
+
       // Build the default stuff here
       const nginx = {
         image: `bitnami/nginx:${options.version}`,
-        command: `/launch.sh ${options.remoteFiles.vhosts}`,
+        command: `/launch.sh ${vhosts} ${server} ${params}`,
         environment: {
           NGINX_HTTP_PORT_NUMBER: '80',
           NGINX_DAEMON_USER: 'root',
@@ -62,9 +73,9 @@ module.exports = {
         user: 'root',
         volumes: [
           `${options.confDest}/launch.sh:/launch.sh`,
-          `${options.confDest}/${options.defaultFiles.params}:${options.remoteFiles.params}`,
+          `${options.confDest}/${options.defaultFiles.params}:${options.remoteFiles.params}:ro`,
           `${options.confDest}/${options.defaultFiles.vhosts}:${options.remoteFiles.vhosts}:ro`,
-          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}`,
+          `${options.confDest}/${options.defaultFiles.server}:${options.remoteFiles.server}:ro`,
         ],
       };
 

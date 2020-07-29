@@ -70,6 +70,11 @@ if ! [ -x "$(command -v openssl)" ]; then
   apt-get update -y && apt-get install openssl -y || apk add --no-cache openssl
 fi
 
+# Make sure the LANDO_CA_CERT exists
+if [ ! -f $LANDO_CA_CERT ]; then
+  /helpers/setup-ca.sh
+fi
+
 # Validate the certs against the root CA
 if [ -f "/certs/cert.pem" ] && ! openssl verify -CAfile $LANDO_CA_CERT /certs/cert.pem >/dev/null; then
   lando_info "Certs are not valid! Lets remove them."

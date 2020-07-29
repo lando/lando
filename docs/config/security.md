@@ -8,6 +8,8 @@ Lando tries to find the fine line between good security and good user experience
 
 The things we do by default and how you can modify them to your needs are shown below:
 
+[[toc]]
+
 ## Exposure
 
 As of `3.0.0-rrc.5`, Lando will bind all exposed services to `127.0.0.1` for security reasons. This means your services are *only* available to your machine. You can alter this behavior in one of two ways.
@@ -110,6 +112,10 @@ sudo rm -f /usr/local/share/ca-certificates/lndo.site.pem
 sudo rm -f /usr/local/share/ca-certificates/lndo.site.crt
 sudo update-ca-certificates --fresh
 ```
+
+### Ubuntu with Firefox
+
+Import the `~/.lando/certs/lndo.site.pem` CA certificate in Firefox by going to `about:preferences#privacy` > `View Certificates` > `Authorities` > `Import`, enabling **Trust this CA to identify websites.**.
 
 ### Arch
 

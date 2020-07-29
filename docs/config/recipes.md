@@ -6,6 +6,8 @@ description: Lando recipes set sane defaults for common use cases like Drupal, W
 
 Recipes are Lando's highest level abstraction and they contain common combinations of [routing](./proxy.md), [services](./services.md), and [tooling](./tooling.md). Said another way, recipes are common development use cases and starting points (e.g. `LAMP` or `Drupal 8`).
 
+[[toc]]
+
 ## Usage
 
 You can use the top-level `recipe` config in your [Landofile](./lando.md) to select a recipe. Note that you will need to select one of the [supported recipes](#supported-recipes) or [create your own](./../contrib/contrib-plugins.html#recipes).
@@ -49,13 +51,13 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ### [Drupal 8](./drupal8.md)
 *   ### [Drupal 9](./drupal9.md) **(BETA)**
 *   ### [Joomla](./joomla.md)
-*   ### [Lagoon](./lagoon.md) **(EXPERIMENTAL)**
+*   ### [Lagoon](./lagoon.md) **(ALPHA)**
 *   ### [Laravel](./laravel.md)
 *   ### [LAMP](./lamp.md)
 *   ### [LEMP](./lemp.md)
 *   ### [MEAN](./mean.md)
 *   ### [Pantheon](./pantheon.md)
-*   ### [Platform.sh](./platformsh.md) **(EXPERIMENTAL)**
+*   ### [Platform.sh](./platformsh.md) **(ALPHA)**
 *   ### [WordPress](./wordpress.md)
 
 ## Extending and Overriding Recipes

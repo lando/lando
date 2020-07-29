@@ -65,7 +65,9 @@ exports.getRule = rule => {
  * Get a list of URLs and their counts
  */
 exports.getUrlsCounts = config => _(config)
-  .flatMap(service => _.uniq(service))
+  .flatMap(service => service)
+  .map(url => exports.parseUrl(url))
+  .map(data => `${data.host}${data.pathname}:${data.port}`)
   .countBy()
   .value();
 
@@ -111,6 +113,18 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
 
   // Add things into the labels
   _.forEach(parsedUrls, rule => {
+    // Add some default middleware
+    rule.middlewares.push({name: 'lando', key: 'headers.customrequestheaders.X-Lando', value: 'on'});
+    // Add in any path stripping middleware we need it
+    if (rule.pathname.length > 1) {
+      rule.middlewares.push({name: `${rule.id}-stripprefix`, key: 'stripprefix.prefixes', value: rule.pathname});
+    };
+
+    // Set up all the middlewares
+    _.forEach(rule.middlewares, m => {
+      labels[`traefik.http.middlewares.${m.name}.${m.key}`] = m.value;
+    });
+
     // Set the http entrypoint
     labels[`traefik.http.routers.${rule.id}.entrypoints`] = 'http';
     labels[`traefik.http.routers.${rule.id}.service`] = `${rule.id}-service`;
@@ -118,11 +132,11 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
     labels[`traefik.http.services.${rule.id}-service.loadbalancer.server.port`] = rule.port;
     // Set the route rules
     labels[`traefik.http.routers.${rule.id}.rule`] = exports.getRule(rule);
-    // Add in any path stripping middleware we need it
-    if (rule.pathname.length > 1) {
-      labels[`traefik.http.routers.${rule.id}.middlewares`] = `${rule.id}-stripprefix`;
-      labels[`traefik.http.middlewares.${rule.id}-stripprefix.stripprefix.prefixes`] = rule.pathname;
-    }
+    // Set none secure middlewares
+    labels[`traefik.http.routers.${rule.id}.middlewares`] = _(_.map(rule.middlewares, 'name'))
+      .filter(name => !_.endsWith(name, '-secured'))
+      .value()
+      .join(',');
 
     // Add https if we can
     if (_.includes(sslReady, service)) {
@@ -131,29 +145,31 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
       labels[`traefik.http.routers.${rule.id}-secured.service`] = `${rule.id}-secured-service`;
       labels[`traefik.http.routers.${rule.id}-secured.rule`] = exports.getRule(rule);
       labels[`traefik.http.routers.${rule.id}-secured.tls`] = true;
+      labels[`traefik.http.routers.${rule.id}-secured.middlewares`] = _.map(rule.middlewares, 'name').join(',');
       labels[`traefik.http.services.${rule.id}-secured-service.loadbalancer.server.port`] = rule.port;
-      if (rule.pathname.length > 1) {
-        labels[`traefik.http.routers.${rule.id}-secured.middlewares`] = `${rule.id}-stripprefix-secured`;
-        labels[`traefik.http.middlewares.${rule.id}-stripprefix-secured.stripprefix.prefixes`] = rule.pathname;
-      }
     }
   });
   return labels;
 };
 
+
 /*
  * Helper to parse a url
  */
-exports.parseUrl = string => {
+exports.parseUrl = data => {
   // We add the protocol ourselves, so it can be parsed. We also change all *
   // occurrences for our magic word __wildcard__, because otherwise the url parser
   // won't parse wildcards in the hostname correctly.
-  const parsedUrl = url.parse(`http://${string}`.replace(/\*/g, '__wildcard__'));
-  return {
-    host: parsedUrl.hostname.replace(/__wildcard__/g, '*'),
-    port: parsedUrl.port || '80',
-    pathname: parsedUrl.pathname || '',
-  };
+  const parsedUrl = _.isString(data) ? url.parse(`http://${data}`.replace(/\*/g, '__wildcard__')) : _.merge({}, data, {
+    hostname: data.hostname.replace(/\*/g, '__wildcard__'),
+  });
+
+  // If the port is null then set it to 80
+  if (_.isNil(parsedUrl.port)) parsedUrl.port = '80';
+
+  // Retranslate and send
+  const defaults = {port: '80', pathname: '/', middlewares: []};
+  return _.merge(defaults, parsedUrl, {host: parsedUrl.hostname.replace(/__wildcard__/g, '*')});
 };
 
 /*

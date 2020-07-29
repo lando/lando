@@ -2,31 +2,29 @@
 description: The best local development environment option for platform.sh, the fastest way to build modern web apps.
 ---
 
-# Platform.sh **(experimental)**
+# Platform.sh **(alpha)**
 
 [Platform.sh](https://platform.sh/) is the end-to-end web platform for agile teams. with it you can build, evolve, and scale your website fleet—with zero infrastructure management investment. Get hosting, CI/CD, automated updates, global 24x7 support. And much more.
 
-This is currently a _very experimental_ integration that has the following _serious caveats_:
+This integration is currently in development and as such it has the following _serious caveats_:
 
-* This should be considered at an `alpha` level of readiness or below
-* This has _only_ been tested for sites built on top of the [platform.sh Drupal 8 Template](https://github.com/platformsh-templates/drupal8)
+* This should be considered at an `alpha` level of readiness
+* This has _only_ been minimally tested on a few vanilla `php` projects and templates
 * This currently _only_ supports platform.sh's `php` application container
-* this currently _only_ supports platform.sh's `memcached`, `mongodb`, `mariadb`, `mysql`, `postgresql`, `redis` and `solr` service containers
 * It's not yet clear how much customization to your project is currently supported
 
-However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
+However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue. You can also read about some more caveats [here](#caveats-and-known-issues).
 
-You can report any issues or feedback [over here](https://github.com/lando/lando/issues/new/choose).
+You can report any issues or feedback [over here](https://github.com/lando/lando/issues/new/choose) or check out
 
 [[toc]]
 
 ## Getting Started
 
-:::warning EXPERIMENTAL FEATURE
+:::warning ALPHA FEATURE
 To access this feature you will need:
 
-  * [Lando 3.0.5](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
-  * [Experimental mode](./experimental.md) turned on
+  * [Lando 3.0.8](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
 :::
 
 Before you get started with this recipe we assume that you have:
@@ -144,12 +142,18 @@ db2:
 
 We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
 
+* [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
+* [Headless Chrome](https://docs.platform.sh/configuration/services/headless-chrome.html)
+* [InfluxDB](https://docs.platform.sh/configuration/services/influxdb.html)
+* [Kafka](https://docs.platform.sh/configuration/services/kafka.html)
+* [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [Memcached](https://docs.platform.sh/configuration/services/memcached.html)
 * [MongoDB](https://docs.platform.sh/configuration/services/mongodb.html)
-* [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [PostgreSQL](https://docs.platform.sh/configuration/services/mysql.html)
+* [RabbitMQ](https://docs.platform.sh/configuration/services/rabbitmq.html)
 * [Redis](https://docs.platform.sh/configuration/services/redis.html)
 * [Solr](https://docs.platform.sh/configuration/services/solr.html)
+* [Varnish](https://docs.platform.sh/configuration/services/varnish.html)
 
 Also note that you will need to run a `lando rebuild` for configuration changes to manifest in the same way you normally would for config changes to your Landofile.
 
@@ -167,13 +171,28 @@ We currently only support the below langauges and we _highly recommend_ you cons
 
 Also note that you will need to run a `lando rebuild` for configuration changes to manifest in the same way you normally would for config changes to your Landofile.
 
-### Other considerations
+### Multiple applications
 
-#### Multiapp
+Lando _should_ support Platform's [multiple applications configurations](https://docs.platform.sh/configuration/app/multi-app.html) although they are not extensively tested at this point so YMMV.
 
-Multiapp configurations _should theoretically_ work but are not currently supported.
+If you have a multiple application setup then you will need to navigate into either the directory that contains the `.platform.app.yaml`  or the `source.root` specified in your `.platform/applications.yaml` file to access the relevant tooling for that app.
 
-#### Environment variables
+This is how tooling works for our [multiapp example](https://github.com/lando/lando/tree/master/examples/platformsh-kitchensink).
+
+```bash
+# Get access to tooling for the "base" application
+lando
+
+# Access tooling for the "discreet" application
+cd discreet
+lando
+
+# Access tooling for the "php" application
+cd ../php
+lando
+```
+
+### Environment variables
 
 Application containers running on Lando will also set up the same [platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on platform.sh with these variables _should_ also automatically work on Lando.
 
@@ -230,8 +249,7 @@ lando ssh
 lando ssh -s db
 ```
 
-Note that Lando will surface commands for the _closest application_ it finds. Generally, this will be the `.platform.app.yaml` located in your project root but if you've `cd multiappsubdir` then it would use that instead.
-
+Note that Lando will surface commands for the _closest application_ it finds. Generally, this will be the `.platform.app.yaml` located in your project root but if you've `cd multiappsubdir` then it will use that instead.
 
 ### Adding additional tooling
 
@@ -296,7 +314,6 @@ Also note that Lando tooling is hyper-powerful so you might want to [check out](
 
 Lando will also set up tooling commands so you can directly access the `relationships` specified in your `.platform.app.yaml`.
 
-
 These are contextual so they will connect via the tool that makes the most sense eg `mysql` for `mariadb` and `redis-cli` for `redis`.
 
 As an example say you have the following relationships in your `.platform.app.yaml`.
@@ -324,10 +341,76 @@ lando redis
 
 Note that some services eg `solr` provide `web` based interfaces. In these cases Lando will provide a `localhost` address you can use to access that interface.
 
+## External access
 
-## Pulling relationships and mounts
+If you would instead like to connect to your database, or some other service, from your host using a GUI client like SequelPro, instead of via the Lando CLI you can run [`lando info`](./../cli/info.md) and use the `external_connection` information and any relevant `creds` for the service you want to connect to.
 
-Lando also provides a _currently rudimentary_ wrapper command called `lando pull` that you can use to import data and download files from your remote platform.sh site.
+Here is example connection info for a multi-endpoint `mariadb` service called `db` below:
+
+```bash
+lando info --service db --format default
+
+  { service: 'db',
+    urls: [],
+    type: 'platformsh-mariadb',
+    healthy: true,
+    creds:
+     [ { internal_hostname: 'database2.internal',
+         password: '3ac01938c66f0ce06304a6357da17c34',
+         path: 'main',
+         port: 3306,
+         user: 'admin' },
+       { internal_hostname: 'reports.internal',
+         password: 'd0c99f580a0d646d62904568573f5012',
+         port: 3306,
+         user: 'reporter' },
+       { internal_hostname: 'imports.internal',
+         password: 'a6bf5826a81f7e9a3fa42baa790207ef',
+         path: 'legacy',
+         port: 3306,
+         user: 'importer' } ],
+    internal_connection: { host: 'db', port: '3306' },
+    external_connection: { host: '127.0.0.1', port: '32915' },
+    config: {},
+    version: '10.4',
+    meUser: 'app',
+    hasCerts: false,
+    hostnames: [ 'db.landod8.internal' ] },
+```
+
+Note that you _must_ have a relationship from your app to a given service in order for it to have credentials.
+
+Also note that this is slightly different than the normal output from `lando info` because `platformsh` services work slightly different. While you _can_ use the `internal_connection:host` and `internal_connection:port` for internal connections we recommend you use the `host` and `port` indicated for the relevant `cred` you want to connect to instead.
+
+So if you wanted to connect to the `main` db you would use the following depending on whether you are connecting externally or internally:
+
+**external creds**
+
+```yaml
+host: 127.0.0.1
+port: 32915
+user: admin
+password: 3ac01938c66f0ce06304a6357da17c34
+database: main
+```
+
+**internal creds**
+
+```yaml
+host: database2.internal
+port: 3306
+user: admin
+password: 3ac01938c66f0ce06304a6357da17c34
+database: main
+```
+
+Of course, it is always preferrable to just use `PLATFORM_RELATIONSHIPS` for all your internal connections anyway.
+
+## Pulling and pushing relationships and mounts
+
+Lando also provides _currently rudimentary_ wrapper commands called `lando pull` and `lando push`.
+
+With `lando pull` you can import data and download files from your remote platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote platform.sh site.
 
 ```bash
 lando pull
@@ -337,6 +420,7 @@ Pull relationships and/or mounts from platform.sh
 Options:
   --help              Shows lando or delegated command help if applicable
   --verbose, -v       Runs with extra verbosity
+  --auth              Platform.sh API token
   --mount, -m         A mount to download
   --relationship, -r  A relationship to import
 ```
@@ -347,11 +431,53 @@ lando pull -r database -m web/sites/default/files
 
 # Import multiple relationships and mounts
 lando pull -r database -r migrate -r readonly -m tmp -m private
+
+# You can also specify a target for a given mount using -m SOURCE:TARGET
+lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
+
+# You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
+lando pull -r admin:legacy
+```
+
+```bash
+lando push
+
+Push relationships and/or mounts to platform.sh
+
+Options:
+  --help              Shows lando or delegated command help if applicable
+  --verbose, -v       Runs with extra verbosity
+  --auth              Platform.sh API token
+  --mount, -m         A mount to push up
+  --relationship, -r  A relationship to push up
+```
+
+```bash
+# Import the remote database relationship and drupal files mount
+lando push -r database -m web/sites/default/files
+
+# Import multiple relationships and mounts
+lando push -r database -r migrate -r readonly -m tmp -m private
+
+# You can also specify a target for a given mount using -m SOURCE:TARGET
+lando push -m tmp:/var/www/tmp -m /private:/somewhere/else
+
+# You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
+lando push -r admin:legacy -r admin:main
+```
+
+## Importing databases
+
+If you have data that exists outside platform.sh eg a `dump.sql` file you'd like to import you can leverage the special `lando` commands we give you to access each `relationship`. You will need to make sure that the relationship you connect with has the appropriate permissions needed to import your dump file.
+
+```bash
+# Import to the main schema using the database relationships
+lando database main < dump.sql
 ```
 
 ## Caveats and known issues
 
-Since this is a currently a pre-alpha level recipe there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
+Since this is a currently an `alpha` release there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
 ).
 
 We also _highly encourage_ you to [post an issue](https://github.com/lando/lando/issues/new/choose) if you see a problem that doesn't already have an issue.
@@ -389,13 +515,19 @@ if ($config->environment === 'lando') {
 
 Note that the above is simply meant to be illustrative.
 
+### Redirects
+
+Lando will currently not perform redirects specified in your `routes.yaml`. Instead it will provide separate `http` and `https` routes.
+
+Adding redirect support is being discussed in this ticket: <https://github.com/lando/lando/issues/2509>.
+
 ### Local considerations
 
 There are some application settings and configuration that platform.sh will automatically set if your project is based on one of their boilerplates. While most of these settings are fine for local development, some are not. If these settings need to be altered for your site to work as expected locally then Lando will modify them.
 
 For example if your project is based on the [Drupal 8 Template](https://github.com/platformsh-templates/drupal8) then Lando will set the `tmp` directory and set `skip_permissions_hardening` to `TRUE`.
 
-Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/experimental/plugins/lando-platformsh/lib/overrides.js).
+Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/integrations/lando-platformsh/lib/overrides.js).
 
 ### platformsh.agent errors
 
@@ -420,11 +552,35 @@ lando start
 
 We've currently only verified that data will persist across `lando rebuilds` for the MariaDB/MySQL and PostgreSQL services. It _may_ persist on other services but we have not tested this yet so be careful before you `lando rebuild` on other services.
 
+### Multiapp
+
+If you are using `.platform/applications.yaml` to configure multiple applications and you have two apps with the same `source.root` then Lando will currently use the _first_ application for tooling.
+
+As a workaround you can use `lando ssh` with the `-s` option to access tooling for other applications with that `source.root`.
+
+In the below example, assume there are three `php` applications with the same `source.route`.
+
+```bash
+# Go into a directory that has many apps with that same source.route
+# See the php version of the first app with source.root at this directory
+lando php -v
+
+# Access another app with same source.root
+lando -s app2 -c "php -v"
+```
+
+### Unsupported things
+
+There are a few things that are currently unsupported at this time, athough we hope to add support in the future.
+
+* Non `php` application containers. Support for `node` will be added before `beta` is reached. [#2368](https://github.com/lando/lando/issues/2368)
+* `workers` and the `network_storage` service [#2393](https://github.com/lando/lando/issues/2393)
+
 ## Development
 
 If you are interested in working on the development of this recipe we recommend you check out:
 
 * The Lando [contrib docs](./../contrib/contributing.md)
-* The [Dev Docs](https://github.com/lando/lando/tree/master/experimental/plugins/lando-platformsh) for this recipe
+* The [Dev Docs](https://github.com/lando/lando/tree/master/integrations/lando-platformsh) for this recipe
 
 <RelatedGuides tag="Platformsh"/>

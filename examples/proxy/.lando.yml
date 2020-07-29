@@ -22,6 +22,22 @@ proxy:
     - "*.more.web3.lndo.site:8080"
     - web3.lndo.site:8080
     - web4.lndo.site:8080
+    - hostname: web5.lndo.site
+      port: 8080
+  php:
+    - hostname: object-format.lndo.site
+      port: 80
+      middlewares:
+        - name: test
+          key: headers.customrequestheaders.X-Lando-Test
+          value: on
+        - name: test-secured
+          key: headers.customrequestheaders.X-Lando-Test-SSL
+          value: on
+    - hostname: object-format.lndo.site
+      pathname: /test
+      port: 80
+
 services:
   web3:
     type: compose
@@ -35,3 +51,14 @@ services:
       ports:
         - "8080"
       user: root
+  php:
+    type: compose
+    ssl: true
+    sslExpose: false
+    services:
+      image: php:7.4-apache
+      command: docker-php-entrypoint apache2-foreground
+      volumes:
+        - "./web:/var/www/html"
+      ports:
+        - "80"

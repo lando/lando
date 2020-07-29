@@ -1,0 +1,16 @@
+.custom-block.tip,
+.custom-block.warning,
+.custom-block.danger {
+  padding: .1rem 1.5rem;
+  border-left-width: .5rem;
+  border-left-style: solid;
+  margin: 1rem 0;
+}
+.custom-block.tip {
+  border-color: #00a38f;
+  background-color: #f3f5f7;
+}
+.custom-block .custom-block-title {
+  font-weight: 600;
+  margin-bottom: -.4rem;
+}

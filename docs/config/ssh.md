@@ -35,11 +35,13 @@ lando logs -s appserver
 lando ssh -s appserver -c "cat /etc/ssh/ssh_config"
 ```
 
+[[toc]]
+
 ## Customizing
 
 Starting with Lando [3.0.0-rrc.5](./../help/2020-changelog.md#_2020), users can customize the behavior of key loading. This provides the flexibility for users to handle some edge cases in the ways that make the most sense for them.
 
-Generally, we expect that users put these customizations inside their [Lando Override File](lando.md#override-file) because they are likely going to be user specific.
+Generally, we expect that users put these customizations inside their [userspace Lando Override File](lando.md#override-file) because they are likely going to be user specific.
 
 ### Disable key loading
 
@@ -58,6 +60,16 @@ keys:
   - id_rsa
   - some_other_key
 ```
+
+### Changing the max key limit
+
+You can also modify your Lando [global config](./global.md) to change the amount of keys that triggers the warning.
+
+```yaml
+maxKeyWarning: 25
+```
+
+Setting this to a sufficiently large integer effectively disables the warning.
 
 ### Using a custom `ssh` config file
 

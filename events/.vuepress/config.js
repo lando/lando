@@ -30,6 +30,7 @@ module.exports = {
           twitter: 'devwithlando',
         },
         canonical_base: 'https://events.lando.dev',
+        image: 'https://lando.dev/images/logo-pink-medium.png',
       },
     ],
     ['canonical',

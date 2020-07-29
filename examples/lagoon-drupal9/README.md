@@ -14,11 +14,6 @@ Run the following commands to get up and running with this example.
 # Should poweroff
 lando poweroff
 
-# Should be running in experimental mode
-lando config | grep experimental | grep true || lando --experimental
-lando config | grep experimental | grep true
-lando config | grep experimentalPluginLoadTest | grep true
-
 # Should initialize the lagoon drupal example
 rm -rf drupal && mkdir -p drupal && cd drupal
 lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x" --recipe lagoon
@@ -41,11 +36,11 @@ lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_nginx_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mariadb_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_nginx_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_mariadb_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_php_1
+docker ps --filter label=com.docker.compose.project=drupal9examplesimple | grep Up | grep drupal9examplesimple_cli_1
 
 # Should ssh against the cli container by default
 cd drupal
@@ -53,8 +48,7 @@ lando ssh -c "env | grep LAGOON=" | grep cli-drupal
 
 # Should have the correct environment set
 cd drupal
-lando ssh -c "env" | grep LAGOON_PROJECT | grep drupal9-example-simple
-lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal-example.lndo.site
+lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal9-example-simple.lndo.site
 lando ssh -c "env" | grep LAGOON_ENVIRONMENT_TYPE | grep development
 
 # Should have composer
@@ -81,6 +75,10 @@ lando node --version
 cd drupal
 lando yarn --version
 
+# Should have lagoon cli
+cd drupal
+lando lagoon --version | grep lagoon
+
 # Should have a running drupal 9 site served by nginx on port 8080
 cd drupal
 lando ssh -s cli -c "curl -kL http://nginx:8080" | grep "Welcome to Drush Site-Install"
@@ -106,7 +104,7 @@ Destroy tests
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Should be able to destroy our drupal7 site with success
+# Should be able to destroy our drupal9 site with success
 cd drupal
 lando destroy -y
 lando poweroff
