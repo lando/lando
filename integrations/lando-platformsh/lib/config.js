@@ -5,6 +5,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const PlatformYaml = require('./yaml');
+const utils = require('./utils');
 
 /*
  * Helper to get appMount
@@ -119,6 +120,7 @@ exports.parseApps = ({applications, applicationFiles}, appRoot) => _(application
     // @NOTE: probably not relevant until we officially support multiapp?
     hostname: `${app.name}.0`,
     sourceDir: _.has(app, 'source.root') ? path.join('/app', app.source.root) : '/app',
+    webroot: utils.getDocRoot(app),
   }))
   // And the webPrefix
   .map(app => _.merge({}, app, {

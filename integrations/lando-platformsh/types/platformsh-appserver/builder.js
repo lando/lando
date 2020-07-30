@@ -56,6 +56,7 @@ module.exports = {
           LANDO_SOURCE_DIR: options.platformsh.sourceDir,
           LANDO_WEBROOT_USER: 'web',
           LANDO_WEBROOT_GROUP: 'web',
+          LANDO_BUILD_DESTINATION: _.get(options, 'platformsh.webroot'),
           PATH: LANDO_PATH.join(':'),
           PLATFORMSH_CLI_HOME: '/var/www',
           PLATFORMSH_CLI_TOKEN: _.get(options, '_app.meta.token'),
