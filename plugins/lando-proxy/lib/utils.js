@@ -117,8 +117,12 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
     rule.middlewares.push({name: 'lando', key: 'headers.customrequestheaders.X-Lando', value: 'on'});
     // Add in any path stripping middleware we need it
     if (rule.pathname.length > 1) {
-      rule.middlewares.push({name: `${rule.id}-stripprefix`, key: 'stripprefix.prefixes', value: rule.pathname});
+      rule.middlewares.push({name: 'stripprefix', key: 'stripprefix.prefixes', value: rule.pathname});
     };
+    // Ensure we prefix all middleware with the ruleid
+    rule.middlewares = _(rule.middlewares)
+      .map(middleware => _.merge({}, middleware, {name: `${rule.id}-${middleware.name}`}))
+      .value();
 
     // Set up all the middlewares
     _.forEach(rule.middlewares, m => {
