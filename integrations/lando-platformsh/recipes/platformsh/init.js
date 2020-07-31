@@ -75,7 +75,9 @@ module.exports = {
         type: 'autocomplete',
         message: 'Which project?',
         source: (answers, input) => {
-          return getAutoCompleteSites(answers, lando, input);
+          return getAutoCompleteSites(answers, lando, input).then(sites => {
+            return _.orderBy(sites, ['name', 'desc']);
+          });
         },
         when: answers => answers.recipe === 'platformsh',
         weight: 530,
@@ -134,15 +136,16 @@ module.exports = {
           // Get information about the project itself
           .then(id => api.getProject(id))
           // Set the git stuff
-          .then(site => {
-            options['platformsh-git-url'] = site.repository.url;
-            options['platformsh-git-ssh'] = site.repository.url.split(':')[0];
-          });
+          .then(site => api.getAccessToken().then(token => {
+            options['url'] = site.repository.url;
+            options['ssh'] = site.repository.url.split(':')[0];
+            options['token'] = token.access_token;
+          }));
         }},
         {name: 'reload-keys', cmd: '/helpers/load-keys.sh --silent', user: 'root'},
         {
           name: 'clone-repo',
-          cmd: options => `/helpers/psh-clone.sh ${options['platformsh-git-url']} ${options['platformsh-git-ssh']}`,
+          cmd: options => `/helpers/psh-clone.sh ${options['url']} ${options['ssh']} ${options['token']}`,
           remove: 'true',
         },
       ];

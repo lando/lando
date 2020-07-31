@@ -5,7 +5,7 @@ const _ = require('lodash');
 const {getAuthOptions} = require('./auth');
 
 // The non dynamic base of the task
-const task = service => ({
+const task = (service, closestApp) => ({
   service,
   description: 'Push relationships and/or mounts to platform.sh',
   cmd: '/helpers/psh-push.sh',
@@ -29,12 +29,30 @@ const task = service => ({
       passthrough: true,
       alias: ['r'],
       array: true,
+      interactive: {
+        type: 'checkbox',
+        message: 'Choose relationships to push to platformsh',
+        choices: () => {
+          return _.keys(closestApp.relationships);
+        },
+        when: () => !_.isEmpty(closestApp.relationships),
+        weight: 100,
+      },
     },
     mount: {
       description: 'A mount to push up',
       passthrough: true,
       alias: ['m'],
       array: true,
+      interactive: {
+        type: 'checkbox',
+        message: 'Choose mounts to push to platformsh',
+        choices: () => {
+          return _.keys(closestApp.mounts);
+        },
+        when: () => !_.isEmpty(closestApp.mounts),
+        weight: 100,
+      },
     },
   },
 });
@@ -43,5 +61,5 @@ const task = service => ({
  * Helper to build a pull command
  */
 exports.getPlatformPush = (service, {meta, platformsh}) => {
-  return _.merge({}, task(service), {options: getAuthOptions(meta, platformsh.tokens)});
+  return _.merge({}, task(service, platformsh.closestApp), {options: getAuthOptions(meta, platformsh.tokens)});
 };
