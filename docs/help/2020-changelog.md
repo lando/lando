@@ -6,6 +6,7 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Fixed bug causing the `proxy` to report `404` when using more than one `platformsh` app [#2507](https://github.com/lando/lando/pull/2507)
 * Fixed bug causing `platformsh` recipe build to fail when webroot doesn't exist [#2529](https://github.com/lando/lando/pull/2529)
+* Updated to Docker Desktop `2.3.0.4` and Docker Compose `1.26.2`. Fixed [#2531](https://github.com/lando/lando/pull/2531)
 
 [What does pre-release mean?](https://docs.lando.dev/config/releases.html)
 
