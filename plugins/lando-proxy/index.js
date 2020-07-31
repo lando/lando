@@ -5,7 +5,7 @@ const _ = require('lodash');
 const path = require('path');
 const utils = require('./lib/utils');
 
-// Default config values for proxy
+// Default config values
 const defaultConfig = {
   proxy: 'ON',
   proxyName: 'landoproxyhyperion5000gandalfedition',
