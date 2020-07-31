@@ -16,6 +16,16 @@ exports.getApplicationServices = (services = []) => _(services)
   .value();
 
 /*
+ * Helper to get the applications doc root
+ */
+exports.getDocRoot = appConfig => {
+  if (_.has(appConfig, 'web.locations./.root')) {
+    return `/app/${appConfig.web.locations['/'].root}`;
+  }
+  return '/app';
+};
+
+/*
  * Helper to filter out services from application containers
  */
 exports.getNonApplicationServices = (services = []) => _(services)
