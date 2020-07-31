@@ -1,11 +1,14 @@
 # 2020
 
-## v3.0.11 - In development
+## v3.0.11 - [July 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.11)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added ability to override `platformsh` `variables` locally in Landofile
+* Added interactivity to `platformsh` `pull` and `push` [#2496](https://github.com/lando/lando/pull/2496)
 * Fixed bug causing the `proxy` to report `404` when using more than one `platformsh` app [#2507](https://github.com/lando/lando/pull/2507)
 * Fixed bug causing `platformsh` recipe build to fail when webroot doesn't exist [#2529](https://github.com/lando/lando/pull/2529)
+* Improved `lando init` for `platformsh` eg faster and supports MFA
 * Updated to Docker Desktop `2.3.0.4` and Docker Compose `1.26.2`. Fixed [#2531](https://github.com/lando/lando/pull/2531)
 
 [What does pre-release mean?](https://docs.lando.dev/config/releases.html)

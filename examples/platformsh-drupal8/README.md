@@ -77,6 +77,10 @@ lando ssh -c "env" | grep PLATFORM_DOCUMENT_ROOT | grep /app/web
 lando ssh -c "env" | grep PLATFORMSH_CLI_TOKEN | grep e_
 lando ssh -c "env" | grep PLATFORMSH_CLI_HOME | grep /var/www
 
+# Should allow the user to override variables from landofile
+cd drupal
+lando ssh -c "env" | grep LOCAL_OVERRIDE | grep itdonehappened
+
 # Should be running services with the correct user
 cd drupal
 lando ssh -c "id" | grep web

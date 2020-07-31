@@ -70,6 +70,7 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: platformsh
 config:
   id: YOURSITEID
+  variables: null
 ```
 
 You will immediately notice that the default `platformsh` recipe Landofile does not contain much. This is because Lando uses the exact same images and configuration mechanisms locally as platform.sh does in production.
@@ -195,6 +196,30 @@ lando
 ### Environment variables
 
 Application containers running on Lando will also set up the same [platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on platform.sh with these variables _should_ also automatically work on Lando.
+
+Lando _does not_ currently pull variables you have set up in the platform.sh dashboard so you will need to add those manually.
+
+
+### Overriding variables
+
+There are some variables that you may want to override for the local use case. You can do so in the following way:
+
+```yaml
+name: myproject
+recipe: platformsh
+config:
+  id: PROJECTID
+  variables:
+    app:
+      env:
+        APP_ENV: dev
+      d8settings:
+        skip_permissions_hardening: 1
+```
+
+Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override. Also note that you will need to `lando rebuild` for this changes to apply.
+
+The syntax under the application name is the same as in [these docs](https://docs.platform.sh/configuration/app/variables.html).
 
 ## Platform CLI
 
@@ -426,6 +451,9 @@ Options:
 ```
 
 ```bash
+# Interactively pull relationships and mounts
+lando pull
+
 # Import the remote database relationship and drupal files mount
 lando pull -r database -m web/sites/default/files
 
@@ -453,6 +481,9 @@ Options:
 ```
 
 ```bash
+# Interactively push relationships and mounts
+lando push
+
 # Import the remote database relationship and drupal files mount
 lando push -r database -m web/sites/default/files
 
@@ -528,6 +559,26 @@ There are some application settings and configuration that platform.sh will auto
 For example if your project is based on the [Drupal 8 Template](https://github.com/platformsh-templates/drupal8) then Lando will set the `tmp` directory and set `skip_permissions_hardening` to `TRUE`.
 
 Lando will likely _not_ do this in the future in favor of a better solution but until then you can check out what we set over [here](https://github.com/lando/lando/blob/master/integrations/lando-platformsh/lib/overrides.js).
+
+### Memory limits
+
+Some services eg Elasticsearch require A LOT of memory to run. Sometimes this memory limit is above the defaults set by Docker Desktop. If you are trying to start an app with memory intensive services and it is hanging try to bump the resources allocated to Docker Desktop and try again. See the below docs:
+
+* [Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/#resources)
+* [Docker Desktop for Windows](https://docs.docker.com/docker-for-windows/#resources)
+
+### Xdebug
+
+You can enable and use xdebug by turning on the extension in your `.platform.app.yaml` and doing a `lando rebuild`.
+
+```yaml
+runtime:
+  extensions:
+    - redis
+    - xdebug
+```
+
+Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production.
 
 ### platformsh.agent errors
 
