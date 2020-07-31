@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     ssh \
     git-core \
     bzip2 \
+    jq \
   && apt-get -y clean \
   && apt-get -y autoclean \
   && apt-get -y autoremove \

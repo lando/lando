@@ -1966,15 +1966,6 @@ babel-plugin-transform-object-rest-spread@^6.26.0:
     babel-plugin-syntax-object-rest-spread "^6.8.0"
     babel-runtime "^6.26.0"
 
-babel-polyfill@^6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.26.0.tgz#379937abc67d7895970adc621f284cd966cf2153"
-  integrity sha1-N5k3q8Z9eJWXCtxiHyhM2WbPIVM=
-  dependencies:
-    babel-runtime "^6.26.0"
-    core-js "^2.5.0"
-    regenerator-runtime "^0.10.5"
-
 babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
@@ -3071,11 +3062,6 @@ core-js@^2.4.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.1.tgz#87416ae817de957a3f249b3b5ca475d4aaed6042"
   integrity sha512-L72mmmEayPJBejKIWe2pYtGis5r0tQ5NaJekdhyXgeMQTpJoBsH0NL4ElY2LfSoV15xeQWKQ+XTTOZdyero5Xg==
-
-core-js@^2.5.0:
-  version "2.6.11"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
-  integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
 core-js@^2.6.5:
   version "2.6.9"
@@ -7596,6 +7582,11 @@ oauth-sign@~0.9.0:
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
+oauth2-popup-flow@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/oauth2-popup-flow/-/oauth2-popup-flow-1.1.0.tgz#0013eafe3d4650b1a44ef42eac3a952149309a66"
+  integrity sha512-JuCXiGPck2h+KWa+c+EGcCmxJb8635c/wf37TRM2aYZd5/3OSLcxzKy62ahB88gl4kP99yIC084oJNm1Wr4+og==
+
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -7663,7 +7654,7 @@ object.omit@^2.0.0:
     for-own "^0.1.4"
     is-extendable "^0.1.1"
 
-object.pick@^1.2.0, object.pick@^1.3.0:
+object.pick@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/object.pick/-/object.pick-1.3.0.tgz#87a10ac4c1694bd2e1cbf53591a66141fb5dd747"
   integrity sha1-h6EKxMFpS9Lhy/U1kaZhQftd10c=
@@ -8171,14 +8162,12 @@ pkg@^4.4.4:
     resolve "^1.15.0"
     stream-meter "^1.0.4"
 
-platformsh-client@^0.1.112:
-  version "0.1.112"
-  resolved "https://registry.yarnpkg.com/platformsh-client/-/platformsh-client-0.1.112.tgz#d557de6f1c1ae62261e4a9064aa2254f90c58225"
-  integrity sha512-hwX14eIJGnd4mgwss4kMtxYWMU1f5oyGZY3TbVqYF2tjC5UnSyt6ldjMf2blwpqnQFhSXjwP88z6gwAaLGiJwQ==
+platformsh-client@^0.1.129:
+  version "0.1.129"
+  resolved "https://registry.yarnpkg.com/platformsh-client/-/platformsh-client-0.1.129.tgz#5f01ae3a8144c86cbdc4f2cb901e42e952b50575"
+  integrity sha512-3NsnEryXIvLg3gI96kO1PUN0BCenfVOwzKZApz7N3Vwh9cNfAg/kztePv8JZYoMjfKC+BWS6z7l6J7HHX2XwrA==
   dependencies:
     atob "^2.1.2"
-    babel-polyfill "^6.26.0"
-    babel-runtime "^6.26.0"
     basename "^0.1.2"
     detect-node "^2.0.4"
     email-validator "^1.0.7"
@@ -8186,7 +8175,8 @@ platformsh-client@^0.1.112:
     is-scalar "^1.0.2"
     is-url "^1.2.2"
     isomorphic-fetch "^2.2.1"
-    object.pick "^1.2.0"
+    oauth2-popup-flow "^1.1.0"
+    object.pick "^1.3.0"
     parse_url "^0.1.1"
     slugify "^1.3.4"
     to-querystring "^1.1.0"
@@ -8974,11 +8964,6 @@ regenerate@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
   integrity sha512-1G6jJVDWrt0rK99kBjvEtziZNCICAuvIPkSiUFIQxVP06RCVpq3dmDo2oi6ABpYaDYaTRr67BEhL8r1wgEZZKg==
-
-regenerator-runtime@^0.10.5:
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
-  integrity sha1-M2w+/BIgrc7dosn6tntaeVWjNlg=
 
 regenerator-runtime@^0.11.0:
   version "0.11.1"
