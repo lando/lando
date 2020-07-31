@@ -28,7 +28,7 @@ sudo mkdir -p /usr/local/bin
 sudo launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist && sleep 10 || true
 sudo install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
 sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
-sudo plutil -insert Version -string 47 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
+sudo plutil -insert Version -string 54 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
 sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
 # Launch docker
