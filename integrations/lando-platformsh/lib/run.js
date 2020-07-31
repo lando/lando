@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const overrides = require('./overrides');
 const path = require('path');
+const utils = require('./utils');
 
 // Constants
 const applicationConfigDefaults = {
@@ -36,16 +37,6 @@ const applicationConfigDefaults = {
 const encode = data => {
   if (_.isObject(data)) data = JSON.stringify(data);
   return Buffer.from(data).toString('base64');
-};
-
-/*
- * Helper to get the applications doc root
- */
-const getDocRoot = appConfig => {
-  if (_.has(appConfig, 'web.locations./.root')) {
-    return `/app/${appConfig.web.locations['/'].root}`;
-  }
-  return '/app';
 };
 
 /*
@@ -131,7 +122,7 @@ const getApplicationsConfig = (apps, config) => _(apps)
  * which is special and needs to be handled separately
  */
 const getApplicationEnvironment = (appConfig, config) => _.merge({}, getEnvironmentVariables(appConfig), {
-  PLATFORM_DOCUMENT_ROOT: getDocRoot(appConfig),
+  PLATFORM_DOCUMENT_ROOT: utils.getDocRoot(appConfig),
   PLATFORM_APPLICATION: encode(appConfig),
   // @NOTE: PLATFORM_APP_DIR is normally set to /app but this is problematic locally
   // eg on Drupal this puts the /tmp and /private at /app/tmp and /app/private and
