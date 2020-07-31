@@ -34,6 +34,13 @@ module.exports = (app, lando) => {
 
     // Start by loading in all the platform files we can
     app.platformsh = {config: pshconf.loadConfigFiles(app.root)};
+    // Add in local variable overrides as needed
+    _.forEach(app.platformsh.config.applications, application => {
+      if (_.has(app, `config.config.variables.${application.name}`)) {
+        const overrides = _.get(app, `config.config.variables.${application.name}`, {});
+        application.variables = _.merge({}, application.variables, overrides);
+      }
+    });
     // And then augment with a few other things
     app.platformsh.domain = `${app.name}.${app._config.domain}`;
     app.platformsh.id = app.id;
