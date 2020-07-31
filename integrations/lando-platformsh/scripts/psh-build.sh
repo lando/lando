@@ -31,5 +31,14 @@ fi
 # Make sure platform things are sourced for this script
 . "$HOME/.bashrc"
 
-# Attempting to run build
-platform local:build $PLATFORM_APPLICATION_NAME
+# Run build
+# NOTE: if the build destination does not already exist we assume
+# it is created as part of the build and therefore we need to make sure
+# it is accessible from the same directory as specificed in web.locations
+if [ ! -d "$LANDO_BUILD_DESTINATION" ] || [ -L "$LANDO_BUILD_DESTINATION" ]; then
+  platform local:build $PLATFORM_APPLICATION_NAME --destination $LANDO_BUILD_DESTINATION
+
+# Otherwise its safe to use the default destination
+else
+  platform local:build $PLATFORM_APPLICATION_NAME
+fi

@@ -5,6 +5,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const PlatformYaml = require('./yaml');
+const utils = require('./utils');
 
 /*
  * Helper to get appMount
@@ -47,6 +48,17 @@ const parseServiceRelationships = ({relationships = {}}) => {
 };
 
 /*
+ * Helper to replace defaualt
+ */
+const replaceDefault = (data, replacer) => {
+  if (_.isObject(data)) {
+    return JSON.parse(JSON.stringify(data).replace(/{default}/g, replacer));
+  } else {
+    return data.replace(/{default}/g, replacer);
+  }
+};
+
+/*
  * Helper to set primary route if needed
  */
 const setPrimaryRoute = (routes = []) => {
@@ -59,7 +71,6 @@ const setPrimaryRoute = (routes = []) => {
   // Return
   return routes;
 };
-
 
 /*
  * Helper to find closest app
@@ -119,6 +130,7 @@ exports.parseApps = ({applications, applicationFiles}, appRoot) => _(application
     // @NOTE: probably not relevant until we officially support multiapp?
     hostname: `${app.name}.0`,
     sourceDir: _.has(app, 'source.root') ? path.join('/app', app.source.root) : '/app',
+    webroot: utils.getDocRoot(app),
   }))
   // And the webPrefix
   .map(app => _.merge({}, app, {
@@ -147,10 +159,22 @@ exports.parseRelationships = (apps, open = {}) => _(apps)
  * Helper to parse the platformsh routes file eg replace DEFAULT in the routes.yml
  */
 exports.parseRoutes = (routes, domain) => _(routes)
-  .map((config, url) => ([url, _.merge({primary: false}, config)]))
+  // Add implicit data and defaults
+  .map((config, url) => ([url, _.merge({primary: false, attributes: {}, id: null, original_url: url}, config)]))
+  // Replace URL defaults
+  .map(route => ([replaceDefault(route[0], domain), route[1]]))
+  // Replace config defaults
+  .map(route => ([route[0], _.merge(route[1], replaceDefault(_.omit(route[1], ['original_url']), domain))]))
+  // Strip upstream if needed
+  .map(route => {
+    if (route[1].upstream) route[1].upstream = _.first(route[1].upstream.split(':'));
+    return [route[0], route[1]];
+  })
+  // Back to object
   .fromPairs()
-  .thru(routes => JSON.parse(JSON.stringify(routes).replace(/{default}/g, domain)))
+  // Set the primary route
   .thru(routes => setPrimaryRoute(routes))
+  // Return
   .value();
 
 /*
