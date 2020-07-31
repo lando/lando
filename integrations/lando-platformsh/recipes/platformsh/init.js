@@ -75,7 +75,9 @@ module.exports = {
         type: 'autocomplete',
         message: 'Which project?',
         source: (answers, input) => {
-          return getAutoCompleteSites(answers, lando, input);
+          return getAutoCompleteSites(answers, lando, input).then(sites => {
+            return _.orderBy(sites, ['name', 'desc']);
+          });
         },
         when: answers => answers.recipe === 'platformsh',
         weight: 530,
