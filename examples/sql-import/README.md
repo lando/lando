@@ -46,8 +46,8 @@ lando psqlverify | grep users
 lando db-import /data/test.sql
 
 # Should be able to dump tables with foreign key constraints
-lando db-import test-foreign-keys.sql
-lando db-import test-foreign-keys.sql
+lando db-import big-bad-dump.sql
+lando db-import big-bad-dump.sql
 ```
 
 Destroy tests

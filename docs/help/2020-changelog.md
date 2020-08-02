@@ -1,5 +1,14 @@
 # 2020
 
+## v3.0.12 - In Development
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing `db-import` wipe to fail on `views` [#2516](https://github.com/lando/lando/pull/2516)
+* Fixed bug causing `db-import` wipe to fail on table names with hypens [#2478](https://github.com/lando/lando/pull/2478)
+
+[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
+
 ## v3.0.11 - [July 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.11)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

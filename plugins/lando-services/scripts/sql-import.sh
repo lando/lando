@@ -96,7 +96,7 @@ echo "Preparing to import $FILE into database '$DATABASE' on service '$SERVICE' 
 # Wipe the database if set
 if [ "$WIPE" == "true" ]; then
   echo ""
-  echo "Destroying all current tables in $DATABASE... "
+  echo "Emptying $DATABASE... "
   lando_yellow "NOTE: See the --no-wipe flag to avoid this step!"
 
   # DO db specific wiping
@@ -116,10 +116,11 @@ if [ "$WIPE" == "true" ]; then
 
     # PURGE IT ALL! BURN IT TO THE GROUND!!!
     for t in $TABLES; do
-      echo "Dropping $t table from $DATABASE database..."
+      echo "Dropping $t from $DATABASE database..."
       $SQLSTART <<-EOF
         SET FOREIGN_KEY_CHECKS=0;
-        DROP TABLE $t
+        DROP VIEW IF EXISTS \`$t\`;
+        DROP TABLE IF EXISTS \`$t\`;
 EOF
     done
   fi

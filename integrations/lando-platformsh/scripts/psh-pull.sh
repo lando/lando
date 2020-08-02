@@ -110,10 +110,11 @@ else
     TABLES=$($LCD $PLATFORM_RELATIONSHIP_SCHEMA -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
     echo "Destroying all current tables in database if needed... "
     for t in $TABLES; do
-      echo "Dropping $t table from local $PLATFORM_RELATIONSHIP_SCHEMA database..."
+      echo "Dropping $t from local $PLATFORM_RELATIONSHIP_SCHEMA database..."
       $LCD $PLATFORM_RELATIONSHIP_SCHEMA <<-EOF
         SET FOREIGN_KEY_CHECKS=0;
-        DROP TABLE $t
+        DROP VIEW IF EXISTS \`$t\`;
+        DROP TABLE IF EXISTS \`$t\`;
 EOF
     done
     # Import the DB
