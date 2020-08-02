@@ -114,7 +114,7 @@ if [ "$WIPE" == "true" ]; then
     # Gather and destroy tables
     TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' || true)
 
-    # PURGE IT ALL! BURN IT TO THE GROUND!!!
+    # PURGE IT ALL! Drop views and tables as needed
     for t in $TABLES; do
       echo "Dropping $t from $DATABASE database..."
       $SQLSTART <<-EOF
