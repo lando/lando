@@ -158,7 +158,7 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/210f5d93d1ab748f8f8e065403bfdbd4'
   id: 227467db7bcdb7dd20095193fe69b92891a0be86
-- name: 'Toby Bellwood'
+- name: Toby Bellwood
   role:
     - Code
     - Content
@@ -170,3 +170,10 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/ac97d5db7a7ff475b9f17bf18de38357'
   id: 9af69d664d66a66aef96174630ddbfce7b98c73a
+- name: chadwcarlson
+  bio: 'Writer, programmer, experimenter, DevRel.'
+  location: 'Boca Raton, FL'
+  github: chadwcarlson
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/40de3d779ce34fd170031d018c005291'
+  id: 8ada068efe4314fddce17d10a8139f3e1ae1afaf
