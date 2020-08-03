@@ -1,16 +1,16 @@
 ---
-description: The best local development environment option for platform.sh, the fastest way to build modern web apps.
+description: The best local development environment option for Platform.sh, the fastest way to build modern web apps.
 ---
 
 # Platform.sh **(alpha)**
 
-[Platform.sh](https://platform.sh/) is the end-to-end web platform for agile teams. with it you can build, evolve, and scale your website fleet—with zero infrastructure management investment. Get hosting, CI/CD, automated updates, global 24x7 support. And much more.
+[Platform.sh](https://platform.sh/) is the end-to-end web platform for agile teams. With it you can build, evolve, and scale your website fleet—with zero infrastructure management investment. Get hosting, CI/CD, automated updates, global 24x7 support. And much more.
 
 This integration is currently in development and as such it has the following _serious caveats_:
 
 * This should be considered at an `alpha` level of readiness
 * This has _only_ been minimally tested on a few vanilla `php` projects and templates
-* This currently _only_ supports platform.sh's `php` application container
+* This currently _only_ supports Platform.sh's `php` application container
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue. You can also read about some more caveats [here](#caveats-and-known-issues).
@@ -33,7 +33,7 @@ Before you get started with this recipe we assume that you have:
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe on one of your platform.sh sites.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe on one of your Platform.sh sites.
 
 ```bash
 # Go through interactive prompts to get your site from platformsh
@@ -62,7 +62,7 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) sets sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
 Here are the configuration options, set to the default values, for this recipe's [Landofile](./../config/lando.md). If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
@@ -73,13 +73,13 @@ config:
   variables: null
 ```
 
-You will immediately notice that the default `platformsh` recipe Landofile does not contain much. This is because Lando uses the exact same images and configuration mechanisms locally as platform.sh does in production.
+You will immediately notice that the default `platformsh` recipe Landofile does not contain much. This is because Lando uses the exact same images and configuration mechanisms locally as Platform.sh does in production.
 
-This means that instead of modifying your Landofile to add, edit or remove the services, dependencies, build steps, etc you need to run your application you will want to modify your platform.sh configuration according to their documentation and then do the usual `lando rebuild` for those changes to be applied.
+This means that instead of modifying your Landofile to add, edit or remove the services, dependencies, build steps, etc you need to run your application you will want to modify your Platform.sh configuration according to their documentation and then do the usual `lando rebuild` for those changes to be applied.
 
 Of course, since this is still a Lando recipe you can continue to [extend and override](./../config/recipes.md#extending-and-overriding-recipes) your Landofile in the usual way for any additional power you require locally.
 
-Here are some details on how Lando interprets the various platform.sh configuration files:
+Here are some details on how Lando interprets the various Platform.sh configuration files:
 
 ### routes.yaml
 
@@ -112,7 +112,7 @@ https://www.my-app.lndo.site
 
 ### services.yaml
 
-Lando will load your [services.yaml](https://docs.platform.sh/configuration/services.html) and spin up _exactly_ the same things there as you have running on your platform.sh site, including any advanced configuration options you may have specified for each like `schemas`, `endpoints`, `extensions`, `properties`, etc.
+Lando will load your [services.yaml](https://docs.platform.sh/configuration/services.html) and spin up _exactly_ the same things there as you have running on your Platform.sh site, including any advanced configuration options you may have specified for each like `schemas`, `endpoints`, `extensions`, `properties`, etc.
 
 This means that Lando knows how to handle more complex configuration such as in the below example:
 
@@ -141,7 +141,7 @@ db2:
       - hstore
 ```
 
-We currently only support the below services and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
+We currently only support the below services and we _highly recommend_ you consult the Platform.sh docs for how to properly configure each.
 
 * [Elasticsearch](https://docs.platform.sh/configuration/services/elasticsearch.html)
 * [Headless Chrome](https://docs.platform.sh/configuration/services/headless-chrome.html)
@@ -150,7 +150,7 @@ We currently only support the below services and we _highly recommend_ you consu
 * [MariaDB/MySQL](https://docs.platform.sh/configuration/services/mysql.html)
 * [Memcached](https://docs.platform.sh/configuration/services/memcached.html)
 * [MongoDB](https://docs.platform.sh/configuration/services/mongodb.html)
-* [PostgreSQL](https://docs.platform.sh/configuration/services/mysql.html)
+* [PostgreSQL](https://docs.platform.sh/configuration/services/postgresql.html)
 * [RabbitMQ](https://docs.platform.sh/configuration/services/rabbitmq.html)
 * [Redis](https://docs.platform.sh/configuration/services/redis.html)
 * [Solr](https://docs.platform.sh/configuration/services/solr.html)
@@ -160,13 +160,13 @@ Also note that you will need to run a `lando rebuild` for configuration changes 
 
 ### .platform.app.yaml
 
-Lando will load your [.platform.app.yaml](https://docs.platform.sh/configuration/routes.html) and spin up _exactly_ the same things there as you have running on your platform.sh site. This means that similarly to platform.sh Lando will also:
+Lando will load your [.platform.app.yaml](https://docs.platform.sh/configuration/app.html) and spin up _exactly_ the same things there as you have running on your Platform.sh site. This means that similarly to Platform.sh Lando will also:
 
 * Install any dependencies specificed in the `build.flavor` or `dependencies` keys
 * Run any `build` or `deploy` hooks
 * Set up needed `relationships`, `variables`, `web` config, `cron` tasks, etc.
 
-We currently only support the below langauges and we _highly recommend_ you consult the platform.sh docs for how to properly configure each.
+We currently only support the below langauges and we _highly recommend_ you consult the Platform.sh docs for how to properly configure each.
 
 * [PHP](https://docs.platform.sh/languages/php.html)
 
@@ -174,7 +174,7 @@ Also note that you will need to run a `lando rebuild` for configuration changes 
 
 ### Multiple applications
 
-Lando _should_ support Platform's [multiple applications configurations](https://docs.platform.sh/configuration/app/multi-app.html) although they are not extensively tested at this point so YMMV.
+Lando _should_ support Platform.sh's [multiple applications configurations](https://docs.platform.sh/configuration/app/multi-app.html) although they are not extensively tested at this point so YMMV.
 
 If you have a multiple application setup then you will need to navigate into either the directory that contains the `.platform.app.yaml`  or the `source.root` specified in your `.platform/applications.yaml` file to access the relevant tooling for that app.
 
@@ -195,9 +195,9 @@ lando
 
 ### Environment variables
 
-Application containers running on Lando will also set up the same [platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on platform.sh with these variables _should_ also automatically work on Lando.
+Application containers running on Lando will also set up the same [Platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on Platform.sh with these variables _should_ also automatically work on Lando.
 
-Lando _does not_ currently pull variables you have set up in the platform.sh dashboard so you will need to add those manually.
+Lando _does not_ currently pull variables you have set up in the Platform.sh dashboard so you will need to add those manually.
 
 
 ### Overriding variables
@@ -223,7 +223,7 @@ The syntax under the application name is the same as in [these docs](https://doc
 
 ## Platform CLI
 
-Every application container will contain the [Platform CLI](https://docs.platform.sh/development/cli.html); automatically authenticated for use with the account and project you selected during `lando init`.
+Every application container will contain the [Platform.sh CLI](https://docs.platform.sh/development/cli.html); automatically authenticated for use with the account and project you selected during `lando init`.
 
 ```bash
 # Who am i?
@@ -435,12 +435,12 @@ Of course, it is always preferrable to just use `PLATFORM_RELATIONSHIPS` for all
 
 Lando also provides _currently rudimentary_ wrapper commands called `lando pull` and `lando push`.
 
-With `lando pull` you can import data and download files from your remote platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote platform.sh site.
+With `lando pull` you can import data and download files from your remote Platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote Platform.sh site.
 
 ```bash
 lando pull
 
-Pull relationships and/or mounts from platform.sh
+Pull relationships and/or mounts from Platform.sh
 
 Options:
   --help              Shows lando or delegated command help if applicable
@@ -470,7 +470,7 @@ lando pull -r admin:legacy
 ```bash
 lando push
 
-Push relationships and/or mounts to platform.sh
+Push relationships and/or mounts to Platform.sh
 
 Options:
   --help              Shows lando or delegated command help if applicable
@@ -499,7 +499,7 @@ lando push -r admin:legacy -r admin:main
 
 ## Importing databases
 
-If you have data that exists outside platform.sh eg a `dump.sql` file you'd like to import you can leverage the special `lando` commands we give you to access each `relationship`. You will need to make sure that the relationship you connect with has the appropriate permissions needed to import your dump file.
+If you have data that exists outside Platform.sh eg a `dump.sql` file you'd like to import you can leverage the special `lando` commands we give you to access each `relationship`. You will need to make sure that the relationship you connect with has the appropriate permissions needed to import your dump file.
 
 ```bash
 # Import to the main schema using the database relationships
@@ -508,7 +508,7 @@ lando database main < dump.sql
 
 ## Caveats and known issues
 
-Since this is a currently an `alpha` release there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
+Since this is a currently an `alpha` release there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [Platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
 ).
 
 We also _highly encourage_ you to [post an issue](https://github.com/lando/lando/issues/new/choose) if you see a problem that doesn't already have an issue.
@@ -519,7 +519,7 @@ Platform.sh sets `$HOME` to `/app` by default. This makes sense in a read-only h
 
 Lando changes this behavior and sets `$HOME` to its own default of `/var/www` for most _user initiated_ commands and automatic build steps.
 
-It also will override any `PLATFORM_VARIABLES` that should be set differently for local dev. For a concrete example of this platform.sh's Drupal 8 template will set the Drupal `/tmp` directory to `/app/tmp`, Lando will instead set this to `/tmp`.
+It also will override any `PLATFORM_VARIABLES` that should be set differently for local dev. For a concrete example of this Platform.sh's Drupal 8 template will set the Drupal `/tmp` directory to `/app/tmp`, Lando will instead set this to `/tmp`.
 
 However, it's _probable_ at this early stage that we have not caught all the places where we need to do both of the above. As a result you probably want to:
 
@@ -554,7 +554,7 @@ Adding redirect support is being discussed in this ticket: <https://github.com/l
 
 ### Local considerations
 
-There are some application settings and configuration that platform.sh will automatically set if your project is based on one of their boilerplates. While most of these settings are fine for local development, some are not. If these settings need to be altered for your site to work as expected locally then Lando will modify them.
+There are some application settings and configuration that Platform.sh will automatically set if your project is based on one of their boilerplates. While most of these settings are fine for local development, some are not. If these settings need to be altered for your site to work as expected locally then Lando will modify them.
 
 For example if your project is based on the [Drupal 8 Template](https://github.com/platformsh-templates/drupal8) then Lando will set the `tmp` directory and set `skip_permissions_hardening` to `TRUE`.
 
@@ -580,7 +580,7 @@ runtime:
 
 Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production.
 
-### platformsh.agent errors
+### Platformsh.agent errors
 
 When you run `lando start` or `lando rebuild` you may experience either Lando hanging or an error being thrown by something called the `platformsh.agent`. We are attempting to track down the causes of some of these failures but they are generally easy to identify and workaround:
 
