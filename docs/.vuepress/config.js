@@ -281,6 +281,13 @@ module.exports = {
           ],
         },
         {
+          title: 'Triaging Issues',
+          collapsable: false,
+          children: [
+            'triage-getting-started',
+          ],
+        },
+        {
           title: 'Blogging',
           collapsable: false,
           children: [
