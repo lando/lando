@@ -22,12 +22,24 @@ const overrideAppserver = options => {
 };
 
 const setTooling = (options, tokens) => {
+  const metaToken = _.get(
+    options,
+    '_app.meta.token',
+    null
+  );
+  const tokenEnv = metaToken !== null ?
+    { env: { TERMINUS_TOKEN: metaToken } }
+    : {};
   // Add in push/pull/switch
   options.tooling.pull = pull.getPantheonPull(options, tokens);
   options.tooling.push = push.getPantheonPush(options, tokens);
   options.tooling.switch = change.getPantheonSwitch(options, tokens);
   // Add in the framework-correct tooling
   options.tooling = _.merge({}, options.tooling, utils.getPantheonTooling(options.framework));
+  // Inject token into the environment for all tooling defined by recipe.
+  options.tooling = _.forOwn(options.tooling, (tool, key, tooling) => {
+    tooling[key] = _.merge(tokenEnv, tool);
+  })
   return options;
 };
 
