@@ -80,7 +80,7 @@ const buildDbPullCommand = ({framework = 'drupal8', drush_version = 8} = {}) => 
   // Drupal requires some drush version logic, which is extremely annoying
   // the key difference here is the --extra/--extra-dump flag
   const coercedDrushVersion = semver.valid(semver.coerce(drush_version));
-  const drushDump = 'terminus remote:drush -- sql-dump --structure-tables-list="cache,cache_*"';
+  const drushDump = 'terminus remote:drush -- sql-dump --structure-tables-list=cache,cache_*';
   if (!_.isNull(coercedDrushVersion) && semver.gte(coercedDrushVersion, '9.0.0')) {
     return `${drushDump} --extra-dump=--column-statistics=0`;
   } else {
