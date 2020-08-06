@@ -35,6 +35,10 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
+# Should start with a clean cache
+cd drupal8
+lando mysql pantheon -e "select count(cid) from cache_data" | grep 0
+
 # Should be able to bootstrap drupal8
 cd drupal8
 lando drush status | grep "Connected"

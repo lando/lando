@@ -84,7 +84,7 @@ const buildDbPullCommand = ({framework = 'drupal8', drush_version = 8} = {}) => 
   if (!_.isNull(coercedDrushVersion) && semver.gte(coercedDrushVersion, '9.0.0')) {
     return `${drushDump} --extra-dump=--column-statistics=0`;
   } else {
-    return `${drushDump} --extra=--column-statistics=0`;
+    return drushDump;
   }
 };
 

@@ -132,6 +132,7 @@ if [ "$DATABASE" != "none" ]; then
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
 
   # For some reason terminus remote:thing commands do not return when run through LEIA so we are hacking this for now
+  echo "$PULL_DB"
   if [ $LANDO_LEIA == 1 ]; then
     PULL_DB="$FALLBACK_PULL_DB"
   fi
