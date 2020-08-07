@@ -28,7 +28,7 @@ const setTooling = (options, tokens) => {
     null
   );
   const tokenEnv = metaToken !== null ?
-    { env: { TERMINUS_TOKEN: metaToken } }
+    { LANDO_TERMINUS_TOKEN: metaToken }
     : {};
   // Add in push/pull/switch
   options.tooling.pull = pull.getPantheonPull(options, tokens);
@@ -36,10 +36,10 @@ const setTooling = (options, tokens) => {
   options.tooling.switch = change.getPantheonSwitch(options, tokens);
   // Add in the framework-correct tooling
   options.tooling = _.merge({}, options.tooling, utils.getPantheonTooling(options.framework));
-  // Inject token into the environment for all tooling defined by recipe.
-  options.tooling = _.forOwn(options.tooling, (tool, key, tooling) => {
-    tooling[key] = _.merge(tokenEnv, tool);
-  })
+  // Inject token into the environment for all relevant tooling defined by recipe.
+  ['push', 'pull', 'switch'].forEach(command => {
+    options.tooling[command].env = _.merge({}, tokenEnv, options.tooling[command].env);
+  });
   return options;
 };
 
