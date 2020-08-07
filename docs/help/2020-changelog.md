@@ -6,7 +6,8 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Fixed bug causing `db-import` wipe to fail on `views` [#2516](https://github.com/lando/lando/pull/2516)
 * Fixed bug causing `db-import` wipe to fail on table names with hypens [#2478](https://github.com/lando/lando/pull/2478)
-* Default `skip_permission_hardening` to true on Pantheon Drupal sites [#2504](https://github.com/lando/lando/pull/2504)
+* Fixed bug causing `lando pull` to not correctly exclude `cache` data for `pantheon` sites
+* Set `skip_permission_hardening` to `true` by default on Pantheon Drupal sites [#2504](https://github.com/lando/lando/pull/2504)
 
 [What does pre-release mean?](https://docs.lando.dev/config/releases.html)
 
