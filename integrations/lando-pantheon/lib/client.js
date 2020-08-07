@@ -42,6 +42,8 @@ const pantheonRequest = (request, log, verb, pathname, data = {}, options = {}) 
         `${data.method} request to ${data.path} failed with code ${data.code}: ${data.codeText}.`,
         `The server responded with the message ${data.response}.`,
       ];
+      // @NOTE: it's not clear to me why we make this into a message instead of passing through
+      // the entire data object, possibly the reason has been lost to the sands of time
       return Promise.reject(new Error(msg.join(' ')));
     }), {max: 2});
 };

@@ -28,7 +28,7 @@ const setTooling = (options, tokens) => {
     null
   );
   const tokenEnv = metaToken !== null ?
-    { LANDO_TERMINUS_TOKEN: metaToken }
+    {LANDO_TERMINUS_TOKEN: metaToken}
     : {};
   // Add in push/pull/switch
   options.tooling.pull = pull.getPantheonPull(options, tokens);

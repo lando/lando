@@ -307,4 +307,5 @@ exports.sortTokens = (...sources) => _(_.flatten([...sources]))
   .sortBy('date')
   .groupBy('email')
   .map(tokens => _.last(tokens))
+  .compact()
   .value();
