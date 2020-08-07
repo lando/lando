@@ -3,7 +3,6 @@
 // Modules
 const _ = require('lodash');
 const auth = require('./auth');
-const semver = require('semver');
 const utils = require('./utils');
 
 // The non dynamic base of the task
