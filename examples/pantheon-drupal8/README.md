@@ -105,7 +105,8 @@ lando pull --code test --database none --files none
 lando pull --code live --database none --files none
 
 # Should automatically skip permission hardening
-lando drush php-eval "print \Drupal::service('settings')->get('skip_permissions_hardening');" | grep 1
+cd drupal8
+lando drush php-eval "print \\Drupal::service(\'settings\')->get(\'skip_permissions_hardening\');" | grep 1
 ```
 
 Destroy tests
