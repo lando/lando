@@ -44,6 +44,8 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 Elasticsearch requires you set the kernel property `vm.max_map_count` to at least `262144` in order to run correctly. Lando will attempt to set this on install if you use any of our official package installers for Windows, macOS, Debian, RPM or Pacman.
 
+NOTE: Set this on the host machine, not in `.lando.yml`.
+
 However, if you are installing from source or via another pathway you will need to set this manually. Generally this can be accomplished with the following:
 
 ```bash
