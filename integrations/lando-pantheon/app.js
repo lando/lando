@@ -37,7 +37,6 @@ module.exports = (app, lando) => {
     });
 
     // Load in other stuff like tokens and other meta at the most opportune moment
-    // @TODO: this is not actually the most opportune moment
     app.events.on('pre-init', 1, () => {
       app.pantheonTokenCache = 'pantheon.tokens';
       app.pantheonTokens = lando.cache.get(app.pantheonTokenCache) || [];
