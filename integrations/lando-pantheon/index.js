@@ -35,6 +35,7 @@ module.exports = lando => {
               lando.cli.clearTaskCaches();
               // This is the money option
               delete data.options.auth;
+              console.log(lando.cli.makeArt('badToken'));
             }
           });
         }
