@@ -79,7 +79,7 @@ sub vcl_recv {
   # is so that developers always have fresh content while editing files.
   #
   # This list of file extensions is also in vcl_backend_response(), keep them in sync.
-  if (req.url ~ "(i?)\/(?!\?)[\w\-\=\&]+\.(png|gif|jpeg|jpg|ico|bmp|tif|tiff|webp|swf|css|js|woff|woff2|svg|ttf|otf|eot)($|\?)") {
+  if (req.url ~ "(i?)\/(?!\?)[\w\-\&~\.]+\.(png|gif|jpeg|jpg|ico|bmp|tif|tiff|webp|swf|css|js|woff|woff2|svg|ttf|otf|eot)($|\?)") {
     unset req.http.Cookie;
   }
 
@@ -250,7 +250,7 @@ sub vcl_pipe {
 sub vcl_backend_response {
   # Don't allow static files to set cookies. This list of file extensions is also
   # in vcl_recv(), keep them in sync.
-  if (bereq.url ~ "(i?)\/(?!\?)[\w\-\=\&]+\.(png|gif|jpeg|jpg|ico|bmp|tif|tiff|webp|swf|css|js|woff|woff2|svg|ttf|otf|eot)($|\?)") {
+  if (bereq.url ~ "(i?)\/(?!\?)[\w\-\&~\.]+\.(png|gif|jpeg|jpg|ico|bmp|tif|tiff|webp|swf|css|js|woff|woff2|svg|ttf|otf|eot)($|\?)") {
     unset beresp.http.set-cookie;
   }
 
