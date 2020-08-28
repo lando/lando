@@ -36,7 +36,7 @@ Here is the outline of content the Lando 101 course will cover:
 * [Init](/guides/lando-101/lando-init.html)
 * [Start](/guides/lando-101/lando-start.html)
 * [Configure](/guides/lando-101/lando-config.html)
-* Add a Service
+* [Add a Service](/guides/lando-101/lando-services.html)
 * Add a Proxy URL
 * Add Tooling
 * Add a Build step
