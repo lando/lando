@@ -40,6 +40,13 @@ cd lando-101
 cp ../.lando.config.yml .lando.yml
 lando rebuild -y
 lando php -v | grep "PHP 7.4"
+lando destroy -y
+
+# Should be able to add a service via the services key
+cd lando-101
+cp ../.lando.services.yml .lando.yml
+lando rebuild -y
+lando ssh -s mailhog -c "ls /usr/local/bin" |grep "MailHog"
 ```
 
 Destroy tests
