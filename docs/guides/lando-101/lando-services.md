@@ -1,8 +1,8 @@
 ---
 title: Lando Services
-metaTitle: Lando Configure | Lando
-description: An example using the config key to configure a Lando recipe.
-summary: An example of extending a Lando recipe using the config key.
+metaTitle: Lando Services | Lando
+description: An example adding the mailhog service to a Lando recipe.
+summary: An example of adding the mailhog service to a Lando recipe using the services key.
 date: 2020-08-28T14:38:22.169Z
 original: 
 repo: 
