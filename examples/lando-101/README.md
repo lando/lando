@@ -47,6 +47,14 @@ cd lando-101
 cp ../.lando.services.yml .lando.yml
 lando rebuild -y
 lando ssh -s mailhog -c "ls /usr/local/bin" |grep "MailHog"
+lando destroy -y
+
+# Should be able to reach a proxy domain
+cd lando-101
+cp ../.lando.proxy.yml .lando.yml
+lando rebuild -y
+curl -s -o /dev/null -X GET -I -w "%{http_code}" http://mail.lando-101.lndo.site | grep 200
+lando destroy -y
 ```
 
 Destroy tests
