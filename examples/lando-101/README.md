@@ -55,6 +55,14 @@ cp ../.lando.proxy.yml .lando.yml
 lando rebuild -y
 curl -s -o /dev/null -X GET -I -w "%{http_code}" http://mail.lando-101.lndo.site | grep 200
 lando destroy -y
+
+# Should be able to use added custom tooling
+cd lando-101
+cp ../.lando.tooling.yml .lando.yml
+lando rebuild -y
+lando composer require squizlabs/php_codesniffer
+lando phpcs --version |grep squiz
+lando destroy -y
 ```
 
 Destroy tests
