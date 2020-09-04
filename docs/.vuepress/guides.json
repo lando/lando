@@ -11,7 +11,8 @@
           "lando-101/lando-init",
           "lando-101/lando-start",
           "lando-101/lando-config",
-          "lando-101/lando-services"
+          "lando-101/lando-services",
+          "lando-101/lando-proxy"
         ]
       }
     ]
