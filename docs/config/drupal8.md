@@ -165,7 +165,7 @@ config:
 
 #### Using a site-local Drush
 
-While Lando will globally install Drush for you, it is increasingly common and in some cases a straight-up best practice to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
+While Lando will globally install Drush for you, it is increasingly common and in some cases a straight-up best practice to [install a site-local Drush](https://www.drush.org/install/) by requiring it in your projects `composer.json` file.
 
 Because of how Lando's [php service](./php.md) sets up its [`PATH`](./php.md#path-considerations), this means that if you have indeed installed Drush on your own via `composer` Lando will use yours over its own. Said more explicitly: **if you've required `drush` via `composer` in your application then this recipe will use your `drush` and not the one you've specified in this recipes config.**
 

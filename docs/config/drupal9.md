@@ -143,7 +143,7 @@ By default our Drupal 9 recipe will globally install the [latest version of Drus
 
 #### Using a site-local Drush
 
-You will want to [install a site-local Drush](https://docs.drush.org/en/master/install/) by requiring it in your projects `composer.json` file.
+You will want to [install a site-local Drush](https://www.drush.org/install/) by requiring it in your projects `composer.json` file.
 
 ```bash
 lando composer require drush/drush
