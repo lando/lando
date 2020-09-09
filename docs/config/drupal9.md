@@ -139,7 +139,7 @@ config:
 
 ### Using Drush
 
-By default our Drupal 9 recipe will globally install the [latest version of Drush 10](http://docs.drush.org/en/master/install/). However, on Drupal 9 this is not really supported anymore, so we _highly recommend_ you install a site-local Drush so that things work as expected.
+By default our Drupal 9 recipe will globally install the [latest version of Drush 10](https://www.drush.org/install/). However, on Drupal 9 this is not really supported anymore, so we _highly recommend_ you install a site-local Drush so that things work as expected.
 
 #### Using a site-local Drush
 
