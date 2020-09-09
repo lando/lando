@@ -9,5 +9,5 @@ exports.drushWarn = version => ({
     'This version of drush prefers a site-local installation',
     'We recommend you install drush that way, see:',
   ],
-  url: 'https://docs.drush.org/en/master/install/',
+  url: 'https://www.drush.org/install/',
 });
