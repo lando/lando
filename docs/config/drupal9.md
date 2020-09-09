@@ -9,7 +9,7 @@ Drupal is a free and open source content-management framework written in PHP and
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [Drupal 9](https://drupal.org/) apps.
 
 ::: warning This is a new recipe!
-This is a relatively new recipe and Drupal 9 is still in development. As such this recipe should be consider **beta** quality.
+This is a relatively new recipe. As such this recipe should be consider **beta** quality.
 :::
 
 [[toc]]
