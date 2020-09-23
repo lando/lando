@@ -43,8 +43,6 @@ service:
 If you want to load Docker compose files **and** use services, you should note that compose files are loaded first. This means that depending on how you name things, your services could override things set in your compose files.
 :::
 
-[[toc]]
-
 ## Supported Services
 
 The following services are currently supported. Please check out each one to learn how to use them.
