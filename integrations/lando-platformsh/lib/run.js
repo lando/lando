@@ -134,7 +134,7 @@ const getApplicationEnvironment = (appConfig, config) => _.merge({}, getEnvironm
   PLATFORM_APPLICATION_NAME: appConfig.name,
   PLATFORM_PROJECT: config.id,
   PLATFORM_DIR: '/app',
-  PLATFORM_PROJECT_ENTROPY: 'heatdeath',
+  PLATFORM_PROJECT_ENTROPY: encode(appConfig),
   PLATFORM_BRANCH: 'master',
   PLATFORM_TREE_ID: `${config.id}-${appConfig.name}`,
   PLATFORM_ROUTES: encode(config.routes),

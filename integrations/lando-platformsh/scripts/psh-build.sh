@@ -21,7 +21,10 @@ export HOME="/var/www"
 export USER="web"
 export SHELL="/bin/dash"
 export LANG="C.UTF-8"
+
+# PLATFORM run/build vars that need to be set
 export PLATFORM_CACHE_DIR="/var/www"
+export PLATFORM_APP_DIR="/app"
 
 # Install the platform-cli if we need it
 if [ ! -f "$HOME/.platformsh/bin/platform" ]; then
