@@ -21,7 +21,7 @@ module.exports = {
         services: {
           init: {
             command: '/bin/sh -c "/helpers/user-perms.sh --silent && tail -f /dev/null"',
-            image: 'devwithlando/util:2',
+            image: 'devwithlando/util:3',
             environment: env,
             labels: labels,
             volumes: [
