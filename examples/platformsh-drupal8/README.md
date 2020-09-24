@@ -89,7 +89,7 @@ lando ssh -s cache -c "id" | grep app
 
 # Should use the correct php version
 cd drupal
-lando php -v | grep "PHP 7.2"
+lando php -v | grep "PHP 7.4"
 
 # Should have the expected platformsh containers and images
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_app_1
@@ -97,8 +97,8 @@ docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_cache
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_db_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_app_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/php-7.4
-docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-5.0
-docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.2
+docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-6.0
+docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.4
 
 # Should connect to remote platform environment and not local
 cd drupal
