@@ -4,13 +4,12 @@ If you've ever tried to run a site with a shload of files using Docker Desktop f
 
 Similarly, since Lando is built on top of these technologies, you likely have experienced them while running big sites on Lando as well; despite the fact that we already [optimize our app mounts](./services.md#app-mount).
 
-The good news is that as of Lando 3.0.8, we can offer two _experimental_, opt-in, performance optimization pathway to users on macOS or Windows. Note that the below configuration does not impact Linux users who already have "native" performance by default.
+The good news is that as of Lando 3.0.8, we can offer an _experimental_, opt-in, performance optimization pathway to users on macOS or Windows. Note that the below configuration does not impact Linux users who already have "native" performance by default.
 
 The `tl;dr` is that users can now `exclude` certain directories from using the default Docker Desktop. Depending on the amount of files you exclude, this can bring your application from [_ugh fml_ to _pretty close_](https://github.com/lando/lando/issues/1460#issuecomment-467126103) to native speed.
 
 The downside of this approach is that all "excluded" directories are decoupled from your host, meaning that you can no longer edit their contents from your host machine. As a result, we recommend you only exclude directories containing code you don't need to modify such as `vendor` or `node_modules`.
 
-However, if you are on macOS and using a version of Docker Desktop which supports `mutagen` file sync then your "excluded" directories will actually be synced back to your host. Note that `mutagen` is currently only available in Docker Destop Edge releases so while you can try it out it's not something we can currently support officially.
 
 [[toc]]
 
@@ -127,29 +126,4 @@ If you run a `lando rebuild` with the above Landofile, you should expect to see 
 #### Cannot remove mounted directories
 
 All of the directories you exclude cannot be removed with a `rm -rf /path/to/exclude` while inside of your container. You will likely get an error indicating the device is busy. This means if you exclude a directory that gets removed during a dependency update or build step you will likely experience some degree of sadness.
-
-### Mutagen
-
-macOS users who are using a version of Docker Desktop that supports `mutagen` file syncing can use the same configuration as above with the following differences in behavior:
-
-* Excluded directories will still be bi-directionally synced between your host and container
-* You can no longer exclude exculudes, this generally should not be a problem since with `mutagen` excluded directories are still synced by default.
-
-You can also `mutagen` sync your entire application directory by setting the `app_mount` of a given service to `delegated`.
-
-```yaml
-services:
-  appserver:
-    app_mount: delegated
-```
-
-This would be equivalent to the following in `excludes` syntax:
-
-```yaml
-excludes:
-  - "."
-```
-
-
-Again note that currently `mutagen` is only available on Docker Destkop Edge releases and as such is not officially supported for use with Lando so YMMV.
 

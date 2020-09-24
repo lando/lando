@@ -3,7 +3,7 @@ Node 12 Example
 
 This example exists primarily to test the following documentation:
 
-* [Node 12-13 Service](https://docs.devwithlando.io/tutorials/node.html)
+* [Node 12-14 Service](https://docs.devwithlando.io/tutorials/node.html)
 * [Installing compass in your node service](https://docs.lando.dev/guides/using-compass-on-a-lando-node-service.html)
 
 Start up tests
@@ -27,7 +27,7 @@ Run the following commands to validate things are rolling as they should.
 lando ssh -s defaults -c "env | grep NODE_VERSION=12."
 
 # Should use a user specified version if given
-lando ssh -s custom -c "env | grep NODE_VERSION=13."
+lando ssh -s custom -c "env | grep NODE_VERSION=14."
 
 # Should use a user specified patch version if given
 lando ssh -s patch -c "env | grep NODE_VERSION=12.13.1"

@@ -3,6 +3,29 @@
 // Modules
 const _ = require('lodash');
 
+// Versions
+const supportedVersions = [
+  '8.6',
+  '8.5',
+  '8.4',
+  '8.3',
+  '8.2',
+  '8.1',
+  '8.0',
+  '8',
+  '7.7',
+  '7.6',
+  '7',
+  '6.6',
+  '6',
+  '5.5',
+  '5',
+  '4.10',
+  '4',
+  '3.6',
+  '3',
+];
+
 /*
  * Helper to parse legacy solr 3 config
  */
@@ -99,7 +122,7 @@ module.exports = {
   name: 'solr',
   config: {
     version: '7',
-    supported: ['8.4', '8.3', '8.2', '8.1', '8.0', '8', '7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
+    supported: supportedVersions,
     legacy: ['4.10', '4', '3.6', '3'],
     patchesSupported: true,
     command: '/start-solr.sh',

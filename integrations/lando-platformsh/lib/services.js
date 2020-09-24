@@ -56,14 +56,7 @@ const getLandoService = platform => {
     // set until now
     lando.build_as_root_internal.push('/helpers/load-keys.sh --silent');
     // Add in the build wrapper
-    // @NOTE: php applications need to run build steps after the OPEN step to
-    // ensure any needed php extensions are installed. all other services should
-    // run before since they may be needed to start up the app correctly
-    if (lando.type === 'platformsh-php') {
-      lando.run_internal = ['/helpers/psh-build.sh'];
-    } else {
-      lando.build_internal = ['/helpers/psh-build.sh'];
-    }
+    lando.build_internal = ['/helpers/psh-build.sh'];
     // Generate certs for proxy purposes but dont expose things
     lando.ssl = true;
     lando.sslExpose = false;

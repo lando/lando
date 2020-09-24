@@ -65,13 +65,13 @@ lando ssh -c "env" | grep PLATFORM_BRANCH
 lando ssh -c "env" | grep PLATFORM_VARIABLES
 lando ssh -c "env" | grep PLATFORM_ROUTES
 lando ssh -c "env" | grep PLATFORM_RELATIONSHIPS
+lando ssh -c "env" | grep PLATFORM_PROJECT_ENTROPY
 lando ssh -c "env" | grep PLATFORM_APP_DIR | grep /app
 lando ssh -c "env" | grep PLATFORM_APPLICATION_NAME | grep app
 lando ssh -c "env" | grep PLATFORM_ENVIRONMENT | grep lando
 lando ssh -c "env" | grep PLATFORM_TREE_ID | grep 5su5nuuuwr5xg-app
 lando ssh -c "env" | grep PLATFORM_DIR | grep /app
 lando ssh -c "env" | grep PLATFORM_PROJECT | grep 5su5nuuuwr5xg
-lando ssh -c "env" | grep PLATFORM_PROJECT_ENTROPY | grep heatdeath
 lando ssh -c "env" | grep PLATFORM_APP_COMMAND | grep /usr/sbin/php-fpm
 lando ssh -c "env" | grep PLATFORM_DOCUMENT_ROOT | grep /app/web
 lando ssh -c "env" | grep PLATFORMSH_CLI_TOKEN | grep e_
@@ -89,16 +89,16 @@ lando ssh -s cache -c "id" | grep app
 
 # Should use the correct php version
 cd drupal
-lando php -v | grep "PHP 7.2"
+lando php -v | grep "PHP 7.4"
 
 # Should have the expected platformsh containers and images
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_app_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_cache_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_db_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_app_1
-docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/php-7.2
-docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-5.0
-docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.2
+docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/php-7.4
+docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-6.0
+docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.4
 
 # Should connect to remote platform environment and not local
 cd drupal

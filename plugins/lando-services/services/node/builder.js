@@ -6,6 +6,7 @@ const utils = require('./../../lib/utils');
 
 // Constants
 const supportedVersions = [
+  '14',
   '13',
   '12',
   '12.16',

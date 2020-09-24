@@ -33,12 +33,13 @@ module.exports = {
 
       // Set up lando user perm handling
       options.meUser = (options.meUser) ? options.meUser : 'user';
+      options.meGroup = (options.meGroup) ? options.meGroup : options.meUser;
 
       // Merge in the usual envvars but make sure user set ones take priority
       lagoon.environment = _.merge({}, {
         LANDO_SERVICE_TYPE: 'lagoon',
         LANDO_WEBROOT_USER: options.meUser,
-        LANDO_WEBROOT_GROUP: options.meUser,
+        LANDO_WEBROOT_GROUP: options.meGroup,
         LANDO_RESET_DIR: '/home',
       }, lagoon.environment);
 

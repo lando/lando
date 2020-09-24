@@ -3,12 +3,31 @@
 // Modules
 const _ = require('lodash');
 
+// Supported versions
+const supportedVersions = [
+  '7',
+  '7.9.x',
+  '7.8.x',
+  '7.7.x',
+  '7.6.x',
+  '7.5.x',
+  '7.4.x',
+  '7.3.x',
+  '6',
+  '6.8.x',
+  '6.7.x',
+  '6.6.x',
+  '6.5.x',
+  '5',
+  '5.6.x',
+];
+
 // Builder
 module.exports = {
   name: 'elasticsearch',
   config: {
     version: '6',
-    supported: ['7', '7.6.x', '7.5.x', '7.4.x', '7.3.x', '6', '6.8.x', '6.7.x', '6.6.x', '6.5.x', '5', '5.6.x'],
+    supported: supportedVersions,
     pinPairs: {
       '7': 'bitnami/elasticsearch:7.6.1-debian-10-r15',
       '6': 'bitnami/elasticsearch:6.8.7-debian-10-r15',

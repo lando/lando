@@ -24,13 +24,14 @@ module.exports = {
   builder: (parent, config) => class LandoLagoonMariaDb extends parent {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
-
       // Set the meUser
       options.meUser = 'mysql';
       // Ensure the non-root backup perm sweep runs
       // NOTE: we guard against cases where the UID is the same as the bitnami non-root user
       // because this messes things up on circle ci and presumably elsewhere and _should_ be unncessary
-      if (_.get(options, '_app._config.uid', '1000') !== '1001') options._app.nonRoot.push(options.name);
+      // NOTE: we are disabling this for now because this container requires mysql to have root as the primary
+      // group and we have no good way of setting that right now
+      // if (_.get(options, '_app._config.uid', '1000') !== '1001') options._app.nonRoot.push(options.name);
 
       // Make sure we set the creds correctly
       // this is tricky because the user can modify this in their lagoon docker-compose.yaml
