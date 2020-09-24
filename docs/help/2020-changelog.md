@@ -4,7 +4,7 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-* Added compatibility for Docker Compose `1.27.0`
+* Added compatibility for Docker Compose `1.27.x`
 * Added support for `node` `14`
 * Added support for recent `solr` `7.x` and `8.x` versions [#2599](https://github.com/lando/lando/pull/2599) [#2575](https://github.com/lando/lando/pull/2575)
 * Changed service certs to be owned by "you" [#2335](https://github.com/lando/lando/pull/2335)
@@ -16,6 +16,8 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug caused by `PLATFORM_PROJECT_ENTROPY` not being set correctly [#2583](https://github.com/lando/lando/pull/2583)
 * Improved authentication flow for `pantheon` apps [#2403](https://github.com/lando/lando/pull/2403)
 * Set `skip_permission_hardening` to `true` by default on Pantheon Drupal sites [#2504](https://github.com/lando/lando/pull/2504)
+* Updated to Docker Desktop `2.3.0.5`
+* Updated to Docker Compose `1.27.2`
 
 [What does pre-release mean?](https://docs.lando.dev/config/releases.html)
 
