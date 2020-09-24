@@ -253,7 +253,7 @@ sub vcl_backend_response {
   # Don't allow static files to set cookies. This list of file extensions is also
   # in vcl_recv(), keep them in sync.
 
-  set bereq.http.url_no_qs = regsub(req.url, "\?.*$", "");
+  set bereq.http.url_no_qs = regsub(bereq.url, "\?.*$", "");
   if (bereq.http.url_no_qs ~ "(?i)\.(png|gif|jpeg|jpg|ico|bmp|tif|tiff|webp|swf|css|js|woff|woff2|svg|ttf|otf|eot)$") {
     set beresp.http.x-pantheon-removed-set-cookie = beresp.http.set-cookie;
     unset beresp.http.set-cookie;

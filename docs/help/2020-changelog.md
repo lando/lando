@@ -18,6 +18,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing `lando pull` on `pantheons` apps to always pull from `dev` [#2578](https://github.com/lando/lando/pull/2578)
 * Fixed bug causing `mariadb` to fail on `lando restart` for `lagoon` recipes [#2411](https://github.com/lando/lando/pull/2411)
 * Fixed bug causing `lando pull` to fail on `pantheon` db pull when app prints error [#2561](https://github.com/lando/lando/pull/2561)
+* Improved `pantheon` `edge` cookie stripping on static assets [#2566](https://github.com/lando/lando/pull/2566)
 * Improved authentication flow for `pantheon` apps [#2403](https://github.com/lando/lando/pull/2403)
 * Set `skip_permission_hardening` to `true` by default on Pantheon Drupal sites [#2504](https://github.com/lando/lando/pull/2504)
 * Removed experimental `mutagen` support [#2354](https://github.com/lando/lando/pull/2354)
