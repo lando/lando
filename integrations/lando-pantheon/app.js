@@ -36,9 +36,11 @@ module.exports = (app, lando) => {
       });
     });
 
-    // Add tokens and other meta to our app
-    app.pantheonTokenCache = 'pantheon.tokens';
-    app.pantheonTokens = lando.cache.get(app.pantheonTokenCache) || [];
-    app.terminusTokens = utils.getTerminusTokens(lando.config.home);
+    // Load in other stuff like tokens and other meta at the most opportune moment
+    app.events.on('pre-init', 1, () => {
+      app.pantheonTokenCache = 'pantheon.tokens';
+      app.pantheonTokens = lando.cache.get(app.pantheonTokenCache) || [];
+      app.terminusTokens = utils.getTerminusTokens(lando.config.home);
+    });
   }
 };
