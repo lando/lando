@@ -18,7 +18,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing `mariadb` to fail on `lando restart` for `lagoon` recipes [#2411](https://github.com/lando/lando/pull/2411)
 * Improved authentication flow for `pantheon` apps [#2403](https://github.com/lando/lando/pull/2403)
 * Set `skip_permission_hardening` to `true` by default on Pantheon Drupal sites [#2504](https://github.com/lando/lando/pull/2504)
-* Removed experimental `mutagen` support
+* Removed experimental `mutagen` support [#2354](https://github.com/lando/lando/pull/2354)
 * Updated to Docker Desktop `2.3.0.5`
 * Updated to Docker Compose `1.27.2`
 
