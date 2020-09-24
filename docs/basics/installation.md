@@ -32,7 +32,7 @@ Note that Lando is basically a PaaS running on your computer and as such we don'
 
 You _can_ run Lando using the below but your experience may be less than ideal.
 
-*   2-core x86-based processor (Other architectures won't work with our images)
+*   2-core **x86-compat** processor
 *   4GB+ RAM
 *   25GB+ of available disk space
 
