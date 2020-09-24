@@ -122,6 +122,9 @@ cp -f /certs/cert.key "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.k
 # breaking changes
 cp -f /certs/cert.crt /certs/server.crt
 cp -f /certs/cert.key /certs/server.key
+# Set the cert and key on host to host-uid/gid ownership
+chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"
+chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"
 
 # Trust our root CA
 if [ ! -f "$CA_CERT_CONTAINER" ]; then
