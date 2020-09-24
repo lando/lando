@@ -6,7 +6,8 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Added compatibility for Docker Compose `1.27.x`
 * Added support for `node` `14`
-* Added support for recent `solr` `7.x` and `8.x` versions [#2599](https://github.com/lando/lando/pull/2599) [#2575](https://github.com/lando/lando/pull/2575)
+* Added support for recent `solr` `7.x` and `8.x` versions [#2599](https://github.com/lando/lando/pull/2599)
+* Added support for recent `elasticsearch` `7.x` versions [#2575](https://github.com/lando/lando/pull/2575)
 * Changed service certs to be owned by "you" [#2335](https://github.com/lando/lando/pull/2335)
 * Fixed bug causing `db-import` wipe to fail on `views` [#2516](https://github.com/lando/lando/pull/2516)
 * Fixed bug causing `db-import` wipe to fail on table names with hypens [#2478](https://github.com/lando/lando/pull/2478)

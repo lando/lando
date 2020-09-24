@@ -32,8 +32,8 @@ lando ssh -s helper -c "curl defaults:8983/solr/admin/info/system?wt=json" | gre
 # Should use version 5.5.5 on patch version
 lando ssh -s helper -c "curl patch:8983/solr/admin/info/system" | grep "solr-spec-version" | grep "5.5.5"
 
-# Should use version 7.9 on custom version
-lando ssh -s helper -c "curl custom:8983/solr/admin/info/system" | grep "solr-spec-version" | grep "7.9"
+# Should use version 7.7 on custom version
+lando ssh -s helper -c "curl custom:8983/solr/admin/info/system" | grep "solr-spec-version" | grep "7.7"
 
 # Should use version 8 on custom8 version
 lando ssh -s helper -c "curl custom8:8983/solr/admin/info/system" | grep "solr-spec-version" | grep "8."
