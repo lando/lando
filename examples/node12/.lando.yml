@@ -16,7 +16,7 @@ services:
       - apt-get install ruby-full -y
       - gem install compass
   custom:
-    type: node:13
+    type: node:14
     ssl: true
     globals:
       gulp-cli: latest
