@@ -129,22 +129,14 @@ if [ "$DATABASE" != "none" ]; then
   FALLBACK_PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
   LOCAL_MYSQL_CONNECT_STRING="mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
 
-  # This condition will never be met, because buildDbPullCommand() in
-  # integrations/lando-pantheon/lib/pull.js will always return something.
-  if [ -z "$LANDO_DB_PULL_COMMAND" ]; then
-    PULL_DB=$FALLBACK_PULL_DB
-  else
-    # Make sure the terminus command returned from buildDbPullCommand() has the
-    # correct <site.env> specified.
-    PULL_DB="$LANDO_DB_PULL_COMMAND $SITE.$DATABASE $LANDO_DB_PULL_COMMAND_OPTIONS"
-  fi
-
-  PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
-
   # For some reason terminus remote:thing commands do not return when run through LEIA so we are hacking this for now
   if [ $LANDO_LEIA == 1 ]; then
     PULL_DB="$FALLBACK_PULL_DB"
   fi
+
+  # Make sure the terminus command returned from buildDbPullCommand() has the
+  # correct <site.env> specified.
+  PULL_DB="$LANDO_DB_PULL_COMMAND $SITE.$DATABASE $LANDO_DB_PULL_COMMAND_OPTIONS"
 
   # Validate before we begin
   lando_pink "Validating you can pull the database from $DATABASE..."
@@ -170,13 +162,15 @@ EOF
 
   # Importing database
   echo "Pulling your database... This miiiiight take a minute"
-  $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
+  $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING || $FALLBACK_PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
 
+  # Validate the pull a bit
+  PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
   # Weak check that we got tables
   lando_pink "Checking db pull for expected tables..."
   if ! mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306 -e "SHOW TABLES;" | grep $PULL_DB_CHECK_TABLE; then
-    lando_red "Database pull failed... trying backup pull command"
-    $FALLBACK_PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING
+    lando_red "Database pull failed... "
+    exit 1
   fi
 
   # Do some post DB things on WP
