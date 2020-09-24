@@ -65,13 +65,13 @@ lando ssh -c "env" | grep PLATFORM_BRANCH
 lando ssh -c "env" | grep PLATFORM_VARIABLES
 lando ssh -c "env" | grep PLATFORM_ROUTES
 lando ssh -c "env" | grep PLATFORM_RELATIONSHIPS
+lando ssh -c "env" | grep PLATFORM_PROJECT_ENTROPY
 lando ssh -c "env" | grep PLATFORM_APP_DIR | grep /app
 lando ssh -c "env" | grep PLATFORM_APPLICATION_NAME | grep app
 lando ssh -c "env" | grep PLATFORM_ENVIRONMENT | grep lando
 lando ssh -c "env" | grep PLATFORM_TREE_ID | grep 5su5nuuuwr5xg-app
 lando ssh -c "env" | grep PLATFORM_DIR | grep /app
 lando ssh -c "env" | grep PLATFORM_PROJECT | grep 5su5nuuuwr5xg
-lando ssh -c "env" | grep PLATFORM_PROJECT_ENTROPY | grep heatdeath
 lando ssh -c "env" | grep PLATFORM_APP_COMMAND | grep /usr/sbin/php-fpm
 lando ssh -c "env" | grep PLATFORM_DOCUMENT_ROOT | grep /app/web
 lando ssh -c "env" | grep PLATFORMSH_CLI_TOKEN | grep e_
