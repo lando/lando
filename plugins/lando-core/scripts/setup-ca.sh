@@ -51,6 +51,9 @@ if [ ! -f "$LANDO_CA_CERT" ]; then
     -days 8675 \
     -out $LANDO_CA_CERT \
     -subj "/C=US/ST=California/L=San Francisco/O=Lando/OU=Bespin/CN=Lando Local CA"
+  # Set the cert and key on host to host-uid/gid ownership
+  chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "$LANDO_CA_KEY"
+  chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "$LANDO_CA_CERT"
   # log
   lando_info "CA generated at $LANDO_CA_CERT"
 fi
