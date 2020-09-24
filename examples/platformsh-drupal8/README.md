@@ -96,7 +96,7 @@ docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_app_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_cache_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_db_1
 docker ps --filter label=com.docker.compose.project=landod8 | grep landod8_app_1
-docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/php-7.2
+docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/php-7.4
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-5.0
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.2
 
