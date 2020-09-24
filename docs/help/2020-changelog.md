@@ -25,8 +25,6 @@ Lando is **free** and **open source** software that relies on contributions from
 * Updated to Docker Desktop `2.3.0.5`
 * Updated to Docker Compose `1.27.2`
 
-[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
-
 ## v3.0.11 - [July 31, 2020](https://github.com/lando/lando/releases/tag/v3.0.11)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
@@ -37,8 +35,6 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing `platformsh` recipe build to fail when webroot doesn't exist [#2529](https://github.com/lando/lando/pull/2529)
 * Improved `lando init` for `platformsh` eg faster and supports MFA
 * Updated to Docker Desktop `2.3.0.4` and Docker Compose `1.26.2`. Fixed [#2531](https://github.com/lando/lando/pull/2531)
-
-[What does pre-release mean?](https://docs.lando.dev/config/releases.html)
 
 ## v3.0.10 - [July 27, 2020](https://github.com/lando/lando/releases/tag/v3.0.10)
 
