@@ -128,7 +128,17 @@ if [ "$DATABASE" != "none" ]; then
   # Holla at @uberhacker for this fu
   FALLBACK_PULL_DB="$(echo $(terminus connection:info $SITE.$DATABASE --field=mysql_command) | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')"
   LOCAL_MYSQL_CONNECT_STRING="mysql --user=pantheon --password=pantheon --database=pantheon --host=database --port=3306"
-  PULL_DB=${LANDO_DB_PULL_COMMAND:-${FALLBACK_PULL_DB}}
+
+  # This condition will never be met, because buildDbPullCommand() in
+  # integrations/lando-pantheon/lib/pull.js will always return something.
+  if [ -z "$LANDO_DB_PULL_COMMAND" ]; then
+    PULL_DB=$FALLBACK_PULL_DB
+  else
+    # Make sure the terminus command returned from buildDbPullCommand() has the
+    # correct <site.env> specified.
+    PULL_DB="$LANDO_DB_PULL_COMMAND $SITE.$DATABASE $LANDO_DB_PULL_COMMAND_OPTIONS"
+  fi
+
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
 
   # For some reason terminus remote:thing commands do not return when run through LEIA so we are hacking this for now

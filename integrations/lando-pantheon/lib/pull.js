@@ -73,11 +73,17 @@ const frameworkType = (framework = 'drupal8') => {
 const buildDbPullCommand = ({framework = 'drupal8', drush_version = 8} = {}) => {
   // Wordpress
   if (frameworkType(framework) === 'pressy') {
-    return 'terminus remote:wp -- db export -';
+    return {
+      command: 'terminus remote:wp',
+      options: '-- db export -',
+    };
   }
 
   // Drupaly
-  return 'terminus remote:drush -- sql-dump --structure-tables-list=cache,cache_*';
+  return {
+    command: 'terminus remote:drush',
+    options: '-- sql-dump --structure-tables-list=cache,cache_*',
+  };
 };
 
 // Helper to populate defaults
@@ -96,9 +102,14 @@ const getDefaults = (task, options) => {
 
   // Get the framework flavor
   const flavor = frameworkType(options.framework);
+  const pullCommand = buildDbPullCommand(options);
   // Set envvars
   task.env = {
-    LANDO_DB_PULL_COMMAND: buildDbPullCommand(options),
+    // These LANDO_DB_PULL_* vars are separate because
+    // integrations/lando-pantheon/scripts/pull.sh needs to concatenate the
+    // specified <site.env> between them.
+    LANDO_DB_PULL_COMMAND: pullCommand.command,
+    LANDO_DB_PULL_COMMAND_OPTIONS: pullCommand.options,
     LANDO_DB_USER_TABLE: flavor === 'pressy' ? 'wp_users' : 'users',
     LANDO_LEIA: _.toInteger(options._app._config.leia),
   };
