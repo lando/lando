@@ -9,7 +9,7 @@ set -e
 LANDO_MODULE="pantheon"
 
 # Args
-AUTH=${1:-${TERMINUS_TOKEN}}
+AUTH=${1:-${LANDO_TERMINUS_TOKEN}}
 SITE=${2:-${PANTHEON_SITE}}
 ENV=${3:-${TERMINUS_ENV}}
 

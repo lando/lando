@@ -230,7 +230,7 @@ exports.getPantheonEnvironment = options => ({
   TERMINUS_HIDE_UPDATE_MESSAGE: 1,
   // TERMINUS_ORG: ''
   TERMINUS_SITE: options.site,
-  TERMINUS_TOKEN: _.get(options, '_app.meta.token'),
+  LANDO_TERMINUS_TOKEN: _.get(options, '_app.meta.token'),
   TERMINUS_USER: _.get(options, '_app.meta.email'),
   SECURE_AUTH_KEY: getHash(options.app),
   SECURE_AUTH_SALT: getHash(options.app + options.root),
@@ -310,4 +310,5 @@ exports.sortTokens = (...sources) => _(_.flatten([...sources]))
   .sortBy('date')
   .groupBy('email')
   .map(tokens => _.last(tokens))
+  .compact()
   .value();
