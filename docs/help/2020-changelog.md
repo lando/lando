@@ -1,5 +1,31 @@
 # 2020
 
+## v3.0.13 - [September 25, 2020](https://github.com/lando/lando/releases/tag/v3.0.13)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added compatibility for Docker Compose `1.27.x`
+* Added support for `node` `14`
+* Added support for recent `solr` `7.x` and `8.x` versions [#2599](https://github.com/lando/lando/pull/2599)
+* Added support for recent `elasticsearch` `7.x` versions [#2575](https://github.com/lando/lando/pull/2575)
+* Changed service certs to be owned by "you" [#2335](https://github.com/lando/lando/pull/2335)
+* Fixed bug causing `db-import` wipe to fail on `views` [#2516](https://github.com/lando/lando/pull/2516)
+* Fixed bug causing `db-import` wipe to fail on table names with hypens [#2478](https://github.com/lando/lando/pull/2478)
+* Fixed bug causing `lando pull` to not correctly exclude `cache` data for `pantheon` sites
+* Fixed bug causing `jq not found` when init `platformsh` recipes [#2583](https://github.com/lando/lando/pull/2583)
+* Fixed bug causing manually installed during build php extensions to not be available in `platformsh` recipes [#2583](https://github.com/lando/lando/pull/2583)
+* Fixed bug caused by `PLATFORM_PROJECT_ENTROPY` not being set correctly [#2583](https://github.com/lando/lando/pull/2583)
+* Fixed bug causing `lando pull` on `pantheons` apps to always pull from `dev` [#2578](https://github.com/lando/lando/pull/2578)
+* Fixed bug causing `mariadb` to fail on `lando restart` for `lagoon` recipes [#2411](https://github.com/lando/lando/pull/2411)
+* Fixed bug causing `lando pull` to fail on `pantheon` db pull when app prints error [#2561](https://github.com/lando/lando/pull/2561)
+* Fixed breaking upstream change in Docker Desktop for Windows 2.3.0.5 [#2610](https://github.com/lando/lando/pull/2610)
+* Improved `pantheon` `edge` cookie stripping on static assets [#2566](https://github.com/lando/lando/pull/2566)
+* Improved authentication flow for `pantheon` apps [#2403](https://github.com/lando/lando/pull/2403)
+* Set `skip_permission_hardening` to `true` by default on Pantheon Drupal sites [#2504](https://github.com/lando/lando/pull/2504)
+* Removed experimental `mutagen` support [#2354](https://github.com/lando/lando/pull/2354)
+* Updated to Docker Desktop `2.3.0.5`
+* Updated to Docker Compose `1.27.2`
+
 ## v3.0.12 - [September 24, 2020](https://github.com/lando/lando/releases/tag/v3.0.12)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
