@@ -82,34 +82,36 @@ const getHash = u => crypto.createHash('sha256').update(u).digest('hex');
 /*
  * Helper to get pantheon settings
  */
-const getPantheonSettings = options => ({
-  databases: pantheonDatabases,
-  conf: {
-    'pressflow_smart_start': true,
-    'pantheon_binding': 'lando',
-    'pantheon_site_uuid': options.id,
-    'pantheon_environment': 'lando',
-    'pantheon_tier': 'lando',
-    'pantheon_index_host': PANTHEON_INDEX_HOST,
-    'pantheon_index_port': PANTHEON_INDEX_PORT,
-    'redis_client_host': PANTHEON_CACHE_HOST,
-    'redis_client_port': PANTHEON_CACHE_PORT,
-    'redis_client_password': PANTHEON_CACHE_PASSWORD,
-    'file_public_path': 'sites/default/files',
-    'file_private_path': 'sites/default/files/private',
-    'file_directory_path': 'sites/default/files',
-    'file_temporary_path': '/tmp',
-    'file_directory_temp': '/tmp',
-    'css_gzip_compression': false,
-    'js_gzip_compression': false,
-    'page_compression': false,
-  },
-  drupal_hash_salt: getHash(JSON.stringify(pantheonDatabases)),
-  config_directory_name: 'config',
-  settings: {
-    skip_permissions_hardening: 1,
-  },
-});
+const getPantheonSettings = options => {
+  const settings = {
+    databases: pantheonDatabases,
+    conf: {
+      'pressflow_smart_start': true,
+      'pantheon_binding': 'lando',
+      'pantheon_site_uuid': options.id,
+      'pantheon_environment': 'lando',
+      'pantheon_tier': 'lando',
+      'pantheon_index_host': PANTHEON_INDEX_HOST,
+      'pantheon_index_port': PANTHEON_INDEX_PORT,
+      'redis_client_host': PANTHEON_CACHE_HOST,
+      'redis_client_port': PANTHEON_CACHE_PORT,
+      'redis_client_password': PANTHEON_CACHE_PASSWORD,
+      'file_public_path': 'sites/default/files',
+      'file_private_path': 'sites/default/files/private',
+      'file_directory_path': 'sites/default/files',
+      'file_temporary_path': '/tmp',
+      'file_directory_temp': '/tmp',
+      'css_gzip_compression': false,
+      'js_gzip_compression': false,
+      'page_compression': false,
+      'skip_permissions_hardening': true,
+    },
+    drupal_hash_salt: getHash(JSON.stringify(pantheonDatabases)),
+    config_directory_name: 'config',
+  };
+  settings.settings = settings.conf;
+  return settings;
+};
 
 /*
  * Helper to get build steps
