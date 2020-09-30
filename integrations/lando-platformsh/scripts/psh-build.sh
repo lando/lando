@@ -34,5 +34,7 @@ fi
 # Make sure platform things are sourced for this script
 . "$HOME/.bashrc"
 
+# Make sure our local build dir exists
+mkdir -p /app/.platform/local
 # Run build
-platform local:build $PLATFORM_APPLICATION_NAME
+platform local:build $PLATFORM_APPLICATION_NAME --source=/app --destination=/app/.platform/local/lando
