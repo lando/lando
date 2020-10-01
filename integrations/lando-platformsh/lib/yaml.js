@@ -45,7 +45,7 @@ module.exports = class PlatformYaml {
       resolve: data => {
         // Kill immediately if we have to
         if (!_.isString(data.path)) return false;
-        // Otherwise make sure this is dir that exists
+        // Otherwise check the path exists
         return fs.existsSync(path.resolve(this.base, data.path));
       },
       construct: data => {
