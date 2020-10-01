@@ -22,17 +22,19 @@ module.exports = {
         .filter(route => route.type === 'upstream')
         .filter(route => route.upstream.split(':')[0] === options.name)
         .orderBy('primary', ['desc'])
-        .thru(routes => routes[0].url)
+        .thru(routes => !_.isEmpty(routes) ? routes[0].url : undefined)
         .value();
+
       // Build the php
       const php = {
         image: `docker.registry.platform.sh/php-${options.version}`,
         volumes: options.volumes,
         ports: ['80'],
-        environment: {
-          DRUSH_OPTIONS_URI: primaryRoute,
-        },
+        environment: {},
       };
+
+      // Add some stuff if we have a primary route
+      if (primaryRoute) php.environment.DRUSH_OPTIONS_URI = primaryRoute;
 
       // Add in the php service and push downstream
       super(id, options, {services: _.set({}, options.name, php)});
