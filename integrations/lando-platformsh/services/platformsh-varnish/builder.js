@@ -16,10 +16,16 @@ module.exports = {
     constructor(id, options = {}, factory) {
       options = _.merge({}, config, options);
 
+      // Get the services we depend on
+      const backends = _(_.get(options, 'platformsh.relationships'), [])
+        .map(backend => _.first(backend.split(':')))
+        .value();
+
       // Build varnish
       const varnish = {
         image: `docker.registry.platform.sh/varnish-${options.version}`,
         ports: options.moreHttpPorts,
+        depends_on: backends,
         environment: {
           LANDO_WEBROOT_USER: options.meUser,
           LANDO_WEBROOT_GROUP: options.meUser,

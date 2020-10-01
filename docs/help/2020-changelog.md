@@ -5,6 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Fixed bug causing unauthed `platformsh` recipes to ask for source/destination on build [#2612](https://github.com/lando/lando/pull/2612)
+* Improved `platformsh` `varnish` service to be dependent on `backends` [#2445](https://github.com/lando/lando/pull/2445)
 
 ## v3.0.14 - [September 28, 2020](https://github.com/lando/lando/releases/tag/v3.0.14)
 
