@@ -85,7 +85,7 @@ exports.findClosestApplication = (apps = []) => _(apps)
  * Helper to load all the platform config files we can find
  */
 exports.loadConfigFiles = baseDir => {
-  const yamlPlatform = new PlatformYaml(baseDir);
+  const yamlPlatform = new PlatformYaml();
   const routesFile = path.join(baseDir, '.platform', 'routes.yaml');
   const servicesFile = path.join(baseDir, '.platform', 'services.yaml');
   const applicationsFile = path.join(baseDir, '.platform', 'applications.yaml');
@@ -95,25 +95,25 @@ exports.loadConfigFiles = baseDir => {
     .concat('.')
     .map(directory => path.resolve(baseDir, directory, '.platform.app.yaml'))
     .filter(file => fs.existsSync(file))
-    .map(file => ({data: yamlPlatform.load(fs.readFileSync(file)), file}))
+    .map(file => ({data: yamlPlatform.load(file), file}))
     .map(data => ({name: data.data.name, file: data.file, dir: path.dirname(data.file)}))
     .value() || [];
 
   // Load in applications from all our platform yamls
   const applications = _(platformAppYamls)
-    .map(app => yamlPlatform.load(fs.readFileSync(app.file)))
+    .map(app => yamlPlatform.load(app.file))
     .value() || [];
 
   // If we also have an applications file then concat
   if (fs.existsSync(applicationsFile)) {
-    applications.push(yamlPlatform.load(fs.readFileSync(applicationsFile)));
+    applications.push(yamlPlatform.load(applicationsFile));
   }
 
   return {
     applications: _.flatten(applications),
     applicationFiles: platformAppYamls,
-    routes: (fs.existsSync(routesFile)) ? yamlPlatform.load(fs.readFileSync(routesFile)) : {},
-    services: (fs.existsSync(servicesFile)) ? yamlPlatform.load(fs.readFileSync(servicesFile)) : {},
+    routes: (fs.existsSync(routesFile)) ? yamlPlatform.load(routesFile) : {},
+    services: (fs.existsSync(servicesFile)) ? yamlPlatform.load(servicesFile) : {},
   };
 };
 

@@ -122,6 +122,14 @@ lando ssh -s php -c "platform -V"
 cd sink
 lando platform auth:info | grep landobot@lando.dev
 
+# Should load yamls from include tags correctly
+cd sink/discreet
+lando ssh -c "env" | grep INCLUDED | grep "yes have some"
+
+# Should be able to override variables from landfile
+cd sink/php
+lando ssh -c "env" | grep APP_ENV | grep lando
+
 # Should have the redis extension installed
 cd sink/php
 lando php -m | grep redis
