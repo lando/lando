@@ -1,14 +1,16 @@
-Symfony
-=======
+---
+description: Use Symfony on Lando for local development; powered by Docker and Docker Compose, config php version, swap db or caching backends or web server, use composer. symfony console, xdebug and custom config files, oh and also import and export databases.
+---
+
+# Symfony
 
 Symfony is a PHP framework for web projects.
 
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [Symfony](https://symfony.com/) apps.
 
-<!-- toc -->
+[[toc]]
 
-Getting Started
----------------
+## Getting Started
 
 Before you get started with this recipe we assume that you have:
 
@@ -23,11 +25,12 @@ However, because you are a developer and developers never ever [RTFM](https://en
 lando init \
   --source cwd \
   --recipe symfony \
-  --webroot app/public \
+  --webroot public \
   --name my-first-symfony-app
 
 # Install symfony
 lando composer create-project symfony/website-skeleton tmp && cp -r tmp/. . && rm -rf tmp
+
 # Install other Symfony dependencies you may like
 lando composer require annotations asset doctrine encore form logger maker profiler security security-guard stof/doctrine-extensions-bundle twig validator var-dumper
 
@@ -38,8 +41,7 @@ lando start
 lando info
 ```
 
-Configuration
--------------
+## Configuration
 
 While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
 
@@ -48,7 +50,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: symfony
 config:
-  php: '7.3'
+  php: '7.4'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
@@ -67,19 +69,19 @@ Note that if the above config options are not enough all Lando recipes can be fu
 
 You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Symfony requirements](https://symfony.com/doc/current/reference/requirements.html) to make sure that version is actually supported by Symfony itself.
 
-Here is the [recipe config](./../config/recipes.md#config) to set the Symfony recipe to use `php` version `7.1`
+Here is the [recipe config](./../config/recipes.md#config) to set the Symfony recipe to use `php` version `7.3`
 
 ```yaml
 recipe: symfony
 config:
-  php: '7.1'
+  php: '7.3'
 ```
 
-### Choosing a webserver
+### Choosing a web server
 
 By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
-** With Apache (default) **
+#### With Apache (default)
 
 ```yaml
 recipe: symfony
@@ -87,7 +89,7 @@ config:
   via: apache
 ```
 
-** With nginx **
+#### With nginx
 
 ```yaml
 recipe: symfony
@@ -97,13 +99,11 @@ config:
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
 
-If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Doctrine requirements](https://www.doctrine-project.org/projects/doctrine-dbal/en/2.9/reference/platforms.html) to make sure the `database` and `version` you select is actually supported by Symfony/Doctrine itself.
-
-** Using MySQL (default) **
+#### Using MySQL (default)
 
 ```yaml
 recipe: symfony
@@ -111,7 +111,7 @@ config:
   database: mysql
 ```
 
-** Using MariaDB **
+#### Using MariaDB
 
 ```yaml
 recipe: symfony
@@ -119,7 +119,7 @@ config:
   database: mariadb
 ```
 
-** Using Postgres **
+#### Using Postgres
 
 ```yaml
 recipe: symfony
@@ -127,14 +127,13 @@ config:
   database: postgres
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: symfony
 config:
   database: postgres:9.6
 ```
-
 
 ### Choosing a caching backend
 
@@ -144,7 +143,7 @@ However, you can specify one using the `cache` recipe config and setting it to u
 
 If you are unsure about how to configure the `cache` we *highly recommend* you check out our [redis](./redis.md) and [memcached](./memcached.md)) docs as well as the [Symfony ones](https://symfony.com/doc/current/cache.html).
 
-** Using redis (recommended) **
+#### Using redis (recommended)
 
 ```yaml
 recipe: symfony
@@ -152,7 +151,7 @@ config:
   cache: redis
 ```
 
-** Using Memcached **
+#### Using Memcached
 
 ```yaml
 recipe: symfony
@@ -160,7 +159,7 @@ config:
   cache: memcached
 ```
 
-** Using a custom version **
+#### Using a custom version
 
 ```yaml
 recipe: symfony
@@ -180,7 +179,6 @@ config:
 
 However, for more information we recommend you consult the [php service documentation](./php.md).
 
-
 ### Using custom config files
 
 You may need to override our [default Symfony config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/symfony) with your own.
@@ -189,7 +187,7 @@ If you do this you must use files that exists inside your applicaton and express
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
-**A hypothetical project**
+#### A hypothetical project
 
 Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
 
@@ -204,7 +202,7 @@ Note that you can put your configuration files anywhere inside your application 
 |-- .lando.yml
 ```
 
-**Landofile using custom symfony config**
+#### Landofile using custom symfony config
 
 ```yaml
 recipe: symfony
@@ -216,8 +214,7 @@ config:
     vhosts: config/default.conf
 ```
 
-Environment File
-----------------
+## Environment File
 
 By default, Symfony comes with a `.env` configuration file. You will want to modify the following `.env` key so that it makes sense for use with Lando.
 
@@ -261,8 +258,7 @@ MAILER_URL=null://localhost
 ###< symfony/swiftmailer-bundle ###
 ```
 
-Connecting to your database and/or cache
-----------------------------------------
+## Connecting to your database and/or cache
 
 Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
@@ -291,8 +287,7 @@ port: 11211
 
 You can get also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
 
-Importing Your Database
------------------------
+## Importing Your Database
 
 Once you've started up your Symfony site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
@@ -309,8 +304,7 @@ lando db-import database.sql.gz
 
 You can learn more about the `db-import` command [over here](./../guides/db-import.md)
 
-Tooling
--------
+## Tooling
 
 By default each Lando Symfony recipe will also ship with helpful dev utilities.
 
@@ -325,7 +319,7 @@ lando mysql             Drops into a MySQL shell on a database service
 lando php               Runs php commands
 ```
 
-**Usage examples**
+### Usage examples
 
 ```bash
 # Do a basic cache clear
@@ -343,13 +337,4 @@ lando php -v
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
-Example
--------
-
-If you are interested in a working example of this recipe that we test on every Lando build then check out
-[https://github.com/lando/lando/tree/master/examples/symfony](https://github.com/lando/lando/tree/master/examples/symfony)
-
-Additional Reading
-------------------
-
-{% include "./../snippets/guides.md" %}
+<RelatedGuides tag="Symfony"/>
