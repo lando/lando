@@ -39,6 +39,10 @@ lando start
 
 # List information about this app.
 lando info
+
+# Run bin/console commands with: lando console
+# Here is how to clear cache; 
+lando console cache:clear
 ```
 
 ## Configuration
