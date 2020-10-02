@@ -70,7 +70,7 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: platformsh
 config:
   id: YOURSITEID
-  variables: null
+  overrides: {}
 ```
 
 You will immediately notice that the default `platformsh` recipe Landofile does not contain much. This is because Lando uses the exact same images and configuration mechanisms locally as Platform.sh does in production.
@@ -199,27 +199,25 @@ Application containers running on Lando will also set up the same [Platform.sh p
 
 Lando _does not_ currently pull variables you have set up in the Platform.sh dashboard so you will need to add those manually.
 
+### Overriding application config
 
-### Overriding variables
-
-There are some variables that you may want to override for the local use case. You can do so in the following way:
+Platform.sh application configuration is generally optimized for production. Lando provides a mechanism to override application configuration with values that make more sense for local.
 
 ```yaml
 name: myproject
 recipe: platformsh
 config:
   id: PROJECTID
-  variables:
+  overrides:
     app:
-      env:
-        APP_ENV: dev
-      d8settings:
-        skip_permissions_hardening: 1
+      variables:
+        env:
+          APP_ENV: dev
+        d8settings:
+          skip_permissions_hardening: 1
 ```
 
 Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override. Also note that you will need to `lando rebuild` for this changes to apply.
-
-The syntax under the application name is the same as in [these docs](https://docs.platform.sh/configuration/app/variables.html).
 
 ## Platform CLI
 

@@ -4,7 +4,10 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added a more robust way to override `platform` application config from lando [#2445](https://github.com/lando/lando/pull/2445)
+* Added support to all `platformsh` custom `YAML` types [#2445](https://github.com/lando/lando/pull/2445)
 * Fixed bug causing unauthed `platformsh` recipes to ask for source/destination on build [#2612](https://github.com/lando/lando/pull/2612)
+* Improved `platformsh` `varnish` service to be dependent on `backends` [#2445](https://github.com/lando/lando/pull/2445)
 
 ## v3.0.14 - [September 28, 2020](https://github.com/lando/lando/releases/tag/v3.0.14)
 
