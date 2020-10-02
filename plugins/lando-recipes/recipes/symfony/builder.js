@@ -24,7 +24,7 @@ const getCache = cache => {
 };
 
 /*
- * Build WordPress
+ * Build Symfony
  */
 module.exports = {
   name: 'symfony',
@@ -37,7 +37,7 @@ module.exports = {
     defaultFiles: {
       php: 'php.ini',
     },
-    php: '7.3',
+    php: '7.4',
     services: {appserver: {overrides: {environment: {
       APP_LOG: 'errorlog',
     }}}},
