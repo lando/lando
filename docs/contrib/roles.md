@@ -14,7 +14,7 @@ Check out [this read](https://producingoss.com/html-chunk/benevolent-dictator.ht
 
 ## Maintainers
 
-Maintainers are committers who also make decisions for the overall direction of the project including but not limited to:
+Maintainers are committers who also make decisions for the overall direction of the project including but not limited to the following:
 
   * Helping set the [strategic vision](./vision.md)
   * Assigning or removing roles and responsibilities
@@ -27,7 +27,7 @@ Decisions are made by consensus with the Benevolent Dictator serving as final au
 
 ## Committers
 
-Committers are contributors who have made several valuable contributions to the project and are now relied upon to both write code directly to the repository and screen the contributions of others. In many cases they are programmers but it is also possible that they contribute in a different role. Typically, a committer will focus on a specific aspect of the project, and will bring a level of expertise and understanding that earns them the respect of the community and the project maintainers. The role of committer is an official one and it is generally a position that influential members of the community will find themselves in as the project maintainers looks to them for guidance and support. Some more popular areas of focus for committers are:
+Committers are contributors who have made several valuable contributions to the project and are now relied upon to both write code directly to the repository and screen the contributions of others. In many cases, they are programmers but it is also possible that they contribute in a different role. Typically, a committer will focus on a specific aspect of the project and will bring a level of expertise and understanding that earns them the respect of the community and the project maintainers. The role of committer is an official one and it is generally a position that influential members of the community will find themselves in as the project maintainers look to them for guidance and support. Some more popular areas of focus for committers are as follows:
 
   * Documentation
   * DevOps (Test, Build, Deploy)
@@ -36,7 +36,7 @@ Committers are contributors who have made several valuable contributions to the 
   * Core Lando Code
   * Writing Tests
 
-Committers have no authority over the overall direction of the project. However, they do have the ear of the project maintainers. It is a committer's job to ensure that the maintainers are aware of the community's needs and collective objectives, and to help develop or elicit appropriate contributions to the project. Often, committers are given informal control over their specific areas of responsibility, and are assigned rights to directly modify certain areas of the source code. That is, although committers do not have explicit decision-making authority, they will often find that their actions are synonymous with the decisions made by the maintainers.
+Committers have no authority over the overall direction of the project. However, they do have the ear of the project maintainers. It is a committer's job to ensure that the maintainers are aware of the community's needs and collective objectives and to help develop or elicit appropriate contributions to the project. Often, committers are given informal control over their specific areas of responsibility and are assigned rights to directly modify certain areas of the source code. That is, although committers do not have explicit decision-making authority, they will often find that their actions are synonymous with the decisions made by the maintainers.
 
 Committers that acquire more project breadth and high level insight around the projects vision may find that the project maintainers start relying on them more and more. When this begins to happen, they gradually adopt the role of maintainer, as described above.
 
@@ -58,21 +58,21 @@ Some contributors will already be engaging with the project as users, but will a
   * Fixing bugs
   * Adding features
   * Triaging issues
-  * Atttempting to replicate bugs
+  * Attempting to replicate bugs
 
 As contributors gain experience and familiarity with the project, they may find that the project maintainers start relying on them more and more. When this begins to happen, they gradually adopt the role of committer, as described above.
 
 ## Security
 
-If you have discovered a security issue with Lando, please contact the Lando Security Team directly at [security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging, or tweeting about it.
+If you have discovered a security issue with Lando, please contact the Lando Security Team directly at [security@devwithlando.io](mailto:security@devwithlando.io). We manage security issues separately in a private repository until the issue has been resolved. Even if you're not sure if it's a security problem, please contact the security team before filing an issue, blogging or tweeting about it.
 
 ## Users
 
-Users are community members who have a need for the project. They are the most important members of the community: without them, the project would have no purpose. Anyone can be a user; there are no specific requirements.
+Users are community members who have a need for the project. They are the most important members of the community; without them, the project would have no purpose. Anyone can be a user; there are no specific requirements.
 
-Users should be encouraged to participate in the life of the project and the community as much as possible. User contributions enable the project team to ensure that they are satisfying the needs of those users. Common user activities include (but are not limited to):
+Users should be encouraged to participate in the life of the project and the community as much as possible. User contributions enable the project team to ensure that they are satisfying the needs of those users. Common user activities include (but are not limited to) the following:
 
-  * Evangelising about the project
+  * Evangelizing about the project
   * Informing developers of project strengths and weaknesses from a new user's perspective
   * Providing moral support (a 'thank you' goes a long way)
   * Providing financial support

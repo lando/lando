@@ -9,11 +9,6 @@ A decent cross purpose fpm based php 7.4 appserver.
 # docker build -t devwithlando/php:7.4-fpm .
 
 FROM php:7.4-fpm-buster
-# Basic php-fpm 7.4 appserver for Lando
-#
-# docker build -t devwithlando/php:7.4-fpm .
-
-FROM php:7.4-fpm-buster
 
 # Install dependencies we need
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
@@ -29,9 +24,9 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     git-core \
     imagemagick \
     libbz2-dev \
-    libc-client2007e-dev \
+    libc-client-dev \
     libicu-dev \
-    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libkrb5-dev \
     libldap2-dev \
     libmagickwand-dev \
@@ -39,6 +34,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libpng-dev \
     libpq-dev \
     libssl-dev \
+    libwebp-dev \
     libxml2-dev \
     libzip-dev \
     libonig-dev \
@@ -58,7 +54,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install oauth-2.0.4 \
   && pecl install redis-5.1.1 \
   && pecl install xdebug \
-  && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
   && docker-php-ext-enable imagick \
@@ -69,7 +64,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-install bz2 \
   && docker-php-ext-install calendar \
   && docker-php-ext-install exif \
-  && docker-php-ext-install gd \
   && docker-php-ext-install gettext \
   && docker-php-ext-install intl \
   && docker-php-ext-install ldap \
@@ -92,5 +86,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/* \
   && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-  && docker-php-ext-install imap
+  && docker-php-ext-install imap \
+  && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
+  && docker-php-ext-install gd
 ```

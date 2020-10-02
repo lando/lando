@@ -1,4 +1,11 @@
 #!/bin/bash
+set -e
+
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="sqlimport"
 
 # Set generic config
 FILE=""
@@ -6,19 +13,15 @@ WIPE=true
 HOST=localhost
 SERVICE=$LANDO_SERVICE_NAME
 
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-DEFAULT_COLOR='\033[0;0m'
-
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
   DATABASE=${POSTGRES_DB:-database}
-  PORT=5432
-  USER=postgres
+  PORT=${LANDO_DB_IMPORT_PORT:-5432}
+  USER=${LANDO_DB_IMPORT_USER:-postgres}
 else
   DATABASE=${MYSQL_DATABASE:-database}
-  PORT=3306
-  USER=root
+  PORT=${LANDO_DB_IMPORT_PORT:-3306}
+  USER=${LANDO_DB_IMPORT_USER:-root}
 fi
 
 # PARSE THE ARGZZ
@@ -60,30 +63,31 @@ eval set -- "$FILE"
 PV=""
 CMD=""
 
+# Ensure file perms on linux
+if [ "$LANDO_HOST_OS" = "linux" ] && [ $(id -u) = 0 ]; then
+  chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}"
+fi
+
 # Use file or stdin
 if [ ! -z "$FILE" ]; then
-
   # Validate we have a file
   if [ ! -f "$FILE" ]; then
-    printf "${RED}File $FILE not found!${DEFAULT_COLOR}\n"
+    lando_red "File $FILE not found!"
     exit 1;
   fi
 
   CMD="$FILE"
-
 else
-
   # Build DB specific connection string
   if [[ ${POSTGRES_DB} != '' ]]; then
     CMD="psql postgresql://$USER@$HOST:$PORT/$DATABASE"
   else
-    CMD="mysql -h $HOST -P $PORT -u $USER"
+    CMD="mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS}"
   fi
 
   # Read stdin into DB
   $CMD #>/dev/null
   exit 0;
-
 fi
 
 # Inform the user of things
@@ -91,35 +95,34 @@ echo "Preparing to import $FILE into database '$DATABASE' on service '$SERVICE' 
 
 # Wipe the database if set
 if [ "$WIPE" == "true" ]; then
-
-  echo "Destroying all current tables in $DATABASE... "
-  echo "NOTE: See the --no-wipe flag to avoid this step!"
-
+  echo ""
+  echo "Emptying $DATABASE... "
+  lando_yellow "NOTE: See the --no-wipe flag to avoid this step!"
 
   # DO db specific wiping
   if [[ ${POSTGRES_DB} != '' ]]; then
-
     # Drop and recreate database
-    printf "\t\t${GREEN}Dropping database ...\n\n${DEFAULT_COLOR}"
+    lando_yellow "\t\tDropping database ...\n\n"
     psql postgresql://$USER@$HOST:$PORT/postgres -c "drop database $DATABASE"
 
-    printf "\t\t${GREEN}Creating database ...\n\n${DEFAULT_COLOR}"
+    lando_green "\t\tCreating database ...\n\n"
     psql postgresql://$USER@$HOST:$PORT/postgres -c "create database $DATABASE"
-
   else
-
     # Build the SQL prefix
-    SQLSTART="mysql -h $HOST -P $PORT -u $USER $DATABASE"
+    SQLSTART="mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS} $DATABASE"
 
     # Gather and destroy tables
-    TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' )
+    TABLES=$($SQLSTART -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' || true)
 
-    # PURGE IT ALL! BURN IT TO THE GROUND!!!
+    # PURGE IT ALL! Drop views and tables as needed
     for t in $TABLES; do
-      echo "Dropping $t table from $DATABASE database..."
-      $SQLSTART -e "DROP TABLE $t"
+      echo "Dropping $t from $DATABASE database..."
+      $SQLSTART <<-EOF
+        SET FOREIGN_KEY_CHECKS=0;
+        DROP VIEW IF EXISTS \`$t\`;
+        DROP TABLE IF EXISTS \`$t\`;
+EOF
     done
-
   fi
 fi
 
@@ -150,25 +153,9 @@ fi
 if [[ ${POSTGRES_DB} != '' ]]; then
   CMD="$CMD | psql postgresql://$USER@$HOST:$PORT/$DATABASE"
 else
-  CMD="$CMD | mysql -h $HOST -P $PORT -u $USER $DATABASE"
+  CMD="$CMD | mysql -h $HOST -P $PORT -u $USER ${LANDO_EXTRA_DB_IMPORT_ARGS} $DATABASE"
 fi
 
 # Import
-echo "Importing $FILE..."
-if command eval "$CMD"; then
-  STATUS=$?
-else
-  STATUS=1
-fi
-
-# Finish up!
-if [ $STATUS -eq 0 ]; then
-  echo ""
-  printf "${GREEN}Import complete!${DEFAULT_COLOR}"
-  echo ""
-else
-  echo ""
-  printf "${RED}Import failed.${DEFAULT_COLOR}"
-  exit $STATUS
-  echo ""
-fi
+lando_pink "Importing $FILE..."
+eval "$CMD" && lando_green "Import complete!" || lando_red "Import failed."

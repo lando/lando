@@ -17,8 +17,10 @@ module.exports = (app, lando) => {
     // Go through each container
     .map(container => {
       // Grab from the proxy if we have them
-      const aliases = _.compact(_.get(app, `config.proxy.${container.service}`, []));
-      // And add in our default alias
+      const aliases = _(_.get(app, `config.proxy.${container.service}`, []))
+        .map(entry => _.isString(entry) ? entry : entry.host)
+        .compact()
+        .value();
       aliases.push(`${container.service}.${container.app}.internal`);
       // Sometimes you need to disconnect before you reconnect
       return landonet.disconnect({Container: container.id, Force: true})
@@ -29,16 +31,18 @@ module.exports = (app, lando) => {
       // Connect
       .then(() => {
         landonet.connect({Container: container.id, EndpointConfig: {Aliases: aliases}});
-        lando.log.info('Connected %s to the landonet', container.name);
+        app.log.debug('connected %s to the landonet', container.name);
       });
     });
   });
 
   // Add in the hostname infos
   app.events.on('post-init', 1, () => {
+    app.log.debug('adding hostnames to the app...');
     _.forEach(app.info, data => {
       data.hostnames = _.get(data, 'hostnames', []);
       data.hostnames.push([data.service, app.project, 'internal'].join('.'));
+      app.log.debug('hostnames added to %s', data.service, data.hostnames);
     });
   });
 };

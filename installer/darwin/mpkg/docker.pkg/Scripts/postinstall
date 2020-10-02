@@ -28,14 +28,22 @@ sudo mkdir -p /usr/local/bin
 sudo launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist && sleep 10 || true
 sudo install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
 sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
-sudo plutil -insert Version -string 46 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
+sudo plutil -insert Version -string 57 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
 sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
 # Launch docker
 sudo -u ${console_user} open -a /Applications/Docker.app
 
-# Disable autoupdates
+# Disable autoupdates and tutorial, we dump this for the first
+sudo -u ${console_user} cat > "~/Library/Group Containers/group.com.docker/settings.json" <<EOF
+{
+  "checkForUpdates" : false,
+  "displayedTutorial" : true
+}
+EOF
+# And then do another pass just in case
 sudo -u ${console_user} sed -i -e 's/\"checkForUpdates\" : true,/\"checkForUpdates\" : false,/g' ~/Library/Group\ Containers/group.com.docker/settings.json
+sudo -u ${console_user} sed -i -e 's/\"displayedTutorial\" : false,/\"displayedTutorial\" : true,/g' ~/Library/Group\ Containers/group.com.docker/settings.json
 
 # Wait for docker to be ready
 NEXT_WAIT_TIME=0

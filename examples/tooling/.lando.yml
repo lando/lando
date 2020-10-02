@@ -1,6 +1,12 @@
 name: lando-tooling
 compose:
   - compose.yml
+events:
+  post-start:
+    - node: whoami | grep node
+services:
+  node:
+    type: node:12
 tooling:
   php:
     service: php
@@ -13,6 +19,21 @@ tooling:
   whoami:
     service: php
     cmd: id
+  nodeme:
+    service: node
+    cmd: whoami
+  stillme:
+    cmd:
+      - node: whoami
+  notme:
+    service: node
+    cmd: whoami
+    user: www-data
+  pipesandstuff:
+    service: node
+    cmd:
+      - env | grep LANDO_ > pipe.txt
+      - echo "more" >> pipe.txt
   test:
     service: php
     cmd:
@@ -51,3 +72,19 @@ tooling:
   busted:
     service: web
     cmd: i-do-not-exist
+  envvar:
+    service: web
+    cmd: echo "$TAYLOR"
+    env:
+      TAYLOR: swift
+  listfiles:
+    service: web
+    cmd: ls -lsa /app/*
+  cmdsub:
+    service: web
+    cmd: echo "`ls -lsa /app/*`"
+  oneliner:
+    service: web
+    cmd: if [ ! -z "$SPECIAL" ]; then echo "$SPECIAL"; fi
+    env:
+      SPECIAL: HOLLA

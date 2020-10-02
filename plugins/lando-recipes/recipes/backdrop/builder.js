@@ -25,7 +25,8 @@ const backdropSettings = () => JSON.stringify({
 /*
  * Helper to return backdrush download url
  */
-const backdrushUrl = version => `https://github.com/backdrop-contrib/drush/archive/${version}.tar.gz`;
+const backdrushUrl = version =>
+  `https://github.com/backdrop-contrib/backdrop-drush-extension/archive/${version}.tar.gz`;
 
 
 /*
@@ -44,11 +45,11 @@ module.exports = {
   name: 'backdrop',
   parent: '_drupaly',
   config: {
-    backdrush: '1.2.0',
+    backdrush: '1.4.0',
     build: [],
     confSrc: __dirname,
     defaultFiles: {},
-    drush: '8.3.2',
+    drush: '8.3.5',
     php: '7.2',
     services: {appserver: {overrides: {
       environment: {

@@ -3,7 +3,11 @@
 # Errors and logz
 set -e
 
-# Try the new entrypoint and then fallback to the older one
-/opt/bitnami/scripts/memcached/entrypoint.sh /opt/bitnami/scripts/memcached/run.sh \
-  || /entrypoint.sh /run.sh \
-  || /app-entrypoint.sh /run.sh
+# Detect and run the correct entrypoint script. THANKS BITNAMI!
+if [ -f "/opt/bitnami/scripts/memcached/entrypoint.sh" ]; then
+  /opt/bitnami/scripts/memcached/entrypoint.sh /opt/bitnami/scripts/memcached/run.sh
+elif [ -f "/entrypoint.sh" ]; then
+  /entrypoint.sh /run.sh
+else
+  /app-entrypoint.sh /run.sh
+fi

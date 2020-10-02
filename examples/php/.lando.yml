@@ -8,6 +8,13 @@ services:
   cli:
     type: php
     via: cli
+    build_as_root:
+      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      - apt-get install -y nodejs
+  cliworker:
+    type: php
+    via: cli
+    command: sleep infinity
   cliold:
     type: php:5.6
     via: cli
@@ -23,12 +30,36 @@ services:
       image: devwithlando/php:7.1-fpm-2
       environment:
         DUALBLADE: maxim
+        OTHER: thing
+  custom_nginx:
+    build_as_root:
+      - mkdir -p /app/test && touch /app/test/managed_build_step
+    overrides:
+      environment:
+        MORE: things
+        OTHER: stuff
   custom74:
     type: php:7.4
   composer:
     type: php:7.0
     composer:
       phpunit/phpunit: "*"
+  withnode:
+    type: php:custom
+    via: cli
+    overrides:
+      image: lando/php:7.4-with-node12
+      build:
+        context: ./
+        dockerfile: Dockerfile.node
 tooling:
   php:
     service: defaults
+  node:
+    service: :host
+    options:
+      host:
+        description: The service to use
+        default: cli
+        alias:
+          - h

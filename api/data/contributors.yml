@@ -52,6 +52,7 @@
   id: 433bd1bd859bb74aa4c7be9f0acd798692d49b62
 - name: Aaron Feledy
   role:
+    - Code
     - Documentation
     - Evangelism
     - Events
@@ -85,3 +86,94 @@
   title: Contributor
   pic: 'https://www.gravatar.com/avatar/cb8c34b202e121d059c955433511f0b9'
   id: 1a7cb15c9746209501ccf1491a103486c898d426
+- name: Jace Bennest
+  role:
+    - Guides and Tutorials
+  bio: Software Developer
+  location: 'Vancouver, BC'
+  github: thejacer87
+  twitter: thejacer87
+  title: Contributor
+  pic: >-
+    https://avatars0.githubusercontent.com/u/6412919?s=460&u=b96d856896743523cec75bad1d9aec42a7f8a25e&v=4
+  id: 7468656a616365723837
+- name: Jonathan Shaw
+  role:
+    - Documentation
+    - Guides and Tutorials
+  bio: Wishes to spend more time building websites and less wrangling devops.
+  location: 'Stroud, UK'
+  github: jonathanjfshaw
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/ba46283b2033d3a0201f2042746f81e7'
+  id: 2ce47e11022bb050f0a5108b762727f7d1d61ff9
+- name: Ed Reel
+  role:
+    - Code
+    - Content
+    - DevOps
+    - Documentation
+    - Evangelism
+    - Events
+    - Guides and Tutorials
+    - Issues
+    - Meetups
+    - Outreach
+    - Support
+    - Training
+  bio: >-
+    I'm an aspiring digital nomad.  My interests include Drupal development,
+    DevOps, Open Source and Raspberry PI.  I usually hack before I RTFM.
+  location: 'Georgetown, TX'
+  github: uberhacker
+  twitter: twittedreel
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/f497380919da21a23b0fbfc3e432bd7c'
+  id: 63f68148475e08669c982e3a5c99b7ed0b948918
+- name: Christopher Martin
+  role:
+    - Code
+    - Documentation
+    - Evangelism
+    - Issues
+    - Meetups
+    - Support
+    - Training
+  bio: >-
+    Engineer at Four Kitchens, I spread the love of lando to all developers who
+    are willing to listen.
+  location: 'Round Rock, TX'
+  github: ccjjmartin
+  twitter: ccjjmartin
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/c5d9dad14053873b6a14a7ac7578fa07'
+  id: 955b2adfdf4e3a35f8266a2e209f88853bdd5047
+- name: Reid Linker
+  role:
+    - Code
+  bio: 'Father, husband, gamer, geek. Not necessarily in that order. ISFJ.'
+  location: 'Charlotte, NC'
+  github: screid123
+  twitter: screid123
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/210f5d93d1ab748f8f8e065403bfdbd4'
+  id: 227467db7bcdb7dd20095193fe69b92891a0be86
+- name: Toby Bellwood
+  role:
+    - Code
+    - Content
+    - Documentation
+  bio: Product Lead at amazee.io
+  location: 'Canberra, Australia'
+  github: tobybellwood
+  twitter: tobybellwood
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/ac97d5db7a7ff475b9f17bf18de38357'
+  id: 9af69d664d66a66aef96174630ddbfce7b98c73a
+- name: chadwcarlson
+  bio: 'Writer, programmer, experimenter, DevRel.'
+  location: 'Boca Raton, FL'
+  github: chadwcarlson
+  title: Contributor
+  pic: 'https://www.gravatar.com/avatar/40de3d779ce34fd170031d018c005291'
+  id: 8ada068efe4314fddce17d10a8139f3e1ae1afaf

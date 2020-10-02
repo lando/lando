@@ -6,13 +6,13 @@ title: Getting Started
 
 # Getting Started
 
-Administrators are a _very special_ contributor role geared towards the thankless but extremeley necessary work of both keeping the Alliance rolling and our sponsors satisfied.
+Administrators are a _very special_ contributor role geared towards the thankless but extremely necessary work of both keeping the Alliance rolling and our sponsors satisfied.
 
-In order to do the above you will likely need access to some of Lando's backend systems. This means this role is built on trust and not everyone will be immediately eligible for all parts of it.
+In order to do the above, you will likely need access to some of Lando's backend systems. This means this role is built on trust and not everyone will be immediately eligible for all parts of it.
 
 ## What do I need to get started?
 
-Getting the ball rolling is a one-step process:
+Getting the ball rolling is a one-step process below:
 
 1. [Join the alliance as an administrator](./join.md)
 

@@ -52,11 +52,12 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= [], prest
           const container = `${app.project}_${service}_1`;
           build.push({
             id: container,
-            cmd: cmd,
+            cmd: ['/bin/sh', '-c', _.isArray(cmd) ? cmd.join(' ') : cmd],
             compose: app.compose,
             project: app.project,
             opts: {
               mode: 'attach',
+              cstdio: ['inherit', 'pipe', 'pipe'],
               prestart,
               user: (_.includes(rootSteps, section)) ? 'root' : getUser(service, app.info),
               services: [service],
@@ -94,7 +95,13 @@ exports.filterBuildSteps = (services, app, rootSteps = [], buildSteps= [], prest
  * Parse config into raw materials for our factory
  */
 exports.parseConfig = (config, app) => _(config)
+  // Arrayify
   .map((service, name) => _.merge({}, service, {name}))
+  // Filter out any services without a type, this implicitly assumes these
+  // services are "managed" by lando eg their type/version details are provided
+  // by another service
+  .filter(service => _.has(service, 'type'))
+  // Build the config
   .map(service => _.merge({}, service, {
     _app: app,
     data: `data_${service.name}`,
@@ -112,19 +119,25 @@ exports.parseConfig = (config, app) => _(config)
 /*
  * Run build
  */
-exports.runBuild = (lando, steps, lockfile) => {
-  if (!_.isEmpty(steps) && !lando.cache.get(lockfile)) {
-    return lando.engine.run(steps)
+exports.runBuild = (app, steps, lockfile, hash = 'YOU SHALL NOT PASS') => {
+  if (!_.isEmpty(steps) && !app._lando.cache.get(lockfile)) {
+    app.log.info('running build steps...');
+    return app.engine.run(steps)
     // Save the new hash if everything works out ok
     .then(() => {
-      lando.cache.set(lockfile, 'YOU SHALL NOT PASS', {persist: true});
+      app._lando.cache.set(lockfile, hash, {persist: true});
+      app.log.info('build steps completed. and locked with %s', lockfile);
     })
     // Make sure we don't save a hash if our build fails
     .catch(error => {
-      lando.log.error('Looks like one of your build steps failed! with %s', error.stack);
-      lando.log.warn('This **MAY** prevent your app from working');
-      lando.log.warn('Check for errors above, fix them, and try again');
-      lando.log.debug('Build error %j', error);
+      app.addWarning({
+        title: `One of your build steps failed`,
+        detail: [
+          'This **MAY** prevent your app from working.',
+          'Check for errors above, fix them in your Landofile, and try again by running:',
+        ],
+        command: 'lando rebuild',
+      }, error);
     });
   }
 };

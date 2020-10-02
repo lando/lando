@@ -10,8 +10,9 @@ module.exports = {
   name: 'postgres',
   config: {
     version: '10',
-    supported: ['11', '11.1', '11.0', '10', '10.6.0', '9.6'],
+    supported: ['12', '11', '11.1', '11.0', '10', '10.6.0', '9.6'],
     pinPairs: {
+      '12': 'bitnami/postgresql:12.2.0-debian-10-r57',
       '11': 'bitnami/postgresql:11.7.0-debian-10-r34',
       '10': 'bitnami/postgresql:10.12.0-debian-10-r36',
       '9.6': 'bitnami/postgresql:9.6.17-debian-10-r37',
@@ -34,6 +35,14 @@ module.exports = {
   builder: (parent, config) => class LandoPostgres extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+      // The Bitnami Postgres container is particular about the user/pass.
+      options.creds.user = 'postgres';
+      options.creds.password = '';
+      // Ensure the non-root backup perm sweep runs
+      // NOTE: we guard against cases where the UID is the same as the bitnami non-root user
+      // because this messes things up on circle ci and presumably elsewhere and _should_ be unncessary
+      if (_.get(options, '_app._config.uid', '1000') !== '1001') options._app.nonRoot.push(options.name);
+
       const postgres = {
         image: `bitnami/postgresql:${options.version}`,
         command: '/launch.sh',
@@ -49,9 +58,6 @@ module.exports = {
           `${options.data}:/bitnami/postgresql`,
         ],
       };
-      // The Bitnami Postgres container is particular about the user/pass.
-      options.creds.user = 'postgres';
-      options.creds.password = '';
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, postgres)});
     };

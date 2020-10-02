@@ -90,3 +90,51 @@
 - name: "Sarah German"
   type: herald
   url: https://sarahgerman.com
+- name: volkswagenchick
+  type: herald
+  url: https://twitter.com/volkswagenchick
+- name: Eelke Blok
+  type: herald
+  url: https://blokspeed.net
+- name: "Platform.sh"
+  type: patriot
+  url: https://platform.sh
+  logo: https://lando.dev/images/platform_sh_logo.png
+- name: "UC Berkeley Web Platform Services"
+  type: herald
+  url: https://web.berkeley.edu/home
+- name: "Fredric Mitchell"
+  type: herald
+  url: http://www.brightplum.com
+- name: "Aimee Hanaford"
+  type: herald
+  url: https://www.linkedin.com/in/aimeehannaford
+- name: "Bud Manz"
+  type: herald
+  url: https://www.manzwebdesigns.com
+- name: "Sitecrafting"
+  type: ally
+  url: https://www.sitecrafting.com
+  logo: https://lando.dev/images/sitecrafting_logo.png
+
+# July 20, 2020
+- name: "@ellytronic"
+  type: herald
+  url: https://ellytronic.media
+- name: "@skylennard"
+  type: herald
+  url: https://github.com/skylennard
+- name: "@webdaemontx"
+  type: herald
+  url: https://github.com/webdaemontx
+- name: "@generalredneck"
+  type: herald
+  url: https://github.com/generalredneck
+- name: "@samaphp"
+  type: herald
+  url: https://github.com/samaphp
+# July 22, 2020
+- name: "Sagetree"
+  type: ally
+  url: https://www.sagetree.com
+  logo: https://lando.dev/images/sagetree_logo.png

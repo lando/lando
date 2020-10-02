@@ -1,5 +1,5 @@
 ---
-description: Add a highly configurable apache solr service to Lando for local development with all the power of Docker and Docker Compose.
+description: Add a highly configurable Apache Solr service to Lando for local development with all the power of Docker and Docker Compose.
 ---
 
 # Solr
@@ -13,6 +13,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 ## Supported versions
 
 *   [8](https://hub.docker.com/r/_/solr/)
+*   [8.6](https://hub.docker.com/r/_/solr/)
+*   [8.5](https://hub.docker.com/r/_/solr/)
 *   [8.4](https://hub.docker.com/r/_/solr/)
 *   [8.3](https://hub.docker.com/r/_/solr/)
 *   [8.2](https://hub.docker.com/r/_/solr/)
@@ -25,7 +27,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [6.6](https://hub.docker.com/r/_/solr/)
 *   [6](https://hub.docker.com/r/_/solr/)
@@ -39,14 +41,14 @@ You can still run these versions with Lando but for all intents and purposes the
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV. Also note that patch versions are not available for Solr 3.x and 4.x
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV. Also note that patch versions are not available for Solr 3.x and 4.x.
 :::
 
-To use a patch version you can do something like this:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr:5.5.5
 ```
 
@@ -54,13 +56,13 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr:7
     portforward: false
     core: lando
@@ -68,9 +70,9 @@ services:
       dir: SEE BELOW
 ```
 
-### Portforwarding
+### Port forwarding
 
-`portforward` will allow you to access this service externally by giving you a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
+`portforward` will allow you to access this service externally by assigning a port directly on your host's `localhost`. Note that `portforward` can be set to either `true` or a specific `port` but we *highly recommend* you set it to `true` unless you have pretty good knowledge of how port assignment works or you have a **very** compelling reason for needing a locked down port.
 
 `portforward: true` will prevent inevitable port collisions and provide greater reliability and stability across Lando apps. That said, one downside of `portforward: true` is that Docker will assign a different port every time you restart your application. You can read more about accessing services externally [over here](./../guides/external-access.md).
 
@@ -80,7 +82,7 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     portforward: true
 ```
@@ -89,35 +91,35 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     portforward: 8983
 ```
 
 ### Using a custom core
 
-You can easily set up a different core name with the `core` cofig value
+You can easily set up a different core name with the `core` config value.
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     core: my-core
 ```
 
 ::: warning Solr 5+ only!
-The `core` config value does not work for Solr 3.x or 4.x
+The `core` config value does not work for Solr 3.x or 4.x.
 :::
 
 ### Using custom solr config
 
 You will almost certainly need to utilize your own custom Solr config. You can do that by telling Lando to inject solr config from a directory inside of your application.
 
-Consider the below example of a Drupal 8 application injecting the Solr 7.x config directly from the `search_api_solr` module.
+Consider a Drupal 8 application injecting the Solr 7.x config directly from the `search_api_solr` module as shown in the example below:
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -142,7 +144,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: solr
     config:
       dir: sites/all/modules/search_api_solr/solr-conf/7.x

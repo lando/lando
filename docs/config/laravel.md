@@ -1,5 +1,5 @@
 ---
-description: Use Laravel on Lando for local development; powered by Docker and Docker Compose, config php version, swap db or caching backends or webserver, use composer. laravel CLI and artisan, xdebug and custom config files, oh and also import and exports databases.
+description: Use Laravel on Lando for local development; powered by Docker and Docker Compose, config php version, swap db or caching backends or web server, use composer. laravel CLI and artisan, xdebug and custom config files, oh and also import and export databases.
 ---
 
 # Laravel
@@ -12,13 +12,13 @@ Lando offers a configurable [recipe](./../config/recipes.md) for developing [Lar
 
 ## Getting Started
 
-Before you get started with this recipe we assume that you have:
+Before you get started with this recipe, we assume that you have:
 
-1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
-2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/).
+2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe.
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of Laravel.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also try out this recipe with a vanilla install of Laravel with the commands as follows:
 
 ```bash
 # Initialize a laravel recipe
@@ -40,9 +40,9 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
-Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this recipe's [Landofile](./../config/lando.md). If you are unsure about where this goes or what this means, we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
 ```yaml
 recipe: laravel
@@ -60,13 +60,13 @@ config:
     vhosts: SEE BELOW
 ```
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Choosing a php version
 
 You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Laravel requirements](https://laravel.com/docs/5.7/installation#web-server-configuration) to make sure that version is actually supported by Laravel itself.
 
-Here is the [recipe config](./../config/recipes.md#config) to set the Laravel recipe to use `php` version `7.1`
+The [recipe config](./../config/recipes.md#config) to set the Laravel recipe to use `php` version `7.1` is shown below:
 
 ```yaml
 recipe: laravel
@@ -74,9 +74,9 @@ config:
   php: '7.1'
 ```
 
-### Choosing a webserver
+### Choosing a web server
 
-By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
+By default, this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
 #### With Apache (default)
 
@@ -96,11 +96,11 @@ config:
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
 
-If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Laravel requirements](https://laravel.com/docs/5.7/database#configuration) to make sure the `database` and `version` you select is actually supported by Laravel itself.
+Also note that like the configuration of the `php` version, you should consult the [Laravel requirements](https://laravel.com/docs/5.7/database#configuration) to make sure the `database` and `version` you select is actually supported by Laravel itself.
 
 #### Using MySQL (default)
 
@@ -136,13 +136,13 @@ config:
 
 ### Choosing a caching backend
 
-By default this recipe will not spin up a caching backend.
+By default, this recipe will not spin up a caching backend.
 
 However, you can specify one using the `cache` recipe config and setting it to use either our use [`redis`](./redis.md) or [`memcached`](./memcached.md) service. Note that you can optionally/additionally specify a particular version for either *as long as it is a version documented as available for use with lando* for either service.
 
-If you are unsure about how to configure the `cache` we *highly recommend* you check out our [redis](./redis.md) and [memcached](./memcached.md)) docs as well as the [Laravel ones](https://laravel.com/docs/5.7/cache#configuration).
+If you are unsure about how to configure the `cache`, we *highly recommend* you check out our [redis](./redis.md) and [memcached](./memcached.md)) docs as well as the [Laravel ones](https://laravel.com/docs/5.7/cache#configuration).
 
-** Using redis (recommended) **
+#### Using redis (recommended)
 
 ```yaml
 recipe: laravel
@@ -150,7 +150,7 @@ config:
   cache: redis
 ```
 
-** Using Memcached **
+#### Using Memcached
 
 ```yaml
 recipe: laravel
@@ -183,13 +183,13 @@ However, for more information we recommend you consult the [php service document
 
 You may need to override our [default Laravel config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/laravel) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
-**A hypothetical project**
+#### A hypothetical project
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -202,7 +202,7 @@ Note that you can put your configuration files anywhere inside your application 
 |-- .lando.yml
 ```
 
-**Landofile using custom laravel config**
+#### Landofile using custom laravel config
 
 ```yaml
 recipe: laravel
@@ -218,7 +218,9 @@ config:
 
 By default, Laravel comes with a `.env` configuration file set to use `homestead`. You will want to modify the following `.env` key so that it makes sense for use with Lando.
 
-Here is what that file would look like if you installed laravel [as above](#getting-started). Note that your file might be slightly different depending on your configuration.
+What that file would look like if you installed laravel [as above](#getting-started) is shown below:
+
+Note that your file might be slightly different depending on your configuration.
 
 ```bash
 APP_NAME=Laravel
@@ -266,9 +268,11 @@ SESSION_LIFETIME=120
 
 ## Connecting to your database and/or cache
 
-Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+Lando will automatically set up a database with a user and password and also set an environment variable called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
-Here are is the default database connection information for a Laravel site. Note that the `host` is not `localhost` but `database`.
+The default database connection information for a Laravel site is shown below:
+
+Note that the `host` is not `localhost` but `database`.
 
 ```yaml
 database: laravel
@@ -281,7 +285,7 @@ port: 3306
 # port: 5432
 ```
 
-If you've also specified a caching backend here are the default connection settings.
+If you've also specified a caching backend, the default connection settings are shown below:
 
 ```yaml
 host: cache
@@ -291,11 +295,11 @@ port: 6379
 port: 11211
 ```
 
-You can get also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
+You can also get the above information, and more, by using the [`lando info`](./../cli/info.md) command.
 
 ## Importing Your Database
 
-Once you've started up your Laravel site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+Once you've started up your Laravel site, you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
 # Grab your database dump
@@ -308,11 +312,11 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 lando db-import database.sql.gz
 ```
 
-You can learn more about the `db-import` command [over here](./../guides/db-import.md)
+You can learn more about the `db-import` command [over here](./../guides/db-import.md).
 
 ## Tooling
 
-By default each Lando Laravel recipe will also ship with helpful dev utilities.
+By default, each Lando Laravel recipe will also ship with helpful dev utilities.
 
 This means you can use things like `artisan`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
@@ -326,7 +330,7 @@ lando mysql             Drops into a MySQL shell on a database service
 lando php               Runs php commands
 ```
 
-**Usage examples**
+### Usage examples
 
 ```bash
 # Do a basic laravel gut check with artisan
@@ -345,6 +349,6 @@ lando mysql
 lando php -v
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+You can also run `lando` from inside your app directory for a complete list of commands. This is always advisable as your list of commands may not be 100% the same as above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
 <RelatedGuides tag="Laravel"/>

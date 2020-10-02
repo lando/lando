@@ -4,7 +4,7 @@ description: Learn how to ship Lando releases if you are a maintainer.
 
 # Shipping
 
-If you are a maintainer of Lando you can kick off an official release using our handy `grunt` tasks. **THIS NEEDS TO BE DONE FROM THE MASTER BRANCH!**
+If you are a maintainer of Lando, you can kick off an official release using our handy `grunt` tasks. **THIS NEEDS TO BE DONE FROM THE MASTER BRANCH!**
 
 ```bash
 # Interactively do the release
@@ -23,9 +23,9 @@ Usage: bump [options]
 #  --premajor            Increase major version, pre-release
 #  --preminor            Increase preminor version, pre-release
 #  --prepatch            Increase prepatch version, pre-release
-#  --prerelease          Increase prerelease version
-#  --prompt              Prompt for type of bump (patch, minor, major, premajor, prerelase, etc.)
-#  --preid <name>        The identifier for prerelease versions (default is "beta")
+#  --prerelease          Increase pre-release version
+#  --prompt              Prompt for type of bump (patch, minor, major, pre-major, pre-release, etc.)
+#  --preid <name>        The identifier for pre-release versions (default is "beta")
 #  --commit [message]    Commit changed files to Git (default message is "release vX.X.X")
 #  --tag                 Tag the commit in Git
 #  --push                Push the Git commit

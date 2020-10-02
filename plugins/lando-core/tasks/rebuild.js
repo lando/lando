@@ -3,19 +3,6 @@
 const _ = require('lodash');
 const utils = require('./../lib/utils');
 
-// Helper to handle options
-const handleOpts = options => {
-  const opts = {
-    pullable: _(options._app.services)
-      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build') || _.has(data, 'services.build')}))
-      .filter(service => !service.isLocal)
-      .map('service')
-      .value(),
-  };
-  if (!_.isEmpty(options.service)) opts.services = options.service;
-  return opts;
-};
-
 module.exports = lando => {
   return {
     command: 'rebuild',
@@ -37,10 +24,14 @@ module.exports = lando => {
       const app = lando.getApp(options._app.root);
       // Rebuild the app
       if (app) {
-        app.opts = handleOpts(options);
+        // If user has given us options then set those
+        if (!_.isEmpty(options.service)) {
+          app.opts = _.merge({}, app.opts, {services: options.service});
+        }
         console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'pre'}));
         return app.rebuild().then(() => {
-          console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: 'post'}));
+          const type = !_.isEmpty(app.warnings) ? 'report' : 'post';
+          console.log(lando.cli.makeArt('appRebuild', {name: app.name, phase: type, warnings: app.warnings}));
           console.log(lando.cli.formatData(utils.startTable(app), {format: 'table'}, {border: false}));
           console.log('');
         });

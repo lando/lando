@@ -27,14 +27,14 @@ lando ssh -s defaults -c "go version | grep go1.14"
 
 # Should run only on port 80 by default
 lando ssh -s defaults -c "curl http://localhost" | grep HEART
-lando ssh -s defaults -c "curl -k https://localhost" || echo $? | grep 1
+lando ssh -s defaults -c "curl https://localhost" || echo $? | grep 1
 
 # Should use the version if specified by user
 lando ssh -s patch -c "go version | grep go1.13.9"
 
 # Should serve over http and https if ssl is set by user
 lando ssh -s custom -c "curl http://localhost" | grep HEART
-lando ssh -s custom -c "curl -k https://localhost" | grep HEART
+lando ssh -s custom -c "curl https://localhost" | grep HEART
 
 # Should not serve port 80 for cli
 lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1

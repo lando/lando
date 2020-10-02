@@ -27,12 +27,15 @@ lando php -v
 lando php -m
 lando php -r "phpinfo();"
 
+# Should run as meUser by default
+lando whoami | grep www-data
+lando nodeme | grep node
+lando stillme | grep node
+
 # Should run as the specified user
 lando iamroot
 lando ssh -s php -c "cat /whoami | grep root"
-
-# Should run as meUser by default
-lando whoami | grep www-data
+lando notme | grep www-data
 
 # Should be able to run multiple commands on one service
 lando test
@@ -40,6 +43,7 @@ lando test
 # Should be able to define and pass down options to a script
 lando word --word bird | grep "bird is the word"
 lando word -w gird | grep "gird is the word"
+lando word --word "this is actually a phrase" | grep "this is actually a phrase"
 
 # Should be able to run multiple commands on multiple services
 lando env
@@ -49,8 +53,22 @@ lando dynamic --service web
 lando dynamic -s php
 lando dynamic --service web2
 
-# Should not run twice on failed commands
-lando busted | grep "i-do-not-exist" | wc -l | grep 1
+# Should know how to handle pipes and carrots
+lando pipesandstuff
+cat pipe.txt | grep LANDO_
+cat pipe.txt | grep more
+
+# Should be able to set envvars
+lando envvar | grep swift
+
+# Should be able to use *
+lando listfiles | grep /app/README.md
+
+# Should be able to use command substitution
+lando cmdsub | grep /app/README.md
+
+# Should be able to run bash oneliners
+lando oneliner | grep HOLLA
 ```
 
 Destroy tests

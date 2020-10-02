@@ -18,7 +18,11 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       super(id, options, {
-        services: _.set({}, options.name, utils.normalizeOverrides(options.services, options.volumes)),
+        services: _.set(
+          {},
+          options.name,
+          utils.normalizeOverrides(options.services, options._app.root, options.volumes)
+        ),
         networks: options.networks,
         volumes: options.volumes,
       });

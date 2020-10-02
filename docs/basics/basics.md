@@ -11,7 +11,7 @@ On a high level, your `lando` configuration should contain **ALL** the things yo
 
 Implicit in the above is that your lando configuration should **always** be checked into version control at the root directory of your project.
 
-We've found a useful pattern here is for the senior-est, most DevOps-y person on your team to craft the initial lando configuration and be responsible for its maintanence but to generally "set it and forget it".
+We've found a useful pattern here is for the senior-est, most DevOps-y person on your team to craft the initial lando configuration and be responsible for its maintenance but to generally "set it and forget it".
 
 ## Ok cool, I dig it. What do I need to get started?
 

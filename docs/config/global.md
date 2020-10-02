@@ -5,7 +5,7 @@ description: Almost all parts of how Lando itself works are configurable, from p
 # Global Config
 
 ::: warning With great power comes great ability to really mess things up!
-If you do not have a **VERY** good idea about how to modify the Lando global config it is *highly recommended* that you do not!
+If you do not have a **VERY** good idea about how to modify the Lando global config, it is *highly recommended* that you do not!
 :::
 
 You can also configure how Lando itself works using a file called `config.yml`. This config system is highly flexible and allows you to override basically anything that shows up when you run `lando config`. A few more common overrides are:
@@ -16,11 +16,13 @@ You can also configure how Lando itself works using a file called `config.yml`. 
 *   The directories Lando scans for the `config.yml` itself.
 *   The config of various loaded plugins
 
-Note that there are some configuration options **THAT MUST** be set during the bootstrap of the `lando` object. For more information about how to bootstrap your own custom `lando` object please consult the [Lando API](./../api/lando.html#lando).
+Note that there are some configuration options **THAT MUST** be set during the bootstrap of the `lando` object. For more information about how to bootstrap your own custom `lando` object, please consult the [Lando API](./../api/lando.html#lando).
+
+[[toc]]
 
 ## config.yml
 
-This file specifies the core configuration options for Lando. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. **PLEASE NOTE THAT THIS FILE IS DIFFERENT THAN YOUR LANDOFILE!** If you add any of these settings to your Landofile the expected result should be "nothing happens".
+This file specifies the core configuration options for Lando. Lando will scan a few different directories for the presence of a `config.yml` file. If it finds one, it will override the default config. **PLEASE NOTE THAT THIS FILE IS DIFFERENT THAN YOUR LANDOFILE!** If you add any of these settings to your Landofile, the expected result should be "nothing happens".
 
 ::: tip What directories are scanned?
 Run `lando config` and look at the `configSources` key to find what directories are scanned for config.
@@ -30,16 +32,16 @@ Note that overrides will be merged in successively. This means the values in the
 
 ## Environment Variables
 
-You can also override any global config value using environment variables of the form `envPrefix_config_value`. So to change the `mode` you'd set
+You can also override any global config value using environment variables of the form `envPrefix_config_value`. So to change the `mode` you'd set:
 
 ```bash
 export LANDO_MODE=mymode
 ```
 
-For more complex config eg an object or array you can set the envvar to a `JSON` string and Lando will parse it for you. Note that Lando keys that are `camelCase` will be separated as envvars with `_`. For example `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
+For more complex config (e.g. an object or array), you can set the envvar to a `JSON` string and Lando will parse it for you. Note that Lando keys that are `camelCase` will be separated as envvars with `_`. For example, `engineConfig` will be accessible vis `LANDO_ENGINE_CONFIG`.
 
 ::: tip What is my `envPrefix`?
-By default this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
+By default, this is `LANDO` but you can run `lando config` and look at the `envPrefix` key to discover yours.
 :::
 
 ## Examples
@@ -59,7 +61,7 @@ lando start SOMEAPP
 
 ### Set a bunch of custom stuff using a yaml file
 
-Place this `yaml` file in at `~/.lando/config.yml`
+Place this `yaml` file in at `~/.lando/config.yml`. An example of a few things you can modify is shown below:
 
 ```yaml
 # Use a different docker daemon
@@ -77,6 +79,10 @@ logLevelConsole: silly
 # NOTE: Not a good idea
 disablePlugins:
   - lando-core
+
+# Change the default bind address to 0.0.0.0
+# Note that this has security implications
+bindAddress: "0.0.0.0"
 ```
 
 ### Set a config value through an ENVVAR

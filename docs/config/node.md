@@ -4,7 +4,7 @@ description: Add a highly configurable node service to Lando for local developme
 
 # Node
 
-[Node.js](https://nodejs.org/en/) is a JavaScript runtime built on Chrome's V8 JavaScript engine and uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Beyond running web applications, it is also commonly used for front-end tooling.
+[Node.js](https://nodejs.org/en/) is a JavaScript runtime built on Chrome's V8 JavaScript engine and uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Beyond running web applications, it is also commonly used for frontend tooling.
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
 
@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [14](https://hub.docker.com/r/_/node/)
 *   [13](https://hub.docker.com/r/_/node/)
 *   [12.4 - 12.16](https://hub.docker.com/r/_/node/)
 *   [12](https://hub.docker.com/r/_/node/)
@@ -23,7 +24,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [8](https://hub.docker.com/r/_/node/)
 *   [8.14](https://hub.docker.com/r/_/node/)
@@ -33,14 +34,14 @@ You can still run these versions with Lando but for all intents and purposes the
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV.
 :::
 
-To use a patch version you can do something like this:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node:12.13
 ```
 
@@ -48,13 +49,13 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node:10
     ssl: false
     command: tail -f /dev/null
@@ -64,31 +65,33 @@ services:
 
 ### Specifying a command
 
-Note that if you *do not* define a `command` for this service it will effectively be a "cli" container eg it will not serve or run an application by default but will be available to run `node` commands against.
+Note that if you *do not* define a `command` for this service, it will effectively be a "cli" container (e.g. it will not serve or run an application by default but will be available to run `node` commands against).
 
-If you want to actually launch a `node` application consider setting the `command` to something like:
+If you want to actually launch a `node` application, consider setting the `command` to something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     command: npm start
 ```
 
 ### Setting a port
 
-While we assume your `node` service is running on port `80` we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
+While we assume your `node` service is running on port `80`, we recognize that many `node` app's also run on port `3000` or otherwise. You can easily change our default to match whatever your app needs.
+
+Note that if you set either `port` or `ssl` to a value less than `1024` then Lando will run the `command` as `root` otherwise it will run as the `node` user which for all intents and purposes is `you`.
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     port: 3000
 ```
 
 ### Using SSL
 
-Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to user to use the certs and secure port correctly in their application like as in this `node` snippet:
+Also note that `ssl: true` will only generate certs in the [default locations](./../config/security.md) and expose port `443`. It is up to the user to use the certs and secure port correctly in their application like the `node` snippet below:
 
 ```js
 // Get our key and cert
@@ -110,7 +113,7 @@ You can also set `ssl` to a specific port. This will do the same thing as `ssl: 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     port: 3000
     ssl: 4444
@@ -121,27 +124,27 @@ services:
 You can also use the `globals` key if you need to install any [global node dependenices](https://docs.npmjs.com/cli/install). This follows the same syntax as your normal [`package.json`](https://docs.npmjs.com/files/package.json) except written as YAML instead of JSON.
 
 ::: tip Use package.json if you can!
-While there are some legitimate use cases to globally install a node dependency it is almost always preferred to install using your applications normal `package.json` and then running either `lando npm` or `lando yarn` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+While there are some legitimate use cases to globally install a node dependency, it is almost always preferred to install using your applications normal `package.json` and then running either `lando npm` or `lando yarn` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
 
 Note that both `lando yarn` and `lando npm` are not provided out of the box by the `node` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
 :::
 
-Here is an example of globally installing the `latest` `gulp-cli`.
+An example of globally installing the `latest` `gulp-cli` is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     globals:
       gulp-cli: latest
     command: npm start
 ```
 
-Here is an example of using a [build step](./../config/services.md#build-steps) to automatically `yarn install` your dependencies before your app invokes `yarn start-app`.
+An example of using a [build step](./../config/services.md#build-steps) to automatically `yarn install` your dependencies before your app invokes `yarn start-app` is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: node
     build:
       - yarn install
@@ -150,7 +153,7 @@ services:
 
 ## Path Considerations
 
-Lando will set the following `PATH` hierarchy for this service.
+Lando will set the `PATH` hierarchy for this service as follows:
 
 ```js
 [

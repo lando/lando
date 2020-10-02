@@ -57,7 +57,9 @@ module.exports = {
         service: 'appserver',
         cmd: `php /app/${options.webroot}/../artisan`,
       };
-      if (_.has(options, 'cache')) options.services.cache = getCache(options.cache);
+      if (_.has(options, 'cache') && options.cache !== 'none') {
+        options.services.cache = getCache(options.cache);
+      }
       // Send downstream
       super(id, options);
     };

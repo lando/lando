@@ -5,7 +5,7 @@ metaTitle: Adding a post to the Lando blog | Lando
 
 # Adding blog content
 
-Now that you are [all setup](./guides-intro.md#what-do-i-need-to-get-started) it's time to make your first guide. Follow the steps below!
+Now that you are [all set up](./guides-intro.md#what-do-i-need-to-get-started), it's time to make your first guide. Follow the steps below:
 
 ::: warning Make sure you activate Secret Toggle!!!
 These docs assume you've [installed Lando from source](./activate.md), [toggled its Secret Toggle](./activate.md), [added yourself as a contributor](./first.md) and generally gotten up to speed with [contributing in general](./contributing.md)
@@ -13,7 +13,7 @@ These docs assume you've [installed Lando from source](./activate.md), [toggled 
 
 ## 1. Start Docs Locally
 
-While technically optionally, it's a good idea to get the blog up and running locally. You can do this either with Lando itself or with `yarn` directly if running Lando on Lando is a little too meta for your tastes.
+While technically optional, it's a good idea to get the blog up and running locally. You can do this either with Lando itself or with `yarn` directly if running Lando on Lando is a little too meta for your tastes.
 
 ### Using Lando (recommended)
 
@@ -46,9 +46,8 @@ open http://localhost:8007
 
 ## 2. Create a new branch
 
-
 ```bash
-# Make sure you are on an updated maser
+# Make sure you are on an updated master
 git checkout master
 git pull origin master
 
@@ -69,9 +68,9 @@ Lando will provide some demo content in the post you create. Check it out!
 
 ## 4. Craft your content
 
-Load the post Lando created for you in your editor of choice and modify it until its good to go.
+Load the post Lando created for you in your editor of choice and modify it until it's good to go.
 
-Note that if you've got the blog site running locally it will hot reload your guide as you edit it. This should help you see what your content will look like when its on the actual site.
+Note that if you've got the blog site running locally, it will hot reload your guide as you edit it. This should help you see what your content will look like when it's on the actual site.
 
 ## 5. Commit, push and PR
 

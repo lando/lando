@@ -15,6 +15,7 @@ const nginxConfig = options => ({
     vhosts: `${options.confDest}/${options.defaultFiles.vhosts}`,
   }, options.config),
   confDest: path.resolve(options.confDest, '..', 'nginx'),
+  info: {managed: true},
   home: options.home,
   name: `${options.name}_nginx`,
   overrides: utils.cloneOverrides(options.overrides),
@@ -23,8 +24,8 @@ const nginxConfig = options => ({
   ssl: options.nginxSsl,
   type: 'nginx',
   userConfRoot: options.userConfRoot,
-  version: '1.14',
   webroot: options.webroot,
+  version: options.via.split(':')[1],
 });
 
 /*
@@ -46,7 +47,7 @@ const parseApache = options => {
  * Helper to parse cli config
  */
 const parseCli = options => {
-  options.command = ['tail -f /dev/null'];
+  options.command = [_.get(options, 'command', 'tail -f /dev/null')];
   return options;
 };
 
@@ -56,7 +57,7 @@ const parseCli = options => {
 const parseNginx = options => {
   options.command = (process.platform !== 'win32') ? ['php-fpm'] : ['php-fpm -R'];
   options.image = 'fpm';
-  options.remoteFiles.vhosts = '/opt/bitnami/extra/nginx/templates/default.conf.tpl';
+  options.remoteFiles.vhosts = '/opt/bitnami/nginx/conf/lando.conf';
   options.defaultFiles.vhosts = (options.ssl) ? 'default-ssl.conf.tpl' : 'default.conf.tpl';
   options.nginxSsl = options.ssl;
   options.ssl = false;
@@ -87,6 +88,7 @@ module.exports = {
     legacy: ['5.5', '5.4', '5.3'],
     path: [
       '/app/vendor/bin',
+      '/app/bin',
       '/usr/local/sbin',
       '/usr/local/bin',
       '/usr/sbin',
@@ -105,6 +107,7 @@ module.exports = {
     },
     environment: {
       COMPOSER_ALLOW_SUPERUSER: 1,
+      COMPOSER_MEMORY_LIMIT: '-1',
       PHP_MEMORY_LIMIT: '1G',
     },
     remoteFiles: {
@@ -159,11 +162,21 @@ module.exports = {
 
       // Add in nginx if we need to
       if (_.startsWith(options.via, 'nginx')) {
+        // Set another lando service we can pass down the stream
         const nginxOpts = nginxConfig(options);
+        // Merge in any user specifified
         const LandoNginx = factory.get('nginx');
-        const nginx = new LandoNginx(nginxOpts.name, nginxOpts);
-        nginx.data.push({services: _.set({}, nginxOpts.name, {'depends_on': [options.name]})});
-        options.sources.push(nginx.data);
+        const data = new LandoNginx(nginxOpts.name, nginxOpts);
+        // If the user has overriden this service lets make sure we include that as well
+        const userOverrides = _.get(options, `_app.config.services.${nginxOpts.name}.overrides`, {});
+        data.data.push({
+          services: _.set({}, nginxOpts.name, userOverrides),
+          version: _.get(data, 'data[0].version'),
+        });
+        // This is a trick to basically replicate what happens upstream
+        options._app.add(data);
+        options._app.info.push(data.info);
+        // Indicate the relationship on the primary service
         options.info.served_by = nginxOpts.name;
       }
 

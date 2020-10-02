@@ -68,9 +68,10 @@ describe('env', () => {
     });
   });
 
-  describe('#getComposeExecutables', () => {
+  describe('#getComposeExecutable', () => {
     it('should return the correct lando-provided path on win32', () => {
       setPlatform('win32');
+      filesystem({'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker-compose.exe': 'CODEZ'});
       process.env.ProgramW6432 = 'C:\\Program Files';
       const composeExecutable = env.getComposeExecutable();
       const value = path.win32.join(env.getDockerBinPath(), 'docker-compose.exe');
@@ -116,6 +117,7 @@ describe('env', () => {
   describe('#getDockerExecutable', () => {
     it('should return the correct lando-provided path on win32', () => {
       setPlatform('win32');
+      filesystem({'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe': 'CODEZ'});
       process.env.ProgramW6432 = 'C:\\Program Files';
       const composeExecutable = env.getDockerExecutable();
       const value = path.win32.join(env.getDockerBinPath(), 'docker.exe');

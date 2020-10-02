@@ -22,9 +22,11 @@ This allows you to:
 You will want to make sure you install the tools you need inside of the services your app is running. If you are not clear on how to do this, check out either [build steps](./services.md#build-steps) or our [`ssh`](./../basics/ssh.md) command.
 :::
 
+[[toc]]
+
 ## Usage
 
-It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. Here are all the options you can use for a given tooling route and their default values.
+It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. All the options you can use for a given tooling route and their default values are shown below:
 
 ```yaml
 tooling:
@@ -34,15 +36,16 @@ tooling:
     cmd: mycommand
     user: you
     options:
+    env:
 ```
 
 ::: tip Tooling routes are cached!
 Note that tooling routes are cached at the end of every lando invocation so you will need to run something like `lando list` or dump the cache manually with `lando --clear` if you are not seeing your tooling commands or changes show up correctly.
 
-After doing so run `lando` to see all the tooling commands for a given Landofile
+After doing so, run `lando` to see all the tooling commands for a given Landofile.
 :::
 
-Here are a few common implementations of the above:
+A few common implementations of the above are shown below:
 
 ### Native command emulation
 
@@ -86,7 +89,7 @@ lando update-deps
 
 ### Multi-command tooling
 
-`cmd` can also be an array. This allows you to chain an indefinate amount of commands together.
+`cmd` can also be an array. This allows you to chain an indefinite amount of commands together.
 
 ```yaml
 tooling:
@@ -105,7 +108,7 @@ tooling:
 lando fire-everything
 ```
 
-Note that each line of the above runs in a separate subshell so if you `source` a file in the first command like we unwisely did above it's not going to be available in any of the others. If you need that sort of behavior consider something like this instead
+Note that each line of the above runs in a separate subshell so if you `source` a file in the first command, like we unwisely did above, it's not going to be available in any of the others. If you need that sort of behavior, instead consider something as shown below:
 
 ```yaml
 tooling:
@@ -123,7 +126,7 @@ tooling:
 
 You can also omit the `service` and define `cmd` as an array of objects where the `key` is the service and the `value` is the command. This can allow you to consolidate complex testing and build steps that need to happen across many different services.
 
-It also allows you to reuse a common interface across many different Landofiles eg `lando test` may differ from project to project but it's always what we use to run our tests.
+It also allows you to reuse a common interface across many different Landofiles (e.g. `lando test` may differ from project to project but it's always what we use to run our tests).
 
 ```yaml
 tooling:
@@ -144,11 +147,24 @@ tooling:
 lando test && lando build
 ```
 
+### Using environment variables
+
+You can also set environment variables that will ONLY be available for a given tooling command.
+
+```yaml
+tooling:
+  deploy:
+    service: appserver
+    cmd: deploy.sh
+    env:
+      TARGET: production
+```
+
 ### Dynamic service commands
 
-Sometimes you have, need or want a single command that can be used on a user-specified service. In these situations you can tell Lando to set the service with an option.
+Sometimes you have, need or want a single command that can be used on a user-specified service. In these situations, you can tell Lando to set the service with an option.
 
-Note that the `:` prefix is what tells Lando to use an option instead of a literal string. Also note that you should be careful to avoid collisions between options *you* specify and options the *underlying command* does.
+Note that the `:` prefix is what tells Lando to use an option instead of a literal string. Also note that you should be careful to avoid collisions between options *you* specify and options of the *underlying command*.
 
 ```yaml
 tooling:
@@ -172,7 +188,7 @@ lando php-version --service appserver2
 lando php-version --service appserver3
 ```
 
-This can help avoid the following messy and hard-to-scale implementation
+This can help avoid the following messy and hard-to-scale implementation.
 
 ```yaml
 tooling:
@@ -189,9 +205,9 @@ tooling:
 
 ### Options driven tooling
 
-You can also define your own options for use in tooling. These options follow the same spec as [Lando tasks](./../contrib-plugins.md#tasks) and are generally used in combination with an underlying script.
+You can also define your own options for use in tooling. These options follow the same spec as [Lando tasks](./../contrib-plugins.md#tasks) and are, generally, used in combination with an underlying script.
 
-Note that the options interface just provides a way to define and then inject options into a given command. It is up to the user to make sure the underlying command or script knows what to do with such options. Note that if you use interactive options you need to set `level: app` as below.
+Note that the options interface just provides a way to define and then inject options into a given command. It is up to the user to make sure the underlying command or script knows what to do with such options. Note that if you use interactive options, you need to set `level: app` as shown below:
 
 ```yaml
 tooling:
@@ -220,34 +236,11 @@ lando word
 lando word --word=fox
 ```
 
-## Pipes, Carrots and Ampersands OH MY!
-
-If Lando sees any combination of `|`, `<`, `>`, or `&` in any of the defined commands it will automatically wrap the entire command in `/bin/sh -c "<command>"`. This means that if you pipe or carrot commands they are all happening *INSIDE* the service and not going from the container to host or vice-versa.
-
-In most situations you will not notice this distinction but not in all situations. Consider the following:
-
-```bash
-# Go into the app root
-cd /path/to/my/app
-
-# Export a database
-lando db-export --stdout > dump.sql
-ls -lsa
-# See the database dump in the filesystem
-
-# Export someplace else and assume you can write to /
-lando db-export --stdout > /dump.sql
-ls -lsa /
-# Do not see the database dump
-lando ssh -s appserver -c "ls -lsa /"
-# See the database dump
-```
-
 ## Overriding
 
 You can override tooling provided by Lando recipes or upstream Landofiles by redefining the tooling command in your Landofile.
 
-For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory and always uses the `drush` you installed via `composer` you could do the below.
+For example, if you wanted to override the built in `drush` command that comes with Drupaly recipes so that it always runs in a specific directory and always uses the `drush` you installed via `composer`, you could do as shown below:
 
 ```yml
 tooling:
@@ -255,11 +248,27 @@ tooling:
     cmd: "/app/vendor/bin/drush --root=/app/web"
 ```
 
+Note that if your upstream tooling has interactive options you will need to either disable those options completely or set appropriate defaults to bypass them.
+
+```yaml
+tooling:
+  # Remove upstream options altogether
+  pull:
+    cmd: echo "Yah right imma gonna let you run this command"
+    options:
+  # Modify upstream options
+  push:
+    cmd: /helpers/my-special-push.sh
+    options:
+      code:
+        default: none
+```
+
 ## Disabling
 
 You can also use "tooling overrides" to disable any other predefined or upstream tooling by setting the command to a non-object value in your Lando file.
 
-While any value will do it's customary to use `disabled` as in the below.
+While any value will do, it's customary to use `disabled` as shown below:
 
 ```yml
 tooling:
@@ -268,7 +277,7 @@ tooling:
 
 ## Directory Mapping
 
-Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally eg not in a container. Consider
+Lando will try to map your host directory to the analogous directory inside the service. This should **MAKE IT SEEM** as though you are running the command locally (e.g. not in a container). Consider the example below:
 
 ```bash
 cd /path/to/my/app
@@ -284,7 +293,11 @@ lando ssh -c "pwd"
 
 If you are not sure about what tools live inside your container, you can use `lando ssh` to drop into a shell on a specific service to both investigate and install any needed dependencies.
 
-Note that while you can do the below, it's generally recommended to install any additional dependencies as part of a build process using either the specific dependency management options built into the service you are using or with Lando's more generic [build steps](./services.md#build-steps).
+Note that while you can do the below, it's, generally, recommended to install any additional dependencies as part of a build process using either the specific dependency management options built into the service you are using or with Lando's more generic [build steps](./services.md#build-steps).
+
+::: warning Make sure to install your dependencies!!!
+Not installing dependencies as part of the build process will result in the loss of those dependencies if `lando rebuild` is executed or the service container is removed.
+:::
 
 ```bash
 # SSH into the appserver

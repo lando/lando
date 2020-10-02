@@ -21,7 +21,7 @@ module.exports = {
         services: {
           mounter: {
             command: 'tail -f /dev/null',
-            image: 'devwithlando/util:2',
+            image: 'devwithlando/util:3',
             environment: {
               LANDO_HOST_UID: uid,
               LANDO_HOST_GID: gid,
@@ -33,7 +33,7 @@ module.exports = {
       };
       // Add in named volume mounts
       mountService.services.mounter.volumes = utils.getServiceVolumes(excludes);
-      mountService.services.mounter.volumes.push(`${app}:/source:delegated`);
+      mountService.services.mounter.volumes.push(`${app}:/source:cached`);
       // Add moar stuff
       mountService.services.mounter.environment.LANDO_SERVICE_TYPE = 'mounter';
       mountService.services.mounter.labels['io.lando.service-container'] = 'TRUE';

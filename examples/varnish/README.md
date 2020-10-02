@@ -29,7 +29,7 @@ lando ssh -s defaults -c "curl -I localhost | grep Via | grep varnish-v4"
 lando ssh -s defaults -c "curl localhost | grep sophisticated"
 
 # Should also serve over https if specified
-lando ssh -s custom_ssl -c "curl -k https://localhost | grep sophisticated"
+lando ssh -s custom_ssl -c "curl https://localhost | grep sophisticated"
 
 # Shoule use a custom vcl file if specified
 lando ssh -s custom -c "cat /etc/varnish/conf.d/lando.vcl | grep LANDOVARNISH"
@@ -42,7 +42,7 @@ lando ssh -s custom_ssl -c "env | grep MEGAMAN | grep X"
 lando ssh -s customport -c "curl http://localhost | grep SAW"
 
 # Should use a custom backend port with SSL if specified
-lando ssh -s customport_ssl -c "curl -k https://localhost | grep SAW"
+lando ssh -s customport_ssl -c "curl https://localhost | grep SAW"
 ```
 
 Destroy tests

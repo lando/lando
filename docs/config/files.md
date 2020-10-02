@@ -12,6 +12,6 @@ While you can also share in additional files and directories via Docker volumes 
 | `$HOME` | `/user` |
 | `lando.config.userConfRoot` | `/lando` |
 
-**NOTE:** Unless you've configured a custom `lando` bootstrap `lando.config.userConfRoot` should resolve to `$HOME/.lando`.
+**NOTE:** Unless you've configured a custom `lando` bootstrap, `lando.config.userConfRoot` should resolve to `$HOME/.lando`.
 
 If you are looking for ways to make file sharing more performant then make sure you also read the [performance docs](./performance.md).

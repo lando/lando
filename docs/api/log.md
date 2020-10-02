@@ -3,6 +3,8 @@
 ## lando.log.debug(msg, [...values])
 Logs a debug message.
 
+Debug messages are intended to communicate lifecycle milestones and events that are relevant to developers
+
 **Kind**: global function  
 **Since**: 3.0.0  
 
@@ -20,6 +22,8 @@ lando.log.debug('All details about docker inspect %j', massiveObject);
 
 ## lando.log.error(msg, [...values])
 Logs an error message.
+
+Errors are intended to communicate there is a serious problem with the application
 
 **Kind**: global function  
 **Since**: 3.0.0  
@@ -39,6 +43,8 @@ lando.log.error('This is an err with details %s', err);
 ## lando.log.info(msg, [...values])
 Logs an info message.
 
+Info messages are intended to communicate lifecycle milestones and events that are relevant to users
+
 **Kind**: global function  
 **Since**: 3.0.0  
 
@@ -56,6 +62,8 @@ lando.log.info('It is happening!');
 
 ## lando.log.silly(msg, [...values])
 Logs a silly message.
+
+Silly messages are meant for hardcore debugging
 
 **Kind**: global function  
 **Since**: 3.0.0  
@@ -78,6 +86,9 @@ lando.log.silly('If you are seeing this you have delved too greedily and too dee
 ## lando.log.verbose(msg, [...values])
 Logs a verbose message.
 
+Verbose messages are intended to communicate extra information to the user and basics to a developer. They sit somewhere
+inbetween info and debug
+
 **Kind**: global function  
 **Since**: 3.0.0  
 
@@ -95,6 +106,8 @@ lando.log.verbose('Config file %j loaded from %d', config, directory);
 
 ## lando.log.warn(msg, [...values])
 Logs a warning message.
+
+Warnings are intended to communicate you _might_ have a problem.
 
 **Kind**: global function  
 **Since**: 3.0.0  

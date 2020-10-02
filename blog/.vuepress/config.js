@@ -52,6 +52,7 @@ module.exports = {
       ga: 'UA-74237404-6',
     },
     'autometa': {
+      image: 'https://lando.dev/images/logo-pink-medium.png',
       site: {
         name: 'Lando',
         twitter: 'devwithlando',

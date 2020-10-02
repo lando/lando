@@ -41,10 +41,9 @@ lando ssh -s appserver_nginx -c "curl -L localhost" | grep "CakePHP"
 cd lemp
 lando php -v | grep "PHP 7.3"
 
-# Should be running nginx 1.x by default
+# Should be running nginx 1.17 by default
 cd lemp
-lando ssh -s appserver_nginx -c "nginx -v 2>&1 | grep 1."
-lando ssh -s appserver_nginx -c "curl -IL localhost" | grep Server | grep nginx | grep "1."
+lando ssh -s appserver_nginx -c "nginx -v 2>&1 | grep 1.17"
 
 # Should be running mysql 5.7 by default
 cd lemp
@@ -57,10 +56,6 @@ lando php -m | grep xdebug || echo $? | grep 1
 # Should use the default database connection info
 cd lemp
 lando mysql -ulemp -plemp lemp -e quit
-
-# Should use custom server config
-cd lemp
-lando ssh -s appserver_nginx -c "cat /opt/bitnami/nginx/conf/nginx.conf" | grep "CUSTOMSERVERCONFIG"
 
 # Should use custom vhosts config
 cd lemp

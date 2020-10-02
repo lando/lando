@@ -1,20 +1,22 @@
 ---
-description: Lando sets a bunch of useful environment variables in each service by default, or you can inject your own by configurating your Landofile or using a custom environment file.
+description: Lando sets a bunch of useful environment variables in each service by default, or you can inject your own by configuring your Landofile or using a custom environment file.
 ---
 
 # Environment
 
 Lando will both inject a bunch of helpful environment variables into each service and allow the user to inject their own either by [file](#environment-files) or [configuration](#environment-configuration). Note that these variables are only available **inside** each service and **not on your host machine.**
 
+[[toc]]
+
 ## Default Environment Variables
 
-While the default variables are more or less the same between services. We recommend you run the following command to get the most up-to-date and relevant list of envvars for yous service. Note, this assume you have not changed the `envPrefix` [global config](./global.md) value.
+While the default variables are more or less the same between services, we recommend you run the following command to get the most up-to-date and relevant list of envvars for your service. Note, this assumes you have not changed the `envPrefix` [global config](./global.md) value.
 
 ```bash
 lando ssh -s appserver -c env | grep LANDO_
 ```
 
-For reference here is an example of the default container envvars inside of the [LAMP](https://github.com/lando/lando/tree/master/examples/lamp) recipe/example.
+For reference, an example of the default container envvars inside of the [LAMP](https://github.com/lando/lando/tree/master/examples/lamp) recipe/example is shown below:
 
 ```bash
 LANDO_WEBROOT_USER=www-data
@@ -48,7 +50,7 @@ LANDO_SERVICE_NAME=appserver
 You can tell Lando to inject additional environment variables into every service in your app using environment files. This is particularly useful if you want to:
 
 1. Inject sensitive credentials into the environment a la the 12-factor app model
-2. Store credentials in a `.gitignored` file that is not committed to the repo
+2. Store credentials in a `.gitignore` file that is not committed to the repo
 3. Set config on a per environment basis
 
 You can accomplish this using the `env_file` top level config in your [Landofile](./lando.md).
@@ -69,7 +71,7 @@ DB_USER=root
 DB_PASS=s1mpl3
 ```
 
-By happenstance you could previously use the following *unsupported* syntax in your `env` files.
+By happenstance, you could previously use the *unsupported* syntax in your `env` files as follows:
 
 ```bash
 WP_ENV=development
@@ -77,7 +79,7 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=${WP_HOME}/wp
 ```
 
-Because we now directly use Docker Compose's `env_file` directive under the hood this syntax no longer works. So you will have to do something like:
+Because we now directly use Docker Compose's `env_file` directive under the hood, this syntax no longer works. So you will have to do something as shown below:
 
 ```bash
 WP_ENV=development
@@ -88,11 +90,11 @@ WP_SITEURL=http://wpb4.test/wp
 If you add or change the `env_file` config, or alter the contents of any env files being used in this config, you will need to run `lando rebuild` for your changes to take effect.
 
 ::: warning This ONLY injects directly into the container environment!
-We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on theapplication side to grab them.
+We inject variables **ONLY** into the container environment. This means that it is up to the user to use relevant mechanisms on the application side to grab them.
 
 For example, in `php` you will want to use something like the [`getenv()`](http://php.net/manual/en/function.getenv.php) function instead of server-provided globals like `$_ENV`.
 :::
 
 ## Environment Configuration
 
-If you'd like to avoid broad strokes and only inject certain environment variables into particular services we recommend you make use of [service overrides](./services.md#overrides).
+If you'd like to avoid broad strokes and only inject certain environment variables into particular services, we recommend you make use of [service overrides](./services.md#overrides).

@@ -1,5 +1,5 @@
 ---
-description: Lando events let you run aribitrary commands before or after certain parts of the Lando runtime; clear caches after a database import or run a script before deployment.
+description: Lando events let you run arbitrary commands before or after certain parts of the Lando runtime; clear caches after a database import or run a script before deployment.
 ---
 
 # Events
@@ -8,7 +8,7 @@ description: Lando events let you run aribitrary commands before or after certai
 Unlike [build steps](./services.md#build-steps) `events` will run **every time** so it is advisable to use them for automating common steps like compiling `sass` before or after your app starts and not installing lower level dependencies like `node modules` or `php extensions`.
 :::
 
-Events allow you to automate commands or tasks you might often or always run either `before` or `after` something happens. Generally you can hook into `pre` and `post` events for every part of the [Lando](./../api/lando.md) and [App](./../api/app.md) runtime. At time of writing those events were:
+Events allow you to automate commands or tasks you might often or always run either `before` or `after` something happens. Generally, you can hook into `pre` and `post` events for every part of the [Lando](./../api/lando.md) and [App](./../api/app.md) runtime. At time of writing, those events were as follows:
 
 | **LANDO** | **APP** |
 | -- | -- |
@@ -31,11 +31,13 @@ Events allow you to automate commands or tasks you might often or always run eit
 | [pre-engine-stop](./../api/engine.md#event_pre_engine_stop) | []() |
 | [post-engine-stop](./../api/engine.md#event_post_engine_stop) | []() |
 
-You can also hook into `pre` and `post` events for all [tooling](./tooling.md) commands. For example, the command `lando db-import` should expose `pre-db-import` and `post-db-import`
+You can also hook into `pre` and `post` events for all [tooling](./tooling.md) commands. For example, the command `lando db-import` should expose `pre-db-import` and `post-db-import`.
+
+[[toc]]
 
 ## Discovering Events
 
-While the above lists are great starting point they may be out of date. You can explicitly discover what events are available by running:
+While the above lists are great starting point, they may be out of date. You can explicitly discover what events are available by running as shown below:
 
 ```bash
 # Discover hookable events for the `lando start` command
@@ -52,7 +54,7 @@ Specifically, you need to hook into an event where the service you are running t
 
 It's fairly straightforward to add events to your [Landofile](./lando.md) using the `events` top level config.
 
-Note that due to the nature of events, eg. automating steps that the _user_ usually runs, all commands are run as "you" and do not have `sudo` or `root` access.
+Note that due to the nature of events (e.g. automating steps that the _user_ usually runs), all commands are run as "you" and do not have `sudo` or `root` access.
 
 ### Default commands
 
@@ -76,13 +78,13 @@ tooling:
     service: web
 ```
 
-In the above scenario, `some-command` will run on the `web` service by default instead of the `appserver`. For [dynamic tooling routes](./tooling.md#dynamic-service-commands) events will use the default of the dynamic route.
+In the above scenario, `some-command` will run on the `web` service by default instead of the `appserver`. For [dynamic tooling routes](./tooling.md#dynamic-service-commands), events will use the default of the dynamic route.
 
 ```yaml
 events:
   post-dynamic:
     - some-command
-tooling
+tooling:
   dynamic:
     cmd: env
     service: :host
@@ -98,7 +100,7 @@ In the above scenario, `some-command` will run on `web2` by default.
 
 ### Service commands
 
-While the defaults above are good to know we *highly recommend* you just explicitly define which commands should run on which services by keying the command with a service as below.
+While the defaults above are good to know, we *highly recommend* you just explicitly define which commands should run on which services by keying the command with a service as shown below:
 
 ```yaml
 events:

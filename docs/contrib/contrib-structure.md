@@ -4,7 +4,7 @@ description: Learn about Lando's project and directory structure.
 
 # Project Structure
 
-Here is a general breakdown of where things live inside the Lando repo.
+A general breakdown of where things live inside the Lando repo is shown below:
 
 ```bash
 ./
@@ -16,8 +16,8 @@ Here is a general breakdown of where things live inside the Lando repo.
 |-- blog            Vuepress blog and its content
 |-- docs            Vuepress docs site and its content
 |-- events          Vuepress events listing and its content
-|-- examples        Examples user in this documentation and to generate func tests
-|-- installer       Installer pkgs and helpers
+|-- examples        Examples user in this documentation and to generate functional tests
+|-- installer       Installer packages and helpers
 |-- lib             Core libraries
 |-- metrics         Express metrics server
 |-- plugins         Core plugins
@@ -30,7 +30,7 @@ Here is a general breakdown of where things live inside the Lando repo.
 |-- package.json    Lando node dependencies
 ```
 
-Some notes about the structure:
+Some notes about the structure are below:
 
 * Code that is easily unit testable and does not require the `lando` object should live in `lib`.
 * Code that requires the `lando` object should be expressed in `plugins`.

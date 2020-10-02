@@ -26,11 +26,10 @@ const getContainerPath = appRoot => {
  */
 const getExecOpts = (docker, datum) => {
   const exec = [docker, 'exec'];
-  // Should use interactive if we arent running this in leia
-  if (process.stdin.isTTY) {
-    exec.push('--tty');
-    exec.push('--interactive');
-  }
+  // Should only use this if we have to
+  if (process.stdin.isTTY) exec.push('--tty');
+  // Should only set interactive in node mode
+  if (process.lando === 'node') exec.push('--interactive');
   // Add user and workdir
   exec.push('--user');
   exec.push(datum.opts.user);
@@ -81,11 +80,15 @@ const handleDynamic = (config, options = {}, answers = {}) => {
  * the first three assuming they are [node, lando.js, options.name]'
  * Check to see if we have global lando opts and remove them if we do
  */
-const handleOpts = (config, argopts = process.argv.slice(3)) => {
+const handleOpts = (config, argopts = []) => {
+  // Append any user specificed opts
+  argopts = argopts.concat(process.argv.slice(3));
+  // If we have no args then just return right away
+  if (_.isEmpty(argopts)) return config;
   // If this is not a CLI then we can pass right back
   if (process.lando !== 'node') return config;
   // Return
-  return _.merge({}, config, {command: config.command.concat(argopts)});
+  return _.merge({}, config, {args: argopts});
 };
 
 /*
@@ -93,7 +96,7 @@ const handleOpts = (config, argopts = process.argv.slice(3)) => {
  */
 const handlePassthruOpts = (options = {}, answers = {}) => _(options)
   .map((value, key) => _.merge({}, {name: key}, value))
-  .filter(value => value.passthrough === true)
+  .filter(value => value.passthrough === true && !_.isNil(answers[value.name]))
   .map(value => `--${value.name}=${answers[value.name]}`)
   .value();
 
@@ -108,16 +111,16 @@ const parseCommand = (cmd, service) => ({
 /*
  * Helper to build commands
  */
-exports.buildCommand = (app, command, service, user) => ({
+exports.buildCommand = (app, command, service, user, env = {}) => ({
   id: `${app.project}_${service}_1`,
   compose: app.compose,
   project: app.project,
   cmd: command,
   opts: {
-    environment: getCliEnvironment(),
+    environment: getCliEnvironment(env),
     mode: 'attach',
     workdir: getContainerPath(app.root),
-    user: user,
+    user: (user === null) ? getUser(service, app.info) : user,
     services: _.compact([service]),
     hijack: false,
     autoRemove: true,
@@ -127,10 +130,13 @@ exports.buildCommand = (app, command, service, user) => ({
 /*
  * Helper to build docker exec command
  */
-exports.dockerExec = (lando, datum = {}) => lando.shell.sh(
-  getExecOpts(lando.config.dockerBin, datum).concat(datum.cmd),
-  {mode: 'attach', cstdio: ['inherit', 'inherit', 'ignore']}
-);
+exports.dockerExec = (injected, stdio, datum = {}) => {
+  // Depending on whether injected is the app or lando
+  const dockerBin = injected.config.dockerBin || injected._config.dockerBin;
+  const opts = {mode: 'attach', cstdio: stdio};
+  // Run run run
+  return injected.shell.sh(getExecOpts(dockerBin, datum).concat(datum.cmd), opts);
+};
 
 /*
  * Helper to get tts
@@ -148,15 +154,12 @@ exports.parseConfig = (cmd, service, options = {}, answers = {}) => _(cmd)
   .map(cmd => parseCommand(cmd, service))
   // Handle dynamic services
   .map(config => handleDynamic(config, options, answers))
-  // Parse the cmds into something more usable for shell.sh
-  .map(config => _.merge({}, config, {command: escape(config.command)}))
   // Add in any argv extras if they've been passed in
-  .map(config => handleOpts(config))
-  // Append passthru options so that interactive responses are permitted
-  // @TODO: this will double add opts that are already passed in non-interactively, is that a problem?
-  .map(config => _.merge({}, config, {command: config.command.concat(handlePassthruOpts(options, answers))}))
+  .map(config => handleOpts(config, handlePassthruOpts(options, answers)))
   // Wrap the command in /bin/sh if that makes sense
-  .map(config => _.merge({}, config, {command: escape(config.command, true)}))
+  .map(config => _.merge({}, config, {command: escape(config.command, true, config.args)}))
+  // Add any args to the command and compact to remove undefined
+  .map(config => _.merge({}, config, {command: _.compact(config.command.concat(config.args))}))
   // Put into an object
   .value();
 
@@ -168,15 +171,19 @@ exports.toolingDefaults = ({
   app = {},
   cmd = name,
   description = `Runs ${name} commands`,
+  env = {},
   options = {},
   service = '',
+  stdio = ['inherit', 'pipe', 'pipe'],
   user = null} = {}) =>
   ({
     name,
     app: app,
     cmd: !_.isArray(cmd) ? [cmd] : cmd,
+    env,
     describe: description,
     options: options,
     service: service,
-    user: (user === null) ? getUser(service, app.info) : user,
+    stdio: stdio,
+    user,
   });

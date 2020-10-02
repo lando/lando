@@ -1,5 +1,5 @@
 ---
-description: Use WordPress on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, wp cli, xdebug and custom config files, oh and also import and exports databases.
+description: Use WordPress on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or web server, use composer, wp cli, xdebug and custom config files, oh and also import and export databases.
 ---
 
 # WordPress
@@ -14,11 +14,11 @@ Lando offers a configurable [recipe](./../config/recipes.md) for developing [Wor
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
-2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/).
+2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe.
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) you can also run the following commands to try out this recipe with a vanilla install of WordPress.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also try out this recipe with a vanilla install of WordPress with the commands as shown below:
 
 ```bash
 # Initialize a wordpress recipe using the latest WordPress version
@@ -38,9 +38,9 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
-Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this recipe's [Landofile](./../config/lando.md). If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
 ```yaml
 recipe: wordpress
@@ -57,13 +57,13 @@ config:
     vhosts: SEE BELOW
 ```
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Choosing a php version
 
 You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [WordPress requirements](https://wordpress.org/about/requirements/) to make sure that version is actually supported by WordPress itself.
 
-Here is the [recipe config](./../config/recipes.md#config) to set the WordPress recipe to use `php` version `7.1`
+The [recipe config](./../config/recipes.md#config) to set the WordPress recipe to use `php` version `7.1` is shown below:
 
 ```yaml
 recipe: wordpress
@@ -71,9 +71,9 @@ config:
   php: '7.1'
 ```
 
-### Choosing a webserver
+### Choosing a web server
 
-By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
+By default, this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
 #### With Apache (default)
 
@@ -93,9 +93,9 @@ config:
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
 
-If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
 Also note that like the configuration of the `php` version you should consult the [WordPress requirements](https://downloads.wordpress.org/us/technical-requirements-us) to make sure the `database` and `version` you select is actually supported by WordPress itself.
 
@@ -148,12 +148,12 @@ However, for more information we recommend you consult the [php service document
 
 You may need to override our [default WordPress config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/wordpress) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -180,9 +180,11 @@ config:
 
 ## Connecting to your database
 
-Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+Lando will automatically set up a database with a user and password and also set an environment variable called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
-Here are is the default database connection information for a WordPress site. Note that the `host` is not `localhost` but `database`.
+The default database connection information for a WordPress site is shown below:
+
+Note that the `host` is not `localhost` but `database`.
 
 ```yaml
 database: wordpress
@@ -199,7 +201,7 @@ You can get also get the above information, and more, by using the [`lando info`
 
 ## Importing Your Database
 
-Once you've started up your WordPress site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+Once you've started up your WordPress site, you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
 # Grab your database dump
@@ -212,11 +214,11 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 lando db-import database.sql.gz
 ```
 
-You can learn more about the `db-import` command [over here](./../guides/db-import.md)
+You can learn more about the `db-import` command [over here](./../guides/db-import.md).
 
 ## Tooling
 
-By default each Lando WordPress recipe will also ship with helpful dev utilities.
+By default, each Lando WordPress recipe will also ship with helpful dev utilities.
 
 This means you can use things like `wp`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
@@ -245,6 +247,63 @@ lando mysql
 lando php -i
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+You can also run `lando` from inside your app directory for a complete list of commands. This is always advisable as your list of commands may not be 100% the same as above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+
+## wp-config.php
+
+If you are setting up an existing WordPress site you _probably_ need to modify the `wp-config.php` so that Lando can connect to your database.
+
+::: tip Your DB connection info may differ
+Note that your database credentials may differ from below since they are customizable. If you have done this we recommend you run `lando info` first and use the `internal_connection` information to populate the below values.
+:::
+
+Here are a few ways you can modify `wp-config.php` for usage with Lando. You will want to make sure these go at the _TOP_ of `wp-config.php`.
+
+**1. Hardcode the values**
+
+```php
+/** This will ensure these are only loaded on Lando  */
+if (getenv('LANDO')) {
+  /** The name of the database for WordPress */
+  define('DB_NAME', 'wordpress');
+  /** MySQL database username */
+  define('DB_USER', 'wordpress');
+  /** MySQL database password */
+  define('DB_PASSWORD', 'wordpress');
+  /** MySQL hostname */
+  define('DB_HOST', 'database');
+
+  /** URL routing (Optional, may not be necessary) */
+  // define('WP_HOME','http://mysite.lndo.site');
+  // define('WP_SITEURL','http://mysite.lndo.site');
+}
+```
+
+**2. Use LANDO_INFO**
+
+```php
+/** This will ensure these are only loaded on Lando */
+if (getenv('LANDO_INFO')) {
+  /**  Parse the LANDO INFO  */
+  $lando_info = json_decode(getenv('LANDO_INFO'));
+
+  /** Get the database config */
+  $database_config = $lando_info->database;
+  /** The name of the database for WordPress */
+  define('DB_NAME', $database_config->creds->database);
+  /** MySQL database username */
+  define('DB_USER', $database_config->creds->user);
+  /** MySQL database password */
+  define('DB_PASSWORD', $database_config->creds->password);
+  /** MySQL hostname */
+  define('DB_HOST', $database_config->internal_connection->host);
+
+  /** URL routing (Optional, may not be necessary) */
+  // define('WP_HOME','http://mysite.lndo.site');
+  // define('WP_SITEURL','http://mysite.lndo.site');
+}
+```
+
+We also recommend you check out [this helpful doc](https://wordpress.org/support/article/editing-wp-config-php/) on the `wp-config.php` file.
 
 <RelatedGuides tag="WordPress"/>

@@ -1,0 +1,3 @@
+<?php
+
+$cfg['ThemeDefault'] = 'pmaterial';

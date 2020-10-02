@@ -2,11 +2,9 @@ version: 2
 jobs:
   build:
     machine:
-      image: circleci/classic:201710-01
-      # @TODO:: once we have more tests running lets buy the below and
-      # set up max parallelism
+      image: ubuntu-1604:201903-01
       # docker_layer_caching: true
-    parallelism: 16
+    parallelism: 10
     steps:
       - checkout
       - run:
@@ -20,10 +18,10 @@ jobs:
             fi
             # Print some helpful things
             echo "Operating on commit range: $COMMIT_RANGE"
-            # Check if we need to run tests and bail if we dont
+            # Check if we need to run tests and bail if we don't
             LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
             echo "The following files have changed: $LANDO_CHANGED_FILES"
-            LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e bin/ -e lib/ -e plugins/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
+            LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e .circleci -e bin/ -e lib/ -e plugins/ -e integrations/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
             if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
               circleci-agent step halt
             fi
@@ -37,9 +35,15 @@ jobs:
           environment:
             TERM: xterm
           command: |
+            # Update needed keys
+            curl https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+            curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
             # Spoof the public key
             ssh-keygen -t rsa -N "" -C "spoof@circle" -f "$HOME/.ssh/spoofkey"
             mv "$HOME/.ssh/spoofkey.pub" "$HOME/.ssh/id_rsa.pub"
+            # Install bc
+            sudo apt-get update -y
+            sudo apt-get install -y bc
             # Hyperdrive
             curl -Ls https://github.com/lando/hyperdrive/releases/download/v0.6.1/hyperdrive > /tmp/hyperdrive
             chmod +x /tmp/hyperdrive
@@ -52,11 +56,11 @@ jobs:
       - run:
           name: Disable usage and error reporting
           command: |
-            # Disable usage reporting
-            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
             # Disable error reporting
             mkdir -p ~/.lando/cache
             echo false > ~/.lando/cache/report_errors
+            # Set CI specific config like disabling usage reports
+            cp -f ~/project/.circleci/lando.yml ~/project/config.yml
       - run:
           name: Switch lando over to binary built from source
           command: |
@@ -69,6 +73,7 @@ jobs:
             lando --experimental
       - run:
           name: Run func test
+          no_output_timeout: 15m
           command: |
             yarn generate-tests
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)

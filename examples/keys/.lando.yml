@@ -18,3 +18,24 @@ services:
         - "./ppkey:/lando/keys/key with space"
         - "./ppkey.pub:/lando/keys/key with space.pub"
         - ./index.html:/tmp/things
+  nokeys:
+    type: php
+    via: cli
+    overrides:
+      volumes:
+        - ./config:/var/www/.ssh/config
+  thesekeys:
+    type: php
+    via: cli
+    build_as_root:
+      - chmod 700 /user/.ssh/mykey
+      - chmod 700 /user/.ssh/mykey2
+      - chmod 700 /user/.ssh/mykey3
+    overrides:
+      environment:
+        LANDO_HOST_USER: Han Solo
+      volumes:
+        - ./easykey:/user/.ssh/mykey
+        - ./easykey:/user/.ssh/mykey2
+        - ./easykey:/user/.ssh/mykey3
+

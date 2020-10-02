@@ -6,6 +6,9 @@
     <div v-if="test" class="tested-by">
       Guide Tested: <a :href="test" target="_blank">Yes</a>
     </div>
+    <div v-else>
+      Guide Tested: <span class="not-tested">No</span>
+    </div>
   </div>
 
 </template>
@@ -28,6 +31,7 @@ export default {
     },
     test: {
       type: String,
+      default: null,
     },
   },
 };
@@ -47,4 +51,6 @@ export default {
   .tested-by
     a
       color #2ecc71
+  .not-tested
+    color red
 </style>

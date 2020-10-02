@@ -69,6 +69,7 @@ describe('plugins', () => {
     it('should throw an error if dynamic require fails', () => {
       filesystem();
       const plugins = new Plugins({
+        silly: sinon.spy(),
         debug: sinon.spy(),
         error: sinon.spy(),
         verbose: sinon.spy(),

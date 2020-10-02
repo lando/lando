@@ -42,17 +42,6 @@ describe('lando', () => {
       lando.cache.get('id').should.equal(lando.config.id);
       filesystem.restore();
     });
-
-    it('should send messages', () => {
-      const lando = new Lando();
-      lando.events.on('message', message => {
-        message.should.be.an('object');
-        message.should.have.property('context', 'core');
-        message.should.have.property('type', 'info');
-        message.meta.should.equal('data');
-      });
-      lando.message({meta: 'data'});
-    });
   });
 
   describe('#bootstrap', () => {

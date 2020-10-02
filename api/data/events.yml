@@ -1,3 +1,56 @@
+- id: 27ffaa28e7a1c6228754e2053c9e9488b0f747b0
+  presenter: Aaron Feledy
+  presenterPic: 'https://www.gravatar.com/avatar/94951b20009cc3229a292213135a11f9'
+  presenterLink: 'https://twitter.com/aaronfeledy'
+  name: Deploy to Mars with Lando
+  date: '2020-07-11'
+  summary: >-
+    You thought Lando was just a flight simulator. A tool to be used on the
+    ground, safely replicating the real-world environment you and your team face
+    in production. What if I told you that Lando is also your production
+    facility, your launchpad, and your mission control?
+  type: camp
+  location: Asheville, NC
+  url: 'https://www.drupalasheville.com/2020/session/deploy-mars-lando'
+- id: 8f1a13fa5280f4f54b1f32cf57b5d73f4aceaa3d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: 'SFDUG - June 25, 2020'
+  date: '2020-06-25'
+  summary: >-
+    San Francisco Drupal Users Group ~ Using Lando for Drupal core and contrib
+    contributions.
+  type: meetup
+  location: San Francisco
+  url: >-
+    https://www.meetup.com/SFDUG-San-Francisco-Drupal-Users-group/events/270298015/
+- id: d0e708c562649d2a0f82f90227c7a3bdd507205d
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: SFDUG Lando + Drupal Contributions
+  date: '2020-06-25'
+  summary: >-
+    Leverage the power of Lando to quickly spin up Drupal contribution
+    environments.
+  type: meetup
+  location: San Francisco
+  url: >-
+    https://www.meetup.com/SFDUG-San-Francisco-Drupal-Users-group/events/270298015/
+- id: 375b8dd30b5ba5a9e309e1c4e830dd8aceca23c6
+  presenter: Geoff St. Pierre
+  presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
+  presenterLink: 'https://twitter.com/serundeputy'
+  name: CMS Philly 2020
+  date: '2020-05-01'
+  summary: >-
+    CMS Philly is Philly Tech Week's newest premiere digital content management
+    event brought to you from the organizers of past Drupaldelphia events, and
+    members of the Philly WordPress, BackDrop, and ApostropheCMS communities!
+  type: camp
+  location: 'Philadelphia, PA'
+  url: 'https://cmsphilly.org/talks/inroduction-lando'
 - name: MidCamp 2020
   id: wahteverf
   date: '2020-03-18'
@@ -38,7 +91,7 @@
   presenter: Dustin LeBlanc
   presenterPic: 'https://www.gravatar.com/avatar/e61caccbbfd817bc8b52c0395ba888a6'
   presenterLink: 'https://twitter.com/DustinLeblanc'
-  name: 'Cornell DrupalCamp'
+  name: Cornell DrupalCamp
   date: '2019-09-27'
   summary: >-
     While Lando is a pretty great tool to get you up and running with Drupal and
@@ -109,7 +162,7 @@
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
   presenterLink: 'https://twitter.com/serundeputy'
-  name: 'DrupalCon Nashville 2018'
+  name: DrupalCon Nashville 2018
   date: '2018-04-11'
   summary: >-
     We often think of DevOps in a super siloed context (eg one project at a
@@ -147,7 +200,7 @@
   presenter: Geoff St. Pierre
   presenterPic: 'https://www.gravatar.com/avatar/e103c2a2a8f8caf5848b38b80422cdd9'
   presenterLink: 'https://twitter.com/serundeputy'
-  name: 'NERD Summit 2017'
+  name: NERD Summit 2017
   date: '2017-03-19'
   summary: >-
     With Kalabox, GitFlow, Continuous Integration (CI), and Continuous

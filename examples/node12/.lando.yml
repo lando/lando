@@ -1,12 +1,22 @@
-name: lando-node
+name: lando-node-12
 services:
   defaults:
     type: node:12
     build:
       - yarn
     command: /app/node_modules/.bin/nodemon src/app-http.js --watch src --ignore *.test.js
+  cli:
+    type: node
+  compass:
+    type: node:12
+    globals:
+      grunt-cli: latest
+    build_as_root:
+      - apt-get update -y
+      - apt-get install ruby-full -y
+      - gem install compass
   custom:
-    type: node:13
+    type: node:14
     ssl: true
     globals:
       gulp-cli: latest
@@ -23,5 +33,8 @@ services:
     command: /app/node_modules/.bin/nodemon src/app-custom.js --watch src --ignore *.test.js
   patch:
     type: node:12.13.1
-  cli:
-    type: node
+tooling:
+  ruby:
+    service: compass
+  compass:
+    service: compass

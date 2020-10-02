@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Source da helpas
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="userperms"
+
 # Adding user if needed
 add_user() {
   local USER=$1
@@ -7,16 +13,17 @@ add_user() {
   local UID=$3
   local GID=$4
   local DISTRO=$5
+  local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
     groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
     id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
   else
     groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER" 2>/dev/null
+    id -u "$GROUP" > /dev/null || useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null
   fi;
 }
 
-# Veridy user
+# Verify user
 verify_user() {
   local USER=$1
   local GROUP=$2
@@ -56,7 +63,7 @@ reset_user() {
   fi;
   # If this mapping is incorrect lets abort here
   if [ "$(id -u $USER)" != "$HOST_UID" ]; then
-    echo "Looks like host/container user mapping was not possible! aborting..."
+    lando_warn "Looks like host/container user mapping was not possible! aborting..."
     exit 0
   fi
 }
@@ -67,6 +74,7 @@ reset_user() {
 perm_sweep() {
   local USER=$1
   local GROUP=$2
+  local OTHER_DIR=$3
 
   # Start with the directories that are likely blockers
   chown -R $USER:$GROUP /usr/local/bin
@@ -74,20 +82,25 @@ perm_sweep() {
   chown $USER:$GROUP /app
   chmod 755 /var/www
 
+  # Do other dirs first if we have them
+  if [ ! -z "$OTHER_DIR" ]; then
+    chown -R $USER:$GROUP $OTHER_DIR >/dev/null 2>&1 &
+  fi
+
   # Do a background sweep
-  nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /var/www/.ssh >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /user/.ssh >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /var/www >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local/bin >/dev/null 2>&1 &
+  nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /user/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/bin -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
   nohup chmod -R 755 /var/www >/dev/null 2>&1 &
 
   # Lets also make some /usr/locals chowned
-  nohup chown -R $USER:$GROUP /usr/local/lib >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local/share >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local >/dev/null 2>&1 &
+  nohup find /usr/local/lib -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/share -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 
   # Make sure we chown the $USER home directory
-  nohup chown -R $USER:$GROUP $(getent passwd $USER | cut -d : -f 6) >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /lando >/dev/null 2>&1 &
+  nohup find $(getent passwd $USER | cut -d : -f 6) -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /lando -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 }

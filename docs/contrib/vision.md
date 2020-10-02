@@ -6,7 +6,7 @@ description: The Lando project vision; liberate developers from dev monotony tog
 
 This document serves as a high level set of considerations that maintainers should reference and attempt to adhere to while making decisions.
 
-While it doesn't need to be strictly interpretted it does serve, more or less, as both manifesto and set of core values.
+While it doesn't need to be strictly interpreted, it does serve, more or less, as both manifesto and set of core values.
 
 ## Why Does Lando Exist?
 
@@ -16,18 +16,18 @@ Lando's primary purpose is to be the fastest and least painful way for developer
 
 **This means that Lando is essentially local development dependency management handled on a per-project basis.**
 
-More specifically, Lando is a free, open source, cross-platform, local development environment and DevOps tool built on Docker container technology and written in NodeJS. It is designed to work with most major languages, frameworks and services, and provide an easy way for developers of all types to specify simple or complex requirements for their projects, and then quickly get to work on them.
+More specifically, Lando is a free, open source, cross-platform, local development environment and DevOps tool built on Docker container technology and written in NodeJS. It is designed to work with most major languages, frameworks and services, and provide an easy way for developers of all types to specify simple or complex requirements for their projects and then quickly get to work on them.
 
-With Lando you should be able to...
+With Lando you should be able to do the following:
 
   * Closely mimic your production environment and DevOps toolchain locally.
   * Standardize your teams local experience on OSX, Windows and Linux.
-  * Integrate with hosting providers like Pantheon or build complex DevOps pipelines
-  * Use Lando in continuous integrations environments to minimize setup time and mimic local
+  * Integrate with hosting providers like Pantheon or build complex DevOps pipelines.
+  * Use Lando in continuous integrations environments to minimize setup time and mimic local.
   * Easily customize or extend tooling, deployment options and basically any other functionality.
   * Free yourself from the tyranny of inferior local development products.
 
-Lando is not a a magic pill to solve local development, nor is it a replacement for a badly designed application. Lando is a tool that requires at least some level of skill and expertise to use.
+Lando is not a magic pill to solve local development, nor is it a replacement for a badly designed application. Lando is a tool that requires at least some level of skill and expertise to use.
 
 ## What is the Goal of Lando?
 
@@ -35,31 +35,31 @@ Lando aims to be the only, or primary, local development and DevOps tool you nee
 
 ## How Do We Develop and Design Lando?
 
-Here are the top 10 design and development principles we use when making Lando that help keep us focused on Lando's core purpose, filter out noise, traps and common dev pitfalls while maximimzing project survivability.
+The top 10 design and development principles we use when making Lando that help keep us focused on Lando's core purpose, filter out noise, traps and common dev pitfalls while maximizing project survivability are shown below:
 
 ### 1. Minimalism
 
 Less is more. We seek to use the least amount of code and dependencies to accomplish a given feature or objective. This makes the project more maintainable in the long run. New dependencies should not be introduced to the project without careful discussion and consideration.
 
-Read we like to make sure [CodeClimate](https://codeclimate.com/github/lando/lando) doesn't get too upset with us.
+We like to make sure [CodeClimate](https://codeclimate.com/github/lando/lando) doesn't get too upset with us.
 
 ### 2. Deliberation
 
 It's easy to add in every seemingly small and benign feature or pull request from every user. But each added feature means more potential for support churn and thus less work on advancing the project's stated goals.
 
-Features should be added when they serve a stated design goal or objective or are overwhelmingly supported by the community. It is very important to assess whether each feature is going to be more trouble than its worth or if it furthers the projects stated goals.
+Features should be added when they serve a stated design goal or objective or are overwhelmingly supported by the community. It is very important to assess whether each feature is going to be more trouble than its worth or if it furthers the project's stated goals.
 
 ### 3. Unobtrusiveness
 
-If Lando cannot do something out of the box without editing a users's codebase then it's something the user needs to set up on their own. It is extremely difficult to provide a simple, consistent and reliable codebase edits that work for a majority of users. Often these code edits change frequently and are hard to maintain. Documentaton and examples are the way to go here.
+If Lando cannot do something out of the box without editing a user's codebase then it's something the user needs to set up on their own. It is extremely difficult to provide simple, consistent and reliable codebase edits that work for a majority of users. Often these code edits change frequently and are hard to maintain. Documentation and examples are the way to go here.
 
 ### 4. User Space
 
-Once the user has completed the initial Lando installaton they should never need to use `sudo` or admin rights to run anything else Lando related. Prompting a user continually for a password is annoying and editing system things that require `sudo` rights is a recipe for disaster.
+Once the user has completed the initial Lando installation, they should never need to use `sudo` or admin rights to run anything else Lando related. Prompting a user continually for a password is annoying and editing system things that require `sudo` rights is a recipe for disaster.
 
 ### 5. Upstreams
 
-Attempting to provide big Lando-based workarounds for significant issues in upstream projects can be a huge time suck. If Lando absolutely requires a dependency with problems then we need to be comfortable indicating to our users that the problem exists there and that it needs to be solved there.
+Attempting to provide big Lando-based workarounds for significant issues in upstream projects can be a huge time suck. If Lando absolutely requires a dependency with problems, then we need to be comfortable indicating to our users that the problem exists there and that it needs to be solved there.
 
 ### 6. Documentation
 
@@ -77,7 +77,7 @@ Tackling "low hanging fruit" issues that are easy to test, solve and that impact
 
 ### 9. Testing
 
-Writing unit and functional tests should be done whenever is possible
+Writing unit and functional tests should be done whenever possible.
 
 ### 10. Fun
 
@@ -89,7 +89,7 @@ Lando is built primarily for professional developers working as freelancers or p
 
 ## Other Things to Consider
 
-1. Community morale and growth is important and sometimes that means betraying some of the above
-2. Expectation management is a thing, don't write a check you or Lando can't cash
-3. Time is our scare resource let's make sure we use it as efficiently as possible
-4. There are traps and temptations everywhere, stay upon the path of righteousness
+1. Community morale and growth is important and sometimes that means betraying some of the above.
+2. Expectation management is a thing. Don't write a check you or Lando can't cash.
+3. Time is our scare resource so let's make sure we use it as efficiently as possible.
+4. There are traps and temptations everywhere. Stay upon the path of righteousness.

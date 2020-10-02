@@ -1,5 +1,5 @@
 ---
-description: Add a highly configurable apache Tomcat service to Lando for local development with all the power of Docker and Docker Compose.
+description: Add a highly configurable Apache Tomcat service to Lando for local development with all the power of Docker and Docker Compose.
 ---
 
 # Tomcat
@@ -20,7 +20,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Legacy versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [7](https://hub.docker.com/_/tomcat/)
 *   [7.0](https://hub.docker.com/_/tomcat/)
@@ -28,14 +28,14 @@ You can still run these versions with Lando but for all intents and purposes the
 ## Patch versions
 
 ::: warning Not officially supported!
-While we allow users to specify patch versions for this service they are not *officially* supported so if you use one YMMV.
+While we allow users to specify patch versions for this service, they are not *officially* supported, so if you use one, YMMV.
 :::
 
-To use a patch version you can do something like this:
+To use a patch version, you can do something as shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: tomcat:7.0.91
 ```
 
@@ -43,13 +43,13 @@ But make sure you use one of the available [patch tags](https://hub.docker.com/r
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: tomcat:8
     webroot: .
     ssl: false
@@ -64,13 +64,13 @@ services:
 
 You may need to override our [default tomcat config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/tomcat) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set `ssl`.
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -87,7 +87,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: tomcat
     config:
       server: config/server.xml

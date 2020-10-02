@@ -1,10 +1,10 @@
 ---
-description: Use a generic LEMP stack on Lando for local development; powered by Docker and Docker Compose, learn how to config php and nginx version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and exports databases.
+description: Use a generic LEMP stack on Lando for local development; powered by Docker and Docker Compose. Learn how to config php and nginx version, use postgres or mysql or mariadb, composer, xdebug and custom config files, oh and also import and export databases.
 ---
 
 # LEMP
 
-The LEMP stack is a common infrastructure designed to run PHP applications, it is similar to the more well known [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack but replaces [Apache](http://apache.org/) with [nginx](http://nginx.org) as the webserver.
+The LEMP stack is a common infrastructure designed to run PHP applications, it is similar to the more well known [LAMP](https://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) stack but replaces [Apache](http://apache.org/) with [nginx](http://nginx.org) as the web server.
 
 Lando offers a configurable [recipe](./../config/recipes.md) for developing [LEMP](https://drupal.org/) apps.
 
@@ -16,11 +16,13 @@ Note that this recipe is for a generic LEMP stack. Definitely check out Lando's 
 
 Before you get started with this recipe we assume that you have:
 
-1. [Installed Lando](./../basics/installation.md) and gotten familar with [its basics](./../basics/)
-2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe
+1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/).
+2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe.
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM) here is an example of using the LEMP recipe to run the older [CakePHP 2.0](https://cakephp.org/) project. Note that CakePHP could be any other [php framework](https://www.dotcominfoway.com/blog/top-5-must-have-php-frameworks-2018) or your own custom php thing.
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), an example of using the LEMP recipe to run the older [CakePHP 2.0](https://cakephp.org/) project is shown below:
+
+Note that CakePHP could be any other [php framework](https://www.dotcominfoway.com/blog/top-5-must-have-php-frameworks-2018) or your own custom php thing.
 
 ```bash
 # Initialize a LEMP recipe using the latest CakePHP 2.0 version
@@ -41,9 +43,9 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
-Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this recipe's [Landofile](./../config/lando.md). If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
 ```yaml
 recipe: lemp
@@ -59,13 +61,13 @@ config:
     vhosts: SEE BELOW
 ```
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Choosing a php version
 
 You can set `php` to any version that is available in our [php service](./php.md). However, you should make sure that whatever framework or custom code you write is designed to work with your choice.
 
-Here is the [recipe config](./../config/recipes.md#config) to set the LEMP recipe to use `php` version `5.4`
+The [recipe config](./../config/recipes.md#config) to set the LEMP recipe to use `php` version `5.4` is shown below:
 
 ```yaml
 recipe: lemp
@@ -75,9 +77,9 @@ config:
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
+By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
 
-If you are unsure about how to configure the `database` we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
 
 #### Using MySQL (default)
 
@@ -128,13 +130,13 @@ However, for more information we recommend you consult the [php service document
 
 You may need to override our [default LEMP config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/LEMP) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be explicitly for `nginx`. We *highly recommend* you check out the [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -159,9 +161,11 @@ config:
 
 ## Connecting to your database
 
-Lando will automatically set up a database with a user and password and also set an environment variables called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
+Lando will automatically set up a database with a user and password and also set an environment variable called [`LANDO INFO`](./../guides/lando-info.md) that contains useful information about how your application can access other Lando services.
 
-Here are is the default database connection information for a LEMP site. Note that the `host` is not `localhost` but `database`.
+The default database connection information for a LEMP site is shown below:
+
+Note that the `host` is not `localhost` but `database`.
 
 ```yaml
 database: lemp
@@ -178,7 +182,7 @@ You can get also get the above information, and more, by using the [`lando info`
 
 ## Importing Your Database
 
-Once you've started up your LEMP site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+Once you've started up your LEMP site, you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
 # Grab your database dump
@@ -195,7 +199,7 @@ You can learn more about the `db-import` command [over here](./../guides/db-impo
 
 ## Tooling
 
-By default each Lando LEMP recipe will also ship with helpful dev utilities.
+By default, each Lando LEMP recipe will also ship with helpful dev utilities.
 
 This means you can use things like `drush`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
@@ -223,6 +227,6 @@ lando mysql
 lando php -m
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+You can also run `lando` from inside your app directory for a complete list of commands. This is always advisable as your list of commands may not be 100% the same as above. For example, if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
 
 <RelatedGuides tag="LEMP"/>

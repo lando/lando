@@ -5,11 +5,16 @@ services:
     hosts:
       - database
       - database2
-  pma_legacy:
+  pma_theme:
     type: phpmyadmin:4.7
     hosts:
       - database
       - database2
+    config:
+      config: .lando/config.user.inc.php
+    build_as_root:
+      - chmod +x /app/.lando/pma-theme.sh
+      - /app/.lando/pma-theme.sh
   database:
     type: mariadb
   database2:

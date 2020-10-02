@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="mounter"
+
 # Set defaults
 : ${LANDO_HOST_UID:='1000'}
 : ${LANDO_HOST_GID:='1000'}

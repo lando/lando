@@ -30,6 +30,7 @@ module.exports = {
         twitter: 'devwithlando',
       },
       canonical_base: 'https://docs.lando.dev',
+      image: 'https://lando.dev/images/logo-pink-medium.png',
     },
     'canonical': {
       baseURL: 'https://docs.lando.dev',
@@ -70,7 +71,7 @@ module.exports = {
     nav: [
       {text: 'Getting Started', link: '/basics/'},
       {text: 'Config', link: '/config/lando.md'},
-      {text: 'Guides', link: '/guides/lando-info/'},
+      {text: 'Guides', link: '/guides/lando-101/lando-overview'},
       {text: 'Help and Support', link: '/help/logs/'},
       {text: 'Contributing', link: '/contrib/contributing/'},
       {text: 'API', link: '/api/app.md'},
@@ -88,6 +89,7 @@ module.exports = {
             'basics',
             'installation',
             'first-app',
+            'updating',
             'uninstalling',
           ],
         },
@@ -128,6 +130,7 @@ module.exports = {
             'experimental',
             'networking',
             'performance',
+            'plugins',
             'releases',
             'ssh',
             'security',
@@ -143,12 +146,15 @@ module.exports = {
             'drupal6',
             'drupal7',
             'drupal8',
+            'drupal9',
             'joomla',
+            'lagoon',
             'laravel',
             'lamp',
             'lemp',
             'mean',
             'pantheon',
+            'platformsh',
             'wordpress',
           ],
         },
@@ -189,6 +195,7 @@ module.exports = {
           children: [
             'logs',
             'wkbox',
+            'updating',
           ],
         },
         {
@@ -257,6 +264,8 @@ module.exports = {
             ['team', 'Current Team'],
             'roles',
             ['opensource', 'Resources'],
+            ['https://docs.google.com/document/d/1aHcpAYIC50X82ul0_zZpvkprl97ZxsM-LXjq-zUK29Q/edit?usp=sharing', 'Minutes'],
+            'roadmap',
           ],
         },
         {
@@ -269,6 +278,13 @@ module.exports = {
             'evangelist-social',
             'evangelist-promote',
             'talking-points',
+          ],
+        },
+        {
+          title: 'Triaging Issues',
+          collapsable: false,
+          children: [
+            'triage-getting-started',
           ],
         },
         {

@@ -12,7 +12,7 @@ You can easily add an event using some secret lando commands.
 
 ## 1. Damn preliminaries
 
-You will need to go through all the steps in our [Getting Involved](contributing) section if you have not done so already. This will get you rolling for contribution. Here are all the steps from the aforementioned section for completeness.
+You will need to go through all the steps in our [Getting Involved](contributing) section if you have not done so already. This will get you rolling for contribution. All the steps from the aforementioned section for completeness are shown below:
 
 1. [Join the alliance](./join.md)
 2. [Join the comms](./comms.md)
@@ -20,10 +20,9 @@ You will need to go through all the steps in our [Getting Involved](contributing
 4. [Add yourself as a contributor](./first.md)
 5. [Process to adding your first guide](./guides-add.md)
 
-If you are having issues with any of the above or need some guidance from one of our guide pros make sure you [join our Slack org](https://launchpass.com/devwithlando) and check out the **#community** and/or **#evangelists** channels.
+If you are having issues with any of the above or need some guidance from one of our guide pros, make sure you [join our Slack org](https://launchpass.com/devwithlando) and check out the **#community** and/or **#evangelists** channels.
 
 ## 2. Create a new branch
-
 
 ```bash
 # Make sure you are on an updated master
@@ -43,7 +42,7 @@ lando.dev event:add
 # Verify it's been added
 lando.dev event:list
 
-# Remove if want to start over
+# Remove if you want to start over
 lando.dev event:remove
 ```
 
@@ -64,7 +63,7 @@ And then [open a pull request](https://help.github.com/articles/creating-a-pull-
 
 Try editing the [events database](https://github.com/lando/lando/blob/master/api/data/events.yml) directly. If you are not sure how to do that then consult [these docs](https://help.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository).
 
-You will want to add an entry like this:
+You will want to add an entry like below:
 
 ```yaml
 - name: MidCamp 2020
@@ -83,5 +82,5 @@ You will want to add an entry like this:
 
 ### Submit an issue
 
-If even the above is not sufficient then [open an issue](https://github.com/lando/lando/issues/new/choose) on GitHub.
+If even the above is not sufficient, then [open an issue](https://github.com/lando/lando/issues/new/choose) on GitHub.
 

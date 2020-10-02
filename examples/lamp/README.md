@@ -8,7 +8,7 @@ This example exists primarily to test the following documentation:
 Start up tests
 --------------
 
-Run the following commands to get up and running with this example.
+Run the following commands to get up and running with this example
 
 ```bash
 # Should poweroff
@@ -68,7 +68,7 @@ lando ssh -s appserver -c "which phpunit | grep /app"
 
 # Should be able to configure via the config key
 # This tests the 'How do I configure a Lando Recipe' guide.
-# https://docs.lando.dev/guides/how-do-i-configure-a-lando-recipe.html 
+# https://docs.lando.dev/guides/how-do-i-configure-a-lando-recipe.html
 cd lamp
 cp .lando.yml orig.lando.yml
 cp ../config.lando.yml .lando.yml

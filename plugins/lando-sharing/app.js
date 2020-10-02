@@ -34,7 +34,7 @@ module.exports = (app, lando) => {
     const excludes = getExcludes(app.config.excludes);
     const includes = getIncludes(app.config.excludes, true);
 
-    // If we have no build lock lets make sure we (re)populate our volumes
+    // If we have no build lock and cant use mutagen lets make sure we (re)populate our volumes
     app.events.on('pre-start', 2, () => {
       if (!lando.cache.get(`${app.name}.build.lock`)) {
         const LandoMounter = lando.factory.get('_mounter');

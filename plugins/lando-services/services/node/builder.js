@@ -6,6 +6,7 @@ const utils = require('./../../lib/utils');
 
 // Constants
 const supportedVersions = [
+  '14',
   '13',
   '12',
   '12.16',
@@ -109,8 +110,19 @@ module.exports = {
         const commands = utils.getInstallCommands(options.globals, pkger, ['npm', 'install', '-g']);
         utils.addBuildStep(commands, options._app, options.name);
       }
-      // Set the sport is ssl is numeric
-      if (options.ssl !== false && _.isInteger(options.ssl)) options.sport = options.ssl;
+      // Set the sport and moreHttpPorts if ssl is numeric
+      if (options.ssl) {
+        options.sport = _.isInteger(options.ssl) ? options.ssl : 443;
+        options.moreHttpPorts.push(options.sport);
+        options.ssl = true;
+      }
+
+      // Run as the node user if we can
+      if (_.min([options.port, options.sport]) >= 1024) {
+        node.environment.LANDO_RESET_DIR = '/certs';
+        node.environment.LANDO_DROP_USER = 'node';
+      }
+
       // Send it downstream
       super(id, options, {services: _.set({}, options.name, node)});
     };

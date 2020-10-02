@@ -11,6 +11,9 @@ services:
       database: trouble
     config:
       database: config/mythings.conf
+  custom12:
+    type: postgres:12
+    portforward: true
   mimicarecipe:
     type: postgres
     creds:
@@ -20,14 +23,17 @@ services:
 tooling:
   verifydefaults:
     service: defaults
-    cmd: psql -U postgres database -c \dt
+    cmd: psql -U postgres database -c "\dt"
   verifycustom:
     service: custom
-    cmd: psql -U postgres trouble -c \dt
+    cmd: psql -U postgres trouble -c "\dt"
+  verifycustom12:
+    service: custom12
+    cmd: psql -U postgres database -c "\dt"
   showmax:
     user: root
     service: custom
     cmd: psql -U postgres -c 'SHOW MAX_FILES_PER_PROCESS;'
   crossconnect:
     service: defaults
-    cmd: psql -h custom -U postgres trouble -c \dt
+    cmd: psql -h custom -U postgres trouble -c "\dt"

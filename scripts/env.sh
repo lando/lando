@@ -7,7 +7,7 @@
 PKG_NAME="lando"
 PKG_PKG="build/installer/dist/lando.$PKG_TYPE"
 PKG_DESCRIPTION="The best local dev in the galaxy."
-PKG_MAINTAINER="Mike Pirog <mike@thinktandem.io>"
+PKG_MAINTAINER="Mike Pirog <mike@lando.dev>"
 PKG_URL="https://docs.devwithlando.io/"
 PKG_LICENSE="GPL3"
 PKG_EXTRA_OPTS="--force"

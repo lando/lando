@@ -24,8 +24,8 @@ module.exports = class SlackNotify {
     this.apiChannel.send({
       attachments: [
         {
-          fallback: 'An API error has occured!',
-          text: 'An API error has occured!',
+          fallback: 'An API error has occurred!',
+          text: 'An API error has occurred!',
           color: ERROR,
           fields: [
             {title: 'code', value: code, short: true},

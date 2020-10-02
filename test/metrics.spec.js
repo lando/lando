@@ -79,7 +79,7 @@ describe('metrics', () => {
         {url: 'https://nsa.gov/prism', report: true},
       ];
       const reportable = _.size(_.filter(endpoints, endpoint => endpoint.report));
-      const metrics = new Metrics({endpoints, log: {debug: sinon.spy()}});
+      const metrics = new Metrics({endpoints, log: {debug: sinon.spy(), verbose: sinon.spy()}});
       sinon.stub(axios, 'create').callsFake(() => ({
         post: () => Promise.reject(),
       }));

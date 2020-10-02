@@ -28,6 +28,7 @@ module.exports = {
         twitter: 'devwithlando',
       },
       canonical_base: 'https://lando.dev',
+      image: 'https://lando.dev/images/logo-pink-medium.png',
     },
     'canonical': {
       baseURL: 'https://lando.dev',

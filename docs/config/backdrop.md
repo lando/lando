@@ -1,5 +1,5 @@
 ---
-description: Use Backdrop CMS on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
+description: Use Backdrop CMS on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or web server, use composer, drush, xdebug and custom config files, oh and also import and export databases.
 ---
 
 # Backdrop
@@ -38,9 +38,9 @@ lando info
 
 ## Configuration
 
-While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box they are also [configurable](./../config/recipes.md#config).
+While Lando [recipes](./../config/recipes.md) set sane defaults so they work out of the box, they are also [configurable](./../config/recipes.md#config).
 
-Here are the configuration options, set to the default values, for this recipe. If you are unsure about where this goes or what this means we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this recipe's [Landofile](./../config/lando.md). If you are unsure about where this goes or what this means, we *highly recommend* scanning the [recipes documentation](./../config/recipes.md) to get a good handle on how the magicks work.
 
 ```yaml
 recipe: backdrop
@@ -58,13 +58,13 @@ config:
     vhosts: SEE BELOW
 ```
 
-Note that if the above config options are not enough all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
 ### Choosing a php version
 
 You can set `php` to any version that is available in our [php service](./php.md). However, you should consult the [Backdrop requirements](https://backdropcms.org/requirements) to make sure that version is actually supported by Backdrop itself.
 
-Here is the [recipe config](./../config/recipes.md#config) to set the Backdrop recipe to use `php` version `5.5`
+The [recipe config](./../config/recipes.md#config) to set the Backdrop recipe to use `php` version `5.5` is shown below:
 
 ```yaml
 recipe: backdrop
@@ -72,9 +72,9 @@ config:
   php: '5.5'
 ```
 
-### Choosing a webserver
+### Choosing a web server
 
-By default this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
+By default, this recipe will be served by the default version of our [apache](./apache.md) service but you can also switch this to use [`nginx`](./nginx.md). We *highly recommend* you check out both the [apache](./apache.md) and [nginx](./nginx.md) services before you change the default `via`.
 
 #### With Apache (default)
 
@@ -94,11 +94,11 @@ config:
 
 ### Choosing a database backend
 
-By default this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql` or `mariadb`.
+By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql` or `mariadb`.
 
-If you are unsure about how to configure the `database` we *highly recommend* you check out both the [mysql](./mysql.md) and [mariadb](./mariadb.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out both the [mysql](./mysql.md) and [mariadb](./mariadb.md) services before you change the default.
 
-Also note that like the configuration of the `php` version you should consult the [Backdrop requirements](https://backdropcms.org/requirements) to make sure the `database` and `version` you select is actually supported by Backdrop itself.
+Also note that like the configuration of the `php` version, you should consult the [Backdrop requirements](https://backdropcms.org/requirements) to make sure the `database` and `version` you select is actually supported by Backdrop itself.
 
 #### Using MySQL (default)
 
@@ -126,15 +126,15 @@ config:
 
 ### Using Drush
 
-By default our Backdrop recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) as well as the latest version of [Backdrop Drush](https://github.com/backdrop-contrib/drush). This means that you should be able to use `lando drush` out of the box.
+By default, our Backdrop recipe will globally install the [latest version of Drush 8](http://docs.drush.org/en/8.x/install/) as well as the latest version of [Backdrop Drush](https://github.com/backdrop-contrib/drush). This means that you should be able to use `lando drush` out of the box.
 
 #### Configuring your root directory
 
-If you are using a webroot besides `.` you will need to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Backdrop site.
+If you are using a webroot besides `.`, you will need to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Backdrop site.
 
-If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
+If you are annoyed by having to `cd` into that directory every time you run a `drush` command, you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
 
-**Note that hardcoding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
+**Note that hard coding the `root` like this may have unforeseen and bad consequences for some `drush` commands such as `drush scr`.**
 
 ```yaml
 tooling:
@@ -159,13 +159,13 @@ However, for more information we recommend you consult the [php service document
 
 You may need to override our [default Backdrop config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/backdrop) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -192,16 +192,18 @@ config:
 
 ## Connecting to your database
 
-Unlike other unnamed php-based CMSs Backdrop's database connection information can be set by an environmental variable named [`BACKDROP_SETTINGS`](https://api.backdropcms.org/api/backdrop/core%21includes%21bootstrap.inc/function/backdrop_settings_initialize/1). Lando will set this variable for you which means that unless you explicitly hijack the default functionality *you should not need to do anything* to configure your database connection.
+Unlike other unnamed php-based CMSes, Backdrop's database connection information can be set by an environmental variable named [`BACKDROP_SETTINGS`](https://api.backdropcms.org/api/backdrop/core%21includes%21bootstrap.inc/function/backdrop_settings_initialize/1). Lando will set this variable for you which means that unless you explicitly hijack the default functionality, *you should not need to do anything* to configure your database connection.
 
-You can also examine and use this variable in-code similarly to how you would with [`LANDO_INFO`](./../guides/lando-info.md)
+You can also examine and use this variable in-code similarly to how you would with [`LANDO_INFO`](./../guides/lando-info.md).
 
 ```bash
 lando php -r "print_r(getenv('BACKDROP_SETTINGS'));"
 # {"databases":{"default":{"default":{"driver":"mysql","database":"backdrop","username":"backdrop","password":"backdrop","host":"database","port":3306}}}}
 ```
 
-If you find that you still cannot connect to your database here is the default information about your Backdrop database. Note that the `host` is not `localhost` but `database`.
+If you find that you still cannot connect to your database, the default information about your Backdrop database is shown below:
+
+Note that the `host` is not `localhost` but `database`.
 
 ```yaml
 database: backdrop
@@ -214,7 +216,7 @@ You can get also get the above information, and more, by using the [`lando info`
 
 ## Importing Your Database
 
-Once you've started up your Backdrop site you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
+Once you've started up your Backdrop site, you will need to pull in your database and files before you can really start to dev all the dev. Pulling your files is as easy as downloading an archive and extracting it to the correct location. Importing a database can be done using our helpful `lando db-import` command.
 
 ```bash
 # Grab your database dump
@@ -227,11 +229,11 @@ curl -fsSL -o database.sql.gz "https://url.to.my.db/database.sql.gz"
 lando db-import database.sql.gz
 ```
 
-You can learn more about the `db-import` command [over here](./../guides/db-import.md)
+You can learn more about the `db-import` command [over here](./../guides/db-import.md).
 
 ## Tooling
 
-By default each Lando Backdrop recipe will also ship with helpful dev utilities.
+By default, each Lando Backdrop recipe will also ship with helpful dev utilities.
 
 This means you can use things like `drush`, `composer` and `php` via Lando and avoid mucking up your actual computer trying to manage `php` versions and tooling.
 
@@ -254,6 +256,6 @@ lando drush dl webform
 lando php -m
 ```
 
-You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above.
+You can also run `lando` from inside your app directory for a complete list of commands. This is always advisable as your list of commands may not be 100% the same as above.
 
 <RelatedGuides tag="Backdrop"/>

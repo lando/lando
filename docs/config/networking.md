@@ -1,22 +1,24 @@
 ---
-description: Lando improves the core networking provided by Docker and Docker Compose so it is more useful in the local development context, let containers talk to each other even across application.
+description: Lando improves the core networking provided by Docker and Docker Compose so it is more useful in the local development context and lets containers talk to each other even across applications.
 ---
 
 # Networking
 
-Lando sets up and manages its own internal Docker network. This provides a common pattern, predictable hostnames and a more reliable experience for local development networking generally.
+Lando sets up and manages its own internal Docker network. This provides a common pattern, predictable hostnames and a more reliable experience for local development networking, generally.
 
-Specifically, every Lando service, even those added via the `compose` top level config should be able to communicate with every other service regardless of whether that service is part of your app or not.  Also note that because of our [automatic certificate and CA setup](./security.md) you should be able to access all of these services over `https` without needing, for example the `-k` option in `curl`.
+Specifically, every Lando service, even those added via the `compose` top level config, should be able to communicate with every other service regardless of whether that service is part of your app or not.  Also note that because of our [automatic certificate and CA setup](./security.md), you should be able to access all of these services over `https` without needing, for example the `-k` option in `curl`.
 
-::: warning Cross app service communication requires all apps be on!
+::: warning Cross app service communication requires all apps to be running!
 If you want a service in App A to talk to a service in App B then you need to make sure you've started up both apps!
 :::
 
+[[toc]]
+
 ## Automatic Hostnames
 
-By default every service will get and be accessible at a hostname of the form `<service>.<app>.internal`. For example if you have an app called `labouche` and a service called `redis` it should be accessible from any other container using `redis.labouche.internal`.
+By default, every service will get and be accessible at a hostname of the form `<service>.<app>.internal`. For example, if you have an app called `labouche` and a service called `redis`, it should be accessible from any other container using `redis.labouche.internal`.
 
-Lando will also look at your services [proxy](./proxy.md) settings and alias those addresses to the correct service. This means that you should also be able to access services across apps using any of their proxy hostname.
+Lando will also look at your services [proxy](./proxy.md) settings and alias those addresses to the correct service. This means that you should also be able to access services across apps using any of their proxy hostnames.
 
 You can get information about which hostnames and urls map to what services using `lando info`.
 
