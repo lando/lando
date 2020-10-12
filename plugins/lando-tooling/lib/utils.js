@@ -85,8 +85,6 @@ const handleOpts = (config, argopts = []) => {
   argopts = argopts.concat(process.argv.slice(3));
   // If we have no args then just return right away
   if (_.isEmpty(argopts)) return config;
-  // If this is not a CLI then we can pass right back
-  if (process.lando !== 'node') return config;
   // Return
   return _.merge({}, config, {args: argopts});
 };
