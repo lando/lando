@@ -110,6 +110,8 @@ http://www.my-app.lndo.site
 https://www.my-app.lndo.site
 ```
 
+Note, however, that Lando will **only** use routes that contain the `{default}` placeholder. FQDN routes will not be used since these generally will be pointing at your production site and not Lando. If you would still like to use these routes then we recommend you review our [proxy](./proxy.md) docs on how to add them back into the mix.
+
 ### services.yaml
 
 Lando will load your [services.yaml](https://docs.platform.sh/configuration/services.html) and spin up _exactly_ the same things there as you have running on your Platform.sh site, including any advanced configuration options you may have specified for each like `schemas`, `endpoints`, `extensions`, `properties`, etc.

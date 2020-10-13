@@ -161,6 +161,9 @@ exports.parseRelationships = (apps, open = {}) => _(apps)
 exports.parseRoutes = (routes, domain) => _(routes)
   // Add implicit data and defaults
   .map((config, url) => ([url, _.merge({primary: false, attributes: {}, id: null, original_url: url}, config)]))
+  // Filter out FQDNs because they are going to point to a prod site
+  // NOTE: do we want to make the above configurable?
+  .filter(route => _.includes(route[0], '{default}'))
   // Replace URL defaults
   .map(route => ([replaceDefault(route[0], domain), route[1]]))
   // Replace config defaults
