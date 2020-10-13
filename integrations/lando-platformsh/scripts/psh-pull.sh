@@ -42,7 +42,6 @@ while (( "$#" )); do
         PLATFORM_PULL_RELATIONSHIPS=($(echo "${1##--relationship=}" | sed -r 's/[,]+/ /g'))
         shift
       else
-        PLATFORM_PULL_RELATIONSHIPS=($(echo "$2" | sed -r 's/[,]+/ /g'))
         shift 2
       fi
       ;;
@@ -51,7 +50,6 @@ while (( "$#" )); do
         PLATFORM_PULL_MOUNTS=($(echo "${1##--mount=}" | sed -r 's/[,]+/ /g'))
         shift
       else
-        PLATFORM_PULL_MOUNTS=($(echo "$2" | sed -r 's/[,]+/ /g'))
         shift 2
       fi
       ;;
@@ -86,6 +84,18 @@ if ! platform ssh "true" 2>/dev/null; then
  lando_info "Redeploying environment to reload keys..."
  platform redeploy -y
 fi
+
+# If relationships or mounts contain "none" then unset the whole thing so we skip
+for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
+  if [ "$PLATFORM_RELATIONSHIP" == 'none' ]; then
+    unset PLATFORM_PULL_RELATIONSHIPS
+  fi
+done
+for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
+  if [ "$PLATFORM_MOUNT" == 'none' ]; then
+    unset PLATFORM_PULL_MOUNTS
+  fi
+done
 
 # If there are no relationships specified then indicate that
 if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then

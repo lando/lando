@@ -433,9 +433,9 @@ Of course, it is always preferrable to just use `PLATFORM_RELATIONSHIPS` for all
 
 ## Pulling and pushing relationships and mounts
 
-Lando also provides _currently rudimentary_ wrapper commands called `lando pull` and `lando push`.
+Lando also provides wrapper commands called `lando pull` and `lando push`.
 
-With `lando pull` you can import data and download files from your remote Platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote Platform.sh site.
+With `lando pull` you can import data and download files from your remote Platform.sh site. With `lando push` you can do the opposite, export data or upload files to your remote Platform.sh site. Note that only database relationships are currently syncable.
 
 ```bash
 lando pull
@@ -465,6 +465,12 @@ lando pull -m tmp:/var/www/tmp -m /private:/somewhere/else
 
 # You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
 lando pull -r admin:legacy
+
+# Skip the mounts part
+lando pull -r database -m none
+
+# Effectively "do nothing"
+lando pull -r none -m none
 ```
 
 ```bash
@@ -495,6 +501,12 @@ lando push -m tmp:/var/www/tmp -m /private:/somewhere/else
 
 # You can also specify a target db/schema for a given relationships using -r RELATIONSHIP:SCHEMA
 lando push -r admin:legacy -r admin:main
+
+# Skip the relationships part
+lando push -r none -m tmp
+
+# Effectively "do nothing"
+lando push -r none -m none
 ```
 
 ## Importing databases
