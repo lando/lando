@@ -65,7 +65,12 @@ const getPhpCliDrupalTooling = (service, flavor = null) => {
 
   // Add more based on service
   if (flavor === 'drupal') {
-    tooling.drush = {service};
+    tooling.drush = {
+      env: {
+        LAGOON_SSH_KEY: '/user/.ssh/id_lagoon',
+      },
+      service,
+    };
   }
 
   // Return
