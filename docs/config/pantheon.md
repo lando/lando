@@ -396,7 +396,7 @@ These are in addition to the [default variables](./../config/env.md#default-envi
 
 Lando also supports the same [external libraries](https://pantheon.io/docs/external-libraries/) as Pantheon so you can use Lando to test code that uses `phantomjs`, `wkhtmltopdf`, `tika` and more.
 
-If you'd like to utilize these libraries as [tooling commands](./../config/tooling.nd), add to the `tooling` section of your Landofile as shown below:
+If you'd like to utilize these libraries as [tooling commands](./../config/tooling.md), add to the `tooling` section of your Landofile as shown below:
 
 ```yaml
 phantomjs:

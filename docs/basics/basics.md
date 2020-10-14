@@ -20,11 +20,11 @@ In order for you to get started using the awesome power of Lando, you need to ha
 * A [Landofile](./../config/lando.md), generally this is called `.lando.yml`
 * Your application's codebase
 
-If you are unclear on how to manually set this up, check out our [lando init](./cli/init.md) command which can help you initialize code from various sources for use with Lando.
+If you are unclear on how to manually set this up, check out our [lando init](./init.md) command which can help you initialize code from various sources for use with Lando.
 
 ## So, what does this Landofile look like anyway?
 
-As mentioned above, the Landofile is generally named `.lando.yml` but is both [configurable](./config/lando.md) and [overridable](./config/lando.md). It needs a `name`, but beyond that, it can contain any combination things, although generally it only uses a small subset as follows:
+As mentioned above, the Landofile is generally named `.lando.yml` but is both [configurable](./../config/lando.md) and [overridable](./../config/lando.md). It needs a `name`, but beyond that, it can contain any combination things, although generally it only uses a small subset as follows:
 
 ```yaml
 name: my-app
@@ -89,7 +89,7 @@ There are various ways to craft your Landofile but we've found and observed a st
 3. Define more complex [tooling](./../config/tooling.md) and [events](./../config/events.md) to simplify difficult command patterns and automate common tasks.
 4. Add in some [build steps](./../config/services.md#build-steps) to further automate setting your services up or to mix in additional project dependencies.
 5. Define [custom services](./../config/compose.md) as a catch all for anything else you need.
-6. Create [custom recipes or services](./../contrib-plugins.md) to lock down your new power tools.
+6. Create [custom recipes or services](./../contrib/contrib-plugins.md) to lock down your new power tools.
 7. Rinse and repeat.
 
 ## You have some examples?

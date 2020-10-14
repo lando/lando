@@ -94,7 +94,7 @@ Note that these will run the _first time_ you run `lando start`. You will need t
 ### Customizing the stack
 
 :::warning Customizations not fully tested
-We _think_ most of the customizations below _should_ work but they have been very minimally tested. If you try one and it doesn't work, please [report an issue]((https://github.com/lando/lando/issues/new/choose)).
+We _think_ most of the customizations below _should_ work but they have been very minimally tested. If you try one and it doesn't work, please [report an issue](https://github.com/lando/lando/issues/new/choose).
 :::
 
 Lando will read and interpret your normal `.lagoon.yml` and its associated Docker Compose files. This means that you should be able to do the customizations Lagoon has documented, run a `lando rebuild` and see the changes.  Lando reads the `lando.type` labels from the docker-compose file to ensure that the correct image is used for a service.
