@@ -90,6 +90,15 @@ module.exports = {
         .fromPairs()
         .value();
 
+      // If we have a token lets set that into all our CLI tools
+      if (_.has(options, '_app.meta.token')) {
+        _.forEach(options.tooling, config => {
+          config.env = _.merge({}, config.env, {
+            PLATFORMSH_CLI_TOKEN: options._app.meta.token,
+          });
+        });
+      }
+
       // Send downstream
       super(id, options);
     };
