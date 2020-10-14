@@ -13,7 +13,7 @@ When you're done, you should be able to distribute your Lando app with a full se
 
 ## Add Node Service
 
-Assuming you're starting with a "Lando-ized" app, open the `.lando.yml` file in the root of your app directory. In this example we'll assume you're using a very basic [LAMP](./../recipes/lamp.md) recipe.
+Assuming you're starting with a "Lando-ized" app, open the `.lando.yml` file in the root of your app directory. In this example we'll assume you're using a very basic [LAMP](./../config/lamp.md) recipe.
 
 To install our frontend tooling we need to be able to run Node. Fortunately it's very easy for us to add a basic Node service to our app:
 
