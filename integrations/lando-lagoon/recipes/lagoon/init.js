@@ -85,7 +85,7 @@ module.exports = {
       interactive: {
         type: 'string',
         message: 'Lagoon account email',
-        when: answers => answers.lagoonKey === 'new' || !answers.lagoonHasKeys,
+        when: answers => answers.recipe === 'lagoon' && (answers.lagoonKey === 'new' || !answers.lagoonHasKeys),
         weight: 510,
       },
     },
@@ -100,24 +100,17 @@ module.exports = {
             return _.orderBy(sites, ['name']);
           });
         },
-        when: answers => answers.lagoonKey && answers.lagoonKey !== 'new',
+        when: answers => answers.recipe === 'lagoon' && answers.lagoonKey && answers.lagoonKey !== 'new',
         weight: 510,
       },
     },
   }),
   overrides: {
-    // Set a temporary name that we override later
-    // name: {
-    //   when: answers => {
-    //     answers.name = _.uniqueId('lagooninit');
-    //     return false;
-    //   },
-    // },
     webroot: {
       when: () => false,
     },
     name: {
-      when: answers => answers.lagoonHasKeys,
+      when: answers => answers.recipe === 'lagoon' && answers.lagoonHasKeys,
     },
   },
   sources: [{
@@ -142,11 +135,6 @@ module.exports = {
       } else {
         const p = lagoonApi.getProject(options.lagoonProjectId);
         const sshKeyFile = `/lando/keys/${options.lagoonKey}`;
-        // buildSteps.push({
-        //   name: 'git-config',
-        //   cmd: options => `/helpers/lagoon-git-init.sh ${sshKeyFile}`,
-        //   remove: true,
-        // });
         buildSteps.push({
           name: 'clone-repo',
           // eslint-disable-next-line max-len
@@ -156,8 +144,6 @@ module.exports = {
       }
       return buildSteps;
     },
-    // Clone the appropriate git sources
-    // build: (options, lando) => (getSourceBuildArray(options.businessUnit)),
   }],
   build: (options, lando) => {
     // Exit if we just generated a Lando key.
