@@ -138,7 +138,7 @@ module.exports = {
         buildSteps.push({
           name: 'clone-repo',
           // eslint-disable-next-line max-len
-          cmd: options => `/helpers/lagoon-git-init.sh ${p.gitUrl} "-b main" ${sshKeyFile}`,
+          cmd: options => `/helpers/lagoon-clone.sh ${p.gitUrl} ${sshKeyFile}`,
           remove: true,
         });
       }
