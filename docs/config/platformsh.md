@@ -636,7 +636,7 @@ lando -s app2 -c "php -v"
 
 There are a few things that are currently unsupported at this time, athough we hope to add support in the future.
 
-* Non `php` application containers. Support for `node` will be added before `beta` is reached. [#2368](https://github.com/lando/lando/issues/2368)
+* Non `php` application containers. [#2368](https://github.com/lando/lando/issues/2368)
 * `workers` and the `network_storage` service [#2393](https://github.com/lando/lando/issues/2393)
 
 ## Development
