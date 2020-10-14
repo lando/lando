@@ -36,11 +36,11 @@ lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_nginx_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_postgres_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_mailhog_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_php_1
-docker ps --filter label=com.docker.compose.project=drupalexample | grep Up | grep drupalexample_cli_1
+docker ps --filter label=com.docker.compose.project=drupal9examplepostgres | grep Up | grep drupal9examplepostgres_nginx_1
+docker ps --filter label=com.docker.compose.project=drupal9examplepostgres | grep Up | grep drupal9examplepostgres_postgres_1
+docker ps --filter label=com.docker.compose.project=drupal9examplepostgres | grep Up | grep drupal9examplepostgres_mailhog_1
+docker ps --filter label=com.docker.compose.project=drupal9examplepostgres | grep Up | grep drupal9examplepostgres_php_1
+docker ps --filter label=com.docker.compose.project=drupal9examplepostgres | grep Up | grep drupal9examplepostgres_lagooncli_1
 
 # Should ssh against the cli container by default
 cd drupal
@@ -48,7 +48,7 @@ lando ssh -c "env | grep LAGOON=" | grep cli-drupal
 
 # Should have the correct environment set
 cd drupal
-lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal-example.lndo.site
+lando ssh -c "env" | grep LAGOON_ROUTE | grep https://drupal9-example-postgres.lndo.site
 lando ssh -c "env" | grep LAGOON_ENVIRONMENT_TYPE | grep development
 
 # Should have composer
