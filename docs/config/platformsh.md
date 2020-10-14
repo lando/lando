@@ -47,6 +47,13 @@ lando init \
   --platformsh-auth "$PLATFORMSH_CLI_TOKEN" \
   --platformsh-site "$PLATFORMSH_SITE_NAME"
 
+
+# OR if you already have your platform code locally
+cd /path/to/repo
+lando init \
+  --source cwd \
+  --recipe platformsh
+
 # Start it up
 lando start
 
@@ -59,6 +66,8 @@ lando pull -r database -m web/sites/default/files
 # List information about this app.
 lando info
 ```
+
+**Note that if your `platformsh` project requires environment variables set in the [Platform Management Console](https://docs.platform.sh/administration/web/configure-environment.html#settings) you will need to set those manually!** See the [Environment Variables](#environment-variables) section below for details.
 
 ## Configuration
 
@@ -195,9 +204,9 @@ cd ../php
 lando
 ```
 
-### Environment variables
+### Environment
 
-Application containers running on Lando will also set up the same [Platform.sh provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on Platform.sh with these variables _should_ also automatically work on Lando.
+Application containers running on Lando will also set up the same [PLATFORM_* provided environment variables](https://docs.platform.sh/development/variables.html#platformsh-provided-variables) so any service connection configuration, like connecting your Drupal site to `mysql` or `redis`, you use on Platform.sh with these variables _should_ also automatically work on Lando.
 
 Lando _does not_ currently pull variables you have set up in the Platform.sh dashboard so you will need to add those manually.
 
@@ -220,6 +229,58 @@ config:
 ```
 
 Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override. Also note that you will need to `lando rebuild` for this changes to apply.
+
+## Environment variables
+
+Lando will also set and honor any [variables](https://docs.platform.sh/configuration/app/variables.html) that have been set up in your `.platform.app.yaml` or `applications.yaml`.
+
+However, some of these, such as `APP_ENV=prod` do not make a ton of sense for local development. In these situations you can override _any_ Platform.sh variable directly from your Landofile with values that make more sense for local. Here is an example:
+
+```yaml
+name: platformsh-drupal8
+recipe: platformsh
+config:
+  id: PROJECTID
+  overrides:
+    app:
+      variables:
+        env:
+          APP_ENV: dev
+        d8settings:
+          skip_permissions_hardening: 1
+```
+
+Perhaps more importantly, Lando **will not** automatically pull and set up environment variables that have been set in the [Platform Management Console](https://docs.platform.sh/administration/web/configure-environment.html#variables). This means that if your build hook requires these environment variables then it will likely fail.
+
+To remediate we recommend you manually add these variables into a local [environment file](./../config/env.html#environment-files) that is also in your `.gitignore` and then `lando rebuild`. Here are some steps on how to do that.
+
+1. Update your Landofile so it knows to load an environment file.
+
+```yaml
+env_file:
+  - platformsh.local.env
+```
+
+2. **Make sure** you add it to your `.gitignore` file.
+
+```
+platformsh.local.env
+```
+
+3. Create the env file
+
+```bash
+touch platformsh.local.env
+```
+
+4. Discover envvars by running `lando platform var`
+5. Use the information from above to populate `platformsh.local.env`
+
+```bash
+SPECIAL_KEY=mysecret
+```
+
+6. Run `lando rebuild` to trigger the build process using the newly added envvars.
 
 ## Platform CLI
 
