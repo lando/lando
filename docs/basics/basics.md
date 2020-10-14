@@ -20,7 +20,7 @@ In order for you to get started using the awesome power of Lando, you need to ha
 * A [Landofile](./../config/lando.md), generally this is called `.lando.yml`
 * Your application's codebase
 
-If you are unclear on how to manually set this up, check out our [lando init](./cli/init.md) command which can help you initialize code from various sources for use with Lando.
+If you are unclear on how to manually set this up, check out our [lando init](./init.md) command which can help you initialize code from various sources for use with Lando.
 
 ## So, what does this Landofile look like anyway?
 
