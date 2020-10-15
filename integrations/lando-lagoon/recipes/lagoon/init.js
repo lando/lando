@@ -154,7 +154,7 @@ module.exports = {
       lagoonApi = getLagoonApi(_.merge({}, keyDefaults, {
         id: options['lagoon-auth'],
       }), lando);
-      return lagoonApi.getProjects().then(() => {
+      return lagoonApi.getProjects(true).then(() => {
         const project = lagoonApi.getProject(options['lagoon-site']);
         return [{
           name: 'clone-repo',
