@@ -141,22 +141,27 @@ module.exports = {
       },
     },
     build: (options, lando) => {
-      const buildSteps = [];
-      if (options['lagoon-auth'] === 'new' || !options['lagoon-has-keys']) {
-        buildSteps.push({
+      // Flow for new keys
+      if (options['lagoon-auth'] === 'new') {
+        return [{
           name: 'generate-key',
           // eslint-disable-next-line max-len
           cmd: `/helpers/lagoon-generate-key.sh "${getKeyId(keyDefaults.host, options.lagoonEmail)}" "${options.lagoonEmail}"`,
-        });
-      } else {
+        }];
+      }
+
+      // Otherwise do get the site
+      lagoonApi = getLagoonApi(_.merge({}, keyDefaults, {
+        id: options['lagoon-auth'],
+      }), lando);
+      return lagoonApi.getProjects().then(() => {
         const project = lagoonApi.getProject(options['lagoon-site']);
-        buildSteps.push({
+        return [{
           name: 'clone-repo',
           cmd: options => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
           remove: true,
-        });
-      }
-      return buildSteps;
+        }];
+      });
     },
   }],
   build: (options, lando) => {
