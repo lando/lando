@@ -18,8 +18,6 @@ lando poweroff
 rm -rf drupal && mkdir -p drupal && cd drupal
 lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x-advanced" --recipe lagoon --lagoon-auth SPOOF --lagoon-site drupal9-example-simple
 
-lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x" --recipe lagoon --lagoon-auth SPOOF --lagoon-site drupal9-example-simple
-
 # Should start up our lagoon Drupal 9 site successfully
 cd drupal
 lando start
