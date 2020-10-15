@@ -149,11 +149,10 @@ module.exports = {
           cmd: `/helpers/lagoon-generate-key.sh "${getKeyId(keyDefaults.host, options.lagoonEmail)}" "${options.lagoonEmail}"`,
         });
       } else {
-        const p = lagoonApi.getProject(options['lagoon-site']);
+        const project = lagoonApi.getProject(options['lagoon-site']);
         buildSteps.push({
           name: 'clone-repo',
-          // eslint-disable-next-line max-len
-          cmd: options => `/helpers/lagoon-clone.sh ${p.gitUrl}`,
+          cmd: options => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
           remove: true,
         });
       }
