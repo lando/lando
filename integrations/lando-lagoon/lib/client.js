@@ -64,13 +64,13 @@ module.exports = class LagoonApi {
     return !refresh && this.projects !== null ? this.projects : this.send(graphQueries.listProject);
   }
 
-  getProject(id) {
+  getProject(name) {
     if (this.projects === null) {
       this.getProjects().then(() => {
-        return this.getProject(id);
+        return this.getProject(name);
       });
     }
-    return _.find(this.projects, project => id === project.id);
+    return _.find(this.projects, project => name === project.name);
   }
 
   whoami() {

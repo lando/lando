@@ -35,18 +35,17 @@ const keyDefaults = {
 const getKeyId = (host, email = '') => `lagoon_${email.replace('@', '-at-')}_${host}`;
 
 const getKeys = (lando = []) => _(utils.getProcessedKeys(lando))
-    .map(key => ({name: key.email, value: key.id}))
-    .thru(tokens => tokens.concat([{name: 'add or refresh a token', value: 'new'}]))
-    .value();
+  .map(key => ({name: key.email, value: key.id}))
+  .thru(tokens => tokens.concat([{name: 'add or refresh a key', value: 'new'}]))
+  .value();
 
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (keyId, lando) => {
   const keyCache = lando.cache.get(lagoonKeyCache);
   const key = _.find(keyCache, key => key.id === keyId);
-  // lagoonApi = lagoonApi !== null ? lagoonApi : new LagoonApi(key, lando);
   lagoonApi = getLagoonApi(key, lando);
   return lagoonApi.getProjects().then(projects => {
-    return _.map(projects, project => ({name: project.name, value: project.id}));
+    return _.map(projects, project => ({name: project.name, value: project.name}));
   });
 };
 
@@ -58,14 +57,14 @@ const exit = () => process.exit(1);
 module.exports = {
   name: 'lagoon',
   options: lando => ({
-    lagoonHasKeys: {
+    'lagoon-has-keys': {
       describe: 'A hidden field mostly for easy testing and key removal',
       string: true,
       hidden: true,
       default: answers => answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache)),
       weight: 500,
     },
-    lagoonKey: {
+    'lagoon-auth': {
       describe: 'A Lagoon SSH key',
       string: true,
       interactive: {
@@ -73,34 +72,48 @@ module.exports = {
         choices: getKeys(lando),
         message: 'Select a Lagoon account',
         when: answers => {
-          answers.lagoonHasKeys = answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache));
-          return answers.lagoonHasKeys;
+          answers['lagoon-has-keys'] = answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache));
+          return answers['lagoon-has-keys'];
         },
         weight: 505,
       },
     },
-    lagoonEmail: {
-      describe: 'Lagoon account email address',
+    'lagoon-auth-email': {
+      hidden: true,
       string: true,
       interactive: {
+        name: 'lagoon-auth',
         type: 'string',
         message: 'Lagoon account email',
-        when: answers => answers.recipe === 'lagoon' && (answers.lagoonKey === 'new' || !answers.lagoonHasKeys),
+        when: answers => {
+          return answers.recipe === 'lagoon' && (answers['lagoon-auth'] === 'new' || !answers['lagoon-has-keys']);
+        },
         weight: 510,
       },
     },
-    lagoonProjectId: {
+    'lagoon-site': {
       describe: 'A Lagoon project name',
       string: true,
       interactive: {
         type: 'autocomplete',
         message: 'Which project?',
         source: (answers, input) => {
-          return getAutoCompleteSites(answers.lagoonKey, lando).then(sites => {
+          return getAutoCompleteSites(answers['lagoon-auth'], lando).then(sites => {
             return _.orderBy(sites, ['name']);
           });
         },
-        when: answers => answers.recipe === 'lagoon' && answers.lagoonKey && answers.lagoonKey !== 'new',
+        when: answers => {
+          // Check if auth is a key or an email
+          // NOTE: this is a weaksauce check
+          const isEmail = _.includes(answers['lagoon-auth'], '@');
+          // If is email then set and spoof
+          if (isEmail) {
+            answers.lagoonEmail = answers['lagoon-auth'];
+            answers['lagoon-auth'] = 'new';
+          }
+          // When will then be now? SOON!
+          return answers.recipe === 'lagoon' && answers['lagoon-auth'] && answers['lagoon-auth'] !== 'new';
+        },
         weight: 510,
       },
     },
@@ -110,7 +123,10 @@ module.exports = {
       when: () => false,
     },
     name: {
-      when: answers => answers.recipe === 'lagoon' && answers.lagoonHasKeys,
+      when: answers => {
+        answers.name = answers['lagoon-site'];
+        return false;
+      },
     },
   },
   sources: [{
@@ -126,19 +142,18 @@ module.exports = {
     },
     build: (options, lando) => {
       const buildSteps = [];
-      if (options.lagoonKey === 'new' || !options.lagoonHasKeys) {
+      if (options['lagoon-auth'] === 'new' || !options['lagoon-has-keys']) {
         buildSteps.push({
           name: 'generate-key',
           // eslint-disable-next-line max-len
           cmd: `/helpers/lagoon-generate-key.sh "${getKeyId(keyDefaults.host, options.lagoonEmail)}" "${options.lagoonEmail}"`,
         });
       } else {
-        const p = lagoonApi.getProject(options.lagoonProjectId);
-        const sshKeyFile = `/lando/keys/${options.lagoonKey}`;
+        const p = lagoonApi.getProject(options['lagoon-site']);
         buildSteps.push({
           name: 'clone-repo',
           // eslint-disable-next-line max-len
-          cmd: options => `/helpers/lagoon-clone.sh ${p.gitUrl} ${sshKeyFile}`,
+          cmd: options => `/helpers/lagoon-clone.sh ${p.gitUrl}`,
           remove: true,
         });
       }
@@ -147,7 +162,7 @@ module.exports = {
   }],
   build: (options, lando) => {
     // Exit if we just generated a Lando key.
-    if (options.lagoonEmail !== '') {
+    if (options.lagoonEmail) {
       // Add key data to cache
       const key = _.merge({}, keyDefaults, {
         id: getKeyId(keyDefaults.host, options.lagoonEmail),
