@@ -150,7 +150,7 @@ module.exports = {
         }];
       }
 
-      // Otherwise do get the site
+      // Otherwise do get the site get thing
       lagoonApi = getLagoonApi(_.merge({}, keyDefaults, {
         id: options['lagoon-auth'],
       }), lando);

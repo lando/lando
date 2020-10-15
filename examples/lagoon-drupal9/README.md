@@ -15,12 +15,7 @@ Run the following commands to get up and running with this example.
 lando poweroff
 
 # Should initialize the lagoon drupal example
-mkdir -p ~/.lando/keys ~/lando/cache
-echo "$LAGOON_KEY" > ~/.lando/keys/lagoon_mike-at-thinktandem.io_ssh.lagoon.amazeeio.cloud
-chmod 500 ~/.lando/keys/lagoon_mike-at-thinktandem.io_ssh.lagoon.amazeeio.cloud
-cp -rf lagoon.keys ~/.lando/cache/lagoon.keys
-rm -rf drupal && mkdir -p drupal && cd drupal
-lando init --source lagoon --lagoon-auth lagoon_mike-at-thinktandem.io_ssh.lagoon.amazeeio.cloud --lagoon-site drupal9-example-simple
+lando init --source remote --remote-url git://github.com/amazeeio/drupal-example-simple.git --remote-options="--branch 9.x" --recipe lagoon --lagoon-auth SPOOF --lagoon-site drupal9-example-simple
 
 # Should start up our lagoon drupal 9 site successfully
 cd drupal
