@@ -111,7 +111,7 @@ module.exports = {
             answers.lagoonEmail = answers['lagoon-auth'];
             answers['lagoon-auth'] = 'new';
           }
-          // When will then be now? SOON!
+          // Go back to the usual
           return answers.recipe === 'lagoon' && answers['lagoon-auth'] && answers['lagoon-auth'] !== 'new';
         },
         weight: 510,
