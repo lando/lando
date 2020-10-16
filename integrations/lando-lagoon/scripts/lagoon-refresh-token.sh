@@ -4,7 +4,7 @@
 # Otherwise, attempts to fetch and validate a new one.
 
 # Set DEBUG to 1 for useful detail in output.
-DEBUG=1
+DEBUG=0
 # If you want to save time and test this directly on your host system,
 # set KEY_PATH as the absolute path to ~/.lando/keys. i.e. /Users/mmilano/.lando/keys
 # Test with the following command: (Replace argument with the id to test with)
