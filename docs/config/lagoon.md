@@ -6,7 +6,7 @@ description: The best local development option for Lagoon a Docker Build and Dep
 
 [Lagoon](https://lagoon.readthedocs.io/en/latest/) solves what developers are dreaming about: A system that allows developers to locally develop their code and their services with Docker and run the exact same system in production. The same Docker images, the same service configurations and the same code.
 
-This is currently a _alpha_ level integration that has the following _serious caveats_:
+This is currently an _alpha_ level integration that has the following _serious caveats_:
 
 * This _only_ supports projects based on or extended from [this example](https://github.com/amazeeio/drupal-example-simple)
 * This _does not_ support Lagoon's `elasticsearch`, `mongodb`, or `rabbitmq` containers yet
@@ -24,7 +24,7 @@ You can report any issues or feedback [over here](https://github.com/lando/lando
 :::warning ALPHA FEATURE
 To access this feature you will need:
 
-  * [Lando 3.0.8](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
+  * [Lando 3.0.16](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
 :::
 
 Before you get started with this recipe we assume that you have:
@@ -37,12 +37,8 @@ Before you get started with this recipe we assume that you have:
 However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe against the amazee.io [Drupal Example](https://github.com/amazeeio/drupal-example-simple).
 
 ```bash
-# Get the D9 example rolling (or use the 8.x branch for D8)
-lando init \
-  --source remote \
-  --remote-url git://github.com/amazeeio/drupal-example-simple.git \
-  --remote-options="--branch 9.x" \
-  --recipe lagoon
+# Clone a site from the amazee.io lagoon instance
+lando init --source lagoon
 
 # Start it up
 lando start

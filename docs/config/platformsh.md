@@ -24,7 +24,7 @@ You can report any issues or feedback [over here](https://github.com/lando/lando
 :::warning ALPHA FEATURE
 To access this feature you will need:
 
-  * [Lando 3.0.8](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
+  * [Lando 3.0.16](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
 :::
 
 Before you get started with this recipe we assume that you have:
