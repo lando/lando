@@ -1,5 +1,7 @@
 # 2020
 
+* Removed `X-Frame-Options SAMEORIGIN` header for Nginx service default config [#2648](https://github.com/lando/lando/pull/2648)
+
 ## v3.0.16 - [October 16, 2020](https://github.com/lando/lando/releases/tag/v3.0.16)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
