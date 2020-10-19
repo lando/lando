@@ -63,15 +63,29 @@ const getPhpCliDrupalTooling = (service, flavor = null) => {
     yarn: {service},
   };
 
+  const envVars = {
+    LAGOON_SSH_KEY: '/user/.ssh/id_lagoon',
+    LANDO_DB_HOST: 'mariadb',
+    LANDO_DB_USER: 'drupal',
+    LANDO_DB_PASS: 'drupal',
+    LANDO_DB_NAME: 'drupal',
+  };
+
   // Add more based on service
   if (flavor === 'drupal') {
     tooling.drush = {
-      env: {
-        LAGOON_SSH_KEY: '/user/.ssh/id_lagoon',
-      },
+      env: envVars,
       service,
     };
   }
+
+  tooling.pull = {
+    service,
+    description: 'Pulls down database and files',
+    cmd: '/helpers/lagoon-pull.sh lagoon.drupal9-example-simple-9-x',
+    user: 'root',
+    env: envVars,
+  };
 
   // Return
   return tooling;
@@ -86,7 +100,7 @@ const getServiceToolingByType = service => {
     case 'lagoon-postgres': return getPostgreSQLTooling(service);
     case 'lagoon-php-cli': return getPhpCliDrupalTooling(service.name, service.flavor);
     default: return {};
-  };
+  }
 };
 
 /*
