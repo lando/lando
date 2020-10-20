@@ -81,10 +81,11 @@ lando_green "Verified project id: $(platform project:info id)"
 # Validate env
 lando_pink "Verifying $PLATFORM_BRANCH is an active environment..."
 if ! platform env -I --pipe | grep $PLATFORM_BRANCH >/dev/null; then
-  lando_yellow "Branch $PLATFORM_BRANCH is inactive... using master instead"
-  PLATFORM_BRANCH=master
+  PLATFORM_PARENT=$(platform environment:info -e $PLATFORM_BRANCH parent 2>/dev/null || echo "master")
+  lando_yellow "Branch $PLATFORM_BRANCH is inactive... using $PLATFORM_PARENT instead"
+  PLATFORM_BRANCH="$PLATFORM_PARENT"
 fi
-lando_green "Verified the $PLATFORM_BRANCH environemnt is active"
+lando_green "Verified the $PLATFORM_BRANCH environment is active"
 
 # Validate ssh keys are good
 lando_pink "Verifying your ssh keys work are deployed to the project..."
