@@ -82,7 +82,7 @@ lando_green "Verified project id: $(platform project:info id)"
 lando_pink "Verifying $PLATFORM_BRANCH is an active environment..."
 if ! platform env -I --pipe | grep $PLATFORM_BRANCH >/dev/null; then
   PLATFORM_PARENT=$(platform environment:info -e $PLATFORM_BRANCH parent 2>/dev/null || echo "master")
-  lando_yellow "Branch $PLATFORM_BRANCH is inactive... using $PLATFORM_PARENT instead"
+  lando_yellow "Branch $PLATFORM_BRANCH is inactive... using the parent environment ($PLATFORM_PARENT) instead"
   PLATFORM_BRANCH="$PLATFORM_PARENT"
 fi
 lando_green "Verified the $PLATFORM_BRANCH environment is active"
