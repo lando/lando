@@ -79,14 +79,6 @@ const getPhpCliDrupalTooling = (service, flavor = null) => {
     };
   }
 
-  tooling.pull = {
-    service,
-    description: 'Pulls down database and files',
-    cmd: '/helpers/lagoon-pull.sh lagoon.drupal9-example-simple-9-x',
-    user: 'root',
-    env: envVars,
-  };
-
   // Return
   return tooling;
 };
