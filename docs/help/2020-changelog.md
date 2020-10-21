@@ -5,7 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Fixed bug causing `platformsh` to not `pull` or `push` using the correct environment [#2467](https://github.com/lando/lando/issues/2467)
-* Fixed bug causing internal proxy route usage to fail when using non-standard ports
+* Fixed bug causing internal proxy route usage to fail when using non-standard ports [#2579](https://github.com/lando/lando/issues/2579)
 
 ## v3.0.16 - [October 16, 2020](https://github.com/lando/lando/releases/tag/v3.0.16)
 
