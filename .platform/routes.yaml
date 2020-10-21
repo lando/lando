@@ -1,31 +1,3 @@
-# Api
-http://api.{default}/:
-  type: upstream
-  upstream: api:http
-  cache:
-    headers: ['Accept', 'Accept-Language', 'Origin']
-    default_ttl: 299
-    enabled: true
-  ssi:
-    enabled: false
-
-# Blog
-http://blog.devwithlando.io/:
-  type: redirect
-  to: http://blog.{default}/
-http://blog.lndo.io/:
-  type: redirect
-  to: http://blog.{default}/
-http://blog.{default}/:
-  type: upstream
-  upstream: blog:http
-  cache:
-    headers: ['Accept', 'Accept-Language', 'Origin']
-    default_ttl: 2600
-    enabled: true
-  ssi:
-    enabled: false
-
 # Docs
 http://docs.devwithlando.io/:
   type: redirect
@@ -36,23 +8,6 @@ http://docs.lndo.io/:
 http://docs.{default}/:
   type: upstream
   upstream: docs:http
-  cache:
-    headers: ['Accept', 'Accept-Language', 'Origin']
-    default_ttl: 2600
-    enabled: true
-  ssi:
-    enabled: false
-
-# Events
-http://events.devwithlando.io/:
-  type: redirect
-  to: http://events.{default}/
-http://events.lndo.io/:
-  type: redirect
-  to: http://events.{default}/
-http://events.{default}/:
-  type: upstream
-  upstream: events:http
   cache:
     headers: ['Accept', 'Accept-Language', 'Origin']
     default_ttl: 2600
@@ -173,20 +128,3 @@ https://stats-v2.kalabox.io/:
   ssi:
     enabled: false
   upstream: metrics:http
-
-# Site
-http://devwithlando.io/:
-  type: redirect
-  to: http://{default}/
-http://lndo.io/:
-  type: redirect
-  to: http://{default}/
-http://{default}/:
-  type: upstream
-  upstream: site:http
-  cache:
-    headers: ['Accept', 'Accept-Language', 'Origin']
-    default_ttl: 2600
-    enabled: true
-  ssi:
-    enabled: false
