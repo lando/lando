@@ -43,34 +43,55 @@ const graphQueries = {
     }`,
 };
 
+// Global so we can return the same object if already instantiated.
+let Api = null;
+
+// First call requires key and lando object.
+exports.getLagoonApi = (key = null, lando = null) => {
+  if (Api !== null) {
+    return Api;
+  }
+  if (key === null || lando === null) {
+    throw new Error('Cannot get lagoonApi for the first time without key and lando');
+  }
+  return new LagoonApi(key, lando);
+};
+
 /*
  * Creates a new api client instance.
  */
-module.exports = class LagoonApi {
-  constructor(key = {}, lando) {
-    this.key = key;
+class LagoonApi {
+  constructor(keyId, lando) {
+    const keyCache = lando.cache.get(utils.keyCacheId);
+    this.key = _.find(keyCache, key => key.id === keyId);
     this.lando = lando;
     this.log = lando.log;
-    this.tokenFile = path.join(lando.config.userConfRoot, 'keys', `${key.id}.token`);
+    this.tokenFile = path.join(lando.config.userConfRoot, 'keys', `${this.key.id}.token`);
     this.token = null;
     this.projects = null;
     // Setup axios
-    axios.defaults.baseURL = key.url;
+    axios.defaults.baseURL = this.key.url;
     // Set this.token and axios Authorization headers
     this.setTokenFromFile();
   };
 
   getProjects(refresh = false) {
-    return !refresh && this.projects !== null ? this.projects : this.send(graphQueries.listProject);
+    return !refresh && this.projects ? this.projects : this.send(graphQueries.listProject);
   }
 
   getProject(name) {
     if (this.projects === null) {
-      this.getProjects().then(() => {
+      return this.getProjects().then(() => {
         return this.getProject(name);
       });
     }
-    return _.find(this.projects, project => name === project.name);
+    return this.projects.find(project => project.name === name);
+  }
+
+  getEnvironments(name) {
+    return this.getProject(name).then(project => {
+      return project.environments ? project.environments : [];
+    });
   }
 
   whoami() {
@@ -124,7 +145,7 @@ module.exports = class LagoonApi {
       axios.defaults.headers.common = {'Authorization': `Bearer ${this.token}`};
     }
   }
-};
+}
 
 /*
  * Helper to collect relevant error data

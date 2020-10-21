@@ -3,22 +3,20 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-const LagoonApi = require('../../lib/client');
+const api = require('../../lib/api');
 const utils = require('../../lib/utils');
 
-const lagoonKeyCache = 'lagoon.keys';
-
 // Setting global so it only ever gets instantiated once.
-let lagoonApi = null;
-const getLagoonApi = (key = null, lando = null) => {
-  if (lagoonApi !== null) {
-    return lagoonApi;
-  }
-  if (key === null || lando === null) {
-    throw new Error('Cannot get lagoonApi for the first time without key and lando');
-  }
-  return new LagoonApi(key, lando);
-};
+// let lagoonApi = null;
+// const getLagoonApi = (key = null, lando = null) => {
+//   if (lagoonApi !== null) {
+//     return lagoonApi;
+//   }
+//   if (key === null || lando === null) {
+//     throw new Error('Cannot get lagoonApi for the first time without key and lando');
+//   }
+//   return new LagoonApi(key, lando);
+// };
 
 const keyDefaults = {
   // Key id is used for the ssh filename
@@ -34,16 +32,9 @@ const keyDefaults = {
 
 const getKeyId = (host, email = '') => `lagoon_${email.replace('@', '-at-')}_${host}`;
 
-const getKeys = (lando = []) => _(utils.getProcessedKeys(lando))
-  .map(key => ({name: key.email, value: key.id}))
-  .thru(tokens => tokens.concat([{name: 'add or refresh a key', value: 'new'}]))
-  .value();
-
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (keyId, lando) => {
-  const keyCache = lando.cache.get(lagoonKeyCache);
-  const key = _.find(keyCache, key => key.id === keyId);
-  lagoonApi = getLagoonApi(key, lando);
+  const lagoonApi = api.getLagoonApi(keyId, lando);
   return lagoonApi.getProjects().then(projects => {
     return _.map(projects, project => ({name: project.name, value: project.name}));
   });
@@ -61,7 +52,7 @@ module.exports = {
       describe: 'A hidden field mostly for easy testing and key removal',
       string: true,
       hidden: true,
-      default: answers => answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache)),
+      default: answers => answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(utils.keyCacheId)),
       weight: 500,
     },
     'lagoon-auth': {
@@ -69,10 +60,10 @@ module.exports = {
       string: true,
       interactive: {
         type: 'list',
-        choices: getKeys(lando),
+        choices: utils.getKeyChoices(lando),
         message: 'Select a Lagoon account',
         when: answers => {
-          answers['lagoon-has-keys'] = answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache));
+          answers['lagoon-has-keys'] = answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(utils.keyCacheId));
           return answers['lagoon-has-keys'];
         },
         weight: 505,
@@ -151,17 +142,27 @@ module.exports = {
       }
 
       // Otherwise do get the site get thing
-      lagoonApi = getLagoonApi(_.merge({}, keyDefaults, {
-        id: options['lagoon-auth'],
-      }), lando);
-      return lagoonApi.getProjects(true).then(() => {
-        const project = lagoonApi.getProject(options['lagoon-site']);
+      // const lagoonApi = api.getLagoonApi(_.merge({}, keyDefaults, {
+      //   id: options['lagoon-auth'],
+      // }), lando);
+
+      return api.getLagoonApi(options['lagoon-auth'], lando).getProject(options['lagoon-site']).then(project => {
         return [{
           name: 'clone-repo',
-          cmd: options => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
+          cmd: () => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
           remove: true,
         }];
       });
+
+      // const lagoonApi = api.getLagoonApi();
+      // return lagoonApi.getProjects().then(() => {
+      //   const project = lagoonApi.getProject(options['lagoon-site']);
+      //   return [{
+      //     name: 'clone-repo',
+      //     cmd: options => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
+      //     remove: true,
+      //   }];
+      // });
     },
   }],
   build: (options, lando) => {
@@ -173,8 +174,8 @@ module.exports = {
         name: `${options.lagoonEmail} [${keyDefaults.host}]`,
         email: options.lagoonEmail,
       });
-      const keyCache = lando.cache.get(lagoonKeyCache);
-      lando.cache.set(lagoonKeyCache, utils.sortKeys(keyCache, [key]), {persist: true});
+      const keyCache = lando.cache.get(utils.keyCacheId);
+      lando.cache.set(utils.keyCacheId, utils.sortKeys(keyCache, [key]), {persist: true});
       exit();
     }
 
@@ -197,7 +198,9 @@ module.exports = {
     // Always reset the name based on the lagoon project
     return {
       name: options.name,
-      config: {build: ['composer install']},
+      config: {
+        build: ['composer install'],
+      },
     };
   },
 };

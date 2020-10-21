@@ -5,13 +5,19 @@ const path = require('path');
 const _ = require('lodash');
 const build = require('../../../plugins/lando-recipes/lib/build');
 
-// TODO: Figure out how to run a command in the container before app is created.
 exports.landoRun = (lando, cmd) => {
   const options = {name: 'landoinit', destination: '/tmp'};
   const config = build.runDefaults(lando, options);
   config.cmd = cmd;
   return build.run(lando, build.buildRun(config));
 };
+
+exports.keyCacheId = 'lagoon.keys';
+
+exports.getKeyChoices = (lando = []) => _(exports.getProcessedKeys(lando))
+  .map(key => ({name: key.email, value: key.id}))
+  .thru(tokens => tokens.concat([{name: 'add or refresh a key', value: 'new'}]))
+  .value();
 
 /*
  * Returns keys after adding any new, sorting, purging orphans, and updating cache.
