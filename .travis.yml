@@ -23,12 +23,8 @@ before_install:
   # Get list of files that have changed
   - export LANDO_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
   # Assess whether our web props have changed
-  - export LANDO_API_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e api/ &>/dev/null && echo true || echo false)
-  - export LANDO_BLOG_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e blog/ &>/dev/null && echo true || echo false)
   - export LANDO_DOCS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e docs/ &>/dev/null && echo true || echo false)
-  - export LANDO_EVENTS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e events/ &>/dev/null && echo true || echo false)
   - export LANDO_METRICS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e metrics/ &>/dev/null && echo true || echo false)
-  - export LANDO_SITE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e website/ &>/dev/null && echo true || echo false)
   # Assess what parts of lando have changed
   - export LANDO_CODE_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e yarn.lock -e package.json -e config.yml -e bin/ -e lib/ -e plugins/ &>/dev/null && echo true || echo false)
   - export LANDO_TESTS_CHANGED=$(echo $LANDO_CHANGED_FILES | grep -e examples/ -e test/ &>/dev/null && echo true || echo false)
@@ -100,20 +96,12 @@ jobs:
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then yarn pkg:cli; fi
         - if [[ "$LANDO_CODE_CHANGED" == "true" ]] ; then ./dist/cli/lando-* version; fi
         - if [[ "$LANDO_INSTALLER_CHANGED" == "true" ]] ; then yarn pkg:full; fi
-    - name: Test Build - API
-      script: if [[ "$LANDO_API_CHANGED" == "true" ]] ; then true; fi
-    - name: Test Build - Blog
-      script: if [[ "$LANDO_BLOG_CHANGED" == "true" ]] ; then yarn build:blog; fi
     - name: Test Build - Documentation
       # get below compatible with node 12?
       node_js: 10
       script: if [[ "$LANDO_DOCS_CHANGED" == "true" ]] ; then yarn build:docs; fi
-    - name: Test Build - Events
-      script: if [[ "$LANDO_EVENTS_CHANGED" == "true" ]] ; then yarn build:events; fi
     - name: Test Build - Metrics server
       script: if [[ "$LANDO_METRICS_CHANGED" == "true" ]] ; then true; fi
-    - name: Test Build - Website
-      script: if [[ "$LANDO_SITE_CHANGED" == "true" ]] ; then yarn build:site; fi
     - name: Test Deploy - S3
       install: skip
       script: touch release/test

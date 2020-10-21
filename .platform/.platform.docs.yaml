@@ -2,19 +2,17 @@
 # in the same project.
 
 # The name of this app. Must be unique within a project.
-name: blog
+name: docs
+source:
+  root: "/"
 
 # The toolstack used to build the application.
-type: nodejs:10
+type: nodejs:14
 build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
 disk: 1000
-mounts:
-  run:
-    source: local
-    source_path: run
 
 # The configuration of app when it is exposed to the web.
 web:
@@ -23,11 +21,11 @@ web:
     start: sleep infinity
   locations:
     "/":
-      root: "_blog"
+      root: "_docs"
       index:
         - "index.html"
-      expires: 300s
-      passthru: false
+      expires: 1y
+      passthru: "/404.html"
       scripts: true
       allow: false
       rules:

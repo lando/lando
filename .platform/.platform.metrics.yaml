@@ -1,14 +1,16 @@
-name: api
-type: nodejs:10
+name: metrics
+source:
+  root: "/"
+type: nodejs:14
 
 dependencies:
   nodejs:
-    pm2: "^2.0.0"
+    pm2: "^4.0.0"
     yarn: "*"
 
 web:
   commands:
-    start: "PM2_HOME=$PLATFORM_APP_DIR/run pm2 start server.js --no-daemon"
+    start: "PM2_HOME=/app/run pm2 start /app/metrics/server.js --no-daemon"
   locations:
     "/public":
       passthru: false
@@ -20,9 +22,11 @@ web:
           expires: -1
 
 mounts:
-  "/run": "shared:files/run"
+  run:
+    source: local
+    source_path: run
 
-disk: 1500
+disk: 3500
 
 hooks:
   build: |
