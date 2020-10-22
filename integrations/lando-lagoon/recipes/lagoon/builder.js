@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const {getPull} = require('../../lib/pull');
+const {getPush} = require('../../lib/push');
 const {getLandoAuxServices, getLandoServices, getSQLServices} = require('./../../lib/services');
 const {getLandoTooling, getDBUtils} = require('./../../lib/tooling');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
@@ -46,6 +47,7 @@ module.exports = {
       }
 
       options.tooling.pull = getPull(options);
+      options.tooling.push = getPush(options);
 
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(options.services, _.get(options, '_app.lagoon.domain'));

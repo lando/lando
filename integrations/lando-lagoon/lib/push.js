@@ -11,7 +11,7 @@ const getEnvironmentChoices = (keyId, lando, projectName) => {
     .then(environments => {
       return _(environments)
         .map(env => ({name: env.name, value: env.openshiftProjectName}))
-        .concat([{name: 'Do not pull', value: 'none'}])
+        .concat([{name: 'Do not push', value: 'none'}])
         .value();
     });
 };
@@ -20,7 +20,7 @@ const getEnvironmentChoices = (keyId, lando, projectName) => {
 const defaultTask = options => ({
   service: 'cli',
   description: 'Pull db and files from Lagoon',
-  cmd: '/helpers/lagoon-pull.sh',
+  cmd: '/helpers/lagoon-push.sh',
   level: 'app',
   stdio: ['inherit', 'pipe', 'pipe'],
   options: {
@@ -37,7 +37,7 @@ const defaultTask = options => ({
       },
     },
     database: {
-      description: 'The environment from which to sync the database from',
+      description: 'The remote environment to push the database to',
       passthrough: true,
       alias: ['d'],
       interactive: {
@@ -45,12 +45,12 @@ const defaultTask = options => ({
         choices: (answers, input) => {
           return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name);
         },
-        message: 'Pull database from?',
+        message: 'Push local database to?',
         weight: 601,
       },
     },
     files: {
-      description: 'The environment from which to sync files from',
+      description: 'The remote environment to push local files to',
       passthrough: true,
       alias: ['f'],
       interactive: {
@@ -58,7 +58,7 @@ const defaultTask = options => ({
         choices: (answers, input) => {
           return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name);
         },
-        message: 'Pull files from?',
+        message: 'Push local files to?',
         weight: 602,
       },
     },
@@ -68,6 +68,6 @@ const defaultTask = options => ({
 /*
  * Helper to build a pull command
  */
-exports.getPull = options => {
+exports.getPush = options => {
   return _.merge({}, defaultTask(options));
 };

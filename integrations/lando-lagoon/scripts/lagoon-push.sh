@@ -7,7 +7,7 @@ set -e
 #   --files       Remote drush alias, without the leading "lagoon." (openshiftProjectName value from the API)
 #
 # Set DEBUG=1 for helpful output
-DEBUG=0
+DEBUG=1
 
 if [ $DEBUG = 1 ]; then
   echo "1: ${1}"
@@ -79,23 +79,23 @@ if [ $DEBUG = 1 ]; then
 fi
 
 # Sync database
-if [ "${LANDO_DB_ALIAS}" != "lagoon.none" ]; then
-  # Drop tables and import from remote
-  echo "Pulling database..."
+if [ $LANDO_DB_ALIAS != "lagoon.none" ]; then
+  # Drop and re-create database
+  echo "Pushing database..."
   # Suppress drush messaging by assigning output
-  OUT=$(drush sql:drop -y)
+  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush "@${LANDO_DB_ALIAS}" sql:drop -y
   # Pipe output of drush sql:dump into mysql
-  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush "@${LANDO_DB_ALIAS}" sql:dump -y | drush sql:cli -y
+  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush sql:dump -y | drush "@${LANDO_DB_ALIAS}" sql:cli -y
 else
   echo "Skipping database"
 fi
 
 # Sync files
-if [ "${LANDO_FILES_ALIAS}" != "lagoon.none" ]; then
+if [ $LANDO_FILES_ALIAS != "lagoon.none" ]; then
   # Import files with rsync
-  echo "Pulling files..."
+  echo "Pushing files..."
   # Suppress drush messaging by assigning output
-  OUT=$(LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync @${LANDO_FILES_ALIAS}:web/sites/default/files web/sites/default -y)
+  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync web/sites/default/files @${LANDO_FILES_ALIAS}:web/sites/default -y -- --omit-dir-times --no-perms --no-group --no-owner --chmod=ugo=rwX
 else
   echo "Skipping files"
 fi
