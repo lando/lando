@@ -21,6 +21,7 @@ const graphQueries = {
         environments {
           name
           environmentType
+          openshiftProjectName
         }
       }
     }`,

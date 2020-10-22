@@ -13,9 +13,8 @@ set -e
 #
 # args:
 #   --auth        SSH key filename located in /lando/keys
-#   --environment Lagoon environment
-#   --database    yes/no
-#   --files       yes/no
+#   --database    Remote drush alias, without the leading "lagoon." (openshiftProjectName value from the API)
+#   --files       Remote drush alias, without the leading "lagoon." (openshiftProjectName value from the API)
 #
 # Set DEBUG=1 for helpful output
 #
@@ -25,14 +24,13 @@ if [ $DEBUG = 1 ]; then
   echo "1: ${1}"
   echo "2: ${2}"
   echo "3: ${3}"
-  echo "4: ${4}"
 fi
 
 # Set option defaults
 LANDO_SSH_KEY=
 LAGOON_ENV="main"
-LANDO_SYNC_DB="no"
-LANDO_SYNC_FILES="no"
+LANDO_DB_ALIAS="none"
+LANDO_FILES_ALIAS="none"
 
 # PARSE THE ARGS
 while (( "$#" )); do
@@ -46,30 +44,21 @@ while (( "$#" )); do
         shift 2
       fi
       ;;
-    -e|--environment|--environment=*)
-      if [ "${1##--environment=}" != "$1" ]; then
-        LAGOON_ENV="${1##--environment=}"
-        shift
-      else
-        LAGOON_ENV=$2
-        shift 2
-      fi
-      ;;
     -d|--database|--database=*)
       if [ "${1##--database=}" != "$1" ]; then
-        LANDO_SYNC_DB="${1##--database=}"
+        LANDO_DB_ALIAS="${1##--database=}"
         shift
       else
-        LANDO_SYNC_DB=$2
+        LANDO_DB_ALIAS=$2
         shift 2
       fi
       ;;
     -f|--files|--files=*)
       if [ "${1##--files=}" != "$1" ]; then
-        LANDO_SYNC_FILES="${1##--files=}"
+        LANDO_FILES_ALIAS="${1##--files=}"
         shift
       else
-        LANDO_SYNC_FILES=$2
+        LANDO_FILES_ALIAS=$2
         shift 2
       fi
       ;;
@@ -87,8 +76,9 @@ while (( "$#" )); do
 done
 
 # Set values from input
-LANDO_SSH_KEY="/lando/keys/$LANDO_SSH_KEY"
-LANDO_DRUSH_ALIAS="lagoon.${LAGOON_PROJECT}-${LAGOON_ENV}"
+LANDO_SSH_KEY="/lando/keys/${LANDO_SSH_KEY}"
+LANDO_DB_ALIAS="lagoon.${LANDO_DB_ALIAS}"
+LANDO_FILES_ALIAS="lagoon.${LANDO_FILES_ALIAS}"
 
 if [ $DEBUG = 1 ]; then
   echo "--"
@@ -102,26 +92,28 @@ if [ $DEBUG = 1 ]; then
   echo "Args"
   echo "LANDO_SSH_KEY: ${LANDO_SSH_KEY}"
   echo "LAGOON_ENV: ${LAGOON_ENV}"
-  echo "LANDO_SYNC_DB: ${LANDO_SYNC_DB}"
-  echo "LANDO_SYNC_FILES: ${LANDO_SYNC_FILES}"
+  echo "LANDO_DB_ALIAS: ${LANDO_DB_ALIAS}"
+  echo "LANDO_FILES_ALIAS: ${LANDO_FILES_ALIAS}"
   echo "--"
-  echo "Args"
   echo "LANDO_SSH_KEY: ${LANDO_SSH_KEY}"
-  echo "LANDO_DRUSH_ALIAS: ${LANDO_DRUSH_ALIAS}"
 fi
 
 # Sync database
-if [ $LANDO_SYNC_DB = "yes" ]; then
+if [ $LANDO_DB_ALIAS != "none" ]; then
   # Drop and re-create database
   echo "Pulling database..."
   mysql -h ${LANDO_DB_HOST} -u ${LANDO_DB_USER} -p${LANDO_DB_PASS} -e "DROP DATABASE ${LANDO_DB_NAME};CREATE DATABASE ${LANDO_DB_NAME};"
   # Pipe output of drush sql:dump into mysql
-  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush "@${LANDO_DRUSH_ALIAS}" sql:dump | mysql -h ${LANDO_DB_HOST} -u ${LANDO_DB_USER} -p${LANDO_DB_PASS} ${LANDO_DB_NAME}
+  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush "@${LANDO_DB_ALIAS}" sql:dump | mysql -h ${LANDO_DB_HOST} -u ${LANDO_DB_USER} -p${LANDO_DB_PASS} ${LANDO_DB_NAME}
+else
+  echo "Skipping database"
 fi
 
 # Sync files
-if [ $LANDO_SYNC_FILES = "yes" ]; then
+if [ $LANDO_FILES_ALIAS != "none" ]; then
   # Import files with rsync
   echo "Pulling files..."
-  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync @${LANDO_DRUSH_ALIAS}:web/sites/default/files web/sites/default -y
+  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync @${LANDO_FILES_ALIAS}:web/sites/default/files web/sites/default -y
+else
+  echo "Skipping files"
 fi

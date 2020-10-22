@@ -9,7 +9,10 @@ const getEnvironmentChoices = (keyId, lando, projectName) => {
   return api.getLagoonApi(keyId, lando)
     .getEnvironments(projectName)
     .then(environments => {
-      return environments.map(env => ({name: env.name, value: env.name}));
+      return _(environments)
+        .map(env => ({name: env.name, value: env.openshiftProjectName}))
+        .concat([{name: 'Do not pull', value: 'none'}])
+        .value();
     });
 };
 
@@ -40,41 +43,30 @@ const defaultTask = options => ({
         weight: 600,
       },
     },
-    environment: {
+    database: {
       description: 'The environment from which to sync the database from',
       passthrough: true,
-      alias: ['e'],
+      alias: ['d'],
       interactive: {
         type: 'list',
         choices: (answers, input) => {
-          return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name).then(sites => {
-            return _.orderBy(sites, ['name']);
-          });
+          return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name);
         },
         message: 'Pull database from?',
         weight: 601,
       },
     },
-    database: {
-      description: 'Whether to pull database',
-      passthrough: true,
-      alias: ['db'],
-      interactive: {
-        type: 'list',
-        choices: [{name: 'No', value: 'no'}, {name: 'Yes', value: 'yes'}],
-        message: 'Pull database?',
-        weight: 610,
-      },
-    },
     files: {
-      description: 'Whether to pull database',
+      description: 'The environment from which to sync files from',
       passthrough: true,
       alias: ['f'],
       interactive: {
         type: 'list',
-        choices: [{name: 'No', value: 'no'}, {name: 'Yes', value: 'yes'}],
-        message: 'Pull database?',
-        weight: 620,
+        choices: (answers, input) => {
+          return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name);
+        },
+        message: 'Pull files from?',
+        weight: 602,
       },
     },
   },
@@ -84,6 +76,5 @@ const defaultTask = options => ({
  * Helper to build a pull command
  */
 exports.getPull = options => {
-  //return [defaultTask(options)];
   return _.merge({}, defaultTask(options));
 };
