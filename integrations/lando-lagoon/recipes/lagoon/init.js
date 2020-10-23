@@ -33,10 +33,11 @@ const keyDefaults = {
 const getKeyId = (host, email = '') => `lagoon_${email.replace('@', '-at-')}_${host}`;
 
 // Helper to get sites for autocomplete
-const getAutoCompleteSites = (keyId, lando) => {
-  const lagoonApi = api.getLagoonApi(keyId, lando);
+const getAutoCompleteSites = (keyId, lando, input = null) => {
+  const lagoonApi = api.getLagoonApi(keyId, lando, input);
   return lagoonApi.getProjects().then(projects => {
-    return _.map(projects, project => ({name: project.name, value: project.name}));
+    return _.map(projects, project => ({name: project.name, value: project.name}))
+      .filter(project => !input || _.startsWith(project.name, input));
   });
 };
 
@@ -89,7 +90,7 @@ module.exports = {
         type: 'autocomplete',
         message: 'Which project?',
         source: (answers, input) => {
-          return getAutoCompleteSites(answers['lagoon-auth'], lando).then(sites => {
+          return getAutoCompleteSites(answers['lagoon-auth'], lando, input).then(sites => {
             return _.orderBy(sites, ['name']);
           });
         },
