@@ -6,18 +6,6 @@ const _ = require('lodash');
 const api = require('../../lib/api');
 const utils = require('../../lib/utils');
 
-// Setting global so it only ever gets instantiated once.
-// let lagoonApi = null;
-// const getLagoonApi = (key = null, lando = null) => {
-//   if (lagoonApi !== null) {
-//     return lagoonApi;
-//   }
-//   if (key === null || lando === null) {
-//     throw new Error('Cannot get lagoonApi for the first time without key and lando');
-//   }
-//   return new LagoonApi(key, lando);
-// };
-
 const keyDefaults = {
   // Key id is used for the ssh filename
   id: null,
@@ -154,16 +142,6 @@ module.exports = {
           remove: true,
         }];
       });
-
-      // const lagoonApi = api.getLagoonApi();
-      // return lagoonApi.getProjects().then(() => {
-      //   const project = lagoonApi.getProject(options['lagoon-site']);
-      //   return [{
-      //     name: 'clone-repo',
-      //     cmd: options => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
-      //     remove: true,
-      //   }];
-      // });
     },
   }],
   build: (options, lando) => {
