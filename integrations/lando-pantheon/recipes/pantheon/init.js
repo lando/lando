@@ -46,7 +46,7 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
       pantheonSites = sites;
       return pantheonSites;
     });
-  };
+  }
 };
 
 /*
