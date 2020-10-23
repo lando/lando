@@ -6,6 +6,7 @@
       <Subscribe
         successMessage="More awesome guide material will be heading your way!"
         :customStyles="stylez"
+        :interests="interests"
         title=""
       />
     </div>
@@ -23,6 +24,13 @@ export default {
       stylez: {
         width: '100%',
       },
+      interests: [{
+        id: 1,
+        group: 37781,
+        checked: true,
+        hidden: true,
+        label: 'Updates',
+      }],
     };
   },
 };
@@ -71,10 +79,6 @@ export default {
   .subscribe
     width: 100%
     padding: 0
-  .subscribe-form
-    display: grid
-    grid-template-columns: 1fr 1fr
-    grid-gap: 10px
   .subscribe .button
     font-size: inherit
     border: none
@@ -101,10 +105,6 @@ export default {
     outline: none
     height: auto
     margin: 1em 0;
-    &:focus
-      outline: none
-      border-size: 0
-      border-color: transparent
   @media (max-width: $MQMobile)
     .subscribe-form
         display block
