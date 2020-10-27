@@ -16,12 +16,7 @@ export default {
     };
   },
   mounted() {
-    this.$api.get('/v1/alliance').then(response => {
-      this.members = response.data || [];
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    this.members = this.$contributors;
   },
 };
 </script>

@@ -17,12 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.$api.get('/v1/sponsors/herald').then(response => {
-      this.heralds = response.data || [];
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    this.heralds = this.$sponsors.filter(sponsor => sponsor.type == 'herald');
   },
 };
 </script>

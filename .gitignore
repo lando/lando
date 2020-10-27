@@ -26,11 +26,9 @@ env.yml
 lando.env
 
 # docs
-_blog
 _docs
-_events
-_site
 docs/examples
+docs/.vuepress/public/api
 
 # Build dirs
 build
