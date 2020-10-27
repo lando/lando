@@ -8,7 +8,7 @@ metaTitle: Contributing | Lando
 If you are interested in helping out with the Lando project, then you've come to the _**right place!**_
 
 ::: center
-[![Lando Alliance](https://lando.dev/images/lando-alliance.png)](https://lando.dev/join)
+![Lando Alliance](https://lando.dev/images/lando-alliance.png)
 :::
 
 We are looking for people to help out in any of the capacities as follows:
@@ -30,7 +30,7 @@ Post case studies, training materials and other less-technical content to the La
 :::
 
 ::: half ADMINISTRATOR
-Help us manage the _Lando Alliance_, our sponsors, marketing, outreach, event logistics, etc.
+Help us manage our sponsors, marketing, outreach, event logistics, etc.
 :::
 
 ::: half UPSELLER

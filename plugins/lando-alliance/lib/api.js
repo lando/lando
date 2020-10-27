@@ -8,7 +8,7 @@ const path = require('path');
 const Yaml = require('./../../../lib/yaml');
 
 // Default data directory
-const apiDataDir = path.resolve(__dirname, '..', '..', '..', 'api', 'data');
+const apiDataDir = path.resolve(__dirname, '..', '..', '..');
 
 /*
  * Creates a new api client instance.

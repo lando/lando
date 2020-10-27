@@ -3,7 +3,7 @@ description: Learn how to activate the Lando secret toggle
 metaTitle: Activate Secret Toggle | Lando
 ---
 
-# 4. Activate Secret Toggle
+# 3. Activate Secret Toggle
 
 Lando has a secret _contributor mode_ that you need to engage to contrib. To make that happen, complete the sections below:
 
