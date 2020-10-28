@@ -1,9 +1,12 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const _ = require('lodash');
 const build = require('../../../plugins/lando-recipes/lib/build');
+const Shell = require('../../../lib/shell');
+
+exports.run = (cmd, lando) => {
+  const shell = new Shell(lando.log);
+  return shell.sh(cmd);
+};
 
 exports.landoRun = (lando, cmd) => {
   const options = {name: 'landoinit', destination: '/tmp'};
@@ -11,48 +14,3 @@ exports.landoRun = (lando, cmd) => {
   config.cmd = cmd;
   return build.run(lando, build.buildRun(config));
 };
-
-exports.keyCacheId = 'lagoon.keys';
-
-exports.getKeyChoices = (lando = []) => _(exports.getProcessedKeys(lando))
-  .map(key => ({name: key.email, value: key.id}))
-  .thru(tokens => tokens.concat([{name: 'add or refresh a key', value: 'new'}]))
-  .value();
-
-/*
- * Returns keys after adding any new, sorting, purging orphans, and updating cache.
- */
-exports.getProcessedKeys = (lando, newKeys=[]) => {
-  const allKeys = sortKeys(lando.cache.get('lagoon.keys'), newKeys);
-  const keyPath = path.join(lando.config.home, '.lando', 'keys');
-  // Remove cached keys that don't have ssh key files.
-  const processedKeys = _(allKeys).filter(key => {
-    return key !== undefined && fs.existsSync(path.join(keyPath, key.id));
-  }).value();
-  lando.cache.set('lagoon.keys', processedKeys, {persist: true});
-  return processedKeys;
-};
-
-/*
- * Adds/updates key in cache array
- * Pass in the result of lando.cache.get(lagoonKeyCache) for the keyCache
- * You must still call lando.cache.set() on result
- */
-exports.updateKey = (keyCache, key) => {
-  const index = _.findIndex(keyCache, o => o.id === key.id);
-  if (index !== -1) {
-    keyCache.splice(index, 1, key);
-  }
-};
-
-/*
- * Sort keys by most recent
- */
-const sortKeys = (...sources) => _(_.flatten([...sources]))
-  .filter(key => key !== null)
-  .sortBy('date')
-  .groupBy('id')
-  .map(keys => _.last(keys))
-  .value();
-
-exports.sortKeys = sortKeys;

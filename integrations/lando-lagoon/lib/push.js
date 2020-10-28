@@ -3,7 +3,7 @@
 // Modules
 const _ = require('lodash');
 const api = require('./api');
-const utils = require('./utils');
+const keys = require('./keys');
 
 const getEnvironmentChoices = (keyId, lando, projectName) => {
   return api.getLagoonApi(keyId, lando)
@@ -30,9 +30,9 @@ const defaultTask = options => ({
       string: true,
       interactive: {
         type: 'list',
-        choices: utils.getKeyChoices(options._app._lando),
+        choices: keys.getKeyChoices(options._app._lando),
         message: 'Select a Lagoon account',
-        when: answers => !_.isEmpty(options._app._lando.cache.get(utils.keyCacheId)),
+        when: () => !_.isEmpty(keys.getCachedKeys(options._app._lando)),
         weight: 600,
       },
     },

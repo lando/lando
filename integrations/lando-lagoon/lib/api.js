@@ -7,6 +7,7 @@ const _ = require('lodash');
 const Promise = require('./../../../lib/promise');
 const axios = require('axios');
 const utils = require('./utils');
+const keys = require('./keys');
 
 const graphQueries = {
   listProject: `
@@ -26,7 +27,7 @@ const graphQueries = {
       }
     }`,
   whoami: `
-    query {
+    query whoami {
       me {
         id
         email
@@ -48,14 +49,14 @@ const graphQueries = {
 let Api = null;
 
 // First call requires key and lando object.
-exports.getLagoonApi = (key = null, lando = null) => {
+exports.getLagoonApi = (keyId = null, lando = null) => {
   if (Api !== null) {
     return Api;
   }
-  if (key === null || lando === null) {
+  if (keyId === null || lando === null) {
     throw new Error('Cannot get lagoonApi for the first time without key and lando');
   }
-  return new LagoonApi(key, lando);
+  return new LagoonApi(keyId, lando);
 };
 
 /*
@@ -63,7 +64,7 @@ exports.getLagoonApi = (key = null, lando = null) => {
  */
 class LagoonApi {
   constructor(keyId, lando) {
-    const keyCache = lando.cache.get(utils.keyCacheId);
+    const keyCache = keys.getCachedKeys(lando);
     this.key = _.find(keyCache, key => key.id === keyId);
     this.lando = lando;
     this.log = lando.log;
@@ -77,7 +78,11 @@ class LagoonApi {
   };
 
   getProjects(refresh = false) {
-    return !refresh && this.projects ? this.projects : this.send(graphQueries.listProject);
+    return !refresh && this.projects ? this.projects :
+      this.send(graphQueries.listProject).then(res => {
+        this.projects = res.data.data.allProjects;
+        return this.projects;
+      });
   }
 
   getProject(name) {
@@ -96,17 +101,14 @@ class LagoonApi {
   }
 
   whoami() {
-    return this.send(graphQueries.whoami);
+    return this.send(graphQueries.whoami)
+      .then(res => res.data.data.me);
   }
 
   send(query, finalTry = false) {
     this.log.verbose('Lagoon request:%s - payload: %s', this.key.url, query);
     return axios({url: '/graphql', method: 'post', data: {query}})
-      .then(res => {
-        this.log.verbose(res.data.data.allProjects);
-        this.projects = res.data.data.allProjects;
-        return this.projects;
-      })
+      .then(res => res)
       .catch(err => {
         const data = getErrorData(err);
         // Refresh token and try once more if response is a 403.
@@ -124,6 +126,7 @@ class LagoonApi {
           `${data.method} request to ${data.path} failed with code ${data.code}: ${data.codeText}.`,
           `The server responded with the message ${data.response}.`,
         ];
+        this.log.verbose('Lagoon request failed: %s', msg);
         // @NOTE: it's not clear to me why we make this into a message instead of passing through
         // the entire data object, possibly the reason has been lost to the wind of change.
         return Promise.reject(new Error(msg.join(' ')));

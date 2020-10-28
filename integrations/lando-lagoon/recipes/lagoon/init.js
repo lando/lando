@@ -4,32 +4,15 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const api = require('../../lib/api');
-const utils = require('../../lib/utils');
-
-const keyDefaults = {
-  // Key id is used for the ssh filename
-  id: null,
-  name: null,
-  email: null,
-  host: 'ssh.lagoon.amazeeio.cloud',
-  port: '32222',
-  user: 'lagoon',
-  url: 'https://api.lagoon.amazeeio.cloud',
-  date: _.toInteger(_.now() / 1000),
-};
-
-const getKeyId = (host, email = '') => `lagoon_${email.replace('@', '-at-')}_${host}`;
+const keys = require('../../lib/keys');
 
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (keyId, lando, input = null) => {
-  const lagoonApi = api.getLagoonApi(keyId, lando, input);
-  return lagoonApi.getProjects().then(projects => {
+  return api.getLagoonApi(keyId, lando).getProjects().then(projects => {
     return _.map(projects, project => ({name: project.name, value: project.name}))
       .filter(project => !input || _.startsWith(project.name, input));
   });
 };
-
-const exit = () => process.exit(1);
 
 /*
  * Init lagoon
@@ -37,38 +20,75 @@ const exit = () => process.exit(1);
 module.exports = {
   name: 'lagoon',
   options: lando => ({
-    'lagoon-has-keys': {
-      describe: 'A hidden field mostly for easy testing and key removal',
-      string: true,
-      hidden: true,
-      default: answers => answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(utils.keyCacheId)),
-      weight: 500,
-    },
     'lagoon-auth': {
       describe: 'A Lagoon SSH key',
       string: true,
       interactive: {
         type: 'list',
-        choices: utils.getKeyChoices(lando),
+        choices: keys.getKeyChoices(lando),
         message: 'Select a Lagoon account',
-        when: answers => {
-          answers['lagoon-has-keys'] = answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(utils.keyCacheId));
-          return answers['lagoon-has-keys'];
+        filter: answer => {
+          if (answer === 'new') {
+            // Generate a new key if user selected new.
+            return keys.generateKeyAndWait(lando).then(() => {
+              return answer;
+            });
+          }
+          return answer;
         },
-        weight: 505,
+        when: answers => {
+          if (answers.recipe !== 'lagoon') {
+            return false;
+          }
+          // Set this answer for easy access later.
+          answers['lagoon-has-keys'] = !_.isEmpty(keys.getCachedKeys(lando));
+          // Auto generate new key if there are no keys.
+          if (!answers['lagoon-has-keys']) {
+            return keys.generateKeyAndWait(lando).then(() => {
+              // return false so this option is not shown.
+              return false;
+            });
+          }
+          return true;
+        },
+        weight: 500,
       },
     },
-    'lagoon-auth-email': {
+    'lagoon-new-key': {
       hidden: true,
       string: true,
       interactive: {
-        name: 'lagoon-auth',
-        type: 'string',
-        message: 'Lagoon account email',
-        when: answers => {
-          return answers.recipe === 'lagoon' && (answers['lagoon-auth'] === 'new' || !answers['lagoon-has-keys']);
+        name: 'lagoon-new-key',
+        type: 'input',
+        message: 'Copy/paste the SSH key above into the Lagoon UI; Then press [Enter]',
+        validate: () => {
+          // Attempt whoami
+          // When we support alternate host, port, and uri, they will need to be passed into opts here.
+          const opts = {};
+          // Creates/updates lagoon-pending key and writes data to cache
+          keys.setPendingKey(lando, opts);
+
+          return api.getLagoonApi('lagoon-pending', lando).whoami()
+            .then(data => {
+              // Set email and promote pending key and cache data
+              opts.email = data.email;
+              // promotePendingKey sets keys.currentKey which is used in the next step.
+              keys.promotePendingKey(lando, opts);
+              return true;
+            })
+            .catch(error => {
+              // Returning a string displays it as an error and allows them to try again.
+              return 'Authentication failed. Please try again.';
+            });
         },
-        weight: 510,
+        when: answers => {
+          // Print the SSH KEY for the user to copy & paste over in the Lagoon UI.
+          if (answers.recipe === 'lagoon' && keys.lastKeyGeneratedOutput !== null) {
+            process.stdout.write(keys.lastKeyGeneratedOutput);
+            return true;
+          }
+        },
+        weight: 520,
       },
     },
     'lagoon-site': {
@@ -78,23 +98,18 @@ module.exports = {
         type: 'autocomplete',
         message: 'Which project?',
         source: (answers, input) => {
+          // Set key to current key if the key was generated during this run.
+          if (keys.currentKey && keys.currentKey.id) {
+            answers['lagoon-auth'] = keys.currentKey.id;
+          }
           return getAutoCompleteSites(answers['lagoon-auth'], lando, input).then(sites => {
             return _.orderBy(sites, ['name']);
           });
         },
         when: answers => {
-          // Check if auth is a key or an email
-          // NOTE: this is a weaksauce check
-          const isEmail = _.includes(answers['lagoon-auth'], '@');
-          // If is email then set and spoof
-          if (isEmail) {
-            answers.lagoonEmail = answers['lagoon-auth'];
-            answers['lagoon-auth'] = 'new';
-          }
-          // When will then be now? SOON
-          return answers.recipe === 'lagoon' && answers['lagoon-auth'] && answers['lagoon-auth'] !== 'new';
+          return answers.recipe === 'lagoon';
         },
-        weight: 510,
+        weight: 530,
       },
     },
   }),
@@ -121,20 +136,6 @@ module.exports = {
       },
     },
     build: (options, lando) => {
-      // Flow for new keys
-      if (options['lagoon-auth'] === 'new') {
-        return [{
-          name: 'generate-key',
-          // eslint-disable-next-line max-len
-          cmd: `/helpers/lagoon-generate-key.sh "${getKeyId(keyDefaults.host, options.lagoonEmail)}" "${options.lagoonEmail}"`,
-        }];
-      }
-
-      // Otherwise do get the site get thing
-      // const lagoonApi = api.getLagoonApi(_.merge({}, keyDefaults, {
-      //   id: options['lagoon-auth'],
-      // }), lando);
-
       return api.getLagoonApi(options['lagoon-auth'], lando).getProject(options['lagoon-site']).then(project => {
         return [{
           name: 'clone-repo',
@@ -145,19 +146,6 @@ module.exports = {
     },
   }],
   build: (options, lando) => {
-    // Exit if we just generated a Lando key.
-    if (options.lagoonEmail) {
-      // Add key data to cache
-      const key = _.merge({}, keyDefaults, {
-        id: getKeyId(keyDefaults.host, options.lagoonEmail),
-        name: `${options.lagoonEmail} [${keyDefaults.host}]`,
-        email: options.lagoonEmail,
-      });
-      const keyCache = lando.cache.get(utils.keyCacheId);
-      lando.cache.set(utils.keyCacheId, utils.sortKeys(keyCache, [key]), {persist: true});
-      exit();
-    }
-
     // Path to lagoonfile
     const lagoonFile = path.join(options.destination, '.lagoon.yml');
     // Error if we don't have a lagoon.yml
