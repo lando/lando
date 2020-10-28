@@ -82,6 +82,26 @@ exports.findClosestApplication = (apps = []) => _(apps)
   .value();
 
 /*
+ * Helper to filter relations
+ */
+exports.getSyncableRelationships = (relationships = {}, services = []) => _(relationships)
+  // Arrayify
+  .toPairs()
+  // Break it up and augment a bit
+  .map(data => ({key: data[0], value: data[1], service: _.first(data[1].split(':'))}))
+  // Add in the service type
+  .map(data => _.merge(data, _.find(services, {name: data.service})))
+  // Break up type
+  .map(data => _.merge(data, {type: _.first(data.type.split(':')), version: _.last(data.type.split(':'))}))
+  // Filter out unsupported syncable services
+  // @NOTE: use an external list if needed at some points
+  .filter(data => _.includes(['mariadb', 'mysql', 'postgresql'], data.type))
+  // Reconstruct
+  .map(data => ([data.key, data.value]))
+  .fromPairs()
+  .value();
+
+/*
  * Helper to load all the platform config files we can find
  */
 exports.loadConfigFiles = baseDir => {
@@ -161,6 +181,9 @@ exports.parseRelationships = (apps, open = {}) => _(apps)
 exports.parseRoutes = (routes, domain) => _(routes)
   // Add implicit data and defaults
   .map((config, url) => ([url, _.merge({primary: false, attributes: {}, id: null, original_url: url}, config)]))
+  // Filter out FQDNs because they are going to point to a prod site
+  // NOTE: do we want to make the above configurable?
+  .filter(route => _.includes(route[0], '{default}'))
   // Replace URL defaults
   .map(route => ([replaceDefault(route[0], domain), route[1]]))
   // Replace config defaults

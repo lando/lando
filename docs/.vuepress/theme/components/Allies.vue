@@ -17,12 +17,7 @@ export default {
     };
   },
   mounted() {
-    this.$api.get('/v1/sponsors/ally').then(response => {
-      this.allies = response.data || [];
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    this.allies = this.$sponsors.filter(sponsor => sponsor.type == 'ally');
   },
 };
 </script>

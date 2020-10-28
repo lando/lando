@@ -11,7 +11,7 @@
 const _ = require('lodash');
 const fs = require('fs-extra');
 const Log = require('./../lib/logger');
-const log = new Log({logLevelConsole: 'debug'});
+const log = new Log({logLevelConsole: 'debug', logName: 'dev-version'});
 const Shell = require('./../lib/shell');
 const shell = new Shell(log);
 

@@ -36,5 +36,10 @@ fi
 
 # Make sure our local build dir exists
 mkdir -p /app/.platform/local
+# Make sure our mount points exist
+for MOUNT in `platform mounts --paths`; do
+  mkdir -p "$PLATFORM_APP_DIR/$MOUNT"
+done
+
 # Run build
 platform local:build $PLATFORM_APPLICATION_NAME --source=/app --destination=/app/.platform/local/lando

@@ -20,10 +20,11 @@ OLD_PLATFORM_APPLICATION=$PLATFORM_APPLICATION
 unset PLATFORM_RELATIONSHIPS
 unset PLATFORM_APPLICATION
 
-# Collect mounts and relationships
+# Collect mounts, relationships and environment
 PLATFORM_PULL_MOUNTS=()
 PLATFORM_PULL_RELATIONSHIPS=()
 PLATFORM_AUTH=${PLATFORMSH_CLI_TOKEN}
+PLATFORM_BRANCH=$(git symbolic-ref --short HEAD)
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -42,7 +43,6 @@ while (( "$#" )); do
         PLATFORM_PULL_RELATIONSHIPS=($(echo "${1##--relationship=}" | sed -r 's/[,]+/ /g'))
         shift
       else
-        PLATFORM_PULL_RELATIONSHIPS=($(echo "$2" | sed -r 's/[,]+/ /g'))
         shift 2
       fi
       ;;
@@ -51,7 +51,6 @@ while (( "$#" )); do
         PLATFORM_PULL_MOUNTS=($(echo "${1##--mount=}" | sed -r 's/[,]+/ /g'))
         shift
       else
-        PLATFORM_PULL_MOUNTS=($(echo "$2" | sed -r 's/[,]+/ /g'))
         shift 2
       fi
       ;;
@@ -79,6 +78,15 @@ platform auth:info
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
+# Validate env
+lando_pink "Verifying $PLATFORM_BRANCH is an active environment..."
+if ! platform env -I --pipe | grep $PLATFORM_BRANCH >/dev/null; then
+  PLATFORM_PARENT=$(platform environment:info -e $PLATFORM_BRANCH parent 2>/dev/null || echo "master")
+  lando_yellow "Branch $PLATFORM_BRANCH is inactive... using the parent environment ($PLATFORM_PARENT) instead"
+  PLATFORM_BRANCH="$PLATFORM_PARENT"
+fi
+lando_green "Verified the $PLATFORM_BRANCH environment is active"
+
 # Validate ssh keys are good
 lando_pink "Verifying your ssh keys work are deployed to the project..."
 if ! platform ssh "true" 2>/dev/null; then
@@ -86,6 +94,18 @@ if ! platform ssh "true" 2>/dev/null; then
  lando_info "Redeploying environment to reload keys..."
  platform redeploy -y
 fi
+
+# If relationships or mounts contain "none" then unset the whole thing so we skip
+for PLATFORM_RELATIONSHIP in "${PLATFORM_PULL_RELATIONSHIPS[@]}"; do
+  if [ "$PLATFORM_RELATIONSHIP" == 'none' ]; then
+    unset PLATFORM_PULL_RELATIONSHIPS
+  fi
+done
+for PLATFORM_MOUNT in "${PLATFORM_PULL_MOUNTS[@]}"; do
+  if [ "$PLATFORM_MOUNT" == 'none' ]; then
+    unset PLATFORM_PULL_MOUNTS
+  fi
+done
 
 # If there are no relationships specified then indicate that
 if [ ${#PLATFORM_PULL_RELATIONSHIPS[@]} -eq 0 ]; then
@@ -119,7 +139,7 @@ EOF
     done
     # Import the DB
     lando_pink "Importing data from the $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship into the $PLATFORM_RELATIONSHIP_SCHEMA schema..."
-    platform db:dump -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA -o | $LCD $PLATFORM_RELATIONSHIP_SCHEMA
+    platform db:dump -e "$PLATFORM_BRANCH" -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA -o | $LCD $PLATFORM_RELATIONSHIP_SCHEMA
   done
 fi
 
@@ -141,7 +161,7 @@ else
       PLATFORM_MOUNT_TARGET="$LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE"
     fi
     lando_pink "Downloading files from the $PLATFORM_MOUNT_SOURCE mount into $PLATFORM_MOUNT_TARGET"
-    platform mount:download --mount $PLATFORM_MOUNT_SOURCE --target "$PLATFORM_MOUNT_TARGET" -y
+    platform mount:download -e "$PLATFORM_BRANCH" --mount $PLATFORM_MOUNT_SOURCE --target "$PLATFORM_MOUNT_TARGET" -y
   done
 fi
 

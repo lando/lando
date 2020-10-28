@@ -26,12 +26,7 @@ export default {
     };
   },
   mounted() {
-    this.$api.get('/v1/sponsors/patriot').then(response => {
-      this.patriots = response.data || [];
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    this.patriots = this.$sponsors.filter(sponsor => sponsor.type == 'patriot');
   },
 };
 </script>

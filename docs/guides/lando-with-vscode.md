@@ -94,7 +94,7 @@ code .vscode/launch.json
       "type": "php",
       "request": "launch",
       "port": 9000,
-      "log": true,
+      "log": false,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
       }

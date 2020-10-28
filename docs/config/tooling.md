@@ -205,7 +205,7 @@ tooling:
 
 ### Options driven tooling
 
-You can also define your own options for use in tooling. These options follow the same spec as [Lando tasks](./../contrib-plugins.md#tasks) and are, generally, used in combination with an underlying script.
+You can also define your own options for use in tooling. These options follow the same spec as [Lando tasks](./../contrib/contrib-plugins.md#tasks) and are, generally, used in combination with an underlying script.
 
 Note that the options interface just provides a way to define and then inject options into a given command. It is up to the user to make sure the underlying command or script knows what to do with such options. Note that if you use interactive options, you need to set `level: app` as shown below:
 

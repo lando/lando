@@ -1,0 +1,51 @@
+name: metrics
+source:
+  root: "/"
+type: nodejs:14
+
+dependencies:
+  nodejs:
+    pm2: "^4.0.0"
+    yarn: "*"
+
+web:
+  commands:
+    start: "PM2_HOME=/app/run pm2 start /app/metrics/server.js --no-daemon"
+  locations:
+    "/public":
+      passthru: false
+      root: "public"
+      allow: true
+      rules:
+        '\.png$':
+          allow: true
+          expires: -1
+
+mounts:
+  run:
+    source: local
+    source_path: run
+
+disk: 5000
+
+hooks:
+  build: |
+    set -e
+    yarn install
+    curl -sS https://platform.sh/cli/installer | php
+
+crons:
+  snapshot:
+    # Take a snapshot automatically every night at 3 am (UTC).
+    spec: '0 3 * * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        /app/.platformsh/bin/platform snapshot:create --yes --no-wait
+      fi
+  renewcert:
+    # Force a redeploy at 9 am (UTC) on the 14th of every month.
+    spec: '0 9 14 * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        /app/.platformsh/bin/platform redeploy --yes --no-wait
+      fi

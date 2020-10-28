@@ -1,0 +1,77 @@
+# This file describes an application. You can have multiple applications
+# in the same project.
+
+# The name of this app. Must be unique within a project.
+name: docs
+source:
+  root: "/"
+
+# The toolstack used to build the application.
+type: nodejs:14
+build:
+  flavor: none
+
+# The size of the persistent disk of the application (in MB).
+disk: 5000
+
+# The configuration of app when it is exposed to the web.
+web:
+  commands:
+    # Run a no-op process that uses no CPU resources, since this is a static site.
+    start: sleep infinity
+  locations:
+    "/":
+      root: "_docs"
+      index:
+        - "index.html"
+      expires: 1y
+      passthru: "/404.html"
+      scripts: true
+      allow: false
+      rules:
+        \.(css|js|json|gif|jpe?g|png|ttf|eot|woff2?|otf|html|ico|svg?)$:
+          allow: true
+        ^/robots\.txt$:
+          allow: true
+        ^/ads\.txt$:
+          allow: true
+        search_index\.json$:
+          allow: true
+        ^/sitemap\.xml$:
+          allow: true
+        ^/rss\.xml$:
+          allow: true
+        ^/feed\.atom$:
+          allow: true
+        ^/feed\.json$:
+          allow: true
+
+# Build time dependencies.
+dependencies:
+  nodejs:
+    yarn: "*"
+
+# Automation
+hooks:
+  build: |
+    set -e
+    yarn install
+    yarn build:docs
+    curl -sS https://platform.sh/cli/installer | php
+
+# The configuration of scheduled execution.
+crons:
+  snapshot:
+    # Take a snapshot automatically every night at 3 am (UTC).
+    spec: '0 3 * * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        /app/.platformsh/bin/platform snapshot:create --yes --no-wait
+      fi
+  renewcert:
+    # Force a redeploy at 9 am (UTC) on the 14th of every month.
+    spec: '0 9 14 * *'
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+        /app/.platformsh/bin/platform redeploy --yes --no-wait
+      fi

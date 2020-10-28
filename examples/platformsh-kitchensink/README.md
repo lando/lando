@@ -38,7 +38,7 @@ There is a repeatable pattern for application containers and services below. Gen
 5. Can I connect to it from a given application container?
 6. Can I pull/push the relationship?
 
-Start up tests
+Start up tests SKIP FOR NOW
 --------------
 
 Run the following commands to get up and running with this example.
@@ -56,7 +56,7 @@ cd sink
 lando start
 ```
 
-Verification commands
+Verification commands SKIP FOR NOW
 ---------------------
 
 Run the following commands to validate things are rolling as they should.
@@ -292,7 +292,7 @@ cd sink/php
 lando ssh -c "curl localhost/chromium.php" | grep "Result" | grep "OK"
 ```
 
-Destroy tests
+Destroy tests SKIP FOR NOW
 -------------
 
 Run the following commands to trash this app like nothing ever happened.

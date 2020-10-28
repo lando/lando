@@ -1,123 +1,51 @@
 <template>
   <div :class="{ subscribe: true, 'subscribe-dark': theme === 'dark' }" :style="customStyles">
-    <script src="//cdn.jsdelivr.net/npm/canvas-confetti@1.0.1/dist/confetti.browser.min.js"></script>
     <h3>{{ title }}</h3>
-    <form id="subscribe-user" @submit.prevent="subscribe" class="subscribe-form">
-      <div v-if="showAlliance" class="subscribe-alliance">
-        <div v-for="(description, key) in allianceRoles" :key="key" class="subscribe-alliance-wrapper">
-          <input
-            type="checkbox"
-            class="subscribe-alliance-checkbox"
-            :id="key"
-            :value="uppercase(key)" v-model="userGroups">
-          <label :for="key">{{ uppercase(key) }} - </label><small>{{ description }}</small>
-        </div>
+    <div id="mc_embed_signup">
+      <form action="https://dev.us12.list-manage.com/subscribe/post?u=59874b4d6910fa65e724a4648&amp;id=613837077f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate subscribe-form" target="_blank" novalidate>
         <input
-          disabled="true"
-          class="hidden-field"
-          name="alliance_role"
-          type="text"
-          :value="getAllianceGroupList()" />
-        <input disabled="true" class="hidden-field" name="alliance_member" type="text" :value="true" />
-        <input disabled="true" class="hidden-field" name="alliance_joined" type="text" :value="today()" />
-      </div>
+          id="mce-EMAIL"
+          type="email"
+          v-model="email"
+          placeholder="Email address"
+          name="EMAIL"
+          class="subscribe-input" />
 
-      <div v-if="showSponsors" class="subscribe-sponsors">
-        <div v-for="(description, key) in sponsorRoles" :key="key" class="subscribe-sponsors-wrapper">
-          <input
-            type="radio"
-            class="subscribe-sponsors-radio"
-            :id="key"
-            :value="uppercase(key)" v-model="sponsor">
-          <label :for="key">{{ uppercase(key) }} - </label><small>{{ description }}</small>
+        <ul style="display: none;" v-if="interests.length > 0">
+          <li v-for="(interest, index) in interests" :key="index">
+            <input
+              type="checkbox"
+              :checked="interest.checked"
+              :value="interest.id"
+              :name="`group[${interest.group}][${interest.id}]`"
+              :id="`mce-group[${interest.group}]-${interest.group}-${index}`">
+            <label :for="`mce-group[${interest.group}]-${interest.group}-${index}`">{{ interest.label }}</label>
+          </li>
+        </ul>
+
+        <div id="mce-responses" class="clear">
+          <div class="response" id="mce-error-response" style="display:none"></div>
+          <div class="response" id="mce-success-response" style="display:none"></div>
         </div>
-        <input disabled="true" class="hidden-field" name="sponsorship_level" type="text" :value="sponsor" />
-        <input disabled="true" class="hidden-field" name="verified_sponsor" type="text" :value="true" />
-        <input disabled="true" class="hidden-field" name="sponsor_joined" type="text" :value="today()" />
-        <p>Check out <a href="https://github.com/sponsors/lando" target="_blank">https://github.com/sponsors/lando</a> if you are unclear
-          on how to match up the sponsorship levels. Email <strong>sponsorships@lando.dev</strong> if things don't seem to match up anymore.</p>
-      </div>
-
-      <input v-if="passcode"
-        type="password"
-        class="subscribe-input"
-        v-model="pw"
-        placeholder="Authorization code"
-        name="passcode" />
-
-      <input
-        :disabled="buttonDisabled"
-        type="email"
-        v-model="email"
-        placeholder="Email"
-        name="email"
-        :class="{ 'subscribe-input': true, disabled: buttonDisabled }" />
-
-      <div v-if="showDevNetwork" class="subscribe-devnetwork">
-        <div class="subscribe-devnetwork-checkbox">
-          <input
-            type="checkbox"
-            id="WORK"
-            value="LOOKING FOR WORK" v-model="userGroups">
-          <label for="WORK">I'm a developer looking for contract work, full time employment or other opportunities</label>
-          <input
-            disabled="true"
-            class="hidden-field"
-            name="available_for_contract_work"
-            type="text"
-            :value="lookingWork" />
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="text" name="b_59874b4d6910fa65e724a4648_613837077f" tabindex="-1" value="">
         </div>
-        <div class="subscribe-devnetwork-checkbox">
-          <input
-            type="checkbox"
-            id="HIRE"
-            value="LOOKING TO HIRE" v-model="userGroups">
-          <label for="HIRE">I'm an employer looking to hire contractors or employees</label>
-          <input
-            disabled="true"
-            class="hidden-field"
-            name="looking_for_developers_for_contract_or_hire"
-            type="text"
-            :value="lookingHire" />
-        </div>
-      </div>
 
-      <div v-if="error" class="subscribe-error">{{ error }}. Try again!</div>
-      <div v-if="success" class="subscribe-success">{{ success }}</div>
-      <input
-        :class="{ button: true, disabled: buttonDisabled || !email }"
-        :disabled="buttonDisabled || !email"
-        type="submit"
-        :value="buttonLabel"
-        name="subscribe" />
-    </form>
+        <input
+          id="mc-embedded-subscribe"
+          :class="{ button: true, disabled: !email }"
+          :disabled="!email"
+          type="submit"
+          :value="buttonLabel"
+          name="subscribe" />
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
-// Const
-const allianceRoles = {
-  administrator: 'Help manage the Lando Alliance, our sponsors, marketing, outreach, event logistics, etc!',
-  blogger: 'Contribute case studies, training materials and other less-technical content to the Lando blog and get credit for it!',
-  contributor: 'Work on Lando\'s code, help manage issues, improve documentation and engage in community support!',
-  evangelist: 'Present, train or speak about Lando at various meetups, camps and conferences and generally spread the good word far and wide!',
-  guider: 'Share working examples of my Lando config (eg browsersync) on the Lando site and get credit for it!',
-  sponsor: 'Sponsor Lando and get swag, shoutouts on Twitter and our websites and other exclusive benefits',
-  upseller: 'Help convince my org, boss or relevant decision maker to sponsor Lando or purchase Lando support/services!',
-};
-const sponsorRoles = {
-  hero: '$4',
-  herald: '$9',
-  ally: '$99',
-  partner: '$999',
-  patriot: '$1776',
-  special: 'Special sponsorship terms',
-  former: 'No longer a sponsor',
-  none: 'Remove as a sponsor',
-};
 
 export default {
-  name: 'Subscribe',
   props: {
     buttonLabel: {
       type: String,
@@ -129,33 +57,13 @@ export default {
         width: '90%',
       }),
     },
-    groups: {
+    interests: {
       type: Array,
-      default: () => (['NEWSLETTER']),
+      default: () => ([]),
     },
-    passcode: {
-      type: String,
-      default: null,
-    },
-    redirect: {
-      type: String,
-      default: null,
-    },
-    showAlliance: {
+    hideInterests: {
       type: Boolean,
-      default: false,
-    },
-    showDevNetwork: {
-      type: Boolean,
-      default: false,
-    },
-    showSponsors: {
-      type: Boolean,
-      default: false,
-    },
-    successMessage: {
-      type: String,
-      default: 'Success! You\'ve subscribed!',
+      default: true,
     },
     title: {
       type: String,
@@ -168,128 +76,8 @@ export default {
   },
   data() {
     return {
-      allianceRoles,
-      buttonDisabled: this.passcode,
       email: '',
-      error: '',
-      pw: '',
-      sponsor: '',
-      sponsorRoles,
-      success: '',
-      userGroups: [],
     };
-  },
-  computed: {
-    lookingHire() {
-      return this.userGroups.includes('LOOKING TO HIRE');
-    },
-    lookingWork() {
-      return this.userGroups.includes('LOOKING FOR WORK');
-    },
-  },
-  methods: {
-    clear() {
-      this.buttonDisabled = this.passcode;
-      this.error = '';
-      this.pw = '';
-      this.sponsor = '';
-      this.success = '';
-      this.userGroups = [];
-    },
-    encrypt(data) {
-      return crypto.subtle.digest('SHA-256', new TextEncoder('utf-8').encode(data)).then(buf => {
-        return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-      });
-    },
-    getAllianceGroupList() {
-      return this.userGroups.filter(value => {
-        return value !== 'LOOKING FOR WORK' && value !== 'LOOKING TO HIRE';
-      }).join(';');
-    },
-    getDefaultGroups() {
-      const defaults = {};
-      if (this.showDevNetwork) {
-        Object.assign(defaults, {
-          '57cd8bf7a6': false,
-          '99872980bb': false,
-        });
-      }
-      if (this.showAlliance) {
-        Object.assign(defaults, {
-          '36113a4526': false,
-          '2abe119d23': false,
-          'f020990e25': false,
-          '4a81e85359': false,
-          'f63decb94d': false,
-          '20270ed04e': false,
-          '8a2f0956f5': false,
-        });
-      }
-      if (this.showSponsors) {
-        Object.assign(defaults, {
-          '1b08452e4a': false,
-          '44db509e64': false,
-          '270e92b16a': false,
-          'd7754c3552': false,
-          'dceea16371': false,
-          'b1a136b4a2': false,
-          '517d319375': false,
-          'f7a6223e35': false,
-        });
-      }
-      return defaults;
-    },
-    getGroups() {
-      if (this.sponsor) this.groups.push(this.sponsor);
-      return this.groups.concat(this.userGroups);
-    },
-    today() {
-      return new Date(new Date().setUTCHours(0, 0, 0, 0)).getTime();
-    },
-    subscribe() {
-      // UX
-      this.buttonDisabled = true;
-      this.error = '';
-      this.success = '';
-      // Set data
-      const data = {defaults: this.getDefaultGroups(), email: this.email, groups: this.getGroups()};
-      // Wait and then do things
-      setTimeout(() => this.$api.put('/v1/subscribe', data).then(response => {
-        this.success = this.successMessage;
-        this.buttonDisabled = false;
-        this.email = '';
-        if (this.redirect) this.$router.push(this.redirect);
-        confetti({
-          particleCount: 100,
-          spread: 270,
-          origin: {
-            y: 0.6,
-          },
-        });
-      })
-      .catch(error => {
-        this.buttonDisabled = false;
-        this.email = '';
-        this.error = error.message;
-      }), 1000);
-    },
-    uppercase(string) {
-      return string.toUpperCase();
-    },
-  },
-  watch: {
-    '$route.path': function() {
-      this.clear();
-    },
-    'pw': function() {
-      this.encrypt(this.pw).then(hash => {
-        if (hash === this.passcode) {
-          this.buttonDisabled = this.buttonDisabled && false;
-        } else {
-          this.buttonDisabled = true;
-        }
-      });
-    },
   },
 };
 </script>

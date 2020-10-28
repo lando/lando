@@ -5,12 +5,6 @@ metaTitle: Getting Started Writing Code for Lando | Lando
 
 # Getting Started
 
-::: danger NOT READY YET!
-We are still working on the Lando Alliance contributor program so this content _may_ be out of date. We are planning to launch on May 4, 2020.
-
-In the meantime, we recommend you get on the waitlist by [joining The Alliance](https://lando.dev/alliance/join/) as a contributor.
-:::
-
 This section is designed for people who want to contribute `code things` to Lando. Specifically, that might mean working on some of the following:
 
 * Lando itself and its plugins
@@ -28,10 +22,9 @@ This section is designed for people who want to contribute `code things` to Land
 
 You will need to go through all the steps in our [Getting Involved](contributing.md) section if you have not done so already. This will get you rolling for contribution. All the steps from the aforementioned section for completeness are shown below:
 
-1. [Join the alliance](./join.md) as a contributor
-2. [Join the comms](./comms.md)
-3. [Install Lando from source and activate secret toggle](./activate.md)
-4. [Add yourself as a contributor](./first.md)
+1. [Join](./comms.md)
+2. [Install Lando from source and activate secret toggle](./activate.md)
+3. [Add yourself as a contributor](./first.md)
 
 ## Good First Issues
 

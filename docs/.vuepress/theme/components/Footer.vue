@@ -78,11 +78,11 @@
             <div class="footer-column-half">
               <h4>Services</h4>
               <ul>
-                <li><a href="https://lando.dev/contact/" target="_blank">Training</a></li>
-                <li><a href="https://lando.dev/contact/" target="_blank">Development</a></li>
-                <li><a href="https://lando.dev/contact/" target="_blank">DevOps</a></li>
-                <li><a href="https://lando.dev/contact/" target="_blank">Whitelabeling</a></li>
-                <li><a href="https://lando.dev/contact/" target="_blank">Development</a></li>
+                <li><a href="https://thinktandem.io/contact" target="_blank">Training</a></li>
+                <li><a href="https://thinktandem.io/contact" target="_blank">Development</a></li>
+                <li><a href="https://thinktandem.io/contact" target="_blank">DevOps</a></li>
+                <li><a href="https://thinktandem.io/contact" target="_blank">Whitelabeling</a></li>
+                <li><a href="https://thinktandem.io/contact" target="_blank">Development</a></li>
               </ul>
               <h4>Repos</h4>
               <ul>
@@ -90,11 +90,11 @@
                 <li><a href="https://github.com/lando/hyperdrive" target="_blank">Hyperdrive</a></li>
                 <li><a href="https://github.com/lando/leia" target="_blank">Leia</a></li>
                 <li><a href="https://github.com/lando/lando/tree/master/docs" target="_blank">Docs</a></li>
-                <li><a href="https://github.com/lando/lando/tree/master/website" target="_blank">Site</a></li>
+                <li><a href="https://github.com/lando/lando/sites" target="_blank">Sites</a></li>
               </ul>
               <h4>Sponsor</h4>
               <ul>
-                <li><a href="https://github.com/sponsors/lando" target="_blank">GitHub Sponsors</a></li>
+                <li><a href="https://github.com/sponsors/lando" target="_blank">GitHub</a></li>
                 <li><a href="https://www.patreon.com/join/devwithlando?" target="_blank">Patreon</a></li>
                 <li><a href="https://opencollective.com/lando" target="_blank">OpenCollective</a></li>
               </ul>
@@ -106,7 +106,7 @@
                 <li><a href="https://launchpass.com/devwithlando" target="_blank">Slack</a></li>
                 <li><a href="https://github.com/lando/lando/tree/master/examples" target="_blank">Code Samples</a></li>
                 <li><a href="https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg" target="_blank">YouTube</a></li>
-                <li><a href="https://lando.dev/contact/" target="_blank">Dedicated</a></li>
+                <li><a href="https://thinktandem.io/contact" target="_blank">Dedicated</a></li>
               </ul>
               <h4>Kalabox</h4>
               <ul>
@@ -148,7 +148,7 @@
               </h3>
               <Subscribe
                 :customStyles="customStyles"
-                :groups="groups"
+                :interests="interests"
                 :title="title"/>
             </div>
           </div>
@@ -173,7 +173,13 @@ export default {
         padding: 0,
       },
       title: '',
-      groups: ['NEWSLETTER'],
+      interests: [{
+        id: 1,
+        group: 37781,
+        checked: true,
+        hidden: true,
+        label: 'Updates',
+      }],
     };
   },
 };

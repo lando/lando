@@ -3,11 +3,9 @@ description: Learn how to communicate with Lando contributors.
 metaTitle: Communicating with contributors | Lando
 ---
 
-# 3. Join the Comms
+# 2. Join
 
-Once you've joined [The Lando Alliance](https://lando.dev/join), we recommend you start collaborating with other contributors. This primarily happens on [GitHub](https://github.com/lando/lando/issues) and [Slack](https://launchpass.com/devwithlando).
-
-Additionally, you can [follow us](https://twitter.com/devwithlando) on the hellscape that is Twitter to help expand our reach.
+We recommend you join the mechanisms below.
 
 ## GitHub
 
@@ -22,7 +20,6 @@ If you are a contributor, it is **highly recommended** you also install [ZenHub]
 Slack serves as the mechanism for Lando support and contributor coordination. You can join the Lando slack org via [LaunchPass](https://launchpass.com/devwithlando). By default, you will be added to the **#community** channel which is our free and open community support channel. You can also join any of the additional channels as is appropriate below:
 
   * **#administrators** - For those who help administer and coordinate Lando
-  * **#alliance** - For all Lando Alliance members
   * **#bloggers** - For those contributing case studies, training materials and other content to the blog
   * **#evangelists** - For those looking to evangelize Lando at meetups, events, camps, etc
   * **#guiders** - For those writing helpful Lando guides and tutorials

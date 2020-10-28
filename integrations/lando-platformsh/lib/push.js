@@ -25,7 +25,7 @@ const task = (service, closestApp) => ({
       },
     },
     relationship: {
-      description: 'A relationship to push up',
+      description: 'A relationship to push up, use "none" to skip',
       passthrough: true,
       alias: ['r'],
       array: true,
@@ -33,14 +33,14 @@ const task = (service, closestApp) => ({
         type: 'checkbox',
         message: 'Choose relationships to push to platformsh',
         choices: () => {
-          return _.keys(closestApp.relationships);
+          return _.keys(closestApp.syncableRelationships);
         },
-        when: () => !_.isEmpty(closestApp.relationships),
+        when: () => !_.isEmpty(closestApp.syncableRelationships),
         weight: 100,
       },
     },
     mount: {
-      description: 'A mount to push up',
+      description: 'A mount to push up, use "none" to skip',
       passthrough: true,
       alias: ['m'],
       array: true,

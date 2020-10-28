@@ -114,6 +114,12 @@ module.exports = (app, lando) => {
       app.log.verbose('parsed platformsh services');
       app.log.silly('platformsh services ares', app.platformsh.services);
 
+      // Figure out what relationships are pullable and not
+      app.platformsh.closestApp.syncableRelationships = pshconf.getSyncableRelationships(
+        app.platformsh.closestApp.relationships,
+        app.platformsh.services
+      );
+
       // Go through our platform config and generate an array of configuration files for each
       // container so we can inject /run/config.json
       app.platformsh.runConfig = runconf.buildRunConfig(app);

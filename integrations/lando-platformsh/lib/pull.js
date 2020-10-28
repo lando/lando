@@ -25,7 +25,7 @@ const task = (service, closestApp) => ({
       },
     },
     relationship: {
-      description: 'A relationship to import',
+      description: 'A relationship to import, use "none" to skip',
       passthrough: true,
       alias: ['r'],
       array: true,
@@ -33,14 +33,14 @@ const task = (service, closestApp) => ({
         type: 'checkbox',
         message: 'Choose relationships to import from platformsh',
         choices: () => {
-          return _.keys(closestApp.relationships);
+          return _.keys(closestApp.syncableRelationships);
         },
-        when: () => !_.isEmpty(closestApp.relationships),
+        when: () => !_.isEmpty(closestApp.syncableRelationships),
         weight: 100,
       },
     },
     mount: {
-      description: 'A mount to download',
+      description: 'A mount to download, use "none" to skip',
       passthrough: true,
       alias: ['m'],
       array: true,

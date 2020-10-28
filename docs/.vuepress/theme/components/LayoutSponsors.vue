@@ -7,7 +7,7 @@
       </a>
     </div>
     <div class="special-sponsor-footer">
-      <a href="https://lando.dev/sponsor/" target="_blank">become a sponsor</a>
+      <a href="https://lando.dev/sponsor" target="_blank">become a sponsor</a>
     </div>
   </div>
 </template>

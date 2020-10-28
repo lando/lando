@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 /*
  * Use this file to augment vuepress with other vue-y things
  */
@@ -8,9 +6,14 @@ export default ({ Vue, options, router, siteData }) => { // eslint-disable-line
     Vue.use({
       install(Vue) {
         Object.defineProperties(Vue.prototype, {
-          $api: {
+          $contributors: {
             get() {
-              return axios.create({baseURL: process.env.LANDO_API});
+              return require('./public/api/contributors.json');
+            },
+          },
+          $sponsors: {
+            get() {
+              return require('./public/api/sponsors.json');
             },
           },
         });

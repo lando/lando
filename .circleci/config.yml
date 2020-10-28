@@ -75,7 +75,7 @@ jobs:
           name: Run func test
           no_output_timeout: 15m
           command: |
-            yarn generate-tests
+            yarn generate:tests
             yarn mocha --timeout 900000 $(circleci tests split ~/project/test/split-file.txt)
       - save_cache:
           paths:
