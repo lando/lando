@@ -99,6 +99,7 @@ module.exports = {
     ],
     confSrc: __dirname,
     command: ['sh -c \'a2enmod rewrite && apache2-foreground\''],
+    composer_version: '2.0.3',
     image: 'apache',
     defaultFiles: {
       _php: 'php.ini',
@@ -158,6 +159,12 @@ module.exports = {
       // Add activate steps for xdebug
       if (options.xdebug) {
         utils.addBuildStep(['docker-php-ext-enable xdebug'], options._app, options.name, 'build_as_root_internal');
+      }
+
+      // Install the desired composer version
+      if (options.composer_version) {
+        const commands = [`/helpers/install-composer.sh ${options.composer_version}`];
+        utils.addBuildStep(commands, options._app, options.name, 'build_internal', true);
       }
 
       // Add in nginx if we need to

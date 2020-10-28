@@ -6,6 +6,8 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Fixed bug causing `platformsh` to not `pull` or `push` using the correct environment [#2467](https://github.com/lando/lando/issues/2467)
 * Fixed bug causing internal proxy route usage to fail when using non-standard ports [#2579](https://github.com/lando/lando/issues/2579)
+* Made `composer` version configurable in relevant `services` and `recipes` [#2658](https://github.com/lando/lando/issues/2658)
+* Set default `composer` version to `2.0.3` [#2658](https://github.com/lando/lando/issues/2658)
 * Updated to Docker Desktop `2.4.0.0` and Docker Compose `1.27.4` [#2657](https://github.com/lando/lando/issues/2657)
 
 ## v3.0.16 - [October 16, 2020](https://github.com/lando/lando/releases/tag/v3.0.16)
