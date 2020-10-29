@@ -12,6 +12,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Removed `X-Frame-Options SAMEORIGIN` header for Nginx service default config [#2648](https://github.com/lando/lando/pull/2648)
 * Set default `composer` version to `2.0.3` [#2658](https://github.com/lando/lando/issues/2658)
 * Updated to Docker Desktop `2.4.0.0` and Docker Compose `1.27.4` [#2657](https://github.com/lando/lando/issues/2657)
+* Updated Terminus to `2.4.1` for `pantheon` recipes
 
 ## v3.0.16 - [October 16, 2020](https://github.com/lando/lando/releases/tag/v3.0.16)
 
