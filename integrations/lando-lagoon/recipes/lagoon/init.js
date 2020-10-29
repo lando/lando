@@ -5,6 +5,7 @@ const path = require('path');
 const _ = require('lodash');
 const api = require('../../lib/api');
 const keys = require('../../lib/keys');
+const authDialogOptions = require('../../lib/auth-dialog-options');
 
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (keyId, lando, input = null) => {
@@ -19,79 +20,13 @@ const getAutoCompleteSites = (keyId, lando, input = null) => {
  */
 module.exports = {
   name: 'lagoon',
-  options: lando => ({
-    'lagoon-auth': {
-      describe: 'A Lagoon SSH key',
-      string: true,
-      interactive: {
-        type: 'list',
-        choices: keys.getKeyChoices(lando),
-        message: 'Select a Lagoon account',
-        filter: answer => {
-          if (answer === 'new') {
-            // Generate a new key if user selected new.
-            return keys.generateKeyAndWait(lando).then(() => {
-              return answer;
-            });
-          }
-          return answer;
-        },
-        when: answers => {
-          if (answers.recipe !== 'lagoon') {
-            return false;
-          }
-          // Set this answer for easy access later.
-          answers['lagoon-has-keys'] = !_.isEmpty(keys.getCachedKeys(lando));
-          // Auto generate new key if there are no keys.
-          if (!answers['lagoon-has-keys']) {
-            return keys.generateKeyAndWait(lando).then(() => {
-              // return false so this option is not shown.
-              return false;
-            });
-          }
-          return true;
-        },
-        weight: 500,
-      },
-    },
-    'lagoon-new-key': {
-      hidden: true,
-      string: true,
-      interactive: {
-        name: 'lagoon-new-key',
-        type: 'input',
-        message: 'Copy/paste the SSH key above into the Lagoon UI; Then press [Enter]',
-        validate: () => {
-          // Attempt whoami
-          // When we support alternate host, port, and uri, they will need to be passed into opts here.
-          const opts = {};
-          // Creates/updates lagoon-pending key and writes data to cache
-          keys.setPendingKey(lando, opts);
-
-          return api.getLagoonApi('lagoon-pending', lando).whoami()
-            .then(data => {
-              // Set email and promote pending key and cache data
-              opts.email = data.email;
-              // promotePendingKey sets keys.currentKey which is used in the next step.
-              keys.promotePendingKey(lando, opts);
-              return true;
-            })
-            .catch(error => {
-              // Returning a string displays it as an error and allows them to try again.
-              return 'Authentication failed. Please try again.';
-            });
-        },
-        when: answers => {
-          // Print the SSH KEY for the user to copy & paste over in the Lagoon UI.
-          if (answers.recipe === 'lagoon' && keys.lastKeyGeneratedOutput !== null) {
-            process.stdout.write(keys.lastKeyGeneratedOutput);
-            return true;
-          }
-        },
-        weight: 520,
-      },
-    },
-    'lagoon-site': {
+  options: lando => {
+    // Set authentication options which facilitates new key workflow.
+    // Note that keys.currentKey is set in auth-dialog-options and managed
+    // globally because of state limitations in inquirer.
+    const opts = authDialogOptions(lando, true);
+    // Continue init options.
+    opts['lagoon-site'] = {
       describe: 'A Lagoon project name',
       string: true,
       interactive: {
@@ -111,8 +46,9 @@ module.exports = {
         },
         weight: 530,
       },
-    },
-  }),
+    };
+    return opts;
+  },
   overrides: {
     webroot: {
       when: () => false,
