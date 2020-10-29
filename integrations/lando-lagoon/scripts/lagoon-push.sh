@@ -7,7 +7,7 @@ set -e
 #   --files       Remote drush alias, without the leading "lagoon." (openshiftProjectName value from the API)
 #
 # Set DEBUG=1 for helpful output
-DEBUG=1
+DEBUG=0
 
 if [ $DEBUG = 1 ]; then
   echo "1: ${1}"

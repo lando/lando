@@ -50,6 +50,10 @@ const getTaskOpts = options => {
     interactive: {
       type: 'list',
       choices: (answers, input) => {
+        // Set key to current key if the key was generated during this run.
+        if (keys.currentKey && keys.currentKey.id) {
+          answers['lagoon-auth'] = keys.currentKey.id;
+        }
         return getEnvironmentChoices(answers['lagoon-auth'], lando, app.name);
       },
       message: 'Pull files from?',

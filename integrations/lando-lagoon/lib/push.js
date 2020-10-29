@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const api = require('./api');
 const keys = require('./keys');
+const authDialogOptions = require('./auth-dialog-options');
 
 const getEnvironmentChoices = (keyId, lando, projectName) => {
   return api.getLagoonApi(keyId, lando)
@@ -16,6 +17,53 @@ const getEnvironmentChoices = (keyId, lando, projectName) => {
     });
 };
 
+// Build options object.
+const getTaskOpts = options => {
+  const lando = options._app._lando;
+  const app = options._app;
+  const opts = authDialogOptions(lando, false);
+
+  // Add database environment selector.
+  opts['database'] = {
+    description: 'The remote environment to push the database to',
+    passthrough: true,
+    alias: ['d'],
+    interactive: {
+      type: 'list',
+      choices: (answers, input) => {
+        // Set key to current key if the key was generated during this run.
+        if (keys.currentKey && keys.currentKey.id) {
+          answers['lagoon-auth'] = keys.currentKey.id;
+        }
+        return getEnvironmentChoices(answers['lagoon-auth'], lando, app.name);
+      },
+      message: 'Push local database to?',
+      weight: 601,
+    },
+  };
+
+  // Add files environment selector.
+  opts['files'] = {
+    description: 'The remote environment to push local files to',
+    passthrough: true,
+    alias: ['f'],
+    interactive: {
+      type: 'list',
+      choices: (answers, input) => {
+        // Set key to current key if the key was generated during this run.
+        if (keys.currentKey && keys.currentKey.id) {
+          answers['lagoon-auth'] = keys.currentKey.id;
+        }
+        return getEnvironmentChoices(answers['lagoon-auth'], lando, app.name);
+      },
+      message: 'Push local files to?',
+      weight: 602,
+    },
+  };
+
+  return opts;
+};
+
 // The non dynamic base of the task
 const defaultTask = options => ({
   service: 'cli',
@@ -23,46 +71,7 @@ const defaultTask = options => ({
   cmd: '/helpers/lagoon-push.sh',
   level: 'app',
   stdio: ['inherit', 'pipe', 'pipe'],
-  options: {
-    auth: {
-      describe: 'Lagoon instance',
-      passthrough: true,
-      string: true,
-      interactive: {
-        type: 'list',
-        choices: keys.getKeyChoices(options._app._lando),
-        message: 'Select a Lagoon account',
-        when: () => !_.isEmpty(keys.getCachedKeys(options._app._lando)),
-        weight: 600,
-      },
-    },
-    database: {
-      description: 'The remote environment to push the database to',
-      passthrough: true,
-      alias: ['d'],
-      interactive: {
-        type: 'list',
-        choices: (answers, input) => {
-          return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name);
-        },
-        message: 'Push local database to?',
-        weight: 601,
-      },
-    },
-    files: {
-      description: 'The remote environment to push local files to',
-      passthrough: true,
-      alias: ['f'],
-      interactive: {
-        type: 'list',
-        choices: (answers, input) => {
-          return getEnvironmentChoices(answers['auth'], options._app._lando, options._app.name);
-        },
-        message: 'Push local files to?',
-        weight: 602,
-      },
-    },
-  },
+  options: getTaskOpts(options),
 });
 
 /*
