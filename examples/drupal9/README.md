@@ -54,12 +54,11 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal9
 lando mysql -udrupal9 -pdrupal9 drupal9 -e quit
 
-# Should use drush 10.x globally by default
+# Should show fake drush by default
 cd drupal9
-lando drush version | grep 10.
-lando ssh -c "which drush" | grep ".composer/vendor/bin/drush"
+lando ssh -c "which drush" | grep "/helpers/drush"
 
-# Should really use a site-local drush though
+# Should use site-local drush if installed
 cd drupal9
 lando composer require drush/drush
 lando ssh -c "which drush" | grep "/app/vendor/bin/drush"

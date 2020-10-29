@@ -96,6 +96,7 @@ module.exports = {
       '/sbin',
       '/bin',
       '/var/www/.composer/vendor/bin',
+      '/helpers',
     ],
     confSrc: __dirname,
     command: ['sh -c \'a2enmod rewrite && apache2-foreground\''],
