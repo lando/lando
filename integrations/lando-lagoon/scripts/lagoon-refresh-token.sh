@@ -22,7 +22,7 @@ KEY_USER=${2:-lagoon}
 KEY_HOST=${3:-ssh.lagoon.amazeeio.cloud}
 KEY_PORT=${4:-32222}
 KEY_URL=${5:-https://api.lagoon.amazeeio.cloud/graphql}
-SSH_CMD="ssh -p ${KEY_PORT} -t ${KEY_USER}@${KEY_HOST} -i ${KEY_PATH}/${KEY_ID} token 2>/dev/null"
+SSH_CMD="ssh  -o StrictHostKeyChecking=no -p ${KEY_PORT} -t ${KEY_USER}@${KEY_HOST} -i ${KEY_PATH}/${KEY_ID} token 2>/dev/null"
 
 KEY_PRIVATE_FILE="${KEY_PATH}/${KEY_ID}"
 KEY_PUBLIC_FILE="${KEY_PRIVATE_FILE}.pub"

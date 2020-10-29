@@ -114,12 +114,13 @@ class LagoonApi {
         // Refresh token and try once more if response is a 403.
         if (!finalTry && data.code >= 400) {
           this.log.verbose('Lagoon request unauthorized; Refreshing token and trying again...');
-          return this.refreshToken().then(res => {
-            // Set token with latest from token file.
-            this.setTokenFromFile();
-            // Run the request once more.
-            return this.send(query, true);
-          });
+          return this.refreshToken()
+            .then(res => {
+              // Set token with latest from token file.
+              this.setTokenFromFile();
+              // Run the request once more.
+              return this.send(query, true);
+            });
         }
 
         const msg = [
@@ -135,7 +136,7 @@ class LagoonApi {
 
   refreshToken() {
     this.log.verbose('Refreshing token');
-    return utils.landoRun(
+    return utils.run(
       this.lando,
       // eslint-disable-next-line max-len
       `/helpers/lagoon-refresh-token.sh ${this.key.id} ${this.key.user} ${this.key.host} ${this.key.port} ${this.key.url}`

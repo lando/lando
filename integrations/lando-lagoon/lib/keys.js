@@ -3,9 +3,11 @@ const path = require('path');
 const _ = require('lodash');
 const utils = require('./utils');
 
+// Lando cache ID for Lagoon keys.
 const keyCacheId = 'lagoon.keys';
 
-// Globals
+// Globals defined to get around limitations
+// in state between various sections of an inquirer object.
 exports.lastKeyGeneratedOutput = null;
 exports.currentKey = null;
 
@@ -30,16 +32,6 @@ const keyDefaults = {
 const getKeyId = (host, email = '') => `lagoon_${email.replace('@', '-at-')}_${host}`;
 
 /*
- * Run lagoon-generate-key.sh in a container
- */
-// const generateKey = (file, name, lando) => {
-//   return exports.landoRun(
-//     lando,
-//     `/helpers/lagoon-generate-key.sh ${file} ${name}`
-//   );
-// };
-
-/*
  * Renames lagoon-pending keys to the ID specified.
  * Should only be promoted after validating.
  * lando.config.userConfRoot
@@ -48,10 +40,10 @@ const promotePendingKeyFile = (id, userConfRoot) => {
   const keyDir = path.join(userConfRoot, 'keys');
   const oldPath = path.join(keyDir, 'lagoon-pending');
   const newPath = path.join(userConfRoot, 'keys', id);
-  fs.copyFileSync(oldPath, newPath);
-  fs.copyFileSync(`${oldPath}.pub`, `${newPath}.pub`);
+  fs.renameSync(oldPath, newPath);
+  fs.renameSync(`${oldPath}.pub`, `${newPath}.pub`);
   if (fs.existsSync(`${oldPath}.token`)) {
-    fs.copyFileSync(`${oldPath}.token`, `${newPath}.token`);
+    fs.renameSync(`${oldPath}.token`, `${newPath}.token`);
   }
 };
 
@@ -73,7 +65,7 @@ const getProcessedKeys = (lando, newKeys=[]) => {
 };
 
 /*
- * Adds/updates key in cache array
+ * Efficiently adds/updates key in cache array.
  */
 const setKeyInCache = (lando, key) => {
   const keyCache = lando.cache.get(keyCacheId);
@@ -113,16 +105,27 @@ const getNewKey = opts => {
   return newKey;
 };
 
+/*
+ * Simply returns the raw key cache.
+ */
 exports.getCachedKeys = lando => {
   return lando.cache.get(keyCacheId);
 };
 
+/*
+ * Creates a 'lagoon-pending' key structure and assures
+ * it exists in the Lando cache for the api lib to work with.
+ */
 exports.setPendingKey = (lando, opts = {}) => {
   const key = getNewKey(_.merge(opts, {email: 'lagoon@example.com'}));
   key.id = 'lagoon-pending';
   setKeyInCache(lando, key);
 };
 
+/*
+ * Promotes `lando-pending` to a properly named key.
+ * This should be run after the pending key has been validated.
+ */
 exports.promotePendingKey = (lando, opts) => {
   const key = getNewKey(opts);
   promotePendingKeyFile(key.id, lando.config.userConfRoot);
@@ -132,53 +135,19 @@ exports.promotePendingKey = (lando, opts) => {
 };
 
 /*
- * Key choices for inquirer
+ * Key choices for inquirer; Orphaned and pending keys are omitted.
  */
 exports.getKeyChoices = (lando = []) => _(getProcessedKeys(lando))
   .map(key => ({name: key.email, value: key.id}))
   .thru(tokens => tokens.concat([{name: 'add a key', value: 'new'}]))
   .value();
 
+/*
+ * Generates a new lagoon-pending key.
+ */
 exports.generateKeyAndWait = lando => {
-  const scriptGenerateKeyLagoon = path.join(
-    lando.config.pluginDirs[0],
-    'integrations',
-    'lando-lagoon',
-    'scripts',
-    'lagoon-generate-key.sh'
-  );
-  const scriptGenerateKey = path.join(
-    lando.config.pluginDirs[0],
-    'plugins',
-    'lando-recipes',
-    'scripts',
-    'generate-key.sh'
-  );
-  const scriptLog = path.join(
-    lando.config.pluginDirs[0],
-    'plugins',
-    'lando-core',
-    'scripts',
-    'log.sh'
-  );
-  const dirKeys = path.join(lando.config.userConfRoot, 'keys');
-
-  const cmd = [
-    'docker',
-    'run',
-    '-i',
-    '--rm',
-    '--name',
-    'landolagoonkeygen',
-    `-v ${scriptGenerateKeyLagoon}:/helpers/lagoon-generate-key.sh`,
-    `-v ${scriptGenerateKey}:/helpers/generate-key.sh`,
-    `-v ${scriptLog}:/helpers/log.sh`,
-    `-v ${dirKeys}:/lando/keys`,
-    'devwithlando/util',
-    '/helpers/lagoon-generate-key.sh lagoon-pending lando',
-  ];
-
-  return utils.run(cmd, lando).then(stdout => {
+  const cmd = '/helpers/lagoon-generate-key.sh lagoon-pending lando';
+  return utils.run(lando, cmd).then(stdout => {
     // Set in exports for easier management for consumers.
     exports.lastKeyGeneratedOutput = stdout;
     return stdout;
