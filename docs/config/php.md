@@ -53,6 +53,7 @@ services:
     webroot: .
     xdebug: false
     composer: []
+    composer_version: '2.0.3'
     # Below only valid for via: cli
     command: tail -f /dev/null
     config:
@@ -151,6 +152,19 @@ xdebug.remote_host = YOUR HOST IP ADDRESS
 ```
 
 You can use `lando info --deep | grep IPAddress` to help discover the correct host ip address but please note that this can change and will likely differ from dev to dev.
+
+### Installing composer
+
+As of Lando `3.0.17` you can configure the version of `composer` you would like to install. This _should_ respect any of the versions listed on the [Composer download page](https://getcomposer.org/download/) but it is required you specify down to the patch version.
+
+```yaml
+services:
+  myservice:
+    type: php
+    composer_version: "1.10.1"
+```
+
+You can also choose to ignore the `composer` install step by setting `composer_version: false`. This will use whatever version of `composer` was last bundled with our `php` image.
 
 ### Installing global dependencies
 

@@ -88,3 +88,7 @@ tooling:
     cmd: if [ ! -z "$SPECIAL" ]; then echo "$SPECIAL"; fi
     env:
       SPECIAL: HOLLA
+  workdir:
+    cmd: pwd
+    service: web
+    dir: /tmp

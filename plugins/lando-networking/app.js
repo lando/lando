@@ -18,7 +18,7 @@ module.exports = (app, lando) => {
     .map(container => {
       // Grab from the proxy if we have them
       const aliases = _(_.get(app, `config.proxy.${container.service}`, []))
-        .map(entry => _.isString(entry) ? entry : entry.host)
+        .map(entry => _.isString(entry) ? entry : entry.hostname)
         .map(entry => _.first(entry.split(':')))
         .compact()
         .value();

@@ -52,7 +52,8 @@ const setBuildSteps = options => {
   options.build_root.push('/helpers/pantheon.sh');
   options.build.push('/helpers/auth.sh');
   options.run_root.push('/helpers/binding.sh');
-  // Add in the framework-correct build steps
+  // Add composer install step
+  if (options.build_step) options.build.unshift('composer install');
   return options;
 };
 
@@ -68,6 +69,7 @@ module.exports = {
     run_root: [],
     cache: true,
     confSrc: __dirname,
+    composer_version: false,
     defaultFiles: {
       php: 'php.ini',
       database: 'mysql.cnf',

@@ -7,19 +7,23 @@ services:
     type: php
   cli:
     type: php
+    composer_version: false
     via: cli
     build_as_root:
       - curl -sL https://deb.nodesource.com/setup_14.x | bash -
       - apt-get install -y nodejs
   cliworker:
     type: php
+    composer_version: false
     via: cli
     command: sleep infinity
   cliold:
     type: php:5.6
+    composer_version: false
     via: cli
   custom:
     type: php:7.1
+    composer_version: false
     via: nginx
     ssl: true
     xdebug: true
@@ -40,12 +44,15 @@ services:
         OTHER: stuff
   custom74:
     type: php:7.4
+    composer_version: false
   composer:
     type: php:7.0
+    composer_version: "2.0.2"
     composer:
       phpunit/phpunit: "*"
   withnode:
     type: php:custom
+    composer_version: false
     via: cli
     overrides:
       image: lando/php:7.4-with-node12
