@@ -33,6 +33,7 @@ tooling:
   mycommand:
     service: this is required, use `lando info` to find the one you want
     description: Runs <mycommand> commands
+    dir: cwd | absolute path to elsewhere
     cmd: mycommand
     user: you
     options:
@@ -158,6 +159,22 @@ tooling:
     cmd: deploy.sh
     env:
       TARGET: production
+```
+
+### Current working directory
+
+By default Lando will run your tooling command in the container equivalent of the directory you are in on your host.
+
+You can change this behavior by specifiying an absolute path to run your command. Note that if you want to run a command from your project root you should use `/app` as the starting point.
+
+As an example if you wanted to install `node` dependencies from `path/to/theme` relative to you project root you would use the below.
+
+```yaml
+tooling:
+  build:
+    service: appserver
+    cmd: yarn
+    dir: /app/path/to/theme
 ```
 
 ### Dynamic service commands

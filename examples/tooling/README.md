@@ -69,6 +69,9 @@ lando cmdsub | grep /app/README.md
 
 # Should be able to run bash oneliners
 lando oneliner | grep HOLLA
+
+# Should be able to set the working directory
+lando workdir | grep /tmp
 ```
 
 Destroy tests

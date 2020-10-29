@@ -247,12 +247,10 @@ module.exports = {
           collapsable: false,
           children: [
             'contributing',
-            'join',
             'comms',
             'activate',
             'first',
             'support',
-            'allianceroles',
           ],
         },
         {
@@ -288,16 +286,6 @@ module.exports = {
           ],
         },
         {
-          title: 'Blogging',
-          collapsable: false,
-          children: [
-            'blogging-intro',
-            'blogging-add',
-            'blogging-remove',
-            'blogging-promote',
-          ],
-        },
-        {
           title: 'Writing Guides',
           collapsable: false,
           children: [
@@ -318,12 +306,10 @@ module.exports = {
             'contrib-testing',
             'contrib-building',
             'contrib-shipping',
-            'contrib-api',
-            'contrib-blog',
             'contrib-docs',
-            'contrib-events',
-            'contrib-metrics',
-            'contrib-website',
+            ['https://github.com/lando/sites', 'Events'],
+            ['https://github.com/lando/metrics', 'Metrics'],
+            ['https://github.com/lando/sites', 'Website'],
           ],
         },
         {
@@ -331,15 +317,7 @@ module.exports = {
           collapsable: false,
           children: [
             'sponsor-intro',
-            'sponsor-benefits',
             'sponsor-faq',
-          ],
-        },
-        {
-          title: 'Upselling',
-          collapsable: false,
-          children: [
-            'upseller-intro',
           ],
         },
         {
@@ -349,7 +327,6 @@ module.exports = {
             'admin-intro',
             'admin-onboarding',
             'admin-sponsors',
-            'admin-alliance',
             'admin-timeline',
           ],
         },

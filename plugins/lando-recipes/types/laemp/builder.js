@@ -88,6 +88,7 @@ const getServices = options => ({
     build_as_root_internal: options.build_root,
     build_internal: options.build,
     composer: options.composer,
+    composer_version: options.composer_version,
     config: utils.getServiceConfig(options),
     run_as_root_internal: options.run_root,
     ssl: true,

@@ -22,16 +22,8 @@ module.exports = {
   builder: (parent, config) => class LandoDrupal9 extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-      // @TODO: Add in drupal console things
-      /*
-      if (options.drupal === true) {
-        options.build = [dcInstall];
-        options.tooling = {drupal: {
-          service: 'appserver',
-          description: 'Runs drupal console commands',
-        }};
-      }
-      */
+      // Set drush to false
+      options.drush = false;
 
       // Let's make sure we set appropripate default versions for things
       // See: https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9

@@ -9,7 +9,7 @@ const utils = require('./utils');
  */
 module.exports = (config, injected) => {
   // Get our defaults and such
-  const {name, app, cmd, describe, env, options, service, stdio, user} = utils.toolingDefaults(config);
+  const {name, app, cmd, describe, dir, env, options, service, stdio, user} = utils.toolingDefaults(config);
   // Handle dynamic services and passthrough options right away
   // Get the event name handler
   const eventName = name.split(' ')[0];
@@ -19,7 +19,7 @@ module.exports = (config, injected) => {
     // Get an interable of our commandz
     .then(() => _.map(utils.parseConfig(cmd, service, options, answers)))
     // Build run objects
-    .map(({command, service}) => utils.buildCommand(app, command, service, user, env))
+    .map(({command, service}) => utils.buildCommand(app, command, service, user, env, dir))
     // Try to run the task quickly first and then fallback to compose launch
     .each(runner => utils.dockerExec(injected, stdio, runner).catch(execError => {
       return injected.engine.isRunning(runner.id).then(isRunning => {

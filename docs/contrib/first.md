@@ -3,7 +3,7 @@ description: Learn how to make your first contribution to Lando.
 metaTitle: Make your first contribution | Lando
 ---
 
-# 5. Make First Contribution
+# 4. Make First Contribution
 
 Now that you are all set up, it's time to make your first contribution. Follow the sections below to add yourself to the [team](./team.html) and learn our workflow.
 

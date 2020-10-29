@@ -46,11 +46,10 @@ And titles for some things that might be better as blog posts or general documen
 
 You will need to go through all the steps in our [Getting Involved](contributing) section if you have not done so already. This will get you rolling for contribution. All the steps from the aforementioned section for completeness are shown below:
 
-1. [Join the alliance](./join.md)
-2. [Join the comms](./comms.md)
-3. [Install Lando from source and activate secret toggle](./activate.md)
-4. [Add yourself as a contributor](./first.md)
-5. [Proceed to adding your first guide](./guides-add.md)
+1. [Join](./comms.md)
+2. [Install Lando from source and activate secret toggle](./activate.md)
+3. [Add yourself as a contributor](./first.md)
+4. [Proceed to adding your first guide](./guides-add.md)
 
 If you are having issues with any of the above or need some guidance from one of our guide pros, make sure you [join our Slack org](https://launchpass.com/devwithlando) and check out the **#community** and/or **#guiders** channels.
 

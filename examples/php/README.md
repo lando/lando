@@ -46,6 +46,9 @@ lando ssh -s defaults -c "curl http://localhost | grep memory_limit | grep 1G"
 # Should have COMPOSER_MEMORY_LIMIT set to -1
 lando ssh -s defaults -c "env" | grep "COMPOSER_MEMORY_LIMIT=-1"
 
+# Should install composer 2.x by default
+lando ssh -s defaults -c "composer --version --no-ansi" | grep "Composer version 2."
+
 # Should have unlimited memory for php for CLI opts
 lando php -i | grep memory_limit | grep -e "-1"
 lando ssh -s defaults -c "php -i | grep memory_limit | grep -e \"-1\""
@@ -59,6 +62,9 @@ lando ssh -s defaults -c "php -m | grep xdebug" || echo $? | grep 1
 
 # Should use specified php version if given
 lando ssh -s custom -c "php -v" | grep "PHP 7.1"
+
+# Should install composer 1.x if composer_version is set to true
+lando ssh -s custom -c "composer --version --no-ansi" | grep "Composer version 1."
 
 # Should serve via nginx if specified
 lando ssh -s custom_nginx -c "curl http://localhost | grep WEBDIR"
@@ -88,6 +94,9 @@ lando ssh -s composer -c "php -v" | grep "PHP 7.0"
 
 # Should have rsync in php 7.4
 lando ssh -s custom74 -c "rsync --version"
+
+# Should install the specified composer version
+lando ssh -s composer -c "composer --version --no-ansi" | grep "Composer version 2.0.2"
 
 # Should install compose global dependencies if specified by user and have them available in PATH
 lando ssh -s composer -c "phpunit --version"

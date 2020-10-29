@@ -2,7 +2,7 @@
 description: Use Drupal 9 on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, drush, xdebug and custom config files, oh and also import and exports databases.
 ---
 
-# Drupal 9 (beta)
+# Drupal 9
 
 Drupal is a free and open source content-management framework written in PHP and distributed under the GNU General Public License. Drupal provides a back-end framework for at least 2.3% of all web sites worldwide – ranging from personal blogs to corporate, political, and government sites.
 
@@ -51,10 +51,11 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: drupal9
 config:
   php: '7.3'
+  composer_version: '2.0.3'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
-  drush: ^10
+  drush: false
   xdebug: false
   config:
     database: SEE BELOW
@@ -75,6 +76,16 @@ Here is the [recipe config](./../config/recipes.md#config) to set the Drupal 9 r
 recipe: drupal9
 config:
   php: '7.4'
+```
+
+### Choosing a composer version
+
+You can set `composer_version` to any version that is available in our [php service](./php.md#installing-composer).
+
+```yaml
+recipe: backdrop
+config:
+  composer_version: '1.10.1'
 ```
 
 ### Choosing a webserver
@@ -139,19 +150,19 @@ config:
 
 ### Using Drush
 
-By default our Drupal 9 recipe will globally install the [latest version of Drush 10](https://www.drush.org/install/). However, on Drupal 9 this is not really supported anymore, so we _highly recommend_ you install a site-local Drush so that things work as expected.
+As of Drupal 9 and Drush 10 it is preferred you use [a site-local install of Drush](https://www.drush.org/install/). For that reason Lando **will not** globall install a version of Drush for Drupal 9 sites.
 
-#### Using a site-local Drush
-
-You will want to [install a site-local Drush](https://www.drush.org/install/) by requiring it in your projects `composer.json` file.
+You can site-local install drush by requiring it in your projects `composer.json` file.
 
 ```bash
 lando composer require drush/drush
 ```
 
-Once you do, Lando will use the site-local one instead of the default global one.
+Once you do, Lando will be able to use `drush` normally.
 
-It is also recommended to configure a [build step](./../config/services.md#build-steps) to automatically install Drush before your app starts up. This can prevent weird version mismatches and other issues if you are using Drush in other Lando automation like [events](./../config/events.md).
+#### Build steps
+
+Once `drush` is listed in your `composer.json` it is also recommended to configure a [build step](./../config/services.md#build-steps) to automatically install Drush before your app starts up. This ensures `drush` is available after `lando start` and during any other build steps or events.
 
 **Automatically composer install before my app starts**
 
@@ -182,33 +193,12 @@ lando drush uli
 
 This happens because it is actually a difficult problem for Lando to 100% know the canonical URL or service that is serving your application. However you can set up your environment so that commands like `lando drush uli` return the proper URL.
 
-Set a specific local drush uri value by adding a setting for `DRUSH_OPTIONS_URI` in the relevant service. You will need to run `lando rebuild` after adding this setting.
-
-```yaml
-services:
-  appserver:
-    overrides:
-      environment:
-        DRUSH_OPTIONS_URI: "https://mysite.lndo.site"
-```
-
-#### Aliases
-
-You can also use Drush site aliases with command like `lando drush @sitealias cr` by following the [site aliases documentation](https://docs.drush.org/en/stable/usage/#site-aliases).
-
-#### Configuring your root directory
-
-If you are using a webroot besides `.` you will need to remember to `cd` into that directory and run `lando drush` from there. This is because many site-specific `drush` commands will only run correctly if you run `drush` from a directory that also contains a Drupal site.
-
-If you are annoyed by having to `cd` into that directory every time you run a `drush` command you can get around it by [overriding](./../config/tooling.md#overriding) the `drush` tooling command in your [Landofile](./../config/lando.md) so that Drush always runs from your `webroot`.
-
-**Note that hardcoding the `root` like this may have unforseen and bad consequences for some `drush` commands such as `drush scr`.**
-
 ```yaml
 tooling:
   drush:
     service: appserver
-    cmd: drush --root=/app/PATH/TO/WEBROOT
+    env:
+      DRUSH_OPTIONS_URI: "https://mysite.lndo.site"
 ```
 
 ### Using xdebug
