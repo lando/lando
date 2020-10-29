@@ -12,6 +12,6 @@ echo ""
 lando_yellow "This version of drupal prefers you have a site-local install of drush!"
 echo ""
 echo "Run the following command and try drush again:"
-lando_green "lando composer require lando composer require drush/drush"
+lando_green "lando composer require drush/drush"
 
 exit 1
