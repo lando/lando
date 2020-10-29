@@ -68,6 +68,7 @@ module.exports = {
     run_root: [],
     cache: true,
     confSrc: __dirname,
+    composer_version: false,
     defaultFiles: {
       php: 'php.ini',
       database: 'mysql.cnf',
