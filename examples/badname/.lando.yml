@@ -1,6 +1,4 @@
-name: "XYZ AFFAIR"
-# Ź|
+name: "XYŹ | AFFAIR"
 services:
   defaults:
     type: apache
-
