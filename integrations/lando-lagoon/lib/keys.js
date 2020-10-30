@@ -145,11 +145,59 @@ exports.getKeyChoices = (lando = []) => _(getProcessedKeys(lando))
 /*
  * Generates a new lagoon-pending key.
  */
-exports.generateKeyAndWait = lando => {
+exports.generateKey = (lando, method = 'new') => {
+  const last = lando.cache.get('lagoon_last_keygen_method');
+  // Remove lagoon-pending key if last generation was from a copy.
+  // We don't want it removed if it was a newly generated key.
+  if (last && last === 'copy') {
+    const file = path.join(lando.config.userConfigDir, 'lagoon-pending');
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+      fs.unlinkSync(`${file}.pub`);
+    }
+  }
+  lando.cache.set('lagoon_last_keygen', method === 'copy' ? 'copy' : 'new', {persist: true});
   const cmd = '/helpers/lagoon-generate-key.sh lagoon-pending lando';
   return utils.run(lando, cmd).then(stdout => {
     // Set in exports for easier management for consumers.
     exports.lastKeyGeneratedOutput = stdout;
     return stdout;
   });
+};
+
+/*
+ * Attempts to match keyFileToMatch to a known key
+ * by matching the content.
+ */
+const findMatchingKeyByContent = (lando, keyFileToMatch) => {
+  if (!fs.existsSync(keyFileToMatch)) {
+    throw new Error('Invalid key; File not found');
+  }
+  if (!fs.existsSync(`${keyFileToMatch}.pub`)) {
+    throw new Error('Invalid key file; .pub file not found');
+  }
+
+  const contentToMatch = fs.readFileSync(keyFileToMatch).toString().trim();
+  const cachedKeys = exports.getCachedKeys(lando);
+  const match = cachedKeys.find(key => {
+    const keyFileToTest = path.join(lando.config.userConfRoot, 'keys', key.id);
+    const content = fs.readFileSync(keyFileToTest).toString().trim();
+    return content === contentToMatch;
+  });
+
+  return match ? match.id : false;
+};
+
+exports.getMatchingKeyOrCreatePending = (lando, keyFileToMatch) => {
+  const match = findMatchingKeyByContent(lando, keyFileToMatch);
+  if (match) {
+    return match;
+  }
+  // Create `lagoon-pending` (& .pub) based on keyFileToMatch
+  const keysDir = path.join(lando.config.userConfRoot, 'keys');
+  // Copy private key
+  fs.copyFileSync(keyFileToMatch, path.join(keysDir, 'lagoon-pending'));
+  // Copy public key
+  fs.copyFileSync(`${keyFileToMatch}.pub`, path.join(keysDir, 'lagoon-pending.pub'));
+  return 'new';
 };

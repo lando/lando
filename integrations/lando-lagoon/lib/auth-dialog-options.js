@@ -9,6 +9,18 @@ const keys = require('./keys');
  *   With tooling, we can assume it's a lagoon recipe so the check is not required.
  *   ... also, answers.recipe is not available in tooling.
  */
+
+const key = () => ({
+  describe: 'A local SSH key file',
+  string: true,
+  interactive: {
+    type: 'input',
+    message: 'Key file',
+    when: false,
+    weight: 500,
+  },
+});
+
 const auth = (lando, validateRecipeIsLagoon= true) => ({
   describe: 'A Lagoon SSH key',
   string: true,
@@ -19,7 +31,7 @@ const auth = (lando, validateRecipeIsLagoon= true) => ({
     filter: answer => {
       if (answer === 'new') {
         // Generate a new key if user selected new.
-        return keys.generateKeyAndWait(lando).then(() => {
+        return keys.generateKey(lando).then(() => {
           return answer;
         });
       }
@@ -29,18 +41,22 @@ const auth = (lando, validateRecipeIsLagoon= true) => ({
       if (validateRecipeIsLagoon && answers.recipe !== 'lagoon') {
         return false;
       }
-      // Set this answer for easy access later.
-      answers['lagoon-has-keys'] = !_.isEmpty(keys.getCachedKeys(lando));
-      // Auto generate new key if there are no keys.
-      if (!answers['lagoon-has-keys']) {
-        return keys.generateKeyAndWait(lando).then(() => {
-          // return false so this option is not shown.
-          return false;
-        });
+
+      // Handle passed in key
+      if (answers.key) {
+        answers['lagoon-auth'] = keys.getMatchingKeyOrCreatePending(lando, answers.key);
+        // Run the generate key to create the output for display in the next step.
+        if (answers['lagoon-auth'] === 'new') {
+          return keys.generateKey(lando, 'copy').then(() => {
+            return false;
+          });
+        }
+        // We have a found key, return false.
+        return false;
       }
       return true;
     },
-    weight: 500,
+    weight: 501,
   },
 });
 
@@ -81,11 +97,12 @@ const newKey = (lando, validateRecipeIsLagoon= true) => ({
         return true;
       }
     },
-    weight: 520,
+    weight: 502,
   },
 });
 
 module.exports = (lando, validateRecipeIsLagoon) => ({
+  'key': key(lando, validateRecipeIsLagoon),
   'lagoon-auth': auth(lando, validateRecipeIsLagoon),
   'lagoon-new-key': newKey(lando, validateRecipeIsLagoon),
 });
