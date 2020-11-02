@@ -11,30 +11,7 @@ exports.landoRun = (lando, cmd) => {
 };
 
 exports.run = (lando, cmd, opts = null, image='devwithlando/util') => {
-  const scriptsLagoon = path.join(
-    lando.config.pluginDirs[0],
-    'integrations',
-    'lando-lagoon',
-    'scripts'
-  );
-  const scriptLagoonGenerateKey = path.join(scriptsLagoon, 'lagoon-generate-key.sh');
-  const scriptLagoonRefreshToken = path.join(scriptsLagoon, 'lagoon-refresh-token.sh');
-
-  const scriptGenerateKey = path.join(
-    lando.config.pluginDirs[0],
-    'plugins',
-    'lando-recipes',
-    'scripts',
-    'generate-key.sh'
-  );
-
-  const scriptLog = path.join(
-    lando.config.pluginDirs[0],
-    'plugins',
-    'lando-core',
-    'scripts',
-    'log.sh'
-  );
+  const scriptsDir = path.join(lando.config.userConfRoot, 'scripts');
 
   let command = [
     'docker',
@@ -43,10 +20,7 @@ exports.run = (lando, cmd, opts = null, image='devwithlando/util') => {
     '--rm',
     '--name',
     'landolagoonkeygen',
-    `-v ${scriptLagoonGenerateKey}:/helpers/lagoon-generate-key.sh`,
-    `-v ${scriptLagoonRefreshToken}:/helpers/lagoon-refresh-token.sh`,
-    `-v ${scriptGenerateKey}:/helpers/generate-key.sh`,
-    `-v ${scriptLog}:/helpers/log.sh`,
+    `-v ${scriptsDir}:/helpers`,
     `-v ${lando.config.userConfRoot}:/lando`,
   ];
 
