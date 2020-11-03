@@ -1,44 +1,31 @@
 'use strict';
 const path = require('path');
-const build = require('../../../plugins/lando-recipes/lib/build');
-const Shell = require('../../../lib/shell');
 
-exports.landoRun = (lando, cmd) => {
-  const options = {name: 'landoinit', destination: '/tmp'};
-  const config = build.runDefaults(lando, options);
-  config.cmd = cmd;
-  return build.run(lando, build.buildRun(config));
-};
-
-exports.run = (lando, cmd, opts = null, image='devwithlando/util') => {
+exports.run = (lando, cmd, key = null, silent = true, image='devwithlando/util') => {
   const scriptsDir = path.join(lando.config.userConfRoot, 'scripts');
 
   let command = [
     'docker',
     'run',
-    '-i',
+    '--interactive',
     '--rm',
-    '--name',
-    'landolagoonkeygen',
-    `-v ${scriptsDir}:/helpers`,
-    `-v ${lando.config.userConfRoot}:/lando`,
+    '-v',
+    `${scriptsDir}:/helpers`,
+    '-v',
+    `${lando.config.userConfRoot}:/lando`,
   ];
 
-  // Add additional options passed in.
-  if (opts !== null) {
-    command = command.concat(opts);
-  }
+  // Mount the key if we have one
+  if (key) command = command.concat(['-v', `${key}:/key`]);
   // Add the Docker image.
   command.push(image);
-
   // Support cmd input as string or array.
-  if (typeof cmd === 'string') {
-    cmd = cmd.split(' ');
-  }
+  if (typeof cmd === 'string')cmd = cmd.split(' ');
+  // Finish it
   command = command.concat(cmd);
 
+  // Log
   lando.log.verbose('Running command: %s', command.join(' '));
-
-  const shell = new Shell(lando.log);
-  return shell.sh(command);
+  // Run
+  return lando.shell.sh(command, {mode: 'attach', silent, cstdio: ['ignore', 'pipe', 'pipe']});
 };

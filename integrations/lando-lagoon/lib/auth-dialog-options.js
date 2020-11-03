@@ -25,7 +25,8 @@ const auth = (lando, validateRecipeIsLagoon= true) => ({
   string: true,
   interactive: {
     type: 'list',
-    choices: keys.getKeyChoices(lando),
+    // choices: keys.getKeyChoices(lando),
+    choices: [],
     message: 'Select a Lagoon account',
     filter: answer => {
       if (answer === 'new') {
