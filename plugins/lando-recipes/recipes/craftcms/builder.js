@@ -14,28 +14,13 @@ const getCache = cache => {
       portforward: true,
       persist: true,
     };
-  // Or memcached
+    // Or memcached
   } else if (_.includes(cache, 'memcached')) {
     return {
       type: cache,
       portforward: true,
     };
   }
-};
-
-const getNode = node => {
-  // Return redis
-  if (_.includes(node, true)) {
-    return {
-      type: `node:${options.node}`,
-      command: options.command,
-      build_internal: options.build,
-      globals: options.globals,
-      port: options.port,
-      ssl: options.ssl,
-    };
-    // Or memcached
-  };
 };
 
 /*
@@ -54,24 +39,30 @@ module.exports = {
     },
     php: '7.3',
     services: {appserver: {overrides: {environment: {
-      APP_LOG: 'errorlog',
-    }}}},
-    tooling: {craft: {service: 'appserver'}},
+            APP_LOG: 'errorlog',
+          }}}},
+    tooling: {
+      craft: {
+        service: 'appserver',
+        cmd: 'php app/craft',
+        description: 'Runs Craft CMS cli commands',
+      },
+    },
     via: 'apache',
-    webroot: 'web',
+    webroot: '.',
     xdebug: false,
   },
-  builder: (parent, config) => class LandoLaravel extends parent {
+  builder: (parent, config) => class LandoCraft extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       // Add the laravel cli installer command
-      options.composer['laravel/installer'] = '*';
+      // options.composer['laravel/installer'] = '*';
       // Add in artisan tooling
       // @NOTE: does artisan always live one up of the webroot?
-      options.tooling.craft = {
-        service: 'appserver',
-        cmd: `php /app/${options.webroot}/../craft`,
-      };
+      // options.tooling.craft = {
+      //   service: 'appserver',
+      //   cmd: `php /app/${options.webroot}/../craft`,
+      // };
       if (_.has(options, 'cache') && options.cache !== 'none') {
         options.services.cache = getCache(options.cache);
       }
