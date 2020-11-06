@@ -38,34 +38,22 @@ module.exports = {
       php: 'php.ini',
     },
     php: '7.3',
-    services: {appserver: {overrides: {environment: {
-            APP_LOG: 'errorlog',
-          }}}},
-    tooling: {
-      craft: {
-        service: 'appserver',
-        cmd: 'php app/craft',
-        description: 'Runs Craft CMS cli commands',
-      },
-    },
+    services: {},
+    tooling: {},
     via: 'apache',
-    webroot: '.',
+    webroot: 'web',
     xdebug: false,
   },
   builder: (parent, config) => class LandoCraft extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-      // Add the laravel cli installer command
-      // options.composer['laravel/installer'] = '*';
-      // Add in artisan tooling
-      // @NOTE: does artisan always live one up of the webroot?
-      // options.tooling.craft = {
-      //   service: 'appserver',
-      //   cmd: `php /app/${options.webroot}/../craft`,
-      // };
       if (_.has(options, 'cache') && options.cache !== 'none') {
         options.services.cache = getCache(options.cache);
       }
+      options.tooling.craft = {
+        service: 'appserver',
+        cmd: `php /app/${options.webroot}/../craft`,
+      };
       // Send downstream
       super(id, options);
     };
