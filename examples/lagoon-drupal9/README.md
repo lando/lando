@@ -16,8 +16,8 @@ lando poweroff
 
 # Should initialize the lagoon drupal example
 rm -rf drupal && mkdir -p drupal && cd drupal
-mkdir ~/.ssh
-cat "$LAGOON_KEY" > ~/.ssh/id_lagoon
+mkdir -p ~/.ssh
+echo "$LAGOON_KEY" > ~/.ssh/id_lagoon
 chmod 600 ~/.ssh/id_lagoon
 lando init --source lagoon --lagoon-auth ~/.ssh/id_lagoon --lagoon-site drupal9-lando
 
