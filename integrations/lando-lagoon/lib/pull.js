@@ -13,7 +13,7 @@ const getEnvironmentChoices = (key, lando, projectName) => {
   const api = new LagoonApi(key, lando);
   return api.auth().then(() => api.getEnvironments(projectName).then(environments => {
     return _(environments)
-      .map(env => ({name: env.name, value: env.openshiftProjectName}))
+      .map(env => ({name: env.name, value: env.name}))
       .concat([{name: 'none', value: 'none'}])
       .value();
   }));

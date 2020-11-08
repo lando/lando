@@ -6,7 +6,7 @@ set -e
 . /helpers/log.sh
 
 # Set the module
-LANDO_MODULE="pantheon"
+LANDO_MODULE="lagoon"
 
 # This script requires the following:
 #   --keyfile        SSH key filename

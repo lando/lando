@@ -47,12 +47,11 @@ module.exports = {
         options.tooling.lagoon = {service: 'lagooncli', cmd: '/lagoon', user: 'root'};
       }
 
-
       // Inquirer our keys as needed
       const keys = getKeys(options._app.lagoonKeys);
       // Get the pull and push
       options.tooling.pull = getPull(options, keys);
-      // options.tooling.push = getPush(options);
+      options.tooling.push = getPush(options, keys);
 
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(options.services, _.get(options, '_app.lagoon.domain'));
