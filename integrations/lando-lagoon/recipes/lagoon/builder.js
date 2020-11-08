@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const {getKeys} = require('../../lib/keys');
 const {getPull} = require('../../lib/pull');
 const {getPush} = require('../../lib/push');
 const {getLandoAuxServices, getLandoServices, getSQLServices} = require('./../../lib/services');
@@ -46,8 +47,12 @@ module.exports = {
         options.tooling.lagoon = {service: 'lagooncli', cmd: '/lagoon', user: 'root'};
       }
 
-      options.tooling.pull = getPull(options);
-      options.tooling.push = getPush(options);
+
+      // Inquirer our keys as needed
+      const keys = getKeys(options._app.lagoonKeys);
+      // Get the pull and push
+      options.tooling.pull = getPull(options, keys);
+      // options.tooling.push = getPush(options);
 
       // Map into lando proxy routes
       options.proxy = getLandoProxyRoutes(options.services, _.get(options, '_app.lagoon.domain'));

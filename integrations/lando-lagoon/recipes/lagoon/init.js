@@ -12,13 +12,6 @@ const LagoonApi = require('./../../lib/api');
 // Lagoon
 const lagoonKeysCache = 'lagoon.keys';
 
-// Helper to get keys
-const getKeys = (keys = []) => _(keys)
-  .map(key => ({name: key.email, value: key.key}))
-  .thru(keys => keys.concat([{name: 'add a new key', value: 'more'}]))
-  .compact()
-  .value();
-
 // Helper to select the correct key between option and generated
 const getPreferredKey = answers => answers['lagoon-auth-generate'] || answers['lagoon-auth'];
 
@@ -48,7 +41,7 @@ module.exports = {
       string: true,
       interactive: {
         type: 'list',
-        choices: getKeys(lando.cache.get(lagoonKeysCache)),
+        choices: keys.getKeys(lando.cache.get(lagoonKeysCache)),
         message: 'Select a Lagoon account',
         when: answers => showKeyList(answers.recipe, lando.cache.get(lagoonKeysCache)),
         weight: 510,

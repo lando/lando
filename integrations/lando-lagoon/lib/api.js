@@ -83,7 +83,7 @@ module.exports = class LagoonApi {
   };
 
   getProjects(refresh = false) {
-    return !refresh && !_.isEmpty(this.projects) ? this.projects :
+    return !refresh && !_.isEmpty(this.projects) ? Promise.resolve(this.projects) :
       this.send(graphQueries.listProject).then(res => {
         this.projects = res.data.data.allProjects;
         return this.projects;
@@ -91,12 +91,10 @@ module.exports = class LagoonApi {
   }
 
   getProject(name) {
-    if (this.projects === null) {
-      return this.getProjects().then(() => {
-        return this.getProject(name);
-      });
+    if (_.isEmpty(this.projects)) {
+      return this.getProjects().then(() => this.getProject(name));
     }
-    return this.projects.find(project => project.name === name);
+    return Promise.resolve(this.projects.find(project => project.name === name));
   }
 
   getEnvironments(name) {
