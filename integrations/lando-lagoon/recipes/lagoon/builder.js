@@ -12,7 +12,7 @@ const {getLandoTooling, getDBUtils} = require('./../../lib/tooling');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
 
 /*
- * Build Lagoon
+ * Build Lagoon and stuff
  */
 module.exports = {
   name: 'lagoon',
