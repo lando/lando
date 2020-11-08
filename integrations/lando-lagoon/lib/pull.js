@@ -6,7 +6,7 @@ const auth = require('./auth');
 const os = require('os');
 const path = require('path');
 
-const {parseKey} = require('./keys');
+const {parseKey, getPreferredKey} = require('./keys');
 const LagoonApi = require('./api');
 
 const getEnvironmentChoices = (key, lando, projectName) => {
@@ -69,12 +69,12 @@ const getDefaults = (task, options) => {
   _.forEach(['database', 'files'], name => {
     task.options[name].interactive.choices = answers => {
       // Parse key and add to answers as a hidden var
-      const {keyPath, host, port} = parseKey(answers['auth']);
+      const {keyPath, host, port} = parseKey(getPreferredKey(answers));
       answers['keyfile'] = path.join('/user', path.relative(os.homedir(), keyPath));
       answers['host'] = host;
       answers['port'] = port;
       // Return the environments
-      return getEnvironmentChoices(answers['auth'], options._app._lando, project);
+      return getEnvironmentChoices(getPreferredKey(answers), options._app._lando, project);
     };
     task.options[name].interactive.default = 'main';
   });
@@ -82,7 +82,7 @@ const getDefaults = (task, options) => {
   // Set envvars
   task.env = {
     LANDO_LEIA: _.toInteger(options._app._config.leia),
-    LANDO_LAGOON_PROJCT: project,
+    LANDO_LAGOON_PROJECT: project,
   };
 
   return task;
@@ -91,6 +91,6 @@ const getDefaults = (task, options) => {
 /*
  * Helper to build a pull command
  */
-exports.getPull = (options, keys = []) => {
-  return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, keys)});
+exports.getPull = (options, keys = [], lando = {}) => {
+  return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(options._app.meta, keys, lando)});
 };

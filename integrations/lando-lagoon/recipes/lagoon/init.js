@@ -12,9 +12,6 @@ const LagoonApi = require('./../../lib/api');
 // Lagoon
 const lagoonKeysCache = 'lagoon.keys';
 
-// Helper to select the correct key between option and generated
-const getPreferredKey = answers => answers['lagoon-auth-generate'] || answers['lagoon-auth'];
-
 // Helper to determine whether to show list of pre-used keys or not
 const showKeyList = (data, keys = []) => data === 'lagoon' && !_.isEmpty(keys);
 
@@ -23,7 +20,7 @@ const showKeyGenerate = (data, answer, keys = []) => data === 'lagoon' && (_.isE
 
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (answers, lando, input = null) => {
-  const api = new LagoonApi(getPreferredKey(answers), lando);
+  const api = new LagoonApi(keys.getPreferredKey(answers), lando);
   return api.auth().then(() => api.getProjects().then(projects => {
     return _.map(projects, project => ({name: project.name, value: project.name}))
       .filter(project => !input || _.startsWith(project.name, input));
@@ -122,7 +119,7 @@ module.exports = {
     },
     build: (options, lando) => {
       // Get the API
-      const api = new LagoonApi(getPreferredKey(options), lando);
+      const api = new LagoonApi(keys.getPreferredKey(options), lando);
       // Auth and get projects
       return api.auth().then(() => api.getProjects().then(projects => {
         // Try to find the project we need
@@ -140,7 +137,7 @@ module.exports = {
   }],
   build: (options, lando) => {
     // Get the API
-    const api = new LagoonApi(getPreferredKey(options), lando);
+    const api = new LagoonApi(keys.getPreferredKey(options), lando);
     // Figure out who i am
     return api.auth().then(() => api.whoami().then(me => {
       // if this is a generated key lets move it
@@ -158,7 +155,7 @@ module.exports = {
       }
 
       // Get the preferred key
-      const key = getPreferredKey(options);
+      const key = keys.getPreferredKey(options);
 
       // Update lando's store of lagoon keys
       const cachedKeys = lando.cache.get(lagoonKeysCache) || [];

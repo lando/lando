@@ -48,10 +48,6 @@ const graphQueries = {
  */
 module.exports = class LagoonApi {
   constructor(key, lando) {
-    // @TODO: validate key exists here or elsewhere?
-    // Compute some stuff based on key
-    // @TODO: Utimately we should infer the below from the format of the key
-    // eg key@host:port would work well
     const {keyPath, host, port} = keys.parseKey(key);
     this.key = keyPath;
     this.host = host;

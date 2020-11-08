@@ -2,8 +2,10 @@
 
 // Modules
 const _ = require('lodash');
+const fs = require('fs');
 const keys = require('./lib/keys');
 const lagoonConf = require('./lib/config');
+const path = require('path');
 const warnings = require('./lib/warnings');
 const {getLandoServices} = require('./lib/services');
 
@@ -27,27 +29,25 @@ module.exports = (app, lando) => {
     app.events.on(`post-${command}`, (config, answers) => {
       // Only run if answer.auth is set, this allows these commands to all be
       // overriden without causing a failure here
-      if (answers.auth) {
-        const api = new LagoonApi(answers.auth, lando);
+      if (keys.getPreferredKey(answers)) {
+        const api = new LagoonApi(keys.getPreferredKey(answers), lando);
         return api.auth().then(() => api.whoami().then(me => {
-          /*
           // if this is a generated key lets move it
-          if (_.has(options, 'lagoon-auth-generate')) {
+          if (_.has(answers, 'auth-generate')) {
             // Get the generated key
-            const auth = options['lagoon-auth-generate'];
+            const auth = answers['auth-generate'];
             const generatedKey = _.first(auth.split('@'));
             // Get the new key
-            const newKey = path.join(os.homedir(), '.lando', 'keys', `lagoon-${me.id}`);
+            const newKey = path.join(lando.config.userConfRoot, 'keys', `lagoon-${me.id}`);
             // Move the key
             fs.renameSync(generatedKey, newKey);
-            options['lagoon-auth-generate'] = _.replace(auth, generatedKey, newKey);
+            answers['auth-generate'] = _.replace(auth, generatedKey, newKey);
             // Remove older stuff
             fs.unlinkSync(`${generatedKey}.pub`);
           }
-          */
 
           // Update lando's store of lagoon keys
-          const newKey = {date: _.toInteger(_.now() / 1000), key: answers.auth, email: me.email};
+          const newKey = {date: _.toInteger(_.now() / 1000), key: keys.getPreferredKey(answers), email: me.email};
           lando.cache.set(app.lagoonKeyCache, keys.sortKeys(app.lagoonKeys, [newKey]), {persist: true});
           // Update the app metadata cache
           const metaData = lando.cache.get(app.metaCache);

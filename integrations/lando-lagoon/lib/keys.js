@@ -22,12 +22,16 @@ exports.generateKey = (lando, method = 'new') => {
 /*
  * Put keys into inquierer format
  */
-// Helper to get keys
 exports.getKeys = (keys = []) => _(keys)
   .map(key => ({name: key.email, value: key.key}))
   .thru(keys => keys.concat([{name: 'add a new key', value: 'more'}]))
   .compact()
   .value();
+
+// Helper to get preferred key
+exports.getPreferredKey = answers => {
+  return answers['lagoon-auth-generate'] || answers['auth-generate'] || answers['lagoon-auth'] || answers['auth'];
+};
 
 /*
  * Parses a key over defaults to extact key/host/port info

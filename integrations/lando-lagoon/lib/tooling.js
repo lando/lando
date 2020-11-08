@@ -64,7 +64,6 @@ const getPhpCliDrupalTooling = (service, flavor = null) => {
   };
 
   const envVars = {
-    LAGOON_SSH_KEY: '/user/.ssh/id_lagoon',
     LANDO_DB_HOST: 'mariadb',
     LANDO_DB_USER: 'drupal',
     LANDO_DB_PASS: 'drupal',

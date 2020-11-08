@@ -95,8 +95,8 @@ while (( "$#" )); do
 done
 
 # Set values from input
-LANDO_DB_ALIAS="lagoon.${LANDO_LAGOON_PROJCT}-${LANDO_DB_ALIAS}"
-LANDO_FILES_ALIAS="lagoon.${LANDO_LAGOON_PROJCT}-${LANDO_FILES_ALIAS}"
+LANDO_DB_ALIAS="lagoon.${LANDO_LAGOON_PROJECT}-${LANDO_DB_ALIAS}"
+LANDO_FILES_ALIAS="lagoon.${LANDO_LAGOON_PROJECT}-${LANDO_FILES_ALIAS}"
 
 if [ $DEBUG = 1 ]; then
   echo "--"
@@ -113,7 +113,7 @@ lando_pink "Refreshing aliases..."
 drush la 1>/dev/null
 
 # Sync database
-if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJCT}-none" ]; then
+if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
   lando_pink "Validating ${LANDO_FILES_ALIAS} exists and you have access to it..."
   if ! drush la | grep ${LANDO_FILES_ALIAS}; then
@@ -136,7 +136,7 @@ else
 fi
 
 # Sync files
-if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJCT}-none" ]; then
+if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
   lando_pink "Validating ${LANDO_FILES_ALIAS} exists and you have access to it..."
   if ! drush la | grep ${LANDO_FILES_ALIAS}; then
