@@ -10,5 +10,7 @@ set -e
 URL=$1
 KEY=$2
 
+git -C /tmp clone "$URL"
+
 # Its safe to clone using the lando keys
-GIT_SSH_COMMAND="ssh -o 'IdentityFile $KEY' -v" /helpers/get-remote-url.sh $URL
+GIT_SSH_COMMAND="ssh -o 'IdentityFile $KEY' -v" /helpers/get-remote-url.sh "$URL"
