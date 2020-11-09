@@ -27,7 +27,7 @@ lando start
 
 # Should pull down database and files for our site
 cd drupal
-lando pull --database main --files main
+# lando pull --database main --files main
 ```
 
 Verification commands
@@ -38,6 +38,7 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # Should be able to connect to a running site
 cd drupal
+lando drush si -y
 lando drush cr -y
 lando drush status | grep "Drupal bootstrap" | grep "Successful"
 
