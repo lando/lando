@@ -111,7 +111,7 @@ if ($can_sign) {
 }
 
 # Docker Desktop
-Download -Url "https://download.docker.com/win/stable/$docker_build/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
+Download -Url "https://desktop.docker.com/win/stable/$docker_build/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
 
 # Copy over some other assets
 Write-Output "Copying over static assets..."

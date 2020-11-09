@@ -70,7 +70,7 @@ chmod +x "${LANDO}"
 # fi
 
 # Prepare Docker Desktop
-curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
+curl -fsSL -o docker.dmg "https://desktop.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
   mkdir -p /tmp/lando/docker && \
   hdiutil attach -mountpoint /tmp/lando/docker Docker.dmg && \
   cp -Rf /tmp/lando/docker/Docker.app ./Docker.app && \
