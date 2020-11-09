@@ -2,13 +2,17 @@
 
 // Modules
 const _ = require('lodash');
+const os = require('os');
+const path = require('path');
+const {getKeys, parseKey} = require('../../lib/keys');
+const {getPull} = require('../../lib/pull');
+const {getPush} = require('../../lib/push');
 const {getLandoAuxServices, getLandoServices, getSQLServices} = require('./../../lib/services');
 const {getLandoTooling, getDBUtils} = require('./../../lib/tooling');
 const {getLandoProxyRoutes} = require('./../../lib/proxy');
 
-
 /*
- * Build Lagoon
+ * Build Lagoon and stuff
  */
 module.exports = {
   name: 'lagoon',
@@ -43,6 +47,21 @@ module.exports = {
       // If we have the lagoong cli then add that in as well
       if (_.has(options, 'services.lagooncli')) {
         options.tooling.lagoon = {service: 'lagooncli', cmd: '/lagoon', user: 'root'};
+      }
+
+      // Inquirer our keys as needed
+      const keys = getKeys(options._app.lagoonKeys);
+      // Get the pull and push
+      options.tooling.pull = getPull(options, keys, options._app._lando);
+      options.tooling.push = getPush(options, keys, options._app._lando);
+
+      // If we have a key for this remote lets add it to our tooling
+      if (_.has(options, '_app.meta.key')) {
+        const parsedKey = parseKey(options._app.meta.key);
+        const upstreamKey = path.join('/user', path.relative(os.homedir(), parsedKey.keyPath));
+        _.forEach(options.tooling, command => {
+          command.env = _.merge({}, command.env, {LAGOON_SSH_KEY: upstreamKey});
+        });
       }
 
       // Map into lando proxy routes

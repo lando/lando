@@ -1,94 +1,83 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
+// Modules
 const _ = require('lodash');
-const LagoonApi = require('../../lib/client');
-const utils = require('../../lib/utils');
+const fs = require('fs');
+const keys = require('./../../lib/keys');
+const os = require('os');
+const path = require('path');
 
-const lagoonKeyCache = 'lagoon.keys';
+const LagoonApi = require('./../../lib/api');
 
-// Setting global so it only ever gets instantiated once.
-let lagoonApi = null;
-const getLagoonApi = (key = null, lando = null) => {
-  if (lagoonApi !== null) {
-    return lagoonApi;
-  }
-  if (key === null || lando === null) {
-    throw new Error('Cannot get lagoonApi for the first time without key and lando');
-  }
-  return new LagoonApi(key, lando);
-};
+// Lagoon
+const lagoonKeysCache = 'lagoon.keys';
 
-const keyDefaults = {
-  // Key id is used for the ssh filename
-  id: null,
-  name: null,
-  email: null,
-  host: 'ssh.lagoon.amazeeio.cloud',
-  port: '32222',
-  user: 'lagoon',
-  url: 'https://api.lagoon.amazeeio.cloud',
-  date: _.toInteger(_.now() / 1000),
-};
+// Helper to determine whether to show list of pre-used keys or not
+const showKeyList = (data, keys = []) => data === 'lagoon' && !_.isEmpty(keys);
 
-const getKeyId = (host, email = '') => `lagoon_${email.replace('@', '-at-')}_${host}`;
-
-const getKeys = (lando = []) => _(utils.getProcessedKeys(lando))
-  .map(key => ({name: key.email, value: key.id}))
-  .thru(tokens => tokens.concat([{name: 'add or refresh a key', value: 'new'}]))
-  .value();
+// Helper to determine whether to show keygen workflow or not
+const showKeyGenerate = (data, answer, keys = []) => data === 'lagoon' && (_.isEmpty(keys) || answer === 'more');
 
 // Helper to get sites for autocomplete
-const getAutoCompleteSites = (keyId, lando) => {
-  const keyCache = lando.cache.get(lagoonKeyCache);
-  const key = _.find(keyCache, key => key.id === keyId);
-  lagoonApi = getLagoonApi(key, lando);
-  return lagoonApi.getProjects().then(projects => {
-    return _.map(projects, project => ({name: project.name, value: project.name}));
-  });
+const getAutoCompleteSites = (answers, lando, input = null) => {
+  const api = new LagoonApi(keys.getPreferredKey(answers), lando);
+  return api.auth().then(() => api.getProjects().then(projects => {
+    return _.map(projects, project => ({name: project.name, value: project.name}))
+      .filter(project => !input || _.startsWith(project.name, input));
+  }));
 };
 
-const exit = () => process.exit(1);
-
 /*
- * Init lagoon
+ * Init Lagoon
  */
 module.exports = {
   name: 'lagoon',
   options: lando => ({
-    'lagoon-has-keys': {
-      describe: 'A hidden field mostly for easy testing and key removal',
-      string: true,
-      hidden: true,
-      default: answers => answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache)),
-      weight: 500,
-    },
     'lagoon-auth': {
-      describe: 'A Lagoon SSH key',
+      describe: 'A Lagoon ssh key',
       string: true,
       interactive: {
         type: 'list',
-        choices: getKeys(lando),
+        choices: keys.getKeys(lando.cache.get(lagoonKeysCache)),
         message: 'Select a Lagoon account',
-        when: answers => {
-          answers['lagoon-has-keys'] = answers.recipe === 'lagoon' && !_.isEmpty(lando.cache.get(lagoonKeyCache));
-          return answers['lagoon-has-keys'];
-        },
-        weight: 505,
+        when: answers => showKeyList(answers.recipe, lando.cache.get(lagoonKeysCache)),
+        weight: 510,
       },
     },
-    'lagoon-auth-email': {
+    'lagoon-auth-key': {
       hidden: true,
-      string: true,
       interactive: {
         name: 'lagoon-auth',
-        type: 'string',
-        message: 'Lagoon account email',
+        default: 'lagoon.amazeeio.cloud:32222',
+        type: 'input',
+        message: 'Copy/paste the SSH key above into the Lagoon UI; Enter the lagoon host and then press [Enter]',
+        // Print the key for us to use
         when: answers => {
-          return answers.recipe === 'lagoon' && (answers['lagoon-auth'] === 'new' || !answers['lagoon-has-keys']);
+          // Figure out whether this is a new key workflow or not
+          const show = showKeyGenerate(answers.recipe, answers['lagoon-auth'], lando.cache.get(lagoonKeysCache));
+          // Show the key as needed
+          if (show) {
+            return keys.generateKey(lando).then(() => {
+              return true;
+            });
+          } else {
+            return false;
+          }
         },
-        weight: 510,
+        // Validate the key and update the key with host/port
+        validate: (input, answers) => {
+          const key = path.join(os.homedir(), '.lando', 'keys', 'lagoon-pending');
+          answers['lagoon-auth'] = `${key}@${input}`;
+          return getAutoCompleteSites(answers, lando, input)
+            .then(() => {
+              // We set this here so we can pass it along separately
+              answers['lagoon-auth-generate'] = answers['lagoon-auth'];
+              // REturn true
+              return true;
+            })
+            .catch(err => err);
+        },
+        weight: 520,
       },
     },
     'lagoon-site': {
@@ -96,37 +85,25 @@ module.exports = {
       string: true,
       interactive: {
         type: 'autocomplete',
-        message: 'Which project?',
+        message: 'Which site?',
         source: (answers, input) => {
-          return getAutoCompleteSites(answers['lagoon-auth'], lando).then(sites => {
-            return _.orderBy(sites, ['name']);
-          });
+          return getAutoCompleteSites(answers, lando, input)
+            .then(sites => _.orderBy(sites, ['name']));
         },
-        when: answers => {
-          // Check if auth is a key or an email
-          // NOTE: this is a weaksauce check
-          const isEmail = _.includes(answers['lagoon-auth'], '@');
-          // If is email then set and spoof
-          if (isEmail) {
-            answers.lagoonEmail = answers['lagoon-auth'];
-            answers['lagoon-auth'] = 'new';
-          }
-          // When will then be now? SOON
-          return answers.recipe === 'lagoon' && answers['lagoon-auth'] && answers['lagoon-auth'] !== 'new';
-        },
-        weight: 510,
+        when: answers => answers.recipe === 'lagoon',
+        weight: 530,
       },
     },
   }),
   overrides: {
-    webroot: {
-      when: () => false,
-    },
     name: {
       when: answers => {
         answers.name = answers['lagoon-site'];
         return false;
       },
+    },
+    webroot: {
+      when: () => false,
     },
   },
   sources: [{
@@ -141,63 +118,81 @@ module.exports = {
       },
     },
     build: (options, lando) => {
-      // Flow for new keys
-      if (options['lagoon-auth'] === 'new') {
-        return [{
-          name: 'generate-key',
-          // eslint-disable-next-line max-len
-          cmd: `/helpers/lagoon-generate-key.sh "${getKeyId(keyDefaults.host, options.lagoonEmail)}" "${options.lagoonEmail}"`,
-        }];
-      }
-
-      // Otherwise do get the site get thing
-      lagoonApi = getLagoonApi(_.merge({}, keyDefaults, {
-        id: options['lagoon-auth'],
-      }), lando);
-      return lagoonApi.getProjects(true).then(() => {
-        const project = lagoonApi.getProject(options['lagoon-site']);
-        return [{
-          name: 'clone-repo',
-          cmd: options => `/helpers/lagoon-clone.sh ${project.gitUrl}`,
-          remove: true,
-        }];
-      });
+      // Get the API
+      const api = new LagoonApi(keys.getPreferredKey(options), lando);
+      // Auth and get projects
+      return api.auth().then(() => api.getProjects().then(projects => {
+        // Try to find the project we need
+        const project = _.find(projects, {name: options['lagoon-site']});
+        // Error if projects does nto exist
+        if (!project) throw Error(`Could not find a site called ${options['lagoon-site']}`);
+        // Reload key and proceed git clone ops
+        return [
+          {name: 'reload-keys', cmd: '/helpers/load-keys.sh --silent', user: 'root'},
+          {name: 'clone-repo', cmd: `/helpers/get-remote-url.sh ${project.gitUrl}`, remove: true},
+        ];
+      }));
     },
   }],
   build: (options, lando) => {
-    // Exit if we just generated a Lando key.
-    if (options.lagoonEmail) {
-      // Add key data to cache
-      const key = _.merge({}, keyDefaults, {
-        id: getKeyId(keyDefaults.host, options.lagoonEmail),
-        name: `${options.lagoonEmail} [${keyDefaults.host}]`,
-        email: options.lagoonEmail,
-      });
-      const keyCache = lando.cache.get(lagoonKeyCache);
-      lando.cache.set(lagoonKeyCache, utils.sortKeys(keyCache, [key]), {persist: true});
-      exit();
-    }
+    // Get the API
+    const api = new LagoonApi(keys.getPreferredKey(options), lando);
+    // Figure out who i am
+    return api.auth().then(() => api.whoami().then(me => {
+      // if this is a generated key lets move it
+      if (_.has(options, 'lagoon-auth-generate')) {
+        // Get the generated key
+        const auth = options['lagoon-auth-generate'];
+        const generatedKey = _.first(auth.split('@'));
+        // Get the new key
+        const newKey = path.join(os.homedir(), '.lando', 'keys', `lagoon-${me.id}`);
+        // Move the key
+        fs.renameSync(generatedKey, newKey);
+        options['lagoon-auth-generate'] = _.replace(auth, generatedKey, newKey);
+        // Remove older stuff
+        fs.unlinkSync(`${generatedKey}.pub`);
+      }
 
-    // Path to lagoonfile
-    const lagoonFile = path.join(options.destination, '.lagoon.yml');
-    // Error if we don't have a lagoon.yml
-    if (!fs.existsSync(lagoonFile)) {
-      throw Error(`Could not detect a .lagoon.yml at ${options.destination}`);
-    }
-    // Parse the Lagoon config
-    const lagoonConfig = lando.yaml.load(lagoonFile);
+      // Get the preferred key
+      const key = keys.getPreferredKey(options);
 
-    // Throw an error if there is no project set
-    if (!_.has(lagoonConfig, 'project')) {
-      throw Error('Lando currently requires that a project be set in your .lagoon.yml!');
-    }
+      // Update lando's store of lagoon keys
+      const cachedKeys = lando.cache.get(lagoonKeysCache) || [];
+      const cache = {
+        date: _.toInteger(_.now() / 1000),
+        key,
+        email: me.email,
+      };
+      lando.cache.set(lagoonKeysCache, [cache], {persist: true});
+      lando.cache.set(lagoonKeysCache, keys.sortKeys(cachedKeys, [cache]), {persist: true});
 
-    // Set this so it shows correctly after init
-    options.name = lagoonConfig.project;
-    // Always reset the name based on the lagoon project
-    return {
-      name: options.name,
-      config: {build: ['composer install']},
-    };
+      // Update the app metadata cache
+      const metaData = lando.cache.get(`${options.name}.meta.cache`);
+      lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
+
+      // Path to lagoonfile
+      const lagoonFile = path.join(options.destination, '.lagoon.yml');
+      // Error if we don't have a lagoon.yml
+      if (!fs.existsSync(lagoonFile)) {
+        throw Error(`Could not detect a .lagoon.yml at ${options.destination}`);
+      }
+      // Parse the Lagoon config
+      const lagoonConfig = lando.yaml.load(lagoonFile);
+
+      // Throw an error if there is no project set
+      if (!_.has(lagoonConfig, 'project')) {
+        throw Error('Lando currently requires that a project be set in your .lagoon.yml!');
+      }
+
+      // Set this so it shows correctly after init
+      options.name = lagoonConfig.project;
+      // Always reset the name based on the lagoon project
+      return {
+        name: options.name,
+        config: {
+          build: ['composer install'],
+        },
+      };
+    }));
   },
 };

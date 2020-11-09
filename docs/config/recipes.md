@@ -51,13 +51,13 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ### [Drupal 8](./drupal8.md)
 *   ### [Drupal 9](./drupal9.md)
 *   ### [Joomla](./joomla.md)
-*   ### [Lagoon](./lagoon.md) **(ALPHA)**
+*   ### [Lagoon](./lagoon.md) **(BETA)**
 *   ### [Laravel](./laravel.md)
 *   ### [LAMP](./lamp.md)
 *   ### [LEMP](./lemp.md)
 *   ### [MEAN](./mean.md)
 *   ### [Pantheon](./pantheon.md)
-*   ### [Platform.sh](./platformsh.md) **(ALPHA)**
+*   ### [Platform.sh](./platformsh.md) **(BETA)**
 *   ### [WordPress](./wordpress.md)
 
 ## Extending and Overriding Recipes
