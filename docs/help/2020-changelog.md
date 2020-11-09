@@ -4,8 +4,10 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-* Fixed bug causing crash when some special characters are used in app names
 * Added `lando pull` and `lando push` for `lagoon` recipes [#2644](https://github.com/lando/lando/issues/2644)
+* Fixed bug causing crash when some special characters are used in app names
+* Fixed bug causing private keys without corresponding public keys to be ignored
+* Updated to Docker Desktop `2.5.0.0`
 
 ## v3.0.17 - [October 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.17)
 
