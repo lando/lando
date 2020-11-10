@@ -10,8 +10,8 @@ LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.js
 LANDO="lando.txt"
 
 # Docker
-DOCKER_VERSION="2.4.0.0"
-DOCKER_DOWNLOAD="48506"
+DOCKER_VERSION="2.5.0.0"
+DOCKER_DOWNLOAD="49427"
 
 # Certs
 TEAM_ID="FY8GAUX282"
@@ -70,7 +70,7 @@ chmod +x "${LANDO}"
 # fi
 
 # Prepare Docker Desktop
-curl -fsSL -o docker.dmg "https://download.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
+curl -fsSL -o docker.dmg "https://desktop.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
   mkdir -p /tmp/lando/docker && \
   hdiutil attach -mountpoint /tmp/lando/docker Docker.dmg && \
   cp -Rf /tmp/lando/docker/Docker.app ./Docker.app && \

@@ -74,7 +74,7 @@ The following services are currently supported. Please check out each one to lea
 
 One of the great features of Lando is its ability to destroy a single planet...  we mean add additional dependencies or build steps to your service without the hassle of having to build or manage your own Dockerfiles.
 
-Note that build steps will **ONLY RUN THE FIRST TIME YOU SPIN UP YOUR APP.** That means if you change them, you will need to run `lando rebuild` for them to re-run.
+Note that build steps will **ONLY RUN THE FIRST TIME YOU SPIN UP YOUR APP.** That means if you change them, you will need to run `lando rebuild` for them to re-run. An exception to this is if one or more of your build steps error. When this happens Lando will run the build steps until they complete succesfully.
 
 :::tip When should I use build steps?
 If you need additional on-server dependencies like php extensions or node modules, it sounds like a build step may be for you. If you have automation, you want to run **EVERY TIME** and you may want to consider using [events](./events.md) instead.

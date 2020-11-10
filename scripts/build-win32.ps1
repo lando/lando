@@ -10,8 +10,8 @@ $ErrorActionPreference = "Stop"
 # Lando version information
 $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
-$docker_version = "2.4.0.0"
-$docker_build = "48506"
+$docker_version = "2.5.0.0"
+$docker_build = "49427"
 
 # Get some ENV things
 $temp_dir = $env:TMP
@@ -111,7 +111,7 @@ if ($can_sign) {
 }
 
 # Docker Desktop
-Download -Url "https://download.docker.com/win/stable/$docker_build/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
+Download -Url "https://desktop.docker.com/win/stable/$docker_build/Docker%20Desktop%20Installer.exe" -Destination "$base_dir\Docker.exe"
 
 # Copy over some other assets
 Write-Output "Copying over static assets..."
