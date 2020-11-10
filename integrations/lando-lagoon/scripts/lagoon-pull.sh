@@ -93,9 +93,14 @@ while (( "$#" )); do
   esac
 done
 
-# Set values from input
-LANDO_DB_ALIAS="lagoon.${LANDO_LAGOON_PROJECT}-${LANDO_DB_ALIAS}"
-LANDO_FILES_ALIAS="lagoon.${LANDO_LAGOON_PROJECT}-${LANDO_FILES_ALIAS}"
+# Dynamically prefix alias if project name was not included
+if [[ "${LANDO_DB_ALIAS}" != "${LANDO_LAGOON_PROJECT}"* ]]; then
+  LANDO_DB_ALIAS="${LANDO_LAGOON_PROJECT}-${LANDO_DB_ALIAS}"
+  LANDO_FILES_ALIAS="${LANDO_LAGOON_PROJECT}-${LANDO_FILES_ALIAS}"
+fi
+# Prefix aliases with lagoon.
+LANDO_DB_ALIAS="lagoon.${LANDO_DB_ALIAS}"
+LANDO_FILES_ALIAS="lagoon.${LANDO_FILES_ALIAS}"
 
 if [ $DEBUG = 1 ]; then
   echo "--"
