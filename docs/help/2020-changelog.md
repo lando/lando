@@ -1,5 +1,12 @@
 # 2020
 
+## v3.0.19 - [November 13, 2020](https://github.com/lando/lando/releases/tag/v3.0.19)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing `lando pull/push` to use branch name instead of env name for `lagoon` recipes [#2685](https://github.com/lando/lando/issues/2685)
+* Fixed bug causing crash when `platformsh` recipe has nested `.platform.app.yaml`
+
 ## v3.0.18 - [November 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.18)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

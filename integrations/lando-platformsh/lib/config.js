@@ -78,7 +78,12 @@ const setPrimaryRoute = (routes = []) => {
 exports.findClosestApplication = (apps = []) => _(apps)
   .filter(app => app.closeness !== -1)
   .orderBy('closeness')
-  .thru(apps => apps[0])
+  // If there is not a "closest" app then just choose the first one that
+  // shows up so that an error is prevented
+  .thru(appsByCloseness => {
+    if (!_.isEmpty(appsByCloseness)) return appsByCloseness[0];
+    else return apps[0];
+  })
   .value();
 
 /*
