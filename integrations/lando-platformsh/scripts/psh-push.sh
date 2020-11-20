@@ -26,6 +26,12 @@ PLATFORM_PUSH_RELATIONSHIPS=()
 PLATFORM_AUTH=${PLATFORMSH_CLI_TOKEN}
 PLATFORM_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "master")
 
+# Error if you want to push to master
+if [ "$PLATFORM_BRANCH" == 'master' ]; then
+  lando_red "Pushing directly to production is not allowed!"
+  exit 6
+fi
+
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
