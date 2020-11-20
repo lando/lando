@@ -250,6 +250,16 @@ module.exports = (app, lando) => {
         // Return
         .value();
 
+      // If we dont have a route for app.root then add in the closest app
+      if (!_.includes(_.map(toolingRouter, 'route'), app.root)) {
+        if (_.has(app, 'platformsh.closestApp.appMountDir')) {
+          const closestMountDir = app.platformsh.closestApp.appMountDir;
+          const closestRoute = _.cloneDeep(_.find(toolingRouter, route => route.route === closestMountDir));
+          closestRoute.route = app.root;
+          toolingRouter.unshift(closestRoute);
+        }
+      }
+
       // Dump the tooling router
       lando.cache.set(app.toolingRouterCache, JSON.stringify(toolingRouter), {persist: true});
     });
