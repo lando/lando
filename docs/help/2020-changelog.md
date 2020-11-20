@@ -1,5 +1,14 @@
 # 2020
 
+## v3.0.20 - [November 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.20)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Improved detection and feedback around unsupported `platform.sh` services and languages
+* Improved `lando push` for `platformsh` recipes so it more accurately tracks branch
+* Fixed bug causing `lando pull/push` to fail on `platformsh` recipes when branch cannot be detected correctly
+* Fixed bug causing tooling to not load correctly for `platformsh` recipes when there is no app in the project root
+
 ## v3.0.19 - [November 13, 2020](https://github.com/lando/lando/releases/tag/v3.0.19)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
