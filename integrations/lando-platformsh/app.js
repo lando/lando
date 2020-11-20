@@ -73,11 +73,28 @@ module.exports = (app, lando) => {
        * This event exists to
        */
       app.events.on('post-start', 9, () => {
+        // Assess service support and warn for unsupported services
         const allServices = _.map(app.platformsh.services, 'name');
         const supportedServices = _.map(getLandoServices(app.platformsh.services), 'name');
         const unsupportedServices = _.difference(allServices, supportedServices);
         if (!_.isEmpty(unsupportedServices)) {
-          app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+          const message = _(app.platformsh.services)
+            .filter(service => _.includes(unsupportedServices, service.name))
+            .map(service => `${service.name} (${service.type})`)
+            .value();
+          app.addWarning(warnings.unsupportedServices(message.join(', ')));
+        }
+
+        // Assess application langauge support and warn for unsupported langauges
+        const allApplications = _.map(app.platformsh.applications, 'name');
+        const supportedApplications = _.map(getLandoServices(app.platformsh.applications), 'name');
+        const unsupportedApplications = _.difference(allApplications, supportedApplications);
+        if (!_.isEmpty(unsupportedApplications)) {
+          const message = _(app.platformsh.applications)
+            .filter(app => _.includes(unsupportedApplications, app.name))
+            .map(app => `${app.name} (${app.type})`)
+            .value();
+          app.addWarning(warnings.unsupportedLanguages(message.join(', ')));
         }
       });
 
