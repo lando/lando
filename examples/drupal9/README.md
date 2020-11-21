@@ -46,6 +46,10 @@ lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
 cd drupal9
 lando mysql -V | grep 5.7
 
+# Should be running sqlite 3.26.0 by default
+cd drupal9
+lando php -r "print_r(SQLite3::version());" | grep versionString | grep 3.26
+
 # Should not enable xdebug by default
 cd drupal9
 lando php -m | grep xdebug || echo $? | grep 1
