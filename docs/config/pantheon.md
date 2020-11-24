@@ -37,7 +37,7 @@ lando init --source pantheon
 lando init \
   --source pantheon \
   --pantheon-auth "$PANTHEON_MACHINE_TOKEN" \
-  --pantheon-site "$PANTEHON_SITE_NAME"
+  --pantheon-site "$PANTHEON_SITE_NAME"
 
 # Start it up
 lando start
