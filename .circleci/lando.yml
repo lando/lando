@@ -11,7 +11,7 @@ dockerSupportedVersions:
       linux: https://docs.docker.com/compose/install/#install-compose-on-linux-systems
   desktop:
     min: "2.1.0.0"
-    max: "2.5.0.0"
+    max: "2.5.0.1"
     link:
       darwin: https://docs.docker.com/docker-for-mac/release-notes/
       win32: https://docs.docker.com/docker-for-windows/release-notes/

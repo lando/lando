@@ -96,6 +96,18 @@ docker ps --filter label=com.docker.compose.project=landod8 | grep docker.regist
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-6.0
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.4
 
+# Should support legacy variable overrides
+cd drupal
+lando ssh -c "env" | grep LOCAL_OVERRIDE | grep itdonehappened
+
+# Should support local application overrides
+cd drupal
+lando ssh -c "env" | grep LOCAL_OVERRIDE2 | grep stillhappening
+
+# Should support local service overrides
+cd drupal
+lando database main -e "show variables;" | grep max_allowed_packet | grep 66060288
+
 # Should connect to remote platform environment and not local
 cd drupal
 lando platform relationships | grep hostname | grep platformsh.site

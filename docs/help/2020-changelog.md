@@ -1,5 +1,13 @@
 # 2020
 
+## v3.0.21 - [November 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.21)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Improved `platformsh` recipe so `services` can also be overriden locally [#2710](https://github.com/lando/lando/issues/2710)
+* Updated to Docker Desktop `2.5.0.1`, fixes issues with macOS Big Sur [#2702](https://github.com/lando/lando/issues/2702)
+* Set default `php` version for `drupal9` recipe to `7.4`, fixes [#2703](https://github.com/lando/lando/issues/2703)
+
 ## v3.0.20 - [November 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.20)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

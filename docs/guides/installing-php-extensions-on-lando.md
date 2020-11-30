@@ -80,7 +80,7 @@ services:
   myservice:
     type: php:custom
     overrides:
-      image: lando/php:7.2-custom
+      image: lando/php:7.3-custom
       build:
         context: ./
         dockerfile: Dockerfile.custom
@@ -91,14 +91,16 @@ services:
 **Dockerfile.custom**
 
 ```docker
-FROM devwithlando/php:7.2-apache-2
+FROM devwithlando/php:7.3-apache-2
 
-# Oracle Things
+# Add php extension helper
+ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+
+# Install Oracle Instantclient
 RUN mkdir /opt/oracle \
-  # Fetch binaries directly from Oracle (!)
+  && cd /opt/oracle \
   && curl https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-basic-linux.x64-19.6.0.0.0dbru.zip > /opt/oracle/instantclient-basic.zip \
   && curl https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-sdk-linux.x64-19.6.0.0.0dbru.zip > /opt/oracle/instantclient-sdk.zip \
-  # Unzip and delete
   && unzip /opt/oracle/instantclient-basic.zip -d /opt/oracle \
   && unzip /opt/oracle/instantclient-sdk.zip -d /opt/oracle \
   && rm /opt/oracle/instantclient-basic.zip \
@@ -107,26 +109,12 @@ RUN mkdir /opt/oracle \
   && echo /opt/oracle/instantclient_19_6 > /etc/ld.so.conf.d/oracle-instantclient.conf \
   && ldconfig -v \
   # Install and enable OCI8
-  && echo "instantclient,/opt/oracle/instantclient_19_6" | pecl install oci8 \
+  && echo "instantclient,/opt/oracle/instantclient_19_6" | pecl install oci8-2.2.0 \
   && docker-php-ext-enable oci8
 
-# Microsoft SQL Server Prerequisites
-RUN apt-get update -y \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/debian/9/prod.list \
-        > /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get install -y --no-install-recommends \
-        locales \
-        apt-transport-https \
-    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
-    && locale-gen \
-    && apt-get update \
-    && apt-get -y --no-install-recommends install \
-        unixodbc-dev \
-        msodbcsql17 \
-    && docker-php-ext-install mbstring pdo pdo_mysql \
-    && pecl install sqlsrv pdo_sqlsrv \
-    && docker-php-ext-enable sqlsrv pdo_sqlsrv
+# Install Microsoft SQL Server extensions
+RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
+  install-php-extensions sqlsrv pdo_sqlsrv
 ```
 
 You can verify the extension was enabled by running

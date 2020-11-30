@@ -204,9 +204,9 @@ Application containers running on Lando will also set up the same [PLATFORM_* pr
 
 Lando _does not_ currently pull variables you have set up in the Platform.sh dashboard so you will need to add those manually.
 
-### Overriding application config
+### Overriding config
 
-Platform.sh application configuration is generally optimized for production. Lando provides a mechanism to override application configuration with values that make more sense for local.
+Platform.sh application language and service configuration is generally optimized for production. While these values are usually also suitable for local development purposes Lando also provides a mechanism to override _both_ application language and service configuration with values that make more sense for local.
 
 ```yaml
 name: myproject
@@ -220,9 +220,13 @@ config:
           APP_ENV: dev
         d8settings:
           skip_permissions_hardening: 1
+    db:
+      configuration:
+        properties:
+          max_allowed_packet: 63
 ```
 
-Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override. Also note that you will need to `lando rebuild` for this changes to apply.
+Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override and `db` should correspond to the `name` of one of the services in your `services.yaml.` Also note that you will need to `lando rebuild` for this changes to apply.
 
 ## Environment variables
 
