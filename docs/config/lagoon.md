@@ -59,6 +59,45 @@ If you do not already have a [Landofile](./../config/lando.md) for your Lagoon s
 
 Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
 
+### Setting Lagoon labels
+
+Under the hood the `lagoon` recipe uses special Docker labels to connect Lagoon services to Lando ones. If your project uses one of the Amazee.io starting templates like [this one for Drupal 9](https://github.com/amazeeio/drupal-example-simple) then you should be good to go, no further setup is required.
+
+However, if you are using a legacy template or a bespoke Lagoon setup then you will need to manually add these labels into your Lagoon's `docker-compose.yml`. Here is an example of a `docker-compose.yml` with non-essential config removed for readability.
+
+```yaml
+services:
+  cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
+    labels:
+      # Lagoon Labels
+      lagoon.type: cli-persistent
+      # Lando type label
+      lando.type: php-cli-drupal
+
+  nginx:
+    labels:
+      lagoon.type: nginx-php-persistent
+      lando.type: nginx-drupal
+
+  php:
+    labels:
+      lagoon.type: nginx-php-persistent
+      lando.type: php-fpm
+
+  mariadb:
+    image: uselagoon/mariadb-drupal:latest
+    labels:
+      lagoon.type: mariadb
+      lando.type: mariadb-drupal
+    ports:
+      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    << : *default-user # uses the defined user from top
+    environment:
+      << : *default-environment
+```
+
+For the most up to date list of supported labels, check out [this](https://github.com/lando/lando/blob/master/integrations/lando-lagoon/lib/services.js#L15). To see labels in action check out the official [Amazee.io Drupal 9 Lagoon example](https://github.com/amazeeio/drupal-example-simple/blob/9.x/docker-compose.yml#L40).
+
 ### Build steps
 
 If you have steps you need to run to get your site into a workable place you can put them in the `build` key of your recipes `config`. By default, we will run `composer install` but you may wish to augment that with any front end compilation tasks you may have as in the example below:
