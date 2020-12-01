@@ -76,7 +76,7 @@ const parseConfig = options => {
     case 'apache': return parseApache(options);
     case 'cli': return parseCli(options);
     case 'nginx': return parseNginx(options);
-  };
+  }
 };
 
 // Builder
