@@ -25,8 +25,8 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 7.3 as the default php version
-lando ssh -s defaults -c "php -v" | grep "PHP 7.3"
+# Should use 7.4 as the default php version
+lando ssh -s defaults -c "php -v" | grep "PHP 7.4"
 
 # Should use 10.x as the default postgresql-client version
 lando ssh -s defaults -c "psql -V | grep 10."
