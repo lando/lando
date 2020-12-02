@@ -33,10 +33,6 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should return the symfony default page
-cd symfony
-lando ssh -s appserver -c "curl -L localhost" | grep "Symfony"
-
 # Should use 7.4 as the default php version
 cd symfony
 lando php -v | grep "PHP 7.4"
