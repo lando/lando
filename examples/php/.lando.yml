@@ -28,6 +28,7 @@ services:
     via: nginx
     ssl: true
     webroot: web
+    xdebug: true
     config:
       php: config/php.ini
     overrides:
