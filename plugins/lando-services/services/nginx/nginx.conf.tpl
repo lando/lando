@@ -23,7 +23,6 @@ http {
     fastcgi_buffers 16 16k;
     fastcgi_buffer_size 32k;
 
-    add_header X-Frame-Options SAMEORIGIN;
     client_body_temp_path  "{{NGINX_TMPDIR}}/client_body" 1 2;
     proxy_temp_path "{{NGINX_TMPDIR}}/proxy" 1 2;
     fastcgi_temp_path "{{NGINX_TMPDIR}}/fastcgi" 1 2;

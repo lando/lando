@@ -1,11 +1,52 @@
 # 2020
 
-## v3.0.17 - In Development
+## v3.0.21 - [November 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.21)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Improved `platformsh` recipe so `services` can also be overriden locally [#2710](https://github.com/lando/lando/issues/2710)
+* Updated to Docker Desktop `2.5.0.1`, fixes issues with macOS Big Sur [#2702](https://github.com/lando/lando/issues/2702)
+* Set default `php` version for `drupal9` recipe to `7.4`, fixes [#2703](https://github.com/lando/lando/issues/2703)
+
+## v3.0.20 - [November 20, 2020](https://github.com/lando/lando/releases/tag/v3.0.20)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Improved detection and feedback around unsupported `platform.sh` services and languages
+* Improved `lando push` for `platformsh` recipes so it more accurately tracks branch
+* Fixed bug causing `lando pull/push` to fail on `platformsh` recipes when branch cannot be detected correctly
+* Fixed bug causing tooling to not load correctly for `platformsh` recipes when there is no app in the project root
+
+## v3.0.19 - [November 13, 2020](https://github.com/lando/lando/releases/tag/v3.0.19)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing `lando pull/push` to use branch name instead of env name for `lagoon` recipes [#2685](https://github.com/lando/lando/issues/2685)
+* Fixed bug causing crash when `platformsh` recipe has nested `.platform.app.yaml`
+
+## v3.0.18 - [November 9, 2020](https://github.com/lando/lando/releases/tag/v3.0.18)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added `lando pull` and `lando push` for `lagoon` recipes [#2644](https://github.com/lando/lando/issues/2644)
+* Fixed bug causing crash when some special characters are used in app names
+* Fixed bug causing private keys without corresponding public keys to be ignored
+* Updated to Docker Desktop `2.5.0.0`
+
+## v3.0.17 - [October 30, 2020](https://github.com/lando/lando/releases/tag/v3.0.17)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added `/app/bin` to `PATH` for `platformsh` recipes
+* Added ability to specify `dir` for `tooling` commands [#2549](https://github.com/lando/lando/issues/2549)
 * Fixed bug causing `platformsh` to not `pull` or `push` using the correct environment [#2467](https://github.com/lando/lando/issues/2467)
 * Fixed bug causing internal proxy route usage to fail when using non-standard ports [#2579](https://github.com/lando/lando/issues/2579)
+* Improved `drush` handling on `drupal9` recipes [#2582](https://github.com/lando/lando/issues/2582) [#2550](https://github.com/lando/lando/issues/2550)
+* Made `composer` version configurable in relevant `services` and `recipes` [#2658](https://github.com/lando/lando/issues/2658)
+* Removed `X-Frame-Options SAMEORIGIN` header for Nginx service default config [#2648](https://github.com/lando/lando/pull/2648)
+* Set default `composer` version to `2.0.3` [#2658](https://github.com/lando/lando/issues/2658)
+* Updated to Docker Desktop `2.4.0.0` and Docker Compose `1.27.4` [#2657](https://github.com/lando/lando/issues/2657)
+* Updated Terminus to `2.4.1` for `pantheon` recipes
 
 ## v3.0.16 - [October 16, 2020](https://github.com/lando/lando/releases/tag/v3.0.16)
 

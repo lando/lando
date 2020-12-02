@@ -18,6 +18,7 @@ events:
 services:
   appserver:
     type: php:custom
+    composer_version: "1.10.1"
     build_as_root_internal:
       - echo "$(id)" > /build_as_root_internal.txt
     build_internal:

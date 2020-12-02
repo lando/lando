@@ -9,13 +9,14 @@
 if [ $# -eq 2 ]; then
   # Don't generate a new key if one already exists
   if [ ! -f $1 ]; then
+    chmod +x /helpers/generate-key.sh
     /helpers/generate-key.sh $1 $2
   fi
-  echo "\n\n"
+  echo "\n"
   lando_pink "*********************"
   lando_pink "** ACTION REQUIRED **"
   lando_pink "*********************\n"
   echo "Login to Lagoon and add the SSH key below to your Lagoon account:\n"
-  cat "/lando/keys/$1.pub"
-  echo "\nOnce the key has been added, re-run lando init.\n"
+  lando_green $(cat "/lando/keys/$1.pub")
+  echo "\n"
 fi

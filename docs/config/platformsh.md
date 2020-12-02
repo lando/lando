@@ -2,14 +2,14 @@
 description: The best local development environment option for Platform.sh, the fastest way to build modern web apps.
 ---
 
-# Platform.sh **(alpha)**
+# Platform.sh **(beta)**
 
 [Platform.sh](https://platform.sh/) is the end-to-end web platform for agile teams. With it you can build, evolve, and scale your website fleet—with zero infrastructure management investment. Get hosting, CI/CD, automated updates, global 24x7 support. And much more.
 
 This integration is currently in development and as such it has the following _serious caveats_:
 
-* This should be considered at an `alpha` level of readiness
-* This has _only_ been minimally tested on a few vanilla `php` projects and templates
+* This should be considered at an `beta` level of readiness
+* This has only been tested against Platform.sh's `php` project templates
 * This currently _only_ supports Platform.sh's `php` application container
 * It's not yet clear how much customization to your project is currently supported
 
@@ -20,12 +20,6 @@ You can report any issues or feedback [over here](https://github.com/lando/lando
 [[toc]]
 
 ## Getting Started
-
-:::warning ALPHA FEATURE
-To access this feature you will need:
-
-  * [Lando 3.0.16](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
-:::
 
 Before you get started with this recipe we assume that you have:
 
@@ -210,9 +204,9 @@ Application containers running on Lando will also set up the same [PLATFORM_* pr
 
 Lando _does not_ currently pull variables you have set up in the Platform.sh dashboard so you will need to add those manually.
 
-### Overriding application config
+### Overriding config
 
-Platform.sh application configuration is generally optimized for production. Lando provides a mechanism to override application configuration with values that make more sense for local.
+Platform.sh application language and service configuration is generally optimized for production. While these values are usually also suitable for local development purposes Lando also provides a mechanism to override _both_ application language and service configuration with values that make more sense for local.
 
 ```yaml
 name: myproject
@@ -226,9 +220,13 @@ config:
           APP_ENV: dev
         d8settings:
           skip_permissions_hardening: 1
+    db:
+      configuration:
+        properties:
+          max_allowed_packet: 63
 ```
 
-Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override. Also note that you will need to `lando rebuild` for this changes to apply.
+Note that `app` in the above example should correspond to the `name` of the Platform.sh application you want to override and `db` should correspond to the `name` of one of the services in your `services.yaml.` Also note that you will need to `lando rebuild` for this changes to apply.
 
 ## Environment variables
 
@@ -581,7 +579,7 @@ lando database main < dump.sql
 
 ## Caveats and known issues
 
-Since this is a currently an `alpha` release there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [Platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
+Since this is a currently an `beta` release there are a few known issues, and workarounds, to be aware of. We also recommend you consult GitHub for other [Platform.sh tagged issues](https://github.com/lando/lando/issues?q=is%3Aopen+is%3Aissue+label%3Aplatformsh
 ).
 
 We also _highly encourage_ you to [post an issue](https://github.com/lando/lando/issues/new/choose) if you see a problem that doesn't already have an issue.

@@ -96,6 +96,9 @@ for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
       if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
         SSH_KEYS+=("$SSH_CANDIDATE")
         SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
+      elif ssh-keygen -y -e -f "$SSH_CANDIDATE" &> /dev/null; then
+        SSH_KEYS+=("$SSH_CANDIDATE")
+        SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
       fi
     else
       SSH_KEYS+=($SSH_CANDIDATE)

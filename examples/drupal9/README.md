@@ -33,9 +33,9 @@ Run the following commands to validate things are rolling as they should.
 cd drupal9
 lando ssh -s appserver -c "curl -L localhost" | grep "Drupal 9"
 
-# Should use 7.3 as the default php version
+# Should use 7.4 as the default php version
 cd drupal9
-lando php -v | grep "PHP 7.3"
+lando php -v | grep "PHP 7.4"
 
 # Should be running apache 2.4 by default
 cd drupal9
@@ -46,6 +46,10 @@ lando ssh -s appserver -c "curl -IL localhost" | grep Server | grep 2.4
 cd drupal9
 lando mysql -V | grep 5.7
 
+# Should be running sqlite 3.27 by default
+cd drupal9
+lando php -r "print_r(SQLite3::version());" | grep versionString | grep 3.27
+
 # Should not enable xdebug by default
 cd drupal9
 lando php -m | grep xdebug || echo $? | grep 1
@@ -54,12 +58,7 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal9
 lando mysql -udrupal9 -pdrupal9 drupal9 -e quit
 
-# Should use drush 10.x globally by default
-cd drupal9
-lando drush version | grep 10.
-lando ssh -c "which drush" | grep ".composer/vendor/bin/drush"
-
-# Should really use a site-local drush though
+# Should use site-local drush if installed
 cd drupal9
 lando composer require drush/drush
 lando ssh -c "which drush" | grep "/app/vendor/bin/drush"

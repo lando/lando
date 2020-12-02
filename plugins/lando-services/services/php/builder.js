@@ -84,7 +84,7 @@ module.exports = {
   name: 'php',
   config: {
     version: '7.3',
-    supported: ['7.4', '7.3', '7.2', '7.1', '7.0', '5.6', '5.5', '5.4', '5.3'],
+    supported: ['8.0', '7.4', '7.3', '7.2', '7.1', '7.0', '5.6', '5.5', '5.4', '5.3'],
     legacy: ['5.5', '5.4', '5.3'],
     path: [
       '/app/vendor/bin',
@@ -96,9 +96,11 @@ module.exports = {
       '/sbin',
       '/bin',
       '/var/www/.composer/vendor/bin',
+      '/helpers',
     ],
     confSrc: __dirname,
     command: ['sh -c \'a2enmod rewrite && apache2-foreground\''],
+    composer_version: '2.0.3',
     image: 'apache',
     defaultFiles: {
       _php: 'php.ini',
@@ -158,6 +160,12 @@ module.exports = {
       // Add activate steps for xdebug
       if (options.xdebug) {
         utils.addBuildStep(['docker-php-ext-enable xdebug'], options._app, options.name, 'build_as_root_internal');
+      }
+
+      // Install the desired composer version
+      if (options.composer_version) {
+        const commands = [`/helpers/install-composer.sh ${options.composer_version}`];
+        utils.addBuildStep(commands, options._app, options.name, 'build_internal', true);
       }
 
       // Add in nginx if we need to

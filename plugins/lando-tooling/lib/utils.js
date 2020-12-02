@@ -109,7 +109,7 @@ const parseCommand = (cmd, service) => ({
 /*
  * Helper to build commands
  */
-exports.buildCommand = (app, command, service, user, env = {}) => ({
+exports.buildCommand = (app, command, service, user, env = {}, dir = undefined) => ({
   id: `${app.project}_${service}_1`,
   compose: app.compose,
   project: app.project,
@@ -117,7 +117,7 @@ exports.buildCommand = (app, command, service, user, env = {}) => ({
   opts: {
     environment: getCliEnvironment(env),
     mode: 'attach',
-    workdir: getContainerPath(app.root),
+    workdir: dir || getContainerPath(app.root),
     user: (user === null) ? getUser(service, app.info) : user,
     services: _.compact([service]),
     hijack: false,
@@ -168,16 +168,19 @@ exports.toolingDefaults = ({
   name,
   app = {},
   cmd = name,
+  dir,
   description = `Runs ${name} commands`,
   env = {},
   options = {},
   service = '',
   stdio = ['inherit', 'pipe', 'pipe'],
-  user = null} = {}) =>
+  user = null,
+  } = {}) =>
   ({
     name,
     app: app,
     cmd: !_.isArray(cmd) ? [cmd] : cmd,
+    dir,
     env,
     describe: description,
     options: options,

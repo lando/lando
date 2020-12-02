@@ -24,6 +24,13 @@ unset PLATFORM_APPLICATION
 PLATFORM_PUSH_MOUNTS=()
 PLATFORM_PUSH_RELATIONSHIPS=()
 PLATFORM_AUTH=${PLATFORMSH_CLI_TOKEN}
+PLATFORM_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "master")
+
+# Error if you want to push to master
+if [ "$PLATFORM_BRANCH" == 'master' ]; then
+  lando_red "Pushing directly to production is not allowed!"
+  exit 6
+fi
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
@@ -77,6 +84,15 @@ platform auth:info
 lando_pink "Verifying your current project..."
 lando_green "Verified project id: $(platform project:info id)"
 
+# Validate env
+lando_pink "Verifying $PLATFORM_BRANCH is an active environment..."
+if ! platform env -I --pipe | grep $PLATFORM_BRANCH >/dev/null; then
+  PLATFORM_PARENT=$(platform environment:info -e $PLATFORM_BRANCH parent 2>/dev/null || echo "master")
+  lando_yellow "Branch $PLATFORM_BRANCH is inactive... using the parent environment ($PLATFORM_PARENT) instead"
+  PLATFORM_BRANCH="$PLATFORM_PARENT"
+fi
+lando_green "Verified the $PLATFORM_BRANCH environment is active"
+
 # Validate ssh keys are good
 lando_pink "Verifying your ssh keys work are deployed to the project..."
 if ! platform ssh "true" 2>/dev/null; then
@@ -116,7 +132,7 @@ else
     fi
     lando_pink "Exporting local data into the remote $PLATFORM_RELATIONSHIP_RELATIONSHIP relationship $PLATFORM_RELATIONSHIP_SCHEMA schema..."
     eval "LD=\$LANDO_DUMP_${PLATFORM_RELATIONSHIP_RELATIONSHIP^^}"
-    $LD $PLATFORM_RELATIONSHIP_SCHEMA | platform db:sql -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA
+    $LD $PLATFORM_RELATIONSHIP_SCHEMA | platform db:sql -e "$PLATFORM_BRANCH" -r $PLATFORM_RELATIONSHIP_RELATIONSHIP --schema $PLATFORM_RELATIONSHIP_SCHEMA
   done
 fi
 
@@ -138,7 +154,7 @@ else
       PLATFORM_MOUNT_TARGET="$PLATFORM_MOUNT_SOURCE"
     fi
     lando_pink "Uploading local files from $LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE into the remote $PLATFORM_MOUNT_TARGET mount"
-    platform mount:upload --mount $PLATFORM_MOUNT_TARGET --source "$LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE" -y
+    platform mount:upload -e "$PLATFORM_BRANCH" --mount $PLATFORM_MOUNT_TARGET --source "$LANDO_SOURCE_DIR/$PLATFORM_MOUNT_SOURCE" -y
   done
 fi
 

@@ -7,6 +7,7 @@ const path = require('path');
 // Path
 const LANDO_PATH = [
   '/app/vendor/bin',
+  '/app/bin',
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',

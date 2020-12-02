@@ -47,6 +47,7 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: drupal6
 config:
   php: '5.6'
+  composer_version: '2.0.3'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
@@ -71,6 +72,16 @@ The [recipe config](./../config/recipes.md#config) to set the Drupal 6 recipe to
 recipe: drupal6
 config:
   php: '7.1'
+```
+
+### Choosing a composer version
+
+You can set `composer_version` to any version that is available in our [php service](./php.md#installing-composer).
+
+```yaml
+recipe: backdrop
+config:
+  composer_version: '1.10.1'
 ```
 
 ### Choosing a web server

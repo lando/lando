@@ -24,7 +24,7 @@ unset PLATFORM_APPLICATION
 PLATFORM_PULL_MOUNTS=()
 PLATFORM_PULL_RELATIONSHIPS=()
 PLATFORM_AUTH=${PLATFORMSH_CLI_TOKEN}
-PLATFORM_BRANCH=$(git symbolic-ref --short HEAD)
+PLATFORM_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "master")
 
 # PARSE THE ARGZZ
 while (( "$#" )); do

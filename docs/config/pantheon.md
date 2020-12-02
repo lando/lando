@@ -37,7 +37,7 @@ lando init --source pantheon
 lando init \
   --source pantheon \
   --pantheon-auth "$PANTHEON_MACHINE_TOKEN" \
-  --pantheon-site "$PANTEHON_SITE_NAME"
+  --pantheon-site "$PANTHEON_SITE_NAME"
 
 # Start it up
 lando start
@@ -65,6 +65,7 @@ config:
   index: true
   edge: true
   cache: true
+  composer_version: false
 ```
 
 If you do not already have a [Landofile](./../config/lando.md) for your Pantheon site, we highly recommend you use [`lando init`](./../basics/init.md) to get one as that will automatically populate the `framework`, `id` and `site` for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
@@ -84,6 +85,16 @@ If you change this version, make sure you [`lando rebuild`](./../cli/rebuild.md)
 ```yaml
 api_version: 1
 php_version: 7.1
+```
+
+### Choosing a composer version
+
+Unlike our other recipes Pantheon uses the default image-provided version of `composer` which at time of writing is `1.10.1`. You can, however, bump this to a different version using the below and running a `lando rebuild`.
+
+```yaml
+recipe: pantheon
+config:
+  composer_version: "2.0.7"
 ```
 
 ### Choosing a nested webroot

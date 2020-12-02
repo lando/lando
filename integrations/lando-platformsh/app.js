@@ -34,17 +34,30 @@ module.exports = (app, lando) => {
 
     // Start by loading in all the platform files we can
     app.platformsh = {config: pshconf.loadConfigFiles(app.root)};
-    // Add in local overrides as needed
+
+    // Add in local application overrides as needed
     _.forEach(app.platformsh.config.applications, application => {
       // @NOTE: This remains for backwards compatibility but is deprecated in favor
       // of the the generic case on line 45
       if (_.has(app, `config.config.variables.${application.name}`)) {
         const overrides = _.get(app, `config.config.variables.${application.name}`, {});
         application.variables = _.merge({}, application.variables, overrides);
+        app.log.debug('legacy local variable override on %s with %j', application.name, overrides);
       }
       // Handle all local application platform config overrides
       if (_.has(app, `config.config.overrides.${application.name}`)) {
-        _.merge(application, _.get(app, `config.config.overrides.${application.name}`, {}));
+        const overrides = _.get(app, `config.config.overrides.${application.name}`, {});
+        _.merge(application, overrides);
+        app.log.debug('local override on %s with %j', application.name, overrides);
+      }
+    });
+
+    // Add in service overrides as needed
+    _.forEach(app.platformsh.config.services, (service, name) => {
+      if (_.has(app, `config.config.overrides.${name}`)) {
+        const overrides = _.get(app, `config.config.overrides.${name}`, {});
+        _.merge(service, overrides);
+        app.log.debug('local service override on %s with %j', name, overrides);
       }
     });
 
@@ -73,11 +86,28 @@ module.exports = (app, lando) => {
        * This event exists to
        */
       app.events.on('post-start', 9, () => {
+        // Assess service support and warn for unsupported services
         const allServices = _.map(app.platformsh.services, 'name');
         const supportedServices = _.map(getLandoServices(app.platformsh.services), 'name');
         const unsupportedServices = _.difference(allServices, supportedServices);
         if (!_.isEmpty(unsupportedServices)) {
-          app.addWarning(warnings.unsupportedServices(unsupportedServices.join(', ')));
+          const message = _(app.platformsh.services)
+            .filter(service => _.includes(unsupportedServices, service.name))
+            .map(service => `${service.name} (${service.type})`)
+            .value();
+          app.addWarning(warnings.unsupportedServices(message.join(', ')));
+        }
+
+        // Assess application langauge support and warn for unsupported langauges
+        const allApplications = _.map(app.platformsh.applications, 'name');
+        const supportedApplications = _.map(getLandoServices(app.platformsh.applications), 'name');
+        const unsupportedApplications = _.difference(allApplications, supportedApplications);
+        if (!_.isEmpty(unsupportedApplications)) {
+          const message = _(app.platformsh.applications)
+            .filter(app => _.includes(unsupportedApplications, app.name))
+            .map(app => `${app.name} (${app.type})`)
+            .value();
+          app.addWarning(warnings.unsupportedLanguages(message.join(', ')));
         }
       });
 
@@ -232,6 +262,16 @@ module.exports = (app, lando) => {
         }))
         // Return
         .value();
+
+      // If we dont have a route for app.root then add in the closest app
+      if (!_.includes(_.map(toolingRouter, 'route'), app.root)) {
+        if (_.has(app, 'platformsh.closestApp.appMountDir')) {
+          const closestMountDir = app.platformsh.closestApp.appMountDir;
+          const closestRoute = _.cloneDeep(_.find(toolingRouter, route => route.route === closestMountDir));
+          closestRoute.route = app.root;
+          toolingRouter.unshift(closestRoute);
+        }
+      }
 
       // Dump the tooling router
       lando.cache.set(app.toolingRouterCache, JSON.stringify(toolingRouter), {persist: true});

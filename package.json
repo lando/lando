@@ -2,7 +2,7 @@
   "name": "lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.0.16",
+  "version": "3.0.21",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
@@ -136,6 +136,7 @@
     "sudo-block": "^2.0.0",
     "tar": "^6.0.2",
     "through": "^2.3.8",
+    "transliteration": "^2.2.0",
     "uuid": "^3.2.1",
     "valid-url": "^1.0.9",
     "winston": "^2.2.0",

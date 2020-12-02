@@ -2,15 +2,13 @@
 description: The best local development option for Lagoon a Docker Build and Deploy System for OpenShift & Kubernetes
 ---
 
-# Lagoon **(alpha)**
+# Lagoon **(beta)**
 
 [Lagoon](https://lagoon.readthedocs.io/en/latest/) solves what developers are dreaming about: A system that allows developers to locally develop their code and their services with Docker and run the exact same system in production. The same Docker images, the same service configurations and the same code.
 
-This is currently an _alpha_ level integration that has the following _serious caveats_:
+This is currently an _beta_ level integration that has the following _serious caveats_:
 
-* This _only_ supports projects based on or extended from [this example](https://github.com/amazeeio/drupal-example-simple)
 * This _does not_ support Lagoon's `elasticsearch`, `mongodb`, or `rabbitmq` containers yet
-* This _does not_ fully interact with the Amazee.io Lagoon API yet
 * It's not yet clear how much customization to your project is currently supported
 
 However, if you'd like to try it out and give your feedback on what worked and what didn't then please continue.
@@ -20,12 +18,6 @@ You can report any issues or feedback [over here](https://github.com/lando/lando
 [[toc]]
 
 ## Getting Started
-
-:::warning ALPHA FEATURE
-To access this feature you will need:
-
-  * [Lando 3.0.16](./../help/2020-changelog.md) or higher or Lando [installed from source](./../basics/installation.md#from-source).
-:::
 
 Before you get started with this recipe we assume that you have:
 
@@ -37,17 +29,14 @@ Before you get started with this recipe we assume that you have:
 However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe against the amazee.io [Drupal Example](https://github.com/amazeeio/drupal-example-simple).
 
 ```bash
-# Clone a site from the amazee.io lagoon instance
+# Clone a site from a lagoon instance
 lando init --source lagoon
 
 # Start it up
 lando start
 
-# Install drupal
-lando drush si -y
-
-# See list of commands you can run
-lando
+# Pull down files and database
+lando pull --database main --files main
 
 # List information about this apps services.
 lando info
@@ -69,6 +58,45 @@ config:
 If you do not already have a [Landofile](./../config/lando.md) for your Lagoon site, we highly recommend you use [`lando init`](./../basics/init.md) to get one as that will automatically populate the above defaults for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
 
 Note that if the above config options are not enough, all Lando recipes can be further [extended and overriden](./../config/recipes.md#extending-and-overriding-recipes).
+
+### Setting Lagoon labels
+
+Under the hood the `lagoon` recipe uses special Docker labels to connect Lagoon services to Lando ones. If your project uses one of the Amazee.io starting templates like [this one for Drupal 9](https://github.com/amazeeio/drupal-example-simple) then you should be good to go, no further setup is required.
+
+However, if you are using a legacy template or a bespoke Lagoon setup then you will need to manually add these labels into your Lagoon's `docker-compose.yml`. Here is an example of a `docker-compose.yml` with non-essential config removed for readability.
+
+```yaml
+services:
+  cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
+    labels:
+      # Lagoon Labels
+      lagoon.type: cli-persistent
+      # Lando type label
+      lando.type: php-cli-drupal
+
+  nginx:
+    labels:
+      lagoon.type: nginx-php-persistent
+      lando.type: nginx-drupal
+
+  php:
+    labels:
+      lagoon.type: nginx-php-persistent
+      lando.type: php-fpm
+
+  mariadb:
+    image: uselagoon/mariadb-drupal:latest
+    labels:
+      lagoon.type: mariadb
+      lando.type: mariadb-drupal
+    ports:
+      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    << : *default-user # uses the defined user from top
+    environment:
+      << : *default-environment
+```
+
+For the most up to date list of supported labels, check out [this](https://github.com/lando/lando/blob/master/integrations/lando-lagoon/lib/services.js#L15). To see labels in action check out the official [Amazee.io Drupal 9 Lagoon example](https://github.com/amazeeio/drupal-example-simple/blob/9.x/docker-compose.yml#L40).
 
 ### Build steps
 
@@ -165,6 +193,60 @@ LOCATION      /Users/pirog/work/lando/examples/lagoon-drupal/drupal
 SERVICES      cli, nginx, php, mariadb, redis, solr, mailhog
 MAILHOG URLS  http://localhost:32792
               http://inbox.drupal-example.lndo.site/
+```
+
+## Pulling and pushing databases and files
+
+Lando also provides wrapper commands called `lando pull` and `lando push`.
+
+With `lando pull` you can import data and download files from your remote Lagoon site. With `lando push` you can do the opposite, export data or upload files to your remote Lagoon site.
+
+```bash
+lando pull
+
+Pull db and files from Lagoon
+
+Options:
+  --help          Shows lando or delegated command help if applicable
+  --verbose, -v   Runs with extra verbosity
+  --auth          Lagoon key
+  --database, -d  The environment from which to pull the database
+  --files, -f     The environment from which to pull the files
+```
+
+```bash
+# Interactively pull databases and files
+lando pull
+
+# Import the remote database and files from the main environment
+lando pull -d main -f main
+
+# Effectively "do nothing"
+lando pull --database none --files none
+```
+
+```bash
+lando pull
+
+Push db and files to Lagoon
+
+Options:
+  --help          Shows lando or delegated command help if applicable
+  --verbose, -v   Runs with extra verbosity
+  --auth          Lagoon key
+  --database, -d  The environment to which the database will be pushed
+  --files, -f     The environment to which the files will be pushed
+```
+
+```bash
+# Interactively push databases and files
+lando push
+
+# Export the local database and files to the main environment
+lando push -d main -f main
+
+# Effectively "do nothing"
+lando push --database none --files none
 ```
 
 <RelatedGuides tag="Lagoon"/>
