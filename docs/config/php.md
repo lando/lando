@@ -53,7 +53,7 @@ services:
     webroot: .
     xdebug: false
     composer: []
-    composer_version: '2.0.3'
+    composer_version: '2.0.7'
     # Below only valid for via: cli
     command: tail -f /dev/null
     config:
