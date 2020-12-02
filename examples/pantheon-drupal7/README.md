@@ -53,7 +53,7 @@ lando terminus -V
 
 # Should use composer 2.x
 cd drupal7
-lando composer --version | grep "2."
+lando composer --version | grep "Composer version 2."
 
 # Should be logged in
 cd drupal7

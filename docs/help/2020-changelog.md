@@ -5,6 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added support for `php` 8 [#2660](https://github.com/lando/lando/issues/2660)
+* Added support for `redis` 6 [#2683](https://github.com/lando/lando/issues/2683)
 * Added support for `xdebug` 3 [#2660](https://github.com/lando/lando/issues/2660)
 * Updated default `composer` version to `2.0.7` [#2720](https://github.com/lando/lando/issues/2720)
 * Updated `pantheon` recipe to use `composer` 2 by default
