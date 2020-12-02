@@ -21,13 +21,14 @@ services:
     type: php:5.6
     composer_version: false
     via: cli
+    xdebug: true
   custom:
     type: php:7.1
     composer_version: false
     via: nginx
     ssl: true
-    xdebug: true
     webroot: web
+    xdebug: true
     config:
       php: config/php.ini
     overrides:
@@ -42,9 +43,10 @@ services:
       environment:
         MORE: things
         OTHER: stuff
-  custom74:
-    type: php:7.4
+  custom80:
+    type: php:8.0
     composer_version: false
+    xdebug: "develop,debug"
   composer:
     type: php:7.0
     composer_version: "2.0.2"

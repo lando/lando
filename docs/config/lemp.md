@@ -51,7 +51,7 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: lemp
 config:
   php: '7.3'
-  composer_version: '2.0.3'
+  composer_version: '2.0.7'
   webroot: .
   database: mysql:5.7
   xdebug: false
