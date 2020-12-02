@@ -28,6 +28,14 @@ const nginxConfig = options => ({
   version: options.via.split(':')[1],
 });
 
+const xdebugConfig = host => ([
+  `client_host=${host}`,
+  'discover_client_host=1',
+ 'log=/tmp/xdebug.log',
+ 'remote_enable=true',
+  `remote_host=${host}`,
+].join(' '));
+
 /*
  * Helper to build a package string
  */
@@ -142,7 +150,8 @@ module.exports = {
         environment: _.merge({}, options.environment, {
           PATH: options.path.join(':'),
           LANDO_WEBROOT: `/app/${options.webroot}`,
-          XDEBUG_CONFIG: `remote_enable=true remote_host=${options._app.env.LANDO_HOST_IP}`,
+          XDEBUG_CONFIG: xdebugConfig(options._app.env.LANDO_HOST_IP),
+          XDEBUG_MODE: (options.xdebug === true) ? 'debug' : options.xdebug,
         }),
         networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
         ports: (_.startsWith(options.via, 'apache') && options.version !== 'custom') ? ['80'] : [],

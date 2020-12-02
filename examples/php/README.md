@@ -89,6 +89,9 @@ lando ssh -s custom_nginx -c "env | grep DUALBLADE | grep maxim"
 # Should use specified php version if given
 lando ssh -s cliold -c "php -v" | grep "PHP 5.6"
 
+# Should enable xdebug 2 for php 5.6
+lando ssh -s cliold -c "php --re xdebug | head -1" | grep "xdebug version 2."
+
 # Should use specified php version if given
 lando ssh -s composer -c "php -v" | grep "PHP 7.0"
 
@@ -97,6 +100,12 @@ lando ssh -s custom80 -c "php -v" | grep "PHP 8.0"
 
 # Should have rsync in php 8.0
 lando ssh -s custom80 -c "rsync --version"
+
+# Should enable xdebug 3 for php 8.0
+lando ssh -s custom80 -c "php --re xdebug | head -1" | grep "xdebug version 3."
+
+# Should set the xdebug mode if specified
+lando ssh -s custom80 -c "php -i" | grep xdebug.mode | grep develop,debug
 
 # Should install the specified composer version
 lando ssh -s composer -c "composer --version --no-ansi" | grep "Composer version 2.0.2"
