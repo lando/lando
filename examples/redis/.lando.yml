@@ -10,3 +10,5 @@ services:
     persist: true
     config:
       server: config/redis.conf
+  custom6:
+    type: redis:6

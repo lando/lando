@@ -30,6 +30,7 @@ lando ssh -s defaults -c "redis-cli CONFIG GET databases"
 
 # Should use the user specified version if given
 lando ssh -s custom -c "redis-server --version | grep v=4."
+lando ssh -s custom6 -c "redis-server --version | grep v=6."
 
 # Should use the user specifiec patch version if given
 lando ssh -s patch -c "redis-server --version | grep v=4.0.11"
