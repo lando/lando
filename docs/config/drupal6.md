@@ -47,7 +47,7 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: drupal6
 config:
   php: '5.6'
-  composer_version: '2.0.3'
+  composer_version: '2.0.7'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
