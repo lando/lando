@@ -144,6 +144,9 @@ module.exports = {
         options.command.unshift('docker-php-entrypoint');
       }
 
+      // If xdebug is set to "true" then map it to "debug"
+      if (options.xdebug === true) options.xdebug = 'debug';
+
       // Build the php
       const php = {
         image: `devwithlando/php:${options.version}-${options.image}-2`,
@@ -151,7 +154,7 @@ module.exports = {
           PATH: options.path.join(':'),
           LANDO_WEBROOT: `/app/${options.webroot}`,
           XDEBUG_CONFIG: xdebugConfig(options._app.env.LANDO_HOST_IP),
-          XDEBUG_MODE: (options.xdebug === true) ? 'debug' : options.xdebug,
+          XDEBUG_MODE: (options.xdebug === false) ? 'off' : options.xdebug,
         }),
         networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
         ports: (_.startsWith(options.via, 'apache') && options.version !== 'custom') ? ['80'] : [],

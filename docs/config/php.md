@@ -106,11 +106,37 @@ services:
     command: php /app/src/artisan horizon
 ```
 
-### Toggling xdebug
+### Using xdebug
 
-You can enable the `xdebug` extension by setting `xdebug: true`. Lando will also automatically configure `xdebug.remote_enable` and `xdebug.remote_host` for you. This means that `xdebug` should be *ready to receive connections* out of the box.
+You can enable the `xdebug` extension by setting `xdebug: true` and doing a `lando rebuild`. When the extension is enabled Lando will automatically set the needed configuration for remote debugging. This means that `xdebug` _should_ be ready to receive connections out of the box.
 
-Note that unlike in previous versions of Lando, `xdebug: false` will now disable the `xdebug` extension instead of just disabling `xdebug.remote_enable`.
+If you are using `xdebug` version 3, which is installed by default for `php` 7.2+ you can optionally specify the mode.
+
+```yaml
+services:
+  myservice:
+    type: php:7.3
+    xdebug: "debug,develop"
+```
+
+For this version of `xdebug` setting `xdebug: true` will set `xdebug.mode=debug`. You can read more about `xdebug.mode` [here](https://xdebug.org/docs/all_settings#mode).
+
+#### Configuring xdebug
+
+If you'd like to override Lando's out of the box `xdebug` config the easiest way to do that is by setting the `XDEBUG_CONFIG` environment variable as a service level override.
+
+```yaml
+services:
+  myservice:
+    type: php:7.3
+    overrides:
+      environment:
+        XDEBUG_CONFIG: "discover_client_host=0 client_host=localhost"
+
+```
+
+Note that you cannot set _every_ `xdebug` configuration option via `XDEBUG_CONFIG`, see [this](https://xdebug.org/docs/all_settings). If you need to configure something outside of the scope of `XDEBUG_CONFIG` we recommend you use a custom `php.ini`.
+
 
 #### Setting up your IDE for XDEBUG
 
@@ -120,7 +146,7 @@ While Lando will handle the server side configuration for you, there is often a 
 
 An example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin is shown below:
 
-```
+```json
 "php-debug":
   {
     ServerPort: 9000
