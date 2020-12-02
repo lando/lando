@@ -76,14 +76,14 @@ const parseConfig = options => {
     case 'apache': return parseApache(options);
     case 'cli': return parseCli(options);
     case 'nginx': return parseNginx(options);
-  };
+  }
 };
 
 // Builder
 module.exports = {
   name: 'php',
   config: {
-    version: '7.3',
+    version: '7.4',
     supported: ['8.0', '7.4', '7.3', '7.2', '7.1', '7.0', '5.6', '5.5', '5.4', '5.3'],
     legacy: ['5.5', '5.4', '5.3'],
     path: [

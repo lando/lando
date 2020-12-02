@@ -42,8 +42,8 @@ services:
       environment:
         MORE: things
         OTHER: stuff
-  custom74:
-    type: php:7.4
+  custom80:
+    type: php:8.0
     composer_version: false
   composer:
     type: php:7.0

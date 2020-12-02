@@ -25,8 +25,8 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should use 7.3 as the default php version
-lando ssh -s defaults -c "php -v" | grep "PHP 7.3"
+# Should use 7.4 as the default php version
+lando ssh -s defaults -c "php -v" | grep "PHP 7.4"
 
 # Should use 10.x as the default postgresql-client version
 lando ssh -s defaults -c "psql -V | grep 10."
@@ -92,8 +92,11 @@ lando ssh -s cliold -c "php -v" | grep "PHP 5.6"
 # Should use specified php version if given
 lando ssh -s composer -c "php -v" | grep "PHP 7.0"
 
-# Should have rsync in php 7.4
-lando ssh -s custom74 -c "rsync --version"
+# Should use specified php version if given
+lando ssh -s custom80 -c "php -v" | grep "PHP 8.0"
+
+# Should have rsync in php 8.0
+lando ssh -s custom80 -c "rsync --version"
 
 # Should install the specified composer version
 lando ssh -s composer -c "composer --version --no-ansi" | grep "Composer version 2.0.2"
@@ -112,9 +115,11 @@ lando ssh -s composer -c "which phpunit | grep /var/www/.composer/vendor/bin/php
 # Should have webp installed in php 7
 lando ssh -s defaults -c "php -i" | grep WebP | grep enabled
 lando ssh -s custom  -c "php -i" | grep WebP | grep enabled
-lando ssh -s custom74 -c "php -i" | grep WebP | grep enabled
 lando ssh -s cli -c "php -i" | grep WebP | grep enabled
 lando ssh -s composer -c "php -i" | grep WebP | grep enabled
+
+# Should have webp installed in php 8
+lando ssh -s custom80 -c "php -i" | grep WebP | grep enabled
 
 # Should have node12 installed in withnode service
 lando node -v -h withnode | grep v12.
