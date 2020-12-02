@@ -18,7 +18,7 @@ lando poweroff
 
 # Should initialize the lando pantheon test wordpress site
 rm -rf wordpress && mkdir -p wordpress && cd wordpress
-lando init --source pantheon --pantheon-auth "$PANTHEON_MACHINE_TOKEN" --pantheon-site landobot-wordpress
+lando init --source pantheon --pantheon-auth "$PANTHEON_MACHINE_TOKEN" --pantheon-site landobot-wordpress --option composer_version=1.10.1
 
 # Should start up our wordpress site successfully
 cd wordpress
@@ -56,6 +56,10 @@ lando ssh -s appserver -c "cat /var/www/.wp-cli/config.yml | grep path | grep /a
 # Should have terminus
 cd wordpress
 lando terminus -V
+
+# Should use composer 1.x
+cd wordpress
+lando composer --version | grep Composer | grep 1.10.1
 
 # Should be logged in
 cd wordpress

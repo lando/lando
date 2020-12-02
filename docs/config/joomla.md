@@ -46,7 +46,7 @@ Here are the configuration options, set to the default values, for this recipe's
 recipe: joomla
 config:
   php: '7.2'
-  composer_version: '2.0.3'
+  composer_version: '2.0.7'
   via: apache:2.4
   webroot: .
   database: mysql:5.7
