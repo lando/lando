@@ -51,6 +51,10 @@ lando drush version
 cd drupal7
 lando terminus -V
 
+# Should use composer 2.x
+cd drupal7
+lando composer --version | grep "2."
+
 # Should be logged in
 cd drupal7
 lando terminus auth:whoami | grep landobot@devwithlando.io
