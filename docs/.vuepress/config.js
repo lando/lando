@@ -155,6 +155,7 @@ module.exports = {
             'mean',
             'pantheon',
             'platformsh',
+            'symfony',
             'wordpress',
           ],
         },
