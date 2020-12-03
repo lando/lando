@@ -58,6 +58,7 @@ The following recipes are currently offered. Please check out each one to learn 
 *   ### [MEAN](./mean.md)
 *   ### [Pantheon](./pantheon.md)
 *   ### [Platform.sh](./platformsh.md) **(BETA)**
+*   ### [Symfony](./symfony.md)
 *   ### [WordPress](./wordpress.md)
 
 ## Extending and Overriding Recipes
