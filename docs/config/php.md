@@ -129,14 +129,27 @@ If you'd like to override Lando's out of the box `xdebug` config the easiest way
 services:
   myservice:
     type: php:7.3
+    xdebug: "debug,develop"
     overrides:
       environment:
         XDEBUG_CONFIG: "discover_client_host=0 client_host=localhost"
-
 ```
 
 Note that you cannot set _every_ `xdebug` configuration option via `XDEBUG_CONFIG`, see [this](https://xdebug.org/docs/all_settings). If you need to configure something outside of the scope of `XDEBUG_CONFIG` we recommend you use a custom `php.ini`.
 
+You can also modify or unset `XDEBUG_MODE` in a similar way. For example if you wanted to manage `xdebug.mode` in your own `php.ini` you could so something like
+
+```yaml
+services:
+  myservice:
+    type: php:7.3
+    xdebug: true
+    overrides:
+      environment:
+        XDEBUG_MODE:
+    config:
+      php: config/php.ini
+```
 
 #### Setting up your IDE for XDEBUG
 
@@ -191,7 +204,23 @@ services:
     composer_version: "1.10.1"
 ```
 
-You can also choose to ignore the `composer` install step by setting `composer_version: false`. This will use whatever version of `composer` was last bundled with our `php` image.
+You can also choose to ignore the `composer` install step by setting `composer_version: false`. This will use whatever version of `composer` was last bundled with our `php` image. The following "convenience flags" are also available:
+
+```yaml
+# Install the latest stable 1.x version
+composer_version: 1
+composer_version: 1-latest
+
+# Install the latest stable 2.x version
+composer_version: 2
+composer_version: 2-latest
+
+# Install latest pre-release version
+composer_version: preview
+
+# Install latest commit
+composer_version: snapshot
+```
 
 ### Installing global dependencies
 
