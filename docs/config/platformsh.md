@@ -651,6 +651,16 @@ runtime:
 
 Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production.
 
+You will also need to set this in your .lando.yml:
+
+```yaml
+config:
+  variables:
+    app:
+      php:
+        xdebug.remote_connect_back: 1
+```
+
 ### Platformsh.agent errors
 
 When you run `lando start` or `lando rebuild` you may experience either Lando hanging or an error being thrown by something called the `platformsh.agent`. We are attempting to track down the causes of some of these failures but they are generally easy to identify and workaround:
