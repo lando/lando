@@ -162,7 +162,6 @@ lando info -s cliworker --deep | grep Cmd | grep sleep | grep infinity
 
 # Should install the latest composer 2.x using the 2-latest flag
 lando ssh -s cliworker -c "composer --version --no-ansi" | grep "Composer version 2."
-
 ```
 
 Destroy tests

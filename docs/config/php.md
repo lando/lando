@@ -123,7 +123,7 @@ For this version of `xdebug` setting `xdebug: true` will set `xdebug.mode=debug`
 
 #### Configuring xdebug
 
-If you'd like to override Lando's out of the box `xdebug` config the easiest way to do that is by setting `XDEBUG_CONFIG` environment variable as a service level override.
+If you'd like to override Lando's out of the box `xdebug` config the easiest way to do that is by setting the `XDEBUG_CONFIG` environment variable as a service level override.
 
 ```yaml
 services:
