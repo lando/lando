@@ -649,9 +649,7 @@ runtime:
     - xdebug
 ```
 
-Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production.
-
-You will also need to set this in your .lando.yml:
+Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production. You _may_ also need to set this in your .lando.yml:
 
 ```yaml
 config:
