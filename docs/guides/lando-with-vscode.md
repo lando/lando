@@ -65,9 +65,10 @@ xdebug.max_nesting_level = 256
 xdebug.show_exception_trace = 0
 xdebug.collect_params = 0
 ; Extra custom Xdebug setting for debug to work in VSCode.
-xdebug.remote_enable = 1
-xdebug.remote_autostart = 1
-xdebug.remote_host = ${LANDO_HOST_IP}
+xdebug.mode = debug
+xdebug.client_host = ${LANDO_HOST_IP}
+xdebug.remote_port = 9003
+xdebug.start_with_request = trigger
 ; xdebug.remote_connect_back = 1
 xdebug.remote_log = /tmp/xdebug.log
 ```
@@ -93,7 +94,7 @@ code .vscode/launch.json
       "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "log": false,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
@@ -106,6 +107,56 @@ code .vscode/launch.json
 Done!
 
 You can now click start debugging (type F5 or click on the icon in the left sidebar).
+
+## Advanced Setup
+
+Optionally for better performance you can easily toggle Xdebug on and off with some custom tooling commands.
+
+If you're using Apache, add this to your `.lando.yml`:
+
+```yaml
+tooling:
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for Apache.
+    cmd: docker-php-ext-enable xdebug && /etc/init.d/apache2 reload && echo "Enabling xdebug"
+    user: root
+
+  xdebug-off:
+    service: appserver
+    description: Disable xdebug for Apache.
+    cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && /etc/init.d/apache2 reload && echo "Disabling xdebug"
+    user: root
+```
+
+If you're using Nginx, add this to your `.lando.yml`:
+
+```yaml
+tooling:
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for nginx.
+    cmd: docker-php-ext-enable xdebug && pkill -o -USR2 php-fpm && echo "Enabling xdebug"
+    user: root
+  xdebug-off:
+    service: appserver
+    description: CUSTOM Disable xdebug for nginx.
+    cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm && echo "Disabling xdebug"
+    user: root
+```
+
+Now you can turn Xdebug on or off with `lando xdebug-on` and `lando xdebug-off`. If you want Xdebug off by default, set `xdebug:false` in your appserver config:
+
+```yaml
+name: mywebsite
+recipe: drupal8
+services:
+  appserver:
+    webroot: web
+    xdebug: false
+    config:
+      php: .vscode/php.ini
+```
 
 ## Debugging PhpUnit
 
@@ -121,7 +172,7 @@ First, you need to have VSCode listen for debugging on 2 separate ports, because
       "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "log": true,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
