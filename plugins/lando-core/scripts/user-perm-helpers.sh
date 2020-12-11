@@ -16,10 +16,10 @@ add_user() {
   local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
     groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" &> /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
+    if ! id -u "$GROUP" > /dev/null; then adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null; fi
   else
     groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" &> /dev/null || useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null
+    if ! id -u "$GROUP" > /dev/null; then useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null; fi
   fi;
 }
 
