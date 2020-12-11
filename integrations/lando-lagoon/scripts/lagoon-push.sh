@@ -115,13 +115,13 @@ fi
 
 # Update aliases
 lando_pink "Refreshing aliases..."
-drush la 1>/dev/null
+drush sa 1>/dev/null
 
 # Sync database
 if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
   lando_pink "Validating ${LANDO_FILES_ALIAS} exists and you have access to it..."
-  if ! drush la | grep ${LANDO_FILES_ALIAS}; then
+  if ! drush sa | grep ${LANDO_FILES_ALIAS}; then
     lando_red "$LANDO_FILES_ALIAS does not appear to be a valid environment!"
     exit 1
   fi
@@ -144,7 +144,7 @@ fi
 if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
   lando_pink "Validating ${LANDO_FILES_ALIAS} exists and you have access to it..."
-  if ! drush la | grep ${LANDO_FILES_ALIAS}; then
+  if ! drush sa | grep ${LANDO_FILES_ALIAS}; then
     lando_red "$LANDO_FILES_ALIAS does not appear to be a valid environment!"
     exit 1
   fi
