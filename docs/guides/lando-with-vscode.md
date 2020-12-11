@@ -55,7 +55,9 @@ The location of this file is arbitrary.
 
 We placed it inside `.vscode/` folder simply because we find it convenient.
 
-Add your custom XDebug settings.
+Add your custom XDebug settings, which will vary slightly depending on which version of PHP and xdebug you're using.
+
+**PHP 7.2+ uses xdebug 3** and needs `config:` under `services:` as follow:
 
 ```ini
 [PHP]
@@ -69,6 +71,23 @@ xdebug.mode = debug
 xdebug.client_host = ${LANDO_HOST_IP}
 xdebug.remote_port = 9003
 xdebug.start_with_request = trigger
+; xdebug.remote_connect_back = 1
+xdebug.log = /tmp/xdebug.log
+```
+
+**PHP 7.1 and earlier uses xdebug 2** and needs `config:` under `services:` as follow:
+
+```ini
+[PHP]
+
+; Xdebug
+xdebug.max_nesting_level = 256
+xdebug.show_exception_trace = 0
+xdebug.collect_params = 0
+; Extra custom Xdebug setting for debug to work in VSCode.
+xdebug.remote_enable = 1
+xdebug.remote_autostart = 1
+xdebug.remote_host = ${LANDO_HOST_IP}
 ; xdebug.remote_connect_back = 1
 xdebug.remote_log = /tmp/xdebug.log
 ```
@@ -103,6 +122,9 @@ code .vscode/launch.json
   ]
 }
 ```
+
+**Note: PHP 7.1 and earlier uses xdebug 2** which uses port 9000, so change the port number above accordinly.
+
 
 Done!
 
@@ -200,8 +222,10 @@ Next add some custom tooling to your .lando.yml file, that provides a command to
 tooling:
   phpunitdebug:
     service: appserver
-    cmd: php -d xdebug.remote_port=9000 vendor/bin/phpunit
+    cmd: php -d xdebug.remote_port=9003 vendor/bin/phpunit
 ```
+
+**Note: PHP 7.1 and earlier uses xdebug 2** which uses port 9000, so change the port number above accordinly.
 
 Now to run debug a PhpUnit test, do the following:
 
@@ -226,13 +250,13 @@ tail -f /tmp/xdebug.log
 # Open your browser and refresh the app
 ```
 
-**Xdebug says "timeout trying to connect to XX.XX.XX:9000**
+**Xdebug says "timeout trying to connect to XX.XX.XX:9003**
 
-Double-check your host machine allow connection on its port 9000.
+Double-check your host machine allow connection on its port 9003.
 
 This is how you can open a specific port on a Debian/Ubuntu:
 
-`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9000 -j ACCEPT`
+`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9003 -j ACCEPT`
 
 ## Read More
 
