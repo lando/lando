@@ -16,10 +16,10 @@ add_user() {
   local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
     groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
+    id -u "$GROUP" &> /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
   else
     groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null
+    id -u "$GROUP" &> /dev/null || useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null
   fi;
 }
 
@@ -28,7 +28,7 @@ verify_user() {
   local USER=$1
   local GROUP=$2
   local DISTRO=$3
-  id -u "$USER" > /dev/null
+  id -u "$USER" &> /dev/null
   groups | grep "$GROUP" > /dev/null
   if [ "$DISTRO" = "alpine" ]; then
     true
