@@ -17,7 +17,7 @@ dockerSupportedVersions:
       win32: https://docs.docker.com/docker-for-windows/release-notes/
   engine:
     min: "18.09.3"
-    max: "19.04.0"
+    max: "20.10.99"
     link:
       linux: https://docs.docker.com/engine/install/
 
