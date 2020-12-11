@@ -4,6 +4,7 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added support up to Docker Engine `20.10.0` [#2738](https://github.com/lando/lando/issues/2738)
 * Added some convenience labels for `composer_version` [#2729](https://github.com/lando/lando/issues/2729)
 * Fixed bug causing `platformsh` recipes to fail when no `routes` are present [#2740](https://github.com/lando/lando/issues/2740)
 
