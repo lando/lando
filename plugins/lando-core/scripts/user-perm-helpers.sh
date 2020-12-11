@@ -15,11 +15,11 @@ add_user() {
   local DISTRO=$5
   local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
-    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
-    if ! id -u "$GROUP" > /dev/null; then adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null; fi
+    if ! groups | grep "$GROUP" &> /dev/null; then addgroup -g "$GID" "$GROUP" 2>/dev/null; fi
+    if ! id -u "$GROUP" &> /dev/null; then adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null; fi
   else
-    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    if ! id -u "$GROUP" > /dev/null; then useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null; fi
+    if ! groups | grep "$GROUP" &> /dev/null; then groupadd --force --gid "$GID" "$GROUP" 2>/dev/null; fi
+    if ! id -u "$GROUP" &> /dev/null; then useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null; fi
   fi;
 }
 
@@ -29,7 +29,7 @@ verify_user() {
   local GROUP=$2
   local DISTRO=$3
   id -u "$USER" &> /dev/null
-  groups | grep "$GROUP" > /dev/null
+  groups | grep "$GROUP" &> /dev/null
   if [ "$DISTRO" = "alpine" ]; then
     true
     # is there a chsh we can use? do we need to?
