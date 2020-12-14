@@ -4,7 +4,8 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
-* Updated to Docker Desktop `3.0.1`
+* Updated to Docker Desktop for Mac to `3.0.1`
+* Updated to Docker Desktop for Windows to `3.0.0`
 
 ## v3.0.23 - [December 11, 2020](https://github.com/lando/lando/releases/tag/v3.0.23)
 

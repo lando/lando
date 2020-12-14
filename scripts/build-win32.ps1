@@ -10,8 +10,8 @@ $ErrorActionPreference = "Stop"
 # Lando version information
 $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
-$docker_version = "3.0.1"
-$docker_build = "50773"
+$docker_version = "3.0.0"
+$docker_build = "50684"
 
 # Get some ENV things
 $temp_dir = $env:TMP
