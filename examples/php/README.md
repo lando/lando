@@ -8,6 +8,8 @@ This example exists primarily to test the following documentation:
 * [Issue #1990](https://github.com/lando/lando/issues/1990)
 * [Issue #2192](https://github.com/lando/lando/issues/2192)
 
+And probably other stuff
+
 Start up tests
 --------------
 
