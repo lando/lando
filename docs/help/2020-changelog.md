@@ -1,10 +1,20 @@
 # 2020
 
-## v3.0.23 - In development
+## v3.0.24 - [December 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.24)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Updated to Docker Desktop for Mac to `3.0.1`
+* Updated to Docker Desktop for Windows to `3.0.0`
+
+## v3.0.23 - [December 11, 2020](https://github.com/lando/lando/releases/tag/v3.0.23)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added support up to Docker Engine `2.10.0` [#2729](https://github.com/lando/lando/issues/2729)
 * Added some convenience labels for `composer_version` [#2729](https://github.com/lando/lando/issues/2729)
+* Fixed bug causing unknown user to be incorrectly reported
+* Fixed bug causing `platformsh` recipes to fail when no `routes` are present [#2740](https://github.com/lando/lando/issues/2740)
 
 ## v3.0.22 - [December 2, 2020](https://github.com/lando/lando/releases/tag/v3.0.22)
 

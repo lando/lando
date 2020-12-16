@@ -226,7 +226,7 @@ lando pull --database none --files none
 ```
 
 ```bash
-lando pull
+lando push
 
 Push db and files to Lagoon
 
