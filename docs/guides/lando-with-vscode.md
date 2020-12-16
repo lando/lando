@@ -69,7 +69,7 @@ xdebug.collect_params = 0
 ; Extra custom Xdebug setting for debug to work in VSCode.
 xdebug.mode = debug
 xdebug.client_host = ${LANDO_HOST_IP}
-xdebug.remote_port = 9003
+xdebug.client_port = 9003
 xdebug.start_with_request = trigger
 ; xdebug.remote_connect_back = 1
 xdebug.log = /tmp/xdebug.log
@@ -137,6 +137,11 @@ Optionally for better performance you can easily toggle Xdebug on and off with s
 If you're using Apache, add this to your `.lando.yml`:
 
 ```yaml
+services:
+  appserver:
+    overrides:
+      environment:
+        XDEBUG_MODE:
 tooling:
   xdebug-on:
     service: appserver
@@ -154,6 +159,11 @@ tooling:
 If you're using Nginx, add this to your `.lando.yml`:
 
 ```yaml
+services:
+  appserver:
+    overrides:
+      environment:
+        XDEBUG_MODE:
 tooling:
   xdebug-on:
     service: appserver
