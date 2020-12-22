@@ -93,7 +93,7 @@ code .vscode/launch.json
       "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "log": false,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
@@ -121,7 +121,7 @@ First, you need to have VSCode listen for debugging on 2 separate ports, because
       "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "log": true,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
@@ -149,7 +149,7 @@ Next add some custom tooling to your .lando.yml file, that provides a command to
 tooling:
   phpunitdebug:
     service: appserver
-    cmd: php -d xdebug.remote_port=9000 vendor/bin/phpunit
+    cmd: php -d xdebug.remote_port=9003 vendor/bin/phpunit
 ```
 
 Now to run debug a PhpUnit test, do the following:
@@ -175,13 +175,13 @@ tail -f /tmp/xdebug.log
 # Open your browser and refresh the app
 ```
 
-**Xdebug says "timeout trying to connect to XX.XX.XX:9000**
+**Xdebug says "timeout trying to connect to XX.XX.XX:9003**
 
-Double-check your host machine allow connection on its port 9000.
+Double-check your host machine allow connection on its port 9003.
 
 This is how you can open a specific port on a Debian/Ubuntu:
 
-`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9000 -j ACCEPT`
+`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9003 -j ACCEPT`
 
 ## Read More
 
