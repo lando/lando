@@ -97,7 +97,7 @@ module.exports = {
           LANDO_WEBROOT_UID: '1000',
           LANDO_WEBROOT_GID: '1000',
         },
-        ports: (options.command !== 'tail -f /dev/null') ? [options.port] : [],
+        ports: (options.command !== 'tail -f /dev/null' && options.port !== false) ? [options.port] : [],
         volumes: options.volumes,
         command: `/bin/sh -c "${options.command}"`,
       };
