@@ -3,13 +3,10 @@
 // Modules
 const _ = require('lodash');
 const fs = require('fs');
-const GitHubApi = require('github');
+const {Octokit} = require('@octokit/rest');
 const os = require('os');
 const path = require('path');
-const Promise = require('./../../../lib/promise');
 
-// Github
-const github = new GitHubApi({Promise: Promise});
 const githubTokenCache = 'github.tokens';
 const gitHubLandoKey = 'github.lando.id_rsa';
 const gitHubLandoKeyComment = 'lando@' + os.hostname();
@@ -51,17 +48,18 @@ const parseTokens = tokens => _.flatten([getTokens(tokens), [{name: 'add or refr
 // Helper to post a github ssh key
 const postKey = (keyDir, token) => {
   // Auth
-  github.authenticate({type: 'token', token});
+  const github = new Octokit({
+    auth: token,
+  });
   // Post key
-  return github.users.createKey({
+  return github.users.createPublicSshKeyForAuthenticated({
     title: 'lando',
     key: _.trim(fs.readFileSync(path.join(keyDir, `${gitHubLandoKey}.pub`), 'utf8')),
   })
   // Catch key already in use error
   .catch(err => {
-    const message = JSON.parse(err.message);
     // Report error for everything else
-    if (_.has(message.errors, '[0].message') && message.errors[0].message !== 'key is already in use') {
+    if (_.has(err.errors, '[0].message') && err.errors[0].message !== 'key is already in use') {
       throw Error(throwError(err));
     }
   });
@@ -70,7 +68,10 @@ const postKey = (keyDir, token) => {
 // Helper to set caches
 const setCaches = (options, lando) => {
   // Get the github user
-  github.authenticate({type: 'token', token: options['github-auth']});
+  const github = new Octokit({
+    auth: options['github-auth'],
+  });
+  // github.authenticate({type: 'token', token: options['github-auth']});
   return github.users.get({})
   .then(user => {
     // Reset this apps metacache
@@ -95,7 +96,9 @@ const getRepos = (answers, Promise) => {
   console.log('Getting your GitHub repos... this may take a moment if you have a lot');
   return new Promise((resolve, reject) => {
     // Authenticate
-    github.authenticate({type: 'token', token: answers['github-auth']});
+    const github = new Octokit({
+      auth: answers['github-auth'],
+    });
     // Get all our slguzz
     github.repos.getAll({affliation: 'owner,collaborator', per_page: 100}, getAllRepos(resolve, reject));
   });
