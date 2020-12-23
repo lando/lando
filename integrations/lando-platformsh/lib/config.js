@@ -61,9 +61,9 @@ const replaceDefault = (data, replacer) => {
 /*
  * Helper to set primary route if needed
  */
-const setPrimaryRoute = (routes = []) => {
+const setPrimaryRoute = (routes = {}) => {
   // If we dont have a primary then set one
-  if (!_.some(routes, 'primary')) {
+  if (!_.isEmpty(routes) && !_.some(routes, 'primary')) {
     const firstUpstream = _.find(routes, {type: 'upstream'});
     firstUpstream.primary = true;
   }

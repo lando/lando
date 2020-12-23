@@ -10,8 +10,8 @@ LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.js
 LANDO="lando.txt"
 
 # Docker
-DOCKER_VERSION="2.5.0.1"
-DOCKER_DOWNLOAD="49550"
+DOCKER_VERSION="3.0.1"
+DOCKER_DOWNLOAD="50773"
 
 # Certs
 TEAM_ID="FY8GAUX282"

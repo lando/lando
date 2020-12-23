@@ -8,6 +8,8 @@ This example exists primarily to test the following documentation:
 * [Issue #1990](https://github.com/lando/lando/issues/1990)
 * [Issue #2192](https://github.com/lando/lando/issues/2192)
 
+And probably other stuff
+
 Start up tests
 --------------
 
@@ -77,6 +79,9 @@ lando ssh -s custom -c "php -m | grep xdebug"
 
 # Should not serve port 80 for cli
 lando ssh -s cli -c "curl http://localhost" || echo $? | grep 1
+
+# Should install the latest composer 1.x using the 1 flag
+lando ssh -s cli -c "composer --version --no-ansi" | grep "Composer version 1."
 
 # Should use custom php ini if specified
 lando ssh -s custom -c "php -i | grep memory_limit | grep 514"
@@ -156,6 +161,9 @@ lando ssh -s defaults -c "curl http://localhost/path_info.php/a/b.php" | grep SC
 
 # Should allow cli services to specify a boot up command
 lando info -s cliworker --deep | grep Cmd | grep sleep | grep infinity
+
+# Should install the latest composer 2.x using the 2-latest flag
+lando ssh -s cliworker -c "composer --version --no-ansi" | grep "Composer version 2."
 ```
 
 Destroy tests

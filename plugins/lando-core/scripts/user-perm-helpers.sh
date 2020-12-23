@@ -15,11 +15,11 @@ add_user() {
   local DISTRO=$5
   local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
-    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
+    if ! groups | grep "$GROUP" > /dev/null 2>&1; then addgroup -g "$GID" "$GROUP" 2>/dev/null; fi
+    if ! id -u "$GROUP" > /dev/null 2>&1; then adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null; fi
   else
-    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null
+    if ! groups | grep "$GROUP" > /dev/null 2>&1; then groupadd --force --gid "$GID" "$GROUP" 2>/dev/null; fi
+    if ! id -u "$GROUP" > /dev/null 2>&1; then useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null; fi
   fi;
 }
 
@@ -28,8 +28,8 @@ verify_user() {
   local USER=$1
   local GROUP=$2
   local DISTRO=$3
-  id -u "$USER" > /dev/null
-  groups | grep "$GROUP" > /dev/null
+  id -u "$USER" > /dev/null 2>&1
+  groups | grep "$GROUP" > /dev/null 2>&1
   if [ "$DISTRO" = "alpine" ]; then
     true
     # is there a chsh we can use? do we need to?

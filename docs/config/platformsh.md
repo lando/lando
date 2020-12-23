@@ -649,7 +649,15 @@ runtime:
     - xdebug
 ```
 
-Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production.
+Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production. You _may_ also need to set this in your .lando.yml:
+
+```yaml
+config:
+  variables:
+    app:
+      php:
+        xdebug.remote_connect_back: 1
+```
 
 ### Platformsh.agent errors
 

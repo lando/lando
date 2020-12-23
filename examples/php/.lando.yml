@@ -7,14 +7,14 @@ services:
     type: php
   cli:
     type: php
-    composer_version: false
+    composer_version: 1
     via: cli
     build_as_root:
       - curl -sL https://deb.nodesource.com/setup_14.x | bash -
       - apt-get install -y nodejs
   cliworker:
     type: php
-    composer_version: false
+    composer_version: 2-latest
     via: cli
     command: sleep infinity
   cliold:
