@@ -127,7 +127,7 @@ if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
   lando_pink "Validating database alias @${LANDO_DB_ALIAS} exists and you have access to it..."
   if ! drush la | grep -q ${LANDO_DB_ALIAS}; then
-    lando_red "@$LANDO_DB_ALIAS does not appear to be a valid environment!"
+    lando_red "@${LANDO_DB_ALIAS} does not appear to be a valid environment!"
     exit 1
   fi
 
@@ -138,7 +138,7 @@ if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
     exit 1
   fi
 
-  lando_green "Database alias @$LANDO_DB_ALIAS access confirmed!"
+  lando_green "Database alias @${LANDO_DB_ALIAS} access confirmed!"
 
   # Suppress drush messaging by assigning output
   echo "Destroying all current tables in database if needed... "
@@ -156,7 +156,7 @@ if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
   lando_pink "Validating file alias @${LANDO_FILES_ALIAS} exists and you have access to it..."
   if ! drush la | grep -q ${LANDO_FILES_ALIAS}; then
-    lando_red "@$LANDO_FILES_ALIAS does not appear to be a valid environment!"
+    lando_red "@${LANDO_FILES_ALIAS} does not appear to be a valid environment!"
     exit 1
   fi
 
@@ -169,13 +169,13 @@ if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   lando_green "Files alias @${LANDO_FILES_ALIAS} access confirmed!"
 
   if ! drush "@${LANDO_FILES_ALIAS}" status | grep -q "File directory path"; then
-    lando_red "Unable to pull files from $LANDO_FILES_ALIAS without a file directory path specified. Set up or import a database first."
+    lando_red "Unable to pull files from ${LANDO_FILES_ALIAS} without a file directory path specified. Set up or import a database first."
     exit 1
   else
     DRUPAL_FILES_PATH=$(drush @${LANDO_FILES_ALIAS} dd files | tr -d '\n' 2>/dev/null)
   fi
 
-  lando_pink "Attemping to sync files to/from directory: $DRUPAL_FILES_PATH"
+  lando_pink "Attemping to sync files to/from directory: ${DRUPAL_FILES_PATH}"
 
   # Import files with rsync
   LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync "@${LANDO_FILES_ALIAS}":${DRUPAL_FILES_PATH} ${DRUPAL_FILES_PATH} -y
