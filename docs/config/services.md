@@ -48,7 +48,7 @@ If you want to load Docker compose files **and** use services, you should note t
 The following services are currently supported. Please check out each one to learn how to use them.
 
 *   ### [apache](./apache.md)
-*   ### [custom](./compose.md)
+*   ### [compose](./compose.md)
 *   ### [dotnet](./dotnet.md)
 *   ### [elasticsearch](./elasticsearch.md)
 *   ### [go](./go.md)
