@@ -48,7 +48,7 @@ If you want to load Docker compose files **and** use services, you should note t
 The following services are currently supported. Please check out each one to learn how to use them.
 
 *   ### [apache](./apache.md)
-*   ### [custom](./compose.md)
+*   ### [compose](./compose.md)
 *   ### [dotnet](./dotnet.md)
 *   ### [elasticsearch](./elasticsearch.md)
 *   ### [go](./go.md)
@@ -74,7 +74,7 @@ The following services are currently supported. Please check out each one to lea
 
 One of the great features of Lando is its ability to destroy a single planet...  we mean add additional dependencies or build steps to your service without the hassle of having to build or manage your own Dockerfiles.
 
-Note that build steps will **ONLY RUN THE FIRST TIME YOU SPIN UP YOUR APP.** That means if you change them, you will need to run `lando rebuild` for them to re-run. An exception to this is if one or more of your build steps error. When this happens Lando will run the build steps until they complete succesfully.
+Note that build steps will **ONLY RUN THE FIRST TIME YOU SPIN UP YOUR APP.** That means if you change them, you will need to run `lando rebuild` for them to re-run. An exception to this is if one or more of your build steps error. When this happens Lando will run the build steps until they complete successfully.
 
 :::tip When should I use build steps?
 If you need additional on-server dependencies like php extensions or node modules, it sounds like a build step may be for you. If you have automation, you want to run **EVERY TIME** and you may want to consider using [events](./events.md) instead.
@@ -116,7 +116,7 @@ As you can likely surmise from the above, each step is intended for a pretty spe
 * Use `run` to install application dependencies or run build steps that require your application be started first
 * Use `run_as_root` for any other post-start `root` level one-time setup commands.
 
-Of course, these steps must make sense within the context of the container you are running them in. For example, you will not be able to run `dnf` inside of a `debian` flavored container. Also note that the default working directory that the commands run in inside the container is `/app`.
+Of course, these steps must make sense within the context of the container you are running them in. For example, you will not be able to run `dnf` inside of a `debian` flavored container. Also, note that the default working directory that the commands run in inside the container is `/app`.
 
 Another potential consideration is "dependent commands". Each line of a build step runs in a separate subshell; so if COMMAND B is dependent on something provided by COMMAND A such as `sourcing` a file, you should combine the commands with `&&` and put them on a single line.
 
@@ -163,7 +163,7 @@ Lando services are just an abstraction layer on top of the [Docker compose v3 fi
 We give you access to the Docker Compose layer with the `overrides` key.
 
 ::: tip You can only override Docker Compose's top-level `services` config
-Overrides you specify get merged and injected directly into the `services` config used by Docker Compose. This means that you cannot use overrides to alter *top level* `networks` or `volumes`. If you are looking for that kind of **POWER**, we suggest you look at the [custom](./compose.md) service.
+Overrides you specify get merged and injected directly into the `services` config used by Docker Compose. This means that you cannot use overrides to alter *top level* `networks` or `volumes`. If you are looking for that kind of **POWER**, we suggest you look at the [compose](./compose.md) service.
 :::
 
 Here is an example of an overridden `apache` service that uses a custom image and injects some additional environment variables. However, you can put anything into `overrides` that you can put into the `services` config of a Docker Compose file. Note that if you change the image, your success in running with that image is directly correlated to how close that image is to the ones we use by default. For that reason, it is **highly recommended** your custom images are extended from ours so your chance of doing this with great success is maximized.
@@ -217,7 +217,7 @@ services:
 
 ### Localhost Assignment
 
-Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default, this is most of our services. An exception is the [`compose`](./compose.md) service which requires the user manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
+Lando will attempt to assign `localhost` addresses to any service that has ports `80` or `443` exposed. By default, this is most of our services. An exception is the [`compose`](./compose.md) service which requires the user to manually expose the ports they need at the Docker Compose level. You can tell Lando to assign `localhost` addresses to additional `http` ports with the following.
 
 ```yaml
 services:
@@ -234,7 +234,7 @@ Note that while you *can* do the above, it is highly unlikely you will *need* to
 
 ### Service URL Scanning
 
-Lando will automatically try to scan all `localhost` and `proxy` URLS after your app starts. We do this to:
+Lando will automatically try to scan all `localhost` and `proxy` URLs after your app starts. We do this to:
 
 1. Provide some immediate feedback to the user regarding the health of their application and the routing that Lando has set up for it
 2. Help compile first-run application caches behind the scenes to improve initial loaded-in-browser speed
