@@ -82,7 +82,7 @@ See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
 :::
 
 1. Ensure homebrew is installed and up-to-date.
-2. Add the lando cask: `brew cask install lando`
+2. Add the lando cask: `brew install --cask lando`
 
 ## Linux
 
