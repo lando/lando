@@ -94,7 +94,7 @@ services:
 FROM devwithlando/php:7.3-apache-2
 
 # Add php extension helper
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 # Install Oracle Instantclient
 RUN mkdir /opt/oracle \
