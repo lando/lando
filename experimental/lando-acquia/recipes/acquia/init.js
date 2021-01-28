@@ -10,10 +10,17 @@ const acquiaTokenCache = 'acquia.tokens';
 const acquiaApps = [];
 
 // Helper to get tokens
-const getTokens = (home, tokens = []) => _(utils.sortTokens(utils.getAcquiaTokens(home), tokens))
-  .map(token => ({name: token.email, value: token.token}))
-  .thru(tokens => tokens.concat([{name: 'add or refresh a token', value: 'more'}]))
-  .value();
+const getTokens = (lando, tokens = []) => {
+  const home = lando.config.home;
+  const hostToken = utils.getAcquiaToken(home);
+  if (hostToken && _.isEmpty(tokens)) {
+    lando.cache.set(acquiaTokenCache, [hostToken], {persist: true});
+  }
+  return _(utils.sortTokens(tokens))
+    .map(token => ({name: token.key, value: token.key}))
+    .thru(tokens => tokens.concat([{name: 'add a token', value: 'more'}]))
+    .value();
+};
 
 // Helper to determine whether to show list of pre-used tokens or not
 const showTokenList = (recipe, tokens = []) => recipe === 'acquia' && !_.isEmpty(tokens);
@@ -41,11 +48,9 @@ module.exports = {
       string: true,
       interactive: {
         type: 'list',
-        choices: getTokens(lando.config.home, lando.cache.get(acquiaTokenCache)),
+        choices: getTokens(lando, lando.cache.get(acquiaTokenCache)),
         message: 'Select your Acquia API key',
-        when: answers => {
-          return showTokenList(answers.recipe, lando.cache.get(acquiaTokenCache));
-        },
+        when: answers => showTokenList(answers.recipe, lando.cache.get(acquiaTokenCache)),
         weight: 510,
       },
     },
@@ -56,6 +61,22 @@ module.exports = {
         type: 'password',
         message: 'Enter your Acquia API key',
         when: answers => {
+          // If a token was selected, attempt to login.
+          if (answers['acquia-auth'] && answers['acquia-auth'] !== 'more') {
+            const token = _.find(lando.cache.get(acquiaTokenCache), token => token.key === answers['acquia-auth']);
+            if (token) {
+              answers['acquia-key'] = token.key;
+              answers['acquia-secret'] = token.secret;
+              return api.auth(answers['acquia-key'], answers['acquia-secret']).then(() => {
+                return false;
+              }).catch(err => {
+                // Clear out token data and prompt user.
+                answers['acquia-key'] = null;
+                answers['acquia-secret'] = null;
+                return true;
+              });
+            }
+          }
           return showTokenEntry(answers.recipe, answers['acquia-auth'], lando.cache.get(acquiaTokenCache));
         },
         weight: 520,
@@ -68,11 +89,20 @@ module.exports = {
         type: 'password',
         message: 'Enter your Acquia API secret',
         when: answers => {
-          return true;
-          // return showTokenEntry(answers.recipe, answers['acquia-auth'], lando.cache.get(acquiaTokenCache));
+          return showTokenEntry(answers.recipe, answers['acquia-auth'], lando.cache.get(acquiaTokenCache));
         },
         validate: (input, answers) => {
           return api.auth(answers['acquia-key'], input).then(() => {
+            let token = _.find(lando.cache.get(acquiaTokenCache), token => token.key === answers['acquia-key']);
+            if (!token) {
+              // Re-create the token as acli would so acli can use it in a container.
+              token = {
+                send_telemetry: false,
+                key: answers['acquia-key'],
+                secret: answers['acquia-secret'],
+              };
+              lando.cache.set(acquiaTokenCache, [token], {persist: true});
+            }
             return true;
           }).catch(err => {
             return err;
@@ -88,7 +118,6 @@ module.exports = {
         type: 'autocomplete',
         message: 'Which site?',
         source: (answers, input) => {
-          // console.log('**', acquiaApps);
           return getAutoCompleteSites(answers, lando, input);
         },
         when: answers => answers.recipe === 'acquia',

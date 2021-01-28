@@ -1,13 +1,11 @@
 'use strict';
-
 // Modules
-const _ = require('lodash');
 const axios = require('axios');
 
 module.exports = class AcquiaApi {
-  constructor() {
+  constructor(lando) {
+    this.lando = lando;
     axios.defaults.baseURL = 'https://cloud.acquia.com/api/';
-
     this.authURL = 'https://accounts.acquia.com/api/auth/oauth/token';
     // this.apiURL = 'https://cloud.acquia.com/api';
     this.token = null;
