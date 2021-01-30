@@ -11,7 +11,7 @@ A container that approximates the appserver used on Pantheon.
 FROM devwithlando/php:5.6-fpm-2
 
 # Version information
-ENV WKHTMLTOPDF_VERSION 0.12.3
+ENV WKHTMLTOPDF_VERSION 0.12.5
 ENV PHANTOMJS_VERSION 2.1.1
 ENV PHANTOMJS_OLD_VERSION 1.7.0
 ENV LANDO_TERMINUS_VERSION 2.4.1
