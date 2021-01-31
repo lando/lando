@@ -28,7 +28,7 @@ fi
 php -r "unlink('/tmp/composer-setup.php');"
 
 #Check if anything is installed globally
-if [ -f /var/www/.composer/composer.json]; then
+if [ -f /var/www/.composer/composer.json ]; then
   # If this is version 2 then let's make sure hirak/prestissimo is removed
   if  composer --version 2>/dev/null | grep "Composer version 2." > /dev/null; then
     composer global remove hirak/prestissimo
