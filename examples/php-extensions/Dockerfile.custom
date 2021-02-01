@@ -1,24 +1,8 @@
 FROM devwithlando/php:7.3-apache-2
 
 # Add php extension helper
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-# Install Oracle Instantclient
-RUN mkdir /opt/oracle \
-  && cd /opt/oracle \
-  && curl https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-basic-linux.x64-19.6.0.0.0dbru.zip > /opt/oracle/instantclient-basic.zip \
-  && curl https://download.oracle.com/otn_software/linux/instantclient/19600/instantclient-sdk-linux.x64-19.6.0.0.0dbru.zip > /opt/oracle/instantclient-sdk.zip \
-  && unzip /opt/oracle/instantclient-basic.zip -d /opt/oracle \
-  && unzip /opt/oracle/instantclient-sdk.zip -d /opt/oracle \
-  && rm /opt/oracle/instantclient-basic.zip \
-  && rm /opt/oracle/instantclient-sdk.zip \
-  # Make OS aware of newly installed libraries
-  && echo /opt/oracle/instantclient_19_6 > /etc/ld.so.conf.d/oracle-instantclient.conf \
-  && ldconfig -v \
-  # Install and enable OCI8
-  && echo "instantclient,/opt/oracle/instantclient_19_6" | pecl install oci8-2.2.0 \
-  && docker-php-ext-enable oci8
-
-# Install Microsoft SQL Server extensions
+# Install Oracle Instantclient, OCI8 and Microsoft SQL Server extensions
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
-  install-php-extensions sqlsrv pdo_sqlsrv
+  install-php-extensions oci8 sqlsrv pdo_sqlsrv
