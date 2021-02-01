@@ -8,6 +8,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Fixed bug causing build hook installed `composer` version to not load correctly in `platformsh` recipe [#2826](https://github.com/lando/lando/issues/2826)
 * Fixed bug causing `nvm` installed `node` versions to not load correctly in `platformsh` recipe when invoked via tooling [#2820](https://github.com/lando/lando/issues/2820)
 * Fixed bug causing `composer` install to fail on `php` `8.0` [#2729](https://github.com/lando/lando/issues/2729)
+* Improved error message when `lando` cannot detect any `platformsh` applications [#2822](https://github.com/lando/lando/issues/2822)
 * Updated `pantheon` recipe to use `wkhtmltopdf` version `0.12.5`
 
 ## v3.0.24 - [December 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.24)
