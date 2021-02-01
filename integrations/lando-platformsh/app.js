@@ -84,7 +84,7 @@ module.exports = (app, lando) => {
           .map(dirent => ` - ${path.join(app.root, dirent.name, '.platform.app.yaml')}`)
           .concat(path.join(app.root, '.platform', 'applications.yaml'))
           .join(os.EOL);
-        lando.log.error(`Could not detect any valid Platform.sh applications in any of: ${os.EOL}${locations}`);
+        lando.log.error(`Could not detect any supported Platform.sh applications in any of: ${os.EOL}${locations}`);
       }
 
       /*
