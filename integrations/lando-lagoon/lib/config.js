@@ -6,6 +6,16 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 
+
+/*
+ * Helper to get label
+ */
+const getLabel = labels => {
+  if (_.has(labels, 'lando.type')) return _.get(labels, 'lando.type');
+  else if (_.get(labels, 'lagoon.type') === 'none') return 'none';
+  else return;
+};
+
 /*
  * Helper to load all the lagoon config files we can find
  */
@@ -36,7 +46,7 @@ exports.parseServices = (services, recipeConfig) => _(services)
   // Remove unneeded things from the docker config and determine the type of the service
   .map((config, name) => _.merge({}, {
     name,
-    type: _.get(config.labels, 'lando.type'),
+    type: getLabel(config.labels),
     compose: _.omit(config, ['volumes', 'volumes_from', 'networks', 'user']),
     config: recipeConfig,
   }))
