@@ -165,16 +165,12 @@ if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
     lando_red "Files alias @${LANDO_FILES_ALIAS} access failed!"
     exit 1
   fi
-
   lando_green "Files alias @${LANDO_FILES_ALIAS} access confirmed!"
 
-  if ! drush "@${LANDO_FILES_ALIAS}" status | grep -q "File directory path"; then
-    lando_red "Unable to pull files from ${LANDO_FILES_ALIAS} without a file directory path specified. Set up or import a database first."
-    exit 1
-  else
-    DRUPAL_FILES_PATH=$(drush @${LANDO_FILES_ALIAS} dd files | tr -d '\n' 2>/dev/null)
-  fi
-
+  # Get the files path
+  # NOTE: It may not be safe to assume this "goes well" under all conditions eg does something
+  # helpful when it fails but lets wait until we know more before we do anything else
+  DRUPAL_FILES_PATH=$(drush @${LANDO_FILES_ALIAS} dd files | tr -d '\n' 2>/dev/null)
   lando_pink "Attemping to sync files to/from directory: ${DRUPAL_FILES_PATH}"
 
   # Import files with rsync
