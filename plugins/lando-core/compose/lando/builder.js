@@ -11,7 +11,6 @@ const utils = require('./../../lib/utils');
 
 /*
  * The lowest level lando service, this is where a lot of the deep magic lives
- * @TODO
  */
 module.exports = {
   name: '_lando',

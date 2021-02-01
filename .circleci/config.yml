@@ -7,24 +7,6 @@ jobs:
     parallelism: 10
     steps:
       - checkout
-      - run:
-          name: Assess needs or bail
-          command: |
-            # Extract commit range (or single commit)
-            COMMIT_RANGE=$(echo "${CIRCLE_COMPARE_URL}" | cut -d/ -f7)
-            # Fix single commit, unfortunately we don't always get a commit range from Circle CI
-            if [[ $COMMIT_RANGE != *"..."* ]]; then
-              COMMIT_RANGE="${COMMIT_RANGE}...${COMMIT_RANGE}"
-            fi
-            # Print some helpful things
-            echo "Operating on commit range: $COMMIT_RANGE"
-            # Check if we need to run tests and bail if we don't
-            LANDO_CHANGED_FILES=$(git diff --name-only $COMMIT_RANGE | cat)
-            echo "The following files have changed: $LANDO_CHANGED_FILES"
-            LANDO_NEEDS_TESTS=$(echo $LANDO_CHANGED_FILES | grep -e .circleci -e bin/ -e lib/ -e plugins/ -e integrations/ -e examples/ -e tests/ &>/dev/null && echo true || echo false)
-            if [[ "$LANDO_NEEDS_TESTS" == "false" ]]; then
-              circleci-agent step halt
-            fi
       - restore_cache:
           keys:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}

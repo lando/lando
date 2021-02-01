@@ -98,6 +98,8 @@ services:
 
 For the most up to date list of supported labels, check out [this](https://github.com/lando/lando/blob/master/integrations/lando-lagoon/lib/services.js#L15). To see labels in action check out the official [Amazee.io Drupal 9 Lagoon example](https://github.com/amazeeio/drupal-example-simple/blob/9.x/docker-compose.yml#L40).
 
+Also note that Lando additionally supports `lagoon.type === none` as documented over [here](https://docs.lagoon.sh/lagoon/using-lagoon-the-basics/docker-compose-yml#skip-ignore-containers).
+
 ### Build steps
 
 If you have steps you need to run to get your site into a workable place you can put them in the `build` key of your recipes `config`. By default, we will run `composer install` but you may wish to augment that with any front end compilation tasks you may have as in the example below:
