@@ -15,6 +15,11 @@ export USER="web"
 export SHELL="/bin/dash"
 export LANG="C.UTF-8"
 
+# Also load BASHRC for things like nvm
+if [ -r "$HOME/.bashrc" ] ; then
+  . "$HOME/.bashrc"
+fi
+
 # If we are running platform CLI commands we actually need to
 # Unset PLATFORM_RELATIONSHIPS and PLATFORM_APPLICATION for this script
 #
