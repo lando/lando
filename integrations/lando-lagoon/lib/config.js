@@ -12,6 +12,11 @@ const yaml = require('js-yaml');
 exports.loadConfigFiles = baseDir => {
   // Get the lagoon file
   const lagoonFile = path.join(baseDir, '.lagoon.yml');
+
+  // If we don't have a lagoonfile then immediately return
+  if (!fs.existsSync(lagoonFile)) return {};
+
+  // Otherwise STILL OK TO GO
   const lagoonConfig = yaml.safeLoad(fs.readFileSync(lagoonFile));
   // Use that to get the docker-compose file
   const composeFile = path.join(baseDir, lagoonConfig['docker-compose-yaml']);
