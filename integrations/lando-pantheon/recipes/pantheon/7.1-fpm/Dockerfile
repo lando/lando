@@ -25,10 +25,10 @@ RUN mkdir -p /usr/share/man/man1 \
   && chown -R www-data:www-data /var/www /srv/bin \
   && wget "https://github.com/pantheon-systems/terminus/releases/download/${LANDO_TERMINUS_VERSION}/terminus.phar" -O /usr/local/bin/terminus \
   && chmod +x /usr/local/bin/terminus \
-  && cd /tmp && wget "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox_${WKHTMLTOPDF_VERSION}-1.strech_amd64.deb" \
-  && dpkg -i "wkhtmltox_${WKHTMLTOPDF_VERSION}-1.strech_amd64.deb" \
+  && cd /tmp && wget "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox_${WKHTMLTOPDF_VERSION}-1.stretch_amd64.deb" \
+  && dpkg -i "wkhtmltox_${WKHTMLTOPDF_VERSION}-1.stretch_amd64.deb" \
   && apt-get install -yf \
-  && rm -rf "wkhtmltox_${WKHTMLTOPDF_VERSION}-1.strech_amd64.deb" \
+  && rm -rf "wkhtmltox_${WKHTMLTOPDF_VERSION}-1.stretch_amd64.deb" \
   && ln -sf /usr/local/bin/wkhtmltopdf /srv/bin/wkhtmltopdf \
   && cd /srv/bin \
   && curl -fsSL "https://github.com/Medium/phantomjs/releases/download/v${PHANTOMJS_VERSION}/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2" | tar -xjv \

@@ -12,7 +12,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Improved `lando pull` for `lagoon` recipes to handle other files directory locations [#2762](https://github.com/lando/lando/issues/2762)
 * Improved error message when `lando` cannot detect any `platformsh` applications for `platformsh` recipes [#2822](https://github.com/lando/lando/issues/2822)
 * Improved error message when `lando` cannot detect a `lagoon.yml` for `lagoon` recipes [#2818](https://github.com/lando/lando/issues/2818)
-* Updated `pantheon` recipe to use `wkhtmltopdf` version `0.12.5` in recent (eg not EOL) `php` images
+* Updated `pantheon` recipe to use `wkhtmltopdf` version `0.12.5` in _most_ `php` images
 * Updated `pantheon` recipe to use `terminus` version `2.5.0`
 
 ## v3.0.24 - [December 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.24)
