@@ -6,6 +6,7 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Added `6.0` to list of supported `redis` versions
 * Fixed bug causing `composer` install to fail on `php` `8.0` [#2729](https://github.com/lando/lando/issues/2729)
+* Updated `pantheon` recipe to use `wkhtmltopdf` version `0.12.5`
 
 ## v3.0.24 - [December 14, 2020](https://github.com/lando/lando/releases/tag/v3.0.24)
 
