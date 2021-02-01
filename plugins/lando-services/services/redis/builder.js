@@ -8,7 +8,7 @@ module.exports = {
   name: 'redis',
   config: {
     version: '5',
-    supported: ['6', '5', '5.0', '4', '4.0', '2.8'],
+    supported: ['6', '6.0', '5', '5.0', '4', '4.0', '2.8'],
     patchesSupported: true,
     confSrc: __dirname,
     persist: false,
