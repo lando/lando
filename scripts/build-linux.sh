@@ -48,5 +48,5 @@ cd .. && mkdir -p dist
 # Build our three packages
 cd ../..
 ./scripts/build-pkg.sh deb $LANDO_VERSION
-# ./scripts/build-pkg.sh pacman $LANDO_VERSION
+./scripts/build-pkg.sh pacman $LANDO_VERSION
 ./scripts/build-pkg.sh rpm $LANDO_VERSION

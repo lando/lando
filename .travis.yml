@@ -194,10 +194,10 @@ jobs:
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-$TRAVIS_TAG.deb; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-stable.deb; fi
         # pacman
-        - cp -rf dist/lando.pacman release/lando-latest-dev.pacman
-        - cp -rf dist/lando.pacman release/lando-$TRAVIS_COMMIT-dev.pacman
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-$TRAVIS_TAG.pacman; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-stable.pacman; fi
+        # - cp -rf dist/lando.pacman release/lando-latest-dev.pacman
+        # - cp -rf dist/lando.pacman release/lando-$TRAVIS_COMMIT-dev.pacman
+        # - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-$TRAVIS_TAG.pacman; fi
+        # - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-stable.pacman; fi
         # rpm
         - cp -rf dist/lando.rpm release/lando-latest-dev.rpm
         - cp -rf dist/lando.rpm release/lando-$TRAVIS_COMMIT-dev.rpm
