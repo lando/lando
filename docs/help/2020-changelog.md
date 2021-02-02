@@ -6,6 +6,7 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * Added support for `lagoon.type == none` [#2828](https://github.com/lando/lando/issues/2828)
 * Added `6.0` to list of supported `redis` versions
+* Added "dumb" support for the `drupal9` `pantheon` framework [#2831](https://github.com/lando/lando/issues/2831)
 * Fixed bug causing build hook installed `composer` version to not load correctly in `platformsh` recipe [#2826](https://github.com/lando/lando/issues/2826)
 * Fixed bug causing `nvm` installed `node` versions to not load correctly in `platformsh` recipe when invoked via tooling [#2820](https://github.com/lando/lando/issues/2820)
 * Fixed bug causing `composer` install to fail on `php` `8.0` [#2729](https://github.com/lando/lando/issues/2729)
