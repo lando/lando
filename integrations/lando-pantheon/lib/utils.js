@@ -66,6 +66,7 @@ const getFilemount = framework => {
     case 'backdrop': return 'files';
     case 'drupal': return 'sites/default/files';
     case 'drupal8': return 'sites/default/files';
+    case 'drupal9': return 'sites/default/files';
     case 'wordpress':
     case 'wordpress_network':
       return 'wp-content/uploads';

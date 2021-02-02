@@ -64,7 +64,7 @@ else {
  */
 if (
   isset($_ENV['FRAMEWORK']) &&
-  $_ENV['FRAMEWORK'] == 'drupal8' &&
+  ($_ENV['FRAMEWORK'] == 'drupal8' || $_ENV['FRAMEWORK'] == 'drupal9') &&
   (empty($GLOBALS['install_state'])) &&
   php_sapi_name() != "cli"
 ) {
