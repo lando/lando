@@ -235,6 +235,7 @@ module.exports = {
           title: 'Changelog',
           collapsable: false,
           children: [
+            '2021-changelog',
             '2020-changelog',
             '2019-changelog',
             '2018-changelog',
