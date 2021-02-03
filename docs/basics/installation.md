@@ -44,6 +44,10 @@ We've found the below or better to deliver the best experience.
 *   16GB+ RAM
 *   100GB+ of available disk space
 
+::: tip Apple Silicon M1 Chip Support
+Docker is [working on support](docker.com/blog/apple-silicon-m1-chips-and-docker) for Mac computers running Apple Silicon M1 chips. We've been monitoring their progress and plan to introduce an M1-compatible Lando binary as soon as possible. [Sponsor Lando](https://github.com/sponsors/lando) to make that world a reality!
+:::
+
 ## Preflight Checks
 
 1.  Verify that your system meets the [minimum system and hardware requirements](#system-requirements) to run Lando.
@@ -82,7 +86,7 @@ See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
 :::
 
 1. Ensure homebrew is installed and up-to-date.
-2. Add the lando cask: `brew cask install lando`
+2. Add the lando cask: `brew install --cask lando`
 
 ## Linux
 

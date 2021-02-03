@@ -6,6 +6,7 @@ const fs = require('fs');
 const {getLandoServices} = require('./lib/services');
 const mkdirp = require('mkdirp');
 const open = require('./lib/open');
+const os = require('os');
 const path = require('path');
 const pshconf = require('./lib/config');
 const runconf = require('./lib/run');
@@ -78,7 +79,12 @@ module.exports = (app, lando) => {
     app.events.on('pre-init', 1, () => {
       // Error if we don't have at least one .platform.app.yml
       if (_.isEmpty(app.platformsh.config.applications)) {
-        lando.log.error(`Could not detect any valid .platform.app.yaml files in ${app.root} or its subdirs!`);
+        const locations = fs.readdirSync(app.root, {withFileTypes: true})
+          .filter(dirent => dirent.isDirectory())
+          .map(dirent => ` - ${path.join(app.root, dirent.name, '.platform.app.yaml')}`)
+          .concat(path.join(app.root, '.platform', 'applications.yaml'))
+          .join(os.EOL);
+        lando.log.error(`Could not detect any supported Platform.sh applications in any of: ${os.EOL}${locations}`);
       }
 
       /*

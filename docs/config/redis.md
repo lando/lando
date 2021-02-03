@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [6](https://hub.docker.com/_/redis)
 *   [6.0](https://hub.docker.com/_/redis)
 *   **[5](https://hub.docker.com/_/redis)** **(default)**
 *   [5.0](https://hub.docker.com/_/redis)
