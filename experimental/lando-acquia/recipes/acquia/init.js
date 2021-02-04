@@ -8,6 +8,7 @@ const utils = require('../../lib/utils');
 const api = new API();
 const acquiaTokenCache = 'acquia.tokens';
 const acquiaApps = [];
+let acquiaEnvs = [];
 
 // Helper to get tokens
 const getTokens = (lando, tokens = []) => {
@@ -34,8 +35,20 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
   }
   return api.getApplications().then(apps => {
     if (apps && Array.isArray(apps)) {
-      apps.map(item => acquiaApps.push({name: item.name, value: item.name}));
+      apps.map(item => acquiaApps.push({name: item.name, value: item.uuid}));
       return lando.Promise.resolve(acquiaApps);
+    }
+  });
+};
+
+const getAutoCompleteEnvs = (answers, lando, input = null) => {
+  if (!_.isEmpty(acquiaEnvs)) {
+    return lando.Promise.resolve(acquiaEnvs).filter(app => _.startsWith(app.name, input));
+  }
+  return api.getEnvironments(answers['acquia-app']).then(envs => {
+    if (envs && Array.isArray(envs)) {
+      acquiaEnvs = envs.map(item => (_.merge({name: item.name, value: item.id}, item)));
+      return acquiaEnvs;
     }
   });
 };
@@ -112,13 +125,26 @@ module.exports = {
       },
     },
     'acquia-app': {
-      describe: 'An Acquia site ID',
+      describe: 'An Acquia app uuid',
       string: true,
       interactive: {
         type: 'autocomplete',
-        message: 'Which site?',
+        message: 'Which application?',
         source: (answers, input) => {
           return getAutoCompleteSites(answers, lando, input);
+        },
+        when: answers => answers.recipe === 'acquia',
+        weight: 540,
+      },
+    },
+    'acquia-env': {
+      describe: 'An Acquia environment',
+      string: true,
+      interactive: {
+        type: 'autocomplete',
+        message: 'Which environment?',
+        source: (answers, input) => {
+          return getAutoCompleteEnvs(answers, lando, input);
         },
         when: answers => answers.recipe === 'acquia',
         weight: 540,
@@ -139,6 +165,20 @@ module.exports = {
   sources: [{
     name: 'acquia',
     label: 'acquia',
+    build: (options, lando) => ([
+      {name: 'get-git-url', func: (options, lando) => {
+        // Set git url & branch from env
+        const env = _.find(acquiaEnvs, item => item.id === options['acquia-env']);
+        options['acquia-git-url'] = env.vcs.url;
+        options['acquia-git-branch'] = env.vcs.path;
+      }},
+      {
+        name: 'clone-repo',
+        cmd: options =>
+          `/helpers/get-remote-url.sh ${options['acquia-git-url']} "--branch ${options['acquia-git-branch']}"`,
+        remove: 'true',
+      },
+    ]),
   }],
   build: (options, lando) => {
     return {

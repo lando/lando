@@ -71,6 +71,17 @@ module.exports = class AcquiaApi {
       });
   }
 
+  getEnvironments(appId) {
+    return axios.get(`https://cloud.acquia.com/api/applications/${appId}/environments`).then(res => {
+      const total = res.data.total;
+      this.environments = total === 0 ? [] : res.data._embedded.items;
+      return this.environments;
+    })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   /**
    * Sets this.account; Called in this.auth().
    * @return {Promise}
