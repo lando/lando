@@ -30,7 +30,7 @@ export default {
     };
   },
   mounted() {
-    this.patriots = filter(sponsors, (sponsor) => {
+    this.patriots = filter(sponsors, sponsor => {
       return sponsor.type == 'patriot';
     });
   },
