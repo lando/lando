@@ -14,6 +14,9 @@
 
 
 <script>
+import {filter} from 'lodash';
+import sponsors from './../../public/api/sponsors.json';
+
 export default {
   props: {
     hideHeader: {
@@ -27,11 +30,8 @@ export default {
     };
   },
   mounted() {
-    this.$api.get('/v1/sponsors/patriot').then(response => {
-      this.patriots = response.data || [];
-    })
-    .catch(error => {
-      console.error(error);
+    this.patriots = filter(sponsors, sponsor => {
+      return sponsor.type == 'patriot';
     });
   },
 };
