@@ -49,9 +49,9 @@ The first thing we need to do is enable WSL2. To do so...
 
 1. Open the start menu and search for "Turn Windows features on or off".
 2. In the resulting window, check 'Windows Subsystem for Linux' and 'Virtual Machine Platform' and then click 'ok'. This starts the system installed for WSL and will ask us to restart after it downloads the stuff it needs. This really only gives you the WSL1 setup. To get WSL2...
-3. Download a kernel update to get WSL2 going. see the (Microsoft docs on installing the kernel update)[https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package].
+3. Download a kernel update to get WSL2 going. see the [Microsoft docs on installing the kernel update](https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package).
 4. After you install the kernel update, launch a powershell and run `wsl --set-default-version 2` to default to WSL 2.
-5. Head to the Microsoft store and install a Linux distro. I am going to choose [Ubuntu 18.04 LTS](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q), since it is the most common distro for Lando users and our handy (Hyperdrive)[https://github.com/lando/hyperdrive] supports it.
+5. Head to the Microsoft store and install a Linux distro. I am going to choose [Ubuntu 18.04 LTS](https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q), since it is the most common distro for Lando users and our handy [Hyperdrive](https://github.com/lando/hyperdrive) supports it.
 
 ## Jump into Hyperspace
 
