@@ -60,7 +60,7 @@ After installing the latest LTS Ubuntu, using Hyperdrive makes the rest extremel
 ## Rules to keep your setup easy and happy
 
 1. **Never** run a Lando app from within the default directory that WSL drops you into (`/mnt/c/Users/whateveruser`). This is the Windows filesystem mounted into your WSL instance, and it suffers from the filesystem performance issues that this setup avoids, therefore making going through the trouble of setting this up pointless.
-2. You have to start Docker every time you start up the WSL2 instance. I just run `sudo service docker start` but you can probably do some `.bashrc` magic to do this automatically. This is because the WSL2 distros have no init system, so Docker doesn't auto start.
+2. You have to start Docker every time you start up the WSL2 instance. Running `lando start` should automatically start Docker, but if you need to initialize Docker for non-Lando purposes, try running `sudo service docker start`. This is because the WSL2 distros have no init system, so Docker doesn't auto start.
 3. VS Code is the absolute easiest editor to use with this setup. Microsoft has some extensions that make working with your WSL filesystem very easy. Vim/Neovim also work great, but using an editor like PHPStorm currently requires some extra setup if you want decent performance.
 
 ## Day to day development
