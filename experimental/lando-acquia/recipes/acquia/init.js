@@ -154,7 +154,7 @@ module.exports = {
   overrides: {
     name: {
       when: answers => {
-        answers.name = answers['acquia-app'];
+        answers.name = _.find(acquiaApps, item => item.value === answers['acquia-app']).name;
         return false;
       },
     },
