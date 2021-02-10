@@ -133,7 +133,22 @@ module.exports = {
         source: (answers, input) => {
           return getAutoCompleteSites(answers, lando, input);
         },
-        when: answers => answers.recipe === 'acquia',
+        when: answers => {
+          // Handle selecting site from .acquia-cli.yml file
+          if (answers.recipe === 'acquia') {
+            if (answers.source === 'cwd') {
+              const uuid = utils.getAcliUuid();
+              if (uuid !== null) {
+                // Build AcquiaApps data and set app uuid
+                getAutoCompleteSites(answers, lando);
+                answers['acquia-app'] = uuid;
+                return false;
+              }
+            }
+            return true;
+          }
+          return false;
+        },
         weight: 540,
       },
     },
@@ -181,6 +196,8 @@ module.exports = {
     ]),
   }],
   build: (options, lando) => {
+    // Write .acli-cli.yml if it doesn't exist.
+    utils.writeAcliUuid(options['acquia-app']);
     return {
     };
   },

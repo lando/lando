@@ -4,6 +4,25 @@
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
+
+exports.getAcliUuid = () => {
+  const file = '.acquia-cli.yml';
+  if (fs.existsSync(file)) {
+    const data = yaml.load(fs.readFileSync(file, 'utf8'));
+    return data.cloud_app_uuid;
+  }
+  return null;
+};
+
+exports.writeAcliUuid = uuid => {
+  const file = '.acquia-cli.yml';
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, `cloud_app_uuid: ${uuid}\n`);
+    return true;
+  }
+  return false;
+};
 
 /*
  * Get acli token from host
