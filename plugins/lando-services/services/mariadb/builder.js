@@ -8,8 +8,9 @@ module.exports = {
   name: 'mariadb',
   config: {
     version: '10.3',
-    supported: ['10.4', '10.3', '10.2', '10.1'],
+    supported: ['10.5', '10.4', '10.3', '10.2', '10.1'],
     pinPairs: {
+      '10.5': 'bitnami/mariadb:10.5.8-debian-10-r74',
       '10.4': 'bitnami/mariadb:10.4.17-debian-10-r84',
       '10.3': 'bitnami/mariadb:10.3.27-debian-10-r84',
       '10.2': 'bitnami/mariadb:10.2.36-debian-10-r83',
