@@ -2,6 +2,7 @@
 
 // Modules
 const _ = require('lodash');
+const {getAcquiaPull} = require('./../../lib/pull');
 
 module.exports = {
   name: 'acquia',
@@ -37,6 +38,7 @@ module.exports = {
           description: 'Run the Acquia acli command',
           cmd: 'acli',
         },
+        'pull': getAcquiaPull(options),
       };
       super(id, options);
     };
