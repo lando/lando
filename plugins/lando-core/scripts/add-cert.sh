@@ -125,6 +125,9 @@ cp -f /certs/cert.key /certs/server.key
 # Set the cert and key on host to host-uid/gid ownership
 chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"
 chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"
+# Change permissions on the folder to let others install certs as needed
+chgrp www-data /certs
+chmod 775 /certs
 
 # Trust our root CA
 if [ ! -f "$CA_CERT_CONTAINER" ]; then
