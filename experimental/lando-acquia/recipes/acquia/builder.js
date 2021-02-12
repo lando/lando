@@ -4,6 +4,8 @@
 const _ = require('lodash');
 const {getAcquiaPull} = require('./../../lib/pull');
 
+const acquiaLastInitCache = 'acquia.last';
+
 module.exports = {
   name: 'acquia',
   parent: '_drupaly',
@@ -20,6 +22,7 @@ module.exports = {
       options.database = 'mysql:5.7';
       // Load .env file.
       options.env_file = ['.env'];
+
       // Set build steps for app server.
       options.services = {
         appserver: {
@@ -27,10 +30,23 @@ module.exports = {
             'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
             'chmod +x acli.phar',
             'mv acli.phar /usr/local/bin/acli',
-            '/usr/local/bin/acli auth:login -k $ACLI_KEY -s $ACLI_SECRET -n',
           ],
         },
       };
+
+      // Add key and secret from last init.
+      const lastInitData = options._app._lando.cache.get(acquiaLastInitCache);
+      if (lastInitData) {
+        const key = lastInitData['acquia-key'];
+        const sec = lastInitData['acquia-secret'];
+        const cmd = `/usr/local/bin/acli auth:login -k "${key}" -s "${sec}" -n`;
+
+        options.services.appserver.build.push(cmd);
+        // Delete because the token will exist on a rebuild, and if
+        // they change the token for some reason, we need that one to be used.
+        options._app._lando.cache.set(acquiaLastInitCache, null, {persist: true});
+      }
+
       // Add acli tooling.
       options.tooling = {
         'acli': {
