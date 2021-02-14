@@ -16,7 +16,7 @@ We recommend getting in touch with local event organizers to help you get starte
 
 Some well known places to get you started are below:
 
-* [Drupal Event Calendar](https://www.drupical.com)
+* [Drupal Events Calendar](https://www.drupal.org/community/events)
 * [WordPress Event Calendar](https://central.wordcamp.org/schedule/)
 * [Meetup.com](https://www.meetup.com/)
 
