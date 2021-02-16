@@ -27,6 +27,9 @@ LANDO_SSH_KEY=
 LANDO_DB_ALIAS="none"
 LANDO_FILES_ALIAS="none"
 
+# Set drupal paths
+DRUPAL_FILES_PATH="web/sites/default/files"
+
 # Auth options
 AUTH_HOST="ssh.lagoon.amazeeio.cloud"
 AUTH_USER="lagoon"
@@ -96,8 +99,11 @@ done
 # Dynamically prefix alias if project name was not included
 if [[ "${LANDO_DB_ALIAS}" != "${LANDO_LAGOON_PROJECT}"* ]]; then
   LANDO_DB_ALIAS="${LANDO_LAGOON_PROJECT}-${LANDO_DB_ALIAS}"
+fi
+if [[ "${LANDO_FILES_ALIAS}" != "${LANDO_LAGOON_PROJECT}"* ]]; then
   LANDO_FILES_ALIAS="${LANDO_LAGOON_PROJECT}-${LANDO_FILES_ALIAS}"
 fi
+
 # Prefix aliases with lagoon.
 LANDO_DB_ALIAS="lagoon.${LANDO_DB_ALIAS}"
 LANDO_FILES_ALIAS="lagoon.${LANDO_FILES_ALIAS}"
@@ -119,15 +125,20 @@ drush la 1>/dev/null
 # Sync database
 if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
-  lando_pink "Validating ${LANDO_DB_ALIAS} exists and you have access to it..."
-  if ! drush la | grep ${LANDO_DB_ALIAS}; then
-    lando_red "$LANDO_DB_ALIAS does not appear to be a valid environment!"
+  lando_pink "Validating database alias @${LANDO_DB_ALIAS} exists and you have access to it..."
+  if ! drush la | grep -q ${LANDO_DB_ALIAS}; then
+    lando_red "@${LANDO_DB_ALIAS} does not appear to be a valid environment!"
     exit 1
   fi
 
+
   # Validate we can ping the remote environment
-  drush "@${LANDO_DB_ALIAS}" status -y
-  lando_green "Confirmed!"
+  if ! drush "@${LANDO_DB_ALIAS}" status -y >/dev/null; then
+    lando_red "Database alias @${LANDO_DB_ALIAS} access failed!"
+    exit 1
+  fi
+
+  lando_green "Database alias @${LANDO_DB_ALIAS} access confirmed!"
 
   # Suppress drush messaging by assigning output
   echo "Destroying all current tables in database if needed... "
@@ -137,27 +148,35 @@ if [ "${LANDO_DB_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   echo "Pulling your database... This miiiiight take a minute"
   LANDO_SSH_KEY=${LANDO_SSH_KEY} drush "@${LANDO_DB_ALIAS}" sql:dump -y | drush sql:cli -y
 else
-  echo "Skipping database"
+  lando_green "Skipping database"
 fi
 
 # Sync files
 if [ "${LANDO_FILES_ALIAS}" != "lagoon.${LANDO_LAGOON_PROJECT}-none" ]; then
   # Validate environment exists
-  lando_pink "Validating ${LANDO_FILES_ALIAS} exists and you have access to it..."
-  if ! drush la | grep ${LANDO_FILES_ALIAS}; then
-    lando_red "$LANDO_FILES_ALIAS does not appear to be a valid environment!"
+  lando_pink "Validating file alias @${LANDO_FILES_ALIAS} exists and you have access to it..."
+  if ! drush la | grep -q ${LANDO_FILES_ALIAS}; then
+    lando_red "@${LANDO_FILES_ALIAS} does not appear to be a valid environment!"
     exit 1
   fi
 
   # Validate we can ping the remote environment
-  drush "@${LANDO_FILES_ALIAS}" status -y
-  lando_green "Confirmed!"
+  if ! drush "@${LANDO_FILES_ALIAS}" status -y >/dev/null; then
+    lando_red "Files alias @${LANDO_FILES_ALIAS} access failed!"
+    exit 1
+  fi
+  lando_green "Files alias @${LANDO_FILES_ALIAS} access confirmed!"
+
+  # Get the files path
+  # NOTE: It may not be safe to assume this "goes well" under all conditions eg does something
+  # helpful when it fails but lets wait until we know more before we do anything else
+  DRUPAL_FILES_PATH=$(drush @${LANDO_FILES_ALIAS} dd files | tr -d '\n' 2>/dev/null)
+  lando_pink "Attemping to sync files to/from directory: ${DRUPAL_FILES_PATH}"
 
   # Import files with rsync
-  echo "Pulling files..."
-  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync @${LANDO_FILES_ALIAS}:web/sites/default/files web/sites/default -y
+  LANDO_SSH_KEY=${LANDO_SSH_KEY} drush rsync "@${LANDO_FILES_ALIAS}":${DRUPAL_FILES_PATH} ${DRUPAL_FILES_PATH} -y
 else
-  echo "Skipping files"
+  lando_green "Skipping files"
 fi
 
 # Finish up!

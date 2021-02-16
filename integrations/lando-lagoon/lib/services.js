@@ -16,6 +16,7 @@ const getLandoServiceType = type => {
   switch (type) {
     case 'nginx': return 'lagoon-nginx';
     case 'nginx-drupal': return 'lagoon-nginx';
+    case 'none': return 'lagoon-none';
     case 'mariadb': return 'lagoon-mariadb';
     case 'mariadb-drupal': return 'lagoon-mariadb';
     case 'php-cli': return 'lagoon-php-cli';
