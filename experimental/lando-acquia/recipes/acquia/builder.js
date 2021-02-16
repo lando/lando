@@ -21,6 +21,7 @@ module.exports = {
       options.database = 'mysql:5.7';
       // Load .env file.
       options.env_file = ['.env'];
+      options.webroot = 'docroot';
 
       // Set build steps for app server.
       options.services = {
