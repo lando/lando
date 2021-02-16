@@ -36,6 +36,17 @@ exports.getAcquiaToken = home => {
 };
 
 /*
+ * Get acli token from host
+ */
+exports.getComposerConfig = () => {
+  const file = path.join('composer.json');
+  if (fs.existsSync(file)) {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  }
+  return null;
+};
+
+/*
  * Helper to return most recent tokens
  */
 exports.sortTokens = (...sources) => _(_.flatten([...sources]))

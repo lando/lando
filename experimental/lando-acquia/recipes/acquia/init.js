@@ -188,6 +188,7 @@ module.exports = {
         const env = _.find(acquiaEnvs, item => item.id === options['acquia-env']);
         options['acquia-git-url'] = env.vcs.url;
         options['acquia-git-branch'] = env.vcs.path;
+        options['acquia-php-version'] = env.configuration.php.version;
       }},
       {
         name: 'clone-repo',
@@ -201,7 +202,24 @@ module.exports = {
     // Write .acli-cli.yml if it doesn't exist.
     utils.writeAcliUuid(options['acquia-app']);
     lando.cache.set(acquiaLastInitCache, options, {persist: true});
-    return {
+
+    const landofileConfig = {
+      config: {
+        php: options['acquia-php-version'],
+      },
     };
+
+    // Set the composer version to 1 if it is defined as such in composer.json
+    const composerConfig = utils.getComposerConfig();
+    if (composerConfig !== null && composerConfig.require['composer/installers']) {
+      const composerConfig = utils.getComposerConfig();
+      if (composerConfig !== null && composerConfig.require['composer/installers']) {
+        const majorVersion = parseInt(composerConfig.require['composer/installers'].replace( /(^.+)(\d)(.+$)/i, '$2'));
+        if (majorVersion === 1) {
+          landofileConfig.config.composer_version = majorVersion;
+        }
+      }
+    }
+    return landofileConfig;
   },
 };
