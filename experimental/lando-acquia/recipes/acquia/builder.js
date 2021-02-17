@@ -32,6 +32,9 @@ module.exports = {
             'mv acli.phar /usr/local/bin/acli',
           ],
         },
+        memcached: {
+          type: 'memcached',
+        },
       };
 
       // Add key and secret from last init.
