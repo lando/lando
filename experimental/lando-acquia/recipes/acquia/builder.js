@@ -24,13 +24,20 @@ module.exports = {
       options.webroot = 'docroot';
 
       // Set build steps for app server.
+      const group = options._app.config.config.ah_group;
       options.services = {
         appserver: {
           build: [
             'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
             'chmod +x acli.phar',
             'mv acli.phar /usr/local/bin/acli',
+            `mkdir -p /var/www/site-php/${group}`,
+            `cp /helpers/settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
           ],
+          environment: {
+            AH_SITE_UUID: options._app.config.config.ah_id || null,
+            AH_SITE_GROUP: options._app.config.config.ah_group || null,
+          },
         },
         memcached: {
           type: 'memcached',

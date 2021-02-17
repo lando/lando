@@ -36,7 +36,7 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
   }
   return api.getApplications().then(apps => {
     if (apps && Array.isArray(apps)) {
-      apps.map(item => acquiaApps.push({name: item.name, value: item.uuid}));
+      apps.map(item => acquiaApps.push({name: item.name, value: item.uuid, group: item.group}));
       return lando.Promise.resolve(acquiaApps);
     }
   });
@@ -202,9 +202,12 @@ module.exports = {
     // Write .acli-cli.yml if it doesn't exist.
     utils.writeAcliUuid(options['acquia-app']);
     lando.cache.set(acquiaLastInitCache, options, {persist: true});
+    const acquiaApp = _.find(acquiaApps, item => item.value === options['acquia-app']);
 
     const landofileConfig = {
       config: {
+        ah_id: options['acquia-app'],
+        ah_group: acquiaApp.group,
         php: options['acquia-php-version'],
       },
     };
