@@ -48,7 +48,7 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
   }
   return api.getEnvironments(answers['acquia-app']).then(envs => {
     if (envs && Array.isArray(envs)) {
-      acquiaEnvs = envs.map(item => (_.merge({name: item.name, value: item.id}, item)));
+      acquiaEnvs = envs.map(item => (_.merge({name: item.label, value: item.id}, item)));
       return acquiaEnvs;
     }
   });
