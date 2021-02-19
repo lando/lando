@@ -24,6 +24,21 @@ exports.writeAcliUuid = uuid => {
   return false;
 };
 
+exports.writeEnvUuids = data => {
+  //const dir = '/app';
+  const file = './acquia-envs.json';
+  fs.writeFileSync(file, JSON.stringify(data));
+  return false;
+};
+
+exports.getEnvUuids = () => {
+  const file = './acquia-envs.json';
+  if (fs.existsSync(file)) {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  }
+  return null;
+};
+
 /*
  * Get acli token from host
  */

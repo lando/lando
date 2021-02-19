@@ -9,7 +9,6 @@ set -e
 LANDO_MODULE="acquia"
 
 # Set option defaults
-SITE=$ACLI_SITE;
 CODE='none';
 DATABASE='none';
 FILES='none';
@@ -37,7 +36,7 @@ while (( "$#" )); do
       ;;
     -d|--database|--database=*)
       if [ "${1##--database=}" != "$1" ]; then
-        DATABASE="${1##--database=}"
+        DATABASE="${1##--database=}";
         shift
       else
         DATABASE=$2
@@ -74,20 +73,13 @@ while (( "$#" )); do
   esac
 done
 
-# Go through the auth procedure
-if [ "$NO_AUTH" == "false" ]; then
-  /helpers/auth.sh "$AUTH" "$SITE"
-fi
+echo "$CODE\n";
+echo "$DATABASE\n";
+echo "$FILES\n";
 
 # Get the codez
 if [ "$CODE" != "none" ]; then
-  # @TODO: what/how can we do a simple auth check for acli?
-  # Validate before we begin
-  # lando_pink "Validating you can pull code from $CODE..."
-  # acli api:applications:list $SITE.$CODE
-  # lando_green "Confirmed!"
-
-  PULL_CODE="$LANDO_CODE_PULL_COMMAND $SITE.$CODE";
+  PULL_CODE="$LANDO_CODE_PULL_COMMAND /app $CODE";
 
       # Fetching code
       eval "$PULL_CODE"
@@ -95,19 +87,7 @@ fi
 
 # Get the database
 if [ "$DATABASE" != "none" ]; then
-  # Make sure the acli command returned from buildDbPullCommand() has the
-  # correct <site.env> specified.
-  # PULL_DB="$LANDO_DB_PULL_COMMAND $SITE.$DATABASE $LANDO_DB_PULL_COMMAND_OPTIONS"
-  PULL_DB="$LANDO_DB_PULL_COMMAND $SITE.$DATABASE";
-
-  # For some reason terminus remote:thing commands do not return when run through
-  # LEIA so we are reseting this here for now
-  # if [ $LANDO_LEIA == 1 ]; then PULL_DB="$FALLBACK_PULL_DB"; fi
-
-  # # Validate before we begin
-  # lando_pink "Validating you can pull the database from $DATABASE..."
-  # terminus env:info $SITE.$DATABASE
-  # lando_green "Confirmed!"
+  PULL_DB="$LANDO_DB_PULL_COMMAND $DATABASE"
 
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
@@ -137,17 +117,10 @@ fi
 
 # Get the files
 if [ "$FILES" != "none" ]; then
-  PULL_FILES=""
+  PULL_FILES="$LANDO_FILES_PULL_COMMAND $FILES";
 
-#   # Validate before we begin
-#   lando_pink "Validating you can pull files from $FILES..."
-#   terminus env:info $SITE.$FILES
-#   lando_green "Confirmed!"
-
-PULL_FILES="$LANDO_FILES_PULL_COMMAND $SITE.$FILES";
-
-    # Importing files
-    eval "$PULL_FILES"
+  # Importing files
+  eval "$PULL_FILES"
 fi
 
 # Finish up!
