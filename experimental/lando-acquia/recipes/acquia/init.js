@@ -36,7 +36,7 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
   }
   return api.getApplications().then(apps => {
     if (apps && Array.isArray(apps)) {
-      apps.map(item => acquiaApps.push({name: item.name, value: item.uuid}));
+      apps.map(item => acquiaApps.push({name: item.name, value: item.uuid, group: item.group}));
       return lando.Promise.resolve(acquiaApps);
     }
   });
@@ -48,7 +48,7 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
   }
   return api.getEnvironments(answers['acquia-app']).then(envs => {
     if (envs && Array.isArray(envs)) {
-      acquiaEnvs = envs.map(item => (_.merge({name: item.name, value: item.id}, item)));
+      acquiaEnvs = envs.map(item => (_.merge({name: item.label, value: item.id}, item)));
       return acquiaEnvs;
     }
   });
@@ -188,6 +188,7 @@ module.exports = {
         const env = _.find(acquiaEnvs, item => item.id === options['acquia-env']);
         options['acquia-git-url'] = env.vcs.url;
         options['acquia-git-branch'] = env.vcs.path;
+        options['acquia-php-version'] = env.configuration.php.version;
       }},
       {
         name: 'clone-repo',
@@ -201,7 +202,27 @@ module.exports = {
     // Write .acli-cli.yml if it doesn't exist.
     utils.writeAcliUuid(options['acquia-app']);
     lando.cache.set(acquiaLastInitCache, options, {persist: true});
-    return {
+    const acquiaApp = _.find(acquiaApps, item => item.value === options['acquia-app']);
+
+    const landofileConfig = {
+      config: {
+        ah_id: options['acquia-app'],
+        ah_group: acquiaApp.group,
+        php: options['acquia-php-version'],
+      },
     };
+
+    // Set the composer version to 1 if it is defined as such in composer.json
+    const composerConfig = utils.getComposerConfig();
+    if (composerConfig !== null && composerConfig.require['composer/installers']) {
+      const composerConfig = utils.getComposerConfig();
+      if (composerConfig !== null && composerConfig.require['composer/installers']) {
+        const majorVersion = parseInt(composerConfig.require['composer/installers'].replace( /(^.+)(\d)(.+$)/i, '$2'));
+        if (majorVersion === 1) {
+          landofileConfig.config.composer_version = majorVersion;
+        }
+      }
+    }
+    return landofileConfig;
   },
 };
