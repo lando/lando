@@ -28,4 +28,4 @@ While you certainly can create content from scratch, we recommend you request ac
 
 We also highly encourage you to contribute your finished presentation materials back to the same Google folder. This both aids future evangelists and also serves as a record for posterity.
 
-Before crafting your content, definitely check out the [talking points](./talking-points.md) and [selling points](./upseller-intro.md) docs.
+Before crafting your content, definitely check out the [talking points](./talking-points.md) so you hit on all the Lando goodness. If you want to see Lando keep winning, please insert a slide reminding people to [sponsor Lando](sponsor-intro.md)!
