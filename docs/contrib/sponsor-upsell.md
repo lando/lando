@@ -30,4 +30,6 @@ Asking your boss to sponsor Lando might seem tough. Why should they pay for some
 
 ## They're Ready to Sponsor. Now What?
 
-Most organizations will want to sponsor directly through our [Github sponsors page](), but to take full advantage of sponsorship benefits, they'll want to reach out to the Lando maintainer team. Checkout the [guide on sponsorships](sponsor-intro.md) for more details on benefits and how sponsors can take advantage of them.
+Most organizations will want to sponsor directly through our [Github sponsors page](https://github.com/sponsors/lando). If Lando saves your organization at least a couple hours each month, we highly encourage you making a recurring contribution, but for one-time contributions [Open Collective](https://opencollective.com/lando#category-CONTRIBUTE) can be more convenient.
+
+To take full advantage of sponsorship benefits your organization will want to reach out to <sponsorships@lando.dev>. Checkout the [guide on sponsorships](sponsor-intro.md) for more details on benefits and how sponsors can take advantage of them.
