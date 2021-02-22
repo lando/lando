@@ -73,10 +73,6 @@ while (( "$#" )); do
   esac
 done
 
-echo "$CODE\n";
-echo "$DATABASE\n";
-echo "$FILES\n";
-
 # Get the codez
 if [ "$CODE" != "none" ]; then
   PULL_CODE="$LANDO_CODE_PULL_COMMAND /app $CODE";

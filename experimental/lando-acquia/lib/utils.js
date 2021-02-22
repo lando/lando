@@ -25,7 +25,6 @@ exports.writeAcliUuid = uuid => {
 };
 
 exports.writeEnvUuids = data => {
-  //const dir = '/app';
   const file = './acquia-envs.json';
   fs.writeFileSync(file, JSON.stringify(data));
   return false;
