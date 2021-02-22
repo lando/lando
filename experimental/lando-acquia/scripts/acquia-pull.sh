@@ -100,7 +100,7 @@ EOF
 
   # Importing database
   echo "Pulling your database... This miiiiight take a minute"
-  $PULL_DB | pv | $LOCAL_MYSQL_CONNECT_STRING | pv | $LOCAL_MYSQL_CONNECT_STRING
+  $PULL_DB;
 
   # Weak check that we got tables
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
