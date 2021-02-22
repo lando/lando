@@ -189,6 +189,7 @@ module.exports = {
         options['acquia-git-url'] = env.vcs.url;
         options['acquia-git-branch'] = env.vcs.path;
         options['acquia-php-version'] = env.configuration.php.version;
+        options['acquia-site-group'] = env.ssh_url.split('.')[0];
       }},
       {
         name: 'clone-repo',
@@ -202,12 +203,11 @@ module.exports = {
     // Write .acli-cli.yml if it doesn't exist.
     utils.writeAcliUuid(options['acquia-app']);
     lando.cache.set(acquiaLastInitCache, options, {persist: true});
-    const acquiaApp = _.find(acquiaApps, item => item.value === options['acquia-app']);
 
     const landofileConfig = {
       config: {
         ah_id: options['acquia-app'],
-        ah_group: acquiaApp.group,
+        ah_group: options['acquia-site-group'],
         php: options['acquia-php-version'],
       },
     };
