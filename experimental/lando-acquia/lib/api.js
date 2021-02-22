@@ -82,13 +82,13 @@ module.exports = class AcquiaApi {
       _.each(this.environments, env => {
         if (env.name != 'prod') {
           envs.push({
-            "name": env.name,
-            "value": env.id
-          })
+            'name': env.name,
+            'value': env.id,
+          });
         }
       });
       // Add in a none option.
-      envs.push({"name": "none", "value": "none"});
+      envs.push({'name': 'none', 'value': 'none'});
       utils.writeEnvUuids(envs);
       return this.environments;
     })

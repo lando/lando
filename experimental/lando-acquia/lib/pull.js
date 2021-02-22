@@ -2,8 +2,6 @@
 
 // Modules
 const _ = require('lodash');
-const auth = require('./auth');
-const fs = require('fs');
 const utils = require('./utils');
 
 // Vars
