@@ -193,7 +193,7 @@ module.exports = {
       {
         name: 'clone-repo',
         cmd: options =>
-          `/helpers/get-remote-url.sh ${options['acquia-git-url']}`,
+          `/helpers/get-remote-url.sh ${options['acquia-git-url']} "" "${options['acquia-git-branch']}"`,
         remove: 'true',
       },
     ]),
