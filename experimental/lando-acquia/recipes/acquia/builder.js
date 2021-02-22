@@ -38,6 +38,7 @@ module.exports = {
           environment: {
             AH_SITE_UUID: options._app.config.config.ah_id || null,
             AH_SITE_GROUP: options._app.config.config.ah_group || null,
+            AH_SITE_ENVIRONMENT: 'LANDO',
           },
         },
         memcached: {
