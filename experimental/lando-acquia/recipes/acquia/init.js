@@ -49,6 +49,8 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
   return api.getEnvironments(answers['acquia-app']).then(envs => {
     if (envs && Array.isArray(envs)) {
       acquiaEnvs = envs.map(item => (_.merge({name: item.label, value: item.id}, item)));
+      console.log(acquiaEnvs);
+      process.exit(1);
       return acquiaEnvs;
     }
   });
@@ -193,7 +195,7 @@ module.exports = {
       {
         name: 'clone-repo',
         cmd: options =>
-          `/helpers/get-remote-url.sh ${options['acquia-git-url']} "--branch ${options['acquia-git-branch']}"`,
+          `/helpers/get-remote-url.sh ${options['acquia-git-url']}`,
         remove: 'true',
       },
     ]),
