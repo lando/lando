@@ -35,4 +35,4 @@ We rely on third party sponsorship platforms to manage your sponsorship so you w
 
 ## How can I convince my boss or org to sponsor?
 
-We have a whole program for that [over here](upseller-intro)!
+We have some ideas for that [over here](sponsor-upsell.md)!

@@ -1,24 +1,5 @@
 [
   {
-    "title": "Lando Courses",
-    "collapsable": false,
-    "children": [
-      {
-        "title": "Lando 101",
-        "collapsable": true,
-        "children": [
-          "lando-101/lando-overview",
-          "lando-101/lando-init",
-          "lando-101/lando-start",
-          "lando-101/lando-config",
-          "lando-101/lando-services",
-          "lando-101/lando-proxy",
-          "lando-101/lando-tooling"
-        ]
-      }
-    ]
-  },
-  {
     "title": "Databases",
     "collapsable": false,
     "children": [
@@ -39,7 +20,8 @@
     "children": [
       "how-do-i-configure-a-lando-recipe",
       "how-do-i-set-the-timezone-of-a-lando-service",
-      "lando-info"
+      "lando-info",
+      "setup-lando-on-windows-with-wsl-2"
     ]
   },
   {
@@ -48,6 +30,25 @@
     "children": [
       "lando-phpstorm",
       "lando-with-vscode"
+    ]
+  },
+  {
+    "title": "Lando Courses",
+    "collapsable": false,
+    "children": [
+      {
+        "title": "Lando 101",
+        "collapsable": true,
+        "children": [
+          "lando-101/lando-overview",
+          "lando-101/lando-init",
+          "lando-101/lando-start",
+          "lando-101/lando-config",
+          "lando-101/lando-services",
+          "lando-101/lando-proxy",
+          "lando-101/lando-tooling"
+        ]
+      }
     ]
   },
   {

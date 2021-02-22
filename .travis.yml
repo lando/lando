@@ -1,6 +1,6 @@
 language: node_js
 node_js: 12
-dist: xenial
+dist: bionic
 cache:
   yarn: true
   directories:
@@ -194,10 +194,10 @@ jobs:
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-$TRAVIS_TAG.deb; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-stable.deb; fi
         # pacman
-        - cp -rf dist/lando.pacman release/lando-latest-dev.pacman
-        - cp -rf dist/lando.pacman release/lando-$TRAVIS_COMMIT-dev.pacman
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-$TRAVIS_TAG.pacman; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-stable.pacman; fi
+        # - cp -rf dist/lando.pacman release/lando-latest-dev.pacman
+        # - cp -rf dist/lando.pacman release/lando-$TRAVIS_COMMIT-dev.pacman
+        # - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-$TRAVIS_TAG.pacman; fi
+        # - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-stable.pacman; fi
         # rpm
         - cp -rf dist/lando.rpm release/lando-latest-dev.rpm
         - cp -rf dist/lando.rpm release/lando-$TRAVIS_COMMIT-dev.rpm
@@ -221,7 +221,7 @@ jobs:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
           file:
             - release/lando-$TRAVIS_TAG.deb
-            - release/lando-$TRAVIS_TAG.pacman
+            # - release/lando-$TRAVIS_TAG.pacman
             - release/lando-$TRAVIS_TAG.rpm
           skip_cleanup: true
           on:

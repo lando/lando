@@ -318,6 +318,7 @@ module.exports = {
           collapsable: false,
           children: [
             'sponsor-intro',
+            'sponsor-upsell',
             'sponsor-faq',
           ],
         },

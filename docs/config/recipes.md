@@ -45,21 +45,21 @@ config:
 
 The following recipes are currently offered. Please check out each one to learn how to specifically use them.
 
-*   ### [Backdrop](./backdrop.md)
-*   ### [Drupal 6](./drupal6.md)
-*   ### [Drupal 7](./drupal7.md)
-*   ### [Drupal 8](./drupal8.md)
-*   ### [Drupal 9](./drupal9.md)
-*   ### [Joomla](./joomla.md)
-*   ### [Lagoon](./lagoon.md) **(BETA)**
-*   ### [Laravel](./laravel.md)
-*   ### [LAMP](./lamp.md)
-*   ### [LEMP](./lemp.md)
-*   ### [MEAN](./mean.md)
-*   ### [Pantheon](./pantheon.md)
-*   ### [Platform.sh](./platformsh.md) **(BETA)**
-*   ### [Symfony](./symfony.md)
-*   ### [WordPress](./wordpress.md)
+* [Backdrop](./backdrop.md)
+* [Drupal 6](./drupal6.md)
+* [Drupal 7](./drupal7.md)
+* [Drupal 8](./drupal8.md)
+* [Drupal 9](./drupal9.md)
+* [Joomla](./joomla.md)
+* [Lagoon](./lagoon.md) **(BETA)**
+* [Laravel](./laravel.md)
+* [LAMP](./lamp.md)
+* [LEMP](./lemp.md)
+* [MEAN](./mean.md)
+* [Pantheon](./pantheon.md)
+* [Platform.sh](./platformsh.md) **(BETA)**
+* [Symfony](./symfony.md)
+* [WordPress](./wordpress.md)
 
 ## Extending and Overriding Recipes
 

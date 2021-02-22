@@ -6,6 +6,15 @@ const path = require('path');
 
 // Path
 const LANDO_PATH = [
+  // BUILD deps
+  '/app/.platform/local/deps/nodejs/node_modules/.bin',
+  '/app/.platform/local/deps/php/vendor/bin',
+  // /app/.platform/local/deps/python
+  '/app/.platform/local/deps/ruby/bin',
+  // GLOBAL things
+  '/var/www/.platform/bin',
+  '/var/www/.platformsh/bin',
+  '/var/www/.composer/vendor/bin',
   '/app/vendor/bin',
   '/app/bin',
   '/usr/local/sbin',
@@ -14,15 +23,6 @@ const LANDO_PATH = [
   '/usr/bin',
   '/sbin',
   '/bin',
-  // GLOBAL things
-  '/var/www/.platform/bin',
-  '/var/www/.platformsh/bin',
-  '/var/www/.composer/vendor/bin',
-  // BUILD deps
-  '/app/.platform/local/deps/nodejs/node_modules/.bin',
-  '/app/.platform/local/deps/php/vendor/bin',
-  // /app/.platform/local/deps/python
-  '/app/.platform/local/deps/ruby/bin',
 ];
 
 /*

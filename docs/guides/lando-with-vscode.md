@@ -55,7 +55,27 @@ The location of this file is arbitrary.
 
 We placed it inside `.vscode/` folder simply because we find it convenient.
 
-Add your custom XDebug settings.
+Add your custom XDebug settings, which will vary slightly depending on which version of PHP and xdebug you're using.
+
+**PHP 7.2+ uses xdebug 3** and needs `config:` under `services:` as follow:
+
+```ini
+[PHP]
+
+; Xdebug
+xdebug.max_nesting_level = 256
+xdebug.show_exception_trace = 0
+xdebug.collect_params = 0
+; Extra custom Xdebug setting for debug to work in VSCode.
+xdebug.mode = debug
+xdebug.client_host = ${LANDO_HOST_IP}
+xdebug.client_port = 9003
+xdebug.start_with_request = trigger
+; xdebug.remote_connect_back = 1
+xdebug.log = /tmp/xdebug.log
+```
+
+**PHP 7.1 and earlier uses xdebug 2** and needs `config:` under `services:` as follow:
 
 ```ini
 [PHP]
@@ -93,7 +113,7 @@ code .vscode/launch.json
       "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "log": false,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
@@ -103,9 +123,72 @@ code .vscode/launch.json
 }
 ```
 
+**Note: PHP 7.1 and earlier uses xdebug 2** which uses port 9000, so change the port number above accordinly.
+
+
 Done!
 
 You can now click start debugging (type F5 or click on the icon in the left sidebar).
+
+## Advanced Setup
+
+Optionally for better performance you can easily toggle Xdebug on and off with some custom tooling commands.
+
+If you're using Apache, add this to your `.lando.yml`:
+
+```yaml
+services:
+  appserver:
+    overrides:
+      environment:
+        XDEBUG_MODE:
+tooling:
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for Apache.
+    cmd: docker-php-ext-enable xdebug && /etc/init.d/apache2 reload && echo "Enabling xdebug"
+    user: root
+
+  xdebug-off:
+    service: appserver
+    description: Disable xdebug for Apache.
+    cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && /etc/init.d/apache2 reload && echo "Disabling xdebug"
+    user: root
+```
+
+If you're using Nginx, add this to your `.lando.yml`:
+
+```yaml
+services:
+  appserver:
+    overrides:
+      environment:
+        XDEBUG_MODE:
+tooling:
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for nginx.
+    cmd: docker-php-ext-enable xdebug && pkill -o -USR2 php-fpm && echo "Enabling xdebug"
+    user: root
+  xdebug-off:
+    service: appserver
+    description: CUSTOM Disable xdebug for nginx.
+    cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm && echo "Disabling xdebug"
+    user: root
+```
+
+Now you can turn Xdebug on or off with `lando xdebug-on` and `lando xdebug-off`. If you want Xdebug off by default, set `xdebug:false` in your appserver config:
+
+```yaml
+name: mywebsite
+recipe: drupal8
+services:
+  appserver:
+    webroot: web
+    xdebug: false
+    config:
+      php: .vscode/php.ini
+```
 
 ## Debugging PhpUnit
 
@@ -121,7 +204,7 @@ First, you need to have VSCode listen for debugging on 2 separate ports, because
       "name": "Listen for XDebug",
       "type": "php",
       "request": "launch",
-      "port": 9000,
+      "port": 9003,
       "log": true,
       "pathMappings": {
         "/app/": "${workspaceFolder}/",
@@ -149,8 +232,10 @@ Next add some custom tooling to your .lando.yml file, that provides a command to
 tooling:
   phpunitdebug:
     service: appserver
-    cmd: php -d xdebug.remote_port=9000 vendor/bin/phpunit
+    cmd: php -d xdebug.remote_port=9003 vendor/bin/phpunit
 ```
+
+**Note: PHP 7.1 and earlier uses xdebug 2** which uses port 9000, so change the port number above accordinly.
 
 Now to run debug a PhpUnit test, do the following:
 
@@ -175,13 +260,13 @@ tail -f /tmp/xdebug.log
 # Open your browser and refresh the app
 ```
 
-**Xdebug says "timeout trying to connect to XX.XX.XX:9000**
+**Xdebug says "timeout trying to connect to XX.XX.XX:9003**
 
-Double-check your host machine allow connection on its port 9000.
+Double-check your host machine allow connection on its port 9003.
 
 This is how you can open a specific port on a Debian/Ubuntu:
 
-`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9000 -j ACCEPT`
+`sudo iptables -A INPUT -p tcp -d 0/0 -s 0/0 --dport 9003 -j ACCEPT`
 
 ## Read More
 

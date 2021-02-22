@@ -68,7 +68,8 @@ module.exports = (app, lando) => {
     app.events.on('pre-init', 1, () => {
       // Error if we don't have at least one docker service or any lagoon config
       if (_.isEmpty(app.lagoon.containers) || _.isEmpty(app.lagoon.config.lagoon)) {
-        lando.log.error('Could not detect a valid lagoon setup in %s', app.root);
+        throw Error(`The lagoon recipe requires a lagoon.yml in ${app.root} but we couldn't find one! ` +
+          `Check out https://docs.lando.dev/config/lagoon.html to see how all the magic works!`);
       }
 
       // Get the raw lagoon config

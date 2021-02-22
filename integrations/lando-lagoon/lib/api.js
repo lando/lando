@@ -51,7 +51,7 @@ module.exports = class LagoonApi {
     const {keyPath, host, port} = keys.parseKey(key);
     this.key = keyPath;
     this.host = host;
-    this.post = port;
+    this.port = port;
     this.lando = lando;
     this.log = lando.log;
 
@@ -66,9 +66,9 @@ module.exports = class LagoonApi {
   };
 
   auth() {
-    this.log.verbose('Fetching token from %s using %s', this.sshURL, this.key);
+    this.log.verbose('Fetching token from %s:%s using %s', this.sshURL, this.port, this.key);
     return Promise.retry(() => {
-      return utils.run(this.lando, `/helpers/lagoon-auth.sh ${this.sshURL}`, this.key)
+      return utils.run(this.lando, `/helpers/lagoon-auth.sh ${this.sshURL} lagoon ${this.port}`, this.key)
         .then(token => {
           this.axios.defaults.headers.common = {'Authorization': `Bearer ${_.trim(token)}`};
         })
