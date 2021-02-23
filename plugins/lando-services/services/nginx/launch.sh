@@ -35,9 +35,8 @@ if [ -f "$PARAMS_SOURCE" ]; then
 fi
 
 # Unpack components
-if [[ -f "/opt/bitnami/scripts/libcomponent.sh" ]]; then
-. /opt/bitnami/scripts/libcomponent.sh && component_unpack "render-template" "1.0.0-3" --checksum 8179ad1371c9a7d897fe3b1bf53bbe763f94edafef19acad2498dd48b3674efe
-/opt/bitnami/scripts/nginx/postunpack.sh
+if [ -f "/opt/bitnami/scripts/libcomponent.sh" ]; then
+  . /opt/bitnami/scripts/libcomponent.sh && component_unpack "render-template" "1.0.0-3"
 fi
 
 # Render the template if render-template exists
