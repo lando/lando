@@ -1,6 +1,8 @@
 'use strict';
 // Modules
 const axios = require('axios');
+const _ = require('lodash');
+const utils = require('./utils');
 
 module.exports = class AcquiaApi {
   constructor(lando) {
@@ -75,6 +77,18 @@ module.exports = class AcquiaApi {
     return axios.get(`https://cloud.acquia.com/api/applications/${appId}/environments`).then(res => {
       const total = res.data.total;
       this.environments = total === 0 ? [] : res.data._embedded.items;
+      const envs = [];
+      _.each(this.environments, env => {
+        if (env.name != 'prod') {
+          envs.push({
+            'name': env.name,
+            'value': env.id,
+          });
+        }
+      });
+      // Add in a none option.
+      envs.push({'name': 'none', 'value': 'none'});
+      utils.writeEnvUuids(envs);
       return this.environments;
     })
       .catch(error => {
