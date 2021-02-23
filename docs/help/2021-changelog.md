@@ -4,8 +4,10 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Added support for `mariab` `10.5` [#2856](https://github.com/lando/lando/issues/2856)
 * Improved availability of `render-template` across `nginx` versions [#2760](https://github.com/lando/lando/issues/2760)
 * Improved various UX and docs things
+* Updated `mariadb` `10.x` images [#2856](https://github.com/lando/lando/issues/2856)
 
 ## v3.0.25 - [February 2, 2021](https://github.com/lando/lando/releases/tag/v3.0.25)
 
