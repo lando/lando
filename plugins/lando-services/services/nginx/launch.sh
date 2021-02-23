@@ -34,10 +34,17 @@ if [ -f "$PARAMS_SOURCE" ]; then
   cp -f "$PARAMS_SOURCE" "$PARAMS"
 fi
 
+# Unpack components
+if [[ -f "/opt/bitnami/scripts/libcomponent.sh" ]]; then
+. /opt/bitnami/scripts/libcomponent.sh && component_unpack "render-template" "1.0.0-3" --checksum 8179ad1371c9a7d897fe3b1bf53bbe763f94edafef19acad2498dd48b3674efe
+/opt/bitnami/scripts/nginx/postunpack.sh
+fi
+
 # Render the template if render-template exists
 if [ -x "$(command -v render-template)" ]; then
   render-template "$VHOST_SOURCE" > /opt/bitnami/nginx/conf/vhosts/lando.conf
 else
+  lando_info "Command render-template not found, using sed"
   sed 's@{{LANDO_WEBROOT}}@'"${LANDO_WEBROOT}"'@g' "$VHOST_SOURCE" > /opt/bitnami/nginx/conf/vhosts/lando.conf
 fi
 lando_info "Rendered template /tmp/vhosts.lando to /opt/bitnami/nginx/conf/vhosts/lando.conf"
