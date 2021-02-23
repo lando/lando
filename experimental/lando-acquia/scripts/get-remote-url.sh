@@ -35,11 +35,11 @@ if [ "$TYPE" = "git repo" ]; then
     echo "Either delete this repo or try to lando init in a folder without .git in it"
     exit 666
   fi
+  echo $OPTIONS
   git -C "$SRC_DIR" clone $OPTIONS "$URL" ./
   echo "Copying git clone over to /app..."
   cp -rfT "$SRC_DIR" /app
   cd /app
-  git checkout $VCSPATH
 fi
 
 # Or archive

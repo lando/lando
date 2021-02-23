@@ -187,14 +187,20 @@ module.exports = {
         // Set git url & branch from env
         const env = _.find(acquiaEnvs, item => item.id === options['acquia-env']);
         options['acquia-git-url'] = env.vcs.url;
-        options['acquia-git-branch'] = env.vcs.path;
+
+        const parts = env.vcs.path.split('/');
+        if (parts[0] === 'tags') {
+          options['acquia-git-branch'] = parts[1];
+        } else {
+          options['acquia-git-branch'] = env.vcs.path;
+        }
         options['acquia-php-version'] = env.configuration.php.version;
         options['acquia-site-group'] = env.ssh_url.split('.')[0];
       }},
       {
         name: 'clone-repo',
         cmd: options =>
-          `/helpers/get-remote-url.sh ${options['acquia-git-url']} "" "${options['acquia-git-branch']}"`,
+          `/helpers/get-remote-url.sh ${options['acquia-git-url']} "--branch ${options['acquia-git-branch']} --depth 1" "${options['acquia-git-branch']}"`,
         remove: 'true',
       },
     ]),
