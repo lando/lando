@@ -82,8 +82,8 @@ module.exports = class AcquiaApi {
         if (env.name != 'prod') {
           const name = `${env.label}, ${env.name} (vcs: ${env.vcs.path})`;
           envs.push({
-            'name': name,
-            'value': env.id,
+            name,
+            value: env.id,
           });
         }
       });
