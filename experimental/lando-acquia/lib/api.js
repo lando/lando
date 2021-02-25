@@ -80,8 +80,9 @@ module.exports = class AcquiaApi {
       const envs = [];
       _.each(this.environments, env => {
         if (env.name != 'prod') {
+          const name = `${env.label}, ${env.name} (vcs: ${env.vcs.path})`;
           envs.push({
-            'name': env.name,
+            'name': name,
             'value': env.id,
           });
         }
