@@ -18,17 +18,17 @@ ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
 # Strictly grab all sudoers
 SUDOERS=$(awk -F':' '$1 == "sudo" {print $4}' /etc/group)
 
-# Bump this for ES search things
-MAX_MAP_COUNT=262144
-if [ -f /proc/sys/vm/max_map_count ] && [ "$(sysctl -n vm.max_map_count)" -lt "$MAX_MAP_COUNT" ]; then
-  sysctl -w vm.max_map_count=$MAX_MAP_COUNT
-fi
-
 # Transform sudoers into IFS default separation and loop
 for u in ${SUDOERS//,/ }
 do
   usermod -a -G docker $u
 done
+
+# Bump this for ES search things
+MAX_MAP_COUNT=262144
+if [ -f /proc/sys/vm/max_map_count ] && [ "$(sysctl -n vm.max_map_count)" -lt "$MAX_MAP_COUNT" ]; then
+  sysctl -w vm.max_map_count=$MAX_MAP_COUNT
+fi
 
 # @TODO: Wait for GUI
 # Add an entry to the system menu
