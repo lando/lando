@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const {getAcquiaPull} = require('./../../lib/pull');
+const {getAcquiaPush} = require('./../../lib/push');
 
 const acquiaLastInitCache = 'acquia.last';
 
@@ -67,6 +68,7 @@ module.exports = {
           cmd: 'acli',
         },
         'pull': getAcquiaPull(options),
+        'push': getAcquiaPush(options),
       };
       super(id, options);
     };
