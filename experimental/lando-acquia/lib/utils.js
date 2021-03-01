@@ -30,6 +30,13 @@ exports.writeEnvUuids = data => {
   return false;
 };
 
+/**
+ * @TODO: Refactor to grab env UUIDs from Acquia API once cloud_api.conf
+ * gets its new storage format in updated acquia/cli tool.
+ *
+ * Once we grab the UUIDs via API we can remove the code in `init.js` that is
+ * writing out to the file `acquia-envs.json`.
+ */
 exports.getEnvUuids = () => {
   const file = './acquia-envs.json';
   if (fs.existsSync(file)) {
