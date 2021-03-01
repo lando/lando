@@ -139,7 +139,6 @@ module.exports = {
       options.volumes.push(`${options.confDest}/${options.defaultFiles._php}:${options.remoteFiles._php}`);
 
       // Shift on the docker entrypoint if this is a more recent version
-      // @TODO: can we assume we will always have major.minor for php release?
       if (options.version !== 'custom' && semver.gt(semver.coerce(options.version), '5.5.0')) {
         options.command.unshift('docker-php-entrypoint');
       }
