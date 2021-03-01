@@ -39,14 +39,50 @@ exports.getEnvUuids = () => {
 };
 
 /*
- * Get acli token from host
+ * Returns keys formatted for inquirer choices.
  */
-exports.getAcquiaToken = home => {
-  const file = path.join(home, '.acquia', 'cloud_api.conf');
+exports.getAcquiaKeyChoices = lando => {
+  const keys = exports.getAcquiaKeys(lando);
+  return _(keys)
+    .map(key => ({name: key.label, value: key.uuid, secret: key.secret}))
+    .thru(keys => keys.concat([{name: 'add a key', value: 'more'}]))
+    .value();
+};
+
+/*
+ * Returns keys fetched from cache & ~/.acquia/cloud_api.conf after caching the merged set.
+ */
+exports.getAcquiaKeys = lando => {
+  const file = path.join(lando.config.home, '.acquia', 'cloud_api.conf');
+  const systemKeys = {};
   if (fs.existsSync(file)) {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+
+    if (data && data.keys) {
+      // Return an object of keys, keyed by key uuid
+      _.forEach(data.keys, key => {
+        systemKeys[key.uuid] = key;
+      });
+      return _(systemKeys).sortBy('label').value();
+    }
   }
-  return null;
+  const cachedKeys = lando.cache.get('acquia.keys');
+  const mergedKeys = _.merge(systemKeys, cachedKeys).sort('label').value();
+  lando.cache.set('acquia.keys', mergedKeys, {persist: true});
+  return mergedKeys;
+};
+
+/*
+ * Returns the active key set in ~/.acquia/cloud_api.conf
+ */
+exports.getAcquiaKey = () => {
+  const file = path.join('var', 'www', '.acquia', 'cloud_api.conf');
+  if (fs.existsSync(file)) {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const activeKey = data.acli_key;
+    return _.find(data.keys, key => key.uuid === activeKey);
+  }
+  return {};
 };
 
 /*
@@ -60,11 +96,3 @@ exports.getComposerConfig = () => {
   return null;
 };
 
-/*
- * Helper to return most recent tokens
- */
-exports.sortTokens = (...sources) => _(_.flatten([...sources]))
-  .sortBy('date')
-  .groupBy('email')
-  .map(tokens => _.last(tokens))
-  .value();

@@ -6,29 +6,22 @@ const utils = require('../../lib/utils');
 
 // Acquia
 const api = new API();
-const acquiaTokenCache = 'acquia.tokens';
 const acquiaLastInitCache = 'acquia.last';
+let acquiaKeys = {};
 const acquiaApps = [];
 let acquiaEnvs = [];
 
-// Helper to get tokens
-const getTokens = (lando, tokens = []) => {
-  const home = lando.config.home;
-  const hostToken = utils.getAcquiaToken(home);
-  if (hostToken && _.isEmpty(tokens)) {
-    lando.cache.set(acquiaTokenCache, [hostToken], {persist: true});
+const getKeyChoices = (lando=null) => {
+  if (lando !== null && _.isEmpty(acquiaKeys)) {
+    acquiaKeys = utils.getAcquiaKeyChoices(lando);
   }
-  return _(utils.sortTokens(tokens))
-    .map(token => ({name: token.key, value: token.key}))
-    .thru(tokens => tokens.concat([{name: 'add a token', value: 'more'}]))
-    .value();
+  return acquiaKeys;
 };
 
 // Helper to determine whether to show list of pre-used tokens or not
-const showTokenList = (recipe, tokens = []) => recipe === 'acquia' && !_.isEmpty(tokens);
+const showKeyList = (recipe, keys = []) => recipe === 'acquia' && !_.isEmpty(keys);
 
-// Helper to determine whether to show token password entry or not
-const showTokenEntry = (data, answer, tokens = []) => data === 'acquia' && (_.isEmpty(tokens) || answer === 'more');
+const showKeyEntry = (data, answer, keys = []) => data === 'acquia' && (_.isEmpty(keys) || answer === 'more');
 
 const getAutoCompleteSites = (answers, lando, input = null) => {
   if (!_.isEmpty(acquiaApps)) {
@@ -48,7 +41,7 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
   }
   return api.getEnvironments(answers['acquia-app']).then(envs => {
     if (envs && Array.isArray(envs)) {
-      acquiaEnvs = envs.map(item => (_.merge({name: item.label, value: item.id}, item)));
+      acquiaEnvs = envs.map(item => (_.merge({name: item.name, value: item.id}, item)));
       return acquiaEnvs;
     }
   });
@@ -62,9 +55,12 @@ module.exports = {
       string: true,
       interactive: {
         type: 'list',
-        choices: getTokens(lando, lando.cache.get(acquiaTokenCache)),
+        choices: utils.getAcquiaKeyChoices(lando),
         message: 'Select your Acquia API key',
-        when: answers => showTokenList(answers.recipe, lando.cache.get(acquiaTokenCache)),
+        when: answers => {
+          acquiaKeys = getKeyChoices(lando);
+          return showKeyList(answers.recipe, acquiaKeys);
+        },
         weight: 510,
       },
     },
@@ -77,10 +73,10 @@ module.exports = {
         when: answers => {
           // If a token was selected, attempt to login.
           if (answers['acquia-auth'] && answers['acquia-auth'] !== 'more') {
-            const token = _.find(lando.cache.get(acquiaTokenCache), token => token.key === answers['acquia-auth']);
-            if (token) {
-              answers['acquia-key'] = token.key;
-              answers['acquia-secret'] = token.secret;
+            const key = _.find(acquiaKeys, key => key.value === answers['acquia-auth']);
+            if (key) {
+              answers['acquia-key'] = key.value;
+              answers['acquia-secret'] = key.secret;
               return api.auth(answers['acquia-key'], answers['acquia-secret']).then(() => {
                 return false;
               }).catch(err => {
@@ -91,7 +87,7 @@ module.exports = {
               });
             }
           }
-          return showTokenEntry(answers.recipe, answers['acquia-auth'], lando.cache.get(acquiaTokenCache));
+          return showKeyEntry(answers.recipe, answers['acquia-auth'], acquiaKeys);
         },
         weight: 520,
       },
@@ -103,7 +99,7 @@ module.exports = {
         type: 'password',
         message: 'Enter your Acquia API secret',
         when: answers => {
-          return showTokenEntry(answers.recipe, answers['acquia-auth'], lando.cache.get(acquiaTokenCache));
+          return showKeyEntry(answers.recipe, answers['acquia-auth'], acquiaKeys);
         },
         validate: (input, answers) => {
           return api.auth(answers['acquia-key'], input).then(() => {

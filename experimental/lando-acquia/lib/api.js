@@ -79,7 +79,7 @@ module.exports = class AcquiaApi {
       this.environments = total === 0 ? [] : res.data._embedded.items;
       const envs = [];
       _.each(this.environments, env => {
-        if (env.name != 'prod') {
+        if (env.name !== 'prod') {
           const name = `${env.label}, ${env.name} (vcs: ${env.vcs.path})`;
           envs.push({
             name,
