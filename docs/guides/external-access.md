@@ -116,6 +116,10 @@ lando info
 
 Some IDEs, such as PhpStorm, will spin up a separate container to run their appserver for services like built-in unit testing.  This means that it is separate from the Lando network and cannot communicate with Lando's other containers, such as the database.  In order to allow them to communicate, you need to tell your interpreter which network to listen on.
 
+::: warning If you got this message...
+`php_network_getaddresses: getaddrinfo failed: Name or service not known` while PHPUnit testing in PHPStorm and use a MySQL test database, you're in the right place!
+:::
+
 First, find your Lando network name by going to the terminal, and _outside of Lando_ run `$ docker network ls`.  You should find a record matching your Lando project.  For example, if your Lando project is named `d7dev`, then you should see something like:
 
 ```
