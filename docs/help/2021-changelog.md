@@ -1,5 +1,7 @@
 # 2021
 
+* Uses `semver.coerce()` to get a valid semantic version number for PHP. [#2884](https://github.com/lando/lando/issues/2884)
+
 ## v3.0.26 - [February 23, 2021](https://github.com/lando/lando/releases/tag/v3.0.26)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
