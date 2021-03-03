@@ -116,7 +116,7 @@ EOF
   done
 
   # Importing database
-  echo "Pulling your database... This miiiiight take a minute"
+  echo "Pulling your database... This might take a minute"
   $PULL_DB;
 
   # Weak check that we got tables

@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const {getAcquiaPull} = require('./../../lib/pull');
+const {getAcquiaPush} = require('./../../lib/push');
 
 module.exports = {
   name: 'acquia',
@@ -68,6 +69,7 @@ module.exports = {
           cmd: 'acli',
         },
         'pull': getAcquiaPull(options),
+        'push': getAcquiaPush(options),
       };
       super(id, options);
     };
