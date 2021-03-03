@@ -12,16 +12,28 @@ LANDO_MODULE="acquia"
 CODE='none';
 DATABASE='none';
 FILES='none';
+KEY='none'
+SECRET='none'
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
-    --auth|--auth=*)
-      if [ "${1##--auth=}" != "$1" ]; then
-        AUTH="${1##--auth=}"
+    -k|--acquia-key|--acquia-key=*)
+      echo '--'
+      if [ "${1##--acquia-key=}" != "$1" ]; then
+        KEY="${1##--acquia-key=}"
         shift
       else
-        AUTH=$2
+        KEY=$2
+        shift 2
+      fi
+      ;;
+    -s|--acquia-secret|--acquia-secret=*)
+      if [ "${1##--acquia-secret=}" != "$1" ]; then
+        SECRET="${1##--acquia-secret=}"
+        shift
+      else
+        SECRET=$2
         shift 2
       fi
       ;;
@@ -72,6 +84,11 @@ while (( "$#" )); do
       ;;
   esac
 done
+
+# Generate token with the key passed from tooling
+if [ "$KEY" != "none" ]; then
+  /usr/local/bin/acli auth:login -k "$KEY" -s "$SECRET" -n
+fi
 
 # Get the codez
 if [ "$CODE" != "none" ]; then

@@ -1,28 +1,37 @@
 'use strict';
 
-// Modules
 const _ = require('lodash');
-const utils = require('./utils');
+const auth = require('./auth');
+const api = auth.api;
 
-// Vars
-const choices = utils.getEnvUuids();
+let acquiaEnvs = [];
 
-// The non dynamic base of the task
-const task = {
-  service: 'appserver',
-  description: 'Pull code, database and/or files from Acquia',
-  cmd: '/helpers/acquia-pull.sh',
-  level: 'app',
-  stdio: ['inherit', 'pipe', 'pipe'],
-  options: {
+const getAutoCompleteEnvs = (answers, lando, input = null) => {
+  if (!_.isEmpty(acquiaEnvs)) {
+    return lando.Promise.resolve(!input ? acquiaEnvs : acquiaEnvs.filter(app => _.startsWith(app.name, input)));
+  }
+  return api.getEnvironments(answers['acquia-app']).then(envs => {
+    if (envs && Array.isArray(envs)) {
+      acquiaEnvs = envs.map(item => (_.merge({name: item.name, value: item.id}, item)));
+      acquiaEnvs.push({'name': 'none', 'value': 'none'});
+      return acquiaEnvs;
+    }
+  });
+};
+
+const getInteractiveOptions = (lando, appId) => {
+  let options = {
     code: {
       description: 'The environment from which to pull the code',
       passthrough: true,
       alias: ['c'],
       interactive: {
-        type: 'list',
+        type: 'autocomplete',
         message: 'Pull code from?',
-        choices: choices,
+        source: (answers, input) => {
+          return getAutoCompleteEnvs(answers, lando, input);
+        },
+        when: true,
         weight: 600,
       },
     },
@@ -31,9 +40,12 @@ const task = {
       passthrough: true,
       alias: ['d'],
       interactive: {
-        type: 'list',
+        type: 'autocomplete',
         message: 'Pull database from?',
-        choices: choices,
+        source: (answers, input) => {
+          return getAutoCompleteEnvs(answers, lando, input);
+        },
+        when: true,
         weight: 601,
       },
     },
@@ -42,13 +54,36 @@ const task = {
       passthrough: true,
       alias: ['f'],
       interactive: {
-        type: 'list',
+        type: 'autocomplete',
         message: 'Pull files from?',
-        choices: choices,
+        source: (answers, input) => {
+          return getAutoCompleteEnvs(answers, lando, input);
+        },
+        validate: (input, answers) => {
+          // Not really validating, just working within inquirer's confines to execute code here.
+          // Strip out key and secret if they were already authenticated by the acli config.
+          if (answers['authenticated']) {
+            delete answers['acquia-key'];
+            delete answers['acauia-secret'];
+          }
+        },
+        when: true,
         weight: 602,
       },
     },
-  },
+  };
+  options = _.merge(options, auth.getInteractiveOptions(lando, appId));
+
+  return options;
+};
+
+// The non dynamic base of the task
+const task = {
+  service: 'appserver',
+  description: 'Pull code, database and/or files from Acquia',
+  cmd: '/helpers/acquia-pull.sh',
+  level: 'app',
+  stdio: ['inherit', 'pipe', 'pipe'],
 };
 
 const buildCodePullCommand = 'acli pull:code';
@@ -63,7 +98,9 @@ const getDefaults = (task, options) => {
     LANDO_DB_USER_TABLE: 'users',
     LANDO_FILES_PULL_COMMAND: buildFilesPullCommand,
   };
-
+  const lando = options._app._lando;
+  const appConfig = options._app.config;
+  task.options = getInteractiveOptions(lando, appConfig);
   return task;
 };
 
@@ -71,5 +108,5 @@ const getDefaults = (task, options) => {
  * Helper to build a pull command
  */
 exports.getAcquiaPull = (options, tokens = []) => {
-  return _.merge({}, getDefaults(task, options));
+  return getDefaults(task, options);
 };

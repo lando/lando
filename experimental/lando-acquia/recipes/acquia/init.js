@@ -2,26 +2,13 @@
 
 const _ = require('lodash');
 const API = require('../../lib/api');
+const auth = require('../../lib/auth');
 const utils = require('../../lib/utils');
 
 // Acquia
 const api = new API();
-const acquiaLastInitCache = 'acquia.last';
-let acquiaKeys = {};
 const acquiaApps = [];
 let acquiaEnvs = [];
-
-const getKeyChoices = (lando=null) => {
-  if (lando !== null && _.isEmpty(acquiaKeys)) {
-    acquiaKeys = utils.getAcquiaKeyChoices(lando);
-  }
-  return acquiaKeys;
-};
-
-// Helper to determine whether to show list of pre-used tokens or not
-const showKeyList = (recipe, keys = []) => recipe === 'acquia' && !_.isEmpty(keys);
-
-const showKeyEntry = (data, answer, keys = []) => data === 'acquia' && (_.isEmpty(keys) || answer === 'more');
 
 const getAutoCompleteSites = (answers, lando, input = null) => {
   if (!_.isEmpty(acquiaApps)) {
@@ -47,123 +34,54 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
   });
 };
 
+const options = lando => (_.merge(auth.getInteractiveOptions(lando), {
+  'acquia-app': {
+    describe: 'An Acquia app uuid',
+    string: true,
+    interactive: {
+      type: 'autocomplete',
+      message: 'Which application?',
+      source: (answers, input) => {
+        return getAutoCompleteSites(answers, lando, input);
+      },
+      when: answers => {
+        // Handle selecting site from .acquia-cli.yml file
+        if (answers.recipe === 'acquia') {
+          if (answers.source === 'cwd') {
+            const uuid = utils.getAcliUuid();
+
+            if (uuid !== null) {
+              // Build AcquiaApps data and set app uuid
+              getAutoCompleteSites(answers, lando);
+              answers['acquia-app'] = uuid;
+              return false;
+            }
+          }
+          return true;
+        }
+        return false;
+      },
+      weight: 540,
+    },
+  },
+  'acquia-env': {
+    describe: 'An Acquia environment',
+    string: true,
+    interactive: {
+      type: 'autocomplete',
+      message: 'Which environment?',
+      source: (answers, input) => {
+        return getAutoCompleteEnvs(answers, lando, input);
+      },
+      when: answers => answers.recipe === 'acquia',
+      weight: 540,
+    },
+  },
+}));
+
 module.exports = {
   name: 'acquia',
-  options: lando => ({
-    'acquia-auth': {
-      describe: 'Acquia API Key',
-      string: true,
-      interactive: {
-        type: 'list',
-        choices: utils.getAcquiaKeyChoices(lando),
-        message: 'Select your Acquia API key',
-        when: answers => {
-          acquiaKeys = getKeyChoices(lando);
-          return showKeyList(answers.recipe, acquiaKeys);
-        },
-        weight: 510,
-      },
-    },
-    'acquia-key': {
-      hidden: false,
-      interactive: {
-        name: 'acquia-key',
-        type: 'password',
-        message: 'Enter your Acquia API key',
-        when: answers => {
-          // If a token was selected, attempt to login.
-          if (answers['acquia-auth'] && answers['acquia-auth'] !== 'more') {
-            const key = _.find(acquiaKeys, key => key.value === answers['acquia-auth']);
-            if (key) {
-              answers['acquia-key'] = key.value;
-              answers['acquia-secret'] = key.secret;
-              return api.auth(answers['acquia-key'], answers['acquia-secret']).then(() => {
-                return false;
-              }).catch(err => {
-                // Clear out token data and prompt user.
-                answers['acquia-key'] = null;
-                answers['acquia-secret'] = null;
-                return true;
-              });
-            }
-          }
-          return showKeyEntry(answers.recipe, answers['acquia-auth'], acquiaKeys);
-        },
-        weight: 520,
-      },
-    },
-    'acquia-secret': {
-      hidden: true,
-      interactive: {
-        name: 'acquia-secret',
-        type: 'password',
-        message: 'Enter your Acquia API secret',
-        when: answers => {
-          return showKeyEntry(answers.recipe, answers['acquia-auth'], acquiaKeys);
-        },
-        validate: (input, answers) => {
-          return api.auth(answers['acquia-key'], input).then(() => {
-            let token = _.find(lando.cache.get(acquiaTokenCache), token => token.key === answers['acquia-key']);
-            if (!token) {
-              // Re-create the token as acli would so acli can use it in a container.
-              token = {
-                send_telemetry: false,
-                key: answers['acquia-key'],
-                secret: answers['acquia-secret'],
-              };
-              lando.cache.set(acquiaTokenCache, [token], {persist: true});
-            }
-            return true;
-          }).catch(err => {
-            return err;
-          });
-        },
-        weight: 530,
-      },
-    },
-    'acquia-app': {
-      describe: 'An Acquia app uuid',
-      string: true,
-      interactive: {
-        type: 'autocomplete',
-        message: 'Which application?',
-        source: (answers, input) => {
-          return getAutoCompleteSites(answers, lando, input);
-        },
-        when: answers => {
-          // Handle selecting site from .acquia-cli.yml file
-          if (answers.recipe === 'acquia') {
-            if (answers.source === 'cwd') {
-              const uuid = utils.getAcliUuid();
-
-              if (uuid !== null) {
-                // Build AcquiaApps data and set app uuid
-                getAutoCompleteSites(answers, lando);
-                answers['acquia-app'] = uuid;
-                return false;
-              }
-            }
-            return true;
-          }
-          return false;
-        },
-        weight: 540,
-      },
-    },
-    'acquia-env': {
-      describe: 'An Acquia environment',
-      string: true,
-      interactive: {
-        type: 'autocomplete',
-        message: 'Which environment?',
-        source: (answers, input) => {
-          return getAutoCompleteEnvs(answers, lando, input);
-        },
-        when: answers => answers.recipe === 'acquia',
-        weight: 540,
-      },
-    },
-  }),
+  options,
   overrides: {
     name: {
       when: answers => {
@@ -181,17 +99,17 @@ module.exports = {
     build: (options, lando) => ([
       {name: 'get-git-url', func: (options, lando) => {
         // Set git url & branch from env
-        const env = _.find(acquiaEnvs, item => item.id === options['acquia-env']);
-        options['acquia-git-url'] = env.vcs.url;
+        const env = _.find(acquiaEnvs, item => item.value === options['acquia-env']);
+        options['acquia-git-url'] = env.git;
 
-        const parts = env.vcs.path.split('/');
+        const parts = env.vcs.split('/');
         if (parts[0] === 'tags') {
           options['acquia-git-branch'] = parts[1];
         } else {
-          options['acquia-git-branch'] = env.vcs.path;
+          options['acquia-git-branch'] = env.vcs;
         }
-        options['acquia-php-version'] = env.configuration.php.version;
-        options['acquia-site-group'] = env.ssh_url.split('.')[0];
+        options['acquia-php-version'] = env.php;
+        options['acquia-site-group'] = env.group;
       }},
       {
         name: 'clone-repo',
@@ -205,7 +123,7 @@ module.exports = {
   build: (options, lando) => {
     // Write .acli-cli.yml if it doesn't exist.
     utils.writeAcliUuid(options['acquia-app']);
-    lando.cache.set(acquiaLastInitCache, options, {persist: true});
+    lando.cache.set('acquia.last', options, {persist: true});
 
     const landofileConfig = {
       config: {

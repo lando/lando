@@ -24,18 +24,28 @@ exports.writeAcliUuid = uuid => {
   return false;
 };
 
-exports.writeEnvUuids = data => {
-  const file = './acquia-envs.json';
-  fs.writeFileSync(file, JSON.stringify(data));
-  return false;
+/*
+ * Returns entire app cache if no app is specified.
+ * Otherwise, returns a specific app object.
+ */
+exports.getAppCache = (lando, appName = null) => {
+  const cachedApps = lando.cache.get('acquia.apps');
+  if (appName === null) {
+    return cachedApps || {};
+  }
+  return cachedApps && cachedApps[appName] ? cachedApps[appName] : {};
 };
 
-exports.getEnvUuids = () => {
-  const file = './acquia-envs.json';
-  if (fs.existsSync(file)) {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  }
-  return null;
+/*
+ * Merges obj into app cache for a single app.
+ */
+exports.setAppCache = (lando, appId, obj) => {
+  const allCachedApps = lando.cache.get('acquia.apps') || {};
+  const cachedApp = exports.getAppCache(lando, appId);
+  const mergedApp = _.merge(cachedApp, obj);
+  allCachedApps[appId] = mergedApp;
+  lando.cache.set('acquia.apps', allCachedApps, {persist: true});
+  return mergedApp;
 };
 
 /*
@@ -73,16 +83,16 @@ exports.getAcquiaKeys = lando => {
 };
 
 /*
- * Returns the active key set in ~/.acquia/cloud_api.conf
+ * Returns the active key set in appserver at /var/www/.acquia/cloud_api.conf
  */
-exports.getAcquiaKey = () => {
-  const file = path.join('var', 'www', '.acquia', 'cloud_api.conf');
+exports.getAcquiaKeyFromApp = (lando, appConfig) => {
+  const file = path.join(lando.config.home, '.lando', 'config', appConfig.name, '.acquia', 'cloud_api.conf');
   if (fs.existsSync(file)) {
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
     const activeKey = data.acli_key;
     return _.find(data.keys, key => key.uuid === activeKey);
   }
-  return {};
+  return null;
 };
 
 /*

@@ -1,10 +1,7 @@
 'use strict';
 
-// Modules
 const _ = require('lodash');
 const {getAcquiaPull} = require('./../../lib/pull');
-
-const acquiaLastInitCache = 'acquia.last';
 
 module.exports = {
   name: 'acquia',
@@ -29,11 +26,17 @@ module.exports = {
       options.services = {
         appserver: {
           build: [
-            'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
-            'chmod +x acli.phar',
-            'mv acli.phar /usr/local/bin/acli',
+            // TODO: Uncomment when production release of acli is in use again (json format is resolved)
+            // 'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
+            // 'chmod +x acli.phar',
+            // 'mv acli.phar /usr/local/bin/acli',
             `mkdir -p /var/www/site-php/${group}`,
             `cp /helpers/settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
+            '/helpers/acquia-config-symlink.sh',
+            // TODO: Remove when production release of acli is in use again
+            'rm -rf /usr/local/cli',
+            'cd /usr/local/ && git clone git@github.com:acquia/cli.git && cd cli && composer install',
+            'ln -s /usr/local/cli/bin/acli /usr/local/bin/acli',
           ],
           environment: {
             AH_SITE_UUID: options._app.config.config.ah_id || null,
@@ -46,17 +49,15 @@ module.exports = {
         },
       };
 
-      // Add key and secret from last init.
-      const lastInitData = options._app._lando.cache.get(acquiaLastInitCache);
+      // Run acli login with credentials set in init; if applicable
+      const lastInitData = options._app._lando.cache.get('acquia.last');
       if (lastInitData) {
         const key = lastInitData['acquia-key'];
         const sec = lastInitData['acquia-secret'];
         const cmd = `/usr/local/bin/acli auth:login -k "${key}" -s "${sec}" -n`;
-
         options.services.appserver.build.push(cmd);
-        // Delete because the token will exist on a rebuild, and if
-        // they change the token for some reason, we need that one to be used.
-        options._app._lando.cache.set(acquiaLastInitCache, null, {persist: true});
+        // Delete the evidence
+        options._app._lando.cache.set('acquia.last', null, {persist: true});
       }
 
       // Add acli tooling.

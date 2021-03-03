@@ -1,15 +1,13 @@
 'use strict';
-// Modules
+
 const axios = require('axios');
 const _ = require('lodash');
-const utils = require('./utils');
 
 module.exports = class AcquiaApi {
   constructor(lando) {
     this.lando = lando;
     axios.defaults.baseURL = 'https://cloud.acquia.com/api/';
     this.authURL = 'https://accounts.acquia.com/api/auth/oauth/token';
-    // this.apiURL = 'https://cloud.acquia.com/api';
     this.token = null;
     this.account = null;
     this.applications = null;
@@ -19,10 +17,11 @@ module.exports = class AcquiaApi {
    * Sets both token and account; Uses original values if called more than once.
    * @param {string} clientId Acquia client key
    * @param {string} clientSecret Acquia client secret
-   * @param {bool} force Cache buster
+   * @param {bool} force Cache bustera
+   * @param {bool} tokenOnly return only token, not account which requires an extra call
    * @return {Promise}
    */
-  auth(clientId, clientSecret, force = false) {
+  auth(clientId, clientSecret, force = false, tokenOnly = false) {
     // @see https://docs.acquia.com/cloud-platform/develop/api/auth/#making-api-calls-through-single-sign-on
     if (!force && this.token !== null) {
       return new this.lando.Promise(this.account);
@@ -43,6 +42,9 @@ module.exports = class AcquiaApi {
       .catch(err => {
         throw err.response.data.error_description;
       }).then(() => {
+        if (tokenOnly) {
+          return this.token;
+        }
         return this.getAccount().then(data => {
           this.account = data;
           return this.account;
@@ -64,7 +66,7 @@ module.exports = class AcquiaApi {
         id: item.id,
         uuid: item.uuid,
         subuuid: item.subscription.uuid,
-        name: item.subscription.name,
+        name: item.name,
       }));
       return this.applications;
     })
@@ -76,20 +78,21 @@ module.exports = class AcquiaApi {
   getEnvironments(appId) {
     return axios.get(`https://cloud.acquia.com/api/applications/${appId}/environments`).then(res => {
       const total = res.data.total;
-      this.environments = total === 0 ? [] : res.data._embedded.items;
-      const envs = [];
-      _.each(this.environments, env => {
+      this.environments = [];
+      const envs = total === 0 ? [] : res.data._embedded.items;
+      _.each(envs, env => {
         if (env.name !== 'prod') {
           const name = `${env.label}, ${env.name} (vcs: ${env.vcs.path})`;
-          envs.push({
+          this.environments.push({
             name,
+            git: env.vcs.url,
+            group: env.ssh_url.split('.')[0],
+            php: env.configuration.php.version,
             value: env.id,
+            vcs: env.vcs.path,
           });
         }
       });
-      // Add in a none option.
-      envs.push({'name': 'none', 'value': 'none'});
-      utils.writeEnvUuids(envs);
       return this.environments;
     })
       .catch(error => {
