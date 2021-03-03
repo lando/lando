@@ -27,7 +27,7 @@ const getInteractiveOptions = (lando, appId) => {
       alias: ['c'],
       interactive: {
         type: 'autocomplete',
-        message: 'Pull code from?',
+        message: 'Push code to?',
         source: (answers, input) => {
           return getAutoCompleteEnvs(answers, lando, input);
         },
@@ -41,7 +41,7 @@ const getInteractiveOptions = (lando, appId) => {
       alias: ['d'],
       interactive: {
         type: 'autocomplete',
-        message: 'Pull database from?',
+        message: 'Push database to?',
         source: (answers, input) => {
           return getAutoCompleteEnvs(answers, lando, input);
         },
@@ -55,7 +55,7 @@ const getInteractiveOptions = (lando, appId) => {
       alias: ['f'],
       interactive: {
         type: 'autocomplete',
-        message: 'Pull files from?',
+        message: 'Push files to?',
         source: (answers, input) => {
           return getAutoCompleteEnvs(answers, lando, input);
         },
