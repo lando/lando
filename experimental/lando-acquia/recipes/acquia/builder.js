@@ -27,15 +27,9 @@ module.exports = {
       options.services = {
         appserver: {
           build: [
-            'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
-            'chmod +x acli.phar',
-            'mv acli.phar /usr/local/bin/acli',
             `mkdir -p /var/www/site-php/${group}`,
             `cp /helpers/settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
             '/helpers/acquia-config-symlink.sh',
-            // Might be able to replace this with acli pull:run-scripts
-            // when this PR is released: https://github.com/acquia/cli/pull/465
-            '/helpers/acquia-composer-install.sh',
           ],
           environment: {
             AH_SITE_UUID: options._app.config.config.ah_id || null,
@@ -48,6 +42,31 @@ module.exports = {
         },
       };
 
+      // Install acli from either 1) latest download, 2) A specific version, or 3) build from a branch
+      const acliVersion = options._app.config.config.acli ? options._app.config.config.acli : 'latest';
+      const regexVersion = /^[0-9]+\.[0-9]+\.[0-9]+$/g;
+      let acliDownload = null;
+      if (acliVersion === 'latest') {
+        acliDownload = 'https://github.com/acquia/cli/releases/latest/download/acli.phar';
+      } else if (acliVersion.match(regexVersion)) {
+        acliDownload = `https://github.com/acquia/cli/releases/download/${acliVersion}/acli.phar`;
+      }
+      // Download release
+      if (acliDownload !== null) {
+        options.services.appserver.build.push(...[
+          'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
+          'chmod +x acli.phar',
+          'mv acli.phar /usr/local/bin/acli',
+        ]);
+      } else {
+        // Build from source
+        options.services.appserver.build.push(...[
+          'rm -rf /usr/local/cli',
+          `cd /usr/local/ && git clone git@github.com:acquia/cli.git -b "${acliVersion}" && cd cli && composer install`,
+          'ln -s /usr/local/cli/bin/acli /usr/local/bin/acli',
+        ]);
+      }
+
       // Run acli login with credentials set in init; if applicable
       const lastInitData = options._app._lando.cache.get('acquia.last');
       if (lastInitData) {
@@ -58,6 +77,9 @@ module.exports = {
         // Delete the evidence
         options._app._lando.cache.set('acquia.last', null, {persist: true});
       }
+
+      // Install composer deps
+      options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts');
 
       // Add acli tooling.
       options.tooling = {
