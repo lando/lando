@@ -9,3 +9,6 @@ $databases['default']['default'] = [
     'prefix' => '',
 ];
 $settings['hash_salt'] = md5(getenv('LANDO_HOST_IP'));
+$settings['memcache']['servers'] = ['memcached:11211' => 'default'];
+$settings['memcache']['bins'] = ['default' => 'default'];
+$settings['memcache']['key_prefix'] = '';

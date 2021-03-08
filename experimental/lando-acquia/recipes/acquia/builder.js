@@ -28,7 +28,7 @@ module.exports = {
         appserver: {
           build: [
             `mkdir -p /var/www/site-php/${group}`,
-            `cp /helpers/settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
+            `cp /helpers/acquia-settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
             '/helpers/acquia-config-symlink.sh',
           ],
           environment: {
