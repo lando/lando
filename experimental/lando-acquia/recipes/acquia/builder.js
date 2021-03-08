@@ -27,17 +27,15 @@ module.exports = {
       options.services = {
         appserver: {
           build: [
-            // TODO: Uncomment when production release of acli is in use again (json format is resolved)
-            // 'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
-            // 'chmod +x acli.phar',
-            // 'mv acli.phar /usr/local/bin/acli',
+            'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
+            'chmod +x acli.phar',
+            'mv acli.phar /usr/local/bin/acli',
             `mkdir -p /var/www/site-php/${group}`,
             `cp /helpers/settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
             '/helpers/acquia-config-symlink.sh',
-            // TODO: Remove when production release of acli is in use again
-            'rm -rf /usr/local/cli',
-            'cd /usr/local/ && git clone git@github.com:acquia/cli.git && cd cli && composer install',
-            'ln -s /usr/local/cli/bin/acli /usr/local/bin/acli',
+            // Might be able to replace this with acli pull:run-scripts
+            // when this PR is released: https://github.com/acquia/cli/pull/465
+            '/helpers/acquia-composer-install.sh',
           ],
           environment: {
             AH_SITE_UUID: options._app.config.config.ah_id || null,
