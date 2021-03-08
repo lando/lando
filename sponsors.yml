@@ -132,3 +132,13 @@
   type: ally
   url: https://www.sagetree.com
   logo: https://lando.dev/images/sagetree_logo.png
+
+# March 4th, 2021
+- name: "Capellic"
+  type: ally
+  url: http://capellic.com/
+  logo: https://lando.dev/images/capellic_logo.png
+- name: "Pantheon"
+  type: patriot
+  url: https://pantheon.io/
+  logo: https://lando.dev/images/pantheon_logo.png
