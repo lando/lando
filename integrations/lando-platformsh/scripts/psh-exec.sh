@@ -3,8 +3,8 @@
 # environment.
 
 # Load Platform variables.
-for script in /etc/profile.d/*.sh ; do
-  if [ -r "$script" ] ; then
+for script in /etc/profile.d/*.sh; do
+  if [ -r "$script" ]; then
     . "$script"
   fi
 done
@@ -15,9 +15,9 @@ export USER="web"
 export SHELL="/bin/dash"
 export LANG="C.UTF-8"
 
-# Also load BASHRC for things like nvm
-if [ -r "$HOME/.bashrc" ] ; then
-  . "$HOME/.bashrc"
+# @NOTE: This is not guaranteed to work, it's here mostly as a convenience
+if [ ! -z "${NODE_VERSION}" ]; then
+  export PATH="$PLATFORM_APP_DIR/.nvm/versions/node/${NODE_VERSION}/bin:${PATH}"
 fi
 
 # If we are running platform CLI commands we actually need to
