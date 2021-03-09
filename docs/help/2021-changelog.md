@@ -1,7 +1,11 @@
 # 2021
 
-* Writes vm.max_map_count only if necessary and writable [#2884](https://github.com/lando/lando/issues/2880).
-* Uses `semver.coerce()` to get a valid semantic version number for PHP. [#2884](https://github.com/lando/lando/issues/2884)
+
+## v3.0.27 - In Development
+
+* Set `DOCKER_BUILDKIT=1` to force emulation for now [#2688](https://github.com/lando/lando/issues/2688)
+* Set `vm.max_map_count` only if necessary and writable [#2884](https://github.com/lando/lando/issues/2880)
+* Switched to use `semver.coerce()` to get a valid semantic version number for PHP. [#2884](https://github.com/lando/lando/issues/2884)
 
 ## v3.0.26 - [February 23, 2021](https://github.com/lando/lando/releases/tag/v3.0.26)
 
