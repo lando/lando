@@ -12,20 +12,20 @@ Events allow you to automate commands or tasks you might often or always run eit
 
 | **LANDO** | **APP** |
 | -- | -- |
-| [pre-bootstrap-config](./../api/lando.md#event_pre_bootstrap_config) | [pre-destroy](./../api/app.md#event_pre_destroy) |
-| [pre-bootstrap-tasks](./../api/lando.md#event_pre_bootstrap_tasks) | [ post-destroy](./../api/app.md#event_post_destroy) |
-| [pre-bootstrap-engine](./../api/lando.md#event_pre_bootstrap_engine) | [pre-init](./../api/app.md#event_pre_init) |
-| [pre-bootstrap-app](./../api/lando.md#event_pre_bootstrap_app) | [post-init](./../api/app.md#event_post_init) |
-| [post-bootstrap-config](./../api/lando.md#event_post_bootstrap_config) | [pre-rebuild](./../api/app.md#event_pre_rebuild) |
-| [post-bootstrap-tasks](./../api/lando.md#event_post_bootstrap_tasks) | [post-rebuild](./../api/app.md#event_post_rebuild) |
-| [post-bootstrap-engine](./../api/lando.md#event_post_bootstrap_engine) | [pre-restart](./../api/app.md#event_pre_restart) |
-| [post-bootstrap-app](./../api/lando.md#event_post_bootstrap_app) | [post-restart](./../api/app.md#event_post_restart) |
-| [pre-engine-build](./../api/engine.md#event_pre_engine_build) | [pre-start](./../api/app.md#event_pre_start) |
-| [post-engine-build](./../api/engine.md#event_post_engine_build) | [post-start](./../api/app.md#event_post_start) |
-| [pre-engine-destroy](./../api/engine.md#event_pre_engine_destroy) | [pre-stop](./../api/app.md#event_pre_stop) |
-| [post-engine-destroy](./../api/engine.md#event_post_engine_destroy) | [post-stop](./../api/app.md#event_post_stop) |
-| [pre-engine-run](./../api/engine.md#event_pre_engine_run) | [pre-uninstall](./../api/app.md#event_pre_uninstall) |
-| [post-engine-run](./../api/engine.md#event_post_engine_run) | [post-uninstall](./../api/app.md#event_post_uninstall) |
+| [pre-bootstrap-config](./../api/lando.md#event_pre_bootstrap_config) | [pre-destroy](./../api/app.html#pre-destroy) |
+| [pre-bootstrap-tasks](./../api/lando.md#event_pre_bootstrap_tasks) | [ post-destroy](./../api/app.html#post-destroy) |
+| [pre-bootstrap-engine](./../api/lando.md#event_pre_bootstrap_engine) | [pre-init](./../api/app.html#pre-init) |
+| [pre-bootstrap-app](./../api/lando.md#event_pre_bootstrap_app) | [post-init](./../api/app.html#post-init) |
+| [post-bootstrap-config](./../api/lando.md#event_post_bootstrap_config) | [pre-rebuild](./../api/app.html#pre-rebuild) |
+| [post-bootstrap-tasks](./../api/lando.md#event_post_bootstrap_tasks) | [post-rebuild](./../api/app.html#post-rebuild) |
+| [post-bootstrap-engine](./../api/lando.md#event_post_bootstrap_engine) | [pre-start](./../api/app.html#pre-start) |
+| [post-bootstrap-app](./../api/lando.md#event_post_bootstrap_app) | [post-start](./../api/app.html#post-start) |
+| [pre-engine-build](./../api/engine.md#event_pre_engine_build) | [pre-stop](./../api/app.html#pre-stop) |
+| [post-engine-build](./../api/engine.md#event_post_engine_build) | [post-stop](./../api/app.html#pre-stop) |
+| [pre-engine-destroy](./../api/engine.md#event_pre_engine_destroy) | [pre-uninstall](./../api/app.html#pre-uninstall) |
+| [post-engine-destroy](./../api/engine.md#event_post_engine_destroy) | [post-uninstall](./../api/app.html#post-uninstall) |
+| [pre-engine-run](./../api/engine.md#event_pre_engine_run) | [ready](./../api/app.html#ready) |
+| [post-engine-run](./../api/engine.md#event_post_engine_run) | []() |
 | [pre-engine-start](./../api/engine.md#event_pre_engine_start) | []() |
 | [post-engine-start](./../api/engine.md#event_post_engine_start) | []() |
 | [pre-engine-stop](./../api/engine.md#event_pre_engine_stop) | []() |
