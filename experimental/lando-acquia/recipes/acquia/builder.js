@@ -37,6 +37,9 @@ module.exports = {
             AH_SITE_ENVIRONMENT: 'LANDO',
           },
         },
+        mailhog: {
+          type: 'mailhog',
+        },
         memcached: {
           type: 'memcached',
         },
