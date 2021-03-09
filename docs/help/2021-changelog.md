@@ -3,6 +3,7 @@
 
 ## v3.0.27 - In Development
 
+* Reverted auto `nvm` sourcing for `platform.sh` recipes in favor of manual `.environment` spec [#2820](https://github.com/lando/lando/issues/2820)
 * Set `DOCKER_BUILDKIT=1` to force emulation for now [#2688](https://github.com/lando/lando/issues/2688)
 * Set `vm.max_map_count` only if necessary and writable [#2884](https://github.com/lando/lando/issues/2880)
 * Switched to use `semver.coerce()` to get a valid semantic version number for PHP. [#2884](https://github.com/lando/lando/issues/2884)

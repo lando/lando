@@ -15,7 +15,7 @@ export USER="web"
 export SHELL="/bin/dash"
 export LANG="C.UTF-8"
 
-# @NOTE: This is not guaranteed to work, it's here mostly as a convenience
+# @NOTE: This is not guaranteed to work. It is here as a convenience.
 if [ ! -z "${NODE_VERSION}" ]; then
   export PATH="$PLATFORM_APP_DIR/.nvm/versions/node/${NODE_VERSION}/bin:${PATH}"
 fi
