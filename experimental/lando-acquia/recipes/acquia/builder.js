@@ -43,7 +43,10 @@ module.exports = {
       };
 
       // Install acli from either 1) latest download, 2) A specific version, or 3) build from a branch
-      const acliVersion = options._app.config.config.acli_version ? options._app.config.config.acli_version : 'latest';
+      // TODO: switch default to `latest` once acli catches up.
+      const acliVersionDefault = 'master';
+      const acliVersion = options._app.config.config.acli_version ?
+        options._app.config.config.acli_version : acliVersionDefault;
       const regexVersion = /^[0-9]+\.[0-9]+\.[0-9]+$/g;
       let acliDownload = null;
       if (acliVersion === 'latest') {
