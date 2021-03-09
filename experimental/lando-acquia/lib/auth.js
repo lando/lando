@@ -36,7 +36,7 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
         }
         // Prepare inquirer for application scoped call.
         if (appConfig) {
-          answers['acquia-app'] = appConfig.config.ah_id;
+          answers['acquia-app'] = appConfig.config.ah_application_uuid;
           const key = utils.getAcquiaKeyFromApp(lando, appConfig);
           // Validate auth if key is cached. Token is stored in api and reused on subsequent actions.
           if (key) {

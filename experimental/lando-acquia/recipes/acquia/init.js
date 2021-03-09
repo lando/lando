@@ -127,8 +127,8 @@ module.exports = {
 
     const landofileConfig = {
       config: {
-        ah_id: options['acquia-app'],
-        ah_group: options['acquia-site-group'],
+        ah_application_uuid: options['acquia-app'],
+        ah_site_group: options['acquia-site-group'],
         php: options['acquia-php-version'],
       },
     };

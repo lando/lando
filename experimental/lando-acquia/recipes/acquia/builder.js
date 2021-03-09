@@ -23,7 +23,7 @@ module.exports = {
       options.webroot = 'docroot';
 
       // Set build steps for app server.
-      const group = options._app.config.config.ah_group;
+      const group = options._app.config.config.ah_site_group;
       options.services = {
         appserver: {
           build: [
@@ -32,8 +32,8 @@ module.exports = {
             '/helpers/acquia-config-symlink.sh',
           ],
           environment: {
-            AH_SITE_UUID: options._app.config.config.ah_id || null,
-            AH_SITE_GROUP: options._app.config.config.ah_group || null,
+            AH_SITE_UUID: options._app.config.config.ah_application_uuid || null,
+            AH_SITE_GROUP: options._app.config.config.ah_site_group || null,
             AH_SITE_ENVIRONMENT: 'LANDO',
           },
         },
