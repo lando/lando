@@ -92,8 +92,7 @@ fi
 
 # Get the codez
 if [ "$CODE" != "none" ]; then
-  PULL_CODE="$LANDO_CODE_PULL_COMMAND /app $CODE";
-
+  PULL_CODE="$LANDO_CODE_PULL_COMMAND $CODE";
       # Fetching code
       eval "$PULL_CODE"
 fi
