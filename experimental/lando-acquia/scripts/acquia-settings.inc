@@ -1,4 +1,5 @@
 <?php
+$conf['acquia_hosting_site_info']['db']['name'] = getenv('AH_SITE_GROUP');
 $databases['default']['default'] = [
     'database' => 'acquia',
     'username' => 'acquia',
