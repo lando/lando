@@ -96,6 +96,14 @@ module.exports = {
   sources: [{
     name: 'acquia',
     label: 'acquia',
+    overrides: {
+      recipe: {
+        when: answers => {
+          answers.recipe = 'acquia';
+          return false;
+        },
+      },
+    },
     build: (options, lando) => ([
       {name: 'get-git-url', func: (options, lando) => {
         // Set git url & branch from env
