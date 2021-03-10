@@ -142,6 +142,7 @@ module.exports = {
           title: 'Recipes',
           collapsable: false,
           children: [
+            'acquia',
             'backdrop',
             'drupal6',
             'drupal7',
