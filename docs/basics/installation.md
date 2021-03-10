@@ -45,7 +45,7 @@ We've found the below or better to deliver the best experience.
 *   100GB+ of available disk space
 
 ::: tip Apple Silicon M1 Chip Support
-Docker is [working on support](docker.com/blog/apple-silicon-m1-chips-and-docker) for Mac computers running Apple Silicon M1 chips. We've been monitoring their progress and plan to introduce an M1-compatible Lando binary as soon as possible. [Sponsor Lando](https://github.com/sponsors/lando) to make that world a reality!
+Docker is [working on support](http://docker.com/blog/apple-silicon-m1-chips-and-docker) for Mac computers running Apple Silicon M1 chips. We've been monitoring their progress and plan to introduce an M1-compatible Lando binary as soon as possible. [Sponsor Lando](https://github.com/sponsors/lando) to make that world a reality!
 :::
 
 ## Preflight Checks

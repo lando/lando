@@ -46,11 +46,11 @@ env_file:
 services:
   database:
     overrides:
-      image: bitnami/mariadb:10.1.43
+      image: bitnami/mariadb:10.3.27
 ```
 
 In the example above, we're overriding the image to use an explicit release of Bitnami's MariaDB container to bypass a
-breaking change released on Bitnami's 10.1 tag (Lando's default version).
+breaking change released on Bitnami's 10.3 tag (Lando's default version).
 
 You can also use this to load your own custom images:
 

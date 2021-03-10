@@ -19,6 +19,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     #imagemagick \
     libbz2-dev \
     libc-client-dev \
+    libfreetype6-dev \
     libicu-dev \
     libjpeg62-turbo-dev \
     libkrb5-dev \
@@ -81,5 +82,5 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/* \
   && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
   && docker-php-ext-install imap \
-  && docker-php-ext-configure gd --enable-gd --with-jpeg --with-webp \
+  && docker-php-ext-configure gd --enable-gd --with-jpeg --with-webp --with-freetype \
   && docker-php-ext-install gd

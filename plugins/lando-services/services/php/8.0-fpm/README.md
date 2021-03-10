@@ -4,10 +4,6 @@ Lando PHP-FPM 8.0 appserver
 A decent cross purpose fpm based php 8.0 appserver.
 
 ```
-# Basic php-fpm 8.0 appserver for Lando
-#
-# docker build -t devwithlando/php:8.0-fpm .
-
 FROM php:8.0-fpm-buster
 
 # Install dependencies we need
@@ -25,6 +21,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     #imagemagick \
     libbz2-dev \
     libc-client-dev \
+    libfreetype6-dev \
     libicu-dev \
     libjpeg62-turbo-dev \
     libkrb5-dev \
@@ -87,6 +84,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/* \
   && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
   && docker-php-ext-install imap \
-  && docker-php-ext-configure gd --enable-gd --with-jpeg --with-webp \
+  && docker-php-ext-configure gd --enable-gd --with-jpeg --with-webp --with-freetype \
   && docker-php-ext-install gd
 ```
