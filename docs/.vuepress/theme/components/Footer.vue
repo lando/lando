@@ -54,6 +54,7 @@
             <div class="footer-column-third">
               <h4>Recipes</h4>
               <ul>
+                <li><a href="https://docs.lando.dev/config/acquia.html" target="_blank">Acquia</a></li>
                 <li><a href="https://docs.lando.dev/config/backdrop.html" target="_blank">Backdrop</a></li>
                 <li><a href="https://docs.lando.dev/config/drupal6.html" target="_blank">Drupal 6</a></li>
                 <li><a href="https://docs.lando.dev/config/drupal7.html" target="_blank">Drupal 7</a></li>

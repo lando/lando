@@ -77,7 +77,7 @@ exports.getAcquiaKeys = lando => {
     }
   }
   const cachedKeys = lando.cache.get('acquia.keys');
-  const mergedKeys = _.merge(systemKeys, cachedKeys).sort('label').value();
+  const mergedKeys = _(_.merge(systemKeys, cachedKeys)).sortBy('label').value();
   lando.cache.set('acquia.keys', mergedKeys, {persist: true});
   return mergedKeys;
 };

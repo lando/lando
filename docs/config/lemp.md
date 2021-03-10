@@ -166,6 +166,8 @@ Note that you can put your configuration files anywhere inside your application 
 recipe: lemp
 config:
   config:
+    server: config/nginx.conf
+    vhosts: config/default.conf
     php: config/php.ini
     database: config/my-custom.cnf
 ```

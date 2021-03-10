@@ -13,7 +13,7 @@ module.exports = {
     php: '7.4',
     drush: '^10',
   },
-  builder: (parent, config) => class LandoDrupal9 extends parent {
+  builder: (parent, config) => class LandoAcquia extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       options.drush = false;

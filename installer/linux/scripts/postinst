@@ -18,16 +18,30 @@ ln -sf "$LANDO_ROOT/bin/lando" /usr/local/bin/lando
 # Strictly grab all sudoers
 SUDOERS=$(awk -F':' '$1 == "sudo" {print $4}' /etc/group)
 
-# Bump this for ES search things
-if [ -f /proc/sys/vm/max_map_count ]; then
-  sysctl -w vm.max_map_count=262144
-fi
-
 # Transform sudoers into IFS default separation and loop
 for u in ${SUDOERS//,/ }
 do
   usermod -a -G docker $u
 done
+
+# Bump this for ES search things
+MAX_MAP_COUNT=262144
+MMC_PARAMETER_PATH=/proc/sys/vm/max_map_count
+if [ -f "$MMC_PARAMETER_PATH" ] && [ "$(sysctl -n vm.max_map_count)" -lt "$MAX_MAP_COUNT" ]; then
+  if [ -w "$MMC_PARAMETER_PATH" ]; then
+    sysctl -w vm.max_map_count=$MAX_MAP_COUNT
+  else
+    CURRENT_VALUE=$(sysctl -n vm.max_map_count)
+    cat <<EOF
+The value of the kernel parameter 'vm.max_map_count' is currently set to $CURRENT_VALUE.
+For best performance, we recommend that this be set to at least $MAX_MAP_COUNT.
+We attempted to set this value automatically, but were unable.
+To try to set this value yourself, run the following command:
+
+            sysctl -w vm.max_map_count=$MAX_MAP_COUNT
+EOF
+  fi
+fi
 
 # @TODO: Wait for GUI
 # Add an entry to the system menu
