@@ -49,3 +49,8 @@ crons:
       if [ "$PLATFORM_BRANCH" = master ]; then
         /app/.platformsh/bin/platform redeploy --yes --no-wait
       fi
+  flushlogs:
+    # Flush the PM2 logs once a month
+    spec: '0 1 1 * *'
+    cmd: |
+      PM2_HOME=/app/run pm2 flush
