@@ -12,7 +12,7 @@ build:
   flavor: none
 
 # The size of the persistent disk of the application (in MB).
-disk: 5000
+disk: 4000
 
 # The configuration of app when it is exposed to the web.
 web:

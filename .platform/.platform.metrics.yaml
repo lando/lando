@@ -26,7 +26,7 @@ mounts:
     source: local
     source_path: run
 
-disk: 5000
+disk: 6000
 
 hooks:
   build: |
