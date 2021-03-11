@@ -37,7 +37,7 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
 
 const options = lando => (_.merge(auth.getInteractiveOptions(lando), {
   'acquia-app': {
-    describe: 'An Acquia app uuid',
+    describe: 'Acquia application uuid',
     string: true,
     interactive: {
       type: 'autocomplete',
@@ -66,7 +66,7 @@ const options = lando => (_.merge(auth.getInteractiveOptions(lando), {
     },
   },
   'acquia-env': {
-    describe: 'An Acquia environment',
+    describe: 'Acquia environment uuid',
     string: true,
     interactive: {
       type: 'autocomplete',

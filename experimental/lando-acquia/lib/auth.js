@@ -4,6 +4,7 @@ const API = require('./api');
 const utils = require('./utils');
 
 // Acquia
+const acquiaTokenCache = 'acquia.tokens';
 const api = new API();
 exports.api = api;
 
@@ -22,7 +23,7 @@ const showKeyEntry = (recipe, answer, keys = []) => recipe === 'acquia' && (_.is
 // Helper to get pantheon auth non-interactive options
 exports.getInteractiveOptions = (lando, appConfig = null) => ({
   'acquia-auth': {
-    describe: 'Acquia API Key',
+    describe: 'Acquia API key',
     string: true,
     interactive: {
       type: 'list',
@@ -57,7 +58,7 @@ exports.getInteractiveOptions = (lando, appConfig = null) => ({
     },
   },
   'acquia-key': {
-    hidden: true,
+    describe: 'Acquia API key',
     passthrough: true,
     interactive: {
       name: 'acquia-auth',
@@ -86,6 +87,8 @@ exports.getInteractiveOptions = (lando, appConfig = null) => ({
     },
   },
   'acquia-secret': {
+    description: 'Acquia API secret',
+    hidden: true,
     passthrough: true,
     interactive: {
       name: 'acquia-secret',
