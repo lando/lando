@@ -66,7 +66,7 @@ module.exports = class AcquiaApi {
         id: item.id,
         uuid: item.uuid,
         subuuid: item.subscription.uuid,
-        name: item.name,
+        name: `${item.name} (${item.hosting.id.split(':')[1]})`,
       }));
       return this.applications;
     })

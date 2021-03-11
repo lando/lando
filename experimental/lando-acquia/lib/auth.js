@@ -22,7 +22,7 @@ const showKeyEntry = (recipe, answer, keys = []) => recipe === 'acquia' && (_.is
 // Helper to get pantheon auth non-interactive options
 exports.getInteractiveOptions = (lando, appConfig=null) => ({
   'acquia-auth': {
-    describe: 'Acquia API Key',
+    describe: 'Acquia API key',
     string: true,
     interactive: {
       type: 'list',
@@ -57,6 +57,7 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
     },
   },
   'acquia-key': {
+    describe: 'Acquia API key',
     hidden: false,
     passthrough: true,
     interactive: {
@@ -86,6 +87,7 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
     },
   },
   'acquia-secret': {
+    description: 'Acquia API secret',
     hidden: true,
     passthrough: true,
     interactive: {
