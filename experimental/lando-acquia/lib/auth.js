@@ -4,6 +4,7 @@ const API = require('./api');
 const utils = require('./utils');
 
 // Acquia
+const acquiaTokenCache = 'acquia.tokens';
 const api = new API();
 exports.api = api;
 
