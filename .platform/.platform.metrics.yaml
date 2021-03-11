@@ -1,7 +1,7 @@
 name: metrics
 source:
   root: "/"
-type: nodejs:12
+type: nodejs:14
 
 dependencies:
   nodejs:
