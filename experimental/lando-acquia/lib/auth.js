@@ -20,7 +20,7 @@ const showKeyList = (recipe, keys = []) => recipe === 'acquia' && !_.isEmpty(key
 const showKeyEntry = (recipe, answer, keys = []) => recipe === 'acquia' && (_.isEmpty(keys) || answer === 'more');
 
 // Helper to get pantheon auth non-interactive options
-exports.getInteractiveOptions = (lando, appConfig=null) => ({
+exports.getInteractiveOptions = (lando, appConfig = null) => ({
   'acquia-auth': {
     describe: 'Acquia API Key',
     string: true,
@@ -57,10 +57,10 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
     },
   },
   'acquia-key': {
-    hidden: false,
+    hidden: true,
     passthrough: true,
     interactive: {
-      name: 'acquia-key',
+      name: 'acquia-auth',
       type: 'input',
       message: 'Enter your Acquia API key',
       when: answers => {
@@ -86,7 +86,6 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
     },
   },
   'acquia-secret': {
-    hidden: true,
     passthrough: true,
     interactive: {
       name: 'acquia-secret',
@@ -97,7 +96,7 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
       },
       validate: (input, answers) => {
         return api.auth(answers['acquia-key'], input).then(() => {
-          let token = _.find(lando.cache.get(acquiaTokenCache), token => token.key === answers['acquia-key']);
+          let token = _.find(lando.cache.get('acquia.tokens'), token => token.key === answers['acquia-key']);
           if (!token) {
             // Re-create the token as acli would so acli can use it in a container.
             token = {
@@ -105,7 +104,7 @@ exports.getInteractiveOptions = (lando, appConfig=null) => ({
               key: answers['acquia-key'],
               secret: answers['acquia-secret'],
             };
-            lando.cache.set(acquiaTokenCache, [token], {persist: true});
+            lando.cache.set('acquia.tokens', [token], {persist: true});
           }
           return true;
         }).catch(err => {

@@ -7,6 +7,7 @@ const utils = require('../../lib/utils');
 
 // Acquia
 const api = new API();
+const pantheonTokenCache = 'pantheon.tokens';
 const acquiaApps = [];
 let acquiaEnvs = [];
 
