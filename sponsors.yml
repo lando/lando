@@ -142,3 +142,7 @@
   type: patriot
   url: https://pantheon.io/
   logo: https://lando.dev/images/pantheon_logo.png
+- name: "Blackmesh by Contegix"
+  type: patriot
+  url: https://www.blackmesh.com/
+  logo: https://lando.dev/images/blackmesh_logo.png
