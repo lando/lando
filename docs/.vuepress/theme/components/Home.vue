@@ -178,6 +178,8 @@ export default {
     padding-top: 4em
     padding-bottom 4em
     text-align: center
+    width: 900px
+    margin: auto
     #patriots
       padding-top: 1em
     h4
@@ -254,6 +256,8 @@ export default {
       .button
         font-size: .9em
     #hero_header
+      width: 80%
+    #patriot_sponsors
       width: 80%
 @media (max-width: $MQMobileNarrow)
   .lando-home
