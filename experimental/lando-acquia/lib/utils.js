@@ -60,29 +60,6 @@ exports.getAcquiaKeyChoices = lando => {
 };
 
 /*
- * Returns keys fetched from cache & ~/.acquia/cloud_api.conf after caching the merged set.
- */
-exports.getAcquiaKeys = lando => {
-  const file = path.join(lando.config.home, '.acquia', 'cloud_api.conf');
-  const systemKeys = {};
-  if (fs.existsSync(file)) {
-    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-
-    if (data && data.keys) {
-      // Return an object of keys, keyed by key uuid
-      _.forEach(data.keys, key => {
-        systemKeys[key.uuid] = key;
-      });
-      return _(systemKeys).sortBy('label').value();
-    }
-  }
-  const cachedKeys = lando.cache.get('acquia.keys');
-  const mergedKeys = _(_.merge(systemKeys, cachedKeys)).sortBy('label').value();
-  lando.cache.set('acquia.keys', mergedKeys, {persist: true});
-  return mergedKeys;
-};
-
-/*
  * Returns the active key set in appserver at /var/www/.acquia/cloud_api.conf
  */
 exports.getAcquiaKeyFromApp = (lando, appConfig) => {
@@ -106,3 +83,26 @@ exports.getComposerConfig = () => {
   return null;
 };
 
+/*
+ * Returns keys fetched from cache & ~/.acquia/cloud_api.conf after caching the merged set.
+ */
+exports.getHostKeys = home => {
+  // Path to acli conf
+  const file = path.join(home, '.acquia', 'cloud_api.conf');
+  // If no keyfile return empty
+  if (!fs.existsSync(file)) return [];
+  // Otherwise lets try to get some data
+  const keys = _.get(JSON.parse(fs.readFileSync(file, 'utf8')), 'keys', []);
+  // Loop through keys to merge in the key of the keys
+  _.forEach(keys, (value, key) => value.key = key);
+  // Return an array of keys
+  return _.map(keys);
+};
+
+/*
+ * Sort, reconcile and format keys
+ */
+exports.sortKeys = (...sources) => _(_.flattenDeep(sources))
+  .uniqBy('uuid')
+  .orderBy('label')
+  .value();

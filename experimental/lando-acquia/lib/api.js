@@ -1,7 +1,8 @@
 'use strict';
 
-const axios = require('axios');
 const _ = require('lodash');
+const axios = require('axios');
+const fs = require('fs');
 
 module.exports = class AcquiaApi {
   constructor(lando) {
@@ -115,4 +116,16 @@ module.exports = class AcquiaApi {
       console.log(error);
     });
   }
+
+  /*
+   * Pushes up a public key
+   */
+  postKey(key, label = 'Lando') {
+    const data = {label, public_key: _.trim(fs.readFileSync(key, 'utf8'))};
+    return axios.post(`https://cloud.acquia.com/api/account/ssh-keys`, data)
+    // Only throw an error if its anything but a conflict
+    .catch(err => {
+      if (_.get(err, 'response.status', 400) !== 409) return Promise.reject(err);
+    });
+  };
 };

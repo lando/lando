@@ -58,7 +58,7 @@ exports.getInteractiveOptions = (lando, appConfig = null) => ({
     },
   },
   'acquia-key': {
-    describe: 'Acquia API key',
+    describe: 'An Acquia API key',
     passthrough: true,
     interactive: {
       name: 'acquia-auth',
