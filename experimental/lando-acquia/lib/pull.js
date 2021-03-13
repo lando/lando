@@ -89,7 +89,6 @@ const task = {
   },
 };
 
-
 // Helper to populate defaults
 const getDefaults = (task, options) => {
   // Set interactive options
@@ -110,17 +109,12 @@ const getDefaults = (task, options) => {
       // Get ENVS
       return getEnvs(bestKey, bestSecret, appUuid);
     };
-    // @TODO: Do we want to set a default env?
-    // task.options[name].interactive.default = options.env;
+    // Dev seems like the safest default for pull
+    task.options[name].interactive.default = 'dev';
   });
 
   // Set the task env
-  task.env = {
-    LANDO_CODE_PULL_COMMAND: 'acli pull:code -n',
-    LANDO_DB_PULL_COMMAND: 'acli pull:db -n',
-    LANDO_DB_USER_TABLE: 'users',
-    LANDO_FILES_PULL_COMMAND: 'acli pull:files -n',
-  };
+  task.env = {LANDO_DB_USER_TABLE: 'users'};
 
   // Return
   return task;

@@ -9,9 +9,9 @@ set -e
 LANDO_MODULE="acquia"
 
 # Set option defaults
-CODE='none';
-DATABASE='none';
-FILES='none';
+CODE='dev';
+DATABASE='dev';
+FILES='dev';
 KEY='none'
 SECRET='none'
 

@@ -9,34 +9,28 @@ set -e
 LANDO_MODULE="acquia"
 
 # Set option defaults
-CODE='dev';
-DATABASE='dev';
-FILES='dev';
+CODE='none';
+DATABASE='none';
+FILES='none';
 KEY='none'
 SECRET='none'
-
-# Set helpers
-SITE=${PANTHEON_SITE_NAME:-${TERMINUS_SITE:-whoops}}
-ENV=${TERMINUS_ENV:-dev}
-PUSH_DB=""
-PUSH_FILES=""
 
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
-    -k|--acquia-key|--acquia-key=*)
+    -k|--key|--key=*)
       echo '--'
-      if [ "${1##--acquia-key=}" != "$1" ]; then
-        KEY="${1##--acquia-key=}"
+      if [ "${1##--key=}" != "$1" ]; then
+        KEY="${1##--key=}"
         shift
       else
         KEY=$2
         shift 2
       fi
       ;;
-    -s|--acquia-secret|--acquia-secret=*)
-      if [ "${1##--acquia-secret=}" != "$1" ]; then
-        SECRET="${1##--acquia-secret=}"
+    -s|--secret|--secret=*)
+      if [ "${1##--secret=}" != "$1" ]; then
+        SECRET="${1##--secret=}"
         shift
       else
         SECRET=$2
@@ -99,31 +93,20 @@ fi
 
 # Push the codez
 if [ "$CODE" != "none" ]; then
-  # Switch to git root
-  cd $LANDO_MOUNT;
-
-  # Commit the goods
-  echo "Pushing code to $CODE ...";
-  eval "acli push:code";
-
+  cd $LANDO_MOUNT
+  acli -n push:code "$AH_SITE_GROUP.$CODE"
 fi
 
 # Push the database
 if [ "$DATABASE" != "none" ]; then
-  # And push
-  echo "Pushing your database... This might take a minute";
-  PUSH_DB="acli push:db $DATABASE";
-  eval "$PUSH_DB";
+  acli -n push:db "$AH_SITE_GROUP.$DATABASE"
 fi
 
 # Push the files
 if [ "$FILES" != "none" ]; then
-  # Build the rsync command
-  PUSH_FILES="acli push:files $FILES";
-
-  # Pushing files
-  eval "$PUSH_FILES"
+  acli push:files "$AH_SITE_GROUP.$FILES"
 fi
 
 # Finish up!
-lando_green "Push completed successfully!"
+echo -n "    "
+lando_check "Push completed successfully!"
