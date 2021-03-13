@@ -69,7 +69,7 @@ module.exports = {
 
       // Run acli login with credentials set in init; if applicable
       if (secret && key) {
-        options.services.appserver.build.push(`/usr/local/bin/acli auth:login -k "${key}" -s "${sec}" -n`);
+        options.services.appserver.build.push(`/usr/local/bin/acli auth:login -k "${key}" -s "${secret}" -n`);
       }
 
       // Set our appserver env overrides
