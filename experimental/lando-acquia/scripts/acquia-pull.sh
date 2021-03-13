@@ -92,15 +92,11 @@ fi
 
 # Get the codez
 if [ "$CODE" != "none" ]; then
-  PULL_CODE="$LANDO_CODE_PULL_COMMAND $CODE";
-  # Fetching code
-  eval "$PULL_CODE"
+  acli -n pull:code "$AH_SITE_GROUP.$CODE"
 fi
 
 # Get the database
 if [ "$DATABASE" != "none" ]; then
-  PULL_DB="$LANDO_DB_PULL_COMMAND $DATABASE"
-
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
   TABLES=$(mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
@@ -117,7 +113,7 @@ EOF
   done
 
   # Importing database
-  $PULL_DB;
+  acli -n pull:db "$AH_SITE_GROUP.$DATABASE"
 
   # Weak check that we got tables
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
@@ -131,10 +127,8 @@ fi
 
 # Get the files
 if [ "$FILES" != "none" ]; then
-  PULL_FILES="$LANDO_FILES_PULL_COMMAND $FILES";
-
-  # Importing files
-  eval "$PULL_FILES"
+  # acli -n pull:files "$FILES" -> non interactive causes a broken pipe error right now
+  acli pull:files "$AH_SITE_GROUP.$FILES"
 fi
 
 # Finish up!

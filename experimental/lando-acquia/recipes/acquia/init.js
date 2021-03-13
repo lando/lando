@@ -87,7 +87,10 @@ const getAutoCompleteEnvs = (answers, lando, input = null) => {
   const {key, secret} = getAuthPair(answers);
   return api.auth(key, secret, true, true)
     .then(() => api.getEnvironments(answers['acquia-app']))
-    .then(envs => _.map(envs, env => (_.merge({}, {name: env.name, value: env.id}, env))))
+    .then(envs => _(envs)
+      .map(env => _.merge({}, env, {name: utils.parseEnvName(env.name), value: utils.parseEnvName(env.name)}))
+      .value()
+    )
     .then(envs => {
       acquiaEnvs = envs;
       return lando.Promise.resolve(acquiaEnvs);
