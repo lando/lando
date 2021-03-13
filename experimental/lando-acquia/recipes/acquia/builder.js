@@ -68,18 +68,9 @@ module.exports = {
       options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts -n');
 
       // Run acli login with credentials set in init; if applicable
-      // @NOTE: this seems better suited to run in pull?
-      /*
-      const lastInitData = options._app._lando.cache.get('acquia.last');
-      if (lastInitData) {
-        const key = lastInitData['acquia-key'];
-        const sec = lastInitData['acquia-secret'];
-        const cmd = `/usr/local/bin/acli auth:login -k "${key}" -s "${sec}" -n`;
-        options.services.appserver.build.push(cmd);
-        // Delete the evidence
-        options._app._lando.cache.set('acquia.last', null, {persist: true});
+      if (secret && key) {
+        options.services.appserver.build.push(`/usr/local/bin/acli auth:login -k "${key}" -s "${sec}" -n`);
       }
-      */
 
       // Set our appserver env overrides
       options.services.appserver.overrides.environment = {
