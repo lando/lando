@@ -2,7 +2,8 @@
 
 const _ = require('lodash');
 const {getAcquiaPull} = require('./../../lib/pull');
-const {getAcquiaPush} = require('./../../lib/push');
+// const {getAcquiaPush} = require('./../../lib/push');
+const utils = require('./../../lib/utils');
 
 module.exports = {
   name: 'acquia',
@@ -12,6 +13,10 @@ module.exports = {
     defaultFiles: {},
     php: '7.4',
     drush: '^10',
+    services: {appserver: {
+      build: [],
+      overrides: {volumes: [], environment: {}},
+    }},
   },
   builder: (parent, config) => class LandoAcquia extends parent {
     constructor(id, options = {}) {
@@ -22,34 +27,19 @@ module.exports = {
       options.env_file = ['.env'];
       options.webroot = 'docroot';
 
-      // Set build steps for app server.
-      const group = options._app.config.config.ah_site_group;
-      options.services = {
-        appserver: {
-          build: [
-            `mkdir -p /var/www/site-php/${group}`,
-            `cp /helpers/acquia-settings.inc /var/www/site-php/${group}/${group}-settings.inc`,
-            '/helpers/acquia-config-symlink.sh',
-          ],
-          environment: {
-            AH_SITE_UUID: options._app.config.config.ah_application_uuid || null,
-            AH_SITE_GROUP: options._app.config.config.ah_site_group || null,
-            AH_SITE_ENVIRONMENT: 'LANDO',
-          },
-        },
-        mailhog: {
-          type: 'mailhog',
-        },
-        memcached: {
-          type: 'memcached',
-        },
-      };
+      // Get and discover our keys
+      const keys = utils.sortKeys(options._app.acquiaKeys, options._app.hostKeys);
+      // Try to grab other relevant stuff that we might have saved
+      const key = _.get(options, '_app.meta.key', null);
+      const secret = _.get(options, '_app.meta.secret', null);
+      const account = _.get(options, '_app.meta.label', null);
+      const group = _.get(options, '_app.config.config.ah_site_group', null);
+      const appUuid = _.get(options, '_app.config.config.ah_application_uuid', null);
+      const acliVersion = _.get(options, '_app.config.config.acli_version', 'master');
 
+      // Figure out our ACLI situation first
       // Install acli from either 1) latest download, 2) A specific version, or 3) build from a branch
       // TODO: switch default to `latest` once acli catches up.
-      const acliVersionDefault = 'master';
-      const acliVersion = options._app.config.config.acli_version ?
-        options._app.config.config.acli_version : acliVersionDefault;
       const regexVersion = /^[0-9]+\.[0-9]+\.[0-9]+$/g;
       let acliDownload = null;
       if (acliVersion === 'latest') {
@@ -73,7 +63,13 @@ module.exports = {
         ]);
       }
 
+      // Set other relevant build steps after ACLI is installed
+      options.services.appserver.build.push('/helpers/acquia-config-symlink.sh');
+      options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts -n');
+
       // Run acli login with credentials set in init; if applicable
+      // @NOTE: this seems better suited to run in pull?
+      /*
       const lastInitData = options._app._lando.cache.get('acquia.last');
       if (lastInitData) {
         const key = lastInitData['acquia-key'];
@@ -83,9 +79,18 @@ module.exports = {
         // Delete the evidence
         options._app._lando.cache.set('acquia.last', null, {persist: true});
       }
+      */
 
-      // Install composer deps
-      options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts');
+      // Set our appserver env overrides
+      options.services.appserver.overrides.environment = {
+        AH_SITE_UUID: appUuid,
+        AH_SITE_GROUP: group,
+        AH_SITE_ENVIRONMENT: 'LANDO',
+      };
+
+      // Mount the acquia settings.php file for auto service "discovery"
+      const settingsMount = `${options.confDest}/acquia-settings.inc:/var/www/site-php/${group}/${group}-settings.inc`;
+      options.services.appserver.overrides.volumes.push(settingsMount);
 
       // Add acli tooling.
       options.tooling = {
@@ -94,8 +99,8 @@ module.exports = {
           description: 'Run the Acquia acli command',
           cmd: 'acli',
         },
-        'pull': getAcquiaPull(options),
-        'push': getAcquiaPush(options),
+        'pull': getAcquiaPull({key, secret, account, appUuid}, keys),
+        // 'push': getAcquiaPush(options),
       };
       super(id, options);
     };

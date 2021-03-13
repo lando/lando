@@ -58,9 +58,6 @@ module.exports = class AcquiaApi {
    * @return {Promise} Acquia applications array
    */
   getApplications() {
-    if (this.applications !== null) {
-      return new lando.Promise(this.applications);
-    }
     return axios.get('https://cloud.acquia.com/api/applications').then(res => {
       const total = res.data.total;
       this.applications = total === 0 ? [] : res.data._embedded.items.map(item => ({
@@ -106,9 +103,6 @@ module.exports = class AcquiaApi {
    * @return {Promise}
    */
   getAccount() {
-    if (this.account !== null) {
-      return new lando.Promise(this.account);
-    }
     return axios.get('https://cloud.acquia.com/api/account').then(res => {
       this.account = res.data;
       return this.account;

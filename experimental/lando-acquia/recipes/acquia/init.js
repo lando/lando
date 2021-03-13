@@ -3,7 +3,6 @@
 // Modules
 const _ = require('lodash');
 const API = require('../../lib/api');
-const auth = require('../../lib/auth');
 const path = require('path');
 const utils = require('../../lib/utils');
 
@@ -34,12 +33,6 @@ const getAuthPair = answers => {
   return {key: answers['acquia-key'], secret: answers['acquia-secret']};
 };
 
-// Helper to get tokens
-const getKeys = (home, keys = []) => _(mergeKeys(home, keys))
-  .map(key => ({name: `${key.label} (${key.uuid})`, value: `${key.key}:${key.secret}`}))
-  .thru(keys => keys.concat([{name: 'add or refresh a key', value: 'more'}]))
-  .value();
-
 // Helper to determine whether to show list of pre-used keys or not
 const showKeyList = (data, home, keys = []) => data === 'acquia' && !_.isEmpty(mergeKeys(home, keys));
 
@@ -62,7 +55,6 @@ const showSecretEntry = answers => {
   return false;
 };
 
-
 // Helper to get sites for autocomplete
 const getAutoCompleteSites = (answers, lando, input = null) => {
   // We already have apps that we can sort
@@ -82,7 +74,6 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
       return lando.Promise.resolve(acquiaApps);
     });
 };
-
 
 // Helper to get envs for autocomplete
 const getAutoCompleteEnvs = (answers, lando, input = null) => {
@@ -114,7 +105,7 @@ module.exports = {
       string: true,
       interactive: {
         type: 'list',
-        choices: getKeys(lando.config.home, lando.cache.get(acquiaKeyCache)),
+        choices: utils.getKeys(mergeKeys(lando.config.home, lando.cache.get(acquiaKeyCache))),
         message: 'Select an Acquia account',
         when: answers => showKeyList(answers.recipe, lando.config.home, lando.cache.get(acquiaKeyCache)),
         weight: 510,
@@ -163,10 +154,12 @@ module.exports = {
         source: (answers, input) => {
           return getAutoCompleteSites(answers, lando, input);
         },
-        // TODO: we need to add back in auto app reference
-        // presumably this happens on a pull/push when we have the code
-        // and we can see infer the UUID
-        when: answers => answers.recipe === 'acquia',
+        when: answers => {
+          if (answers.recipe === 'acquia' && answers.source === 'cwd') {
+            answers['acquia-app'] = utils.getAcliUuid();
+            return _.isNil(answers['acquia-app']);
+          } else return answers.recipe === 'acquia';
+        },
         weight: 540,
       },
     },
@@ -266,34 +259,57 @@ module.exports = {
       },
   ])}],
   build: (options, lando) => {
-    const api = new acquiaApiClient(options['acquia-key'], lando.log);
-    // Get our sites and user
-    return api.auth().then(() => Promise.all([api.getSites(), api.getUser()]))
-    // Parse the dataz and set the things
-    .then(results => {
-      // Get our site and email
-      const site = _.head(_.filter(results[0], site => site.name === options['acquia-site']));
-      const user = results[1];
+    // Get the info we need to build the relevant config
+    return api.auth(options['acquia-key'], options['acquia-secret'], true, true)
+      .then(() => Promise.all([
+        api.getAccount(),
+        api.getEnvironments(options['acquia-app']),
+      ]))
+      .then(data => {
+        const account = data[0];
+        const env = _.find(data[1], {value: options['acquia-env']});
+        // Write the acli-cli.yml file
+        utils.writeAcliUuid(options['acquia-app']);
+        // Reset the name to something human readable
+        options.name = env.group;
+        // Merge in other lando config
+        const landofileConfig = {
+          config: {
+            acli_version: 'master',
+            ah_application_uuid: options['acquia-app'],
+            ah_site_group: env.group,
+            php: env.php,
+          },
+        };
+        // Set the composer version to 1 if it is defined as such in composer.json
+        const composerConfig = utils.getComposerConfig();
+        if (composerConfig !== null && composerConfig.require['composer/installers']) {
+          const composerConfig = utils.getComposerConfig();
+          if (composerConfig !== null && composerConfig.require['composer/installers']) {
+            const majorVersion = parseInt(composerConfig.require['composer/installers']
+              .replace( /(^.+)(\d)(.+$)/i, '$2'));
+            if (majorVersion === 1) {
+              landofileConfig.config.composer_version = majorVersion;
+            }
+          }
+        }
 
-      // Error if site doesn't exist
-      if (_.isEmpty(site)) throw Error(`${site} does not appear to be a acquia site!`);
+        // This is good auth, lets update our cache
+        const cache = {
+          key: options['acquia-key'],
+          label: account.mail,
+          secret: options['acquia-secret'],
+        };
 
-      // This is a good token, lets update our cache
-      const cache = {token: options['acquia-key'], email: user.email, date: _.toInteger(_.now() / 1000)};
+        // Update lando's store of acquia creds
+        const keys = lando.cache.get(acquiaKeyCache) || [];
+        lando.cache.set(acquiaKeyCache, utils.sortKeys(keys, [cache]), {persist: true});
+        // Update app metdata
+        const metaData = lando.cache.get(`${options.name}.meta.cache`);
+        lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
 
-      // Update lando's store of acquia machine tokens
-      const tokens = lando.cache.get(acquiaTokenCache) || [];
-      lando.cache.set(acquiaTokenCache, utils.sortTokens(tokens, [cache]), {persist: true});
-      // Update app metdata
-      const metaData = lando.cache.get(`${options.name}.meta.cache`);
-      lando.cache.set(`${options.name}.meta.cache`, _.merge({}, metaData, cache), {persist: true});
-
-      // Add some stuff to our landofile
-      return {config: {
-        framework: _.get(site, 'framework', 'drupal'),
-        site: _.get(site, 'name', options.name),
-        id: _.get(site, 'id', 'lando'),
-      }};
-    });
-  },
+        // Finish up
+        return landofileConfig;
+      });
+    },
 };

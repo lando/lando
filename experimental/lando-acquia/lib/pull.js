@@ -1,80 +1,30 @@
 'use strict';
 
+// Modules
 const _ = require('lodash');
 const auth = require('./auth');
-const api = auth.api;
+const API = require('./api');
 
+// Acquia
+const api = new API();
 let acquiaEnvs = [];
 
-const getAutoCompleteEnvs = (answers, lando, input = null) => {
-  if (!_.isEmpty(acquiaEnvs)) {
-    return lando.Promise.resolve(!input ? acquiaEnvs : acquiaEnvs.filter(app => _.startsWith(app.name, input)));
-  }
-  return api.getEnvironments(answers['acquia-app']).then(envs => {
-    if (envs && Array.isArray(envs)) {
-      acquiaEnvs = envs.map(item => (_.merge({name: item.name, value: item.id}, item)));
+/*
+ * Helper to get envs
+ */
+const getEnvs = (key, secret, uuid) => {
+  // If we already have it, return it
+  if (!_.isEmpty(acquiaEnvs)) return acquiaEnvs;
+
+  // Otherwise fetch them
+  return api.auth(key, secret, true, true)
+    .then(() => api.getEnvironments(uuid))
+    .then(envs => _.map(envs, env => (_.merge({}, {name: env.name, value: env.id}, env))))
+    .then(envs => {
+      acquiaEnvs = envs;
       acquiaEnvs.push({'name': 'none', 'value': 'none'});
-      return acquiaEnvs;
-    }
-  });
-};
-
-const getInteractiveOptions = (lando, appId) => {
-  let options = {
-    code: {
-      description: 'The environment from which to pull the code',
-      passthrough: true,
-      alias: ['c'],
-      interactive: {
-        type: 'autocomplete',
-        message: 'Pull code from?',
-        source: (answers, input) => {
-          return getAutoCompleteEnvs(answers, lando, input);
-        },
-        when: true,
-        weight: 600,
-      },
-    },
-    database: {
-      description: 'The environment from which to pull the database',
-      passthrough: true,
-      alias: ['d'],
-      interactive: {
-        type: 'autocomplete',
-        message: 'Pull database from?',
-        source: (answers, input) => {
-          return getAutoCompleteEnvs(answers, lando, input);
-        },
-        when: true,
-        weight: 601,
-      },
-    },
-    files: {
-      description: 'The environment from which to pull the files',
-      passthrough: true,
-      alias: ['f'],
-      interactive: {
-        type: 'autocomplete',
-        message: 'Pull files from?',
-        source: (answers, input) => {
-          return getAutoCompleteEnvs(answers, lando, input);
-        },
-        validate: (input, answers) => {
-          // Not really validating, just working within inquirer's confines to execute code here.
-          // Strip out key and secret if they were already authenticated by the acli config.
-          if (answers['authenticated']) {
-            delete answers['acquia-key'];
-            delete answers['acauia-secret'];
-          }
-        },
-        when: true,
-        weight: 602,
-      },
-    },
-  };
-  options = _.merge(options, auth.getInteractiveOptions(lando, appId));
-
-  return options;
+      return envs;
+    });
 };
 
 // The non dynamic base of the task
@@ -84,29 +34,98 @@ const task = {
   cmd: '/helpers/acquia-pull.sh',
   level: 'app',
   stdio: ['inherit', 'pipe', 'pipe'],
+  options: {
+    key: {
+      describe: 'An Acquia API key',
+      passthrough: true,
+      string: true,
+      interactive: {
+        type: 'list',
+        message: 'Choose an Acquia key',
+        choices: [],
+        when: () => false,
+        weight: 100,
+      },
+    },
+    secret: {
+      describe: 'An Acquia API secret',
+      passthrough: true,
+      password: true,
+    },
+    code: {
+      description: 'The environment from which to pull the code',
+      passthrough: true,
+      alias: ['c'],
+      interactive: {
+        type: 'list',
+        message: 'Pull code from?',
+        weight: 200,
+      },
+    },
+    database: {
+      description: 'The environment from which to pull the database',
+      passthrough: true,
+      alias: ['d'],
+      interactive: {
+        type: 'list',
+        message: 'Pull database from?',
+        weight: 300,
+      },
+    },
+    files: {
+      description: 'The environment from which to pull the files',
+      passthrough: true,
+      alias: ['f'],
+      interactive: {
+        type: 'list',
+        message: 'Pull files from?',
+        weight: 400,
+      },
+    },
+  },
 };
 
-const buildCodePullCommand = 'acli pull:code';
-const buildDbPullCommand = 'acli pull:db';
-const buildFilesPullCommand = 'acli pull:files';
 
 // Helper to populate defaults
 const getDefaults = (task, options) => {
+  // Set interactive options
+  const {key, secret, appUuid} = options;
+  _.forEach(['code', 'database', 'files'], name => {
+    task.options[name].interactive.choices = answers => {
+      // Break up auth into parts
+      const authParts = answers['key'].split(':');
+      // If we have two parts then we need to separate, otherwise we assume
+      // secret and key were passed in separately
+      if (authParts.length === 2) {
+        answers['key'] = authParts[0];
+        answers['secret'] = authParts[1];
+      }
+      // Use the inputed creds, otherwise fallback
+      const bestKey = _.get(answers, 'key', key);
+      const bestSecret = _.get(answers, 'secret', secret);
+      // Get ENVS
+      return getEnvs(bestKey, bestSecret, appUuid);
+    };
+    // @TODO: Do we want to set a default env?
+    // task.options[name].interactive.default = options.env;
+  });
+
+  // Set the task env
   task.env = {
-    LANDO_CODE_PULL_COMMAND: buildCodePullCommand,
-    LANDO_DB_PULL_COMMAND: buildDbPullCommand,
+    LANDO_CODE_PULL_COMMAND: 'acli pull:code -n',
+    LANDO_DB_PULL_COMMAND: 'acli pull:db -n',
     LANDO_DB_USER_TABLE: 'users',
-    LANDO_FILES_PULL_COMMAND: buildFilesPullCommand,
+    LANDO_FILES_PULL_COMMAND: 'acli pull:files -n',
   };
-  const lando = options._app._lando;
-  const appConfig = options._app.config;
-  task.options = getInteractiveOptions(lando, appConfig);
+
+  // Return
   return task;
 };
 
 /*
  * Helper to build a pull command
  */
-exports.getAcquiaPull = (options, tokens = []) => {
-  return getDefaults(task, options);
+exports.getAcquiaPull = (options, keys = []) => {
+  const {key, secret, account} = options;
+  return _.merge({}, getDefaults(task, options), {options: auth.getAuthOptions(key, secret, account, keys)});
 };

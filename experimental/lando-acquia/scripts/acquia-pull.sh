@@ -18,19 +18,19 @@ SECRET='none'
 # PARSE THE ARGZZ
 while (( "$#" )); do
   case "$1" in
-    -k|--acquia-key|--acquia-key=*)
+    -k|--key|--key=*)
       echo '--'
-      if [ "${1##--acquia-key=}" != "$1" ]; then
-        KEY="${1##--acquia-key=}"
+      if [ "${1##--key=}" != "$1" ]; then
+        KEY="${1##--key=}"
         shift
       else
         KEY=$2
         shift 2
       fi
       ;;
-    -s|--acquia-secret|--acquia-secret=*)
-      if [ "${1##--acquia-secret=}" != "$1" ]; then
-        SECRET="${1##--acquia-secret=}"
+    -s|--secret|--secret=*)
+      if [ "${1##--secret=}" != "$1" ]; then
+        SECRET="${1##--secret=}"
         shift
       else
         SECRET=$2
@@ -93,8 +93,8 @@ fi
 # Get the codez
 if [ "$CODE" != "none" ]; then
   PULL_CODE="$LANDO_CODE_PULL_COMMAND $CODE";
-      # Fetching code
-      eval "$PULL_CODE"
+  # Fetching code
+  eval "$PULL_CODE"
 fi
 
 # Get the database
@@ -104,9 +104,11 @@ if [ "$DATABASE" != "none" ]; then
   # Destroy existing tables
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
   TABLES=$(mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
-  echo "Destroying all current tables in database if needed... "
+  echo -n "    "
+  lando_check "Destroying all current tables in database if needed... "
   for t in $TABLES; do
-    echo "Dropping $t from local acquia database..."
+    echo -n "    "
+    lando_check "Dropping $t from local acquia database..."
     mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 <<-EOF
       SET FOREIGN_KEY_CHECKS=0;
       DROP VIEW IF EXISTS \`$t\`;
@@ -115,12 +117,12 @@ EOF
   done
 
   # Importing database
-  echo "Pulling your database... This might take a minute"
   $PULL_DB;
 
   # Weak check that we got tables
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
-  lando_pink "Checking db pull for expected tables..."
+  echo -n "    "
+  lando_check "Checking db pull for expected tables..."
   if ! mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 -e "SHOW TABLES;" | grep $PULL_DB_CHECK_TABLE; then
     lando_red "Database pull failed... "
     exit 1
@@ -136,4 +138,5 @@ if [ "$FILES" != "none" ]; then
 fi
 
 # Finish up!
-lando_green "Pull completed successfully!"
+echo -n "    "
+lando_check "Pull completed successfully!"

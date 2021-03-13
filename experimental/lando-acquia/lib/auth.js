@@ -1,120 +1,73 @@
 'use strict';
+
+// Modules
 const _ = require('lodash');
-const API = require('./api');
 const utils = require('./utils');
 
-// Acquia
-const acquiaTokenCache = 'acquia.tokens';
-const api = new API();
-exports.api = api;
-
-let acquiaKeys = {};
-const getKeyChoices = (lando=null) => {
-  if (lando !== null && _.isEmpty(acquiaKeys)) {
-    acquiaKeys = utils.getAcquiaKeyChoices(lando);
-  }
-  return acquiaKeys;
-};
-
-// Helper to determine whether to show list of pre-used tokens or not
-const showKeyList = (recipe, keys = []) => recipe === 'acquia' && !_.isEmpty(keys);
-const showKeyEntry = (recipe, answer, keys = []) => recipe === 'acquia' && (_.isEmpty(keys) || answer === 'more');
-
 // Helper to get pantheon auth non-interactive options
-exports.getInteractiveOptions = (lando, appConfig = null) => ({
-  'acquia-auth': {
-    describe: 'Acquia API key',
-    string: true,
+const getInteractiveOptions = (keys = []) => ({
+  'key': {
     interactive: {
-      type: 'list',
-      choices: utils.getAcquiaKeyChoices(lando),
-      message: 'Select your Acquia API key',
-      when: answers => {
-        // TODO: I think we can remove this if it's only added when using an acquia recipe.
-        answers.recipe = 'acquia';
-        if (answers.recipe !== 'acquia') {
-          return false;
-        }
-        // Prepare inquirer for application scoped call.
-        if (appConfig) {
-          answers['acquia-app'] = appConfig.config.ah_application_uuid;
-          const key = utils.getAcquiaKeyFromApp(lando, appConfig);
-          // Validate auth if key is cached. Token is stored in api and reused on subsequent actions.
-          if (key) {
-            // Set answers if authentication works.
-            return api.auth(key.uuid, key.secret, false, true).then(() => {
-              answers['authenticated'] = true;
-              answers['acquia-auth'] = key.uuid;
-              answers['acquia-key'] = key.uuid;
-              answers['acquia-secret'] = key.secret;
-              return false;
-            });
-          }
-        }
-        acquiaKeys = getKeyChoices(lando);
-        return !answers['acquia-auth'] && showKeyList(answers.recipe, acquiaKeys);
-      },
-      weight: 510,
+      choices: utils.getKeys(keys),
+      when: answers => !_.isEmpty(keys),
+      weight: 100,
     },
   },
-  'acquia-key': {
-    describe: 'An Acquia API key',
-    passthrough: true,
-    interactive: {
-      name: 'acquia-auth',
-      type: 'input',
-      message: 'Enter your Acquia API key',
-      when: answers => {
-        // If a token was selected, attempt to login.
-        if (answers['acquia-auth'] && answers['acquia-auth'] !== 'more') {
-          const key = _.find(acquiaKeys, key => key.value === answers['acquia-auth']);
-          if (key) {
-            answers['acquia-key'] = key.value;
-            answers['acquia-secret'] = key.secret;
-            return api.auth(answers['acquia-key'], answers['acquia-secret']).then(() => {
-              return false;
-            }).catch(err => {
-              // Clear out token data and prompt user.
-              answers['acquia-key'] = null;
-              answers['acquia-secret'] = null;
-              return true;
-            });
-          }
-        }
-        return !answers['acquia-key'] && showKeyEntry(answers.recipe, answers['acquia-auth'], acquiaKeys);
-      },
-      weight: 520,
-    },
-  },
-  'acquia-secret': {
-    description: 'Acquia API secret',
+  'key-entry': {
     hidden: true,
-    passthrough: true,
     interactive: {
-      name: 'acquia-secret',
+      name: 'key',
       type: 'password',
-      message: 'Enter your Acquia API secret',
-      when: answers => {
-        return !answers['acquia-secret'] && showKeyEntry(answers.recipe, answers['acquia-auth'], acquiaKeys);
-      },
+      message: 'Enter an Acquia API key',
+      when: answers => _.isEmpty(keys) || answers.key === 'more',
       validate: (input, answers) => {
-        return api.auth(answers['acquia-key'], input).then(() => {
-          let token = _.find(lando.cache.get('acquia.tokens'), token => token.key === answers['acquia-key']);
-          if (!token) {
-            // Re-create the token as acli would so acli can use it in a container.
-            token = {
-              send_telemetry: false,
-              key: answers['acquia-key'],
-              secret: answers['acquia-secret'],
-            };
-            lando.cache.set('acquia.tokens', [token], {persist: true});
-          }
-          return true;
-        }).catch(err => {
-          return err;
-        });
+        // If we end up here we likely need to ask for the secret as well
+        if (answers['key'] === 'more') answers['needs-secret-entry'] = true;
+
+        // @NOTE: this exists mostly to stealth add acquia-needs-secret-entry
+        // but @TODO could actually validate the key as well
+        return true;
       },
-      weight: 530,
+      weight: 110,
+    },
+  },
+  'secret': {
+    interactive: {
+      type: 'password',
+      message: 'Enter an Acquia API secret',
+      when: answers => {
+        // If we are manually entering another key/secret pair
+        if (answers['needs-secret-entry']) return answers['needs-secret-entry'];
+
+        // Otherwise we only want to show this in a partial options pass in
+        // eg lando init --source acquia --acquia-key my-key
+        const authParts = answers['key'].split(':');
+        if (authParts.length === 1) return true;
+
+        // Otherwise i dont think we need to show this
+        return false;
+      },
+      weight: 120,
     },
   },
 });
+
+// Helper to get pantheon auth non-interactive options
+const getNonInteractiveOptions = (key, secret, email) => ({
+  'key': {
+    default: key,
+    defaultDescription: email,
+  },
+  'secret': {
+    default: secret,
+    defaultDescription: '***',
+  },
+});
+
+/*
+ * Helper to build a pull command
+ */
+exports.getAuthOptions = (key = false, secret = false, label = false, keys = []) => {
+  if (key && secret) return getNonInteractiveOptions(key, secret, label);
+  else return getInteractiveOptions(keys);
+};
