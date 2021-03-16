@@ -91,6 +91,8 @@ if [ "$KEY" != "none" ]; then
   /usr/local/bin/acli auth:login -k "$KEY" -s "$SECRET" -n
 fi
 
+# @TODO: if lando has not already generated and exchanged a key with acquia cloud let us do that here
+
 # Push the codez
 if [ "$CODE" != "none" ]; then
   cd $LANDO_MOUNT

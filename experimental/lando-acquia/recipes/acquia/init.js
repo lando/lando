@@ -18,9 +18,11 @@ const mergeKeys = (home, keys = []) => utils.sortKeys(utils.getHostKeys(home), k
 
 // Helper to suss out our key and secret
 const getAuthPair = answers => {
-  // Break up auth into parts
-  const authParts = answers['acquia-key'].split(':');
+  // If we dont even have a key then just return the answers unaltered
+  if (!answers['acquia-key']) return answers;
 
+  // Otherwise break up auth into parts
+  const authParts = answers['acquia-key'].split(':');
   // If we have two parts then we need to separate, otherwise we assume
   // secret and key were passed in separately
   if (authParts.length === 2) {
@@ -51,6 +53,9 @@ const showKeyEntry = (data, answer, home, keys = []) => {
 
 // Helper to determine whether to show secret entry or not
 const showSecretEntry = answers => {
+  // If there is no acquia key then we should bail on this right good now
+  if (!answers['acquia-key']) return false;
+
   // If we are manually entering another key/secret pair
   if (answers['acquia-needs-secret-entry']) return answers['acquia-needs-secret-entry'];
 

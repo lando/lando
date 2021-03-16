@@ -90,6 +90,8 @@ if [ "$KEY" != "none" ]; then
   /usr/local/bin/acli auth:login -k "$KEY" -s "$SECRET" -n
 fi
 
+# @TODO: if lando has not already generated and exchanged a key with acquia cloud let us do that here
+
 # Get the codez
 if [ "$CODE" != "none" ]; then
   acli -n pull:code "$AH_SITE_GROUP.$CODE"
@@ -101,7 +103,7 @@ if [ "$DATABASE" != "none" ]; then
   # NOTE: We do this so the source DB **EXACTLY MATCHES** the target DB
   TABLES=$(mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 -e 'SHOW TABLES' | awk '{ print $1}' | grep -v '^Tables' ) || true
   echo -n "    "
-  lando_check "Destroying all current tables in database if needed... "
+  lando_check "Destroying all current tables in local database if needed... "
   for t in $TABLES; do
     echo -n "    "
     lando_check "Dropping $t from local acquia database..."
