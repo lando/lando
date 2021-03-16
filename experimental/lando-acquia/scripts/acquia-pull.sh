@@ -130,7 +130,7 @@ fi
 # Get the files
 if [ "$FILES" != "none" ]; then
   # acli -n pull:files "$FILES" -> non interactive causes a broken pipe error right now
-  acli pull:files "$AH_SITE_GROUP.$FILES"
+  acli -n pull:files "$AH_SITE_GROUP.$FILES"
 fi
 
 # Finish up!

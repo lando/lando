@@ -113,7 +113,7 @@ const getDefaults = (task, options) => {
   });
 
   // Override the default so code puses to dev
-  task.options.code.interactive.default = 'dev';
+  task.options.code.interactive.default = getBestEnv(acquiaEnvs);
   // Set the task env
   task.env = {LANDO_DB_USER_TABLE: 'users'};
 

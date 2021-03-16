@@ -34,14 +34,6 @@ const getAuthPair = answers => {
   return {key: answers['acquia-key'], secret: answers['acquia-secret']};
 };
 
-// Get best env
-const getBestEnv = (envs = []) => {
-  // Try to get the dev environment
-  const dev = _.find(envs, env => utils.parseEnvName(env.name) === 'dev');
-  // Return dev environment if we have it otherwise just use the first one
-  return (dev) ? dev : _.first(envs);
-};
-
 // Helper to determine whether to show list of pre-used keys or not
 const showKeyList = (data, home, keys = []) => data === 'acquia' && !_.isEmpty(mergeKeys(home, keys));
 
@@ -213,7 +205,7 @@ module.exports = {
             .then(() => api.getEnvironments(options['acquia-app']))
             .then(envs => {
               // Match our euuid with acquias
-              const env = getBestEnv(envs);
+              const env = utils.getBestEnv(envs);
               // Get GIT URL
               options['acquia-git-url'] = env.git;
               // And some other things
@@ -250,7 +242,7 @@ module.exports = {
       ]))
       .then(data => {
         const account = data[0];
-        const env = getBestEnv(data[1]);
+        const env = utils.getBestEnv(data[1]);
         // Write the acli-cli.yml file
         utils.writeAcliUuid(options['acquia-app']);
         // Reset the name to something human readable

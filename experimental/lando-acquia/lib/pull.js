@@ -4,7 +4,7 @@
 const _ = require('lodash');
 const auth = require('./auth');
 const API = require('./api');
-const {parseEnvName} = require('./utils');
+const {getBestEnv, parseEnvName} = require('./utils');
 
 // Acquia
 const api = new API();
@@ -110,7 +110,7 @@ const getDefaults = (task, options) => {
       return getEnvs(bestKey, bestSecret, appUuid);
     };
     // Dev seems like the safest default for pull
-    task.options[name].interactive.default = 'dev';
+    task.options[name].interactive.default = getBestEnv(acquiaEnvs);
   });
 
   // Set the task env
