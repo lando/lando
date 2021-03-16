@@ -94,10 +94,10 @@ module.exports = {
       // Add in mailhog
       if (options.inbox) {
         options.services.inbox = {type: 'mailhog:v1.0.0', hogfrom: ['appserver']};
-        options.proxy.inbox = [`inbox.${group}.${options._app.domain}`];
+        options.proxy.inbox = [`inbox.${options.app}.${options._app._config.domain}`];
       }
 
-      // Add acli tooling.
+      // Add acli and push/pull tooling.
       options.tooling = {
         'acli': {
           service: 'appserver',
