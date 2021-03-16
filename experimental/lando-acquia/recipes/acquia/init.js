@@ -38,7 +38,6 @@ const getAuthPair = answers => {
 const getBestEnv = (envs = []) => {
   // Try to get the dev environment
   const dev = _.find(envs, env => utils.parseEnvName(env.name) === 'dev');
-
   // Return dev environment if we have it otherwise just use the first one
   return (dev) ? dev : _.first(envs);
 };

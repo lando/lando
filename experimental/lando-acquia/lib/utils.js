@@ -80,7 +80,11 @@ exports.getKeys = (keys = []) => _(keys)
   .value();
 
 // Helper to get a more machiney sort of name for the environments
-exports.parseEnvName = name => name.split(' ')[1];
+exports.parseEnvName = name => {
+  const parts = name.split(' ');
+  const position = parts.length - 3;
+  return parts[position];
+};
 
 /*
  * Sort, reconcile and format keys
