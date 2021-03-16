@@ -4,7 +4,6 @@
 const _ = require('lodash');
 const auth = require('./auth');
 const API = require('./api');
-const {parseEnvName} = require('./utils');
 
 // Acquia
 const api = new API();
@@ -21,7 +20,8 @@ const getEnvs = (key, secret, uuid) => {
   return api.auth(key, secret, true, true)
     .then(() => api.getEnvironments(uuid))
     .then(envs => _(envs)
-      .map(env => _.merge({}, env, {name: parseEnvName(env.name), value: parseEnvName(env.name)}))
+      .filter(env => (env.name !== 'prod'))
+      .map(env => _.merge({}, env, {name: env.displayName, value: env.name}))
       .value()
     )
     .then(envs => {

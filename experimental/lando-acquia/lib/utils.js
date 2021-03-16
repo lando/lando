@@ -79,9 +79,6 @@ exports.getKeys = (keys = []) => _(keys)
   .thru(keys => keys.concat([{name: 'add or refresh a key', value: 'more'}]))
   .value();
 
-// Helper to get a more machiney sort of name for the environments
-exports.parseEnvName = name => name.split(' ')[1];
-
 /*
  * Sort, reconcile and format keys
  */

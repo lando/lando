@@ -64,7 +64,7 @@ module.exports = class AcquiaApi {
         id: item.id,
         uuid: item.uuid,
         subuuid: item.subscription.uuid,
-        name: `${item.name} (${item.hosting.id.split(':')[1]})`,
+        name: item.hosting ? `${item.name} (${item.hosting.id.split(':')[1]})` : $item.name,
       }));
       return this.applications;
     })
@@ -79,17 +79,16 @@ module.exports = class AcquiaApi {
       this.environments = [];
       const envs = total === 0 ? [] : res.data._embedded.items;
       _.each(envs, env => {
-        if (env.name !== 'prod') {
-          const name = `${env.label}, ${env.name} (vcs: ${env.vcs.path})`;
-          this.environments.push({
-            name,
-            git: env.vcs.url,
-            group: env.ssh_url.split('.')[0],
-            php: env.configuration.php.version,
-            value: env.id,
-            vcs: env.vcs.path,
-          });
-        }
+        const displayName = `${env.label}, ${env.name} (vcs: ${env.vcs.path})`;
+        this.environments.push({
+          name: env.name,
+          displayName,
+          git: env.vcs.url,
+          group: env.ssh_url.split('.')[0],
+          php: env.configuration.php.version,
+          value: env.id,
+          vcs: env.vcs.path,
+        });
       });
       return this.environments;
     })
