@@ -12,7 +12,6 @@ const api = new API();
 
 // Singleton just to hold app/env data
 let acquiaApps = [];
-let acquiaEnvs = [];
 
 // Helper to combine host and cached keys
 const mergeKeys = (home, keys = []) => utils.sortKeys(utils.getHostKeys(home), keys);
@@ -31,6 +30,15 @@ const getAuthPair = answers => {
 
   // Return
   return {key: answers['acquia-key'], secret: answers['acquia-secret']};
+};
+
+// Get best env
+const getBestEnv = (envs = []) => {
+  // Try to get the dev environment
+  const dev = _.find(envs, env => utils.parseEnvName(env.name) === 'dev');
+
+  // Return dev environment if we have it otherwise just use the first one
+  return (dev) ? dev : _.first(envs);
 };
 
 // Helper to determine whether to show list of pre-used keys or not
@@ -72,28 +80,6 @@ const getAutoCompleteSites = (answers, lando, input = null) => {
     .then(apps => {
       acquiaApps = apps;
       return lando.Promise.resolve(acquiaApps);
-    });
-};
-
-// Helper to get envs for autocomplete
-const getAutoCompleteEnvs = (answers, lando, input = null) => {
-  if (!_.isEmpty(acquiaEnvs)) {
-    return lando.Promise.resolve(acquiaEnvs).filter(env => _.startsWith(env.name, input));
-  }
-
-  // Get the key and secret so we can populate the list of apps
-  // NOTE: we do this here instead of upstream because we do not know exactly
-  // how the user is going to provide us with the auth creds
-  const {key, secret} = getAuthPair(answers);
-  return api.auth(key, secret, true, true)
-    .then(() => api.getEnvironments(answers['acquia-app']))
-    .then(envs => _(envs)
-      .map(env => _.merge({}, env, {name: utils.parseEnvName(env.name), value: utils.parseEnvName(env.name)}))
-      .value()
-    )
-    .then(envs => {
-      acquiaEnvs = envs;
-      return lando.Promise.resolve(acquiaEnvs);
     });
 };
 
@@ -158,25 +144,15 @@ module.exports = {
           return getAutoCompleteSites(answers, lando, input);
         },
         when: answers => {
+          // Sneak this in here so we can use auth correctly downstream
+          getAuthPair(answers);
+          // If we can infer this based on local file then let us
           if (answers.recipe === 'acquia' && answers.source === 'cwd') {
             answers['acquia-app'] = utils.getAcliUuid();
             return _.isNil(answers['acquia-app']);
           } else return answers.recipe === 'acquia';
         },
         weight: 540,
-      },
-    },
-    'acquia-env': {
-      describe: 'An Acquia environment uuid',
-      string: true,
-      interactive: {
-        type: 'autocomplete',
-        message: 'Which environment?',
-        source: (answers, input) => {
-          return getAutoCompleteEnvs(answers, lando, input);
-        },
-        when: answers => answers.recipe === 'acquia',
-        weight: 550,
       },
     },
   }),
@@ -233,7 +209,7 @@ module.exports = {
             .then(() => api.getEnvironments(options['acquia-app']))
             .then(envs => {
               // Match our euuid with acquias
-              const env = _.find(envs, item => item.value === options['acquia-env']);
+              const env = getBestEnv(envs);
               // Get GIT URL
               options['acquia-git-url'] = env.git;
               // And some other things
@@ -270,7 +246,7 @@ module.exports = {
       ]))
       .then(data => {
         const account = data[0];
-        const env = _.find(data[1], env => utils.parseEnvName(env.name) === options['acquia-env']);
+        const env = getBestEnv(data[1]);
         // Write the acli-cli.yml file
         utils.writeAcliUuid(options['acquia-app']);
         // Reset the name to something human readable
