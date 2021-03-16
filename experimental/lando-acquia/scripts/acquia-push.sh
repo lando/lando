@@ -106,7 +106,7 @@ fi
 
 # Push the files
 if [ "$FILES" != "none" ]; then
-  acli push:files "$AH_SITE_GROUP.$FILES"
+  acli -n push:files "$AH_SITE_GROUP.$FILES"
 fi
 
 # Finish up!

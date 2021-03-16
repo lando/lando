@@ -4,6 +4,7 @@
 const _ = require('lodash');
 const auth = require('./auth');
 const API = require('./api');
+const {getBestEnv} = require('./utils');
 
 // Acquia
 const api = new API();
@@ -113,7 +114,7 @@ const getDefaults = (task, options) => {
   });
 
   // Override the default so code puses to dev
-  task.options.code.interactive.default = 'dev';
+  task.options.code.interactive.default = getBestEnv(acquiaEnvs);
   // Set the task env
   task.env = {LANDO_DB_USER_TABLE: 'users'};
 
