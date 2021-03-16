@@ -270,7 +270,7 @@ module.exports = {
       ]))
       .then(data => {
         const account = data[0];
-        const env = _.find(data[1], {value: options['acquia-env']});
+        const env = _.find(data[1], env => utils.parseEnvName(env.name) === options['acquia-env']);
         // Write the acli-cli.yml file
         utils.writeAcliUuid(options['acquia-app']);
         // Reset the name to something human readable

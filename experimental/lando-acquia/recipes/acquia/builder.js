@@ -88,12 +88,12 @@ module.exports = {
 
       // Add in memcache
       if (options.cache) {
-        options.services.cache = {type: 'memcached:1', portforward: false, mem: 64};
+        options.services.cache = {type: 'memcached:1', portforward: true, mem: 64};
       }
 
       // Add in mailhog
       if (options.inbox) {
-        options.services.inbox = {type: 'mailhog:v1.0.0', hogfrom: ['appserver']};
+        options.services.inbox = {type: 'mailhog:v1.0.0', portforward: true, hogfrom: ['appserver']};
         options.proxy.inbox = [`inbox.${options.app}.${options._app._config.domain}`];
       }
 

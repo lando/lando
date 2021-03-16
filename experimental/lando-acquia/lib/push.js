@@ -112,6 +112,8 @@ const getDefaults = (task, options) => {
     task.options[name].interactive.default = 'none';
   });
 
+  // Override the default so code puses to dev
+  task.options.code.interactive.default = 'dev';
   // Set the task env
   task.env = {LANDO_DB_USER_TABLE: 'users'};
 
