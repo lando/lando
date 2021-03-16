@@ -11,12 +11,15 @@ module.exports = {
   config: {
     confSrc: __dirname,
     defaultFiles: {},
-    php: '7.4',
     drush: '^10',
+    cache: true,
+    inbox: true,
+    php: '7.4',
     services: {appserver: {
       build: [],
       overrides: {volumes: [], environment: {}},
     }},
+    proxy: {},
   },
   builder: (parent, config) => class LandoAcquia extends parent {
     constructor(id, options = {}) {
@@ -30,12 +33,12 @@ module.exports = {
       // Get and discover our keys
       const keys = utils.sortKeys(options._app.acquiaKeys, options._app.hostKeys);
       // Try to grab other relevant stuff that we might have saved
+      const account = _.get(options, '_app.meta.label', null);
+      const acliVersion = _.get(options, '_app.config.config.acli_version', 'master');
+      const appUuid = _.get(options, '_app.config.config.ah_application_uuid', null);
+      const group = _.get(options, '_app.config.config.ah_site_group', null);
       const key = _.get(options, '_app.meta.key', null);
       const secret = _.get(options, '_app.meta.secret', null);
-      const account = _.get(options, '_app.meta.label', null);
-      const group = _.get(options, '_app.config.config.ah_site_group', null);
-      const appUuid = _.get(options, '_app.config.config.ah_application_uuid', null);
-      const acliVersion = _.get(options, '_app.config.config.acli_version', 'master');
 
       // Figure out our ACLI situation first
       // Install acli from either 1) latest download, 2) A specific version, or 3) build from a branch
@@ -82,6 +85,17 @@ module.exports = {
       // Mount the acquia settings.php file for auto service "discovery"
       const settingsMount = `${options.confDest}/acquia-settings.inc:/var/www/site-php/${group}/${group}-settings.inc`;
       options.services.appserver.overrides.volumes.push(settingsMount);
+
+      // Add in memcache
+      if (options.cache) {
+        options.services.cache = {type: 'memcached:1', portforward: false, mem: 64};
+      }
+
+      // Add in mailhog
+      if (options.inbox) {
+        options.services.inbox = {type: 'mailhog:v1.0.0', hogfrom: ['appserver']};
+        options.proxy.inbox = [`inbox.${group}.${options._app.domain}`];
+      }
 
       // Add acli tooling.
       options.tooling = {
