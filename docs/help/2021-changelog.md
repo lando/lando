@@ -1,8 +1,9 @@
 # 2021
 
 
-## v3.0.27 - In Development
+## v3.0.27 - [March 17, 2021](https://github.com/lando/lando/releases/tag/v3.0.27)
 
+* Added experimental `alpha` support for `acquia` recipe [read more](https://docs.lando.dev/config/acquia.html)
 * Reverted auto `nvm` sourcing for `platform.sh` recipes in favor of manual `.environment` spec [#2820](https://github.com/lando/lando/issues/2820)
 * Set `DOCKER_BUILDKIT=1` to force emulation for now [#2688](https://github.com/lando/lando/issues/2688)
 * Set `vm.max_map_count` only if necessary and writable [#2884](https://github.com/lando/lando/issues/2880)
