@@ -17,7 +17,7 @@ const getInteractiveOptions = (keys = []) => ({
     hidden: true,
     interactive: {
       name: 'key',
-      type: 'password',
+      type: 'input',
       message: 'Enter an Acquia API key',
       when: answers => _.isEmpty(keys) || answers.key === 'more',
       validate: (input, answers) => {

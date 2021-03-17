@@ -100,7 +100,7 @@ module.exports = {
       hidden: true,
       interactive: {
         name: 'acquia-key',
-        type: 'password',
+        type: 'input',
         message: 'Enter an Acquia API key',
         when: answers => showKeyEntry(
           answers.recipe,
