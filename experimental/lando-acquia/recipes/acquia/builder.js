@@ -62,11 +62,13 @@ module.exports = {
       } else {
         // Build from source
         const gitHubUrl = 'https://github.com/acquia/cli.git';
-        // We need this to remove the key requirement
-        const sshOpts = `GIT_SSH_COMMAND='ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'`;
+        // We need this to remove the key requirement which fails on circleci and
+        // presumably for people who dont have keys on github
+        const sshOpts = 'ssh -F /dev/null -o PreferredAuthentications=password -o PubkeyAuthentication=no';
+        const sshReset = `GIT_SSH_COMMAND='ssh ${sshOpts}'`;
         options.services.appserver.build.push(...[
           'rm -rf /usr/local/cli',
-          `cd /usr/local/ && ${sshOpts} git clone ${gitHubUrl} -b "${acliVersion}" && cd cli && composer install`,
+          `cd /usr/local/ && ${sshReset} git clone ${gitHubUrl} -b "${acliVersion}" && cd cli && composer install`,
           'ln -sf /usr/local/cli/bin/acli /usr/local/bin/acli',
         ]);
       }
