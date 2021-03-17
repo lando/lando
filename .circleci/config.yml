@@ -32,6 +32,8 @@ jobs:
             /tmp/hyperdrive -y --name "Lando System" --email landobot@devwithlando.io
             # @TODO: anyway hyperdrive can assert dominance here?
             sudo ln -sf /usr/bin/nodejs /opt/circleci/.nvm/versions/node/v6.1.0/bin/node
+            # We need to not enforce ssh for github because this breaks some tests
+            git config --global --unset url.ssh://git@github.com.insteadof
       - run:
           name: Install node modules
           command: yarn
