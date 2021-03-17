@@ -1,4 +1,4 @@
-#!/usr/bin/env NODE_NO_WARNINGS=1 node
+#!/usr/bin/env node
 
 /**
  * Main CLI entrypoint to use the lando libraries
