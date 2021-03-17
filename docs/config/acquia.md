@@ -20,7 +20,7 @@ However, in order to profit, **you must** have an account and a site on Acquia t
 ## Getting Started
 
 ::: warning ALPHA VERSION!
-This recipe is currently in `alpha`. This means it is mostly feature complete but not currently tested against a large cross section of projects. As a result YMMV.
+This recipe is currently in `alpha`. This means it is mostly feature complete but not currently tested against a large cross section of projects. As a result YMMV. Also note that you must have Lando version `3.0.27` or higher to try this out.
 :::
 
 Before you get started with this recipe, we assume that you have:
