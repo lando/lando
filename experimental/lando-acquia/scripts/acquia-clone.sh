@@ -17,8 +17,8 @@ SRC_DIR=/tmp/source
 
 # Set expectations
 echo "Setting up SSH keys..."
-# Chill for a bit
-sleep 10
+# Chill for a sec
+sleep 1
 # Wait until key is available
 echo "Verifying key ($KEY) is available on Acquia Cloud..."
 echo "This could take a minute or so..."
