@@ -118,6 +118,26 @@ config:
 
 Note that if your application code depends on one of these services and you disable them, you should expect an error. Also note that Lando does not track what services you are using on your Acquia site e.g. these settings are "decoupled".
 
+### Using acli
+
+While in `alpha` Lando ships the `acli` built from the latest commit to `master` on GitHub. You can change this behavior in a few ways:
+
+1. Install latest stable release
+
+```yaml
+recipe: acquia
+config:
+  acli_version: latest
+```
+
+2. Install a specific release version
+
+```yaml
+recipe: acquia
+config:
+  acli_version: "1.8.1"
+```
+
 ### Using xdebug
 
 This is just a passthrough option to the [xdebug setting](./php.md#toggling-xdebug) that exists on all our [php services](./php.md). The `tl;dr` is `xdebug: true` enables and configures the php xdebug extension and `xdebug: false` disables it.

@@ -61,9 +61,10 @@ module.exports = {
         ]);
       } else {
         // Build from source
+        const gitHubUrl = 'https://github.com/acquia/cli.git';
         options.services.appserver.build.push(...[
           'rm -rf /usr/local/cli',
-          `cd /usr/local/ && git clone git@github.com:acquia/cli.git -b "${acliVersion}" && cd cli && composer install`,
+          `cd /usr/local/ && git clone ${gitHubUrl} -b "${acliVersion}" && cd cli && composer install`,
           'ln -sf /usr/local/cli/bin/acli /usr/local/bin/acli',
         ]);
       }
