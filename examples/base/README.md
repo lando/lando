@@ -165,18 +165,8 @@ lando version
 lando --clear
 ls -lsa ~/.lando/cache | grep _.tasks.cache || echo $? | grep 1
 
-# Should enable the lando-alliance plugin when secret-toggle is on and run from source
-./../../bin/lando.js --secret-toggle
-./../../bin/lando.js config | grep "alliance: true"
-./../../bin/lando.js config | grep "name: " | grep "lando-alliance"
-
 # Should not load the lando-alliance plugin when secret-toggle is on and packaged
 lando config | grep "disablePlugins" | grep "lando-alliance"
-
-# Should disable the lando-alliance plugin when secret-toggle is off
-./../../bin/lando.js --secret-toggle
-./../../bin/lando.js config | grep "alliance: false"
-./../../bin/lando.js config | grep "disablePlugins" | grep "lando-alliance"
 
 # Should not allow the secret toggle when run packaged
 lando --secret-toggle || echo $? | grep 1

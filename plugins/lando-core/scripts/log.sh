@@ -68,6 +68,9 @@ lando_yellow() {
 lando_red() {
   _lando_stdout_print "${RED}${*}${RESET}"
 }
+lando_check() {
+  _lando_stdout_print "${GREEN}✔ ${RESET}${*}"
+}
 
 ########################
 # Log message
