@@ -14,3 +14,7 @@ tweeting about it.
 * [Dustin LeBlanc](https://github.com/dustinleblanc)
 * [Mike Pirog](https://github.com/pirog)
 * [Geoff St. Pierre](https://github.com/serundeputy)
+
+## Security Evaluations
+
+Is your company looking at adopting Lando and performing a security evaluation? Contact [security@devwithlando.io](mailto:security@devwithlando.io) and we can help you get started.
