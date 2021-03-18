@@ -37,8 +37,8 @@ It's common in universities and other settings where you might want to share the
 To run Drupal multisite you need to do several things:
 
 1. Your `.lando.yml` will need proxies for each multisite in the appserver array
-2. The settings.local.php file within your docroot/sites/site1/ should include the out of the box lando configuration for the database (which is 'database' => 'database', 'username' => 'mysql', 'password' => 'password', 'port' => 3306), plus the host defined in the proxy:appserver array
-3. You need drush aliases pointing to your local. If you use drupal console, you'll need to specify your uri (e.g. drupal --uri=http://site1.lndo.site cr all).
+2. The `settings.local.php` file within your subsite directory (ex: `docroot/sites/site1/`) needs settings to connect to the appropriate Lando-hosted database.
+3. You need Drush aliases pointing to your local. If you use Drupal console, you'll need to specify your uri (ex: `drupal --uri=http://site1.lndo.site cr all`).
 
 ## 1. Configure .lando.yml
 
@@ -62,9 +62,9 @@ services:
       confd: .lando/mysql/conf.d
 ```
 
-## 2. Configure each multisite's local.settings.php
+## 2. Configure each subsite's local.settings.php
 
-Configure each multisite to include the default Lando config to connect to the database, along with specifying the appserver name you defined in `.lando.yml`. For example, in `docroot/sites/site1/settings/local.settings.php` you would include...
+Configure each subsite to include the default Lando config to connect to the database, along with specifying the appserver name you defined in `.lando.yml`. For example, in `docroot/sites/site1/settings/local.settings.php` you would include...
 
 ```php
 /**
@@ -85,7 +85,7 @@ $databases['default']['default']['host'] = 'site1';
 ```
 
 ::: warning If you're on Acquia...
-You must specify $_Server['PWD']=DRUPAL_ROOT if you use Drush 9 on Acquia (this may apply to some other hosts as well). Update your main `sites/default/settings.php` to tell our local Drupal to use the `/settings/local.settings.php` within each multisite:
+You must specify $_Server['PWD']=DRUPAL_ROOT if you use Drush 9 on Acquia (this may apply to some other hosts as well). Update your main `sites/default/settings.php` to tell our local Drupal to use the `/settings/local.settings.php` within each subsite:
 
 ```php
 if (!key_exists('AH_SITE_ENVIRONMENT', $_ENV)) {
