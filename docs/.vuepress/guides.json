@@ -21,7 +21,8 @@
       "how-do-i-configure-a-lando-recipe",
       "how-do-i-set-the-timezone-of-a-lando-service",
       "lando-info",
-      "setup-lando-on-windows-with-wsl-2"
+      "setup-lando-on-windows-with-wsl-2",
+      "drupal-multisite-on-lando"
     ]
   },
   {
