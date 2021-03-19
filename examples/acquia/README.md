@@ -87,11 +87,11 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # Should be able to remove our acquia ssh keys
-cp -r remove-keys.sh drupal/remove-keys.sh
-cd drupal
+cp -r remove-keys.sh drupal9/remove-keys.sh
+cd drupal9
 lando ssh -s appserver -c "/app/remove-keys.sh $CIRCLE_SHA1"
 cd ..
-rm -rf drupal/remove-keys.sh
+rm -rf drupal9/remove-keys.sh
 
 # Should be able to destroy our drupal9 site with success
 cd drupal9
