@@ -24,11 +24,13 @@ module.exports = {
   builder: (parent, config) => class LandoAcquia extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
+      options.composer_version = '2';
       options.drush = false;
       options.database = 'mysql:5.7';
       // Load .env file.
       options.env_file = ['.env'];
       options.webroot = 'docroot';
+      options.xdebug = false;
 
       // Get and discover our keys
       const keys = utils.sortKeys(options._app.acquiaKeys, options._app.hostKeys);
@@ -53,16 +55,17 @@ module.exports = {
       // Download release
       if (acliDownload !== null) {
         options.services.appserver.build.push(...[
-          'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
+          `curl -OL ${acliDownload}`,
           'chmod +x acli.phar',
           'mv acli.phar /usr/local/bin/acli',
         ]);
       } else {
         // Build from source
+        const gitHubUrl = 'https://github.com/acquia/cli.git';
         options.services.appserver.build.push(...[
           'rm -rf /usr/local/cli',
-          `cd /usr/local/ && git clone git@github.com:acquia/cli.git -b "${acliVersion}" && cd cli && composer install`,
-          'ln -s /usr/local/cli/bin/acli /usr/local/bin/acli',
+          `cd /usr/local/ && git clone ${gitHubUrl} -b "${acliVersion}" && cd cli && composer install`,
+          'ln -sf /usr/local/cli/bin/acli /usr/local/bin/acli',
         ]);
       }
 

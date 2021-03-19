@@ -67,13 +67,25 @@ config:
   ah_application_uuid: null
   ah_site_group: null
   cache: true
+  composer_version: '2'
   inbox: true
   php: '7.4'
+  xdebug: false
 ```
 
 If you do not already have a [Landofile](./../config/lando.md) for your Acquia site, we highly recommend you use [`lando init`](./../basics/init.md) to get one as that will automatically populate the `ah_application_uuid`, `ah_site_group` and `php` version for you. Manually creating a Landofile with these things set correctly can be difficult and is *highly discouraged.*
 
 Note that if the above config options are not enough, all Lando recipes can be further [extended and overridden](./../config/recipes.md#extending-and-overriding-recipes).
+
+### Choosing a composer version
+
+By default the `acquia` recipe will default to the latest stable release of `composer` 2. If your application depends on a different version of composer you can set `composer_version` to any version that is available in our [php service](./php.md#installing-composer).
+
+```yaml
+recipe: acquia
+config:
+  composer_version: '1.10.1'
+```
 
 ### Customizing the stack
 
@@ -105,6 +117,26 @@ config:
 ```
 
 Note that if your application code depends on one of these services and you disable them, you should expect an error. Also note that Lando does not track what services you are using on your Acquia site e.g. these settings are "decoupled".
+
+### Using acli
+
+While in `alpha` Lando ships the `acli` built from the latest commit to `master` on GitHub. You can change this behavior in a few ways:
+
+1. Install latest stable release
+
+```yaml
+recipe: acquia
+config:
+  acli_version: latest
+```
+
+2. Install a specific release version
+
+```yaml
+recipe: acquia
+config:
+  acli_version: "1.8.1"
+```
 
 ### Using xdebug
 

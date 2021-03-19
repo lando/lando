@@ -133,10 +133,6 @@ if [ "$DATABASE" != "none" ]; then
   # correct <site.env> specified.
   PULL_DB="$LANDO_DB_PULL_COMMAND $SITE.$DATABASE $LANDO_DB_PULL_COMMAND_OPTIONS"
 
-  # For some reason terminus remote:thing commands do not return when run through
-  # LEIA so we are reseting this here for now
-  if [ $LANDO_LEIA == 1 ]; then PULL_DB="$FALLBACK_PULL_DB"; fi
-
   # Validate before we begin
   lando_pink "Validating you can pull the database from $DATABASE..."
   terminus env:info $SITE.$DATABASE
