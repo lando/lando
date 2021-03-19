@@ -91,7 +91,7 @@ cp -r remove-keys.sh drupal9/remove-keys.sh
 cd drupal9
 lando ssh -s appserver -u root -c "apt-get update -y"
 lando ssh -s appserver -u root -c "apt-get install jq -y"
-lando ssh -s appserver -c "/app/remove-keys.sh $CIRCLE_SHA1"
+lando ssh -s appserver -c "/app/remove-keys.sh $ACQUIA_API_KEY $ACQUIA_API_SECRET $CIRCLE_SHA1"
 cd ..
 rm -rf drupal9/remove-keys.sh
 

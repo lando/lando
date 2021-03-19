@@ -1,14 +1,16 @@
 #!/bin/bash
 
-KEYID="${1:-Landokey}"
+KEY="$1"
+SECRET="$2"
+KEYID="${3:-Landokey}"
 
 # Get our access token from CURLZ
 TOKEN=$(curl -X POST \
    -H "Content-Type:application/json" \
    -d \
 '{
-  "client_id": "$ACQUIA_API_KEY",
-  "client_secret": "$ACQUIA_API_SECRET",
+  "client_id": "$KEY",
+  "client_secret": "$SECRET",
   "grant_type": "client_credentials",
   "scope": ""
 }' \
@@ -31,4 +33,3 @@ else
   curl -X DELETE -H "Authorization: Bearer $TOKEN" "https://cloud.acquia.com/api/account/ssh-keys/$KEY_UUID"
   exit 1
 fi
-
