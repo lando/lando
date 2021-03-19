@@ -89,6 +89,8 @@ Run the following commands to trash this app like nothing ever happened.
 # Should be able to remove our acquia ssh keys
 cp -r remove-keys.sh drupal9/remove-keys.sh
 cd drupal9
+lando ssh -s appserver -u root -c "apt-get update -y"
+lando ssh -s appserver -u root -c "apt-get install jq -y"
 lando ssh -s appserver -c "/app/remove-keys.sh $CIRCLE_SHA1"
 cd ..
 rm -rf drupal9/remove-keys.sh
