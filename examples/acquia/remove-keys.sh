@@ -1,5 +1,5 @@
 #!/bin/bash
-KEYID="$1"
+KEYID="${1:=Landokey}"
 
 # Get our access token from CURLZ
 TOKEN=$(curl -X POST \
