@@ -111,7 +111,6 @@ const getDefaults = (task, options) => {
     LANDO_DB_PULL_COMMAND: pullCommand.command,
     LANDO_DB_PULL_COMMAND_OPTIONS: pullCommand.options,
     LANDO_DB_USER_TABLE: flavor === 'pressy' ? 'wp_users' : 'users',
-    LANDO_LEIA: _.toInteger(options._app._config.leia),
   };
 
   return task;
