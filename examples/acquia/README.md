@@ -86,6 +86,16 @@ Destroy tests
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
+# Should be able to destroy our drupal9 site with success
+cd drupal9
+lando destroy -y
+lando poweroff
+```
+
+TODO
+----
+
+```bash
 # Should be able to remove our acquia ssh keys
 cp -r remove-keys.sh drupal9/remove-keys.sh
 cd drupal9
@@ -94,9 +104,4 @@ lando ssh -s appserver -u root -c "apt-get install jq -y"
 lando ssh -s appserver -c "/app/remove-keys.sh $ACQUIA_API_KEY $ACQUIA_API_SECRET $CIRCLE_SHA1"
 cd ..
 rm -rf drupal9/remove-keys.sh
-
-# Should be able to destroy our drupal9 site with success
-cd drupal9
-lando destroy -y
-lando poweroff
 ```
