@@ -13,7 +13,7 @@ $lando_version = $lando_pkg.version
 $docker_version = "3.1.0"
 $docker_build = "51484"
 
-# Get some ENV things
+# Get some ENV things for certs
 $temp_dir = $env:TMP
 $cert_data = $env:WINDOZE_CERTS_DATA
 $cert_password = $env:WINDOZE_CERTS_PASSWORD
