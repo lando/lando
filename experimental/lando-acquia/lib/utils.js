@@ -77,7 +77,11 @@ exports.getHostKeys = home => {
   // Otherwise lets try to get some data
   const keys = _.get(JSON.parse(fs.readFileSync(file, 'utf8')), 'keys', []);
   // Loop through keys to merge in the key of the keys
-  _.forEach(keys, (value, key) => value.key = key);
+  _.forEach(keys, (value, key) => {
+    if (!_.isString(value)) {
+      value.key = key;
+    }
+  });
   // Return an array of keys
   return _.map(keys);
 };
