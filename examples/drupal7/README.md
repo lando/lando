@@ -71,6 +71,10 @@ cd drupal7
 lando ssh -s appserver -c "env" | grep SIMPLETEST_BASE_URL | grep "https://appserver"
 lando ssh -s appserver -c "env" | grep SIMPLETEST_DB | grep "mysql://drupal7:drupal7@database/drupal7"
 
+# Should have proxy urls present in lando info
+cd drupal7
+lando info |grep "lando-drupal7.lndo.site"
+
 # Should be able to pipe data directly into lando drush sql-cli
 cd drupal7
 lando db-export --stdout > dump.sql
