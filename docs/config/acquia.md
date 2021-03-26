@@ -33,7 +33,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 
 ```bash
 # Toggle the experimental flag to gain access to alpha features
-lando --experiental
+lando --experimental
 
 # Go through interactive prompts to get your code from acquia
 lando init --source acquia
