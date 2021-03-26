@@ -29,7 +29,7 @@ Before you get started with this recipe, we assume that you have:
 2. [Initialized](./../basics/init.md) a [Landofile](./../config/lando.md) for your codebase for use with this recipe.
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also try out this recipe with a vanilla install of WordPress with the commands as follows:
+However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also try out this recipe with an extant Acquia project or start a brand new project on Acquia with the commands as follows:
 
 ```bash
 # Toggle the experimental flag to gain access to alpha features
