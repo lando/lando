@@ -56,6 +56,8 @@ module.exports = {
         }
       }
 
+      options.proxy = _.merge({}, options.proxy);
+
       // Set legacy envars
       options.services = _.merge({}, options.services, {appserver: {overrides: {
         environment: {
