@@ -134,7 +134,7 @@
     "object-hash": "^1.1.8",
     "platformsh-client": "^0.1.129",
     "semver": "^7.3.2",
-    "shelljs": "0.7.8",
+    "shelljs": "^0.8.4",
     "string-argv": "0.1.1",
     "sudo-block": "^2.0.0",
     "tar": "^6.0.2",
