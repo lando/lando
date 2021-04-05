@@ -157,7 +157,7 @@ module.exports = (app, lando) => {
         }
 
         // Build out the docker compose augment and return
-        service.labels['traefik.enable'] = 1;
+        service.labels['traefik.enable'] = true;
         service.labels['traefik.docker.network'] = lando.config.proxyNet;
         service.environment.LANDO_PROXY_PASSTHRU = _.toString(lando.config.proxyPassThru);
         const proxyVolume = `${lando.config.proxyName}_proxy_config`;

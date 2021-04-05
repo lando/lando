@@ -144,11 +144,11 @@ exports.parseRoutes = (service, urls = [], sslReady, labels = {}) => {
 
     // Add https if we can
     if (_.includes(sslReady, service)) {
-      labels['io.lando.proxy.has-certs'] = 1;
+      labels['io.lando.proxy.has-certs'] = true;
       labels[`traefik.http.routers.${rule.id}-secured.entrypoints`] = 'https';
       labels[`traefik.http.routers.${rule.id}-secured.service`] = `${rule.id}-secured-service`;
       labels[`traefik.http.routers.${rule.id}-secured.rule`] = exports.getRule(rule);
-      labels[`traefik.http.routers.${rule.id}-secured.tls`] = 1;
+      labels[`traefik.http.routers.${rule.id}-secured.tls`] = true;
       labels[`traefik.http.routers.${rule.id}-secured.middlewares`] = _.map(rule.middlewares, 'name').join(',');
       labels[`traefik.http.services.${rule.id}-secured-service.loadbalancer.server.port`] = rule.port;
     }
