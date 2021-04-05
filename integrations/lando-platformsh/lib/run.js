@@ -129,7 +129,7 @@ const getApplicationEnvironment = (appConfig, config) => _.merge({}, getEnvironm
   // we probably dont want these things ending up in git
   //
   // That said changing this could def be problematic for other reasons
-  // PLATFORM_APP_DIR: '/var/www',
+  // PLATFORM_APP_DIR: '/app',
   PLATFORM_ENVIRONMENT: 'lando',
   PLATFORM_APPLICATION_NAME: appConfig.name,
   PLATFORM_PROJECT: config.id,
