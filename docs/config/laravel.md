@@ -25,7 +25,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 lando init \
   --source cwd \
   --recipe laravel \
-  --webroot app/public \
+  --webroot public \
   --name my-first-laravel-app
 
 # Install laravel
