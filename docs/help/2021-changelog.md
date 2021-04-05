@@ -6,6 +6,7 @@ Lando is **free** and **open source** software that relies on contributions from
 
 * **Fixed longstanding bug causing container to container `*.lndo.site` resolution to differ from proxy-based resolution [#2934](https://github.com/lando/lando/issues/2934), this results in a change of behavior that may impact how your app works in Lando, read more [here](https://docs.lando.dev/config/networking.html#port-considerations)**
 
+* Improved `xdebug` support and docs for `platformsh` recipes [#2927](https://github.com/lando/lando/issues/2927)
 * Updated dependencies to be compatible with `node` 14 [#2945](https://github.com/lando/lando/issues/2945) [#2928](https://github.com/lando/lando/issues/2928)
 
 ## v3.0.28 - [March 26, 2021](https://github.com/lando/lando/releases/tag/v3.0.28)
