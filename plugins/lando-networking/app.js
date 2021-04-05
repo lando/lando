@@ -36,12 +36,19 @@ module.exports = (app, lando) => {
   // standing issue where thing.lndo.site behaves differently externally and
   // internally
   app.events.on('post-start', 1, () => {
-    if (lando.config.proxy === 'ON') {
-      // Get the needed ids
-      const proxyNet = lando.engine.getNetwork(lando.config.proxyNet);
-      const proxyContainer = lando.config.proxyContainer;
+    // If the proxy isnt on then just bail
+    if (lando.config.proxy !== 'ON') return;
 
-      // Inspect the proxy container
+    // Get the needed ids
+    const proxyNet = lando.engine.getNetwork(lando.config.proxyNet);
+    const proxyContainer = lando.config.proxyContainer;
+
+    // Make sure the proxy container exists before we proceed
+    return lando.engine.exists({id: proxyContainer}).then(exists => {
+      // if doesnt exist then bail
+      if (!exists) return lando.Promise.resolve();
+
+      // Otherwise scan and add as needed
       return lando.engine.scan({id: proxyContainer}).then(data => {
         // Get existing aliases and merge them into our new ones
         // @NOTE: Do we need to handle wildcards and paths?
@@ -68,7 +75,7 @@ module.exports = (app, lando) => {
             app.log.debug('aliased %j to the proxynet', aliases);
           });
       });
-    }
+    });
   });
 
   // Add in the hostname infos
