@@ -24,7 +24,7 @@ CERT="/lando/keys/platformsh.lando.id_rsa-cert"
 # Set expectations
 echo "Setting up SSH keys..."
 # Set up a cert for instant comz
-curl -H "Authorization: Bearer $TOKEN" -d '{"key": "'"$(< $KEY.pub)"'"}' https://ssh.api.platform.sh/ssh | jq '.certificate' -r > "$CERT"
+curl -sSH "Authorization: Bearer $TOKEN" -d '{"key": "'"$(< $KEY.pub)"'"}' https://ssh.api.platform.sh/ssh | jq '.certificate' -r > "$CERT"
 # Chill for a bit
 sleep 1
 # Announce intent

@@ -24,6 +24,8 @@ fi
 lando_info "Ensuring needed directories exist..."
 mkdir -p /run/shared /run/rpc_pipefs/nfs /run/runit
 chmod 777 /run
+# NOTE: This seems to only be relevant on M1 macs and maybe is fixed in the future?
+chmod 666 /dev/null
 
 # Make sure there is a group that has $LANDO_HOST_GID
 # This is rare but can happen if the host gid is different than the uid

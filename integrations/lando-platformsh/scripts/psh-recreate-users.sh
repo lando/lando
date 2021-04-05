@@ -30,7 +30,7 @@ addAppUserIfNotExists() {
       --home /mnt \
       --shell /bin/false \
       -M \
-      app
+      app > /dev/null || true
   fi
 }
 
@@ -48,13 +48,13 @@ fi
 # Check if a different user was found for the UID
 if ! [ "$FOUND_USERNAME" = "" ]; then
   # Delete it (This may be "app"; If so, we'll add it back later)
-  deluser $FOUND_USERNAME
+  deluser $FOUND_USERNAME > /dev/null
 fi
 
 # Now check if there's a "web" user with a UID that is not LANDO_HOST_UID
 if id -u $WEB_USERNAME >/dev/null 2>&1; then
   # Delete so we can add it with the proper UID
-  deluser $WEB_USERNAME
+  deluser $WEB_USERNAME > /dev/null
 fi
 
 # At this point there is no "web" user and no user with the LANDO_HOST_UID
@@ -64,3 +64,8 @@ addWebuser
 # Last, in case app user is missing, or we deleted it because it had the LANDO_HOST_UID
 # Create the app user if it doesn't exist
 addAppUserIfNotExists
+
+# Add to the root group
+# NOTE: this seems to be necessary on M1 macs only for some reason?
+addgroup app root > /dev/null || true
+addgroup web root > /dev/null || true
