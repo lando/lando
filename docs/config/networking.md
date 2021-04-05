@@ -63,7 +63,7 @@ proxy:
 ```
 
 ```bash
-# Access the services externally (eg on your hose) using the proxy
+# Access the services externally (eg on your host) using the proxy
 curl https://lamp2.lndo.site
 curl thing.my-project.lndo.site
 
@@ -91,7 +91,7 @@ proxy:
 ```
 
 ```bash
-# Access the services externally (eg on your hose) using the proxy
+# Access the services externally (eg on your host) using the proxy
 curl https://lamp2.lndo.site
 curl thing.my-project.lndo.site
 
