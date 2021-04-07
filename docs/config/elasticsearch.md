@@ -135,3 +135,17 @@ services:
 You can get connection and credential information about your elasticsearch instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
 
 <RelatedGuides tag="Elasticsearch"/>
+
+## Adding Kibana for Elasticsearch
+
+If you want to add a Kibana service for your Elasticsearch, you can easily use a [custom compose service](./compose.md).
+The version of Kibana should match your version of Elasticsearch!
+
+```yaml
+services:
+  kibana:
+    type: compose
+    services:
+      image: bitnami/kibana:7.12.0
+      command: '/opt/bitnami/scripts/kibana/entrypoint.sh /opt/bitnami/scripts/kibana/run.sh'
+```
