@@ -98,7 +98,7 @@ docker ps --filter label=com.docker.compose.project=landod8 | grep docker.regist
 
 # Should allow for service portforward overrides
 cd drupal
-lando info -s db --path '[0]external_connection.port' | grep 3307
+lando info -s db --path "[0]external_connection.port" | grep 3307
 
 # Should support legacy variable overrides
 cd drupal
