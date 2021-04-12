@@ -13,6 +13,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 ## Supported versions
 
 *   [7](https://hub.docker.com/r/bitnami/elasticsearch)
+*   [7.12.x](https://hub.docker.com/r/bitnami/elasticsearch)
+*   [7.11.x](https://hub.docker.com/r/bitnami/elasticsearch)
+*   [7.10.x](https://hub.docker.com/r/bitnami/elasticsearch)
 *   [7.9.x](https://hub.docker.com/r/bitnami/elasticsearch)
 *   [7.8.x](https://hub.docker.com/r/bitnami/elasticsearch)
 *   [7.7.x](https://hub.docker.com/r/bitnami/elasticsearch)
@@ -132,3 +135,17 @@ services:
 You can get connection and credential information about your elasticsearch instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
 
 <RelatedGuides tag="Elasticsearch"/>
+
+## Adding Kibana for Elasticsearch
+
+If you want to add a Kibana service for your Elasticsearch, you can easily use a [custom compose service](./compose.md).
+The version of Kibana should match your version of Elasticsearch!
+
+```yaml
+services:
+  kibana:
+    type: compose
+    services:
+      image: bitnami/kibana:7.12.0
+      command: '/opt/bitnami/scripts/kibana/entrypoint.sh /opt/bitnami/scripts/kibana/run.sh'
+```
