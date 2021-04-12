@@ -679,7 +679,7 @@ config:
         xdebug.remote_enable: 1
         xdebug.remote_mode: req
         xdebug.remote_port: 9000
-        xdebug.remote_connect_back = 0
+        xdebug.remote_connect_back: 0
 
         # XDEBUG 3
         xdebug.discover_client_host: true
