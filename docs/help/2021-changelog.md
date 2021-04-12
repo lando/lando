@@ -5,6 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added support for Elasticsearch `7.10.x`, `7.11.x` and `7.12.x` [#2950](https://github.com/lando/lando/issues/2950)
+* Fixed bug causing `portforward` user overrides to not work for the `lagoon` and `platformsh` recipes [#2749](https://github.com/lando/lando/issues/2749)
 * Updated to Docker Compose `1.29.0` [#2781](https://github.com/lando/lando/issues/2781) [#2780](https://github.com/lando/lando/issues/2780)
 * Updated to Docker Desktop `3.3.0` [#2781](https://github.com/lando/lando/issues/2781) [#2780](https://github.com/lando/lando/issues/2780)
 
