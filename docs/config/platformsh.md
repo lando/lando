@@ -668,7 +668,8 @@ Lando will also make a best effort attempt to set the correct `xdebug` configura
 
 ```yaml
 config:
-  variables:
+  id: PROJECT_ID
+  overrides:
     app:
       runtime:
         extensions:
