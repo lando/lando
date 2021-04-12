@@ -2,7 +2,7 @@
 
 # Versions and things
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-DOCKER_COMPOSE_VERSION="1.27.4"
+DOCKER_COMPOSE_VERSION="1.29.0"
 
 # Checking to see that we have the correct core build dependencies
 if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then

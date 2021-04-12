@@ -6,12 +6,12 @@ mode: cli
 dockerSupportedVersions:
   compose:
     min: "1.23.0"
-    max: "1.27.4"
+    max: "1.29.0"
     link:
       linux: https://docs.docker.com/compose/install/#install-compose-on-linux-systems
   desktop:
     min: "2.1.0.0"
-    max: "3.1.99"
+    max: "3.3.99"
     link:
       darwin: https://docs.docker.com/docker-for-mac/release-notes/
       win32: https://docs.docker.com/docker-for-windows/release-notes/
