@@ -43,6 +43,15 @@ lando drush version
 cd drupal9
 lando acli -V
 
+# Should have site local drush 10
+cd drupal9
+lando ssh -s appserver -c "which drush" | grep "/app/vendor/bin/drush"
+lando drush --no-ansi --version | grep "Drush Commandline Tool 10."
+
+# Should have globally installed drush 8 as fallback
+cd drupal9
+lando ssh -s appserver -c "cd /tmp && /usr/local/bin/drush --version" | grep "Drush Version" | grep "8.4."
+
 # Should use composer 2.x by default
 cd drupal9
 lando composer --version | grep Composer | grep 2.

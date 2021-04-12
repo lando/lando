@@ -74,7 +74,7 @@ exports.getPhar = (url, src, dest, check = 'true') => {
   if (_.isString(check)) check = [check];
   // Phar install command
   const pharInstall = [
-    ['curl', url, '-L', '-o', src],
+    ['curl', url, '-LsS', '-o', src],
     ['chmod', '+x', src],
     ['mv', src, dest],
     check,

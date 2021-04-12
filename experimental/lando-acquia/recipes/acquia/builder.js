@@ -11,7 +11,7 @@ module.exports = {
   config: {
     confSrc: __dirname,
     defaultFiles: {},
-    drush: '^10',
+    drush: '8.4.8',
     cache: true,
     inbox: true,
     php: '7.4',
@@ -25,7 +25,6 @@ module.exports = {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
       options.composer_version = '2';
-      options.drush = false;
       options.database = 'mysql:5.7';
       // Load .env file.
       options.env_file = ['.env'];

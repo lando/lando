@@ -5,6 +5,7 @@
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added support for Elasticsearch `7.10.x`, `7.11.x` and `7.12.x` [#2950](https://github.com/lando/lando/issues/2950)
+* Fixed bug preventing global fallback version of `drush` to be properly installed for `acquia` recipes
 * Fixed bug causing `portforward` user overrides to not work for the `lagoon` and `platformsh` recipes [#2749](https://github.com/lando/lando/issues/2749)
 * Fixed bug causing `platformsh` recipes to prompt for `/app/.platform/local/lando` overwrite on `lando rebuild` [#2947](https://github.com/lando/lando/issues/2947)
 * Updated to Drush `8.4.8` for legacy `drupal` recipes
