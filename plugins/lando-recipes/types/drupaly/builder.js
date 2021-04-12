@@ -8,7 +8,7 @@ const utils = require('./../../lib/utils');
 const warnings = require('./../../lib/warnings');
 
 // "Constants"
-const DRUSH8 = '8.3.5';
+const DRUSH8 = '8.4.8';
 const DRUSH7 = '7.4.0';
 
 /*
