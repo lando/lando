@@ -42,4 +42,4 @@ for MOUNT in `platform mounts --paths`; do
 done
 
 # Run build
-platform local:build $PLATFORM_APPLICATION_NAME --source=/app --destination=/app/.platform/local/lando
+platform local:build $PLATFORM_APPLICATION_NAME --source=/app --destination=/app/.platform/local/lando --yes
