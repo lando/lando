@@ -39,6 +39,7 @@ module.exports = {
       const appUuid = _.get(options, '_app.config.config.ah_application_uuid', null);
       const group = _.get(options, '_app.config.config.ah_site_group', null);
       const key = _.get(options, '_app.meta.key', null);
+      const runScripts = _.get(options, '_app.config.config.build.run_scripts', true);
       const secret = _.get(options, '_app.meta.secret', null);
 
       // Figure out our ACLI situation first
@@ -68,9 +69,12 @@ module.exports = {
         ]);
       }
 
-      // Set other relevant build steps after ACLI is installed
+      // Symlink the acli config directories
       options.services.appserver.build.push('/helpers/acquia-config-symlink.sh');
-      options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts -n');
+      // Run acli build scripts unless purposefully toggled off
+      if (runScripts !== false) {
+        options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts -n');
+      }
 
       // Run acli login with credentials set in init; if applicable
       if (secret && key) {

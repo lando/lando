@@ -66,6 +66,8 @@ config:
   acli_version: master
   ah_application_uuid: null
   ah_site_group: null
+  build:
+    run_scripts: true
   cache: true
   composer_version: '2'
   inbox: true
@@ -85,6 +87,17 @@ By default the `acquia` recipe will default to the latest stable release of `com
 recipe: acquia
 config:
   composer_version: '1.10.1'
+```
+
+### Disabling `acli pull:run-scripts`
+
+By default `acli pull:run-scripts` will automatically run on your first `lando start` and on subsequent `lando rebuilds` to ensure your site has the needed code dependencies to run correctly. However, there are some _rare_ situations where this may not be a suitable default. In such cases you can disable this behavior:
+
+```yaml
+recipe: acquia
+config:
+  build:
+    run_scripts: false
 ```
 
 ### Customizing the stack
