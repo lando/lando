@@ -79,7 +79,7 @@ config:
 You can set `composer_version` to any version that is available in our [php service](./php.md#installing-composer).
 
 ```yaml
-recipe: backdrop
+recipe: drupal8
 config:
   composer_version: '1.10.1'
 ```
