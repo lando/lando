@@ -63,7 +63,7 @@ Here are the configuration options, set to the default values, for this recipe. 
 ```yaml
 recipe: acquia
 config:
-  acli_version: master
+  acli_version: latest
   ah_application_uuid: null
   ah_site_group: null
   build:
