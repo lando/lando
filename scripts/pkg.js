@@ -13,10 +13,18 @@ const Shell = require('./../lib/shell');
 const shell = new Shell(log);
 const util = require('./util');
 
+// Get arch
+// Assume x64 as the default
+const arch = _.get(argv, 'arch', 'x64');
+
+// Docker destop uses amd64, vercel uses x64 so lets just handle both
+const pkgArch = (arch === 'amd64') ? 'x64' : arch;
+const ddArch = (arch === 'x64') ? 'amd64' : arch;
+
 // Lando info
 const version = require('./../package.json').version;
 const pkgOs = (process.platform !== 'darwin') ? process.platform : 'osx';
-const pkgType = [pkgOs, 'x64', 'v' + version].join('-');
+const pkgType = [pkgOs, pkgArch, 'v' + version].join('-');
 const pkgExt = (pkgOs === 'win32') ? '.exe' : '';
 const cliPkgName = 'lando-' + pkgType + pkgExt;
 
@@ -56,14 +64,14 @@ fs.emptyDirSync(files.dist);
 // Get things based on args
 let cleanDirs = [files.dist, files.cli.build];
 let buildCopy = [{src: files.cli.buildSrc, dest: files.cli.build}];
-let buildCmds = _.map(util.cliPkgTask(cliPkgName), cmd => (util.parseCommand(cmd, files.cli.build)));
+let buildCmds = _.map(util.cliPkgTask(cliPkgName, pkgArch), cmd => (util.parseCommand(cmd, files.cli.build)));
 let distCopy = [files.cli.dist];
 
 // Add in extra stuff for the installer
 if (argv.installer) {
   cleanDirs.push(files.installer.build);
   buildCopy.push({src: files.installer.buildSrc, dest: files.installer.build, direct: true});
-  buildCmds.push(util.parseCommand(util.installerPkgTask()));
+  buildCmds.push(util.parseCommand(util.installerPkgTask(ddArch)));
   distCopy.push(files.installer.dist);
 }
 

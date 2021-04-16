@@ -148,6 +148,7 @@
   },
   "devDependencies": {
     "@bugsnag/js": "^6.4.3",
+    "@jesec/pkg": "^4.5.6",
     "@octokit/rest": "^17.1.0",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
     "body-parser": "^1.14.2",
@@ -169,7 +170,6 @@
     "mock-fs": "https://github.com/pirog/mock-fs.git#256-ctxBindingAccess",
     "nodemon": "^1.11.0",
     "nyc": "^12.0.1",
-    "pkg": "^4.4.4",
     "platformsh": "^1.0.0",
     "sinon": "^4.3.0",
     "sinon-chai": "^2.14.0",

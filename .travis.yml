@@ -118,16 +118,16 @@ jobs:
 
     # Build and deploy macOS
     - stage: Deploy
-      name: macOS Packages
+      name: macOS amd64 Packages
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode12.2
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
-        - yarn pkg:full
-        - cp -rf dist/lando.dmg release/lando-latest-dev.dmg
-        - cp -rf dist/lando.dmg release/lando-$TRAVIS_COMMIT-dev.dmg
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.dmg release/lando-$TRAVIS_TAG.dmg; fi
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.dmg release/lando-stable.dmg; fi
+        - yarn pkg:full --arch amd64
+        - cp -rf dist/lando.dmg release/lando-amd64-latest-dev.dmg
+        - cp -rf dist/lando.dmg release/lando-amd64-$TRAVIS_COMMIT-dev.dmg
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.dmg release/lando-amd64-$TRAVIS_TAG.dmg; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.dmg release/lando-amd64-stable.dmg; fi
       deploy:
         - provider: s3
           access_key_id: AKIAJXCGUYNMSXQPAKYQ
@@ -144,7 +144,38 @@ jobs:
         - provider: releases
           api_key:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
-          file: release/lando-$TRAVIS_TAG.dmg
+          file: release/lando-amd64-$TRAVIS_TAG.dmg
+          skip_cleanup: true
+          on:
+            repo: lando/lando
+            tags: true
+    - name: macOS arm64 Packages
+      os: osx
+      osx_image: xcode12.2
+      script:
+        - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
+        - yarn pkg:full --arch arm64
+        - cp -rf dist/lando.dmg release/lando-arm64-latest-dev.dmg
+        - cp -rf dist/lando.dmg release/lando-arm64-$TRAVIS_COMMIT-dev.dmg
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.dmg release/lando-arm64-$TRAVIS_TAG.dmg; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.dmg release/lando-arm64-stable.dmg; fi
+      deploy:
+        - provider: s3
+          access_key_id: AKIAJXCGUYNMSXQPAKYQ
+          secret_access_key:
+            secure: HstC04mBeuucF2PseyrNLXGZlt5WQ23iwWRrkh4rWTuqq2F4tKkTc+pCB6+Kx64ZE3OGx5T2KdyPOPhLYJOPmYhtTtE0RFI4oF2kEUxvLjTRLrXqDNHKL47PZ5Vel4Z/MTTfWka0M7wCxslBsbomPhO3ljUxlcqChqsh+VT+3JEFYJw4JmEbWHGQ/GnIdTkAksvMfiOFbZHGK+14NjKic9BOwqeBiItSLcydAzURKZOUmcp+u5dNGhHuM+fb98zenhxFIMp75ErwiENv5ER1ja42C+Hyveu3wWc/QIlZHarMULRlH+Zq3yDUCOeOoFjIgeb+H7MGVots8igGIZ4h17/eU8lAO6uRYLLKup/T87CH82VjMDYEDbwsr3XM6f20q/5Fk2dr1XLo+xwhFadIlpJgsbPpmGHu+QuuYczlqdGzw3Qn1IAzU9L7aitjmNQ1ReSGySjlD8sN0nNT7OJYW/4cdy9+RcoYpH4+dbNzjq9DXubJe1EeYQagd/7ebnHvazg5/5Av2whn/F5YjObwno+JrEDzgD2H0pOWfEVBjGT1uOaDIO7Itn1KTJl+gV9Uv+QJ0G/1wP3fnL3KOzMqqFATubtgBUqe12VQ39jUALmgfBKEdXMF2tojwtHkP4b+vQUszpkGxpNih4JmyJYEgc0CZTSNxQP0m+j+3HH/jDc=
+          bucket: files.devwithlando.io
+          local-dir: release
+          acl: public_read
+          region: us-west-2
+          skip_cleanup: true
+          on:
+            repo: lando/lando
+            all_branches: true
+        - provider: releases
+          api_key:
+            secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
+          file: release/lando-arm64-$TRAVIS_TAG.dmg
           skip_cleanup: true
           on:
             repo: lando/lando
@@ -159,9 +190,10 @@ jobs:
       script:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
-        - cp -rf dist/lando.exe release/lando-latest-dev.exe
-        - cp -rf dist/lando.exe release/lando-$TRAVIS_COMMIT-dev.exe
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.exe release/lando-$TRAVIS_TAG.exe; fi
+        - cp -rf dist/lando.exe release/lando-amd64-latest-dev.exe
+        - cp -rf dist/lando.exe release/lando-amd64-$TRAVIS_COMMIT-dev.exe
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.exe release/lando-amd64-$TRAVIS_TAG.exe; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.exe release/lando-amd64-stable.exe; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.exe release/lando-stable.exe; fi
       deploy:
         - provider: s3
@@ -179,7 +211,7 @@ jobs:
         - provider: releases
           api_key:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
-          file: release/lando-$TRAVIS_TAG.exe
+          file: release/lando-amd64-$TRAVIS_TAG.exe
           skip_cleanup: true
           on:
             repo: lando/lando
@@ -189,9 +221,10 @@ jobs:
         - if [ -z "$TRAVIS_TAG" ]; then node ./scripts/dev-version.js; fi
         - yarn pkg:full
         # debian
-        - cp -rf dist/lando.deb release/lando-latest-dev.deb
-        - cp -rf dist/lando.deb release/lando-$TRAVIS_COMMIT-dev.deb
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-$TRAVIS_TAG.deb; fi
+        - cp -rf dist/lando.deb release/lando-amd64-latest-dev.deb
+        - cp -rf dist/lando.deb release/lando-amd64-$TRAVIS_COMMIT-dev.deb
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-amd64-$TRAVIS_TAG.deb; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-amd64-stable.deb; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.deb release/lando-stable.deb; fi
         # pacman
         # - cp -rf dist/lando.pacman release/lando-latest-dev.pacman
@@ -199,9 +232,10 @@ jobs:
         # - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-$TRAVIS_TAG.pacman; fi
         # - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.pacman release/lando-stable.pacman; fi
         # rpm
-        - cp -rf dist/lando.rpm release/lando-latest-dev.rpm
-        - cp -rf dist/lando.rpm release/lando-$TRAVIS_COMMIT-dev.rpm
-        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.rpm release/lando-$TRAVIS_TAG.rpm; fi
+        - cp -rf dist/lando.rpm release/lando-amd64-latest-dev.rpm
+        - cp -rf dist/lando.rpm release/lando-amd64-$TRAVIS_COMMIT-dev.rpm
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.rpm release/lando-amd64-$TRAVIS_TAG.rpm; fi
+        - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.rpm release/lando-amd64-stable.rpm; fi
         - if [ ! -z "$TRAVIS_TAG" ]; then cp -rf dist/lando.rpm release/lando-stable.rpm; fi
       deploy:
         - provider: s3
@@ -220,9 +254,9 @@ jobs:
           api_key:
             secure: UXDea6KLTOOiUaUfhYqE7stUY74VE2gOdi3No5NscD0Lg3xB/EMf1wzpVe2nuTpjn1CbDBsGXXHqRRpy2IZj6qp21D39+Wygznv9PpSGPgTAB2ZHRYhpux1Qf/HxD8R/NhvISNMXukNLyd66OyiJlz5RWoLWQvLIiJgT1Uczc3Sj8iOJOmYaxQZku/3/q/LmjKKHVJ9vq7ail4l4SoNmLqh6sdDt9utJtavWHMa0hN5kF+CwoV5Vk/z2RFzYNInGwlJggwV7Y/Kf3TmOQv0CiKgxdEQqR8LfTDGIvkxFwpPSf7JnQYnsZWcOWW08oousN7tjc1L1ow2dzPnT2zRYNyx73FwkjWtZ7SLQCkU95pq6FgSy31+w6iWU6Rvwd9mgdX4sfxgdwxLwiF38Rki5TxXtMRGWW1qYRYvnCcc7gpPUPFv0PzsQYZiFSGxMF3uKdKxmKzYd+tfCMvE5YhfkDtCM+LeJBlSL5hZspMUezXEFtiKSv7fDmBKtGGFUsEruNqMphKEbH1kY1UT9SXUu+uxWN40ciJTXfQXJAGMSh34WkZFAgEP/r61+SZDlpuyYPQ8l8fOOcX2uaJYD0LJBSERVmVAX00SNxWSVdTTGibadRXWWuJ4gd4PGCXUhSJI9r1QLfMLyZtt5P3i9SUL2X4cO9isKysBjOq/5DZXjqq0=
           file:
-            - release/lando-$TRAVIS_TAG.deb
+            - release/lando-amd64-$TRAVIS_TAG.deb
             # - release/lando-$TRAVIS_TAG.pacman
-            - release/lando-$TRAVIS_TAG.rpm
+            - release/lando-amd64-$TRAVIS_TAG.rpm
           skip_cleanup: true
           on:
             repo: lando/lando

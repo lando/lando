@@ -1,5 +1,10 @@
 # 2021
 
+## v3.1.1 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.0)
+
+* Introduced `arm64` based build for Apple Mac Silicon [#2688](https://github.com/lando/lando/issues/2688)
+* Updated to Docker Desktop `3.3.1`
+
 ## v3.1.0 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.0)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
