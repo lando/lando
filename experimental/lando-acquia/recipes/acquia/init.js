@@ -91,7 +91,7 @@ module.exports = {
       interactive: {
         type: 'list',
         choices: utils.getKeys(mergeKeys(lando.config.home, lando.cache.get(acquiaKeyCache))),
-        message: 'Select an Acquia account',
+        message: 'Select an Acquia Cloud Platform API token',
         when: answers => showKeyList(answers.recipe, lando.config.home, lando.cache.get(acquiaKeyCache)),
         weight: 510,
       },
