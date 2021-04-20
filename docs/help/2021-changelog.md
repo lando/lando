@@ -1,7 +1,10 @@
 # 2021
 
-## v3.1.1 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.1)
+## v3.1.1 - [April 20, 2021](https://github.com/lando/lando/releases/tag/v3.1.1)
 
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing `lando push` to fail when pushing code from an `acquia` recipe [#2960](https://github.com/lando/lando/issues/2960)
 * Fixed bug causing `composer_version` to not work for `acquia` recipes [#2964](https://github.com/lando/lando/issues/2964)
 * Fixed bug causing `solr` `8.5` and `8.6` to not data directory correctly [#2959](https://github.com/lando/lando/issues/2959)
 * Switched `acquia` recipe to pull the `latest` stable `acli` instead of `master`

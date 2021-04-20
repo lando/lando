@@ -96,7 +96,7 @@ fi
 # Push the codez
 if [ "$CODE" != "none" ]; then
   cd $LANDO_MOUNT
-  acli -n push:code "$AH_SITE_GROUP.$CODE"
+  acli -n push:code
 fi
 
 # Push the database
