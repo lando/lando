@@ -26,7 +26,7 @@ exports.cliPkgTask = (output, arch = 'x64') => {
   // Package command
   const pkgCmd = [
     'node',
-    path.resolve(__dirname, '..', 'node_modules', '@jesec', 'pkg', 'lib-es5', 'bin.js'),
+    path.resolve(__dirname, '..', 'node_modules', 'pkg', 'lib-es5', 'bin.js'),
     '--targets ' + ['node12', exports.cliTargetOs(), arch].join('-'),
     '--config ' + path.join('package.json'),
     '--output ' + output,
