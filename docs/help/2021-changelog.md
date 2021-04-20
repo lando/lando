@@ -1,8 +1,7 @@
 # 2021
 
-## v3.1.1 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.0)
+## v3.1.1 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.1)
 
-* Updated `lando` to run on `node14`
 * Updated to Docker Desktop `3.3.1`
 
 ## v3.1.0 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.0)

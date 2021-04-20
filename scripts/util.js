@@ -27,7 +27,7 @@ exports.cliPkgTask = (output, arch = 'x64') => {
   const pkgCmd = [
     'node',
     path.resolve(__dirname, '..', 'node_modules', '@jesec', 'pkg', 'lib-es5', 'bin.js'),
-    '--targets ' + ['node14', exports.cliTargetOs(), arch].join('-'),
+    '--targets ' + ['node12', exports.cliTargetOs(), arch].join('-'),
     '--config ' + path.join('package.json'),
     '--output ' + output,
     path.join('bin', 'lando.js'),
