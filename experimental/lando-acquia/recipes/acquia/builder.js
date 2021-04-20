@@ -9,10 +9,11 @@ module.exports = {
   name: 'acquia',
   parent: '_drupaly',
   config: {
+    cache: true,
+    composer_version: '2',
     confSrc: __dirname,
     defaultFiles: {},
     drush: '8.4.8',
-    cache: true,
     inbox: true,
     php: '7.4',
     services: {appserver: {
@@ -24,7 +25,6 @@ module.exports = {
   builder: (parent, config) => class LandoAcquia extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-      options.composer_version = '2';
       options.database = 'mysql:5.7';
       // Load .env file.
       options.env_file = ['.env'];
