@@ -259,7 +259,7 @@ module.exports = {
         // Merge in other lando config
         const landofileConfig = {
           config: {
-            acli_version: 'master',
+            acli_version: 'latest',
             ah_application_uuid: options['acquia-app'],
             ah_site_group: env.group,
             php: env.php,

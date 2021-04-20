@@ -35,7 +35,7 @@ module.exports = {
       const keys = utils.sortKeys(options._app.acquiaKeys, options._app.hostKeys);
       // Try to grab other relevant stuff that we might have saved
       const account = _.get(options, '_app.meta.label', null);
-      const acliVersion = _.get(options, '_app.config.config.acli_version', 'master');
+      const acliVersion = _.get(options, '_app.config.config.acli_version', 'latest');
       const appUuid = _.get(options, '_app.config.config.ah_application_uuid', null);
       const group = _.get(options, '_app.config.config.ah_site_group', null);
       const key = _.get(options, '_app.meta.key', null);
@@ -44,7 +44,6 @@ module.exports = {
 
       // Figure out our ACLI situation first
       // Install acli from either 1) latest download, 2) A specific version, or 3) build from a branch
-      // TODO: switch default to `latest` once acli catches up.
       const regexVersion = /^[0-9]+\.[0-9]+\.[0-9]+$/g;
       let acliDownload = null;
       if (acliVersion === 'latest') {
