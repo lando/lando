@@ -92,6 +92,7 @@ if [ "$KEY" != "none" ]; then
 fi
 
 # @TODO: if lando has not already generated and exchanged a key with acquia cloud let us do that here
+# Let's do this?
 
 # Push the codez
 if [ "$CODE" != "none" ]; then
