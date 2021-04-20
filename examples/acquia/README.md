@@ -58,7 +58,7 @@ lando composer --version | grep Composer | grep 2.
 
 # Should be able to specify the composer version
 cd drupal9
-lando composer --version | grep Composer | grep "2.0.11"
+lando ssh -c "/usr/local/bin/composer --version" | grep Composer | grep "2.0.11"
 
 # Should use php version 7.4 by default
 cd drupal9
