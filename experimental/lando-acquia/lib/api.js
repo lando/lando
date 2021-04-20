@@ -114,11 +114,23 @@ module.exports = class AcquiaApi {
    * Pushes up a public key
    */
   postKey(key, label = 'Lando') {
-    const data = {label, public_key: _.trim(fs.readFileSync(key, 'utf8'))};
-    return axios.post(`https://cloud.acquia.com/api/account/ssh-keys`, data)
-    // Only throw an error if its anything but a conflict
-    .catch(err => {
-      if (_.get(err, 'response.status', 400) !== 409) return Promise.reject(err);
+    // Key Post data
+    const postData = {label, public_key: _.trim(fs.readFileSync(key, 'utf8'))};
+    // Start by the users keys
+    return axios.get('https://cloud.acquia.com/api/account/ssh-keys')
+    // Only grab the lando ones
+    .then(response => _(_.get(response, 'data._embedded.items', []))
+      .filter(key => _.startsWith(key.label, label))
+      .value())
+    // If we dont have a match lets post the new one
+    .then(landoKeys => {
+      if (_.isEmpty(_.find(landoKeys, {public_key: postData.public_key}))) {
+        postData.label = `${label}${landoKeys.length + 1}`;
+        return axios.post(`https://cloud.acquia.com/api/account/ssh-keys`, postData)
+        .catch(err => {
+          throw new Error(_.get(err, 'response.data.message', 'Something went wrong posting your key!'));
+        });
+      }
     });
   };
 };

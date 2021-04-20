@@ -28,5 +28,8 @@ while GIT_SSH_COMMAND='ssh -o IdentityFile=/lando/keys/$KEY -o StrictHostKeyChec
   sleep 10
 done
 
+# Take another break just to make sure we are ready
+sleep 5
+
 # Passthrough to our normal mechanism
 /helpers/get-remote-url.sh $URL "$OPTIONS"

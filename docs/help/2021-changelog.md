@@ -4,6 +4,7 @@
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
+* Fixed bug causing new `acquia` recipe ssh keys with the same label as previous keys to not be posted correctly
 * Fixed bug causing `lando push` to fail when pushing code from an `acquia` recipe [#2960](https://github.com/lando/lando/issues/2960)
 * Fixed bug causing `composer_version` to not work for `acquia` recipes [#2964](https://github.com/lando/lando/issues/2964)
 * Fixed bug causing `solr` `8.5` and `8.6` to not data directory correctly [#2959](https://github.com/lando/lando/issues/2959)
