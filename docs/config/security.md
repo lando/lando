@@ -117,6 +117,10 @@ sudo update-ca-certificates --fresh
 
 Import the `~/.lando/certs/lndo.site.pem` CA certificate in Firefox by going to `about:preferences#privacy` > `View Certificates` > `Authorities` > `Import`, enabling **Trust this CA to identify websites.**.
 
+### Ubuntu with Chrome
+
+On the Authorities tab at chrome://settings/certificates, import `~/.lando/certs/lndo.site.pem or /usr/local/share/ca-certificates/lndo.site.crt`
+
 ### Arch
 
 ```bash
