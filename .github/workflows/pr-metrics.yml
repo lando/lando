@@ -2,8 +2,6 @@ name: Metrics tests
 
 on:
   pull_request:
-    paths:
-      - 'metrics/*'
 
 jobs:
   metrics-tests:

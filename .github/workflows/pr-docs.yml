@@ -2,11 +2,9 @@ name: Documentation tests
 
 on:
   pull_request:
-    paths:
-      - 'docs/**'
 
 jobs:
-  metrics-tests:
+  docs-tests:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
@@ -15,7 +13,7 @@ jobs:
         os:
           - ubuntu-20.04
         node-version:
-          - '12'
+          - '14'
     steps:
 
       # Install deps and cache
@@ -39,28 +37,8 @@ jobs:
       - name: Install Yarn dependencies
         run: yarn install --prefer-offline --frozen-lockfile
 
-      # This block should eventually become use lando/actions-hyperdrive@v2
-      - name: Verify Docker dependencies
-        run: |
-          docker --version | grep "20.10."
-          docker-compose --version | grep "1.29."
-      # - name: Install via hyperdrive if above is bad
-      - name: Disable usage and error reporting
-        run: |
-          mkdir -p ~/.lando/cache
-          echo false > ~/.lando/cache/report_errors
-          sed -i "s/report: true.*/report: false/" config.yml
-      - name: Package CLI
-        run: yarn pkg
-      - name: Replace source CLI with packaged one
-        run: sudo mv ./dist/* /usr/local/bin/lando
-      - name: Verify we can run the packaged CLI
-        run: |
-          lando version
-          lando config
-
-      # This block should eventually become use lando/actions-leia@v2
-      - name: Generate tests
-        run: yarn generate:tests
-      - name: Run ${{ matrix.leia-tests }} tests
-        run: yarn mocha --timeout 900000 ./test/${{ matrix.leia-tests }}.func.js
+      # Run doc tests
+      - name: Lint docs code
+        run: yarn lint:docs
+      - name: Build docs
+        run: yarn build:docs
