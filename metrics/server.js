@@ -7,7 +7,7 @@ const log = require('./lib/logger.js');
 const path = require('path');
 const Promise = require('bluebird');
 
-// TEST1
+// TEST2
 
 // Define default config
 const defaultConfig = {
