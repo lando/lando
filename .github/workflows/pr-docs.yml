@@ -1,0 +1,66 @@
+name: Documentation tests
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+
+jobs:
+  metrics-tests:
+    runs-on: ${{ matrix.os }}
+    env:
+      TERM: xterm
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+        node-version:
+          - '12'
+    steps:
+
+      # Install deps and cache
+      # Eventually it would be great if these steps could live in a separate YAML file
+      # that could be included in line to avoid code duplication
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Use Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Yarn dependencies
+        run: yarn install --prefer-offline --frozen-lockfile
+
+      # This block should eventually become use lando/actions-hyperdrive@v2
+      - name: Verify Docker dependencies
+        run: |
+          docker --version | grep "20.10."
+          docker-compose --version | grep "1.29."
+      # - name: Install via hyperdrive if above is bad
+      - name: Disable usage and error reporting
+        run: |
+          mkdir -p ~/.lando/cache
+          echo false > ~/.lando/cache/report_errors
+          sed -i "s/report: true.*/report: false/" config.yml
+      - name: Package CLI
+        run: yarn pkg
+      - name: Replace source CLI with packaged one
+        run: sudo mv ./dist/* /usr/local/bin/lando
+      - name: Verify we can run the packaged CLI
+        run: |
+          lando version
+          lando config
+
+      # This block should eventually become use lando/actions-leia@v2
+      - name: Generate tests
+        run: yarn generate:tests
+      - name: Run ${{ matrix.leia-tests }} tests
+        run: yarn mocha --timeout 900000 ./test/${{ matrix.leia-tests }}.func.js
