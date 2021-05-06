@@ -12,24 +12,17 @@
     "url": "https://github.com/lando/lando/issues"
   },
   "scripts": {
-    "build:docs": "yarn generate:api && node ./scripts/docs.js && vuepress build docs -d _docs",
-    "dev:docs": "yarn generate:api && node ./scripts/docs.js && vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8021 docs",
+    "build:docs": "vuepress build docs -d _docs",
+    "dev:docs": "vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8021 docs",
     "dev:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
-    "generate:api": "node ./scripts/yaml2json.js ./sponsors.yml ./contributors.yml --output-dir docs/.vuepress/public/api",
     "lint:metrics": "eslint --quiet --no-ignore --config .eslintrc.metrics.json metrics",
     "lint:docs": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json docs/.vuepress",
     "release": "bump --prompt --tag --all --push"
   },
-  "dependencies": {
-    "bluebird": "^3.4.1",
-    "js-yaml": "^3.4.6",
-    "lodash": "^4.17.19",
-    "winston": "2.4.5",
-    "yargs": "^12.0.5"
-  },
   "devDependencies": {
     "@bugsnag/js": "^6.4.3",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
+    "bluebird": "^3.4.1",
     "body-parser": "^1.14.2",
     "dotenv": "^4.0.0",
     "elasticsearch": "~10.1.2",
@@ -37,7 +30,8 @@
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-vue": "^5.2.3",
     "express": "^4.13.3",
-    "jsdoc-to-markdown": "^4.0.1",
+    "fs-extra": "^10.0.0",
+    "lodash": "^4.17.19",
     "nodemon": "^1.11.0",
     "platformsh": "^1.0.0",
     "version-bump-prompt": "^4.2.1",
@@ -46,6 +40,8 @@
     "vuepress-plugin-canonical": "^1.0.0",
     "vuepress-plugin-feed": "^0.1.8",
     "vuepress-plugin-robots": "^1.0.1",
-    "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4"
+    "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4",
+    "winston": "2.4.5",
+    "yargs": "^12.0.5"
   }
 }

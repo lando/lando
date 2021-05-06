@@ -27,8 +27,6 @@ lando.env
 
 # docs
 _docs
-docs/examples
-docs/.vuepress/public/api
 
 # Build dirs
 build
