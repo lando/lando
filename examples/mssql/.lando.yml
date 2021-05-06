@@ -1,4 +1,0 @@
-name: lando-mssql
-services:
-  defaults:
-    type: mssql

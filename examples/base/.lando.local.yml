@@ -1,3 +1,0 @@
-name: lando-base
-env_file:
-  - environment/local.env

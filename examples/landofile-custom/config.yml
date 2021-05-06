@@ -1,5 +1,0 @@
-landoFile: .solo.yml
-preLandoFiles:
-  - .solo.dist.yml
-postLandoFiles:
-  - .solo.local.yml

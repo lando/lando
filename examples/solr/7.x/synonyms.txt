@@ -1,3 +1,0 @@
-# Contains synonyms to use for your index. For the format used, see
-# http://wiki.apache.org/solr/AnalyzersTokenizersTokenFilters#solr.SynonymFilterFactory
-# (Lines starting with a pound character # are ignored.)

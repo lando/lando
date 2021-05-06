@@ -1,8 +1,0 @@
-FROM devwithlando/php:7.4-apache-2
-
-# Choose the major node version
-ENV NODE_VERSION=12
-
-# Install node
-RUN curl -sL "https://deb.nodesource.com/setup_${NODE_VERSION}.x" | bash - \
-  && apt-get install -y nodejs

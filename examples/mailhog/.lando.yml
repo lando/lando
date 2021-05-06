@@ -1,8 +1,0 @@
-name: lando-mailhog
-services:
-  mailhog:
-    type: mailhog
-    hogfrom:
-      - php
-  php:
-    type: php

@@ -1,6 +1,0 @@
-name: melamp
-recipe: lamp
-config:
-  webroot: .
-  php: 5.6
-  database: mariadb:10.3
