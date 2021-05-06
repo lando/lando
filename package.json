@@ -8,108 +8,17 @@
     "url": "https://github.com/lando/lando"
   },
   "bugs": {
-    "email": "mike@thinktandem.io",
+    "email": "mike@lando.dev",
     "url": "https://github.com/lando/lando/issues"
-  },
-  "main": "lib/lando.js",
-  "bin": {
-    "lando": "./bin/lando.js"
-  },
-  "directories": {
-    "lib": "./lib"
-  },
-  "nyc": {
-    "include": [
-      "lib/**/*.js",
-      "experimental/**/lib/*.js",
-      "integrations/**/lib/*.js",
-      "plugins/**/lib/*.js",
-      "scripts/util.js"
-    ],
-    "exclude": [
-      "test/**",
-      "plugins/**/test"
-    ],
-    "cache": true,
-    "all": true
   },
   "scripts": {
     "build:docs": "yarn generate:api && node ./scripts/docs.js && vuepress build docs -d _docs",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "generate:api": "node ./scripts/yaml2json.js ./sponsors.yml ./contributors.yml --output-dir docs/.vuepress/public/api",
-    "generate:tests": "leia \"examples/**/README.md\" test -r 2 -s 'Start up tests' -t 'Verification commands' -c 'Destroy tests' --split-file --spawn --stdin",
     "lint:metrics": "eslint --quiet --no-ignore --config .eslintrc.metrics.json metrics",
     "lint:docs": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json docs/.vuepress",
-    "pkg:cli": "node ./scripts/pkg.js",
-    "pkg:full": "node ./scripts/pkg.js --installer",
     "release": "bump --prompt --tag --all --push",
     "dev:docs": "yarn generate:api && node ./scripts/docs.js && vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8021 docs",
     "dev:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
-    "test:unit": "nyc --reporter=html --reporter=text mocha --timeout 5000 experimental/**/test/*.spec.js integrations/**/test/*.spec.js test/**/*.spec.js plugins/**/test/**/*.spec.js",
-    "test:unit:core": "nyc --reporter=html --reporter=text mocha --timeout 5000 test/**/*.spec.js",
-    "test:unit:plugins": "nyc --reporter=html --reporter=text mocha --timeout 5000 experimental/**/test/*.spec.js integrations/**/test/*.spec.js plugins/**/test/**/*.spec.js",
-    "test:functional": "mocha --timeout 900000 test/**/*.func.js",
-    "test": "yarn lint && yarn test:unit"
-  },
-  "pkg": {
-    "scripts": [
-      "bin/*.js",
-      "experimental/**/*.js",
-      "integrations/**/*.js",
-      "lib/**/*.js",
-      "plugins/**/*.js"
-    ],
-    "assets": [
-      "config.yml",
-      "package.json",
-      "experimental/**/fastcgi_params",
-      "experimental/**/*.cnf",
-      "experimental/**/*.conf",
-      "experimental/**/*.ini",
-      "experimental/**/*.inc",
-      "experimental/**/*.json",
-      "experimental/**/*.php",
-      "experimental/**/*.py",
-      "experimental/**/*.sh",
-      "experimental/**/*.toml",
-      "experimental/**/*.tpl",
-      "experimental/**/*.vcl",
-      "experimental/**/*.xml",
-      "experimental/**/*.yaml",
-      "experimental/**/*.yml",
-      "integrations/**/fastcgi_params",
-      "integrations/**/*.cnf",
-      "integrations/**/*.conf",
-      "integrations/**/*.ini",
-      "integrations/**/*.inc",
-      "integrations/**/*.json",
-      "integrations/**/*.php",
-      "integrations/**/*.py",
-      "integrations/**/*.sh",
-      "integrations/**/*.toml",
-      "integrations/**/*.tpl",
-      "integrations/**/*.vcl",
-      "integrations/**/*.xml",
-      "integrations/**/*.yaml",
-      "integrations/**/*.yml",
-      "plugins/**/fastcgi_params",
-      "plugins/**/*.cnf",
-      "plugins/**/*.conf",
-      "plugins/**/*.ini",
-      "plugins/**/*.inc",
-      "plugins/**/*.json",
-      "plugins/**/*.php",
-      "plugins/**/*.py",
-      "plugins/**/*.sh",
-      "plugins/**/*.toml",
-      "plugins/**/*.tpl",
-      "plugins/**/*.vcl",
-      "plugins/**/*.xml",
-      "plugins/**/*.yaml",
-      "plugins/**/*.yml",
-      "node_modules/figlet/fonts/Small Slant.flf",
-      "node_modules/figlet/fonts/ANSI Shadow.flf"
-    ]
   },
   "dependencies": {
     "axios": "^0.21.1",
