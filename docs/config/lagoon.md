@@ -4,7 +4,7 @@ description: The best local development option for Lagoon a Docker Build and Dep
 
 # Lagoon **(beta)**
 
-[Lagoon](https://lagoon.readthedocs.io/en/latest/) solves what developers are dreaming about: A system that allows developers to locally develop their code and their services with Docker and run the exact same system in production. The same Docker images, the same service configurations and the same code.
+[Lagoon](https://docs.lagoon.sh/lagoon/) solves what developers are dreaming about: A system that allows developers to locally develop their code and their services with Docker and run the exact same system in production. The same Docker images, the same service configurations and the same code.
 
 This is currently an _beta_ level integration that has the following _serious caveats_:
 
@@ -113,7 +113,7 @@ config:
     - drush sql-sync my-database
 ```
 
-These will run against the [Lagoon PHP CLI Drupal container](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli-drupal/) so you will have access to all the tools there as well as the ones it inherits from the base [PHP CLI container](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli/).
+These will run against the [Lagoon PHP CLI Drupal container](https://docs.lagoon.sh/lagoon/docker-images/php-cli/php-cli-drupal) so you will have access to all the tools there as well as the ones it inherits from the base [PHP CLI container](https://docs.lagoon.sh/lagoon/docker-images/php-cli).
 
 Note that these will run the _first time_ you run `lando start`. You will need to run `lando rebuild` to trigger them again if you make changes.
 
@@ -127,14 +127,15 @@ Lando will read and interpret your normal `.lagoon.yml` and its associated Docke
 
 The services we currently support with links to their associated Lagoon docs is shown below:
 
-* [PHP-FPM](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-fpm/)
-* [PHP CLI](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-cli/)
-* [Nginx](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/nginx/)
-* [MariaDB](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/mariadb/)
-* [PostgreSQL](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/postgres/)
-* [Redis](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/redis/)
-* [Solr](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/solr/)
-* [Varnish](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/varnish/)
+* [Elasticsearch](https://docs.lagoon.sh/lagoon/docker-images/elasticsearch)
+* [PHP-FPM](https://docs.lagoon.sh/lagoon/docker-images/php-fpm)
+* [PHP CLI](https://docs.lagoon.sh/lagoon/docker-images/php-cli)
+* [Nginx](https://docs.lagoon.sh/lagoon/docker-images/nginx)
+* [MariaDB](https://docs.lagoon.sh/lagoon/docker-images/mariadb)
+* [PostgreSQL](https://docs.lagoon.sh/lagoon/docker-images/postgres)
+* [Redis](https://docs.lagoon.sh/lagoon/docker-images/redis)
+* [Solr](https://docs.lagoon.sh/lagoon/docker-images/solr)
+* [Varnish](https://docs.lagoon.sh/lagoon/docker-images/varnish)
 
 Note that we are testing against the "Drupal" variants of the above but it's _possible_ the base services work as well.
 
