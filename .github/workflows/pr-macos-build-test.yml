@@ -1,10 +1,10 @@
-name: Build macOS tests
+name: Build macOS test
 
 on:
   pull_request:
 
 jobs:
-  build-tests:
+  build-macos-test:
     runs-on: ${{ matrix.os }}
     env:
       APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}

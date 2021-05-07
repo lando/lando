@@ -55,9 +55,15 @@ done
 echo "Building with Docker from $DOCKER_URL"
 echo "Building with Lando from $LANDO_URL"
 
-# Start up our build directory and go into it
+# Prep our workspace
+rm -rf build/installer
 mkdir -p build/installer
+# Copy installer assets to build dir
+cp -rf installer/macos/* build/installer
+
+# GO into our working dir and check things out
 cd build/installer
+ls -lsa
 
 # Get Lando CLI
 curl -fsSL -o "$LANDO" "$LANDO_URL" && \
