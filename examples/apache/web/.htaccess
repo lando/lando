@@ -1,6 +1,0 @@
-# Just your run of the mill htaccess that your production site would use!
-# If you have a .htaccess-lando, this file will be ignored!
-
-Options +FollowSymLinks
-RewriteEngine On
-RewriteRule ^folder3.*$ http://landoapache.lndo.site/folder2/ [R=301,L]
