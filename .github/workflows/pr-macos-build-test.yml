@@ -23,6 +23,8 @@ jobs:
       # that could be included in line to avoid code duplication
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
