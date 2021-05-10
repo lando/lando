@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [13](https://hub.docker.com/r/bitnami/postgresql)
 *   [12](https://hub.docker.com/r/bitnami/postgresql)
 *   [11](https://hub.docker.com/r/bitnami/postgresql)
 *   [11.1.0](https://hub.docker.com/r/bitnami/postgresql)
