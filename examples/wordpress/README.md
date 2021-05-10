@@ -33,9 +33,9 @@ Run the following commands to validate things are rolling as they should.
 cd wordpress
 lando ssh -s appserver -c "curl -L localhost" | grep "WordPress"
 
-# Should use 7.3 as the default php version
+# Should use 7.4 as the default php version
 cd wordpress
-lando php -v | grep "PHP 7.3"
+lando php -v | grep "PHP 7.4"
 
 # Should be running apache 2.4 by default
 cd wordpress
