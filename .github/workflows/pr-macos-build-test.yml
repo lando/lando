@@ -67,4 +67,4 @@ jobs:
           # Verify
           codesign -v dist/lando.dmg
       - name: Notarize DMG
-        run: ./scripts/notarize.sh dist/lando.dmg
+        run: ./scripts/notarize.sh ./dist/lando.dmg
