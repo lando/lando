@@ -62,9 +62,9 @@ jobs:
         run: ./scripts/create-dmg.sh build/installer/dmg
       - name: Sign DMG
         run: |
-        # Sign
-        codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
-        # Verify
-        codesign -v dist/lando.dmg
+          # Sign
+          codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
+          # Verify
+          codesign -v dist/lando.dmg
       - name: Notarize DMG
         run: ./scripts/notarize.sh dist/lando.dmg
