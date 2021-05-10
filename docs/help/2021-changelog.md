@@ -1,6 +1,6 @@
 # 2021
 
-## v3.1.2 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.1.2)
+## v3.1.3 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.1.3)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
@@ -10,6 +10,17 @@ Lando is **free** and **open source** software that relies on contributions from
 * Switched `wordpress` recipe to use `php` `7.4` as the default version [#3004](https://github.com/lando/lando/pull/3004)
 * Updated to Docker Desktop `3.3.3`
 * Updated to Docker Compose `1.29.1`
+
+## v3.1.2 - [April 20, 2021](https://github.com/lando/lando/releases/tag/v3.1.2)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing new `acquia` recipe ssh keys with the same label as previous keys to not be posted correctly
+* Fixed bug causing `lando push` to fail when pushing code from an `acquia` recipe [#2960](https://github.com/lando/lando/issues/2960)
+* Fixed bug causing `composer_version` to not work for `acquia` recipes [#2964](https://github.com/lando/lando/issues/2964)
+* Fixed bug causing `solr` `8.5` and `8.6` to not data directory correctly [#2959](https://github.com/lando/lando/issues/2959)
+* Switched `acquia` recipe to pull the `latest` stable `acli` instead of `master`
+* Updated to Docker Desktop `3.3.1`
 
 ## v3.1.1 - [April 20, 2021](https://github.com/lando/lando/releases/tag/v3.1.1)
 
