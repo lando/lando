@@ -9,6 +9,7 @@ Lando is **free** and **open source** software that relies on contributions from
 * Moved `acquia` recipe into `beta` readiness
 * Switched `wordpress` recipe to use `php` `7.4` as the default version [#3004](https://github.com/lando/lando/pull/3004)
 * Updated to Docker Desktop `3.3.3`
+* Updated to Docker Compose `1.29.1`
 
 ## v3.1.1 - [April 20, 2021](https://github.com/lando/lando/releases/tag/v3.1.1)
 
