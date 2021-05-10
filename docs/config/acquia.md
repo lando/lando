@@ -2,7 +2,7 @@
 description: The best local development option for Drupal 7, Drupal 8 or WordPress sites running on Acquia. Get Acquia CLI and all the usual power tools plus awesome workflow automation.
 ---
 
-# Acquia (alpha)
+# Acquia **(beta)**
 
 [Acquia](https://www.acquia.com/) is the Enterprise Digital Experience Platform designed to help you build Drupal experiences that engage customers, enhance conversions and help your business stand out.
 
@@ -17,12 +17,6 @@ However, in order to profit, **you must** have an account and a site on Acquia t
 
 [[toc]]
 
-## Getting Started
-
-::: warning ALPHA VERSION!
-This recipe is currently in `alpha`. This means it is mostly feature complete but not currently tested against a large cross section of projects. As a result YMMV. Also note that you must have Lando version `3.0.27` or higher to try this out.
-:::
-
 Before you get started with this recipe, we assume that you have:
 
 1. [Installed Lando](./../basics/installation.md) and gotten familiar with [its basics](./../basics/).
@@ -32,9 +26,6 @@ Before you get started with this recipe, we assume that you have:
 However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also try out this recipe with an extant Acquia project or start a brand new project on Acquia with the commands as follows:
 
 ```bash
-# Toggle the experimental flag to gain access to alpha features
-lando --experimental
-
 # Go through interactive prompts to get your code from acquia
 lando init --source acquia
 
