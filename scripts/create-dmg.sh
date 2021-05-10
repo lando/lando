@@ -11,6 +11,6 @@ if [ ! -d "$SRCDIR" ]; then
 fi
 
 NEXT_WAIT_TIME=0
-until hdiutil create -volname "Lando $LANDO_VERSION" -srcfolder "$SRCDIR" -ov -format UDZO dist/lando.dmg || [ $NEXT_WAIT_TIME -eq 5 ]; do
+until hdiutil create -volname "Lando $LANDO_VERSION" -srcfolder "$SRCDIR" -ov -format UDZO ./dist/lando.dmg || [ $NEXT_WAIT_TIME -eq 5 ]; do
   sleep $(( NEXT_WAIT_TIME++ ))
 done

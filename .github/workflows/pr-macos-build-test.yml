@@ -9,6 +9,8 @@ jobs:
     env:
       APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
       APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+      APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
+      APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
       APPLE_TEAM_ID: FY8GAUX282
       TERM: xterm
     strategy:
@@ -43,11 +45,11 @@ jobs:
 
       # Make sure the things we need to build the release actually work
       - name: Rewrite the version since this is a test
-        run: node ./scripts/dev-version.js
+        run: node scripts/dev-version.js
       - name: Import and verify certs
-        run: ./scripts/import-macos-certs.sh
+        run: scripts/import-macos-certs.sh
       - name: Assemble pieces
-        run: ./scripts/assemble-macos.sh
+        run: scripts/assemble-macos.sh
       - name: Sign package
         run: |
           # Rename some things
@@ -59,7 +61,9 @@ jobs:
           # Remove unsigned
           rm -f build/installer/dmg/UnsignedLandoInstaller.pkg
       - name: Create DMG
-        run: ./scripts/create-dmg.sh build/installer/dmg
+        run: |
+          mkdir -p dist
+          scripts/create-dmg.sh build/installer/dmg
       - name: Sign DMG
         run: |
           # Sign
@@ -67,4 +71,7 @@ jobs:
           # Verify
           codesign -v dist/lando.dmg
       - name: Notarize DMG
-        run: ./scripts/notarize.sh ./dist/lando.dmg
+        env:
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+        run: scripts/notarize.sh dist/lando.dmg
