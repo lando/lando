@@ -18,7 +18,7 @@ stages:
       branch == "master" OR \
       tag IS present
 
-# Set some immportant things to help maximize our CI performancez
+# Set some immportant things to help maximize our CI performance
 before_install:
   # Get list of files that have changed
   - export LANDO_CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE | cat)
