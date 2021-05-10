@@ -128,7 +128,7 @@
     "js-yaml": "^3.4.6",
     "jsonfile": "^2.4.0",
     "localtunnel": "^1.9.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "mkdirp": "^0.5.1",
     "node-cache": "^4.1.1",
     "object-hash": "^1.1.8",
