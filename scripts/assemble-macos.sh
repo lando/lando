@@ -8,8 +8,8 @@
 LANDO="lando.txt"
 
 # Set defaults
-DOCKER_VERSION="3.3.2"
-DOCKER_BUILD="63878"
+DOCKER_VERSION="3.3.3"
+DOCKER_BUILD="64133"
 LANDO_CLI_VERSION="latest"
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
 

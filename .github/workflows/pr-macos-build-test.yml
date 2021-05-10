@@ -46,5 +46,25 @@ jobs:
         run: node ./scripts/dev-version.js
       - name: Import and verify certs
         run: ./scripts/import-macos-certs.sh
-      - name: Assemble DMG
-        run: ./scripts/build-macos.sh
+      - name: Assemble pieces
+        run: ./scripts/assemble-macos.sh
+      - name: Sign package
+        run: |
+          # Rename some things
+          mv build/installer/dmg/LandoInstaller.pkg build/installer/dmg/UnsignedLandoInstaller.pkg
+          # Sign
+          productsign --sign "$APPLE_TEAM_ID" build/installer/dmg/UnsignedLandoInstaller.pkg build/installer/dmg/LandoInstaller.pkg
+          # Verify
+          pkgutil --check-signature build/installer/dmg/LandoInstaller.pkg
+          # Remove unsigned
+          rm -f build/installer/dmg/UnsignedLandoInstaller.pkg
+      - name: Create DMG
+        run: ./scripts/create-dmg.sh build/installer/dmg
+      - name: Sign DMG
+        run: |
+        # Sign
+        codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
+        # Verify
+        codesign -v dist/lando.dmg
+      - name: Notarize DMG
+        run: ./scripts/notarize.sh dist/lando.dmg
