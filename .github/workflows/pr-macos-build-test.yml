@@ -9,8 +9,6 @@ jobs:
     env:
       APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
       APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
-      APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
-      APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
       APPLE_TEAM_ID: FY8GAUX282
       TERM: xterm
     strategy:
