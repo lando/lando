@@ -1,7 +1,13 @@
-name: Build macOS test
+name: Ship macOS Installer
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
+      - 'preview/**'
+    tags:
+      - test*
+      - v*
 
 jobs:
   build-macos-test:
@@ -51,9 +57,11 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done < BUILD.env
 
-      # Make sure the things we need to build the release actually work
-      - name: Rewrite the version since this is a test
-        run: node scripts/dev-version.js
+      # Build and prep the release
+      - name: Rewrite the version based on the tag
+        run: |
+          node scripts/dev-version.js
+          node ./bin/lando.js version
       - name: Import and verify certs
         run: scripts/import-macos-certs.sh
       - name: Assemble pieces
@@ -78,8 +86,34 @@ jobs:
           codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
           # Verify
           codesign -v dist/lando.dmg
-      # - name: Notarize DMG
-      #   env:
-      #     APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
-      #     APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
-      #   run: scripts/notarize.sh dist/lando.dmg
+      - name: Notarize DMG
+        env:
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+        run: scripts/notarize.sh dist/lando.dmg
+
+      # Create and upload releases
+      - name: Create releases
+        env:
+          SOURCE_BRANCH: "${GITHUB_REF#refs/heads/}"
+          SOURCE_TAG: "$(git describe --tags --abbrev=0)"
+        shell: bash
+        run: |
+          # Create release directories
+          mkdir -p ./releases ./dev-builds
+
+          # Snapshot release
+          cp -f "./dist/lando.dmg" "./dev-builds/lando-build-${{ github.sha }}.dmg"
+
+          # Branch releases
+          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$SOURCE_BRANCH-latest.dmg"; fi
+          # Latest dev release
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.dmg" "./releases/lando-latest.dmg"; fi
+          # Tag releases
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$SOURCE_TAG.dmg"; fi
+          # Latest stable release
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-stable.dmg"; fi
+
+          # Print what we end up with
+          ls -lsa ./releases
+          ls -lsa ./dev-builds

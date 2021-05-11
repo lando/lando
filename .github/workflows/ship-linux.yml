@@ -1,10 +1,16 @@
-name: Build Linux test
+name: Ship Linux Installer
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
+      - 'preview/**'
+    tags:
+      - test*
+      - v*
 
 jobs:
-  build-linux-test:
+  ship-linux-pkg:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
@@ -58,12 +64,40 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done < BUILD.env
 
-      # Make sure the things we need to build the release actually work
-      - name: Rewrite the version since this is a test
-        run: node scripts/dev-version.js
+      # Build and prep the release
+      - name: Rewrite the version based on the tag
+        run: |
+          node scripts/dev-version.js
+          node ./bin/lando.js version
       - name: Assemble pieces
         run: scripts/assemble-linux.sh
       - name: Create package
         run: |
           LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
           scripts/create-pkg.sh ${{ matrix.flavor }} "$LANDO_VERSION"
+
+      # Create and upload releases
+      - name: Create releases
+        env:
+          SOURCE_BRANCH: "${GITHUB_REF#refs/heads/}"
+          SOURCE_TAG: "$(git describe --tags --abbrev=0)"
+        shell: bash
+        run: |
+          # Create release directories
+          mkdir -p ./releases ./dev-builds
+
+          # Snapshot release
+          cp -f "./dist/lando.${{ matrix.flavor }}" "./dev-builds/lando-build-${{ github.sha }}.${{ matrix.flavor }}"
+
+          # Branch releases
+          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
+          # Latest dev release
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-latest.${{ matrix.flavor }}"; fi
+          # Tag releases
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-$SOURCE_TAG.${{ matrix.flavor }}"; fi
+          # Latest stable release
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-stable.${{ matrix.flavor }}"; fi
+
+          # Print what we end up with
+          ls -lsa ./releases
+          ls -lsa ./dev-builds

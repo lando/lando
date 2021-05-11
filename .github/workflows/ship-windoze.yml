@@ -1,8 +1,13 @@
-name: Build Windoze test
+name: Ship Windoze Installer
 
 on:
-  pull_request:
-
+  push:
+    branches:
+      - main
+      - 'preview/**'
+    tags:
+      - test*
+      - v*
 jobs:
   build-windoze-test:
     runs-on: ${{ matrix.os }}
@@ -50,9 +55,11 @@ jobs:
             echo "$line" >> $GITHUB_ENV
           done < BUILD.env
 
-      # Make sure the things we need to build the release actually work
-      - name: Rewrite the version since this is a test
-        run: node scripts/dev-version.js
+      # Build and prep the release
+      - name: Rewrite the version based on the tag
+        run: |
+          node scripts/dev-version.js
+          node ./bin/lando.js version
       - name: Import and verify certs
         shell: powershell
         run: scripts/import-win-certs.ps1
@@ -62,3 +69,29 @@ jobs:
       - name: Create and sign package
         shell: powershell
         run: scripts/create-exe.ps1
+
+      # Create and upload releases
+      - name: Create releases
+        env:
+          SOURCE_BRANCH: "${GITHUB_REF#refs/heads/}"
+          SOURCE_TAG: "$(git describe --tags --abbrev=0)"
+        shell: bash
+        run: |
+          # Create release directories
+          mkdir -p ./releases ./dev-builds
+
+          # Snapshot release
+          cp -f "./dist/lando.exe" "./dev-builds/lando-build-${{ github.sha }}.exe"
+
+          # Branch releases
+          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.exe" "./releases/lando-$SOURCE_BRANCH-latest.exe"; fi
+          # Latest dev release
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.exe" "./releases/lando-latest.exe"; fi
+          # Tag releases
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.exe" "./releases/lando-$SOURCE_TAG.exe"; fi
+          # Latest stable release
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.exe" "./releases/lando-stable.exe"; fi
+
+          # Print what we end up with
+          ls -lsa ./releases
+          ls -lsa ./dev-builds

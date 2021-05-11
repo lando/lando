@@ -16,7 +16,7 @@ LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.js
 
 # Download urls
 DOCKER_URL="https://desktop.docker.com/mac/stable/amd64/${DOCKER_BUILD}/Docker.dmg"
-LANDO_URL="https://files.lando.dev/lando-macos-x64-${LANDO_CLI_VERSION}"
+LANDO_URL="https://files.lando.dev/cli/lando-macos-x64-${LANDO_CLI_VERSION}"
 
 # Allow things to be overridden
 while (( "$#" )); do
