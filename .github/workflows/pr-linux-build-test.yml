@@ -18,7 +18,7 @@ jobs:
           - '14'
         ruby-version:
           - '2.6'
-        flavors:
+        flavor:
           - deb
           - pacman
           - rpm
