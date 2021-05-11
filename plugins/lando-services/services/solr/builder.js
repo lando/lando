@@ -107,6 +107,8 @@ const parseConfig = options => {
     case '3': return parse3(options);
     case '4.10': return parse4(options);
     case '4': return parse4(options);
+    case '8.6': return parse8(options);
+    case '8.5': return parse8(options);
     case '8.4': return parse8(options);
     case '8.3': return parse8(options);
     case '8.2': return parse8(options);

@@ -24,11 +24,16 @@ declare -r docker=${docker_bundle_dir}/Resources/bin/docker
 sudo mkdir -p /Library/PrivilegedHelperTools
 sudo mkdir -p /usr/local/bin
 
+# Ensure correct permissions
+# See: https://github.com/lando/lando/issues/2780
+sudo mkdir -p "/Users/${console_user}/.docker/contexts/meta" || true
+sudo chown -R ${console_user} "/Users/${console_user}/.docker/contexts" || true
+
 # Set up our VMNET things
 sudo launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist && sleep 10 || true
 sudo install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
 sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
-sudo plutil -insert Version -string 56 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
+sudo plutil -insert Version -string 59 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
 sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
 
 # Launch docker
@@ -41,6 +46,7 @@ sudo -u ${console_user} cat > "~/Library/Group Containers/group.com.docker/setti
   "displayedTutorial" : true
 }
 EOF
+
 # And then do another pass just in case
 sudo -u ${console_user} sed -i -e 's/\"checkForUpdates\" : true,/\"checkForUpdates\" : false,/g' ~/Library/Group\ Containers/group.com.docker/settings.json
 sudo -u ${console_user} sed -i -e 's/\"displayedTutorial\" : false,/\"displayedTutorial\" : true,/g' ~/Library/Group\ Containers/group.com.docker/settings.json

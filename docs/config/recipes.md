@@ -45,7 +45,7 @@ config:
 
 The following recipes are currently offered. Please check out each one to learn how to specifically use them.
 
-* [Acquia](./acquia.md) **(ALPHA})**
+* [Acquia](./acquia.md) **(BETA)**
 * [Backdrop](./backdrop.md)
 * [Drupal 6](./drupal6.md)
 * [Drupal 7](./drupal7.md)

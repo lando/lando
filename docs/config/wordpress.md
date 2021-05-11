@@ -45,7 +45,7 @@ Here are the configuration options, set to the default values, for this recipe's
 ```yaml
 recipe: wordpress
 config:
-  php: '7.3'
+  php: '7.4'
   composer_version: '2.0.7'
   via: apache:2.4
   webroot: .

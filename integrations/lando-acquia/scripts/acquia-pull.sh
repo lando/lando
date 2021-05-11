@@ -121,7 +121,7 @@ EOF
   PULL_DB_CHECK_TABLE=${LANDO_DB_USER_TABLE:-users}
   echo -n "    "
   lando_check "Checking db pull for expected tables..."
-  if ! mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 -e "SHOW TABLES;" | grep $PULL_DB_CHECK_TABLE; then
+  if ! mysql --user=acquia --password=acquia --database=acquia --host=database --port=3306 -e "SHOW TABLES;" | grep $PULL_DB_CHECK_TABLE >/dev/null; then
     lando_red "Database pull failed... "
     exit 1
   fi

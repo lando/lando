@@ -96,6 +96,10 @@ docker ps --filter label=com.docker.compose.project=landod8 | grep docker.regist
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/redis-6.0
 docker ps --filter label=com.docker.compose.project=landod8 | grep docker.registry.platform.sh/mariadb-10.4
 
+# Should allow for service portforward overrides
+cd drupal
+lando info -s db --path "[0]external_connection.port" | grep 3307
+
 # Should support legacy variable overrides
 cd drupal
 lando ssh -c "env" | grep LOCAL_OVERRIDE | grep itdonehappened

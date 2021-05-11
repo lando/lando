@@ -185,7 +185,7 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 To install from source you need to first make sure you've manually installed the below dependencies:
 
 * [the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system, set to its **factory defaults**.
-* [the latest node 12](https://nodejs.org/en/download/)
+* [the latest node 14](https://nodejs.org/en/download/)
 * [the latest yarn](https://yarnpkg.com/lang/en/docs/install/)
 * **(linux only)** [the latest stable docker compose binary](https://github.com/docker/compose/releases) downloaded and placed at `/usr/share/lando/bin` and make executable.
 

@@ -73,7 +73,7 @@ fi
 # @TODO: We should def figure out whether we can get away with running everything through exec at some point
 lando_info "Lando handing off to: $@"
 
-# Try to DROP DOWN to anotehr user if we can
+# Try to DROP DOWN to another user if we can
 if [ ! -z ${LANDO_DROP_USER+x} ]; then
   lando_debug "Running command as ${LANDO_DROP_USER}..."
   su ${LANDO_DROP_USER} -c "$@" || tail -f /dev/null

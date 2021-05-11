@@ -23,6 +23,15 @@ module.exports = {
       // We need to do this again since this isnt technically an override
       if (_.has(lagoon, 'build.context')) lagoon.build.context = path.join(options.root);
 
+      // Handle portfoward in the usual way
+      if (options.portforward) {
+        if (options.portforward === true) {
+          sources.push({services: _.set({}, options.name, {ports: [options.port]})});
+        } else {
+          sources.push({services: _.set({}, options.name, {ports: [`${options.portforward}:${options.port}`]})});
+        }
+      }
+
       // Refactor the lagoon routes for lando
       lagoon.environment.LAGOON_PROJECT = options._app.lagoon.config.lagoon.project;
       lagoon.environment.LAGOON_ROUTE = `https://${options.app}.${options._app._config.domain}`;

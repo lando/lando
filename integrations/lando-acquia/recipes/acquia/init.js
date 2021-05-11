@@ -91,7 +91,7 @@ module.exports = {
       interactive: {
         type: 'list',
         choices: utils.getKeys(mergeKeys(lando.config.home, lando.cache.get(acquiaKeyCache))),
-        message: 'Select an Acquia account',
+        message: 'Select an Acquia Cloud Platform API token',
         when: answers => showKeyList(answers.recipe, lando.config.home, lando.cache.get(acquiaKeyCache)),
         weight: 510,
       },
@@ -151,6 +151,13 @@ module.exports = {
         weight: 540,
       },
     },
+    'acquia-key-name': {
+      describe: 'A hidden field mostly for easy testing and key removal',
+      string: true,
+      hidden: true,
+      default: 'Landokey',
+      when: answers => answers.recipe === 'acquia',
+    },
   }),
   overrides: {
     name: {
@@ -195,7 +202,9 @@ module.exports = {
         name: 'post-key',
         func: (options, lando) => {
           const pubKey = path.join(lando.config.userConfRoot, 'keys', `${options['acquia-keyname']}.pub`);
-          return api.auth(options['acquia-key'], options['acquia-secret'], true, true).then(() => api.postKey(pubKey));
+          const keyName = options['acquia-key-name'];
+          return api.auth(options['acquia-key'], options['acquia-secret'], true, true)
+            .then(() => api.postKey(pubKey, keyName));
         },
       },
       {
@@ -228,8 +237,8 @@ module.exports = {
       {
         name: 'clone-repo',
         cmd: options =>
-          `/helpers/acquia-get-remote-url.sh ${options['acquia-git-url']} "--branch ${options['acquia-git-branch']}" ` +
-          `"${options['acquia-git-branch']}"`,
+          `/helpers/acquia-clone.sh ${options['acquia-git-url']} "--branch ${options['acquia-git-branch']}" ` +
+          `${options['acquia-keyname']}`,
         remove: 'true',
       },
   ])}],
@@ -250,24 +259,12 @@ module.exports = {
         // Merge in other lando config
         const landofileConfig = {
           config: {
-            acli_version: 'master',
+            acli_version: 'latest',
             ah_application_uuid: options['acquia-app'],
             ah_site_group: env.group,
             php: env.php,
           },
         };
-        // Set the composer version to 1 if it is defined as such in composer.json
-        const composerConfig = utils.getComposerConfig();
-        if (composerConfig !== null && composerConfig.require['composer/installers']) {
-          const composerConfig = utils.getComposerConfig();
-          if (composerConfig !== null && composerConfig.require['composer/installers']) {
-            const majorVersion = parseInt(composerConfig.require['composer/installers']
-              .replace( /(^.+)(\d)(.+$)/i, '$2'));
-            if (majorVersion === 1) {
-              landofileConfig.config.composer_version = majorVersion;
-            }
-          }
-        }
 
         // This is good auth, lets update our cache
         const cache = {

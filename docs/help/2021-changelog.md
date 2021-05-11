@@ -1,7 +1,80 @@
 # 2021
 
+## v3.1.4 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.1.4)
 
-## v3.0.27 - [March 17, 2021](https://github.com/lando/lando/releases/tag/v3.0.27)
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added support for `postgres` `13` [#2998](https://github.com/lando/lando/pull/2998)
+* Added `elasticsearch` support to the `lagoon` recipe [#2996](https://github.com/lando/lando/pull/2996)
+* Moved `acquia` recipe into `beta` readiness
+* Switched `wordpress` recipe to use `php` `7.4` as the default version [#3004](https://github.com/lando/lando/pull/3004)
+* Updated to Docker Desktop `3.3.3`
+* Updated to Docker Compose `1.29.1`
+
+## v3.1.3 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.1.3)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added support for `postgres` `13` [#2998](https://github.com/lando/lando/pull/2998)
+* Added `elasticsearch` support to the `lagoon` recipe [#2996](https://github.com/lando/lando/pull/2996)
+* Moved `acquia` recipe into `beta` readiness
+* Switched `wordpress` recipe to use `php` `7.4` as the default version [#3004](https://github.com/lando/lando/pull/3004)
+* Updated to Docker Desktop `3.3.3`
+* Updated to Docker Compose `1.29.1`
+
+## v3.1.2 - [April 20, 2021](https://github.com/lando/lando/releases/tag/v3.1.2)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing new `acquia` recipe ssh keys with the same label as previous keys to not be posted correctly
+* Fixed bug causing `lando push` to fail when pushing code from an `acquia` recipe [#2960](https://github.com/lando/lando/issues/2960)
+* Fixed bug causing `composer_version` to not work for `acquia` recipes [#2964](https://github.com/lando/lando/issues/2964)
+* Fixed bug causing `solr` `8.5` and `8.6` to not data directory correctly [#2959](https://github.com/lando/lando/issues/2959)
+* Switched `acquia` recipe to pull the `latest` stable `acli` instead of `master`
+* Updated to Docker Desktop `3.3.1`
+
+## v3.1.1 - [April 20, 2021](https://github.com/lando/lando/releases/tag/v3.1.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Fixed bug causing new `acquia` recipe ssh keys with the same label as previous keys to not be posted correctly
+* Fixed bug causing `lando push` to fail when pushing code from an `acquia` recipe [#2960](https://github.com/lando/lando/issues/2960)
+* Fixed bug causing `composer_version` to not work for `acquia` recipes [#2964](https://github.com/lando/lando/issues/2964)
+* Fixed bug causing `solr` `8.5` and `8.6` to not data directory correctly [#2959](https://github.com/lando/lando/issues/2959)
+* Switched `acquia` recipe to pull the `latest` stable `acli` instead of `master`
+* Updated to Docker Desktop `3.3.1`
+
+## v3.1.0 - [April 12, 2021](https://github.com/lando/lando/releases/tag/v3.1.0)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Added support for Elasticsearch `7.10.x`, `7.11.x` and `7.12.x` [#2950](https://github.com/lando/lando/issues/2950)
+* Added ability to disable automatic `acli pull:run-scripts` on `lando start/rebuild` for `acquia` recipes [#2956](https://github.com/lando/lando/issues/2956)
+* Fixed bug preventing global fallback version of `drush` to be properly installed for `acquia` recipes [#2955](https://github.com/lando/lando/issues/2955)
+* Fixed bug causing `portforward` user overrides to not work for the `lagoon` and `platformsh` recipes [#2749](https://github.com/lando/lando/issues/2749)
+* Fixed bug causing `platformsh` recipes to prompt for `/app/.platform/local/lando` overwrite on `lando rebuild` [#2947](https://github.com/lando/lando/issues/2947)
+* Updated to Drush `8.4.8` for legacy `drupal` recipes
+* Updated to Docker Compose `1.29.0` [#2781](https://github.com/lando/lando/issues/2781) [#2780](https://github.com/lando/lando/issues/2780)
+* Updated to Docker Desktop `3.3.0` [#2781](https://github.com/lando/lando/issues/2781) [#2780](https://github.com/lando/lando/issues/2780)
+
+## v3.0.29 - [April 5, 2021](https://github.com/lando/lando/releases/tag/v3.0.29)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* **Fixed longstanding bug causing container to container `*.lndo.site` resolution to differ from proxy-based resolution [#2934](https://github.com/lando/lando/issues/2934), this results in a change of behavior that may impact how your app works in Lando, read more [here](https://docs.lando.dev/config/networking.html#port-considerations)**
+
+* Improved `xdebug` support and docs for `platformsh` recipes [#2927](https://github.com/lando/lando/issues/2927)
+* Updated dependencies to be compatible with `node` 14 [#2945](https://github.com/lando/lando/issues/2945) [#2928](https://github.com/lando/lando/issues/2928)
+
+## v3.0.28 - [March 26, 2021](https://github.com/lando/lando/releases/tag/v3.0.28)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+* Hotfixed `*.lndo.site` going away for `drupaly` recipes [#2934](https://github.com/lando/lando/issues/2934)
+
+## v3.0.27 - [March 25, 2021](https://github.com/lando/lando/releases/tag/v3.0.27)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 * Added experimental `alpha` support for `acquia` recipe [read more](https://docs.lando.dev/config/acquia.html)
 * Reverted auto `nvm` sourcing for `platform.sh` recipes in favor of manual `.environment` spec [#2820](https://github.com/lando/lando/issues/2820)

@@ -152,7 +152,21 @@ describe('scripts', () => {
     it('should return scripts/build-darwin.sh on darwin', () => {
       setPlatform('darwin');
       const command = util.installerPkgTask();
-      command.should.equal('scripts/build-darwin.sh');
+      command.should.equal('scripts/build-darwin.sh --arch=amd64');
+      resetPlatform();
+    });
+
+    it('should use arch amd64 by default', () => {
+      setPlatform('darwin');
+      const command = util.installerPkgTask();
+      command.should.equal('scripts/build-darwin.sh --arch=amd64');
+      resetPlatform();
+    });
+
+    it('should allow arch to be specified', () => {
+      setPlatform('darwin');
+      const command = util.installerPkgTask('arm64');
+      command.should.equal('scripts/build-darwin.sh --arch=arm64');
       resetPlatform();
     });
 
@@ -160,7 +174,7 @@ describe('scripts', () => {
       setPlatform('linux');
       const command = util.installerPkgTask();
       command.should.be.a('string');
-      command.should.equal('scripts/build-linux.sh');
+      command.should.equal('scripts/build-linux.sh --arch=amd64');
       resetPlatform();
     });
 

@@ -48,7 +48,7 @@ SORRY WINDOZE USERS!
 To generate tests from the `examples` repo and then run the functional test suite, execute the following:
 
 ```bash
-yarn generate-tests && yarn test:functional
+yarn generate:tests && yarn test:functional
 ```
 
 **NOTE:** This may take awhile to complete locally and could destroy any apps you may already have running. It's best to use it in a continuous integration environment.
@@ -68,7 +68,7 @@ Running the Lando functional tests can take a lot of system resources and in dev
 After editing or making a new test in one of the `example/*/README.md` files, you first need to regenerate the tests as follows:
 
 ```bash
-yarn generate-tests
+yarn generate:tests
 ```
 
 This will use `leia` to convert the `README.md` test steps into mocha functional tests in the `tests/` directory.

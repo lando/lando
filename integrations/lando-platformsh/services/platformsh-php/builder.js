@@ -24,13 +24,22 @@ module.exports = {
         .orderBy('primary', ['desc'])
         .thru(routes => !_.isEmpty(routes) ? routes[0].url : undefined)
         .value();
+      // Get the remote host
+      const hostIP = _.get(options, 'runConfig.data.host_ip', 'host.docker.internal');
 
       // Build the php
       const php = {
         image: `docker.registry.platform.sh/php-${options.version}`,
         volumes: options.volumes,
         ports: ['80'],
-        environment: {},
+
+        // Set xdebug things, should be safe to set these regardless of whether
+        // the extensions is enabled or not, should also be safe to mix xdebug2
+        // and xdebug3
+        environment: {
+          XDEBUG_CONFIG: `client_host=${hostIP} remote_host=${hostIP}`,
+          PHP_IDE_CONFIG: `serverName=${options.name}`,
+        },
       };
 
       // Add some stuff if we have a primary route

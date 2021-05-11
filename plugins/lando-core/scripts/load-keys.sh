@@ -118,7 +118,7 @@ Host *
   User "${LANDO_HOST_USER}"
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
-  LogLevel=ERROR
+  LogLevel=FATAL
 ${SSH_IDENTITIES[*]}
 EOF
 IFS="${OLDIFS}"

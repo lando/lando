@@ -46,9 +46,13 @@ lando ssh -s database -c "mysql -uroot -h database.lamp1.internal"
 
 ## Port considerations
 
-Note that if you are trying to access your site internally using the `proxy` address you will want to take into account that the _external_ port may not be the same as the _internal_ one.
+::: warning This behavior changed in `3.0.29`
+To read about previous behavior check out the [older networking docs](https://github.com/lando/lando/blob/v3.0.28/docs/config/networking.md#port-considerations)
+:::
 
-This is because _internally_ the `proxy` address is simply an alias that resolves to a given service and not to the proxy. As a consequence there is no port forwarding. This is not problematic if the service itself is also reachable on the same port as the proxy (usually port `80`) but will _definitely be problematic_ if it is reachable on a different port. Consider the below example:
+Prior to Lando `3.0.29`, when trying to communicate between two services using `proxy` addresses a la `thing.lndo.site` you had to explicitly use the internal proxy port and protocol if they differed from the proxy.
+
+Consider the below example for a clearer picture of this behavior.
 
 ```yaml
 proxy:
@@ -59,16 +63,44 @@ proxy:
 ```
 
 ```bash
-# Access the services externally using the proxy
+# Access the services externally (eg on your host) using the proxy
 curl https://lamp2.lndo.site
 curl thing.my-project.lndo.site
 
-# Access the services internally using the proxy alias
+# Access the services internally (eg from inside a container) using the proxy alias
 # Below will fail
 lando ssh -s appserver -c "curl my-project.lndo.site"
 # Below will succeed
 lando ssh -s appserver -c "curl thing.my-project.lndo.site"
 # Below will succeed
+lando ssh -s appserver -c "curl my-project.lndo.site:8000"
+```
+
+As of Lando `3.0.29` internal requests to proxy addresses are now routed out to the proxy and back into Lando. This means that the behavior is now the same regardless of whether the request originates on your host or from inside a container.
+
+However, please note that _**this could be a breaking change**_ if your app was hardcoding the needed port. In most of these cases you can now simply omit the port since the proxy will know what port to use for a given service.
+
+Expressed in terms of the above example you should now expect this:
+
+```yaml
+proxy:
+  appserver:
+    - my-project.lndo.site:8000
+  another_thing:
+    - thing.my-project.lndo.site
+```
+
+```bash
+# Access the services externally (eg on your host) using the proxy
+curl https://lamp2.lndo.site
+curl thing.my-project.lndo.site
+
+# Access the services internally (eg from inside a container) using the proxy alias
+# Below will succeed
+lando ssh -s appserver -c "curl my-project.lndo.site"
+# Below will succeed
+lando ssh -s appserver -c "curl thing.my-project.lndo.site"
+# Below will fail
 lando ssh -s appserver -c "curl my-project.lndo.site:8000"
 ```
 

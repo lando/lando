@@ -79,7 +79,7 @@ Also note that we produce a duplicate `crt` file that you can use for systems th
 
 That all said, once you've located the correct cert, you can add or remove it with the relevant commands below.
 
-### macOS
+### macOS (see Firefox instructions below)
 
 ```bash
 # Add the Lando CA
@@ -113,9 +113,13 @@ sudo rm -f /usr/local/share/ca-certificates/lndo.site.crt
 sudo update-ca-certificates --fresh
 ```
 
-### Ubuntu with Firefox
+### Ubuntu or MacOS with Firefox
 
 Import the `~/.lando/certs/lndo.site.pem` CA certificate in Firefox by going to `about:preferences#privacy` > `View Certificates` > `Authorities` > `Import`, enabling **Trust this CA to identify websites.**.
+
+### Ubuntu with Chrome
+
+On the Authorities tab at chrome://settings/certificates, import `~/.lando/certs/lndo.site.pem or /usr/local/share/ca-certificates/lndo.site.crt`
 
 ### Arch
 

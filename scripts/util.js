@@ -22,12 +22,12 @@ exports.cliTargetOs = () => {
 /*
  * Constructs the CLI PKG task
  */
-exports.cliPkgTask = output => {
+exports.cliPkgTask = (output, arch = 'x64') => {
   // Package command
   const pkgCmd = [
     'node',
     path.resolve(__dirname, '..', 'node_modules', 'pkg', 'lib-es5', 'bin.js'),
-    '--targets ' + ['node12', exports.cliTargetOs(), 'x64'].join('-'),
+    '--targets ' + ['node12', exports.cliTargetOs(), arch].join('-'),
     '--config ' + path.join('package.json'),
     '--output ' + output,
     path.join('bin', 'lando.js'),
@@ -80,9 +80,9 @@ exports.psTask = cmd => (['PowerShell -NoProfile -ExecutionPolicy Bypass -Comman
 /*
  * Installer pacakge task
  */
-exports.installerPkgTask = () => {
+exports.installerPkgTask = (arch = 'amd64') => {
   const extension = (process.platform === 'win32') ? 'ps1' : 'sh';
   const join = (extension === 'sh') ? path.posix.join : path.win32.join;
-  const script = join('scripts', `build-${process.platform}.${extension}`);
+  const script = join('scripts', `build-${process.platform}.${extension} --arch=${arch}`);
   return (extension === 'ps1') ? exports.psTask(script).join(' ') : script;
 };

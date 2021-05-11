@@ -9,10 +9,11 @@ module.exports = {
   name: 'acquia',
   parent: '_drupaly',
   config: {
+    cache: true,
+    composer_version: '2',
     confSrc: __dirname,
     defaultFiles: {},
-    drush: '^10',
-    cache: true,
+    drush: '8.4.8',
     inbox: true,
     php: '7.4',
     services: {appserver: {
@@ -24,25 +25,25 @@ module.exports = {
   builder: (parent, config) => class LandoAcquia extends parent {
     constructor(id, options = {}) {
       options = _.merge({}, config, options);
-      options.drush = false;
       options.database = 'mysql:5.7';
       // Load .env file.
       options.env_file = ['.env'];
       options.webroot = 'docroot';
+      options.xdebug = false;
 
       // Get and discover our keys
       const keys = utils.sortKeys(options._app.acquiaKeys, options._app.hostKeys);
       // Try to grab other relevant stuff that we might have saved
       const account = _.get(options, '_app.meta.label', null);
-      const acliVersion = _.get(options, '_app.config.config.acli_version', 'master');
+      const acliVersion = _.get(options, '_app.config.config.acli_version', 'latest');
       const appUuid = _.get(options, '_app.config.config.ah_application_uuid', null);
       const group = _.get(options, '_app.config.config.ah_site_group', null);
       const key = _.get(options, '_app.meta.key', null);
+      const runScripts = _.get(options, '_app.config.config.build.run_scripts', true);
       const secret = _.get(options, '_app.meta.secret', null);
 
       // Figure out our ACLI situation first
       // Install acli from either 1) latest download, 2) A specific version, or 3) build from a branch
-      // TODO: switch default to `latest` once acli catches up.
       const regexVersion = /^[0-9]+\.[0-9]+\.[0-9]+$/g;
       let acliDownload = null;
       if (acliVersion === 'latest') {
@@ -53,22 +54,26 @@ module.exports = {
       // Download release
       if (acliDownload !== null) {
         options.services.appserver.build.push(...[
-          'curl -OL https://github.com/acquia/cli/releases/latest/download/acli.phar',
+          `curl -OL ${acliDownload}`,
           'chmod +x acli.phar',
           'mv acli.phar /usr/local/bin/acli',
         ]);
       } else {
         // Build from source
+        const gitHubUrl = 'https://github.com/acquia/cli.git';
         options.services.appserver.build.push(...[
           'rm -rf /usr/local/cli',
-          `cd /usr/local/ && git clone git@github.com:acquia/cli.git -b "${acliVersion}" && cd cli && composer install`,
-          'ln -s /usr/local/cli/bin/acli /usr/local/bin/acli',
+          `cd /usr/local/ && git clone ${gitHubUrl} -b "${acliVersion}" && cd cli && composer install`,
+          'ln -sf /usr/local/cli/bin/acli /usr/local/bin/acli',
         ]);
       }
 
-      // Set other relevant build steps after ACLI is installed
+      // Symlink the acli config directories
       options.services.appserver.build.push('/helpers/acquia-config-symlink.sh');
-      options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts -n');
+      // Run acli build scripts unless purposefully toggled off
+      if (runScripts !== false) {
+        options.services.appserver.build.push('cd /app && /usr/local/bin/acli pull:run-scripts -n');
+      }
 
       // Run acli login with credentials set in init; if applicable
       if (secret && key) {

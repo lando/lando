@@ -649,14 +649,42 @@ runtime:
     - xdebug
 ```
 
-Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production. You _may_ also need to set this in your .lando.yml:
+Due to how Platform.sh sets up `xdebug` it should be ok to have this on even in production. However, if you would like to enable it _only_ on Lando you can override the extensions in your Landofile. Note that the entire array is replaced in the overrides so your Landofile should reflect _all_ the extensions you want to use not just the difference.
+
+```yaml
+recipe: platformsh
+config:
+  id: PROJECT_ID
+  overrides:
+    app:
+      runtime:
+        extensions:
+          - redis
+          - xdebug
+```
+
+Lando will also make a best effort attempt to set the correct `xdebug` configuration so that it works "out of the box". If you find that things are not working as expected you can modify the configuration to your liking using the same override mechanisn.
+
 
 ```yaml
 config:
-  variables:
+  id: PROJECT_ID
+  overrides:
     app:
+      runtime:
+        extensions:
+          - redis
+          - xdebug
       php:
-        xdebug.remote_connect_back: 1
+        # XDEBUG 2
+        xdebug.remote_enable: 1
+        xdebug.remote_mode: req
+        xdebug.remote_port: 9000
+        xdebug.remote_connect_back: 0
+
+        # XDEBUG 3
+        xdebug.discover_client_host: true
+        xdebug.mode: debug
 ```
 
 ### Platformsh.agent errors

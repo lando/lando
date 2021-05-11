@@ -16,8 +16,17 @@ module.exports = {
       const runConfigPath = _.get(options, 'runConfig.file');
       const bootScript = path.join(options.userConfRoot, 'scripts', 'psh-boot.sh');
 
-      // Figure out whether we should portforward and add in creds
-      options.portforward = !_.isEmpty(options.platformsh.creds);
+      // If portforward is not set by the user than compute its value
+      if (_.isNil(options.portforward)) options.portforward = !_.isEmpty(options.platformsh.creds);
+      // Handle portfoward in the usual way
+      if (options.portforward) {
+        if (options.portforward === true) {
+          sources.push({services: _.set({}, options.name, {ports: [options.port]})});
+        } else {
+          sources.push({services: _.set({}, options.name, {ports: [`${options.portforward}:${options.port}`]})});
+        }
+      }
+
       // Add some lando info if portforward is on
       options.info = _.merge({}, options.info, {
         creds: _(options.platformsh.creds)

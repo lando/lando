@@ -8,10 +8,36 @@ LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.js
 #
 # LANDO="lando"
 LANDO="lando.txt"
+TARGET_ARCH="amd64"
+
+# Allow arch to be overridden
+while (( "$#" )); do
+  case "$1" in
+    --arch|--arch=*)
+      if [ "${1##--arch=}" != "$1" ]; then
+        TARGET_ARCH="${1##--arch=}"
+        shift
+      else
+        TARGET_ARCH=$2
+        shift 2
+      fi
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*|--*=)
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
 
 # Docker
-DOCKER_VERSION="3.1.0"
-DOCKER_DOWNLOAD="51484"
+DOCKER_VERSION="3.3.3"
+DOCKER_DOWNLOAD="64133"
 
 # Certs
 TEAM_ID="FY8GAUX282"
@@ -62,7 +88,13 @@ mkdir -p build/installer
 cd build/installer
 
 # Prepare Lando
-cp -rf "../../build/cli/lando-osx-x64-v${LANDO_VERSION}" "${LANDO}"
+PKG_ARCH="$TARGET_ARCH"
+# Map amd64 -> x64
+if [ "$PKG_ARCH" == "amd64" ]; then
+  PKG_ARCH="x64"
+fi
+
+cp -rf "../../build/cli/lando-osx-${PKG_ARCH}-v${LANDO_VERSION}" "${LANDO}"
 chmod +x "${LANDO}"
 # We cannot codesign the binary until https://github.com/zeit/pkg/issues/128 is resolved
 # if [ "$PKG_SIGN" == "true" ]; then
@@ -70,7 +102,7 @@ chmod +x "${LANDO}"
 # fi
 
 # Prepare Docker Desktop
-curl -fsSL -o docker.dmg "https://desktop.docker.com/mac/stable/${DOCKER_DOWNLOAD}/Docker.dmg" && \
+curl -fsSL -o docker.dmg "https://desktop.docker.com/mac/stable/${TARGET_ARCH}/${DOCKER_DOWNLOAD}/Docker.dmg" && \
   mkdir -p /tmp/lando/docker && \
   hdiutil attach -mountpoint /tmp/lando/docker Docker.dmg && \
   cp -Rf /tmp/lando/docker/Docker.app ./Docker.app && \

@@ -14,6 +14,7 @@ const SQLServices = ['lagoon-mariadb', 'lagoon-postgres'];
  */
 const getLandoServiceType = type => {
   switch (type) {
+    case 'elasticsearch': return 'lagoon-elasticsearch';
     case 'nginx': return 'lagoon-nginx';
     case 'nginx-drupal': return 'lagoon-nginx';
     case 'none': return 'lagoon-none';
