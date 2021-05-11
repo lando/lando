@@ -48,15 +48,16 @@ echo "Building with Lando from $LANDO_URL"
 
 # Prep our workspace
 rm -rf build/installer
+
+# Copy installer assets to build dir
+cp -rf installer/linux/* build/installer
 mkdir -p build/installer
 mkdir -p build/installer/lando
 mkdir -p build/installer/lando/bin
 mkdir -p build/installer/lando/docs
-# Copy installer assets to build dir
-cp -rf installer/linux/* build/installer
 
 # GO into our working dir and check things out
-cd build/installer
+cd build/installer/lando
 ls -lsa
 
 # Get our Lando dependencies
