@@ -33,7 +33,7 @@ jobs:
         id: vars
         shell: bash
         run: |
-          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"=
+          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
           echo "::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}"
           echo "::set-output name=SOURCE_TAG::$(git describe --tags --abbrev=0)"
       - name: Test user defined variables
@@ -89,7 +89,9 @@ jobs:
         shell: bash
         run: |
           # Create release directories
-          mkdir -p releases dev-builds
+          mkdir -p dist releases dev-builds
+          # Move from build dir to dist
+          cp -f "installer/dist/lando.exe" "dist/lando.exe
 
           # Snapshot release
           cp -f "dist/lando.exe" "dev-builds/lando-build-${{ github.sha }}.exe"

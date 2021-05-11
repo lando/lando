@@ -33,13 +33,11 @@ jobs:
           fetch-depth: 0
       - name: Set other variables
         id: vars
-        shell: bash
         run: |
-          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"=
+          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
           echo "::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}"
           echo "::set-output name=SOURCE_TAG::$(git describe --tags --abbrev=0)"
       - name: Test user defined variables
-        shell: bash
         run: |
           echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
           echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
@@ -64,7 +62,6 @@ jobs:
       # @NOTE: We do this so there is a single place to update versions
       - name: Import build version envvars
         id: import-env
-        shell: bash
         run: |
           while read line; do
             echo "$line" >> $GITHUB_ENV
@@ -108,7 +105,6 @@ jobs:
         env:
           SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
-        shell: bash
         run: |
           # Create release directories
           mkdir -p ./releases ./dev-builds
