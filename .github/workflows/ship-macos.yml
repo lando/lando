@@ -45,12 +45,7 @@ jobs:
         run: |
           echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
           echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
-          # Set SOURCE_TAG if it makes sense
-          if [ "$GITHUB_REF" != "${GITHUB_REF#refs/tags/" ]; then
-            echo "::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}"
-          else
-            echo "::set-output name=SOURCE_TAG::"
-          fi
+          echo "The SOURCE_TAG is ${{ steps.vars.outputs.SOURCE_TAG }}"
       - name: Install node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
