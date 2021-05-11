@@ -8,9 +8,9 @@
 LANDO="lando.txt"
 
 # Set defaults
-DOCKER_VERSION="3.3.3"
-DOCKER_BUILD="64133"
-LANDO_CLI_VERSION="latest"
+DOCKER_VERSION="$DOCKER_DESKTOP_VERSION"
+DOCKER_BUILD="$DOCKER_DESKTOP_BUILD"
+LANDO_CLI_VERSION="$LANDO_CLI_VERSION"
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
 
 # Download urls

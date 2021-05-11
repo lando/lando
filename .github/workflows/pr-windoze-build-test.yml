@@ -1,23 +1,22 @@
-name: Build macOS test
+name: Build Windoze test
 
 on:
   pull_request:
 
 jobs:
-  build-macos-test:
+  build-windoze-test:
     runs-on: ${{ matrix.os }}
     env:
-      APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
-      APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
-      APPLE_TEAM_ID: FY8GAUX282
       DOCKER_DESKTOP_VERSION: "3.3.3"
       DOCKER_DESKTOP_BUILD: "64133"
       LANDO_CLI_VERSION: "3.2.0"
+      WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}
+      WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
       TERM: xterm
     strategy:
       matrix:
         os:
-          - macos-10.15
+          - windows-2019
         node-version:
           - '14'
     steps:
@@ -48,31 +47,11 @@ jobs:
       - name: Rewrite the version since this is a test
         run: node scripts/dev-version.js
       - name: Import and verify certs
-        run: scripts/import-macos-certs.sh
+        shell: powershell
+        run: scripts/import-win-certs.ps1
       - name: Assemble pieces
-        run: scripts/assemble-macos.sh
-      - name: Sign package
-        run: |
-          # Rename some things
-          mv build/installer/dmg/LandoInstaller.pkg build/installer/dmg/UnsignedLandoInstaller.pkg
-          # Sign
-          productsign --sign "$APPLE_TEAM_ID" build/installer/dmg/UnsignedLandoInstaller.pkg build/installer/dmg/LandoInstaller.pkg
-          # Verify
-          pkgutil --check-signature build/installer/dmg/LandoInstaller.pkg
-          # Remove unsigned
-          rm -f build/installer/dmg/UnsignedLandoInstaller.pkg
-      - name: Create DMG
-        run: |
-          mkdir -p dist
-          scripts/create-dmg.sh build/installer/dmg
-      - name: Sign DMG
-        run: |
-          # Sign
-          codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
-          # Verify
-          codesign -v dist/lando.dmg
-      # - name: Notarize DMG
-      #   env:
-      #     APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
-      #     APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
-      #   run: scripts/notarize.sh dist/lando.dmg
+        shell: powershell
+        run: scripts/assemble-win.ps1
+      - name: Create and sign package
+        shell: powershell
+        run: scripts/create-exe.ps1
