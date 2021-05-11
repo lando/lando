@@ -53,13 +53,15 @@ case $FLAVOR in
     ;;
   debian)
     sudo apt-get update && sudo apt-get -y --force-yes install \
-      bsdtar \
+      libarchive-tools \
       build-essential \
       curl \
       file \
       rpm \
       ruby \
-      ruby-dev
+      ruby-dev \
+      ruby-gems
+
     ;;
   fedora)
     echo "Not implemented yet!"

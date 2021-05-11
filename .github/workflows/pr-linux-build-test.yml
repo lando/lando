@@ -16,6 +16,8 @@ jobs:
           - ubuntu-20.04
         node-version:
           - '14'
+        ruby-version:
+          - '2.6'
         flavors:
           - deb
           - pacman
@@ -32,6 +34,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
       - name: Get Yarn cache directory
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -49,7 +55,7 @@ jobs:
         run: node scripts/dev-version.js
       - name: Assemble pieces
         run: scripts/assemble-linux.sh
-      - name: Create and sign package
+      - name: Create package
         run: |
           LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
           scripts/create-pkg.sh ${{ matrix.flavor }} "$LANDO_VERSION"
