@@ -60,7 +60,7 @@ case $FLAVOR in
       rpm \
       ruby \
       ruby-dev \
-      ruby-gems
+      rubygems
 
     ;;
   fedora)

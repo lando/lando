@@ -25,9 +25,9 @@ if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
 fi
 
 # Make sure ruby gems are in the path
-ruby -e 'print Gem.user_dir'
-export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin:/home/travis/.gem/bin"
+export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin:/home/runner/.gem/bin:/home/travis/.gem/bin"
 export GEM_HOME=$HOME/.gem
+echo "$PATH"
 
 # Making sure we have FPM
 if [ ! $(type -p fpm) ]; then
