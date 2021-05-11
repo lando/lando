@@ -22,7 +22,7 @@ $inno_bin = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
 # Cert things
 $temp_dir = $env:TMP
 $cert_path = "$temp_dir\lando.windoze.p12"
-$cert_password = $env:WINDOZE_CERTS_PASSWORD
+$cert_password = $env:WINDOZE_CERT_PASSWORD
 $signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\bin\x64\signtool.exe"
 
 # Install helper
