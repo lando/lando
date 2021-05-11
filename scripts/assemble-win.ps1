@@ -16,7 +16,7 @@ $docker_build = $env:DOCKER_DESKTOP_BUILD
 
 # Download urls
 $docker_url="https://desktop.docker.com/mac/stable/amd64/$docker_build/Docker.dmg"
-$lando_url="https://files.lando.dev/lando-win-x64-$lando_cli_version"
+$lando_url="https://files.lando.dev/lando-win-x64-$lando_cli_version.exe"
 
 # Installer things
 $base_dir = "$pwd\build\installer"
