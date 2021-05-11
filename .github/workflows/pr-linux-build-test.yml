@@ -7,8 +7,6 @@ jobs:
   build-linux-test:
     runs-on: ${{ matrix.os }}
     env:
-      DOCKER_COMPOSE_VERSION: "1.29.1"
-      LANDO_CLI_VERSION: "v3.2.0"
       TERM: xterm
     strategy:
       matrix:
@@ -23,6 +21,16 @@ jobs:
           - pacman
           - rpm
     steps:
+      # Import ENVVARS from build.env
+      # @NOTE: We do this so there is a single place to update versions
+      - name: Import build version envvars
+        id: import-env
+        shell: bash
+        run: |
+          while read line; do
+            echo "$line" >> $GITHUB_ENV
+          done < BUILD.env
+
       # Install deps and cache
       # Eventually it would be great if these steps could live in a separate YAML file
       # that could be included in line to avoid code duplication
