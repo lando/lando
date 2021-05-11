@@ -38,12 +38,6 @@ $inno_url = "http://www.jrsoftware.org/download.php/is.exe"
 $inno_dest = "$temp_dir\inno-installer.exe"
 $inno_bin = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
 
-# Handle params
-param (
-  [string]$docker_url = $default_docker_url,
-  [string]$lando_url = $default_lando_url
-)
-
 # Install helper
 function InstallExe($file)
 {

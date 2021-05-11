@@ -24,11 +24,6 @@ $cert_path = "$temp_dir\lando.windoze.p12"
 $cert_password = $env:WINDOZE_CERTS_PASSWORD
 $signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\bin\x64\signtool.exe"
 
-# Handle params
-param (
-  [string]$issfile = $default_iss_file,
-)
-
 # Install helper
 function InstallExe($file)
 {
