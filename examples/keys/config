@@ -1,6 +1,0 @@
-Host *
-  User "Han Solo"
-  StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-  LogLevel=FATAL
-  IdentityFile "/user/.ssh/smutkey1"

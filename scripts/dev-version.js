@@ -10,18 +10,32 @@
 // Grab needed modules
 const _ = require('lodash');
 const fs = require('fs-extra');
-const Log = require('./../lib/logger');
-const log = new Log({logLevelConsole: 'debug', logName: 'dev-version'});
-const Shell = require('./../lib/shell');
-const shell = new Shell(log);
+const util = require('util');
+const winston = require('winston');
+const exec = util.promisify(require('child_process').exec);
 
-// Start our sacred promise
-return shell.sh(['git', 'describe', '--tags', '--always', '--abbrev=1'], {mode: 'collect'})
+// Instantiate loggers
+const log = new winston.Logger({
+  transports: [
+    new winston.transports.Console({colorize: true}),
+  ],
+});
 
-// Trim the tag
-.then(data => _.trim(data.slice(1)))
+// Get dev version func
+async function getDevVersion() {
+  return await exec('git describe --tags --always --abbrev=1');
+}
 
-// Replace the version for our files
+// Build new version
+return getDevVersion()
+
+// Fail if we dont have a version
+.then(result => {
+  if (!_.isEmpty(result.stderr)) return Promise.reject('NOPE');
+  else return (_.trim(result.stdout.slice(1)));
+})
+
+// Write the new version
 .then(version => {
   const packageJson = require('./../package.json');
   packageJson.version = version;

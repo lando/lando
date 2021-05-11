@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get the script type
 SCRIPT_TYPE=$1

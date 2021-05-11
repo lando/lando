@@ -1,7 +1,0 @@
-name: lando-dotnet
-services:
-  defaults:
-    type: dotnet
-    command: dotnet run
-  cli:
-    type: dotnet

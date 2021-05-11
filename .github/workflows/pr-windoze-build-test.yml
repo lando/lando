@@ -1,0 +1,64 @@
+name: Build Windoze test
+
+on:
+  pull_request:
+
+jobs:
+  build-windoze-test:
+    runs-on: ${{ matrix.os }}
+    env:
+      WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}
+      WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
+      TERM: xterm
+    strategy:
+      matrix:
+        os:
+          - windows-2019
+        node-version:
+          - '14'
+    steps:
+      # Install deps and cache
+      # Eventually it would be great if these steps could live in a separate YAML file
+      # that could be included in line to avoid code duplication
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Use Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Yarn dependencies
+        run: yarn install --prefer-offline --frozen-lockfile
+
+      # Import ENVVARS from build.env
+      # @NOTE: We do this so there is a single place to update versions
+      - name: Import build version envvars
+        id: import-env
+        shell: bash
+        run: |
+          while read line; do
+            echo "$line" >> $GITHUB_ENV
+          done < BUILD.env
+
+      # Make sure the things we need to build the release actually work
+      - name: Rewrite the version since this is a test
+        run: node scripts/dev-version.js
+      - name: Import and verify certs
+        shell: powershell
+        run: scripts/import-win-certs.ps1
+      - name: Assemble pieces
+        shell: powershell
+        run: scripts/assemble-win.ps1
+      - name: Create and sign package
+        shell: powershell
+        run: scripts/create-exe.ps1
