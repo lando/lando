@@ -14,12 +14,6 @@ $lando_cli_version = $env:LANDO_CLI_VERSION
 $docker_version = $env:DOCKER_DESKTOP_VERSION
 $docker_build = $env:DOCKER_DESKTOP_BUILD
 
-# Get some ENV things for certs
-$temp_dir = $env:TMP
-$cert_data = $env:WINDOZE_CERTS_DATA
-$cert_password = $env:WINDOZE_CERTS_PASSWORD
-$cert_secure_password = $null
-
 # Download urls
 $docker_url="https://desktop.docker.com/mac/stable/amd64/$docker_build/Docker.dmg"
 $lando_url="https://files.lando.dev/lando-win-x64-$lando_cli_version"
@@ -31,22 +25,6 @@ $gui_dir = "$bundle_dir\gui"
 $docs_dir = "$bundle_dir\docs"
 $bin_dir = "$bundle_dir\bin"
 $plugins_dir = "$bundle_dir\plugins"
-$installer_args = "/DMyAppVersion=$lando_version /DDockerVersion=$docker_version"
-
-# Build dependencies
-$inno_url = "http://www.jrsoftware.org/download.php/is.exe"
-$inno_dest = "$temp_dir\inno-installer.exe"
-$inno_bin = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-
-# Install helper
-function InstallExe($file)
-{
-  Write-Output "Installing $file..."
-  #Start-Process -Wait $file $arguments
-  $arguments = '/SP /SILENT /VERYSILENT /SUPRESSMSGBOXES /NOCANCEL /NOREBOOT /NORESTART /CLOSEAPPLICATIONS'
-  Start-Process -Wait $file $arguments
-  Write-Output "Installed with $file"
-}
 
 # Download helper
 function Download($url, $destination)
@@ -67,14 +45,7 @@ Remove-Item -LiteralPath "$base_dir" -Force -Recurse -ErrorAction Ignore
 New-Item -type directory "$base_dir"
 # Copy installer assets
 Copy-Item -Path "$pwd/installer/win/*" -Destination "$base_dir" -Recurse
-Dir -Recurse c:\path\ | Get-Childitem
-
-# Make sure our dependencies are installed
-If (!(Test-Path $inno_bin)) {
-  Write-Output "Grabbing and installing some needed dependencies..."
-  Download -Url $inno_url -Destination $inno_dest
-  InstallExe -File $inno_dest
-}
+Dir -Recurse "$base_dir" | Get-Childitem
 
 # Get the things we need
 New-Item -type directory -force -path $bundle_dir, $docs_dir, $bin_dir, $plugins_dir, $gui_dir
