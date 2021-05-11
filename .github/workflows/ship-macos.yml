@@ -31,6 +31,19 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Set other variables
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"=
+          echo "::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}"
+          echo "::set-output name=SOURCE_TAG::$(git describe --tags --abbrev=0)"
+      - name: Test user defined variables
+        shell: bash
+        run: |
+          echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
+          echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
+          echo "The SOURCE_TAG is ${{ steps.vars.outputs.SOURCE_TAG }}"
       - name: Install node ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -93,8 +106,8 @@ jobs:
       # Create and upload releases
       - name: Create releases
         env:
-          SOURCE_BRANCH: "${GITHUB_REF#refs/heads/}"
-          SOURCE_TAG: "$(git describe --tags --abbrev=0)"
+          SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
+          SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
         shell: bash
         run: |
           # Create release directories
@@ -140,9 +153,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SOURCE_TAG: "$(git describe --tags --abbrev=0)"
         with:
           draft: true
-          files: releases/lando-$SOURCE_TAG.dmg
+          files: releases/lando-${{ steps.vars.outputs.SOURCE_TAG }}.dmg
           # @TODO: Handle autochangelog stuff here eventaully
           # body_path: ${{ github.workflow }}-CHANGELOG.txt
