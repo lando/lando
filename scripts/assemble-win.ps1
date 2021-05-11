@@ -21,8 +21,8 @@ $cert_password = $env:WINDOZE_CERTS_PASSWORD
 $cert_secure_password = $null
 
 # Download urls
-$default_docker_url="https://desktop.docker.com/mac/stable/amd64/$docker_build/Docker.dmg"
-$default_lando_url="https://files.lando.dev/lando-win-x64-$lando_cli_version"
+$docker_url="https://desktop.docker.com/mac/stable/amd64/$docker_build/Docker.dmg"
+$lando_url="https://files.lando.dev/lando-win-x64-$lando_cli_version"
 
 # Installer things
 $base_dir = "$pwd\build\installer"
@@ -63,7 +63,7 @@ Write-Output "Building with Docker from $docker_url"
 Write-Output "Building with Lando from $lando_url"
 
 # Prep our workspace
-Remove-Item -LiteralPath "$base_dir" -Force -Recurse
+Remove-Item -LiteralPath "$base_dir" -Force -Recurse -ErrorAction Ignore
 New-Item -type directory "$base_dir"
 # Copy installer assets
 Copy-Item -Path "$pwd/installer/win/*" -Destination "$base_dir" -Recurse
