@@ -72,6 +72,3 @@ cp -rf ../../../README.md docs/README.md
 cp -rf ../../../PRIVACY.md docs/PRIVACY.md
 cp -rf ../../../TERMS.md docs/TERMS.md
 cp -rf ../../../LICENSE.md docs/LICENSE.md
-
-# Back out to install root
-cd .. && mkdir -p dist

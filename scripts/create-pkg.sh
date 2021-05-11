@@ -36,6 +36,9 @@ if [ ! $(type -p fpm) ]; then
   gem install --verbose fpm || sudo gem install --verbose fpm
 fi
 
+# Ensure dist dir
+mkdir -p dist
+
 # Build a $PKG_TYPE package
 fpm -s dir -t $PKG_TYPE \
   --package "$PKG_PKG" \
