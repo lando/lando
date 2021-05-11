@@ -10,7 +10,7 @@ on:
       - v*
 
 jobs:
-  ship-linux-pkg:
+  ship-linux-installer:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
@@ -66,9 +66,7 @@ jobs:
 
       # Build and prep the release
       - name: Rewrite the version based on the tag
-        run: |
-          node scripts/dev-version.js
-          node ./bin/lando.js version
+        run: node scripts/dev-version.js
       - name: Assemble pieces
         run: scripts/assemble-linux.sh
       - name: Create package
@@ -84,20 +82,51 @@ jobs:
         shell: bash
         run: |
           # Create release directories
-          mkdir -p ./releases ./dev-builds
+          mkdir -p releases dev-builds
 
           # Snapshot release
-          cp -f "./dist/lando.${{ matrix.flavor }}" "./dev-builds/lando-build-${{ github.sha }}.${{ matrix.flavor }}"
+          cp -f "dist/lando.${{ matrix.flavor }}" "dev-builds/lando-build-${{ github.sha }}.${{ matrix.flavor }}"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-latest.${{ matrix.flavor }}"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-latest.${{ matrix.flavor }}"; fi
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-$SOURCE_TAG.${{ matrix.flavor }}"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$SOURCE_TAG.${{ matrix.flavor }}"; fi
           # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.${{ matrix.flavor }}" "./releases/lando-stable.${{ matrix.flavor }}"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-stable.${{ matrix.flavor }}"; fi
 
           # Print what we end up with
-          ls -lsa ./releases
-          ls -lsa ./dev-builds
+          ls -lsa releases
+          ls -lsa dev-builds
+      # Upload back to Actions
+      - name: Upload build snapshot as Actions artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lando-build-${{ github.sha }}.${{ matrix.flavor }}
+          path: dev-builds/
+          if-no-files-found: error
+          retention-days: 30
+      # Upload releases to S3
+      - name: Configure S3 Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Upload releases to S3
+        shell: bash
+        run: |
+          aws s3 sync releases s3://files.lando.dev/installer --acl public-read
+      # Upload releases to GitHub Releases
+      - name: Upload releases to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_TAG: "$(git describe --tags --abbrev=0)"
+        with:
+          draft: true
+          files: releases/lando-$SOURCE_TAG.${{ matrix.flavor }}
+          # @TODO: Handle autochangelog stuff here eventaully
+          # body_path: ${{ github.workflow }}-CHANGELOG.txt
