@@ -50,11 +50,11 @@ echo "Building with Lando from $LANDO_URL"
 rm -rf build/installer
 
 # Copy installer assets to build dir
-cp -rf installer/linux/* build/installer
 mkdir -p build/installer
 mkdir -p build/installer/lando
 mkdir -p build/installer/lando/bin
 mkdir -p build/installer/lando/docs
+cp -rf installer/linux/* build/installer
 
 # GO into our working dir and check things out
 cd build/installer/lando
