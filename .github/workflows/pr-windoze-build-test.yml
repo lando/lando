@@ -9,7 +9,7 @@ jobs:
     env:
       DOCKER_DESKTOP_VERSION: "3.3.3"
       DOCKER_DESKTOP_BUILD: "64133"
-      LANDO_CLI_VERSION: "3.2.0"
+      LANDO_CLI_VERSION: "v3.2.0"
       WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}
       WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
       TERM: xterm

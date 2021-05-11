@@ -12,7 +12,7 @@ jobs:
       APPLE_TEAM_ID: FY8GAUX282
       DOCKER_DESKTOP_VERSION: "3.3.3"
       DOCKER_DESKTOP_BUILD: "64133"
-      LANDO_CLI_VERSION: "3.2.0"
+      LANDO_CLI_VERSION: "v3.2.0"
       TERM: xterm
     strategy:
       matrix:
