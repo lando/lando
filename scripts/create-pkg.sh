@@ -18,6 +18,23 @@ source ./scripts/env.sh
 ./scripts/build-scripts.sh prerm $PKG_TYPE
 ./scripts/build-scripts.sh postrm $PKG_TYPE
 
+# Checking to see that we have the correct core build dependencies
+if [ ! $(type -p rpmbuild) ] || [ ! $(type -p bsdtar) ]; then
+  echo "You do not have the correct dependencies installed to build Lando! Trying to install them..."
+  ./scripts/install-deps.sh
+fi
+
+# Make sure ruby gems are in the path
+export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin:/home/travis/.gem/bin"
+export GEM_HOME=$HOME/.gem
+
+# Making sure we have FPM
+if [ ! $(type -p fpm) ]; then
+  echo "You do not have fpm! Trying to install it..."
+  ./scripts/install-deps.sh
+  gem install --verbose fpm || sudo gem install --verbose fpm
+fi
+
 # Build a $PKG_TYPE package
 fpm -s dir -t $PKG_TYPE \
   --package "$PKG_PKG" \

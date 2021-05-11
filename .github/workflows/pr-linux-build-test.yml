@@ -1,0 +1,55 @@
+name: Build Linux test
+
+on:
+  pull_request:
+
+jobs:
+  build-linux-test:
+    runs-on: ${{ matrix.os }}
+    env:
+      DOCKER_COMPOSE_VERSION: "1.29.1"
+      LANDO_CLI_VERSION: "v3.2.0"
+      TERM: xterm
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+        node-version:
+          - '14'
+        flavors:
+          - deb
+          - pacman
+          - rpm
+    steps:
+      # Install deps and cache
+      # Eventually it would be great if these steps could live in a separate YAML file
+      # that could be included in line to avoid code duplication
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Use Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Yarn dependencies
+        run: yarn install --prefer-offline --frozen-lockfile
+
+      # Make sure the things we need to build the release actually work
+      - name: Rewrite the version since this is a test
+        run: node scripts/dev-version.js
+      - name: Assemble pieces
+        run: scripts/assemble-linux.sh
+      - name: Create and sign package
+        run: |
+          LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
+          scripts/create-pkg.sh ${{ matrix.flavor }} "$LANDO_VERSION"
