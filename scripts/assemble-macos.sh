@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # We are spoofing the binary as a text file because it will then pass app notarization
 # This is not ideal but its what we have to do until https://github.com/zeit/pkg/issues/128

@@ -1,4 +1,5 @@
-  #!/bin/bash
+#!/bin/bash
+set -e
 
 # Get our file
 FILE="$(pwd)/$1"

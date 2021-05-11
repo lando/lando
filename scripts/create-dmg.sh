@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get our build dir
 SRCDIR="$(pwd)/$1"

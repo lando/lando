@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Set defaults
 DOCKER_COMPOSE_VERSION="$DOCKER_COMPOSE_VERSION"

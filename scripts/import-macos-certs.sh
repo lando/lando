@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Verify we have the envvars we need
 if [ -z "$APPLE_CERT_DATA" ]; then

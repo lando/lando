@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 #
 # A script to install the Lando build and dev dependencies on POSIX
