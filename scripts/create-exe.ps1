@@ -12,7 +12,7 @@ $base_dir = "$pwd\build\installer"
 $docker_version = $env:DOCKER_DESKTOP_VERSION
 $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
-$default_iss_file = "$base_dir\Lando.iss"
+$issfile = "$base_dir\Lando.iss"
 
 # Build dependencies
 $inno_url = "http://www.jrsoftware.org/download.php/is.exe"
