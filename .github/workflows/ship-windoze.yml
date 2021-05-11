@@ -95,7 +95,7 @@ jobs:
           # Create release directories
           mkdir -p dist releases dev-builds
           # Move from build dir to dist
-          cp -f "installer/dist/lando.exe" "dist/lando.exe"
+          cp -f "build/installer/dist/lando.exe" "dist/lando.exe"
 
           # Snapshot release
           cp -f "dist/lando.exe" "dev-builds/lando-build-${{ github.sha }}.exe"
