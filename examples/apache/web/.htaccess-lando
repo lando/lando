@@ -1,5 +1,0 @@
-# This file is Lando specific so you can do htaccess overrides
-# just for the man in the blue cape!
-Options +FollowSymLinks
-RewriteEngine On
-RewriteRule ^folder1.*$ http://landoapache.lndo.site/folder2/ [R=301,L]

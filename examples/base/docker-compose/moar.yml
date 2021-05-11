@@ -1,4 +1,0 @@
-version: '3.2'
-services:
-  log:
-    image: php:7.1-fpm-alpine

@@ -1,11 +1,12 @@
 #!/bin/bash
+set -e
 
 # Set up our FPM env
 # We want this separate so we can source from other things ie tests
 
 # Set some basic info
 PKG_NAME="lando"
-PKG_PKG="build/installer/dist/lando.$PKG_TYPE"
+PKG_PKG="dist/lando.$PKG_TYPE"
 PKG_DESCRIPTION="The best local dev in the galaxy."
 PKG_MAINTAINER="Mike Pirog <mike@lando.dev>"
 PKG_URL="https://docs.devwithlando.io/"

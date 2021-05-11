@@ -1,6 +1,0 @@
-name: lando-lemp
-recipe: lemp
-config:
-  webroot: .
-  config:
-    vhosts: config/default.conf.tpl

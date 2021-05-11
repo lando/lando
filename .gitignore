@@ -27,17 +27,7 @@ lando.env
 
 # docs
 _docs
-docs/examples
-docs/.vuepress/public/api
 
 # Build dirs
 build
 dist
-
-# coverage reporting
-.nyc_output
-coverage/
-
-# CCI test splitting
-test/split-file.txt
-test/*.func.js
