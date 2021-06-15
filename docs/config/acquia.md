@@ -2,7 +2,7 @@
 description: The best local development option for Drupal 7, Drupal 8 or WordPress sites running on Acquia. Get Acquia CLI and all the usual power tools plus awesome workflow automation.
 ---
 
-# Acquia **(beta)**
+# Acquia
 
 [Acquia](https://www.acquia.com/) is the Enterprise Digital Experience Platform designed to help you build Drupal experiences that engage customers, enhance conversions and help your business stand out.
 
