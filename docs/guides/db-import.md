@@ -79,6 +79,6 @@ tooling:
         boolean: true
 ```
 
-<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" repo="https://github.com/lando/lando/tree/master/examples/sql-import" />
+<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" repo="https://github.com/lando/cli/tree/main/examples/sql-import" />
 <Newsletter />
 

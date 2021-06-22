@@ -183,7 +183,7 @@ Lando _should_ support Platform.sh's [multiple applications configurations](http
 
 If you have a multiple application setup then you will need to navigate into either the directory that contains the `.platform.app.yaml`  or the `source.root` specified in your `.platform/applications.yaml` file to access the relevant tooling for that app.
 
-This is how tooling works for our [multiapp example](https://github.com/lando/lando/tree/master/examples/platformsh-kitchensink).
+This is how tooling works for our [multiapp example](https://github.com/lando/cli/tree/main/examples/platformsh-kitchensink).
 
 ```bash
 # Get access to tooling for the "base" application

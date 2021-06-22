@@ -26,7 +26,7 @@ feed:
 
 # How do I set the timezone of a Lando service?
 
-<GuideHeader test="https://github.com/lando/lando/tree/master/examples/services" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
+<GuideHeader test="https://github.com/lando/cli/tree/main/examples/services" name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" />
 
 <YouTube url="https://www.youtube.com/embed/P8n2z4m0_s0" />
 

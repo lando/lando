@@ -106,5 +106,5 @@ lando npm -v
 ```
 
 
-<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" original="" repo="https://github.com/lando/lando/tree/master/examples/php"/>
+<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" original="" repo="https://github.com/lando/cli/tree/main/examples/php"/>
 <Newsletter />

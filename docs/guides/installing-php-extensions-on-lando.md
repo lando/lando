@@ -107,5 +107,5 @@ You can verify the extension was enabled by running
 lando ssh -s myservice -c "php -m"
 ```
 
-<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" original="" repo="https://github.com/lando/lando/tree/master/examples/php-extensions"/>
+<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" original="" repo="https://github.com/lando/cli/tree/main/examples/php-extensions"/>
 <Newsletter />

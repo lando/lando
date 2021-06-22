@@ -87,7 +87,7 @@ lando pull
 
 ## More
 
-Check out the [`lando init` docs](./init.md) to get a better sense of its power or try running one of our countless [examples](https://github.com/lando/lando/tree/master/examples).
+Check out the [`lando init` docs](./init.md) to get a better sense of its power or try running one of our countless [examples](https://github.com/lando/cli/tree/main/examples).
 
 Or subscribe to our training program where we send you material every week to help you learn all the Lando
 

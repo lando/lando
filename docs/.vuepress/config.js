@@ -221,7 +221,7 @@ module.exports = {
             ['https://launchpass.com/devwithlando', 'Slack - Official Lando'],
             ['https://www.drupal.org/slack', 'Slack - Drupal #lando channel'],
             ['https://www.youtube.com/channel/UCl_QBNuGJNoo7yH-n18K7Kg', 'YouTube Tutorials'],
-            ['https://github.com/lando/lando/tree/master/examples', 'Code examples'],
+            ['https://github.com/lando/cli/tree/main/examples', 'Code examples'],
             ['security', 'Security Issues'],
           ],
         },

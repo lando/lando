@@ -298,6 +298,6 @@ This service is useful if you are:
 2. Using Docker Compose config from other projects
 3. Need a service not currently provided by Lando itself
 
-You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/compose).
+You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/cli/tree/main/examples/compose).
 
 <RelatedGuides tag="Services"/>

@@ -25,7 +25,7 @@ feed:
 
 # How do I configure a Lando Recipe?
 
-<GuideHeader name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" test="https://github.com/lando/lando/tree/master/examples/lamp"/>
+<GuideHeader name="Team Lando" pic="https://gravatar.com/avatar/c335f31e62b453f747f39a84240b3bbd" link="https://twitter.com/devwithlando" test="https://github.com/lando/cli/tree/main/examples/lamp"/>
 
 When you first initialize a lando app (`lando init`) you get a very simple `.lando.yml` configuration file. Here is the `.lando.yml` file for the LAMP recipe.
 

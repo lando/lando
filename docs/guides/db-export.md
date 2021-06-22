@@ -69,5 +69,5 @@ tooling:
         description: Dump database to stdout
 ```
 
-<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" repo="https://github.com/lando/lando/tree/master/examples/sql-export" />
+<GuideFooter test="https://circleci.com/gh/lando/lando/tree/master" repo="https://github.com/lando/cli/tree/main/examples/sql-export" />
 <Newsletter />

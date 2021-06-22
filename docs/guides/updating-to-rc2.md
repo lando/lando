@@ -113,7 +113,7 @@ services:
       - '80'
 ```
 
-Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new override syntax.
+Check out [this example](https://github.com/lando/cli/tree/main/examples/services) which is tested on every build for some examples of new override syntax.
 
 ## Internal Service Name Changes
 
@@ -243,7 +243,7 @@ tooling:
     cmd: drush --root=/app/PATH/TO/WEBROOT
 ```
 
-Check out [this example](https://github.com/lando/lando/tree/master/examples/tooling) which is tested on every build for some examples of new tooling syntax.
+Check out [this example](https://github.com/lando/cli/tree/main/examples/tooling) which is tested on every build for some examples of new tooling syntax.
 
 ### Eventy commands
 
@@ -276,7 +276,7 @@ tooling:
       - appserver: cd $LANDO_WEBROOT && drush updb -y
 ```
 
-Check out [this example](https://github.com/lando/lando/tree/master/examples/tooling) which is tested on every build for some examples of new tooling syntax.
+Check out [this example](https://github.com/lando/cli/tree/main/examples/tooling) which is tested on every build for some examples of new tooling syntax.
 
 ## Build Steps
 
@@ -342,7 +342,7 @@ run:
   - if [ ! -z $LANDO_MOUNT ]; then do-stuff; fi
 ```
 
-Check out [this example](https://github.com/lando/lando/tree/master/examples/services) which is tested on every build for some examples of new build step syntax.
+Check out [this example](https://github.com/lando/cli/tree/main/examples/services) which is tested on every build for some examples of new build step syntax.
 
 ## Global Environment Variables
 
@@ -475,7 +475,7 @@ WP_HOME=http://wpb4.test
 WP_SITEURL=http://wpb4.test/wp
 ```
 
-Check out [this example](https://github.com/lando/lando/tree/master/examples/base) which is tested on every build for some examples of the new environment file syntax.
+Check out [this example](https://github.com/lando/cli/tree/main/examples/base) which is tested on every build for some examples of the new environment file syntax.
 
 ## Drush Handling
 

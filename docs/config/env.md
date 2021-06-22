@@ -16,7 +16,7 @@ While the default variables are more or less the same between services, we recom
 lando ssh -s appserver -c env | grep LANDO_
 ```
 
-For reference, an example of the default container envvars inside of the [LAMP](https://github.com/lando/lando/tree/master/examples/lamp) recipe/example is shown below:
+For reference, an example of the default container envvars inside of the [LAMP](https://github.com/lando/cli/tree/main/examples/lamp) recipe/example is shown below:
 
 ```bash
 LANDO_WEBROOT_USER=www-data

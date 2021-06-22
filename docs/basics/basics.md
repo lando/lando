@@ -94,7 +94,7 @@ There are various ways to craft your Landofile but we've found and observed a st
 
 ## You have some examples?
 
-You can check out our [large repository of tested-every-build and working examples](https://github.com/lando/lando/tree/master/examples).  A few example Landofiles to help give you a sense of how simple or complex they can be is shown below:
+You can check out our [large repository of tested-every-build and working examples](https://github.com/lando/cli/tree/main/examples).  A few example Landofiles to help give you a sense of how simple or complex they can be is shown below:
 
 ### Cold as ice
 
