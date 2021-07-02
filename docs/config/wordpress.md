@@ -156,7 +156,7 @@ However, for more information we recommend you consult the [php service document
 
 ### Using custom config files
 
-You may need to override our [default WordPress config](https://github.com/lando/lando/tree/master/plugins/lando-recipes/recipes/wordpress) with your own.
+You may need to override our [default WordPress config](https://github.com/lando/cli/tree/main/plugins/lando-recipes/recipes/wordpress) with your own.
 
 If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
