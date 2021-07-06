@@ -59,7 +59,7 @@ services:
 
 ### Using custom nginx config files
 
-You may need to override our [default nginx config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/nginx) with your own custom [server](https://www.linode.com/docs/web-servers/nginx/how-to-configure-nginx/), [vhosts](https://www.linode.com/docs/web-servers/nginx/how-to-configure-nginx/) or [fastcgi_params](https://www.nginx.com/resources/wiki/start/topics/examples/full/) config.
+You may need to override our [default nginx config](https://github.com/lando/cli/tree/main/plugins/lando-services/services/nginx) with your own custom [server](https://www.linode.com/docs/web-servers/nginx/how-to-configure-nginx/), [vhosts](https://www.linode.com/docs/web-servers/nginx/how-to-configure-nginx/) or [fastcgi_params](https://www.nginx.com/resources/wiki/start/topics/examples/full/) config.
 
 If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
