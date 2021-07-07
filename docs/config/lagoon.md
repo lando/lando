@@ -26,7 +26,7 @@ Before you get started with this recipe we assume that you have:
 3. Read about the various [services](./../config/services.md), [tooling](./../config/tooling.md), [events](./../config/events.md) and [routing](./../config/proxy.md) Lando offers.
 4. Temporarily stopped (`pygmy stop`) the [Pygmy](https://pygmy.readthedocs.io/en/master/) tool to avoid any port conflicts
 
-However, because you are a developer and developers never ever [RTFM](https://en.wikipedia.org/wiki/RTFM), you can also run the following commands to try out this recipe against the amazee.io [Drupal Example](https://github.com/amazeeio/drupal-example-simple).
+To get started quickly, you can also run the following commands to try out this recipe against the amazee.io [Drupal Example](https://github.com/amazeeio/drupal-example-simple).
 
 ```bash
 # Clone a site from a lagoon instance
