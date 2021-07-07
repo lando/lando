@@ -15,7 +15,7 @@ Lando has an advanced plugin system that allows developers to add and extend Lan
 7.  Augment or alter the `lando` object and its configuration
 3.  Hook into various `lando` and `app` runtime events to provide additional functionality.
 
-In fact, almost all of Lando's core functionality is provided via plugins. This includes its [core tasks](https://github.com/lando/lando/tree/master/plugins/lando-core/tasks), [proxy](https://github.com/lando/lando/tree/master/plugins/lando-proxy), [events system](https://github.com/lando/lando/tree/master/plugins/lando-events), [services](https://github.com/lando/lando/tree/master/plugins/lando-services), [recipes](https://github.com/lando/lando/tree/master/plugins/lando-recipes), [tooling layer](https://github.com/lando/lando/tree/master/plugins/lando-tooling) and [container networking](https://github.com/lando/lando/tree/master/plugins/lando-networking).
+In fact, almost all of Lando's core functionality is provided via plugins. This includes its [core tasks](https://github.com/lando/cli/tree/main/plugins/lando-core/tasks), [proxy](https://github.com/lando/cli/tree/main/plugins/lando-proxy), [events system](https://github.com/lando/cli/tree/main/plugins/lando-events), [services](https://github.com/lando/cli/tree/main/plugins/lando-services), [recipes](https://github.com/lando/cli/tree/main/plugins/lando-recipes), [tooling layer](https://github.com/lando/cli/tree/main/plugins/lando-tooling) and [container networking](https://github.com/lando/cli/tree/main/plugins/lando-networking).
 
 [[toc]]
 
@@ -416,4 +416,4 @@ Some more details about each key are shown below:
 
 ## Plugin Examples
 
-Check out some of our [core plugins](https://github.com/lando/lando/tree/master/plugins) for motivation in creating your own.
+Check out some of our [core plugins](https://github.com/lando/cli/tree/main/plugins) for motivation in creating your own.
