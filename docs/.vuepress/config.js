@@ -65,6 +65,7 @@ module.exports = {
     docsDir: 'docs',
     docsBranch: 'master',
     logo: '/images/logo-pink-small.png',
+    docsBranch: 'main',
     editLinks: true,
     editLinkText: 'Is this doc out of date? Suggest a change!',
     lastUpdated: 'Last Updated',
