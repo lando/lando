@@ -27,7 +27,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 
 ```bash
 # Go through interactive prompts to get your code from acquia
-lando init --source acquia
+lando init
 
 # OR if you already have your acquia code locally
 cd /path/to/repo
