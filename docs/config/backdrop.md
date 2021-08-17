@@ -24,7 +24,7 @@ However, because you are a developer and developers never ever [RTFM](https://en
 # Initialize a backdrop recipe using the latest backdrop version
 lando init \
   --source remote \
-  --remote-url https://github.com/backdrop/backdrop/releases/download/1.12.1/backdrop.zip \
+  --remote-url https://github.com/backdrop/backdrop/releases/latest/download/backdrop.zip \
   --recipe backdrop \
   --webroot backdrop \
   --name my-first-backdrop-app
