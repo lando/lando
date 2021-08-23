@@ -1,5 +1,28 @@
 # 2021
 
+## v3.3.0 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.1.4)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+### Installer
+
+* Added an experimental Apple Silicon installer [#3086](https://github.com/lando/lando/issues/3086)
+* Updated to Lando CLI `3.3.0`
+* Updated to Docker Compose `1.9.2`
+* Updated to Docker Desktop `3.6.0` [#3075](https://github.com/lando/lando/issues/3075) [#3076](https://github.com/lando/lando/issues/3076) [#3098](https://github.com/lando/lando/issues/3098)
+
+### CLI, core and plugins
+
+* Added support for `go` versions `1.15` and `1.16` [#14](https://github.com/lando/cli/pull/14)
+* Added support for `database.version` in `pantheon.yml` [#16](https://github.com/lando/cli/issues/16)
+* Fixed `dotnet` not working due to upstream change in Microsoft registry [#2711](https://github.com/lando/lando/issues/2711)
+* Fixed `mssql` not working due to upstream change in Microsoft registry [#2711](https://github.com/lando/lando/issues/2711) [#12](https://github.com/lando/cli/issues/12)
+* Fixed `push` in `lagoon` recipe to respect configured Drupal public file path [#3060](https://github.com/lando/lando/issues/3060)
+* Fixed `pull` in `lagoon` recipe to not nest files too deeply [#3059](https://github.com/lando/lando/issues/3059)
+* Fixed `null` key issue with `lagoon` recipe [#3058](https://github.com/lando/lando/issues/3058)
+* Forced usage of `docker-compose-v1` for now [#3075](https://github.com/lando/lando/issues/3075) [#3076](https://github.com/lando/lando/issues/3076) [#3098](https://github.com/lando/lando/issues/3098)
+* Introduced signed and notarized binaries as applicable for x64 and arm64 [#5](https://github.com/lando/cli/pull/5)
+
 ## v3.1.4 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.1.4)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).

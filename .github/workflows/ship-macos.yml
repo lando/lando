@@ -23,6 +23,10 @@ jobs:
           - macos-10.15
         node-version:
           - '14'
+        arch:
+          - x64
+          - arm64
+
     steps:
       # Install deps and cache
       # Eventually it would be great if these steps could live in a separate YAML file
@@ -77,7 +81,7 @@ jobs:
       - name: Import and verify certs
         run: scripts/import-macos-certs.sh
       - name: Assemble pieces
-        run: scripts/assemble-macos.sh
+        run: scripts/assemble-macos.sh --arch ${{ matrix.arch }}
       - name: Sign package
         run: |
           # Rename some things
@@ -109,21 +113,22 @@ jobs:
         env:
           SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
+          ARCH: ${{ matrix.arch }}
         run: |
           # Create release directories
           mkdir -p ./releases ./dev-builds
 
           # Snapshot release
-          cp -f "./dist/lando.dmg" "./dev-builds/lando-build-${{ github.sha }}.dmg"
+          cp -f "./dist/lando.dmg" "./dev-builds/lando-build-${{ github.sha }}-$ARCH.dmg"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$SOURCE_BRANCH-latest.dmg"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_BRANCH-latest.dmg"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.dmg" "./releases/lando-latest.dmg"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-latest.dmg"; fi
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$SOURCE_TAG.dmg"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_TAG.dmg"; fi
           # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-stable.dmg"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-stable.dmg"; fi
 
           # Print what we end up with
           ls -lsa ./releases
@@ -132,7 +137,7 @@ jobs:
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lando-build-${{ github.sha }}.dmg
+          name: lando-build-${{ github.sha }}-$ARCH.dmg
           path: dev-builds/
           if-no-files-found: error
           retention-days: 30
@@ -155,6 +160,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
-          files: releases/lando-${{ steps.vars.outputs.SOURCE_TAG }}.dmg
-          # @TODO: Handle autochangelog stuff here eventaully
-          # body_path: ${{ github.workflow }}-CHANGELOG.txt
+          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.dmg
