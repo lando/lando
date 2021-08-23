@@ -11,7 +11,7 @@ unset LD_LIBRARY_PATH
 #
 # See: https://github.com/zeit/pkg/issues/128
 mkdir -p /usr/local/bin
-mv -f /usr/local/bin/lando.txt /usr/local/bin/lando
+mv -f /usr/local/bin/lando /usr/local/bin/lando
 chmod +x /usr/local/bin/lando
 
 # Fin

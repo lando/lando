@@ -10,22 +10,22 @@
     </choices-outline>
 
     <choice id="choiceLando" title="choiceLando_title" description="choiceLando_msg" start_selected="true" start_enabled="true" start_visible="true">
-        <pkg-ref id="io.lando.pkg.lando"/>
+        <pkg-ref id="dev.lando.pkg.lando"/>
     </choice>
-    <pkg-ref id="io.lando.pkg.lando" auth="Root" version="%LANDO_VERSION%" installKBytes="%LANDO_INSTALL_KBYTES%">#lando.pkg</pkg-ref>
-    <pkg-ref id="io.lando.pkg.lando">
+    <pkg-ref id="dev.lando.pkg.lando" auth="Root" version="%LANDO_VERSION%" installKBytes="%LANDO_INSTALL_KBYTES%">#lando.pkg</pkg-ref>
+    <pkg-ref id="dev.lando.pkg.lando">
         <bundle-version/>
     </pkg-ref>
 
     <choice id="choiceDocker" title="choiceDocker_title" description="choiceDocker_msg" start_selected="true" start_enabled="true" start_visible="true">
-        <pkg-ref id="io.lando.pkg.docker"/>
+        <pkg-ref id="dev.lando.pkg.docker"/>
     </choice>
-    <pkg-ref id="io.lando.pkg.docker" auth="Root" version="%DOCKER_VERSION%" installKBytes="%DOCKER_INSTALL_KBYTES%">#docker.pkg</pkg-ref>
-    <pkg-ref id="io.lando.pkg.docker">
+    <pkg-ref id="dev.lando.pkg.docker" auth="Root" version="%DOCKER_VERSION%" installKBytes="%DOCKER_INSTALL_KBYTES%">#docker.pkg</pkg-ref>
+    <pkg-ref id="dev.lando.pkg.docker">
         <bundle-version/>
     </pkg-ref>
 
-    <product id="io.lando.mpkg.lando" version="%LANDO_VERSION%"/>
+    <product id="dev.lando.mpkg" version="%LANDO_VERSION%"/>
 
     <installation-check script="checkPrerequisite()"/>
     <script>
@@ -37,7 +37,7 @@
        {
            test = system.sysctl('hw.machine');
            system.log("Hardware architecture detected: " + test);
-           result = (test == 'i386' || test == 'x86_64');
+           result = (test == 'i386' || test == 'x86_64' || test == 'arm64');
        } catch (e) { system.log(e); result = false; }
 
        if (!result)

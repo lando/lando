@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pkg-info overwrite-permissions="true" relocatable="false" identifier="io.lando.pkg.lando" postinstall-action="none" version="%LANDO_VERSION%" format-version="2" generator-version="mystic crystal revelation" install-location="/usr/local/bin/" auth="root">
+<pkg-info overwrite-permissions="true" relocatable="false" identifier="dev.lando.pkg.lando" postinstall-action="none" version="%LANDO_VERSION%" format-version="2" generator-version="mystic crystal revelation" install-location="/usr/local/bin/" auth="root">
     <payload numberOfFiles="%LANDO_NUMBER_OF_FILES%" installKBytes="%LANDO_INSTALL_KBYTES%"/>
     <bundle-version/>
     <upgrade-bundle/>
