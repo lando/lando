@@ -26,6 +26,8 @@ jobs:
           - deb
           - pacman
           - rpm
+        arch:
+          - x64
     steps:
       # Install deps and cache
       # Eventually it would be great if these steps could live in a separate YAML file
@@ -93,21 +95,22 @@ jobs:
         env:
           SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
+          ARCH: ${{ matrix.arch }}
         run: |
           # Create release directories
           mkdir -p releases dev-builds
 
           # Snapshot release
-          cp -f "dist/lando.${{ matrix.flavor }}" "dev-builds/lando-build-${{ github.sha }}.${{ matrix.flavor }}"
+          cp -f "dist/lando.${{ matrix.flavor }}" "dev-builds/lando-build-${{ github.sha }}-$ARCH.${{ matrix.flavor }}"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-latest.${{ matrix.flavor }}"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-latest.${{ matrix.flavor }}"; fi
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$SOURCE_TAG.${{ matrix.flavor }}"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_TAG.${{ matrix.flavor }}"; fi
           # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-stable.${{ matrix.flavor }}"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-stable.${{ matrix.flavor }}"; fi
 
           # Print what we end up with
           ls -lsa releases
@@ -116,7 +119,7 @@ jobs:
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lando-build-${{ github.sha }}.${{ matrix.flavor }}
+          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.${{ matrix.flavor }}
           path: dev-builds/
           if-no-files-found: error
           retention-days: 30
@@ -138,6 +141,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
-          files: releases/lando-${{ steps.vars.outputs.SOURCE_TAG }}.${{ matrix.flavor }}
+          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.${{ matrix.flavor }}
           # @TODO: Handle autochangelog stuff here eventaully
           # body_path: ${{ github.workflow }}-CHANGELOG.txt

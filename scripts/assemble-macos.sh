@@ -122,7 +122,7 @@ cd mpkg/lando.pkg && \
     -e "s/%LANDO_INSTALL_KBYTES%/`du -sk | cut -f1`/g" \
     ../PackageInfo ../../Distribution && \
   sed -i "" \
-    -e "s/%LANDO_VERSION%/$LANDO_VERSION/g" \
+    -e "s/%LANDO_VERSION%/$LANDO_CLI_VERSION/g" \
     ../PackageInfo ../../Distribution && \
   cd .. && \
   rm -rf rootfs && \
@@ -153,6 +153,7 @@ cd mpkg/docker.pkg && \
   cd ../..
 
 # Add in version info
+sed -i "" -e "s/%LANDO_CLI_VERSION%/$LANDO_CLI_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 sed -i "" -e "s/%LANDO_VERSION%/$LANDO_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 sed -i "" -e "s/%DOCKER_VERSION%/$DOCKER_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 

@@ -21,6 +21,8 @@ jobs:
           - windows-2019
         node-version:
           - '14'
+        arch:
+          - x64
     steps:
       # Install deps and cache
       # Eventually it would be great if these steps could live in a separate YAML file
@@ -90,6 +92,7 @@ jobs:
         env:
           SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
+          ARCH: ${{ matrix.arch }}
         shell: bash
         run: |
           # Create release directories
@@ -98,16 +101,16 @@ jobs:
           cp -f "build/installer/dist/lando.exe" "dist/lando.exe"
 
           # Snapshot release
-          cp -f "dist/lando.exe" "dev-builds/lando-build-${{ github.sha }}.exe"
+          cp -f "dist/lando.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$SOURCE_BRANCH-latest.exe"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.exe"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.exe" "releases/lando-latest.exe"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-latest.exe"; fi
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$SOURCE_TAG.exe"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"; fi
           # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-stable.exe"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-stable.exe"; fi
 
           # Print what we end up with
           ls -lsa releases
@@ -116,7 +119,7 @@ jobs:
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lando-build-${{ github.sha }}.exe
+          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.exe
           path: dev-builds/
           if-no-files-found: error
           retention-days: 30
@@ -139,6 +142,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
-          files: releases/lando-${{ steps.vars.outputs.SOURCE_TAG }}.exe
+          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.exe
           # @TODO: Handle autochangelog stuff here eventaully
           # body_path: ${{ github.workflow }}-CHANGELOG.txt

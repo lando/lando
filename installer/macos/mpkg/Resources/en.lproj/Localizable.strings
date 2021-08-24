@@ -1,6 +1,6 @@
 'lando_title' = 'Lando';
 
-'choiceLando_title' = 'Lando %LANDO_VERSION%';
+'choiceLando_title' = 'Lando CLI %LANDO_CLI_VERSION%';
 'choiceLando_msg' = 'Installs Lando into /usr/local/bin/';
 
 'choiceDocker_title' = 'Docker Desktop %DOCKER_VERSION%';

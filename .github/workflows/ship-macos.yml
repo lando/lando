@@ -137,7 +137,7 @@ jobs:
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lando-build-${{ github.sha }}-$ARCH.dmg
+          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.dmg
           path: dev-builds/
           if-no-files-found: error
           retention-days: 30
