@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # Get the script type
 SCRIPT_TYPE=$1

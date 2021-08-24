@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # Verify we have the envvars we need
 if [ -z "$APPLE_CERT_DATA" ]; then

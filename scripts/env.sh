@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # Set up our FPM env
 # We want this separate so we can source from other things ie tests

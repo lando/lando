@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 # We are spoofing the binary as a text file because it will then pass app notarization
@@ -13,21 +14,6 @@ DOCKER_VERSION="$DOCKER_DESKTOP_VERSION"
 DOCKER_BUILD="$DOCKER_DESKTOP_BUILD"
 LANDO_CLI_VERSION="$LANDO_CLI_VERSION"
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-
-# Standardize ARCH
-if [ "$ARCH" == "x86_x64" ]; then
-  ="x64"
-fi
-
-# Docker arch
-DOCKER_ARCH="$ARCH"
-if [ "$DOCKER_ARCH" == "x64" ]; then
-  DOCKER_ARCH="amd64"
-fi
-
-# Download urls
-DOCKER_URL="https://desktop.docker.com/mac/stable/${DOCKER_ARCH}/${DOCKER_BUILD}/Docker.dmg"
-LANDO_URL="https://files.lando.dev/cli/lando-macos-${ARCH}-${LANDO_CLI_VERSION}"
 
 # Allow things to be overridden
 while (( "$#" )); do
@@ -72,10 +58,31 @@ while (( "$#" )); do
   esac
 done
 
+# Standardize ARCH
+if [ "$ARCH" == "x86_64" ]; then
+  ARCH="x64"
+fi
+
+# Docker arch
+DOCKER_ARCH="$ARCH"
+if [ "$DOCKER_ARCH" == "x64" ]; then
+  DOCKER_ARCH="amd64"
+fi
+
+# Set Download urls if they are empty
+if [ -z "$DOCKER_URL" ]; then
+  DOCKER_URL="https://desktop.docker.com/mac/stable/${DOCKER_ARCH}/${DOCKER_BUILD}/Docker.dmg"
+fi
+if [ -z "$LANDO_URL" ]; then
+  LANDO_URL="https://files.lando.dev/cli/lando-macos-${ARCH}-${LANDO_CLI_VERSION}"
+fi
+
 # Some helpful output
 echo "Building with Docker from $DOCKER_URL"
 echo "Building with Lando from $LANDO_URL"
 echo "Building for $ARCH"
+
+exit 1
 
 # Prep our workspace
 rm -rf build/installer

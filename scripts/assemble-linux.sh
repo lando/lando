@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # Set defaults
 DOCKER_COMPOSE_VERSION="$DOCKER_COMPOSE_VERSION"

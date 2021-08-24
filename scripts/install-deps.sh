@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 #
 # A script to install the Lando build and dev dependencies on POSIX

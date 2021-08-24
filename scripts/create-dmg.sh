@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # Get our build dir
 SRCDIR="$(pwd)/$1"
