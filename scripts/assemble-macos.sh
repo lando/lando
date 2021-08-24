@@ -82,8 +82,6 @@ echo "Building with Docker from $DOCKER_URL"
 echo "Building with Lando from $LANDO_URL"
 echo "Building for $ARCH"
 
-exit 1
-
 # Prep our workspace
 rm -rf build/installer
 mkdir -p build/installer
