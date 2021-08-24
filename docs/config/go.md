@@ -12,7 +12,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[1.14](https://hub.docker.com/_/golang/)** **(default)**
+*   **[1.16](https://hub.docker.com/_/golang/)** **(default)**
+*   [1.15](https://hub.docker.com/_/golang/)
+*   [1.14](https://hub.docker.com/_/golang/)
 *   [1.13](https://hub.docker.com/_/golang/)
 *   [custom](./../config/services.md#advanced)
 

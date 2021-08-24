@@ -12,7 +12,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[latest](https://hub.docker.com/r/microsoft/mssql-server-linux)** **(default)**
+*   [2019-latest](https://hub.docker.com/_/microsoft-mssql-server)
+*   **[2017-latest](https://hub.docker.com/_/microsoft-mssql-server)** **(default)**
 *   [custom](./../config/services.md#advanced)
 
 ## Patch versions

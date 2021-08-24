@@ -12,14 +12,16 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[2](https://hub.docker.com/r/microsoft/dotnet/)** **(default)**
-*   [2.0](https://hub.docker.com/r/microsoft/dotnet/)
+*   [3.1](https://hub.docker.com/_/microsoft-dotnet-sdk/)
+*   **[2.1](https://hub.docker.com/_/microsoft-dotnet-sdk)** **(default)**
 *   [custom](./../config/services.md#advanced)
 
-## Legacy versions
+## Unsupported versions
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
+Due to upstream changes these no longer work.
 
+*   [2](https://hub.docker.com/r/microsoft/dotnet/)
+*   [2.0](https://hub.docker.com/r/microsoft/dotnet/)
 *   [1](https://hub.docker.com/r/microsoft/dotnet/)
 *   [1.1](https://hub.docker.com/r/microsoft/dotnet/)
 *   [1.0](https://hub.docker.com/r/microsoft/dotnet/)
