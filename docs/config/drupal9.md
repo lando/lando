@@ -150,7 +150,7 @@ config:
 
 ### Using Drush
 
-As of Drupal 9 and Drush 10 it is preferred you use [a site-local install of Drush](https://www.drush.org/install/). For that reason Lando **will not** globall install a version of Drush for Drupal 9 sites.
+As of Drupal 9 and Drush 10 it is preferred you use [a site-local install of Drush](https://www.drush.org/latest/install/). For that reason Lando **will not** globall install a version of Drush for Drupal 9 sites.
 
 You can site-local install drush by requiring it in your projects `composer.json` file.
 
