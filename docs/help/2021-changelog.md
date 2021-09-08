@@ -1,6 +1,20 @@
 # 2021
 
-## v3.3.0 - [May 10, 2021](https://github.com/lando/lando/releases/tag/v3.3.0)
+## v3.3.1 - [September 8, 2021](https://github.com/lando/lando/releases/tag/v3.3.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+### Installer
+
+* HOTFIX for Windows Installer, SORRY! [#3129](https://github.com/lando/lando/issues/3129)
+
+### CLI, core and plugins
+
+* Added `devwithlando/util:4`
+* Added ability to specify utility container version as part of `lando init`
+* Added missing `$PATH` directories `/app/.global/bin`, `/app/.global/vendor/bin` to `platformsh` recipe [#30](https://github.com/lando/cli/pull/30)
+
+## v3.3.0 - [Аugust 23, 2021](https://github.com/lando/lando/releases/tag/v3.3.0)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
