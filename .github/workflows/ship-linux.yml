@@ -133,6 +133,8 @@ jobs:
       - name: Upload releases to S3
         run: |
           aws s3 sync releases s3://files.lando.dev/installer --acl public-read
+          # Below is for backwards compatibility
+          aws s3 sync releases s3://files.lando.dev --acl public-read
       # Upload releases to GitHub Releases
       - name: Upload releases to GitHub Releases
         uses: softprops/action-gh-release@v1
