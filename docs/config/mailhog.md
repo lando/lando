@@ -12,7 +12,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)** **(default)**
+*   **[v1.0.1](https://hub.docker.com/r/mailhog/mailhog/)** **(default)**
+*   [v1.0.0](https://hub.docker.com/r/mailhog/mailhog/)
 *   [custom](./../config/services.md#advanced)
 
 ## Patch versions

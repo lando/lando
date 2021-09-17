@@ -19,8 +19,8 @@ Lando is designed to work on a wide range of computers. Here are some basic guid
 Please also verify you meet the requirements needed to run our Docker engine backend. Note that the macOS and Windows Lando installer will install Docker for you if needed.
 
 *   Linux Docker engine [requirements](https://docs.docker.com/engine/installation/linux)
-*   Docker for Mac [requirements](https://docs.docker.com/docker-for-mac/#/what-to-know-before-you-install)
-*   Docker for Windows [requirements](https://docs.docker.com/docker-for-windows/#/what-to-know-before-you-install)
+*   Docker Desktop for Mac [requirements](https://docs.docker.com/docker-for-mac/#/what-to-know-before-you-install)
+*   Docker Desktop for Windows [requirements](https://docs.docker.com/docker-for-windows/#/what-to-know-before-you-install)
 
 ## Hardware Requirements
 
@@ -43,10 +43,6 @@ We've found the below or better to deliver the best experience.
 *   8-core processor
 *   16GB+ RAM
 *   100GB+ of available disk space
-
-::: tip Apple Silicon M1 Chip Support
-Docker is [working on support](http://docker.com/blog/apple-silicon-m1-chips-and-docker) for Mac computers running Apple Silicon M1 chips. We've been monitoring their progress and plan to introduce an M1-compatible Lando binary as soon as possible. [Sponsor Lando](https://github.com/sponsors/lando) to make that world a reality!
-:::
 
 ## Preflight Checks
 
@@ -76,6 +72,12 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 3.  Double-click on the `LandoInstaller.pkg`
 4.  Go through the setup workflow
 5.  Enter your username and password when prompted
+
+::: tip Choose the correct DMG for your chip architecture
+If you have a new Apple Silicon based Mac then choose the `arm64`. Use the `x64` DMG for the older Intel chip Macs.
+
+**Note that Apple Silicon support is still a work in progress and YMMV.**
+:::
 
 ### Install via [HomeBrew](https://brew.sh/) (third party)
 

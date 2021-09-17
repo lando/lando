@@ -12,7 +12,10 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   **[4.1](https://hub.docker.com/r/eeacms/varnish/)** **(default)**
+*   [6.0](https://hub.docker.com/r/wodby/varnish)
+*   [6](https://hub.docker.com/r/wodby/varnish)
+*   **[4.1](https://hub.docker.com/r/wodby/varnish)** **(default)**
+*   [4](https://hub.docker.com/r/wodby/varnish)
 *   [custom](./../config/services.md#advanced)
 
 ## Patch versions
@@ -97,7 +100,7 @@ services:
 
 ### Advanced
 
-There are also [several various envvars](https://hub.docker.com/r/eeacms/varnish/) exposed by the underlying image we use that you can set to further customize how your Varnish works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then, YMMV.
+There are also [several various envvars](https://github.com/wodby/varnish#environment-variables) exposed by the underlying image we use that you can set to further customize how your Varnish works. **These are not officially supported** so we *highly recommend* you do not alter them unless you know what you are doing. Even then, YMMV.
 
 That said, you will need to use a [service override](./../config/services.md#overrides) to take advantage of them as shown below:
 
@@ -108,12 +111,10 @@ myservice:
     - database
   overrides:
     environment:
-      BACKENDS_PROBE_ENABLED: false
-      DNS_ENABLED: true
-      BACKENDS_PROBE_INTERVAL: 3s
-      BACKENDS_PROBE_TIMEOUT: 1s
-      BACKENDS_PROBE_WINDOW: 3
-      BACKENDS_PROBE_THRESHOLD: 2
+      VARNISH_STRIP_ALL_PARAMS: true
+      VARNISHD_PARAM_FETCH_CHUNKSIZE:	16k
+      VARNISHD_PARAM_FIRST_BYTE_TIMEOUT:	80
+      VARNISHD_PARAM_GZIP_BUFFER:	32k
 ```
 
 ## Getting information
