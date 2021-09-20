@@ -17,47 +17,25 @@ This is a basic setup to help you in this task.
 
 Enable Xdebug by adding some lines to your Lando recipe.
 
-**Lando beta versions and rc.1** need `conf:` at file root as follow:
-
 ```yaml
 name: mywebsite
-recipe: drupal8
-config:
-  webroot: docroot
-  xdebug: true
-  conf:
-    php: .vscode/php.ini
-```
-
-**Lando rc.2+** needs `config:` under `services:` as follow:
-
-```yaml
-name: mywebsite
-recipe: drupal8
+recipe: drupal9
 services:
   appserver:
     webroot: web
-    xdebug: true
+    xdebug: debug
     config:
       php: .vscode/php.ini
 ```
 
-**Tell Lando to use additional PHP settings**
+Create a custom `php.ini` file (place it wherever you want - we use `.vscode` folder because we find it convenient).
 
-Create the custom `php.ini` file to add XDebug settings to PHP.
 
 ```bash
 touch .vscode/php.ini
 code .vscode/php.ini
 ```
 
-The location of this file is arbitrary.
-
-We placed it inside `.vscode/` folder simply because we find it convenient.
-
-Add your custom XDebug settings, which will vary slightly depending on which version of PHP and xdebug you're using.
-
-**PHP 7.2+ uses xdebug 3** and needs `config:` under `services:` as follow:
 
 ```ini
 [PHP]
@@ -66,30 +44,17 @@ Add your custom XDebug settings, which will vary slightly depending on which ver
 xdebug.max_nesting_level = 256
 xdebug.show_exception_trace = 0
 xdebug.collect_params = 0
-; Extra custom Xdebug setting for debug to work in VSCode.
 xdebug.mode = debug
+xdebug.start_with_request = yes
 xdebug.client_host = ${LANDO_HOST_IP}
-xdebug.client_port = 9003
-xdebug.start_with_request = trigger
-; xdebug.remote_connect_back = 1
-xdebug.log = /tmp/xdebug.log
-```
+; xdebug.log = /tmp/xdebug.log
 
-**PHP 7.1 and earlier uses xdebug 2** and needs `config:` under `services:` as follow:
-
-```ini
-[PHP]
-
-; Xdebug
-xdebug.max_nesting_level = 256
-xdebug.show_exception_trace = 0
-xdebug.collect_params = 0
-; Extra custom Xdebug setting for debug to work in VSCode.
+; Remote settings
 xdebug.remote_enable = 1
 xdebug.remote_autostart = 1
 xdebug.remote_host = ${LANDO_HOST_IP}
 ; xdebug.remote_connect_back = 1
-xdebug.remote_log = /tmp/xdebug.log
+; xdebug.remote_log = /tmp/xdebug_remote.log
 ```
 
 Rebuild your environment.
@@ -98,7 +63,7 @@ Rebuild your environment.
 lando rebuild -y
 ```
 
-Finally, add a custom `launch.json` file in VSCode in order to map paths so that XDebug works correctly.
+Finally, create a custom `launch.json` file in your workspace in order to map paths so that XDebug works correctly.
 
 ```bash
 touch .vscode/launch.json
@@ -250,7 +215,20 @@ Now to run debug a PhpUnit test, do the following:
 
 If Xdebug session doesn't start, dig into the log file inside the application.
 
-Enter your lando app `lando ssh` and open the debug file (`/tmp/xdebug.log`). Path to the debug file is configured in your custom `php.ini`.
+Uncomment some lines in your `php.ini` file:
+```ini
+xdebug.log = /tmp/xdebug.log
+xdebug.remote_log = /tmp/xdebug.log
+```
+
+Rebuild your app:
+```bash
+lando rebuild -y
+```
+
+Enter the app with `lando ssh` and open the debug file (`/tmp/xdebug.log`). 
+
+Path to the debug file is configured in your custom `php.ini`.
 
 Now open your app in a browser and see what's being logged.
 
