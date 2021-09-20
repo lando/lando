@@ -17,9 +17,9 @@ Lando uses a modified [GitHub Flow](https://guides.github.com/introduction/flow/
 # Make sure you are in the lando source repo
 cd /path/to/cloned/lando/source
 
-# Make sure you are on an updated master
-git checkout master
-git pull origin master
+# Make sure you are on an updated main
+git checkout main
+git pull origin main
 
 # Checkout a new branch for your contribution
 git checkout -b addContribMe
