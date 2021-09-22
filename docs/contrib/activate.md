@@ -18,7 +18,7 @@ Lando has a secret _contributor mode_ that you need to engage to contrib. To mak
 
 ```bash
 # Ensure you have the correct version of node installed
-node -v | grep v12. || echo "Wrong node version"
+node -v | grep v14. || echo "Wrong node version"
 
 # Ensure you have yarn installed
 yarn -v || echo "Yarn not installed"
