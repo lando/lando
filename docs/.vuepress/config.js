@@ -75,7 +75,6 @@ module.exports = {
       {text: 'Guides', link: '/guides/lando-101/lando-overview'},
       {text: 'Help and Support', link: '/help/logs/'},
       {text: 'Contributing', link: '/contrib/contributing/'},
-      {text: 'API', link: '/api/app.md'},
       {text: 'Blog', link: 'https://blog.lando.dev'},
       {text: 'Events & Meetups', link: 'https://events.lando.dev'},
     ],
