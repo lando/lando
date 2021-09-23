@@ -14,12 +14,12 @@ Now that you are all set up, it's time to make your first contribution. Follow t
 Lando uses a modified [GitHub Flow](https://guides.github.com/introduction/flow/) development model. You can read more about this process in the aforementioned link but the general code flow is as follows:
 
 ```bash
-# Make sure you are in the lando source repo
-cd /path/to/cloned/lando/source
+# Make sure you are in the Lando cli source repo
+cd /path/to/cloned/cli
 
-# Make sure you are on an updated master
-git checkout master
-git pull origin master
+# Make sure you are on the updated main branch
+git checkout main
+git pull origin main
 
 # Checkout a new branch for your contribution
 git checkout -b addContribMe
@@ -54,7 +54,7 @@ If the recommended workflow above is not working for you, then you still have a 
 
 ### Directly edit
 
-Try editing the [contributor database](https://github.com/lando/lando/blob/master/api/data/contributors.yml) directly. If you are not sure how to do that then consult [these docs](https://help.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository).
+Try editing the [contributor database](https://github.com/lando/lando/blob/main/contributors.yml) directly. If you are not sure how to do that then consult [these docs](https://help.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository).
 
 You will want to add an entry like below:
 

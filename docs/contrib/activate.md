@@ -9,8 +9,9 @@ Lando has a secret _contributor mode_ that you need to engage to contrib. To mak
 
 ## Fork and install Lando from source
 
-* If you are not a Lando committer with write access to the [official repo](https://github.com/lando/lando), start by [forking Lando](https://help.github.com/articles/fork-a-repo/).
-* Follow the [install from source instructions](./../basics/installation.html#from-source) using either the [official repo](https://github.com/lando/lando) or the fork you made in Step 1.
+* If you are not a Lando committer with write access to the [official repo](https://github.com/lando/cli), start by [forking Lando](https://help.github.com/articles/fork-a-repo/).
+* Follow the [install from source instructions](./../basics/installation.html#from-source) using either the [official repo](https://github.com/lando/cli) or your fork.
+* Clone the https://github.com/lando/lando repo into the same directory. 
 
 ## Engage Contrib Mode
 
