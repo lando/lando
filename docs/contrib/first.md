@@ -17,6 +17,7 @@ Lando uses a modified [GitHub Flow](https://guides.github.com/introduction/flow/
 # Make sure you are in the Lando cli source repo
 cd /path/to/cloned/cli
 
+
 # Make sure you are on the updated main branch
 git checkout main
 git pull origin main
