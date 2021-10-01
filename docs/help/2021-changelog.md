@@ -1,5 +1,13 @@
 # 2021
 
+## v3.4.1 - [October 1, 2021](https://github.com/lando/lando/releases/tag/v3.4.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+### CLI, core and plugins
+
+* HOTFIX release to address expired root certs and `libssl` security update [#3162](https://github.com/lando/lando/issues/3162)
+
 ## v3.4.0 - [September 17, 2021](https://github.com/lando/lando/releases/tag/v3.4.0)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
@@ -17,8 +25,6 @@ Lando is **free** and **open source** software that relies on contributions from
 * Added version `5.1` to `phpmyadmin` service
 * Added version `6` to `varnish` service
 * Fixed bug in `load-keys.sh` which caused keys to not load in some situations eg `alpine:3.14` `grep` [#34](https://github.com/lando/cli/issues/34)
-
-Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 ## v3.3.2 - [September 10, 2021](https://github.com/lando/lando/releases/tag/v3.3.2)
 
