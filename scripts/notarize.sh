@@ -38,7 +38,7 @@ fi
 
 # Wait until we good
 NOTARY_STATUS="in progress"
-while [[ "$NOTARY_STATUS" == "in progress" ]]; do
+while [[ "$NOTARY_STATUS" == "in progress" ||  "$NOTARY_STATUS" == "" ]]; do
   echo -n "waiting... "
   sleep 10
   NOTARY_STATUS=$(xcrun altool \
