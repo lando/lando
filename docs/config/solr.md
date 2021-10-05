@@ -115,15 +115,15 @@ The `core` config value does not work for Solr 3.x or 4.x.
 
 You will almost certainly need to utilize your own custom Solr config. You can do that by telling Lando to inject solr config from a directory inside of your application.
 
-Consider a Drupal 8 application injecting the Solr 7.x config directly from the `search_api_solr` module as shown in the example below:
+Consider a Drupal 8 or 9 application injecting the Solr 7.x config directly from the `search_api_solr` module as shown in the example below:
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
+Note that if using custom configuration you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando`. In this example we're using the ["jump-start" configuration](https://git.drupalcode.org/project/search_api_solr/-/tree/4.x/jump-start) from `search_api_solr`:
 
 ```bash
 ./
-|-- sites/all/modules/search_api_solr/solr-conf/7.x
+|-- web/modules/contrib/search_api_solr/jump-start/solr7
    |-- elevate.xml
    |-- mapping-ISOLatin1Accent.txt
    |-- protwords.txt
@@ -147,7 +147,7 @@ services:
   myservice:
     type: solr
     config:
-      dir: sites/all/modules/search_api_solr/solr-conf/7.x
+      dir: web/modules/contrib/search_api_solr/jump-start/solr7
 ```
 
 ## Getting information
