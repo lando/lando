@@ -1,12 +1,20 @@
 # 2021
 
+## v3.4.2 - [October 5, 2021](https://github.com/lando/lando/releases/tag/v3.4.2)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+### CLI, core and plugins
+
+* HOTFIX release to address expired root certs and `libssl` security update for `platformsh` recipe [#3164](https://github.com/lando/lando/issues/3164)
+
 ## v3.4.1 - [October 1, 2021](https://github.com/lando/lando/releases/tag/v3.4.1)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
 
 ### CLI, core and plugins
 
-* HOTFIX release to address expired root certs and `libssl` security update [#3162](https://github.com/lando/lando/issues/3162)
+* HOTFIX release to address expired root certs and `libssl` security update for `pantheon` recipe [#3162](https://github.com/lando/lando/issues/3162)
 
 ## v3.4.0 - [September 17, 2021](https://github.com/lando/lando/releases/tag/v3.4.0)
 
