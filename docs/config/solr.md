@@ -123,7 +123,7 @@ Note that if using custom configuration you can put your configuration files any
 
 ```bash
 ./
-|-- web/modules/contrib/search_api_solr/jump-start/solr7
+|-- web/modules/contrib/search_api_solr/jump-start/solr7/config-set
    |-- elevate.xml
    |-- mapping-ISOLatin1Accent.txt
    |-- protwords.txt
@@ -137,6 +137,7 @@ Note that if using custom configuration you can put your configuration files any
    |-- solrcore.properties
    |-- stopwords.txt
    |-- synonyms.txt
+   |-- ... (and many more)
 |-- .lando.yml
 ```
 
@@ -147,7 +148,7 @@ services:
   myservice:
     type: solr
     config:
-      dir: web/modules/contrib/search_api_solr/jump-start/solr7
+      dir: web/modules/contrib/search_api_solr/jump-start/solr7/config-set
 ```
 
 ## Getting information
