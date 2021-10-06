@@ -1,5 +1,14 @@
 # 2021
 
+## v3.4.3 - [October 6, 2021](https://github.com/lando/lando/releases/tag/v3.4.3)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+### CLI, core and plugins
+
+* Fixed broken `/tmp` directory causing `drush` commands to fail in `platformsh` recipe [#3164](https://github.com/lando/lando/issues/3164)
+* Improved `libssl` workaround so it runs _before_ `platformsh` build hooks [#3164](https://github.com/lando/lando/issues/3164)
+
 ## v3.4.2 - [October 5, 2021](https://github.com/lando/lando/releases/tag/v3.4.2)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
