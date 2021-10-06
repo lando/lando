@@ -4,7 +4,7 @@ description: Learn how to configure the Lando release channel so you can get a v
 
 # Release Channels
 
-Starting with [3.0.2](https://docs.lndo.site/help/2020-changelog.html) Lando provides three release channels: `stable`, `edge` and `none`.
+Starting with [3.0.2](https://docs.lando.dev/help/2020-changelog.html) Lando provides three release channels: `stable`, `edge` and `none`.
 
 The default `stable` channel will prompt you to update when there is a new release [on GitHub](https://github.com/lando/lando/releases) that has been tagged `Latest release`. These releases undergo a more rigorous vetting process and generally will provide the most stability. This is the best option for most users.
 
