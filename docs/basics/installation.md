@@ -110,22 +110,22 @@ Make sure you have `wget` installed.
 ### Debian
 
 ```bash
-wget https://files.devwithlando.io/lando-stable.deb
-sudo dpkg -i lando-stable.deb
+wget https://files.lando.dev/installer/lando-x64-stable.deb
+sudo dpkg -i lando-x64-stable.deb
 ```
 
 ### Fedora
 
 ```bash
-wget https://files.devwithlando.io/lando-stable.rpm
-sudo dnf install lando-stable.rpm
+wget https://files.lando.dev/installer/lando-x64-stable.rpm
+sudo dnf install lando-x64-stable.rpm
 ```
 
 ### Arch
 
 ```bash
-wget https://files.devwithlando.io/lando-stable.pacman
-sudo pacman -U lando-stable.pacman
+wget https://files.lando.dev/installer/lando-x64-stable.pacman
+sudo pacman -U lando-x64-stable.pacman
 ```
 
 Make sure you look at the caveats below and follow them appropriately as well.
