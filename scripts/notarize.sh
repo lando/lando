@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eo pipefail
+set -e
 
 # Get our file
 FILE="$(pwd)/$1"
@@ -38,7 +38,7 @@ fi
 
 # Wait until we good
 NOTARY_STATUS="in progress"
-while [[ "$NOTARY_STATUS" == "in progress" ]]; do
+while [[ "$NOTARY_STATUS" == "in progress" ||  "$NOTARY_STATUS" == "" ]]; do
   echo -n "waiting... "
   sleep 10
   NOTARY_STATUS=$(xcrun altool \
@@ -47,6 +47,12 @@ while [[ "$NOTARY_STATUS" == "in progress" ]]; do
     --password "$APPLE_NOTARY_PASSWORD" 2>&1 | awk -F ': ' '/Status:/ { print $2; }' )
   echo "We are currently waiting with status of $NOTARY_STATUS"
 done
+
+# Print the full status after it is no longer in progress
+xcrun altool \
+  --notarization-info "$RID" \
+  --username "$APPLE_NOTARY_USER" \
+  --password "$APPLE_NOTARY_PASSWORD"
 
 # Exit if there is an issue
 if [[ $NOTARY_STATUS != "success" ]]; then
