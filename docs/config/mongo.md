@@ -10,6 +10,8 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [5.0](https://hub.docker.com/r/bitnami/mongodb)
+*   [4.4](https://hub.docker.com/r/bitnami/mongodb)
 *   **[4.2](https://hub.docker.com/r/bitnami/mongodb)**  **(default)**
 *   [4.0](https://hub.docker.com/r/bitnami/mongodb)
 *   [3.6](https://hub.docker.com/r/bitnami/mongodb)
@@ -51,6 +53,23 @@ services:
     config:
       database: SEE BELOW
 ```
+
+::: warning Be careful when switching database version!
+You should be careful switching database `version` because the underlying database will not be compatible unless you follow these steps to upgrade it:
+
+If you have a current project with 4.2 that you wish to upgrade to 5.0, you need to upgrade to 4.4 first (change the version, run lando rebuild) and do the tiny step described here:
+https://docs.mongodb.com/v5.0/release-notes/4.4-upgrade-standalone/
+
+> Run the setFeatureCompatibilityVersion command against the admin database:
+> db.adminCommand( { setFeatureCompatibilityVersion: "4.4" } )
+
+Before you update the mongodb version to 5.0 and repeat the above step.
+
+You can also use mongodump to create a backup of your database, delete the mongo instance, recreate it on a new version and use mongorestore to populate the database again.
+
+**Ignoring this warning can prevent your database from starting**
+:::
+
 
 ### Port forwarding
 
