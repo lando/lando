@@ -1,5 +1,10 @@
 # 2021
 
+## Next - [tbd](https://github.com/lando/lando/releases/tag/<tbd>)
+### CLI, core and plugins
+
+* Added versions `4.4` and `5.0`to `mongodb` service. To prevent data loss, [check upgrade note in the docs](https://docs.lando.dev/config/mongo.html)** before changing version in your project.
+
 ## v3.4.3 - [October 6, 2021](https://github.com/lando/lando/releases/tag/v3.4.3)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
