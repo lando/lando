@@ -52,5 +52,5 @@ If (!(Test-Path $inno_bin)) {
   InstallExe -File $inno_dest
 }
 
-$signer = "$signtool sign /f $cert_path /p $cert_password /fd sha256 /tr http://timestamp.comodoca.com/?td=sha256 /td sha256 `$f"
+$signer = "$signtool sign /f $cert_path /p $cert_password /fd sha256 /tr http://timestamp.digicert.com /td sha256 `$f"
 & iscc /DMyAppVersion=$lando_version /DDockerVersion=$docker_version /Ssigntool=$signer "$issfile"
