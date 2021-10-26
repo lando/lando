@@ -1,0 +1,26 @@
+name: Automatic Issue Triage
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  issue-triage:
+    runs-on: ${{ matrix.os }}
+    env:
+      TERM: xterm
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+        router:
+          - platformsh:platformsh
+
+    steps:
+      - name: Manual Action Test
+        id: test_action
+        uses: lando/transfer-issue-action@v2
+        with:
+          token: ${{ secrets.TRANSFER_ISSUE_TOKEN }}
+          router: ${{ matrix.router }}
+          apply_label: Needs Triage
