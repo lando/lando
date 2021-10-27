@@ -1,5 +1,5 @@
 ---
-name: Request a new feature or suggest an improvement
+name: Feature
 about: Suggest an idea for this project
 labels: feature
 ---
