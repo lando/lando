@@ -4,7 +4,7 @@
     "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 8
   },
   "extends": "google",
   "rules": {

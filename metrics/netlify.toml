@@ -12,3 +12,7 @@
   from = "/status/*"
   to = "/.netlify/functions/status/:splat"
   status = 200
+[[redirects]]
+  from = "/metrics/v2/*"
+  to = "/.netlify/functions/metrics/:splat"
+  status = 200
