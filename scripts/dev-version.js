@@ -11,15 +11,8 @@
 const _ = require('lodash');
 const fs = require('fs-extra');
 const util = require('util');
-const winston = require('winston');
+const debug = require('debug')('@lando/dev-version');
 const exec = util.promisify(require('child_process').exec);
-
-// Instantiate loggers
-const log = new winston.Logger({
-  transports: [
-    new winston.transports.Console({colorize: true}),
-  ],
-});
 
 // Get dev version func
 async function getDevVersion() {
@@ -39,12 +32,12 @@ return getDevVersion()
 .then(version => {
   const packageJson = require('./../package.json');
   packageJson.version = version;
-  log.info('Updating package.json to dev version %s', packageJson.version);
+  debug('Updating package.json to dev version %s', packageJson.version);
   fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
 })
 
 // Catch errors and do stuff so we can break builds when this fails
 .catch(error => {
-  log.error(error);
+  debug(error);
   process.exit(error.code || 555);
 });

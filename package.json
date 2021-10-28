@@ -20,29 +20,26 @@
     "release": "bump --prompt --tag --all --push"
   },
   "devDependencies": {
-    "@bugsnag/js": "^6.4.3",
     "@vuepress/plugin-google-analytics": "^1.0.0-rc.1",
-    "bluebird": "^3.4.1",
-    "body-parser": "^1.14.2",
-    "dotenv": "^4.0.0",
-    "elasticsearch": "~10.1.2",
     "eslint": "^6.1.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-vue": "^5.2.3",
     "fs-extra": "^10.0.0",
-    "lodash": "^4.17.19",
     "nodemon": "^1.11.0",
-    "platformsh": "^1.0.0",
     "version-bump-prompt": "^4.2.1",
     "vuepress": "^1.0.4",
     "vuepress-plugin-autometa": "^0.1.12",
     "vuepress-plugin-canonical": "^1.0.0",
     "vuepress-plugin-feed": "^0.1.8",
     "vuepress-plugin-robots": "^1.0.1",
-    "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4",
-    "winston": "2.4.5"
+    "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4"
   },
   "dependencies": {
-    "debug": "^4.3.2"
+    "@bugsnag/js": "^6.4.3",
+    "bluebird": "^3.4.1",
+    "debug": "^4.3.2",
+    "dotenv": "^4.0.0",
+    "elasticsearch": "~10.1.2",
+    "lodash": "^4.17.21"
   }
 }
