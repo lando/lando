@@ -1,0 +1,14 @@
+[build]
+  functions = "."
+[[redirects]]
+  from = "/"
+  to = "/.netlify/functions/ping"
+  status = 200
+[[redirects]]
+  from = "/ping"
+  to = "/.netlify/functions/ping"
+  status = 200
+[[redirects]]
+  from = "/status/*"
+  to = "/.netlify/functions/status/:splat"
+  status = 200
