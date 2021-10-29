@@ -1,5 +1,17 @@
 # 2021
 
+## v3.5.1 - [October 29, 2021](https://github.com/lando/lando/releases/tag/v3.5.1)
+
+Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
+
+### Core
+
+* Fixed bug causing long site names to prevent certificate creation causing site spin up failure [#3179](https://github.com/lando/lando/issues/3179)
+
+### Plugins
+
+* Updated to `@lando/platformsh` version [`0.6.0`](https://github.com/lando/platformsh/releases/tag/v0.6.0)
+
 ## v3.5.0 - [October 26, 2021](https://github.com/lando/lando/releases/tag/v3.5.0)
 
 Lando is **free** and **open source** software that relies on contributions from developers like you! If you like Lando then help us spend more time making, updating and supporting it by [contributing](https://github.com/sponsors/lando).
