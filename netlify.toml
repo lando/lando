@@ -3,8 +3,8 @@
   publish = "_docs"
   command = "yarn build"
   # This sort of lets us build only on tagged commits to prod
-  # [context.production]
-  #   ignore = "if git diff $CACHED_COMMIT_REF $COMMIT_REF ./package.json | grep - | grep version && git diff $CACHED_COMMIT_REF $COMMIT_REF ./package.json | grep + | grep version; then exit 1; else exit 0; fi"
+  [context.production]
+    ignore = "if git diff $CACHED_COMMIT_REF $COMMIT_REF ./package.json | grep - | grep version && git diff $CACHED_COMMIT_REF $COMMIT_REF ./package.json | grep + | grep version; then exit 1; else exit 0; fi"
 
 # Domain redirects
 [[redirects]]
