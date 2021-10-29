@@ -12,11 +12,9 @@
     "url": "https://github.com/lando/lando/issues"
   },
   "scripts": {
-    "build:docs": "vuepress build docs -d _docs",
-    "dev:docs": "vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8021 docs",
-    "dev:metrics": "./node_modules/nodemon/bin/nodemon.js ./metrics/server.js",
-    "lint:metrics": "eslint --quiet --no-ignore --config .eslintrc.metrics.json metrics",
-    "lint:docs": "eslint  --quiet --ext .js,.vue --config .eslintrc.vuepress.json docs/.vuepress",
+    "build": "vuepress build docs -d _docs",
+    "dev": "vuepress dev --temp /tmp/lando-docs --cache /tmp/lando-docs-cache --port 8021 docs",
+    "lint": "eslint  --quiet --ext .js,.vue --config .eslintrc.json docs/.vuepress",
     "release": "bump --prompt --tag --all --push"
   },
   "devDependencies": {
@@ -24,8 +22,6 @@
     "eslint": "^6.1.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-vue": "^5.2.3",
-    "fs-extra": "^10.0.0",
-    "nodemon": "^1.11.0",
     "version-bump-prompt": "^4.2.1",
     "vuepress": "^1.0.4",
     "vuepress-plugin-autometa": "^0.1.12",
@@ -35,11 +31,8 @@
     "vuepress-plugin-sitemap": "https://github.com/ekoeryanto/vuepress-plugin-sitemap#dd8b9763b2c7939668a67f2afa34de501dea45d4"
   },
   "dependencies": {
-    "@bugsnag/js": "^6.4.3",
-    "bluebird": "^3.4.1",
     "debug": "^4.3.2",
-    "dotenv": "^4.0.0",
-    "elasticsearch": "~10.1.2",
+    "fs-extra": "^10",
     "lodash": "^4.17.21"
   }
 }

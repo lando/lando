@@ -38,6 +38,6 @@ jobs:
 
       # Run doc tests
       - name: Lint docs code
-        run: yarn lint:docs
+        run: yarn lint
       - name: Build docs
-        run: yarn build:docs
+        run: yarn build
