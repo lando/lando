@@ -92,9 +92,9 @@
                 <li><a href="https://github.com/lando/hyperdrive" target="_blank">Hyperdrive</a></li>
                 <li><a href="https://github.com/lando/leia" target="_blank">Leia</a></li>
                 <li><a href="https://github.com/lando/lando/tree/master/docs" target="_blank">Docs</a></li>
-                <li><a href="https://github.com/lando/lando/website" target="_blank">Website</a></li>
-                <li><a href="https://github.com/lando/lando/blog" target="_blank">Blog</a></li>
-                <li><a href="https://github.com/lando/lando/events" target="_blank">Events</a></li>
+                <li><a href="https://github.com/lando/website" target="_blank">Website</a></li>
+                <li><a href="https://github.com/lando/blog" target="_blank">Blog</a></li>
+                <li><a href="https://github.com/lando/events" target="_blank">Events</a></li>
               </ul>
               <h4>Sponsor</h4>
               <ul>
