@@ -97,7 +97,7 @@ services:
     type: redis
     persist: true
   node:
-    type: node:6.10
+    type: node:16.13
 
   # Override our appserver to add some environmental variables
   # This service is provided by the lamp recipe

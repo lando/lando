@@ -100,7 +100,7 @@ services:
     run:
       - composer install
   node:
-    type: node:10
+    type: node:16
     build:
       - yarn
     run:
