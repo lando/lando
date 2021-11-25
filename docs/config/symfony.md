@@ -136,7 +136,7 @@ config:
 ```yaml
 recipe: symfony
 config:
-  database: postgres:9.6
+  database: postgres:14
 ```
 
 ### Choosing a caching backend

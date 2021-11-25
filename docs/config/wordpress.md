@@ -138,7 +138,7 @@ config:
 ```yaml
 recipe: wordpress
 config:
-  database: postgres:9.6
+  database: postgres:14
 ```
 
 ### Using xdebug

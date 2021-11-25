@@ -33,7 +33,7 @@ recipe: lamp
 config:
   php: '5.6'
   webroot: www
-  database: postgres:11.1
+  database: postgres:14
   xdebug: true
   config:
     php: config/php.ini

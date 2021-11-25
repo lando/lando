@@ -12,11 +12,12 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   **[14](https://hub.docker.com/r/bitnami/postgresql)** **(default)**
 *   [13](https://hub.docker.com/r/bitnami/postgresql)
 *   [12](https://hub.docker.com/r/bitnami/postgresql)
 *   [11](https://hub.docker.com/r/bitnami/postgresql)
 *   [11.1.0](https://hub.docker.com/r/bitnami/postgresql)
-*   **[10](https://hub.docker.com/r/bitnami/postgresql)** **(default)**
+*   [10](https://hub.docker.com/r/bitnami/postgresql)
 *   [10.6.0](https://hub.docker.com/r/bitnami/postgresql)
 *   [9.6](https://hub.docker.com/r/bitnami/postgresql)
 *   [custom](./../config/services.md#advanced)
@@ -55,7 +56,7 @@ In the case of type and version, the underlying database files between these thi
 ```yaml
 services:
   myservice:
-    type: postgres:10
+    type: postgres:14
     portforward: false
     creds:
       database: database
