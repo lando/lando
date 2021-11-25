@@ -2,7 +2,7 @@
 
 ## unreleased - [TBD, 2021](https://github.com/lando/lando/releases/tag/vTBD)
 
-* Added support for `postgres` `14` [#TBD](https://github.com/lando/lando/pull/TBD)
+* Added support for `postgres` `14` [#3221](https://github.com/lando/lando/pull/3221)
 * Added support for `node` `14` and `16` [#3219](https://github.com/lando/lando/pull/3219)
 ## v3.5.1 - [October 29, 2021](https://github.com/lando/lando/releases/tag/v3.5.1)
 
