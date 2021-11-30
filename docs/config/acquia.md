@@ -1,5 +1,5 @@
 ---
-description: The best local development option for Drupal 7, Drupal 8 or WordPress sites running on Acquia. Get Acquia CLI and all the usual power tools plus awesome workflow automation.
+description: The best local development option for Drupal sites running on Acquia. Get Acquia CLI and all the usual power tools plus awesome workflow automation.
 ---
 
 # Acquia
