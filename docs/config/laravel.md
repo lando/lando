@@ -80,7 +80,7 @@ config:
 You can set `composer_version` to any version that is available in our [php service](./php.md#installing-composer).
 
 ```yaml
-recipe: backdrop
+recipe: laravel
 config:
   composer_version: '1.10.1'
 ```
@@ -109,7 +109,7 @@ config:
 
 By default, this recipe will use the default version of our [mysql](./mysql.md) service as the database backend but you can also switch this to use [`mariadb`](./mariadb.md) or ['postgres'](./postgres.md) instead. Note that you can also specify a version *as long as it is a version available for use with lando* for either `mysql`, `mariadb` or `postgres`.
 
-If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md)and ['postgres'](./postgres.md) services before you change the default.
+If you are unsure about how to configure the `database`, we *highly recommend* you check out the [mysql](./mysql.md), [mariadb](./mariadb.md) and ['postgres'](./postgres.md) services before you change the default.
 
 Also note that like the configuration of the `php` version, you should consult the [Laravel requirements](https://laravel.com/docs/5.7/database#configuration) to make sure the `database` and `version` you select is actually supported by Laravel itself.
 

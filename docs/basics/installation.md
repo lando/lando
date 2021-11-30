@@ -60,7 +60,7 @@ We've found the below or better to deliver the best experience.
 <YouTube url="https://www.youtube.com/embed/W8qIutOAe-0" />
 
 ::: tip Do not fear the package size!
-Note that our macOS installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages.
+Note that our macOS installer _includes_ Docker Desktop and this accounts for its large file size in comparison to our Linux packages.
 
 When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
 :::
@@ -171,7 +171,7 @@ Make sure that [Hyper-V is enabled](https://msdn.microsoft.com/en-us/virtualizat
 :::
 
 ::: tip Do not fear the package size!
-Note that our Windows installer _includes_ Docker Desktop and this accounts for it's large file size in comparison to our Linux packages.
+Note that our Windows installer _includes_ Docker Desktop and this accounts for its large file size in comparison to our Linux packages.
 
 When going through the installer you can choose to _not_ install Docker Desktop, although we recommend you use the version of Docker Desktop that we ship for compatibility and support reasons!
 :::
