@@ -12,20 +12,21 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   [14](https://hub.docker.com/r/_/node/)
-*   [13](https://hub.docker.com/r/_/node/)
-*   [12.4 - 12.16](https://hub.docker.com/r/_/node/)
-*   [12](https://hub.docker.com/r/_/node/)
-*   [11](https://hub.docker.com/r/_/node/)
-*   [11.4 - 11.15](https://hub.docker.com/r/_/node/)
-*   **[10](https://hub.docker.com/r/_/node/)** **(default)**
-*   [10.14 - 10.19](https://hub.docker.com/r/_/node/)
+*   [16](https://hub.docker.com/r/_/node/)
+*   **[14](https://hub.docker.com/r/_/node/)** **(default)**
 *   [custom](./../config/services.md#advanced)
 
 ## Legacy versions
 
 You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
+*   [13](https://hub.docker.com/r/_/node/)
+*   [12.4 - 12.16](https://hub.docker.com/r/_/node/)
+*   [12](https://hub.docker.com/r/_/node/)
+*   [11](https://hub.docker.com/r/_/node/)
+*   [11.4 - 11.15](https://hub.docker.com/r/_/node/)
+*   [10](https://hub.docker.com/r/_/node/)
+*   [10.14 - 10.19](https://hub.docker.com/r/_/node/)
 *   [8](https://hub.docker.com/r/_/node/)
 *   [8.14](https://hub.docker.com/r/_/node/)
 *   [6](https://hub.docker.com/r/_/node/)
@@ -42,7 +43,7 @@ To use a patch version, you can do something as shown below:
 ```yaml
 services:
   myservice:
-    type: node:12.13
+    type: node:16.13
 ```
 
 But make sure you use one of the available [patch tags](https://hub.docker.com/r/library/node/tags/) for the underlying image we are using.
@@ -56,7 +57,7 @@ Also note that options, in addition to the [build steps](./../config/services.md
 ```yaml
 services:
   myservice:
-    type: node:10
+    type: node:16
     ssl: false
     command: tail -f /dev/null
     globals: []
