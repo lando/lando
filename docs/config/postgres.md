@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [14](https://hub.docker.com/r/bitnami/postgresql)
 *   [13](https://hub.docker.com/r/bitnami/postgresql)
 *   [12](https://hub.docker.com/r/bitnami/postgresql)
 *   [11](https://hub.docker.com/r/bitnami/postgresql)
@@ -46,8 +47,14 @@ Also note that the below options are in addition to the [build steps](./../confi
 ::: warning Be careful when switching database type, version or credentials!
 You should be careful switching database `type`, `version` or `creds`.
 
-In the case of type and version, the underlying database files between these things will likely not be compatible. In the case of credentials, these are set when the container is **initially created** so in order to change them, you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
+In the case of type and version, the underlying database files between these things will not be compatible. In the case of credentials, these are set when the container is **initially created** so in order to change them, you need to `lando destroy && lando start`. Note that `lando destroy` will delete all the data in your database.
 
+To upgrade the PostgreSQL major version you need to:
+
+1. Take a database dump
+2. Destroy the postgres container
+3. Change version in `.lando.yml` and rebuild
+4. Restore your database dump
 
 **Ignoring this warning can prevent your database from starting**
 :::
@@ -55,7 +62,7 @@ In the case of type and version, the underlying database files between these thi
 ```yaml
 services:
   myservice:
-    type: postgres:10
+    type: postgres:14
     portforward: false
     creds:
       database: database
