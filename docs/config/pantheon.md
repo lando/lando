@@ -326,7 +326,7 @@ Pantheon [multidev](https://pantheon.io/docs/multidev/) is a great (and easy) wa
 lando switch feature-1
 
 # Switch to the env called "feature-1" but ignore grabbing that env's files and database
-# Note that this is basically a glorified `get fetch --all && git checkout BRANCH`
+# Note that this is basically a glorified `git fetch --all && git checkout BRANCH`
 lando switch feature-1 --no-db --no-files
 ```
 
