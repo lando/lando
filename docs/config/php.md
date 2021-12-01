@@ -12,6 +12,7 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [8.1](https://hub.docker.com/r/devwithlando/php)
 *   [8.0](https://hub.docker.com/r/devwithlando/php)
 *   **[7.4](https://hub.docker.com/r/devwithlando/php)** **(default)**
 *   [7.3](https://hub.docker.com/r/devwithlando/php)
