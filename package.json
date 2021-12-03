@@ -12,7 +12,7 @@
     "url": "https://github.com/lando/lando/issues"
   },
   "scripts": {
-    "lint": "eslint  --quiet --ext .js",
+    "lint": "eslint  --quiet --ext .js --config .eslintrc.json scripts",
     "release": "bump --prompt --tag --all --push"
   },
   "devDependencies": {
