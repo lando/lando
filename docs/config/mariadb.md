@@ -12,11 +12,11 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
+*   [10.6](https://hub.docker.com/r/bitnami/mariadb)
 *   [10.5](https://hub.docker.com/r/bitnami/mariadb)
 *   [10.4](https://hub.docker.com/r/bitnami/mariadb)
 *   **[10.3](https://hub.docker.com/r/bitnami/mariadb)** **(default)**
 *   [10.2](https://hub.docker.com/r/bitnami/mariadb)
-*   [10.1](https://hub.docker.com/r/bitnami/mariadb)
 *   [custom](./../config/services.md#advanced)
 
 ## Patch versions
@@ -53,7 +53,7 @@ In the case of type and version, the underlying database files between these thi
 ```yaml
 services:
   myservice:
-    type: mariadb:10.1
+    type: mariadb:10.6
     portforward: false
     creds:
       user: mariadb
