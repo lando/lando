@@ -1,13 +1,16 @@
 {
+  "env": {
+    "node": true,
+    "es6": true
+  },
   "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 6
+    "ecmaVersion": 8
   },
   "extends": [
-    "plugin:vue/recommended",
     "google"
   ],
   "rules": {
+    "require-jsdoc": 0,
     "linebreak-style": 0,
     "arrow-parens": ["error",
       "as-needed"
