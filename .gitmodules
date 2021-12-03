@@ -22,3 +22,15 @@
 	path = plugins/pantheon
 	url = git@github.com:lando/pantheon.git
 	branch = main
+[submodule "blog"]
+	path = blog
+	url = git@github.com:lando/blog.git
+	branch = main
+[submodule "events"]
+	path = events
+	url = git@github.com:lando/events.git
+	branch = main
+[submodule "website"]
+	path = website
+	url = git@github.com:lando/website.git
+	branch = main
