@@ -2,3 +2,23 @@
 	path = docs
 	url = git@github.com:lando/docs.git
 	branch = main
+[submodule "cli"]
+	path = cli
+	url = git@github.com:lando/cli.git
+	branch = main
+[submodule "plugins/platformsh"]
+	path = plugins/platformsh
+	url = git@github.com:lando/platformsh.git
+	branch = main
+[submodule "plugins/acquia"]
+	path = plugins/acquia
+	url = git@github.com:lando/acquia.git
+	branch = main
+[submodule "plugins/lagoon"]
+	path = plugins/lagoon
+	url = git@github.com:lando/lagoon.git
+	branch = main
+[submodule "plugins/pantheon"]
+	path = plugins/pantheon
+	url = git@github.com:lando/pantheon.git
+	branch = main
