@@ -3,9 +3,6 @@ env_file:
   - lando.env
 excludes:
   - node_modules
-proxy:
-  cli:
-    - docs.lndo.site:8021
 services:
   cli:
     type: node:14
@@ -20,13 +17,7 @@ services:
       ports:
         - '8021:8021'
 tooling:
-  docs:
-    service: cli
-    cmd: yarn dev:docs
-    description: Launch the documentation site
   node:
-    service: cli
-  vuepress:
     service: cli
   yarn:
     service: cli
