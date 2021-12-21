@@ -1,30 +1,14 @@
-[submodule "docs"]
-	path = docs
-	url = git@github.com:lando/docs.git
+[submodule "blog"]
+	path = blog
+	url = git@github.com:lando/blog.git
 	branch = main
 [submodule "cli"]
 	path = cli
 	url = git@github.com:lando/cli.git
 	branch = main
-[submodule "plugins/platformsh"]
-	path = plugins/platformsh
-	url = git@github.com:lando/platformsh.git
-	branch = main
-[submodule "plugins/acquia"]
-	path = plugins/acquia
-	url = git@github.com:lando/acquia.git
-	branch = main
-[submodule "plugins/lagoon"]
-	path = plugins/lagoon
-	url = git@github.com:lando/lagoon.git
-	branch = main
-[submodule "plugins/pantheon"]
-	path = plugins/pantheon
-	url = git@github.com:lando/pantheon.git
-	branch = main
-[submodule "blog"]
-	path = blog
-	url = git@github.com:lando/blog.git
+[submodule "docs"]
+	path = docs
+	url = git@github.com:lando/docs.git
 	branch = main
 [submodule "events"]
 	path = events
@@ -34,3 +18,57 @@
 	path = website
 	url = git@github.com:lando/website.git
 	branch = main
+[submodule "plugins/acquia"]
+	path = plugins/acquia
+	url = git@github.com:lando/acquia.git
+	branch = main
+[submodule "plugins/apache"]
+	path = plugins/apache
+	url = git@github.com:lando/apache.git
+	branch = main
+[submodule "plugins/lagoon"]
+	path = plugins/lagoon
+	url = git@github.com:lando/lagoon.git
+	branch = main
+[submodule "plugins/lamp"]
+	path = plugins/lamp
+	url = git@github.com:lando/lamp.git
+	branch = main
+[submodule "plugins/lemp"]
+	path = plugins/lemp
+	url = git@github.com:lando/lemp.git
+	branch = main
+[submodule "plugins/mariadb"]
+	path = plugins/mariadb
+	url = git@github.com:lando/mariadb.git
+	branch = main
+[submodule "plugins/mysql"]
+	path = plugins/mysql
+	url = git@github.com:lando/mysql.git
+	branch = main
+[submodule "plugins/nginx"]
+	path = plugins/nginx
+	url = git@github.com:lando/nginx.git
+	branch = main
+[submodule "plugins/pantheon"]
+	path = plugins/pantheon
+	url = git@github.com:lando/pantheon.git
+	branch = main
+[submodule "plugins/php"]
+	path = plugins/php
+	url = git@github.com:lando/php.git
+	branch = main
+[submodule "plugins/postgres"]
+	path = plugins/postgres
+	url = git@github.com:lando/postgres.git
+	branch = main
+[submodule "plugins/platformsh"]
+	path = plugins/platformsh
+	url = git@github.com:lando/platformsh.git
+	branch = main
+
+
+
+
+
+
