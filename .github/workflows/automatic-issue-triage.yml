@@ -19,6 +19,12 @@ jobs:
           - lagoon:lagoon
           - pantheon:pantheon
           - platformsh:platformsh
+          - apache:apache
+          - mariadb:mariadb
+          - mysql:mysql
+          - nginx:nginx
+          - php:php
+          - postgres:postgres
 
     steps:
       - name: Manual Action Test
