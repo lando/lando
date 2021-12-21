@@ -34,3 +34,35 @@
 	path = website
 	url = git@github.com:lando/website.git
 	branch = main
+[submodule "plugins/apache"]
+	path = plugins/apache
+	url = git@github.com:lando/apache.git
+	branch = main
+[submodule "plugins/mariadb"]
+	path = plugins/mariadb
+	url = git@github.com:lando/mariadb.git
+	branch = main
+[submodule "plugins/mysql"]
+	path = plugins/mysql
+	url = git@github.com:lando/mysql.git
+	branch = main
+[submodule "plugins/nginx"]
+	path = plugins/nginx
+	url = git@github.com:lando/nginx.git
+	branch = main
+[submodule "plugins/php"]
+	path = plugins/php
+	url = git@github.com:lando/php.git
+	branch = main
+[submodule "plugins/postgres"]
+	path = plugins/postgres
+	url = git@github.com:lando/postgres.git
+	branch = main
+[submodule "plugins/lamp"]
+	path = plugins/lamp
+	url = git@github.com:lando/lamp.git
+	branch = main
+[submodule "plugins/lemp"]
+	path = plugins/lemp
+	url = git@github.com:lando/lemp.git
+	branch = main
