@@ -25,6 +25,8 @@ jobs:
           - nginx:nginx
           - php:php
           - postgres:postgres
+          - lamp:lamp
+          - lemp:lemp
 
     steps:
       - name: Manual Action Test
