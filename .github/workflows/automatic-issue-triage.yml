@@ -27,6 +27,7 @@ jobs:
           - postgres:postgres
           - lamp:lamp
           - lemp:lemp
+          - solr:solr
 
     steps:
       - name: Manual Action Test

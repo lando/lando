@@ -66,3 +66,7 @@
 	path = plugins/lemp
 	url = git@github.com:lando/lemp.git
 	branch = main
+[submodule "plugins/solr"]
+	path = plugins/solr
+	url = git@github.com:lando/solr.git
+	branch = main
