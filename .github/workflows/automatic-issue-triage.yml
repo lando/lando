@@ -28,6 +28,7 @@ jobs:
           - lamp:lamp
           - lemp:lemp
           - solr:solr
+          - elasticsearch:elasticsearch
 
     steps:
       - name: Manual Action Test

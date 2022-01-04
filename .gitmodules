@@ -70,3 +70,7 @@
 	path = plugins/solr
 	url = git@github.com:lando/solr.git
 	branch = main
+[submodule "plugins/elasticsearch"]
+	path = plugins/elasticsearch
+	url = git@github.com:lando/elasticsearch.git
+	branch = main
