@@ -34,6 +34,7 @@ jobs:
           - go:go
           - compose:compose
           - mailhog:mailhog
+          - memcached:memcached
 
     steps:
       - name: Manual Action Test

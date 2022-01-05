@@ -94,3 +94,7 @@
 	path = plugins/mailhog
 	url = git@github.com:lando/mailhog.git
 	branch = main
+[submodule "plugins/memcached"]
+	path = plugins/memcached
+	url = git@github.com:lando/memcached.git
+	branch = main
