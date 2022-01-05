@@ -82,3 +82,7 @@
 	path = plugins/dotnet
 	url = git@github.com:lando/dotnet.git
 	branch = main
+[submodule "plugins/go"]
+	path = plugins/go
+	url = git@github.com:lando/go.git
+	branch = main
