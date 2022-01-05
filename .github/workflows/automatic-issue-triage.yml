@@ -32,6 +32,7 @@ jobs:
           - python:python
           - dotnet:dotnet
           - go:go
+          - compose:compose
 
     steps:
       - name: Manual Action Test

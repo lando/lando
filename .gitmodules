@@ -86,3 +86,7 @@
 	path = plugins/go
 	url = git@github.com:lando/go.git
 	branch = main
+[submodule "plugins/compose"]
+	path = plugins/compose
+	url = git@github.com:lando/compose.git
+	branch = main
