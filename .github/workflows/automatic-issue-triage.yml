@@ -30,6 +30,7 @@ jobs:
           - solr:solr
           - elasticsearch:elasticsearch
           - python:python
+          - dotnet:dotnet
 
     steps:
       - name: Manual Action Test
