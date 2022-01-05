@@ -33,6 +33,7 @@ jobs:
           - dotnet:dotnet
           - go:go
           - compose:compose
+          - mailhog:mailhog
 
     steps:
       - name: Manual Action Test

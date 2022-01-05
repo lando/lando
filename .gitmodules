@@ -90,3 +90,7 @@
 	path = plugins/compose
 	url = git@github.com:lando/compose.git
 	branch = main
+[submodule "plugins/mailhog"]
+	path = plugins/mailhog
+	url = git@github.com:lando/mailhog.git
+	branch = main
