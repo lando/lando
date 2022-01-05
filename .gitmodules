@@ -98,3 +98,7 @@
 	path = plugins/memcached
 	url = git@github.com:lando/memcached.git
 	branch = main
+[submodule "plugins/mongo"]
+	path = plugins/mongo
+	url = git@github.com:lando/mongo.git
+	branch = main
