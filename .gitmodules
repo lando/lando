@@ -74,3 +74,7 @@
 	path = plugins/elasticsearch
 	url = git@github.com:lando/elasticsearch.git
 	branch = main
+[submodule "plugins/python"]
+	path = plugins/python
+	url = git@github.com:lando/python.git
+	branch = main

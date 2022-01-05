@@ -29,6 +29,7 @@ jobs:
           - lemp:lemp
           - solr:solr
           - elasticsearch:elasticsearch
+          - python:python
 
     steps:
       - name: Manual Action Test
