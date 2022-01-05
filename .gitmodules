@@ -78,3 +78,7 @@
 	path = plugins/python
 	url = git@github.com:lando/python.git
 	branch = main
+[submodule "plugins/dotnet"]
+	path = plugins/dotnet
+	url = git@github.com:lando/dotnet.git
+	branch = main
