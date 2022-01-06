@@ -114,3 +114,7 @@
 	path = plugins/phpmyadmin
 	url = git@github.com:lando/phpmyadmin.git
 	branch = main
+[submodule "plugins/redis"]
+	path = plugins/redis
+	url = git@github.com:lando/redis.git
+	branch = main
