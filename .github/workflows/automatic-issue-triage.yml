@@ -41,6 +41,7 @@ jobs:
           - redis:redis
           - ruby:ruby
           - solr:solr
+          - tomcat:tomcat
 
     steps:
       - name: Manual Action Test
