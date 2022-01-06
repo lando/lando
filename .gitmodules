@@ -126,3 +126,7 @@
 	path = plugins/tomcat
 	url = git@github.com:lando/tomcat.git
 	branch = main
+[submodule "plugins/varnish"]
+	path = plugins/varnish
+	url = git@github.com:lando/varnish.git
+	branch = main
