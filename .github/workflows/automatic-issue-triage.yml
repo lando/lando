@@ -38,6 +38,7 @@ jobs:
           - platformsh:platformsh
           - postgres:postgres
           - python:python
+          - redis:redis
           - solr:solr
 
     steps:
