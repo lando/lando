@@ -39,6 +39,7 @@ jobs:
           - postgres:postgres
           - python:python
           - redis:redis
+          - ruby:ruby
           - solr:solr
 
     steps:
