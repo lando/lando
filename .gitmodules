@@ -122,3 +122,7 @@
 	path = plugins/ruby
 	url = git@github.com:lando/ruby.git
 	branch = main
+[submodule "plugins/tomcat"]
+	path = plugins/tomcat
+	url = git@github.com:lando/tomcat.git
+	branch = main
