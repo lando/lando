@@ -110,3 +110,7 @@
 	path = plugins/node
 	url = git@github.com:lando/node.git
 	branch = main
+[submodule "plugins/phpmyadmin"]
+	path = plugins/phpmyadmin
+	url = git@github.com:lando/phpmyadmin.git
+	branch = main
