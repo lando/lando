@@ -36,6 +36,7 @@ jobs:
           - mailhog:mailhog
           - memcached:memcached
           - mongo:mongo
+          - mssql:mssql
 
     steps:
       - name: Manual Action Test

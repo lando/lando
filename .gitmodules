@@ -102,3 +102,7 @@
 	path = plugins/mongo
 	url = git@github.com:lando/mongo.git
 	branch = main
+[submodule "plugins/mssql"]
+	path = plugins/mssql
+	url = git@github.com:lando/mssql.git
+	branch = main
