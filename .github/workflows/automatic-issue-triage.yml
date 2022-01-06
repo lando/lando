@@ -42,6 +42,7 @@ jobs:
           - ruby:ruby
           - solr:solr
           - tomcat:tomcat
+          - varnish:varnish
 
     steps:
       - name: Manual Action Test
