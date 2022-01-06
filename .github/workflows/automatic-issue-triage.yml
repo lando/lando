@@ -14,29 +14,30 @@ jobs:
         os:
           - ubuntu-20.04
         router:
-          - documentation:docs
           - acquia:acquia
-          - lagoon:lagoon
-          - pantheon:pantheon
-          - platformsh:platformsh
           - apache:apache
-          - mariadb:mariadb
-          - mysql:mysql
-          - nginx:nginx
-          - php:php
-          - postgres:postgres
+          - compose:compose
+          - documentation:docs
+          - dotnet:dotnet
+          - elasticsearch:elasticsearch
+          - go:go
+          - lagoon:lagoon
           - lamp:lamp
           - lemp:lemp
-          - solr:solr
-          - elasticsearch:elasticsearch
-          - python:python
-          - dotnet:dotnet
-          - go:go
-          - compose:compose
           - mailhog:mailhog
+          - mariadb:mariadb
           - memcached:memcached
           - mongo:mongo
           - mssql:mssql
+          - mysql:mysql
+          - nginx:nginx
+          - node:node
+          - pantheon:pantheon
+          - php:php
+          - platformsh:platformsh
+          - postgres:postgres
+          - python:python
+          - solr:solr
 
     steps:
       - name: Manual Action Test

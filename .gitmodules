@@ -106,3 +106,7 @@
 	path = plugins/mssql
 	url = git@github.com:lando/mssql.git
 	branch = main
+[submodule "plugins/node"]
+	path = plugins/node
+	url = git@github.com:lando/node.git
+	branch = main
