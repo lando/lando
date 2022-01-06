@@ -118,3 +118,7 @@
 	path = plugins/redis
 	url = git@github.com:lando/redis.git
 	branch = main
+[submodule "plugins/ruby"]
+	path = plugins/ruby
+	url = git@github.com:lando/ruby.git
+	branch = main
