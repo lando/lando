@@ -130,3 +130,7 @@
 	path = plugins/varnish
 	url = git@github.com:lando/varnish.git
 	branch = main
+[submodule "plugins/backdrop"]
+	path = plugins/backdrop
+	url = git@github.com:lando/backdrop.git
+	branch = main
