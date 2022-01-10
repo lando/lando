@@ -146,3 +146,7 @@
 	path = plugins/mean
 	url = git@github.com:lando/mean.git
 	branch = main
+[submodule "plugins/symfony"]
+	path = plugins/symfony
+	url = git@github.com:lando/symfony.git
+	branch = main

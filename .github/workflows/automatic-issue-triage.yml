@@ -45,6 +45,7 @@ jobs:
           - redis:redis
           - ruby:ruby
           - solr:solr
+          - symfony:symfony
           - tomcat:tomcat
           - varnish:varnish
 
