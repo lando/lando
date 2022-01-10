@@ -138,3 +138,7 @@
 	path = plugins/joomla
 	url = git@github.com:lando/joomla.git
 	branch = main
+[submodule "plugins/laravel"]
+	path = plugins/laravel
+	url = git@github.com:lando/laravel.git
+	branch = main
