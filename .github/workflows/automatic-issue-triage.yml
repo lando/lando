@@ -16,6 +16,7 @@ jobs:
         router:
           - acquia:acquia
           - apache:apache
+          - backdrop:backdrop
           - compose:compose
           - documentation:docs
           - dotnet:dotnet
