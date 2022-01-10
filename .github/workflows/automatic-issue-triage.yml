@@ -25,6 +25,7 @@ jobs:
           - joomla:joomla
           - lagoon:lagoon
           - lamp:lamp
+          - laravel:laravel
           - lemp:lemp
           - mailhog:mailhog
           - mariadb:mariadb
