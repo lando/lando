@@ -134,3 +134,7 @@
 	path = plugins/backdrop
 	url = git@github.com:lando/backdrop.git
 	branch = main
+[submodule "plugins/joomla"]
+	path = plugins/joomla
+	url = git@github.com:lando/joomla.git
+	branch = main

@@ -22,6 +22,7 @@ jobs:
           - dotnet:dotnet
           - elasticsearch:elasticsearch
           - go:go
+          - joomla:joomla
           - lagoon:lagoon
           - lamp:lamp
           - lemp:lemp
