@@ -142,3 +142,7 @@
 	path = plugins/laravel
 	url = git@github.com:lando/laravel.git
 	branch = main
+[submodule "plugins/mean"]
+	path = plugins/mean
+	url = git@github.com:lando/mean.git
+	branch = main

@@ -29,6 +29,7 @@ jobs:
           - lemp:lemp
           - mailhog:mailhog
           - mariadb:mariadb
+          - mean:mean
           - memcached:memcached
           - mongo:mongo
           - mssql:mssql
