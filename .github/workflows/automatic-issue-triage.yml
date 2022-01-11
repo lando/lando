@@ -20,6 +20,7 @@ jobs:
           - compose:compose
           - documentation:docs
           - dotnet:dotnet
+          - drupal:drupal
           - elasticsearch:elasticsearch
           - go:go
           - joomla:joomla
