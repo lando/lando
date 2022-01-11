@@ -154,3 +154,7 @@
 	path = plugins/wordpress
 	url = git@github.com:lando/wordpress.git
 	branch = main
+[submodule "plugins/drupal"]
+	path = plugins/drupal
+	url = git@github.com:lando/drupal.git
+	branch = main
