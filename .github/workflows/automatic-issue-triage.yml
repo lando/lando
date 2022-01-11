@@ -48,6 +48,7 @@ jobs:
           - symfony:symfony
           - tomcat:tomcat
           - varnish:varnish
+          - wordpress:wordpress
 
     steps:
       - name: Manual Action Test
