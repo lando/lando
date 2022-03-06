@@ -32,7 +32,7 @@ Lando is and always will be FREE and OPEN SOURCE. As such it relies on generous 
 
 ### Advanced Configuration
 
-[Landofile](https://docs.lando.dev/config/lando.html) | [Recipes](https://docs.lando.dev/config/recipes.html) | [Services & Build Steps](https://docs.lando.dev/config/services.html) | [Tooling](https://docs.lando.dev/config/tooling.html) | [Proxy & Nice Url Routing](https://docs.lando.dev/config/proxy.html) | [Environment](https://docs.lando.dev/config/env.html) | [Events & Automation](https://docs.lando.dev/config/events.html) | [Experimental](https://docs.lando.dev/config/experimental.html) | [Networking](https://docs.lando.dev/config/networking.html) | [Performance](https://docs.lando.dev/config/performance.html) | [Release Channels](https://docs.lando.dev/config/releases.html) | [SSh Keys](https://docs.lando.dev/config/ssh.html) | [Global Config](https://docs.lando.dev/config/global.html)
+[Landofile](https://docs.lando.dev/config/lando.html) | [Recipes](https://docs.lando.dev/config/recipes.html) | [Services & Build Steps](https://docs.lando.dev/config/services.html) | [Tooling](https://docs.lando.dev/config/tooling.html) | [Proxy & Nice Url Routing](https://docs.lando.dev/config/proxy.html) | [Environment](https://docs.lando.dev/config/env.html) | [Events & Automation](https://docs.lando.dev/config/events.html) | [Experimental](https://docs.lando.dev/config/experimental.html) | [Networking](https://docs.lando.dev/config/networking.html) | [Performance](https://docs.lando.dev/config/performance.html) | [Release Channels](https://docs.lando.dev/config/releases.html) | [SSH Keys](https://docs.lando.dev/config/ssh.html) | [Global Config](https://docs.lando.dev/config/global.html)
 
 ## Help, Troubleshooting & Support
 
