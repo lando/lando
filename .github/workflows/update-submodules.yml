@@ -20,8 +20,9 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.PIROG_TOKEN }}
           fetch-depth: 0
+          submodules: true
+
       - name: Setup git user
         shell: bash
         run: |
