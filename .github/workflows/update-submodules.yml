@@ -1,7 +1,7 @@
 name: Automatic Submodule Update
 on:
   schedule:
-    - cron: '40 * * * *'
+    - cron: '57 * * * *'
 
 jobs:
   auto-update-submodules:
@@ -16,6 +16,7 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v2
         with:
+          token: ${{ secrets.PIROG_TOKEN }}
           fetch-depth: 0
           submodules: true
       - name: Setup git user
