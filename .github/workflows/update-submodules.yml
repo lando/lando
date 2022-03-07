@@ -1,10 +1,7 @@
 name: Automatic Submodule Update
 on:
-  push:
-    branches:
-      - main
-  # schedule:
-  #   - cron: '0 3 * * * *'
+  schedule:
+    - cron: '20 * * * * *'
 
 jobs:
   auto-update-submodules:
@@ -22,7 +19,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-
       - name: Setup git user
         shell: bash
         run: |
@@ -39,5 +35,6 @@ jobs:
           git add .
           git commit \
           -m "FEAR NOT THE SUBMODULE UPDATES THAT ROBOTS MAKE IN THE DARK WATCHES OF THE NIGHT"
+          git push origin main
 
 
