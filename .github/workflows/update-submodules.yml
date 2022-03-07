@@ -1,0 +1,42 @@
+name: Automatic Submodule Update
+on:
+  push:
+    branches:
+      - main
+  # schedule:
+  #   - cron: '0 3 * * * *'
+
+jobs:
+  auto-update-submodules:
+    runs-on: ${{ matrix.os }}
+    env:
+      TERM: xterm
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PIROG_TOKEN }}
+          fetch-depth: 0
+      - name: Setup git user
+        shell: bash
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: Update submodules
+        shell: bash
+        run: |
+          git submodule update --init --recursive
+          git submodule update --recursive --remote
+      - name: Commit and push
+        shell: bash
+        run: |
+          git add .
+          git commit \
+          -m "FEAR NOT THE SUBMODULE UPDATES THAT ROBOTS MAKE IN THE DARK WATCHES OF THE NIGHT"
+
+
