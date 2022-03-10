@@ -1,6 +1,6 @@
 <div align="center">
-  
-[![Lando logo](https://docs.lando.dev/images/icon.svg)](https://lando.dev)
+
+<a href="https://lando.dev" target="_blank"><img width=250" src="https://docs.lando.dev/images/icon.svg" alt="Lando logo"></a>
 
 # Lando
 
