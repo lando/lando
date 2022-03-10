@@ -1,3 +1,5 @@
+<div align="center">
+  
 [![Lando logo](https://docs.lando.dev/images/hero-pink.png)](https://lando.dev)
 
 # Lando
