@@ -9,8 +9,13 @@ on:
       - test*
       - v*
 
+permissions:
+  contents: read
+
 jobs:
   ship-linux-installer:
+    permissions:
+      contents: write  # for softprops/action-gh-release to create GitHub release
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm

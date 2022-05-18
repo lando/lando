@@ -8,8 +8,13 @@ on:
     tags:
       - test*
       - v*
+permissions:
+  contents: read
+
 jobs:
   ship-windows-installer:
+    permissions:
+      contents: write  # for softprops/action-gh-release to create GitHub release
     runs-on: ${{ matrix.os }}
     env:
       WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}
