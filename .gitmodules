@@ -158,3 +158,15 @@
 	path = plugins/drupal
 	url = git@github.com:lando/drupal.git
 	branch = main
+[submodule "core"]
+	path = core
+	url = git@github.com:lando/core.git
+	branch = main
+[submodule "core-next"]
+	path = core-next
+	url = git@github.com:lando/core-next.git
+	branch = main
+[submodule "hyperdrive"]
+	path = hyperdrive
+	url = git@github.com:lando/hyperdrive.git
+	branch = main
